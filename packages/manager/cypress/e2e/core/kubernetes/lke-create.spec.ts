@@ -877,6 +877,18 @@ describe('LKE Cluster Creation with LKE-E', () => {
       mockGetTieredKubernetesVersions('enterprise', [
         latestEnterpriseTierKubernetesVersion,
       ]).as('getTieredKubernetesVersions');
+      mockGetRegions([
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes'],
+          id: 'us-east',
+          label: 'Newark, US',
+        }),
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-iad',
+          label: 'Washington, DC',
+        }),
+      ]).as('getRegions');
 
       cy.visitWithLogin('/kubernetes/clusters');
       cy.wait(['@getAccount']);
@@ -912,6 +924,24 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       // Confirm HA section is hidden since LKE-E includes HA by default
       cy.findByText('HA Control Plane').should('not.exist');
+
+      cy.wait(['@getRegions']);
+
+      // Confirm unsupported regions are not displayed
+      ui.regionSelect.find().click().type('Newark, NJ');
+      ui.autocompletePopper.find().within(() => {
+        cy.findByText('Newark, NJ (us-east)').should('not.exist');
+      });
+
+      // Select a supported region
+      ui.regionSelect.find().clear().type('Washington, DC{enter}');
+
+      // Confirm that there is a tooltip explanation for the region dropdown options
+      ui.tooltip
+        .findByText(
+          'Only regions that support Kubernetes Enterprise are listed.'
+        )
+        .should('be.visible');
 
       // Selects an enterprise version
       ui.autocomplete

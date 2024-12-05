@@ -369,11 +369,22 @@ export const CreateCluster = () => {
           <StyledFieldWithDocsStack>
             <Stack>
               <RegionSelect
+                currentCapability={
+                  isLkeEnterpriseLAFeatureEnabled &&
+                  selectedTier === 'enterprise'
+                    ? 'Kubernetes Enterprise'
+                    : 'Kubernetes'
+                }
                 textFieldProps={{
                   helperText: <RegionHelperText mb={2} />,
                   helperTextPosition: 'top',
                 }}
-                currentCapability="Kubernetes"
+                tooltipText={
+                  isLkeEnterpriseLAFeatureEnabled &&
+                  selectedTier === 'enterprise'
+                    ? 'Only regions that support Kubernetes Enterprise are listed.'
+                    : undefined
+                }
                 disableClearable
                 errorText={errorMap.region}
                 onChange={(e, region) => setSelectedRegionId(region.id)}

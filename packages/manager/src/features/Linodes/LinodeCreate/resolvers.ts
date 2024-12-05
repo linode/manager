@@ -43,7 +43,6 @@ export const getLinodeCreateResolver = (
     }
 
     const regions = await queryClient.ensureQueryData(regionQueries.regions);
-
     const selectedRegion = regions.find((r) => r.id === values.region);
 
     const hasSelectedAnEURegion = isEURegion(

@@ -1,10 +1,15 @@
-import { Autocomplete, Notice, Toggle, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  FormControlLabel,
+  Notice,
+  Toggle,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
@@ -47,10 +52,10 @@ export const AccessSelect = React.memo((props: Props) => {
 
   const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
+
+  // CORS is only available at a bucket level, not at an object level.
   const isCorsAvailable =
-    (variant === 'bucket' || variant === 'object') &&
-    endpointType !== 'E2' &&
-    endpointType !== 'E3';
+    variant === 'bucket' && endpointType !== 'E2' && endpointType !== 'E3';
 
   const {
     data: bucketAccessData,
