@@ -13,6 +13,7 @@ export const CloudPulseAppliedFilter = (
 
   return (
     <Box
+      data-qa-applied-filter-id="applied-filter"
       data-testid="applied-filter"
       display="flex"
       flexDirection={{ sm: 'row', xs: 'column' }}

@@ -211,10 +211,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .should('be.visible')
       .type(engine);
 
-    ui.autocompletePopper
-       .findByTitle(engine)
-        .should('be.visible')
-        .click();
+    ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();
@@ -241,11 +238,22 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.button.findByTitle('Filters').should('be.visible').click();
 
     // Verify that the applied filters
-    cy.get('[data-testid="applied-filter"]').within(() => {
-      cy.get(`[data-qa-value="Database Engine ${engine}"]`);
-      cy.get(`[data-qa-value="Region US, Chicago, IL"]`);
-      cy.get(`[data-qa-value="Node Type ${nodeType}"]`);
-      cy.get(`[data-qa-value="Database Clusters ${databaseMock.label}"]`);
+    cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
+      cy.get(`[data-qa-value="Database Engine ${engine}"]`)
+        .should('be.visible')
+        .should('have.text', engine);
+
+      cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+        .should('be.visible')
+        .should('have.text', 'US, Chicago, IL');
+
+      cy.get(`[data-qa-value="Node Type ${nodeType}"]`)
+        .should('be.visible')
+        .should('have.text', nodeType);
+
+      cy.get(`[data-qa-value="Database Clusters ${clusterName}"]`)
+        .should('be.visible')
+        .should('have.text', clusterName);
     });
 
     // Wait for all metrics query requests to resolve.
