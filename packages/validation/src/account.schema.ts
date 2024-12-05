@@ -67,10 +67,11 @@ export const PaymentMethodSchema = object({
   ),
   data: object().when('type', {
     is: 'credit_card',
-    then: CreditCardSchema,
-    otherwise: object({
-      nonce: string().required('Payment nonce is required.'),
-    }),
+    then: () => CreditCardSchema,
+    otherwise: () =>
+      object({
+        nonce: string().required('Payment nonce is required.'),
+      }),
   }),
   is_default: boolean().required(
     'You must indicate if this should be your default method of payment.'
@@ -100,10 +101,12 @@ export const UpdateUserSchema = object({
 
 const GrantSchema = object({
   id: number().required('ID is required.'),
-  permissions: mixed().oneOf(
-    [null, 'read_only', 'read_write'],
-    'Permissions must be null, read_only, or read_write.'
-  ),
+  permissions: string()
+    .oneOf(
+      ['read_only', 'read_write'],
+      'Permissions must be null, read_only, or read_write.'
+    )
+    .nullable('Permissions must be null, read_only, or read_write.'),
 });
 
 export const UpdateGrantSchema = object({

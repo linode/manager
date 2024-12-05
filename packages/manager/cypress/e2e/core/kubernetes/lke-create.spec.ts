@@ -39,6 +39,7 @@ import {
   dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 /**
  * Gets the label for an LKE plan as shown in creation plan table.
@@ -823,6 +824,113 @@ describe('LKE Cluster Creation with ACL', () => {
       // Confirm API error displays
       cy.wait('@createClusterError');
       cy.contains(mockErrorMessage).should('be.visible');
+    });
+  });
+});
+
+describe('LKE Cluster Creation with LKE-E', () => {
+  /**
+   * - Confirms LKE-E flow does not exist if account doesn't have the corresponding capability
+   * @todo LKE-E: Remove this test once LKE-E is fully rolled out
+   */
+  it('does not show the LKE-E flow with the feature flag off', () => {
+    mockAppendFeatureFlags({
+      lkeEnterprise: { enabled: false, la: false },
+    }).as('getFeatureFlags');
+    cy.visitWithLogin('/kubernetes/clusters');
+
+    ui.button
+      .findByTitle('Create Cluster')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.url().should('endWith', '/kubernetes/create');
+
+    cy.contains('Cluster Type').should('not.exist');
+  });
+
+  describe('shows the LKE-E flow with the feature flag on', () => {
+    beforeEach(() => {
+      // Mock feature flag -- @TODO LKE-E: Remove feature flag once LKE-E is fully rolled out
+      mockAppendFeatureFlags({
+        lkeEnterprise: { enabled: true, la: true },
+      }).as('getFeatureFlags');
+    });
+
+    /**
+     * - Mocks the LKE-E capability
+     * - Confirms the Cluster Type selection can be made
+     * - Confirms that HA is enabled by default with LKE-E selection
+     * @todo LKE-E: Add onto this test as the LKE-E changes to the Create flow are built out
+     */
+    it('creates an LKE-E cluster with the account capability', () => {
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Kubernetes Enterprise'],
+        })
+      ).as('getAccount');
+
+      cy.visitWithLogin('/kubernetes/clusters');
+
+      ui.button
+        .findByTitle('Create Cluster')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.url().should('endWith', '/kubernetes/create');
+
+      cy.findByText('Cluster Type').should('be.visible');
+
+      // Confirm both cluster types exist and the LKE card is selected by default
+      cy.get(`[data-qa-select-card-heading="LKE"]`)
+        .closest('[data-qa-selection-card]')
+        .should('be.visible')
+        .should('have.attr', 'data-qa-selection-card-checked', 'true');
+
+      cy.get(`[data-qa-select-card-heading="LKE Enterprise"]`)
+        .closest('[data-qa-selection-card]')
+        .should('be.visible')
+        .should('have.attr', 'data-qa-selection-card-checked', 'false')
+        .click();
+
+      // Select LKE-E as the cluster type
+      cy.get(`[data-qa-select-card-heading="LKE Enterprise"]`)
+        .closest('[data-qa-selection-card]')
+        .should('be.visible')
+        .should('have.attr', 'data-qa-selection-card-checked', 'true');
+
+      // Confirm HA section is hidden since LKE-E includes HA by default
+      cy.findByText('HA Control Plane').should('not.exist');
+
+      // TODO: finish the rest of this test in subsequent PRs
+    });
+
+    it('disables the Cluster Type selection without the LKE-E account capability', () => {
+      cy.visitWithLogin('/kubernetes/clusters');
+
+      ui.button
+        .findByTitle('Create Cluster')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.url().should('endWith', '/kubernetes/create');
+
+      // Confirm the Cluster Type selection can be made when the LKE-E feature is enabled
+      cy.findByText('Cluster Type').should('be.visible');
+
+      // Confirm both tiers exist and the LKE card is selected by default
+      cy.get(`[data-qa-select-card-heading="LKE"]`)
+        .closest('[data-qa-selection-card]')
+        .should('be.visible')
+        .should('have.attr', 'data-qa-selection-card-checked', 'true');
+
+      cy.get(`[data-qa-select-card-heading="LKE Enterprise"]`)
+        .closest('[data-qa-selection-card]')
+        .should('be.visible')
+        .should('have.attr', 'disabled');
     });
   });
 });
