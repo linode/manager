@@ -14,6 +14,7 @@ import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/Sta
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 
 import { AlertTableRow } from './AlertTableRow';
+import { AlertListingTableLabelMap } from './constants';
 
 export const AlertListing = () => {
   // These are dummy order value and handleOrder methods, will replace them in the next PR
@@ -39,50 +40,19 @@ export const AlertListing = () => {
       <Table colCount={7} size="small">
         <TableHead>
           <TableRow>
-            <TableSortCell
-              active={true}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="alertName"
-            >
-              Alert Name
-            </TableSortCell>
-            <TableSortCell
-              handleClick={() => {
-                'asc';
-              }}
-              active={true}
-              direction={order}
-              label="service"
-              size="small"
-            >
-              Service
-            </TableSortCell>
-            <TableSortCell
-              active={true}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
-            <TableSortCell
-              active={true}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="lastModified"
-            >
-              Last Modified
-            </TableSortCell>
-            <TableSortCell
-              active={true}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="createdBy"
-              size="small"
-            >
-              Created By
-            </TableSortCell>
+            {AlertListingTableLabelMap.map((value, idx) => {
+              return (
+                <TableSortCell
+                  active={true}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  key={idx}
+                  label={value.label}
+                >
+                  {value.colName}
+                </TableSortCell>
+              );
+            })}
             <TableCell actionCell />
           </TableRow>
         </TableHead>

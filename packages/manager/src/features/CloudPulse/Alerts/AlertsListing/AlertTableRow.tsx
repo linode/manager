@@ -9,6 +9,7 @@ import { capitalize } from 'src/utilities/capitalize';
 import { AlertActionMenu } from './AlertActionMenu';
 
 import type { Alert } from '@linode/api-v4';
+import { useTheme } from '@mui/material';
 
 interface Props {
   /**
@@ -20,12 +21,19 @@ interface Props {
 export const AlertTableRow = (props: Props) => {
   const { alert } = props;
   const { created_by, id, label, service_type, status, updated } = alert;
+  const theme = useTheme();
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>{label}</TableCell>
       <TableCell>{service_type}</TableCell>
       <TableCell>
-        <Typography color={status === 'enabled' ? 'limegreen' : 'gray'}>
+        <Typography
+          color={
+            status === 'enabled'
+              ? theme.tokens.color.Green[70]
+              : theme.tokens.color.Neutrals[60]
+          }
+        >
           {capitalize(status)}
         </Typography>
       </TableCell>
