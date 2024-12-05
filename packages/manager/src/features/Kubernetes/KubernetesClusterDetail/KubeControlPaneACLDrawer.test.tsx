@@ -8,12 +8,12 @@ import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
 import type { KubeControlPlaneACLDrawerProps } from './KubeControlPaneACLDrawer';
 
 const props: KubeControlPlaneACLDrawerProps = {
+  aclData: undefined,
   closeDrawer: vi.fn(),
   clusterId: 1,
   clusterLabel: 'Test',
   clusterMigrated: true,
   open: true,
-  showControlPlaneACL: true,
 };
 
 const queryMocks = vi.hoisted(() => ({
@@ -46,7 +46,7 @@ describe('KubeControlPaneACLDrawer', () => {
       <KubeControlPlaneACLDrawer {...props} />
     );
 
-    expect(getByText('Control Plane ACL')).toBeVisible();
+    expect(getByText('Control Plane ACL for Test')).toBeVisible();
     expect(
       getByText(
         "Control Plane ACL secures network access to your LKE cluster's control plane. Use this form to enable or disable the ACL on your LKE cluster, update the list of allowed IP addresses, and adjust other settings."

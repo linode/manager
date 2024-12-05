@@ -1,7 +1,7 @@
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Autocomplete } from '@linode/ui';
 import { Flag } from 'src/components/Flag';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
@@ -121,7 +121,7 @@ export const RegionSelect = <
         }}
         sx={(theme) => ({
           [theme.breakpoints.up('md')]: {
-            width: '416px',
+            maxWidth: tooltipText ? '458px' : '416px',
           },
         })}
         textFieldProps={{

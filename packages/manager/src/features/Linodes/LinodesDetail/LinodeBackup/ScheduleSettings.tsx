@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   FormControl,
   FormHelperText,
   Notice,
@@ -11,7 +12,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,

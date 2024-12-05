@@ -51,11 +51,10 @@ export const StyledFieldWithDocsStack = styled(Stack, {
 }));
 
 export const StyledDocsLinkContainer = styled(Box, {
-  label: 'StyledRegionSelectStack',
+  label: 'StyledDocsLinkContainer',
 })(({ theme }) => ({
   alignSelf: 'flex-start',
   marginLeft: 'auto',
-  marginTop: theme.spacing(2),
   [theme.breakpoints.down('md')]: {
     marginLeft: 'unset',
     marginTop: theme.spacing(2),
