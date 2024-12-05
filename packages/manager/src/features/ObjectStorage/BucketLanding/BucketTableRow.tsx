@@ -107,7 +107,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
       </Hidden>
       <StyledBucketSizeCell noWrap>
         <Typography data-qa-size variant="body1">
-          {/* to convert the Bytes to equivalent MB/GB we need to pass the base10 flag as true */}
+          {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
           {readableBytes(size, { base10: true }).formatted}
         </Typography>
       </StyledBucketSizeCell>

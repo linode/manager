@@ -172,7 +172,7 @@ export const OMC_BucketLanding = () => {
             variant="body1"
           >
             Total storage used:{' '}
-            {/* to convert the Bytes to equivalent MB/GB we need to pass the base10 flag as true */}
+            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
             {readableBytes(totalUsage, { base10: true }).formatted}
           </Typography>
         ) : null}
