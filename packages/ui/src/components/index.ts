@@ -10,6 +10,7 @@ export * from './ClickAwayListener';
 export * from './Divider';
 export * from './EditableText';
 export * from './FormControl';
+export * from './FormControlLabel';
 export * from './FormHelperText';
 export * from './H1Header';
 export * from './IconButton';
