@@ -2,9 +2,7 @@
 
 ### Added:
 
-- New IAM endpoints and types ([#11146](https://github.com/linode/manager/pull/11146))
 - Extend support for Object Storage in Support tickets ([#11178](https://github.com/linode/manager/pull/11178))
-- New IAM endpoints and types ([#11181](https://github.com/linode/manager/pull/11181))
 - Missing `+eq` type to `FilterConditionTypes` interface ([#11233](https://github.com/linode/manager/pull/11233))
 - New Accelerated-related fields and capabilities to API types ([#11256](https://github.com/linode/manager/pull/11256))
 - Placement Groups migrations Types ([#11261](https://github.com/linode/manager/pull/11261))
@@ -27,6 +25,7 @@
 - Add POST request endpoint for create alert in `alerts.ts`, add Alert, add CreateAlertPayload types ([#11255](https://github.com/linode/manager/pull/11255))
 - Add v4beta/account endpoint and update Capabilities for LKE-E ([#11259](https://github.com/linode/manager/pull/11259))
 - Add remaining new types and v4beta endpoints for LKE-E ([#11302](https://github.com/linode/manager/pull/11302))
+- New IAM endpoints and types ([#11146](https://github.com/linode/manager/pull/11146), [#11181](https://github.com/linode/manager/pull/11181))
 
 ## [2024-11-12] - v0.130.0
 
