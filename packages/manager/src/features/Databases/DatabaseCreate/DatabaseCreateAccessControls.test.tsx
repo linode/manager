@@ -25,7 +25,7 @@ describe('DatabaseCreateAccessControls', () => {
       />
     );
 
-    expect(getAllByText('Add Access Controls')).toHaveLength(1);
+    expect(getAllByText('Manage Access')).toHaveLength(1);
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(1);
     expect(getAllByTestId('button')).toHaveLength(1);
 
@@ -60,7 +60,7 @@ describe('DatabaseCreateAccessControls', () => {
       />
     );
 
-    expect(getAllByText('Add Access Controls')).toHaveLength(1);
+    expect(getAllByText('Manage Access')).toHaveLength(1);
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(3);
     expect(getAllByTestId('button')).toHaveLength(3);
 
@@ -91,7 +91,7 @@ describe('DatabaseCreateAccessControls', () => {
       />
     );
 
-    expect(getAllByText('Add Access Controls')).toHaveLength(1);
+    expect(getAllByText('Manage Access')).toHaveLength(1);
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(1);
     expect(getAllByTestId('button')).toHaveLength(1);
 
