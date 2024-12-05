@@ -860,7 +860,7 @@ describe('LKE cluster updates', () => {
     });
   });
 
-  it.only('can add and delete node pool tags', () => {
+  it('can add and delete node pool tags', () => {
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
     });
@@ -887,7 +887,7 @@ describe('LKE cluster updates', () => {
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait(['@getCluster', '@getNodePoolsNoTags', '@getVersions']);
 
-    cy.get('[data-qa-node-pool-id="1"]').within(() => {
+    cy.get(`[data-qa-node-pool-id="${mockNodePoolNoTags.id}"]`).within(() => {
       ui.button.findByTitle('Add a tag').should('be.visible').click();
 
       cy.findByLabelText('Create or Select a Tag')
