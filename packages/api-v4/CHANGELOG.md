@@ -1,5 +1,34 @@
-## [2024-11-12] - v0.130.0
+## [2024-12-10] - v0.131.0
 
+### Added:
+
+- New IAM endpoints and types ([#11146](https://github.com/linode/manager/pull/11146))
+- Extend support for Object Storage in Support tickets ([#11178](https://github.com/linode/manager/pull/11178))
+- New IAM endpoints and types ([#11181](https://github.com/linode/manager/pull/11181))
+- Missing `+eq` type to `FilterConditionTypes` interface ([#11233](https://github.com/linode/manager/pull/11233))
+- New VPU related fields and capabilities to API types ([#11256](https://github.com/linode/manager/pull/11256))
+- Placement Groups migrations Types ([#11261](https://github.com/linode/manager/pull/11261))
+- `service_type` as parameter for the Create Alert POST request ([#11286](https://github.com/linode/manager/pull/11286))
+
+### Removed:
+
+- `deleted` from the `ImageStatus` type ([#11257](https://github.com/linode/manager/pull/11257))
+
+### Tech Stories:
+
+- Update yup from `0.32.9` to `1.4.0` (#11324)
+- Add Linter rules for naming convention ([#11337](https://github.com/linode/manager/pull/11337))
+- Update Linter rules for common PR feedback points (#11258)
+- Remove recently added camelCase rule ([#11330](https://github.com/linode/manager/pull/11330))
+
+### Upcoming Features:
+
+- Modify `chart_type` property type in `types.ts` ([#11204](https://github.com/linode/manager/pull/11204))
+- Add POST request endpoint for create alert in `alerts.ts`, add Alert, add CreateAlertPayload types ([#11255](https://github.com/linode/manager/pull/11255))
+- Add v4beta/account endpoint and update Capabilities for LKE-E ([#11259](https://github.com/linode/manager/pull/11259))
+- Add remaining new types and v4beta endpoints for LKE-E ([#11302](https://github.com/linode/manager/pull/11302))
+
+## [2024-11-12] - v0.130.0
 
 ### Added:
 
@@ -17,9 +46,7 @@
 
 - DBaaS: Modify update payload to include version, add patch API ([#11196](https://github.com/linode/manager/pull/11196))
 
-
 ## [2024-10-28] - v0.129.0
-
 
 ### Added:
 
@@ -54,7 +81,6 @@
 
 ## [2024-09-30] - v0.127.0
 
-
 ### Changed:
 
 - Make `replication_type` and `replication_commit_type` optional in MySQL and Postgres interfaces ([#10980](https://github.com/linode/manager/pull/10980))
@@ -69,7 +95,6 @@
 - DBaaS V2 readonly hosts ([#10939](https://github.com/linode/manager/pull/10939))
 
 ## [2024-09-16] - v0.126.0
-
 
 ### Added:
 
@@ -86,7 +111,6 @@
 
 ## [2024-09-03] - v0.125.0
 
-
 ### Added:
 
 - Managed Databases V2 capability and types ([#10786](https://github.com/linode/manager/pull/10786))
@@ -100,7 +124,6 @@
 
 - Update `AclpConfig` type ([#10769](https://github.com/linode/manager/pull/10769))
 - Add service types and `getCloudPulseServiceTypes` request ([#10805](https://github.com/linode/manager/pull/10805))
-
 
 ## [2024-08-19] - v0.124.0
 
