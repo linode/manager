@@ -1,10 +1,13 @@
 import {
+  Autocomplete,
   Button,
   FormControl,
+  FormControlLabel,
   Notice,
   Radio,
   RadioGroup,
   TooltipIcon,
+  Typography,
 } from '@linode/ui';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
@@ -13,9 +16,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';

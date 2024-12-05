@@ -1,8 +1,7 @@
-import { CircleProgress, Divider, Paper, Stack } from '@linode/ui';
+import { CircleProgress, Divider, Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Typography } from 'src/components/Typography';
 
 import BetaDetails from './BetaDetails';
 

@@ -1,5 +1,4 @@
-import { Button } from '@linode/ui';
-import { Box, Paper } from '@linode/ui';
+import { Box, Button, Paper } from '@linode/ui';
 import * as React from 'react';
 import {
   Redirect,
@@ -85,12 +84,9 @@ export const AlertsLanding = React.memo(() => {
         <Switch>
           <Route
             component={AlertDefinitionLanding}
-            path={'/monitor/cloudpulse/alerts/definitions'}
+            path={'/monitor/alerts/definitions'}
           />
-          <Redirect
-            from="/monitor/cloudpulse/alerts"
-            to="/monitor/cloudpulse/alerts/definitions"
-          />
+          <Redirect from="*" to="/monitor/alerts/definitions" />
         </Switch>
       </Tabs>
     </Paper>

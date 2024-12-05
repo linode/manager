@@ -131,8 +131,8 @@ describe('format number', () => {
 
 describe('formatting', () => {
   it('formatPercent adds percent sign', () => {
-    expect(formatPercentage(12)).toBe('12.00%');
-    expect(formatPercentage(0)).toBe('0.00%');
-    expect(formatPercentage(123456789)).toBe('123456789.00%');
+    expect(formatPercentage(12)).toBe('12.00 %');
+    expect(formatPercentage(0)).toBe('0.00 %');
+    expect(formatPercentage(123456789)).toBe('123456789.00 %');
   });
 });

@@ -1,8 +1,6 @@
-import { TooltipIcon } from '@linode/ui';
+import { TooltipIcon, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 interface Props {
   dataTestId: string;

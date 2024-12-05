@@ -2,19 +2,19 @@ import { transformUrl } from './usePendo';
 
 const ID_URLS = [
   {
-    expectedTransform: 'https://cloud.linode.com/nodebalancers/XXXX',
+    expectedTransform: 'https://cloud.linode.com/nodebalancers/*',
     position: 'end',
     url: 'https://cloud.linode.com/nodebalancers/123',
   },
   {
     expectedTransform:
-      'https://cloud.linode.com/nodebalancers/XXXX/configurations',
+      'https://cloud.linode.com/nodebalancers/*/configurations',
     position: 'middle',
     url: 'https://cloud.linode.com/nodebalancers/123/configurations',
   },
   {
     expectedTransform:
-      'https://cloud.linode.com/nodebalancers/XXXX/configurations/XXXX',
+      'https://cloud.linode.com/nodebalancers/*/configurations/*',
     position: 'multiple',
     url: 'https://cloud.linode.com/nodebalancers/123/configurations/456',
   },
@@ -37,23 +37,20 @@ const USERNAME_URLS = [
 
 const OBJ_URLS = [
   {
-    expectedTransform:
-      'http://cloud.linode.com/object-storage/buckets/XXXX/XXXX',
+    expectedTransform: 'http://cloud.linode.com/object-storage/buckets/*/*',
     path: 'us-west/abc123',
   },
   {
-    expectedTransform:
-      'http://cloud.linode.com/object-storage/buckets/XXXX/XXXX/ssl',
+    expectedTransform: 'http://cloud.linode.com/object-storage/buckets/*/*/ssl',
     path: 'us-west/abc123/ssl',
   },
   {
-    expectedTransform:
-      'http://cloud.linode.com/object-storage/buckets/XXXX/XXXX',
+    expectedTransform: 'http://cloud.linode.com/object-storage/buckets/*/*',
     path: 'us-west/123abc',
   },
   {
     expectedTransform:
-      'http://cloud.linode.com/object-storage/buckets/XXXX/XXXX/access',
+      'http://cloud.linode.com/object-storage/buckets/*/*/access',
     path: 'us-west/123abc/access',
   },
 ];

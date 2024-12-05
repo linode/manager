@@ -1,10 +1,9 @@
-import { Divider } from '@linode/ui';
+import { Divider, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
-import { Typography } from 'src/components/Typography';
 
 import type { Theme } from '@mui/material/styles';
 import type {

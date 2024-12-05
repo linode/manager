@@ -1,12 +1,11 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
 import * as React from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { Typography } from 'src/components/Typography';
 import { useRestoreFromBackupMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

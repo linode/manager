@@ -1,8 +1,6 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-
-import { Typography } from 'src/components/Typography';
 
 export const StyledResultsWrapper = styled('div', {
   label: 'StyledResultsWrapper',

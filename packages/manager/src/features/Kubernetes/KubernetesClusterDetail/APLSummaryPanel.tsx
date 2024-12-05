@@ -1,11 +1,10 @@
-import { Paper } from '@linode/ui';
+import { Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import axios from 'axios';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import type { Theme } from '@mui/material/styles';

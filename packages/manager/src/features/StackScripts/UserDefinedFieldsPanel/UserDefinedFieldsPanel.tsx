@@ -1,11 +1,10 @@
-import { Box, Divider, Notice } from '@linode/ui';
+import { Box, Divider, Notice, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { RenderGuard } from 'src/components/RenderGuard';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
-import { Typography } from 'src/components/Typography';
 import {
   getIsUDFHeader,
   getIsUDFMultiSelect,

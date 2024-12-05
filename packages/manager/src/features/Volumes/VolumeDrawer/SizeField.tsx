@@ -3,12 +3,12 @@ import {
   CircleProgress,
   FormHelperText,
   InputAdornment,
+  TextField,
+  Typography,
 } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useVolumeTypesQuery } from 'src/queries/volumes/volumes';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';

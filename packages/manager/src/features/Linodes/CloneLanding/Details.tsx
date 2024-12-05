@@ -1,13 +1,18 @@
-import { Button, Divider, Notice, Paper } from '@linode/ui';
+import {
+  Button,
+  Divider,
+  List,
+  ListItem,
+  Notice,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
-import { Typography } from 'src/components/Typography';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 

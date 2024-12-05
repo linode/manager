@@ -55,9 +55,16 @@ interface XAxisProps {
   tickFormat: string;
 
   /**
-   * represents the pixer gap between two x-axis ticks
+   * represents the pixel gap between two x-axis ticks
    */
   tickGap: number;
+}
+
+interface YAxisProps {
+  /**
+   * The formatter function for the y-axis tick.
+   */
+  tickFormat: (value: number) => string;
 }
 
 export interface AreaChartProps {
@@ -67,7 +74,7 @@ export interface AreaChartProps {
   areas: AreaProps[];
 
   /**
-   * arialabel for the graph
+   * aria-label for the graph
    */
   ariaLabel: string;
 
@@ -154,6 +161,11 @@ export interface AreaChartProps {
    * non-zero value : this many ticks will be generated based on the starting & ending timestamp in the data
    */
   xAxisTickCount?: number;
+
+  /**
+   * y-axis properties
+   */
+  yAxisProps?: YAxisProps;
 }
 
 export const AreaChart = (props: AreaChartProps) => {
@@ -176,6 +188,7 @@ export const AreaChart = (props: AreaChartProps) => {
     width = '100%',
     xAxis,
     xAxisTickCount,
+    yAxisProps,
   } = props;
 
   const theme = useTheme();
@@ -254,7 +267,7 @@ export const AreaChart = (props: AreaChartProps) => {
   };
 
   return (
-    <Box data-testid="areachart-wrapper">
+    <>
       <ResponsiveContainer height={height} width={width}>
         <_AreaChart aria-label={ariaLabel} data={data} margin={margin}>
           <CartesianGrid
@@ -277,7 +290,12 @@ export const AreaChart = (props: AreaChartProps) => {
             tickFormatter={xAxisTickFormatter}
             type="number"
           />
-          <YAxis stroke={theme.color.label} tickFormatter={humanizeLargeData} />
+          <YAxis
+            tickFormatter={
+              yAxisProps?.tickFormat ? yAxisProps.tickFormat : humanizeLargeData
+            }
+            stroke={theme.color.label}
+          />
           <Tooltip
             contentStyle={{
               color: theme.tokens.color.Neutrals[70],
@@ -333,7 +351,7 @@ export const AreaChart = (props: AreaChartProps) => {
         timezone={timezone}
         unit={unit}
       />
-    </Box>
+    </>
   );
 };
 

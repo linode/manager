@@ -1,4 +1,4 @@
-import { Box, Chip, Stack, StyledActionButton } from '@linode/ui';
+import { Box, Chip, Stack, StyledActionButton, Typography } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -10,7 +10,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
-import { Typography } from 'src/components/Typography';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { getKubeControlPlaneACL } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
@@ -186,12 +185,12 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         open={drawerOpen}
       />
       <KubeControlPlaneACLDrawer
+        aclData={aclData}
         closeDrawer={() => setControlPlaneACLDrawerOpen(false)}
         clusterId={cluster.id}
         clusterLabel={cluster.label}
         clusterMigrated={!isErrorKubernetesACL}
         open={isControlPlaneACLDrawerOpen}
-        showControlPlaneACL={!!showControlPlaneACL}
       />
       <DeleteKubernetesClusterDialog
         clusterId={cluster.id}

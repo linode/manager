@@ -214,6 +214,11 @@ export const darkTheme: ThemeOptions = {
     },
     MuiAutocomplete: {
       styleOverrides: {
+        input: {
+          '&::selection': {
+            backgroundColor: customDarkModeOptions.bg.appBar,
+          },
+        },
         listbox: {
           backgroundColor: customDarkModeOptions.bg.white,
           border: `1px solid ${primaryColors.main}`,
@@ -227,11 +232,6 @@ export const darkTheme: ThemeOptions = {
         tag: {
           '.MuiChip-deleteIcon': { color: primaryColors.text },
           backgroundColor: customDarkModeOptions.bg.lightBlue1,
-        },
-        input: {
-          '&::selection': {
-            backgroundColor: customDarkModeOptions.bg.appBar,
-          },
         },
       },
     },

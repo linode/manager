@@ -1,10 +1,15 @@
-import { Box, Notice, Paper, Stack } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Notice,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Typography } from 'src/components/Typography';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import { AppsList } from './AppsList';

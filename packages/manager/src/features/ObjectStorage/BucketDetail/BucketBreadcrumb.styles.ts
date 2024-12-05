@@ -1,7 +1,7 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Typography } from 'src/components/Typography';
 
 export const StyledRootContainer = styled('div', {
   label: 'StyledRootContainer',
@@ -17,10 +17,10 @@ export const StyledPrefixWrapper = styled('div', {
   display: 'flex',
   overflow: 'auto',
   padding: `${theme.spacing(1)} ${theme.spacing(1)}`,
-  whiteSpace: 'nowrap',
   [theme.breakpoints.down('lg')]: {
     marginLeft: theme.spacing(1),
   },
+  whiteSpace: 'nowrap',
 }));
 
 export const StyledSlash = styled(Typography, {

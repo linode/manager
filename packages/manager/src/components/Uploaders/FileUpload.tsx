@@ -1,10 +1,9 @@
-import { Button, Tooltip } from '@linode/ui';
+import { Button, Tooltip, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import CautionIcon from 'src/assets/icons/caution.svg';
 import FileUploadComplete from 'src/assets/icons/fileUploadComplete.svg';
 import { LinearProgress } from 'src/components/LinearProgress';
-import { Typography } from 'src/components/Typography';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import {
