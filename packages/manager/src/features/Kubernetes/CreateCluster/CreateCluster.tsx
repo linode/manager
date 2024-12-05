@@ -61,7 +61,6 @@ import type {
   CreateNodePoolData,
   KubeNodePoolResponse,
   KubernetesTier,
-  KubernetesTieredVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
@@ -74,9 +73,6 @@ export const CreateCluster = () => {
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
   const [version, setVersion] = React.useState<string | undefined>();
-  const [tieredVersions, setTieredVersions] = React.useState<
-    KubernetesTieredVersion[]
-  >();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
@@ -110,15 +106,7 @@ export const CreateCluster = () => {
   } = useKubernetesTypesQuery();
 
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
-    if (tier === 'enterprise') {
-      setHighAvailability(false);
-    }
     setSelectedTier(tier);
-    setTieredVersions(
-      tier === 'enterprise'
-        ? enterpriseTierVersionData
-        : standardTierVersionData
-    );
   };
 
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
@@ -145,12 +133,9 @@ export const CreateCluster = () => {
   const {
     data: versionData,
     isError: versionLoadError,
+    isLoading: versionLoading,
   } = useKubernetesVersionQuery();
 
-  const {
-    data: standardTierVersionData,
-    isLoading: standardTierVersionDataIsLoading,
-  } = useKubernetesTieredVersionsQuery('standard');
   const {
     data: enterpriseTierVersionData,
     isLoading: enterpriseTierVersionDataIsLoading,
@@ -166,20 +151,15 @@ export const CreateCluster = () => {
    * If LKE-E is disabled, use the data from the existing /versions endpoint.
    * @todo LKE-E: Clean up use of versionData once LKE-E is in GA.
    */
-  const _versionData = isLkeEnterpriseLAFeatureEnabled
-    ? tieredVersions
-    : versionData;
+  const _versionData =
+    isLkeEnterpriseLAFeatureEnabled && selectedTier === 'enterprise'
+      ? enterpriseTierVersionData
+      : versionData;
 
   const versions = (_versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
     value: thisVersion.id,
   }));
-
-  React.useEffect(() => {
-    if (isLkeEnterpriseLAFeatureEnabled && selectedTier === 'standard') {
-      setTieredVersions(standardTierVersionData);
-    }
-  }, [versions]);
 
   React.useEffect(() => {
     if (versions.length > 0) {
@@ -404,9 +384,9 @@ export const CreateCluster = () => {
           <Divider sx={{ marginTop: 4 }} />
           <Autocomplete
             loading={
-              isLkeEnterpriseLAFeatureEnabled &&
-              (enterpriseTierVersionDataIsLoading ||
-                standardTierVersionDataIsLoading)
+              versionLoading ||
+              (isLkeEnterpriseLAFeatureEnabled &&
+                enterpriseTierVersionDataIsLoading)
             }
             onChange={(_, selected) => {
               setVersion(selected?.value);
