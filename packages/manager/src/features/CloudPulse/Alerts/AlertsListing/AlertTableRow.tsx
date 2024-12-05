@@ -1,4 +1,5 @@
 import { Typography } from '@linode/ui';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -9,7 +10,6 @@ import { capitalize } from 'src/utilities/capitalize';
 import { AlertActionMenu } from './AlertActionMenu';
 
 import type { Alert } from '@linode/api-v4';
-import { useTheme } from '@mui/material';
 
 interface Props {
   /**
