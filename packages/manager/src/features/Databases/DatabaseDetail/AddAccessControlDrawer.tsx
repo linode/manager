@@ -7,6 +7,12 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
+import {
+  ACCESS_CONTROLS_DRAWER_TEXT,
+  ACCESS_CONTROLS_DRAWER_TEXT_LEGACY,
+  LEARN_MORE_LINK,
+  LEARN_MORE_LINK_LEGACY,
+} from 'src/features/Databases/constants';
 import { isDefaultDatabase } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
@@ -171,9 +177,7 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
     }
   }, [open, resetForm]);
 
-  const learnMoreLink = isDefaultDB
-    ? 'https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#ipv6-support'
-    : 'https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls';
+  const learnMoreLink = isDefaultDB ? LEARN_MORE_LINK : LEARN_MORE_LINK_LEGACY;
   return (
     <Drawer onClose={onClose} open={open} title="Manage Access">
       <React.Fragment>
@@ -189,9 +193,9 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
           : null}
         <Typography className={classes.instructions} variant="body1">
           {isDefaultDB
-            ? 'Add, edit, or remove IPv6 (recommended) or IPv4 addresses or ranges that should be authorized to access your cluster.'
-            : 'Add, edit, or remove IPv4 addresses and ranges that should be authorized to access your cluster.'}{' '}
-          <Link to={learnMoreLink}>Learn more</Link>
+            ? ACCESS_CONTROLS_DRAWER_TEXT
+            : ACCESS_CONTROLS_DRAWER_TEXT_LEGACY}{' '}
+          <Link to={learnMoreLink}>Learn more</Link>.
         </Typography>
         <form onSubmit={handleSubmit}>
           <MultipleIPInput
