@@ -19,7 +19,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@hookform/resolvers": "2.9.11",
+    "@hookform/resolvers": "3.9.1",
     "@linode/api-v4": "*",
     "@linode/design-language-system": "^2.6.1",
     "@linode/search": "*",

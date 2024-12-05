@@ -148,14 +148,13 @@ export interface CreateAlertDefinitionPayload {
   rule_criteria: {
     rules: MetricCriteria[];
   };
-  triggerCondition: TriggerCondition;
+  trigger_condition: TriggerCondition;
   channel_ids: number[];
 }
 export interface MetricCriteria {
   metric: string;
   aggregation_type: MetricAggregationType;
   operator: MetricOperatorType;
-  value: number;
   dimension_filters: DimensionFilter[];
 }
 
