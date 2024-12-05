@@ -1,9 +1,8 @@
+import { convertToKebabCase } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 import ReactSelect from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-
-import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 import { DropdownIndicator } from './components/DropdownIndicator';
 import Input from './components/Input';
@@ -17,6 +16,7 @@ import Control from './components/SelectControl';
 import { SelectPlaceholder as Placeholder } from './components/SelectPlaceholder';
 import { reactSelectStyles, useStyles } from './Select.styles';
 
+import type { TextFieldProps } from '@linode/ui';
 import type { Theme } from '@mui/material';
 import type {
   ActionMeta,
@@ -24,7 +24,6 @@ import type {
   ValueType,
 } from 'react-select';
 import type { CreatableProps as CreatableSelectProps } from 'react-select/creatable';
-import type { TextFieldProps } from 'src/components/TextField';
 
 export interface Item<T = number | string, L = string> {
   data?: any;

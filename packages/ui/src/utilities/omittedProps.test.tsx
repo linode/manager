@@ -2,6 +2,7 @@
 import styled from '@emotion/styled';
 import '@testing-library/jest-dom/vitest';
 import { describe, expect, it } from 'vitest';
+
 import { omitProps, omittedProps } from './omittedProps';
 
 type StyledProps = {

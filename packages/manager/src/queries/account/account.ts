@@ -11,6 +11,7 @@ import {
 import { useSnackbar } from 'notistack';
 
 import { useIsTaxIdEnabled } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import { queryPresets } from '../base';
@@ -33,6 +34,21 @@ export const useAccount = () => {
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
     enabled: !profile?.restricted,
+  });
+};
+
+/**
+ * @TODO LKE-E - M3-8838: Clean up after released to GA, if not otherwise in use
+ */
+export const useAccountBeta = () => {
+  const { data: profile } = useProfile();
+  const flags = useFlags();
+
+  return useQuery<Account, APIError[]>({
+    ...accountQueries.accountBeta,
+    ...queryPresets.oneTimeFetch,
+    ...queryPresets.noRetry,
+    enabled: !profile?.restricted && flags.lkeEnterprise?.enabled,
   });
 };
 

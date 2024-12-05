@@ -262,6 +262,11 @@ export const updateBucketAccess = (
     setData(params, UpdateBucketAccessSchema)
   );
 
+/**
+ * getObjectStorageEndpoints
+ *
+ * Returns a list of Object Storage Endpoints.
+ */
 export const getObjectStorageEndpoints = ({ filter, params }: RequestOptions) =>
   Request<Page<ObjectStorageEndpoint>>(
     setMethod('GET'),

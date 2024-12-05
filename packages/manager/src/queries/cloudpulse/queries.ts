@@ -22,6 +22,10 @@ import type {
 const key = 'Clousepulse';
 
 export const queryFactory = createQueryKeys(key, {
+  alerts: {
+    // This query key is a placeholder , it will be updated once the relevant queries are added
+    queryKey: null,
+  },
   dashboardById: (dashboardId: number) => ({
     queryFn: () => getDashboardById(dashboardId),
     queryKey: [dashboardId],
@@ -80,6 +84,6 @@ export const queryFactory = createQueryKeys(key, {
 
   token: (serviceType: string | undefined, request: JWETokenPayLoad) => ({
     queryFn: () => getJWEToken(request, serviceType!),
-    queryKey: [serviceType],
+    queryKey: [serviceType, { resource_ids: request.resource_ids.sort() }],
   }),
 });

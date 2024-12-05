@@ -39,6 +39,7 @@ export const PlacementGroupsLandingEmptyState = ({
       headers={headers}
       icon={LinodeIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
+      wide
     />
   );
 };

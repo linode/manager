@@ -52,3 +52,74 @@ The Linode Create Page is a good example of a complex form that is built using r
 ### Uncontrolled Forms
 Uncontrolled forms are a type of form that does not have a state for its values. It is often used for simple forms that do not need to be controlled, such as forms with a single input field or call to action.
 
+## Form Validation (React Hook Form)
+### Best Practices
+1. Keep API validation in `@linode/validation` package
+2. Create extended schemas in `@linode/manager` package when you need validation beyond the API contract
+3. Use yup.concat() to extend existing schemas
+4. Add custom validation logic within the resolver function
+5. Include type definitions for form values and context
+
+### Simple Schema Extension
+For basic form validation, extend the API schema directly:
+
+```typescript
+import { CreateWidgetSchema } from '@linode/validation';
+import { object, string } from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const extendedSchema = CreateWidgetSchema.concat(
+  object({
+    customField: string().required('Required field'),
+  })
+);
+
+const form = useForm({
+  resolver: yupResolver(extendedSchema)
+});
+```
+
+### Complex Schema Extensions
+You may create a `resolver` function that handles the validation (see: [ManageImageRegionsForm.tsx](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Images/ImagesLanding/ImageRegions/ManageImageRegionsForm.tsx#L189-L213)):
+
+```typescript
+// Step 1: Create a Resolver Function
+// This function validates your form data against specific requirements
+
+type Resolver<FormData, Context> = (values: FormData, context: Context) => {
+  errors: Record<string, any>;
+  values: FormData;
+};
+
+// Example resolver that checks if at least one item from a list is selected
+const resolver: Resolver<YourFormData, YourContext> = (values, context) => {
+  // Check if at least one valid option is selected
+  const hasValidSelection = values.selectedItems.some(
+    item => context.availableItems.includes(item)
+  );
+
+  if (!hasValidSelection) {
+    return {
+      errors: {
+        selectedItems: {
+          message: 'Please select at least one valid option',
+          type: 'validate'
+        }
+      },
+      values
+    };
+  }
+
+  return { errors: {}, values };
+};
+
+// Step 2: Use the Resolver in Your Form
+const form = useForm({
+  resolver,
+  defaultValues: { selectedItems: [] },
+  context: { availableItems: ['item1', 'item2'] }
+});
+```
+
+### Additional Complexity
+When working with multiple sequential schemas that require validation, you can create a resolver map and function (see: [LinodeCreate/resolvers.ts](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Linodes/LinodeCreate/resolvers.ts])).

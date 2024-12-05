@@ -1,14 +1,13 @@
+import { TextField } from '@linode/ui';
 import * as React from 'react';
-import { ControlProps } from 'react-select';
 
-import { TextField } from 'src/components/TextField';
+import type { ControlProps } from 'react-select';
 
 type Props = ControlProps<any, any>;
 
 const SelectControl: React.FC<Props> = (props) => {
   return (
     <TextField
-      placeholder={props.selectProps.placeholder}
       InputProps={{
         inputComponent: 'div',
         inputProps: {
@@ -24,6 +23,7 @@ const SelectControl: React.FC<Props> = (props) => {
           : props.selectProps.placeholder
       }
       fullWidth
+      placeholder={props.selectProps.placeholder}
       {...props.selectProps.textFieldProps}
     />
   );

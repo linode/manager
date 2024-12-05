@@ -1,15 +1,17 @@
-import { FormControl } from '@linode/ui';
-import { FormHelperText } from '@linode/ui';
+import {
+  Autocomplete,
+  FormControl,
+  FormHelperText,
+  Notice,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from '@linode/ui';
-import { Typography } from 'src/components/Typography';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,

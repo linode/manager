@@ -14,8 +14,8 @@ export const createDatabaseSchema = object({
   cluster_size: number()
     .oneOf([1, 2, 3], 'Nodes are required')
     .required('Nodes are required'),
-  replication_type: string().notRequired().nullable(true), // TODO (UIE-8214) remove POST GA
-  replication_commit_type: string().notRequired().nullable(true), // TODO (UIE-8214) remove POST GA
+  replication_type: string().notRequired().nullable(), // TODO (UIE-8214) remove POST GA
+  replication_commit_type: string().notRequired().nullable(), // TODO (UIE-8214) remove POST GA
 });
 
 export const updateDatabaseSchema = object({
@@ -28,8 +28,8 @@ export const updateDatabaseSchema = object({
       duration: number(),
       hour_of_day: number(),
       day_of_week: number(),
-      week_of_month: number().nullable(true),
+      week_of_month: number().nullable(),
     })
-    .nullable(true),
+    .nullable(),
   type: string().notRequired(),
 });

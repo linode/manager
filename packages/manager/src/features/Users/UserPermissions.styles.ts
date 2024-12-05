@@ -1,8 +1,7 @@
-import { Paper } from '@linode/ui';
+import { CircleProgress, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import Select from 'src/components/EnhancedSelect/Select';
 
 export const StyledSelect = styled(Select, {

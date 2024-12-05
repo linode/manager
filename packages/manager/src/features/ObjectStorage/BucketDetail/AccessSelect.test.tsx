@@ -38,8 +38,8 @@ describe('AccessSelect', () => {
     ['bucket', 'E1', true],
     ['bucket', 'E2', false],
     ['bucket', 'E3', false],
-    ['object', 'E0', true],
-    ['object', 'E1', true],
+    ['object', 'E0', false],
+    ['object', 'E1', false],
     ['object', 'E2', false],
     ['object', 'E3', false],
   ])(

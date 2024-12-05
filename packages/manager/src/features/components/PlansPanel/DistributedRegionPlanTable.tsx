@@ -1,9 +1,6 @@
-import { Box, Paper } from '@linode/ui';
+import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
-
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 

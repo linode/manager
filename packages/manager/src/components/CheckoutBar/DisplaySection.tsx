@@ -1,6 +1,5 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 import { StyledCheckoutSection, SxTypography } from './styles';
 

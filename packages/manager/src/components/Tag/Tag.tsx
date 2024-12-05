@@ -6,7 +6,7 @@ import { truncateEnd } from 'src/utilities/truncate';
 
 import { StyledChip, StyledDeleteButton } from './Tag.styles';
 
-import type { ChipProps } from 'src/components/Chip';
+import type { ChipProps } from '@linode/ui';
 
 type Variants = 'blue' | 'lightBlue';
 

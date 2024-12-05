@@ -1,11 +1,14 @@
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import type { SxProps, Theme } from '@mui/material/styles';
+import VisibilityHideIcon from 'src/assets/icons/visibilityHide.svg';
+import VisibilityShowIcon from 'src/assets/icons/visibilityShow.svg';
+
 import { IconButton } from '../IconButton';
-import { Tooltip, TooltipProps } from '../Tooltip';
+import { Tooltip } from '../Tooltip';
+
+import type { TooltipProps } from '../Tooltip';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface Props {
   /**
@@ -17,32 +20,33 @@ interface Props {
    */
   isVisible: boolean;
   /**
-   * Additional styles to apply to the component.
-   */
-  sx?: SxProps<Theme>;
-  /**
    * The placement of the tooltip.
    */
   placement?: TooltipProps['placement'];
+  /**
+   * Additional styles to apply to the component.
+   */
+  sx?: SxProps<Theme>;
 }
 /**
  * Toggle-able visibility icon with tooltip on hover
  */
 export const VisibilityTooltip = (props: Props) => {
-  const { handleClick, isVisible, sx, placement } = props;
+  const { handleClick, isVisible, placement, sx } = props;
 
   return (
     <Tooltip
-      sx={sx}
-      title={!isVisible ? 'Show' : 'Hide'}
+      data-testid="VisibilityTooltip"
       disableInteractive
       placement={placement ?? 'top'}
+      sx={sx}
+      title={!isVisible ? 'Show' : 'Hide'}
     >
       <StyledToggleButton onClick={handleClick}>
         {!isVisible ? (
-          <VisibilityIcon aria-label="Show" />
+          <VisibilityShowIcon aria-label="Show" />
         ) : (
-          <VisibilityOffIcon aria-label="Hide" />
+          <VisibilityHideIcon aria-label="Hide" />
         )}
       </StyledToggleButton>
     </Tooltip>
@@ -53,13 +57,15 @@ const StyledToggleButton = styled(IconButton, {
   label: 'StyledToggleButton',
 })(({ theme }) => ({
   '& svg': {
-    color: theme.palette.grey[500],
-    fontSize: '0.875rem',
+    '& path': {
+      stroke: theme.palette.grey[500],
+    },
   },
   '& svg:hover': {
-    color: theme.palette.primary.main,
+    '& path': {
+      stroke: theme.palette.primary.main,
+    },
   },
-  fontSize: '0.875rem',
   marginLeft: theme.spacing(),
   minHeight: 'auto',
   minWidth: 'auto',

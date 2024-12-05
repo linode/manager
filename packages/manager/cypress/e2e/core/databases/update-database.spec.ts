@@ -97,14 +97,17 @@ const manageAccessControl = (allowedIps: string[], existingIps: number = 0) => {
   cy.findByTestId('button-access-control').click();
 
   ui.drawer
-    .findByTitle('Manage Access Controls')
+    .findByTitle('Manage Access')
     .should('be.visible')
     .within(() => {
       allowedIps.forEach((allowedIp, index) => {
-        ui.button.findByTitle('Add an IP').click();
-
+        if (existingIps > 0) {
+          ui.button.findByTitle('Add Another IP').click();
+        } else {
+          ui.button.findByTitle('Add an IP').click();
+        }
         cy.findByLabelText(
-          `Allowed IP Address(es) or Range(s) ip-address-${index + existingIps}`
+          `Allowed IP Addresses or Ranges ip-address-${index + existingIps}`
         )
           .click()
           .type(allowedIp);
@@ -371,7 +374,7 @@ describe('Update database clusters', () => {
 
           manageAccessControl([randomIp()], 1);
           cy.wait('@updateDatabase');
-          ui.drawer.findByTitle('Manage Access Controls').within(() => {
+          ui.drawer.findByTitle('Manage Access').within(() => {
             cy.findByText(errorMessage).should('be.visible');
             ui.drawerCloseButton.find().click();
           });

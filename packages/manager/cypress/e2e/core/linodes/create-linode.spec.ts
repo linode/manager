@@ -12,13 +12,20 @@ import { authenticate } from 'support/api/authentication';
 import {
   interceptCreateLinode,
   mockCreateLinodeError,
+  mockCreateLinode,
+  mockGetLinodeDisks,
+  mockGetLinodeType,
+  mockGetLinodeTypes,
+  mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
 import { interceptGetProfile } from 'support/intercepts/profile';
 import { Region, VLAN, Config, Disk } from '@linode/api-v4';
 import { getRegionById } from 'support/util/regions';
 import {
+  accountFactory,
   linodeFactory,
   linodeConfigFactory,
+  linodeTypeFactory,
   VLANFactory,
   vpcFactory,
   subnetFactory,
@@ -27,18 +34,11 @@ import {
   LinodeConfigInterfaceFactoryWithVPC,
 } from 'src/factories';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
-import {
-  mockGetLinodeType,
-  mockGetLinodeTypes,
-} from 'support/intercepts/linodes';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
-import {
-  mockCreateLinode,
-  mockGetLinodeDisks,
-  mockGetLinodeVolumes,
-} from 'support/intercepts/linodes';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import {
   fbtClick,
@@ -47,7 +47,7 @@ import {
   getVisible,
   containsVisible,
 } from 'support/helpers';
-import {} from 'support/helpers';
+
 let username: string;
 
 authenticate();
@@ -85,6 +85,7 @@ describe('Create Linode', () => {
           planId: 'g7-premium-2',
         },
         // TODO Include GPU plan types.
+        // TODO Include Accelerated plan types (when they're no longer as restricted)
       ].forEach((planConfig) => {
         /*
          * - Parameterized end-to-end test to create a Linode for each plan type.
@@ -167,6 +168,107 @@ describe('Create Linode', () => {
             });
         });
       });
+    });
+  });
+
+  // Mocks creating an accelerated Linode due to accelerated linodes currently having limited deployment availability
+  // TODO: eventually transition this to an e2e test (in the above test)
+  it('creates a mock accelerated Linode and confirms response', () => {
+    // Create mocks
+    const linodeLabel = randomLabel();
+    const mockLinode = linodeFactory.build({
+      label: linodeLabel,
+      specs: {
+        accelerated_devices: 2,
+        disk: 51200,
+        gpus: 0,
+        memory: 2048,
+        transfer: 2000,
+        vcpus: 1,
+      },
+      type: 'accelerated-1',
+    });
+    const mockAcceleratedType = [
+      linodeTypeFactory.build({
+        id: 'accelerated-1',
+        label: 'accelerated-1',
+        class: 'accelerated',
+      }),
+    ];
+    const mockRegions = [
+      regionFactory.build({
+        capabilities: ['Linodes', 'Kubernetes', 'NETINT Quadra T1U'],
+        id: 'us-east',
+        label: 'Newark, NJ',
+      }),
+    ];
+    const linodeRegion = mockRegions[0];
+
+    // Create request intercepts
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['NETINT Quadra T1U'],
+      })
+    ).as('getAccount');
+    mockAppendFeatureFlags({
+      acceleratedPlans: {
+        linodePlans: true,
+        lkePlans: false,
+      },
+    }).as('getFeatureFlags');
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodeTypes([...mockAcceleratedType]).as('getLinodeTypes');
+    mockCreateLinode(mockLinode).as('createLinode');
+
+    cy.visitWithLogin('/linodes/create');
+    cy.wait([
+      '@getRegions',
+      '@getLinodeTypes',
+      '@getAccount',
+      '@getFeatureFlags',
+    ]);
+
+    // Set Linode label, OS, plan type, password, etc.
+    linodeCreatePage.setLabel(linodeLabel);
+    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectRegionById(linodeRegion.id);
+    linodeCreatePage.selectPlan('Accelerated', mockAcceleratedType[0].label);
+    linodeCreatePage.setRootPassword(randomString(32));
+
+    // Confirm information in summary is shown as expected.
+    cy.get('[data-qa-linode-create-summary]')
+      .scrollIntoView()
+      .within(() => {
+        cy.findByText('Debian 11').should('be.visible');
+        cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
+        cy.findByText(mockAcceleratedType[0].label).should('be.visible');
+      });
+
+    // Create Linode and confirm it's provisioned as expected.
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@createLinode').then((xhr) => {
+      const requestPayload = xhr.request.body;
+      const responsePayload = xhr.response?.body;
+
+      // Confirm that API request and response contain expected data
+      expect(requestPayload['label']).to.equal(linodeLabel);
+      expect(requestPayload['region']).to.equal(linodeRegion.id);
+      expect(requestPayload['type']).to.equal(mockAcceleratedType[0].id);
+
+      expect(responsePayload['label']).to.equal(linodeLabel);
+      expect(responsePayload['region']).to.equal(linodeRegion.id);
+      expect(responsePayload['type']).to.equal(mockAcceleratedType[0].id);
+
+      // Accelerated linodes: Confirm accelerated_devices value is returned as expected
+      expect(responsePayload['specs']).has.property('accelerated_devices', 2);
+
+      // Confirm that Cloud redirects to details page
+      cy.url().should('endWith', `/linodes/${responsePayload['id']}`);
     });
   });
 

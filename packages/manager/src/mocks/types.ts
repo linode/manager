@@ -52,6 +52,7 @@ export type MockPresetExtraGroup = {
 };
 export type MockPresetExtraId =
   | 'account:child-proxy'
+  | 'account:lke-enterprise-enabled'
   | 'account:managed-disabled'
   | 'account:managed-enabled'
   | 'account:parent'

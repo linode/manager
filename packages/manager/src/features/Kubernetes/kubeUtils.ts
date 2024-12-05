@@ -1,5 +1,7 @@
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccountBeta } from 'src/queries/account/account';
 import { useAccountBetaQuery } from 'src/queries/account/betas';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getBetaStatus } from 'src/utilities/betaUtils';
 import { sortByVersion } from 'src/utilities/sort-by';
 
@@ -183,4 +185,40 @@ export const getLatestVersion = (
   }
 
   return { label: `${latestVersion.value}`, value: `${latestVersion.value}` };
+};
+
+/**
+ * Hook to determine if the LKE-Enterprise feature should be visible to the user.
+ * Based on the user's account capability and the feature flag.
+ *
+ * @returns {boolean, boolean, boolean, boolean} - Whether the LKE-Enterprise flags are enabled for LA/GA and whether feature is enabled for LA/GA (flags + account capability).
+ */
+export const useIsLkeEnterpriseEnabled = () => {
+  const flags = useFlags();
+  const { data: account } = useAccountBeta();
+
+  const isLkeEnterpriseLAFlagEnabled = Boolean(
+    flags?.lkeEnterprise?.enabled && flags.lkeEnterprise.la
+  );
+  const isLkeEnterpriseGAFlagEnabled = Boolean(
+    flags.lkeEnterprise?.enabled && flags.lkeEnterprise.ga
+  );
+
+  const isLkeEnterpriseLAFeatureEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise',
+    isLkeEnterpriseLAFlagEnabled,
+    account?.capabilities ?? []
+  );
+  const isLkeEnterpriseGAFeatureEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise',
+    isLkeEnterpriseGAFlagEnabled,
+    account?.capabilities ?? []
+  );
+
+  return {
+    isLkeEnterpriseGAFeatureEnabled,
+    isLkeEnterpriseGAFlagEnabled,
+    isLkeEnterpriseLAFeatureEnabled,
+    isLkeEnterpriseLAFlagEnabled,
+  };
 };

@@ -1,8 +1,8 @@
+import { Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Notice } from 'src/components/Notice/Notice';
 
 export const StyledNotice = styled(Notice, { label: 'StyledNotice' })({
   marginBottom: '0px !important',

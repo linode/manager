@@ -1,9 +1,9 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import { Typography } from 'src/components/Typography';
 
 import { EditableInput } from './EditableInput';
 

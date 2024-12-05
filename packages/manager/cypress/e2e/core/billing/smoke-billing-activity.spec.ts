@@ -276,8 +276,9 @@ describe('Billing Activity Feed', () => {
       .within(() => {
         // Confirm that pagination page size selection is set to "Show 25".
         ui.pagination.findPageSizeSelect().click();
-
-        ui.select.findItemByText('Show 25').should('be.visible').click();
+        cy.get('[data-qa-pagination-page-size-option="25"]')
+          .should('exist')
+          .click();
 
         // Confirm that pagination controls list exactly 4 pages.
         ui.pagination
@@ -309,8 +310,9 @@ describe('Billing Activity Feed', () => {
 
         // Change page size selection from "Show 25" to "Show 100".
         ui.pagination.findPageSizeSelect().click();
-
-        ui.select.findItemByText('Show 100').should('be.visible').click();
+        cy.get('[data-qa-pagination-page-size-option="100"]')
+          .should('exist')
+          .click();
 
         // Confirm that all 100 invoices are shown.
         cy.get('tr').should('have.length', 101);

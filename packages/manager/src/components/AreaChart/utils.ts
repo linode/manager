@@ -2,7 +2,8 @@ import { DateTime } from 'luxon';
 
 import { roundTo } from 'src/utilities/roundTo';
 
-import { LinodeNetworkTimeData } from './types';
+import type { DataSet } from './AreaChart';
+import type { LinodeNetworkTimeData } from './types';
 
 export const getAccessibleTimestamp = (timestamp: number, timezone: string) =>
   DateTime.fromMillis(timestamp, { zone: timezone }).toLocaleString(
@@ -15,7 +16,7 @@ export const tooltipLabelFormatter = (timestamp: number, timezone: string) =>
   );
 
 export const tooltipValueFormatter = (value: number, unit: string) =>
-  `${roundTo(value)}${unit}`;
+  `${roundTo(value)} ${unit}`;
 
 export const humanizeLargeData = (value: number) => {
   if (value >= 1000000000000) {
@@ -34,6 +35,47 @@ export const humanizeLargeData = (value: number) => {
     return +(value / 1000).toFixed(1) + 'K';
   }
   return `${value}`;
+};
+
+/**
+ *
+ * @param data dataset for which ticks should be generated
+ * @param timezone timezone applicable to timestamp in the dataset
+ * @param tickCount number of ticks to be generated
+ * @returns list of tickCount number of x-axis ticks
+ */
+export const generate12HourTicks = (
+  data: DataSet[],
+  timezone: string,
+  tickCount: number
+) => {
+  if (data.length === 0) {
+    return [];
+  }
+
+  // Get start and end time from data
+  const startTime = data[0].timestamp;
+  const endTime = data[data.length - 1].timestamp;
+
+  if (tickCount === 1) {
+    return [(startTime + endTime) / 2];
+  }
+
+  // Calculate duration in hours
+  const duration = DateTime.fromMillis(endTime, { zone: timezone }).diff(
+    DateTime.fromMillis(startTime, { zone: timezone }),
+    'hours'
+  ).hours;
+
+  // Generate fixed number of ticks across the 12-hour period
+  // Use 7 ticks (every 2 hours) to prevent overcrowding
+  const interval = duration / (tickCount - 1);
+
+  return Array.from({ length: tickCount }, (_, i) => {
+    return DateTime.fromMillis(startTime, { zone: timezone })
+      .plus({ hours: i * interval })
+      .toMillis();
+  });
 };
 
 export const timeData: LinodeNetworkTimeData[] = [

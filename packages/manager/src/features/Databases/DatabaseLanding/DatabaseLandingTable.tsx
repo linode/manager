@@ -31,6 +31,7 @@ interface Props {
   order: 'asc' | 'desc';
   orderBy: string;
   showSuspend?: boolean;
+  results: number | undefined;
 }
 const DatabaseLandingTable = ({
   data,
@@ -38,6 +39,7 @@ const DatabaseLandingTable = ({
   isNewDatabase,
   order,
   orderBy,
+  results,
   showSuspend,
 }: Props) => {
   const { data: events } = useInProgressEvents();
@@ -190,7 +192,7 @@ const DatabaseLandingTable = ({
         </TableBody>
       </Table>
       <PaginationFooter
-        count={data?.length || 0}
+        count={results || 0}
         eventCategory="Databases Table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}

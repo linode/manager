@@ -233,9 +233,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    // Wait for the newly 'created' mocked bucket to appear
-    cy.wait(['@getBuckets']);
-
     // Confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {
       const requestPayload = xhr.request.body;
@@ -355,9 +352,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .should('be.enabled')
           .click();
       });
-
-    // Wait for the newly 'created' mocked bucket to appear
-    cy.wait(['@getBuckets']);
 
     // Confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {
@@ -483,9 +477,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    // Wait for the newly 'created' mocked bucket to appear
-    cy.wait(['@getBuckets']);
-
     // Confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {
       const requestPayload = xhr.request.body;
@@ -607,9 +598,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .should('be.enabled')
           .click();
       });
-
-    // Wait for the newly 'created' mocked bucket to appear
-    cy.wait(['@getBuckets']);
 
     // Confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {

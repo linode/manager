@@ -1,8 +1,8 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { PlaceholderProps } from 'react-select';
 
-import { Typography } from 'src/components/Typography';
+import type { PlaceholderProps } from 'react-select';
 
 type Props = PlaceholderProps<any, any>;
 

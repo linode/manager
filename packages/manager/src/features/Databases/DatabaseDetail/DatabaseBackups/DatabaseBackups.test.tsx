@@ -1,4 +1,3 @@
-import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import {
@@ -18,6 +17,7 @@ describe('Database Backups', () => {
     const mockDatabase = databaseFactory.build({
       platform: 'rdbms-legacy',
     });
+
     const backups = databaseBackupFactory.buildList(7);
 
     server.use(
@@ -32,34 +32,20 @@ describe('Database Backups', () => {
       })
     );
 
-    const { findAllByText, getByText, queryByText } = renderWithTheme(
-      <DatabaseBackups />
-    );
+    const { findByText, getAllByRole } = renderWithTheme(<DatabaseBackups />);
 
-    // Wait for loading to disappear
-    await waitFor(() =>
-      expect(queryByText(/loading/i)).not.toBeInTheDocument()
-    );
+    const backupPromises = backups.map((backup) => {
+      const expectedDate = formatDate(backup.created, { timezone: 'utc' });
+      return findByText(expectedDate);
+    });
 
-    await waitFor(
-      async () => {
-        const renderedBackups = await findAllByText((content) => {
-          return /\d{4}-\d{2}-\d{2}/.test(content);
-        });
-        expect(renderedBackups).toHaveLength(backups.length);
-      },
-      { timeout: 5000 }
-    );
+    const backupElements = await Promise.all(backupPromises);
+    backupElements.forEach((backupItem) => {
+      expect(backupItem).toBeVisible();
+    });
 
-    await waitFor(
-      () => {
-        backups.forEach((backup) => {
-          const formattedDate = formatDate(backup.created, { timezone: 'utc' });
-          expect(getByText(formattedDate)).toBeInTheDocument();
-        });
-      },
-      { timeout: 5000 }
-    );
+    // Verify there is a table row for each backup (and a row for the table header)
+    expect(getAllByRole('row')).toHaveLength(backups.length + 1);
   });
 
   it('should render an empty state if there are no backups', async () => {

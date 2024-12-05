@@ -42,6 +42,7 @@ export const VPCEmptyState = () => {
       headers={headers}
       icon={NodeBalancerIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
+      wide
     />
   );
 };

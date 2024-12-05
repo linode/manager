@@ -1,13 +1,10 @@
-import { Box } from '@linode/ui';
+import { Box, Button, CircleProgress, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import {
   useMutateSecurityQuestions,
   useSecurityQuestions,

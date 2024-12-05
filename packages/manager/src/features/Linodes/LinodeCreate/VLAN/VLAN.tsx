@@ -1,19 +1,21 @@
+import {
+  Accordion,
+  Stack,
+  TextField,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { Accordion } from 'src/components/Accordion';
 import { Link } from 'src/components/Link';
-import { Stack } from 'src/components/Stack';
-import { TextField } from 'src/components/TextField';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { VLANSelect } from 'src/components/VLANSelect';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
-import { VLANAvailabilityNotice } from './VLANAvailabilityNotice';
 import { useLinodeCreateQueryParams } from '../utilities';
+import { VLANAvailabilityNotice } from './VLANAvailabilityNotice';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 

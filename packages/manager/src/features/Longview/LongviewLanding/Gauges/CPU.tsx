@@ -1,16 +1,17 @@
+import { Typography, clamp } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { clamp, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
-import { Typography } from 'src/components/Typography';
-import withClientStats, {
-  Props as LVDataProps,
-} from 'src/containers/longview.stats.container';
+import withClientStats from 'src/containers/longview.stats.container';
 import { pluralize } from 'src/utilities/pluralize';
 
-import { CPU } from '../../request.types';
-import { BaseProps as Props, baseGaugeProps } from './common';
+import { baseGaugeProps } from './common';
+
+import type { CPU } from '../../request.types';
+import type { BaseProps as Props } from './common';
+import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 interface getFinalUsedCPUProps extends Props, LVDataProps {}
 
@@ -88,7 +89,7 @@ export const normalizeValue = (value: number, numCores: number) => {
   if (numCores < 0) {
     return 0;
   }
-  const clamped = clamp(0, 100 * numCores)(value);
+  const clamped = clamp(0, 100 * numCores, value);
   return Math.round(clamped);
 };
 

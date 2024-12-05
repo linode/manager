@@ -1,7 +1,6 @@
+import { Autocomplete } from '@linode/ui';
 import { groupBy } from 'ramda';
 import * as React from 'react';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import type { Kernel } from '@linode/api-v4';
 

@@ -1,14 +1,9 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { TextField } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { TextField } from 'src/components/TextField';
-import {
-  LongviewProcesses,
-  WithStartAndEnd,
-} from 'src/features/Longview/request.types';
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
 import { escapeRegExp } from 'src/utilities/escapeRegExp';
 import { isToday as _isToday } from 'src/utilities/isToday';
@@ -16,9 +11,16 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 import { StyledItemGrid } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { ProcessesGraphs } from './ProcessesGraphs';
-import { ProcessesTable, ExtendedProcess } from './ProcessesTable';
-import { Process } from './types';
 import { StyledBox, StyledTimeRangeSelect } from './ProcessesLanding.styles';
+import { ProcessesTable } from './ProcessesTable';
+
+import type { ExtendedProcess } from './ProcessesTable';
+import type { Process } from './types';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type {
+  LongviewProcesses,
+  WithStartAndEnd,
+} from 'src/features/Longview/request.types';
 
 interface Props {
   clientAPIKey?: string;

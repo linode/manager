@@ -28,12 +28,14 @@ export const linode1: Linode = {
   placement_group: {
     id: 1,
     label: 'pg-1',
+    migrating_to: null,
     placement_group_policy: 'strict',
     placement_group_type: 'anti_affinity:local',
   },
   region: 'us-east',
   site_type: 'core',
   specs: {
+    accelerated_devices: 0,
     disk: 20480,
     gpus: 0,
     memory: 1024,
@@ -75,12 +77,14 @@ export const linode2: Linode = {
   placement_group: {
     id: 1,
     label: 'pg-1',
+    migrating_to: null,
     placement_group_policy: 'strict',
     placement_group_type: 'anti_affinity:local',
   },
   region: 'us-east',
   site_type: 'core',
   specs: {
+    accelerated_devices: 0,
     disk: 30720,
     gpus: 0,
     memory: 2048,
@@ -122,12 +126,14 @@ export const linode3: Linode = {
   placement_group: {
     id: 1,
     label: 'pg-1',
+    migrating_to: null,
     placement_group_policy: 'strict',
     placement_group_type: 'anti_affinity:local',
   },
   region: 'us-east',
   site_type: 'core',
   specs: {
+    accelerated_devices: 0,
     disk: 30720,
     gpus: 0,
     memory: 2048,
@@ -169,12 +175,14 @@ export const linode4: Linode = {
   placement_group: {
     id: 1,
     label: 'pg-1',
+    migrating_to: null,
     placement_group_policy: 'strict',
     placement_group_type: 'anti_affinity:local',
   },
   region: 'eu-west',
   site_type: 'core',
   specs: {
+    accelerated_devices: 0,
     disk: 30720,
     gpus: 0,
     memory: 2048,

@@ -30,7 +30,7 @@ describe('Image Table Row', () => {
       capabilities: ['cloud-init', 'distributed-sites'],
       regions: [
         { region: 'us-east', status: 'available' },
-        { region: 'us-southeast', status: 'pending' },
+        { region: 'us-southeast', status: 'available' },
       ],
       size: 300,
       total_size: 600,
@@ -45,7 +45,7 @@ describe('Image Table Row', () => {
     // Check to see if the row rendered some data
     expect(getByText(image.label)).toBeVisible();
     expect(getByText(image.id)).toBeVisible();
-    expect(getByText('Ready')).toBeVisible();
+    expect(getByText('Available')).toBeVisible();
     expect(getByText('Cloud-init, Distributed')).toBeVisible();
     expect(getByText('2 Regions')).toBeVisible();
     expect(getByText('0.29 GB')).toBeVisible(); // Size is converted from MB to GB - 300 / 1024 = 0.292
