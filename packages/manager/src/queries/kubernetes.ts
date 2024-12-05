@@ -136,8 +136,8 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 
 export const useKubernetesClusterQuery = (id: number) => {
   const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
-  const { isLkeEnterpriseLAEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = showAPL || isLkeEnterpriseLAEnabled;
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const useBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
 
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.cluster(useBetaEndpoint),
@@ -150,8 +150,8 @@ export const useKubernetesClustersQuery = (
   filter: Filter,
   enabled = true
 ) => {
-  const { isLkeEnterpriseLAEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = isLkeEnterpriseLAEnabled;
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const useBetaEndpoint = isLkeEnterpriseLAFeatureEnabled;
 
   return useQuery<ResourcePage<KubernetesCluster>, APIError[]>({
     ...kubernetesQueries.lists._ctx.paginated(params, filter, useBetaEndpoint),
@@ -196,16 +196,18 @@ export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
   });
 };
 
-export const useKubenetesKubeConfigQuery = (
+export const useKubernetesKubeConfigQuery = (
   clusterId: number,
   enabled = false
 ) =>
   useQuery<string, APIError[]>({
     ...kubernetesQueries.cluster(clusterId)._ctx.kubeconfig,
     enabled,
-    refetchOnMount: true,
-    retry: true,
+    retry: 3,
     retryDelay: 5000,
+    // Disable stale time to prevent caching of the kubeconfig
+    // because it can take some time for config to get updated in the API
+    staleTime: 0,
   });
 
 export const useResetKubeConfigMutation = () => {
@@ -391,8 +393,8 @@ export const useKubernetesTieredVersionQuery = (tier: string) => {
  * Before you use this, consider implementing infinite scroll instead.
  */
 export const useAllKubernetesClustersQuery = (enabled = false) => {
-  const { isLkeEnterpriseLAEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = isLkeEnterpriseLAEnabled;
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const useBetaEndpoint = isLkeEnterpriseLAFeatureEnabled;
 
   return useQuery<KubernetesCluster[], APIError[]>({
     ...kubernetesQueries.lists._ctx.all(useBetaEndpoint),

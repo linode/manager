@@ -5,7 +5,7 @@ import { CheckIcon, AlertIcon as Error, WarningIcon } from '../../assets/icons';
 import { Typography } from '../Typography';
 import { useStyles } from './Notice.styles';
 
-import type { TypographyProps } from '@mui/material';
+import type { TypographyProps } from '../Typography';
 import type { Grid2Props } from '@mui/material/Unstable_Grid2';
 
 export type NoticeVariant =

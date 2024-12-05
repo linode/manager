@@ -1,7 +1,6 @@
-import { Radio } from '@linode/ui';
+import { FormControlLabel, Radio } from '@linode/ui';
 import React from 'react';
 
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';

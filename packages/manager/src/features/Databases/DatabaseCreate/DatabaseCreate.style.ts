@@ -1,7 +1,6 @@
-import { Box, Button, TextField, Typography } from '@linode/ui';
+import { Autocomplete, Box, Button, TextField, Typography } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 
 export const StyledLabelTooltip = styled(Box, {

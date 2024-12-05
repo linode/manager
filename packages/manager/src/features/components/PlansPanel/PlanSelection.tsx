@@ -1,8 +1,7 @@
-import { Chip, Radio } from '@linode/ui';
+import { Chip, FormControlLabel, Radio } from '@linode/ui';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
@@ -82,7 +81,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
   const rowIsDisabled =
-    isSamePlan ||
+    (!isDatabaseFlow && isSamePlan) ||
     planIsTooSmall ||
     planBelongsToDisabledClass ||
     planIsDisabled512Gb ||
@@ -125,7 +124,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           onClick={() => (!rowIsDisabled ? onSelect(plan.id) : undefined)}
         >
           <StyledRadioCell>
-            {!isSamePlan && (
+            {(!isSamePlan || (isDatabaseFlow && isSamePlan)) && (
               <FormControlLabel
                 aria-label={`${plan.heading} ${
                   rowIsDisabled ? `- ${disabledPlanReasonCopy}` : ''
