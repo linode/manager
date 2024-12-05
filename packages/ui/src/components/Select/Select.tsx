@@ -1,69 +1,52 @@
-import { KeyboardArrowDown } from '@mui/icons-material';
 import { styled } from '@mui/material';
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select as MuiSelect,
-} from '@mui/material';
 import React from 'react';
 
-import type { SelectProps as MuiSelectProps } from '@mui/material';
+import { Autocomplete } from '../Autocomplete';
+import { Box } from '../Box';
 
-interface SelectProps
-  extends Omit<
-    MuiSelectProps,
-    'IconComponent' | 'children' | 'label' | 'multiple' | 'native' | 'variant'
-  > {
-  label: string;
-  options: { label: string; value: string }[];
-}
+import type { EnhancedAutocompleteProps } from '../Autocomplete';
+
+type OptionType = { label: string; value: string };
+
+type SelectProps = Pick<
+  EnhancedAutocompleteProps<OptionType>,
+  | 'errorText'
+  | 'helperText'
+  | 'label'
+  | 'onChange'
+  | 'options'
+  | 'placeholder'
+  | 'textFieldProps'
+  | 'value'
+>;
 
 /**
- * A simple select component with a list of options.
- * A wrapper around MuiSelect with some props overridden for convenience and consistency.
+ * An abstracted Autocomplete component with some props overridden for convenience and consistency.
  */
 export const Select = (props: SelectProps) => {
-  const { label, options, ...rest } = props;
+  const { textFieldProps, ...rest } = props;
+
   return (
-    <FormControl fullWidth>
-      <InputLabel shrink>{label}</InputLabel>
-      <StyledSelect
+    <SelectContainer>
+      <Autocomplete
         {...rest}
-        IconComponent={KeyboardArrowDown}
-        color="primary"
-        variant="standard"
-      >
-        {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </StyledSelect>
-    </FormControl>
+        textFieldProps={{
+          ...textFieldProps,
+          inputProps: {
+            ...textFieldProps?.inputProps,
+            readOnly: true,
+          },
+        }}
+      />
+    </SelectContainer>
   );
 };
 
-const BaseSelect = styled(MuiSelect, {
-  label: 'StyledSelect',
-})(() => ({
-  '& .MuiSvgIcon-root': {
-    top: 4,
+const SelectContainer = styled(Box)(({}) => ({
+  '& .MuiInputBase-root, & .MuiInputBase-input': {
+    '&::selection': {
+      backgroundColor: 'transparent',
+    },
+    cursor: 'pointer',
   },
-}));
-
-const StyledSelect = styled(({ className, ...props }: MuiSelectProps) => (
-  <BaseSelect
-    {...props}
-    MenuProps={{ PaperProps: { className }, marginThreshold: 0 }}
-  />
-))(({ theme }) => ({
-  '& .MuiList-root': {
-    border: `1px solid ${theme.palette.primary.main}`,
-    overflow: 'hidden',
-    width: 'calc(100% + 2px)',
-  },
-  marginLeft: -1,
-  marginTop: -1,
-  overflow: 'visible',
 }));
