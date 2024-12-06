@@ -17,10 +17,7 @@ import {
 } from '../Utils/ReusableDashboardFilterUtils';
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
-import type {
-  FilterValue,
-  FilterValueType,
-} from './CloudPulseDashboardLanding';
+import type { FilterData, FilterValueType } from './CloudPulseDashboardLanding';
 import type { TimeDuration } from '@linode/api-v4';
 
 export interface CloudPulseDashboardWithFiltersProp {
@@ -41,7 +38,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
       dashboardId
     );
 
-    const [filterValue, setFilterValue] = React.useState<FilterValue>({
+    const [filterValue, setFilterValue] = React.useState<FilterData>({
       id: {},
       label: {},
     });
