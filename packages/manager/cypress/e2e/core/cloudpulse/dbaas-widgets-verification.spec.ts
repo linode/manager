@@ -48,7 +48,23 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+const flags: Partial<Flags> = {
+  aclp: { enabled: true, beta: true },
+  aclpResourceTypeMap: [
+    {
+      dimensionKey: 'LINODE_ID',
+      maxResourceSelections: 10,
+      serviceType: 'linode',
+      supportedRegionIds: '',
+    },
+    {
+      dimensionKey: 'cluster_id',
+      maxResourceSelections: 10,
+      serviceType: 'dbaas',
+      supportedRegionIds: 'us-east,  us-ord',
+    },
+  ],
+};
 
 const {
   metrics,
