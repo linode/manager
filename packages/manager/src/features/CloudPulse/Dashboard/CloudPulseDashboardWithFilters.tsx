@@ -39,7 +39,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
     );
 
     const [filterValue, setFilterValue] = React.useState<FilterData>({
-      filterId: {},
+      id: {},
       label: {},
     });
 
@@ -60,8 +60,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
       (filterKey: string, value: FilterValueType, labels: string[]) => {
         setFilterValue((prev) => {
           return {
-            filterId: {
-              ...prev.filterId,
+            id: {
+              ...prev.id,
               [filterKey]: value,
             },
             label: {
@@ -112,7 +112,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
     const isFilterBuilderNeeded = checkIfFilterBuilderNeeded(dashboard);
     const isMandatoryFiltersSelected = checkMandatoryFiltersSelected({
       dashboardObj: dashboard,
-      filterValue: filterValue.filterId,
+      filterValue: filterValue.id,
       resource,
       timeDuration,
     });
@@ -170,7 +170,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
           <CloudPulseDashboard
             {...getDashboardProperties({
               dashboardObj: dashboard,
-              filterValue: filterValue.filterId,
+              filterValue: filterValue.id,
               resource,
               timeDuration,
             })}
