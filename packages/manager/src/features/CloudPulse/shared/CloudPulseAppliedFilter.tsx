@@ -1,4 +1,4 @@
-import { Box, Chip, Typography } from '@mui/material';
+import { Box, Chip, Typography } from '@linode/ui';
 import React from 'react';
 
 interface CloudPulseAppliedFilterProps {

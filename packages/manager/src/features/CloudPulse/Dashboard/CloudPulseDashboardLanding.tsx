@@ -1,4 +1,5 @@
-import { Box, Grid, Paper } from '@mui/material';
+import { Box, Paper } from '@linode/ui';
+import { Grid } from '@mui/material';
 import * as React from 'react';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
