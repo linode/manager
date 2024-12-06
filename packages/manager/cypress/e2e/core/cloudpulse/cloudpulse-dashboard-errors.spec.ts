@@ -78,10 +78,9 @@ const metricDefinitions = {
 };
 
 const mockRegion = regionFactory.build({
-  capabilities: ['Linodes'],
+  capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
-  country: 'us',
 });
 
 const databaseMock: Database = databaseFactory.build({

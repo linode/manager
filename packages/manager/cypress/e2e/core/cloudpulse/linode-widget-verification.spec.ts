@@ -26,7 +26,6 @@ import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
-import { extendRegion } from 'support/util/regions';
 import { CloudPulseMetricsResponse } from '@linode/api-v4';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { Interception } from 'cypress/types/net-stubbing';
@@ -47,14 +46,8 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
-const {
-  metrics,
-  id,
-  serviceType,
-  dashboardName,
-  region,
-  resource,
-} = widgetDetails.linode;
+const { metrics, id, serviceType, dashboardName, region, resource } =
+  widgetDetails.linode;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
@@ -85,14 +78,12 @@ const mockLinode = linodeFactory.build({
 });
 
 const mockAccount = accountFactory.build();
-const mockRegion = extendRegion(
-  regionFactory.build({
-    capabilities: ['Linodes'],
-    id: 'us-ord',
-    label: 'Chicago, IL',
-    country: 'us',
-  })
-);
+
+const mockRegion = regionFactory.build({
+  capabilities: ['Linodes'],
+  id: 'us-ord',
+  label: 'Chicago, IL',
+});
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
@@ -170,15 +161,23 @@ describe('Integration Tests for Linode Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Dashboard')
       .should('be.visible')
-      .type(`${dashboardName}{enter}`)
-      .should('be.visible');
+      .type(dashboardName);
+
+    ui.autocompletePopper
+      .findByTitle(dashboardName)
+      .should('be.visible')
+      .click();
 
     // Select a time duration from the autocomplete input.
     ui.autocomplete
       .findByLabel('Time Range')
       .should('be.visible')
-      .type(`${timeDurationToSelect}{enter}`)
-      .should('be.visible');
+      .type(timeDurationToSelect);
+
+    ui.autocompletePopper
+      .findByTitle(timeDurationToSelect)
+      .should('be.visible')
+      .click();
 
     // Select a region from the dropdown.
     ui.regionSelect.find().click().type(`${region}{enter}`);
@@ -191,6 +190,23 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .click();
 
     cy.findByText(resource).should('be.visible');
+
+    // Expand the applied filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
+
+    // Verify that the applied filters
+    cy.get('[data-qa-applied-filter-id="applied-filter"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+          .should('be.visible')
+          .should('have.text', 'US, Chicago, IL');
+
+        cy.get(`[data-qa-value="Resources ${resource}"]`)
+          .should('be.visible')
+          .should('have.text', resource);
+      });
+
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
   });
