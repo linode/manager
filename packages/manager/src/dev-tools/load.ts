@@ -28,7 +28,7 @@ export async function loadDevTools(
   store: ApplicationStore,
   client: QueryClient
 ) {
-  const devTools = await import('./dev-tools');
+  const devTools = await import('./DevTools');
 
   if (isMSWEnabled) {
     const { worker: mswWorker } = await import('../mocks/mswWorkers');

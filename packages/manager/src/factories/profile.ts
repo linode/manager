@@ -8,7 +8,7 @@ import Factory from 'src/factories/factoryProxy';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
   authentication_type: 'password',
-  authorized_keys: [],
+  authorized_keys: ['foo', 'bar'],
   email: 'mock-user@linode.com',
   email_notifications: false,
   ip_whitelist_enabled: false,
@@ -22,7 +22,7 @@ export const profileFactory = Factory.Sync.makeFactory<Profile>({
     url: 'https://www.linode.com/XXX',
   },
   restricted: false,
-  timezone: 'Asia/Shanghai',
+  timezone: 'America/New_York',
   two_factor_auth: false,
   uid: 9999,
   user_type: 'default',
