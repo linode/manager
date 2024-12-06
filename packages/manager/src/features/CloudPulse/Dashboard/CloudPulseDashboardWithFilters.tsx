@@ -1,4 +1,4 @@
-import { CircleProgress, Paper } from '@linode/ui';
+import { Box, CircleProgress, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
@@ -121,54 +121,40 @@ export const CloudPulseDashboardWithFilters = React.memo(
     });
 
     return (
-      <>
-        <Paper
-          sx={{
-            padding: 0,
-          }}
-        >
-          <Grid
-            justifyContent={{
-              sm: 'flex-end',
-              xs: 'center',
-            }}
-            columnSpacing={2}
-            container
-            display={'flex'}
-            item
-            maxHeight={'120px'}
-            mb={1}
-            overflow={'auto'}
-            px={2}
-            py={1}
-            rowGap={2}
-            xs={12}
-          >
-            <Grid item md={4} sm={6} xs={12}>
-              <CloudPulseTimeRangeSelect
-                disabled={!dashboard}
-                handleStatsChange={handleTimeRangeChange}
-                savePreferences={true}
-              />
-            </Grid>
-          </Grid>
-          {isFilterBuilderNeeded && (
-            <CloudPulseDashboardFilterBuilder
-              dashboard={dashboard}
-              emitFilterChange={onFilterChange}
-              handleToggleAppliedFilter={toggleAppliedFilter}
-              isServiceAnalyticsIntegration={true}
+      <Box display={'flex'} flexDirection={'column'} gap={2.5}>
+        <Box display={'flex'} flexDirection={'column'} gap={1}>
+          <Box alignSelf="end" width={160}>
+            <CloudPulseTimeRangeSelect
+              disabled={!dashboard}
+              handleStatsChange={handleTimeRangeChange}
+              label=""
+              savePreferences={true}
             />
-          )}
-          <Grid item mb={3} mt={-3} xs={12}>
-            {showAppliedFilters && (
-              <CloudPulseAppliedFilterRenderer
-                filters={filterValue.label}
-                serviceType={dashboard.service_type}
+          </Box>
+
+          <Paper
+            sx={{
+              padding: 0,
+            }}
+          >
+            {isFilterBuilderNeeded && (
+              <CloudPulseDashboardFilterBuilder
+                dashboard={dashboard}
+                emitFilterChange={onFilterChange}
+                handleToggleAppliedFilter={toggleAppliedFilter}
+                isServiceAnalyticsIntegration={true}
               />
             )}
-          </Grid>
-        </Paper>
+            <Grid item mb={3} mt={-3} xs={12}>
+              {showAppliedFilters && (
+                <CloudPulseAppliedFilterRenderer
+                  filters={filterValue.label}
+                  serviceType={dashboard.service_type}
+                />
+              )}
+            </Grid>
+          </Paper>
+        </Box>
         {isMandatoryFiltersSelected ? (
           <CloudPulseDashboard
             {...getDashboardProperties({
@@ -181,7 +167,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
         ) : (
           renderPlaceHolder('Select filters to visualize metrics.')
         )}
-      </>
+      </Box>
     );
   }
 );
