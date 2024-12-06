@@ -17,10 +17,7 @@ import {
 } from '../Utils/ReusableDashboardFilterUtils';
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
-import type {
-  FilterValue,
-  FilterValueType,
-} from './CloudPulseDashboardLanding';
+import type { FilterData, FilterValueType } from './CloudPulseDashboardLanding';
 import type { TimeDuration } from '@linode/api-v4';
 
 export interface CloudPulseDashboardWithFiltersProp {
@@ -41,8 +38,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
       dashboardId
     );
 
-    const [filterValue, setFilterValue] = React.useState<FilterValue>({
-      id: {},
+    const [filterValue, setFilterValue] = React.useState<FilterData>({
+      filterId: {},
       label: {},
     });
 
@@ -63,8 +60,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
       (filterKey: string, value: FilterValueType, labels: string[]) => {
         setFilterValue((prev) => {
           return {
-            id: {
-              ...prev.id,
+            filterId: {
+              ...prev.filterId,
               [filterKey]: value,
             },
             label: {
@@ -115,7 +112,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
     const isFilterBuilderNeeded = checkIfFilterBuilderNeeded(dashboard);
     const isMandatoryFiltersSelected = checkMandatoryFiltersSelected({
       dashboardObj: dashboard,
-      filterValue: filterValue.id,
+      filterValue: filterValue.filterId,
       resource,
       timeDuration,
     });
@@ -173,7 +170,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
           <CloudPulseDashboard
             {...getDashboardProperties({
               dashboardObj: dashboard,
-              filterValue: filterValue.id,
+              filterValue: filterValue.filterId,
               resource,
               timeDuration,
             })}

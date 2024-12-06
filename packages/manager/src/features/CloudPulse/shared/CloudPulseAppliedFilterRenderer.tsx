@@ -3,10 +3,9 @@ import React from 'react';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { CloudPulseAppliedFilter } from './CloudPulseAppliedFilter';
 
-interface AppliedFilterRendererProps {
-  filters: {
-    [label: string]: string[];
-  };
+import type { CloudPulseAppliedFilterProps } from './CloudPulseAppliedFilter';
+
+interface AppliedFilterRendererProps extends CloudPulseAppliedFilterProps {
   serviceType: string;
 }
 
