@@ -80,6 +80,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     entity,
     errors,
     inputProps,
+    isFetching,
     label,
     loading,
     onClick,
@@ -131,6 +132,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     <ConfirmationDialog
       actions={actions}
       error={errors ? errors[0].reason : undefined}
+      isFetching={isFetching}
       onClose={onClose}
       open={open}
       title={title}

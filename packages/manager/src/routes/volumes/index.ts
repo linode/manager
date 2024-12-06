@@ -1,10 +1,29 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { VolumesRoute } from './VolumesRoute';
+import { VolumesRoot } from './VolumesRoot';
+
+import type { TableSearchParams } from '../types';
+
+const volumeAction = {
+  attach: 'attach',
+  clone: 'clone',
+  delete: 'delete',
+  detach: 'detach',
+  details: 'details',
+  edit: 'edit',
+  resize: 'resize',
+  upgrade: 'upgrade',
+} as const;
+
+export type VolumeAction = typeof volumeAction[keyof typeof volumeAction];
+
+export interface VolumesSearchParams extends TableSearchParams {
+  query?: string;
+}
 
 const volumesRoute = createRoute({
-  component: VolumesRoute,
+  component: VolumesRoot,
   getParentRoute: () => rootRoute,
   path: 'volumes',
 });
@@ -12,8 +31,9 @@ const volumesRoute = createRoute({
 const volumesIndexRoute = createRoute({
   getParentRoute: () => volumesRoute,
   path: '/',
+  validateSearch: (search: VolumesSearchParams) => search,
 }).lazy(() =>
-  import('src/features/Volumes/VolumesLanding').then(
+  import('src/routes/volumes/volumesLazyRoutes').then(
     (m) => m.volumesLandingLazyRoute
   )
 );
@@ -22,12 +42,50 @@ const volumesCreateRoute = createRoute({
   getParentRoute: () => volumesRoute,
   path: 'create',
 }).lazy(() =>
-  import('src/features/Volumes/VolumeCreate').then(
-    (m) => m.volumeCreateLazyRoute
+  import('./volumesLazyRoutes').then((m) => m.volumeCreateLazyRoute)
+);
+
+const volumeActionRoute = createRoute({
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in volumeAction)) {
+      throw redirect({
+        search: () => ({}),
+        to: '/volumes',
+      });
+    }
+  },
+  getParentRoute: () => volumesRoute,
+  parseParams: ({
+    action,
+    volumeId,
+  }: {
+    action: VolumeAction;
+    volumeId: string;
+  }) => ({
+    action,
+    volumeId: Number(volumeId),
+  }),
+  path: '$volumeId/$action',
+  validateSearch: (search: VolumesSearchParams) => search,
+}).lazy(() =>
+  import('src/routes/volumes/volumesLazyRoutes').then(
+    (m) => m.volumesLandingLazyRoute
   )
 );
 
+const volumesCatchAllRoute = createRoute({
+  beforeLoad: () => {
+    throw redirect({
+      search: () => ({}),
+      to: '/volumes',
+    });
+  },
+  getParentRoute: () => volumesRoute,
+  path: '*',
+});
+
 export const volumesRouteTree = volumesRoute.addChildren([
-  volumesIndexRoute,
+  volumesIndexRoute.addChildren([volumeActionRoute]),
   volumesCreateRoute,
+  volumesCatchAllRoute,
 ]);

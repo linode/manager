@@ -1,5 +1,6 @@
 import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -130,7 +131,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() =>
   import('src/features/Domains').then((module) => ({
     default: module.DomainsRoutes,
@@ -207,6 +207,7 @@ export const MainContent = () => {
   const { classes, cx } = useStyles();
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
+  const queryClient = useQueryClient();
 
   const globalErrors = useGlobalErrors();
 
@@ -336,8 +337,6 @@ export const MainContent = () => {
                               path="/placement-groups"
                             />
                           )}
-                          <Route component={Volumes} path="/volumes" />
-                          <Redirect path="/volumes*" to="/volumes" />
                           <Route
                             component={NodeBalancers}
                             path="/nodebalancers"
@@ -382,6 +381,7 @@ export const MainContent = () => {
                            */}
                           <Route path="*">
                             <RouterProvider
+                              context={{ queryClient }}
                               router={migrationRouter as AnyRouter}
                             />
                           </Route>

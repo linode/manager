@@ -1,5 +1,5 @@
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useRef, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
@@ -7,12 +7,31 @@ import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import type { RoutePaths } from '@tanstack/react-router';
+import type { MigrationRouteTree } from 'src/routes';
 import type { OrderSet } from 'src/types/ManagerPreferences';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
 
 export type Order = 'asc' | 'desc';
+
+interface UseOrderV2Props {
+  /**
+   * initial order to use when no query params are present
+   * Includes the from and search params
+   */
+  initialRoute: {
+    from: RoutePaths<MigrationRouteTree>;
+    search?: OrderSet;
+  };
+  /**
+   * preference key to save to user preferences
+   */
+  preferenceKey?: string;
+  /**
+   * prefix for the query params in the url
+   */
+  prefix?: string;
+}
 
 /**
  * useOrder is a hook that allows you to handle ordering tables. It takes into account
@@ -22,32 +41,25 @@ export type Order = 'asc' | 'desc';
  *  3. Initial Order passed as params
  * When a user changes order using the handleOrderChange function, the query params are
  * updated and the user preferences are also updated.
- * @param initial {OrderSet} include the initial order
- * @param preferenceKey {string} include a preference key so user order preference is persisted
- * @param prefix {string} prefix in the url we can have many useOrders on the same page
- * @returns {order, orderBy, handleOrderChange}
  */
-export const useOrder = (
-  initial?: OrderSet,
-  preferenceKey?: string,
-  prefix?: string
-) => {
+export const useOrderV2 = ({
+  initialRoute,
+  preferenceKey,
+  prefix,
+}: UseOrderV2Props) => {
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
-  const location = useLocation();
-  const history = useHistory();
-  const params = getQueryParamsFromQueryString<BaseQueryParams>(
-    location.search
-  );
+  const params = useParams({ from: initialRoute.from });
+  const navigate = useNavigate();
 
   const initialOrder = getInitialValuesFromUserPreferences(
     preferenceKey || '',
     preferences || {},
     params,
-    initial?.orderBy,
-    initial?.order,
+    initialRoute?.search?.orderBy,
+    initialRoute?.search?.order,
     prefix
-  ) as OrderSet;
+  );
 
   const [orderBy, setOrderBy] = useState(initialOrder.orderBy);
   const [order, setOrder] = useState<'asc' | 'desc'>(initialOrder.order);
@@ -79,13 +91,14 @@ export const useOrder = (
           orderBy: newOrderBy,
         };
 
-    const queryParams = new URLSearchParams(location.search);
-
-    for (const [key, value] of Object.entries(urlData)) {
-      queryParams.set(key, value);
-    }
-
-    history.replace(`?${queryParams.toString()}`);
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        ...params,
+        ...urlData,
+      }),
+      to: initialRoute.from,
+    });
 
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
