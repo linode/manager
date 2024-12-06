@@ -40,19 +40,17 @@ export const AlertListing = () => {
       <Table colCount={7} size="small">
         <TableHead>
           <TableRow>
-            {AlertListingTableLabelMap.map((value, idx) => {
-              return (
-                <TableSortCell
-                  active={true}
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  key={idx}
-                  label={value.label}
-                >
-                  {value.colName}
-                </TableSortCell>
-              );
-            })}
+            {AlertListingTableLabelMap.map((value) => (
+              <TableSortCell
+                active={true}
+                direction={order}
+                handleClick={handleOrderChange}
+                key={value.label}
+                label={value.label}
+              >
+                {value.colName}
+              </TableSortCell>
+            ))}
             <TableCell actionCell />
           </TableRow>
         </TableHead>
