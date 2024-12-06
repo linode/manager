@@ -121,7 +121,7 @@ export const RegionSelect = <
         }}
         sx={(theme) => ({
           [theme.breakpoints.up('md')]: {
-            width: '416px',
+            width: tooltipText ? '458px' : '416px',
           },
         })}
         textFieldProps={{

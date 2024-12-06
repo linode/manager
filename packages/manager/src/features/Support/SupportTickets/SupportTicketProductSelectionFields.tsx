@@ -132,10 +132,12 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     if (entityType === 'bucket') {
       return (
         reactQueryEntityDataMap['bucket']?.buckets?.map(
-          ({ label, region }) => ({
-            label,
-            value: region ?? '',
-          })
+          ({ cluster, label, region }) => {
+            return {
+              label,
+              value: region ?? cluster,
+            };
+          }
         ) || []
       );
     }
@@ -185,8 +187,15 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     : undefined;
 
   const selectedEntity =
-    entityOptions.find((thisEntity) => String(thisEntity.value) === entityId) ||
-    null;
+    entityType === 'bucket'
+      ? entityOptions.find(
+          (thisEntity) =>
+            String(thisEntity.value) === entityId &&
+            thisEntity.label === entityInputValue
+        ) || null
+      : entityOptions.find(
+          (thisEntity) => String(thisEntity.value) === entityId
+        ) || null;
 
   const renderEntityTypes = () => {
     return Object.keys(ENTITY_MAP).map((key: string) => {

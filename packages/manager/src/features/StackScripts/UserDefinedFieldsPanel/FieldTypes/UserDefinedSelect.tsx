@@ -1,8 +1,12 @@
-import { Autocomplete, InputLabel, Notice, Radio } from '@linode/ui';
+import {
+  Autocomplete,
+  FormControlLabel,
+  InputLabel,
+  Notice,
+  Radio,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { FormControlLabel } from 'src/components/FormControlLabel';
 
 import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 
