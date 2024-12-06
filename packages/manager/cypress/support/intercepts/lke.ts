@@ -19,6 +19,7 @@ import type {
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
   KubernetesVersion,
+  PriceType,
 } from '@linode/api-v4';
 
 /**
@@ -454,4 +455,17 @@ export const mockUpdateControlPlaneACLError = (
     apiMatcher(`/lke/clusters/${clusterId}/control_plane_acl`),
     makeErrorResponse(errorMessage, statusCode)
   );
+};
+
+/**
+ * Intercepts GET request for LKE cluster types and mocks the response
+ *
+ * @param types - LKE cluster types with which to mock response
+ *
+ * @returns Cypress chainable
+ */
+export const mockGetLKEClusterTypes = (
+  types: PriceType[]
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('lke/types*'), paginateResponse(types));
 };
