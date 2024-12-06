@@ -51,13 +51,13 @@ export const CardBaseGrid = styled(Grid, {
 
 export const CardBaseIcon = styled(Grid, {
   label: 'CardBaseIcon',
-})(() => ({
+})(({ theme }) => ({
   '& img': {
     maxHeight: 32,
     maxWidth: 32,
   },
   '& svg, & span': {
-    color: '#939598',
+    color: theme.tokens.color.Neutrals[50],
     fontSize: 32,
   },
   alignItems: 'flex-end',
