@@ -25,7 +25,7 @@ export interface SelectProps
   creatable?: boolean;
   hideLabel?: boolean;
   label: string;
-  onChange?: (event: React.SyntheticEvent, value: OptionType | null) => void;
+  onChange?: (_event: React.SyntheticEvent, _value: OptionType | null) => void;
   required?: boolean;
   searchable?: boolean;
 }
