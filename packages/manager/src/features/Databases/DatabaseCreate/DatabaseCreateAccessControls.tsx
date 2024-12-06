@@ -12,7 +12,10 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
+import {
+  ipFieldPlaceholder,
+  ipV6FieldPlaceholder,
+} from 'src/utilities/ipUtils';
 
 import { useIsDatabasesEnabled } from '../utilities';
 
@@ -63,14 +66,14 @@ export const DatabaseCreateAccessControls = (props: Props) => {
   return (
     <Grid>
       <Typography className={classes.header} variant="h2">
-        Add Access Controls
+        Manage Access
       </Typography>
       {isDatabasesV2GA ? (
         <>
           <Typography>
-            Add IPv4 addresses or ranges that should be authorized to access
-            this cluster.
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls">
+            Add IPv6 (recommended) or IPv4 addresses or ranges that should be
+            authorized to access this cluster.{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#ipv6-support">
               Learn more
             </Link>
             .
@@ -123,13 +126,14 @@ export const DatabaseCreateAccessControls = (props: Props) => {
               value="specific"
             />
             <MultipleIPInput
+              buttonText={ips.length > 1 ? 'Add Another IP' : 'Add an IP'}
               className={classes.multipleIPInput}
               disabled={accessOption === 'none' || disabled}
               ips={ips}
               onBlur={onBlur}
               onChange={onChange}
-              placeholder={ipFieldPlaceholder}
-              title="Allowed IP Address(es) or Range(s)"
+              placeholder={ipV6FieldPlaceholder}
+              title="Allowed IP Addresses or Ranges"
             />
             <FormControlLabel
               control={<Radio />}

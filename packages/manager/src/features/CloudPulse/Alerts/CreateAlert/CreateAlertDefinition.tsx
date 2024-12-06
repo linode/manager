@@ -19,6 +19,7 @@ import { filterFormValues, filterMetricCriteriaFormValues } from './utilities';
 
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
 import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
+import type { ObjectSchema } from 'yup';
 
 const triggerConditionInitialValues: TriggerCondition = {
   evaluation_period_seconds: 0,
@@ -30,7 +31,6 @@ const criteriaInitialValues: MetricCriteriaForm = {
   dimension_filters: [],
   metric: '',
   operator: null,
-  value: 0,
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
@@ -43,7 +43,7 @@ const initialValues: CreateAlertDefinitionForm = {
   },
   serviceType: null,
   severity: null,
-  triggerCondition: triggerConditionInitialValues,
+  trigger_condition: triggerConditionInitialValues,
 };
 
 const overrides = [
@@ -65,7 +65,9 @@ export const CreateAlertDefinition = () => {
   const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
     mode: 'onBlur',
-    resolver: yupResolver(CreateAlertDefinitionFormSchema),
+    resolver: yupResolver(
+      CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>
+    ),
   });
 
   const {
