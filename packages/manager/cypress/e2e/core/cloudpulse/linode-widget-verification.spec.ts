@@ -52,7 +52,7 @@ const flags: Partial<Flags> = {
       dimensionKey: 'LINODE_ID',
       maxResourceSelections: 10,
       serviceType: 'linode',
-      supportedRegionIds: '',
+      supportedRegionIds: 'us-ord',
     },
     {
       dimensionKey: 'cluster_id',
@@ -99,6 +99,12 @@ const mockRegion = regionFactory.build({
   capabilities: ['Linodes'],
   id: 'us-ord',
   label: 'Chicago, IL',
+});
+
+const extendedMockRegion = regionFactory.build({
+  capabilities: ['Managed Databases'],
+  id: 'us-east',
+  label: 'Newark,NL',
 });
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
@@ -195,8 +201,23 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .should('be.visible')
       .click();
 
+    ui.regionSelect.find().click();
+
+    //  Select a region from the dropdown.
+    ui.regionSelect.find().click();
+
+    ui.regionSelect.find().type(extendedMockRegion.label);
+
+    // Since Linode does not support this region, we expect it to not be in the dropdown.
+
+    ui.autocompletePopper.find().within(() => {
+      cy.findByText(
+        `${extendedMockRegion.label} (${extendedMockRegion.id})`
+      ).should('not.exist');
+    });
+
     // Select a region from the dropdown.
-    ui.regionSelect.find().click().type(`${region}{enter}`);
+    ui.regionSelect.find().click().clear().type(`${region}{enter}`);
 
     // Select a resource from the autocomplete input.
     ui.autocomplete

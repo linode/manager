@@ -61,7 +61,7 @@ const flags: Partial<Flags> = {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-east,  us-ord',
+      supportedRegionIds: 'us-ord',
     },
   ],
 };
@@ -110,6 +110,12 @@ const mockRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
+});
+
+const extendedMockRegion = regionFactory.build({
+  capabilities: ['Managed Databases'],
+  id: 'us-east',
+  label: 'Newark,NL',
 });
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
@@ -189,7 +195,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
     );
-    mockGetRegions([mockRegion]);
+    mockGetRegions([mockRegion, extendedMockRegion]);
     mockGetUserPreferences({});
     mockGetDatabases([databaseMock]).as('getDatabases');
 
@@ -231,6 +237,18 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();
+
+    ui.regionSelect.find().type(extendedMockRegion.label);
+
+    // Since DBaaS does not support this region, we expect it to not be in the dropdown.
+
+    ui.autocompletePopper.find().within(() => {
+      cy.findByText(
+        `${extendedMockRegion.label} (${extendedMockRegion.id})`
+      ).should('not.exist');
+    });
+
+    ui.regionSelect.find().click().clear();
     ui.regionSelect
       .findItemByRegionId(mockRegion.id, [mockRegion])
       .should('be.visible')
