@@ -5,7 +5,8 @@ import {
   StyledEditableText,
   StyledH1Header,
 } from './FinalCrumb.styles';
-import { EditableProps, LabelProps } from './types';
+
+import type { EditableProps, LabelProps } from './types';
 
 interface Props {
   crumb: string;
