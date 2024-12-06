@@ -21,12 +21,44 @@ export interface SelectProps
     | 'textFieldProps'
     | 'value'
   > {
+  /**
+   * Whether the select can be cleared once a value is selected.
+   *
+   * @default false
+   */
   clearable?: boolean;
+  /**
+   * Whether the select can create a new option.
+   * This will enable the freeSolo prop on the Autocomplete component.
+   *
+   * @default false
+   */
   creatable?: boolean;
+  /**
+   * Whether to visually hide the label, which is still required for accessibility.
+   *
+   * @default false
+   */
   hideLabel?: boolean;
+  /**
+   * The label for the select.
+   */
   label: string;
+  /**
+   * The callback function that is invoked when the value changes.
+   */
   onChange?: (_event: React.SyntheticEvent, _value: OptionType | null) => void;
+  /**
+   * Whether the select is required.
+   *
+   * @default false
+   */
   required?: boolean;
+  /**
+   * Whether the select is searchable.
+   *
+   * @default false
+   */
   searchable?: boolean;
 }
 
