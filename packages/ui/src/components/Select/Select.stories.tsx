@@ -16,12 +16,17 @@ const meta: Meta<SelectProps> = {
 type Story = StoryObj<SelectProps>;
 
 const defaultArgs: SelectProps = {
+  clearable: false,
+  creatable: false,
+  hideLabel: false,
   label: 'A Select with a couple options',
   options: [
     { label: 'Option 1', value: 'option-1' },
     { label: 'Option 2', value: 'option-2' },
   ],
   placeholder: 'Select an option',
+  required: false,
+  searchable: false,
 };
 
 export const Default: Story = {
@@ -81,6 +86,8 @@ export const Creatable: Story = {
   args: {
     ...defaultArgs,
     creatable: true,
+    label: 'A select where one can create an option',
+    placeholder: 'Select or create an option',
   },
   render: (args) => {
     const Wrapper = () => {
