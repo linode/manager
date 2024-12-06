@@ -18,6 +18,7 @@ import {
 } from '../Utils/constants';
 import {
   getCustomSelectProperties,
+  getFilters,
   getRegionProperties,
   getResourcesProperties,
 } from '../Utils/FilterBuilder';
@@ -234,7 +235,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     };
 
     const RenderFilters = React.useCallback(() => {
-      const filters = FILTER_CONFIG.get(dashboard.service_type)?.filters || [];
+      const filters = getFilters(dashboard, isServiceAnalyticsIntegration);
 
       if (!filters || filters.length === 0) {
         // if the filters are not defined , print an error state
@@ -277,13 +278,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }
 
     // Count number of filters to be render
-    const filterCount = FILTER_CONFIG.get(
-      dashboard.service_type
-    )?.filters?.filter((config) =>
-      isServiceAnalyticsIntegration
-        ? config.configuration.neededInServicePage
-        : config.configuration.filterKey !== RELATIVE_TIME_DURATION
-    ).length;
+    const filterCount = getFilters(dashboard, isServiceAnalyticsIntegration)
+      ?.length;
 
     return (
       <Grid
