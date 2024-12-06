@@ -1,4 +1,5 @@
-import { Box, Grid, Paper } from '@mui/material';
+import { Box, Paper } from '@linode/ui';
+import { Grid } from '@mui/material';
 import * as React from 'react';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
@@ -9,9 +10,9 @@ import type { Dashboard, TimeDuration } from '@linode/api-v4';
 
 export type FilterValueType = number | number[] | string | string[] | undefined;
 
-export interface FilterValue {
-  id: { [key: string]: FilterValueType };
-  label: { [key: string]: string[] };
+export interface FilterData {
+  id: { [filterKey: string]: FilterValueType };
+  label: { [filterKey: string]: string[] };
 }
 export interface DashboardProp {
   dashboard?: Dashboard;
@@ -22,7 +23,7 @@ export interface DashboardProp {
 }
 
 export const CloudPulseDashboardLanding = () => {
-  const [filterValue, setFilterValue] = React.useState<FilterValue>({
+  const [filterData, setFilterData] = React.useState<FilterData>({
     id: {},
     label: {},
   });
@@ -41,7 +42,7 @@ export const CloudPulseDashboardLanding = () => {
 
   const onFilterChange = React.useCallback(
     (filterKey: string, filterValue: FilterValueType, labels: string[]) => {
-      setFilterValue((prev: FilterValue) => {
+      setFilterData((prev: FilterData) => {
         return {
           id: {
             ...prev.id,
@@ -59,7 +60,7 @@ export const CloudPulseDashboardLanding = () => {
 
   const onDashboardChange = React.useCallback((dashboardObj: Dashboard) => {
     setDashboard(dashboardObj);
-    setFilterValue({
+    setFilterData({
       id: {},
       label: {},
     }); // clear the filter values on dashboard change
@@ -83,7 +84,7 @@ export const CloudPulseDashboardLanding = () => {
             />
             {dashboard?.service_type && showAppliedFilters && (
               <CloudPulseAppliedFilterRenderer
-                filters={filterValue.label}
+                filters={filterData.label}
                 serviceType={dashboard.service_type}
               />
             )}
@@ -92,7 +93,7 @@ export const CloudPulseDashboardLanding = () => {
       </Grid>
       <CloudPulseDashboardRenderer
         dashboard={dashboard}
-        filterValue={filterValue.id}
+        filterValue={filterData.id}
         timeDuration={timeDuration}
       />
     </Grid>
