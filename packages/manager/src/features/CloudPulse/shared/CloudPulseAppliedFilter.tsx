@@ -16,7 +16,7 @@ export const CloudPulseAppliedFilter = (
       data-testid="applied-filter"
       display="flex"
       flexDirection={{ sm: 'row', xs: 'column' }}
-      flexWrap={{ sm: 'wrap', xs: 'nowrap' }}
+      flexWrap={{ sm: 'wrap' }}
       maxHeight="70px"
       mb={2}
       mx={3}
@@ -40,10 +40,12 @@ export const CloudPulseAppliedFilter = (
                 <Chip
                   sx={{
                     backgroundColor: '#f0f7ff',
+                    color: '#3d3d42',
                     fontSize: '14px',
                     mr: index === filterValue.length - 1 ? 4 : 1,
                     px: 1,
                     py: 0.5,
+                    width: { sm: 'fit-content', xs: '100%' },
                   }}
                   key={`${label} ${value}`}
                   label={value}
