@@ -34,6 +34,44 @@ export const Default: Story = {
   render: (args) => <Select {...args} />,
 };
 
+export const Creatable: Story = {
+  args: {
+    ...defaultArgs,
+    creatable: true,
+    label: 'A select where one can create an option',
+    placeholder: 'Select or create an option',
+  },
+  render: (args) => {
+    const Wrapper = () => {
+      const [value, setValue] = React.useState(args.value);
+
+      return (
+        <>
+          <Select
+            {...args}
+            textFieldProps={{
+              onChange: (e) =>
+                setValue({
+                  label: e.target.value,
+                  value: e.target.value.replace(' ', '-').toLowerCase(),
+                }),
+            }}
+            onChange={(_, newValue) => setValue(newValue)}
+            value={value}
+          />
+          <Box sx={{ mt: 2 }}>
+            <Typography>
+              <strong>Selected Value: </strong> {JSON.stringify(value)}
+            </Typography>
+          </Box>
+        </>
+      );
+    };
+
+    return <Wrapper />;
+  },
+};
+
 export const Searchable: Story = {
   args: {
     ...defaultArgs,
@@ -82,42 +120,13 @@ export const WithErrorText: Story = {
   render: (args) => <Select {...args} />,
 };
 
-export const Creatable: Story = {
+export const NoOptionsText: Story = {
   args: {
     ...defaultArgs,
-    creatable: true,
-    label: 'A select where one can create an option',
-    placeholder: 'Select or create an option',
+    noOptionsText: "Nothin' here",
+    options: [],
   },
-  render: (args) => {
-    const Wrapper = () => {
-      const [value, setValue] = React.useState(args.value);
-
-      return (
-        <>
-          <Select
-            {...args}
-            textFieldProps={{
-              onChange: (e) =>
-                setValue({
-                  label: e.target.value,
-                  value: e.target.value.replace(' ', '-').toLowerCase(),
-                }),
-            }}
-            onChange={(_, newValue) => setValue(newValue)}
-            value={value}
-          />
-          <Box sx={{ mt: 2 }}>
-            <Typography>
-              <strong>Selected Value: </strong> {JSON.stringify(value)}
-            </Typography>
-          </Box>
-        </>
-      );
-    };
-
-    return <Wrapper />;
-  },
+  render: (args) => <Select {...args} />,
 };
 
 export default meta;
