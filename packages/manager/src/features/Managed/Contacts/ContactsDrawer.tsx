@@ -205,6 +205,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                         }
                       : null
                   }
+                  clearable
                   creatable
                   errorText={errors.group}
                   label="Group"
