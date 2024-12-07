@@ -1,14 +1,17 @@
-import { styled } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from '../Autocomplete';
-import { Box } from '../Box';
+import { ListItem } from '../ListItem';
 import { TextField } from '../TextField';
 
 import type { EnhancedAutocompleteProps } from '../Autocomplete';
-import type { BoxProps } from '../Box';
 
-type OptionType = { label: string; value: string };
+type OptionType = {
+  create?: boolean;
+  label: string;
+  noOptions?: boolean;
+  value: string;
+};
 
 export interface SelectProps
   extends Pick<
@@ -79,7 +82,7 @@ export const Select = (props: SelectProps) => {
     label,
     noOptionsText = 'No options available',
     onChange,
-    options = [],
+    options,
     searchable = false,
     textFieldProps,
     ...rest
@@ -93,90 +96,106 @@ export const Select = (props: SelectProps) => {
     if (creatable && typeof value === 'string') {
       onChange?.(event, {
         label: value,
-        value: value.toLowerCase().replace(/\s+/g, '-'),
+        value,
       });
     } else {
       onChange?.(event, value as OptionType | null);
     }
   };
 
+  const selectedOptions = React.useMemo(
+    () => getOptions({ creatable, inputValue, options }),
+    [creatable, inputValue, options]
+  );
+
   return (
-    <SelectContainer creatable={creatable}>
-      <Autocomplete
-        {...rest}
-        options={
-          creatable
-            ? options.length === 0 && !inputValue
-              ? [{ label: 'No options available', value: '' }] // No options at all
-              : inputValue && !options.some((opt) => opt.value === inputValue)
-              ? [
-                  // Has input and it's unique
-                  { label: `Create "${inputValue}"`, value: inputValue },
-                  ...options,
-                ]
-              : options // Either no input or input matches existing option
-            : options // Not creatable
-        }
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            {...textFieldProps}
-            inputProps={{
-              ...params.inputProps,
-              ...textFieldProps?.inputProps,
-              readOnly: !creatable && !searchable,
-            }}
-            errorText={props.errorText}
-            helperText={props.helperText}
-            hideLabel={hideLabel}
-            inputId={params.id}
-            label={label}
-            placeholder={props.placeholder}
-            required={props.required}
-          />
-        )}
-        renderOption={(props, option: OptionType) => (
-          <li
-            {...props}
-            className={`${props.className} ${
-              option?.value === '' ? 'no-options' : ''
-            }`}
+    <Autocomplete
+      {...rest}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          {...textFieldProps}
+          inputProps={{
+            ...params.inputProps,
+            ...textFieldProps?.inputProps,
+            readOnly: !creatable && !searchable,
+          }}
+          errorText={props.errorText}
+          helperText={props.helperText}
+          hideLabel={hideLabel}
+          inputId={params.id}
+          label={label}
+          placeholder={props.placeholder}
+          required={props.required}
+        />
+      )}
+      renderOption={(props, option: OptionType) => {
+        const { key, ...rest } = props;
+        return (
+          <ListItem
+            {...rest}
+            sx={
+              option.noOptions
+                ? {
+                    opacity: '1 !important',
+                  }
+                : null
+            }
+            key={key}
           >
-            {option?.label}
-          </li>
-        )}
-        disableClearable={!clearable}
-        forcePopupIcon
-        freeSolo={creatable}
-        getOptionDisabled={(option: OptionType) => option.value === ''}
-        label={label}
-        noOptionsText={noOptionsText}
-        onChange={handleChange}
-        onInputChange={(_, value) => setInputValue(value)}
-      />
-    </SelectContainer>
+            {option.create ? (
+              <>
+                <strong>Create&nbsp;</strong> &quot;{option.label}&quot;
+              </>
+            ) : (
+              option.label
+            )}
+          </ListItem>
+        );
+      }}
+      disableClearable={!clearable}
+      forcePopupIcon
+      freeSolo={creatable}
+      getOptionDisabled={(option: OptionType) => option.value === ''}
+      label={label}
+      noOptionsText={noOptionsText}
+      onChange={handleChange}
+      onInputChange={(_, value) => setInputValue(value)}
+      options={selectedOptions}
+      selectOnFocus={false}
+    />
   );
 };
 
-interface SelectContainerProps extends BoxProps {
-  creatable?: boolean;
-  searchable?: boolean;
+interface GetOptionsProps {
+  creatable: SelectProps['creatable'];
+  inputValue: string;
+  options: readonly OptionType[];
 }
 
-const SelectContainer = styled(Box, {
-  label: 'SelectWrapper',
-  shouldForwardProp: (prop) => prop !== 'creatable' && prop !== 'searchable',
-})<SelectContainerProps>(({ creatable, searchable }) => ({
-  '& .MuiAutocomplete-option.no-options': {
-    opacity: 1,
-  },
-  '& .MuiInputBase-root, & .MuiInputBase-input': {
-    ...(!creatable &&
-      !searchable && {
-        '&::selection': {
-          backgroundColor: 'transparent !important',
-        },
-        cursor: 'pointer',
-      }),
-  },
-}));
+const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
+  if (!creatable) {
+    return options;
+  }
+
+  if (options.length === 0 && !inputValue) {
+    return [{ label: 'No options available', noOptions: true, value: '' }];
+  }
+
+  if (inputValue && !options.some((opt) => opt.value === inputValue)) {
+    return [
+      { create: true, label: inputValue, value: inputValue },
+      ...options,
+    ].sort((a, b) => {
+      if (a.create) {
+        return -1;
+      }
+      if (b.create) {
+        return 1;
+      }
+      return a.label.localeCompare(b.label);
+    });
+  }
+
+  return options;
+};
