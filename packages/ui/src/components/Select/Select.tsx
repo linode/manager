@@ -106,7 +106,7 @@ export const Select = (props: SelectProps) => {
         {...rest}
         options={
           creatable
-            ? options.length === 0
+            ? options.length === 0 && !inputValue
               ? [{ label: 'No options available', value: '' }] // No options at all
               : inputValue && !options.some((opt) => opt.value === inputValue)
               ? [
