@@ -1,7 +1,12 @@
 /**
- * @file Integration tests for CloudPulse navigation.
+ * @file Error Handling Tests for CloudPulse Region Selection
+ * 
+ * This file contains tests to verify the proper handling of errors 
+ * when interacting with region selection features in CloudPulse. 
+ * The tests focus on scenarios such as invalid or unsupported regions, 
+ * and ensure the application behaves as expected, providing appropriate 
+ * error messages or fallback behavior when necessary.
  */
-
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetAccount } from 'support/intercepts/account';
 import { accountFactory } from 'src/factories';
