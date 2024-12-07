@@ -146,6 +146,7 @@ export const Select = (props: SelectProps) => {
           </li>
         )}
         disableClearable={!clearable}
+        forcePopupIcon
         freeSolo={creatable}
         getOptionDisabled={(option: OptionType) => option.value === ''}
         label={label}
