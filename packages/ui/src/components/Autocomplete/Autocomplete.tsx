@@ -144,10 +144,6 @@ export const Autocomplete = <
                     </>
                   ),
                 }}
-                inputProps={{
-                  ...params.inputProps,
-                  ...textFieldProps?.inputProps,
-                }}
               />
             )
       }

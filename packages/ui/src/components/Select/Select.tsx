@@ -16,6 +16,7 @@ export interface SelectProps
     | 'errorText'
     | 'helperText'
     | 'loading'
+    | 'noOptionsText'
     | 'options'
     | 'placeholder'
     | 'textFieldProps'
@@ -76,11 +77,14 @@ export const Select = (props: SelectProps) => {
     creatable = false,
     hideLabel = false,
     label,
+    noOptionsText = 'No options available',
     onChange,
+    options = [],
     searchable = false,
     textFieldProps,
     ...rest
   } = props;
+  const [inputValue, setInputValue] = React.useState('');
 
   const handleChange = (
     event: React.SyntheticEvent,
@@ -100,43 +104,54 @@ export const Select = (props: SelectProps) => {
     <SelectContainer creatable={creatable}>
       <Autocomplete
         {...rest}
-        renderInput={
+        options={
           creatable
-            ? (params) => (
-                <TextField
-                  {...params}
-                  {...textFieldProps}
-                  errorText={props.errorText}
-                  helperText={props.helperText}
-                  hideLabel={hideLabel}
-                  inputId={params.id}
-                  label={label}
-                  placeholder={props.placeholder}
-                  required={props.required}
-                />
-              )
-            : undefined
+            ? options.length === 0
+              ? [{ label: 'No options available', value: '' }] // No options at all
+              : inputValue && !options.some((opt) => opt.value === inputValue)
+              ? [
+                  // Has input and it's unique
+                  { label: `Create "${inputValue}"`, value: inputValue },
+                  ...options,
+                ]
+              : options // Either no input or input matches existing option
+            : options // Not creatable
         }
-        textFieldProps={
-          !creatable
-            ? {
-                ...textFieldProps,
-                InputProps: {
-                  ...textFieldProps?.InputProps,
-                  required: props.required,
-                },
-                hideLabel,
-                inputProps: {
-                  ...textFieldProps?.inputProps,
-                  readOnly: !searchable,
-                },
-              }
-            : undefined
-        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            {...textFieldProps}
+            inputProps={{
+              ...params.inputProps,
+              ...textFieldProps?.inputProps,
+              readOnly: !creatable && !searchable,
+            }}
+            errorText={props.errorText}
+            helperText={props.helperText}
+            hideLabel={hideLabel}
+            inputId={params.id}
+            label={label}
+            placeholder={props.placeholder}
+            required={props.required}
+          />
+        )}
+        renderOption={(props, option: OptionType) => (
+          <li
+            {...props}
+            className={`${props.className} ${
+              option?.value === '' ? 'no-options' : ''
+            }`}
+          >
+            {option?.label}
+          </li>
+        )}
         disableClearable={!clearable}
         freeSolo={creatable}
+        getOptionDisabled={(option: OptionType) => option.value === ''}
         label={label}
+        noOptionsText={noOptionsText}
         onChange={handleChange}
+        onInputChange={(_, value) => setInputValue(value)}
       />
     </SelectContainer>
   );
@@ -144,15 +159,23 @@ export const Select = (props: SelectProps) => {
 
 interface SelectContainerProps extends BoxProps {
   creatable?: boolean;
+  searchable?: boolean;
 }
 
-const SelectContainer = styled(Box)<SelectContainerProps>(({ creatable }) => ({
+const SelectContainer = styled(Box, {
+  label: 'SelectWrapper',
+  shouldForwardProp: (prop) => prop !== 'creatable' && prop !== 'searchable',
+})<SelectContainerProps>(({ creatable, searchable }) => ({
+  '& .MuiAutocomplete-option.no-options': {
+    opacity: 1,
+  },
   '& .MuiInputBase-root, & .MuiInputBase-input': {
-    ...(!creatable && {
-      '&::selection': {
-        backgroundColor: 'transparent !important',
-      },
-    }),
-    cursor: 'pointer',
+    ...(!creatable &&
+      !searchable && {
+        '&::selection': {
+          backgroundColor: 'transparent !important',
+        },
+        cursor: 'pointer',
+      }),
   },
 }));
