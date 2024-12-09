@@ -132,21 +132,14 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     });
   });
 
-  it('should only display mocking region as Chicago and then supportedRegionIds is set to empty', () => {
+  it.skip('If the supportedRegionIds column is removed, all mocked regions will be considered supported by default', () => {
     const flags: Partial<Flags> = {
       aclp: { enabled: true, beta: true },
       aclpResourceTypeMap: [
-        {
-          dimensionKey: 'LINODE_ID',
-          maxResourceSelections: 10,
-          serviceType: 'linode',
-          supportedRegionIds: '',
-        },
-        {
+         {
           dimensionKey: 'cluster_id',
           maxResourceSelections: 10,
           serviceType: 'dbaas',
-          supportedRegionIds: '',
         },
       ],
     };
@@ -186,6 +179,55 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
         .should('be.visible')
         .should('have.text', 'US, Chicago, IL');
+    });
+  });
+  it('supportedRegionIds is empty, no regions will be displayed', () => {
+    const flags: Partial<Flags> = {
+      aclp: { enabled: true, beta: true },
+      aclpResourceTypeMap: [
+        {
+          dimensionKey: 'LINODE_ID',
+          maxResourceSelections: 10,
+          serviceType: 'linode',
+          supportedRegionIds: '',
+        },
+        {
+          dimensionKey: 'cluster_id',
+          maxResourceSelections: 10,
+          serviceType: 'dbaas',
+          supportedRegionIds: '',
+        },
+      ],
+    };
+    mockAppendFeatureFlags(flags).as('getFeatureFlags');
+    cy.visitWithLogin('monitor');
+    cy.wait('@getFeatureFlags');
+
+    // Selecting a dashboard from the autocomplete input.
+    ui.autocomplete
+      .findByLabel('Dashboard')
+      .should('be.visible')
+      .type(dashboardName);
+
+    ui.autocompletePopper
+      .findByTitle(dashboardName)
+      .should('be.visible')
+      .click();
+
+    // Wait for the services and dashboard ,Region API calls to complete before proceeding
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchRegion']);
+
+    ui.regionSelect.find().click();
+    ui.autocompletePopper.find().within(() => {
+      cy.get('[data-option-index]').should('have.length', 0);
+    });
+
+    // Expand the applied filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
+
+    // Verify that the applied filters
+    cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
+      cy.get('h3').should('not.exist');
     });
   });
 

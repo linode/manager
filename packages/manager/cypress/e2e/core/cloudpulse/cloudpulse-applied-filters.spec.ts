@@ -31,7 +31,23 @@ import type { Flags } from 'src/featureFlags';
 
 const timeDurationToSelect = 'Last 24 Hours';
 
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+const flags: Partial<Flags> = {
+  aclp: { enabled: true, beta: true },
+  aclpResourceTypeMap: [
+    {
+      dimensionKey: 'LINODE_ID',
+      maxResourceSelections: 10,
+      serviceType: 'linode',
+      supportedRegionIds: '',
+    },
+    {
+      dimensionKey: 'cluster_id',
+      maxResourceSelections: 10,
+      serviceType: 'dbaas',
+      supportedRegionIds: 'us-ord',
+    },
+  ],
+};
 
 const {
   metrics,
