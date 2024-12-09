@@ -160,7 +160,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
           <Grid item mb={3} mt={-3} xs={12}>
             {showAppliedFilters && (
               <CloudPulseAppliedFilterRenderer
-                filters={filterValue.label}
+                filters={filterData.label}
                 serviceType={dashboard.service_type}
               />
             )}
