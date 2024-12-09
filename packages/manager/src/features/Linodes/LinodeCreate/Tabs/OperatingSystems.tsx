@@ -32,7 +32,7 @@ export const OperatingSystems = () => {
     name: 'region',
   });
 
-  const { data: region } = useRegionQuery(regionId ?? -1);
+  const { data: region } = useRegionQuery(regionId);
 
   const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
