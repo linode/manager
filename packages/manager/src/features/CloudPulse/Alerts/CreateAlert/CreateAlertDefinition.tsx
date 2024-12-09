@@ -9,18 +9,20 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
+import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
 import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { CreateAlertDefinitionFormSchema } from './schemas';
-import { filterFormValues, filterMetricCriteriaFormValues } from './utilities';
+import { filterFormValues } from './utilities';
 
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
 import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
 
 const triggerConditionInitialValues: TriggerCondition = {
+  criteria_condition: 'ALL',
   evaluation_period_seconds: 0,
   polling_interval_seconds: 0,
   trigger_occurrences: 0,
@@ -28,9 +30,9 @@ const triggerConditionInitialValues: TriggerCondition = {
 const criteriaInitialValues: MetricCriteriaForm = {
   aggregation_type: null,
   dimension_filters: [],
-  metric: '',
+  metric: null,
   operator: null,
-  value: 0,
+  threshold: 0,
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
@@ -39,11 +41,11 @@ const initialValues: CreateAlertDefinitionForm = {
   label: '',
   region: '',
   rule_criteria: {
-    rules: filterMetricCriteriaFormValues(criteriaInitialValues),
+    rules: [criteriaInitialValues],
   },
   serviceType: null,
   severity: null,
-  triggerCondition: triggerConditionInitialValues,
+  trigger_condition: triggerConditionInitialValues,
 };
 
 const overrides = [
@@ -81,6 +83,11 @@ export const CreateAlertDefinition = () => {
     getValues('serviceType')!
   );
 
+  /**
+   * The maxScrapeInterval variable will be required for the Trigger Conditions part of the Critieria section.
+   */
+  const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
+
   const serviceTypeWatcher = watch('serviceType');
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -92,8 +99,13 @@ export const CreateAlertDefinition = () => {
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
+          // eslint-disable-next-line no-console
+          console.log(error);
           setError(error.field, { message: error.reason });
         } else {
+          enqueueSnackbar(`Alert failed: ${error.reason}`, {
+            variant: 'error',
+          });
           setError('root', { message: error.reason });
         }
       }
@@ -150,6 +162,13 @@ export const CreateAlertDefinition = () => {
             serviceType={serviceTypeWatcher}
           />
           <CloudPulseAlertSeveritySelect name="severity" />
+          <MetricCriteriaField
+            getMaxInterval={(interval: number) =>
+              setMaxScrapeInterval(interval)
+            }
+            name="rule_criteria.rules"
+            serviceType={serviceTypeWatcher!}
+          />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',

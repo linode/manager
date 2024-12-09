@@ -1,0 +1,277 @@
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
+
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+
+import { convertToSeconds } from '../utilities';
+import { MetricCriteriaField } from './MetricCriteria';
+
+import type { CreateAlertDefinitionForm } from '../types';
+import type { MetricDefinitions } from '@linode/api-v4';
+
+const queryMocks = vi.hoisted(() => ({
+  useGetCloudPulseMetricDefinitionsByServiceType: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/cloudpulse/services', async () => {
+  const actual = await vi.importActual('src/queries/cloudpulse/services');
+  return {
+    ...actual,
+    useGetCloudPulseMetricDefinitionsByServiceType:
+      queryMocks.useGetCloudPulseMetricDefinitionsByServiceType,
+  };
+});
+
+const mockData: MetricDefinitions = {
+  data: [
+    {
+      available_aggregate_functions: ['min', 'max', 'avg'],
+      dimensions: [
+        {
+          dimension_label: 'cpu',
+          label: 'CPU name',
+          values: [],
+        },
+        {
+          dimension_label: 'state',
+          label: 'State of CPU',
+          values: [
+            'user',
+            'system',
+            'idle',
+            'interrupt',
+            'nice',
+            'softirq',
+            'steal',
+            'wait',
+          ],
+        },
+        {
+          dimension_label: 'LINODE_ID',
+          label: 'Linode ID',
+          values: [],
+        },
+      ],
+      label: 'CPU utilization',
+      metric: 'system_cpu_utilization_percent',
+      metric_type: 'gauge',
+      scrape_interval: '2m',
+      unit: 'percent',
+    },
+    {
+      available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+      dimensions: [
+        {
+          dimension_label: 'state',
+          label: 'State of memory',
+          values: [
+            'used',
+            'free',
+            'buffered',
+            'cached',
+            'slab_reclaimable',
+            'slab_unreclaimable',
+          ],
+        },
+        {
+          dimension_label: 'LINODE_ID',
+          label: 'Linode ID',
+          values: [],
+        },
+      ],
+      label: 'Memory Usage',
+      metric: 'system_memory_usage_by_resource',
+      metric_type: 'gauge',
+      scrape_interval: '30s',
+      unit: 'byte',
+    },
+  ],
+};
+
+queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+  data: mockData,
+  isError: false,
+  isLoading: false,
+  status: 'success',
+});
+
+describe('MetricCriteriaField', () => {
+  const user = userEvent.setup();
+  it('renders correctly', () => {
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <MetricCriteriaField
+          getMaxInterval={vi.fn()}
+          name="rule_criteria.rules"
+          serviceType="linode"
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          rule_criteria: {
+            rules: [mockData.data[0]],
+          },
+        },
+      },
+    });
+    expect(screen.getByText('2. Criteria')).toBeVisible();
+    expect(screen.getByText('Metric Threshold')).toBeVisible();
+  });
+
+  it('renders the initial metric field without the delete-icon', async () => {
+    const {
+      getByTestId,
+      queryByTestId,
+    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <MetricCriteriaField
+          getMaxInterval={vi.fn()}
+          name="rule_criteria.rules"
+          serviceType="linode"
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          rule_criteria: {
+            rules: [mockData.data[0]],
+          },
+        },
+      },
+    });
+    expect(getByTestId('rule_criteria.rules.0-id')).toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        queryByTestId('rule_criteria.rules.0-delete-icon')
+      ).not.toBeInTheDocument()
+    );
+  });
+
+  it('handles error state while fetching metric definitions', async () => {
+    // Mock the API to simulate error state
+    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+      data: undefined,
+      isError: true,
+      isLoading: false,
+      status: 'error',
+    }),
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+        component: (
+          <MetricCriteriaField
+            getMaxInterval={vi.fn()}
+            name="rule_criteria.rules"
+            serviceType="linode"
+          />
+        ),
+        useFormOptions: {
+          defaultValues: {
+            rule_criteria: {
+              rules: [mockData.data[0]],
+            },
+          },
+        },
+      });
+    expect(
+      await screen.findByText(/Error in fetching the data./i)
+    ).toBeInTheDocument();
+  });
+
+  it('adds and removes metric fields dynamically', async () => {
+    const {
+      getByTestId,
+      queryByTestId,
+    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <MetricCriteriaField
+          getMaxInterval={vi.fn()}
+          name="rule_criteria.rules"
+          serviceType="linode"
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          rule_criteria: {
+            rules: [mockData.data[0]],
+          },
+        },
+      },
+    });
+    await user.click(screen.getByRole('button', { name: 'Add metric' }));
+    expect(getByTestId('rule_criteria.rules.1-id')).toBeInTheDocument();
+    await user.click(screen.getByTestId('rule_criteria.rules.1-delete-icon'));
+    await waitFor(() =>
+      expect(queryByTestId('rule_criteria.rules.1-id')).not.toBeInTheDocument()
+    );
+  });
+
+  it('getMaxInterval has to be called', async () => {
+    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+      data: mockData,
+      isError: true,
+      isLoading: false,
+      status: 'error',
+    });
+    const getMaxInterval = vi.fn();
+    const firstOption = mockData.data[0];
+    const [firstOptionConvertedTime] = convertToSeconds([
+      firstOption.scrape_interval,
+    ]);
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <MetricCriteriaField
+          getMaxInterval={getMaxInterval}
+          name="rule_criteria.rules"
+          serviceType="linode"
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          rule_criteria: {
+            rules: [firstOption],
+          },
+        },
+      },
+    });
+
+    expect(getMaxInterval).toBeCalledWith(firstOptionConvertedTime);
+  });
+
+  it('getMaxInterval has to be called', async () => {
+    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+      data: mockData,
+      isError: true,
+      isLoading: false,
+      status: 'error',
+    });
+    const getMaxInterval = vi.fn();
+    const firstOption = mockData.data[0];
+    const secondOption = mockData.data[1];
+    const [
+      firstOptionConvertedTime,
+      secondOptionConvertedTime,
+    ] = convertToSeconds([
+      firstOption.scrape_interval,
+      secondOption.scrape_interval,
+    ]);
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <MetricCriteriaField
+          getMaxInterval={getMaxInterval}
+          name="rule_criteria.rules"
+          serviceType="linode"
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          rule_criteria: {
+            rules: [firstOption, secondOption],
+          },
+        },
+      },
+    });
+
+    expect(getMaxInterval).toBeCalledWith(
+      Math.max(firstOptionConvertedTime, secondOptionConvertedTime)
+    );
+  });
+});

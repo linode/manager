@@ -34,11 +34,12 @@ export const CloudPulseMultiResourceSelect = (
   const { engine, name, region, serviceType } = { ...props };
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
 
+
   const { data: resources, isError, isLoading } = useResourcesQuery(
     Boolean(region && serviceType),
     serviceType?.toString(),
     {},
-    engine !== null ? { engine, region } : { region }
+    serviceType === 'dbaas' ? { engine, region } : { region }
   );
 
   const getResourcesList = React.useMemo((): Item<string, string>[] => {

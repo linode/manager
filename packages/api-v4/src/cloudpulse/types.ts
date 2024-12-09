@@ -5,6 +5,17 @@ export type AlertServiceType = 'linode' | 'dbaas';
 type DimensionFilterOperatorType = 'eq' | 'neq' | 'startswith' | 'endswith';
 export type AlertDefinitionType = 'default' | 'custom';
 export type AlertStatusType = 'enabled' | 'disabled';
+export type CriteriaConditionType = 'ALL';
+export type MetricUnitType =
+  | 'number'
+  | 'byte'
+  | 'second'
+  | 'percent'
+  | 'bit_per_second'
+  | 'millisecond'
+  | 'KB'
+  | 'MB'
+  | 'GB';
 export interface Dashboard {
   id: number;
   label: string;
@@ -148,18 +159,23 @@ export interface CreateAlertDefinitionPayload {
   rule_criteria: {
     rules: MetricCriteria[];
   };
-  triggerCondition: TriggerCondition;
+  trigger_condition: TriggerCondition;
   channel_ids: number[];
 }
 export interface MetricCriteria {
   metric: string;
   aggregation_type: MetricAggregationType;
   operator: MetricOperatorType;
-  value: number;
+  threshold: number;
   dimension_filters: DimensionFilter[];
 }
 
+export interface AlertDefinitionMetricCriteria extends MetricCriteria {
+  unit: string;
+  label: string;
+}
 export interface DimensionFilter {
+  label: string;
   dimension_label: string;
   operator: DimensionFilterOperatorType;
   value: string;
@@ -169,6 +185,7 @@ export interface TriggerCondition {
   polling_interval_seconds: number;
   evaluation_period_seconds: number;
   trigger_occurrences: number;
+  criteria_condition: CriteriaConditionType;
 }
 export interface Alert {
   id: number;
@@ -181,9 +198,9 @@ export interface Alert {
   service_type: AlertServiceType;
   entity_ids: string[];
   rule_criteria: {
-    rules: MetricCriteria[];
+    rules: AlertDefinitionMetricCriteria[];
   };
-  triggerCondition: TriggerCondition;
+  trigger_condition: TriggerCondition;
   channels: {
     id: string;
     label: string;
