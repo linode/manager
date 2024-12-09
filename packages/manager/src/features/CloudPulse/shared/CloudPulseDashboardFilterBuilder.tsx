@@ -231,9 +231,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const toggleShowFilter = () => {
       handleToggleAppliedFilter(showFilter);
-      setShowFilter((showFilterPrev) => {
-        return !showFilterPrev;
-      });
+      setShowFilter((showFilterPrev) => !showFilterPrev);
     };
 
     const RenderFilters = React.useCallback(() => {
