@@ -229,8 +229,10 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const toggleShowFilter = () => {
-      setShowFilter((showFilterPrev) => !showFilterPrev);
-      handleToggleAppliedFilter(showFilter);
+      setShowFilter((showFilterPrev) => {
+        handleToggleAppliedFilter(showFilterPrev);
+        return !showFilterPrev;
+      });
     };
 
     const RenderFilters = React.useCallback(() => {
@@ -328,6 +330,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           item
           maxHeight={theme.spacing(23)}
           overflow={'auto'}
+          pr={{ sm: 0, xs: 2 }}
           rowGap={theme.spacing(2)}
           xs={12}
         >
