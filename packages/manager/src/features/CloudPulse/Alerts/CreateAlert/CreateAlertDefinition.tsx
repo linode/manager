@@ -1,12 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Paper, TextField, Typography } from '@linode/ui';
+import { Breadcrumb, Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';

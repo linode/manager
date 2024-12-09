@@ -1,4 +1,3 @@
-import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,7 +8,9 @@ import {
 } from './Crumbs.styles';
 import { FinalCrumb } from './FinalCrumb';
 import { FinalCrumbPrefix } from './FinalCrumbPrefix';
-import { EditableProps, LabelProps } from './types';
+
+import type { EditableProps, LabelProps } from './types';
+import type { LocationDescriptor } from 'history';
 
 export interface CrumbOverridesProps {
   label?: string;
