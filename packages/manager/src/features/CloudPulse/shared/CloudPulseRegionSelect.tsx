@@ -8,6 +8,7 @@ import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { Dashboard, FilterValue, Region } from '@linode/api-v4';
 import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
+import { isNil } from 'ramda';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
@@ -57,17 +58,17 @@ export const CloudPulseRegionSelect = React.memo(
         (item: CloudPulseResourceTypeMapFlag) =>
           item.serviceType === serviceType
       );
-      const supportedRegionsIdList =
-        resourceTypeFlag?.supportedRegionIds
-          ?.split(',')
-          .map((regionId: string) => regionId.trim())
-          .filter((regionId: string) => regionId.length > 0) || [];
 
-      if (!supportedRegionsIdList.length) {
+      if (isNil(resourceTypeFlag?.supportedRegionIds)) {
         return regions;
       }
+
+      const supportedRegionsIdList = resourceTypeFlag.supportedRegionIds
+        .split(',')
+        .map((regionId: string) => regionId.trim());
+
       return regions?.filter((region) =>
-        supportedRegionsIdList?.includes(region.id)
+        supportedRegionsIdList.includes(region.id)
       );
     }, [flags.aclpResourceTypeMap, regions, serviceType]);
 
