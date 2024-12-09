@@ -1,3 +1,4 @@
+import { isNil } from 'ramda';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -8,7 +9,6 @@ import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { Dashboard, FilterValue, Region } from '@linode/api-v4';
 import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
-import { isNil } from 'ramda';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
