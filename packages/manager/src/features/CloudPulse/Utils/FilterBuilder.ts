@@ -54,7 +54,11 @@ interface CloudPulseMandatoryFilterCheckProps {
  */
 export const getRegionProperties = (
   props: CloudPulseFilterProperties,
-  handleRegionChange: (region: string | undefined, savePref?: boolean) => void
+  handleRegionChange: (
+    region: string | undefined,
+    labels: [],
+    savePref?: boolean
+  ) => void
 ): CloudPulseRegionSelectProps => {
   const { name: label, placeholder } = props.config.configuration;
   const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
@@ -119,6 +123,7 @@ export const getCustomSelectProperties = (
   handleCustomSelectChange: (
     filterKey: string,
     value: FilterValueType,
+    labels: string[],
     savePref?: boolean,
     updatedPreferenceData?: {}
   ) => void
