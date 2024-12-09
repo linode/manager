@@ -1,4 +1,4 @@
-import type { UserPreferences } from '@linode/api-v4';
+import type { AclpConfig } from '@linode/api-v4';
 import type { Order } from 'src/hooks/useOrder';
 import type { ThemeChoice } from 'src/utilities/theme';
 
@@ -14,7 +14,8 @@ export interface DismissedNotification {
   label?: string;
 }
 
-export interface ManagerPreferences extends UserPreferences {
+export interface ManagerPreferences {
+  aclpPreference?: AclpConfig; // Why is this type in @linode/api-v4?
   avatarColor?: string;
   backups_cta_dismissed?: boolean;
   collapsedSideNavProductFamilies?: number[];
