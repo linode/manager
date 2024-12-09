@@ -59,6 +59,7 @@ import type {
   ObjectStorageObjectList,
 } from '@linode/api-v4';
 import type { InfiniteData } from '@tanstack/react-query';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 interface MatchParams {
   bucketName: string;
@@ -378,6 +379,7 @@ export const BucketDetail = (props: Props) => {
 
   return (
     <>
+      <DocumentTitleSegment segment={bucketName} />
       <BucketBreadcrumb
         bucketName={bucketName}
         history={history}
