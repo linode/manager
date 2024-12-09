@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -6,17 +6,12 @@ import { compose } from 'recompose';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
-import { DispatchProps } from 'src/containers/longview.container';
-import withClientStats, {
-  Props as LVDataProps,
-} from 'src/containers/longview.stats.container';
+import withClientStats from 'src/containers/longview.stats.container';
 import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';
 
-import { LongviewPackage } from '../request.types';
 import { getPackageNoticeText } from '../shared/utilities';
 import {
   StyledButton,
@@ -25,6 +20,11 @@ import {
   StyledUpdatesGrid,
 } from './LongviewClientHeader.styles';
 import { RestrictedUserLabel } from './RestrictedUserLabel';
+
+import type { LongviewPackage } from '../request.types';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { DispatchProps } from 'src/containers/longview.container';
+import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 interface Props {
   clientID: number;

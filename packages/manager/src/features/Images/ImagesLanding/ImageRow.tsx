@@ -6,15 +6,14 @@ import { Hidden } from 'src/components/Hidden';
 import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useProfile } from 'src/queries/profile/profile';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { convertStorageUnit } from 'src/utilities/unitConversions';
 
 import { ImagesActionMenu } from './ImagesActionMenu';
+import { ImageStatus } from './ImageStatus';
 
 import type { Handlers } from './ImagesActionMenu';
 import type { Event, Image, ImageCapabilities } from '@linode/api-v4';
@@ -49,29 +48,12 @@ export const ImageRow = (props: Props) => {
   const { data: profile } = useProfile();
   const flags = useFlags();
 
-  const isFailed = status === 'pending_upload' && event?.status === 'failed';
-
   const compatibilitiesList = multiRegionsEnabled
     ? capabilities.map((capability) => capabilityMap[capability]).join(', ')
     : '';
 
-  const getStatusForImage = (status: string) => {
-    switch (status) {
-      case 'creating':
-        return (
-          <ProgressDisplay
-            progress={progressFromEvent(event)}
-            text="Creating"
-          />
-        );
-      case 'available':
-        return 'Ready';
-      case 'pending_upload':
-        return isFailed ? 'Failed' : 'Processing';
-      default:
-        return capitalizeAllWords(status.replace('_', ' '));
-    }
-  };
+  const isFailedUpload =
+    image.status === 'pending_upload' && event?.status === 'failed';
 
   const getSizeForImage = (
     size: number,
@@ -87,7 +69,7 @@ export const ImageRow = (props: Props) => {
       }).format(sizeInGB);
 
       return `${formattedSizeInGB} GB`;
-    } else if (isFailed) {
+    } else if (isFailedUpload) {
       return 'N/A';
     } else {
       return 'Pending';
@@ -113,7 +95,9 @@ export const ImageRow = (props: Props) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell>{getStatusForImage(status)}</TableCell>
+        <TableCell noWrap>
+          <ImageStatus event={event} image={image} />
+        </TableCell>
       </Hidden>
       {multiRegionsEnabled && (
         <Hidden smDown>
@@ -168,35 +152,5 @@ export const ImageRow = (props: Props) => {
         <ImagesActionMenu {...props} />
       </TableCell>
     </TableRow>
-  );
-};
-
-export const isImageUpdating = (e?: Event) => {
-  // Make Typescript happy, since this function can otherwise technically return undefined
-  if (!e) {
-    return false;
-  }
-  return (
-    e?.action === 'disk_imagize' && ['scheduled', 'started'].includes(e.status)
-  );
-};
-
-const progressFromEvent = (e?: Event) => {
-  return e?.status === 'started' && e?.percent_complete
-    ? e.percent_complete
-    : undefined;
-};
-
-const ProgressDisplay: React.FC<{
-  progress: number | undefined;
-  text: string;
-}> = (props) => {
-  const { progress, text } = props;
-  const displayProgress = progress ? `${progress}%` : `scheduled`;
-
-  return (
-    <Typography variant="body1">
-      {text}: {displayProgress}
-    </Typography>
   );
 };

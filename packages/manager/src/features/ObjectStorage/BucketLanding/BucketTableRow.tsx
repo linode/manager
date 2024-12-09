@@ -1,4 +1,4 @@
-import { Stack } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -7,7 +7,6 @@ import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
@@ -108,7 +107,8 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
       </Hidden>
       <StyledBucketSizeCell noWrap>
         <Typography data-qa-size variant="body1">
-          {readableBytes(size).formatted}
+          {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
+          {readableBytes(size, { base10: true }).formatted}
         </Typography>
       </StyledBucketSizeCell>
 

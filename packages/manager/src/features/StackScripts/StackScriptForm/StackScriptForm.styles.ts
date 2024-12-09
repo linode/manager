@@ -1,9 +1,8 @@
-import { Notice } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { TextField } from 'src/components/TextField';
 
 export const StyledActionsPanel = styled(ActionsPanel, {
   label: 'StyledActionsPanel',

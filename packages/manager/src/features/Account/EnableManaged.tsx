@@ -1,15 +1,13 @@
 import { enableManaged } from '@linode/api-v4/lib/managed';
-import { Button } from '@linode/ui';
+import { Accordion, Button, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
-import { Typography } from 'src/components/Typography';
 import { updateAccountSettingsData } from 'src/queries/account/settings';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { pluralize } from 'src/utilities/pluralize';

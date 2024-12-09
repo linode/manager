@@ -1,11 +1,17 @@
-import { Box, Button, CircleProgress, Notice, Stack } from '@linode/ui';
+import {
+  Accordion,
+  Box,
+  Button,
+  CircleProgress,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
 import { Link } from 'src/components/Link';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useCancelObjectStorageMutation } from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';

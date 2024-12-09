@@ -1,11 +1,6 @@
-import {
-  EntityTransfer,
-  TransferEntities,
-} from '@linode/api-v4/lib/entity-transfers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Accordion } from '@linode/ui';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableBody } from 'src/components/TableBody';
@@ -19,6 +14,12 @@ import { ConfirmTransferCancelDialog } from './EntityTransfersLanding/ConfirmTra
 import { TransferDetailsDialog } from './EntityTransfersLanding/TransferDetailsDialog';
 import { RenderTransferRow } from './RenderTransferRow';
 import { StyledDiv, StyledTable } from './TransfersTable.styles';
+
+import type {
+  EntityTransfer,
+  TransferEntities,
+} from '@linode/api-v4/lib/entity-transfers';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   error: APIError[] | null;

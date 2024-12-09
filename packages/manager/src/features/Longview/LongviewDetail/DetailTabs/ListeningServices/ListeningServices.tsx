@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -12,10 +13,10 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
-import { LongviewService } from 'src/features/Longview/request.types';
 
 import { LongviewServiceRow } from './LongviewServiceRow';
+
+import type { LongviewService } from 'src/features/Longview/request.types';
 
 export interface TableProps {
   services: LongviewService[];

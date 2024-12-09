@@ -1,10 +1,9 @@
-import { Paper, Stack } from '@linode/ui';
+import { Paper, Stack, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionQuery } from 'src/queries/regions/regions';
 

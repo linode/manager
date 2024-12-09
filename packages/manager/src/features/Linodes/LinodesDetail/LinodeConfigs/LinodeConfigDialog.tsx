@@ -1,13 +1,18 @@
 import {
+  Autocomplete,
   Box,
   Button,
   CircleProgress,
   Divider,
   FormControl,
+  FormControlLabel,
   FormHelperText,
   Notice,
   Radio,
+  TextField,
+  Toggle,
   TooltipIcon,
+  Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -18,15 +23,10 @@ import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle/Toggle';
-import { Typography } from 'src/components/Typography';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import {

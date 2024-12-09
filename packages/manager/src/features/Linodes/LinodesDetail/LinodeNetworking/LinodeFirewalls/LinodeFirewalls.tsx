@@ -1,4 +1,4 @@
-import { Paper, Stack } from '@linode/ui';
+import { Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
@@ -9,7 +9,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { Typography } from 'src/components/Typography';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 

@@ -1,4 +1,4 @@
-import { StyledLinkButton } from '@linode/ui';
+import { StyledLinkButton, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
@@ -15,7 +15,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';

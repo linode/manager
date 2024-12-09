@@ -37,8 +37,7 @@ export const createDomainSchema = domainSchemaBase.shape({
   soa_email: string()
     .when('type', {
       is: 'master',
-      then: string().required('SOA Email is required.'),
-      otherwise: string(),
+      then: (schema) => schema.required('SOA Email is required.'),
     })
     .email('SOA Email is not valid.')
     .trim(),
@@ -46,13 +45,12 @@ export const createDomainSchema = domainSchemaBase.shape({
     .of(string())
     .when('type', {
       is: 'slave',
-      then: array()
-        .of(string())
-        .compact()
-        .ensure()
-        .required('At least one primary IP address is required.')
-        .min(1, 'At least one primary IP address is required.'),
-      otherwise: array().of(string()),
+      then: (schema) =>
+        schema
+          .compact()
+          .ensure()
+          .required('At least one primary IP address is required.')
+          .min(1, 'At least one primary IP address is required.'),
     }),
 });
 

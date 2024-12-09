@@ -1,8 +1,10 @@
 import _Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import type { DividerProps as _DividerProps } from '@mui/material/Divider';
+
 import { omittedProps } from '../../utilities';
+
+import type { DividerProps as _DividerProps } from '@mui/material/Divider';
 
 export interface DividerProps extends _DividerProps {
   dark?: boolean;

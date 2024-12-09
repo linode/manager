@@ -1,14 +1,12 @@
-import { Box, Notice, Stack } from '@linode/ui';
+import { Autocomplete, Box, Notice, Stack, Typography } from '@linode/ui';
 import { DateTime } from 'luxon';
 import React, { useMemo } from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { imageFactory } from 'src/factories/images';
 import { useAllImagesQuery } from 'src/queries/images';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { OSIcon } from '../OSIcon';
-import { Typography } from '../Typography';
 import { ImageOption } from './ImageOption';
 import {
   getAPIFilterForImageSelect,
@@ -18,7 +16,7 @@ import {
 } from './utilities';
 
 import type { Image, RegionSite } from '@linode/api-v4';
-import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
+import type { EnhancedAutocompleteProps } from '@linode/ui';
 
 export type ImageSelectVariant = 'all' | 'private' | 'public';
 

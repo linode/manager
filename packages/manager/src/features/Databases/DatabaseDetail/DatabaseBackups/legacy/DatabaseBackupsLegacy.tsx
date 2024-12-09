@@ -1,18 +1,20 @@
-import { APIError } from '@linode/api-v4';
-import type { Database, Engine } from '@linode/api-v4/lib/databases';
+import { Paper, Typography } from '@linode/ui';
 import * as React from 'react';
-import { Paper } from '@linode/ui';
+
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import RestoreLegacyFromBackupDialog from 'src/features/Databases/DatabaseDetail/DatabaseBackups/legacy/RestoreLegacyFromBackupDialog';
 import { useOrder } from 'src/hooks/useOrder';
 import { useDatabaseBackupsQuery } from 'src/queries/databases/databases';
+
 import DatabaseBackupTableBody from './DatabaseBackupTableBody';
+
+import type { APIError } from '@linode/api-v4';
+import type { Database, Engine } from '@linode/api-v4/lib/databases';
 
 interface Props {
   database: Database | undefined;
@@ -26,9 +28,9 @@ export const DatabaseBackupsLegacy = (props: Props) => {
   const {
     database,
     databaseError,
-    isDatabaseLoading,
     disabled,
     engine,
+    isDatabaseLoading,
   } = props;
 
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);

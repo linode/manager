@@ -30,7 +30,7 @@ describe('CloudPulse  navigation', () => {
     cy.wait('@getFeatureFlags');
 
     cy.get('[data-testid="menu-item-Monitor"]').should('be.visible').click();
-    cy.url().should('endWith', '/cloudpulse');
+    cy.url().should('endWith', '/monitor');
   });
 
   /*
@@ -63,7 +63,7 @@ describe('CloudPulse  navigation', () => {
       },
     }).as('getFeatureFlags');
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor');
     cy.wait('@getFeatureFlags');
 
     cy.findByText('Not Found').should('be.visible');

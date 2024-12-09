@@ -1,10 +1,9 @@
-import { Paper } from '@linode/ui';
+import { Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { Typography } from 'src/components/Typography';
 
 import { TabLinkList } from './TabLinkList';
 

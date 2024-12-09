@@ -1,10 +1,9 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { Typography } from 'src/components/Typography';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -195,6 +194,8 @@ export const ConfigureForm = React.memo((props: Props) => {
                 handlePlacementGroupSelection(placementGroup);
               }}
               textFieldProps={{
+                helperText:
+                  'If your Linode already belongs to a placement group, it will be automatically unassigned during the migration. You can choose to move it to a new placement group in the same region here.',
                 tooltipText: hasRegionPlacementGroupCapability
                   ? ''
                   : 'Placement Groups are not available in this region.',

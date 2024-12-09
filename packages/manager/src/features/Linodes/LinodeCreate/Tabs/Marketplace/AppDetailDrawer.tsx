@@ -1,4 +1,4 @@
-import { Box, Button } from '@linode/ui';
+import { Box, Button, Typography } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -6,7 +6,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import { getMarketplaceAppLabel, useMarketplaceApps } from './utilities';

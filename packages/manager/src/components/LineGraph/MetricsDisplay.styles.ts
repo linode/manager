@@ -36,6 +36,7 @@ export const StyledButton = styled(Button, {
   label: 'StyledButton',
   shouldForwardProp: omittedProps(['legendColor', 'hidden']),
 })<{ legendColor?: string }>(({ hidden, legendColor, theme }) => ({
+  padding: 0,
   ...(legendColor && {
     '&:before': {
       backgroundColor: hidden

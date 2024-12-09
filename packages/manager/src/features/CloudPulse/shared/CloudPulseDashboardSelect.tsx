@@ -1,8 +1,6 @@
-import { Box } from '@linode/ui';
+import { Autocomplete, Box, Typography } from '@linode/ui';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Typography } from 'src/components/Typography';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 

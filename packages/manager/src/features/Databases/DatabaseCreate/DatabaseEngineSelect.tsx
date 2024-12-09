@@ -1,8 +1,7 @@
-import { Box } from '@linode/ui';
+import { Autocomplete, Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { getEngineOptions } from 'src/features/Databases/DatabaseCreate/utilities';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 

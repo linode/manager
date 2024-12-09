@@ -1,7 +1,6 @@
-import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
 import { pluralize } from 'src/utilities/pluralize';
 
 import {
@@ -13,7 +12,9 @@ import {
   StyledSubmitButton,
   StyledTypography,
 } from './TransferCheckoutBar.styles';
-import { TransferState } from './transferReducer';
+
+import type { TransferState } from './transferReducer';
+import type { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 
 interface Props {
   handleSubmit: (payload: CreateTransferPayload) => void;

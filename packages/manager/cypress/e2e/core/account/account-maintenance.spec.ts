@@ -1,5 +1,6 @@
 import { mockGetMaintenance } from 'support/intercepts/account';
 import { accountMaintenanceFactory } from 'src/factories';
+import { parseCsv } from 'support/util/csv';
 
 describe('Maintenance', () => {
   /*
@@ -7,6 +8,21 @@ describe('Maintenance', () => {
    * - When there is no pending maintenance, "No pending maintenance." is shown in the table.
    * - When there is no completed maintenance, "No completed maintenance." is shown in the table.
    */
+  beforeEach(() => {
+    const downloadsFolder = Cypress.config('downloadsFolder');
+    const filePatterns = '{pending-maintenance*,completed-maintenance*}';
+    // Delete the file before the test
+    cy.exec(`rm -f ${downloadsFolder}/${filePatterns}`, {
+      failOnNonZeroExit: false,
+    }).then((result) => {
+      if (result.code === 0) {
+        cy.log(`Deleted file: ${filePatterns}`);
+      } else {
+        cy.log(`Failed to delete file: ${filePatterns}`);
+      }
+    });
+  });
+
   it('table empty when no maintenance', () => {
     mockGetMaintenance([], []).as('getMaintenance');
 
@@ -118,12 +134,106 @@ describe('Maintenance', () => {
         });
       });
 
-    // Confirm download buttons work
-    cy.get('button')
-      .filter(':contains("Download CSV")')
-      .should('be.visible')
-      .should('be.enabled')
-      .click({ multiple: true });
-    // TODO Need to add assertions to confirm CSV contains the expected contents on first trial (M3-8393)
+    // Validate content of the downloaded CSV for pending maintenance
+    cy.get('a[download*="pending-maintenance"]')
+      .invoke('attr', 'download')
+      .then((fileName) => {
+        const downloadsFolder = Cypress.config('downloadsFolder');
+
+        // Locate the <a> element for pending-maintenance and then find its sibling <button> element
+        cy.get('a[download*="pending-maintenance"]')
+          .siblings('button')
+          .should('be.visible')
+          .and('contain', 'Download CSV')
+          .click();
+
+        // Map the expected CSV content to match the structure of the downloaded CSV
+        const expectedPendingMigrationContent = accountpendingMaintenance.map(
+          (maintenance) => ({
+            entity_label: maintenance.entity.label,
+            entity_type: maintenance.entity.type,
+            type: maintenance.type,
+            status: maintenance.status,
+            reason: maintenance.reason,
+          })
+        );
+
+        // Read the downloaded CSV and compare its content to the expected CSV content
+        cy.readFile(`${downloadsFolder}/${fileName}`)
+          .should('not.eq', null)
+          .should('not.eq', '')
+          .then((csvContent) => {
+            const parsedCsvPendingMigration = parseCsv(csvContent);
+            expect(parsedCsvPendingMigration.length).to.equal(
+              expectedPendingMigrationContent.length
+            );
+            // Map the parsedCsv to match the structure of expectedCsvContent
+            const actualPendingMigrationCsvContent = parsedCsvPendingMigration.map(
+              (entry: any) => ({
+                entity_label: entry['Entity Label'],
+                entity_type: entry['Entity Type'],
+                type: entry['Type'],
+                status: entry['Status'],
+                reason: entry['Reason'],
+              })
+            );
+
+            expect(actualPendingMigrationCsvContent).to.deep.equal(
+              expectedPendingMigrationContent
+            );
+          });
+      });
+
+    // Validate content of the downloaded CSV for completed maintenance
+    cy.get('a[download*="completed-maintenance"]')
+      .invoke('attr', 'download')
+      .then((fileName) => {
+        const downloadsFolder = Cypress.config('downloadsFolder');
+
+        // Locate the <a> element for completed-maintenance and then find its sibling <button> element
+        cy.get('a[download*="completed-maintenance"]')
+          .siblings('button')
+          .should('be.visible')
+          .and('contain', 'Download CSV')
+          .click();
+
+        // Map the expected CSV content to match the structure of the downloaded CSV
+        const expectedCompletedMigrationContent = accountcompletedMaintenance.map(
+          (maintenance) => ({
+            entity_label: maintenance.entity.label,
+            entity_type: maintenance.entity.type,
+            type: maintenance.type,
+            status: maintenance.status,
+            reason: maintenance.reason,
+          })
+        );
+
+        // Read the downloaded CSV and compare its content to the expected CSV content
+        cy.readFile(`${downloadsFolder}/${fileName}`)
+          .should('not.eq', null)
+          .should('not.eq', '')
+          .then((csvContent) => {
+            const parsedCsvCompletedMigration = parseCsv(csvContent);
+
+            expect(parsedCsvCompletedMigration.length).to.equal(
+              expectedCompletedMigrationContent.length
+            );
+
+            // Map the parsedCsv to match the structure of expectedCsvContent
+            const actualCompletedMigrationCsvContent = parsedCsvCompletedMigration.map(
+              (entry: any) => ({
+                entity_label: entry['Entity Label'],
+                entity_type: entry['Entity Type'],
+                type: entry['Type'],
+                status: entry['Status'],
+                reason: entry['Reason'],
+              })
+            );
+
+            expect(actualCompletedMigrationCsvContent).to.deep.equal(
+              expectedCompletedMigrationContent
+            );
+          });
+      });
   });
 });

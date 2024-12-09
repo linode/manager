@@ -1,4 +1,4 @@
-import { Button } from '@linode/ui';
+import { Button, convertToKebabCase } from '@linode/ui';
 import {
   Step,
   StepConnector,
@@ -10,8 +10,6 @@ import {
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useState } from 'react';
-
-import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 import {
   CustomStepIcon,

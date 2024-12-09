@@ -1,5 +1,5 @@
 import { deleteDomainRecord } from '@linode/api-v4/lib/domains';
-import { Button } from '@linode/ui';
+import { Button, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   compose,
@@ -27,7 +27,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { Typography } from 'src/components/Typography';
 import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,

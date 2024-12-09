@@ -1,7 +1,7 @@
+import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { ResourceLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinks';
-import { Typography } from 'src/components/Typography';
 
 import type { ResourcesLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
