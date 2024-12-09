@@ -57,7 +57,6 @@ export const VPCCreateDrawer = (props: Props) => {
       title={'Create VPC'}
     >
       {userCannotAddVPC && CannotCreateVPCNotice}
-
       <FormProvider {...form}>
         <Grid>
           <form onSubmit={handleSubmit(onCreateVPC)} ref={formContainerRef}>

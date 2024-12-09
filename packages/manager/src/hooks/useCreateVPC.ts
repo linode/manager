@@ -84,20 +84,23 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
     }
   };
 
+  const defaultValues = {
+    description: '',
+    label: '',
+    region: selectedRegion ?? '',
+    subnets: [
+      {
+        ipv4: DEFAULT_SUBNET_IPV4_VALUE,
+        label: '',
+      },
+    ],
+  };
+
   const form = useForm<CreateVPCPayload>({
-    defaultValues: {
-      description: '',
-      label: '',
-      region: selectedRegion ?? '',
-      subnets: [
-        {
-          ipv4: DEFAULT_SUBNET_IPV4_VALUE,
-          label: '',
-        },
-      ],
-    },
+    defaultValues,
     mode: 'onBlur',
     resolver: yupResolver(createVPCSchema),
+    values: { ...defaultValues },
   });
 
   const { errors } = form.formState;
