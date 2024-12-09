@@ -65,10 +65,7 @@ export const DatabaseSummarySection = (props: Props) => {
       ) : (
         <span>{currentPlanPrice}</span>
       )}
-      <Typography
-        component="span"
-        // sx={(theme) => ({ marginRight: theme.spacing(1) })}
-      >
+      <Typography component="span">
         {currentClusterSize} Node
         {currentClusterSize > 1 ? 's - HA ' : ' '}
       </Typography>
@@ -77,6 +74,15 @@ export const DatabaseSummarySection = (props: Props) => {
   ) : (
     'Please specify your cluster configuration'
   );
+  const getSuffix = (numberOfNodes: number) => {
+    let suffix = '';
+    if (numberOfNodes > 1) {
+      suffix = isNewDatabase ? 's - HA ' : 's: ';
+    } else {
+      suffix = isNewDatabase ? ' ' : ': ';
+    }
+    return suffix;
+  };
   const resizeSummary = (
     <Box
       sx={(theme: Theme) => ({
@@ -101,8 +107,7 @@ export const DatabaseSummarySection = (props: Props) => {
             component="span"
           >
             {resizeData.numberOfNodes} Node
-            {resizeData.numberOfNodes > 1 ? 's' : ''}
-            {!isNewDatabase ? ': ' : ' - HA '}
+            {getSuffix(resizeData.numberOfNodes)}
           </Typography>
           {resizeData.price}
         </>
