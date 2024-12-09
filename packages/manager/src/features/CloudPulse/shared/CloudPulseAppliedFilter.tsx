@@ -13,15 +13,18 @@ export const CloudPulseAppliedFilter = (
 
   return (
     <Box
+      sx={{
+        overflowX: 'hidden',
+        overflowY: 'auto',
+      }}
       data-qa-applied-filter-id="applied-filter"
       data-testid="applied-filter"
       display="flex"
       flexDirection={{ sm: 'row', xs: 'column' }}
-      flexWrap={{ sm: 'wrap', xs: 'nowrap' }}
+      flexWrap={{ sm: 'wrap' }}
       maxHeight="70px"
       mb={2}
       mx={3}
-      overflow="auto"
       pb={2}
       rowGap={1.5}
     >
@@ -39,13 +42,15 @@ export const CloudPulseAppliedFilter = (
             {filterValue.map((value, index) => {
               return (
                 <Chip
-                  sx={{
-                    backgroundColor: '#f0f7ff',
+                  sx={(theme) => ({
+                    backgroundColor: theme.tokens.color.Ultramarine[10],
+                    color: theme.tokens.color.Neutrals.Black,
                     fontSize: '14px',
                     mr: index === filterValue.length - 1 ? 4 : 1,
                     px: 1,
                     py: 0.5,
-                  }}
+                    width: { sm: 'fit-content', xs: '98%' },
+                  })}
                   data-qa-value={`${label} ${value}`}
                   key={`${label} ${value}`}
                   label={value}
