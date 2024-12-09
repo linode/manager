@@ -1,10 +1,13 @@
 import { Box } from '@linode/ui';
-import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 
 import { DateTimePicker } from './DateTimePicker';
 
+import type { DateTime } from 'luxon';
+
 interface DateTimeRangePickerProps {
+  /** Custom error message for invalid end date */
+  endDateErrorMessage?: string;
   /** Initial or controlled value for the end date-time */
   endDateTimeValue?: DateTime | null;
   /** Custom labels for the start and end date/time fields */
@@ -21,6 +24,8 @@ interface DateTimeRangePickerProps {
   showEndTimeZone?: boolean;
   /** Whether to show the start timezone field for the end date picker */
   showStartTimeZone?: boolean;
+  /** Custom error message for invalid start date */
+  startDateErrorMessage?: string;
   /** Initial or controlled value for the start date-time */
   startDateTimeValue?: DateTime | null;
   /** Custom labels for the start and end date/time fields */
@@ -30,12 +35,14 @@ interface DateTimeRangePickerProps {
 }
 
 export const DateTimeRangePicker = ({
+  endDateErrorMessage = 'End date/time cannot be before the start date/time.',
   endDateTimeValue = null,
   endLabel = 'End Date and Time',
   format = 'yyyy-MM-dd HH:mm',
   onChange,
   showEndTimeZone = false,
   showStartTimeZone = false,
+  startDateErrorMessage = 'Start date/time cannot be after the end date/time.',
   startDateTimeValue = null,
   startLabel = 'Start Date and Time',
   startTimeZoneValue = null,
@@ -51,12 +58,27 @@ export const DateTimeRangePicker = ({
   );
   const [error, setError] = useState<string>();
 
+  const validateDates = (
+    start: DateTime | null,
+    end: DateTime | null,
+    source: 'end' | 'start'
+  ) => {
+    if (start && end) {
+      if (source === 'start' && start > end) {
+        setError(startDateErrorMessage);
+        return;
+      }
+      if (source === 'end' && end < start) {
+        setError(endDateErrorMessage);
+        return;
+      }
+    }
+    setError(undefined); // Clear error if valid
+  };
+
   const handleStartDateTimeChange = (newStart: DateTime | null) => {
     setStartDateTime(newStart);
-
-    if (endDateTime && newStart && endDateTime >= newStart) {
-      setError(undefined); // Clear error if valid
-    }
+    validateDates(newStart, endDateTime, 'start');
 
     if (onChange) {
       onChange(newStart, endDateTime, startTimeZone);
@@ -64,12 +86,8 @@ export const DateTimeRangePicker = ({
   };
 
   const handleEndDateTimeChange = (newEnd: DateTime | null) => {
-    if (startDateTime && newEnd && newEnd < startDateTime) {
-      setError('End date/time must be after the start date/time.');
-    } else {
-      setEndDateTime(newEnd);
-      setError(undefined);
-    }
+    setEndDateTime(newEnd);
+    validateDates(startDateTime, newEnd, 'end');
 
     if (onChange) {
       onChange(startDateTime, newEnd, startTimeZone);
@@ -107,7 +125,7 @@ export const DateTimeRangePicker = ({
         timeZoneSelectProps={{
           value: startTimeZone, // Automatically reflect the start timezone
         }}
-        dateCalendarProps={{ minDate: startDateTime ?? DateTime.now() }}
+        dateCalendarProps={{ minDate: startDateTime ?? undefined }}
         format={format}
         label={endLabel}
         onChange={handleEndDateTimeChange}

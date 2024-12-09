@@ -57,4 +57,57 @@ describe('DateTimeRangePicker Component', () => {
     // Confirm error message is not shown since the click was blocked
     expect(screen.queryByText('Invalid date and Time')).not.toBeInTheDocument();
   });
+
+  it('should show error when start date-time is after end date-time', async () => {
+    renderWithTheme(
+      <DateTimeRangePicker
+        endLabel="End Date and Time"
+        onChange={onChangeMock}
+        startLabel="Start Date and Time"
+      />
+    );
+
+    // Set the end date-time to the 15th
+    const endDateField = screen.getByLabelText('End Date and Time');
+    await userEvent.click(endDateField);
+    await userEvent.click(screen.getByRole('gridcell', { name: '15' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+    // Set the start date-time to the 10th (which is earlier than the end date-time)
+    const startDateField = screen.getByLabelText('Start Date and Time');
+    await userEvent.click(startDateField);
+    await userEvent.click(screen.getByRole('gridcell', { name: '20' })); // Invalid date
+    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+    // Confirm the error message is displayed
+    expect(
+      screen.getByText('Start date/time cannot be after the end date/time.')
+    ).toBeInTheDocument();
+  });
+
+  it('should display custom error messages when start date-time is after end date-time', async () => {
+    renderWithTheme(
+      <DateTimeRangePicker
+        endLabel="End Date and Time"
+        onChange={onChangeMock}
+        startDateErrorMessage="Custom start date error"
+        startLabel="Start Date and Time"
+      />
+    );
+
+    // Set the end date-time to the 15th
+    const endDateField = screen.getByLabelText('End Date and Time');
+    await userEvent.click(endDateField);
+    await userEvent.click(screen.getByRole('gridcell', { name: '15' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+    // Set the start date-time to the 20th (which is after the end date-time)
+    const startDateField = screen.getByLabelText('Start Date and Time');
+    await userEvent.click(startDateField);
+    await userEvent.click(screen.getByRole('gridcell', { name: '20' })); // Invalid date
+    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+    // Confirm the custom error message is displayed for the start date
+    expect(screen.getByText('Custom start date error')).toBeInTheDocument();
+  });
 });
