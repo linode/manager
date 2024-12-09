@@ -133,13 +133,11 @@ export const CreateCluster = () => {
   const {
     data: _versionData,
     isError: versionLoadError,
-    isLoading: versionLoading,
   } = useKubernetesVersionQuery();
 
-  const {
-    data: enterpriseTierVersionData,
-    isLoading: enterpriseTierVersionDataIsLoading,
-  } = useKubernetesTieredVersionsQuery('enterprise');
+  const { data: enterpriseTierVersionData } = useKubernetesTieredVersionsQuery(
+    'enterprise'
+  );
 
   const {
     isLkeEnterpriseLAFeatureEnabled,
@@ -383,11 +381,6 @@ export const CreateCluster = () => {
           </StyledFieldWithDocsStack>
           <Divider sx={{ marginTop: 4 }} />
           <Autocomplete
-            loading={
-              versionLoading ||
-              (isLkeEnterpriseLAFeatureEnabled &&
-                enterpriseTierVersionDataIsLoading)
-            }
             onChange={(_, selected) => {
               setVersion(selected?.value);
             }}
