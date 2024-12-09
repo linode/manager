@@ -17,15 +17,13 @@ import { StyledHeaderTypography } from './FormComponents/VPCCreateForm.styles';
 import { VPCTopSectionContent } from './FormComponents/VPCTopSectionContent';
 
 const VPCCreate = () => {
-  const formContainerRef = React.useRef<HTMLFormElement>(null);
-
   const {
     form,
     isLoadingCreateVPC,
     onCreateVPC,
     regionsData,
     userCannotAddVPC,
-  } = useCreateVPC({ formContainerRef, pushToVPCPage: true });
+  } = useCreateVPC({ pushToVPCPage: true });
 
   const {
     formState: { errors },
@@ -51,10 +49,10 @@ const VPCCreate = () => {
       />
       {userCannotAddVPC && CannotCreateVPCNotice}
       <Grid>
-        <form onSubmit={handleSubmit(onCreateVPC)} ref={formContainerRef}>
-          {errors.root?.message ? (
+        <form onSubmit={handleSubmit(onCreateVPC)}>
+          {errors.root?.message && (
             <Notice text={errors.root.message} variant="error" />
-          ) : null}
+          )}
           <Paper>
             <StyledHeaderTypography variant="h2">VPC</StyledHeaderTypography>
             <VPCTopSectionContent

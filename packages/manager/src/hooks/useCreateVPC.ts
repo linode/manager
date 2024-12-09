@@ -10,7 +10,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
 
 import type { CreateVPCPayload, VPC } from '@linode/api-v4';
@@ -18,7 +18,6 @@ import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
 export interface UseCreateVPCInputs {
-  formContainerRef: React.RefObject<HTMLFormElement>;
   handleSelectVPC?: (vpc: VPC) => void;
   onDrawerClose?: () => void;
   pushToVPCPage?: boolean;
@@ -27,12 +26,13 @@ export interface UseCreateVPCInputs {
 
 export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const {
-    formContainerRef,
     handleSelectVPC,
     onDrawerClose,
     pushToVPCPage,
     selectedRegion,
   } = inputs;
+
+  const previousSubmitCount = React.useRef<number>(0);
 
   const history = useHistory();
   const { data: profile } = useProfile();
@@ -106,13 +106,14 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
     values: { ...defaultValues },
   });
 
-  const { errors } = form.formState;
+  const { errors, submitCount } = form.formState;
 
   React.useEffect(() => {
-    if (!isEmpty(errors)) {
-      scrollErrorIntoViewV2(formContainerRef);
+    if (!isEmpty(errors) && submitCount > previousSubmitCount.current) {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
-  }, [errors]);
+    previousSubmitCount.current = submitCount;
+  }, [errors, submitCount]);
 
   return {
     form,

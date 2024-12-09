@@ -25,7 +25,6 @@ interface Props {
 
 export const VPCCreateDrawer = (props: Props) => {
   const theme = useTheme();
-  const formContainerRef = React.useRef<HTMLFormElement>(null);
   const { onClose, onSuccess, open, selectedRegion } = props;
 
   const {
@@ -35,7 +34,6 @@ export const VPCCreateDrawer = (props: Props) => {
     regionsData,
     userCannotAddVPC,
   } = useCreateVPC({
-    formContainerRef,
     handleSelectVPC: onSuccess,
     onDrawerClose: onClose,
     selectedRegion,
@@ -59,7 +57,7 @@ export const VPCCreateDrawer = (props: Props) => {
       {userCannotAddVPC && CannotCreateVPCNotice}
       <FormProvider {...form}>
         <Grid>
-          <form onSubmit={handleSubmit(onCreateVPC)} ref={formContainerRef}>
+          <form onSubmit={handleSubmit(onCreateVPC)}>
             {errors.root?.message ? (
               <Notice text={errors.root.message} variant="error" />
             ) : null}
