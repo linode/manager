@@ -1,15 +1,20 @@
+import { Box, Notice, Stack } from '@linode/ui';
+import { DateTime } from 'luxon';
 import React, { useMemo } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { imageFactory } from 'src/factories/images';
 import { useAllImagesQuery } from 'src/queries/images';
+import { formatDate } from 'src/utilities/formatDate';
 
 import { OSIcon } from '../OSIcon';
+import { Typography } from '../Typography';
 import { ImageOption } from './ImageOption';
 import {
   getAPIFilterForImageSelect,
   getDisabledImages,
   getFilteredImagesForImageSelect,
+  isImageDeprecated,
 } from './utilities';
 
 import type { Image, RegionSite } from '@linode/api-v4';
@@ -131,69 +136,114 @@ export const ImageSelect = (props: Props) => {
     return options.find((option) => option.id === selected) ?? null;
   }, [multiple, options, selected]);
 
+  const selectedDeprecatedImages = useMemo(() => {
+    if (!value) {
+      return false;
+    }
+    if (Array.isArray(value)) {
+      return value.filter((img) => isImageDeprecated(img));
+    }
+    return isImageDeprecated(value) && [value];
+  }, [value]);
+
   if (options.length === 1 && onChange && selectIfOnlyOneOption && !multiple) {
     onChange(options[0]);
   }
 
   return (
-    <Autocomplete
-      groupBy={(option) => {
-        if (option.id === 'any/all') {
-          return '';
-        }
-        if (!option.is_public) {
-          return 'My Images';
-        }
+    <Box>
+      <Autocomplete
+        groupBy={(option) => {
+          if (option.id === 'any/all') {
+            return '';
+          }
+          if (!option.is_public) {
+            return 'My Images';
+          }
 
-        return option.vendor ?? '';
-      }}
-      renderOption={(props, option, state) => {
-        const { key, ...rest } = props;
+          return option.vendor ?? '';
+        }}
+        renderOption={(props, option, state) => {
+          const { key, ...rest } = props;
 
-        return (
-          <ImageOption
-            disabledOptions={disabledImages[option.id]}
-            item={option}
-            key={key}
-            props={rest}
-            selected={state.selected}
-          />
-        );
-      }}
-      textFieldProps={{
-        InputProps: {
-          startAdornment:
-            !multiple && value && !Array.isArray(value) ? (
-              <OSIcon
-                fontSize="24px"
-                height="24px"
-                os={value.vendor ?? ''}
-                pl={1}
-                pr={2}
-              />
-            ) : null,
-        },
-      }}
-      clearOnBlur
-      disableSelectAll
-      label={label || 'Images'}
-      loading={isLoading}
-      options={sortedOptions}
-      placeholder={placeholder || 'Choose an image'}
-      {...rest}
-      disableClearable={
-        rest.disableClearable ??
-        (selectIfOnlyOneOption && options.length === 1 && !multiple)
-      }
-      onChange={(_, value) =>
-        multiple && Array.isArray(value)
-          ? onChange(value)
-          : !multiple && !Array.isArray(value) && onChange(value)
-      }
-      errorText={rest.errorText ?? error?.[0].reason}
-      getOptionDisabled={(option) => Boolean(disabledImages[option.id])}
-      multiple={multiple}
-      value={value}
-    />
+          return (
+            <ImageOption
+              disabledOptions={disabledImages[option.id]}
+              item={option}
+              key={key}
+              props={rest}
+              selected={state.selected}
+            />
+          );
+        }}
+        textFieldProps={{
+          InputProps: {
+            startAdornment:
+              !multiple && value && !Array.isArray(value) ? (
+                <OSIcon
+                  fontSize="24px"
+                  height="24px"
+                  os={value.vendor ?? ''}
+                  pl={1}
+                  pr={2}
+                />
+              ) : null,
+          },
+        }}
+        clearOnBlur
+        disableSelectAll
+        label={label || 'Images'}
+        loading={isLoading}
+        options={sortedOptions}
+        placeholder={placeholder || 'Choose an image'}
+        {...rest}
+        disableClearable={
+          rest.disableClearable ??
+          (selectIfOnlyOneOption && options.length === 1 && !multiple)
+        }
+        onChange={(_, value) =>
+          multiple && Array.isArray(value)
+            ? onChange(value)
+            : !multiple && !Array.isArray(value) && onChange(value)
+        }
+        errorText={rest.errorText ?? error?.[0].reason}
+        getOptionDisabled={(option) => Boolean(disabledImages[option.id])}
+        multiple={multiple}
+        value={value}
+      />
+
+      <Stack>
+        {selectedDeprecatedImages &&
+          selectedDeprecatedImages.map((image) => (
+            <Notice
+              dataTestId="os-distro-deprecated-image-notice"
+              key={image.id}
+              spacingBottom={0}
+              spacingTop={16}
+              variant="warning"
+            >
+              {image.eol && DateTime.fromISO(image.eol) > DateTime.now() ? (
+                <Typography fontFamily={(theme) => theme.font.bold}>
+                  {image.label} will reach its end-of-life on{' '}
+                  {formatDate(image.eol ?? '', { format: 'MM/dd/yyyy' })}. After
+                  this date, this OS distribution will no longer receive
+                  security updates or technical support. We recommend selecting
+                  a newer supported version to ensure continued security and
+                  stability for your linodes.
+                </Typography>
+              ) : (
+                <Typography fontFamily={(theme) => theme.font.bold}>
+                  {image.label} reached its end-of-life on{' '}
+                  {formatDate(image.eol ?? '', { format: 'MM/dd/yyyy' })}. This
+                  OS distribution will no longer receive security updates or
+                  technical support. We recommend selecting a newer supported
+                  version to ensure continued security and stability for your
+                  linodes.
+                </Typography>
+              )}
+            </Notice>
+          ))}
+      </Stack>
+    </Box>
   );
 };
