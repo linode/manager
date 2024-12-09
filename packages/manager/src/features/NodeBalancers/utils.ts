@@ -3,7 +3,6 @@ import { filter, isNil } from 'ramda';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type {
-  ExtendedNodeBalancerConfigNode,
   NodeBalancerConfigFields,
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
@@ -51,7 +50,7 @@ export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
   weight: +node.weight!,
 });
 
-export const formatAddress = (node: ExtendedNodeBalancerConfigNode) => ({
+export const formatAddress = (node: NodeBalancerConfigNodeFields) => ({
   ...node,
   address: `${node.address}:${node.port}`,
 });
