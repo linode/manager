@@ -82,39 +82,6 @@ export const DateTimePicker = ({
     noMarginTop: true,
   };
 
-  useEffect(() => {
-    if (value) {
-      setSelectedDateTime(value);
-    }
-  }, [value]);
-
-  useEffect(() => {
-    if (timeZoneSelectProps.value) {
-      setSelectedTimeZone(timeZoneSelectProps.value);
-    }
-  }, [timeZoneSelectProps.value]);
-
-  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-    if (onCancel) {
-      onCancel();
-    }
-  };
-
-  const handleApply = () => {
-    setAnchorEl(null);
-    if (onChange) {
-      onChange(selectedDateTime);
-    }
-    if (onApply) {
-      onApply();
-    }
-  };
-
   const handleDateChange = (newDate: DateTime | null) => {
     setSelectedDateTime((prev) =>
       newDate
@@ -130,7 +97,6 @@ export const DateTimePicker = ({
     if (newTime) {
       setSelectedDateTime((prev) => {
         if (prev) {
-          // Ensure hour and minute are valid numbers
           const newHour = newTime.hour;
           const newMinute = newTime.minute;
 
@@ -138,12 +104,8 @@ export const DateTimePicker = ({
             return prev.set({ hour: newHour, minute: newMinute });
           }
         }
-        // Return the current `prev` value if newTime is invalid
         return prev;
       });
-    }
-    if (timeSelectProps.onChange && newTime) {
-      timeSelectProps.onChange(newTime.toISOTime());
     }
   };
 
@@ -153,6 +115,29 @@ export const DateTimePicker = ({
       timeZoneSelectProps.onChange(newTimeZone);
     }
   };
+
+  const handleApply = () => {
+    setAnchorEl(null);
+    if (onChange) {
+      onChange(selectedDateTime);
+    }
+    if (onApply) {
+      onApply();
+    }
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    if (onCancel) {
+      onCancel();
+    }
+  };
+
+  useEffect(() => {
+    if (timeZoneSelectProps.value) {
+      setSelectedTimeZone(timeZoneSelectProps.value);
+    }
+  }, [timeZoneSelectProps.value]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
@@ -168,7 +153,7 @@ export const DateTimePicker = ({
           InputProps={{ readOnly: true }}
           errorText={errorText}
           label={label}
-          onClick={handleOpen}
+          onClick={(event) => setAnchorEl(event.currentTarget)}
           placeholder={placeholder}
         />
       </Box>
@@ -181,6 +166,9 @@ export const DateTimePicker = ({
       >
         <Box padding={2}>
           <DateCalendar
+            onChange={handleDateChange}
+            value={selectedDateTime || null}
+            {...dateCalendarProps}
             sx={(theme: Theme) => ({
               '& .MuiDayCalendar-weekContainer, & .MuiDayCalendar-header': {
                 justifyContent: 'space-between',
@@ -203,9 +191,6 @@ export const DateTimePicker = ({
               borderRadius: `${theme.spacing(2)}`,
               borderWidth: '0px',
             })}
-            onChange={handleDateChange}
-            value={selectedDateTime}
-            {...dateCalendarProps}
           />
           <Grid
             container
@@ -216,16 +201,12 @@ export const DateTimePicker = ({
               <Grid item xs={4}>
                 <TimePicker
                   slotProps={{
-                    openPickerButton: {
-                      sx: {
-                        padding: 0,
-                      },
-                    },
+                    openPickerButton: { sx: { padding: 0 } },
                     textField: TimePickerFieldProps,
                   }}
                   onChange={handleTimeChange}
                   slots={{ textField: TextField }}
-                  value={selectedDateTime}
+                  value={selectedDateTime || null}
                 />
               </Grid>
             )}

@@ -17,8 +17,10 @@ interface DateTimeRangePickerProps {
     end: DateTime | null,
     startTimeZone?: null | string
   ) => void;
-  /** Whether to show the timezone field for the end date picker */
+  /** Whether to show the end timezone field for the end date picker */
   showEndTimeZone?: boolean;
+  /** Whether to show the start timezone field for the end date picker */
+  showStartTimeZone?: boolean;
   /** Initial or controlled value for the start date-time */
   startDateTimeValue?: DateTime | null;
   /** Custom labels for the start and end date/time fields */
@@ -33,6 +35,7 @@ export const DateTimeRangePicker = ({
   format = 'yyyy-MM-dd HH:mm',
   onChange,
   showEndTimeZone = false,
+  showStartTimeZone = false,
   startDateTimeValue = null,
   startLabel = 'Start Date and Time',
   startTimeZoneValue = null,
@@ -94,6 +97,7 @@ export const DateTimeRangePicker = ({
         format={format}
         label={startLabel}
         onChange={handleStartDateTimeChange}
+        showTimeZone={showStartTimeZone}
         timeSelectProps={{ label: 'Start Time' }}
         value={startDateTime}
       />

@@ -1,10 +1,10 @@
 import { action } from '@storybook/addon-actions';
-import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { DateTimePicker } from './DateTimePicker';
 
 import type { Meta, StoryObj } from '@storybook/react';
+import type { DateTime } from 'luxon';
 
 type Story = StoryObj<typeof DateTimePicker>;
 
@@ -14,7 +14,7 @@ export const ControlledExample: Story = {
       const [
         selectedDateTime,
         setSelectedDateTime,
-      ] = React.useState<DateTime | null>(DateTime.now());
+      ] = React.useState<DateTime | null>(null); // Start with null
 
       const handleChange = (newDateTime: DateTime | null) => {
         setSelectedDateTime(newDateTime);
@@ -32,6 +32,7 @@ export const ControlledExample: Story = {
           onCancel={action('Cancel clicked')}
           onChange={handleChange}
           placeholder="yyyy-MM-dd HH:mm"
+          showTimeZone={false}
           timeSelectProps={{ label: 'Select Time' }}
           value={selectedDateTime}
         />

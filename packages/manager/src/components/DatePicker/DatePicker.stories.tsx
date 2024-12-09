@@ -1,19 +1,17 @@
 import { action } from '@storybook/addon-actions';
-import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { DatePicker } from './DatePicker';
 
 import type { Meta, StoryObj } from '@storybook/react';
+import type { DateTime } from 'luxon';
 
 type Story = StoryObj<typeof DatePicker>;
 
 export const ControlledExample: Story = {
   render: () => {
     const ControlledDatePicker = () => {
-      const [selectedDate, setSelectedDate] = React.useState<DateTime | null>(
-        DateTime.now()
-      );
+      const [selectedDate, setSelectedDate] = React.useState<DateTime | null>();
 
       const handleChange = (newDate: DateTime | null) => {
         setSelectedDate(newDate);
@@ -26,6 +24,7 @@ export const ControlledExample: Story = {
           helperText="This is a controlled DatePicker"
           label="Controlled Date Picker"
           onChange={handleChange}
+          placeholder="yyyy-MM-dd"
           value={selectedDate}
         />
       );
