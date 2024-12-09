@@ -17,6 +17,7 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
+  queryOptions,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -76,6 +77,17 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
         queryKey: null,
       },
       objects: {
+        contextQueries: {
+          acl: (name: string) => ({
+            queryFn: () =>
+              getObjectACL({
+                bucket: bucketName,
+                clusterId: clusterOrRegion,
+                params: { name },
+              }),
+            queryKey: [name],
+          }),
+        },
         // This is a placeholder queryFn and QueryKey. View the `useObjectBucketObjectsInfiniteQuery` implementation for details.
         queryFn: null,
         queryKey: null,
@@ -209,8 +221,9 @@ export const useObjectAccess = (
 ) =>
   useQuery<ObjectStorageObjectACL, APIError[]>({
     enabled: queryEnabled,
-    queryFn: () => getObjectACL({ bucket, clusterId, params }),
-    queryKey: [bucket, clusterId, params.name],
+    ...objectStorageQueries
+      .bucket(clusterId, bucket)
+      ._ctx.objects._ctx.acl(params.name),
   });
 
 export const useUpdateBucketAccessMutation = (
@@ -241,16 +254,20 @@ export const useUpdateObjectAccessMutation = (
   name: string
 ) => {
   const queryClient = useQueryClient();
+
+  const options = queryOptions(
+    objectStorageQueries
+      .bucket(clusterId, bucketName)
+      ._ctx.objects._ctx.acl(name)
+  );
+
   return useMutation<{}, APIError[], ACLType>({
     mutationFn: (data) => updateObjectACL(clusterId, bucketName, name, data),
-    onSuccess: (_, acl) => {
-      queryClient.setQueryData<ObjectStorageObjectACL>(
-        [bucketName, clusterId, name],
-        (oldData) => ({
-          acl,
-          acl_xml: oldData?.acl_xml ?? null,
-        })
-      );
+    onSuccess(_, acl) {
+      queryClient.setQueryData(options.queryKey, (oldData) => ({
+        acl,
+        acl_xml: oldData?.acl_xml ?? null,
+      }));
     },
   });
 };
