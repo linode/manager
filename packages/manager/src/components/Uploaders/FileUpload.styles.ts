@@ -1,4 +1,4 @@
-import { Typography, rotate360 } from '@linode/ui';
+import { Typography, rotate360CounterClockwise } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
@@ -51,7 +51,7 @@ export const StyledRightWrapper = styled('div', {
 export const StyledUploadPending = styled(UploadPending, {
   label: 'StyledUploadPending',
 })(({ theme }) => ({
-  animation: `${rotate360} 2s linear infinite`,
+  animation: `${rotate360CounterClockwise} 2s linear infinite`,
   color: theme.textColors.headlineStatic,
 }));
 

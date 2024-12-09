@@ -1,4 +1,4 @@
-import { Box, Chip, Divider, Typography, rotate360 } from '@linode/ui';
+import { Box, Chip, Divider, Typography, rotate360Clockwise } from '@linode/ui';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
@@ -196,7 +196,7 @@ const StyledChip = styled(Chip, {
 }));
 
 export const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
-  animation: `${rotate360} 2s linear infinite`,
+  animation: `${rotate360Clockwise} 2s linear infinite`,
   bottom: 4,
   color: theme.palette.primary.main,
   fontSize: 18,
