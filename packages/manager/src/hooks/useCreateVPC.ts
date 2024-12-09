@@ -75,7 +75,10 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       }
     } catch (errors) {
       for (const error of errors) {
-        if (error?.field === 'subnets.label') {
+        if (
+          error?.field === 'subnets.label' ||
+          error?.field === 'subnets.ipv4'
+        ) {
           form.setError('subnets', { message: error.reason });
         } else {
           form.setError(error?.field ?? 'root', { message: error.reason });

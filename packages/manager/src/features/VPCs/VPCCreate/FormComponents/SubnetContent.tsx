@@ -60,11 +60,10 @@ export const SubnetContent = (props: Props) => {
         </Link>
         .
       </StyledBodyTypography>
-      {/* TODO: figure out general subnet errors */}
-      {errors.subnets?.root?.message && (
+      {errors.subnets?.message && (
         <Notice
           spacingBottom={8}
-          text={errors.subnets.root.message}
+          text={errors.subnets.message}
           variant="error"
         />
       )}
