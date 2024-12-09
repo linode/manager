@@ -57,7 +57,7 @@ export const Creatable: Story = {
                 }),
             }}
             onChange={(_, newValue) => setValue(newValue)}
-            value={value}
+            value={value ?? null}
           />
           <Box sx={{ mt: 2 }}>
             <Typography>

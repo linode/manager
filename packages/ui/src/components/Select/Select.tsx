@@ -1,18 +1,22 @@
 import React from 'react';
 
 import { Autocomplete } from '../Autocomplete';
+import { CircleProgress } from '../CircleProgress';
+import { InputAdornment } from '../InputAdornment';
 import { ListItem } from '../ListItem';
 import { TextField } from '../TextField';
 
 import type { EnhancedAutocompleteProps } from '../Autocomplete';
 
 type OptionType = {
-  create?: boolean;
   label: string;
-  noOptions?: boolean;
   value: string;
 };
 
+interface InternalOptionType extends OptionType {
+  create?: boolean;
+  noOptions?: boolean;
+}
 export interface SelectProps
   extends Pick<
     EnhancedAutocompleteProps<OptionType>,
@@ -51,7 +55,10 @@ export interface SelectProps
   /**
    * The callback function that is invoked when the value changes.
    */
-  onChange?: (_event: React.SyntheticEvent, _value: OptionType | null) => void;
+  onChange?: (
+    _event: React.SyntheticEvent,
+    _value: SelectProps['value']
+  ) => void;
   /**
    * Whether the select is required.
    *
@@ -68,8 +75,8 @@ export interface SelectProps
 
 /**
  * An abstracted Autocomplete component with a limited set of props.
- * This component is meant to be used when wanting:
- * - A simple select without search ability
+ * Meant to be used when needing:
+ * - A simple select
  * - A create-able select
  *
  * For any other use-cases, use the Autocomplete component directly.
@@ -80,6 +87,7 @@ export const Select = (props: SelectProps) => {
     creatable = false,
     hideLabel = false,
     label,
+    loading = false,
     noOptionsText = 'No options available',
     onChange,
     options,
@@ -98,8 +106,14 @@ export const Select = (props: SelectProps) => {
         label: value,
         value,
       });
+    } else if (value && typeof value === 'object' && 'label' in value) {
+      const { label, value: optionValue } = value;
+      onChange?.(event, {
+        label,
+        value: optionValue,
+      });
     } else {
-      onChange?.(event, value as OptionType | null);
+      onChange?.(event, null);
     }
   };
 
@@ -115,6 +129,21 @@ export const Select = (props: SelectProps) => {
         <TextField
           {...params}
           {...textFieldProps}
+          InputProps={{
+            ...params.InputProps,
+            ...textFieldProps?.InputProps,
+            endAdornment: (
+              <>
+                {loading && (
+                  <InputAdornment position="end">
+                    <CircleProgress size="sm" />
+                  </InputAdornment>
+                )}
+                {textFieldProps?.InputProps?.endAdornment}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
           inputProps={{
             ...params.inputProps,
             ...textFieldProps?.inputProps,
@@ -129,7 +158,7 @@ export const Select = (props: SelectProps) => {
           required={props.required}
         />
       )}
-      renderOption={(props, option: OptionType) => {
+      renderOption={(props, option: InternalOptionType) => {
         const { key, ...rest } = props;
         return (
           <ListItem
@@ -170,7 +199,7 @@ export const Select = (props: SelectProps) => {
 interface GetOptionsProps {
   creatable: SelectProps['creatable'];
   inputValue: string;
-  options: readonly OptionType[];
+  options: readonly InternalOptionType[];
 }
 
 const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
@@ -182,7 +211,10 @@ const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
     return [{ label: 'No options available', noOptions: true, value: '' }];
   }
 
-  if (inputValue && !options.some((opt) => opt.value === inputValue)) {
+  if (
+    inputValue &&
+    !options.some((opt) => opt.value === inputValue || opt.label === inputValue)
+  ) {
     return [
       { create: true, label: inputValue, value: inputValue },
       ...options,
