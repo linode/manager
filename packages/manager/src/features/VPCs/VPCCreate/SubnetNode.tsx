@@ -1,67 +1,36 @@
-import { Button, FormHelperText, Stack, TextField } from '@linode/ui';
+import { Button, FormHelperText, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
+import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import {
   RESERVED_IP_NUMBER,
   calculateAvailableIPv4sRFC1918,
 } from 'src/utilities/subnets';
 
-import type { SubnetFieldState } from 'src/utilities/subnets';
+import type { CreateVPCPayload } from '@linode/api-v4';
 
 interface Props {
   disabled?: boolean;
-  // extra props enable SubnetNode to be an independent component or be part of MultipleSubnetInput
-  // potential refactor - isRemoveable, and subnetIdx & remove in onChange prop
-  idx?: number;
+  idx: number;
   isCreateVPCDrawer?: boolean;
-  isRemovable?: boolean;
-  onChange: (
-    subnet: SubnetFieldState,
-    subnetIdx?: number,
-    remove?: boolean
-  ) => void;
-  subnet: SubnetFieldState;
+  remove: (index?: number | number[]) => void;
 }
 
 // @TODO VPC: currently only supports IPv4, must update when/if IPv6 is also supported
 export const SubnetNode = (props: Props) => {
-  const {
-    disabled,
-    idx,
-    isCreateVPCDrawer,
-    isRemovable,
-    onChange,
-    subnet,
-  } = props;
+  const { disabled, idx, isCreateVPCDrawer, remove } = props;
 
-  const onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSubnet = {
-      ...subnet,
-      label: e.target.value,
-      labelError: '',
-    };
-    onChange(newSubnet, idx);
-  };
+  const { control, watch } = useFormContext<CreateVPCPayload>();
 
-  const onIpv4Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const availIPs = calculateAvailableIPv4sRFC1918(e.target.value);
-    const newSubnet = {
-      ...subnet,
-      ip: { availIPv4s: availIPs, ipv4: e.target.value },
-    };
-    onChange(newSubnet, idx);
-  };
+  const subnet = watch(`subnets.${idx}`);
 
-  const removeSubnet = () => {
-    onChange(subnet, idx, isRemovable);
-  };
+  const numberOfAvailIPs = calculateAvailableIPv4sRFC1918(subnet.ipv4 ?? '');
 
-  const showRemoveButton = isCreateVPCDrawer
-    ? idx !== 0 && isRemovable
-    : isRemovable;
+  const showRemoveButton = !(isCreateVPCDrawer && idx === 0);
 
   return (
     <Grid key={idx} sx={{ maxWidth: 460 }}>
@@ -71,30 +40,44 @@ export const SubnetNode = (props: Props) => {
           xs={showRemoveButton ? 11 : 12}
         >
           <Stack>
-            <TextField
-              aria-label="Enter a subnet label"
-              disabled={disabled}
-              errorText={subnet.labelError}
-              inputId={`subnet-label-${idx}`}
-              label="Subnet Label"
-              onChange={onLabelChange}
-              placeholder="Enter a subnet label"
-              value={subnet.label}
+            <Controller
+              render={({ field, fieldState }) => (
+                <TextField
+                  aria-label="Enter a subnet label"
+                  disabled={disabled}
+                  errorText={fieldState.error?.message}
+                  inputId={`subnet-label-${idx}`}
+                  label="Subnet Label"
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  placeholder="Enter a subnet label"
+                  value={field.value}
+                />
+              )}
+              control={control}
+              name={`subnets.${idx}.label`}
             />
-            <TextField
-              aria-label="Enter an IPv4"
-              disabled={disabled}
-              errorText={subnet.ip.ipv4Error}
-              inputId={`subnet-ipv4-${idx}`}
-              label="Subnet IP Address Range"
-              onChange={onIpv4Change}
-              value={subnet.ip.ipv4}
+            <Controller
+              render={({ field, fieldState }) => (
+                <TextField
+                  aria-label="Enter an IPv4"
+                  disabled={disabled}
+                  errorText={fieldState.error?.message}
+                  inputId={`subnet-ipv4-${idx}`}
+                  label="Subnet IP Address Range"
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  value={field.value}
+                />
+              )}
+              control={control}
+              name={`subnets.${idx}.ipv4`}
             />
-            {subnet.ip.availIPv4s && (
+            {numberOfAvailIPs && (
               <FormHelperText>
                 Number of Available IP Addresses:{' '}
-                {subnet.ip.availIPv4s > 4
-                  ? (subnet.ip.availIPv4s - RESERVED_IP_NUMBER).toLocaleString()
+                {numberOfAvailIPs > 4
+                  ? (numberOfAvailIPs - RESERVED_IP_NUMBER).toLocaleString()
                   : 0}
               </FormHelperText>
             )}
@@ -102,7 +85,10 @@ export const SubnetNode = (props: Props) => {
         </Grid>
         {showRemoveButton && (
           <Grid xs={1}>
-            <StyledButton aria-label="Remove Subnet" onClick={removeSubnet}>
+            <StyledButton
+              aria-label="Remove Subnet"
+              onClick={() => remove(idx)}
+            >
               <Close data-testid={`delete-subnet-${idx}`} />
             </StyledButton>
           </Grid>
