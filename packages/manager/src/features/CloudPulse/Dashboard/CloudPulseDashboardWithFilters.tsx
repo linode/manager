@@ -127,7 +127,6 @@ export const CloudPulseDashboardWithFilters = React.memo(
             <CloudPulseTimeRangeSelect
               disabled={!dashboard}
               handleStatsChange={handleTimeRangeChange}
-              label=""
               savePreferences={true}
             />
           </Box>
