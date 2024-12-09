@@ -74,8 +74,8 @@ export const CloudPulseDashboardLanding = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Paper>
-          <Box display={'flex'} flexDirection={'column'}>
+        <Paper sx={{ padding: 0 }}>
+          <Box display="flex" flexDirection="column">
             <GlobalFilters
               handleAnyFilterChange={onFilterChange}
               handleDashboardChange={onDashboardChange}
