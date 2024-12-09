@@ -1,3 +1,5 @@
+import { getLatestKubernetesVersion } from 'support/util/lke';
+
 import type { KubernetesTieredVersion } from '@linode/api-v4';
 import type { LkePlanDescription } from 'support/api/lke';
 
@@ -23,7 +25,9 @@ export const enterpriseKubernetesVersions = ['v1.31.1+lke1'];
 /**
  * The latest Kubernetes version available for cluster creation via Cloud Manager.
  */
-export const latestKubernetesVersion = kubernetesVersions[0];
+export const latestKubernetesVersion = getLatestKubernetesVersion(
+  kubernetesVersions
+);
 
 /**
  * The latest standard tier Kubernetes version available for cluster creation via Cloud Manager.
@@ -37,6 +41,6 @@ export const latestStandardTierKubernetesVersion: KubernetesTieredVersion = {
  * The latest enterprise tier Kubernetes version available for cluster creation via Cloud Manager.
  */
 export const latestEnterpriseTierKubernetesVersion: KubernetesTieredVersion = {
-  id: enterpriseKubernetesVersions[0],
+  id: getLatestKubernetesVersion(enterpriseKubernetesVersions),
   tier: 'enterprise',
 };
