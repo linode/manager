@@ -1,9 +1,8 @@
-import { Button } from '@linode/ui';
+import { Button, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { Typography } from 'src/components/Typography';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetes';
 
 import { getNextVersion } from '../kubeUtils';

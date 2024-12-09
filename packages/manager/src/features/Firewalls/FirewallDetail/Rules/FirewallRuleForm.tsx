@@ -1,13 +1,17 @@
-import { Notice, Radio, RadioGroup } from '@linode/ui';
+import {
+  Autocomplete,
+  FormControlLabel,
+  Notice,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import {
   addressOptions,
   firewallOptionItemsShort,

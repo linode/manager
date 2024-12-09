@@ -1,4 +1,4 @@
-import { Button, Notice, Stack } from '@linode/ui';
+import { Button, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -8,7 +8,6 @@ import { Dialog } from '../Dialog/Dialog';
 import { ErrorMessage } from '../ErrorMessage';
 import { LinearProgress } from '../LinearProgress';
 import { Link } from '../Link';
-import { Typography } from '../Typography';
 import { useCreateFirewallFromTemplate } from './useCreateFirewallFromTemplate';
 
 import type { Firewall } from '@linode/api-v4';

@@ -14,14 +14,14 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 
 import Undo from 'src/assets/icons/undo.svg';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Autocomplete } from '@linode/ui';
 import { Hidden } from 'src/components/Hidden';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Table } from 'src/components/Table';
@@ -30,7 +30,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { Typography } from 'src/components/Typography';
 import {
   generateAddressesLabel,
   generateRuleLabel,

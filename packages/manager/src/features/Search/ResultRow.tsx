@@ -1,10 +1,9 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { Hidden } from 'src/components/Hidden';
 import { Tags } from 'src/components/Tags/Tags';
-import { Typography } from 'src/components/Typography';
 import { RegionIndicator } from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 
 import {
@@ -15,6 +14,8 @@ import {
   StyledTableRow,
   StyledTagTableCell,
 } from './ResultRow.styles';
+
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface ResultRowProps {
   result: Item;

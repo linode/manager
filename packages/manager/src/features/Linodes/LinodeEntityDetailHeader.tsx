@@ -19,7 +19,7 @@ import { getLinodeIconStatus } from './LinodesLanding/utils';
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { Config, LinodeBackups } from '@linode/api-v4';
 import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
-import type { TypographyProps } from 'src/components/Typography';
+import type { TypographyProps } from '@linode/ui';
 
 interface LinodeEntityDetailProps {
   id: number;

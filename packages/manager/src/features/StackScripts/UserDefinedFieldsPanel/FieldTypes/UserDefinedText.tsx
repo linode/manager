@@ -1,10 +1,9 @@
-import { omittedProps } from '@linode/ui';
+import { TextField, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { RenderGuard } from 'src/components/RenderGuard';
-import { TextField } from 'src/components/TextField';
 
 import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 

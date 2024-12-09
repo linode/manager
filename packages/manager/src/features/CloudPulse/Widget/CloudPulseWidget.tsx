@@ -10,15 +10,10 @@ import { useProfile } from 'src/queries/profile/profile';
 import {
   generateGraphData,
   getCloudPulseMetricRequest,
-  fillMissingTimeStampsAcrossDimensions,
 } from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
 import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
-import {
-  convertValueToUnit,
-  formatToolTip,
-  generateCurrentUnit,
-} from '../Utils/unitConversion';
+import { generateCurrentUnit } from '../Utils/unitConversion';
 import { useAclpPreference } from '../Utils/UserPreference';
 import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
@@ -34,7 +29,12 @@ import type {
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
-import type { DataSet } from 'src/components/LineGraph/LineGraph';
+import type { DataSet } from 'src/components/AreaChart/AreaChart';
+import type {
+  AreaProps,
+  ChartVariant,
+} from 'src/components/AreaChart/AreaChart';
+import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import type { Metrics } from 'src/utilities/statMetrics';
 
 export interface CloudPulseWidgetProperties {
@@ -51,7 +51,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * token to fetch metrics data
    */
-  authToken: string;
+  authToken?: string;
 
   /**
    * metrics defined of this widget
@@ -67,6 +67,11 @@ export interface CloudPulseWidgetProperties {
    * Any error to be shown in this widget
    */
   errorLabel?: string;
+
+  /**
+   * Jwe token fetching status check
+   */
+  isJweTokenFetching: boolean;
 
   /**
    * resources ids selected by user to show metrics for
@@ -136,6 +141,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     authToken,
     availableMetrics,
     duration,
+    isJweTokenFetching,
     resourceIds,
     resources,
     savePref,
@@ -232,17 +238,18 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     {
       authToken,
-      isFlags: Boolean(flags),
+      isFlags: Boolean(flags && !isJweTokenFetching),
       label: widget.label,
       timeStamp,
       url: flags.aclpReadEndpoint!,
     }
   );
-
   let data: DataSet[] = [];
 
-  let legendRows: LegendRow[] = [];
-  let today: boolean = false;
+  let legendRows: MetricsDisplayRow[] = [];
+  let currentUnit = unit;
+  let areas: AreaProps[] = [];
+  const variant: ChartVariant = widget.chart_type;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
       flags,
@@ -252,29 +259,19 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       serviceType,
       status,
       unit,
-      widgetChartType: widget.chart_type,
-      widgetColor: widget.color,
     });
 
     data = generatedData.dimensions;
-
-    // add missing timestamps across all the dimensions
-    const filledArrays = fillMissingTimeStampsAcrossDimensions(
-      ...data.map((data) => data.data)
-    );
-
-    //update the chart data with updated arrays
-    filledArrays.forEach((arr, index) => {
-      data[index].data = arr;
-    });
-
     legendRows = generatedData.legendRowsData;
-    today = generatedData.today;
     scaledWidgetUnit.current = generatedData.unit; // here state doesn't matter, as this is always the latest re-render
+    currentUnit = generatedData.unit;
+    areas = generatedData.areas;
   }
 
   const metricsApiCallError = error?.[0]?.reason;
 
+  const tickFormat =
+    duration.unit === 'min' || duration.unit === 'hr' ? 'hh:mm a' : 'LLL dd';
   return (
     <Grid container item lg={widget.size} xs={12}>
       <Stack flexGrow={1} spacing={2}>
@@ -335,22 +332,23 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 ? metricsApiCallError ?? 'Error while rendering graph'
                 : undefined
             }
-            formatData={(data: number | null) =>
-              data === null
-                ? data
-                : convertValueToUnit(data, scaledWidgetUnit.current)
-            }
-            legendRows={
-              legendRows && legendRows.length > 0 ? legendRows : undefined
-            }
+            loading={
+              isLoading ||
+              metricsApiCallError === jweTokenExpiryError ||
+              isJweTokenFetching
+            } // keep loading until we are trying to fetch the refresh token
+            areas={areas}
             ariaLabel={ariaLabel ? ariaLabel : ''}
             data={data}
-            formatTooltip={(value: number) => formatToolTip(value, unit)}
-            gridSize={widget.size}
-            loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
-            showToday={today}
+            dotRadius={1.5}
+            height={424}
+            legendRows={legendRows}
+            showDot
+            showLegend={data.length !== 0}
             timezone={timezone}
-            title={widget.label}
+            unit={currentUnit}
+            variant={variant}
+            xAxis={{ tickFormat, tickGap: 60 }}
           />
         </Paper>
       </Stack>

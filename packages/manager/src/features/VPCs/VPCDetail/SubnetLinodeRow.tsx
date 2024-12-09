@@ -1,4 +1,4 @@
-import { Box, CircleProgress, TooltipIcon } from '@linode/ui';
+import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 
@@ -8,7 +8,6 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';

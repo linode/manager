@@ -1,7 +1,5 @@
-import { Box, Divider, Paper, Stack } from '@linode/ui';
+import { Box, Divider, Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 interface Props {
   attachments: string[];

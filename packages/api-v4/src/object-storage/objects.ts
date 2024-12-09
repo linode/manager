@@ -64,7 +64,7 @@ export const updateObjectACL = (
   name: string,
   acl: Omit<ACLType, 'custom'>
 ) =>
-  Request<ObjectStorageObjectACL>(
+  Request<{}>(
     setMethod('PUT'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(

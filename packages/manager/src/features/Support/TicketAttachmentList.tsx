@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -5,7 +6,6 @@ import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
-import { Typography } from 'src/components/Typography';
 
 import { TicketAttachmentRow } from './TicketAttachmentRow';
 

@@ -1,8 +1,7 @@
-import { TooltipIcon } from '@linode/ui';
+import { TooltipIcon, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 const sxTooltipIcon = {
   padding: '0',

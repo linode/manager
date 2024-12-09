@@ -1,8 +1,8 @@
+import { TextField } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { TextField } from 'src/components/TextField';
 import { useAccount } from 'src/queries/account/account';
 import { useSpecificTypes, useTypeQuery } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';

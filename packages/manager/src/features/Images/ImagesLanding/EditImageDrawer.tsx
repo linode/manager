@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Notice } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { updateImageSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -7,7 +7,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { TextField } from 'src/components/TextField';
 import { useUpdateImageMutation } from 'src/queries/images';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
@@ -59,7 +58,7 @@ export const EditImageDrawer = (props: Props) => {
       ...values,
       description: safeDescription,
     })
-      .then(onClose)
+      .then(handleClose)
       .catch((errors: APIError[]) => {
         for (const error of errors) {
           if (
@@ -75,8 +74,13 @@ export const EditImageDrawer = (props: Props) => {
       });
   });
 
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
   return (
-    <Drawer onClose={onClose} onExited={reset} open={open} title="Edit Image">
+    <Drawer onClose={handleClose} open={open} title="Edit Image">
       {!canCreateImage && (
         <Notice
           text="You don't have permissions to edit images. Please contact an account administrator for details."
@@ -152,7 +156,7 @@ export const EditImageDrawer = (props: Props) => {
         secondaryButtonProps={{
           disabled: !canCreateImage,
           label: 'Cancel',
-          onClick: onClose,
+          onClick: handleClose,
         }}
         style={{ marginTop: 16 }}
       />

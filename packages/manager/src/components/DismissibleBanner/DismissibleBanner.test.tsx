@@ -1,8 +1,7 @@
-import { Button } from '@linode/ui';
+import { Button, Typography } from '@linode/ui';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DismissibleBanner } from './DismissibleBanner';

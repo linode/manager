@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import {
   Box,
   Button,
@@ -10,7 +11,6 @@ import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
-import { Typography } from 'src/components/Typography';
 import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
 
 import type { Filter, UserType } from '@linode/api-v4';

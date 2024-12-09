@@ -1,10 +1,10 @@
+import { Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { SupportLink } from 'src/components/SupportLink';
-import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { useMutateAccountAgreements } from 'src/queries/account/agreements';
 import { accountQueries } from 'src/queries/account/queries';

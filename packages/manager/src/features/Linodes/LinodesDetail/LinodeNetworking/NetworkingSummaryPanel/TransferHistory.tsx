@@ -1,4 +1,4 @@
-import { Box, CircleProgress } from '@linode/ui';
+import { Box, CircleProgress, Typography } from '@linode/ui';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
@@ -9,7 +9,6 @@ import * as React from 'react';
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Typography } from 'src/components/Typography';
 import {
   convertNetworkToUnit,
   generateNetworkUnits,

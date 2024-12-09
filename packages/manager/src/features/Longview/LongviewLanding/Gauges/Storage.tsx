@@ -1,15 +1,16 @@
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
-import { Typography } from 'src/components/Typography';
-import withClientStats, {
-  Props as LVDataProps,
-} from 'src/containers/longview.stats.container';
+import withClientStats from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { sumStorage } from '../../shared/utilities';
-import { BaseProps as Props, baseGaugeProps } from './common';
+import { baseGaugeProps } from './common';
+
+import type { BaseProps as Props } from './common';
+import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 interface getUsedStorageProps extends Props, LVDataProps {}
 

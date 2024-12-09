@@ -10,31 +10,33 @@ export const AutoscaleNodePoolSchema = object({
   enabled: boolean(),
   min: number().when('enabled', {
     is: true,
-    then: number()
-      .required()
-      .test(
-        'min',
-        'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.',
-        function (min) {
-          if (!min) {
-            return false;
+    then: (schema) =>
+      schema
+        .required()
+        .test(
+          'min',
+          'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.',
+          function (min) {
+            if (!min) {
+              return false;
+            }
+            if (min < 1 || min > 99) {
+              return false;
+            }
+            if (min > this.parent['max']) {
+              return false;
+            }
+            return true;
           }
-          if (min < 1 || min > 99) {
-            return false;
-          }
-          if (min > this.parent['max']) {
-            return false;
-          }
-          return true;
-        }
-      ),
+        ),
   }),
   max: number().when('enabled', {
     is: true,
-    then: number()
-      .required()
-      .min(1, 'Maximum must be between 1 and 100 nodes.')
-      .max(100, 'Maximum must be between 1 and 100 nodes.'),
+    then: (schema) =>
+      schema
+        .required()
+        .min(1, 'Maximum must be between 1 and 100 nodes.')
+        .max(100, 'Maximum must be between 1 and 100 nodes.'),
   }),
 });
 
@@ -60,13 +62,13 @@ export const createKubeClusterSchema = object().shape({
     .min(1, 'Please add at least one node pool.'),
 });
 
-export const ipv4Address = string().test({
+export const ipv4Address = string().defined().test({
   name: 'validateIP',
   message: 'Must be a valid IPv4 address.',
   test: validateIP,
 });
 
-export const ipv6Address = string().test({
+export const ipv6Address = string().defined().test({
   name: 'validateIP',
   message: 'Must be a valid IPv6 address.',
   test: validateIP,
@@ -75,10 +77,12 @@ export const ipv6Address = string().test({
 const controlPlaneACLOptionsSchema = object().shape({
   enabled: boolean(),
   'revision-id': string(),
-  addresses: object().shape({
-    ipv4: array().of(ipv4Address).nullable(true),
-    ipv6: array().of(ipv6Address).nullable(true),
-  }),
+  addresses: object()
+    .shape({
+      ipv4: array().of(ipv4Address).nullable(),
+      ipv6: array().of(ipv6Address).nullable(),
+    })
+    .notRequired(),
 });
 
 export const kubernetesControlPlaneACLPayloadSchema = object().shape({

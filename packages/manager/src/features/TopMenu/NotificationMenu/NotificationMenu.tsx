@@ -1,4 +1,4 @@
-import { Box, Chip, Divider, rotate360 } from '@linode/ui';
+import { Box, Chip, Divider, Typography, rotate360 } from '@linode/ui';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
@@ -8,7 +8,6 @@ import { useHistory } from 'react-router-dom';
 
 import Bell from 'src/assets/icons/notification.svg';
 import { LinkButton } from 'src/components/LinkButton';
-import { Typography } from 'src/components/Typography';
 import { NotificationCenterEvent } from 'src/features/NotificationCenter/Events/NotificationCenterEvent';
 import {
   notificationCenterContext as _notificationContext,

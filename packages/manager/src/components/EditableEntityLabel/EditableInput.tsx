@@ -12,7 +12,7 @@ import {
   StyledTypography,
 } from './EditableInput.styles';
 
-import type { TextFieldProps } from 'src/components/TextField';
+import type { TextFieldProps } from '@linode/ui';
 
 export type EditableTextVariant = 'h1' | 'h2' | 'table-cell';
 

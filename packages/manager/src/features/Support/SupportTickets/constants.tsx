@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import {
   createAccountLimitSupportTicketSchema,
   createSMTPSupportTicketSchema,
@@ -6,7 +7,6 @@ import {
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import type {
   EntityType,

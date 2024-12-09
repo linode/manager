@@ -1,9 +1,8 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { PaymentMethodRow } from 'src/components/PaymentMethodRow/PaymentMethodRow';
-import { Typography } from 'src/components/Typography';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { PaymentMethod } from '@linode/api-v4/lib/account/types';

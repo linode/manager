@@ -1,6 +1,6 @@
-import { latoWeb } from '../../foundations';
 import { styled } from '@mui/material/styles';
 
+import { latoWeb } from '../../foundations';
 import { Button } from './Button';
 
 /**

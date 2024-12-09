@@ -1,12 +1,10 @@
-import { Button } from '@linode/ui';
+import { Button, H1Header, Typography } from '@linode/ui';
 import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import { H1Header } from 'src/components/H1Header/H1Header';
-import { Typography } from 'src/components/Typography';
 
 import type { Theme } from '@mui/material/styles';
 
