@@ -75,11 +75,10 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       }
     } catch (errors) {
       for (const error of errors) {
-        if (
-          error?.field === 'subnets.label' ||
-          error?.field === 'subnets.ipv4'
-        ) {
-          form.setError('subnets', { message: error.reason });
+        if (error?.field === 'subnets.label') {
+          form.setError('root.subnetLabel', { message: error.reason });
+        } else if (error?.field === 'subnets.ipv4') {
+          form.setError('root.subnetIPv4', { message: error.reason });
         } else {
           form.setError(error?.field ?? 'root', { message: error.reason });
         }

@@ -60,10 +60,17 @@ export const SubnetContent = (props: Props) => {
         </Link>
         .
       </StyledBodyTypography>
-      {errors.subnets?.message && (
+      {errors.root?.subnetLabel && (
         <Notice
           spacingBottom={8}
-          text={errors.subnets.message}
+          text={errors.root.subnetLabel.message}
+          variant="error"
+        />
+      )}
+      {errors.root?.subnetIPv4 && (
+        <Notice
+          spacingBottom={8}
+          text={errors.root.subnetIPv4.message}
           variant="error"
         />
       )}
