@@ -1,14 +1,12 @@
 /**
- * @file Integration Tests for CloudPulse Dbass Dashboard.
+ * @file Integration Tests for contextualview of Dbass Dashboard.
  */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateCloudPulseJWEToken,
   mockGetCloudPulseDashboard,
   mockCreateCloudPulseMetrics,
-  mockGetCloudPulseDashboards,
   mockGetCloudPulseMetricDefinitions,
-  mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
 import { ui } from 'support/ui';
 import { widgetDetails } from 'support/constants/widgets';
@@ -18,22 +16,25 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
-  kubeLinodeFactory,
   linodeFactory,
   regionFactory,
   widgetFactory,
 } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetLinodes } from 'support/intercepts/linodes';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
-import { Interception } from 'cypress/types/net-stubbing';
-import { generateRandomMetricsData } from 'support/util/cloudpulse';
-import { mockGetDatabases } from 'support/intercepts/databases';
-import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
-import type { Flags } from 'src/featureFlags';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
+import { generateRandomMetricsData } from 'support/util/cloudpulse';
+import {
+  mockGetDatabase,
+  mockGetDatabaseTypes,
+  mockGetDatabases,
+} from 'support/intercepts/databases';
+import { mockDatabaseNodeTypes } from 'support/constants/databases';
+import { randomIp } from 'support/util/random';
+import { extendRegion } from 'support/util/regions';
+import { Flags } from 'src/featureFlags';
+import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
@@ -45,32 +46,14 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
  * Testing widget interactions, including zooming and filtering, to ensure proper behavior.
  * Each test ensures that widgets on the dashboard operate correctly and display accurate information.
  */
-const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
+const expectedGranularityArray = ['1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-
-const flags: Partial<Flags> = {
-  aclp: { enabled: true, beta: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-      supportedRegionIds: '',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-      supportedRegionIds: 'us-ord',
-    },
-  ],
-};
 
 const {
   metrics,
-  id,
   serviceType,
   dashboardName,
+  region,
   engine,
   clusterName,
   nodeType,
@@ -78,6 +61,7 @@ const {
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
+  id: 1,
   service_type: serviceType,
   widgets: metrics.map(({ title, yLabel, name, unit }) => {
     return widgetFactory.build({
@@ -99,24 +83,8 @@ const metricDefinitions = {
   ),
 };
 
-const mockLinode = linodeFactory.build({
-  label: clusterName,
-  id: kubeLinodeFactory.build().instance_id ?? undefined,
-});
-
 const mockAccount = accountFactory.build();
 
-const mockRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
-  id: 'us-ord',
-  label: 'Chicago, IL',
-});
-
-const extendedMockRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
-  id: 'us-east',
-  label: 'Newark,NL',
-});
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
@@ -142,7 +110,7 @@ const getWidgetLegendRowValuesFromResponse = (
 ) => {
   // Generate graph data using the provided parameters
   const graphData = generateGraphData({
-    flags,
+    flags: { enabled: true } as Partial<Flags>,
     label: label,
     metricsList: responsePayload,
     resources: [
@@ -168,127 +136,69 @@ const getWidgetLegendRowValuesFromResponse = (
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
 
+const allowedIp = randomIp();
+
 const databaseMock: Database = databaseFactory.build({
   label: clusterName,
+  id: 100,
   type: engine,
-  region: mockRegion.label,
+  region: region,
   version: '1',
-  status: 'provisioning',
+  status: 'active',
   cluster_size: 1,
   engine: 'mysql',
-  hosts: {
-    primary: undefined,
-    secondary: undefined,
-  },
+  allow_list: [allowedIp],
 });
+const mockRegion = extendRegion(
+  regionFactory.build({
+    capabilities: ['Managed Databases'],
+    id: 'us-ord',
+    label: 'Chicago, IL',
+  })
+);
 
 describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags(flags);
-    mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
-    mockGetLinodes([mockLinode]);
+    mockAppendFeatureFlags({
+      aclp: { beta: true, enabled: true },
+    });
+    mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
-    mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
-    mockGetCloudPulseDashboard(id, dashboard);
+    mockGetCloudPulseDashboard(1, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
     );
-    mockGetRegions([mockRegion, extendedMockRegion]);
-    mockGetUserPreferences({});
+    mockGetRegions([mockRegion]);
+    mockGetDatabase(databaseMock).as('getDatabase');
     mockGetDatabases([databaseMock]).as('getDatabases');
+    mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
 
-    // navigate to the cloudpulse page
-    cy.visitWithLogin('monitor');
+    // navigate to the linodes page
+    cy.visitWithLogin('/linodes');
 
-    // Wait for the services and dashboard API calls to complete before proceeding
-    cy.wait(['@fetchServices', '@fetchDashboard']);
+    // navigate to the Databases
+    cy.get('[data-testid="menu-item-Databases"]')
+      .should('be.visible') // Check if it is visible
+      .click(); // Click the link
 
-    // Selecting a dashboard from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Dashboard')
-      .should('be.visible')
-      .type(dashboardName);
-
-    ui.autocompletePopper
-      .findByTitle(dashboardName)
-      .should('be.visible')
-      .click();
+    // navigate to the Monitor
+    cy.visitWithLogin(
+      `/databases/${databaseMock.engine}/${databaseMock.id}/monitor`
+    );
 
     // Select a time duration from the autocomplete input.
     ui.autocomplete
       .findByLabel('Time Range')
       .should('be.visible')
-      .type(timeDurationToSelect);
+      .type(`${timeDurationToSelect}{enter}`)
+      .should('be.visible');
 
-    ui.autocompletePopper
-      .findByTitle(timeDurationToSelect)
-      .should('be.visible')
-      .click();
-
-    //Select a Database Engine from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Engine')
-      .should('be.visible')
-      .type(engine);
-
-    ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
-
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-
-    ui.regionSelect.find().type(extendedMockRegion.label);
-
-    // Since DBaaS does not support this region, we expect it to not be in the dropdown.
-
-    ui.autocompletePopper.find().within(() => {
-      cy.findByText(
-        `${extendedMockRegion.label} (${extendedMockRegion.id})`
-      ).should('not.exist');
-    });
-
-    ui.regionSelect.find().click().clear();
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
-      .should('be.visible')
-      .click();
-
-    // Select a resource (Database Clusters) from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Clusters')
-      .should('be.visible')
-      .type(clusterName);
-
-    ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
-
-    // Select a Node from the autocomplete input.
+    //Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
       .type(`${nodeType}{enter}`);
-
-    // Expand the applied filters section
-    ui.button.findByTitle('Filters').should('be.visible').click();
-
-    // Verify that the applied filters
-    cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
-      cy.get(`[data-qa-value="Database Engine ${engine}"]`)
-        .should('be.visible')
-        .should('have.text', engine);
-
-      cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
-        .should('be.visible')
-        .should('have.text', 'US, Chicago, IL');
-
-      cy.get(`[data-qa-value="Node Type ${nodeType}"]`)
-        .should('be.visible')
-        .should('have.text', nodeType);
-
-      cy.get(`[data-qa-value="Database Clusters ${clusterName}"]`)
-        .should('be.visible')
-        .should('have.text', clusterName);
-    });
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
@@ -301,7 +211,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       cy.get(widgetSelector)
         .should('be.visible')
         .find('h2')
-        .should('have.text', `${testData.title} (${testData.unit})`);
+        .should('have.text', `${testData.title} (${testData.unit.trim()})`);
       cy.get(widgetSelector)
         .should('be.visible')
         .within(() => {
@@ -310,6 +220,12 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             .findByLabel('Select an Interval')
             .should('be.visible')
             .click();
+
+          // Verify tooltip message for granularity selection
+
+          ui.tooltip
+            .findByText('Data aggregation interval')
+            .should('be.visible');
 
           expectedGranularityArray.forEach((option) => {
             ui.autocompletePopper.findByTitle(option).should('exist');
@@ -344,6 +260,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               testData.unit
             );
             const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+
             cy.get(graphRowTitle)
               .should('be.visible')
               .should('have.text', `${testData.title} (${testData.unit})`);
@@ -363,6 +280,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         });
     });
   });
+
   it('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
@@ -379,6 +297,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             .findByLabel('Select an Aggregate Function')
             .should('be.visible')
             .type(`${testData.expectedAggregation}{enter}`); //type expected granularity
+
+          // Verify tooltip message for aggregation selection
+
+          ui.tooltip.findByText('Aggregation function').should('be.visible');
 
           //check if the API call is made correctly with time granularity value selected
           cy.wait('@getAggregationMetrics').then((interception) => {
@@ -417,36 +339,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         });
     });
   });
-  it('should trigger the global refresh button and verify the corresponding network calls', () => {
-    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
-      'refreshMetrics'
-    );
-
-    // click the global refresh button
-    ui.button
-      .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
-      .should('be.visible')
-      .click();
-
-    // validate the API calls are going with intended payload
-    cy.get('@refreshMetrics.all')
-      .should('have.length', 4)
-      .each((xhr: unknown) => {
-        const interception = xhr as Interception;
-        const { body: requestPayload } = interception.request;
-        const { metric, relative_time_duration: timeRange } = requestPayload;
-        const metricData = metrics.find(({ name }) => name === metric);
-
-        if (!metricData) {
-          throw new Error(
-            `Unexpected metric name '${metric}' included in the outgoing refresh API request`
-          );
-        }
-        expect(metric).to.equal(metricData.name);
-        expect(timeRange).to.have.property('unit', 'hr');
-        expect(timeRange).to.have.property('value', 24);
-      });
-  });
 
   it('should zoom in and out of all the widgets', () => {
     // do zoom in and zoom out test on all the widgets
@@ -460,14 +352,21 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             .should('be.visible')
             .should('be.enabled')
             .click();
+
+          // Verify tooltip message for Zoom-in
+
+          ui.tooltip.findByText('Maximize').should('be.visible');
+
           cy.get('@widget').should('be.visible');
 
+          //validate the widget areachart is present
           cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
               testData.title,
               testData.unit
             );
+
             const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
             cy.get(graphRowTitle)
               .should('be.visible')
@@ -493,7 +392,13 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             .should('be.enabled')
             .scrollIntoView()
             .click({ force: true });
+
+          // Verify tooltip message for Zoom-out
+
+          ui.tooltip.findByText('Minimize').should('be.visible');
+
           cy.get('@widget').should('be.visible');
+
           cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
