@@ -20,6 +20,7 @@ import {
 
 import type { StackScript } from '@linode/api-v4/lib/stackscripts';
 import type { APIError } from '@linode/api-v4/lib/types';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export const StackScriptsDetail = () => {
   const { _hasGrant, _isRestrictedUser, profile } = useAccountManagement();
@@ -114,6 +115,7 @@ export const StackScriptsDetail = () => {
 
   return (
     <>
+      <DocumentTitleSegment segment={stackScript.label} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
