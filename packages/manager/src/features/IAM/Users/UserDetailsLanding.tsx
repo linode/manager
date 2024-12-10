@@ -74,7 +74,7 @@ export const UserDetailsLanding = () => {
             <p>UIE-8138 - User Roles - Assigned Roles Table</p>
           </SafeTabPanel>
           <SafeTabPanel index={++idx}>
-            <p>Resources</p>
+            <p>UIE-8139 - User Roles - Resources Table</p>
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
