@@ -7,6 +7,10 @@ export interface OrderSet {
   orderBy: string;
 }
 
+export type OrderSetWithPrefix<P extends string> = {
+  [K in `${P}-order` | `${P}-orderBy`]: K extends `${P}-order` ? Order : string;
+};
+
 export interface DismissedNotification {
   created: string;
   expiry?: string;
