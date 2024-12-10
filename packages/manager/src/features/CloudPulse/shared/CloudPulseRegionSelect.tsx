@@ -51,7 +51,7 @@ export const CloudPulseRegionSelect = React.memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [regions]);
 
-    // validate launchDrakly region_ids with the ids from the fetched 'all-regions'
+    // validate launchDarkly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {
       const resourceTypeFlag = flags.aclpResourceTypeMap?.find(
         (item: CloudPulseResourceTypeMapFlag) =>
