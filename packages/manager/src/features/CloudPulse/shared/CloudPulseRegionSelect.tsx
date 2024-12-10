@@ -59,7 +59,10 @@ export const CloudPulseRegionSelect = React.memo(
           item.serviceType === serviceType
       );
 
-      if (isNil(resourceTypeFlag?.supportedRegionIds)) {
+      if (
+        resourceTypeFlag?.supportedRegionIds === null ||
+        resourceTypeFlag?.supportedRegionIds === undefined
+      ) {
         return regions;
       }
 
@@ -88,7 +91,7 @@ export const CloudPulseRegionSelect = React.memo(
         loading={isLoading}
         noMarginTop
         placeholder={placeholder ?? 'Select a Region'}
-        regions={supportedRegions ? supportedRegions : []}
+        regions={supportedRegions ?? []}
         value={selectedRegion}
       />
     );
