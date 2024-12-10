@@ -73,18 +73,20 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
         <Typography variant={'h2'}>2. Criteria</Typography>
       </Box>
       <Stack spacing={2} sx={(theme) => ({ marginTop: theme.spacing(3) })}>
-        {fields.map((field, index) => {
-          return (
-            <Metric
-              apiError={[isMetricDefinitionError, isMetricDefinitionLoading]}
-              data={metricDefinitions ? metricDefinitions.data : []}
-              key={field.id}
-              name={`rule_criteria.rules.${index}`}
-              onMetricDelete={() => remove(index)}
-              showDeleteIcon={fields.length > 1}
-            />
-          );
-        })}
+        {fields !== null &&
+          fields.length !== 0 &&
+          fields.map((field, index) => {
+            return (
+              <Metric
+                apiError={[isMetricDefinitionError, isMetricDefinitionLoading]}
+                data={metricDefinitions ? metricDefinitions.data : []}
+                key={field.id}
+                name={`rule_criteria.rules.${index}`}
+                onMetricDelete={() => remove(index)}
+                showDeleteIcon={fields.length > 1}
+              />
+            );
+          })}
       </Stack>
       <Button
         onClick={() =>

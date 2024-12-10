@@ -8,7 +8,7 @@ import {
   MetricAggregationOptions,
   MetricOperatorOptions,
 } from '../../constants';
-import { StyledDeleteIcon } from '../utilities';
+import { ClearIconButton } from './ClearIconButton';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from '../types';
@@ -117,12 +117,7 @@ export const Metric = (props: MetricCriteriaProps) => {
         <Box display={'flex'} justifyContent="space-between">
           <Typography variant={'h3'}>Metric Threshold</Typography>
           <Box>
-            {showDeleteIcon && (
-              <StyledDeleteIcon
-                data-testid={`${name}-delete-icon`}
-                onClick={onMetricDelete}
-              />
-            )}
+            {showDeleteIcon && <ClearIconButton handleClick={onMetricDelete} />}
           </Box>
         </Box>
         <Grid alignItems="flex-start" container spacing={2}>
@@ -264,6 +259,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                       name={`${name}.threshold`}
                       onBlur={field.onBlur}
                       onChange={(e) => field.onChange(e.target.value)}
+                      sx={{ height: '34px' }}
                       type="number"
                       value={field.value ?? 0}
                     />
@@ -281,6 +277,9 @@ export const Metric = (props: MetricCriteriaProps) => {
                   }}
                   variant="body1"
                 >
+                  {/* There are discussions going on with the UX and within the team about the
+                   * units being outside of the TextField or inside as an adornments
+                   */}
                   {unit}
                 </Typography>
               </Grid>

@@ -1,6 +1,4 @@
 import { omitProps } from '@linode/ui';
-import ClearOutlineOutlined from '@mui/icons-material/ClearOutlined';
-import styled from '@mui/material/styles/styled';
 
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
 import type {
@@ -62,16 +60,3 @@ export const convertToSeconds = (secondsList: string[]) => {
     }
   });
 };
-
-export const StyledDeleteIcon = styled(ClearOutlineOutlined)(({ theme }) => ({
-  '&:active': {
-    transform: 'scale(0.9)',
-  },
-  '&:hover': {
-    color: theme.color.blue,
-  },
-  color: theme.palette.text.primary,
-  cursor: 'pointer',
-  margin: 2,
-  padding: 2,
-}));

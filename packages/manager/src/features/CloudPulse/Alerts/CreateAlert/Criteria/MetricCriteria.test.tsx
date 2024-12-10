@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -145,9 +145,7 @@ describe('MetricCriteriaField', () => {
     });
     expect(getByTestId('rule_criteria.rules.0-id')).toBeInTheDocument();
     await waitFor(() =>
-      expect(
-        queryByTestId('rule_criteria.rules.0-delete-icon')
-      ).not.toBeInTheDocument()
+      expect(queryByTestId('clear-icon')).not.toBeInTheDocument()
     );
   });
 
@@ -176,7 +174,7 @@ describe('MetricCriteriaField', () => {
         },
       });
     expect(
-      await screen.findByText(/Error in fetching the data./i)
+      await screen.findByText('Error in fetching the data.')
     ).toBeInTheDocument();
   });
 
@@ -200,11 +198,14 @@ describe('MetricCriteriaField', () => {
         },
       },
     });
+    const ruleCriteriaID = 'rule_criteria.rules.1-id';
     await user.click(screen.getByRole('button', { name: 'Add metric' }));
-    expect(getByTestId('rule_criteria.rules.1-id')).toBeInTheDocument();
-    await user.click(screen.getByTestId('rule_criteria.rules.1-delete-icon'));
+    expect(getByTestId(ruleCriteriaID)).toBeInTheDocument();
+    await user.click(
+      within(screen.getByTestId(ruleCriteriaID)).getByTestId('clear-icon')
+    );
     await waitFor(() =>
-      expect(queryByTestId('rule_criteria.rules.1-id')).not.toBeInTheDocument()
+      expect(queryByTestId(ruleCriteriaID)).not.toBeInTheDocument()
     );
   });
 
