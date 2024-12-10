@@ -21,12 +21,11 @@ import { filterFormValues } from './utilities';
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
 import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
 
-
 const triggerConditionInitialValues: TriggerCondition = {
   criteria_condition: 'ALL',
-  evaluation_period_seconds: 300,
-  polling_interval_seconds: 60,
-  trigger_occurrences: 2,
+  evaluation_period_seconds: 0,
+  polling_interval_seconds: 0,
+  trigger_occurrences: 0,
 };
 const criteriaInitialValues: MetricCriteriaForm = {
   aggregation_type: null,
@@ -36,7 +35,7 @@ const criteriaInitialValues: MetricCriteriaForm = {
   threshold: 0,
 };
 const initialValues: CreateAlertDefinitionForm = {
-  channel_ids: [10000],
+  channel_ids: [],
   engineType: null,
   entity_ids: [],
   label: '',
@@ -44,9 +43,9 @@ const initialValues: CreateAlertDefinitionForm = {
   rule_criteria: {
     rules: [criteriaInitialValues],
   },
-  tags: [''],
   serviceType: null,
   severity: null,
+  tags: [''],
   trigger_conditions: triggerConditionInitialValues,
 };
 
