@@ -45,6 +45,11 @@ const volumesCreateRoute = createRoute({
   import('./volumesLazyRoutes').then((m) => m.volumeCreateLazyRoute)
 );
 
+type VolumeActionRouteParams<P = number | string> = {
+  action: VolumeAction;
+  volumeId: P;
+};
+
 const volumeActionRoute = createRoute({
   beforeLoad: async ({ params }) => {
     if (!(params.action in volumeAction)) {
@@ -55,16 +60,16 @@ const volumeActionRoute = createRoute({
     }
   },
   getParentRoute: () => volumesRoute,
-  parseParams: ({
-    action,
-    volumeId,
-  }: {
-    action: VolumeAction;
-    volumeId: string;
-  }) => ({
-    action,
-    volumeId: Number(volumeId),
-  }),
+  params: {
+    parse: ({ action, volumeId }: VolumeActionRouteParams<string>) => ({
+      action,
+      volumeId: Number(volumeId),
+    }),
+    stringify: ({ action, volumeId }: VolumeActionRouteParams<number>) => ({
+      action,
+      volumeId: String(volumeId),
+    }),
+  },
   path: '$volumeId/$action',
   validateSearch: (search: VolumesSearchParams) => search,
 }).lazy(() =>
