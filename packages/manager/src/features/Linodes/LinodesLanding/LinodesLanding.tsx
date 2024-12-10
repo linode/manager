@@ -43,7 +43,6 @@ import type { ExtendedStatus } from './utils';
 import type { Config } from '@linode/api-v4/lib/linodes/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { RouteComponentProps } from 'react-router-dom';
-import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import type { WithFeatureFlagProps } from 'src/containers/flags.container';
 import type { WithProfileProps } from 'src/containers/profile.container';
 import type { DialogType } from 'src/features/Linodes/types';
@@ -308,7 +307,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         )}
         <DocumentTitleSegment segment="Linodes" />
         <ProductInformationBanner bannerLocation="Linodes" />
-        <PreferenceToggle<boolean>
+        <PreferenceToggle
           preferenceKey="linodes_group_by_tag"
           preferenceOptions={[false, true]}
           toggleCallbackFn={sendGroupByAnalytic}
@@ -316,9 +315,9 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           {({
             preference: linodesAreGrouped,
             togglePreference: toggleGroupLinodes,
-          }: PreferenceToggleProps<boolean>) => {
+          }) => {
             return (
-              <PreferenceToggle<'grid' | 'list'>
+              <PreferenceToggle
                 preferenceKey="linodes_view_style"
                 preferenceOptions={['list', 'grid']}
                 toggleCallbackFn={this.changeView}
@@ -331,7 +330,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                 {({
                   preference: linodeViewPreference,
                   togglePreference: toggleLinodeView,
-                }: PreferenceToggleProps<'grid' | 'list'>) => {
+                }) => {
                   return (
                     <React.Fragment>
                       <React.Fragment>

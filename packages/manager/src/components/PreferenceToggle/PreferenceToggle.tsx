@@ -3,28 +3,30 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
-export interface PreferenceToggleProps<T> {
-  preference: T;
-  togglePreference: () => T;
-}
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 interface RenderChildrenProps<T> {
-  preference: T;
-  togglePreference: () => T;
+  preference: NonNullable<T>;
+  togglePreference: () => NonNullable<T>;
 }
 
 type RenderChildren<T> = (props: RenderChildrenProps<T>) => JSX.Element;
 
-interface Props<T> {
-  children: RenderChildren<T>;
-  initialSetCallbackFn?: (value: T) => void;
-  preferenceKey: string;
-  preferenceOptions: [T, T];
-  toggleCallbackFn?: (value: T) => void;
-  value?: T;
+interface Props<Key extends keyof ManagerPreferences> {
+  children: RenderChildren<ManagerPreferences[Key]>;
+  initialSetCallbackFn?: (value: ManagerPreferences[Key]) => void;
+  preferenceKey: Key;
+  preferenceOptions: [ManagerPreferences[Key], ManagerPreferences[Key]];
+  toggleCallbackFn?: (value: ManagerPreferences[Key]) => void;
+  value?: ManagerPreferences[Key];
 }
 
-export const PreferenceToggle = <T,>(props: Props<T>) => {
+/**
+ * @deprecated There are more simple ways to use preferences. Look into using `usePreferences` directly.
+ */
+export const PreferenceToggle = <Key extends keyof ManagerPreferences>(
+  props: Props<Key>
+) => {
   const {
     children,
     preferenceKey,
@@ -38,7 +40,7 @@ export const PreferenceToggle = <T,>(props: Props<T>) => {
   const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
   const togglePreference = () => {
-    let newPreferenceToSet: T;
+    let newPreferenceToSet: ManagerPreferences[Key];
 
     if (preferences?.[preferenceKey] === undefined) {
       // Because we default to preferenceOptions[0], toggling with no preference should pick preferenceOptions[1]
@@ -58,11 +60,11 @@ export const PreferenceToggle = <T,>(props: Props<T>) => {
       toggleCallbackFn(newPreferenceToSet);
     }
 
-    return newPreferenceToSet;
+    return newPreferenceToSet!;
   };
 
   return children({
-    preference: value ?? preferences?.[preferenceKey] ?? preferenceOptions[0],
+    preference: value ?? preferences?.[preferenceKey] ?? preferenceOptions[0]!,
     togglePreference,
   });
 };
