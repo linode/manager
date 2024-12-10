@@ -37,7 +37,7 @@ export type MockPresetBaselineId =
   | 'baseline:api-unstable'
   | 'baseline:crud'
   | 'baseline:legacy'
-  | 'baseline:preset-mocking';
+  | 'baseline:static-mocking';
 export interface MockPresetBaseline extends MockPresetBase {
   group: MockPresetBaselineGroup;
   id: MockPresetBaselineId;
@@ -47,18 +47,24 @@ export interface MockPresetBaseline extends MockPresetBase {
  * Mock Preset Extra
  */
 export type MockPresetExtraGroup = {
-  id: 'API' | 'Account' | 'Limits' | 'Managed' | 'Regions';
-  type: 'checkbox' | 'select';
+  id:
+    | 'API'
+    | 'Account'
+    | 'Capabilities'
+    | 'Limits'
+    | 'Managed'
+    | 'Profile'
+    | 'Regions';
+  type: 'account' | 'checkbox' | 'profile' | 'select';
 };
 export type MockPresetExtraId =
-  | 'account:child-proxy'
-  | 'account:lke-enterprise-enabled'
+  | 'account:custom'
   | 'account:managed-disabled'
   | 'account:managed-enabled'
-  | 'account:parent'
   | 'api:response-time'
   | 'limits:linode-limits'
   | 'limits:lke-limits'
+  | 'profile:custom'
   | 'regions:core-and-distributed'
   | 'regions:core-only'
   | 'regions:legacy';

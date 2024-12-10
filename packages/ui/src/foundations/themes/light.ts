@@ -755,7 +755,7 @@ export const lightTheme: ThemeOptions = {
           },
           fontSize: '0.875rem',
           lineHeight: 1.25,
-          maxWidth: 415,
+          maxWidth: 416,
         },
       },
     },
@@ -1093,6 +1093,16 @@ export const lightTheme: ThemeOptions = {
             color: `${Color.Neutrals[40]} !important`,
             fill: `${Color.Neutrals[5]} !important`,
             pointerEvents: 'none',
+          },
+          '&.MuiRadio-root': {
+            '.MuiSvgIcon-fontSizeMedium': {
+              fontSize: '20px',
+            },
+          },
+          '&.MuiRadio-sizeSmall': {
+            '.MuiSvgIcon-fontSizeSmall': {
+              fontSize: '16px',
+            },
           },
           '&:hover': {
             '& .defaultFill': {

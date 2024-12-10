@@ -1,11 +1,7 @@
+import { Autocomplete, SelectedIcon, StyledListItem } from '@linode/ui';
 import { Box } from '@mui/material';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import {
-  SelectedIcon,
-  StyledListItem,
-} from 'src/components/Autocomplete/Autocomplete.styles';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { themes } from 'src/utilities/theme';

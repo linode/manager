@@ -1,6 +1,8 @@
 import {
+  Autocomplete,
   Box,
   Checkbox,
+  FormControlLabel,
   Paper,
   Stack,
   TextField,
@@ -11,8 +13,6 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
