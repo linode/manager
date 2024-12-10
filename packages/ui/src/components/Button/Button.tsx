@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ReloadIcon } from '../../assets';
-import { rotate360Clockwise } from '../../foundations';
+import { rotate360 } from '../../foundations';
 import { omittedProps } from '../../utilities';
 import { Tooltip } from '../Tooltip';
 
@@ -73,7 +73,7 @@ const StyledButton = styled(_Button, {
   }),
   ...(props.loading && {
     '& svg': {
-      animation: `${rotate360Clockwise} 2s linear infinite`,
+      animation: `${rotate360} 2s linear infinite`,
       height: `${theme.spacing(2)}`,
       margin: '0 auto',
       width: `${theme.spacing(2)}`,
