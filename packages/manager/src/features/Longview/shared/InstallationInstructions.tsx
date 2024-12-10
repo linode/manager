@@ -1,10 +1,9 @@
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import {
   StyledContainerGrid,

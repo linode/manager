@@ -4,8 +4,10 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-const KubernetesLanding = React.lazy(
-  () => import('./KubernetesLanding/KubernetesLanding')
+const KubernetesLanding = React.lazy(() =>
+  import('./KubernetesLanding/KubernetesLanding').then((module) => ({
+    default: module.KubernetesLanding,
+  }))
 );
 
 const ClusterCreate = React.lazy(() =>

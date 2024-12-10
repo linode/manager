@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -75,6 +75,8 @@ describe('HostNamesDrawer', () => {
     const closeButton = screen.getByRole('button', { name: 'Close drawer' });
     await userEvent.click(closeButton);
 
-    expect(mockOnClose).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockOnClose).toHaveBeenCalled();
+    });
   });
 });

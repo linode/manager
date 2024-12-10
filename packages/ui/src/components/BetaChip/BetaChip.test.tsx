@@ -1,10 +1,9 @@
+import '@testing-library/jest-dom/vitest';
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
 import { BetaChip } from './BetaChip';
-
-import { expect, vi, describe, it } from 'vitest';
-import '@testing-library/jest-dom/vitest';
 
 describe('BetaChip', () => {
   it('renders with default color', () => {

@@ -1,11 +1,7 @@
-import {
-  ObjectStorageKeyBucketAccessPermissions,
-  ObjectStorageKeyBucketAccess,
-} from '@linode/api-v4/lib/object-storage/types';
+import { Radio } from '@linode/ui';
 import { update } from 'ramda';
 import * as React from 'react';
 
-import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -25,6 +21,10 @@ import {
 } from './AccessTable.styles';
 
 import type { MODE } from './types';
+import type {
+  ObjectStorageKeyBucketAccess,
+  ObjectStorageKeyBucketAccessPermissions,
+} from '@linode/api-v4/lib/object-storage/types';
 
 export const getUpdatedScopes = (
   oldScopes: ObjectStorageKeyBucketAccess[],

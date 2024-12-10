@@ -1,10 +1,7 @@
+import { Notice, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from '@linode/ui';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { useAccountAgreements } from 'src/queries/account/agreements';
 import { useRegionsQuery } from 'src/queries/regions/regions';

@@ -64,7 +64,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
 
   const { endpoint_type } = bucket ?? {};
 
-  const isSSLEnabled = endpoint_type !== 'E2' && endpoint_type !== 'E3';
+  const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
 
   const tabs = [
     {
@@ -75,7 +75,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       routeName: `${props.match.url}/access`,
       title: 'Access',
     },
-    ...(flags.objectStorageGen2?.enabled
+    ...(isObjectStorageGen2Enabled
       ? [
           {
             routeName: `${props.match.url}/properties`,
@@ -83,7 +83,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
           },
         ]
       : []),
-    ...(isSSLEnabled
+    ...(!isGen2Endpoint
       ? [
           {
             routeName: `${props.match.url}/ssl`,
@@ -136,7 +136,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
                 endpointType={endpoint_type}
               />
             </SafeTabPanel>
-            {flags.objectStorageGen2?.enabled && bucket && (
+            {isObjectStorageGen2Enabled && bucket && (
               <SafeTabPanel index={2}>
                 <BucketProperties bucket={bucket} />
               </SafeTabPanel>

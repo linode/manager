@@ -1,21 +1,22 @@
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { useResumeDatabaseMutation } from 'src/queries/databases/databases';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import { useIsDatabasesEnabled } from '../utilities';
 
 import type { DatabaseStatus, Engine } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
-import { useIsDatabasesEnabled } from '../utilities';
-import { useResumeDatabaseMutation } from 'src/queries/databases/databases';
-import { enqueueSnackbar } from 'notistack';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   databaseEngine: Engine;
   databaseId: number;
   databaseLabel: string;
-  handlers: ActionHandlers;
   databaseStatus: DatabaseStatus;
+  handlers: ActionHandlers;
 }
 
 export interface ActionHandlers {
@@ -30,8 +31,8 @@ export const DatabaseActionMenu = (props: Props) => {
     databaseEngine,
     databaseId,
     databaseLabel,
-    handlers,
     databaseStatus,
+    handlers,
   } = props;
 
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
@@ -64,17 +65,17 @@ export const DatabaseActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      disabled: isDatabaseNotRunning,
+      disabled: isDatabaseNotRunning || isDatabaseSuspended,
       onClick: handlers.handleManageAccessControls,
       title: 'Manage Access Controls',
     },
     {
-      disabled: isDatabaseNotRunning,
+      disabled: isDatabaseNotRunning || isDatabaseSuspended,
       onClick: handlers.handleResetPassword,
       title: 'Reset Root Password',
     },
     {
-      disabled: isDatabaseNotRunning,
+      disabled: isDatabaseNotRunning || isDatabaseSuspended,
       onClick: () => {
         history.push({
           pathname: `/databases/${databaseEngine}/${databaseId}/resize`,

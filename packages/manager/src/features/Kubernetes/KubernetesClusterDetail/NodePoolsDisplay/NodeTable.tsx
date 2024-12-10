@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, TooltipIcon, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import Lock from 'src/assets/icons/lock.svg';
@@ -8,6 +8,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
@@ -15,16 +16,10 @@ import { TableFooter } from 'src/components/TableFooter';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 import { NodeRow as _NodeRow } from './NodeRow';
-import {
-  StyledTable,
-  StyledTypography,
-  StyledVerticalDivider,
-} from './NodeTable.styles';
+import { StyledTypography, StyledVerticalDivider } from './NodeTable.styles';
 
 import type { NodeRow } from './NodeRow';
 import type { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
@@ -70,7 +65,7 @@ export const NodeTable = React.memo((props: Props) => {
             pageSize,
           }) => (
             <>
-              <StyledTable aria-label="List of Your Cluster Nodes">
+              <Table aria-label="List of Your Cluster Nodes">
                 <TableHead>
                   <TableRow>
                     <TableSortCell
@@ -162,7 +157,7 @@ export const NodeTable = React.memo((props: Props) => {
                     </TableCell>
                   </TableRow>
                 </TableFooter>
-              </StyledTable>
+              </Table>
               <PaginationFooter
                 count={count}
                 eventCategory="Node Table"

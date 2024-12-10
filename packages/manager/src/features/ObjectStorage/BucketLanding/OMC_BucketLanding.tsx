@@ -1,16 +1,14 @@
+import { CircleProgress, Notice, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useDeleteBucketWithRegionMutation,
@@ -173,7 +171,9 @@ export const OMC_BucketLanding = () => {
             style={{ marginTop: 18, textAlign: 'center', width: '100%' }}
             variant="body1"
           >
-            Total storage used: {readableBytes(totalUsage).formatted}
+            Total storage used:{' '}
+            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
+            {readableBytes(totalUsage, { base10: true }).formatted}
           </Typography>
         ) : null}
         <TransferDisplay spacingTop={buckets.length > 1 ? 8 : 18} />

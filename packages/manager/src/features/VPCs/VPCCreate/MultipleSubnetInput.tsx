@@ -1,8 +1,7 @@
+import { Button, Divider } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   getRecommendedSubnetIPv4,

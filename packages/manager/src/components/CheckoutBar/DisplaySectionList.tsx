@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Divider } from '../Divider';
+import { Divider } from '@linode/ui';
 import { DisplaySection } from './DisplaySection';
 
 interface DisplaySectionListProps {

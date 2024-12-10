@@ -3,6 +3,7 @@ import {
   Redirect,
   Route,
   Switch,
+  useHistory,
   useLocation,
   useRouteMatch,
 } from 'react-router-dom';
@@ -25,6 +26,7 @@ export const CloudPulseTabs = () => {
   const flags = useFlags();
   const { url } = useRouteMatch();
   const { pathname } = useLocation();
+  const history = useHistory();
   const alertTabs = React.useMemo<EnabledAlertTab[]>(
     () => [
       {
@@ -63,22 +65,22 @@ export const CloudPulseTabs = () => {
       ),
     [accessibleTabs, pathname]
   );
+  const handleChange = (index: number) => {
+    history.push(alertTabs[index].tab.routeName);
+  };
   return (
-    <Tabs index={activeTabIndex} marginTop={0}>
+    <Tabs index={activeTabIndex} margintop={0} onChange={handleChange}>
       <TabLinkList tabs={accessibleTabs} />
 
       <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route
             component={CloudPulseDashboardLanding}
+            exact
             path={`${url}/dashboards`}
           />
           <Route component={AlertsLanding} path={`${url}/alerts`} />
-          <Redirect
-            exact
-            from="/monitor/cloudpulse"
-            to="/monitor/cloudpulse/dashboards"
-          />
+          <Redirect from="*" to="/monitor/dashboards" />
         </Switch>
       </React.Suspense>
     </Tabs>

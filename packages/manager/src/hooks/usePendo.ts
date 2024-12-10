@@ -41,14 +41,14 @@ export const transformUrl = (url: string) => {
   const oauthPathMatchingRegex = /(#access_token).*/;
   let transformedUrl = url;
 
-  // Replace any ids with XXXX and keep the rest of the URL intact
-  transformedUrl = url.replace(idMatchingRegex, '/XXXX');
+  // Replace any ids with * and keep the rest of the URL intact
+  transformedUrl = url.replace(idMatchingRegex, `/*`);
 
-  // Replace the region and bucket names with XXXX and keep the rest of the URL intact.
+  // Replace the region and bucket names with * and keep the rest of the URL intact.
   // Object storage file navigation is truncated via the 'clear search' transform.
   transformedUrl = transformedUrl.replace(
     bucketPathMatchingRegex,
-    'buckets/XXXX/XXXX'
+    'buckets/*/*'
   );
 
   // Remove everything after access_token

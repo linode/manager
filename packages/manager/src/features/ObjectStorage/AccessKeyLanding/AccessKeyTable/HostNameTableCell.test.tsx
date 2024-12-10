@@ -81,17 +81,19 @@ describe('HostNameTableCell', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
-    const { findByText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <HostNameTableCell
         setHostNames={vi.fn()}
         setShowHostNamesDrawers={vi.fn()}
         storageKeyData={storageKeyData}
       />
     );
-    const hostname = await findByText('US, Newark, NJ: alpha.test.com');
-    const moreButton = await findByText(/and\s+1\s+more\.\.\./);
-    await waitFor(() => expect(hostname).toBeInTheDocument());
 
-    await expect(moreButton).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText('Newark', { exact: false })).toBeInTheDocument();
+      expect(getByText('alpha.test.com', { exact: false })).toBeInTheDocument();
+      expect(getByText(/\+ 1 region/, { exact: false })).toBeInTheDocument();
+      expect(getByText('Show All', { exact: false })).toBeInTheDocument();
+    });
   });
 });

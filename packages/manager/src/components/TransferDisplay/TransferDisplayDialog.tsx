@@ -1,12 +1,10 @@
-import { Box } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
+import { Box, Divider, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import { useIsGeckoEnabled } from '../RegionSelect/RegionSelect.utils';
 import { NETWORK_TRANSFER_USAGE_AND_COST_LINK } from './constants';

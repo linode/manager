@@ -1,29 +1,25 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { CircleProgress } from '@linode/ui';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LineGraph } from 'src/components/LineGraph/LineGraph';
+import { roundTo } from 'src/utilities/roundTo';
 
-import { isDataEmpty } from '../../Utils/CloudPulseWidgetUtils';
+import type { AreaChartProps } from 'src/components/AreaChart/AreaChart';
 
-import type { LegendRow } from '../CloudPulseWidget';
-import type { LineGraphProps } from 'src/components/LineGraph/LineGraph';
-
-export interface CloudPulseLineGraph extends LineGraphProps {
-  ariaLabel?: string;
+export interface CloudPulseLineGraph extends AreaChartProps {
   error?: string;
-  gridSize: number;
-  legendRows?: LegendRow[];
   loading?: boolean;
-  subtitle?: string;
-  title: string;
 }
 
 export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
-  const { ariaLabel, data, error, legendRows, loading, ...rest } = props;
+  const { error, loading, ...rest } = props;
 
   const theme = useTheme();
+
+  // to reduce the x-axis tick count for small screen
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   if (loading) {
     return <CircleProgress sx={{ minHeight: '380px' }} />;
@@ -34,7 +30,6 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
   }
 
   const noDataMessage = 'No data to display';
-
   return (
     <Box p={2} position="relative">
       {error ? (
@@ -42,29 +37,29 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           <ErrorState errorText={error} />
         </Box>
       ) : (
-        <LineGraph
+        <AreaChart
           {...rest}
-          sxTableStyles={{
-            '& .MuiTable-root': {
-              border: 0,
-            },
-            backgroundColor: theme.bg.offWhite,
-            maxHeight: `calc(${theme.spacing(14)} + 3px)`,
-            minHeight: `calc(${theme.spacing(10)})`,
-            overflow: 'auto',
-            paddingLeft: theme.spacing(1),
+          margin={{
+            bottom: 0,
+            left: -15,
+            right: 30,
+            top: 2,
           }}
-          ariaLabel={ariaLabel}
-          data={data}
-          isLegendsFullSize={true}
-          legendRows={legendRows}
+          xAxisTickCount={
+            isSmallScreen ? undefined : Math.min(rest.data.length, 7)
+          }
+          yAxisProps={{
+            tickFormat: (value: number) => `${roundTo(value, 3)}`,
+          }}
+          fillOpacity={0.5}
+          legendHeight="150px"
         />
       )}
-      {isDataEmpty(data) && (
+      {rest.data.length === 0 && (
         <Box
           sx={{
-            bottom: '60%',
-            left: '50%',
+            bottom: '50%',
+            left: '45%',
             position: 'absolute',
           }}
         >

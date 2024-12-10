@@ -1,6 +1,6 @@
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
@@ -8,8 +8,8 @@ import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
 import type { APIError, PlacementGroup, Region } from '@linode/api-v4';
+import type { TextFieldProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material/styles';
-import type { TextFieldProps } from 'src/components/TextField';
 
 export interface PlacementGroupsSelectProps {
   /**

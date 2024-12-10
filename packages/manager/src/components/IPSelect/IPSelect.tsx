@@ -1,6 +1,6 @@
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 interface Option {

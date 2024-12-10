@@ -1,4 +1,3 @@
-import { groupBy } from 'ramda';
 import React from 'react';
 
 import MongoDBIcon from 'src/assets/icons/mongodb.svg';
@@ -68,48 +67,17 @@ export const engineIcons: EngineIconsProps = {
   postgresql: <PostgreSQLIcon height="24" width="24" />,
   redis: null,
 };
+
 export const getEngineOptions = (engines: DatabaseEngine[]) => {
-  const groupedEngines = groupBy<DatabaseEngine>((engineObject) => {
-    if (engineObject.engine.match(/mysql/i)) {
-      return 'MySQL';
-    }
-    if (engineObject.engine.match(/postgresql/i)) {
-      return 'PostgreSQL';
-    }
-    if (engineObject.engine.match(/mongodb/i)) {
-      return 'MongoDB';
-    }
-    if (engineObject.engine.match(/redis/i)) {
-      return 'Redis';
-    }
-    return 'Other';
-  }, engines);
-  return ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'Other'].reduce(
-    (accum, thisGroup) => {
-      if (
-        !groupedEngines[thisGroup] ||
-        groupedEngines[thisGroup].length === 0
-      ) {
-        return accum;
-      }
-      return [
-        ...accum,
-        {
-          label: thisGroup,
-          options: groupedEngines[thisGroup]
-            .map((engineObject) => ({
-              ...engineObject,
-              flag: engineIcons[engineObject.engine],
-              label: getDatabasesDescription({
-                engine: engineObject.engine,
-                version: engineObject.version,
-              }),
-              value: `${engineObject.engine}/${engineObject.version}`,
-            }))
-            .sort((a, b) => (a.version > b.version ? -1 : 1)),
-        },
-      ];
-    },
-    []
-  );
+  return engines.map((e) => {
+    return {
+      engine: e.engine,
+      flag: engineIcons[e.engine],
+      label: getDatabasesDescription({
+        engine: e.engine,
+        version: e.version,
+      }),
+      value: `${e.engine}/${e.version}`,
+    };
+  });
 };

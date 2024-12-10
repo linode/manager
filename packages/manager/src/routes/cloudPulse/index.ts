@@ -6,7 +6,7 @@ import { CloudPulseRoute } from './CloudPulseRoute';
 const cloudPulseRoute = createRoute({
   component: CloudPulseRoute,
   getParentRoute: () => rootRoute,
-  path: 'monitor/cloudpulse',
+  path: 'monitor',
 });
 
 const cloudPulseLandingRoute = createRoute({

@@ -1,8 +1,5 @@
+import { Notice, StyledLinkButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Notice } from 'src/components/Notice/Notice';
-
-import { StyledLinkButton } from '../Button/StyledLinkButton';
 
 export const StyledNotice = styled(Notice, { label: 'StyledNotice' })(
   ({ theme }) => ({

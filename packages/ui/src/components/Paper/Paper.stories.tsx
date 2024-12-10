@@ -1,7 +1,8 @@
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { Paper } from './Paper';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Paper> = {
   component: Paper,

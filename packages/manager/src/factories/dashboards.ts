@@ -7,9 +7,10 @@ import type {
   Dashboard,
   Widgets,
 } from '@linode/api-v4';
+import type { ChartVariant } from 'src/components/AreaChart/AreaChart';
 
 const color = ['blue', 'red', 'green', 'yellow'];
-const chart_type = ['area', 'area', 'area', 'line'];
+const chart_type: ChartVariant[] = ['area', 'area', 'area', 'line'];
 const scrape_interval = ['2m', '30s', '30s', '30s'];
 
 export const dashboardFactory = Factory.Sync.makeFactory<Dashboard>({

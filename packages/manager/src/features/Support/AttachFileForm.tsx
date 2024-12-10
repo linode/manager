@@ -1,12 +1,12 @@
+import { Button } from '@linode/ui';
 import AttachFile from '@mui/icons-material/AttachFile';
 import { remove } from 'ramda';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-
 import { AttachFileListItem } from './AttachFileListItem';
-import { FileAttachment } from './index';
 import { reshapeFiles } from './ticketUtils';
+
+import type { FileAttachment } from './index';
 
 interface Props {
   files: FileAttachment[];

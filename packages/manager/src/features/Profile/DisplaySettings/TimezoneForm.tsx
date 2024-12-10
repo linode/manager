@@ -1,3 +1,4 @@
+import { Autocomplete, Button, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -5,9 +6,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { timezones } from 'src/assets/timezones/timezones';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Button } from 'src/components/Button/Button';
-import { Notice } from 'src/components/Notice/Notice';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 

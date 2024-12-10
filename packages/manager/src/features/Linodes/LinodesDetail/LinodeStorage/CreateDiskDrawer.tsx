@@ -1,5 +1,10 @@
-import { InputAdornment } from '@linode/ui';
-import { FormHelperText } from '@linode/ui';
+import {
+  Autocomplete,
+  FormHelperText,
+  InputAdornment,
+  Notice,
+  TextField,
+} from '@linode/ui';
 import {
   CreateLinodeDiskFromImageSchema,
   CreateLinodeDiskSchema,
@@ -9,11 +14,8 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   useAllLinodeDisksQuery,

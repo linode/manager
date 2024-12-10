@@ -31,6 +31,7 @@ import type {
   UnassignLinodesFromPlacementGroupPayload,
   UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
+import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 const getAllPlacementGroupsRequest = (
   _params: Params = {},
@@ -221,5 +222,65 @@ export const useUnassignLinodesFromPlacementGroup = (
         });
       }
     },
+  });
+};
+
+export const placementGroupEventHandler = ({
+  event,
+  invalidateQueries,
+}: EventHandlerData) => {
+  const { action, entity, secondary_entity } = event;
+  // for assignment/unassignment events
+  // in the case of a migration, the assignment/unassignment events are happening asynchronously,
+  // without using the hook. We need to invalidate the placement group queries here.
+  // invalidateQueries({ queryKey: placementGroupQueries._def });
+  // event looks as follow:
+  // {
+  //   "id": {id},
+  //   "created": {created},
+  //   "seen": false,
+  //   "read": false,
+  //   "percent_complete": null,
+  //   "time_remaining": null,
+  //   "rate": null,
+  //   "duration": null,
+  //   "action": "placement_group_unassign",
+  //   "username": {username},
+  //   "entity": {
+  //       "label": {label},
+  //       "id": {id},
+  //       "type": "placement_group",
+  //       "url": "/v4/placement/groups/{id}"
+  //   },
+  //   "status": "notification",
+  //   "secondary_entity": {
+  //       "id": {id},
+  //       "type": "linode",
+  //       "label": {label},
+  //       "url": "/v4/linode/instances/{id}"
+  //   },
+  //   "message": ""
+  // }
+  if (
+    action !== 'placement_group_unassign' &&
+    action !== 'placement_group_assign'
+  ) {
+    return;
+  }
+
+  if (entity && secondary_entity) {
+    invalidateQueries({
+      queryKey: placementGroupQueries.placementGroup(entity.id).queryKey,
+    });
+    invalidateQueries({
+      queryKey: linodeQueries.linode(secondary_entity.id).queryKey,
+    });
+  }
+
+  invalidateQueries({
+    queryKey: placementGroupQueries.paginated._def,
+  });
+  invalidateQueries({
+    queryKey: linodeQueries.linodes._ctx.all._def,
   });
 };

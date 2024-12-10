@@ -8,8 +8,8 @@ const recordBaseSchema = object().shape({
     .max(255, 'Priority must be between 0 and 255.'),
   weight: number(),
   port: number(),
-  service: string().nullable(true),
-  protocol: string().nullable(true),
+  service: string().nullable(),
+  protocol: string().nullable(),
   ttl_sec: number(),
   tag: string(),
 });

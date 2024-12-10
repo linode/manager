@@ -1,11 +1,10 @@
-import { Box, omittedProps } from '@linode/ui';
+import { Box, Typography, omittedProps } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import type { NotificationCenterNotificationMessageProps } from './types';
 import type { Theme } from '@mui/material/styles';

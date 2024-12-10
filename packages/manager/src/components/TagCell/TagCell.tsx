@@ -1,4 +1,10 @@
-import { IconButton, omittedProps } from '@linode/ui';
+import {
+  CircleProgress,
+  IconButton,
+  StyledPlusIcon,
+  StyledTagButton,
+  omittedProps,
+} from '@linode/ui';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -7,8 +13,6 @@ import * as React from 'react';
 import { Tag } from 'src/components/Tag/Tag';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 
-import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
-import { CircleProgress } from '../CircleProgress';
 import { AddTag } from './AddTag';
 import { TagDrawer } from './TagDrawer';
 

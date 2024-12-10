@@ -1,13 +1,11 @@
-import { Box } from '@linode/ui';
+import { Box, Stack, Typography } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { replaceNewlinesWithLineBreaks } from 'src/utilities/replaceNewlinesWithLineBreaks';
 
-import { Stack } from '../Stack';
 import {
   StyledAkamaiLogo,
   StyledBanner,

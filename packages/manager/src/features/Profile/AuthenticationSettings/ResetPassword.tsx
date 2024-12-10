@@ -1,9 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { LOGIN_ROOT } from 'src/constants';
 
 interface Props {

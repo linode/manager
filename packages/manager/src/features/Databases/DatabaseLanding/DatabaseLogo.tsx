@@ -1,10 +1,9 @@
-import { BetaChip, Box } from '@linode/ui';
+import { BetaChip, Box, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import LogoWhite from 'src/assets/icons/db-logo-white.svg';
 import Logo from 'src/assets/icons/db-logo.svg';
-import { Typography } from 'src/components/Typography';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 
 import type { SxProps, Theme } from '@mui/material/styles';

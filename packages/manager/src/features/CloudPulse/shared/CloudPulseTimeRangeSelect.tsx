@@ -1,6 +1,5 @@
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import type { FilterValue, TimeDuration } from '@linode/api-v4';
 import type {

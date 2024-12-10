@@ -68,6 +68,9 @@ export const getCapabilityFromPlanType = (
     case 'premium': {
       return 'Premium Plans';
     }
+    case 'accelerated': {
+      return 'NETINT Quadra T1U';
+    }
     default: {
       return 'Linodes';
     }

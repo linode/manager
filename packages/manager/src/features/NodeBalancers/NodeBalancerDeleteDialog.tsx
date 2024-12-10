@@ -1,9 +1,8 @@
+import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import { useNodebalancerDeleteMutation } from 'src/queries/nodebalancers';
 
 interface Props {

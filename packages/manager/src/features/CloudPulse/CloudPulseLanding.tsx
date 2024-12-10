@@ -12,7 +12,7 @@ export const CloudPulseLanding = () => {
       <LandingHeader
         breadcrumbProps={{ pathname: '/Akamai Cloud Pulse' }}
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
       />
       <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
@@ -23,8 +23,6 @@ export const CloudPulseLanding = () => {
   );
 };
 
-export const cloudPulseLandingLazyRoute = createLazyRoute(
-  '/monitor/cloudpulse'
-)({
+export const cloudPulseLandingLazyRoute = createLazyRoute('/monitor')({
   component: CloudPulseLanding,
 });

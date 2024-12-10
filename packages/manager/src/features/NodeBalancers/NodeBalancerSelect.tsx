@@ -1,9 +1,8 @@
+import { Autocomplete, CustomPopper } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 

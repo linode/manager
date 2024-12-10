@@ -1,21 +1,28 @@
-import { Theme } from '@mui/material/styles';
+import {
+  FormControlLabel,
+  Notice,
+  Radio,
+  RadioGroup,
+  Typography,
+} from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useState } from 'react';
 import * as React from 'react';
-import { ChangeEvent, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
-import { Typography } from 'src/components/Typography';
-import { ExtendedIP, ipFieldPlaceholder } from 'src/utilities/ipUtils';
+import {
+  ipFieldPlaceholder,
+  ipV6FieldPlaceholder,
+} from 'src/utilities/ipUtils';
 
 import { useIsDatabasesEnabled } from '../utilities';
 
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+import type { ChangeEvent } from 'react';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   container: {
@@ -33,7 +40,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export type AccessOption = 'specific' | 'none';
+export type AccessOption = 'none' | 'specific';
 
 interface Props {
   disabled?: boolean;
@@ -59,14 +66,14 @@ export const DatabaseCreateAccessControls = (props: Props) => {
   return (
     <Grid>
       <Typography className={classes.header} variant="h2">
-        Add Access Controls
+        Manage Access
       </Typography>
       {isDatabasesV2GA ? (
         <>
           <Typography>
-            Add IPv4 addresses or ranges that should be authorized to access
-            this cluster. 
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls">
+            Add IPv6 (recommended) or IPv4 addresses or ranges that should be
+            authorized to access this cluster.{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#ipv6-support">
               Learn more
             </Link>
             .
@@ -119,13 +126,14 @@ export const DatabaseCreateAccessControls = (props: Props) => {
               value="specific"
             />
             <MultipleIPInput
+              buttonText={ips.length > 1 ? 'Add Another IP' : 'Add an IP'}
               className={classes.multipleIPInput}
               disabled={accessOption === 'none' || disabled}
               ips={ips}
               onBlur={onBlur}
               onChange={onChange}
-              placeholder={ipFieldPlaceholder}
-              title="Allowed IP Address(es) or Range(s)"
+              placeholder={ipV6FieldPlaceholder}
+              title="Allowed IP Addresses or Ranges"
             />
             <FormControlLabel
               control={<Radio />}

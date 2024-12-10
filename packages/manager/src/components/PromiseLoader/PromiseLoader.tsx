@@ -1,6 +1,5 @@
+import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
-
-import { CircleProgress } from 'src/components/CircleProgress';
 
 interface State {
   [name: string]: any;
@@ -22,6 +21,21 @@ export interface PromiseLoaderResponse<T> {
 export default function preload<P>(requests: RequestMap<P>) {
   return function (Component: React.ComponentType<P>) {
     return class LoadedComponent extends React.Component<P, State> {
+      static displayName = `PromiseLoader(${
+        Component.displayName || Component.name
+      })`;
+      handleDone = () => {
+        if (!this.mounted) {
+          return;
+        }
+
+        this.setState((prevState) => ({ ...prevState, loading: false }));
+      };
+
+      mounted: boolean = false;
+
+      state = { loading: true };
+
       componentDidMount() {
         this.mounted = true;
         const promises = Object.entries(requests).map(([name, request]) =>
@@ -50,6 +64,7 @@ export default function preload<P>(requests: RequestMap<P>) {
 
         Promise.all(promises).then(this.handleDone).catch(this.handleDone);
       }
+
       componentWillUnmount() {
         this.mounted = false;
       }
@@ -62,22 +77,6 @@ export default function preload<P>(requests: RequestMap<P>) {
 
         return <Component {...this.props} {...responses} />;
       }
-
-      static displayName = `PromiseLoader(${
-        Component.displayName || Component.name
-      })`;
-
-      handleDone = () => {
-        if (!this.mounted) {
-          return;
-        }
-
-        this.setState((prevState) => ({ ...prevState, loading: false }));
-      };
-
-      mounted: boolean = false;
-
-      state = { loading: true };
     };
   };
 }

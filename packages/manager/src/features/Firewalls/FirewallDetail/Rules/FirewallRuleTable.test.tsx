@@ -1,5 +1,6 @@
 import { firewallRuleToRowData } from './FirewallRuleTable';
-import { ExtendedFirewallRule } from './firewallRuleEditor';
+
+import type { ExtendedFirewallRule } from './firewallRuleEditor';
 
 describe('Firewall rule table tests', () => {
   describe('firewallRuleToRowData', () => {
