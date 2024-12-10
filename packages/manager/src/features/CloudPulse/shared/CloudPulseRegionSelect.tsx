@@ -1,4 +1,3 @@
-import { isNil } from 'ramda';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
