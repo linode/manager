@@ -2,7 +2,12 @@
 import * as React from 'react';
 import { ui } from 'support/ui';
 import { componentTests } from 'support/util/components';
-import { randomItem, randomLabel, randomString } from 'support/util/random';
+import {
+  randomItem,
+  randomLabel,
+  randomNumber,
+  randomString,
+} from 'support/util/random';
 
 import { firewallRuleFactory } from 'src/factories';
 import { FirewallRulesLanding } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRulesLanding';
@@ -390,7 +395,7 @@ componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
               outbound_policy: 'DROP',
             }}
             disabled={false}
-            firewallID={1}
+            firewallID={randomNumber()}
           />
         );
         verifyFirewallWithRules({
@@ -418,7 +423,7 @@ componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
               outbound_policy: 'DROP',
             }}
             disabled={false}
-            firewallID={2}
+            firewallID={randomNumber()}
           />
         );
         verifyFirewallWithRules({
@@ -455,7 +460,7 @@ componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
               outbound_policy: 'DROP',
             }}
             disabled={false}
-            firewallID={3}
+            firewallID={randomNumber()}
           />
         );
         verifyFirewallWithRules({
@@ -484,7 +489,7 @@ componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
               outbound_policy: 'DROP',
             }}
             disabled={false}
-            firewallID={4}
+            firewallID={randomNumber()}
           />
         );
         verifyFirewallWithRules({
