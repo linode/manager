@@ -1,8 +1,7 @@
+import { Button, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import { DismissibleBanner } from './DismissibleBanner';
 

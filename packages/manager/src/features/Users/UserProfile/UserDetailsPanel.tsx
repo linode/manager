@@ -1,13 +1,11 @@
-import { Paper } from '@linode/ui';
+import { Paper, Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { Typography } from 'src/components/Typography';
 
 import type { User } from '@linode/api-v4';
 

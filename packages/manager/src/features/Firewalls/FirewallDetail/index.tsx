@@ -1,9 +1,9 @@
+import { CircleProgress } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
@@ -16,8 +16,8 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
+import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 

@@ -77,6 +77,27 @@ describe('DatabaseSummaryConnectionDetails', () => {
     });
   });
 
+  it('should display N/A for default DB with blank read-only Host field', async () => {
+    const database = databaseFactory.build({
+      engine: POSTGRESQL,
+      hosts: {
+        primary: DEFAULT_PRIMARY,
+        secondary: undefined,
+        standby: undefined,
+      },
+      id: 99,
+      platform: 'rdbms-default',
+      port: 22496,
+      ssl_connection: true,
+    });
+
+    const { queryAllByText } = renderWithTheme(
+      <DatabaseSummaryConnectionDetails database={database} />
+    );
+
+    expect(queryAllByText('N/A')).toHaveLength(1);
+  });
+
   it('should display correctly for legacy db', async () => {
     queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
       data: {

@@ -59,12 +59,12 @@ describe('Object Storage gen2 access keys tests', () => {
     cy.findByText(mockAccessKey1.label).should('be.visible');
     cy.findByText(mockAccessKey2.label).should('be.visible');
     cy.findByText('US, Newark, NJ (E3): us-east.com').should('be.visible');
-    cy.findByText('US, Atlanta, GA (E3): us-southeast.com').should(
-      'be.visible'
-    );
 
-    // confirm endpoint types are present in the drawer
-    cy.findByText('and 3 more...').should('be.visible').click();
+    // Using contains since the text includes additional information, i.e. '| +2 regions | Show All'
+    cy.contains('US, Atlanta, GA (E3): us-southeast.com').should('be.visible');
+    cy.contains('+ 3 regions').should('be.visible');
+    cy.findByText('Show All').should('be.visible').click();
+
     ui.drawer
       .findByTitle('Regions / S3 Hostnames')
       .should('be.visible')

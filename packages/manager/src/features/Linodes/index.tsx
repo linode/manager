@@ -10,6 +10,7 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 import { storage } from 'src/utilities/storage';
 
+import { PENDING_MAINTENANCE_FILTER } from '../Account/Maintenance/utilities';
 import { linodesInTransition } from './transitions';
 
 import type { RegionFilter } from 'src/utilities/storage';
@@ -49,7 +50,7 @@ export const LinodesRoutes = () => {
 export const LinodesLandingWrapper = React.memo(() => {
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
-    { status: { '+or': ['pending, started'] } }
+    PENDING_MAINTENANCE_FILTER
   );
 
   const { isGeckoLAEnabled } = useIsGeckoEnabled();

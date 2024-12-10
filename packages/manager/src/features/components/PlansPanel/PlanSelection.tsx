@@ -1,10 +1,8 @@
+import { Chip, FormControlLabel, Radio } from '@linode/ui';
 import * as React from 'react';
 
-import { Chip } from 'src/components/Chip';
 import { Currency } from 'src/components/Currency';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';
-import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -83,7 +81,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
   const rowIsDisabled =
-    isSamePlan ||
+    (!isDatabaseFlow && isSamePlan) ||
     planIsTooSmall ||
     planBelongsToDisabledClass ||
     planIsDisabled512Gb ||
@@ -110,6 +108,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       planHasLimitedAvailability ||
       planIsTooSmall);
 
+  const isDistributedPlan =
+    plan.id.includes('dedicated-edge') || plan.id.includes('nanode-edge');
+
+  const networkOutGbps = plan.network_out && plan.network_out / 1000;
+
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
@@ -121,7 +124,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           onClick={() => (!rowIsDisabled ? onSelect(plan.id) : undefined)}
         >
           <StyledRadioCell>
-            {!isSamePlan && (
+            {(!isSamePlan || (isDatabaseFlow && isSamePlan)) && (
               <FormControlLabel
                 aria-label={`${plan.heading} ${
                   rowIsDisabled ? `- ${disabledPlanReasonCopy}` : ''
@@ -206,9 +209,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             <TableCell center data-qa-network noWrap>
               {plan.network_out ? (
                 <>
-                  {LINODE_NETWORK_IN} Gbps{' '}
-                  <span style={{ color: '#9DA4A6' }}>/</span>{' '}
-                  {plan.network_out / 1000} Gbps
+                  {isDistributedPlan ? networkOutGbps : LINODE_NETWORK_IN} Gbps{' '}
+                  <span style={{ color: '#9DA4A6' }}>/</span> {networkOutGbps}{' '}
+                  Gbps
                 </>
               ) : (
                 ''

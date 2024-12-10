@@ -1,11 +1,6 @@
-import { Box } from '@linode/ui';
+import { Box, Checkbox, Notice, Typography } from '@linode/ui';
 import { List, ListItem } from '@mui/material';
 import * as React from 'react';
-
-import { Checkbox } from 'src/components/Checkbox';
-import { Typography } from 'src/components/Typography';
-
-import { Notice } from '../Notice/Notice';
 
 export interface EncryptionProps {
   descriptionCopy: JSX.Element | string;

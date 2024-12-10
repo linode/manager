@@ -1,8 +1,8 @@
+import { Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { useDeleteDomainMutation } from 'src/queries/domains';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

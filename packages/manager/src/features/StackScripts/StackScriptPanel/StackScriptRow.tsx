@@ -1,10 +1,9 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
-import { Typography } from 'src/components/Typography';
 import { StackScriptActionMenu } from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
-import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 
 import {
   StyledImagesTableCell,
@@ -17,6 +16,8 @@ import {
   StyledTypography,
   StyledUsernameSpan,
 } from '../CommonStackScript.styles';
+
+import type { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 
 export interface Props {
   canAddLinodes: boolean;

@@ -1,10 +1,9 @@
-import { Tooltip } from '@linode/ui';
+import { Tooltip, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { TableCell } from 'src/components/TableCell';
-import { Typography } from 'src/components/Typography';
 
 import ActionMenu from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';

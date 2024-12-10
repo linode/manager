@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import {
   createAccountLimitSupportTicketSchema,
   createSMTPSupportTicketSchema,
@@ -6,7 +7,6 @@ import {
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import type {
   EntityType,
@@ -69,11 +69,13 @@ export const ENTITY_MAP: Record<string, EntityType> = {
   Kubernetes: 'lkecluster_id',
   Linodes: 'linode_id',
   NodeBalancers: 'nodebalancer_id',
+  'Object Storage': 'bucket',
   VPCs: 'vpc_id',
   Volumes: 'volume_id',
 };
 
 export const ENTITY_ID_TO_NAME_MAP: Record<EntityType, string> = {
+  bucket: 'Bucket',
   database_id: 'Database Cluster',
   domain_id: 'Domain',
   firewall_id: 'Firewall',

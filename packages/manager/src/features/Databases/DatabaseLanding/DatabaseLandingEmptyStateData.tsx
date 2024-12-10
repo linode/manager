@@ -22,17 +22,18 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview of Managed Databases',
-      to: 'https://techdocs.akamai.com/cloud-computing/docs/managed-databases',
+      to:
+        'https://techdocs.akamai.com/cloud-computing/docs/aiven-database-clusters',
     },
     {
       text: 'Get Started with Managed Databases',
       to:
-        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-managed-databases',
+        'https://techdocs.akamai.com/cloud-computing/docs/get-started-new-clusters',
     },
     {
       text: 'Choosing a Database Engine',
       to:
-        'https://techdocs.akamai.com/cloud-computing/docs/database-engines-and-plans',
+        'https://techdocs.akamai.com/cloud-computing/docs/aiven-database-engines',
     },
   ],
   moreInfo: {

@@ -1,12 +1,10 @@
+import { Accordion, Notice, TextField } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,

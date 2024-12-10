@@ -1,20 +1,19 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { StackScript } from '@linode/api-v4/lib/stackscripts';
+import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { TableBody } from 'src/components/TableBody';
 import { TableRow } from 'src/components/TableRow';
-import {
-  StackScriptCategory,
-  canUserModifyAccountStackScript,
-} from 'src/features/StackScripts/stackScriptUtils';
+import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { stripImageName } from 'src/utilities/stripImageName';
 
 import { StyledStackScriptSectionTableCell } from '../CommonStackScript.styles';
 import { StackScriptRow } from './StackScriptRow';
+
+import type { Image } from '@linode/api-v4/lib/images';
+import type { StackScript } from '@linode/api-v4/lib/stackscripts';
+import type { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 
 export interface Props {
   // change until we're actually using it.

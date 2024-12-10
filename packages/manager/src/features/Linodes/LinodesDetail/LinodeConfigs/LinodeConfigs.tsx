@@ -1,9 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';

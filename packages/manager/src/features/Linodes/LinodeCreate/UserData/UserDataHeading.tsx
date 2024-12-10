@@ -1,10 +1,7 @@
+import { Notice, Stack, TooltipIcon, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Stack } from 'src/components/Stack';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 
 import { useLinodeCreateQueryParams } from '../utilities';
 

@@ -1,8 +1,8 @@
+import { Button } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
@@ -51,8 +51,8 @@ export const MonitorTable = () => {
   const { data, error, isLoading } = useAllManagedMonitorsQuery();
   const {
     data: issues,
-    error: issuesError,
-    isLoading: areIssuesLoading,
+    failureReason,
+    isFetching: areIssuesFetching,
   } = useAllManagedIssuesQuery();
   const { data: credentials } = useAllManagedCredentialsQuery();
   const { data: contacts } = useAllManagedContactsQuery();
@@ -283,8 +283,8 @@ export const MonitorTable = () => {
         issues={issues?.filter((thisIssue) =>
           thisIssue.services.includes(editID)
         )}
-        error={issuesError}
-        loading={areIssuesLoading}
+        error={failureReason}
+        isFetching={areIssuesFetching}
         monitorLabel={editLabel}
         onClose={() => setHistoryDrawerOpen(false)}
         open={historyDrawerOpen}

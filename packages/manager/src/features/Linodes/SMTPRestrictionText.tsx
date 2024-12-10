@@ -1,8 +1,8 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
-import { Typography } from 'src/components/Typography';
 import { useAccount } from 'src/queries/account/account';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 

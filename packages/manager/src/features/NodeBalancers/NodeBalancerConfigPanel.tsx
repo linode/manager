@@ -1,16 +1,18 @@
-import { FormHelperText } from '@linode/ui';
+import {
+  Autocomplete,
+  Button,
+  Divider,
+  FormHelperText,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';

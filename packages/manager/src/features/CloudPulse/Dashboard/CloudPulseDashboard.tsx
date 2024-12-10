@@ -1,7 +1,7 @@
+import { CircleProgress } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
@@ -67,7 +67,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
     return {
-      resource_ids: resourceList?.map((resource) => Number(resource.id)) ?? [],
+      resource_ids: resources?.map((resource) => Number(resource)) ?? [],
     };
   };
 
@@ -100,11 +100,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   const {
     data: jweToken,
     isError: isJweTokenError,
-    isLoading: isJweTokenLoading,
+    isFetching: isJweTokenFetching,
   } = useCloudPulseJWEtokenQuery(
     dashboard?.service_type,
     getJweTokenPayload(),
-    Boolean(resourceList)
+    Boolean(resources) && !isDashboardLoading && !isDashboardApiError
   );
 
   if (isDashboardApiError) {
@@ -123,12 +123,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     return renderErrorState('Error loading the definitions of metrics.');
   }
 
-  if (
-    isMetricDefinitionLoading ||
-    isDashboardLoading ||
-    isResourcesLoading ||
-    isJweTokenLoading
-  ) {
+  if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
     return <CircleProgress />;
   }
 
@@ -137,6 +132,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       additionalFilters={additionalFilters}
       dashboard={dashboard}
       duration={duration}
+      isJweTokenFetching={isJweTokenFetching}
       jweToken={jweToken}
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}

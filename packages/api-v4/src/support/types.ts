@@ -35,10 +35,12 @@ export interface ReplyRequest {
 export interface TicketRequest {
   summary: string;
   description: string;
+  bucket?: string;
   domain_id?: number;
   linode_id?: number;
   longviewclient_id?: number;
   nodebalancer_id?: number;
+  region?: string;
   volume_id?: number;
   severity?: TicketSeverity;
 }

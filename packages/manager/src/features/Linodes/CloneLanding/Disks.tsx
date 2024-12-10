@@ -1,9 +1,8 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
+import { Checkbox } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 
-import { Checkbox } from 'src/components/Checkbox';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -13,7 +12,8 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
-import { DiskSelection } from './utilities';
+import type { DiskSelection } from './utilities';
+import type { Disk } from '@linode/api-v4/lib/linodes';
 
 export interface DisksProps {
   diskSelection: DiskSelection;

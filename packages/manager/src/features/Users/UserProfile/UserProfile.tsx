@@ -1,11 +1,10 @@
+import { CircleProgress, Stack } from '@linode/ui';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { NotFound } from 'src/components/NotFound';
-import { Stack } from 'src/components/Stack';
 import { useAccountUser } from 'src/queries/account/users';
 
 import { DeleteUserPanel } from './DeleteUserPanel';

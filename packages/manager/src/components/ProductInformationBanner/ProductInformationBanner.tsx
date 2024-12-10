@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { reportException } from 'src/exceptionReporting';
-import { ProductInformationBannerLocation } from 'src/featureFlags';
 import { useFlags } from 'src/hooks/useFlags';
 import { isAfter } from 'src/utilities/date';
 
 import { DismissibleBanner } from '../DismissibleBanner/DismissibleBanner';
 
-import type { NoticeProps } from 'src/components/Notice/Notice';
+import type { NoticeProps } from '@linode/ui';
+import type { ProductInformationBannerLocation } from 'src/featureFlags';
 
 interface Props {
   bannerLocation: ProductInformationBannerLocation;
