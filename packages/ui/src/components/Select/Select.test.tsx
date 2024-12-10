@@ -15,8 +15,19 @@ describe('Select', () => {
   it('renders a Select with a label and options', async () => {
     const onChange = vi.fn();
     const { getByRole, getByText } = renderWithTheme(
-      <Select label="My Select" onChange={onChange} options={options} />
+      <Select
+        label="My Select"
+        onChange={onChange}
+        options={options}
+        placeholder="Select an option"
+      />
     );
+
+    const select = getByRole('combobox');
+    expect(select).toHaveAttribute('aria-autocomplete', 'list');
+    expect(select).toHaveAttribute('aria-expanded', 'false');
+    expect(select).toHaveAttribute('placeholder', 'Select an option');
+    expect(select).toHaveAttribute('readOnly');
 
     expect(getByText('My Select')).toBeInTheDocument();
     expect(getByRole('button', { name: 'Open' })).toBeInTheDocument();
@@ -45,7 +56,7 @@ describe('Select', () => {
 
   it('can be clearable', async () => {
     const onChange = vi.fn();
-    const { container } = renderWithTheme(
+    const { container, getByRole } = renderWithTheme(
       <Select
         isOptionEqualToValue={(option, value) =>
           option.value === value.value && option.label === value.label
@@ -61,11 +72,51 @@ describe('Select', () => {
       />
     );
 
+    const select = getByRole('combobox');
+    expect(select).toHaveValue(options[0].label);
     const clearButton = container.querySelector(
       '.MuiAutocomplete-clearIndicator'
     );
     expect(clearButton).toBeInTheDocument();
     fireEvent.click(clearButton!);
     expect(onChange).toHaveBeenCalledWith(expect.any(Object), null);
+  });
+
+  it('features helper text', () => {
+    const { getByText } = renderWithTheme(
+      <Select helperText="Helper text" label="My Select" options={options} />
+    );
+    expect(getByText('Helper text')).toBeInTheDocument();
+  });
+
+  it('features error text', () => {
+    const { getByText } = renderWithTheme(
+      <Select errorText="Error text" label="My Select" options={options} />
+    );
+    expect(getByText('Error text')).toBeInTheDocument();
+  });
+
+  it('features loading state', () => {
+    const { getByRole } = renderWithTheme(
+      <Select label="My Select" loading options={options} />
+    );
+    expect(
+      getByRole('progressbar', { name: 'Content is loading' })
+    ).toBeInTheDocument();
+  });
+
+  it('features a required state', () => {
+    const { getByText } = renderWithTheme(
+      <Select label="My Select" options={options} required />
+    );
+    expect(getByText('(required)')).toBeInTheDocument();
+  });
+
+  it('features a searchable state', () => {
+    const { getByRole } = renderWithTheme(
+      <Select label="My Select" options={options} searchable />
+    );
+    const select = getByRole('combobox');
+    expect(select).not.toHaveAttribute('readOnly');
   });
 });
