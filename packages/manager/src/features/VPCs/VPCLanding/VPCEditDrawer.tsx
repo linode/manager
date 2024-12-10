@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Notice, TextField } from '@linode/ui';
-import { updateVPCSchema } from '@linode/validation/lib/vpcs.schema';
+import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -11,7 +11,7 @@ import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useUpdateVPCMutation } from 'src/queries/vpcs/vpcs';
 
-import type { UpdateVPCPayload, VPC } from '@linode/api-v4/lib/vpcs/types';
+import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -47,7 +47,6 @@ export const VPCEditDrawer = (props: Props) => {
     handleSubmit,
     reset: resetForm,
     setError,
-    watch,
   } = useForm<UpdateVPCPayload>({
     mode: 'onBlur',
     resolver: yupResolver(updateVPCSchema),
@@ -57,15 +56,13 @@ export const VPCEditDrawer = (props: Props) => {
     },
   });
 
-  const values = watch();
-
   const handleDrawerClose = () => {
     onClose();
     resetForm();
     resetMutation();
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (values: UpdateVPCPayload) => {
     try {
       await updateVPC(values);
       handleDrawerClose();
