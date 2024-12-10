@@ -232,7 +232,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           <StyledLabelTypography>Database name</StyledLabelTypography>
         </Grid>
         <StyledValueGrid md={8} xs={9}>
-          defaultdb
+          {isLegacy ? database.engine : 'defaultdb'}
         </StyledValueGrid>
         <Grid md={4} xs={3}>
           <StyledLabelTypography>Host</StyledLabelTypography>

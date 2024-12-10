@@ -18,13 +18,13 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   severity: 0,
   status: 'enabled',
   tags: ['tag1', 'tag2'],
-  trigger_condition: {
+  trigger_conditions: {
     criteria_condition: 'ALL',
     evaluation_period_seconds: 0,
     polling_interval_seconds: 0,
     trigger_occurrences: 0,
   },
-  type: 'default',
+  type: 'user',
   updated: new Date().toISOString(),
   updated_by: 'user1',
 });

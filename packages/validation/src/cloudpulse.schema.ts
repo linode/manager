@@ -17,7 +17,7 @@ const metricCriteria = object({
   dimension_filters: array().of(dimensionFilters).notRequired(),
 });
 
-const trigger_condition = object({
+const triggerConditionValidation = object({
   polling_interval_seconds: number().required('Polling Interval is required.'),
   evaluation_period_seconds: number().required(
     'Evaluation Period is required.'
@@ -39,6 +39,7 @@ export const createAlertDefinitionSchema = object({
       .of(metricCriteria)
       .min(1, 'At least one metric criteria is needed.'),
   }),
-  trigger_condition,
+  trigger_conditions: triggerConditionValidation,
   channel_ids: array(number()),
+  tags: array().of(string()).notRequired(),
 });

@@ -353,7 +353,6 @@ describe('Billing Activity Feed', () => {
     // reflect each timezone.
     timeZonesList.forEach((timezone) => {
       const timezoneId = timezone.key;
-      const humanReadable = timezone.human;
 
       mockUpdateProfile({
         ...mockProfile,
@@ -367,7 +366,7 @@ describe('Billing Activity Feed', () => {
       cy.findByText('Timezone')
         .should('be.visible')
         .click()
-        .type(`${humanReadable}{enter}`);
+        .type('Pacific Time - Los Angeles{enter}');
 
       ui.button
         .findByTitle('Update Timezone')

@@ -51,7 +51,10 @@ export const ObjectTableRow = (props: Props) => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
+      <TableCell noWrap>
+        {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
+        {readableBytes(objectSize, { base10: true }).formatted}
+      </TableCell>
       <Hidden mdDown>
         <TableCell noWrap>
           <DateTimeDisplay value={objectLastModified} />

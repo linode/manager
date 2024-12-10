@@ -20,6 +20,7 @@ import { filterFormValues } from './utilities';
 
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
 import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
+import type { ObjectSchema } from 'yup';
 
 const triggerConditionInitialValues: TriggerCondition = {
   criteria_condition: 'ALL',
@@ -68,7 +69,9 @@ export const CreateAlertDefinition = () => {
   const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
     mode: 'onBlur',
-    resolver: yupResolver(CreateAlertDefinitionFormSchema),
+    resolver: yupResolver(
+      CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>
+    ),
   });
 
   const {
