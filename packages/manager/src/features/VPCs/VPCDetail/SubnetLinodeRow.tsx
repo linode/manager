@@ -328,7 +328,14 @@ const getFirewallLinks = (data: Firewall[]): JSX.Element => {
 };
 
 export const SubnetLinodeTableRowHead = (
-  <TableRow>
+  <TableRow
+    sx={(theme) => ({
+      '& .MuiTableCell-root': {
+        backgroundColor:
+          theme.name == 'dark' ? theme.tokens.color.Neutrals[80] : undefined,
+      },
+    })}
+  >
     <StyledTableHeadCell>Linode Label</StyledTableHeadCell>
     <StyledTableHeadCell sx={{ width: '14%' }}>Status</StyledTableHeadCell>
     <Hidden smDown>
