@@ -17,7 +17,6 @@ import {
   sortByUTFDate,
 } from 'src/utilities/sort-by';
 
-import type { AllParams, AnyRoute } from '@tanstack/react-router';
 import type { Order } from 'src/hooks/useOrder';
 import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
@@ -60,7 +59,7 @@ export type CombinedProps<T> = Props<T>;
 export const getInitialValuesFromUserPreferences = (
   preferenceKey: string,
   preferences: ManagerPreferences,
-  params: AllParams<AnyRoute> | Record<string, string>, // account for both TanStack and React Router params
+  params: Record<string, string>,
   defaultOrderBy?: string,
   defaultOrder?: Order,
   prefix?: string

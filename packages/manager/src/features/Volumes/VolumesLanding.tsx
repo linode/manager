@@ -69,11 +69,11 @@ export const VolumesLanding = () => {
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
-      from: '/volumes',
-      search: {
+      defaultOrder: {
         order: VOLUME_TABLE_DEFAULT_ORDER,
         orderBy: VOLUME_TABLE_DEFAULT_ORDER_BY,
       },
+      from: '/volumes',
     },
     preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
   });
