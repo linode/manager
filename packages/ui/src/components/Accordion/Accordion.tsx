@@ -18,7 +18,7 @@ import type { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 const useStyles = makeStyles()((theme: Theme) => ({
   itemCount: {
     alignItems: 'center',
-    backgroundColor: '#2575d0',
+    backgroundColor: theme.tokens.color.Ultramarine[70],
     borderRadius: '50%',
     color: theme.tokens.color.Neutrals.White,
     display: 'flex',
