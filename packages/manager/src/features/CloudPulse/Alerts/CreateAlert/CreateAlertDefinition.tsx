@@ -21,6 +21,7 @@ import { filterFormValues } from './utilities';
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
 import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
 
+
 const triggerConditionInitialValues: TriggerCondition = {
   criteria_condition: 'ALL',
   evaluation_period_seconds: 300,
@@ -43,9 +44,9 @@ const initialValues: CreateAlertDefinitionForm = {
   rule_criteria: {
     rules: [criteriaInitialValues],
   },
+  tags: [''],
   serviceType: null,
   severity: null,
-  tags: [''],
   trigger_conditions: triggerConditionInitialValues,
 };
 
