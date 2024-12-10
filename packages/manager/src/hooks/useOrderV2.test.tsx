@@ -106,7 +106,7 @@ describe('useOrderV2', () => {
     });
   });
 
-  it.only('should update URL and preferences when handleOrderChange is called', async () => {
+  it('should update URL and preferences when handleOrderChange is called', async () => {
     const mutatePreferencesMock = vi.fn();
     server.use(
       http.put('*/profile/preferences', async ({ request }) => {
