@@ -22,7 +22,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
     polling_interval_seconds: 0,
     trigger_occurrences: 0,
   },
-  type: 'default',
+  type: 'user',
   updated: new Date().toISOString(),
   updated_by: 'user1',
 });
