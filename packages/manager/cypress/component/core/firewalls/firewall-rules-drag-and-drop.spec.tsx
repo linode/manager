@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-identical-functions */
 /* eslint-disable sonarjs/no-duplicate-string */
 import * as React from 'react';
 import { ui } from 'support/ui';
@@ -8,7 +7,7 @@ import { randomItem, randomLabel, randomString } from 'support/util/random';
 import { firewallRuleFactory } from 'src/factories';
 import { FirewallRulesLanding } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRulesLanding';
 
-import type { FirewallPolicyType } from '@linode/api-v4';
+import type { FirewallPolicyType, FirewallRuleType } from '@linode/api-v4';
 
 interface MoveFocusedElementParams {
   direction: 'DOWN' | 'UP';
@@ -53,6 +52,11 @@ const inboundAriaLabel = 'inbound Rules List';
 const outboundAriaLabel = 'outbound Rules List';
 const buttonText = 'Save Changes';
 
+/**
+ * Returns the formatted label for the given firewall rule action.
+ *
+ * @param ruleAction
+ */
 const getRuleActionLabel = (ruleAction: FirewallPolicyType): string => {
   return `${ruleAction.charAt(0).toUpperCase()}${ruleAction
     .slice(1)
@@ -121,6 +125,244 @@ const verifyFirewallWithRules = ({
 };
 
 /**
+ * Verifies that the rows in a table are in the expected order based on the
+ * provided list of rules and the specified aria-label.
+ *
+ * @param ariaLabel - The aria-label of the table (either inbound or outbound rule table).
+ * @param expectedOrder - The expected order of rules (Array of FirewallRuleType objects).
+ *
+ * @example
+ * // Verifies that the inbound rule table rows are in the expected order.
+ * verifyTableRowOrder('inbound Rules List', [rule1, rule2, rule3]);
+ */
+const verifyTableRowOrder = (
+  ariaLabel: string,
+  expectedOrder: FirewallRuleType[]
+) => {
+  cy.get(`[aria-label="${ariaLabel}"]`).within(() => {
+    cy.get('tbody tr').then((rows) => {
+      expectedOrder.forEach((rule, index) => {
+        expect(rows[index]).to.contain(rule.label);
+      });
+    });
+  });
+};
+
+/**
+ * Test scenario for moving inbound rule rows using keyboard interactions.
+ *
+ * This test verifies that the keyboard-based drag-and-drop functionality
+ * works as expected for inbound rules:
+ * - Ensuring the `Save Changes` button is initially disabled.
+ * - Activating the row drag mode via `Space/Enter` key.
+ * - Moving the rule rows up and down with arrow keys.
+ * - Dropping the row and verifying the updated row order.
+ * - Enabling the `Save Changes` button after the operation.
+ */
+const testMoveInboundRuleRowsViaKeyboard = () => {
+  // Verify 'Save Changes' button is initially disabled.
+  ui.button
+    .findByTitle(buttonText)
+    .should('be.visible')
+    .should('have.attr', 'aria-disabled', 'true');
+
+  // Activate keyboard drag mode using Space/Enter key on the first row - inboundRule1.
+  cy.findByText(inboundRule1.label!).should('be.visible');
+  cy.findByText(inboundRule1.label!).closest('tr').type(' ');
+  cy.findByText(inboundRule1.label!)
+    .closest('tr')
+    .should('have.attr', 'aria-pressed', 'true');
+
+  // Move `inboundRule1` down two rows.
+  moveFocusedElement({ direction: 'DOWN', times: 2 });
+
+  // Drop row with Space/Enter key.
+  cy.focused().type(' ');
+
+  // Verify that "inboundRule2" is in the 1st row,
+  // "inboundRule3" is in the 2nd row, and "inboundRule1" is in the 3rd row.
+  verifyTableRowOrder(inboundAriaLabel, [
+    inboundRule2,
+    inboundRule3,
+    inboundRule1,
+  ]);
+
+  // Activate keyboard drag mode using Space/Enter key on the 2nd row - inboundRule3.
+  cy.findByText(inboundRule3.label!).should('be.visible');
+  cy.findByText(inboundRule3.label!).closest('tr').type(' ');
+  cy.findByText(inboundRule3.label!)
+    .closest('tr')
+    .should('have.attr', 'aria-pressed', 'true');
+
+  // Move `inboundRule3` up one row.
+  moveFocusedElement({ direction: 'UP', times: 1 });
+
+  // Drop row with Space/Enter key.
+  cy.focused().type(' ');
+
+  // Verify that "inboundRule3" is in the 1st row,
+  // "inboundRule2" is in the 2nd row, and "inboundRule1" is in the 3rd row.
+  verifyTableRowOrder(inboundAriaLabel, [
+    inboundRule3,
+    inboundRule2,
+    inboundRule1,
+  ]);
+
+  // Verify 'Save Changes' button is enabled after row is moved.
+  ui.button
+    .findByTitle(buttonText)
+    .should('be.visible')
+    .should('have.attr', 'aria-disabled', 'false');
+};
+
+/**
+ * Test scenario for canceling the inbound rule drag-and-drop operation using the `Esc` key.
+ *
+ * This test checks that when the `Esc` key is pressed during a row drag operation,
+ * the row returns to its original position and the `Save Changes` button remains disabled.
+ */
+const testDiscardInboundRuleDragViaKeyboard = () => {
+  // Verify 'Save Changes' button is initially disabled.
+  ui.button
+    .findByTitle(buttonText)
+    .should('be.visible')
+    .should('have.attr', 'aria-disabled', 'true');
+
+  // Activate keyboard drag mode using Space/Enter key on the first row - inboundRule1.
+  cy.findByText(inboundRule1.label!).should('be.visible');
+  cy.findByText(inboundRule1.label!).closest('tr').type(' ');
+  cy.findByText(inboundRule1.label!)
+    .closest('tr')
+    .should('have.attr', 'aria-pressed', 'true');
+
+  // Move `inboundRule1` down two rows.
+  moveFocusedElement({ direction: 'DOWN', times: 2 });
+
+  // Cancel with Esc key.
+  cy.focused().type('{esc}');
+
+  // Ensure row remains in its original position.
+  verifyTableRowOrder(inboundAriaLabel, [
+    inboundRule1,
+    inboundRule2,
+    inboundRule3,
+  ]);
+
+  // Verify 'Save Changes' button remains disabled after discarding with Esc key.
+  ui.button
+    .findByTitle(buttonText)
+    .should('be.visible')
+    .should('have.attr', 'aria-disabled', 'true');
+};
+
+/**
+ * Test scenario for moving outbound rule rows using keyboard interactions.
+ *
+ * This test verifies that the keyboard-based drag-and-drop functionality
+ * works as expected for outbound rules:
+ * - Ensuring the `Save Changes` button is initially disabled.
+ * - Activating the row drag mode via `Space/Enter` key.
+ * - Moving the rule rows up and down with arrow keys.
+ * - Dropping the row and verifying the updated row order.
+ * - Enabling the `Save Changes` button after the operation.
+ */
+const testMoveOutboundRulesViaKeyboard = () => {
+  // Verify 'Save Changes' button is initially disabled.
+  ui.button
+    .findByTitle(buttonText)
+    .should('be.visible')
+    .should('have.attr', 'aria-disabled', 'true');
+
+  // Activate keyboard drag mode using Space/Enter key on the first row - outboundRule1.
+  cy.findByText(outboundRule1.label!).should('be.visible');
+  cy.findByText(outboundRule1.label!).closest('tr').type(' ');
+  cy.findByText(outboundRule1.label!)
+    .closest('tr')
+    .should('have.attr', 'aria-pressed', 'true');
+
+  // Move `outboundRule1` down two rows
+  moveFocusedElement({ direction: 'DOWN', times: 2 });
+
+  // Drop row with Space/Enter key
+  cy.focused().type(' ');
+
+  // Verify that "outboundRule2" is in the 1st row,
+  // "outboundRule3" is in the 2nd row, and "outboundRule1" is in the 3rd row.
+  verifyTableRowOrder(outboundAriaLabel, [
+    outboundRule2,
+    outboundRule3,
+    outboundRule1,
+  ]);
+
+  // Activate keyboard drag mode using Space/Enter key on the 2nd row - outboundRule3.
+  cy.findByText(outboundRule3.label!).should('be.visible');
+  cy.findByText(outboundRule3.label!).closest('tr').type(' ');
+  cy.findByText(outboundRule3.label!)
+    .closest('tr')
+    .should('have.attr', 'aria-pressed', 'true');
+
+  // Move `outboundRule3` up one row.
+  moveFocusedElement({ direction: 'UP', times: 1 });
+
+  // Drop row with Space/Enter key.
+  cy.focused().type(' ');
+
+  // Verify that "outboundRule3" is in the 1st row,
+  // "outboundRule2" is in the 2nd row, and "outboundRule1" is in the 3rd row.
+  verifyTableRowOrder(outboundAriaLabel, [
+    outboundRule3,
+    outboundRule2,
+    outboundRule1,
+  ]);
+
+  // Verify 'Save Changes' button is enabled after row is moved.
+  ui.button
+    .findByTitle(buttonText)
+    .should('be.visible')
+    .should('have.attr', 'aria-disabled', 'false');
+};
+
+/**
+ * Test scenario for canceling the outbound rule drag-and-drop operation using the `Esc` key.
+ *
+ * This test checks that when the `Esc` key is pressed during a row drag operation,
+ * the row returns to its original position and the `Save Changes` button remains disabled.
+ */
+const testDiscardOutboundRuleDragViaKeyboard = () => {
+  // Verify 'Save Changes' button is initially disabled.
+  ui.button
+    .findByTitle(buttonText)
+    .should('be.visible')
+    .should('have.attr', 'aria-disabled', 'true');
+
+  // Activate keyboard drag mode using Space/Enter key on the first row - outboundRule1.
+  cy.findByText(outboundRule1.label!).should('be.visible');
+  cy.findByText(outboundRule1.label!).closest('tr').type(' ');
+  cy.findByText(outboundRule1.label!)
+    .closest('tr')
+    .should('have.attr', 'aria-pressed', 'true');
+
+  // Move `outboundRule1` down two rows.
+  moveFocusedElement({ direction: 'DOWN', times: 2 });
+
+  // Cancel with Esc key.
+  cy.focused().type('{esc}');
+
+  // Ensure row remains in its original position.
+  verifyTableRowOrder(outboundAriaLabel, [
+    outboundRule1,
+    outboundRule2,
+    outboundRule3,
+  ]);
+
+  // Verify 'Save Changes' button remains disabled after discarding with Esc key.
+  ui.button
+    .findByTitle(buttonText)
+    .should('be.visible')
+    .should('have.attr', 'aria-disabled', 'true');
+};
+
+/**
  * Keyboard keys used to perform interactions with rows in the Firewall Rules table:
  * - Press `Space/Enter` key once to activate keyboard sensor on the selected row.
  * - Use `Up/Down` arrow keys to move the row up or down.
@@ -158,99 +400,11 @@ componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
       });
 
       it('should move Inbound rule rows using keyboard interaction', () => {
-        // Verify 'Save Changes' button is initially disabled.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
-
-        // Activate keyboard drag mode using Space/Enter key on the first row.
-        cy.findByText(inboundRule1.label!).should('be.visible');
-        cy.findByText(inboundRule1.label!).closest('tr').type(' ');
-        cy.findByText(inboundRule1.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `inboundRule1` down two rows.
-        moveFocusedElement({ direction: 'DOWN', times: 2 });
-
-        // Drop row with Space/Enter key.
-        cy.focused().type(' ');
-
-        // Verify that "inboundRule2" is in the 1st row,
-        // "inboundRule3" is in the 2nd row, and "inboundRule1" is in the 3rd row.
-        cy.get(`[aria-label="${inboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(inboundRule2.label);
-            expect(rows[1]).to.contain(inboundRule3.label);
-            expect(rows[2]).to.contain(inboundRule1.label);
-          });
-        });
-
-        // Activate keyboard drag mode using Space/Enter key on the 2nd row.
-        cy.findByText(inboundRule3.label!).should('be.visible');
-        cy.findByText(inboundRule3.label!).closest('tr').type(' ');
-        cy.findByText(inboundRule3.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `inboundRule3` up one row.
-        moveFocusedElement({ direction: 'UP', times: 1 });
-
-        // Drop row with Space/Enter key.
-        cy.focused().type(' ');
-
-        // Verify that "inboundRule3" is in the 1st row,
-        // "inboundRule2" is in the 2nd row, and "inboundRule1" is in the 3rd row.
-        cy.get(`[aria-label="${inboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(inboundRule3.label);
-            expect(rows[1]).to.contain(inboundRule2.label);
-            expect(rows[2]).to.contain(inboundRule1.label);
-          });
-        });
-
-        // Verify 'Save Changes' button is enabled after row is moved.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'false');
+        testMoveInboundRuleRowsViaKeyboard();
       });
 
       it('should cancel the Inbound rules drag operation with Esc key', () => {
-        // Verify 'Save Changes' button is initially disabled.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
-
-        // Activate keyboard drag mode using Space/Enter key on the first row.
-        cy.findByText(inboundRule1.label!).should('be.visible');
-        cy.findByText(inboundRule1.label!).closest('tr').type(' ');
-        cy.findByText(inboundRule1.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `inboundRule1` down two rows.
-        moveFocusedElement({ direction: 'DOWN', times: 2 });
-
-        // Cancel with Esc key.
-        cy.focused().type('{esc}');
-
-        // Ensure row remains in its original position.
-        cy.get(`[aria-label="${inboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(inboundRule1.label);
-            expect(rows[1]).to.contain(inboundRule2.label);
-            expect(rows[2]).to.contain(inboundRule3.label);
-          });
-        });
-
-        // Verify 'Save Changes' button remains disabled after discarding with Esc key.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
+        testDiscardInboundRuleDragViaKeyboard();
       });
     });
 
@@ -274,99 +428,11 @@ componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
       });
 
       it('should move Outbound rule rows using keyboard interaction', () => {
-        // Verify 'Save Changes' button is initially disabled.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
-
-        // Activate keyboard drag mode using Space/Enter key on the first row.
-        cy.findByText(outboundRule1.label!).should('be.visible');
-        cy.findByText(outboundRule1.label!).closest('tr').type(' ');
-        cy.findByText(outboundRule1.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `outboundRule1` down two rows
-        moveFocusedElement({ direction: 'DOWN', times: 2 });
-
-        // Drop row with Space/Enter key
-        cy.focused().type(' ');
-
-        // Verify that "outboundRule2" is in the 1st row,
-        // "outboundRule3" is in the 2nd row, and "outboundRule1" is in the 3rd row.
-        cy.get(`[aria-label="${outboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(outboundRule2.label);
-            expect(rows[1]).to.contain(outboundRule3.label);
-            expect(rows[2]).to.contain(outboundRule1.label);
-          });
-        });
-
-        // Activate keyboard drag mode using Space/Enter key on the 2nd row.
-        cy.findByText(outboundRule3.label!).should('be.visible');
-        cy.findByText(outboundRule3.label!).closest('tr').type(' ');
-        cy.findByText(outboundRule3.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `outboundRule3` up one row.
-        moveFocusedElement({ direction: 'UP', times: 1 });
-
-        // Drop row with Space/Enter key.
-        cy.focused().type(' ');
-
-        // Verify that "outboundRule3" is in the 1st row,
-        // "outboundRule2" is in the 2nd row, and "outboundRule1" is in the 3rd row.
-        cy.get(`[aria-label="${outboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(outboundRule3.label);
-            expect(rows[1]).to.contain(outboundRule2.label);
-            expect(rows[2]).to.contain(outboundRule1.label);
-          });
-        });
-
-        // Verify 'Save Changes' button is enabled after row is moved.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'false');
+        testMoveOutboundRulesViaKeyboard();
       });
 
       it('should cancel the Outbound rules drag operation with Esc key', () => {
-        // Verify 'Save Changes' button is initially disabled.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
-
-        // Activate keyboard drag mode using Space/Enter key on the first row.
-        cy.findByText(outboundRule1.label!).should('be.visible');
-        cy.findByText(outboundRule1.label!).closest('tr').type(' ');
-        cy.findByText(outboundRule1.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `outboundRule1` down two rows.
-        moveFocusedElement({ direction: 'DOWN', times: 2 });
-
-        // Cancel with Esc key.
-        cy.focused().type('{esc}');
-
-        // Ensure row remains in its original position.
-        cy.get(`[aria-label="${outboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(outboundRule1.label);
-            expect(rows[1]).to.contain(outboundRule2.label);
-            expect(rows[2]).to.contain(outboundRule3.label);
-          });
-        });
-
-        // Verify 'Save Changes' button remains disabled after discarding with Esc key.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
+        testDiscardOutboundRuleDragViaKeyboard();
       });
     });
   });
@@ -400,99 +466,11 @@ componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
       });
 
       it('should move Inbound rule rows using keyboard interaction', () => {
-        // Verify 'Save Changes' button is initially disabled.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
-
-        // Activate keyboard drag mode using Space/Enter key on the first row.
-        cy.findByText(inboundRule1.label!).should('be.visible');
-        cy.findByText(inboundRule1.label!).closest('tr').type(' ');
-        cy.findByText(inboundRule1.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `inboundRule1` down two rows.
-        moveFocusedElement({ direction: 'DOWN', times: 2 });
-
-        // Drop row with Space/Enter key.
-        cy.focused().type(' ');
-
-        // Verify that "inboundRule2" is in the 1st row,
-        // "inboundRule3" is in the 2nd row, and "inboundRule1" is in the 3rd row.
-        cy.get(`[aria-label="${inboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(inboundRule2.label);
-            expect(rows[1]).to.contain(inboundRule3.label);
-            expect(rows[2]).to.contain(inboundRule1.label);
-          });
-        });
-
-        // Activate keyboard drag mode using Space/Enter key on the 2nd row.
-        cy.findByText(inboundRule3.label!).should('be.visible');
-        cy.findByText(inboundRule3.label!).closest('tr').type(' ');
-        cy.findByText(inboundRule3.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `inboundRule3` up one row.
-        moveFocusedElement({ direction: 'UP', times: 1 });
-
-        // Drop row with Space/Enter key.
-        cy.focused().type(' ');
-
-        // Verify that "inboundRule3" is in the 1st row,
-        // "inboundRule2" is in the 2nd row, and "inboundRule1" is in the 3rd row.
-        cy.get(`[aria-label="${inboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(inboundRule3.label);
-            expect(rows[1]).to.contain(inboundRule2.label);
-            expect(rows[2]).to.contain(inboundRule1.label);
-          });
-        });
-
-        // Verify 'Save Changes' button is enabled after row is moved.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'false');
+        testMoveInboundRuleRowsViaKeyboard();
       });
 
       it('should cancel the Inbound rules drag operation with Esc key', () => {
-        // Verify 'Save Changes' button is initially disabled.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
-
-        // Activate keyboard drag mode using Space/Enter key on the first row.
-        cy.findByText(inboundRule1.label!).should('be.visible');
-        cy.findByText(inboundRule1.label!).closest('tr').type(' ');
-        cy.findByText(inboundRule1.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `inboundRule1` down two rows.
-        moveFocusedElement({ direction: 'DOWN', times: 2 });
-
-        // Cancel with Esc key.
-        cy.focused().type('{esc}');
-
-        // Ensure row remains in its original position.
-        cy.get(`[aria-label="${inboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(inboundRule1.label);
-            expect(rows[1]).to.contain(inboundRule2.label);
-            expect(rows[2]).to.contain(inboundRule3.label);
-          });
-        });
-
-        // Verify 'Save Changes' button remains disabled after discarding with Esc key.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
+        testDiscardInboundRuleDragViaKeyboard();
       });
     });
 
@@ -517,99 +495,11 @@ componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
       });
 
       it('should move Outbound rule rows using keyboard interaction', () => {
-        // Verify 'Save Changes' button is initially disabled.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
-
-        // Activate keyboard drag mode using Space/Enter key on the first row.
-        cy.findByText(outboundRule1.label!).should('be.visible');
-        cy.findByText(outboundRule1.label!).closest('tr').type(' ');
-        cy.findByText(outboundRule1.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `outboundRule1` down two rows.
-        moveFocusedElement({ direction: 'DOWN', times: 2 });
-
-        // Drop row with Space/Enter key.
-        cy.focused().type(' ');
-
-        // Verify that "outboundRule2" is in the 1st row,
-        // "outboundRule3" is in the 2nd row, and "outboundRule1" is in the 3rd row.
-        cy.get(`[aria-label="${outboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(outboundRule2.label);
-            expect(rows[1]).to.contain(outboundRule3.label);
-            expect(rows[2]).to.contain(outboundRule1.label);
-          });
-        });
-
-        // Activate keyboard drag mode using Space/Enter key on the 2nd row.
-        cy.findByText(outboundRule3.label!).should('be.visible');
-        cy.findByText(outboundRule3.label!).closest('tr').type(' ');
-        cy.findByText(outboundRule3.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `outboundRule3` up one row.
-        moveFocusedElement({ direction: 'UP', times: 1 });
-
-        // Drop row with Space/Enter key.
-        cy.focused().type(' ');
-
-        // Verify that "outboundRule3" is in the 1st row,
-        // "outboundRule2" is in the 2nd row, and "outboundRule1" is in the 3rd row.
-        cy.get(`[aria-label="${outboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(outboundRule3.label);
-            expect(rows[1]).to.contain(outboundRule2.label);
-            expect(rows[2]).to.contain(outboundRule1.label);
-          });
-        });
-
-        // Verify 'Save Changes' button is enabled after row is moved.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'false');
+        testMoveOutboundRulesViaKeyboard();
       });
 
       it('should cancel the Outbound rules drag operation with Esc key', () => {
-        // Verify 'Save Changes' button is initially disabled.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
-
-        // Activate keyboard drag mode using Space/Enter key on the first row.
-        cy.findByText(outboundRule1.label!).should('be.visible');
-        cy.findByText(outboundRule1.label!).closest('tr').type(' ');
-        cy.findByText(outboundRule1.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `outboundRule1` down two rows.
-        moveFocusedElement({ direction: 'DOWN', times: 2 });
-
-        // Cancel with Esc key.
-        cy.focused().type('{esc}');
-
-        // Ensure row remains in its original position.
-        cy.get(`[aria-label="${outboundAriaLabel}"]`).within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(outboundRule1.label);
-            expect(rows[1]).to.contain(outboundRule2.label);
-            expect(rows[2]).to.contain(outboundRule3.label);
-          });
-        });
-
-        // Verify 'Save Changes' button remains disabled after discarding with Esc key.
-        ui.button
-          .findByTitle(buttonText)
-          .should('be.visible')
-          .should('have.attr', 'aria-disabled', 'true');
+        testDiscardOutboundRuleDragViaKeyboard();
       });
     });
   });
