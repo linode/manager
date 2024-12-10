@@ -25,11 +25,9 @@ export const SubnetNode = (props: Props) => {
 
   const { control } = useFormContext<CreateVPCPayload>();
 
-  const subnets = useWatch({ control, name: 'subnets' });
+  const { ipv4, label } = useWatch({ control, name: `subnets.${idx}` });
 
-  const numberOfAvailIPs = calculateAvailableIPv4sRFC1918(
-    (subnets && subnets[idx].ipv4) ?? ''
-  );
+  const numberOfAvailIPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
 
   const availableIPHelperText = numberOfAvailIPs
     ? `Number of Available IP Addresses: ${
@@ -86,7 +84,7 @@ export const SubnetNode = (props: Props) => {
         {showRemoveButton && (
           <Grid xs={1}>
             <StyledButton
-              aria-label="Remove Subnet"
+              aria-label={`Remove Subnet ${label !== '' ? label : idx}`}
               onClick={() => remove(idx)}
             >
               <Close data-testid={`delete-subnet-${idx}`} />
