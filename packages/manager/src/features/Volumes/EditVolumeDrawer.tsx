@@ -18,13 +18,14 @@ import {
 import type { Volume } from '@linode/api-v4';
 
 interface Props {
+  isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: Volume | undefined;
 }
 
 export const EditVolumeDrawer = (props: Props) => {
-  const { onClose: _onClose, open, volume } = props;
+  const { isFetching, onClose: _onClose, open, volume } = props;
 
   const { data: grants } = useGrants();
 
@@ -53,7 +54,7 @@ export const EditVolumeDrawer = (props: Props) => {
     values,
   } = useFormik({
     enableReinitialize: true,
-    initialValues: { label: volume?.label, tags: volume?.tags },
+    initialValues: { label: volume?.label ?? '', tags: volume?.tags ?? [] },
     async onSubmit(values, { setErrors, setStatus }) {
       try {
         await updateVolume({
@@ -81,7 +82,12 @@ export const EditVolumeDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Volume">
+    <Drawer
+      isFetching={isFetching}
+      onClose={onClose}
+      open={open}
+      title="Edit Volume"
+    >
       <form onSubmit={handleSubmit}>
         {isReadOnly && (
           <Notice
