@@ -8,6 +8,7 @@ import {
 } from 'src/factories';
 import {
   getDatabasesDescription,
+  hasPendingUpdates,
   isDateOutsideBackup,
   isDefaultDatabase,
   isLegacyDatabase,
@@ -19,7 +20,12 @@ import {
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import type { AccountCapability, Database, Engine } from '@linode/api-v4';
+import type {
+  AccountCapability,
+  Database,
+  Engine,
+  PendingUpdates,
+} from '@linode/api-v4';
 import type { TimeOption } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups';
 
 const setup = (capabilities: AccountCapability[], flags: any) => {
@@ -416,6 +422,32 @@ describe('getDatabasesDescription', () => {
     });
     const result = getDatabasesDescription(db);
     expect(result).toEqual('PostgreSQL v14.13');
+  });
+});
+
+describe('hasPendingUpdates', () => {
+  it('should return false when there are no pending updates provided', () => {
+    expect(hasPendingUpdates()).toBe(false);
+  });
+
+  it('should return false when pendingUpdates param is undefined', () => {
+    expect(hasPendingUpdates(undefined)).toBe(false);
+  });
+
+  it('should return false when pending updates is an empty array', () => {
+    const updates: PendingUpdates[] = [];
+    expect(hasPendingUpdates(updates)).toBe(false);
+  });
+
+  it('should return true when there are pending updates', () => {
+    const updates: PendingUpdates[] = [
+      {
+        deadline: null,
+        description: 'Log configuration options changes required',
+        planned_for: null,
+      },
+    ];
+    expect(hasPendingUpdates(updates)).toBe(true);
   });
 });
 
