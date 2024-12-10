@@ -1,4 +1,4 @@
-import { within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -48,28 +48,26 @@ const mockData: AvailableMetrics[] = [
 describe('Metric component tests', () => {
   const user = userEvent.setup();
   it('should render all the components and names', () => {
-    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
-      {
-        component: (
-          <Metric
-            apiError={[false, false]}
-            data={mockData}
-            name={`rule_criteria.rules.${0}`}
-            onMetricDelete={vi.fn()}
-            showDeleteIcon={false}
-          />
-        ),
-        useFormOptions: {
-          defaultValues: {
-            serviceType: 'linode',
-          },
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <Metric
+          apiError={[false, false]}
+          data={mockData}
+          name={`rule_criteria.rules.${0}`}
+          onMetricDelete={vi.fn()}
+          showDeleteIcon={false}
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          serviceType: 'linode',
         },
-      }
-    );
-    expect(container.getAllByLabelText('Data Field'));
-    expect(container.getAllByLabelText('Aggregation Type'));
-    expect(container.getAllByLabelText('Operator'));
-    expect(container.getAllByLabelText('Threshold'));
+      },
+    });
+    expect(screen.getByLabelText('Data Field')).toBeVisible();
+    expect(screen.getByLabelText('Aggregation Type')).toBeVisible();
+    expect(screen.getByLabelText('Operator')).toBeVisible();
+    expect(screen.getByLabelText('Threshold')).toBeVisible();
   });
 
   it('should render the Data Field component with options happy path and select an option', async () => {

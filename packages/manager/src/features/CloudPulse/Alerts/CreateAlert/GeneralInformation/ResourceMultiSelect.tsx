@@ -34,7 +34,6 @@ export const CloudPulseMultiResourceSelect = (
   const { engine, name, region, serviceType } = { ...props };
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
 
-
   const { data: resources, isError, isLoading } = useResourcesQuery(
     Boolean(region && serviceType),
     serviceType?.toString(),
@@ -46,7 +45,7 @@ export const CloudPulseMultiResourceSelect = (
     return resources && resources.length > 0
       ? resources.map((resource) => ({
           label: resource.label,
-          value: resource.id,
+          value: resource.id.toString(),
         }))
       : [];
   }, [resources]);

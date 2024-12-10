@@ -153,13 +153,14 @@ export interface ServiceTypesList {
 
 export interface CreateAlertDefinitionPayload {
   label: string;
+  tags?: string[];
   description?: string;
   entity_ids?: string[];
   severity: AlertSeverityType;
   rule_criteria: {
     rules: MetricCriteria[];
   };
-  trigger_condition: TriggerCondition;
+  trigger_conditions: TriggerCondition;
   channel_ids: number[];
 }
 export interface MetricCriteria {
@@ -190,6 +191,7 @@ export interface TriggerCondition {
 export interface Alert {
   id: number;
   label: string;
+  tags: string[];
   description: string;
   has_more_resources: boolean;
   status: AlertStatusType;

@@ -23,9 +23,9 @@ import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
 
 const triggerConditionInitialValues: TriggerCondition = {
   criteria_condition: 'ALL',
-  evaluation_period_seconds: 0,
-  polling_interval_seconds: 0,
-  trigger_occurrences: 0,
+  evaluation_period_seconds: 300,
+  polling_interval_seconds: 60,
+  trigger_occurrences: 2,
 };
 const criteriaInitialValues: MetricCriteriaForm = {
   aggregation_type: null,
@@ -35,7 +35,7 @@ const criteriaInitialValues: MetricCriteriaForm = {
   threshold: 0,
 };
 const initialValues: CreateAlertDefinitionForm = {
-  channel_ids: [],
+  channel_ids: [10000],
   engineType: null,
   entity_ids: [],
   label: '',
@@ -45,7 +45,8 @@ const initialValues: CreateAlertDefinitionForm = {
   },
   serviceType: null,
   severity: null,
-  trigger_condition: triggerConditionInitialValues,
+  tags: [''],
+  trigger_conditions: triggerConditionInitialValues,
 };
 
 const overrides = [
@@ -99,8 +100,6 @@ export const CreateAlertDefinition = () => {
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
-          // eslint-disable-next-line no-console
-          console.log(error);
           setError(error.field, { message: error.reason });
         } else {
           enqueueSnackbar(`Alert failed: ${error.reason}`, {
@@ -163,7 +162,7 @@ export const CreateAlertDefinition = () => {
           />
           <CloudPulseAlertSeveritySelect name="severity" />
           <MetricCriteriaField
-            getMaxInterval={(interval: number) =>
+            setMaxInterval={(interval: number) =>
               setMaxScrapeInterval(interval)
             }
             name="rule_criteria.rules"

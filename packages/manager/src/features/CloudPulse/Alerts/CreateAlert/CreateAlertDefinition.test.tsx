@@ -22,8 +22,8 @@ describe('AlertDefinition Create', () => {
     expect(getByText('Metric Threshold')).toBeVisible();
     expect(getByLabelText('Data Field')).toBeVisible();
     expect(getByLabelText('Aggregation Type')).toBeVisible();
-    expect(getByLabelText('Operator'));
-    expect(getByLabelText('Threshold'));
+    expect(getByLabelText('Operator')).toBeVisible();
+    expect(getByLabelText('Threshold')).toBeVisible();
   });
 
   it('should be able to enter a value in the textbox', async () => {

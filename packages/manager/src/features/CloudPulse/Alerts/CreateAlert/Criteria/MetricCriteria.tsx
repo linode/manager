@@ -13,12 +13,6 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 interface MetricCriteriaProps {
   /**
-   * function used to pass the scrape interval value to the parent component
-   * @param maxInterval number value that takes the maximum scrape interval from the list of selected metrics
-   * @returns void
-   */
-  getMaxInterval: (maxInterval: number) => void;
-  /**
    * name used for the component to set formik field
    */
   name: FieldPathByValue<CreateAlertDefinitionForm, MetricCriteriaForm[]>;
@@ -26,10 +20,16 @@ interface MetricCriteriaProps {
    * serviceType used by the api to fetch the metric definitions
    */
   serviceType: AlertServiceType | null;
+  /**
+   * function used to pass the scrape interval value to the parent component
+   * @param maxInterval number value that takes the maximum scrape interval from the list of selected metrics
+   * @returns void
+   */
+  setMaxInterval: (maxInterval: number) => void;
 }
 
 export const MetricCriteriaField = (props: MetricCriteriaProps) => {
-  const { getMaxInterval, name, serviceType } = props;
+  const { name, serviceType, setMaxInterval } = props;
   const {
     data: metricDefinitions,
     isError: isMetricDefinitionError,
@@ -55,8 +55,8 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
     const maxInterval = Math.max(
       ...convertToSeconds(intervalList ? intervalList : [])
     );
-    getMaxInterval(maxInterval);
-  }, [getMaxInterval, metricCriteriaWatcher, metricDefinitions]);
+    setMaxInterval(maxInterval);
+  }, [setMaxInterval, metricCriteriaWatcher, metricDefinitions]);
 
   const { append, fields, remove } = useFieldArray({
     control,

@@ -102,9 +102,9 @@ describe('MetricCriteriaField', () => {
     renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <MetricCriteriaField
-          getMaxInterval={vi.fn()}
           name="rule_criteria.rules"
           serviceType="linode"
+          setMaxInterval={vi.fn()}
         />
       ),
       useFormOptions: {
@@ -117,6 +117,10 @@ describe('MetricCriteriaField', () => {
     });
     expect(screen.getByText('2. Criteria')).toBeVisible();
     expect(screen.getByText('Metric Threshold')).toBeVisible();
+    expect(screen.getByLabelText('Data Field')).toBeVisible();
+    expect(screen.getByLabelText('Aggregation Type')).toBeVisible();
+    expect(screen.getByLabelText('Operator')).toBeVisible();
+    expect(screen.getByLabelText('Threshold')).toBeVisible();
   });
 
   it('renders the initial metric field without the delete-icon', async () => {
@@ -126,9 +130,9 @@ describe('MetricCriteriaField', () => {
     } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <MetricCriteriaField
-          getMaxInterval={vi.fn()}
           name="rule_criteria.rules"
           serviceType="linode"
+          setMaxInterval={vi.fn()}
         />
       ),
       useFormOptions: {
@@ -158,9 +162,9 @@ describe('MetricCriteriaField', () => {
       renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
         component: (
           <MetricCriteriaField
-            getMaxInterval={vi.fn()}
             name="rule_criteria.rules"
             serviceType="linode"
+            setMaxInterval={vi.fn()}
           />
         ),
         useFormOptions: {
@@ -183,9 +187,9 @@ describe('MetricCriteriaField', () => {
     } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <MetricCriteriaField
-          getMaxInterval={vi.fn()}
           name="rule_criteria.rules"
           serviceType="linode"
+          setMaxInterval={vi.fn()}
         />
       ),
       useFormOptions: {
@@ -204,14 +208,14 @@ describe('MetricCriteriaField', () => {
     );
   });
 
-  it('getMaxInterval has to be called', async () => {
+  it('setMaxInterval has to be called', async () => {
     queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
       data: mockData,
       isError: true,
       isLoading: false,
       status: 'error',
     });
-    const getMaxInterval = vi.fn();
+    const setMaxInterval = vi.fn();
     const firstOption = mockData.data[0];
     const [firstOptionConvertedTime] = convertToSeconds([
       firstOption.scrape_interval,
@@ -219,9 +223,9 @@ describe('MetricCriteriaField', () => {
     renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <MetricCriteriaField
-          getMaxInterval={getMaxInterval}
           name="rule_criteria.rules"
           serviceType="linode"
+          setMaxInterval={setMaxInterval}
         />
       ),
       useFormOptions: {
@@ -233,17 +237,17 @@ describe('MetricCriteriaField', () => {
       },
     });
 
-    expect(getMaxInterval).toBeCalledWith(firstOptionConvertedTime);
+    expect(setMaxInterval).toBeCalledWith(firstOptionConvertedTime);
   });
 
-  it('getMaxInterval has to be called', async () => {
+  it('setMaxInterval has to be called', async () => {
     queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
       data: mockData,
       isError: true,
       isLoading: false,
       status: 'error',
     });
-    const getMaxInterval = vi.fn();
+    const setMaxInterval = vi.fn();
     const firstOption = mockData.data[0];
     const secondOption = mockData.data[1];
     const [
@@ -256,9 +260,9 @@ describe('MetricCriteriaField', () => {
     renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <MetricCriteriaField
-          getMaxInterval={getMaxInterval}
           name="rule_criteria.rules"
           serviceType="linode"
+          setMaxInterval={setMaxInterval}
         />
       ),
       useFormOptions: {
@@ -270,7 +274,7 @@ describe('MetricCriteriaField', () => {
       },
     });
 
-    expect(getMaxInterval).toBeCalledWith(
+    expect(setMaxInterval).toBeCalledWith(
       Math.max(firstOptionConvertedTime, secondOptionConvertedTime)
     );
   });
