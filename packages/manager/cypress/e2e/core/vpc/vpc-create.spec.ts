@@ -187,7 +187,7 @@ describe('VPC create flow', () => {
         );
 
         // Delete subnet.
-        cy.findByLabelText('Remove Subnet')
+        cy.findByLabelText('Remove Subnet 1')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -304,7 +304,7 @@ describe('VPC create flow', () => {
     getSubnetNodeSection(0)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Remove Subnet')
+        cy.findByLabelText('Remove Subnet 0')
           .should('be.visible')
           .should('be.enabled')
           .click();
