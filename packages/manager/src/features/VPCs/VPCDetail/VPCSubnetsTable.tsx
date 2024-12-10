@@ -174,7 +174,15 @@ export const VPCSubnetsTable = (props: Props) => {
   }
 
   const SubnetTableRowHead = (
-    <TableRow>
+    <TableRow
+      sx={(theme) => ({
+        '& .MuiTableCell-root': {
+          backgroundColor:
+            theme.name == 'light' ? theme.color.black : undefined,
+          color: theme.name == 'light' ? `${theme.color.white}` : undefined,
+        },
+      })}
+    >
       <StyledTableSortCell
         sx={(theme) => ({
           [theme.breakpoints.down('sm')]: {
@@ -204,7 +212,7 @@ export const VPCSubnetsTable = (props: Props) => {
       <Hidden smDown>
         <StyledTableCell sx={{ width: '10%' }}>Linodes</StyledTableCell>
       </Hidden>
-      <StyledTableCell></StyledTableCell>
+      <StyledTableCell />
     </TableRow>
   );
 
@@ -364,6 +372,10 @@ const StyledTableCell = styled(TableCell, {
 const StyledTableSortCell = styled(TableSortCell, {
   label: 'StyledTableSortCell',
 })(({ theme }) => ({
+  '& .Mui-active': {
+    color: theme.name == 'light' ? `${theme.color.white}` : undefined,
+  },
   borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
+  color: theme.name == 'light' ? `${theme.color.white}` : undefined,
   whiteSpace: 'nowrap',
 }));
