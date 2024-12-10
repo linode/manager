@@ -169,6 +169,7 @@ export const DateTimePicker = ({
             onChange={handleDateChange}
             value={selectedDateTime || null}
             {...dateCalendarProps}
+            // TODO: Move styling customization to global theme styles.
             sx={(theme: Theme) => ({
               '& .MuiDayCalendar-weekContainer, & .MuiDayCalendar-header': {
                 justifyContent: 'space-between',
@@ -201,7 +202,32 @@ export const DateTimePicker = ({
               <Grid item xs={4}>
                 <TimePicker
                   slotProps={{
-                    openPickerButton: { sx: { padding: 0 } },
+                    actionBar: {
+                      sx: (theme: Theme) => ({
+                        justifyContent: 'center',
+                        marginBottom: theme.spacing(1 / 2),
+                        marginTop: theme.spacing(1 / 2),
+                        padding: 0,
+                      }),
+                    },
+                    layout: {
+                      sx: (theme: Theme) => ({
+                        '& .MuiPickersLayout-contentWrapper': {
+                          borderBottom: `1px solid ${theme.borderColors.divider}`,
+                        },
+                        border: `1px solid ${theme.borderColors.divider}`,
+                      }),
+                    },
+                    openPickerButton: {
+                      sx: { padding: 0 },
+                    },
+                    popper: {
+                      sx: (theme: Theme) => ({
+                        ul: {
+                          borderColor: `${theme.borderColors.divider} !important`,
+                        },
+                      }),
+                    },
                     textField: TimePickerFieldProps,
                   }}
                   onChange={handleTimeChange}

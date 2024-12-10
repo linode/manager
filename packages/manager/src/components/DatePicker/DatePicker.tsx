@@ -56,6 +56,7 @@ export const DatePicker = ({
         value={value}
         {...props}
         slotProps={{
+          // TODO: Move styling customization to global theme styles.
           popper: {
             sx: {
               '& .MuiDayCalendar-weekDayLabel': {
