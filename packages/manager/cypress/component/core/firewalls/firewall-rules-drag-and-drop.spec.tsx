@@ -418,7 +418,7 @@ componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
               outbound_policy: 'DROP',
             }}
             disabled={false}
-            firewallID={1}
+            firewallID={2}
           />
         );
         verifyFirewallWithRules({
@@ -484,7 +484,7 @@ componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
               outbound_policy: 'DROP',
             }}
             disabled={false}
-            firewallID={3}
+            firewallID={4}
           />
         );
         verifyFirewallWithRules({
