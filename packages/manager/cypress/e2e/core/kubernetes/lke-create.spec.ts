@@ -190,10 +190,10 @@ describe('LKE Cluster Creation', () => {
     cy.url().should('endWith', '/kubernetes/create');
 
     // Fill out LKE creation form label, region, and Kubernetes version fields.
-    const labelInput = '[data-qa-textfield-label="Cluster Label"]';
-    cy.get(labelInput).should('be.visible');
-    cy.get(labelInput).click();
-    cy.get(labelInput).type(`${clusterLabel}{enter}`);
+    cy.get('[data-qa-textfield-label="Cluster Label"]')
+      .should('be.visible')
+      .click();
+    cy.focused().type(`${clusterLabel}{enter}`);
 
     ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
 
@@ -396,10 +396,10 @@ describe('LKE Cluster Creation with APL enabled', () => {
     ]);
 
     // Enter cluster details
-    const labelInput = '[data-qa-textfield-label="Cluster Label"]';
-    cy.get(labelInput).should('be.visible');
-    cy.get(labelInput).click();
-    cy.get(labelInput).type(`${clusterLabel}{enter}`);
+    cy.get('[data-qa-textfield-label="Cluster Label"]')
+      .should('be.visible')
+      .click();
+    cy.focused().type(`${clusterLabel}{enter}`);
 
     ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
 
