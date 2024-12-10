@@ -28,6 +28,7 @@ import {
 import {
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
+  useKubernetesTieredVersionsQuery,
   useKubernetesTypesQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
@@ -105,9 +106,6 @@ export const CreateCluster = () => {
   } = useKubernetesTypesQuery();
 
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
-    if (tier === 'enterprise') {
-      setHighAvailability(false);
-    }
     setSelectedTier(tier);
   };
 
@@ -133,14 +131,30 @@ export const CreateCluster = () => {
   } = useCreateKubernetesClusterBetaMutation();
 
   const {
-    data: versionData,
+    data: _versionData,
     isError: versionLoadError,
+    isLoading: versionLoading,
   } = useKubernetesVersionQuery();
+
+  const {
+    data: enterpriseTierVersionData,
+    isLoading: enterpriseTierVersionDataIsLoading,
+  } = useKubernetesTieredVersionsQuery('enterprise');
 
   const {
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
   } = useIsLkeEnterpriseEnabled();
+
+  /**
+   * If LKE-E is enabled, use the new /versions/<tier> endpoint data, which supports enterprise tiers.
+   * If LKE-E is disabled, use the data from the existing /versions endpoint.
+   * @todo LKE-E: Clean up use of versionData once LKE-E is in GA.
+   */
+  const versionData =
+    isLkeEnterpriseLAFeatureEnabled && selectedTier === 'enterprise'
+      ? enterpriseTierVersionData
+      : _versionData;
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -210,6 +224,10 @@ export const CreateCluster = () => {
 
     if (showAPL) {
       payload = { ...payload, apl_enabled };
+    }
+
+    if (isLkeEnterpriseLAFeatureEnabled) {
+      payload = { ...payload, tier: selectedTier };
     }
 
     const createClusterFn =
@@ -374,6 +392,11 @@ export const CreateCluster = () => {
             options={versions}
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
+            loading={
+              versionLoading ||
+              (isLkeEnterpriseLAFeatureEnabled &&
+                enterpriseTierVersionDataIsLoading)
+            }
           />
           {showAPL && (
             <>
