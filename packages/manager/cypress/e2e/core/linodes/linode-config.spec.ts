@@ -53,9 +53,6 @@ import type {
   Kernel,
 } from '@linode/api-v4';
 
-// Length of time to wait for clone to finish. Equals 5 minutes.
-const CLONE_TIMEOUT = 300_000;
-
 /**
  * Returns a Promise that resolves to a new test Linode and its first config object.
  *
@@ -387,8 +384,7 @@ describe('Linode Config management', () => {
 
         // Confirm toast message and that UI updates to reflect clone in progress.
         ui.toast.assertMessage(
-          `Linode ${sourceLinode.label} has been cloned to ${destLinode.label}.`,
-          { timeout: CLONE_TIMEOUT }
+          `Linode ${sourceLinode.label} has been cloned to ${destLinode.label}.`
         );
         cy.findByText(/CLONING \(\d+%\)/).should('be.visible');
       });

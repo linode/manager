@@ -19,7 +19,6 @@ import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import type { Linode } from '@linode/api-v4';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 /**
  * Returns the Cloud Manager URL to clone a given Linode.
@@ -34,8 +33,8 @@ const getLinodeCloneUrl = (linode: Linode): string => {
   return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone+Linode${typeQuery}`;
 };
 
-/* Timeout after 5 minutes while waiting for clone. */
-const CLONE_TIMEOUT = 300_000;
+/* Timeout after 4 minutes while waiting for clone. */
+const CLONE_TIMEOUT = 240_000;
 
 authenticate();
 describe('clone linode', () => {
@@ -70,9 +69,7 @@ describe('clone linode', () => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
 
       // Wait for Linode to boot, then initiate clone flow.
-      cy.findByText('OFFLINE', { timeout: LINODE_CREATE_TIMEOUT }).should(
-        'be.visible'
-      );
+      cy.findByText('OFFLINE').should('be.visible');
 
       ui.actionMenu
         .findByTitle(`Action menu for Linode ${linode.label}`)
