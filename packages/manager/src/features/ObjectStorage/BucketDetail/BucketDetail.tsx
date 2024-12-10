@@ -10,6 +10,7 @@ import { debounce } from 'throttle-debounce';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -59,7 +60,6 @@ import type {
   ObjectStorageObjectList,
 } from '@linode/api-v4';
 import type { InfiniteData } from '@tanstack/react-query';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 interface MatchParams {
   bucketName: string;
@@ -379,7 +379,7 @@ export const BucketDetail = (props: Props) => {
 
   return (
     <>
-      <DocumentTitleSegment segment={bucketName} />
+      <DocumentTitleSegment segment={bucketName + ' | Bucket'} />;
       <BucketBreadcrumb
         bucketName={bucketName}
         history={history}
@@ -441,7 +441,6 @@ export const BucketDetail = (props: Props) => {
           </StyledTryAgainButton>
         </StyledErrorFooter>
       )}
-
       {!hasNextPage && numOfDisplayedObjects >= 100 && (
         <StyledFooter variant="subtitle2">
           Showing all {numOfDisplayedObjects} items
