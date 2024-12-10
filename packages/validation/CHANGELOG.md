@@ -1,12 +1,27 @@
-## [2024-11-12] - v0.56.0
+## [2024-12-10] - v0.57.0
 
+### Added:
+
+- Punctuation for CloudPulse Alert error messages ([#11286](https://github.com/linode/manager/pull/11286))
+- Maximum and minimum values for `check_attempts`, `check_interval`, and `check_timeout` in `createNodeBalancerConfigSchema` ([#11306](https://github.com/linode/manager/pull/11306))
+- Maximum and minimum values for `check_attempts`, `check_interval`, and `check_timeout` to `UpdateNodeBalancerConfigSchema` ([#11306](https://github.com/linode/manager/pull/11306))
+
+### Tech Stories:
+
+- Update yup from `0.32.9` to `1.4.0` (#11324)
+- Update Linter rules for common pr feedback points ([#11258](https://github.com/linode/manager/pull/11258))
+
+### Upcoming Features:
+
+- Add `cloudpulse.schema` to validate the various fields for the Create Alert Form ([#11255](https://github.com/linode/manager/pull/11255))
+
+## [2024-11-12] - v0.56.0
 
 ### Tech Stories:
 
 - Remove `@types/node` dependency ([#11157](https://github.com/linode/manager/pull/11157))
 
 ## [2024-10-28] - v0.55.0
-
 
 ### Added:
 
@@ -19,20 +34,17 @@
 
 ## [2024-10-14] - v0.54.0
 
-
 ### Changed:
 
 - Update validation schema to account for clearing value in ImageSelect ([#11007](https://github.com/linode/manager/pull/11007))
 
 ## [2024-09-30] - v0.53.0
 
-
 ### Changed:
 
 - Make `replication_type` and `replication_commit_type` optional in `databases.schema.ts` ([#10980](https://github.com/linode/manager/pull/10980))
 
 ## [2024-09-03] - v0.52.0
-
 
 ### Fixed:
 
@@ -43,7 +55,6 @@
 - Increase block storage max volume size to 16TB ([#10865](https://github.com/linode/manager/pull/10865))
 
 ## [2024-08-05] - v0.51.0
-
 
 ### Added:
 
