@@ -2535,9 +2535,9 @@ export const handlers = [
       id: params.id,
       label:
         params.id === '1'
-          ? 'Linode Service I/O Statistics'
-          : 'DBaaS Service I/O Statistics',
-      service_type: params.id === '1' ? 'linode' : 'dbaas', // just update the service type and label and use same widget configs
+          ? 'DBaaS Service I/O Statistics'
+          : 'Linode Service I/O Statistics',
+      service_type: params.id === '1' ? 'dbaas' : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,
       widgets: [
