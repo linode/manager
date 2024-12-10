@@ -96,7 +96,7 @@ describe('VPC create page', () => {
       'The IPv4 range must be in CIDR format'
     );
     expect(badSubnetIP).toBeInTheDocument();
-    const badLabels = screen.getAllByText('Label is required');
+    const badLabels = screen.getAllByText('Label is required.');
     expect(badLabels).toHaveLength(2);
   });
 
