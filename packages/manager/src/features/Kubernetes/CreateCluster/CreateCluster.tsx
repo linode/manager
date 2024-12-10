@@ -133,11 +133,13 @@ export const CreateCluster = () => {
   const {
     data: _versionData,
     isError: versionLoadError,
+    isLoading: versionLoading,
   } = useKubernetesVersionQuery();
 
-  const { data: enterpriseTierVersionData } = useKubernetesTieredVersionsQuery(
-    'enterprise'
-  );
+  const {
+    data: enterpriseTierVersionData,
+    isLoading: enterpriseTierVersionDataIsLoading,
+  } = useKubernetesTieredVersionsQuery('enterprise');
 
   const {
     isLkeEnterpriseLAFeatureEnabled,
@@ -390,6 +392,11 @@ export const CreateCluster = () => {
             options={versions}
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
+            loading={
+              versionLoading ||
+              (isLkeEnterpriseLAFeatureEnabled &&
+                enterpriseTierVersionDataIsLoading)
+            }
           />
           {showAPL && (
             <>

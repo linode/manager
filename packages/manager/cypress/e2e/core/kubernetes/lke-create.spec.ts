@@ -23,6 +23,7 @@ import {
   mockGetClusters,
   mockGetLKEClusterTypes,
   mockGetTieredKubernetesVersions,
+  mockGetKubernetesVersions,
 } from 'support/intercepts/lke';
 import { mockGetAccountBeta } from 'support/intercepts/betas';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -51,7 +52,10 @@ import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
 import type { ExtendedType } from 'src/utilities/extendType';
 import type { LkePlanDescription } from 'support/api/lke';
 import { PriceType } from '@linode/api-v4/lib/types';
-import { latestEnterpriseTierKubernetesVersion } from 'support/constants/lke';
+import {
+  latestEnterpriseTierKubernetesVersion,
+  latestKubernetesVersion,
+} from 'support/constants/lke';
 
 const dedicatedNodeCount = 4;
 const nanodeNodeCount = 3;
@@ -132,7 +136,7 @@ describe('LKE Cluster Creation', () => {
    * - Confirms that new LKE cluster is shown on LKE clusters landing page.
    */
   const clusterLabel = randomLabel();
-  const clusterVersion = '1.27';
+  const clusterVersion = '1.31';
   const clusterPlans: LkePlanDescription[] = [
     {
       nodeCount: dedicatedNodeCount,
@@ -180,6 +184,7 @@ describe('LKE Cluster Creation', () => {
     mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
     mockGetLKEClusterTypes(mockedLKEClusterPrices).as('getLKEClusterTypes');
     mockGetClusters([mockedLKECluster]).as('getClusters');
+    mockGetKubernetesVersions([clusterVersion]).as('getKubernetesVersions');
 
     cy.visitWithLogin('/kubernetes/clusters');
 
@@ -1068,6 +1073,9 @@ describe('LKE Cluster Creation with LKE-E', () => {
       mockGetTieredKubernetesVersions('enterprise', [
         latestEnterpriseTierKubernetesVersion,
       ]).as('getTieredKubernetesVersions');
+      mockGetKubernetesVersions([latestKubernetesVersion]).as(
+        'getKubernetesVersions'
+      );
       mockGetRegions([
         regionFactory.build({
           capabilities: ['Linodes', 'Kubernetes'],
@@ -1091,7 +1099,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getTieredKubernetesVersions']);
+      cy.wait(['@getKubernetesVersions', '@getTieredKubernetesVersions']);
 
       cy.findByText('Cluster Type').should('be.visible');
 

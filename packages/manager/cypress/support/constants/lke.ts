@@ -5,7 +5,7 @@ import type { KubernetesTieredVersion } from '@linode/api-v4';
 /**
  * Kubernetes versions available for cluster creation via Cloud Manager.
  */
-export const kubernetesVersions = ['1.25', '1.24'];
+export const kubernetesVersions = ['1.31', '1.30'];
 
 /**
  * Enterprise kubernetes versions available for cluster creation via Cloud Manager.
