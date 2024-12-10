@@ -22,6 +22,7 @@ export interface SelectProps
     EnhancedAutocompleteProps<OptionType>,
     | 'errorText'
     | 'helperText'
+    | 'isOptionEqualToValue'
     | 'loading'
     | 'noOptionsText'
     | 'options'

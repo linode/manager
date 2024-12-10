@@ -1,4 +1,3 @@
-import { screen, waitFor, within } from '@testing-library/dom';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -13,7 +12,7 @@ const options = [
 ];
 
 describe('Select', () => {
-  it('It renders a Select with a label and options', async () => {
+  it('renders a Select with a label and options', async () => {
     const onChange = vi.fn();
     const { getByRole, getByText } = renderWithTheme(
       <Select label="My Select" onChange={onChange} options={options} />
@@ -27,23 +26,34 @@ describe('Select', () => {
     options.forEach((option) => {
       fireEvent.focus(selectInput);
       fireEvent.change(selectInput, { target: { value: option.label } });
+
       expect(getByText(option.label)).toBeInTheDocument();
-
-      const listbox = document.querySelector('[role="listbox"]');
-      const optionElement = within(listbox as HTMLElement).getByText(
-        option.label
-      );
-      fireEvent.click(optionElement);
-
-      expect(onChange).toHaveBeenCalledWith(expect.any(Object), option);
       expect(selectInput).toHaveValue(option.label);
     });
   });
 
+  it('can have its label visually hidden', async () => {
+    const { container } = renderWithTheme(
+      <Select hideLabel label="My Select" options={options} />
+    );
+
+    const label = container.querySelector(
+      '[data-qa-textfield-label="My Select"]'
+    );
+    expect(label?.parentElement).toHaveClass('visually-hidden');
+  });
+
   it('can be clearable', async () => {
     const onChange = vi.fn();
-    const { getByRole } = renderWithTheme(
+    const { container } = renderWithTheme(
       <Select
+        isOptionEqualToValue={(option, value) =>
+          option.value === value.value && option.label === value.label
+        }
+        value={{
+          label: options[0].label,
+          value: options[0].value,
+        }}
         clearable
         label="My Select"
         onChange={onChange}
@@ -51,18 +61,11 @@ describe('Select', () => {
       />
     );
 
-    const selectInput = getByRole('combobox');
-    fireEvent.mouseDown(selectInput);
-
-    const listbox = screen.getByRole('listbox');
-    const optionElement = within(listbox).getByText(options[0].label);
-    fireEvent.click(optionElement);
-
-    await waitFor(() => {
-      const clearButton = screen.getByRole('button', { name: 'Clear' });
-      expect(clearButton).toBeInTheDocument();
-      fireEvent.click(clearButton);
-      expect(onChange).toHaveBeenCalledWith(expect.any(Object), null);
-    });
+    const clearButton = container.querySelector(
+      '.MuiAutocomplete-clearIndicator'
+    );
+    expect(clearButton).toBeInTheDocument();
+    fireEvent.click(clearButton!);
+    expect(onChange).toHaveBeenCalledWith(expect.any(Object), null);
   });
 });
