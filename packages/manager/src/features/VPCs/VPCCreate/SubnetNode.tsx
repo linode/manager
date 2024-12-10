@@ -1,10 +1,9 @@
-import { Button, FormHelperText, TextField } from '@linode/ui';
+import { Button, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
   RESERVED_IP_NUMBER,
@@ -24,11 +23,21 @@ interface Props {
 export const SubnetNode = (props: Props) => {
   const { disabled, idx, isCreateVPCDrawer, remove } = props;
 
-  const { control, watch } = useFormContext<CreateVPCPayload>();
+  const { control } = useFormContext<CreateVPCPayload>();
 
-  const subnet = watch(`subnets.${idx}`);
+  const subnets = useWatch({ control, name: 'subnets' });
 
-  const numberOfAvailIPs = calculateAvailableIPv4sRFC1918(subnet.ipv4 ?? '');
+  const numberOfAvailIPs = calculateAvailableIPv4sRFC1918(
+    (subnets && subnets[idx].ipv4) ?? ''
+  );
+
+  const availableIPHelperText = numberOfAvailIPs
+    ? `Number of Available IP Addresses: ${
+        numberOfAvailIPs > 4
+          ? (numberOfAvailIPs - RESERVED_IP_NUMBER).toLocaleString()
+          : 0
+      }`
+    : undefined;
 
   const showRemoveButton = !(isCreateVPCDrawer && idx === 0);
 
@@ -39,49 +48,40 @@ export const SubnetNode = (props: Props) => {
           sx={{ ...(!showRemoveButton && { width: '100%' }), flexGrow: 1 }}
           xs={showRemoveButton ? 11 : 12}
         >
-          <Stack>
-            <Controller
-              render={({ field, fieldState }) => (
-                <TextField
-                  aria-label="Enter a subnet label"
-                  disabled={disabled}
-                  errorText={fieldState.error?.message}
-                  inputId={`subnet-label-${idx}`}
-                  label="Subnet Label"
-                  onBlur={field.onBlur}
-                  onChange={field.onChange}
-                  placeholder="Enter a subnet label"
-                  value={field.value}
-                />
-              )}
-              control={control}
-              name={`subnets.${idx}.label`}
-            />
-            <Controller
-              render={({ field, fieldState }) => (
-                <TextField
-                  aria-label="Enter an IPv4"
-                  disabled={disabled}
-                  errorText={fieldState.error?.message}
-                  inputId={`subnet-ipv4-${idx}`}
-                  label="Subnet IP Address Range"
-                  onBlur={field.onBlur}
-                  onChange={field.onChange}
-                  value={field.value}
-                />
-              )}
-              control={control}
-              name={`subnets.${idx}.ipv4`}
-            />
-            {numberOfAvailIPs && (
-              <FormHelperText>
-                Number of Available IP Addresses:{' '}
-                {numberOfAvailIPs > 4
-                  ? (numberOfAvailIPs - RESERVED_IP_NUMBER).toLocaleString()
-                  : 0}
-              </FormHelperText>
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                aria-label="Enter a subnet label"
+                disabled={disabled}
+                errorText={fieldState.error?.message}
+                inputId={`subnet-label-${idx}`}
+                label="Subnet Label"
+                onBlur={field.onBlur}
+                onChange={field.onChange}
+                placeholder="Enter a subnet label"
+                value={field.value}
+              />
             )}
-          </Stack>
+            control={control}
+            name={`subnets.${idx}.label`}
+          />
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                aria-label="Enter an IPv4"
+                disabled={disabled}
+                errorText={fieldState.error?.message}
+                helperText={availableIPHelperText}
+                inputId={`subnet-ipv4-${idx}`}
+                label="Subnet IP Address Range"
+                onBlur={field.onBlur}
+                onChange={field.onChange}
+                value={field.value}
+              />
+            )}
+            control={control}
+            name={`subnets.${idx}.ipv4`}
+          />
         </Grid>
         {showRemoveButton && (
           <Grid xs={1}>

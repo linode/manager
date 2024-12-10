@@ -45,15 +45,13 @@ export const VPCCreateDrawer = (props: Props) => {
     reset,
   } = form;
 
+  const handleDrawerClose = () => {
+    onClose();
+    reset();
+  };
+
   return (
-    <Drawer
-      onClose={() => {
-        onClose();
-        reset();
-      }}
-      open={open}
-      title={'Create VPC'}
-    >
+    <Drawer onClose={handleDrawerClose} open={open} title={'Create VPC'}>
       {userCannotAddVPC && CannotCreateVPCNotice}
       <FormProvider {...form}>
         <Grid>
@@ -80,7 +78,7 @@ export const VPCCreateDrawer = (props: Props) => {
               secondaryButtonProps={{
                 'data-testid': 'cancel',
                 label: 'Cancel',
-                onClick: onClose,
+                onClick: handleDrawerClose,
               }}
               style={{ marginTop: theme.spacing(3) }}
             />
