@@ -8,7 +8,16 @@ import { themes } from 'src/utilities/theme';
 
 import { deepEqual } from '../Utils/FilterBuilder';
 
-import type { Filter, FilterValue } from '@linode/api-v4';
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type { FilterConditionTypes, FilterValue } from '@linode/api-v4';
+
+type ExtendedLinodeFilter =
+  | {
+      [key in keyof FilterConditionTypes]: FilterConditionTypes[key];
+    }
+  | { [key: string]: FilterValueType };
+
+export type ExtendedFilter = ExtendedLinodeFilter | ExtendedLinodeFilter[];
 
 export interface CloudPulseResources {
   id: string;
@@ -28,7 +37,8 @@ export interface CloudPulseResourcesSelectProps {
   region?: string;
   resourceType: string | undefined;
   savePreferences?: boolean;
-  xFilter?: Filter;
+  tags?: string[];
+  xFilter?: ExtendedFilter;
 }
 
 export const CloudPulseResourcesSelect = React.memo(
@@ -42,17 +52,14 @@ export const CloudPulseResourcesSelect = React.memo(
       region,
       resourceType,
       savePreferences,
+      tags,
       xFilter,
     } = props;
 
     const flags = useFlags();
 
-    const resourceFilterMap: Record<string, Filter> = {
-      dbaas: {
-        '+order': 'asc',
-        '+order_by': 'label',
-        platform: 'rdbms-default',
-      },
+    const resourceFilterMap: Record<string, ExtendedLinodeFilter> = {
+      dbaas: { '+order': 'asc', '+order_by': 'label', platform: 'rdbms-default' },
     };
 
     const { data: resources, isError, isLoading } = useResourcesQuery(
@@ -67,6 +74,7 @@ export const CloudPulseResourcesSelect = React.memo(
         : {
             ...(resourceFilterMap[resourceType ?? ''] ?? {}),
             region,
+            tags,
           }
     );
 
@@ -191,6 +199,7 @@ export const CloudPulseResourcesSelect = React.memo(
               },
             },
           },
+          required: true,
         }}
         autoHighlight
         clearOnBlur

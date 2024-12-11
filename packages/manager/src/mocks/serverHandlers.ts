@@ -714,21 +714,32 @@ export const handlers = [
     if (request.headers.get('x-filter')) {
       const headers = JSON.parse(request.headers.get('x-filter') || '{}');
       const orFilters = headers['+or'];
+      const andFilters = headers['+and'];
+
+      let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
 
       if (orFilters) {
-        const filteredLinodes = linodes.filter((linode) => {
-          const filteredById = orFilters.some(
+        filteredLinodes = filteredLinodes.filter((linode) => {
+          return orFilters.some((filter: { tags: string }) =>
+            linode.tags.includes(filter.tags)
+          );
+        });
+      }
+
+      if (andFilters) {
+        filteredLinodes = filteredLinodes.filter((linode) => {
+          const filteredById = andFilters.every(
             (filter: { id: number }) => filter.id === linode.id
           );
-          const filteredByRegion = orFilters.some(
+          const filteredByRegion = andFilters.every(
             (filter: { region: string }) => filter.region === linode.region
           );
 
-          return (filteredById || filteredByRegion) ?? linodes;
+          return filteredById || filteredByRegion;
         });
-
-        return HttpResponse.json(makeResourcePage(filteredLinodes));
       }
+
+      return HttpResponse.json(makeResourcePage(filteredLinodes));
     }
     return HttpResponse.json(makeResourcePage(linodes));
   }),
