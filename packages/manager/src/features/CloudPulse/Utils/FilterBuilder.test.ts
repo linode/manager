@@ -104,7 +104,9 @@ it('test getResourceSelectionProperties method', () => {
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(false);
-    expect(JSON.stringify(xFilter)).toEqual('{"+and":[{"region":"us-east"}]}');
+    expect(JSON.stringify(xFilter)).toEqual(
+      '{"+and":[{"region":"us-east"}],"+or":[]}'
+    );
     expect(label).toEqual(name);
   }
 });
@@ -136,7 +138,7 @@ it('test getResourceSelectionProperties method with disabled true', () => {
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(true);
-    expect(JSON.stringify(xFilter)).toEqual('{"+and":[]}');
+    expect(JSON.stringify(xFilter)).toEqual('{"+and":[],"+or":[]}');
     expect(label).toEqual(name);
   }
 });
@@ -177,13 +179,16 @@ it('test buildXfilter method', () => {
   if (resourceSelectionConfig) {
     let result = buildXFilter(resourceSelectionConfig, {
       region: 'us-east',
+      tags: ['test1'],
     });
 
-    expect(JSON.stringify(result)).toEqual('{"+and":[{"region":"us-east"}]}');
+    expect(JSON.stringify(result)).toEqual(
+      '{"+and":[{"region":"us-east"}],"+or":[{"tags":"test1"}]}'
+    );
 
     result = buildXFilter(resourceSelectionConfig, {});
 
-    expect(JSON.stringify(result)).toEqual('{"+and":[]}');
+    expect(JSON.stringify(result)).toEqual('{"+and":[],"+or":[]}');
   }
 });
 
