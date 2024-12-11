@@ -96,16 +96,7 @@ export const NodeBalancerConfigNode = React.memo(
             </Grid>
           )}
           <Grid container spacing={2}>
-            <Grid
-              sx={{
-                '.MuiInputLabel-root': {
-                  marginTop: 0,
-                },
-              }}
-              lg={forEdit ? 2 : 4}
-              sm={forEdit ? 4 : 6}
-              xs={12}
-            >
+            <Grid lg={4} sm={forEdit ? 4 : 6} xs={12}>
               <TextField
                 data-qa-backend-ip-label
                 disabled={disabled}
@@ -114,6 +105,7 @@ export const NodeBalancerConfigNode = React.memo(
                 inputId={`node-label-${configIdx}-${idx}`}
                 inputProps={{ 'data-node-idx': idx }}
                 label="Label"
+                noMarginTop
                 onChange={onNodeLabelChange}
                 value={node.label}
               />

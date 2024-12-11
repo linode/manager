@@ -77,7 +77,7 @@ export const transformConfigsForRequest = (
   configs: NodeBalancerConfigFields[]
 ): NodeBalancerConfigFields[] => {
   return configs.map((config: NodeBalancerConfigFields) => {
-    return filter(
+    return (filter(
       /* remove the (key: value) pairs that we set to undefined */
       (el) => el !== undefined,
       {
@@ -130,18 +130,8 @@ export const transformConfigsForRequest = (
             : config.ssl_key || undefined,
         stickiness: config.stickiness || undefined,
       }
-    ) as any;
-  }) as NodeBalancerConfigFields[];
-};
-
-/* Transform the Node fields in an array of Nodes into valid request data
-   Does not modify in-place, returns a deep clone of the Nodes */
-export const transformConfigNodesForRequest = (
-  nodes: NodeBalancerConfigNode[]
-): NodeBalancerConfigNodeFields[] => {
-  return nodes.map((node: NodeBalancerConfigNodeFields) =>
-    nodeForRequest(node)
-  );
+    ) as unknown) as NodeBalancerConfigFields;
+  });
 };
 
 export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {

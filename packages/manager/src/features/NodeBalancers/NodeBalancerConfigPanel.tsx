@@ -435,15 +435,7 @@ export const NodeBalancerConfigPanel = (
                 removeNode={removeNode}
               />
             ))}
-            <Grid
-              // is the Save/Delete ActionsPanel showing?
-              style={
-                forEdit || configIdx !== 0
-                  ? { marginBottom: -16, marginTop: 0 }
-                  : { marginTop: 16 }
-              }
-              xs={12}
-            >
+            <Grid xs={12}>
               <Button
                 buttonType="outlined"
                 disabled={disabled}
