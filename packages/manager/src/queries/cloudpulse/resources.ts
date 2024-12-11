@@ -2,14 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 
 import { queryFactory } from './queries';
 
-import type { Filter, Params } from '@linode/api-v4';
-import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
+import type { Params } from '@linode/api-v4';
+import type {
+  CloudPulseResources,
+  ExtendedFilter,
+} from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
 
 export const useResourcesQuery = (
   enabled = false,
   resourceType: string | undefined,
   params?: Params,
-  filters?: Filter
+  filters?: ExtendedFilter
 ) =>
   useQuery<any[], unknown, CloudPulseResources[]>({
     ...queryFactory.resources(resourceType, params, filters),

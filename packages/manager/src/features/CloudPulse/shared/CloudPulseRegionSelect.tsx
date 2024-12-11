@@ -88,6 +88,9 @@ export const CloudPulseRegionSelect = React.memo(
             savePreferences
           );
         }}
+        textFieldProps={{
+          required: true,
+        }}
         currentCapability={capability}
         data-testid="region-select"
         disableClearable={false}

@@ -8,7 +8,16 @@ import { themes } from 'src/utilities/theme';
 
 import { deepEqual } from '../Utils/FilterBuilder';
 
-import type { Filter, FilterValue } from '@linode/api-v4';
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type { FilterConditionTypes, FilterValue } from '@linode/api-v4';
+
+type ExtendedLinodeFilter =
+  | {
+      [key in keyof FilterConditionTypes]: FilterConditionTypes[key];
+    }
+  | { [key: string]: FilterValueType };
+
+export type ExtendedFilter = ExtendedLinodeFilter | ExtendedLinodeFilter[];
 
 export interface CloudPulseResources {
   id: string;
@@ -28,7 +37,8 @@ export interface CloudPulseResourcesSelectProps {
   region?: string;
   resourceType: string | undefined;
   savePreferences?: boolean;
-  xFilter?: Filter;
+  tags?: string[];
+  xFilter?: ExtendedFilter;
 }
 
 export const CloudPulseResourcesSelect = React.memo(
@@ -42,12 +52,13 @@ export const CloudPulseResourcesSelect = React.memo(
       region,
       resourceType,
       savePreferences,
+      tags,
       xFilter,
     } = props;
 
     const flags = useFlags();
 
-    const resourceFilterMap: Record<string, Filter> = {
+    const resourceFilterMap: Record<string, ExtendedLinodeFilter> = {
       dbaas: { '+order': 'asc', '+order_by': 'label', platform: 'rdbms-default' },
     };
 
@@ -57,13 +68,14 @@ export const CloudPulseResourcesSelect = React.memo(
       {},
       xFilter
         ? {
-          ...(resourceFilterMap[resourceType ?? ''] ?? {}),
-          ...xFilter, // the usual xFilters
-        }
+            ...(resourceFilterMap[resourceType ?? ''] ?? {}),
+            ...xFilter, // the usual xFilters
+          }
         : {
-          ...(resourceFilterMap[resourceType ?? ''] ?? {}),
-          region,
-        }
+            ...(resourceFilterMap[resourceType ?? ''] ?? {}),
+            region,
+            tags,
+          }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<
@@ -187,6 +199,7 @@ export const CloudPulseResourcesSelect = React.memo(
               },
             },
           },
+          required: true,
         }}
         autoHighlight
         clearOnBlur

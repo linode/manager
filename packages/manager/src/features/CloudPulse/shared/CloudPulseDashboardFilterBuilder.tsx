@@ -15,18 +15,21 @@ import {
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
   RESOURCES,
+  TAGS,
 } from '../Utils/constants';
 import {
   getCustomSelectProperties,
   getFilters,
   getRegionProperties,
   getResourcesProperties,
+  getTagsProperties,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
+import type { CloudPulseTags } from './CloudPulseTagsFilter';
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseDashboardFilterBuilderProps {
@@ -126,6 +129,21 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       [emitFilterChange, checkAndUpdateDependentFilters]
     );
 
+    const handleTagsChange = React.useCallback(
+      (tags: CloudPulseTags[], savePref: boolean = false) => {
+        emitFilterChangeByFilterKey(
+          TAGS,
+          tags.map((tag) => tag.label),
+          tags.map((tag) => tag.label),
+          savePref,
+          {
+            [TAGS]: tags.map((tag: { label: string }) => String(tag.label)),
+          }
+        );
+      },
+      [emitFilterChangeByFilterKey]
+    );
+
     const handleResourceChange = React.useCallback(
       (resourceId: CloudPulseResources[], savePref: boolean = false) => {
         emitFilterChangeByFilterKey(
@@ -185,7 +203,17 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const getProps = React.useCallback(
       (config: CloudPulseServiceTypeFilters) => {
-        if (config.configuration.filterKey === REGION) {
+        if (config.configuration.filterKey === TAGS) {
+          return getTagsProperties(
+            {
+              config,
+              dashboard,
+              isServiceAnalyticsIntegration,
+              preferences,
+            },
+            handleTagsChange
+          );
+        } else if (config.configuration.filterKey === REGION) {
           return getRegionProperties(
             {
               config,
@@ -221,6 +249,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       },
       [
         dashboard,
+        handleTagsChange,
         handleRegionChange,
         handleResourceChange,
         handleCustomSelectChange,

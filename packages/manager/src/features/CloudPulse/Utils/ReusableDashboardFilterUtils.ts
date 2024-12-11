@@ -1,3 +1,4 @@
+import { TAGS } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
@@ -66,7 +67,10 @@ export const checkMandatoryFiltersSelected = (
     return false;
   }
 
-  return serviceTypeConfig.filters.every(({ configuration }) => {
+  const mandatoryFilters = serviceTypeConfig.filters.filter(
+    (filter) => filter.configuration.filterKey !== TAGS
+  );
+  return mandatoryFilters.every(({ configuration }) => {
     const { filterKey, neededInServicePage } = configuration;
 
     // If the filter is not needed, skip it
