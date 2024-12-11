@@ -95,17 +95,9 @@ export const DateTimePicker = ({
 
   const handleTimeChange = (newTime: DateTime | null) => {
     if (newTime) {
-      setSelectedDateTime((prev) => {
-        if (prev) {
-          const newHour = newTime.hour;
-          const newMinute = newTime.minute;
-
-          if (typeof newHour === 'number' && typeof newMinute === 'number') {
-            return prev.set({ hour: newHour, minute: newMinute });
-          }
-        }
-        return prev;
-      });
+      setSelectedDateTime((prev) =>
+        prev ? prev.set({ hour: newTime.hour, minute: newTime.minute }) : prev
+      );
     }
   };
 
