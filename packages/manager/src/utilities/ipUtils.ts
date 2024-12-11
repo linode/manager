@@ -24,6 +24,7 @@ export interface ExtendedIP {
 export const stringToExtendedIP = (ip: string): ExtendedIP => ({ address: ip });
 export const extendedIPToString = (ip: ExtendedIP): string => ip.address;
 export const ipFieldPlaceholder = '192.0.2.1/32';
+export const ipV6FieldPlaceholder = '2600:1401:4000::1726:XXXX';
 
 export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
 
