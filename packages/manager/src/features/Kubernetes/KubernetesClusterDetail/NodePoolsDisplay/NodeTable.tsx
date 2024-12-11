@@ -16,13 +16,17 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TagCell } from 'src/components/TagCell/TagCell';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { NodeRow as _NodeRow } from './NodeRow';
-import { StyledTypography, StyledVerticalDivider } from './NodeTable.styles';
+import {
+  StyledTableFooter,
+  StyledTagCell,
+  StyledTypography,
+  StyledVerticalDivider,
+} from './NodeTable.styles';
 
 import type { NodeRow } from './NodeRow';
 import type { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
@@ -158,18 +162,7 @@ export const NodeTable = React.memo((props: Props) => {
                   </TableContentWrapper>
                 </TableBody>
               </Table>
-              <Box
-                sx={(theme) => ({
-                  background: theme.bg.bgPaper,
-                  [theme.breakpoints.down('sm')]: {
-                    flexDirection: 'column',
-                  },
-                })}
-                alignItems="center"
-                display="flex"
-                justifyContent="space-between"
-                px={2}
-              >
+              <StyledTableFooter>
                 <Box display="flex" width="100%">
                   {isDiskEncryptionFeatureEnabled &&
                   encryptionStatus !== undefined ? (
@@ -189,18 +182,12 @@ export const NodeTable = React.memo((props: Props) => {
                     <Typography>Pool ID {poolId}</Typography>
                   )}
                 </Box>
-                <TagCell
-                  sx={(theme) => ({
-                    [theme.breakpoints.down('sm')]: {
-                      marginTop: 1,
-                    },
-                    width: '100%',
-                  })}
+                <StyledTagCell
                   tags={tags}
                   updateTags={updateTags}
                   view="inline"
                 />
-              </Box>
+              </StyledTableFooter>
               <PaginationFooter
                 count={count}
                 eventCategory="Node Table"
