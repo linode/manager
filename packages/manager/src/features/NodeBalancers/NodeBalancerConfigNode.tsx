@@ -20,7 +20,7 @@ import type { NodeBalancerConfigNodeFields } from './types';
 import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 
 export interface NodeBalancerConfigNodeProps {
-  configIdx?: number;
+  configIdx: number;
   disabled: boolean;
   disallowRemoval: boolean;
   hideModeSelect: boolean;

@@ -43,7 +43,7 @@ export interface NodeBalancerConfigPanelProps {
   checkPassive: boolean;
 
   checkPath: string;
-  configIdx?: number;
+  configIdx: number;
   disabled?: boolean;
   errors?: APIError[];
 
