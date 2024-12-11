@@ -71,8 +71,7 @@ describe('VPC create flow', () => {
       subnets: mockSubnets,
     });
 
-    const ipValidationErrorMessage1 =
-      'A subnet must have either IPv4 or IPv6, or both, but not neither.';
+    const ipValidationErrorMessage1 = 'A subnet must have an IPv4 range.';
     const ipValidationErrorMessage2 = 'The IPv4 range must be in CIDR format.';
     const vpcCreationErrorMessage = 'An unknown error has occurred.';
     const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets(mockSubnets);
