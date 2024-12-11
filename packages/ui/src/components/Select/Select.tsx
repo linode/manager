@@ -213,13 +213,20 @@ const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
     return [{ label: 'No options available', noOptions: true, value: '' }];
   }
 
-  if (
-    inputValue &&
-    !options.some((opt) => opt.value === inputValue || opt.label === inputValue)
-  ) {
+  if (inputValue) {
+    const matchingOptions = options.filter(
+      (opt) =>
+        opt.label.toLowerCase().includes(inputValue.toLowerCase()) ||
+        opt.value.toLowerCase().includes(inputValue.toLowerCase())
+    );
+
+    if (!matchingOptions.length) {
+      return [{ create: true, label: inputValue, value: inputValue }];
+    }
+
     return [
       { create: true, label: inputValue, value: inputValue },
-      ...options,
+      ...matchingOptions,
     ].sort((a, b) => {
       if (a.create) {
         return -1;

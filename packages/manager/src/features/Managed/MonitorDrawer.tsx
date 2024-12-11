@@ -179,7 +179,6 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 data-qa-add-consultation-group
                 errorText={errors.consultation_group}
                 label="Contact Group"
-                // name="consultation_group"
                 onBlur={handleBlur}
                 options={groupOptions}
                 placeholder="Select a group..."
@@ -198,7 +197,6 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                     data-qa-add-service-type
                     errorText={errors.service_type}
                     label="Monitor Type"
-                    // name="service_type"
                     onBlur={handleBlur}
                     options={typeOptions}
                     value={getValueFromItem(values.service_type, typeOptions)}
@@ -280,7 +278,6 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 errorText={errors.credentials}
                 label="Credentials"
                 multiple
-                // name="credentials"
                 onBlur={handleBlur}
                 options={credentialOptions}
               />
