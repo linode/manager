@@ -49,6 +49,12 @@ export const Creatable: Story = {
         <>
           <Select
             {...args}
+            onChange={(_, newValue) =>
+              setValue({
+                label: newValue?.label ?? '',
+                value: newValue?.value.replace(' ', '-').toLowerCase() ?? '',
+              })
+            }
             textFieldProps={{
               onChange: (e) =>
                 setValue({
@@ -56,7 +62,6 @@ export const Creatable: Story = {
                   value: e.target.value.replace(' ', '-').toLowerCase(),
                 }),
             }}
-            onChange={(_, newValue) => setValue(newValue)}
             value={value ?? null}
           />
           <Box sx={{ mt: 2 }}>
