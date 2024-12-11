@@ -692,6 +692,11 @@ export const handlers = [
         type: 'g5-standard-20-s1',
       }),
       linodeFactory.build({
+        // eslint-disable-next-line sonarjs/no-duplicate-string
+        region: 'us-central',
+        tags: ['test2'],
+      }),
+      linodeFactory.build({
         label: 'eu-linode',
         region: 'eu-west',
       }),
@@ -711,15 +716,7 @@ export const handlers = [
 
       let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
 
-      if (orFilters) {
-        filteredLinodes = filteredLinodes.filter((linode) => {
-          return orFilters.some((filter: { tags: string }) =>
-            linode.tags.includes(filter.tags)
-          );
-        });
-      }
-
-      if (andFilters) {
+      if (andFilters?.length) {
         filteredLinodes = filteredLinodes.filter((linode) => {
           const filteredById = andFilters.every(
             (filter: { id: number }) => filter.id === linode.id
@@ -729,6 +726,14 @@ export const handlers = [
           );
 
           return filteredById || filteredByRegion;
+        });
+      }
+
+      if (orFilters?.length) {
+        filteredLinodes = filteredLinodes.filter((linode) => {
+          return orFilters.some((filter: { tags: string }) =>
+            linode.tags.includes(filter.tags)
+          );
         });
       }
 
