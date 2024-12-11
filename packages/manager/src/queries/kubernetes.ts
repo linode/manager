@@ -381,8 +381,8 @@ export const useKubernetesVersionQuery = () =>
     ...queryPresets.oneTimeFetch,
   });
 
-export const useKubernetesTieredVersionQuery = (tier: string) => {
-  useQuery<KubernetesTieredVersion[], APIError[]>({
+export const useKubernetesTieredVersionsQuery = (tier: string) => {
+  return useQuery<KubernetesTieredVersion[], APIError[]>({
     ...kubernetesQueries.tieredVersions(tier),
     ...queryPresets.oneTimeFetch,
   });
