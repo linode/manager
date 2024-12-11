@@ -115,7 +115,7 @@ export const StackScriptsDetail = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment={stackScript.label + ' | StackScripts'} />
+      <DocumentTitleSegment segment={`${stackScript.label} | StackScripts`} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

@@ -379,7 +379,7 @@ export const BucketDetail = (props: Props) => {
 
   return (
     <>
-      <DocumentTitleSegment segment={bucketName + ' | Bucket'} />
+      <DocumentTitleSegment segment={`${bucketName} | Bucket`} />
       <BucketBreadcrumb
         bucketName={bucketName}
         history={history}
