@@ -22,7 +22,8 @@ import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 export interface NodeBalancerConfigNodeProps {
   configIdx?: number;
   disabled: boolean;
-  forEdit: boolean;
+  disallowRemoval: boolean;
+  hideModeSelect: boolean;
   idx: number;
   node: NodeBalancerConfigNodeFields;
   nodeBalancerRegion?: string;
@@ -55,8 +56,9 @@ export const NodeBalancerConfigNode = React.memo(
     const {
       configIdx,
       disabled,
-      forEdit,
       idx,
+      disallowRemoval,
+      hideModeSelect,
       node,
       nodeBalancerRegion,
       onNodeAddressChange,
@@ -85,7 +87,7 @@ export const NodeBalancerConfigNode = React.memo(
               <Divider
                 style={{
                   marginBottom: 24,
-                  marginTop: forEdit ? 8 : 24,
+                  marginTop: 8,
                 }}
               />
             </Grid>
@@ -96,11 +98,11 @@ export const NodeBalancerConfigNode = React.memo(
             </Grid>
           )}
           <Grid container spacing={2}>
-            <Grid lg={4} sm={forEdit ? 4 : 6} xs={12}>
+            <Grid lg={4} sm={4} xs={12}>
               <TextField
                 data-qa-backend-ip-label
                 disabled={disabled}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.label}
                 inputId={`node-label-${configIdx}-${idx}`}
                 inputProps={{ 'data-node-idx': idx }}
@@ -126,7 +128,7 @@ export const NodeBalancerConfigNode = React.memo(
         </Grid>
         <Grid sx={{ padding: 1 }} xs={12}>
           <Grid container data-qa-node key={idx} spacing={2}>
-            <Grid lg={forEdit ? 2 : 4} sm={3} xs={12}>
+            <Grid lg={2} sm={3} xs={12}>
               <ConfigNodeIPSelect
                 disabled={disabled}
                 errorText={nodesErrorMap.address}
@@ -141,7 +143,7 @@ export const NodeBalancerConfigNode = React.memo(
               <TextField
                 data-qa-backend-ip-port
                 disabled={disabled}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.port}
                 inputProps={{ 'data-node-idx': idx }}
                 label="Port"
@@ -155,7 +157,7 @@ export const NodeBalancerConfigNode = React.memo(
               <TextField
                 data-qa-backend-ip-weight
                 disabled={disabled}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.weight}
                 inputProps={{ 'data-node-idx': idx }}
                 label="Weight"
@@ -165,7 +167,7 @@ export const NodeBalancerConfigNode = React.memo(
                 value={node.weight}
               />
             </Grid>
-            {forEdit && (
+            {!hideModeSelect && (
               <Grid lg={2} sm={3} xs={6}>
                 <Autocomplete
                   value={modeOptions.find(
@@ -181,7 +183,7 @@ export const NodeBalancerConfigNode = React.memo(
                 />
               </Grid>
             )}
-            {(forEdit || idx !== 0) && (
+            {!disallowRemoval && (
               <Box alignSelf="flex-end" paddingBottom={1}>
                 <Button disabled={disabled} onClick={() => removeNode(idx)}>
                   Remove

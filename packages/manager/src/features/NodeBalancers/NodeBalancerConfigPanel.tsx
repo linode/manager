@@ -422,7 +422,8 @@ export const NodeBalancerConfigPanel = (
               <NodeBalancerConfigNode
                 configIdx={configIdx}
                 disabled={Boolean(disabled)}
-                forEdit={Boolean(forEdit)}
+                disallowRemoval={!forEdit && nodeIdx === 0} // Prevent the user from removing the first node on the create flow.
+                hideModeSelect={protocol === 'udp'} // UDP does not support the "mode" option on nodes
                 idx={nodeIdx}
                 key={`nb-node-${nodeIdx}`}
                 node={node}
