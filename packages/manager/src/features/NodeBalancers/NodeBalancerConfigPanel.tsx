@@ -13,6 +13,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
@@ -20,7 +21,13 @@ import { PassiveCheck } from './NodeBalancerPassiveCheck';
 import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
-import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
+import type {
+  Algorithm,
+  NodeBalancerConfigNodeMode,
+  NodeBalancerProxyProtocol,
+  Protocol,
+  Stickiness,
+} from '@linode/api-v4';
 
 const DATA_NODE = 'data-node-idx';
 export const ROUND_ROBIN_ALGORITHM_HELPER_TEXT =
@@ -33,6 +40,7 @@ export const SOURCE_ALGORITHM_HELPER_TEXT =
 export const NodeBalancerConfigPanel = (
   props: NodeBalancerConfigPanelProps
 ) => {
+  const flags = useFlags();
   const {
     algorithm,
     configIdx,
@@ -59,12 +67,20 @@ export const NodeBalancerConfigPanel = (
 
   const onProtocolChange = (
     event: React.SyntheticEvent,
-    selected: { label: string; value: string }
+    selected: { label: string; value: Protocol }
   ) => {
     const { healthCheckType } = props;
     const { value: protocol } = selected;
 
     props.onProtocolChange(selected.value);
+
+    if (selected.value === 'udp') {
+      props.onSessionStickinessChange('none');
+      props.onCheckPassiveChange(false);
+      props.onProxyProtocolChange('none');
+      props.onSslCertificateChange('');
+      props.onPrivateKeyChange('');
+    }
 
     if (
       protocol === 'tcp' &&
@@ -136,9 +152,13 @@ export const NodeBalancerConfigPanel = (
     { label: 'TCP', value: 'tcp' },
     { label: 'HTTP', value: 'http' },
     { label: 'HTTPS', value: 'https' },
+    ...(flags.udp ? [{ label: 'UDP', value: 'udp' }] : []),
   ];
 
-  const proxyProtocolOptions = [
+  const proxyProtocolOptions: {
+    label: string;
+    value: NodeBalancerProxyProtocol;
+  }[] = [
     { label: 'None', value: 'none' },
     { label: 'v1', value: 'v1' },
     { label: 'v2', value: 'v2' },
@@ -154,11 +174,18 @@ export const NodeBalancerConfigPanel = (
     }
   );
 
-  const algOptions = [
-    { label: 'Round Robin', value: 'roundrobin' },
-    { label: 'Least Connections', value: 'leastconn' },
-    { label: 'Source', value: 'source' },
-  ];
+  const algOptions: { label: string; value: Algorithm }[] =
+    protocol === 'udp'
+      ? [
+          { label: 'Round Robin', value: 'roundrobin' },
+          { label: 'Least Connections', value: 'leastconn' },
+          { label: 'Ring Hash', value: 'ring_hash' },
+        ]
+      : [
+          { label: 'Round Robin', value: 'roundrobin' },
+          { label: 'Least Connections', value: 'leastconn' },
+          { label: 'Source', value: 'source' },
+        ];
 
   const defaultAlg = algOptions.find((eachAlg) => {
     return eachAlg.value === algorithm;
@@ -171,11 +198,18 @@ export const NodeBalancerConfigPanel = (
     source: SOURCE_ALGORITHM_HELPER_TEXT,
   };
 
-  const sessionOptions = [
-    { label: 'None', value: 'none' },
-    { label: 'Table', value: 'table' },
-    { label: 'HTTP Cookie', value: 'http_cookie' },
-  ];
+  const sessionOptions: { label: string; value: Stickiness }[] =
+    protocol === 'udp'
+      ? [
+          { label: 'None', value: 'none' },
+          { label: 'Session', value: 'session' },
+          { label: 'Source IP', value: 'source_ip' },
+        ]
+      : [
+          { label: 'None', value: 'none' },
+          { label: 'Table', value: 'table' },
+          { label: 'HTTP Cookie', value: 'http_cookie' },
+        ];
 
   const defaultSession = sessionOptions.find((eachSession) => {
     return eachSession.value === sessionStickiness;
@@ -358,7 +392,7 @@ export const NodeBalancerConfigPanel = (
       </Grid>
       <Grid container spacing={2}>
         <ActiveCheck errorMap={errorMap} {...props} />
-        <PassiveCheck {...props} />
+        {protocol !== 'udp' && <PassiveCheck {...props} />}
         <Grid xs={12}>
           <Divider />
         </Grid>
