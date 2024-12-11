@@ -1,5 +1,6 @@
 import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -38,6 +39,7 @@ import { migrationRouter } from './routes';
 
 import type { Theme } from '@mui/material/styles';
 import type { AnyRouter } from '@tanstack/react-router';
+import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -129,7 +131,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() =>
   import('src/features/Domains').then((module) => ({
     default: module.DomainsRoutes,
@@ -196,10 +197,17 @@ const CloudPulse = React.lazy(() =>
   }))
 );
 
+const IAM = React.lazy(() =>
+  import('src/features/IAM').then((module) => ({
+    default: module.IdentityAccessManagement,
+  }))
+);
+
 export const MainContent = () => {
   const { classes, cx } = useStyles();
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
+  const queryClient = useQueryClient();
 
   const globalErrors = useGlobalErrors();
 
@@ -231,6 +239,8 @@ export const MainContent = () => {
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
   const { isACLPEnabled } = useIsACLPEnabled();
+
+  const { isIAMEnabled } = useIsIAMEnabled();
 
   /**
    * this is the case where the user has successfully completed signup
@@ -327,8 +337,6 @@ export const MainContent = () => {
                               path="/placement-groups"
                             />
                           )}
-                          <Route component={Volumes} path="/volumes" />
-                          <Redirect path="/volumes*" to="/volumes" />
                           <Route
                             component={NodeBalancers}
                             path="/nodebalancers"
@@ -346,6 +354,9 @@ export const MainContent = () => {
                             path="/object-storage"
                           />
                           <Route component={Kubernetes} path="/kubernetes" />
+                          {isIAMEnabled && (
+                            <Route component={IAM} path="/iam" />
+                          )}
                           <Route component={Account} path="/account" />
                           <Route component={Profile} path="/profile" />
                           <Route component={Help} path="/support" />
@@ -370,6 +381,7 @@ export const MainContent = () => {
                            */}
                           <Route path="*">
                             <RouterProvider
+                              context={{ queryClient }}
                               router={migrationRouter as AnyRouter}
                             />
                           </Route>

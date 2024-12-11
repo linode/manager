@@ -7,6 +7,7 @@ import {
 import {
   Box,
   CircleProgress,
+  FormControlLabel,
   Notice,
   Paper,
   Toggle,
@@ -19,7 +20,6 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';

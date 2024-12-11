@@ -21,7 +21,7 @@ import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 
 import Undo from 'src/assets/icons/undo.svg';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Autocomplete } from '@linode/ui';
 import { Hidden } from 'src/components/Hidden';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Table } from 'src/components/Table';
