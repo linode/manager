@@ -1,4 +1,5 @@
 import { CircleProgress } from '@linode/ui';
+import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -43,25 +44,31 @@ export const AlertDetail = () => {
     return { crumbOverrides: overrides, pathname: '/Definitions/Details' };
   }, [alertId, serviceType]);
 
+  const theme = useTheme();
+
   if (isFetching) {
-    return <CircleProgress />;
+    return (
+      <Grid alignItems="center" container height={theme.spacing(75)}>
+        <Grid item xs={12}>
+          <CircleProgress />
+        </Grid>
+      </Grid>
+    );
   }
 
   if (isError) {
     return (
-      <>
-        <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <ErrorState errorText={'Error loading alert details.'} />
-      </>
+      <Grid alignItems="center" container height={theme.spacing(75)}>
+        <Grid item xs={12}>
+          <ErrorState
+            errorText={
+              'An error occurred while loading the definitions. Please try again later.'
+            }
+          />
+        </Grid>
+      </Grid>
     );
   }
-
-  return (
-    <React.Fragment>
-      <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-      {/**
-       * TODO,  The implementations of show details page by use of data from useAlertDefinitionQuery will be added in upcoming PR's to keep this PR small
-       */}
-    </React.Fragment>
-  );
+  // TODO: The overview, criteria, resources details for alerts will be added in upcoming PR's by consuming the results of useAlertDefinitionQuery call
+  return <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />;
 };
