@@ -124,6 +124,8 @@ export const Dialog = React.forwardRef(
           />
           <DialogContent
             sx={{
+              display: 'flex',
+              flexDirection: 'column',
               overflowX: 'hidden',
               paddingBottom: theme.spacing(3),
             }}
