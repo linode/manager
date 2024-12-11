@@ -1,5 +1,5 @@
-import { CircleProgress } from '@linode/ui';
-import { Grid, useTheme } from '@mui/material';
+import { Box, CircleProgress } from '@linode/ui';
+import { useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -48,25 +48,21 @@ export const AlertDetail = () => {
 
   if (isFetching) {
     return (
-      <Grid alignItems="center" container height={theme.spacing(75)}>
-        <Grid item xs={12}>
-          <CircleProgress />
-        </Grid>
-      </Grid>
+      <Box alignContent="center" height={theme.spacing(75)}>
+        <CircleProgress />
+      </Box>
     );
   }
 
   if (isError) {
     return (
-      <Grid alignItems="center" container height={theme.spacing(75)}>
-        <Grid item xs={12}>
-          <ErrorState
-            errorText={
-              'An error occurred while loading the definitions. Please try again later.'
-            }
-          />
-        </Grid>
-      </Grid>
+      <Box alignContent="center" height={theme.spacing(75)}>
+        <ErrorState
+          errorText={
+            'An error occurred while loading the definitions. Please try again later.'
+          }
+        />
+      </Box>
     );
   }
   // TODO: The overview, criteria, resources details for alerts will be added in upcoming PR's by consuming the results of useAlertDefinitionQuery call
