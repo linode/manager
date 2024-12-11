@@ -128,7 +128,7 @@ export const NodeBalancerConfigNode = React.memo(
         </Grid>
         <Grid sx={{ padding: 1 }} xs={12}>
           <Grid container data-qa-node key={idx} spacing={2}>
-            <Grid lg={2} sm={3} xs={12}>
+            <Grid lg={3} sm={4} xs={12}>
               <ConfigNodeIPSelect
                 disabled={disabled}
                 errorText={nodesErrorMap.address}

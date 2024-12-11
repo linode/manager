@@ -146,7 +146,7 @@ export const Accordion = (props: AccordionProps) => {
                 {...(success && { variant: 'success' })}
                 {...(warning && { variant: 'warning' })}
                 {...(error && { variant: 'error' })}
-                spacingBottom={0}
+                spacingBottom={8}
               />
             </Grid>
           ) : null}

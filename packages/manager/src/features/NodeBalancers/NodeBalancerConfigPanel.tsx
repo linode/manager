@@ -399,14 +399,19 @@ export const NodeBalancerConfigPanel = (
       </Grid>
       <Grid container spacing={2}>
         <Grid xs={12}>
-          {nodeMessage && (
-            <Grid xs={12}>
-              <Notice text={nodeMessage} variant="info" />
-            </Grid>
-          )}
           <Typography data-qa-backend-ip-header variant="h2">
             Backend Nodes
           </Typography>
+          {nodeMessage && (
+            <Grid xs={12}>
+              <Notice
+                spacingBottom={0}
+                spacingTop={8}
+                text={nodeMessage}
+                variant="info"
+              />
+            </Grid>
+          )}
           {errorMap.nodes && (
             <FormHelperText error>{errorMap.nodes}</FormHelperText>
           )}

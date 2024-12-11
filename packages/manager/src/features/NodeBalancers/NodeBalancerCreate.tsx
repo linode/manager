@@ -198,6 +198,12 @@ const NodeBalancerCreate = () => {
     value: string
   ) => setNodeValue(configIdx, nodeIdx, 'label', value);
 
+  const onNodeModeChange = (
+    configIdx: number,
+    nodeIdx: number,
+    value: string
+  ) => setNodeValue(configIdx, nodeIdx, 'mode', value);
+
   const onNodeAddressChange = (
     configIdx: number,
     nodeIdx: number,
@@ -610,6 +616,9 @@ const NodeBalancerCreate = () => {
                 }
                 onNodeLabelChange={(nodeIndex, value) =>
                   onNodeLabelChange(idx, nodeIndex, value)
+                }
+                onNodeModeChange={(nodeIndex, value) =>
+                  onNodeModeChange(idx, nodeIndex, value)
                 }
                 onNodePortChange={(nodeIndex, value) =>
                   onNodePortChange(idx, nodeIndex, value)
