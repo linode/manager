@@ -22,6 +22,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { NodeRow as _NodeRow } from './NodeRow';
 import {
+  StyledPoolInfoBox,
   StyledTableFooter,
   StyledTagCell,
   StyledTypography,
@@ -163,7 +164,7 @@ export const NodeTable = React.memo((props: Props) => {
                 </TableBody>
               </Table>
               <StyledTableFooter>
-                <Box display="flex" width="100%">
+                <StyledPoolInfoBox>
                   {isDiskEncryptionFeatureEnabled &&
                   encryptionStatus !== undefined ? (
                     <Box
@@ -181,7 +182,7 @@ export const NodeTable = React.memo((props: Props) => {
                   ) : (
                     <Typography>Pool ID {poolId}</Typography>
                   )}
-                </Box>
+                </StyledPoolInfoBox>
                 <StyledTagCell
                   tags={tags}
                   updateTags={updateTags}

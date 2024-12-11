@@ -29,12 +29,19 @@ export const StyledTypography = styled(Typography, {
   margin: `0 0 0 ${theme.spacing()}`,
 }));
 
+export const StyledPoolInfoBox = styled(Box, {
+  label: 'StyledPoolInfoBox',
+})(({ theme }) => ({
+  display: 'flex',
+  [theme.breakpoints.down('sm')]: {
+    padding: `${theme.spacing()} 0`,
+  },
+  width: '100%',
+}));
+
 export const StyledTagCell = styled(TagCell, {
   label: 'StyledTagCell',
-})(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    marginTop: 1,
-  },
+})(() => ({
   width: '100%',
 }));
 
