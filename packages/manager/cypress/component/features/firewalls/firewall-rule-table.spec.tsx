@@ -48,12 +48,16 @@ componentTests('Firewall Rules', (mount) => {
     const secondRow =
       'div[aria-label="inbound Rules List"] tbody tr:nth-child(2)';
 
-    // Mock 3 inbound rules
     beforeEach(() => {
+      // Set the viewport to 1024x768
+      cy.viewport(1024, 768);
+
+      // Mock 3 inbound rules
       inboundRule1 = mockInboundRule('inbound_rule_1');
       inboundRule2 = mockInboundRule('inbound_rule_2');
       inboundRule3 = mockInboundRule('inbound_rule_3');
 
+      // Mount the FirewallRulesLanding
       mount(
         <FirewallRulesLanding
           rules={{
@@ -71,7 +75,7 @@ componentTests('Firewall Rules', (mount) => {
     it('mouse drag and drop functionality should work for firewall inbound rules table', () => {
       // Drag the 1st row rule to 2nd row position
       // Note that eq is 0-indexed
-      cy.get(tableRow).eq(0).drag(secondRow, { force: true });
+      cy.get(tableRow).eq(0).drag(secondRow);
 
       // Verify the labels in the 1st, 2nd, and 3rd rows
       cy.get(tableRow).eq(0).should('contain', inboundRule2.label);
@@ -79,7 +83,7 @@ componentTests('Firewall Rules', (mount) => {
       cy.get(tableRow).eq(2).should('contain', inboundRule3.label);
 
       // Drag the 3rd row rule to 2nd row position
-      cy.get(tableRow).eq(2).drag(secondRow, { force: true });
+      cy.get(tableRow).eq(2).drag(secondRow);
 
       // Verify the labels in the 1st, 2nd, and 3rd rows
       cy.get(tableRow).eq(0).should('contain', inboundRule2.label);
@@ -87,7 +91,7 @@ componentTests('Firewall Rules', (mount) => {
       cy.get(tableRow).eq(2).should('contain', inboundRule1.label);
 
       // Drag the 3rd row rule to 1st position
-      cy.get(tableRow).eq(2).drag(firstRow, { force: true });
+      cy.get(tableRow).eq(2).drag(firstRow);
 
       // Verify the labels in the 1st, 2nd, and 3rd rows
       cy.get(tableRow).eq(0).should('contain', inboundRule1.label);
@@ -108,10 +112,15 @@ componentTests('Firewall Rules', (mount) => {
       'div[aria-label="outbound Rules List"] tbody tr:nth-child(2)';
 
     beforeEach(() => {
+      // Set the viewport to 1024x768
+      cy.viewport(1024, 768);
+
+      // Mock 3 outbound rules
       outboundRule1 = mockOutboundRule('outbound_rule_1');
       outboundRule2 = mockOutboundRule('outbound_rule_2');
       outboundRule3 = mockOutboundRule('outbound_rule_3');
 
+      // Mount the FirewallRulesLanding
       mount(
         <FirewallRulesLanding
           rules={{
@@ -128,7 +137,7 @@ componentTests('Firewall Rules', (mount) => {
     it('mouse drag and drop functionality should work for firewall outbound rules table', () => {
       // Drag the 1st row rule to 2nd row position
       // Note that eq is 0-indexed
-      cy.get(tableRow).eq(0).drag(secondRow, { force: true });
+      cy.get(tableRow).eq(0).drag(secondRow);
 
       // Verify the labels in the 1st, 2nd, and 3rd rows
       cy.get(tableRow).eq(0).should('contain', outboundRule2.label);
@@ -136,7 +145,7 @@ componentTests('Firewall Rules', (mount) => {
       cy.get(tableRow).eq(2).should('contain', outboundRule3.label);
 
       // Drag the 3rd row rule to 2nd row position
-      cy.get(tableRow).eq(2).drag(secondRow, { force: true });
+      cy.get(tableRow).eq(2).drag(secondRow);
 
       // Verify the labels in the 1st, 2nd, and 3rd rows
       cy.get(tableRow).eq(0).should('contain', outboundRule2.label);
@@ -144,7 +153,7 @@ componentTests('Firewall Rules', (mount) => {
       cy.get(tableRow).eq(2).should('contain', outboundRule1.label);
 
       // Drag the 3rd row rule to 1st position
-      cy.get(tableRow).eq(2).drag(firstRow, { force: true });
+      cy.get(tableRow).eq(2).drag(firstRow);
 
       // Verify the labels in the 1st, 2nd, and 3rd rows
       cy.get(tableRow).eq(0).should('contain', outboundRule1.label);
