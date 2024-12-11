@@ -25,6 +25,7 @@ export interface SelectProps
     | 'isOptionEqualToValue'
     | 'loading'
     | 'noOptionsText'
+    | 'onBlur'
     | 'options'
     | 'placeholder'
     | 'textFieldProps'
