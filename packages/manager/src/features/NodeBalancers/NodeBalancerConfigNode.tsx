@@ -56,9 +56,9 @@ export const NodeBalancerConfigNode = React.memo(
     const {
       configIdx,
       disabled,
-      idx,
       disallowRemoval,
       hideModeSelect,
+      idx,
       node,
       nodeBalancerRegion,
       onNodeAddressChange,
@@ -98,7 +98,7 @@ export const NodeBalancerConfigNode = React.memo(
             </Grid>
           )}
           <Grid container spacing={2}>
-            <Grid lg={4} sm={4} xs={12}>
+            <Grid lg={4} sm={6} xs={12}>
               <TextField
                 data-qa-backend-ip-label
                 disabled={disabled}
