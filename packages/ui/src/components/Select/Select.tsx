@@ -8,18 +8,18 @@ import { TextField } from '../TextField';
 
 import type { EnhancedAutocompleteProps } from '../Autocomplete';
 
-type OptionType = {
+export type SelectOptionType = {
   label: string;
   value: string;
 };
 
-interface InternalOptionType extends OptionType {
+interface InternalOptionType extends SelectOptionType {
   create?: boolean;
   noOptions?: boolean;
 }
 export interface SelectProps
   extends Pick<
-    EnhancedAutocompleteProps<OptionType>,
+    EnhancedAutocompleteProps<SelectOptionType>,
     | 'errorText'
     | 'helperText'
     | 'isOptionEqualToValue'
@@ -100,7 +100,7 @@ export const Select = (props: SelectProps) => {
 
   const handleChange = (
     event: React.SyntheticEvent,
-    value: OptionType | null | string
+    value: SelectOptionType | null | string
   ) => {
     if (creatable && typeof value === 'string') {
       onChange?.(event, {
@@ -186,7 +186,7 @@ export const Select = (props: SelectProps) => {
       disableClearable={!clearable}
       forcePopupIcon
       freeSolo={creatable}
-      getOptionDisabled={(option: OptionType) => option.value === ''}
+      getOptionDisabled={(option: SelectOptionType) => option.value === ''}
       label={label}
       noOptionsText={noOptionsText}
       onChange={handleChange}

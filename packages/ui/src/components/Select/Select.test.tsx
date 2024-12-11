@@ -19,14 +19,14 @@ describe('Select', () => {
         label="My Select"
         onChange={onChange}
         options={options}
-        placeholder="Select an option"
+        placeholder="Select something!"
       />
     );
 
     const select = getByRole('combobox');
     expect(select).toHaveAttribute('aria-autocomplete', 'list');
     expect(select).toHaveAttribute('aria-expanded', 'false');
-    expect(select).toHaveAttribute('placeholder', 'Select an option');
+    expect(select).toHaveAttribute('placeholder', 'Select something!');
     expect(select).toHaveAttribute('readOnly');
 
     expect(getByText('My Select')).toBeInTheDocument();
