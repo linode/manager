@@ -47,6 +47,7 @@ export const StyledTableFooter = styled(Box, {
   justifyContent: 'space-between',
   padding: `0 ${theme.spacing(2)}`,
   [theme.breakpoints.down('sm')]: {
+    display: 'block',
     flexDirection: 'column',
   },
 }));
