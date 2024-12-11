@@ -33,7 +33,7 @@ export const StyledPoolInfoBox = styled(Box, {
   label: 'StyledPoolInfoBox',
 })(({ theme }) => ({
   display: 'flex',
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     padding: `${theme.spacing()} 0`,
   },
   width: '100%',
@@ -53,7 +53,7 @@ export const StyledTableFooter = styled(Box, {
   display: 'flex',
   justifyContent: 'space-between',
   padding: `0 ${theme.spacing(2)}`,
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     display: 'block',
     flexDirection: 'column',
   },
