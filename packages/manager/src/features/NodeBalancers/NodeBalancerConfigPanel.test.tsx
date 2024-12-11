@@ -317,4 +317,53 @@ describe('NodeBalancerConfigPanel', () => {
     await userEvent.click(editConfigButton);
     expect(nbConfigPanelMockPropsForTest.onSave).toHaveBeenCalled();
   });
+
+  it('does not show the passive checks option for the UDP protocol', () => {
+    const { queryByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        protocol="udp"
+      />
+    );
+
+    expect(queryByText('Passive Checks')).not.toBeInTheDocument();
+  });
+
+  it('shows correct algorithm options for the UDP protocol', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        protocol="udp"
+      />
+    );
+
+    const algorithmField = getByLabelText('Algorithm');
+
+    expect(algorithmField).toBeVisible();
+
+    await userEvent.click(algorithmField);
+
+    for (const algorithm of ['Round Robin', 'Least Connections', 'Ring Hash']) {
+      expect(getByText(algorithm)).toBeVisible();
+    }
+  });
+
+  it('shows correct session stickiness options for the UDP protocol', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        protocol="udp"
+      />
+    );
+
+    const sessionStickinessField = getByLabelText('Session Stickiness');
+
+    expect(sessionStickinessField).toBeVisible();
+
+    await userEvent.click(sessionStickinessField);
+
+    for (const algorithm of ['None', 'Session', 'Source IP']) {
+      expect(getByText(algorithm)).toBeVisible();
+    }
+  });
 });
