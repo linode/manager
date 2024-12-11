@@ -58,7 +58,7 @@ export const CloudPulseResourcesSelect = React.memo(
 
     const flags = useFlags();
 
-    const resourceFilterMap: Record<string, ExtendedLinodeFilter> = {
+    const resourceFilterMap: Record<string, ExtendedFilter> = {
       dbaas: { '+order': 'asc', '+order_by': 'label', platform: 'rdbms-default' },
     };
 
