@@ -367,144 +367,146 @@ const testDiscardOutboundRuleDragViaKeyboard = () => {
     .should('have.attr', 'aria-disabled', 'true');
 };
 
-/**
- * Keyboard keys used to perform interactions with rows in the Firewall Rules table:
- * - Press `Space/Enter` key once to activate keyboard sensor on the selected row.
- * - Use `Up/Down` arrow keys to move the row up or down.
- * - Press `Space/Enter` key again to drop the focused row.
- * - Press `Esc` key to discard drag and drop operation.
- *
- * Confirms:
- * - All keyboard interactions on Firewall Rules table rows work as expected
- *   for both normal (no vertical scrollbar) and smaller window sizes (with vertical scrollbar).
- * - `CustomKeyboardSensor` works as expected.
- */
 componentTests('FirewallRulesTable Drag and Drop Interactions', (mount) => {
-  describe('Normal window (no vertical scrollbar)', () => {
-    beforeEach(() => {
-      cy.viewport(1536, 960);
-    });
-
-    describe('Inbound Rules:', () => {
+  /**
+   * Keyboard keys used to perform interactions with rows in the Firewall Rules table:
+   * - Press `Space/Enter` key once to activate keyboard sensor on the selected row.
+   * - Use `Up/Down` arrow keys to move the row up or down.
+   * - Press `Space/Enter` key again to drop the focused row.
+   * - Press `Esc` key to discard drag and drop operation.
+   *
+   * Confirms:
+   * - All keyboard interactions on Firewall Rules table rows work as expected
+   *   for both normal (no vertical scrollbar) and smaller window sizes (with vertical scrollbar).
+   * - `CustomKeyboardSensor` works as expected.
+   */
+  describe('Keyboard Interactions', () => {
+    describe('Normal window (no vertical scrollbar)', () => {
       beforeEach(() => {
-        mount(
-          <FirewallRulesLanding
-            rules={{
-              inbound: mockInboundRules,
-              inbound_policy: 'ACCEPT',
-              outbound_policy: 'DROP',
-            }}
-            disabled={false}
-            firewallID={randomNumber()}
-          />
-        );
-        verifyFirewallWithRules({
-          includeInbound: true,
-          includeOutbound: false,
+        cy.viewport(1536, 960);
+      });
+
+      describe('Inbound Rules:', () => {
+        beforeEach(() => {
+          mount(
+            <FirewallRulesLanding
+              rules={{
+                inbound: mockInboundRules,
+                inbound_policy: 'ACCEPT',
+                outbound_policy: 'DROP',
+              }}
+              disabled={false}
+              firewallID={randomNumber()}
+            />
+          );
+          verifyFirewallWithRules({
+            includeInbound: true,
+            includeOutbound: false,
+          });
+        });
+
+        it('should move Inbound rule rows using keyboard interaction', () => {
+          testMoveInboundRuleRowsViaKeyboard();
+        });
+
+        it('should cancel the Inbound rules drag operation with Esc key', () => {
+          testDiscardInboundRuleDragViaKeyboard();
         });
       });
 
-      it('should move Inbound rule rows using keyboard interaction', () => {
-        testMoveInboundRuleRowsViaKeyboard();
-      });
+      describe('Outbound Rules:', () => {
+        beforeEach(() => {
+          mount(
+            <FirewallRulesLanding
+              rules={{
+                inbound_policy: 'ACCEPT',
+                outbound: mockOutboundRules,
+                outbound_policy: 'DROP',
+              }}
+              disabled={false}
+              firewallID={randomNumber()}
+            />
+          );
+          verifyFirewallWithRules({
+            includeInbound: false,
+            includeOutbound: true,
+          });
+        });
 
-      it('should cancel the Inbound rules drag operation with Esc key', () => {
-        testDiscardInboundRuleDragViaKeyboard();
+        it('should move Outbound rule rows using keyboard interaction', () => {
+          testMoveOutboundRulesViaKeyboard();
+        });
+
+        it('should cancel the Outbound rules drag operation with Esc key', () => {
+          testDiscardOutboundRuleDragViaKeyboard();
+        });
       });
     });
 
-    describe('Outbound Rules:', () => {
+    describe('Window with vertical scrollbar', () => {
       beforeEach(() => {
-        mount(
-          <FirewallRulesLanding
-            rules={{
-              inbound_policy: 'ACCEPT',
-              outbound: mockOutboundRules,
-              outbound_policy: 'DROP',
-            }}
-            disabled={false}
-            firewallID={randomNumber()}
-          />
-        );
-        verifyFirewallWithRules({
-          includeInbound: false,
-          includeOutbound: true,
+        // Browser window with vertical scroll bar enabled (smaller screens).
+        cy.viewport(800, 400);
+        cy.window().should('have.property', 'innerWidth', 800);
+        cy.window().should('have.property', 'innerHeight', 400);
+      });
+
+      describe('Inbound Rules:', () => {
+        beforeEach(() => {
+          mount(
+            <FirewallRulesLanding
+              rules={{
+                inbound: mockInboundRules,
+                inbound_policy: 'ACCEPT',
+                outbound_policy: 'DROP',
+              }}
+              disabled={false}
+              firewallID={randomNumber()}
+            />
+          );
+          verifyFirewallWithRules({
+            includeInbound: true,
+            includeOutbound: false,
+            isSmallViewport: true,
+          });
+        });
+
+        it('should move Inbound rule rows using keyboard interaction', () => {
+          testMoveInboundRuleRowsViaKeyboard();
+        });
+
+        it('should cancel the Inbound rules drag operation with Esc key', () => {
+          testDiscardInboundRuleDragViaKeyboard();
         });
       });
 
-      it('should move Outbound rule rows using keyboard interaction', () => {
-        testMoveOutboundRulesViaKeyboard();
-      });
-
-      it('should cancel the Outbound rules drag operation with Esc key', () => {
-        testDiscardOutboundRuleDragViaKeyboard();
-      });
-    });
-  });
-
-  describe('Window with vertical scrollbar', () => {
-    beforeEach(() => {
-      // Browser window with vertical scroll bar enabled (smaller screens).
-      cy.viewport(800, 400);
-      cy.window().should('have.property', 'innerWidth', 800);
-      cy.window().should('have.property', 'innerHeight', 400);
-    });
-
-    describe('Inbound Rules:', () => {
-      beforeEach(() => {
-        mount(
-          <FirewallRulesLanding
-            rules={{
-              inbound: mockInboundRules,
-              inbound_policy: 'ACCEPT',
-              outbound_policy: 'DROP',
-            }}
-            disabled={false}
-            firewallID={randomNumber()}
-          />
-        );
-        verifyFirewallWithRules({
-          includeInbound: true,
-          includeOutbound: false,
-          isSmallViewport: true,
+      describe('Outbound Rules:', () => {
+        beforeEach(() => {
+          mount(
+            <FirewallRulesLanding
+              rules={{
+                inbound_policy: 'ACCEPT',
+                outbound: mockOutboundRules,
+                outbound_policy: 'DROP',
+              }}
+              disabled={false}
+              firewallID={randomNumber()}
+            />
+          );
+          verifyFirewallWithRules({
+            includeInbound: false,
+            includeOutbound: true,
+            isSmallViewport: true,
+          });
         });
-      });
 
-      it('should move Inbound rule rows using keyboard interaction', () => {
-        testMoveInboundRuleRowsViaKeyboard();
-      });
-
-      it('should cancel the Inbound rules drag operation with Esc key', () => {
-        testDiscardInboundRuleDragViaKeyboard();
-      });
-    });
-
-    describe('Outbound Rules:', () => {
-      beforeEach(() => {
-        mount(
-          <FirewallRulesLanding
-            rules={{
-              inbound_policy: 'ACCEPT',
-              outbound: mockOutboundRules,
-              outbound_policy: 'DROP',
-            }}
-            disabled={false}
-            firewallID={randomNumber()}
-          />
-        );
-        verifyFirewallWithRules({
-          includeInbound: false,
-          includeOutbound: true,
-          isSmallViewport: true,
+        it('should move Outbound rule rows using keyboard interaction', () => {
+          testMoveOutboundRulesViaKeyboard();
         });
-      });
 
-      it('should move Outbound rule rows using keyboard interaction', () => {
-        testMoveOutboundRulesViaKeyboard();
-      });
-
-      it('should cancel the Outbound rules drag operation with Esc key', () => {
-        testDiscardOutboundRuleDragViaKeyboard();
+        it('should cancel the Outbound rules drag operation with Esc key', () => {
+          testDiscardOutboundRuleDragViaKeyboard();
+        });
       });
     });
   });
