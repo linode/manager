@@ -68,7 +68,7 @@ export const checkMandatoryFiltersSelected = (
   }
 
   const mandatoryFilters = serviceTypeConfig.filters.filter(
-    (filter) => filter.configuration.filterKey !== TAGS
+    (filter) => !filter.configuration.isOptional
   );
   return mandatoryFilters.every(({ configuration }) => {
     const { filterKey, neededInServicePage } = configuration;
