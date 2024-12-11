@@ -31,7 +31,13 @@ export const StackScriptsLanding = () => {
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="StackScripts" />
+      <DocumentTitleSegment
+        segment={
+          history.location.pathname === '/stackscripts/community'
+            ? 'Community StackScripts'
+            : 'Account StackScripts'
+        }
+      />
       {!!history.location.state && !!history.location.state.successMessage ? (
         <Notice
           text={history.location.state.successMessage}
