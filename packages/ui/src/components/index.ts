@@ -23,6 +23,7 @@ export * from './Notice';
 export * from './Paper';
 export * from './Radio';
 export * from './RadioGroup';
+export * from './Select/Select';
 export * from './Stack';
 export * from './TextField';
 export * from './Toggle';
