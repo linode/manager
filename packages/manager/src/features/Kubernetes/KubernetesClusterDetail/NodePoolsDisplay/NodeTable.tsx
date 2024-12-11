@@ -161,6 +161,9 @@ export const NodeTable = React.memo((props: Props) => {
               <Box
                 sx={(theme) => ({
                   background: theme.bg.bgPaper,
+                  [theme.breakpoints.down('sm')]: {
+                    flexDirection: 'column',
+                  },
                 })}
                 alignItems="center"
                 display="flex"
@@ -187,9 +190,12 @@ export const NodeTable = React.memo((props: Props) => {
                   )}
                 </Box>
                 <TagCell
-                  sx={{
+                  sx={(theme) => ({
+                    [theme.breakpoints.down('sm')]: {
+                      marginTop: 1,
+                    },
                     width: '100%',
-                  }}
+                  })}
                   tags={tags}
                   updateTags={updateTags}
                   view="inline"
@@ -246,7 +252,7 @@ export const EncryptedStatus = ({
     </>
   ) : encryptionStatus === 'disabled' ? (
     <>
-      <Unlock style={{ minWidth: 16 }} />
+      <Unlock />
       <StyledTypography sx={{ whiteSpace: 'nowrap' }}>
         Not Encrypted
       </StyledTypography>
