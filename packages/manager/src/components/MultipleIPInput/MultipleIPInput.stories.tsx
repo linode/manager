@@ -28,27 +28,20 @@ const meta: Meta<typeof MultipleIPInput> = {
 
 export default meta;
 
+const MultipleIPInputWithState = ({ ...args }: any) => {
+  const [ips, setIps] = useState(defaultArgs.ips);
+
+  const handleChange = (newIps: typeof ips) => {
+    setIps(newIps);
+  };
+
+  return <MultipleIPInput {...args} ips={ips} onChange={handleChange} />;
+};
+
 export const Default: Story = {
   args: defaultArgs,
   render: (args) => {
-    const MultipleIPInputWithState = () => {
-      const [ips, setIps] = useState(defaultArgs.ips);
-
-      const handleChange = (newIps: typeof ips) => {
-        setIps(newIps);
-      };
-
-      return (
-        <MultipleIPInput
-          {...args}
-          ips={ips}
-          onChange={handleChange}
-          placeholder={mockTitle}
-        />
-      );
-    };
-
-    return <MultipleIPInputWithState />;
+    return <MultipleIPInputWithState {...args} />;
   },
 };
 
@@ -64,6 +57,9 @@ export const HelperText: Story = {
     ...defaultArgs,
     helperText: 'helperText',
   },
+  render: (args) => {
+    return <MultipleIPInputWithState {...args} />;
+  },
 };
 
 export const Placeholder: Story = {
@@ -71,5 +67,8 @@ export const Placeholder: Story = {
     ips: [{ address: '' }],
     placeholder: 'placeholder',
     title: mockTitle,
+  },
+  render: (args) => {
+    return <MultipleIPInputWithState {...args} />;
   },
 };
