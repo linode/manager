@@ -48,21 +48,27 @@ export const AlertDetail = () => {
 
   if (isFetching) {
     return (
-      <Box alignContent="center" height={theme.spacing(75)}>
-        <CircleProgress />
-      </Box>
+      <>
+        <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
+        <Box alignContent="center" height={theme.spacing(75)}>
+          <CircleProgress />
+        </Box>
+      </>
     );
   }
 
   if (isError) {
     return (
-      <Box alignContent="center" height={theme.spacing(75)}>
-        <ErrorState
-          errorText={
-            'An error occurred while loading the definitions. Please try again later.'
-          }
-        />
-      </Box>
+      <>
+        <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
+        <Box alignContent="center" height={theme.spacing(75)}>
+          <ErrorState
+            errorText={
+              'An error occurred while loading the definitions. Please try again later.'
+            }
+          />
+        </Box>
+      </>
     );
   }
   // TODO: The overview, criteria, resources details for alerts will be added by consuming the results of useAlertDefinitionQuery call
