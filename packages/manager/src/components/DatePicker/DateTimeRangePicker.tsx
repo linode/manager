@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 import { DateTimePicker } from './DateTimePicker';
 
+import type { SxProps, Theme } from '@mui/material/styles';
 import type { DateTime } from 'luxon';
 
 interface DateTimeRangePickerProps {
@@ -32,20 +33,25 @@ interface DateTimeRangePickerProps {
   startLabel?: string;
   /** Initial or controlled value for the start timezone */
   startTimeZoneValue?: null | string;
+  /**
+   * Any additional styles to apply to the root element.
+   */
+  sx?: SxProps<Theme>;
 }
 
 export const DateTimeRangePicker = ({
-  endDateErrorMessage = 'End date/time cannot be before the start date/time.',
+  endDateErrorMessage,
   endDateTimeValue = null,
   endLabel = 'End Date and Time',
   format = 'yyyy-MM-dd HH:mm',
   onChange,
   showEndTimeZone = false,
   showStartTimeZone = false,
-  startDateErrorMessage = 'Start date/time cannot be after the end date/time.',
+  startDateErrorMessage,
   startDateTimeValue = null,
   startLabel = 'Start Date and Time',
   startTimeZoneValue = null,
+  sx,
 }: DateTimeRangePickerProps) => {
   const [startDateTime, setStartDateTime] = useState<DateTime | null>(
     startDateTimeValue
@@ -56,7 +62,9 @@ export const DateTimeRangePicker = ({
   const [startTimeZone, setStartTimeZone] = useState<null | string>(
     startTimeZoneValue
   );
-  const [error, setError] = useState<string>();
+
+  const [startDateError, setStartDateError] = useState<string>();
+  const [endDateError, setEndDateError] = useState<string>();
 
   const validateDates = (
     start: DateTime | null,
@@ -65,15 +73,19 @@ export const DateTimeRangePicker = ({
   ) => {
     if (start && end) {
       if (source === 'start' && start > end) {
-        setError(startDateErrorMessage);
+        setStartDateError('Start date/time cannot be after the end date/time.');
+        setEndDateError(undefined);
         return;
       }
       if (source === 'end' && end < start) {
-        setError(endDateErrorMessage);
+        setEndDateError('End date/time cannot be before the start date/time.');
+        setStartDateError(undefined);
         return;
       }
     }
-    setError(undefined); // Clear error if valid
+    // Reset validation errors if valid
+    setStartDateError(undefined);
+    setEndDateError(undefined);
   };
 
   const handleStartDateTimeChange = (newStart: DateTime | null) => {
@@ -103,7 +115,7 @@ export const DateTimeRangePicker = ({
   };
 
   return (
-    <Box display="flex" gap={2}>
+    <Box display="flex" gap={2} sx={sx}>
       {/* Start DateTime Picker */}
       <DateTimePicker
         timeZoneSelectProps={{
@@ -111,7 +123,7 @@ export const DateTimeRangePicker = ({
           onChange: handleStartTimeZoneChange,
           value: startTimeZone,
         }}
-        errorText={error}
+        errorText={startDateError ?? startDateErrorMessage}
         format={format}
         label={startLabel}
         onChange={handleStartDateTimeChange}
@@ -125,7 +137,7 @@ export const DateTimeRangePicker = ({
         timeZoneSelectProps={{
           value: startTimeZone, // Automatically reflect the start timezone
         }}
-        dateCalendarProps={{ minDate: startDateTime ?? undefined }}
+        errorText={endDateError ?? endDateErrorMessage}
         format={format}
         label={endLabel}
         onChange={handleEndDateTimeChange}

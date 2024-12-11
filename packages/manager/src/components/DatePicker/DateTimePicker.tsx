@@ -1,6 +1,6 @@
-import { TextField } from '@linode/ui';
 import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
+import { TextField } from '@linode/ui';
 import { Grid, Popover } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -13,7 +13,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { TimeZoneSelect } from './TimeZoneSelect';
 
 import type { TextFieldProps } from '@linode/ui';
-import type { Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import type { DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
 import type { DateTime } from 'luxon';
 
@@ -38,6 +38,10 @@ export interface DateTimePickerProps {
   showTime?: boolean;
   /** Whether to show the timezone selector */
   showTimeZone?: boolean;
+  /**
+   * Any additional styles to apply to the root element.
+   */
+  sx?: SxProps<Theme>;
   /** Props for customizing the TimePicker component */
   timeSelectProps?: {
     label?: string;
@@ -65,6 +69,7 @@ export const DateTimePicker = ({
   placeholder = 'yyyy-MM-dd HH:mm',
   showTime = true,
   showTimeZone = true,
+  sx,
   timeSelectProps = {},
   timeZoneSelectProps = {},
   value = null,
@@ -133,7 +138,7 @@ export const DateTimePicker = ({
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
-      <Box>
+      <Box sx={{ minWidth: '300px', ...sx }}>
         <TextField
           value={
             selectedDateTime
