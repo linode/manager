@@ -55,7 +55,10 @@ export interface LinodeBackups {
   last_successful: string | null;
 }
 
-export type LinodeCapabilities = 'Block Storage Encryption' | 'SMTP Enabled';
+export type LinodeCapabilities =
+  | 'Block Storage Encryption'
+  | 'SMTP Enabled'
+  | 'Block Storage Performance B1';
 
 export type Window =
   | 'Scheduling'
