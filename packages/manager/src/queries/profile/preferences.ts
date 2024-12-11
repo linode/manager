@@ -30,12 +30,11 @@ export const useMutatePreferences = (replace = false) => {
     async mutationFn(data) {
       if (replace) {
         return updateUserPreferences(data);
-      } else {
-        const existingPreferences = await queryClient.ensureQueryData<ManagerPreferences>(
-          profileQueries.preferences
-        );
-        return updateUserPreferences({ ...existingPreferences, ...data });
       }
+      const existingPreferences = await queryClient.ensureQueryData<ManagerPreferences>(
+        profileQueries.preferences
+      );
+      return updateUserPreferences({ ...existingPreferences, ...data });
     },
     onMutate: (data) => updatePreferenceData(data, replace, queryClient),
   });
