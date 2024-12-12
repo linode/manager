@@ -363,13 +363,17 @@ describe('Create Linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getLinodeTypes', '@getVPCs']);
+    cy.wait('@getLinodeTypes');
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
     // Check the 'Backups' add on
     cy.get('[data-testid="backups"]').should('be.visible').click();
     ui.regionSelect.find().click().type(`${region.label} {enter}`);
+
+    // Verify VPCs get fetched once a region is selected
+    cy.wait('@getVPCs');
+
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
 
