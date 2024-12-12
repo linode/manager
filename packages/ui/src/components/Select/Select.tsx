@@ -12,9 +12,18 @@ export type SelectOptionType = {
   label: string;
   value: string;
 };
-
 interface InternalOptionType extends SelectOptionType {
+  /**
+   * Whether the option is a "create" option.
+   *
+   * @default false
+   */
   create?: boolean;
+  /**
+   * Whether the option is a "no options" option.
+   *
+   * @default false
+   */
   noOptions?: boolean;
 }
 export interface SelectProps
@@ -74,9 +83,8 @@ export interface SelectProps
   searchable?: boolean;
   /**
    * The value of the select.
-   * We ensure that when passing in a value, it is never undefined. (to prevent controlled/uncontrolled input issues)
    */
-  value: SelectOptionType | null;
+  value?: SelectOptionType | null;
 }
 
 /**
@@ -105,7 +113,7 @@ export const Select = (props: SelectProps) => {
 
   const handleChange = (
     event: React.SyntheticEvent,
-    value: SelectProps['value'] | string
+    value: SelectOptionType | null | string
   ) => {
     if (creatable && typeof value === 'string') {
       onChange?.(event, {
@@ -123,14 +131,20 @@ export const Select = (props: SelectProps) => {
     }
   };
 
-  const selectedOptions = React.useMemo(
+  const _options = React.useMemo(
     () => getOptions({ creatable, inputValue, options }),
     [creatable, inputValue, options]
   );
 
   return (
-    <Autocomplete
+    <Autocomplete<SelectOptionType, false, boolean, boolean>
       {...rest}
+      isOptionEqualToValue={(option, value) => {
+        if (!option || !value) {
+          return false;
+        }
+        return option.value === value.value;
+      }}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -176,7 +190,7 @@ export const Select = (props: SelectProps) => {
                   }
                 : null
             }
-            key={key}
+            key={option.create ? `create-${option.value}` : key}
           >
             {option.create ? (
               <>
@@ -196,23 +210,47 @@ export const Select = (props: SelectProps) => {
       noOptionsText={noOptionsText}
       onChange={handleChange}
       onInputChange={(_, value) => setInputValue(value)}
-      options={selectedOptions}
+      options={_options}
       selectOnFocus={false}
+      value={valueOrNull(props.value)}
     />
   );
 };
 
 interface GetOptionsProps {
+  /**
+   * Whether the select can create a new option.
+   */
   creatable: SelectProps['creatable'];
+  /**
+   * The input value.
+   */
   inputValue: string;
+  /**
+   * The options for the Select component.
+   */
   options: readonly InternalOptionType[];
 }
 
+/**
+ * Ensure that when passing in a value, it is never undefined.
+ * (to prevent controlled/uncontrolled input issues)
+ */
+const valueOrNull = (value: SelectOptionType | null | undefined) =>
+  value ?? null;
+
+/**
+ * Get the options for the Select component.
+ *
+ * This allows us to refine the logic the displays ot then options based on the type of select.
+ */
 const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
+  // Early return for as "simple" select
   if (!creatable) {
     return options;
   }
 
+  // If there's no input value and no options, show the "no options" option
   if (options.length === 0 && !inputValue) {
     return [{ label: 'No options available', noOptions: true, value: '' }];
   }
@@ -224,10 +262,24 @@ const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
         opt.value.toLowerCase().includes(inputValue.toLowerCase())
     );
 
+    const exactMatch = matchingOptions.some(
+      (opt) =>
+        opt.label.toLowerCase() === inputValue.toLowerCase() ||
+        opt.value.toLowerCase() === inputValue.toLowerCase()
+    );
+
+    // If there's an exact match, don't show is as a create option
+    // This is for when a field has a default value
+    if (exactMatch) {
+      return options;
+    }
+
+    // If there's no matching options, just show the create option
     if (!matchingOptions.length) {
       return [{ create: true, label: inputValue, value: inputValue }];
     }
 
+    // If there's matching options, show the create option and the matching options
     return [
       { create: true, label: inputValue, value: inputValue },
       ...matchingOptions,

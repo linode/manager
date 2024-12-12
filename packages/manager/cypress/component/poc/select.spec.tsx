@@ -192,7 +192,7 @@ componentTests('Select', (mount) => {
 
       it('calls `onChange` callback when region is initially selected', () => {
         const spyFn = createSpy(() => {}, 'changeSpy');
-        mount(<Select {...defaultProps} onChange={spyFn} value={null} />);
+        mount(<Select {...defaultProps} onChange={spyFn} />);
 
         openAutocompletePopper();
 
@@ -279,7 +279,7 @@ componentTests('Select', (mount) => {
                   value: e.target.value.replace(' ', '-').toLowerCase(),
                 }),
             }}
-            value={value ?? null}
+            value={value}
             {...props}
           />
           <Box sx={{ mt: 2 }}>

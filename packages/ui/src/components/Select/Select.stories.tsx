@@ -27,7 +27,6 @@ const defaultArgs: SelectProps = {
   placeholder: 'Select an option',
   required: false,
   searchable: false,
-  value: null,
 };
 
 export const Default: Story = {

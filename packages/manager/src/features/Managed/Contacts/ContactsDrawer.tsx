@@ -188,7 +188,6 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                   </Grid>
                 </Grid>
 
-                {/* @todo: This <Select /> should be clearable eventually, but isn't currently allowed by the API. */}
                 <Select
                   onChange={(_, selectedGroup) =>
                     setFieldValue('group', selectedGroup?.value)
@@ -205,7 +204,6 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                         }
                       : null
                   }
-                  clearable
                   creatable
                   errorText={errors.group}
                   label="Group"
