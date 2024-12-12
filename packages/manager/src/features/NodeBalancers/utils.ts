@@ -92,7 +92,9 @@ export const transformConfigsForRequest = (
         check_interval: !isNil(config.check_interval)
           ? +config.check_interval
           : undefined,
-        check_passive: config.check_passive /* will be boolean or undefined */,
+        check_passive: shouldIncludePassiveCheck(config)
+          ? config.check_passive
+          : undefined,
         check_path: shouldIncludeCheckPath(config)
           ? config.check_path
           : undefined,
@@ -139,6 +141,10 @@ export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
     (config.check === 'http' || config.check === 'http_body') &&
     config.check_path
   );
+};
+
+const shouldIncludePassiveCheck = (config: NodeBalancerConfigFields) => {
+  return config.protocol !== 'udp';
 };
 
 export const shouldIncludeCheckBody = (config: NodeBalancerConfigFields) => {

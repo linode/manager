@@ -76,7 +76,6 @@ export const NodeBalancerConfigPanel = (
 
     if (selected.value === 'udp') {
       props.onSessionStickinessChange('none');
-      props.onCheckPassiveChange(false);
       props.onProxyProtocolChange('none');
       props.onSslCertificateChange('');
       props.onPrivateKeyChange('');
