@@ -1,7 +1,7 @@
 import '@4tw/cypress-drag-drop';
 import * as React from 'react';
 import { componentTests } from 'support/util/components';
-import { randomItem, randomString } from 'support/util/random';
+import { randomItem, randomNumber, randomString } from 'support/util/random';
 
 import { firewallRuleFactory } from 'src/factories';
 import { FirewallRulesLanding } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRulesLanding';
@@ -60,7 +60,7 @@ componentTests('Firewall Rules', (mount) => {
             outbound_policy: 'DROP',
           }}
           disabled={false}
-          firewallID={1}
+          firewallID={randomNumber()}
         />
       );
     });
@@ -119,7 +119,7 @@ componentTests('Firewall Rules', (mount) => {
             outbound_policy: 'DROP',
           }}
           disabled={false}
-          firewallID={1}
+          firewallID={randomNumber()}
         />
       );
     });
