@@ -47,9 +47,6 @@ export const AlertTableRow = (props: Props) => {
       </TableCell>
       <TableCell>{created_by}</TableCell>
       <TableCell actionCell>
-        {/* handlers are supposed to be passed to this AlertActionMenu,
-        it is dependent on other feature and will added as that feature in the next PR
-        */}
         <AlertActionMenu alertType={type} handlers={handlers} />
       </TableCell>
     </TableRow>
