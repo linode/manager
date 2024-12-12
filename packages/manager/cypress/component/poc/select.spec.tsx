@@ -100,6 +100,18 @@ componentTests('Select', (mount) => {
 
         cy.get('input').should('have.attr', 'value', `${options[0].label}`);
         cy.get('[data-qa-autocomplete-popper]').should('not.exist');
+
+        openAutocompletePopper();
+
+        ui.autocompletePopper
+          .find()
+          .should('be.visible')
+          .within(() => {
+            cy.get('li').should('have.length', options.length);
+            cy.contains(`${options[0].label}`)
+              .should('be.visible')
+              .should('have.attr', 'aria-selected', 'true');
+          });
       });
 
       it('can select an option by typing', () => {
@@ -253,7 +265,6 @@ componentTests('Select', (mount) => {
     onChange: () => {},
     options,
     placeholder: 'Select an option',
-    value: null,
   };
 
   describe('Logic', () => {

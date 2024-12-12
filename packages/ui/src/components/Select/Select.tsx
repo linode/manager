@@ -38,6 +38,7 @@ export interface SelectProps
     | 'options'
     | 'placeholder'
     | 'textFieldProps'
+    | 'value'
   > {
   /**
    * Whether the select can be cleared once a value is selected.
@@ -81,10 +82,6 @@ export interface SelectProps
    * @default false
    */
   searchable?: boolean;
-  /**
-   * The value of the select.
-   */
-  value?: SelectOptionType | null;
 }
 
 /**
@@ -163,11 +160,13 @@ export const Select = (props: SelectProps) => {
                 {params.InputProps.endAdornment}
               </>
             ),
+            sx: { cursor: creatable || searchable ? 'text' : 'pointer' },
           }}
           inputProps={{
             ...params.inputProps,
             ...textFieldProps?.inputProps,
             readOnly: !creatable && !searchable,
+            sx: { cursor: creatable || searchable ? 'text' : 'pointer' },
           }}
           errorText={props.errorText}
           helperText={props.helperText}
@@ -202,6 +201,17 @@ export const Select = (props: SelectProps) => {
           </ListItem>
         );
       }}
+      sx={
+        !creatable && !searchable
+          ? {
+              '& .MuiInputBase-input': {
+                '&::selection': {
+                  background: 'transparent',
+                },
+              },
+            }
+          : null
+      }
       disableClearable={!clearable}
       forcePopupIcon
       freeSolo={creatable}
@@ -212,7 +222,6 @@ export const Select = (props: SelectProps) => {
       onInputChange={(_, value) => setInputValue(value)}
       options={_options}
       selectOnFocus={false}
-      value={valueOrNull(props.value)}
     />
   );
 };
@@ -231,13 +240,6 @@ interface GetOptionsProps {
    */
   options: readonly InternalOptionType[];
 }
-
-/**
- * Ensure that when passing in a value, it is never undefined.
- * (to prevent controlled/uncontrolled input issues)
- */
-const valueOrNull = (value: SelectOptionType | null | undefined) =>
-  value ?? null;
 
 /**
  * Get the options for the Select component.
