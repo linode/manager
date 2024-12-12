@@ -29,10 +29,8 @@ export const AlertListing = () => {
 
   const history = useHistory();
 
-  const handleDetails = (alert: Alert) => {
-    history.push(
-      `${location.pathname}/detail/${alert.service_type}/${alert.id}`
-    );
+  const handleDetails = ({ id, service_type: serviceType }: Alert) => {
+    history.push(`${location.pathname}/detail/${serviceType}/${id}`);
   };
 
   if (alerts?.length === 0) {

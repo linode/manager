@@ -17,7 +17,9 @@ interface Props {
    * alert details used by the component to fill the row details
    */
   alert: Alert;
-
+  /**
+   * The callback handlers for clicking an action menu item like show details, delete etc.,
+   */
   handlers: ActionHandlers;
 }
 

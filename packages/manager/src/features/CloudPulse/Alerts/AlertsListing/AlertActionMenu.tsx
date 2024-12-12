@@ -24,18 +24,11 @@ export interface AlertActionMenuProps {
   handlers: ActionHandlers;
 }
 
-/**
- * The handlers and alertType are made optional only temporarily, they will be enabled but they are dependent on another feature which will be part of next PR
- */
 export const AlertActionMenu = (props: AlertActionMenuProps) => {
   const { alertType, handlers } = props;
   return (
     <ActionMenu
-      actionsList={
-        handlers && alertType
-          ? getAlertTypeToActionsList(handlers)[alertType]
-          : []
-      }
+      actionsList={getAlertTypeToActionsList(handlers)[alertType]}
       ariaLabel={'Action menu for Alert'}
     />
   );
