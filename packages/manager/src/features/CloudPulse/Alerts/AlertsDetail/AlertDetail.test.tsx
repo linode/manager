@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { alertFactory } from 'src/factories/cloudpulse/alerts';
+import { alertFactory } from 'src/factories/';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertDetail } from './AlertDetail';

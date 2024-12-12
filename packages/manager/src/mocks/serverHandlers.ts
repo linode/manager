@@ -19,6 +19,7 @@ import {
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
+  alertFactory,
   appTokenFactory,
   betaFactory,
   contactFactory,
@@ -105,8 +106,6 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
-
-import { alertFactory } from 'src/factories/cloudpulse/alerts';
 import { pickRandom } from 'src/utilities/random';
 
 import type {

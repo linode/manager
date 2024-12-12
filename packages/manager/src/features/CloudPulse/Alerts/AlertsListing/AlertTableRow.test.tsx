@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { alertFactory } from 'src/factories/cloudpulse/alerts';
+import { alertFactory } from 'src/factories';
 import { capitalize } from 'src/utilities/capitalize';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
