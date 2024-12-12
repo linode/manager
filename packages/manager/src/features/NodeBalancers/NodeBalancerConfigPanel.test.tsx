@@ -3,12 +3,12 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 import {
   LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
-  NodeBalancerConfigPanel,
   ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
   SOURCE_ALGORITHM_HELPER_TEXT,
-} from './NodeBalancerConfigPanel';
+} from './utils';
 
 import type {
   NodeBalancerConfigNodeFields,
