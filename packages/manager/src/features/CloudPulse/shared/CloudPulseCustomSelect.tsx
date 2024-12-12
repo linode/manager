@@ -237,6 +237,9 @@ export const CloudPulseCustomSelect = React.memo(
             placement: 'bottom',
           },
         }}
+        textFieldProps={{
+          required: true,
+        }}
         autoHighlight
         disabled={isAutoCompleteDisabled}
         errorText={staticErrorText}

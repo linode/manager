@@ -1,4 +1,3 @@
-import { TAGS } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
