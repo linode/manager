@@ -13,6 +13,8 @@ const labelTestDetails = {
 
 const IP_EITHER_BOTH_NOT_NEITHER =
   'A subnet must have either IPv4 or IPv6, or both, but not neither.';
+// @TODO VPC - remove below constant when IPv6 is added
+const TEMPORARY_IPV4_REQUIRED_MESSAGE = 'A subnet must have an IPv4 range.';
 
 export const determineIPType = (ip: string) => {
   try {
@@ -128,9 +130,11 @@ export const createSubnetSchema = object().shape(
       is: (value: unknown) =>
         value === '' || value === null || value === undefined,
       then: (schema) =>
-        schema.required(IP_EITHER_BOTH_NOT_NEITHER).test({
+        // @TODO VPC - change required message back to IP_EITHER_BOTH_NOT_NEITHER when IPv6 is supported
+        // Since only IPv4 is currently supported, subnets must have an IPv4
+        schema.required(TEMPORARY_IPV4_REQUIRED_MESSAGE).test({
           name: 'IPv4 CIDR format',
-          message: 'The IPv4 range must be in CIDR format',
+          message: 'The IPv4 range must be in CIDR format.',
           test: (value) =>
             vpcsValidateIP({
               value,
@@ -147,7 +151,7 @@ export const createSubnetSchema = object().shape(
             case 'string':
               return schema.notRequired().test({
                 name: 'IPv4 CIDR format',
-                message: 'The IPv4 range must be in CIDR format',
+                message: 'The IPv4 range must be in CIDR format.',
                 test: (value) =>
                   vpcsValidateIP({
                     value,
