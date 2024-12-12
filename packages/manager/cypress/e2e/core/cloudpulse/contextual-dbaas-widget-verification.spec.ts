@@ -16,23 +16,18 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
-  linodeFactory,
-  regionFactory,
   widgetFactory,
 } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetRegions } from 'support/intercepts/regions';
 import { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import {
   mockGetDatabase,
   mockGetDatabaseTypes,
-  mockGetDatabases,
 } from 'support/intercepts/databases';
 import { mockDatabaseNodeTypes } from 'support/constants/databases';
 import { randomIp } from 'support/util/random';
-import { extendRegion } from 'support/util/regions';
 import { Flags } from 'src/featureFlags';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 
@@ -149,13 +144,6 @@ const databaseMock: Database = databaseFactory.build({
   engine: 'mysql',
   allow_list: [allowedIp],
 });
-const mockRegion = extendRegion(
-  regionFactory.build({
-    capabilities: ['Managed Databases'],
-    id: 'us-ord',
-    label: 'Chicago, IL',
-  })
-);
 
 describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
@@ -164,14 +152,12 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     });
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
-    mockGetCloudPulseDashboard(1, dashboard);
-    mockCreateCloudPulseJWEToken(serviceType);
+    mockGetCloudPulseDashboard(1, dashboard).as('getDashboard');
+    mockCreateCloudPulseJWEToken(serviceType).as('getServiceType');
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
     );
-    mockGetRegions([mockRegion]);
     mockGetDatabase(databaseMock).as('getDatabase');
-    mockGetDatabases([databaseMock]).as('getDatabases');
     mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
 
     // navigate to the linodes page
@@ -179,13 +165,15 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // navigate to the Databases
     cy.get('[data-testid="menu-item-Databases"]')
-      .should('be.visible') // Check if it is visible
-      .click(); // Click the link
+      .should('be.visible') 
+      .click();
 
     // navigate to the Monitor
     cy.visitWithLogin(
       `/databases/${databaseMock.engine}/${databaseMock.id}/monitor`
     );
+
+    cy.wait(['@getDashboard', '@getServiceType','@getDatabase']);
 
     // Select a time duration from the autocomplete input.
     ui.autocomplete
