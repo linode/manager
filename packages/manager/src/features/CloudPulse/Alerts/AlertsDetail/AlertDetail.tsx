@@ -7,8 +7,6 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
-import type { BreadcrumbProps } from 'src/components/Breadcrumb/Breadcrumb';
-
 interface RouteParams {
   /**
    * The id of the alert for which the data needs to be shown
@@ -28,7 +26,7 @@ export const AlertDetail = () => {
     serviceType
   );
 
-  const { crumbOverrides, pathname } = React.useMemo((): BreadcrumbProps => {
+  const { crumbOverrides, pathname } = React.useMemo(() => {
     const overrides = [
       {
         label: 'Definitions',
