@@ -1,3 +1,4 @@
+// Using this lib only for mouse drag-and-drop interactions
 import '@4tw/cypress-drag-drop';
 import * as React from 'react';
 import { componentTests } from 'support/util/components';
