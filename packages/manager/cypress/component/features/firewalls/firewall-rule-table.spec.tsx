@@ -1,36 +1,35 @@
+import '@4tw/cypress-drag-drop';
 import * as React from 'react';
-import { FirewallRulesLanding } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRulesLanding';
 import { componentTests } from 'support/util/components';
 import { randomItem, randomString } from 'support/util/random';
 
 import { firewallRuleFactory } from 'src/factories';
+import { FirewallRulesLanding } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRulesLanding';
 
 import type { FirewallRuleType } from '@linode/api-v4';
 
-import '@4tw/cypress-drag-drop';
-
 const portPresetMap = {
   '22': 'SSH',
+  '53': 'DNS',
   '80': 'HTTP',
   '443': 'HTTPS',
   '3306': 'MySQL',
-  '53': 'DNS',
 };
 
 const mockInboundRule = (label: string) => {
   return firewallRuleFactory.build({
-    label: label,
-    description: randomString(),
     action: 'ACCEPT',
+    description: randomString(),
+    label,
     ports: randomItem(Object.keys(portPresetMap)),
   });
 };
 
 const mockOutboundRule = (label: string) => {
   return firewallRuleFactory.build({
-    label: label,
-    description: randomString(),
     action: 'DROP',
+    description: randomString(),
+    label,
     ports: randomItem(Object.keys(portPresetMap)),
   });
 };
@@ -99,6 +98,7 @@ componentTests('Firewall Rules', (mount) => {
       cy.get(tableRow).eq(2).should('contain', inboundRule3.label);
     });
   });
+
   describe('firewall outbound rules drag & drop with mouse and keyboard tests', () => {
     let outboundRule1: FirewallRuleType;
     let outboundRule2: FirewallRuleType;
@@ -124,8 +124,8 @@ componentTests('Firewall Rules', (mount) => {
       mount(
         <FirewallRulesLanding
           rules={{
-            outbound: [outboundRule1, outboundRule2, outboundRule3],
             inbound_policy: 'ACCEPT',
+            outbound: [outboundRule1, outboundRule2, outboundRule3],
             outbound_policy: 'DROP',
           }}
           disabled={false}
