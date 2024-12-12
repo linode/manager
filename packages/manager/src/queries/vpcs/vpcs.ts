@@ -35,10 +35,10 @@ import type {
 
 // VPC queries
 export const vpcQueries = createQueryKeys('vpcs', {
-  all: {
-    queryFn: getAllVPCsRequest,
-    queryKey: null,
-  },
+  all: (filter: Filter = {}) => ({
+    queryFn: () => getAllVPCsRequest(filter),
+    queryKey: [filter],
+  }),
   paginated: (params: Params = {}, filter: Filter = {}) => ({
     queryFn: () => getVPCs(params, filter),
     queryKey: [params, filter],
@@ -71,8 +71,8 @@ interface AllVPCsOptions {
 
 export const useAllVPCsQuery = (options: AllVPCsOptions) =>
   useQuery<VPC[], APIError[]>({
-    ...vpcQueries.all,
-    ...options,
+    ...vpcQueries.all(options.filter),
+    enabled: options.enabled,
   });
 
 export const useVPCsQuery = (
@@ -99,7 +99,7 @@ export const useCreateVPCMutation = () => {
     mutationFn: createVPC,
     onSuccess(vpc) {
       queryClient.invalidateQueries({
-        queryKey: vpcQueries.all.queryKey,
+        queryKey: vpcQueries.all._def,
       });
       queryClient.invalidateQueries({
         queryKey: vpcQueries.paginated._def,
@@ -128,7 +128,7 @@ export const useDeleteVPCMutation = (id: number) => {
     mutationFn: () => deleteVPC(id),
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: vpcQueries.all.queryKey,
+        queryKey: vpcQueries.all._def,
       });
       queryClient.invalidateQueries({
         queryKey: vpcQueries.paginated._def,
@@ -160,7 +160,7 @@ export const useCreateSubnetMutation = (vpcId: number) => {
     onSuccess() {
       // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
       queryClient.invalidateQueries({
-        queryKey: vpcQueries.all.queryKey,
+        queryKey: vpcQueries.all._def,
       });
       queryClient.invalidateQueries({
         queryKey: vpcQueries.paginated._def,
@@ -179,7 +179,7 @@ export const useUpdateSubnetMutation = (vpcId: number, subnetId: number) => {
     onSuccess() {
       // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
       queryClient.invalidateQueries({
-        queryKey: vpcQueries.all.queryKey,
+        queryKey: vpcQueries.all._def,
       });
       queryClient.invalidateQueries({
         queryKey: vpcQueries.paginated._def,
@@ -198,7 +198,7 @@ export const useDeleteSubnetMutation = (vpcId: number, subnetId: number) => {
     onSuccess() {
       // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
       queryClient.invalidateQueries({
-        queryKey: vpcQueries.all.queryKey,
+        queryKey: vpcQueries.all._def,
       });
       queryClient.invalidateQueries({
         queryKey: vpcQueries.paginated._def,

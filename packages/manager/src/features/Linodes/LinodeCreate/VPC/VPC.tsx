@@ -154,7 +154,7 @@ export const VPC = () => {
                 onBlur={field.onBlur}
                 options={vpcs ?? []}
                 placeholder="None"
-                value={selectedVPC}
+                value={selectedVPC ?? null}
               />
             )}
             control={control}
