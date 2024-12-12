@@ -8,6 +8,7 @@ import type { APIError } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
+// Reference for this pattern: https://tkdodo.eu/blog/react-query-data-transformations#3-using-the-select-option
 export const usePreferences = <TData = ManagerPreferences>(
   select?: (data: ManagerPreferences | undefined) => TData,
   enabled = true
