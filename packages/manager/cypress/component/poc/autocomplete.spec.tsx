@@ -164,7 +164,7 @@ componentTests('Autocomplete', (mount) => {
       });
     });
 
-    describe('Selection (single)', () => {
+    describe('Single-select', () => {
       /**
        * - Confirms user can select an initial option
        */
@@ -197,7 +197,6 @@ componentTests('Autocomplete', (mount) => {
         // Confirm that selection change is reflected by input field value, and that
         // the autocomplete popper has been dismissed.
         cy.get('input').should('have.attr', 'value', `${options[0].label}`);
-
         cy.get('[data-qa-autocomplete-popper]').should('not.exist');
       });
 
@@ -228,7 +227,6 @@ componentTests('Autocomplete', (mount) => {
         // Confirm that selection change is reflected by input field value, and that
         // the autocomplete popper has been dismissed.
         cy.get('input').should('have.attr', 'value', `${options[1].label}`);
-
         cy.get('[data-qa-autocomplete-popper]').should('not.exist');
       });
 
@@ -278,7 +276,6 @@ componentTests('Autocomplete', (mount) => {
         );
 
         cy.get('input').should('have.attr', 'value', `${options[0].label}`);
-
         cy.findByLabelText('Clear').should('not.exist');
       });
 
@@ -509,6 +506,7 @@ componentTests('Autocomplete', (mount) => {
           .click();
 
         cy.findByLabelText('Clear').should('be.visible').should('be.enabled');
+        cy.contains('Select All').should('not.exist');
 
         // After selecting all elements, 'Deselect All' appears as an option
         ui.autocompletePopper
@@ -521,10 +519,10 @@ componentTests('Autocomplete', (mount) => {
       });
 
       /**
-       * - Confirms 'Deselect All' appears as long as all options are selected
-       * (even if 'Select All' wasn't clicked)
+       * - Confirms 'Deselect All' appears only when all options are selected (even if 'Select All' wasn't clicked)
+       * - Confirms 'Select All' appears if not all options have been selected
        */
-      it('shows Deselect All as long as all options are selected', () => {
+      it('shows Deselect All if all options are selected', () => {
         const MultiSelect = () => {
           const [selectedOptions, setSelectedOptions] = React.useState<
             Option[]
@@ -548,23 +546,26 @@ componentTests('Autocomplete', (mount) => {
           .should('be.enabled')
           .click();
 
-        // select all options manually
+        // select all options manually, confirm Select all is still visible if not all options selected yet
         ui.autocompletePopper.findByTitle('Select All').should('be.visible');
         ui.autocompletePopper
           .findByTitle('my-option-1')
           .should('be.visible')
           .click();
+        ui.autocompletePopper.findByTitle('Select All').should('be.visible');
         ui.autocompletePopper
           .findByTitle('my-option-2')
           .should('be.visible')
           .click();
+        ui.autocompletePopper.findByTitle('Select All').should('be.visible');
         ui.autocompletePopper
           .findByTitle('my-option-3')
           .should('be.visible')
           .click();
 
-        // Confirm Deselect All appears, and Select All is hidden
+        // Confirm Deselect All appears, and Select All doesn't exist anymore
         ui.autocompletePopper.findByTitle('Deselect All').should('be.visible');
+        cy.contains('Select All').should('not.exist');
       });
 
       /**
