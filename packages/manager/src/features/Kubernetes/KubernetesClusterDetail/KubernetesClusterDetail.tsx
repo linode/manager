@@ -82,6 +82,7 @@ export const KubernetesClusterDetail = () => {
       <UpgradeKubernetesVersionBanner
         clusterID={cluster?.id}
         clusterLabel={cluster?.label}
+        clusterTier={cluster?.tier ?? 'standard'}
         currentVersion={cluster?.k8s_version}
       />
       <LandingHeader

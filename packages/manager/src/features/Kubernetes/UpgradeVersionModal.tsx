@@ -9,28 +9,37 @@ import {
   getNextVersion,
   localStorageWarning,
 } from 'src/features/Kubernetes/kubeUtils';
-import {
-  useKubernetesClusterMutation,
-  useKubernetesVersionQuery,
-} from 'src/queries/kubernetes';
+import { useLkeStandardOrEnterpriseVersions } from 'src/hooks/useLkeStandardOrEnterpriseVersions';
+import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
+
+import type { KubernetesTier } from '@linode/api-v4/lib/kubernetes';
 
 interface Props {
   clusterID: number;
   clusterLabel: string;
+  clusterTier: KubernetesTier;
   currentVersion: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const UpgradeDialog = (props: Props) => {
-  const { clusterID, clusterLabel, currentVersion, isOpen, onClose } = props;
+  const {
+    clusterID,
+    clusterLabel,
+    clusterTier,
+    currentVersion,
+    isOpen,
+    onClose,
+  } = props;
 
-  const { data: versions } = useKubernetesVersionQuery();
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
     clusterID
   );
+
+  const versions = useLkeStandardOrEnterpriseVersions(clusterTier);
 
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
