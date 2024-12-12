@@ -4,7 +4,7 @@ import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { useAccountBeta } from 'src/queries/account/account';
+import { useAccount } from 'src/queries/account/account';
 
 import { StyledDocsLinkContainer } from './CreateCluster.styles';
 
@@ -19,7 +19,7 @@ interface Props {
 export const ClusterTypePanel = (props: Props) => {
   const { handleClusterTypeSelection, selectedTier } = props;
 
-  const { data: account } = useAccountBeta();
+  const { data: account } = useAccount();
 
   const mdDownBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('md')

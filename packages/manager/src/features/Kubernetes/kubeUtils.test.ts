@@ -16,7 +16,7 @@ import {
 } from './kubeUtils';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountBeta: vi.fn().mockReturnValue({}),
+  useAccount: vi.fn().mockReturnValue({}),
   useAccountBetaQuery: vi.fn().mockReturnValue({}),
   useFlags: vi.fn().mockReturnValue({}),
 }));
@@ -25,7 +25,7 @@ vi.mock('src/queries/account/account', () => {
   const actual = vi.importActual('src/queries/account/account');
   return {
     ...actual,
-    useAccountBeta: queryMocks.useAccountBeta,
+    useAccount: queryMocks.useAccount,
   };
 });
 
@@ -165,7 +165,7 @@ describe('helper functions', () => {
 
 describe('useIsLkeEnterpriseEnabled', () => {
   it('returns false for feature enablement if the account does not have the capability', () => {
-    queryMocks.useAccountBeta.mockReturnValue({
+    queryMocks.useAccount.mockReturnValue({
       data: {
         capabilities: [],
       },
@@ -188,7 +188,7 @@ describe('useIsLkeEnterpriseEnabled', () => {
   });
 
   it('returns true for LA feature enablement if the account has the capability + enabled LA feature flag values', () => {
-    queryMocks.useAccountBeta.mockReturnValue({
+    queryMocks.useAccount.mockReturnValue({
       data: {
         capabilities: ['Kubernetes Enterprise'],
       },
@@ -211,7 +211,7 @@ describe('useIsLkeEnterpriseEnabled', () => {
   });
 
   it('returns true for GA feature enablement if the account has the capability + enabled GA feature flag values', () => {
-    queryMocks.useAccountBeta.mockReturnValue({
+    queryMocks.useAccount.mockReturnValue({
       data: {
         capabilities: ['Kubernetes Enterprise'],
       },

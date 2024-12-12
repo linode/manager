@@ -1158,7 +1158,13 @@ describe('LKE Cluster Creation with LKE-E', () => {
     });
 
     it('disables the Cluster Type selection without the LKE-E account capability', () => {
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: [],
+        })
+      ).as('getAccount');
       cy.visitWithLogin('/kubernetes/clusters');
+      cy.wait(['@getAccount']);
 
       ui.button
         .findByTitle('Create Cluster')
