@@ -1,4 +1,4 @@
-import { Box, Notice, Paper, Stack, TextField } from '@linode/ui';
+import { Autocomplete, Box, Notice, Paper, Stack, TextField } from '@linode/ui';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -6,7 +6,6 @@ import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
@@ -19,6 +18,7 @@ import {
   getKubeHighAvailability,
   getLatestVersion,
   useAPLAvailability,
+  useIsLkeEnterpriseEnabled,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -28,6 +28,7 @@ import {
 import {
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
+  useKubernetesTieredVersionsQuery,
   useKubernetesTypesQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
@@ -38,13 +39,14 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
+import { ClusterTypePanel } from './ClusterTypePanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
@@ -58,6 +60,7 @@ import type {
   CreateKubeClusterPayload,
   CreateNodePoolData,
   KubeNodePoolResponse,
+  KubernetesTier,
 } from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
@@ -92,12 +95,19 @@ export const CreateCluster = () => {
   const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
+  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
+    'standard'
+  );
 
   const {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery();
+
+  const handleClusterTypeSelection = (tier: KubernetesTier) => {
+    setSelectedTier(tier);
+  };
 
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
     (type) => type.id === 'lke-ha'
@@ -121,9 +131,30 @@ export const CreateCluster = () => {
   } = useCreateKubernetesClusterBetaMutation();
 
   const {
-    data: versionData,
+    data: _versionData,
     isError: versionLoadError,
+    isLoading: versionLoading,
   } = useKubernetesVersionQuery();
+
+  const {
+    data: enterpriseTierVersionData,
+    isLoading: enterpriseTierVersionDataIsLoading,
+  } = useKubernetesTieredVersionsQuery('enterprise');
+
+  const {
+    isLkeEnterpriseLAFeatureEnabled,
+    isLkeEnterpriseLAFlagEnabled,
+  } = useIsLkeEnterpriseEnabled();
+
+  /**
+   * If LKE-E is enabled, use the new /versions/<tier> endpoint data, which supports enterprise tiers.
+   * If LKE-E is disabled, use the data from the existing /versions endpoint.
+   * @todo LKE-E: Clean up use of versionData once LKE-E is in GA.
+   */
+  const versionData =
+    isLkeEnterpriseLAFeatureEnabled && selectedTier === 'enterprise'
+      ? enterpriseTierVersionData
+      : _versionData;
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -195,9 +226,14 @@ export const CreateCluster = () => {
       payload = { ...payload, apl_enabled };
     }
 
-    const createClusterFn = showAPL
-      ? createKubernetesClusterBeta
-      : createKubernetesCluster;
+    if (isLkeEnterpriseLAFeatureEnabled) {
+      payload = { ...payload, tier: selectedTier };
+    }
+
+    const createClusterFn =
+      showAPL || isLkeEnterpriseLAFeatureEnabled
+        ? createKubernetesClusterBeta
+        : createKubernetesCluster;
 
     createClusterFn(payload)
       .then((cluster) => {
@@ -300,15 +336,35 @@ export const CreateCluster = () => {
             label="Cluster Label"
             value={label || ''}
           />
+          {isLkeEnterpriseLAFlagEnabled && (
+            <>
+              <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
+              <ClusterTypePanel
+                handleClusterTypeSelection={handleClusterTypeSelection}
+                selectedTier={selectedTier}
+              />
+            </>
+          )}
           <Divider sx={{ marginTop: 4 }} />
           <StyledFieldWithDocsStack>
             <Stack>
               <RegionSelect
+                currentCapability={
+                  isLkeEnterpriseLAFeatureEnabled &&
+                  selectedTier === 'enterprise'
+                    ? 'Kubernetes Enterprise'
+                    : 'Kubernetes'
+                }
                 textFieldProps={{
                   helperText: <RegionHelperText mb={2} />,
                   helperTextPosition: 'top',
                 }}
-                currentCapability="Kubernetes"
+                tooltipText={
+                  isLkeEnterpriseLAFeatureEnabled &&
+                  selectedTier === 'enterprise'
+                    ? 'Only regions that support Kubernetes Enterprise are listed.'
+                    : undefined
+                }
                 disableClearable
                 errorText={errorMap.region}
                 onChange={(e, region) => setSelectedRegionId(region.id)}
@@ -316,7 +372,9 @@ export const CreateCluster = () => {
                 value={selectedRegionId}
               />
             </Stack>
-            <StyledDocsLinkContainer>
+            <StyledDocsLinkContainer
+              sx={(theme) => ({ marginTop: theme.spacing(2) })}
+            >
               <DocsLink
                 href="https://www.linode.com/pricing"
                 label={DOCS_LINK_LABEL_DC_PRICING}
@@ -334,6 +392,11 @@ export const CreateCluster = () => {
             options={versions}
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
+            loading={
+              versionLoading ||
+              (isLkeEnterpriseLAFeatureEnabled &&
+                enterpriseTierVersionDataIsLoading)
+            }
           />
           {showAPL && (
             <>
@@ -349,7 +412,7 @@ export const CreateCluster = () => {
             </>
           )}
           <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
-          {showHighAvailability && (
+          {showHighAvailability && selectedTier !== 'enterprise' && (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
                 highAvailabilityPrice={
@@ -367,7 +430,7 @@ export const CreateCluster = () => {
           )}
           {showControlPlaneACL && (
             <>
-              <Divider />
+              {selectedTier !== 'enterprise' && <Divider />}
               <ControlPlaneACLPane
                 handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
                   setIPv4Addr(newIpV4Addr);

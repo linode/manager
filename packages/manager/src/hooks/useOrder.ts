@@ -16,7 +16,7 @@ export type Order = 'asc' | 'desc';
 
 /**
  * useOrder is a hook that allows you to handle ordering tables. It takes into account
- * the following items when determining inital order
+ * the following items when determining initial order
  *  1. Query Params (Ex. ?order=asc&orderBy=status)
  *  2. User Preference
  *  3. Initial Order passed as params

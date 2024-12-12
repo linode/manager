@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { FormControlLabel, Typography } from '@linode/ui';
 import {
   Box,
   CircleProgress,
@@ -11,7 +11,6 @@ import {
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 
 export interface HAControlPlaneProps {
@@ -102,8 +101,10 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
               </Typography>
               {isAPLEnabled && (
                 <TooltipIcon
+                  text={
+                    'Enabled by default when Akamai App Platform is enabled.'
+                  }
                   status="help"
-                  text={'Enabled by default when APL is enabled.'}
                 />
               )}
             </Box>
@@ -116,7 +117,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
 
         <FormControlLabel
           checked={isAPLEnabled ? false : undefined}
-          control={<Radio />}
+          control={<Radio data-testid="ha-radio-button-no" />}
           label="No"
           name="no"
           value="no"
