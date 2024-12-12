@@ -52,13 +52,19 @@ export const getThemeFromPreferenceValue = (
 };
 
 export const useColorMode = () => {
-  // Make sure we are authenticated before we fetch preferences.
   const isAuthenticated = !!useAuthentication().token;
-  const { data: preferences } = usePreferences(isAuthenticated);
+
+  const { data: themePreference } = usePreferences(
+    (preferences) => preferences?.theme,
+    // Make sure we are authenticated before we fetch preferences.
+    // If we don't, we get an authentication loop.
+    isAuthenticated
+  );
+
   const isSystemInDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const colorMode = getThemeFromPreferenceValue(
-    preferences?.theme,
+    themePreference,
     isSystemInDarkMode
   );
 
