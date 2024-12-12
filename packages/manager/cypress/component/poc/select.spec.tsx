@@ -192,7 +192,7 @@ componentTests('Select', (mount) => {
 
       it('calls `onChange` callback when region is initially selected', () => {
         const spyFn = createSpy(() => {}, 'changeSpy');
-        mount(<Select {...defaultProps} onChange={spyFn} value={undefined} />);
+        mount(<Select {...defaultProps} onChange={spyFn} value={null} />);
 
         openAutocompletePopper();
 
@@ -253,6 +253,7 @@ componentTests('Select', (mount) => {
     onChange: () => {},
     options,
     placeholder: 'Select an option',
+    value: null,
   };
 
   describe('Logic', () => {

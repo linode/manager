@@ -29,7 +29,6 @@ export interface SelectProps
     | 'options'
     | 'placeholder'
     | 'textFieldProps'
-    | 'value'
   > {
   /**
    * Whether the select can be cleared once a value is selected.
@@ -73,6 +72,11 @@ export interface SelectProps
    * @default false
    */
   searchable?: boolean;
+  /**
+   * The value of the select.
+   * We ensure that when passing in a value, it is never undefined. (to prevent controlled/uncontrolled input issues)
+   */
+  value: SelectOptionType | null;
 }
 
 /**
@@ -101,7 +105,7 @@ export const Select = (props: SelectProps) => {
 
   const handleChange = (
     event: React.SyntheticEvent,
-    value: SelectOptionType | null | string
+    value: SelectProps['value'] | string
   ) => {
     if (creatable && typeof value === 'string') {
       onChange?.(event, {

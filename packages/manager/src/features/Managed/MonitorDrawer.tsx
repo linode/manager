@@ -83,7 +83,7 @@ const helperText = {
 };
 
 const getValueFromItem = (value: string, options: Item<any>[]) => {
-  return options.find((thisOption) => thisOption.value === value);
+  return options.find((thisOption) => thisOption.value === value) || null;
 };
 
 const getMultiValuesFromItems = (values: number[], options: Item<any>[]) => {

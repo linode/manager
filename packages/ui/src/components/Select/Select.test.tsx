@@ -20,6 +20,7 @@ describe('Select', () => {
         onChange={onChange}
         options={options}
         placeholder="Select something!"
+        value={null}
       />
     );
 
@@ -45,7 +46,7 @@ describe('Select', () => {
 
   it('can have its label visually hidden', async () => {
     const { container } = renderWithTheme(
-      <Select hideLabel label="My Select" options={options} />
+      <Select hideLabel label="My Select" options={options} value={null} />
     );
 
     const label = container.querySelector(
@@ -84,21 +85,31 @@ describe('Select', () => {
 
   it('features helper text', () => {
     const { getByText } = renderWithTheme(
-      <Select helperText="Helper text" label="My Select" options={options} />
+      <Select
+        helperText="Helper text"
+        label="My Select"
+        options={options}
+        value={null}
+      />
     );
     expect(getByText('Helper text')).toBeInTheDocument();
   });
 
   it('features error text', () => {
     const { getByText } = renderWithTheme(
-      <Select errorText="Error text" label="My Select" options={options} />
+      <Select
+        errorText="Error text"
+        label="My Select"
+        options={options}
+        value={null}
+      />
     );
     expect(getByText('Error text')).toBeInTheDocument();
   });
 
   it('features loading state', () => {
     const { getByRole } = renderWithTheme(
-      <Select label="My Select" loading options={options} />
+      <Select label="My Select" loading options={options} value={null} />
     );
     expect(
       getByRole('progressbar', { name: 'Content is loading' })
@@ -107,14 +118,14 @@ describe('Select', () => {
 
   it('features a required state', () => {
     const { getByText } = renderWithTheme(
-      <Select label="My Select" options={options} required />
+      <Select label="My Select" options={options} required value={null} />
     );
     expect(getByText('(required)')).toBeInTheDocument();
   });
 
   it('features a searchable state', () => {
     const { getByRole } = renderWithTheme(
-      <Select label="My Select" options={options} searchable />
+      <Select label="My Select" options={options} searchable value={null} />
     );
     const select = getByRole('combobox');
     expect(select).not.toHaveAttribute('readOnly');
