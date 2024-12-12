@@ -12,14 +12,12 @@ export const getAlertTypeToActionsList = ({
   // for now there is system and user alert types, in future more alert types can be added and action items will differ according to alert types
   system: [
     {
-      disabled: false,
       onClick: handleDetails,
       title: 'Show Details',
     },
   ],
   user: [
     {
-      disabled: false,
       onClick: handleDetails,
       title: 'Show Details',
     },
