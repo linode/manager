@@ -36,9 +36,9 @@ const mockOutboundRule = (label: string) => {
 
 componentTests('Firewall Rules', (mount) => {
   describe('firewall inbound rules drag & drop with mouse and keyboard tests', () => {
-    let inboundRule1: FirewallRuleType;
-    let inboundRule2: FirewallRuleType;
-    let inboundRule3: FirewallRuleType;
+    const inboundRule1: FirewallRuleType = mockInboundRule('inbound_rule_1');
+    const inboundRule2: FirewallRuleType = mockInboundRule('inbound_rule_2');
+    const inboundRule3: FirewallRuleType = mockInboundRule('inbound_rule_3');
 
     // Note that nth-child is 1-indexed
     const tableRow = 'div[aria-label="inbound Rules List"] tbody tr';
@@ -50,11 +50,6 @@ componentTests('Firewall Rules', (mount) => {
     beforeEach(() => {
       // Set the viewport to 1024x768
       cy.viewport(1024, 768);
-
-      // Mock 3 inbound rules
-      inboundRule1 = mockInboundRule('inbound_rule_1');
-      inboundRule2 = mockInboundRule('inbound_rule_2');
-      inboundRule3 = mockInboundRule('inbound_rule_3');
 
       // Mount the FirewallRulesLanding
       mount(
@@ -100,9 +95,9 @@ componentTests('Firewall Rules', (mount) => {
   });
 
   describe('firewall outbound rules drag & drop with mouse and keyboard tests', () => {
-    let outboundRule1: FirewallRuleType;
-    let outboundRule2: FirewallRuleType;
-    let outboundRule3: FirewallRuleType;
+    const outboundRule1: FirewallRuleType = mockOutboundRule('outbound_rule_1');
+    const outboundRule2: FirewallRuleType = mockOutboundRule('outbound_rule_2');
+    const outboundRule3: FirewallRuleType = mockOutboundRule('outbound_rule_3');
 
     // Note that nth-child is 1-indexed
     const tableRow = 'div[aria-label="outbound Rules List"] tbody tr';
@@ -114,11 +109,6 @@ componentTests('Firewall Rules', (mount) => {
     beforeEach(() => {
       // Set the viewport to 1024x768
       cy.viewport(1024, 768);
-
-      // Mock 3 outbound rules
-      outboundRule1 = mockOutboundRule('outbound_rule_1');
-      outboundRule2 = mockOutboundRule('outbound_rule_2');
-      outboundRule3 = mockOutboundRule('outbound_rule_3');
 
       // Mount the FirewallRulesLanding
       mount(
