@@ -83,7 +83,10 @@ export const VPCPanel = (props: VPCPanelProps) => {
     'VPCs'
   );
 
-  const { data: vpcsData, error, isLoading } = useAllVPCsQuery();
+  const { data: vpcsData, error, isLoading } = useAllVPCsQuery({
+    enabled: regionSupportsVPCs,
+    filter: { region },
+  });
 
   React.useEffect(() => {
     if (subnetError || vpcIPv4Error) {

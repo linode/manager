@@ -64,10 +64,15 @@ export const vpcQueries = createQueryKeys('vpcs', {
   }),
 });
 
-export const useAllVPCsQuery = (enabled = true) =>
+interface AllVPCsOptions {
+  enabled?: boolean;
+  filter?: Filter;
+}
+
+export const useAllVPCsQuery = (options: AllVPCsOptions) =>
   useQuery<VPC[], APIError[]>({
     ...vpcQueries.all,
-    enabled,
+    ...options,
   });
 
 export const useVPCsQuery = (
