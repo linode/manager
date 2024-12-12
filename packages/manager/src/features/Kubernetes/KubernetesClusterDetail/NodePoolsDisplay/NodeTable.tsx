@@ -16,15 +16,16 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TagCell } from 'src/components/TagCell/TagCell';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { NodeRow as _NodeRow } from './NodeRow';
 import {
+  StyledNotEncryptedBox,
   StyledPoolInfoBox,
   StyledTableFooter,
-  StyledTagCell,
   StyledTypography,
   StyledVerticalDivider,
 } from './NodeTable.styles';
@@ -172,7 +173,9 @@ export const NodeTable = React.memo((props: Props) => {
                       data-testid={encryptionStatusTestId}
                       display="flex"
                     >
-                      <Typography>Pool ID {poolId}</Typography>
+                      <Typography sx={{ textWrap: 'nowrap' }}>
+                        Pool ID {poolId}
+                      </Typography>
                       <StyledVerticalDivider />
                       <EncryptedStatus
                         encryptionStatus={encryptionStatus}
@@ -183,11 +186,7 @@ export const NodeTable = React.memo((props: Props) => {
                     <Typography>Pool ID {poolId}</Typography>
                   )}
                 </StyledPoolInfoBox>
-                <StyledTagCell
-                  tags={tags}
-                  updateTags={updateTags}
-                  view="inline"
-                />
+                <TagCell tags={tags} updateTags={updateTags} view="inline" />
               </StyledTableFooter>
               <PaginationFooter
                 count={count}
@@ -241,10 +240,10 @@ export const EncryptedStatus = ({
   ) : encryptionStatus === 'disabled' ? (
     <>
       <Unlock />
-      <StyledTypography sx={{ whiteSpace: 'nowrap' }}>
-        Not Encrypted
-      </StyledTypography>
-      {tooltipText ? <TooltipIcon status="help" text={tooltipText} /> : null}
+      <StyledNotEncryptedBox>
+        <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
+        {tooltipText ? <TooltipIcon status="help" text={tooltipText} /> : null}
+      </StyledNotEncryptedBox>
     </>
   ) : null;
 };

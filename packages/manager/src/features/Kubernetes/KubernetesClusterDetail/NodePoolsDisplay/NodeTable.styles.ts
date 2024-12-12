@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 
 import VerticalDivider from 'src/assets/icons/divider-vertical.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { TagCell } from 'src/components/TagCell/TagCell';
 
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'CopyTooltip',
@@ -26,23 +25,25 @@ export const StyledVerticalDivider = styled(VerticalDivider, {
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
 })(({ theme }) => ({
-  margin: `0 0 0 ${theme.spacing()}`,
+  margin: `0 ${theme.spacing(2)} 0 ${theme.spacing()}`,
+  [theme.breakpoints.down('md')]: {
+    padding: theme.spacing(),
+  },
+}));
+
+export const StyledNotEncryptedBox = styled(Box, {
+  label: 'StyledNotEncryptedBox',
+})(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  margin: `0 ${theme.spacing(2)} 0 ${theme.spacing()}`,
 }));
 
 export const StyledPoolInfoBox = styled(Box, {
   label: 'StyledPoolInfoBox',
-})(({ theme }) => ({
-  display: 'flex',
-  [theme.breakpoints.down('md')]: {
-    padding: `${theme.spacing()} 0`,
-  },
-  width: '100%',
-}));
-
-export const StyledTagCell = styled(TagCell, {
-  label: 'StyledTagCell',
 })(() => ({
-  width: '100%',
+  display: 'flex',
+  width: '50%',
 }));
 
 export const StyledTableFooter = styled(Box, {
@@ -56,5 +57,6 @@ export const StyledTableFooter = styled(Box, {
   [theme.breakpoints.down('md')]: {
     display: 'block',
     flexDirection: 'column',
+    paddingBottom: theme.spacing(),
   },
 }));
