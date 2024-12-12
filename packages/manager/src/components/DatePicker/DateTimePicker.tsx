@@ -31,7 +31,7 @@ export interface DateTimePickerProps {
   /** Callback when the "Cancel" button is clicked */
   onCancel?: () => void;
   /** Callback when date-time changes */
-  onChange?: (dateTime: DateTime | null) => void;
+  onChange: (dateTime: DateTime | null) => void;
   /** Placeholder text for the input field */
   placeholder?: string;
   /** Whether to show the time selector */
@@ -115,9 +115,8 @@ export const DateTimePicker = ({
 
   const handleApply = () => {
     setAnchorEl(null);
-    if (onChange) {
-      onChange(selectedDateTime);
-    }
+    onChange(selectedDateTime);
+
     if (onApply) {
       onApply();
     }

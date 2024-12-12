@@ -16,7 +16,7 @@ interface DateTimeRangePickerProps {
   /** Format for displaying the date-time */
   format?: string;
   /** Callback when the date-time range changes */
-  onChange?: (
+  onChange: (
     start: DateTime | null,
     end: DateTime | null,
     startTimeZone?: null | string
@@ -92,26 +92,20 @@ export const DateTimeRangePicker = ({
     setStartDateTime(newStart);
     validateDates(newStart, endDateTime, 'start');
 
-    if (onChange) {
-      onChange(newStart, endDateTime, startTimeZone);
-    }
+    onChange(newStart, endDateTime, startTimeZone);
   };
 
   const handleEndDateTimeChange = (newEnd: DateTime | null) => {
     setEndDateTime(newEnd);
     validateDates(startDateTime, newEnd, 'end');
 
-    if (onChange) {
-      onChange(startDateTime, newEnd, startTimeZone);
-    }
+    onChange(startDateTime, newEnd, startTimeZone);
   };
 
   const handleStartTimeZoneChange = (newTimeZone: null | string) => {
     setStartTimeZone(newTimeZone);
 
-    if (onChange) {
-      onChange(startDateTime, endDateTime, newTimeZone);
-    }
+    onChange(startDateTime, endDateTime, newTimeZone);
   };
 
   return (
