@@ -12,8 +12,9 @@ import {
 import { ui } from 'support/ui';
 import { routes } from 'support/ui/constants';
 import {
-  sideMenuAkamaiDashboardLocator,
+  sideMenuAkamaiDashboard,
   sideMenuItemsLocator,
+  topMenuItemsLocator,
 } from 'support/ui/locators/common-locators';
 import { apiMatcher } from 'support/util/intercepts';
 import { chooseRegion, getRegionById } from 'support/util/regions';
@@ -87,31 +88,31 @@ describe('linode landing checks', () => {
   });
 
   it.only('checks the landing page side menu items', () => {
-    getVisible(sideMenuAkamaiDashboardLocator);
-    getVisible(sideMenuItemsLocator.menuItemLinodes);
-    getVisible(sideMenuItemsLocator.menuItemVolumes);
-    getVisible(sideMenuItemsLocator.menuItemNodeBalancers);
-    getVisible(sideMenuItemsLocator.menuItemFirewalls);
-    getVisible(sideMenuItemsLocator.menuItemStackScripts);
-    getVisible(sideMenuItemsLocator.menuItemImages);
-    getVisible(sideMenuItemsLocator.menuItemDomains);
-    getVisible(sideMenuItemsLocator.menuItemKubernetes);
-    getVisible(sideMenuItemsLocator.menuItemBucket);
-    getVisible(sideMenuItemsLocator.menuItemLongview);
-    getVisible(sideMenuItemsLocator.menuItemMarketplaceOneClick);
-    getVisible(sideMenuItemsLocator.menuItemAccount);
-    getVisible(sideMenuItemsLocator.menuItemSupport);
+    getVisible(sideMenuAkamaiDashboard);
+    getVisible(sideMenuItemsLocator.linodesLink);
+    getVisible(sideMenuItemsLocator.volumesLink);
+    getVisible(sideMenuItemsLocator.nodeBalancersLink);
+    getVisible(sideMenuItemsLocator.firewallsLink);
+    getVisible(sideMenuItemsLocator.stackScriptsLink);
+    getVisible(sideMenuItemsLocator.imagesLink);
+    getVisible(sideMenuItemsLocator.domainsLink);
+    getVisible(sideMenuItemsLocator.kubernatesLink);
+    getVisible(sideMenuItemsLocator.bucketLink);
+    getVisible(sideMenuItemsLocator.longviewLink);
+    getVisible(sideMenuItemsLocator.marketplaceOneClickLink);
+    getVisible(sideMenuItemsLocator.accountLink);
+    getVisible(sideMenuItemsLocator.supportLink);
   });
 
-  it('checks the landing top menu items', () => {
+  it.only('checks the landing top menu items', () => {
     cy.wait('@getProfile').then((xhr) => {
       const username = xhr.response?.body.username;
-      getVisible('[aria-label="open menu"]');
-      getVisible('[data-qa-add-new-menu-button="true"]');
-      getVisible('[data-qa-search-icon="true"]');
-      fbtVisible('Search Products, IP Addresses, Tags...');
+      getVisible(topMenuItemsLocator.toggleSideMenuButton);
+      getVisible(topMenuItemsLocator.addNewMenuButton);
+      getVisible(topMenuItemsLocator.searchIcon);
+      fbtVisible(topMenuItemsLocator.searchInput);
 
-      cy.findByLabelText('Help & Support')
+      cy.findByLabelText(topMenuItemsLocator.helpAndSupportLink)
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -122,12 +123,12 @@ describe('linode landing checks', () => {
       // Cypress cannot work with other tabs and windows, so we can't test
       // that this takes the user to the expected place since it has no `href`
       // attribute.
-      cy.findByLabelText('Linode Cloud Community - link opens in a new tab')
+      cy.findByLabelText(topMenuItemsLocator.linodeCloudCommunityLink)
         .should('be.visible')
         .should('be.enabled');
 
-      getVisible('[aria-label="Notifications"]');
-      getVisible('[data-testid="nav-group-profile"]').within(() => {
+      getVisible(topMenuItemsLocator.notificationsButton);
+      getVisible(topMenuItemsLocator.navProfileButton).within(() => {
         fbtVisible(username);
       });
     });

@@ -1,23 +1,34 @@
-export const sideMenuAkamaiDashboardLocator =
+export const sideMenuAkamaiDashboard =
   '[title="Akamai - Dashboard"][href="/dashboard"]';
 
 export const sideMenuItemsLocator = {
-  menuItemLinodes: '[data-testid="menu-item-Linodes"][href="/linodes"]',
-  menuItemVolumes: '[data-testid="menu-item-Volumes"][href="/volumes"]',
-  menuItemNodeBalancers:
-    '[data-testid="menu-item-NodeBalancers"][href="/nodebalancers"]',
-  menuItemFirewalls: '[data-testid="menu-item-Firewalls"][href="/firewalls"]',
-  menuItemStackScripts:
-    '[data-testid="menu-item-StackScripts"][href="/stackscripts"]',
-  menuItemImages: '[data-testid="menu-item-Images"][href="/images"]',
-  menuItemDomains: '[data-testid="menu-item-Domains"][href="/domains"]',
-  menuItemKubernetes:
-    '[data-testid="menu-item-Kubernetes"][href="/kubernetes/clusters"]',
-  menuItemBucket:
+  accountLink: '[data-testid="menu-item-Account"][href="/account"]',
+  bucketLink:
     '[data-testid="menu-item-Object Storage"][href="/object-storage/buckets"]',
-  menuItemLongview: '[data-testid="menu-item-Longview"][href="/longview"]',
-  menuItemMarketplaceOneClick:
+  domainsLink: '[data-testid="menu-item-Domains"][href="/domains"]',
+  firewallsLink: '[data-testid="menu-item-Firewalls"][href="/firewalls"]',
+  imagesLink: '[data-testid="menu-item-Images"][href="/images"]',
+  kubernatesLink:
+    '[data-testid="menu-item-Kubernetes"][href="/kubernetes/clusters"]',
+  linodesLink: '[data-testid="menu-item-Linodes"][href="/linodes"]',
+  longviewLink: '[data-testid="menu-item-Longview"][href="/longview"]',
+  marketplaceOneClickLink:
     '[data-testid="menu-item-Marketplace"][href="/linodes/create?type=One-Click"]',
-  menuItemAccount: '[data-testid="menu-item-Account"][href="/account"]',
-  menuItemSupport: '[data-testid="menu-item-Help & Support"][href="/support"]',
+  nodeBalancersLink:
+    '[data-testid="menu-item-NodeBalancers"][href="/nodebalancers"]',
+  stackScriptsLink:
+    '[data-testid="menu-item-StackScripts"][href="/stackscripts"]',
+  supportLink: '[data-testid="menu-item-Help & Support"][href="/support"]',
+  volumesLink: '[data-testid="menu-item-Volumes"][href="/volumes"]',
+};
+
+export const topMenuItemsLocator = {
+  addNewMenuButton: '[data-qa-add-new-menu-button="true"]',
+  helpAndSupportLink: 'Help & Support',
+  linodeCloudCommunityLink: 'Linode Cloud Community - link opens in a new tab',
+  navProfileButton: '[data-testid="nav-group-profile"]',
+  notificationsButton: '[aria-label="Notifications"]',
+  searchIcon: '[data-qa-search-icon="true"]',
+  searchInput: 'Search Products, IP Addresses, Tags...',
+  toggleSideMenuButton: '[aria-label="open menu"]',
 };
