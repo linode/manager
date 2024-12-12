@@ -10,11 +10,11 @@ import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 import type { BreadcrumbProps } from 'src/components/Breadcrumb/Breadcrumb';
 
 interface RouteParams {
-  /*
+  /**
    * The id of the alert for which the data needs to be shown
    */
   alertId: string;
-  /*
+  /**
    * The service type like linode, dbaas etc., of the the alert for which the data needs to be shown
    */
   serviceType: string;

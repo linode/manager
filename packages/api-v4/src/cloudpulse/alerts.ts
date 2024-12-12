@@ -32,7 +32,10 @@ export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
     setXFilter(filters)
   );
 
-export const getAlertDefinitionById = (alertId: number, serviceType: string) =>
+export const getAlertDefinitionByIdAndServiceType = (
+  alertId: number,
+  serviceType: string
+) =>
   Request<Alert>(
     setURL(
       `${API_ROOT}/monitor/services/${encodeURIComponent(

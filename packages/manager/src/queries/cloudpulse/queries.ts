@@ -1,5 +1,5 @@
 import {
-  getAlertDefinitionById,
+  getAlertDefinitionByIdAndServiceType,
   getCloudPulseServiceTypes,
   getDashboardById,
   getDashboards,
@@ -30,8 +30,9 @@ export const queryFactory = createQueryKeys(key, {
         // This query key is a placeholder , it will be updated once the relevant queries are added
         queryKey: null,
       },
-      alertById: (alertId: number, serviceType: string) => ({
-        queryFn: () => getAlertDefinitionById(alertId, serviceType),
+      alertByIdAndServiceType: (alertId: number, serviceType: string) => ({
+        queryFn: () =>
+          getAlertDefinitionByIdAndServiceType(alertId, serviceType),
         queryKey: [alertId, serviceType],
       }),
       all: (params: Params = {}, filter: Filter = {}) => ({
