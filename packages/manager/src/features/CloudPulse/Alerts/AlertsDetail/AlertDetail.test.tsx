@@ -29,7 +29,7 @@ beforeEach(() => {
 
 describe('AlertDetail component tests', () => {
   it('should render the error state on details API call failure', () => {
-    // Override only the failing query
+    // return isError true
     queryMocks.useAlertDefinitionQuery.mockReturnValueOnce({
       data: null,
       isError: true,
@@ -56,7 +56,7 @@ describe('AlertDetail component tests', () => {
   });
 
   it('should render the loading state when API call is fetching', () => {
-    // Override only the failing query
+    // return isFetching true
     queryMocks.useAlertDefinitionQuery.mockReturnValueOnce({
       data: null,
       isError: false,

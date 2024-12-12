@@ -69,6 +69,6 @@ export const AlertDetail = () => {
       </>
     );
   }
-  // TODO: The overview, criteria, resources details for alerts will be added by consuming the results of useAlertDefinitionQuery call
+  // TODO: The overview, criteria, resources details for alerts will be added by consuming the results of useAlertDefinitionQuery call in the coming PR's
   return <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />;
 };
