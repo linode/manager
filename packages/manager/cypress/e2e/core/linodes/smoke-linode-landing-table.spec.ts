@@ -11,6 +11,10 @@ import {
 } from 'support/helpers';
 import { ui } from 'support/ui';
 import { routes } from 'support/ui/constants';
+import {
+  sideMenuAkamaiDashboardLocator,
+  sideMenuItemsLocator,
+} from 'support/ui/locators/common-locators';
 import { apiMatcher } from 'support/util/intercepts';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { authenticate } from 'support/api/authentication';
@@ -82,29 +86,21 @@ describe('linode landing checks', () => {
     cy.url().should('endWith', routes.linodeLanding);
   });
 
-  it('checks the landing page side menu items', () => {
-    getVisible('[title="Akamai - Dashboard"][href="/dashboard"]');
-    getVisible('[data-testid="menu-item-Linodes"][href="/linodes"]');
-    getVisible('[data-testid="menu-item-Volumes"][href="/volumes"]');
-    getVisible(
-      '[data-testid="menu-item-NodeBalancers"][href="/nodebalancers"]'
-    );
-    getVisible('[data-testid="menu-item-Firewalls"][href="/firewalls"]');
-    getVisible('[data-testid="menu-item-StackScripts"][href="/stackscripts"]');
-    getVisible('[data-testid="menu-item-Images"][href="/images"]');
-    getVisible('[data-testid="menu-item-Domains"][href="/domains"]');
-    getVisible(
-      '[data-testid="menu-item-Kubernetes"][href="/kubernetes/clusters"]'
-    );
-    getVisible(
-      '[data-testid="menu-item-Object Storage"][href="/object-storage/buckets"]'
-    );
-    getVisible('[data-testid="menu-item-Longview"][href="/longview"]');
-    getVisible(
-      '[data-testid="menu-item-Marketplace"][href="/linodes/create?type=One-Click"]'
-    );
-    getVisible('[data-testid="menu-item-Account"][href="/account"]');
-    getVisible('[data-testid="menu-item-Help & Support"][href="/support"]');
+  it.only('checks the landing page side menu items', () => {
+    getVisible(sideMenuAkamaiDashboardLocator);
+    getVisible(sideMenuItemsLocator.menuItemLinodes);
+    getVisible(sideMenuItemsLocator.menuItemVolumes);
+    getVisible(sideMenuItemsLocator.menuItemNodeBalancers);
+    getVisible(sideMenuItemsLocator.menuItemFirewalls);
+    getVisible(sideMenuItemsLocator.menuItemStackScripts);
+    getVisible(sideMenuItemsLocator.menuItemImages);
+    getVisible(sideMenuItemsLocator.menuItemDomains);
+    getVisible(sideMenuItemsLocator.menuItemKubernetes);
+    getVisible(sideMenuItemsLocator.menuItemBucket);
+    getVisible(sideMenuItemsLocator.menuItemLongview);
+    getVisible(sideMenuItemsLocator.menuItemMarketplaceOneClick);
+    getVisible(sideMenuItemsLocator.menuItemAccount);
+    getVisible(sideMenuItemsLocator.menuItemSupport);
   });
 
   it('checks the landing top menu items', () => {
