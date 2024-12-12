@@ -1,8 +1,11 @@
+# Node.js version to use.
+ARG NODE_VERSION=20.17
+
 # Node.js base image for Cloud Manager CI tasks.
 #
 # Extends from the Node.js base image that corresponds with our latest supported
 # version of Node, and includes other tools that we rely on like pnpm and bun.
-FROM node:20.17-bullseye-slim as nodejs-cloud-manager
+FROM node:${NODE_VERSION}-bullseye-slim as nodejs-cloud-manager
 RUN npm install -g pnpm bun
 
 # `manager`
