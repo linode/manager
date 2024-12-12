@@ -1,5 +1,5 @@
 # Node.js version to use.
-ARG NODE_VERSION=20.17
+ARG NODE_VERSION=20.17.0
 
 # Node.js base image for Cloud Manager CI tasks.
 #
