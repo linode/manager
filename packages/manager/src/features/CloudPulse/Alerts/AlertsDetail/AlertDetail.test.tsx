@@ -36,7 +36,7 @@ describe('AlertDetail component tests', () => {
       isFetching: false,
     });
 
-    const { getByText } = renderWithTheme(<AlertDetail />);
+    const { getByTestId, getByText } = renderWithTheme(<AlertDetail />);
 
     // Assert error message is displayed
     expect(
@@ -44,6 +44,15 @@ describe('AlertDetail component tests', () => {
         'An error occurred while loading the definitions. Please try again later.'
       )
     ).toBeInTheDocument();
+
+    // validate breadcrumbs on error state
+    const link = getByTestId('link-text');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveTextContent('Definitions');
+    expect(link.closest('a')).toHaveAttribute(
+      'href',
+      '/monitor/alerts/definitions'
+    );
   });
 
   it('should render the loading state when API call is fetching', () => {
@@ -54,8 +63,17 @@ describe('AlertDetail component tests', () => {
       isFetching: true,
     });
 
-    const screen = renderWithTheme(<AlertDetail />);
+    const { getByTestId } = renderWithTheme(<AlertDetail />);
 
-    expect(screen.getByTestId('circle-progress')).toBeInTheDocument();
+    expect(getByTestId('circle-progress')).toBeInTheDocument();
+
+    // validate breadcrumbs on loading state
+    const link = getByTestId('link-text');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveTextContent('Definitions');
+    expect(link.closest('a')).toHaveAttribute(
+      'href',
+      '/monitor/alerts/definitions'
+    );
   });
 });
