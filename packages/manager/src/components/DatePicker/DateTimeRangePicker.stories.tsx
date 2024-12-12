@@ -111,7 +111,7 @@ const meta: Meta<typeof DateTimeRangePicker> = {
     startLabel: 'Start Date and Time',
   },
   component: DateTimeRangePicker,
-  title: 'Components/DateTimeRangePicker',
+  title: 'Components/DatePicker/DateTimeRangePicker',
 };
 
 export default meta;

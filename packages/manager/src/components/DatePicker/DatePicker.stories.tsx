@@ -118,7 +118,7 @@ const meta: Meta<typeof DatePicker> = {
     value: null,
   },
   component: DatePicker,
-  title: 'Components/DatePicker',
+  title: 'Components/DatePicker/DatePicker',
 };
 
 export default meta;

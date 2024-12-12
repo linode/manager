@@ -139,7 +139,7 @@ const meta: Meta<typeof DateTimePicker> = {
     placeholder: 'Select a date and time',
   },
   component: DateTimePicker,
-  title: 'Components/DateTimePicker',
+  title: 'Components/DatePicker/DateTimePicker',
 };
 
 export default meta;
