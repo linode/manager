@@ -60,11 +60,7 @@ export const AlertDetail = () => {
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
         <Box alignContent="center" height={theme.spacing(75)}>
-          <ErrorState
-            errorText={
-              'An error occurred while loading the definitions. Please try again later.'
-            }
-          />
+          <ErrorState errorText="An error occurred while loading the definitions. Please try again later." />
         </Box>
       </>
     );

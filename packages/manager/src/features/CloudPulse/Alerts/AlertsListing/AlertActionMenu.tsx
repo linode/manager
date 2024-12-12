@@ -29,7 +29,7 @@ export const AlertActionMenu = (props: AlertActionMenuProps) => {
   return (
     <ActionMenu
       actionsList={getAlertTypeToActionsList(handlers)[alertType]}
-      ariaLabel={'Action menu for Alert'}
+      ariaLabel="Action menu for Alert"
     />
   );
 };
