@@ -13,7 +13,7 @@ import type { RouteComponentProps } from 'react-router-dom';
 type Props = RouteComponentProps<{}>;
 
 const Users = React.lazy(() =>
-  import('./Users/Users').then((module) => ({
+  import('./Users/UsersTable/Users').then((module) => ({
     default: module.UsersLanding,
   }))
 );

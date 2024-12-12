@@ -166,6 +166,7 @@ export const NodeBalancerConfigPanel = (
 
   const algorithmHelperText = {
     leastconn: LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
+    ring_hash: '', // @todo Add copy as part of UDP NodeBalancer project
     roundrobin: ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
     source: SOURCE_ALGORITHM_HELPER_TEXT,
   };
@@ -274,8 +275,8 @@ export const NodeBalancerConfigPanel = (
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-proxy-protocol-select': true,
-                  errorGroup: forEdit ? `${configIdx}` : undefined,
                 },
+                errorGroup: forEdit ? `${configIdx}` : undefined,
               }}
               autoHighlight
               disableClearable

@@ -216,7 +216,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 {(firstName || lastName) && (
                   <StyledTypography
                     data-qa-contact-name
-                    sx={{ wordBreak: 'break-all' }}
+                    sx={{ wordBreak: 'keep-all' }}
                   >
                     {firstName} {lastName}
                   </StyledTypography>
@@ -224,7 +224,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 {company && (
                   <StyledTypography
                     data-qa-company
-                    sx={{ wordBreak: 'break-all' }}
+                    sx={{ wordBreak: 'keep-all' }}
                   >
                     {company}
                   </StyledTypography>

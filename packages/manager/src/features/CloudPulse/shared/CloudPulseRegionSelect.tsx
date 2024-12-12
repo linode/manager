@@ -8,7 +8,6 @@ import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { Dashboard, FilterValue, Region } from '@linode/api-v4';
 import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
-import { isNil } from 'ramda';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
@@ -56,14 +55,17 @@ export const CloudPulseRegionSelect = React.memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [regions]);
 
-    // validate launchDrakly region_ids with the ids from the fetched 'all-regions'
+    // validate launchDarkly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {
       const resourceTypeFlag = flags.aclpResourceTypeMap?.find(
         (item: CloudPulseResourceTypeMapFlag) =>
           item.serviceType === serviceType
       );
 
-      if (isNil(resourceTypeFlag?.supportedRegionIds)) {
+      if (
+        resourceTypeFlag?.supportedRegionIds === null ||
+        resourceTypeFlag?.supportedRegionIds === undefined
+      ) {
         return regions;
       }
 
@@ -96,7 +98,7 @@ export const CloudPulseRegionSelect = React.memo(
         loading={isLoading}
         noMarginTop
         placeholder={placeholder ?? 'Select a Region'}
-        regions={supportedRegions ? supportedRegions : []}
+        regions={supportedRegions ?? []}
         value={selectedRegion}
       />
     );
