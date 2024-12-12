@@ -9,6 +9,7 @@ import type { Account } from '@linode/api-v4/lib/account';
 import type {
   KubeNodePoolResponse,
   KubernetesCluster,
+  KubernetesTieredVersion,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import type { Region } from '@linode/api-v4/lib/regions';
@@ -68,12 +69,11 @@ export const getDescriptionForCluster = (
 
 export const getNextVersion = (
   currentVersion: string,
-  versions: KubernetesVersion[]
+  versions: KubernetesTieredVersion[] | KubernetesVersion[] // TODO LKE-E: remove KubernetesVersion from type after GA.
 ) => {
   if (versions.length === 0) {
     return null;
   }
-
   const versionStrings = versions.map((v) => v.id).sort();
   const currentIdx = versionStrings.findIndex(
     (thisVersion) => currentVersion === thisVersion
