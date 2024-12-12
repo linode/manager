@@ -35,7 +35,7 @@ const mockOutboundRule = (label: string) => {
 };
 
 componentTests('Firewall Rules', (mount) => {
-  describe('firewall inbound rules drag & drop with mouse and keyboard tests', () => {
+  describe('firewall inbound rules drag & drop with mouse', () => {
     const inboundRule1: FirewallRuleType = mockInboundRule('inbound_rule_1');
     const inboundRule2: FirewallRuleType = mockInboundRule('inbound_rule_2');
     const inboundRule3: FirewallRuleType = mockInboundRule('inbound_rule_3');
@@ -66,7 +66,7 @@ componentTests('Firewall Rules', (mount) => {
     });
 
     // Test the drag and drop functionality using mouse
-    it('mouse drag and drop functionality should work for firewall inbound rules table', () => {
+    it('should move inbound rules rows using mouse drag and drop', () => {
       // Drag the 1st row rule to 2nd row position
       // Note that eq is 0-indexed
       cy.get(tableRow).eq(0).drag(secondRow);
@@ -94,7 +94,7 @@ componentTests('Firewall Rules', (mount) => {
     });
   });
 
-  describe('firewall outbound rules drag & drop with mouse and keyboard tests', () => {
+  describe('firewall outbound rules drag & drop with mouse', () => {
     const outboundRule1: FirewallRuleType = mockOutboundRule('outbound_rule_1');
     const outboundRule2: FirewallRuleType = mockOutboundRule('outbound_rule_2');
     const outboundRule3: FirewallRuleType = mockOutboundRule('outbound_rule_3');
@@ -124,7 +124,7 @@ componentTests('Firewall Rules', (mount) => {
       );
     });
 
-    it('mouse drag and drop functionality should work for firewall outbound rules table', () => {
+    it('should move outbound rules rows using mouse drag and drop', () => {
       // Drag the 1st row rule to 2nd row position
       // Note that eq is 0-indexed
       cy.get(tableRow).eq(0).drag(secondRow);
