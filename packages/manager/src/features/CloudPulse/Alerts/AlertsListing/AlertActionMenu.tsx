@@ -7,7 +7,7 @@ import { getAlertTypeToActionsList } from '../Utils/AlertsActionMenu';
 import type { AlertDefinitionType } from '@linode/api-v4';
 
 export interface ActionHandlers {
-  /*
+  /**
    * Callback for show details action
    */
   handleDetails: () => void;
