@@ -18,15 +18,17 @@ import { useFlags } from 'src/hooks/useFlags';
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
 import { PassiveCheck } from './NodeBalancerPassiveCheck';
-import { setErrorMap } from './utils';
+import {
+  getAlgorithmOptions,
+  getStickinessOptions,
+  setErrorMap,
+} from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
 import type {
-  Algorithm,
   NodeBalancerConfigNodeMode,
   NodeBalancerProxyProtocol,
   Protocol,
-  Stickiness,
 } from '@linode/api-v4';
 
 const DATA_NODE = 'data-node-idx';
@@ -74,11 +76,25 @@ export const NodeBalancerConfigPanel = (
 
     props.onProtocolChange(selected.value);
 
-    if (selected.value === 'udp') {
-      props.onSessionStickinessChange('none');
-      props.onProxyProtocolChange('none');
-      props.onSslCertificateChange('');
-      props.onPrivateKeyChange('');
+    const newAlgorithmOptions = getAlgorithmOptions(selected.value);
+    const newStickinessOptions = getStickinessOptions(selected.value);
+
+    if (!newAlgorithmOptions.some((option) => option.value === algorithm)) {
+      // If the newly selected protocol does not support the curretly selected algorthim,
+      // we reset the algorithm for the user.
+      // For example if UDP is selcted with "Ring Hash" then the user selects TCP, the algorithm
+      // will change to "Round Robin" because TCP does not support Ring Hash.
+      props.onAlgorithmChange(newAlgorithmOptions[0].value);
+    }
+
+    if (
+      !newStickinessOptions.some((option) => option.value === sessionStickiness)
+    ) {
+      // If the newly selected protocol does not support the curretly selected stickiness option,
+      // we reset the stickiness selection for the user.
+      // For example if UDP is selcted with the "Session" stickiness option then the user selects TCP,
+      // the stickiness will change to "None" because TCP does not support the "Session" stickiness option.
+      props.onSessionStickinessChange(newStickinessOptions[0].value);
     }
 
     if (
@@ -173,18 +189,7 @@ export const NodeBalancerConfigPanel = (
     }
   );
 
-  const algOptions: { label: string; value: Algorithm }[] =
-    protocol === 'udp'
-      ? [
-          { label: 'Round Robin', value: 'roundrobin' },
-          { label: 'Least Connections', value: 'leastconn' },
-          { label: 'Ring Hash', value: 'ring_hash' },
-        ]
-      : [
-          { label: 'Round Robin', value: 'roundrobin' },
-          { label: 'Least Connections', value: 'leastconn' },
-          { label: 'Source', value: 'source' },
-        ];
+  const algOptions = getAlgorithmOptions(protocol);
 
   const defaultAlg = algOptions.find((eachAlg) => {
     return eachAlg.value === algorithm;
@@ -197,18 +202,7 @@ export const NodeBalancerConfigPanel = (
     source: SOURCE_ALGORITHM_HELPER_TEXT,
   };
 
-  const sessionOptions: { label: string; value: Stickiness }[] =
-    protocol === 'udp'
-      ? [
-          { label: 'None', value: 'none' },
-          { label: 'Session', value: 'session' },
-          { label: 'Source IP', value: 'source_ip' },
-        ]
-      : [
-          { label: 'None', value: 'none' },
-          { label: 'Table', value: 'table' },
-          { label: 'HTTP Cookie', value: 'http_cookie' },
-        ];
+  const sessionOptions = getStickinessOptions(protocol);
 
   const defaultSession = sessionOptions.find((eachSession) => {
     return eachSession.value === sessionStickiness;

@@ -7,8 +7,13 @@ import type {
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from './types';
-import type { APIError } from '@linode/api-v4';
-import type { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
+import type {
+  APIError,
+  Algorithm,
+  NodeBalancerConfigNode,
+  Protocol,
+  Stickiness,
+} from '@linode/api-v4';
 
 export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
   address: '',
@@ -144,6 +149,7 @@ export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
 };
 
 const shouldIncludePassiveCheck = (config: NodeBalancerConfigFields) => {
+  // UDP does not support passive checks
   return config.protocol !== 'udp';
 };
 
@@ -181,3 +187,45 @@ export const setErrorMap = (errors: APIError[]) =>
     ],
     filteredErrors(errors)
   );
+
+interface AlgorithmOption {
+  label: string;
+  value: Algorithm;
+}
+
+export const getAlgorithmOptions = (protocol: Protocol): AlgorithmOption[] => {
+  if (protocol === 'udp') {
+    return [
+      { label: 'Round Robin', value: 'roundrobin' },
+      { label: 'Least Connections', value: 'leastconn' },
+      { label: 'Ring Hash', value: 'ring_hash' },
+    ];
+  }
+  return [
+    { label: 'Round Robin', value: 'roundrobin' },
+    { label: 'Least Connections', value: 'leastconn' },
+    { label: 'Source', value: 'source' },
+  ];
+};
+
+interface StickinessOption {
+  label: string;
+  value: Stickiness;
+}
+
+export const getStickinessOptions = (
+  protocol: Protocol
+): StickinessOption[] => {
+  if (protocol === 'udp') {
+    return [
+      { label: 'None', value: 'none' },
+      { label: 'Session', value: 'session' },
+      { label: 'Source IP', value: 'source_ip' },
+    ];
+  }
+  return [
+    { label: 'None', value: 'none' },
+    { label: 'Table', value: 'table' },
+    { label: 'HTTP Cookie', value: 'http_cookie' },
+  ];
+};
