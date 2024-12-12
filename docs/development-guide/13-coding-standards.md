@@ -15,7 +15,7 @@ If you are using VSCode it is **highly** recommended to use the [ESlint extensio
 
 ## React
 ### useEffect()
-UseEffect should only be used for handling true side effects - specifically API calls, subscriptions, and DOM mutations that must occur outside React's render cycle. While you may encounter UseEffect throughout our existing codebase, we're actively working to remove these instances. Don't use existing code as precedent for implementing new UseEffects. All state updates and data transformations should be handled through event handlers and direct state management.
+`useEffect()` should only be used for handling true side effects - specifically API calls, subscriptions, and DOM mutations that must occur outside React's render cycle. While you may encounter instances where `useEffect()` is used differently throughout our existing codebase, we're actively working to remove those instances. Existing code that does not adhere to the hook's proper use should not be used as precedent for implementing new `useEffect()` instances. All state updates and data transformations should be handled through event handlers and direct state management.
 
 When Not to Use Effects:
 - Prop synchronization with state
