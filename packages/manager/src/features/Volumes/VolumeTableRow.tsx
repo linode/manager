@@ -12,7 +12,7 @@ import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import HighPerformanceVolumeIcon from '../Linodes/HighPerformanceVolumeIcon';
+import { HighPerformanceVolumeIcon } from '../Linodes/HighPerformanceVolumeIcon';
 import {
   getDerivedVolumeStatusFromStatusAndEvent,
   getEventProgress,
@@ -119,11 +119,11 @@ export const VolumeTableRow = React.memo((props: Props) => {
           }}
         >
           <Box
-            sx={{
+            sx={(theme) => ({
               alignItems: 'center',
               display: 'flex',
-              gap: '0.25rem',
-            }}
+              gap: theme.spacing(),
+            })}
           >
             {volume.label}
             <HighPerformanceVolumeIcon

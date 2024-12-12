@@ -8,26 +8,26 @@ interface Props {
   linodeCapabilities?: LinodeCapabilities[];
 }
 
-function HighPerformanceVolumeIcon({ linodeCapabilities }: Props) {
+export function HighPerformanceVolumeIcon({ linodeCapabilities }: Props) {
   const isHighPerformanceVolume = !!linodeCapabilities?.includes(
     'Block Storage Performance B1'
   );
 
+  if (!isHighPerformanceVolume) {
+    return null;
+  }
+
   return (
-    isHighPerformanceVolume && (
-      <Tooltip arrow title="High Performance">
-        <IconButton
-          sx={{
-            border: '1px solid',
-            borderRadius: '50%',
-            padding: 0,
-          }}
-        >
-          <BoltIcon sx={{ fontSize: 12 }} />
-        </IconButton>
-      </Tooltip>
-    )
+    <Tooltip arrow title="High Performance">
+      <IconButton
+        sx={{
+          border: '1px solid',
+          borderRadius: '50%',
+          padding: 0,
+        }}
+      >
+        <BoltIcon sx={{ fontSize: 12 }} />
+      </IconButton>
+    </Tooltip>
   );
 }
-
-export default HighPerformanceVolumeIcon;

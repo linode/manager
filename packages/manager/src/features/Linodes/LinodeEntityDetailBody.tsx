@@ -19,7 +19,7 @@ import { pluralize } from 'src/utilities/pluralize';
 
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
-import HighPerformanceVolumeIcon from './HighPerformanceVolumeIcon';
+import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,
   StyledColumnLabelGrid,
@@ -156,7 +156,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             </Grid>
             <Grid lg={6} sm={12} xs={6}>
               <Box
-                sx={{ alignItems: 'center', display: 'flex', gap: '0.25rem' }}
+                sx={(theme) => ({
+                  alignItems: 'center',
+                  display: 'flex',
+                  gap: theme.spacing(),
+                })}
               >
                 <Typography>
                   {pluralize('Volume', 'Volumes', numVolumes)}
