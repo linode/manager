@@ -45,6 +45,5 @@ export const useAlertDefinitionQuery = (
 ) => {
   return useQuery<Alert, APIError[]>({
     ...queryFactory.alerts._ctx.alertById(alertId, serviceType),
-    enabled: alertId !== undefined,
   });
 };
