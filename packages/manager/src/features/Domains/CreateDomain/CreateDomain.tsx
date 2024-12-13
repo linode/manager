@@ -11,7 +11,6 @@ import {
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { createLazyRoute } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -448,10 +447,6 @@ export const CreateDomain = () => {
     </Grid>
   );
 };
-
-export const createDomainLazyRoute = createLazyRoute('/domains/create')({
-  component: CreateDomain,
-});
 
 const StyledGrid = styled(Grid, { label: 'StyledGrid' })({
   width: '100%',

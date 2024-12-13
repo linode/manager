@@ -1,5 +1,4 @@
 import { CircleProgress } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -43,7 +42,3 @@ export const DomainDetailRouting = () => {
   // page with an open drawer.
   return <DomainsLanding domainForEditing={domain} />;
 };
-
-export const domainDetailLazyRoute = createLazyRoute('/domains/$domainId')({
-  component: DomainDetailRouting,
-});
