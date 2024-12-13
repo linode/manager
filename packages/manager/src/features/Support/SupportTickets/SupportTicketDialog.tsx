@@ -421,14 +421,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         >
           {props.children || (
             <>
-              {form.formState.errors.root && (
-                <Notice
-                  data-qa-notice
-                  text={form.formState.errors.root.message}
-                  variant="error"
-                />
-              )}
-
               <Typography data-qa-support-ticket-helper-text>
                 {TICKET_TYPE_MAP[ticketType].helperText}
               </Typography>
@@ -512,6 +504,14 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                 <MarkdownReference />
               </Accordion>
               <AttachFileForm files={files} updateFiles={updateFiles} />
+              {form.formState.errors.root && (
+                <Notice
+                  data-qa-notice
+                  spacingTop={16}
+                  text={form.formState.errors.root.message}
+                  variant="error"
+                />
+              )}
             </>
           )}
           <ActionsPanel
