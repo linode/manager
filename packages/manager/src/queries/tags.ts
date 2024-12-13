@@ -1,4 +1,4 @@
-import { getTags } from '@linode/api-v4';
+import { getTaggedObjects, getTags } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
@@ -14,6 +14,10 @@ const tagQueries = createQueryKeys('tags', {
     queryFn: () => getAllTags(),
     queryKey: null,
   },
+  tagObjects:  (label: string) => ({
+    queryFn: () => getTaggedObjects(label),
+    queryKey: [label]
+  })
 });
 
 export const useAllTagsQuery = (enabled = true) =>
@@ -22,6 +26,9 @@ export const useAllTagsQuery = (enabled = true) =>
     ...queryPresets.longLived,
     enabled,
   });
+
+export const useTagObjectsQuery = (label: string) =>
+  useQuery(tagQueries.tagObjects(label));
 
 const getAllTags = (passedParams: Params = {}, passedFilter: Filter = {}) =>
   getAll<Tag>((params, filter) =>

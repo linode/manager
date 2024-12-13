@@ -26,6 +26,7 @@ import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
+import { tagsRoutes } from 'src/features/Tags/routes';
 
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {
@@ -60,6 +61,7 @@ export const routeTree = rootRoute.addChildren([
   supportRouteTree,
   volumesRouteTree,
   vpcsRouteTree,
+  tagsRoutes,
 ]);
 
 export const router = createRouter({
@@ -87,8 +89,11 @@ declare module '@tanstack/react-router' {
 export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
   volumesRouteTree,
+  tagsRoutes,
 ]);
+
 export type MigrationRouteTree = typeof migrationRouteTree;
+
 export const migrationRouter = createRouter({
   Wrap: ({ children }) => {
     return <div data-testid="migration-router">{children}</div>;
