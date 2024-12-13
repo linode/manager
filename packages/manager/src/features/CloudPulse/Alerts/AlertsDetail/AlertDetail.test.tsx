@@ -46,13 +46,7 @@ describe('AlertDetail component tests', () => {
     ).toBeInTheDocument();
 
     // validate breadcrumbs on error state
-    const link = getByTestId('link-text');
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveTextContent('Definitions');
-    expect(link.closest('a')).toHaveAttribute(
-      'href',
-      '/monitor/alerts/definitions'
-    );
+    validateBreadcrumbs(getByTestId('link-text'));
   });
 
   it('should render the loading state when API call is fetching', () => {
@@ -68,12 +62,15 @@ describe('AlertDetail component tests', () => {
     expect(getByTestId('circle-progress')).toBeInTheDocument();
 
     // validate breadcrumbs on loading state
-    const link = getByTestId('link-text');
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveTextContent('Definitions');
-    expect(link.closest('a')).toHaveAttribute(
-      'href',
-      '/monitor/alerts/definitions'
-    );
+    validateBreadcrumbs(getByTestId('link-text'));
   });
 });
+
+const validateBreadcrumbs = (link: HTMLElement) => {
+  expect(link).toBeInTheDocument();
+  expect(link).toHaveTextContent('Definitions');
+  expect(link.closest('a')).toHaveAttribute(
+    'href',
+    '/monitor/alerts/definitions'
+  );
+};
