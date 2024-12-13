@@ -44,6 +44,6 @@ export const useAlertDefinitionQuery = (
   serviceType: string
 ) => {
   return useQuery<Alert, APIError[]>({
-    ...queryFactory.alerts._ctx.alertByIdAndServiceType(alertId, serviceType),
+    ...queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId),
   });
 };

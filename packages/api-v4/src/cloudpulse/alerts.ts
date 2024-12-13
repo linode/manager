@@ -32,9 +32,9 @@ export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
     setXFilter(filters)
   );
 
-export const getAlertDefinitionByIdAndServiceType = (
-  alertId: number,
-  serviceType: string
+export const getAlertDefinitionByServiceTypeAndId = (
+  serviceType: string,
+  alertId: number
 ) =>
   Request<Alert>(
     setURL(
