@@ -4,8 +4,8 @@ import React from 'react';
 import { FormControlLabel } from '@mui/material';
 
 import { Box } from '../Box';
-import { Radio } from './Radio';
 import { RadioGroup } from '../RadioGroup';
+import { Radio } from './Radio';
 
 import type { RadioProps } from './Radio';
 import type { Meta, StoryObj } from '@storybook/react';

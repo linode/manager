@@ -1,6 +1,5 @@
 import { Box, Chip, Stack, StyledActionButton, Typography } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -38,8 +37,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
 
   const { data: account } = useAccount();
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
-
-  const theme = useTheme();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -95,7 +92,17 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     <Box>
       <EntityDetail
         body={
-          <Stack direction="row" flexWrap="wrap" gap={2} px={3} py={2}>
+          <Stack
+            sx={(theme) => ({
+              padding: theme.spacing(2),
+              [theme.breakpoints.down('sm')]: {
+                padding: theme.spacing(1),
+              },
+            })}
+            direction="row"
+            flexWrap="wrap"
+            gap={2}
+          >
             <KubeClusterSpecs cluster={cluster} />
             <KubeConfigDisplay
               clusterId={cluster.id}
@@ -135,12 +142,15 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         header={
           <EntityHeader>
             <Box
-              sx={{
+              sx={(theme) => ({
                 paddingBottom: theme.spacing(),
                 paddingLeft: theme.spacing(3),
                 paddingRight: theme.spacing(1),
                 paddingTop: theme.spacing(),
-              }}
+                [theme.breakpoints.down('sm')]: {
+                  paddingLeft: theme.spacing(2),
+                },
+              })}
             >
               <Typography variant="h2">Summary</Typography>
             </Box>
@@ -185,12 +195,12 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         open={drawerOpen}
       />
       <KubeControlPlaneACLDrawer
+        aclData={aclData}
         closeDrawer={() => setControlPlaneACLDrawerOpen(false)}
         clusterId={cluster.id}
         clusterLabel={cluster.label}
         clusterMigrated={!isErrorKubernetesACL}
         open={isControlPlaneACLDrawerOpen}
-        showControlPlaneACL={!!showControlPlaneACL}
       />
       <DeleteKubernetesClusterDialog
         clusterId={cluster.id}

@@ -1,7 +1,6 @@
-import { InputLabel, Typography } from '@linode/ui';
+import { Autocomplete, InputLabel, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { LinkButton } from 'src/components/LinkButton';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 

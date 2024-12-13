@@ -13,6 +13,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
           service_type: 'linode',
         })}
         emitFilterChange={vi.fn()}
+        handleToggleAppliedFilter={vi.fn()}
         isServiceAnalyticsIntegration={false}
       />
     );
@@ -28,6 +29,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
           service_type: 'dbaas',
         })}
         emitFilterChange={vi.fn()}
+        handleToggleAppliedFilter={vi.fn()}
         isServiceAnalyticsIntegration={false}
       />
     );

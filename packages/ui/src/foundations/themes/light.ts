@@ -15,8 +15,8 @@ import {
   NotificationToast,
   Radius,
   Select,
-  Typography,
   Spacing,
+  Typography,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
@@ -755,7 +755,7 @@ export const lightTheme: ThemeOptions = {
           },
           fontSize: '0.875rem',
           lineHeight: 1.25,
-          maxWidth: 415,
+          maxWidth: 416,
         },
       },
     },
@@ -1093,6 +1093,16 @@ export const lightTheme: ThemeOptions = {
             color: `${Color.Neutrals[40]} !important`,
             fill: `${Color.Neutrals[5]} !important`,
             pointerEvents: 'none',
+          },
+          '&.MuiRadio-root': {
+            '.MuiSvgIcon-fontSizeMedium': {
+              fontSize: '20px',
+            },
+          },
+          '&.MuiRadio-sizeSmall': {
+            '.MuiSvgIcon-fontSizeSmall': {
+              fontSize: '16px',
+            },
           },
           '&:hover': {
             '& .defaultFill': {
@@ -1645,15 +1655,15 @@ export const lightTheme: ThemeOptions = {
     background: Background,
     border: Border,
     borderRadius: BorderRadius,
-    color: Color,
     chart: Chart,
+    color: Color,
     content: Content,
     elevation: Elevation,
+    font: Font,
     interaction: Interaction,
     radius: Radius,
-    typography: Typography,
-    font: Font,
     spacing: Spacing,
+    typography: Typography,
   },
   typography: {
     body1: {

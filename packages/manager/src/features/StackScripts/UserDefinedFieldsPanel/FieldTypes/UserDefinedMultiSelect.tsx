@@ -1,7 +1,6 @@
-import { Notice } from '@linode/ui';
+import { Autocomplete, Notice } from '@linode/ui';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { RenderGuard } from 'src/components/RenderGuard';
 
 import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';

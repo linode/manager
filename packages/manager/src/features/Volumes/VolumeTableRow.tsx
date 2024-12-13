@@ -1,5 +1,6 @@
 import { Box, Chip, Typography } from '@linode/ui';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 

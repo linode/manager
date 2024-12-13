@@ -1,10 +1,14 @@
-import { Notice, Paper, Typography } from '@linode/ui';
+import {
+  FormControlLabel,
+  Notice,
+  Paper,
+  Toggle,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Toggle } from 'src/components/Toggle/Toggle';
 
 interface AutoEnrollProps {
   enabled: boolean;

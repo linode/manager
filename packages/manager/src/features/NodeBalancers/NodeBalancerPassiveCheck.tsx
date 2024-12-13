@@ -1,9 +1,11 @@
-import { FormHelperText, Typography } from '@linode/ui';
+import {
+  FormControlLabel,
+  FormHelperText,
+  Toggle,
+  Typography,
+} from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Toggle } from 'src/components/Toggle/Toggle';
 
 import type { NodeBalancerConfigPanelProps } from './types';
 

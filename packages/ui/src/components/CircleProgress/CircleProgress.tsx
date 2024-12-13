@@ -1,8 +1,9 @@
-import { Box } from '../Box';
-import { omittedProps } from '../../utilities';
 import _CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
+import { omittedProps } from '../../utilities';
+import { Box } from '../Box';
 
 import type { CircularProgressProps } from '@mui/material/CircularProgress';
 import type { SxProps, Theme } from '@mui/material/styles';
