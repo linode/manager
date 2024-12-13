@@ -51,6 +51,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   lkeStandardAvailabilityTypeFactory,
   longviewActivePlanFactory,
@@ -801,6 +802,7 @@ export const handlers = [
     const lkeTypes = [
       lkeStandardAvailabilityTypeFactory.build(),
       lkeHighAvailabilityTypeFactory.build(),
+      lkeEnterpriseTypeFactory.build(),
     ];
     return HttpResponse.json(makeResourcePage(lkeTypes));
   }),

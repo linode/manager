@@ -113,6 +113,10 @@ export const CreateCluster = () => {
     (type) => type.id === 'lke-ha'
   );
 
+  const lkeEnterpriseType = kubernetesHighAvailabilityTypesData?.find(
+    (type) => type.id === 'lke-e'
+  );
+
   const {
     data: allTypes,
     error: typesError,
@@ -498,6 +502,7 @@ export const CreateCluster = () => {
           region={selectedRegionId}
           regionsData={regionsData}
           removePool={removePool}
+          enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
           showHighAvailability={showHighAvailability}
           submitting={submitting}
           toggleHasAgreed={toggleHasAgreed}

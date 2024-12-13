@@ -30,6 +30,7 @@ export interface Props {
   region: string | undefined;
   regionsData: Region[];
   removePool: (poolIdx: number) => void;
+  enterprisePrice?: number;
   showHighAvailability: boolean | undefined;
   submitting: boolean;
   toggleHasAgreed: () => void;
@@ -46,6 +47,7 @@ export const KubeCheckoutBar = (props: Props) => {
     region,
     regionsData,
     removePool,
+    enterprisePrice,
     showHighAvailability,
     submitting,
     toggleHasAgreed,
@@ -95,12 +97,14 @@ export const KubeCheckoutBar = (props: Props) => {
       calculatedPrice={
         region
           ? getTotalClusterPrice({
-              highAvailabilityPrice: highAvailability
-                ? Number(highAvailabilityPrice)
-                : undefined,
+              highAvailabilityPrice:
+                highAvailability && !enterprisePrice
+                  ? Number(highAvailabilityPrice)
+                  : undefined,
               pools,
               region,
               types: types ?? [],
+              enterprisePrice: enterprisePrice ?? undefined,
             })
           : undefined
       }
@@ -145,15 +149,25 @@ export const KubeCheckoutBar = (props: Props) => {
             variant="warning"
           />
         )}
-        {region && highAvailability ? (
-          <StyledHABox>
-            <StyledHAHeader>
-              High Availability (HA) Control Plane
-            </StyledHAHeader>
+        {region && highAvailability && !enterprisePrice && (
+          <StyledBox>
+            <StyledHeader>High Availability (HA) Control Plane</StyledHeader>
             <Typography>{`$${highAvailabilityPrice}/month`}</Typography>
             <Divider dark spacingBottom={0} spacingTop={16} />
-          </StyledHABox>
-        ) : undefined}
+          </StyledBox>
+        )}
+        {enterprisePrice && (
+          <StyledBox>
+            <StyledHeader>LKE Enterprise</StyledHeader>
+            <Typography sx={{ width: '80%' }}>
+              HA control plane, Dedicated control plane
+            </Typography>
+            <Typography mt={1}>{`$${enterprisePrice?.toFixed(
+              2
+            )}/month`}</Typography>
+            <Divider dark spacingBottom={0} spacingTop={16} />
+          </StyledBox>
+        )}
       </>
     </CheckoutBar>
   );
@@ -161,8 +175,8 @@ export const KubeCheckoutBar = (props: Props) => {
 
 export default RenderGuard(KubeCheckoutBar);
 
-const StyledHAHeader = styled(Typography, {
-  label: 'StyledHAHeader',
+const StyledHeader = styled(Typography, {
+  label: 'StyledHeader',
 })(({ theme }) => ({
   fontFamily: theme.font.bold,
   fontSize: '16px',
@@ -170,8 +184,8 @@ const StyledHAHeader = styled(Typography, {
   paddingTop: theme.spacing(0.5),
 }));
 
-const StyledHABox = styled(Box, {
-  label: 'StyledHABox',
+const StyledBox = styled(Box, {
+  label: 'StyledBox',
 })(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
