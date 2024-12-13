@@ -1,5 +1,5 @@
+import { IconButton, Tooltip } from '@linode/ui';
 import BoltIcon from '@mui/icons-material/Bolt';
-import { IconButton, Tooltip } from '@mui/material';
 import React from 'react';
 
 import type { LinodeCapabilities } from '@linode/api-v4';
@@ -18,7 +18,7 @@ export function HighPerformanceVolumeIcon({ linodeCapabilities }: Props) {
   }
 
   return (
-    <Tooltip arrow title="High Performance">
+    <Tooltip title="High Performance">
       <IconButton
         sx={{
           border: '1px solid',
