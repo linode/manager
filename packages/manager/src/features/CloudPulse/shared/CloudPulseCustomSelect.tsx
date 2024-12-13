@@ -103,6 +103,10 @@ export interface CloudPulseCustomSelectProps {
   preferences?: AclpConfig;
 
   /**
+   * This adds a subtitle after label if input is required
+   */
+  required?: boolean;
+  /**
    * This property controls whether to save the preferences or not
    */
   savePreferences?: boolean;
@@ -135,6 +139,7 @@ export const CloudPulseCustomSelect = React.memo(
       options,
       placeholder,
       preferences,
+      required,
       savePreferences,
       type,
     } = props;
@@ -238,7 +243,9 @@ export const CloudPulseCustomSelect = React.memo(
           },
         }}
         textFieldProps={{
-          required: true,
+          InputProps: {
+            required,
+          },
         }}
         autoHighlight
         disabled={isAutoCompleteDisabled}

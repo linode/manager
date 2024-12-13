@@ -136,9 +136,10 @@ export const getResourcesProperties = (
     handleResourcesSelection: handleResourceChange,
     label,
     placeholder,
+    required: true,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
-    xFilter: buildXFilter(config, dependentFilters ?? {}),
+    xFilter: buildXFilter(config, dependentFilters ?? {})
   };
 };
 
@@ -168,6 +169,7 @@ export const getCustomSelectProperties = (
     name: label,
     options,
     placeholder,
+    required,
   } = props.config.configuration;
   const {
     dashboard,
@@ -198,6 +200,7 @@ export const getCustomSelectProperties = (
     options,
     placeholder,
     preferences,
+    required: true,
     savePreferences: !isServiceAnalyticsIntegration,
     type: options
       ? CloudPulseSelectTypes.static

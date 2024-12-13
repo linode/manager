@@ -150,6 +150,10 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    */
   priority: number;
   /**
+   * This adds a subtitle after label if input is required
+   */
+  required?: boolean;
+  /**
    * default is predefined filters like (region, resources, timeduration) or dynamic / static
    */
   type?: CloudPulseSelectTypes;

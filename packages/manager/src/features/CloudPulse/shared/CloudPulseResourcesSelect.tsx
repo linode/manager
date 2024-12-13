@@ -35,6 +35,7 @@ export interface CloudPulseResourcesSelectProps {
   label: string;
   placeholder?: string;
   region?: string;
+  required?: boolean;
   resourceType: string | undefined;
   savePreferences?: boolean;
   tags?: string[];
@@ -50,10 +51,11 @@ export const CloudPulseResourcesSelect = React.memo(
       label,
       placeholder,
       region,
+      required,
       resourceType,
       savePreferences,
       tags,
-      xFilter,
+      xFilter
     } = props;
 
     const flags = useFlags();
@@ -186,6 +188,7 @@ export const CloudPulseResourcesSelect = React.memo(
         }}
         textFieldProps={{
           InputProps: {
+            required,
             sx: {
               '::-webkit-scrollbar': {
                 display: 'none',
@@ -199,7 +202,6 @@ export const CloudPulseResourcesSelect = React.memo(
               },
             },
           },
-          required: true,
         }}
         autoHighlight
         clearOnBlur

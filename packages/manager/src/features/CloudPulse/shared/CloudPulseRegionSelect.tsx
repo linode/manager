@@ -88,9 +88,6 @@ export const CloudPulseRegionSelect = React.memo(
             savePreferences
           );
         }}
-        textFieldProps={{
-          required: true,
-        }}
         currentCapability={capability}
         data-testid="region-select"
         disableClearable={false}
@@ -102,6 +99,7 @@ export const CloudPulseRegionSelect = React.memo(
         noMarginTop
         placeholder={placeholder ?? 'Select a Region'}
         regions={supportedRegions ?? []}
+        required
         value={selectedRegion}
       />
     );
