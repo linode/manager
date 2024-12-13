@@ -10,7 +10,10 @@ import { useProfile } from 'src/queries/profile/profile';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
-import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
+import {
+  LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
+  LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
+} from 'src/utilities/pricing/constants';
 import {
   getKubernetesMonthlyPrice,
   getTotalClusterPrice,
@@ -81,7 +84,10 @@ export const KubeCheckoutBar = (props: Props) => {
     highAvailabilityPrice !== undefined;
 
   const disableCheckout = Boolean(
-    needsAPool || gdprConditions || haConditions && !enterprisePrice || !region
+    needsAPool ||
+      gdprConditions ||
+      (haConditions && !enterprisePrice) ||
+      !region
   );
 
   if (isLoading) {
@@ -114,7 +120,11 @@ export const KubeCheckoutBar = (props: Props) => {
       heading="Cluster Summary"
       isMakingRequest={submitting}
       onDeploy={createCluster}
-      priceSelectionText={LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE}
+      priceSelectionText={
+        enterprisePrice
+          ? LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE
+          : LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE
+      }
       submitText="Create Cluster"
     >
       <>
