@@ -9,6 +9,12 @@ import {
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import {
+  DOMAINS_TABLE_DEFAULT_ORDER,
+  DOMAINS_TABLE_DEFAULT_ORDER_BY,
+  DOMAINS_TABLE_PREFERENCE_KEY,
+} from './constants';
+
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -22,8 +28,8 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useDialogData } from 'src/hooks/useDialogData';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import {
   useDeleteDomainMutation,
   useDomainQuery,
@@ -53,8 +59,6 @@ interface DomainsLandingProps {
   domainForEditing?: Domain;
 }
 
-const PREFERENCE_KEY = 'domains';
-
 export const DomainsLanding = (props: DomainsLandingProps) => {
   const navigate = useNavigate();
   const params = useParams({ strict: false });
@@ -64,15 +68,21 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
 
-  const pagination = usePagination(1, PREFERENCE_KEY);
+  const pagination = usePaginationV2({
+    currentRoute: '/domains',
+    preferenceKey: DOMAINS_TABLE_PREFERENCE_KEY,
+  });
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'domain',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: DOMAINS_TABLE_DEFAULT_ORDER,
+        orderBy: DOMAINS_TABLE_DEFAULT_ORDER_BY,
+      },
+      from: '/domains',
     },
-    `${PREFERENCE_KEY}-order`
-  );
+    preferenceKey: `${DOMAINS_TABLE_PREFERENCE_KEY}-order`,
+  });
 
   const filter = {
     ['+order']: order,
