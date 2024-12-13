@@ -5,7 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "precommit": " "
+    "precommit": " ",
+    "changeset": "node changelog/changeset.mjs"
   },
   "dependencies": {},
   "devDependencies": {
