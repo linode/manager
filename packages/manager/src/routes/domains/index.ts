@@ -12,7 +12,6 @@ const domainAction = {
   delete: 'delete',
   disable: 'disable',
   edit: 'edit',
-  import: 'import',
 } as const;
 
 export type DomainAction = typeof domainAction[keyof typeof domainAction];
@@ -36,6 +35,13 @@ const domainCreateRoute = createRoute({
   path: 'create',
 }).lazy(() =>
   import('./domainsLazyRoutes').then((m) => m.createDomainLazyRoute)
+);
+
+const domainImportRoute = createRoute({
+  getParentRoute: () => domainsRoute,
+  path: 'import',
+}).lazy(() =>
+  import('./domainsLazyRoutes').then((m) => m.domainsLandingLazyRoute)
 );
 
 const domainDetailRoute = createRoute({
@@ -90,5 +96,6 @@ const domainActionRoute = createRoute({
 export const domainsRouteTree = domainsRoute.addChildren([
   domainsIndexRoute.addChildren([domainActionRoute]),
   domainCreateRoute,
+  domainImportRoute,
   domainDetailRoute.addChildren([domainDetailRecordsRoute]),
 ]);

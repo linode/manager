@@ -1,6 +1,11 @@
 import { Button, CircleProgress, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearch,
+} from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -53,6 +58,7 @@ const PREFERENCE_KEY = 'domains';
 export const DomainsLanding = (props: DomainsLandingProps) => {
   const navigate = useNavigate();
   const params = useParams({ strict: false });
+  const location = useLocation();
   const { recordError } = useSearch({ strict: false });
 
   const { enqueueSnackbar } = useSnackbar();
@@ -140,11 +146,10 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
     });
   };
 
-  const handleImport = (domain: Domain) => {
+  const handleImport = () => {
     navigate({
-      params: { action: 'import', domainId: domain.id },
       search: (prev) => prev,
-      to: `/domains/$domainId/$action`,
+      to: `/domains/import`,
     });
   };
 
@@ -215,7 +220,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         />
         <DomainZoneImportDrawer
           onClose={navigateToDomains}
-          open={params.action === 'import'}
+          open={location.pathname === '/domains/import'}
         />
       </>
     );
@@ -310,7 +315,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
       />
       <DomainZoneImportDrawer
         onClose={navigateToDomains}
-        open={params.action === 'import'}
+        open={location.pathname === '/domains/import'}
       />
       <DisableDomainDialog
         domain={selectedDomain}

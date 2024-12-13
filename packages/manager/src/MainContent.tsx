@@ -131,11 +131,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Domains = React.lazy(() =>
-  import('src/features/Domains').then((module) => ({
-    default: module.DomainsRoutes,
-  }))
-);
 const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() =>
   import('src/features/Kubernetes').then((module) => ({
