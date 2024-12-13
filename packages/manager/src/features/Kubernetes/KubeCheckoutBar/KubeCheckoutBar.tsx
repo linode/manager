@@ -117,6 +117,25 @@ export const KubeCheckoutBar = (props: Props) => {
       submitText="Create Cluster"
     >
       <>
+        {region && highAvailability && !enterprisePrice && (
+          <StyledBox>
+            <Divider dark spacingBottom={16} spacingTop={16} />
+            <StyledHeader>High Availability (HA) Control Plane</StyledHeader>
+            <Typography>{`$${highAvailabilityPrice}/month`}</Typography>
+          </StyledBox>
+        )}
+        {enterprisePrice && (
+          <StyledBox>
+            <Divider dark spacingBottom={16} spacingTop={16} />
+            <StyledHeader>LKE Enterprise</StyledHeader>
+            <Typography sx={{ width: '80%' }}>
+              HA control plane, Dedicated control plane
+            </Typography>
+            <Typography mt={1}>{`$${enterprisePrice?.toFixed(
+              2
+            )}/month`}</Typography>
+          </StyledBox>
+        )}
         {pools.map((thisPool, idx) => (
           <NodePoolSummary
             poolType={
@@ -148,25 +167,6 @@ export const KubeCheckoutBar = (props: Props) => {
             text={nodeWarning}
             variant="warning"
           />
-        )}
-        {region && highAvailability && !enterprisePrice && (
-          <StyledBox>
-            <StyledHeader>High Availability (HA) Control Plane</StyledHeader>
-            <Typography>{`$${highAvailabilityPrice}/month`}</Typography>
-            <Divider dark spacingBottom={0} spacingTop={16} />
-          </StyledBox>
-        )}
-        {enterprisePrice && (
-          <StyledBox>
-            <StyledHeader>LKE Enterprise</StyledHeader>
-            <Typography sx={{ width: '80%' }}>
-              HA control plane, Dedicated control plane
-            </Typography>
-            <Typography mt={1}>{`$${enterprisePrice?.toFixed(
-              2
-            )}/month`}</Typography>
-            <Divider dark spacingBottom={0} spacingTop={16} />
-          </StyledBox>
         )}
       </>
     </CheckoutBar>
