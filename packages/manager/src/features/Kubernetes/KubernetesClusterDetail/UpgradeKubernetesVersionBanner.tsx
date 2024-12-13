@@ -3,9 +3,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { useLkeStandardOrEnterpriseVersions } from 'src/hooks/useLkeStandardOrEnterpriseVersions';
 
-import { getNextVersion } from '../kubeUtils';
+import {
+  getNextVersion,
+  useLkeStandardOrEnterpriseVersions,
+} from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 
 import type { KubernetesTier } from '@linode/api-v4';

@@ -8,7 +8,6 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useLkeStandardOrEnterpriseVersions } from 'src/hooks/useLkeStandardOrEnterpriseVersions';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
@@ -17,6 +16,7 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import {
   getNextVersion,
   getTotalClusterMemoryCPUAndStorage,
+  useLkeStandardOrEnterpriseVersions,
 } from '../kubeUtils';
 import { ClusterActionMenu } from './ClusterActionMenu';
 

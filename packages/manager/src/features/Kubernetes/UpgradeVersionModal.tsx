@@ -8,8 +8,8 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import {
   getNextVersion,
   localStorageWarning,
+  useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useLkeStandardOrEnterpriseVersions } from 'src/hooks/useLkeStandardOrEnterpriseVersions';
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
 
 import type { KubernetesTier } from '@linode/api-v4/lib/kubernetes';

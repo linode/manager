@@ -1,6 +1,10 @@
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { useAccountBetaQuery } from 'src/queries/account/betas';
+import {
+  useKubernetesTieredVersionsQuery,
+  useKubernetesVersionQuery,
+} from 'src/queries/kubernetes';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getBetaStatus } from 'src/utilities/betaUtils';
 import { sortByVersion } from 'src/utilities/sort-by';
@@ -9,6 +13,7 @@ import type { Account } from '@linode/api-v4/lib/account';
 import type {
   KubeNodePoolResponse,
   KubernetesCluster,
+  KubernetesTier,
   KubernetesTieredVersion,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
@@ -220,5 +225,45 @@ export const useIsLkeEnterpriseEnabled = () => {
     isLkeEnterpriseGAFlagEnabled,
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
+  };
+};
+
+/**
+ * A hook to return the correct list of versions depending on the LKE cluster tier.
+ * @param clusterTier Whether the cluster is standard or enterprise
+ * @returns The list of either standard or enterprise k8 versions and query loading or error state
+ */
+export const useLkeStandardOrEnterpriseVersions = (
+  clusterTier: KubernetesTier
+) => {
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+
+  /**
+   * If LKE-E is enabled, use the data from the new /versions/<tier> endpoint for enterprise tiers.
+   * If LKE-E is disabled, use the data from the existing /versions endpoint and disable the tiered query.
+   */
+  const {
+    data: enterpriseTierVersions,
+    error: enterpriseTierVersionsError,
+    isLoading: enterpriseTierVersionsIsLoading,
+  } = useKubernetesTieredVersionsQuery(
+    'enterprise',
+    isLkeEnterpriseLAFeatureEnabled
+  );
+
+  // TODO LKE-E: Replace this with the tiered version query for 'standard' versions after GA.
+  const {
+    data: _versions,
+    error: versionsError,
+    isLoading: versionsIsLoading,
+  } = useKubernetesVersionQuery();
+
+  return {
+    isLoadingVersions: enterpriseTierVersionsIsLoading || versionsIsLoading,
+    versions:
+      isLkeEnterpriseLAFeatureEnabled && clusterTier === 'enterprise'
+        ? enterpriseTierVersions
+        : _versions,
+    versionsError: enterpriseTierVersionsError || versionsError,
   };
 };
