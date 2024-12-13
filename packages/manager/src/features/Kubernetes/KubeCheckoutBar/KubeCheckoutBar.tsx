@@ -1,5 +1,5 @@
-import { Box, CircleProgress, Divider, Notice } from '@linode/ui';
-import { Typography, styled } from '@mui/material';
+import { CircleProgress, Divider, Notice } from '@linode/ui';
+import { Typography } from '@mui/material';
 import * as React from 'react';
 
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
@@ -17,7 +17,8 @@ import {
 } from 'src/utilities/pricing/kubernetes';
 
 import { nodeWarning } from '../kubeUtils';
-import { NodePoolSummary } from './NodePoolSummary';
+import { NodePoolSummaryItem } from './NodePoolSummaryItem';
+import { StyledHeader, StyledBox } from './KubeCheckoutSummary.styles';
 
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
 
@@ -137,7 +138,7 @@ export const KubeCheckoutBar = (props: Props) => {
           </StyledBox>
         )}
         {pools.map((thisPool, idx) => (
-          <NodePoolSummary
+          <NodePoolSummaryItem
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
@@ -174,18 +175,3 @@ export const KubeCheckoutBar = (props: Props) => {
 };
 
 export default RenderGuard(KubeCheckoutBar);
-
-const StyledHeader = styled(Typography, {
-  label: 'StyledHeader',
-})(({ theme }) => ({
-  fontFamily: theme.font.bold,
-  fontSize: '16px',
-  paddingBottom: theme.spacing(0.5),
-  paddingTop: theme.spacing(0.5),
-}));
-
-const StyledBox = styled(Box, {
-  label: 'StyledBox',
-})(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
