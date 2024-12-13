@@ -1,8 +1,8 @@
 import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -19,13 +19,15 @@ import DomainRecords from '../DomainRecords';
 import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
 
 export const DomainDetail = () => {
-  const params = useParams<{ domainId: string }>();
-  const domainId = Number(params.domainId);
+  const navigate = useNavigate();
+  const params = useParams({ from: '/domains/$domainId' });
+  const domainId = params.domainId;
+  const { recordError } = useSearch({ strict: false });
 
-  const history = useHistory();
-  const location = useLocation<{ recordError?: string }>();
-
-  const { data: domain, error, isLoading } = useDomainQuery(domainId);
+  const { data: domain, error, isLoading } = useDomainQuery(
+    domainId,
+    !!domainId
+  );
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
   const {
     data: records,
@@ -110,9 +112,7 @@ export const DomainDetail = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         title="Domain Details"
       />
-      {location.state && location.state.recordError && (
-        <StyledNotice text={location.state.recordError} variant="error" />
-      )}
+      {recordError && <StyledNotice text={recordError} variant="error" />}
       <StyledRootGrid container>
         <StyledMainGrid xs={12}>
           <DomainRecords
@@ -138,7 +138,7 @@ export const DomainDetail = () => {
             <DeleteDomain
               domainId={domain.id}
               domainLabel={domain.domain}
-              onSuccess={() => history.push('/domains')}
+              onSuccess={() => navigate({ to: '/domains' })}
             />
           </StyledDiv>
         </StyledTagSectionGrid>

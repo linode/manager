@@ -14,7 +14,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -64,7 +64,7 @@ export const CreateDomain = () => {
   // of the payload and must be handled separately.
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const defaultRecords: DefaultRecordsSetting[] = [
     {
@@ -126,9 +126,12 @@ export const CreateDomain = () => {
   const isCreatingPrimaryDomain = values.type === 'master';
   const isCreatingSecondaryDomain = values.type === 'slave';
 
-  const redirect = (id: '' | number, state?: Record<string, string>) => {
+  const redirect = (id: '' | number, _state?: Record<string, string>) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
-    history.push(returnPath, state);
+    navigate({
+      params: { domainId: Number(id) },
+      to: returnPath,
+    });
   };
 
   const redirectToLandingOrDetail = (

@@ -80,7 +80,7 @@ export const useAllDomainsQuery = (enabled: boolean = false) =>
     enabled,
   });
 
-export const useDomainQuery = (id: number, enabled: boolean = false) =>
+export const useDomainQuery = (id: number, enabled: boolean = true) =>
   useQuery<Domain, APIError[]>({
     ...domainQueries.domain(id),
     enabled,

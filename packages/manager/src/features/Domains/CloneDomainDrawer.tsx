@@ -5,9 +5,9 @@ import {
   RadioGroup,
   TextField,
 } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -33,13 +33,16 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
     domain?.id ?? 0
   );
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const formik = useFormik<{ domain: string }>({
     initialValues: { domain: '' },
     onSubmit: async (values) => {
       const newDomain = await cloneDomain(values);
-      history.push(`/domains/${newDomain.id}`);
+      navigate({
+        params: { domainId: newDomain.id },
+        to: '/domains/$domainId',
+      });
       onClose();
     },
   });

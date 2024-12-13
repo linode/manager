@@ -1,7 +1,7 @@
 import { createLazyRoute } from '@tanstack/react-router';
 
 import { CreateDomain } from 'src/features/Domains/CreateDomain/CreateDomain';
-import { DomainDetailRouting } from 'src/features/Domains/DomainDetail';
+import { DomainDetail } from 'src/features/Domains/DomainDetail/DomainDetail';
 import { DomainsLanding } from 'src/features/Domains/DomainsLanding';
 
 export const domainsLandingLazyRoute = createLazyRoute('/domains')({
@@ -13,5 +13,5 @@ export const createDomainLazyRoute = createLazyRoute('/domains/create')({
 });
 
 export const domainDetailLazyRoute = createLazyRoute('/domains/$domainId')({
-  component: DomainDetailRouting,
+  component: DomainDetail,
 });

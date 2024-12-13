@@ -1,6 +1,6 @@
 import { CircleProgress } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { NotFound } from 'src/components/NotFound';
@@ -16,8 +16,8 @@ const DomainDetail = React.lazy(() =>
 );
 
 export const DomainDetailRouting = () => {
-  const params = useParams<{ domainId: string }>();
-  const domainId = Number(params.domainId);
+  const params = useParams({ from: '/domains/$domainId' });
+  const domainId = params.domainId;
 
   const { data: domain, error, isLoading } = useDomainQuery(domainId);
 
