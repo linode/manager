@@ -115,7 +115,7 @@ export const KubernetesLanding = () => {
   const openUpgradeDialog = (
     clusterID: number,
     clusterLabel: string,
-    clusterTier: KubernetesTier | undefined, // TODO LKE-E: Make this required after LKE-E is in GA
+    clusterTier: KubernetesTier,
     currentVersion: string
   ) => {
     setUpgradeDialogState({
@@ -123,7 +123,7 @@ export const KubernetesLanding = () => {
       open: true,
       selectedClusterID: clusterID,
       selectedClusterLabel: clusterLabel,
-      selectedClusterTier: clusterTier ?? 'standard',
+      selectedClusterTier: clusterTier,
     });
   };
 
@@ -248,7 +248,7 @@ export const KubernetesLanding = () => {
                 openUpgradeDialog(
                   cluster.id,
                   cluster.label,
-                  cluster?.tier,
+                  cluster?.tier ?? 'standard', // TODO LKE: remove fallback once LKE-E is in GA and tier is required
                   cluster.k8s_version
                 )
               }

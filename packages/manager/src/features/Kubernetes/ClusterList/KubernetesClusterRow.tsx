@@ -71,7 +71,7 @@ export const KubernetesClusterRow = (props: Props) => {
   const region = regions?.find((r) => r.id === cluster.region);
 
   const { versions } = useLkeStandardOrEnterpriseVersions(
-    cluster.tier ?? 'standard'
+    cluster.tier ?? 'standard' //TODO LKE: remove fallback once LKE-E is in GA and tier is required
   );
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
