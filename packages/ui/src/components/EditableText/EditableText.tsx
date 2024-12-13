@@ -4,15 +4,14 @@ import Edit from '@mui/icons-material/Edit';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Link } from '../../internal/Link';
 import { Button } from '../Button';
 import { ClickAwayListener } from '../ClickAwayListener';
 import { H1Header } from '../H1Header';
 import { TextField } from '../TextField';
 
-import type { LinkProps } from '../../internal/Link';
 import type { TextFieldProps } from '../TextField';
 import type { Theme } from '@mui/material/styles';
+import type { PropsWithChildren } from 'react';
 
 const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   (theme: Theme, _params, classes) => ({
@@ -103,22 +102,18 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   })
 );
 
-interface Props {
+interface BaseProps {
   /**
-   * An optional custom Link component used when `labelLink` is passed via props
-   *
-   * The component you pass must accept `className`, `to`, and `children` as props
-   * - `to` is just the `labelLink` prop forwarded to this Link component
-   * - `className` should be passed to your Link so that it has the correct styles
-   * - `children` contains the link's text/children
-   *
-   * A basic HTML anchor will be used by default if no LinkComponent is passed.
-   * @default 'a'
-   *
+   * The class name to apply to the container
    */
-  LinkComponent?: React.ComponentType<LinkProps>;
   className?: string;
+  /**
+   * Whether to disable the Breadcrumb edit button
+   */
   disabledBreadcrumbEditButton?: boolean;
+  /**
+   * The error text to display
+   */
   errorText?: string;
   /**
    * Send event analytics
@@ -135,7 +130,7 @@ interface Props {
   /**
    * The function to handle saving edited text
    */
-  onEdit: (text: string) => Promise<any>;
+  onEdit: (_text: string) => Promise<void>;
   /**
    * The text inside the textbox
    */
@@ -146,15 +141,37 @@ interface Props {
   textSuffix?: string;
 }
 
-interface PassThroughProps extends Props, Omit<TextFieldProps, 'label'> {}
+interface PropsWithoutLink extends BaseProps {
+  LinkComponent?: never;
+  labelLink?: never;
+}
 
-export const EditableText = (props: PassThroughProps) => {
+interface PropsWithLink extends BaseProps {
+  /**
+   * A custom Link component that is required when passing a `labelLink` prop
+   *
+   * The component you pass must accept `className`, `to`, and `children` as props
+   * - `to` is just the `labelLink` prop forwarded to this Link component
+   * - `className` should be passed to your Link so that it has the correct styles
+   * - `children` contains the link's text/children
+   */
+  LinkComponent: React.ComponentType<
+    PropsWithChildren<{ className?: string; to: string }>
+  >;
+  labelLink: string;
+}
+
+type Props = PropsWithLink | PropsWithoutLink;
+
+export type EditableTextProps = Props & Omit<TextFieldProps, 'label'>;
+
+export const EditableText = (props: EditableTextProps) => {
   const { classes } = useStyles();
 
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
   const [text, setText] = React.useState(props.text);
   const {
-    LinkComponent = Link,
+    LinkComponent,
     className,
     disabledBreadcrumbEditButton,
     errorText,
