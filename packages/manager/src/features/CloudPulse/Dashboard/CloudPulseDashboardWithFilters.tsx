@@ -1,4 +1,4 @@
-import { Box, CircleProgress, Paper } from '@linode/ui';
+import { Box, CircleProgress, Divider, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
@@ -7,6 +7,7 @@ import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboar
 
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
+import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
@@ -118,28 +119,52 @@ export const CloudPulseDashboardWithFilters = React.memo(
     });
 
     return (
-      <Box display={'flex'} flexDirection={'column'} gap={2.5}>
-        <Box display={'flex'} flexDirection={'column'} gap={1}>
-          <Box alignSelf="end" width={160}>
-            <CloudPulseTimeRangeSelect
-              disabled={!dashboard}
-              handleStatsChange={handleTimeRangeChange}
-              hideLabel
-              savePreferences={true}
-            />
-          </Box>
+      <Box display="flex" flexDirection="column" gap={2.5}>
+        <Paper
+          sx={{
+            padding: 0,
+          }}
+        >
+          <Grid container>
+            <Grid container item m={3} rowGap={1} xs={12}>
+              <Grid
+                columnSpacing={2}
+                container
+                item
+                justifyContent="space-between"
+                rowSpacing={2}
+              >
+                <Grid display={'flex'} item md={4} sm={5} xs={12}>
+                  <CloudPulseDashboardSelect
+                    defaultValue={dashboardId}
+                    disabled
+                    serviceIntegration
+                  />
+                </Grid>
+                <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
+                  <CloudPulseTimeRangeSelect
+                    handleStatsChange={handleTimeRangeChange}
+                    savePreferences
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
 
-          <Paper
-            sx={{
-              padding: 0,
-            }}
-          >
+            <Grid item xs={12}>
+              <Divider
+                sx={(theme) => ({
+                  borderColor: theme.color.grey5,
+                  margin: 0,
+                })}
+              />
+            </Grid>
+
             {isFilterBuilderNeeded && (
               <CloudPulseDashboardFilterBuilder
                 dashboard={dashboard}
                 emitFilterChange={onFilterChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
-                isServiceAnalyticsIntegration={true}
+                isServiceAnalyticsIntegration
               />
             )}
             <Grid item mb={3} mt={-3} xs={12}>
@@ -150,8 +175,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 />
               )}
             </Grid>
-          </Paper>
-        </Box>
+          </Grid>
+        </Paper>
         {isMandatoryFiltersSelected ? (
           <CloudPulseDashboard
             {...getDashboardProperties({
