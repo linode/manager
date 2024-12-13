@@ -9,19 +9,16 @@ import { mockUpdateIPAddress } from 'support/intercepts/networking';
 import { ui } from 'support/ui';
 
 describe('linode networking', () => {
-  /**
-   * - Confirms the success toast message after editing RDNS
-   */
-  it('checks for the toast message upon editing an RDNS', () => {
-    const mockLinode = linodeFactory.build();
-    const linodeIPv4 = mockLinode.ipv4[0];
-    const mockRDNS = `${linodeIPv4}.ip.linodeusercontent.com`;
-    const ipAddress = ipAddressFactory.build({
-      address: linodeIPv4,
-      linode_id: mockLinode.id,
-      rdns: mockRDNS,
-    });
+  const mockLinode = linodeFactory.build();
+  const linodeIPv4 = mockLinode.ipv4[0];
+  const mockRDNS = `${linodeIPv4}.ip.linodeusercontent.com`;
+  const ipAddress = ipAddressFactory.build({
+    address: linodeIPv4,
+    linode_id: mockLinode.id,
+    rdns: mockRDNS,
+  });
 
+  beforeEach(() => {
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
     mockGetLinodeFirewalls(mockLinode.id, []).as('getLinodeFirewalls');
     mockGetLinodeIPAddresses(mockLinode.id, {
@@ -36,7 +33,12 @@ describe('linode networking', () => {
 
     cy.visitWithLogin(`linodes/${mockLinode.id}/networking`);
     cy.wait(['@getLinode', '@getLinodeFirewalls', '@getLinodeIPAddresses']);
+  });
 
+  /**
+   * - Confirms the success toast message after editing RDNS
+   */
+  it('checks for the toast message upon editing an RDNS', () => {
     cy.findByLabelText('IPv4 Addresses')
       .should('be.visible')
       .within(() => {
@@ -79,5 +81,19 @@ describe('linode networking', () => {
 
     // confirm RDNS toast message
     ui.toast.assertMessage(`Successfully updated RDNS for ${linodeIPv4}`);
+  });
+
+  it('validates content of IP Address table row action menu aria Label', () => {
+    // Setting the viewport to 1279px x 800px (width < 1280px) to make Action menu visible
+    cy.viewport(1279, 800);
+
+    cy.get(`[data-qa-ip="${linodeIPv4}"]`)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.actionMenu
+          .findByTitle(`Action menu for IP Address ${linodeIPv4}`)
+          .should('be.visible');
+      });
   });
 });
