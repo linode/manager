@@ -15,7 +15,7 @@ import { FirewallRulesLanding } from 'src/features/Firewalls/FirewallDetail/Rule
 
 import type { FirewallPolicyType, FirewallRuleType } from '@linode/api-v4';
 
-interface MoveFocusedElementParams {
+interface MoveFocusedElementViaKeyboard {
   direction: 'DOWN' | 'UP';
   times: number;
 }
@@ -80,7 +80,7 @@ const getRuleActionLabel = (ruleAction: FirewallPolicyType): string => {
 const moveFocusedElementViaKeyboard = ({
   direction,
   times,
-}: MoveFocusedElementParams) => {
+}: MoveFocusedElementViaKeyboard) => {
   // `direction` is either "UP" or "DOWN"
   const arrowKey = direction === 'DOWN' ? '{downarrow}' : '{uparrow}';
 
