@@ -5,7 +5,7 @@ import React from 'react';
 import type { LinodeCapabilities } from '@linode/api-v4';
 
 interface Props {
-  linodeCapabilities?: LinodeCapabilities[];
+  linodeCapabilities: LinodeCapabilities[];
 }
 
 export function HighPerformanceVolumeIcon({ linodeCapabilities }: Props) {

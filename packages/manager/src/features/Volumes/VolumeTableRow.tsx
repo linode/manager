@@ -126,9 +126,11 @@ export const VolumeTableRow = React.memo((props: Props) => {
             })}
           >
             {volume.label}
-            <HighPerformanceVolumeIcon
-              linodeCapabilities={linodeCapabilities}
-            />
+            {linodeCapabilities && (
+              <HighPerformanceVolumeIcon
+                linodeCapabilities={linodeCapabilities}
+              />
+            )}
           </Box>
 
           {isEligibleForUpgradeToNVMe && (

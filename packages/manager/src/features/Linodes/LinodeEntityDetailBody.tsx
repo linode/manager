@@ -68,7 +68,7 @@ export interface BodyProps {
   ipv6: Linode['ipv6'];
   isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
   isVPCOnlyLinode: boolean;
-  linodeCapabilities?: LinodeCapabilities[];
+  linodeCapabilities: LinodeCapabilities[];
   linodeId: number;
   linodeIsInDistributedRegion: boolean;
   linodeLabel: string;

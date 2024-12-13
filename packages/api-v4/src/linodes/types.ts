@@ -20,7 +20,7 @@ export interface Linode {
   id: number;
   alerts: LinodeAlerts;
   backups: LinodeBackups;
-  capabilities?: LinodeCapabilities[]; // @TODO BSE: Remove optionality once BSE is fully rolled out
+  capabilities: LinodeCapabilities[];
   created: string;
   disk_encryption?: EncryptionStatus; // @TODO LDE: Remove optionality once LDE is fully rolled out
   region: string;
