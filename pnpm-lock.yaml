@@ -285,6 +285,9 @@ importers:
         specifier: ^4.4.2
         version: 4.4.2
     devDependencies:
+      '@4tw/cypress-drag-drop':
+        specifier: ^2.2.5
+        version: 2.2.5(cypress@13.11.0)
       '@linode/eslint-plugin-cloud-manager':
         specifier: ^0.0.5
         version: 0.0.5(eslint@7.32.0)
@@ -703,6 +706,11 @@ importers:
         version: 8.3.5(@swc/core@1.9.2)(jiti@1.21.6)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
 
 packages:
+
+  '@4tw/cypress-drag-drop@2.2.5':
+    resolution: {integrity: sha512-3ghTmzhOmUqeN6U3QmUnKRUxI7OMLbJA4hHUY/eS/FhWJgxbiGgcaELbolWnBAOpajPXcsNQGYEj9brd59WH6A==}
+    peerDependencies:
+      cypress: 2 - 13
 
   '@adobe/css-tools@4.4.1':
     resolution: {integrity: sha512-12WGKBQzjUAI4ayyF4IAtfw2QR/IDoqk6jTddXDhtYTJF9ASmoE1zst7cVtP0aL/F1jUJL5r+JxKXKEgHNbEUQ==}
@@ -9969,6 +9977,10 @@ packages:
     resolution: {integrity: sha512-Bq0B+ixT/DMyG8kgX2xWcI5jUvCwqrMxSFam7m0lAf78nf04hv6lNCsyLYdyYTrCVMqNDY/206K7eExYCeSyUQ==}
 
 snapshots:
+
+  '@4tw/cypress-drag-drop@2.2.5(cypress@13.11.0)':
+    dependencies:
+      cypress: 13.11.0
 
   '@adobe/css-tools@4.4.1': {}
 
