@@ -39,7 +39,7 @@ export const UpgradeDialog = (props: Props) => {
     clusterID
   );
 
-  const versions = useLkeStandardOrEnterpriseVersions(clusterTier);
+  const { versions } = useLkeStandardOrEnterpriseVersions(clusterTier);
 
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 

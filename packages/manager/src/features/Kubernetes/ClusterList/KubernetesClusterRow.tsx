@@ -70,7 +70,7 @@ export const KubernetesClusterRow = (props: Props) => {
 
   const region = regions?.find((r) => r.id === cluster.region);
 
-  const versions = useLkeStandardOrEnterpriseVersions(
+  const { versions } = useLkeStandardOrEnterpriseVersions(
     cluster.tier ?? 'standard'
   );
 

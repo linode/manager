@@ -20,7 +20,7 @@ interface Props {
 export const UpgradeKubernetesVersionBanner = (props: Props) => {
   const { clusterID, clusterLabel, clusterTier, currentVersion } = props;
 
-  const versions = useLkeStandardOrEnterpriseVersions(clusterTier);
+  const { versions } = useLkeStandardOrEnterpriseVersions(clusterTier);
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
