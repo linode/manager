@@ -304,6 +304,12 @@ describe('LKE cluster updates', () => {
       const oldVersion = '1.31.1+lke1';
       const newVersion = '1.31.1+lke2';
 
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Kubernetes Enterprise'],
+        })
+      ).as('getAccount');
+
       // TODO LKE-E: Remove once feature is in GA
       mockAppendFeatureFlags({
         lkeEnterprise: { enabled: true, la: true },
@@ -340,7 +346,12 @@ describe('LKE cluster updates', () => {
       mockGetApiEndpoints(mockCluster.id);
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-      cy.wait(['@getCluster', '@getNodePools', '@getTieredVersions']);
+      cy.wait([
+        '@getAccount',
+        '@getCluster',
+        '@getNodePools',
+        '@getTieredVersions',
+      ]);
 
       // Confirm that upgrade prompt is shown.
       cy.findByText(upgradePrompt).should('be.visible');
@@ -416,6 +427,12 @@ describe('LKE cluster updates', () => {
       const oldVersion = '1.31.1+lke1';
       const newVersion = '1.32.1+lke2';
 
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Kubernetes Enterprise'],
+        })
+      ).as('getAccount');
+
       // TODO LKE-E: Remove once feature is in GA
       mockAppendFeatureFlags({
         lkeEnterprise: { enabled: true, la: true },
@@ -438,7 +455,7 @@ describe('LKE cluster updates', () => {
 
       cy.visitWithLogin(`/kubernetes/clusters`);
 
-      cy.wait(['@getClusters', '@getTieredVersions']);
+      cy.wait(['@getAccount', '@getClusters', '@getTieredVersions']);
 
       cy.findByText(oldVersion).should('be.visible');
 
