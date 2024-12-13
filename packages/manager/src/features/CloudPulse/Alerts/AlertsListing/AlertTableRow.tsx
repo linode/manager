@@ -18,7 +18,7 @@ interface Props {
    */
   alert: Alert;
   /**
-   * The callback handlers for clicking an action menu item like show details, delete etc.,
+   * The callback handlers for clicking an action menu item like Show Details, Delete, etc.
    */
   handlers: ActionHandlers;
 }
