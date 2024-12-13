@@ -9,6 +9,7 @@ import type {
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
+  KubernetesTieredVersion,
   KubernetesVersion,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes/types';
@@ -75,6 +76,20 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>
 export const kubernetesVersionFactory = Factory.Sync.makeFactory<KubernetesVersion>(
   {
     id: '1.24',
+  }
+);
+
+export const kubernetesStandardTierVersionFactory = Factory.Sync.makeFactory<KubernetesTieredVersion>(
+  {
+    id: '1.31',
+    tier: 'standard',
+  }
+);
+
+export const kubernetesEnterpriseTierVersionFactory = Factory.Sync.makeFactory<KubernetesTieredVersion>(
+  {
+    id: 'v1.31.1+lke1',
+    tier: 'enterprise',
   }
 );
 

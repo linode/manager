@@ -6,6 +6,10 @@ import {
   linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
+import {
+  kubernetesEnterpriseTierVersionFactory,
+  kubernetesVersionFactory,
+} from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
 
 import {
@@ -13,12 +17,21 @@ import {
   getTotalClusterMemoryCPUAndStorage,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
+  useLkeStandardOrEnterpriseVersions,
 } from './kubeUtils';
+
+const mockKubernetesVersions = kubernetesVersionFactory.buildList(1);
+const mockKubernetesEnterpriseVersions = kubernetesEnterpriseTierVersionFactory.buildList(
+  1
+);
 
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
   useAccountBetaQuery: vi.fn().mockReturnValue({}),
   useFlags: vi.fn().mockReturnValue({}),
+  useIsLkeEnterpriseEnabled: vi.fn().mockReturnValue({}),
+  useKubernetesTieredVersionsQuery: vi.fn().mockReturnValue({}),
+  useKubernetesVersionQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/account/account', () => {
@@ -42,6 +55,24 @@ vi.mock('src/hooks/useFlags', () => {
   return {
     ...actual,
     useFlags: queryMocks.useFlags,
+  };
+});
+
+vi.mock('src/queries/kubernetes', () => {
+  const actual = vi.importActual('src/queries/kubernetes');
+  return {
+    ...actual,
+    useKubernetesTieredVersionsQuery:
+      queryMocks.useKubernetesTieredVersionsQuery,
+    useKubernetesVersionQuery: queryMocks.useKubernetesVersionQuery,
+  };
+});
+
+vi.mock('src/hooks/useIsLkeEnterpriseEnabled', () => {
+  const actual = vi.importActual('src/hooks/useIsLkeEnterpriseEnabled');
+  return {
+    ...actual,
+    useIsLkeEnterpriseEnabled: queryMocks.useIsLkeEnterpriseEnabled,
   };
 });
 
@@ -231,5 +262,95 @@ describe('useIsLkeEnterpriseEnabled', () => {
       isLkeEnterpriseLAFeatureEnabled: true,
       isLkeEnterpriseLAFlagEnabled: true,
     });
+  });
+});
+
+describe('useLkeStandardOrEnterpriseVersions', () => {
+  it('returns enterprise versions for enterprise clusters when the LKE-E feature is enabled', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['Kubernetes Enterprise'],
+      },
+    });
+    queryMocks.useFlags.mockReturnValue({
+      lkeEnterprise: {
+        enabled: true,
+        ga: true,
+        la: true,
+      },
+    });
+    queryMocks.useKubernetesTieredVersionsQuery.mockReturnValue({
+      data: mockKubernetesEnterpriseVersions,
+      error: null,
+      loading: false,
+    });
+    queryMocks.useKubernetesVersionQuery.mockReturnValue({
+      data: mockKubernetesVersions,
+      error: null,
+      loading: false,
+    });
+
+    const { result } = renderHook(() =>
+      useLkeStandardOrEnterpriseVersions('enterprise')
+    );
+
+    expect(result.current.versions).toEqual(mockKubernetesEnterpriseVersions);
+  });
+
+  it('returns standard versions for standard clusters when the LKE-E feature is enabled', () => {
+    queryMocks.useFlags.mockReturnValue({
+      lkeEnterprise: {
+        enabled: true,
+        ga: true,
+        la: true,
+      },
+    });
+    queryMocks.useKubernetesTieredVersionsQuery.mockReturnValue({
+      data: mockKubernetesEnterpriseVersions,
+      error: null,
+      loading: false,
+    });
+    queryMocks.useKubernetesVersionQuery.mockReturnValue({
+      data: mockKubernetesVersions,
+      error: null,
+      loading: false,
+    });
+
+    const { result } = renderHook(() =>
+      useLkeStandardOrEnterpriseVersions('standard')
+    );
+
+    expect(result.current.versions).toEqual(mockKubernetesVersions);
+  });
+
+  it('returns standard versions when the LKE-E feature is disabled', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['Kubernetes Enterprise'],
+      },
+    });
+    queryMocks.useFlags.mockReturnValue({
+      lkeEnterprise: {
+        enabled: false,
+        ga: true,
+        la: true,
+      },
+    });
+    queryMocks.useKubernetesTieredVersionsQuery.mockReturnValue({
+      data: mockKubernetesEnterpriseVersions,
+      error: null,
+      loading: false,
+    });
+    queryMocks.useKubernetesVersionQuery.mockReturnValue({
+      data: mockKubernetesVersions,
+      error: null,
+      loading: false,
+    });
+
+    const { result } = renderHook(() =>
+      useLkeStandardOrEnterpriseVersions('standard')
+    );
+
+    expect(result.current.versions).toEqual(mockKubernetesVersions);
   });
 });
