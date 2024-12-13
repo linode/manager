@@ -1064,9 +1064,20 @@ describe('LKE Cluster Creation with LKE-E', () => {
      * - Mocks the LKE-E capability
      * - Confirms the Cluster Tier selection can be made
      * - Confirms that HA is enabled by default with LKE-E selection
-     * @todo LKE-E: Add onto this test as the LKE-E changes to the Create flow are built out
+     * - Confirms an LKE-E supported region can be selected
+     * - Confirms an LKE-E supported k8 version can be selected
+     * - Confirms the checkout bar displays the correct LKE-E info
+     * - Confirms an enterprise cluster can be created
      */
     it('creates an LKE-E cluster with the account capability', () => {
+      const clusterLabel = randomLabel();
+      const mockedEnterpriseCluster = kubernetesClusterFactory.build({
+        label: clusterLabel,
+        region: clusterRegion.id,
+        tier: 'enterprise',
+        k8s_version: latestEnterpriseTierKubernetesVersion.id,
+      });
+
       mockGetAccount(
         accountFactory.build({
           capabilities: ['Kubernetes Enterprise'],
@@ -1093,6 +1104,9 @@ describe('LKE Cluster Creation with LKE-E', () => {
           label: 'Washington, DC',
         }),
       ]).as('getRegions');
+      mockGetCluster(mockedEnterpriseCluster).as('getCluster');
+      mockCreateCluster(mockedEnterpriseCluster).as('createCluster');
+      mockGetClusters([mockedEnterpriseCluster]).as('getClusters');
 
       cy.visitWithLogin('/kubernetes/clusters');
       cy.wait(['@getAccount']);
@@ -1105,6 +1119,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       cy.url().should('endWith', '/kubernetes/create');
       cy.wait(['@getKubernetesVersions', '@getTieredKubernetesVersions']);
+
+      cy.findByLabelText('Cluster Label')
+        .should('be.visible')
+        .click()
+        .type(`${clusterLabel}{enter}`);
 
       cy.findByText('Cluster Tier').should('be.visible');
 
@@ -1193,6 +1212,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
           );
 
           // Confirm LKE-E section is shown
+          cy.findByText('LKE Enterprise').should('be.visible');
           cy.findByText('HA control plane, Dedicated control plane').should(
             'be.visible'
           );
@@ -1211,7 +1231,17 @@ describe('LKE Cluster Creation with LKE-E', () => {
             .click();
         });
 
-      // TODO: finish the rest of this test in subsequent PRs
+      // Wait for LKE cluster to be created and confirm that we are redirected
+      // to the cluster summary page, where the cluster has an LKE-E version.
+      cy.wait(['@getCluster', '@createCluster']);
+      cy.url().should(
+        'endWith',
+        `/kubernetes/clusters/${mockedEnterpriseCluster.id}/summary`
+      );
+
+      cy.findByText(
+        `Version ${latestEnterpriseTierKubernetesVersion.id}`
+      ).should('be.visible');
     });
 
     it('disables the Cluster Type selection without the LKE-E account capability', () => {
