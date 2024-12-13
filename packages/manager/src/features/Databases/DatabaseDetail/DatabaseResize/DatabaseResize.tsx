@@ -102,8 +102,9 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     <>
       <Typography variant="h2">Resize a Database Cluster</Typography>
       <Typography sx={{ marginTop: '4px' }}>
-        Adapt the cluster to your needs by resizing to a larger plan. Clusters
-        cannot be resized to smaller plans.
+        {isNewDatabaseGA
+          ? 'Adapt the cluster to your needs by resizing it to a smaller or larger plan.'
+          : 'Adapt the cluster to your needs by resizing to a larger plan. Clusters cannot be resized to smaller plans.'}
       </Typography>
     </>
   );
@@ -298,6 +299,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           disabledSmallerPlans={disabledPlans}
           handleTabChange={handleTabChange}
           header="Choose a Plan"
+          isLegacyDatabase={!isNewDatabaseGA}
           onSelect={(selected: string) => setSelectedPlanId(selected)}
           selectedId={selectedPlanId}
           tabDisabledMessage="Resizing a 2-node cluster is only allowed with Dedicated plans."
