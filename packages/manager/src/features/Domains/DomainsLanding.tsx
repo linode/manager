@@ -9,12 +9,6 @@ import {
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import {
-  DOMAINS_TABLE_DEFAULT_ORDER,
-  DOMAINS_TABLE_DEFAULT_ORDER_BY,
-  DOMAINS_TABLE_PREFERENCE_KEY,
-} from './constants';
-
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -41,6 +35,11 @@ import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CloneDomainDrawer } from './CloneDomainDrawer';
+import {
+  DOMAINS_TABLE_DEFAULT_ORDER,
+  DOMAINS_TABLE_DEFAULT_ORDER_BY,
+  DOMAINS_TABLE_PREFERENCE_KEY,
+} from './constants';
 import { DisableDomainDialog } from './DisableDomainDialog';
 import { DomainBanner } from './DomainBanner';
 import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
