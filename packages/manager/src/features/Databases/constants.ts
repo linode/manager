@@ -11,6 +11,12 @@ export const ACCESS_CONTROLS_IN_SETTINGS_TEXT =
 export const ACCESS_CONTROLS_IN_SETTINGS_TEXT_LEGACY =
   'Add or remove IPv4 addresses or ranges that should be authorized to access your cluster.';
 
+export const ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT =
+  'Must be a valid IPv6 or IPv4 address.';
+
+export const ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY =
+  'Must be a valid IPv4 address.';
+
 export const SUSPEND_CLUSTER_TEXT = `Suspend the cluster if you don't use it temporarily to prevent being billed for it.`;
 
 export const RESET_ROOT_PASSWORD_TEXT =
