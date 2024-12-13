@@ -13,10 +13,10 @@
     "precommit": "tsc"
   },
   "dependencies": {
-    "peggy": "^4.0.3"
+    "peggy": "^4.0.3",
+    "@linode/api-v4": "workspace:*"
   },
   "peerDependencies": {
-    "@linode/api-v4": "workspace:*",
     "vite": "*"
   }
 }
