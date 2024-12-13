@@ -23,6 +23,7 @@ const mockResourceHandler = vi.fn();
 const SELECT_ALL = 'Select All';
 const ARIA_SELECTED = 'aria-selected';
 const ARIA_DISABLED = 'aria-disabled';
+const LABEL_SUBTITLE = 'Resources (required)';
 
 describe('CloudPulseResourcesSelect component tests', () => {
   it('should render disabled component if the the props are undefined or regions and service type does not have any resources', () => {
@@ -37,11 +38,12 @@ describe('CloudPulseResourcesSelect component tests', () => {
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region={undefined}
+        required
         resourceType={undefined}
       />
     );
     expect(getByTestId('resource-select')).toBeInTheDocument();
-    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
     expect(getByPlaceholderText('Select Resources')).toBeInTheDocument();
   }),
     it('should render resources happy path', () => {
@@ -56,11 +58,12 @@ describe('CloudPulseResourcesSelect component tests', () => {
           handleResourcesSelection={mockResourceHandler}
           label="Resources"
           region={'us-east'}
+          required
           resourceType={'us-east'}
         />
       );
       fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-      expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+      expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
       expect(
         screen.getByRole('option', {
           name: 'linode-3',
@@ -84,12 +87,13 @@ describe('CloudPulseResourcesSelect component tests', () => {
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region={'us-east'}
+        required
         resourceType={'linode'}
       />
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
     fireEvent.click(screen.getByRole('option', { name: SELECT_ALL }));
-    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
     expect(
       screen.getByRole('option', {
         name: 'linode-5',
@@ -114,13 +118,14 @@ describe('CloudPulseResourcesSelect component tests', () => {
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region={'us-east'}
+        required
         resourceType={'linode'}
       />
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
     fireEvent.click(screen.getByRole('option', { name: SELECT_ALL }));
     fireEvent.click(screen.getByRole('option', { name: 'Deselect All' }));
-    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
     expect(
       screen.getByRole('option', {
         name: 'linode-7',
@@ -145,13 +150,14 @@ describe('CloudPulseResourcesSelect component tests', () => {
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region={'us-east'}
+        required
         resourceType={'linode'}
       />
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
     fireEvent.click(screen.getByRole('option', { name: 'linode-9' }));
     fireEvent.click(screen.getByRole('option', { name: 'linode-10' }));
-    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
 
     expect(
       screen.getByRole('option', {
@@ -269,13 +275,14 @@ describe('CloudPulseResourcesSelect component tests', () => {
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region="us-east"
+        required
         resourceType="linode"
       />
     );
 
     await user.click(screen.getByRole('button', { name: 'Open' }));
 
-    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
     expect(screen.getByText('Select up to 10 Resources')).toBeInTheDocument();
 
     for (let i = 14; i <= 23; i++) {
@@ -314,6 +321,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region={'us-east'}
+        required
         resourceType={'linode'}
       />
     );
@@ -322,7 +330,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
     await user.click(screen.getByRole('option', { name: SELECT_ALL }));
     await user.click(screen.getByRole('option', { name: 'Deselect All' }));
 
-    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
 
     for (let i = 26; i <= 35; i++) {
       expect(
