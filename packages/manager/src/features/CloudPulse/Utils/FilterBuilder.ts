@@ -169,7 +169,6 @@ export const getCustomSelectProperties = (
     name: label,
     options,
     placeholder,
-    required,
   } = props.config.configuration;
   const {
     dashboard,
