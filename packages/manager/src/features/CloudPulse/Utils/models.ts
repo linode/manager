@@ -121,7 +121,7 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   isMultiSelect?: boolean;
 
   /**
-   * If this is true, we will pass tags as an optional filter
+   * If this is true, we will pass filter as an optional filter
    */
   isOptional?: boolean;
 
@@ -149,10 +149,6 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    *  This controls the order of rendering the filtering componenents
    */
   priority: number;
-  /**
-   * This adds a subtitle after label if input is required
-   */
-  required?: boolean;
   /**
    * default is predefined filters like (region, resources, timeduration) or dynamic / static
    */

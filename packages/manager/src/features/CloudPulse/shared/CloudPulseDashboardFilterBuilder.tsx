@@ -131,13 +131,14 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const handleTagsChange = React.useCallback(
       (tags: CloudPulseTags[], savePref: boolean = false) => {
+        const selectedTags = tags.map((tag) => tag.label);
         emitFilterChangeByFilterKey(
           TAGS,
-          tags.map((tag) => tag.label),
-          tags.map((tag) => tag.label),
+          selectedTags,
+          selectedTags,
           savePref,
           {
-            [TAGS]: tags.map((tag: { label: string }) => String(tag.label)),
+            [TAGS]: selectedTags,
           }
         );
       },
