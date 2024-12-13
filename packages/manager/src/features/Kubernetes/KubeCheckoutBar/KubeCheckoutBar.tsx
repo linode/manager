@@ -81,7 +81,7 @@ export const KubeCheckoutBar = (props: Props) => {
     highAvailabilityPrice !== undefined;
 
   const disableCheckout = Boolean(
-    needsAPool || gdprConditions || haConditions || !region
+    needsAPool || gdprConditions || haConditions && !enterprisePrice || !region
   );
 
   if (isLoading) {
