@@ -20,7 +20,7 @@ export interface DatePickerProps
   /** Label to display for the date picker input */
   label?: string;
   /** Callback function fired when the value changes */
-  onChange?: (newDate: DateTime | null) => void;
+  onChange: (newDate: DateTime | null) => void;
   /** Placeholder text for the date picker input */
   placeholder?: string;
   /** Additional props to pass to the underlying TextField component */
@@ -42,9 +42,7 @@ export const DatePicker = ({
   const theme = useTheme();
 
   const onChangeHandler = (newDate: DateTime | null) => {
-    if (onChange) {
-      onChange(newDate);
-    }
+    onChange(newDate);
   };
 
   return (

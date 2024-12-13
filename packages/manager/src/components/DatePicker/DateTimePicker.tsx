@@ -1,6 +1,6 @@
-import { TextField } from '@linode/ui';
 import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
+import { TextField } from '@linode/ui';
 import { Grid, Popover } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -13,7 +13,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { TimeZoneSelect } from './TimeZoneSelect';
 
 import type { TextFieldProps } from '@linode/ui';
-import type { Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import type { DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
 import type { DateTime } from 'luxon';
 
@@ -31,13 +31,17 @@ export interface DateTimePickerProps {
   /** Callback when the "Cancel" button is clicked */
   onCancel?: () => void;
   /** Callback when date-time changes */
-  onChange?: (dateTime: DateTime | null) => void;
+  onChange: (dateTime: DateTime | null) => void;
   /** Placeholder text for the input field */
   placeholder?: string;
   /** Whether to show the time selector */
   showTime?: boolean;
   /** Whether to show the timezone selector */
   showTimeZone?: boolean;
+  /**
+   * Any additional styles to apply to the root element.
+   */
+  sx?: SxProps<Theme>;
   /** Props for customizing the TimePicker component */
   timeSelectProps?: {
     label?: string;
@@ -65,6 +69,7 @@ export const DateTimePicker = ({
   placeholder = 'yyyy-MM-dd HH:mm',
   showTime = true,
   showTimeZone = true,
+  sx,
   timeSelectProps = {},
   timeZoneSelectProps = {},
   value = null,
@@ -95,17 +100,9 @@ export const DateTimePicker = ({
 
   const handleTimeChange = (newTime: DateTime | null) => {
     if (newTime) {
-      setSelectedDateTime((prev) => {
-        if (prev) {
-          const newHour = newTime.hour;
-          const newMinute = newTime.minute;
-
-          if (typeof newHour === 'number' && typeof newMinute === 'number') {
-            return prev.set({ hour: newHour, minute: newMinute });
-          }
-        }
-        return prev;
-      });
+      setSelectedDateTime((prev) =>
+        prev ? prev.set({ hour: newTime.hour, minute: newTime.minute }) : prev
+      );
     }
   };
 
@@ -118,9 +115,8 @@ export const DateTimePicker = ({
 
   const handleApply = () => {
     setAnchorEl(null);
-    if (onChange) {
-      onChange(selectedDateTime);
-    }
+    onChange(selectedDateTime);
+
     if (onApply) {
       onApply();
     }
@@ -141,7 +137,7 @@ export const DateTimePicker = ({
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
-      <Box>
+      <Box sx={{ minWidth: '300px', ...sx }}>
         <TextField
           value={
             selectedDateTime
