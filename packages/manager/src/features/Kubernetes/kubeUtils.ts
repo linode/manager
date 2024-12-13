@@ -245,7 +245,7 @@ export const useLkeStandardOrEnterpriseVersions = (
   const {
     data: enterpriseTierVersions,
     error: enterpriseTierVersionsError,
-    isLoading: enterpriseTierVersionsIsLoading,
+    isFetching: enterpriseTierVersionsIsLoading,
   } = useKubernetesTieredVersionsQuery(
     'enterprise',
     isLkeEnterpriseLAFeatureEnabled

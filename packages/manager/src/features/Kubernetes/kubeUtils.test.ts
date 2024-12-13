@@ -29,7 +29,6 @@ const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
   useAccountBetaQuery: vi.fn().mockReturnValue({}),
   useFlags: vi.fn().mockReturnValue({}),
-  useIsLkeEnterpriseEnabled: vi.fn().mockReturnValue({}),
   useKubernetesTieredVersionsQuery: vi.fn().mockReturnValue({}),
   useKubernetesVersionQuery: vi.fn().mockReturnValue({}),
 }));
@@ -65,14 +64,6 @@ vi.mock('src/queries/kubernetes', () => {
     useKubernetesTieredVersionsQuery:
       queryMocks.useKubernetesTieredVersionsQuery,
     useKubernetesVersionQuery: queryMocks.useKubernetesVersionQuery,
-  };
-});
-
-vi.mock('src/hooks/useIsLkeEnterpriseEnabled', () => {
-  const actual = vi.importActual('src/hooks/useIsLkeEnterpriseEnabled');
-  return {
-    ...actual,
-    useIsLkeEnterpriseEnabled: queryMocks.useIsLkeEnterpriseEnabled,
   };
 });
 
@@ -266,7 +257,7 @@ describe('useIsLkeEnterpriseEnabled', () => {
 });
 
 describe('useLkeStandardOrEnterpriseVersions', () => {
-  it('returns enterprise versions for enterprise clusters when the LKE-E feature is enabled', () => {
+  beforeAll(() => {
     queryMocks.useAccount.mockReturnValue({
       data: {
         capabilities: ['Kubernetes Enterprise'],
@@ -282,53 +273,36 @@ describe('useLkeStandardOrEnterpriseVersions', () => {
     queryMocks.useKubernetesTieredVersionsQuery.mockReturnValue({
       data: mockKubernetesEnterpriseVersions,
       error: null,
-      loading: false,
+      isFetching: false,
     });
     queryMocks.useKubernetesVersionQuery.mockReturnValue({
       data: mockKubernetesVersions,
       error: null,
-      loading: false,
+      isLoading: false,
     });
+  });
 
+  it('returns enterprise versions for enterprise clusters when the LKE-E feature is enabled', () => {
     const { result } = renderHook(() =>
       useLkeStandardOrEnterpriseVersions('enterprise')
     );
 
     expect(result.current.versions).toEqual(mockKubernetesEnterpriseVersions);
+    expect(result.current.isLoadingVersions).toBe(false);
+    expect(result.current.versionsError).toBe(null);
   });
 
   it('returns standard versions for standard clusters when the LKE-E feature is enabled', () => {
-    queryMocks.useFlags.mockReturnValue({
-      lkeEnterprise: {
-        enabled: true,
-        ga: true,
-        la: true,
-      },
-    });
-    queryMocks.useKubernetesTieredVersionsQuery.mockReturnValue({
-      data: mockKubernetesEnterpriseVersions,
-      error: null,
-      loading: false,
-    });
-    queryMocks.useKubernetesVersionQuery.mockReturnValue({
-      data: mockKubernetesVersions,
-      error: null,
-      loading: false,
-    });
-
     const { result } = renderHook(() =>
       useLkeStandardOrEnterpriseVersions('standard')
     );
 
     expect(result.current.versions).toEqual(mockKubernetesVersions);
+    expect(result.current.isLoadingVersions).toBe(false);
+    expect(result.current.versionsError).toBe(null);
   });
 
   it('returns standard versions when the LKE-E feature is disabled', () => {
-    queryMocks.useAccount.mockReturnValue({
-      data: {
-        capabilities: ['Kubernetes Enterprise'],
-      },
-    });
     queryMocks.useFlags.mockReturnValue({
       lkeEnterprise: {
         enabled: false,
@@ -336,21 +310,13 @@ describe('useLkeStandardOrEnterpriseVersions', () => {
         la: true,
       },
     });
-    queryMocks.useKubernetesTieredVersionsQuery.mockReturnValue({
-      data: mockKubernetesEnterpriseVersions,
-      error: null,
-      loading: false,
-    });
-    queryMocks.useKubernetesVersionQuery.mockReturnValue({
-      data: mockKubernetesVersions,
-      error: null,
-      loading: false,
-    });
 
     const { result } = renderHook(() =>
       useLkeStandardOrEnterpriseVersions('standard')
     );
 
     expect(result.current.versions).toEqual(mockKubernetesVersions);
+    expect(result.current.isLoadingVersions).toBe(false);
+    expect(result.current.versionsError).toBe(null);
   });
 });
