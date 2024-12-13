@@ -52,7 +52,9 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
             }}
             text={
               <Typography>
-                Upgrades are disabled while maintenance updates are in progress.
+                Upgrades are disabled due to pending maintenance updates. To
+                enable the upgrade, apply available updates now or wait until
+                the next maintenance window.
               </Typography>
             }
             status="help"
