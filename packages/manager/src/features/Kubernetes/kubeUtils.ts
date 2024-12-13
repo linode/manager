@@ -72,6 +72,12 @@ export const getDescriptionForCluster = (
   return description.join(', ');
 };
 
+/**
+ * Finds the next version for upgrade, given a current version and the list of all versions.
+ * @param currentVersion The current cluster version
+ * @param versions All available standard or enterprise versions
+ * @returns The next version from which to upgrade from the current version
+ */
 export const getNextVersion = (
   currentVersion: string,
   versions: KubernetesTieredVersion[] | KubernetesVersion[] // TODO LKE-E: remove KubernetesVersion from type after GA.
