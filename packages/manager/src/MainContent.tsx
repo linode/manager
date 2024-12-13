@@ -343,7 +343,6 @@ export const MainContent = () => {
                             component={NodeBalancers}
                             path="/nodebalancers"
                           />
-                          <Route component={Domains} path="/domains" />
                           <Route component={Managed} path="/managed" />
                           <Route component={Longview} path="/longview" />
                           <Route component={Images} path="/images" />
