@@ -102,7 +102,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   })
 );
 
-interface BaseProps {
+interface BaseProps extends Omit<TextFieldProps, 'label'> {
   /**
    * The class name to apply to the container
    */
@@ -161,9 +161,7 @@ interface PropsWithLink extends BaseProps {
   labelLink: string;
 }
 
-type Props = PropsWithLink | PropsWithoutLink;
-
-export type EditableTextProps = Props & Omit<TextFieldProps, 'label'>;
+export type EditableTextProps = PropsWithLink | PropsWithoutLink;
 
 export const EditableText = (props: EditableTextProps) => {
   const { classes } = useStyles();
