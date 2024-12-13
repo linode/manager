@@ -9,24 +9,36 @@ import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
 import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
+  /**
+   * default value selected on initial render
+   */
   defaultValue?: Partial<FilterValue>;
-  disabled?: boolean;
+  /**
+   *
+   * @param dashboard latest dashboard object selected from dropdown
+   * @param savePref boolean value to check whether changes to be saved on preferences or not
+   */
   handleDashboardChange?: (
     dashboard: Dashboard | undefined,
     savePref?: boolean
   ) => void;
+  /**
+   * flag value to identify whether this component is being used in service level integration or not
+   */
+  isServiceIntegration?: boolean;
+  /**
+   * boolean value to identify whether changes to be saved on preferences or not
+   */
   savePreferences?: boolean;
-  serviceIntegration?: boolean;
 }
 
 export const CloudPulseDashboardSelect = React.memo(
   (props: CloudPulseDashboardSelectProps) => {
     const {
       defaultValue,
-      disabled,
       handleDashboardChange = () => {},
+      isServiceIntegration,
       savePreferences,
-      serviceIntegration: isServiceIntegration,
     } = props;
 
     const {
@@ -109,7 +121,7 @@ export const CloudPulseDashboardSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
-        disabled={disabled || !dashboardsList}
+        disabled={isServiceIntegration || !dashboardsList}
         errorText={Boolean(dashboardsList?.length) ? '' : errorText}
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}

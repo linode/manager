@@ -137,8 +137,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 <Grid display={'flex'} item md={4} sm={5} xs={12}>
                   <CloudPulseDashboardSelect
                     defaultValue={dashboardId}
-                    disabled
-                    serviceIntegration
+                    isServiceIntegration
                   />
                 </Grid>
                 <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
