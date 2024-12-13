@@ -275,8 +275,8 @@ export const NodeBalancerConfigPanel = (
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-proxy-protocol-select': true,
-                  errorGroup: forEdit ? `${configIdx}` : undefined,
                 },
+                errorGroup: forEdit ? `${configIdx}` : undefined,
               }}
               autoHighlight
               disableClearable

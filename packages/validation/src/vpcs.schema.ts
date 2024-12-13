@@ -2,13 +2,13 @@ import ipaddr from 'ipaddr.js';
 import { array, lazy, object, string } from 'yup';
 
 const LABEL_MESSAGE = 'Label must be between 1 and 64 characters.';
-const LABEL_REQUIRED = 'Label is required';
+const LABEL_REQUIRED = 'Label is required.';
 const LABEL_REQUIREMENTS =
-  'Must include only ASCII letters, numbers, and dashes';
+  'Label must include only ASCII letters, numbers, and dashes.';
 
 const labelTestDetails = {
   testName: 'no two dashes in a row',
-  testMessage: 'Must not contain two dashes in a row',
+  testMessage: 'Label must not contain two dashes in a row.',
 };
 
 const IP_EITHER_BOTH_NOT_NEITHER =
@@ -116,11 +116,11 @@ const labelValidation = string()
   )
   .min(1, LABEL_MESSAGE)
   .max(64, LABEL_MESSAGE)
-  .matches(/[a-zA-Z0-9-]+/, LABEL_REQUIREMENTS);
+  .matches(/^[a-zA-Z0-9-]*$/, LABEL_REQUIREMENTS);
 
 export const updateVPCSchema = object({
-  label: labelValidation.notRequired(),
-  description: string().notRequired(),
+  label: labelValidation,
+  description: string(),
 });
 
 export const createSubnetSchema = object().shape(
