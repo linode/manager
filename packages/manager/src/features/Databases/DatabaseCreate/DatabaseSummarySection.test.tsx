@@ -2,18 +2,18 @@ import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { databaseTypeFactory } from 'src/factories';
+import { databaseFactory, databaseTypeFactory } from 'src/factories';
+import DatabaseCreate from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
+import { DatabaseResize } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResize';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
-
-import DatabaseCreate from './DatabaseCreate';
 
 const loadingTestId = 'circle-progress';
 
 beforeAll(() => mockMatchMedia());
 
-describe('database node selector', () => {
+describe('database summary section', () => {
   const flags = {
     dbaasV2: {
       beta: false,
@@ -56,6 +56,54 @@ describe('database node selector', () => {
     const summary = getByTestId('currentSummary');
     const selectedPlanText = 'Dedicated 4 GB $60/month';
     expect(summary).toHaveTextContent(selectedPlanText);
+    const selectedNodesText = '3 Nodes - HA $140/month';
+    expect(summary).toHaveTextContent(selectedNodesText);
+  });
+
+  it('should render correct suffix for 1 Node', async () => {
+    const mockDatabase = databaseFactory.build({
+      cluster_size: 3,
+      engine: 'mysql',
+      platform: 'rdbms-default',
+      type: 'g6-nanode-1',
+    });
+    const { getByTestId } = renderWithTheme(
+      <DatabaseResize database={mockDatabase} />,
+      {
+        flags,
+      }
+    );
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const node = getByTestId('database-node-1');
+    await userEvent.click(node);
+
+    const summary = getByTestId('resizeSummary');
+    const selectedNodesText = '1 Node $60/month';
+    expect(summary).toHaveTextContent(selectedNodesText);
+  });
+
+  it('should render correct suffix for 3 Nodes', async () => {
+    const mockDatabase = databaseFactory.build({
+      cluster_size: 1,
+      engine: 'mysql',
+      platform: 'rdbms-default',
+      type: 'g6-nanode-1',
+    });
+    const { getByTestId } = renderWithTheme(
+      <DatabaseResize database={mockDatabase} />,
+      {
+        flags,
+      }
+    );
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const node = getByTestId('database-node-3');
+    await userEvent.click(node);
+
+    const summary = getByTestId('resizeSummary');
     const selectedNodesText = '3 Nodes - HA $140/month';
     expect(summary).toHaveTextContent(selectedNodesText);
   });
