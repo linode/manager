@@ -1,5 +1,5 @@
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountBeta } from 'src/queries/account/account';
+import { useAccount } from 'src/queries/account/account';
 import { useAccountBetaQuery } from 'src/queries/account/betas';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getBetaStatus } from 'src/utilities/betaUtils';
@@ -195,7 +195,7 @@ export const getLatestVersion = (
  */
 export const useIsLkeEnterpriseEnabled = () => {
   const flags = useFlags();
-  const { data: account } = useAccountBeta();
+  const { data: account } = useAccount();
 
   const isLkeEnterpriseLAFlagEnabled = Boolean(
     flags?.lkeEnterprise?.enabled && flags.lkeEnterprise.la
