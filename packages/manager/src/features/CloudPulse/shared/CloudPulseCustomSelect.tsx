@@ -106,6 +106,7 @@ export interface CloudPulseCustomSelectProps {
    * This adds a subtitle after label if input is required
    */
   required?: boolean;
+
   /**
    * This property controls whether to save the preferences or not
    */

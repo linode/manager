@@ -299,7 +299,7 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
       return filter.configuration.dependency?.some((dependent) => {
         const dependentFilter = dependentFilters[dependent];
         const optionalFilter = filters.find(
-          (filter) => filter.configuration.isOptional === true
+          (filter) => filter.configuration.isOptional
         )?.configuration.filterKey;
 
         return (
