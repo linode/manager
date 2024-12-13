@@ -42,15 +42,6 @@ export const WithSuffix: Story = {
   },
 };
 
-export const WithLink: Story = {
-  args: {
-    labelLink: 'https://linode.com',
-    onCancel: action('onCancel'),
-    text: 'I have a link',
-  },
-  render: (args) => <EditableText {...args} />,
-};
-
 /**
  * Pretend this is `react-router-dom`'s Link component.
  * This is just an example to show usage with `EditableText`
@@ -58,7 +49,7 @@ export const WithLink: Story = {
 const Link = (
   props: React.PropsWithChildren<{ className?: string; to?: string }>
 ) => {
-  return <a {...props} href={props.to} />;
+  return <a {...props} href={props.to} target="_blank" />;
 };
 
 export const WithCustomLinkComponent: Story = {

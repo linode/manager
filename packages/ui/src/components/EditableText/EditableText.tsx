@@ -120,10 +120,6 @@ interface BaseProps extends Omit<TextFieldProps, 'label'> {
    */
   handleAnalyticsEvent?: () => void;
   /**
-   * Optional link for the text when it is not in editing mode
-   */
-  labelLink?: string;
-  /**
    * Function to cancel editing and restore text to previous text
    */
   onCancel: () => void;
@@ -158,6 +154,9 @@ interface PropsWithLink extends BaseProps {
   LinkComponent: React.ComponentType<
     PropsWithChildren<{ className?: string; to: string }>
   >;
+  /**
+   * Optional link for the text when it is not in editing mode
+   */
   labelLink: string;
 }
 
