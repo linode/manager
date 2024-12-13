@@ -235,6 +235,9 @@ export const useIsLkeEnterpriseEnabled = () => {
 };
 
 /**
+ * @todo Remove this hook and just use `useKubernetesTieredVersionsQuery` directly once we're in GA
+ * since we'll always have a cluster tier.
+ *
  * A hook to return the correct list of versions depending on the LKE cluster tier.
  * @param clusterTier Whether the cluster is standard or enterprise
  * @returns The list of either standard or enterprise k8 versions and query loading or error state
@@ -257,7 +260,6 @@ export const useLkeStandardOrEnterpriseVersions = (
     isLkeEnterpriseLAFeatureEnabled
   );
 
-  // TODO LKE-E: Replace this with the tiered version query for 'standard' versions after GA.
   const {
     data: _versions,
     error: versionsError,
