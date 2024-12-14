@@ -258,8 +258,12 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
       <DomainBanner hidden={!shouldShowBanner} />
       {recordError && <Notice text={recordError} variant="error" />}
       <LandingHeader
+        breadcrumbProps={{
+          labelTitle: 'Domains',
+          pathname: '/domains',
+        }}
         extraActions={
-          <StyledButon buttonType="secondary" onClick={() => handleImport}>
+          <StyledButon buttonType="secondary" onClick={handleImport}>
             Import a Zone
           </StyledButon>
         }
