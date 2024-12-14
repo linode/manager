@@ -54,14 +54,6 @@ const domainDetailRoute = createRoute({
   import('./domainsLazyRoutes').then((m) => m.domainDetailLazyRoute)
 );
 
-const domainDetailRecordsRoute = createRoute({
-  getParentRoute: () => domainDetailRoute,
-  // unsure this path is needed, but added for legacy purposes
-  path: 'records',
-}).lazy(() =>
-  import('./domainsLazyRoutes').then((m) => m.domainDetailLazyRoute)
-);
-
 type DomainActionRouteParams<P = number | string> = {
   action: DomainAction;
   domainId: P;
@@ -97,5 +89,5 @@ export const domainsRouteTree = domainsRoute.addChildren([
   domainsIndexRoute.addChildren([domainActionRoute]),
   domainCreateRoute,
   domainImportRoute,
-  domainDetailRoute.addChildren([domainDetailRecordsRoute]),
+  domainDetailRoute,
 ]);

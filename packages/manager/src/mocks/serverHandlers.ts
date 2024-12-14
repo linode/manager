@@ -1182,6 +1182,14 @@ export const handlers = [
     const domains = domainFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(domains));
   }),
+  http.get('*/domains/:id', () => {
+    const domain = domainFactory.build();
+    return HttpResponse.json(domain);
+  }),
+  http.get('*/domains/*/records', () => {
+    const records = domainRecordFactory.buildList(1);
+    return HttpResponse.json(makeResourcePage(records));
+  }),
   http.post('*/domains/*/records', () => {
     const record = domainRecordFactory.build();
     return HttpResponse.json(record);
@@ -2086,6 +2094,11 @@ export const handlers = [
         accountBetaFactory.build({
           ended: DateTime.now().minus({ days: 5 }).toISO(),
           enrolled: DateTime.now().minus({ days: 20 }).toISO(),
+          started: DateTime.now().minus({ days: 30 }).toISO(),
+        }),
+        accountBetaFactory.build({
+          ended: DateTime.now().plus({ days: 5 }).toISO(),
+          enrolled: undefined,
           started: DateTime.now().minus({ days: 30 }).toISO(),
         }),
       ])

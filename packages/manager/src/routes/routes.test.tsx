@@ -7,8 +7,25 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { migrationRouter } from './index';
 import { getAllRoutePaths } from './utils/allPaths';
 
+import type { useQuery } from '@tanstack/react-query';
 // TODO: Tanstack Router - replace AnyRouter once migration is complete.
 import type { AnyRouter } from '@tanstack/react-router';
+
+vi.mock('@tanstack/react-query', async () => {
+  const actual = await vi.importActual('@tanstack/react-query');
+  return {
+    ...actual,
+    useQuery: vi
+      .fn()
+      .mockImplementation((...args: Parameters<typeof useQuery>) => {
+        const actualResult = (actual.useQuery as typeof useQuery)(...args);
+        return {
+          ...actualResult,
+          isLoading: false,
+        };
+      }),
+  };
+});
 
 const allMigrationPaths = getAllRoutePaths(migrationRouter);
 
@@ -32,7 +49,7 @@ describe('Migration Router', () => {
    * It will hopefully catch any issues with routes not being added or set up correctly:
    * - Route is not found in the router
    * - Route is found in the router but the component is not rendered
-   * - Route is found in the router and the component is rendered but missing a heading, (which should be a requirement for all routes) unless it is in a loading state
+   * - Route is found in the router and the component is rendered but missing a heading (which should be a requirement for all routes)
    */
   test.each(allMigrationPaths)('route: %s', async (path) => {
     renderWithRouter(path);
@@ -40,17 +57,10 @@ describe('Migration Router', () => {
     await waitFor(
       async () => {
         const migrationRouter = screen.getByTestId('migration-router');
+        const h1 = screen.getByRole('heading', { level: 1 });
         expect(migrationRouter).toBeInTheDocument();
-        // Check for either an H1 or loading state
-        try {
-          const h1 = screen.getByRole('heading', { level: 1 });
-          expect(h1).toBeInTheDocument();
-          expect(h1).not.toHaveTextContent('Not Found');
-        } catch {
-          // If H1 is not found, check for loading state
-          const loading = screen.getByTestId('circle-progress');
-          expect(loading).toBeInTheDocument();
-        }
+        expect(h1).toBeInTheDocument();
+        expect(h1).not.toHaveTextContent('Not Found');
       },
       {
         timeout: 5000,
