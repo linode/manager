@@ -1178,11 +1178,11 @@ export const handlers = [
   http.delete('*object-storage/keys/:id', () => {
     return HttpResponse.json({});
   }),
-  http.get('*/domains', () => {
+  http.get('*/v4/domains', () => {
     const domains = domainFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(domains));
   }),
-  http.get('*/domains/:id', () => {
+  http.get('*/v4/domains/:id', () => {
     const domain = domainFactory.build();
     return HttpResponse.json(domain);
   }),
@@ -2722,6 +2722,13 @@ export const handlers = [
     };
 
     return HttpResponse.json(response);
+  }),
+  http.get('*/src/routes/*LazyRoutes', ({ request }) => {
+    return new Response('export const module = {};', {
+      headers: {
+        'Content-Type': 'application/javascript',
+      },
+    });
   }),
   ...entityTransfers,
   ...statusPage,
