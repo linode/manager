@@ -120,6 +120,14 @@ export const CloudPulseDashboardSelect = React.memo(
             {params.children}
           </Box>
         )}
+        sx={(theme) => ({
+          '& .MuiInputBase-input.Mui-disabled': {
+            WebkitTextFillColor: theme.tokens.color.Neutrals.Black,
+          },
+        })}
+        textFieldProps={{
+          color: 'primary',
+        }}
         autoHighlight
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
