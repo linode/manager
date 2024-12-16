@@ -229,12 +229,3 @@ export const getStickinessOptions = (
     { label: 'HTTP Cookie', value: 'http_cookie' },
   ];
 };
-
-export const ROUND_ROBIN_ALGORITHM_HELPER_TEXT =
-  'Round robin distributes connection requests to backend servers in weighted circular order.';
-
-export const LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT =
-  'Least connections assigns connections to the backend with the least connections.';
-
-export const SOURCE_ALGORITHM_HELPER_TEXT =
-  "Source uses the client's IPv4 address.";

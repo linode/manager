@@ -3,12 +3,8 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { ALGORITHM_HELPER_TEXT } from './constants';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
-import {
-  LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
-  ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
-  SOURCE_ALGORITHM_HELPER_TEXT,
-} from './utils';
 
 import type {
   NodeBalancerConfigNodeFields,
@@ -225,11 +221,15 @@ describe('NodeBalancerConfigPanel', () => {
       <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
-    expect(getByText(ROUND_ROBIN_ALGORITHM_HELPER_TEXT)).toBeVisible();
+    expect(getByText(ALGORITHM_HELPER_TEXT.roundrobin)).toBeVisible();
+
+    expect(queryByText(ALGORITHM_HELPER_TEXT.source)).not.toBeInTheDocument();
     expect(
-      queryByText(LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT)
+      queryByText(ALGORITHM_HELPER_TEXT.leastconn)
     ).not.toBeInTheDocument();
-    expect(queryByText(SOURCE_ALGORITHM_HELPER_TEXT)).not.toBeInTheDocument();
+    expect(
+      queryByText(ALGORITHM_HELPER_TEXT.ring_hash)
+    ).not.toBeInTheDocument();
   });
 
   it('renders the relevant helper text for the Least Connections algorithm', () => {
@@ -240,10 +240,14 @@ describe('NodeBalancerConfigPanel', () => {
       />
     );
 
-    expect(getByText(LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT)).toBeVisible();
-    expect(queryByText(SOURCE_ALGORITHM_HELPER_TEXT)).not.toBeInTheDocument();
+    expect(getByText(ALGORITHM_HELPER_TEXT.leastconn)).toBeVisible();
+
+    expect(queryByText(ALGORITHM_HELPER_TEXT.source)).not.toBeInTheDocument();
     expect(
-      queryByText(ROUND_ROBIN_ALGORITHM_HELPER_TEXT)
+      queryByText(ALGORITHM_HELPER_TEXT.ring_hash)
+    ).not.toBeInTheDocument();
+    expect(
+      queryByText(ALGORITHM_HELPER_TEXT.roundrobin)
     ).not.toBeInTheDocument();
   });
 
@@ -255,12 +259,16 @@ describe('NodeBalancerConfigPanel', () => {
       />
     );
 
-    expect(getByText(SOURCE_ALGORITHM_HELPER_TEXT)).toBeVisible();
+    expect(getByText(ALGORITHM_HELPER_TEXT.source)).toBeVisible();
+
     expect(
-      queryByText(ROUND_ROBIN_ALGORITHM_HELPER_TEXT)
+      queryByText(ALGORITHM_HELPER_TEXT.leastconn)
     ).not.toBeInTheDocument();
     expect(
-      queryByText(LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT)
+      queryByText(ALGORITHM_HELPER_TEXT.ring_hash)
+    ).not.toBeInTheDocument();
+    expect(
+      queryByText(ALGORITHM_HELPER_TEXT.roundrobin)
     ).not.toBeInTheDocument();
   });
 

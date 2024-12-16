@@ -15,13 +15,11 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { ALGORITHM_HELPER_TEXT } from './constants';
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
 import { PassiveCheck } from './NodeBalancerPassiveCheck';
 import {
-  LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
-  ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
-  SOURCE_ALGORITHM_HELPER_TEXT,
   getAlgorithmOptions,
   getStickinessOptions,
   setErrorMap,
@@ -192,13 +190,6 @@ export const NodeBalancerConfigPanel = (
     return eachAlg.value === algorithm;
   });
 
-  const algorithmHelperText = {
-    leastconn: LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
-    ring_hash: '', // @todo Add copy as part of UDP NodeBalancer project
-    roundrobin: ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
-    source: SOURCE_ALGORITHM_HELPER_TEXT,
-  };
-
   const sessionOptions = getStickinessOptions(protocol);
 
   const defaultSession = sessionOptions.find((eachSession) => {
@@ -347,7 +338,7 @@ export const NodeBalancerConfigPanel = (
             size="small"
             value={defaultAlg || algOptions[0]}
           />
-          <FormHelperText>{algorithmHelperText[algorithm]}</FormHelperText>
+          <FormHelperText>{ALGORITHM_HELPER_TEXT[algorithm]}</FormHelperText>
         </Grid>
 
         <Grid md={3} xs={6}>
