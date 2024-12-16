@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { eventFactory } from 'src/factories';
-import { getEventTimestamp } from 'src/utilities/eventUtils';
 import {
   renderWithTheme,
   resizeScreenSize,
@@ -10,7 +9,6 @@ import {
 
 import { EventRow } from './EventRow';
 
-import type { completionEvent } from './EventRow';
 import type { Event } from '@linode/api-v4/lib/account';
 
 describe('EventRow', () => {
@@ -19,15 +17,11 @@ describe('EventRow', () => {
     status: 'notification',
     username: 'test_user',
   });
-  const completionEvent: completionEvent = {
-    ...mockEvent,
-    completionTime: getEventTimestamp(mockEvent),
-  };
 
   it('displays the correct data', () => {
     resizeScreenSize(1600);
     const { getByRole } = renderWithTheme(
-      wrapWithTableBody(<EventRow event={completionEvent} />)
+      wrapWithTableBody(<EventRow event={mockEvent} />)
     );
 
     expect(

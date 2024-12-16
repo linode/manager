@@ -8,6 +8,7 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { TextTooltip } from 'src/components/TextTooltip';
 import { useProfile } from 'src/queries/profile/profile';
 
 import {
@@ -17,14 +18,10 @@ import {
 } from './utils';
 
 import type { Event } from '@linode/api-v4/lib/account';
-import type { DateTime } from 'luxon';
 
-export interface completionEvent extends Event {
-  completionTime: DateTime;
-}
 interface EventRowProps {
   entityId?: number;
-  event: completionEvent;
+  event: Event;
 }
 
 export const EventRow = (props: EventRowProps) => {
@@ -41,7 +38,11 @@ export const EventRow = (props: EventRowProps) => {
     return null;
   }
 
-  const { progressEventDisplay, showProgress } = formatProgressEvent(event);
+  const {
+    progressEventDate,
+    progressEventDuration,
+    showProgress,
+  } = formatProgressEvent(event);
 
   return (
     <TableRow data-qa-event-row data-test-id={action}>
@@ -74,8 +75,13 @@ export const EventRow = (props: EventRowProps) => {
           </Box>
         </TableCell>
       </Hidden>
-      <TableCell parentColumn="Relative Date">
-        {progressEventDisplay}
+      <TableCell parentColumn="Start Date">
+        <TextTooltip
+          displayText={progressEventDate}
+          minWidth={130}
+          placement="top"
+          tooltipText={<DateTimeDisplay value={event.created} />}
+        />
         {username && (
           <Hidden smUp>
             <br />
@@ -86,8 +92,8 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden mdDown>
-        <TableCell data-qa-event-created-cell parentColumn="Absolute Date">
-          <DateTimeDisplay value={event.completionTime.toString()} />
+        <TableCell data-qa-event-created-cell parentColumn="Duration">
+          {progressEventDuration}
         </TableCell>
       </Hidden>
     </TableRow>

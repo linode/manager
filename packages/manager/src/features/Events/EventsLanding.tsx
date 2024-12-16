@@ -21,9 +21,7 @@ import {
   StyledTableCell,
   StyledTypography,
 } from './EventsLanding.styles';
-import { sortEventsChronologically } from './utils';
 
-import type { completionEvent } from './EventRow';
 import type { Filter } from '@linode/api-v4';
 
 interface Props {
@@ -51,13 +49,6 @@ export const EventsLanding = (props: Props) => {
     isLoading,
   } = useEventsInfiniteQuery(filter);
 
-  const eventsInSortedOrder: completionEvent[] = React.useMemo(() => {
-    if (events && events.length > 0) {
-      return sortEventsChronologically(events);
-    }
-    return [];
-  }, [events]);
-
   const renderTableBody = () => {
     if (isLoading) {
       return (
@@ -79,7 +70,7 @@ export const EventsLanding = (props: Props) => {
     } else {
       return (
         <>
-          {eventsInSortedOrder?.map((event) => (
+          {events?.map((event) => (
             <EventRow
               entityId={entityId}
               event={event}
@@ -111,10 +102,10 @@ export const EventsLanding = (props: Props) => {
                 User
               </TableCell>
             </Hidden>
-            <StyledTableCell sx={{ width: 175 }}>Relative Date</StyledTableCell>
+            <StyledTableCell sx={{ width: 175 }}>Start Date</StyledTableCell>
             <Hidden mdDown>
-              <StyledTableCell data-qa-events-time-header sx={{ width: 150 }}>
-                Absolute Date
+              <StyledTableCell data-qa-events-time-header sx={{ width: 175 }}>
+                Duration
               </StyledTableCell>
             </Hidden>
           </TableRow>

@@ -2,12 +2,12 @@ import { Duration } from 'luxon';
 
 import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
-import { getEventTimestamp } from 'src/utilities/eventUtils';
+import { parseAPIDate } from 'src/utilities/date';
+import { formatDuration } from 'src/utilities/formatDuration';
 
 import { ACTIONS_WITHOUT_USERNAMES } from './constants';
 import { eventMessages } from './factory';
 
-import type { completionEvent } from './EventRow';
 import type { Event } from '@linode/api-v4';
 
 type EventMessageManualInput = {
@@ -113,7 +113,8 @@ const shouldShowEventProgress = (event: Event): boolean => {
 };
 
 interface ProgressEventDisplay {
-  progressEventDisplay: null | string;
+  progressEventDate: string;
+  progressEventDuration: string;
   showProgress: boolean;
 }
 
@@ -125,29 +126,20 @@ interface ProgressEventDisplay {
  */
 export const formatProgressEvent = (event: Event): ProgressEventDisplay => {
   const showProgress = shouldShowEventProgress(event);
-  const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
+  const startDate = parseAPIDate(event.created).toRelative();
+  const progressEventDate = showProgress ? `Started ${startDate}` : startDate;
 
-  const progressEventDisplay = showProgress
-    ? parsedTimeRemaining
-      ? `~${parsedTimeRemaining}`
-      : `Started ${getEventTimestamp(event).toRelative()}`
-    : getEventTimestamp(event).toRelative();
+  const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
+  const eventDuration = event.duration
+    ? formatDuration(Duration.fromObject({ seconds: event.duration }))
+    : '-';
+  const progressEventDuration = parsedTimeRemaining
+    ? `~${parsedTimeRemaining}`
+    : eventDuration;
 
   return {
-    progressEventDisplay,
+    progressEventDate,
+    progressEventDuration,
     showProgress,
   };
-};
-
-export const sortEventsChronologically = (
-  events: Event[]
-): completionEvent[] => {
-  return events
-    ?.map((e) => ({
-      ...e,
-      completionTime: getEventTimestamp(e),
-    }))
-    .sort((e1, e2) => {
-      return e2.completionTime.toMillis() - e1.completionTime.toMillis();
-    });
 };
