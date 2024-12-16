@@ -189,9 +189,20 @@ describe('Integration Tests for Applied Filters', () => {
 
      cy.get('[data-testid="applied-filter"]').within(() => {
       cy.get(`[data-qa-value="Database Engine ${engine}"]`)
-      cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
-      cy.get(`[data-qa-value="Node Type ${nodeType}"]`)
-      cy.get(`[data-qa-value="Database Clusters ${databaseMock.label}"]`)
+      .should('be.visible')
+      .should('have.text', engine);
+
+    cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+      .should('be.visible')
+      .should('have.text', 'US, Chicago, IL');
+
+    cy.get(`[data-qa-value="Node Type ${nodeType}"]`)
+      .should('be.visible')
+      .should('have.text', nodeType);
+
+    cy.get(`[data-qa-value="Database Clusters ${clusterName}"]`)
+      .should('be.visible')
+      .should('have.text', clusterName);
     });
   });
 
@@ -214,7 +225,9 @@ describe('Integration Tests for Applied Filters', () => {
     //Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
     cy.get('[data-testid="applied-filter"]').within(() => {
-     cy.get(`[data-qa-value="Database Engine ${engine}"]`)
+      cy.get(`[data-qa-value="Database Engine ${engine}"]`)
+      .should('be.visible')
+      .should('have.text', engine);
     });
   });
 
@@ -229,7 +242,9 @@ describe('Integration Tests for Applied Filters', () => {
     //Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
     cy.get('[data-testid="applied-filter"]').within(() => {
-     cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+      cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+      .should('be.visible')
+      .should('have.text', 'US, Chicago, IL');
     });
   });
 
@@ -242,8 +257,11 @@ describe('Integration Tests for Applied Filters', () => {
 
     //Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
+    
     cy.get('[data-testid="applied-filter"]').within(() => {
       cy.get(`[data-qa-value="Node Type ${nodeType}"]`)
+      .should('be.visible')
+      .should('have.text', nodeType);
     });
   });
   it('should update and verify that the applied global filters are reflected in the filter section', () => {
@@ -283,11 +301,26 @@ describe('Integration Tests for Applied Filters', () => {
     //Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
     cy.get('[data-testid="applied-filter"]').within(() => {
-      cy.get(`[data-qa-value="Database Engine PostgreSQL"]`)
+      cy.get(`[data-qa-value="Database Engine ${'PostgreSQL'}"]`)
+        .should('be.visible')
+        .should('have.text', 'PostgreSQL');
+
       cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
-      cy.get(`[data-qa-value="Node Type Primary"]`)
-      cy.get(`[data-qa-value="Database Clusters ${databaseMock.label}"]`)
-      cy.get(`[data-qa-value="Database Clusters ${extendDatabaseMock.label}"]`)
+        .should('be.visible')
+        .should('have.text', 'US, Chicago, IL');
+
+        cy.get('[data-qa-value="Node Type Primary"]')
+        .should('be.visible')
+        .should('have.text', 'Primary');
+
+      cy.get(`[data-qa-value="Database Clusters ${clusterName}"]`)
+        .should('be.visible')
+        .should('have.text', clusterName);
+
+        cy.get(`[data-qa-value="Database Clusters ${extendDatabaseMock.label}"]`)
+        .should('be.visible')
+        .should('have.text', extendDatabaseMock.label);
+
     });
   });
 });
