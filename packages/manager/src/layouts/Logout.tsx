@@ -1,59 +1,50 @@
-import { pathOr } from 'ramda';
-import { Component } from 'react';
-import { MapDispatchToProps, MapStateToProps, connect } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { useEffect } from 'react';
 
-import { CLIENT_ID } from 'src/constants';
-import { ApplicationState } from 'src/store';
-import { clearUserInput } from 'src/store/authentication/authentication.helpers';
-import { handleLogout } from 'src/store/authentication/authentication.requests';
-import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
+import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
+import { revokeToken } from 'src/session';
+import { getAuthToken } from 'src/utilities/authentication';
+import {
+  getEnvLocalStorageOverrides,
+  stackScriptInProgress,
+  supportTicket,
+  supportTicketStorageDefaults,
+  ticketReply,
+} from 'src/utilities/storage';
 
-interface LogoutProps extends DispatchProps, StateProps {}
+export const Logout = () => {
+  useEffect(() => {
+    const clientId = getEnvLocalStorageOverrides()?.clientID ?? CLIENT_ID;
+    const authToken = getAuthToken().token;
 
-export class Logout extends Component<LogoutProps> {
-  componentDidMount() {
-    // Clear any user input (in the Support Drawer) since the user is manually logging out.
     clearUserInput();
+    if (clientId && authToken) {
+      revokeToken(clientId, authToken.split(' ')[1]);
+    }
+    window.location.assign(getLoginUrl() + '/logout');
+  }, []);
 
-    const localStorageOverrides = getEnvLocalStorageOverrides();
-
-    const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
-
-    // Split the token so we can get the token portion of the "<prefix> <token>" pair
-    this.props.dispatchLogout(clientID || '', this.props.token.split(' ')[1]);
-  }
-
-  render() {
-    return null;
-  }
-}
-
-interface StateProps {
-  token: string;
-}
-
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (
-  state,
-  ownProps
-) => ({
-  token: pathOr('', ['authentication', 'token'], state),
-});
-
-interface DispatchProps {
-  dispatchLogout: (client_id: string, token: string) => void;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
-) => {
-  return {
-    dispatchLogout: (client_id: string, token: string) =>
-      dispatch(handleLogout({ client_id, token })),
-  };
+  return null;
 };
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const getLoginUrl = () => {
+  try {
+    return new URL(getEnvLocalStorageOverrides()?.loginRoot ?? LOGIN_ROOT);
+  } catch (_) {
+    return LOGIN_ROOT;
+  }
+};
 
-export default connected(Logout);
+// TODO -- find a better home for this util
+const clearUserInput = () => {
+  supportTicket.set(supportTicketStorageDefaults);
+  ticketReply.set({ text: '', ticketId: -1 });
+  stackScriptInProgress.set({
+    description: '',
+    id: '',
+    images: [],
+    label: '',
+    rev_note: '',
+    script: '',
+    updated: '',
+  });
+};

@@ -1,16 +1,11 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import { handleStartSession } from 'src/store/authentication/authentication.actions';
+import { setAuthToken } from 'src/utilities/authentication';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { authentication } from 'src/utilities/storage';
 
-import type { MapDispatchToProps } from 'react-redux';
-import type { RouteComponentProps } from 'react-router-dom';
 import type { BaseQueryParams } from 'src/utilities/queryParams';
-
-interface OAuthCallbackPageProps extends DispatchProps, RouteComponentProps {}
 
 export interface OAuthQueryParams extends BaseQueryParams {
   access_token: string; // token for auth
@@ -21,40 +16,37 @@ export interface OAuthQueryParams extends BaseQueryParams {
   token_type: string; // token prefix AKA "Bearer"
 }
 
-export class OAuthCallbackPage extends Component<OAuthCallbackPageProps> {
-  checkNonce(nonce: string) {
-    const { history } = this.props;
-    // nonce should be set and equal to ours otherwise retry auth
-    const storedNonce = authentication.nonce.get();
-    if (!(nonce && storedNonce === nonce)) {
-      authentication.nonce.set('');
-      history.push('/');
-    }
+const checkNonce = (nonce: string, history: ReturnType<typeof useHistory>) => {
+  // nonce should be set and equal to ours otherwise retry auth
+  const storedNonce = authentication.nonce.get();
+  if (!(nonce && storedNonce === nonce)) {
+    authentication.nonce.set('');
+    history.push('/');
   }
+};
 
-  componentDidMount() {
-    /**
-     * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
-     * the data we need and should bounce.
-     * location.hash is a string which starts with # and is followed by a basic query params stype string.
-     *
-     * 'location.hash = `#access_token=something&token_type=something˙&expires_in=something&scope=something&state=something&return=the-url-we-are-now-at?returnTo=where-to-redirect-when-done`
-     *
-     */
+const OAuthCallback = () => {
+  /**
+   * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
+   * the data we need and should bounce.
+   * location.hash is a string which starts with # and is followed by a basic query params stype string.
+   *
+   * 'location.hash = `#access_token=something&token_type=something˙&expires_in=something&scope=something&state=something&return=the-url-we-are-now-at?returnTo=where-to-redirect-when-done`
+   */
+  const history = useHistory();
+  const location = useLocation();
 
-    const { history, location } = this.props;
-
+  useEffect(() => {
     /**
      * If the hash doesn't contain a string after the #, there's no point continuing as we dont have
      * the query params we need.
      */
-
     if (!location.hash || location.hash.length < 2) {
       return history.push('/');
     }
 
     const hashParams = getQueryParamsFromQueryString<OAuthQueryParams>(
-      location.hash.substr(1)
+      location.hash.substring(1)
     );
 
     const {
@@ -88,7 +80,7 @@ export class OAuthCallbackPage extends Component<OAuthCallbackPageProps> {
      * matches the one we stored when authentication was started. This confirms the initiator
      * and receiver are the same.
      */
-    this.checkNonce(nonce);
+    checkNonce(nonce, history);
 
     /**
      * We multiply the expiration time by 1000 ms because JavaSript returns time in ms, while
@@ -100,50 +92,19 @@ export class OAuthCallbackPage extends Component<OAuthCallbackPageProps> {
     /**
      * We have all the information we need and can persist it to localStorage and Redux.
      */
-    this.props.dispatchStartSession(
-      accessToken,
-      tokenType,
+    setAuthToken({
+      expiration: expireDate.toString(),
       scopes,
-      expireDate.toString()
-    );
+      token: `${tokenType} ${accessToken}`,
+    });
 
     /**
      * All done, redirect this bad-boy to the returnTo URL we generated earlier.
      */
     history.push(returnTo);
-  }
+  }, []);
 
-  render() {
-    return null;
-  }
-}
-
-interface DispatchProps {
-  dispatchStartSession: (
-    token: string,
-    tokenType: string,
-    scopes: string,
-    expiry: string
-  ) => void;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch
-) => {
-  return {
-    dispatchStartSession: (token, tokenType, scopes, expiry) =>
-      dispatch(
-        handleStartSession({
-          expires: expiry,
-          scopes,
-          token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
-            1
-          )} ${token}`,
-        })
-      ),
-  };
+  return null;
 };
 
-const connected = connect(undefined, mapDispatchToProps);
-
-export default connected(withRouter(OAuthCallbackPage));
+export default OAuthCallback;

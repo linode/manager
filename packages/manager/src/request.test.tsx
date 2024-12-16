@@ -1,10 +1,9 @@
 import { AxiosHeaders } from 'axios';
 
-import { handleStartSession } from 'src/store/authentication/authentication.actions';
-
 import { profileFactory } from './factories';
 import { getURL, handleError, injectAkamaiAccountHeader } from './request';
 import { storeFactory } from './store';
+import { getAuthToken, setAuthToken } from './utilities/authentication';
 
 import type { LinodeError } from './request';
 import type { APIError } from '@linode/api-v4';
@@ -48,22 +47,15 @@ const error401: AxiosError<LinodeError> = {
 
 describe('Expiring Tokens', () => {
   it('should properly expire tokens if given a 401 error', () => {
-    store.dispatch(
-      handleStartSession({
-        expires: 'never',
-        scopes: '*',
-        token: 'helloworld',
-      })
-    );
+    setAuthToken({ expiration: 'never', scopes: '*', token: 'helloworld' });
     const expireToken = handleError(error401, store);
 
     /**
      * the redux state should nulled out and the function should return
      * our original error
      */
-    expect(store.getState().authentication).toEqual({
+    expect(getAuthToken()).toEqual({
       expiration: null,
-      loggedInAsCustomer: false,
       scopes: null,
       token: null,
     });
@@ -73,22 +65,15 @@ describe('Expiring Tokens', () => {
   });
 
   it('should just promise reject if a non-401 error', () => {
-    store.dispatch(
-      handleStartSession({
-        expires: 'never',
-        scopes: '*',
-        token: 'helloworld',
-      })
-    );
+    setAuthToken({ expiration: 'never', scopes: '*', token: 'helloworld' });
     const expireToken = handleError(error400, store);
 
     /**
      * the redux state should nulled out and the function should return
      * our original error
      */
-    expect(store.getState().authentication).toEqual({
+    expect(getAuthToken()).toEqual({
       expiration: 'never',
-      loggedInAsCustomer: false,
       scopes: '*',
       token: 'helloworld',
     });
@@ -155,8 +140,7 @@ describe('setupInterceptors', () => {
       },
     };
 
-    const state = store.getState();
-    const token = state.authentication?.token ?? '';
+    const token = getAuthToken().token;
 
     const headers = new AxiosHeaders(config.headers);
     const hasExplicitAuthToken = headers.hasAuthorization();

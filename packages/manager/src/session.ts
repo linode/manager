@@ -87,14 +87,14 @@ export interface RevokeTokenSuccess {
   success: true;
 }
 
-export const revokeToken = (client_id: string, token: string) => {
+export const revokeToken = (clientId: string, token: string) => {
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
   const loginURL = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
 
   return Axios({
     baseURL: loginURL,
-    data: new URLSearchParams({ client_id, token }).toString(),
+    data: new URLSearchParams({ clientId, token }).toString(),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     },

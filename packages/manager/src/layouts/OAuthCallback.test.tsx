@@ -2,7 +2,7 @@ import { isEmpty } from 'ramda';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import type { OAuthQueryParams } from './OAuth';
+import type { OAuthQueryParams } from './OAuthCallback';
 
 describe('layouts/OAuth', () => {
   describe('parseQueryParams', () => {

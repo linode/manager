@@ -5,7 +5,7 @@ import * as React from 'react';
 import { AppBar } from 'src/components/AppBar';
 import { Hidden } from 'src/components/Hidden';
 import { Toolbar } from 'src/components/Toolbar';
-import { useAuthentication } from 'src/hooks/useAuthentication';
+import { loggedInAsCustomer } from 'src/utilities/authentication';
 
 import { Community } from './Community';
 import { CreateMenu } from './CreateMenu/CreateMenu';
@@ -29,7 +29,7 @@ export interface TopMenuProps {
 export const TopMenu = React.memo((props: TopMenuProps) => {
   const { desktopMenuToggle, isSideMenuOpen, openSideMenu, username } = props;
 
-  const { loggedInAsCustomer } = useAuthentication();
+  const isLoggedInAsCustomer = loggedInAsCustomer();
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'
@@ -37,7 +37,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
 
   return (
     <React.Fragment>
-      {loggedInAsCustomer && (
+      {isLoggedInAsCustomer && (
         <Box
           bgcolor={(theme) => theme.tokens.color.Pink[40]}
           padding="1em"

@@ -1,5 +1,7 @@
 import { shouldLoadDevTools } from 'src/dev-tools/load';
 
+import { isNullOrUndefined } from './nullOrUndefined';
+
 import type { RegionSite } from '@linode/api-v4';
 import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
@@ -16,7 +18,7 @@ export const getStorage = (key: string, fallback?: any) => {
    * Basically, if localstorage doesn't exist,
    * return whatever we set as a fallback
    */
-  if ((item === null || item === undefined) && !!fallback) {
+  if (isNullOrUndefined(item) && fallback !== undefined) {
     return fallback;
   }
 
@@ -61,7 +63,7 @@ export type PageSize = number;
 export type RegionFilter = 'all' | RegionSite;
 
 interface AuthGetAndSet {
-  get: () => any;
+  get: () => string;
   set: (value: string) => void;
 }
 
@@ -145,19 +147,19 @@ export const storage: Storage = {
   },
   authentication: {
     expire: {
-      get: () => getStorage(EXPIRE),
+      get: () => getStorage(EXPIRE, ''),
       set: (v) => setStorage(EXPIRE, v),
     },
     nonce: {
-      get: () => getStorage(NONCE),
+      get: () => getStorage(NONCE, ''),
       set: (v) => setStorage(NONCE, v),
     },
     scopes: {
-      get: () => getStorage(SCOPES),
+      get: () => getStorage(SCOPES, ''),
       set: (v) => setStorage(SCOPES, v),
     },
     token: {
-      get: () => getStorage(TOKEN),
+      get: () => getStorage(TOKEN, ''),
       set: (v) => setStorage(TOKEN, v),
     },
   },
