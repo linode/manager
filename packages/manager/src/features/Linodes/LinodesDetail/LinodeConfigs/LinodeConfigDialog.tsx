@@ -290,7 +290,7 @@ export const LinodeConfigDialog = (props: Props) => {
   const [
     primaryInterfaceIndex,
     setPrimaryInterfaceIndex,
-  ] = React.useState<number>();
+  ] = React.useState<number>(0);
 
   const regionHasVLANS = regions.some(
     (thisRegion) =>
@@ -1273,6 +1273,7 @@ export const unrecommendedConfigNoticeSelector = ({
 
    If not one of the above scenarios, do not display a warning notice re: configuration
   */
+
   if (
     vpcInterface &&
     primaryInterfaceIndex !== thisIndex &&
