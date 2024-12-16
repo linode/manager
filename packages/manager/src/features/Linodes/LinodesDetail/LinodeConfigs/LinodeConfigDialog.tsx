@@ -1273,7 +1273,6 @@ export const unrecommendedConfigNoticeSelector = ({
 
    If not one of the above scenarios, do not display a warning notice re: configuration
   */
-
   if (
     vpcInterface &&
     primaryInterfaceIndex !== thisIndex &&
