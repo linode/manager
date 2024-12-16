@@ -1186,7 +1186,7 @@ export const handlers = [
     const domain = domainFactory.build();
     return HttpResponse.json(domain);
   }),
-  http.get('*/domains/*/records', () => {
+  http.get('*/v4/domains/*/records', () => {
     const records = domainRecordFactory.buildList(1);
     return HttpResponse.json(makeResourcePage(records));
   }),
