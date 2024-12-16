@@ -8,7 +8,9 @@
     "precommit": " ",
     "changeset": "node changelog/changeset.mjs",
     "generate-changelogs": "node changelog/generate-changelogs.mjs",
-    "package-versions": "node package-versions/index.js"
+    "package-versions": "node package-versions/index.js",
+    "junit:summary": "tsx junit-summary/index.ts",
+    "generate-tod": "tsx tod-payload/index.ts"
   },
   "dependencies": {},
   "devDependencies": {
