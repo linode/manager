@@ -164,6 +164,7 @@ export const LinodeVolumes = () => {
             }
             isDetailsPageRow
             key={volume.id}
+            linodeCapabilities={linode?.capabilities}
             volume={volume}
           />
         );

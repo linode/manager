@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -173,5 +174,24 @@ describe('Volume table row - for linodes detail page', () => {
 
     // Make sure there is a detach button
     expect(getByText('Detach'));
+  });
+
+  it('should show a high performance icon tooltip if Linode has the capability', async () => {
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+      wrapWithTableBody(
+        <VolumeTableRow
+          handlers={handlers}
+          isDetailsPageRow
+          linodeCapabilities={['Block Storage Performance B1']}
+          volume={attachedVolume}
+        />
+      )
+    );
+
+    const highPerformanceIcon = getByLabelText('High Performance');
+
+    expect(highPerformanceIcon).toBeVisible();
+    await userEvent.click(highPerformanceIcon);
+    await waitFor(() => expect(getByText('High Performance')).toBeVisible());
   });
 });
