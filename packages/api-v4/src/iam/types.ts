@@ -1,9 +1,4 @@
-export interface IamUserPermissions {
-  account_access: AccountAccessType[];
-  resource_access: ResourceAccess[];
-}
-
-type ResourceType =
+export type ResourceTypePermissions =
   | 'linode'
   | 'firewall'
   | 'nodebalancer'
@@ -23,31 +18,187 @@ type AccountAccessType =
 
 type RoleType = 'linode_contributor' | 'firewall_admin';
 
+export interface IamUserPermissions {
+  account_access: AccountAccessType[];
+  resource_access: ResourceAccess[];
+}
 export interface ResourceAccess {
   resource_id: number;
-  resource_type: ResourceType;
+  resource_type: ResourceTypePermissions;
   roles: RoleType[];
 }
 
-export interface IamAccountPermissions {
-  account_access: Access[];
-  resource_access: Access[];
-}
-
-type PermissionType =
+export type PermissionType =
   | 'create_linode'
   | 'update_linode'
   | 'update_firewall'
   | 'delete_linode'
-  | 'view_linode';
+  | 'view_linode'
+  | 'create_firewall'
+  | 'list_firewalls'
+  | 'view_account'
+  | 'view_account_settings'
+  | 'view_network_usage'
+  | 'list_events'
+  | 'list_service_transfers'
+  | 'list_notifications'
+  | 'list_account_logins'
+  | 'list_oauth_clients'
+  | 'list_available_services'
+  | 'list_account_agreements'
+  | 'list_child_accounts'
+  | 'view_user'
+  | 'list_users'
+  | 'view_linode_stats'
+  | 'view_linode_monthly_stats'
+  | 'view_linode_network_transfer'
+  | 'view_linode_monthly_network_transfer_stats'
+  | 'list_linode_types'
+  | 'list_linode_volumes'
+  | 'list_linode_backups'
+  | 'list_linode_config_profiles'
+  | 'list_linode_disks'
+  | 'list_linode_firewalls'
+  | 'view_linode_networking_info'
+  | 'list_linode_nodebalancers'
+  | 'list_linode_kernels'
+  | 'view_linode_type'
+  | 'view_linode_backup'
+  | 'view_linode_config_profile'
+  | 'list_linode_config_profile_interfaces'
+  | 'view_linode_config_profile_interface'
+  | 'view_linode_disk'
+  | 'view_linode_ip_address'
+  | 'view_linode_kernel'
+  | 'view_image'
+  | 'view_vpc'
+  | 'list_vpc_ip_addresses'
+  | 'list_vpc_subnets'
+  | 'view_vpc_subnet'
+  | 'view_volume'
+  | 'view_nodebalancer'
+  | 'list_nodebalancer_firewalls'
+  | 'view_nodebalancer_statistics'
+  | 'list_nodebalancer_configs'
+  | 'list_nodebalancer_config_nodes'
+  | 'view_nodebalancer_config'
+  | 'view_nodebalancer_config_node'
+  | 'update_account'
+  | 'update_account_settings'
+  | 'enable_managed'
+  | 'create_service_transfer'
+  | 'list_maintenances'
+  | 'create_oauth_client'
+  | 'acknowledge_account_agreement'
+  | 'enroll_beta_program'
+  | 'list_enrolled_beta_programs'
+  | 'create_user'
+  | 'update_user'
+  | 'delete_user'
+  | 'list_linodes'
+  | 'allocate_ip'
+  | 'assign_ips'
+  | 'share_ips'
+  | 'assign_ipv4'
+  | 'share_ipv4'
+  | 'create_ipv6_range'
+  | 'boot_linode'
+  | 'clone_linode'
+  | 'migrate_linode'
+  | 'upgrade_linode'
+  | 'password_reset_linode'
+  | 'reboot_linode'
+  | 'rebuild_linode'
+  | 'rescue_linode'
+  | 'resize_linode'
+  | 'shutdown_linode'
+  | 'create_linode_backup_snapshot'
+  | 'cancel_linode_backups'
+  | 'enable_linode_backups'
+  | 'create_linode_config_profile'
+  | 'create_linode_disk'
+  | 'allocate_linode_ip_address'
+  | 'restore_linode_backup'
+  | 'update_linode_config_profile'
+  | 'create_linode_config_profile_interface'
+  | 'reorder_linode_config_profile_interfaces'
+  | 'update_linode_config_profile_interface'
+  | 'update_linode_disk'
+  | 'clone_linode_disk'
+  | 'reset_linode_disk_root_password'
+  | 'resize_linode_disk'
+  | 'update_linode_ip_address'
+  | 'delete_linode_config_profile'
+  | 'delete_linode_config_profile_interface'
+  | 'delete_linode_disk'
+  | 'delete_linode_ip_address'
+  | 'delete_firewall'
+  | 'create_firewall_device'
+  | 'delete_firewall_device'
+  | 'update_firewall_rules'
+  | 'view_firewall'
+  | 'view_firewall_device'
+  | 'list_firewall_devices'
+  | 'create_image'
+  | 'upload_image'
+  | 'list_images'
+  | 'update_image'
+  | 'delete_image'
+  | 'create_vpc'
+  | 'list_vpcs'
+  | 'list_all_vpc_ipaddresses'
+  | 'update_vpc'
+  | 'update_vpc_subnet'
+  | 'delete_vpc'
+  | 'create_vpc_subnet'
+  | 'delete_vpc_subnet'
+  | 'create_volume'
+  | 'list_volumes'
+  | 'update_volume'
+  | 'attach_volume'
+  | 'clone_volume'
+  | 'detach_volume'
+  | 'resize_volume'
+  | 'delete_volume'
+  | 'create_nodebalancer'
+  | 'list_nodebalancers'
+  | 'update_nodebalancer'
+  | 'add_nodebalancer_config'
+  | 'update_nodebalancer_config'
+  | 'rebuild_nodebalancer_config'
+  | 'add_nodebalancer_config_node'
+  | 'update_nodebalancer_config_node'
+  | 'delete_nodebalancer'
+  | 'delete_nodebalancer_config'
+  | 'delete_nodebalancer_config_node'
+  | 'cancel_account'
+  | 'list_payments'
+  | 'list_invoices'
+  | 'list_payment_methods'
+  | 'view_invoice'
+  | 'list_invoice_items'
+  | 'view_payment_method'
+  | 'view_payment'
+  | 'make_payment'
+  | 'create_payment_method'
+  | 'create_promo_code'
+  | 'delete_payment_method'
+  | 'set_default_payment_method';
 
-interface Access {
-  resource_type: ResourceType;
+export interface IamAccountPermissions {
+  account_access: IamAccess[];
+  resource_access: IamAccess[];
+}
+
+export interface IamAccess {
+  resource_type: ResourceTypePermissions;
   roles: Roles[];
 }
 
 export interface Roles {
   name: string;
   description: string;
-  permissions?: PermissionType[];
+  permissions: PermissionType[];
 }
+
+export type IamAccessType = keyof IamAccountPermissions;
