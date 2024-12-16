@@ -166,9 +166,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   {pluralize('Volume', 'Volumes', numVolumes)}
                 </Typography>
 
-                <HighPerformanceVolumeIcon
-                  linodeCapabilities={linodeCapabilities}
-                />
+                {numVolumes > 0 && (
+                  <HighPerformanceVolumeIcon
+                    linodeCapabilities={linodeCapabilities}
+                  />
+                )}
               </Box>
             </Grid>
             {isDiskEncryptionFeatureEnabled && encryptionStatus && (
