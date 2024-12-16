@@ -309,7 +309,7 @@ describe('Integration Tests for Applied Filters', () => {
         .should('be.visible')
         .should('have.text', 'US, Chicago, IL');
 
-      cy.get(`[data-qa-value="Node Type ${'Primary'}"]`)
+        cy.get('[data-qa-value="Node Type Primary"]')
         .should('be.visible')
         .should('have.text', 'Primary');
 
