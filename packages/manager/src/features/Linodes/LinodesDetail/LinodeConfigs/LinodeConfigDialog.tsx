@@ -1004,7 +1004,7 @@ export const LinodeConfigDialog = (props: Props) => {
                   disabled={isReadOnly}
                   label="Primary Interface (Default Route)"
                   options={getPrimaryInterfaceOptions(values.interfaces)}
-                  value={primaryInterfaceOptions[primaryInterfaceIndex ?? 0]}
+                  value={primaryInterfaceOptions[primaryInterfaceIndex]}
                 />
                 <Divider
                   sx={{
@@ -1242,7 +1242,7 @@ export const unrecommendedConfigNoticeSelector = ({
   values,
 }: {
   _interface: ExtendedInterface;
-  primaryInterfaceIndex: number | undefined;
+  primaryInterfaceIndex: number;
   thisIndex: number;
   values: EditableFields;
 }): JSX.Element | null => {
@@ -1255,9 +1255,7 @@ export const unrecommendedConfigNoticeSelector = ({
 
   // Edge case: users w/ ability to have multiple VPC interfaces. Scenario 1 & 2 notices not helpful if that's done
   const primaryInterfaceIsVPC =
-    primaryInterfaceIndex !== undefined
-      ? values.interfaces[primaryInterfaceIndex].purpose === 'vpc'
-      : false;
+    values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
 
   /*
    Scenario 1:
