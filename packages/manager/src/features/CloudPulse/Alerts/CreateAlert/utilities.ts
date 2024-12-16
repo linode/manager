@@ -18,7 +18,7 @@ export const filterFormValues = (
     'rule_criteria',
   ]);
   // severity has a need for null in the form for edge-cases, so null-checking and returning it as an appropriate type
-  const severity = formValues.severity!;
+  const severity = formValues.severity ?? 1;
   const entityIds = formValues.entity_ids;
   const rules = formValues.rule_criteria.rules;
   return {
@@ -36,10 +36,10 @@ export const filterMetricCriteriaFormValues = (
     const values = omitProps(rule, ['aggregation_type', 'operator', 'metric']);
     return {
       ...values,
-      aggregation_type: rule.aggregation_type!,
+      aggregation_type: rule.aggregation_type ?? 'avg',
       dimension_filters: rule.dimension_filters,
-      metric: rule.metric!,
-      operator: rule.operator!,
+      metric: rule.metric ?? '',
+      operator: rule.operator ?? 'eq',
     };
   });
 };

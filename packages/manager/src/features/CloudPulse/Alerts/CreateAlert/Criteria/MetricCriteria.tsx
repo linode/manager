@@ -1,6 +1,6 @@
 import { Box, Button, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
 
@@ -39,24 +39,24 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
     serviceType !== null
   );
 
-  const { control, watch } = useFormContext<CreateAlertDefinitionForm>();
+  const { control } = useFormContext<CreateAlertDefinitionForm>();
 
-  const metricCriteriaWatcher = watch(name);
+  const metricCriteriaWatcher = useWatch({ control, name });
+
+  const intervalList =
+    metricDefinitions?.data
+      .filter((item) =>
+        metricCriteriaWatcher.some(
+          (criteria: MetricCriteriaForm) => criteria.metric === item.metric
+        )
+      )
+      .map((item) => item.scrape_interval) || [];
+
+  const maxInterval = Math.max(...convertToSeconds(intervalList));
+
   React.useEffect(() => {
-    const formMetricValues = new Set(
-      metricCriteriaWatcher.map((item: MetricCriteriaForm) => item.metric)
-    );
-
-    const intervalList =
-      metricDefinitions &&
-      metricDefinitions.data
-        .filter((item) => formMetricValues.has(item.metric))
-        .map((item) => item.scrape_interval);
-    const maxInterval = Math.max(
-      ...convertToSeconds(intervalList ? intervalList : [])
-    );
     setMaxInterval(maxInterval);
-  }, [setMaxInterval, metricCriteriaWatcher, metricDefinitions]);
+  }, [maxInterval, setMaxInterval]);
 
   const { append, fields, remove } = useFieldArray({
     control,

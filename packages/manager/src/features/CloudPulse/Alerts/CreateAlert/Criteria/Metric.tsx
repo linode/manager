@@ -2,7 +2,7 @@ import { Autocomplete, Box } from '@linode/ui';
 import { Stack, TextField, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
   MetricAggregationOptions,
@@ -46,11 +46,7 @@ interface MetricCriteriaProps {
 export const Metric = (props: MetricCriteriaProps) => {
   const { apiError, data, name, onMetricDelete, showDeleteIcon } = props;
   const [isMetricDefinitionError, isMetricDefinitionLoading] = apiError;
-  const {
-    control,
-    setValue,
-    watch,
-  } = useFormContext<CreateAlertDefinitionForm>();
+  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
 
   const handleDataFieldChange = (
     selected: { label: string; unit: MetricUnitType; value: string },
@@ -83,7 +79,7 @@ export const Metric = (props: MetricCriteriaProps) => {
       : [];
   }, [data]);
 
-  const metricWatcher = watch(`${name}.metric`);
+  const metricWatcher = useWatch({ control, name: `${name}.metric` });
 
   const selectedMetric = React.useMemo(() => {
     return data && metricWatcher
@@ -103,6 +99,7 @@ export const Metric = (props: MetricCriteriaProps) => {
       : [];
   }, [selectedMetric]);
 
+  const serviceWatcher = useWatch({ control, name: 'serviceType' });
   return (
     <Box
       sx={(theme) => ({
@@ -154,7 +151,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                       : null
                   }
                   data-testid={'Data-field'}
-                  disabled={!watch('serviceType')}
+                  disabled={!serviceWatcher}
                   label="Data Field"
                   loading={isMetricDefinitionLoading}
                   onBlur={field.onBlur}

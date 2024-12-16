@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -74,14 +74,7 @@ export const CreateAlertDefinition = () => {
     ),
   });
 
-  const {
-    control,
-    formState,
-    getValues,
-    handleSubmit,
-    setError,
-    watch,
-  } = formMethods;
+  const { control, formState, getValues, handleSubmit, setError } = formMethods;
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
     getValues('serviceType')!
@@ -92,7 +85,7 @@ export const CreateAlertDefinition = () => {
    */
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
-  const serviceTypeWatcher = watch('serviceType');
+  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
@@ -158,9 +151,9 @@ export const CreateAlertDefinition = () => {
           {serviceTypeWatcher === 'dbaas' && <EngineOption name="engineType" />}
           <CloudPulseRegionSelect name="region" />
           <CloudPulseMultiResourceSelect
-            engine={watch('engineType')}
+            engine={useWatch({ control, name: 'engineType' })}
             name="entity_ids"
-            region={watch('region')}
+            region={useWatch({ control, name: 'region' })}
             serviceType={serviceTypeWatcher}
           />
           <CloudPulseAlertSeveritySelect name="severity" />
