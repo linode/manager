@@ -43,8 +43,8 @@
     "generate-changelogs": "yarn workspace @linode/scripts generate-changelogs",
     "coverage": "yarn workspace linode-manager coverage",
     "coverage:summary": "yarn workspace linode-manager coverage:summary",
-    "junit:summary": "yarn workspace @linode/scripts junit:summary",
-    "generate-tod": "yarn workspace @linode/scripts generate-tod",
+    "junit:summary": "YARN_SILENT=1 yarn workspace @linode/scripts junit:summary",
+    "generate-tod": "YARN_SILENT=1 yarn workspace @linode/scripts generate-tod",
     "docs": "bunx vitepress@1.0.0-rc.44 dev docs",
     "prepare": "husky"
   },
