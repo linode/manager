@@ -19,9 +19,9 @@
  *                          will fail otherwise.
  */
 
-const fs = require('fs');
-const path = require('path');
-const readline = require('readline');
+import fs from 'fs';
+import path from 'path';
+import readline from 'readline';
 
 // Command line arguments with executable path and name excluded.
 const args = process.argv.slice(2);
@@ -49,7 +49,7 @@ const flags = args.filter((arg) => {
  *
  * @var {string}
  */
-const root = path.resolve(__dirname, '..', '..');
+const root = path.resolve(import.meta.dirname, '..', '..');
 
 /**
  * Gets the path to the package.json file for the package with the given name.
@@ -138,7 +138,7 @@ const main = async () => {
   console.info('Package info:');
   console.table(currentPackageInfo);
 
-  for (job of jobs) {
+  for (const job of jobs) {
     const jobName = job.name;
     const jobPath = job.path;
     const jobVersion = job.desiredVersion;

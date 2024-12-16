@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "precommit": " ",
-    "changeset": "node changelog/changeset.mjs"
+    "changeset": "node changelog/changeset.mjs",
+    "generate-changelogs": "node changelog/generate-changelogs.mjs",
+    "package-versions": "node package-versions/index.js"
   },
   "dependencies": {},
   "devDependencies": {
