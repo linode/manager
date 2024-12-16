@@ -4,6 +4,7 @@ import * as React from 'react';
 import { SupportLink } from 'src/components/SupportLink';
 
 interface MessageLinkEntity {
+  fallback?: string;
   message: null | string;
 }
 
@@ -15,10 +16,10 @@ interface MessageLinkEntity {
  *  - render "contact support" strings as <Link>.
  */
 export const FormattedEventMessage = (props: MessageLinkEntity) => {
-  const { message } = props;
+  const { fallback, message } = props;
 
   if (!message) {
-    return null;
+    return fallback ? fallback : null;
   }
 
   return formatMessage(message);
