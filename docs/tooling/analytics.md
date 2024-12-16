@@ -1,8 +1,35 @@
 # Analytics
 
+## Pendo
+
+Cloud Manager uses [Pendo](https://www.pendo.io/pendo-for-your-customers/) to capture analytics, guide users, and improve the user experience.  Pendo is the **preferred** method for collecting analytics, including user events, since it requires no development effort and can be accomplished via the Pendo UI.
+
+To view Pendo dashboards, Cloud Manager developers must follow internal processes to request access.
+
+### Set Up and Initialization
+
+Pendo is configured in [`usePendo.js`](https://github.com/linode/manager/blob/develop/packages/manager/src/hooks/usePendo.ts). This custom hook allows us to initialize the Pendo analytics script when the [App](https://github.com/linode/manager/blob/develop/packages/manager/src/App.tsx#L56) is mounted.
+
+Important notes:
+
+- Pendo is only loaded if a valid `PENDO_API_KEY` is configured as an environment variable. In our development, staging, and production environments, `PENDO_API_KEY` is available at build time. See **Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo** for set up with local environments.
+- We load the Pendo agent from the CDN, rather than [self-hosting](https://support.pendo.io/hc/en-us/articles/360038969692-Self-hosting-the-Pendo-agent), and we have configured a [CNAME](https://support.pendo.io/hc/en-us/articles/360043539891-CNAME-for-Pendo).
+- We are hashing account and visitor IDs in a way that is consistent with Akamai's standards.
+- At initialization, we do string transformation on select URL patterns to **remove  sensitive data**. When new URL patterns are added to Cloud Manager, verify that existing transforms remove sensitive data; if not, update the transforms.
+- Pendo is currently not using any client-side (cookies or local) storage.
+- Pendo makes use of the existing `data-testid` properties, used in our automated testing, for tagging elements. They are more persistent and reliable than CSS properties, which are liable to change.
+
+### Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo
+
+1. Set the `REACT_APP_PENDO_API_KEY` environment variable in `.env`.
+2. Use the browser tools Network tab, filter requests by "psp.cloud", and check that successful network requests have been made to load Pendo scripts. (Also visible in browser tools Sources tab.)
+3. In the browser console, type `pendo.validateEnvironment()`.
+4. You should see command output in the console, and it should include a hashed `accountId` and hashed `visitorId`. Each page view change or custom event that fires should be visible as a request in the Network tab.
+5. If the console does not output the expected ids and instead outputs something like `Cookies are disabled in Pendo config. Is this expected?` in response to the above command, clear app storage with the browser tools. Once redirected back to Login, update the OneTrust cookie settings to enable cookies via "Manage Preferences" in the banner at the bottom of the screen. Log back into Cloud Manager and Pendo should load.
+
 ## Adobe Analytics
 
-Cloud Manager uses Adobe Analytics to capture page view and custom event statistics. To view analytics, Cloud Manager developers must follow internal processes to request access to Adobe Analytics dashboards.
+Cloud Manager uses Adobe Analytics to capture page view and custom event statistics, although Pendo is the preferred method for collecting this data where possible, as of Q4 2024. To view analytics, Cloud Manager developers must follow internal processes to request access to Adobe Analytics dashboards.
 
 ### Writing a Custom Event
 
@@ -63,27 +90,3 @@ See the `LinodeCreateForm` form events as an example.
 3. In the browser console, type `_satellite.setDebug(true)`.
 4. Refresh the page. You should see Adobe debug log output in the console. Each page view change or custom event that fires should be visible in the logs.
 5. When viewing dashboards in Adobe Analytics, it may take ~1 hour for analytics data to update. Once this happens, locally fired events will be visible in the dev dashboard.
-
-## Pendo
-
-Cloud Manager uses [Pendo](https://www.pendo.io/pendo-for-your-customers/) to capture analytics, guide users, and improve the user experience. To view Pendo dashboards, Cloud Manager developers must follow internal processes to request access.
-
-### Set Up and Initialization
-
-Pendo is configured in [`usePendo.js`](https://github.com/linode/manager/blob/develop/packages/manager/src/hooks/usePendo.ts). This custom hook allows us to initialize the Pendo analytics script when the [App](https://github.com/linode/manager/blob/develop/packages/manager/src/App.tsx#L56) is mounted.
-
-Important notes:
-
-- Pendo is only loaded if a valid `PENDO_API_KEY` is configured as an environment variable. In our development, staging, and production environments, `PENDO_API_KEY` is available at build time. See **Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo** for set up with local environments.
-- We load the Pendo agent from the CDN, rather than [self-hosting](https://support.pendo.io/hc/en-us/articles/360038969692-Self-hosting-the-Pendo-agent).
-- We are hashing account and visitor IDs in a way that is consistent with Akamai's standards.
-- At initialization, we do string transformation on select URL patterns to **remove  sensitive data**. When new URL patterns are added to Cloud Manager, verify that existing transforms remove sensitive data; if not, update the transforms.
-- Pendo is currently not using any client-side (cookies or local) storage.
-- Pendo makes use of the existing `data-testid` properties, used in our automated testing, for tagging elements. They are more persistent and reliable than CSS properties, which are liable to change.
-
-### Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo
-
-1. Set the `REACT_APP_PENDO_API_KEY` environment variable in `.env`.
-2. Use the browser tools Network tab, filter requests by "pendo", and check that successful network requests have been made to load Pendo scripts. (Also visible in browser tools Sources tab.)
-3. In the browser console, type `pendo.validateEnvironment()`.
-4. You should see command output in the console, and it should include a hashed `accountId` and hashed `visitorId`. Each page view change or custom event that fires should be visible as a request in the Network tab.
