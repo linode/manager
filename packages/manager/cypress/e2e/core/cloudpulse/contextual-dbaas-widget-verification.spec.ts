@@ -7,6 +7,8 @@ import {
   mockGetCloudPulseDashboard,
   mockCreateCloudPulseMetrics,
   mockGetCloudPulseMetricDefinitions,
+  mockGetCloudPulseDashboards,
+  mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
 import { ui } from 'support/ui';
 import { widgetDetails } from 'support/constants/widgets';
@@ -157,6 +159,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
     );
+    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
+    mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
+    mockGetCloudPulseServices(serviceType).as('fetchServices');
     mockGetDatabase(databaseMock).as('getDatabase');
     mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
 
@@ -164,29 +169,46 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     cy.visitWithLogin('/linodes');
 
     // navigate to the Databases
-    cy.get('[data-testid="menu-item-Databases"]')
-      .should('be.visible') 
-      .click();
+    cy.get('[data-testid="menu-item-Databases"]').should('be.visible').click();
 
     // navigate to the Monitor
     cy.visitWithLogin(
       `/databases/${databaseMock.engine}/${databaseMock.id}/monitor`
     );
 
-    cy.wait(['@getDashboard', '@getServiceType','@getDatabase']);
+    cy.wait(['@getDashboard', '@getServiceType', '@getDatabase']);
+
+    // Use findByPlaceholderText to locate the input field
+    cy.findByPlaceholderText('Select a Dashboard')
+      .should('be.visible')
+      .and('be.disabled') // Check if disabled
+      .and('have.value', 'Dbaas Dashboard'); // Ensure value is set
 
     // Select a time duration from the autocomplete input.
     ui.autocomplete
       .findByLabel('Time Range')
       .should('be.visible')
-      .type(`${timeDurationToSelect}{enter}`)
-      .should('be.visible');
+      .type(timeDurationToSelect);
+
+    ui.autocompletePopper
+      .findByTitle(timeDurationToSelect)
+      .should('be.visible')
+      .click();
 
     //Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
       .type(`${nodeType}{enter}`);
+
+    //Collapse the Filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
+
+    cy.get('[data-testid="applied-filter"]').within(() => {
+      cy.get(`[data-qa-value="Node Type ${nodeType}"]`)
+        .should('be.visible')
+        .should('have.text', nodeType);
+    });
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
