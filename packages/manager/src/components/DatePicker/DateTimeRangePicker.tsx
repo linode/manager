@@ -59,6 +59,10 @@ export const DateTimeRangePicker = ({
   const [startDateTime, setStartDateTime] = useState<DateTime | null>(
     startDateTimeValue
   );
+  const [presetValue, setPresetValue] = useState({
+    label: 'Select a preset',
+    value: '',
+  });
   const [endDateTime, setEndDateTime] = useState<DateTime | null>(
     endDateTimeValue
   );
@@ -168,6 +172,7 @@ export const DateTimeRangePicker = ({
           onChange={(_, selection) => {
             if (selection) {
               handlePresetSelection(selection.value);
+              setPresetValue(selection);
             }
           }}
           options={[
@@ -178,13 +183,10 @@ export const DateTimeRangePicker = ({
             { label: 'Last Month', value: 'last_month' },
             { label: 'Custom Range', value: 'custom_range' },
           ]}
-          value={{
-            label: 'Select a preset',
-            value: '',
-          }}
           fullWidth
           label="Date Presets"
           placeholder="Select Date"
+          value={presetValue}
         />
       ) : (
         <Box display="flex" gap={2}>
