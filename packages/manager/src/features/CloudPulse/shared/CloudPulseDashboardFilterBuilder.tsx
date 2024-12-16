@@ -297,13 +297,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           <Button
             startIcon={
               showFilter ? (
-                <KeyboardArrowDownIcon
-                  sx={{ color: 'grey', height: '30px', width: '30px' }}
-                />
+                <KeyboardArrowDownIcon />
               ) : (
-                <KeyboardArrowRightIcon
-                  sx={{ color: 'grey', height: '30px', width: '30px' }}
-                />
+                <KeyboardArrowRightIcon />
               )
             }
             sx={{
