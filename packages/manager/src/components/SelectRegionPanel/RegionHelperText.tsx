@@ -11,10 +11,10 @@ interface RegionHelperTextProps extends BoxProps {
 }
 
 export const RegionHelperText = (props: RegionHelperTextProps) => {
-  const { onClick, showCoreHelperText, ...rest } = props;
+  const { onClick, showCoreHelperText, sx, ...rest } = props;
 
   return (
-    <Box component="span" sx={{ display: 'block' }} {...rest}>
+    <Box {...rest} component="span" sx={{ ...sx, display: 'block' }}>
       <Typography
         component="span"
         data-testid="region-select-helper-test"
