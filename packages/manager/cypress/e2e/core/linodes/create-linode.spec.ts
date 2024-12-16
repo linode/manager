@@ -488,7 +488,7 @@ describe('Create Linode', () => {
     cy.findByText(`${createLinodeErrorMessage}`).should('not.exist');
   });
 
-  it('shows correct validation errors when a backup or plan is not selected', () => {
+  it('shows correct validation errors if no backup or plan is selected', () => {
     cy.visitWithLogin('/linodes/create');
 
     // Navigate to Linode Create page "Backups" tab
