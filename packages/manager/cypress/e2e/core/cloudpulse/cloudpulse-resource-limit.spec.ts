@@ -6,7 +6,7 @@
  * Ticket: DI-21897
  * 
  * 1. **Max Resource Limit Reached**:
- *    - Verifies that when the maximum number of database clusters (1) is selected,
+ *    - clusters exceeding the selection limit will be disabled, but they will still be visible in dropdown.
  *      the "Select All" option is hidden and only the available clusters (up to the limit)
  *      are shown in the `Database Clusters` dropdown.
  *    - Ensures that when a region is selected, the `Database Clusters` dropdown is enabled
