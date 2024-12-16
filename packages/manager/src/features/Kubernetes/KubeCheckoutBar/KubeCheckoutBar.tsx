@@ -1,5 +1,4 @@
-import { CircleProgress, Divider, Notice } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { CircleProgress, Divider, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
