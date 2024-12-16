@@ -1,10 +1,7 @@
-import { Box, Tooltip } from '@linode/ui';
+import { Box, ListItem, SelectedIcon, Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
-
-import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
-import { ListItem } from 'src/components/ListItem';
 
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 

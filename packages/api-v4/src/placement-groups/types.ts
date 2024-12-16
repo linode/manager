@@ -24,15 +24,22 @@ export interface PlacementGroup {
     is_compliant: boolean;
   }[];
   placement_group_policy: PlacementGroupPolicy;
+  migrations: {
+    inbound?: Array<{ linode_id: number }>;
+    outbound?: Array<{ linode_id: number }>;
+  } | null;
 }
 
-export type PlacementGroupPayload = Pick<
-  PlacementGroup,
-  'id' | 'label' | 'placement_group_type' | 'placement_group_policy'
->;
+export interface LinodePlacementGroupPayload
+  extends Pick<
+    PlacementGroup,
+    'id' | 'label' | 'placement_group_type' | 'placement_group_policy'
+  > {
+  migrating_to: number | null;
+}
 
 export interface CreatePlacementGroupPayload
-  extends Omit<PlacementGroupPayload, 'id'> {
+  extends Omit<LinodePlacementGroupPayload, 'id' | 'migrating_to'> {
   region: Region['id'];
 }
 

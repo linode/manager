@@ -1,11 +1,16 @@
-import { Notice, Radio, RadioGroup, TextField } from '@linode/ui';
+import {
+  FormControlLabel,
+  Notice,
+  Radio,
+  RadioGroup,
+  TextField,
+} from '@linode/ui';
 import { useFormik } from 'formik';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useCloneDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 

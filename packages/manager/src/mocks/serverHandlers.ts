@@ -19,6 +19,7 @@ import {
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
+  alertFactory,
   appTokenFactory,
   betaFactory,
   contactFactory,
@@ -105,8 +106,6 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
-
-import { alertFactory } from 'src/factories/cloudpulse/alerts';
 import { pickRandom } from 'src/utilities/random';
 
 import type {
@@ -2346,7 +2345,7 @@ export const handlers = [
   http.post(
     '*/monitor/services/:service_type/alert-definitions',
     async ({ request }) => {
-      const types: AlertDefinitionType[] = ['custom', 'default'];
+      const types: AlertDefinitionType[] = ['system', 'user'];
       const status: AlertStatusType[] = ['enabled', 'disabled'];
       const severity: AlertSeverityType[] = [0, 1, 2, 3];
       const users = ['user1', 'user2', 'user3'];
@@ -2363,6 +2362,46 @@ export const handlers = [
         updated_by: pickRandom(users),
       });
       return HttpResponse.json(response);
+    }
+  ),
+  http.get('*/monitor/alert-definitions', async ({ request }) => {
+    const customAlerts = alertFactory.buildList(2, {
+      severity: 0,
+      type: 'user',
+    });
+    const customAlertsWithServiceType = alertFactory.buildList(2, {
+      service_type: 'dbaas',
+      severity: 1,
+      type: 'user',
+    });
+    const defaultAlerts = alertFactory.buildList(1, { type: 'system' });
+    const defaultAlertsWithServiceType = alertFactory.buildList(1, {
+      service_type: 'dbaas',
+      severity: 3,
+      type: 'system',
+    });
+    const alerts = [
+      ...defaultAlerts,
+      ...alertFactory.buildList(3, { status: 'disabled' }),
+      ...customAlerts,
+      ...defaultAlertsWithServiceType,
+      ...alertFactory.buildList(3),
+      ...customAlertsWithServiceType,
+    ];
+    return HttpResponse.json(makeResourcePage(alerts));
+  }),
+  http.get(
+    '*/monitor/services/:serviceType/alert-definitions/:id',
+    ({ params }) => {
+      if (params.id !== undefined) {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: Number(params.id),
+            service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
+          })
+        );
+      }
+      return HttpResponse.json({}, { status: 404 });
     }
   ),
   http.get('*/monitor/services', () => {

@@ -89,10 +89,14 @@ module.exports = {
     {
       files: [
         // for each new features added to the migration router, add its directory here
-        'src/features/Betas/*',
+        'src/features/Betas/**/*',
+        'src/features/Volumes/**/*',
       ],
       rules: {
         'no-restricted-imports': [
+          // This needs to remain an error however trying to link to a feature that is not yet migrated will break the router
+          // For those cases react-router-dom history.push is still needed
+          // using `eslint-disable-next-line no-restricted-imports` can help bypass those imports
           'error',
           {
             paths: [
@@ -164,6 +168,33 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/naming-convention': [
+      'warn',
+      {
+        format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
+        leadingUnderscore: 'allow',
+        selector: 'variable',
+        trailingUnderscore: 'allow',
+      },
+      {
+        format: null,
+        modifiers: ['destructured'],
+        selector: 'variable',
+      },
+      {
+        format: ['camelCase', 'PascalCase'],
+        selector: 'function',
+      },
+      {
+        format: ['camelCase'],
+        leadingUnderscore: 'allow',
+        selector: 'parameter',
+      },
+      {
+        format: ['PascalCase'],
+        selector: 'typeLike',
+      },
+    ],
     '@typescript-eslint/no-empty-interface': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-inferrable-types': 'off',
@@ -174,7 +205,6 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     'array-callback-return': 'error',
-    camelcase: ['warn', { properties: 'always' }],
     'comma-dangle': 'off', // Prettier and TS both handle and check for this one
     // radix: Codacy considers it as an error, i put it here to fix it before push
     curly: 'warn',
