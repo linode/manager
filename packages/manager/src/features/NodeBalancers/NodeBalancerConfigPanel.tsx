@@ -77,9 +77,9 @@ export const NodeBalancerConfigPanel = (
     const newStickinessOptions = getStickinessOptions(selected.value);
 
     if (!newAlgorithmOptions.some((option) => option.value === algorithm)) {
-      // If the newly selected protocol does not support the curretly selected algorthim,
+      // If the newly selected protocol does not support the currently selected algorithm,
       // we reset the algorithm for the user.
-      // For example if UDP is selcted with "Ring Hash" then the user selects TCP, the algorithm
+      // For example if UDP is selected with "Ring Hash" then the user selects TCP, the algorithm
       // will change to "Round Robin" because TCP does not support Ring Hash.
       props.onAlgorithmChange(newAlgorithmOptions[0].value);
     }
@@ -87,9 +87,9 @@ export const NodeBalancerConfigPanel = (
     if (
       !newStickinessOptions.some((option) => option.value === sessionStickiness)
     ) {
-      // If the newly selected protocol does not support the curretly selected stickiness option,
+      // If the newly selected protocol does not support the currently selected stickiness option,
       // we reset the stickiness selection for the user.
-      // For example if UDP is selcted with the "Session" stickiness option then the user selects TCP,
+      // For example if UDP is selected with the "Session" stickiness option then the user selects TCP,
       // the stickiness will change to "None" because TCP does not support the "Session" stickiness option.
       props.onSessionStickinessChange(newStickinessOptions[0].value);
     }

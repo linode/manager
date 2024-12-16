@@ -50,7 +50,7 @@ describe('NodeBalancerConfigNode', () => {
     expect(getByText('DOWN')).toBeVisible();
   });
 
-  it('hides the "Mode" select if hodeModeSelect is true', () => {
+  it('hides the "Mode" select if hideModeSelect is true', () => {
     const { queryByText } = renderWithTheme(
       <NodeBalancerConfigNode {...props} hideModeSelect />
     );
