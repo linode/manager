@@ -24,6 +24,7 @@ vi.mock('src/queries/cloudpulse/tags', async () => {
 const mockTagsHandler = vi.fn();
 const SELECT_ALL = 'Select All';
 const ARIA_SELECTED = 'aria-selected';
+const LABEL_SUBTITLE = 'Tags (optional)';
 
 describe('CloudPulseTagsSelect component tests', () => {
   beforeEach(() => {
@@ -45,7 +46,7 @@ describe('CloudPulseTagsSelect component tests', () => {
       />
     );
     expect(getByTestId('tags-select')).toBeInTheDocument();
-    expect(screen.getByLabelText('Tags')).toBeInTheDocument();
+    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
     expect(getByPlaceholderText('Select Tags')).toBeInTheDocument();
   });
 
@@ -85,7 +86,7 @@ describe('CloudPulseTagsSelect component tests', () => {
     await user.click(screen.getByRole('button', { name: 'Open' }));
     await user.click(screen.getByRole('option', { name: 'tag-2' }));
     await user.click(screen.getByRole('option', { name: 'tag-3' }));
-    expect(screen.getByLabelText('Tags')).toBeInTheDocument();
+    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
 
     expect(
       screen.getByRole('option', {
@@ -123,7 +124,7 @@ describe('CloudPulseTagsSelect component tests', () => {
     await user.click(screen.getByRole('button', { name: 'Open' }));
     await user.click(screen.getByRole('option', { name: SELECT_ALL }));
     await user.click(screen.getByRole('option', { name: 'Deselect All' }));
-    expect(screen.getByLabelText('Tags')).toBeInTheDocument();
+    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
     expect(
       screen.getByRole('option', {
         name: 'tag-2',

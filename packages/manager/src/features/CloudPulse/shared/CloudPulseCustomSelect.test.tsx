@@ -20,8 +20,6 @@ const mockOptions: CloudPulseServiceTypeFiltersOptions[] = [
   },
 ];
 
-const LABEL_SUBTITLE = 'Test (required)';
-
 const queryMocks = vi.hoisted(() => ({
   useGetCustomFiltersQuery: vi.fn().mockReturnValue({
     data: [
@@ -61,12 +59,11 @@ describe('CloudPulseCustomSelect component tests', () => {
         label="Test"
         options={mockOptions}
         placeholder={testFilter}
-        required
         type={CloudPulseSelectTypes.static}
       />
     );
     expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
-    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
+    expect(screen.getByLabelText('Test')).toBeInTheDocument();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     fireEvent.click(screen.getByText('Test1'));
@@ -84,12 +81,11 @@ describe('CloudPulseCustomSelect component tests', () => {
         label="CustomTest"
         options={[...mockOptions]}
         placeholder={testFilter}
-        required
         type={CloudPulseSelectTypes.static}
       />
     );
     expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
-    expect(screen.getByLabelText('CustomTest (required)')).toBeInTheDocument();
+    expect(screen.getByLabelText('CustomTest')).toBeInTheDocument();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     expect(screen.getAllByText('Test1').length).toEqual(2); // here it should be 2
@@ -115,12 +111,11 @@ describe('CloudPulseCustomSelect component tests', () => {
         handleSelectionChange={selectionChnage}
         label="Test"
         placeholder={testFilter}
-        required
         type={CloudPulseSelectTypes.dynamic}
       />
     );
     expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
-    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
+    expect(screen.getByLabelText('Test')).toBeInTheDocument();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     fireEvent.click(screen.getByText('Test1'));
@@ -144,12 +139,11 @@ describe('CloudPulseCustomSelect component tests', () => {
         isMultiSelect={true}
         label="Test"
         placeholder={testFilter}
-        required
         type={CloudPulseSelectTypes.dynamic}
       />
     );
     expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
-    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
+    expect(screen.getByLabelText('Test')).toBeInTheDocument();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     expect(screen.getAllByText('Test1').length).toEqual(2); // here it should be 2
