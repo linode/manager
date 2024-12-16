@@ -95,6 +95,7 @@ export const CloudPulseTagsSelect = React.memo(
               },
             },
           },
+          optional: true,
         }}
         autoHighlight
         clearOnBlur

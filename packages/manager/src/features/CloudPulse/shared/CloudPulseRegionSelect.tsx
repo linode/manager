@@ -99,7 +99,6 @@ export const CloudPulseRegionSelect = React.memo(
         noMarginTop
         placeholder={placeholder ?? 'Select a Region'}
         regions={supportedRegions ?? []}
-        required
         value={selectedRegion}
       />
     );

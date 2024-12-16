@@ -49,7 +49,7 @@ describe('CloudPulseRegionSelect', () => {
       <CloudPulseRegionSelect {...props} />
     );
 
-    expect(getByLabelText('Region (required)')).toBeInTheDocument();
+    expect(getByLabelText('Region')).toBeInTheDocument();
     expect(getByTestId('region-select')).toBeInTheDocument();
   });
 
