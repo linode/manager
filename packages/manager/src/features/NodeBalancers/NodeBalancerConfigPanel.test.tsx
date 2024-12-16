@@ -218,7 +218,10 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('renders the relevant helper text for the Round Robin algorithm', () => {
     const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        algorithm="roundrobin"
+      />
     );
 
     expect(getByText(ALGORITHM_HELPER_TEXT.roundrobin)).toBeVisible();
@@ -227,25 +230,19 @@ describe('NodeBalancerConfigPanel', () => {
     expect(
       queryByText(ALGORITHM_HELPER_TEXT.leastconn)
     ).not.toBeInTheDocument();
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.ring_hash)
-    ).not.toBeInTheDocument();
   });
 
   it('renders the relevant helper text for the Least Connections algorithm', () => {
     const { getByText, queryByText } = renderWithTheme(
       <NodeBalancerConfigPanel
         {...nbConfigPanelMockPropsForTest}
-        algorithm={'leastconn'}
+        algorithm="leastconn"
       />
     );
 
     expect(getByText(ALGORITHM_HELPER_TEXT.leastconn)).toBeVisible();
 
     expect(queryByText(ALGORITHM_HELPER_TEXT.source)).not.toBeInTheDocument();
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.ring_hash)
-    ).not.toBeInTheDocument();
     expect(
       queryByText(ALGORITHM_HELPER_TEXT.roundrobin)
     ).not.toBeInTheDocument();
@@ -255,7 +252,7 @@ describe('NodeBalancerConfigPanel', () => {
     const { getByText, queryByText } = renderWithTheme(
       <NodeBalancerConfigPanel
         {...nbConfigPanelMockPropsForTest}
-        algorithm={'source'}
+        algorithm="source"
       />
     );
 
@@ -263,9 +260,6 @@ describe('NodeBalancerConfigPanel', () => {
 
     expect(
       queryByText(ALGORITHM_HELPER_TEXT.leastconn)
-    ).not.toBeInTheDocument();
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.ring_hash)
     ).not.toBeInTheDocument();
     expect(
       queryByText(ALGORITHM_HELPER_TEXT.roundrobin)
