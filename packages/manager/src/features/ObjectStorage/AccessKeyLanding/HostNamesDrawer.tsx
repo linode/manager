@@ -3,6 +3,8 @@ import * as React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Drawer } from 'src/components/Drawer';
+import { filterRegionsByEndpoints } from 'src/features/ObjectStorage/utilities';
+import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
@@ -19,7 +21,15 @@ interface Props {
 export const HostNamesDrawer = (props: Props) => {
   const { onClose, open, regions } = props;
   const { data: regionsData } = useRegionsQuery();
-  const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
+  const { data: endpoints } = useObjectStorageEndpoints();
+
+  const filteredRegions = React.useMemo(
+    () => filterRegionsByEndpoints(regionsData, endpoints),
+    [regionsData, endpoints]
+  );
+
+  const regionsLookup =
+    filteredRegions && getRegionsByRegionId(filteredRegions);
 
   if (!regionsData || !regionsLookup) {
     return null;
