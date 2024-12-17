@@ -3,17 +3,13 @@ import * as React from 'react';
 
 import {
   objectStorageBucketFactory,
-  objectStorageBucketFactoryGen2,
   objectStorageClusterFactory,
-  objectStorageEndpointsFactory,
 } from 'src/factories/objectStorage';
-import { regionFactory } from 'src/factories/regions';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketLanding } from './BucketLanding';
-import { OMC_BucketLanding } from './OMC_BucketLanding';
 
 describe('ObjectStorageLanding', () => {
   beforeAll(() => server.listen());
