@@ -1,4 +1,5 @@
 import { Box, TooltipIcon, Typography } from '@linode/ui';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
 import Lock from 'src/assets/icons/lock.svg';
@@ -12,14 +13,22 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
-import { TableFooter } from 'src/components/TableFooter';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TagCell } from 'src/components/TagCell/TagCell';
+import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { NodeRow as _NodeRow } from './NodeRow';
-import { StyledTypography, StyledVerticalDivider } from './NodeTable.styles';
+import {
+  StyledNotEncryptedBox,
+  StyledPoolInfoBox,
+  StyledTableFooter,
+  StyledTypography,
+  StyledVerticalDivider,
+} from './NodeTable.styles';
 
 import type { NodeRow } from './NodeRow';
 import type { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
@@ -27,10 +36,12 @@ import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 export interface Props {
+  clusterId: number;
   encryptionStatus: EncryptionStatus | undefined;
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  tags: string[];
   typeLabel: string;
 }
 
@@ -38,10 +49,12 @@ export const encryptionStatusTestId = 'encryption-status-fragment';
 
 export const NodeTable = React.memo((props: Props) => {
   const {
+    clusterId,
     encryptionStatus,
     nodes,
     openRecycleNodeDialog,
     poolId,
+    tags,
     typeLabel,
   } = props;
 
@@ -49,6 +62,25 @@ export const NodeTable = React.memo((props: Props) => {
   const {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
+
+  const { mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
+    clusterId,
+    poolId
+  );
+
+  const updateTags = React.useCallback(
+    (tags: string[]) => {
+      return updateNodePool({ tags }).catch((e) =>
+        enqueueSnackbar(
+          getAPIErrorOrDefault(e, 'Error updating tags')[0].reason,
+          {
+            variant: 'error',
+          }
+        )
+      );
+    },
+    [updateNodePool]
+  );
 
   const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
 
@@ -131,33 +163,31 @@ export const NodeTable = React.memo((props: Props) => {
                     })}
                   </TableContentWrapper>
                 </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={4}>
-                      {isDiskEncryptionFeatureEnabled &&
-                      encryptionStatus !== undefined ? (
-                        <Box
-                          alignItems="center"
-                          data-testid={encryptionStatusTestId}
-                          display="flex"
-                          flexDirection="row"
-                        >
-                          <Typography>Pool ID {poolId}</Typography>
-                          <StyledVerticalDivider />
-                          <EncryptedStatus
-                            tooltipText={
-                              DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY
-                            }
-                            encryptionStatus={encryptionStatus}
-                          />
-                        </Box>
-                      ) : (
-                        <Typography>Pool ID {poolId}</Typography>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
               </Table>
+              <StyledTableFooter>
+                <StyledPoolInfoBox>
+                  {isDiskEncryptionFeatureEnabled &&
+                  encryptionStatus !== undefined ? (
+                    <Box
+                      alignItems="center"
+                      data-testid={encryptionStatusTestId}
+                      display="flex"
+                    >
+                      <Typography sx={{ textWrap: 'nowrap' }}>
+                        Pool ID {poolId}
+                      </Typography>
+                      <StyledVerticalDivider />
+                      <EncryptedStatus
+                        encryptionStatus={encryptionStatus}
+                        tooltipText={DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY}
+                      />
+                    </Box>
+                  ) : (
+                    <Typography>Pool ID {poolId}</Typography>
+                  )}
+                </StyledPoolInfoBox>
+                <TagCell tags={tags} updateTags={updateTags} view="inline" />
+              </StyledTableFooter>
               <PaginationFooter
                 count={count}
                 eventCategory="Node Table"
@@ -209,11 +239,11 @@ export const EncryptedStatus = ({
     </>
   ) : encryptionStatus === 'disabled' ? (
     <>
-      <Unlock style={{ minWidth: 16 }} />
-      <StyledTypography sx={{ whiteSpace: 'nowrap' }}>
-        Not Encrypted
-      </StyledTypography>
-      {tooltipText ? <TooltipIcon status="help" text={tooltipText} /> : null}
+      <Unlock />
+      <StyledNotEncryptedBox>
+        <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
+        {tooltipText ? <TooltipIcon status="help" text={tooltipText} /> : null}
+      </StyledNotEncryptedBox>
     </>
   ) : null;
 };
