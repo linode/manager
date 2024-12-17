@@ -1,7 +1,7 @@
 import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -18,12 +18,14 @@ import { DeleteDomain } from '../DeleteDomain';
 import DomainRecords from '../DomainRecords';
 import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
 
+import type { DomainState } from 'src/routes/domains';
+
 export const DomainDetail = () => {
   const navigate = useNavigate();
   const params = useParams({ from: '/domains/$domainId' });
   const domainId = params.domainId;
-  const { recordError } = useSearch({ strict: false });
-
+  const location = useLocation();
+  const locationState = location.state as DomainState;
   const { data: domain, error, isLoading } = useDomainQuery(
     domainId,
     !!domainId
@@ -112,7 +114,9 @@ export const DomainDetail = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         title="Domain Details"
       />
-      {recordError && <StyledNotice text={recordError} variant="error" />}
+      {locationState?.recordError && (
+        <StyledNotice text={locationState.recordError} variant="error" />
+      )}
       <StyledRootGrid container>
         <StyledMainGrid xs={12}>
           <DomainRecords

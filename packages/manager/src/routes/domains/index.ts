@@ -3,9 +3,13 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { DomainsRoute } from './DomainsRoute';
 
-export interface DomainsSearchParams {
+import type { TableSearchParams } from '../types';
+
+export type DomainsSearchParams = TableSearchParams;
+
+export type DomainState = {
   recordError?: string;
-}
+};
 
 const domainAction = {
   clone: 'clone',

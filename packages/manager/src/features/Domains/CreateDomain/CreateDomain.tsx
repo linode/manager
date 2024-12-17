@@ -11,10 +11,10 @@ import {
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
-import { useNavigate } from '@tanstack/react-router';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -45,6 +45,7 @@ import type {
 } from '@linode/api-v4/lib/domains';
 import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { DomainState } from 'src/routes/domains';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface DefaultRecordsSetting {
@@ -126,10 +127,11 @@ export const CreateDomain = () => {
   const isCreatingPrimaryDomain = values.type === 'master';
   const isCreatingSecondaryDomain = values.type === 'slave';
 
-  const redirect = (id: '' | number, _state?: Record<string, string>) => {
+  const redirect = (id: null | number, state?: DomainState) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
     navigate({
       params: { domainId: Number(id) },
+      state: (prev) => ({ ...prev, ...state }),
       to: returnPath,
     });
   };
@@ -137,12 +139,12 @@ export const CreateDomain = () => {
   const redirectToLandingOrDetail = (
     type: 'master' | 'slave',
     domainID: number,
-    state: Record<string, string> = {}
+    state: DomainState = {}
   ) => {
     if (type === 'master' && domainID) {
       redirect(domainID, state);
     } else {
-      redirect('', state);
+      redirect(null, state);
     }
   };
 

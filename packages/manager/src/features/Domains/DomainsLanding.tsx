@@ -1,11 +1,6 @@
 import { Button, CircleProgress, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearch,
-} from '@tanstack/react-router';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -49,6 +44,7 @@ import { EditDomainDrawer } from './EditDomainDrawer';
 
 import type { Handlers as DomainHandlers } from './DomainActionMenu';
 import type { Domain } from '@linode/api-v4';
+import type { DomainState } from 'src/routes/domains';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
@@ -62,7 +58,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
   const navigate = useNavigate();
   const params = useParams({ strict: false });
   const location = useLocation();
-  const { recordError } = useSearch({ strict: false });
+  const locationState = location.state as DomainState;
 
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
@@ -256,7 +252,9 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
     <>
       <DocumentTitleSegment segment="Domains" />
       <DomainBanner hidden={!shouldShowBanner} />
-      {recordError && <Notice text={recordError} variant="error" />}
+      {locationState?.recordError && (
+        <Notice text={locationState.recordError} variant="error" />
+      )}
       <LandingHeader
         breadcrumbProps={{
           labelTitle: 'Domains',
