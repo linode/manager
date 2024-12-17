@@ -102,12 +102,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
   }
 
   const vpcDropdownOptions: DropdownOption[] = React.useMemo(() => {
-    return vpcs.reduce((accumulator, vpc) => {
-      return vpc.region === region
-        ? [...accumulator, { label: vpc.label, value: vpc.id }]
-        : accumulator;
-    }, []);
-  }, [vpcs, region]);
+    return vpcs.map((vpc) => ({ label: vpc.label, value: vpc.id }));
+  }, [vpcs]);
 
   const defaultVPCValue = null;
 
