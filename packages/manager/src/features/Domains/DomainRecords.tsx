@@ -1,18 +1,7 @@
-import { deleteDomainRecord } from '@linode/api-v4/lib/domains';
+import { deleteDomainRecord as deleteDomain } from '@linode/api-v4/lib/domains';
 import { Button, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import {
-  compose,
-  equals,
-  filter,
-  flatten,
-  isEmpty,
-  lensPath,
-  over,
-  pathOr,
-  prepend,
-  propEq,
-} from 'ramda';
+import { compose, isEmpty, lensPath, over, pathOr } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -38,6 +27,12 @@ import { truncateEnd } from 'src/utilities/truncate';
 import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { DomainRecordDrawer } from './DomainRecordDrawer';
 import { StyledDiv, StyledGrid, StyledTableCell } from './DomainRecords.styles';
+import {
+  getNSRecords,
+  getTTL,
+  msToReadable,
+  typeEq,
+} from './DomainRecordsUtils';
 
 import type {
   Domain,
@@ -52,7 +47,7 @@ interface UpdateDomainDataProps extends UpdateDomainPayload {
   id: number;
 }
 
-interface Props {
+export interface Props {
   domain: Domain;
   domainRecords: DomainRecord[];
   updateDomain: (data: UpdateDomainDataProps) => Promise<Domain>;
@@ -97,60 +92,10 @@ const createLink = (title: string, handler: () => void) => (
   </Button>
 );
 
-class DomainRecords extends React.Component<Props, State> {
-  static defaultDrawerState: DrawerState = {
-    mode: 'create',
-    open: false,
-    type: 'NS',
-  };
+const DomainRecords = (props: Props) => {
+  const { domain, domainRecords, updateDomain, updateRecords } = props;
 
-  confirmDeletion = (recordId: number) =>
-    this.updateConfirmDialog((confirmDialog) => ({
-      ...confirmDialog,
-      open: true,
-      recordId,
-    }));
-
-  deleteDomainRecord = () => {
-    const {
-      domain: { id: domainId },
-    } = this.props;
-    const {
-      confirmDialog: { recordId },
-    } = this.state;
-    if (!domainId || !recordId) {
-      return;
-    }
-
-    this.updateConfirmDialog((c) => ({
-      ...c,
-      errors: undefined,
-      submitting: true,
-    }));
-
-    deleteDomainRecord(domainId, recordId)
-      .then(() => {
-        this.props.updateRecords();
-
-        this.updateConfirmDialog((_) => ({
-          errors: undefined,
-          open: false,
-          recordId: undefined,
-          submitting: false,
-        }));
-      })
-      .catch((errorResponse) => {
-        const errors = getAPIErrorOrDefault(errorResponse);
-        this.updateConfirmDialog((c) => ({
-          ...c,
-          errors,
-          submitting: false,
-        }));
-      });
-    this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
-  };
-
-  generateTypes = (): IType[] => [
+  const generateTypes = (): IType[] => [
     /** SOA Record */
     {
       columns: [
@@ -183,15 +128,15 @@ class DomainRecords extends React.Component<Props, State> {
             return d.type === 'master' ? (
               <DomainRecordActionMenu
                 editPayload={d}
-                label={this.props.domain.domain}
-                onEdit={this.handleOpenSOADrawer}
+                label={domain.domain}
+                onEdit={handleOpenSOADrawer}
               />
             ) : null;
           },
           title: '',
         },
       ],
-      data: [this.props.domain],
+      data: [domain],
       order: 'asc',
       orderBy: 'domain',
       title: 'SOA Record',
@@ -209,7 +154,7 @@ class DomainRecords extends React.Component<Props, State> {
             const sd = r.name;
             const {
               domain: { domain },
-            } = this.props;
+            } = props;
             return isEmpty(sd) ? domain : `${sd}.${domain}`;
           },
           title: 'Subdomain',
@@ -223,11 +168,17 @@ class DomainRecords extends React.Component<Props, State> {
            * If the NS is one of Linode's, don't display the Action menu since the user
            * cannot make changes to Linode's nameservers.
            */
-          render: ({ id, name, target, ttl_sec }: DomainRecord) =>
-            id === -1 ? null : (
+          render: (domainRecordParams: DomainRecord) => {
+            const { id, name, target, ttl_sec } = domainRecordParams;
+
+            if (id === -1) {
+              return null;
+            }
+
+            return (
               <DomainRecordActionMenu
                 deleteData={{
-                  onDelete: this.confirmDeletion,
+                  onDelete: confirmDeletion,
                   recordID: id,
                 }}
                 editPayload={{
@@ -237,14 +188,15 @@ class DomainRecords extends React.Component<Props, State> {
                   ttl_sec,
                 }}
                 label={name}
-                onEdit={this.openForEditNSRecord}
+                onEdit={openForEditNSRecord}
               />
-            ),
+            );
+          },
           title: '',
         },
       ],
-      data: getNSRecords(this.props),
-      link: () => createLink('Add an NS Record', this.openForCreateNSRecord),
+      data: getNSRecords(props),
+      link: () => createLink('Add an NS Record', openForCreateNSRecord),
       order: 'asc',
       orderBy: 'target',
       title: 'NS Record',
@@ -270,28 +222,31 @@ class DomainRecords extends React.Component<Props, State> {
           title: 'TTL',
         },
         {
-          render: ({ id, name, priority, target, ttl_sec }: DomainRecord) => (
-            <DomainRecordActionMenu
-              deleteData={{
-                onDelete: this.confirmDeletion,
-                recordID: id,
-              }}
-              editPayload={{
-                id,
-                name,
-                priority,
-                target,
-                ttl_sec,
-              }}
-              label={name}
-              onEdit={this.openForEditMXRecord}
-            />
-          ),
+          render: (domainRecordParams: DomainRecord) => {
+            const { id, name, priority, target, ttl_sec } = domainRecordParams;
+            return (
+              <DomainRecordActionMenu
+                deleteData={{
+                  onDelete: confirmDeletion,
+                  recordID: id,
+                }}
+                editPayload={{
+                  id,
+                  name,
+                  priority,
+                  target,
+                  ttl_sec,
+                }}
+                label={name}
+                onEdit={openForEditMXRecord}
+              />
+            );
+          },
           title: '',
         },
       ],
-      data: this.props.domainRecords.filter(typeEq('MX')),
-      link: () => createLink('Add a MX Record', this.openForCreateMXRecord),
+      data: domainRecords.filter(typeEq('MX')),
+      link: () => createLink('Add a MX Record', openForCreateMXRecord),
       order: 'asc',
       orderBy: 'target',
       title: 'MX Record',
@@ -301,35 +256,36 @@ class DomainRecords extends React.Component<Props, State> {
     {
       columns: [
         {
-          render: (r: DomainRecord) => r.name || this.props.domain.domain,
+          render: (r: DomainRecord) => r.name || domain.domain,
           title: 'Hostname',
         },
         { render: (r: DomainRecord) => r.target, title: 'IP Address' },
         { render: getTTL, title: 'TTL' },
         {
-          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <DomainRecordActionMenu
-              deleteData={{
-                onDelete: this.confirmDeletion,
-                recordID: id,
-              }}
-              editPayload={{
-                id,
-                name,
-                target,
-                ttl_sec,
-              }}
-              label={name || this.props.domain.domain}
-              onEdit={this.openForEditARecord}
-            />
-          ),
+          render: (domainRecordParams: DomainRecord) => {
+            const { id, name, target, ttl_sec } = domainRecordParams;
+            return (
+              <DomainRecordActionMenu
+                deleteData={{
+                  onDelete: confirmDeletion,
+                  recordID: id,
+                }}
+                editPayload={{
+                  id,
+                  name,
+                  target,
+                  ttl_sec,
+                }}
+                label={name || domain.domain}
+                onEdit={openForEditARecord}
+              />
+            );
+          },
           title: '',
         },
       ],
-      data: this.props.domainRecords.filter(
-        (r) => typeEq('AAAA', r) || typeEq('A', r)
-      ),
-      link: () => createLink('Add an A/AAAA Record', this.openForCreateARecord),
+      data: domainRecords.filter((r) => typeEq('AAAA', r) || typeEq('A', r)),
+      link: () => createLink('Add an A/AAAA Record', openForCreateARecord),
       order: 'asc',
       orderBy: 'name',
       title: 'A/AAAA Record',
@@ -342,28 +298,30 @@ class DomainRecords extends React.Component<Props, State> {
         { render: (r: DomainRecord) => r.target, title: 'Aliases to' },
         { render: getTTL, title: 'TTL' },
         {
-          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <DomainRecordActionMenu
-              deleteData={{
-                onDelete: this.confirmDeletion,
-                recordID: id,
-              }}
-              editPayload={{
-                id,
-                name,
-                target,
-                ttl_sec,
-              }}
-              label={name}
-              onEdit={this.openForEditCNAMERecord}
-            />
-          ),
+          render: (domainRecordParams: DomainRecord) => {
+            const { id, name, target, ttl_sec } = domainRecordParams;
+            return (
+              <DomainRecordActionMenu
+                deleteData={{
+                  onDelete: confirmDeletion,
+                  recordID: id,
+                }}
+                editPayload={{
+                  id,
+                  name,
+                  target,
+                  ttl_sec,
+                }}
+                label={name}
+                onEdit={openForEditCNAMERecord}
+              />
+            );
+          },
           title: '',
         },
       ],
-      data: this.props.domainRecords.filter(typeEq('CNAME')),
-      link: () =>
-        createLink('Add a CNAME Record', this.openForCreateCNAMERecord),
+      data: domainRecords.filter(typeEq('CNAME')),
+      link: () => createLink('Add a CNAME Record', openForCreateCNAMERecord),
       order: 'asc',
       orderBy: 'name',
       title: 'CNAME Record',
@@ -373,7 +331,7 @@ class DomainRecords extends React.Component<Props, State> {
     {
       columns: [
         {
-          render: (r: DomainRecord) => r.name || this.props.domain.domain,
+          render: (r: DomainRecord) => r.name || domain.domain,
           title: 'Hostname',
         },
         {
@@ -382,27 +340,30 @@ class DomainRecords extends React.Component<Props, State> {
         },
         { render: getTTL, title: 'TTL' },
         {
-          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
-            <DomainRecordActionMenu
-              deleteData={{
-                onDelete: this.confirmDeletion,
-                recordID: id,
-              }}
-              editPayload={{
-                id,
-                name,
-                target,
-                ttl_sec,
-              }}
-              label={name}
-              onEdit={this.openForEditTXTRecord}
-            />
-          ),
+          render: (domainRecordParams: DomainRecord) => {
+            const { id, name, target, ttl_sec } = domainRecordParams;
+            return (
+              <DomainRecordActionMenu
+                deleteData={{
+                  onDelete: confirmDeletion,
+                  recordID: id,
+                }}
+                editPayload={{
+                  id,
+                  name,
+                  target,
+                  ttl_sec,
+                }}
+                label={name}
+                onEdit={openForEditTXTRecord}
+              />
+            );
+          },
           title: '',
         },
       ],
-      data: this.props.domainRecords.filter(typeEq('TXT')),
-      link: () => createLink('Add a TXT Record', this.openForCreateTXTRecord),
+      data: domainRecords.filter(typeEq('TXT')),
+      link: () => createLink('Add a TXT Record', openForCreateTXTRecord),
       order: 'asc',
       orderBy: 'name',
       title: 'TXT Record',
@@ -412,7 +373,7 @@ class DomainRecords extends React.Component<Props, State> {
       columns: [
         { render: (r: DomainRecord) => r.name, title: 'Service/Protocol' },
         {
-          render: () => this.props.domain.domain,
+          render: () => domain.domain,
           title: 'Name',
         },
         {
@@ -438,7 +399,7 @@ class DomainRecords extends React.Component<Props, State> {
           }: DomainRecord) => (
             <DomainRecordActionMenu
               deleteData={{
-                onDelete: this.confirmDeletion,
+                onDelete: confirmDeletion,
                 recordID: id,
               }}
               editPayload={{
@@ -450,15 +411,15 @@ class DomainRecords extends React.Component<Props, State> {
                 target,
                 weight,
               }}
-              label={this.props.domain.domain}
-              onEdit={this.openForEditSRVRecord}
+              label={domain.domain}
+              onEdit={openForEditSRVRecord}
             />
           ),
           title: '',
         },
       ],
-      data: this.props.domainRecords.filter(typeEq('SRV')),
-      link: () => createLink('Add an SRV Record', this.openForCreateSRVRecord),
+      data: domainRecords.filter(typeEq('SRV')),
+      link: () => createLink('Add an SRV Record', openForCreateSRVRecord),
       order: 'asc',
       orderBy: 'name',
       title: 'SRV Record',
@@ -475,105 +436,169 @@ class DomainRecords extends React.Component<Props, State> {
         },
         { render: getTTL, title: 'TTL' },
         {
-          render: ({ id, name, tag, target, ttl_sec }: DomainRecord) => (
-            <DomainRecordActionMenu
-              deleteData={{
-                onDelete: this.confirmDeletion,
-                recordID: id,
-              }}
-              editPayload={{
-                id,
-                name,
-                tag,
-                target,
-                ttl_sec,
-              }}
-              label={name}
-              onEdit={this.openForEditCAARecord}
-            />
-          ),
+          render: (domainRecordParams: DomainRecord) => {
+            const { id, name, tag, target, ttl_sec } = domainRecordParams;
+            return (
+              <DomainRecordActionMenu
+                deleteData={{
+                  onDelete: confirmDeletion,
+                  recordID: id,
+                }}
+                editPayload={{
+                  id,
+                  name,
+                  tag,
+                  target,
+                  ttl_sec,
+                }}
+                label={name}
+                onEdit={openForEditCAARecord}
+              />
+            );
+          },
           title: '',
         },
       ],
-      data: this.props.domainRecords.filter(typeEq('CAA')),
-      link: () => createLink('Add a CAA Record', this.openForCreateCAARecord),
+      data: domainRecords.filter(typeEq('CAA')),
+      link: () => createLink('Add a CAA Record', openForCreateCAARecord),
       order: 'asc',
       orderBy: 'name',
       title: 'CAA Record',
     },
   ];
 
-  handleCloseDialog = () => {
-    this.updateConfirmDialog(() => ({
+  const defaultDrawerState: DrawerState = {
+    mode: 'create',
+    open: false,
+    type: 'NS',
+  };
+
+  const [state, setState] = React.useState<State>({
+    confirmDialog: {
+      open: false,
+      submitting: false,
+    },
+    drawer: defaultDrawerState,
+    types: generateTypes(),
+  });
+
+  const confirmDeletion = (recordId: number) =>
+    updateConfirmDialog((confirmDialog) => ({
+      ...confirmDialog,
+      open: true,
+      recordId,
+    }));
+
+  const deleteDomainRecord = () => {
+    const {
+      domain: { id: domainId },
+    } = props;
+    const {
+      confirmDialog: { recordId },
+    } = state;
+    if (!domainId || !recordId) {
+      return;
+    }
+
+    updateConfirmDialog((c) => ({
+      ...c,
+      errors: undefined,
+      submitting: true,
+    }));
+
+    deleteDomain(domainId, recordId)
+      .then(() => {
+        updateRecords();
+
+        updateConfirmDialog((_) => ({
+          errors: undefined,
+          open: false,
+          recordId: undefined,
+          submitting: false,
+        }));
+      })
+      .catch((errorResponse) => {
+        const errors = getAPIErrorOrDefault(errorResponse);
+        updateConfirmDialog((c) => ({
+          ...c,
+          errors,
+          submitting: false,
+        }));
+      });
+    updateConfirmDialog((c) => ({ ...c, submitting: true }));
+  };
+
+  const handleCloseDialog = () => {
+    updateConfirmDialog(() => ({
       open: false,
       recordId: undefined,
       submitting: false,
     }));
   };
 
-  handleOpenSOADrawer = (d: Domain) => {
+  const handleOpenSOADrawer = (d: Domain) => {
     return d.type === 'master'
-      ? this.openForEditPrimaryDomain(d)
-      : this.openForEditSecondaryDomain(d);
+      ? openForEditPrimaryDomain(d)
+      : openForEditSecondaryDomain(d);
   };
 
-  openForCreateARecord = () => this.openForCreation('AAAA');
+  const openForCreateARecord = () => openForCreation('AAAA');
 
-  openForCreateCAARecord = () => this.openForCreation('CAA');
+  const openForCreateCAARecord = () => openForCreation('CAA');
 
-  openForCreateCNAMERecord = () => this.openForCreation('CNAME');
-  openForCreateMXRecord = () => this.openForCreation('MX');
+  const openForCreateCNAMERecord = () => openForCreation('CNAME');
+  const openForCreateMXRecord = () => openForCreation('MX');
 
-  openForCreateNSRecord = () => this.openForCreation('NS');
-  openForCreateSRVRecord = () => this.openForCreation('SRV');
+  const openForCreateNSRecord = () => openForCreation('NS');
+  const openForCreateSRVRecord = () => openForCreation('SRV');
 
-  openForCreateTXTRecord = () => this.openForCreation('TXT');
-  openForCreation = (type: RecordType) =>
-    this.updateDrawer(() => ({
+  const openForCreateTXTRecord = () => openForCreation('TXT');
+  const openForCreation = (type: RecordType) =>
+    updateDrawer(() => ({
       mode: 'create',
       open: true,
       submitting: false,
       type,
     }));
 
-  openForEditARecord = (
+  const openForEditARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => this.openForEditing('AAAA', f);
-  openForEditCAARecord = (
+  ) => openForEditing('AAAA', f);
+  const openForEditCAARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
-  ) => this.openForEditing('CAA', f);
+  ) => openForEditing('CAA', f);
 
-  openForEditCNAMERecord = (
+  const openForEditCNAMERecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => this.openForEditing('CNAME', f);
-  openForEditMXRecord = (
+  ) => openForEditing('CNAME', f);
+  const openForEditMXRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'priority' | 'target' | 'ttl_sec'>
-  ) => this.openForEditing('MX', f);
+  ) => openForEditing('MX', f);
 
-  openForEditNSRecord = (
+  const openForEditNSRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => this.openForEditing('NS', f);
-  openForEditPrimaryDomain = (f: Partial<Domain>) =>
-    this.openForEditing('master', f);
+  ) => openForEditing('NS', f);
+  const openForEditPrimaryDomain = (f: Partial<Domain>) =>
+    openForEditing('master', f);
 
-  openForEditSRVRecord = (
+  const openForEditSRVRecord = (
     f: Pick<
       DomainRecord,
       'id' | 'name' | 'port' | 'priority' | 'protocol' | 'target' | 'weight'
     >
-  ) => this.openForEditing('SRV', f);
-  openForEditSecondaryDomain = (f: Partial<Domain>) =>
-    this.openForEditing('slave', f);
+  ) => openForEditing('SRV', f);
+  const openForEditSecondaryDomain = (f: Partial<Domain>) =>
+    openForEditing('slave', f);
 
-  openForEditTXTRecord = (
+  const openForEditTXTRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => this.openForEditing('TXT', f);
+  ) => openForEditing('TXT', f);
 
-  openForEditing = (
+  const openForEditing = (
     type: DomainType | RecordType,
     fields: Partial<Domain> | Partial<DomainRecord>
   ) =>
-    this.updateDrawer(() => ({
+    updateDrawer(() => ({
       fields,
       mode: 'edit',
       open: true,
@@ -581,309 +606,199 @@ class DomainRecords extends React.Component<Props, State> {
       type,
     }));
 
-  renderDialogActions = () => {
+  const renderDialogActions = () => {
     return (
       <ActionsPanel
         primaryButtonProps={{
           label: 'Delete',
-          loading: this.state.confirmDialog.submitting,
-          onClick: this.deleteDomainRecord,
+          loading: state.confirmDialog.submitting,
+          onClick: deleteDomainRecord,
         }}
         secondaryButtonProps={{
           label: 'Cancel',
-          onClick: this.handleCloseDialog,
+          onClick: handleCloseDialog,
         }}
       />
     );
   };
 
-  resetDrawer = () => this.updateDrawer(() => DomainRecords.defaultDrawerState);
+  const resetDrawer = () => updateDrawer(() => defaultDrawerState);
 
-  updateConfirmDialog = (fn: (d: ConfirmationState) => ConfirmationState) =>
-    this.setState(over(lensPath(['confirmDialog']), fn), () => {
+  //   const updateConfirmDialog = (
+  //     fn: (d: ConfirmationState) => ConfirmationState
+  //   ) =>
+  //     this.setState(over(lensPath(['confirmDialog']), fn), () => {
+  //       scrollErrorIntoView();
+  //     });
+
+  const updateConfirmDialog = (
+    fn: (d: ConfirmationState) => ConfirmationState
+  ) => {
+    setState((prevState) => {
+      const newState = over(lensPath(['confirmDialog']), fn, prevState);
       scrollErrorIntoView();
+
+      return newState;
     });
+  };
 
-  updateDrawer = (fn: (d: DrawerState) => DrawerState) =>
-    this.setState(over(lensPath(['drawer']), fn));
+  //   const updateDrawer = (fn: (d: DrawerState) => DrawerState) =>
+  //     this.setState(over(lensPath(['drawer']), fn));
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      confirmDialog: {
-        open: false,
-        submitting: false,
-      },
-      drawer: DomainRecords.defaultDrawerState,
-      types: this.generateTypes(),
-    };
-  }
+  const updateDrawer = (fn: (d: DrawerState) => DrawerState) => {
+    setState((prevState) => {
+      return over(lensPath(['drawer']), fn, prevState);
+    });
+  };
 
-  componentDidUpdate(prevProps: Props) {
-    if (
-      !equals(prevProps.domainRecords, this.props.domainRecords) ||
-      !equals(prevProps.domain, this.props.domain)
-    ) {
-      this.setState({ types: this.generateTypes() });
-    }
-  }
+  React.useEffect(() => {
+    setState((prevState) => ({
+      ...prevState,
+      types: generateTypes(),
+    }));
+  }, [domainRecords, domain]);
 
-  render() {
-    const { domain, domainRecords } = this.props;
-    const { confirmDialog, drawer } = this.state;
+  return (
+    <>
+      <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
+      {state.types.map((type, eachTypeIdx) => {
+        const ref: React.RefObject<HTMLDivElement> = React.createRef();
 
-    return (
-      <>
-        <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
-        {this.state.types.map((type, eachTypeIdx) => {
-          const ref: React.Ref<any> = React.createRef();
-
-          return (
-            <div key={eachTypeIdx}>
-              <StyledGrid
-                alignItems="center"
-                container
-                justifyContent="space-between"
-                spacing={2}
-              >
-                <Grid ref={ref} sx={{ paddingLeft: 0, paddingRight: 0 }}>
-                  <Typography
-                    aria-level={2}
-                    className="m0"
-                    data-qa-domain-record={type.title}
-                    role="heading"
-                    variant="h2"
-                  >
-                    {type.title}
-                  </Typography>
+        return (
+          <div key={eachTypeIdx}>
+            <StyledGrid
+              alignItems="center"
+              container
+              justifyContent="space-between"
+              spacing={2}
+            >
+              <Grid ref={ref} sx={{ paddingLeft: 0, paddingRight: 0 }}>
+                <Typography
+                  aria-level={2}
+                  className="m0"
+                  data-qa-domain-record={type.title}
+                  role="heading"
+                  variant="h2"
+                >
+                  {type.title}
+                </Typography>
+              </Grid>
+              {type.link && (
+                <Grid sx={{ paddingLeft: 0, paddingRight: 0 }}>
+                  {' '}
+                  <StyledDiv>{type.link()}</StyledDiv>{' '}
                 </Grid>
-                {type.link && (
-                  <Grid sx={{ paddingLeft: 0, paddingRight: 0 }}>
-                    {' '}
-                    <StyledDiv>{type.link()}</StyledDiv>{' '}
-                  </Grid>
-                )}
-              </StyledGrid>
-              <OrderBy
-                data={type.data}
-                order={type.order}
-                orderBy={type.orderBy}
-              >
-                {({ data: orderedData }) => {
-                  return (
-                    <Paginate
-                      data={orderedData}
-                      pageSize={storage.infinitePageSize.get()}
-                      pageSizeSetter={storage.infinitePageSize.set}
-                      scrollToRef={ref}
-                    >
-                      {({
-                        count,
-                        data: paginatedData,
-                        handlePageChange,
-                        handlePageSizeChange,
-                        page,
-                        pageSize,
-                      }) => {
-                        return (
-                          <>
-                            <Table aria-label={`List of Domains ${type.title}`}>
-                              <TableHead>
-                                <TableRow>
-                                  {type.columns.length > 0 &&
-                                    type.columns.map((col, columnIndex) => {
-                                      return (
-                                        <TableCell key={columnIndex}>
-                                          {col.title}
-                                        </TableCell>
-                                      );
-                                    })}
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {type.data.length === 0 ? (
-                                  <TableRowEmpty
-                                    colSpan={type.columns.length}
-                                  />
-                                ) : (
-                                  paginatedData.map((data, idx) => {
+              )}
+            </StyledGrid>
+            <OrderBy data={type.data} order={type.order} orderBy={type.orderBy}>
+              {({ data: orderedData }) => {
+                return (
+                  <Paginate
+                    data={orderedData}
+                    pageSize={storage.infinitePageSize.get()}
+                    pageSizeSetter={storage.infinitePageSize.set}
+                    scrollToRef={ref}
+                  >
+                    {({
+                      count,
+                      data: paginatedData,
+                      handlePageChange,
+                      handlePageSizeChange,
+                      page,
+                      pageSize,
+                    }) => {
+                      return (
+                        <>
+                          <Table aria-label={`List of Domains ${type.title}`}>
+                            <TableHead>
+                              <TableRow>
+                                {type.columns.length > 0 &&
+                                  type.columns.map((col, columnIndex) => {
                                     return (
-                                      <TableRow
-                                        data-qa-record-row={type.title}
-                                        key={idx}
-                                      >
-                                        {type.columns.length > 0 &&
-                                          type.columns.map(
-                                            (
-                                              { render, title },
-                                              columnIndex
-                                            ) => {
-                                              return (
-                                                <StyledTableCell
-                                                  data-qa-column={title}
-                                                  key={columnIndex}
-                                                  parentColumn={title}
-                                                >
-                                                  {render(data)}
-                                                </StyledTableCell>
-                                              );
-                                            }
-                                          )}
-                                      </TableRow>
+                                      <TableCell key={columnIndex}>
+                                        {col.title}
+                                      </TableCell>
                                     );
-                                  })
-                                )}
-                              </TableBody>
-                            </Table>
-                            <PaginationFooter
-                              count={count}
-                              eventCategory={`${type.title.toLowerCase()} panel`}
-                              handlePageChange={handlePageChange}
-                              handleSizeChange={handlePageSizeChange}
-                              page={page}
-                              pageSize={pageSize}
-                              // Disabling show All as it is impacting page performance.
-                              showAll={false}
-                            />
-                          </>
-                        );
-                      }}
-                    </Paginate>
-                  );
-                }}
-              </OrderBy>
-            </div>
-          );
-        })}
-        <ConfirmationDialog
-          error={
-            confirmDialog.errors
-              ? getErrorStringOrDefault(confirmDialog.errors)
-              : undefined
-          }
-          actions={this.renderDialogActions}
-          onClose={this.handleCloseDialog}
-          open={confirmDialog.open}
-          title="Confirm Deletion"
-        >
-          Are you sure you want to delete this record?
-        </ConfirmationDialog>
-        <DomainRecordDrawer
-          domain={this.props.domain.domain}
-          domainId={this.props.domain.id}
-          mode={drawer.mode}
-          onClose={this.resetDrawer}
-          open={drawer.open}
-          records={domainRecords}
-          type={drawer.type}
-          updateDomain={this.props.updateDomain}
-          updateRecords={this.props.updateRecords}
-          {...drawer.fields}
-        />
-      </>
-    );
-  }
-}
-
-const msToReadable = (v: number): null | string =>
-  pathOr(null, [v], {
-    0: 'Default',
-    30: '30 seconds',
-    120: '2 minutes',
-    300: '5 minutes',
-    3600: '1 hour',
-    7200: '2 hours',
-    14400: '4 hours',
-    28800: '8 hours',
-    57600: '16 hours',
-    86400: '1 day',
-    172800: '2 days',
-    345600: '4 days',
-    604800: '1 week',
-    1209600: '2 weeks',
-    2419200: '4 weeks',
-  });
-
-const getTTL = compose(msToReadable, pathOr(0, ['ttl_sec']));
-
-const typeEq = propEq('type');
-
-const prependLinodeNS = compose<any, any, DomainRecord[]>(
-  flatten,
-  prepend([
-    {
-      id: -1,
-      name: '',
-      port: 0,
-      priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns1.linode.com',
-      ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
-    },
-    {
-      id: -1,
-      name: '',
-      port: 0,
-      priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns2.linode.com',
-      ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
-    },
-    {
-      id: -1,
-      name: '',
-      port: 0,
-      priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns3.linode.com',
-      ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
-    },
-    {
-      id: -1,
-      name: '',
-      port: 0,
-      priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns4.linode.com',
-      ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
-    },
-    {
-      id: -1,
-      name: '',
-      port: 0,
-      priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns5.linode.com',
-      ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
-    },
-  ])
-);
-
-const getNSRecords = compose<
-  Props,
-  DomainRecord[],
-  DomainRecord[],
-  DomainRecord[]
->(prependLinodeNS, filter(typeEq('NS')), pathOr([], ['domainRecords']));
+                                  })}
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {type.data.length === 0 ? (
+                                <TableRowEmpty colSpan={type.columns.length} />
+                              ) : (
+                                paginatedData.map((data, idx) => {
+                                  return (
+                                    <TableRow
+                                      data-qa-record-row={type.title}
+                                      key={idx}
+                                    >
+                                      {type.columns.length > 0 &&
+                                        type.columns.map(
+                                          ({ render, title }, columnIndex) => {
+                                            return (
+                                              <StyledTableCell
+                                                data-qa-column={title}
+                                                key={columnIndex}
+                                                parentColumn={title}
+                                              >
+                                                {render(data)}
+                                              </StyledTableCell>
+                                            );
+                                          }
+                                        )}
+                                    </TableRow>
+                                  );
+                                })
+                              )}
+                            </TableBody>
+                          </Table>
+                          <PaginationFooter
+                            count={count}
+                            eventCategory={`${type.title.toLowerCase()} panel`}
+                            handlePageChange={handlePageChange}
+                            handleSizeChange={handlePageSizeChange}
+                            page={page}
+                            pageSize={pageSize}
+                            // Disabling show All as it is impacting page performance.
+                            showAll={false}
+                          />
+                        </>
+                      );
+                    }}
+                  </Paginate>
+                );
+              }}
+            </OrderBy>
+          </div>
+        );
+      })}
+      <ConfirmationDialog
+        error={
+          state.confirmDialog.errors
+            ? getErrorStringOrDefault(state.confirmDialog.errors)
+            : undefined
+        }
+        actions={renderDialogActions}
+        onClose={handleCloseDialog}
+        open={state.confirmDialog.open}
+        title="Confirm Deletion"
+      >
+        Are you sure you want to delete this record?
+      </ConfirmationDialog>
+      <DomainRecordDrawer
+        domain={domain.domain}
+        domainId={domain.id}
+        mode={state.drawer.mode}
+        onClose={resetDrawer}
+        open={state.drawer.open}
+        records={domainRecords}
+        type={state.drawer.type}
+        updateDomain={updateDomain}
+        updateRecords={updateRecords}
+        {...state.drawer.fields}
+      />
+    </>
+  );
+};
 
 export default DomainRecords;
