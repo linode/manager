@@ -78,8 +78,9 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
           fields.map((field, index) => {
             return (
               <Metric
-                apiError={[isMetricDefinitionError, isMetricDefinitionLoading]}
                 data={metricDefinitions ? metricDefinitions.data : []}
+                isMetricDefinitionError={isMetricDefinitionError}
+                isMetricDefinitionLoading={isMetricDefinitionLoading}
                 key={field.id}
                 name={`rule_criteria.rules.${index}`}
                 onMetricDelete={() => remove(index)}

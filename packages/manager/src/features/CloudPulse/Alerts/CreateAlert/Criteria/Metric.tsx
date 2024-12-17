@@ -16,19 +16,22 @@ import type {
   AvailableMetrics,
   MetricAggregationType,
   MetricOperatorType,
-  MetricUnitType,
 } from '@linode/api-v4';
 import type { FieldPathByValue } from 'react-hook-form';
 
 interface MetricCriteriaProps {
   /**
-   * apiErrors while accessing the metric definitions endpoint
-   */
-  apiError: boolean[];
-  /**
    * metric data fetched by the metric definitions endpoint
    */
   data: AvailableMetrics[];
+  /**
+   * variable to check for metric definitions api call error state
+   */
+  isMetricDefinitionError: boolean;
+  /**
+   * variable to check for metric definitions api call loading state
+   */
+  isMetricDefinitionLoading: boolean;
   /**
    * name (with the index) used for the component to set in form
    */
@@ -44,12 +47,18 @@ interface MetricCriteriaProps {
   showDeleteIcon: boolean;
 }
 export const Metric = (props: MetricCriteriaProps) => {
-  const { apiError, data, name, onMetricDelete, showDeleteIcon } = props;
-  const [isMetricDefinitionError, isMetricDefinitionLoading] = apiError;
+  const {
+    data,
+    isMetricDefinitionError,
+    isMetricDefinitionLoading,
+    name,
+    onMetricDelete,
+    showDeleteIcon,
+  } = props;
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
 
   const handleDataFieldChange = (
-    selected: { label: string; unit: MetricUnitType; value: string },
+    selected: { label: string; value: string },
     operation: string
   ) => {
     const fieldValue: MetricCriteriaForm = {
@@ -132,7 +141,6 @@ export const Metric = (props: MetricCriteriaProps) => {
                     _,
                     newValue: {
                       label: string;
-                      unit: MetricUnitType;
                       value: string;
                     },
                     reason

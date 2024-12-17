@@ -51,8 +51,9 @@ describe('Metric component tests', () => {
     renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <Metric
-          apiError={[false, false]}
           data={mockData}
+          isMetricDefinitionError={false}
+          isMetricDefinitionLoading={false}
           name={`rule_criteria.rules.${0}`}
           onMetricDelete={vi.fn()}
           showDeleteIcon={false}
@@ -75,8 +76,9 @@ describe('Metric component tests', () => {
       {
         component: (
           <Metric
-            apiError={[false, false]}
             data={mockData}
+            isMetricDefinitionError={false}
+            isMetricDefinitionLoading={false}
             name={`rule_criteria.rules.${0}`}
             onMetricDelete={vi.fn()}
             showDeleteIcon={false}
@@ -119,8 +121,9 @@ describe('Metric component tests', () => {
       {
         component: (
           <Metric
-            apiError={[false, false]}
             data={mockData}
+            isMetricDefinitionError={false}
+            isMetricDefinitionLoading={false}
             name={`rule_criteria.rules.${0}`}
             onMetricDelete={vi.fn()}
             showDeleteIcon={false}
@@ -164,8 +167,9 @@ describe('Metric component tests', () => {
       {
         component: (
           <Metric
-            apiError={[false, false]}
             data={mockData}
+            isMetricDefinitionError={false}
+            isMetricDefinitionLoading={false}
             name={`rule_criteria.rules.${0}`}
             onMetricDelete={vi.fn()}
             showDeleteIcon={false}
@@ -205,8 +209,9 @@ describe('Metric component tests', () => {
       {
         component: (
           <Metric
-            apiError={[false, false]}
             data={mockData}
+            isMetricDefinitionError={false}
+            isMetricDefinitionLoading={false}
             name={`rule_criteria.rules.${0}`}
             onMetricDelete={vi.fn()}
             showDeleteIcon={false}
