@@ -376,11 +376,6 @@ export const CreateCluster = () => {
           </StyledFieldWithDocsStack>
           <Divider sx={{ marginTop: 4 }} />
           <Autocomplete
-            loading={
-              versionLoading ||
-              (isLkeEnterpriseLAFeatureEnabled &&
-                enterpriseTierVersionDataIsLoading)
-            }
             onChange={(_, selected) => {
               setVersion(selected?.value);
             }}
