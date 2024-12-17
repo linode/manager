@@ -65,12 +65,12 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
   return (
     <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
       <Box
-        alignItems={'center'}
-        display={'flex'}
-        justifyContent={'space-between'}
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
         sx={{ marginBottom: 1 }}
       >
-        <Typography variant={'h2'}>2. Criteria</Typography>
+        <Typography variant="h2">2. Criteria</Typography>
       </Box>
       <Stack spacing={2} sx={(theme) => ({ marginTop: theme.spacing(3) })}>
         {fields !== null &&
@@ -98,7 +98,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
             threshold: 0,
           })
         }
-        buttonType={'outlined'}
+        buttonType="outlined"
         size="medium"
         sx={(theme) => ({ marginTop: theme.spacing(2) })}
       >

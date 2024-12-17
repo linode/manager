@@ -111,8 +111,8 @@ export const Metric = (props: MetricCriteriaProps) => {
       data-testid={`${name}-id`}
     >
       <Stack>
-        <Box display={'flex'} justifyContent="space-between">
-          <Typography variant={'h3'}>Metric Threshold</Typography>
+        <Box display="flex" justifyContent="space-between">
+          <Typography variant="h3">Metric Threshold</Typography>
           <Box>
             {showDeleteIcon && <ClearIconButton handleClick={onMetricDelete} />}
           </Box>
@@ -150,7 +150,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                         )
                       : null
                   }
-                  data-testid={'Data-field'}
+                  data-testid="Data-field"
                   disabled={!serviceWatcher}
                   label="Data Field"
                   loading={isMetricDefinitionLoading}
@@ -187,7 +187,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                         )
                       : null
                   }
-                  data-testid={'Aggregation-type'}
+                  data-testid="Aggregation-type"
                   disabled={aggOptions.length === 0}
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
@@ -225,10 +225,10 @@ export const Metric = (props: MetricCriteriaProps) => {
                         )
                       : null
                   }
-                  data-testid={'Operator'}
+                  data-testid="Operator"
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
-                  label={'Operator'}
+                  label="Operator"
                   onBlur={field.onBlur}
                   options={MetricOperatorOptions}
                   placeholder="Select an operator"
