@@ -6,8 +6,8 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { CloudPulseAlertSeveritySelect } from './AlertSeveritySelect';
 
-describe('EngineOption component tests', () => {
-  it('should render the component when resource type is dbaas', () => {
+describe('Severity component tests', () => {
+  it('should render the component', () => {
     const { getByLabelText, getByTestId } = renderWithThemeAndHookFormContext({
       component: <CloudPulseAlertSeveritySelect name={'severity'} />,
     });
