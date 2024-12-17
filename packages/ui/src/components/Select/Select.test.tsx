@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -34,9 +34,9 @@ describe('Select', () => {
 
     const selectInput = getByRole('combobox');
 
-    options.forEach((option) => {
-      fireEvent.focus(selectInput);
-      fireEvent.change(selectInput, { target: { value: option.label } });
+    options.forEach(async (option) => {
+      await userEvent.click(selectInput);
+      await userEvent.type(selectInput, option.label);
 
       expect(getByText(option.label)).toBeInTheDocument();
       expect(selectInput).toHaveValue(option.label);
@@ -78,7 +78,7 @@ describe('Select', () => {
       '.MuiAutocomplete-clearIndicator'
     );
     expect(clearButton).toBeInTheDocument();
-    fireEvent.click(clearButton!);
+    await userEvent.click(clearButton!);
     expect(onChange).toHaveBeenCalledWith(expect.any(Object), null);
   });
 

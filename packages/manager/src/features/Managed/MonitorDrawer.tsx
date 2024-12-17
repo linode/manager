@@ -182,6 +182,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 onBlur={handleBlur}
                 options={groupOptions}
                 placeholder="Select a group..."
+                searchable
               />
 
               <Grid container spacing={2}>
@@ -193,7 +194,6 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                     textFieldProps={{
                       required: mode === modes.CREATING,
                     }}
-                    clearable={false}
                     data-qa-add-service-type
                     errorText={errors.service_type}
                     label="Monitor Type"
