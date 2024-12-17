@@ -102,14 +102,25 @@ export const CreateCluster = () => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery();
+  } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
+
+    // HA is enabled by default for enterprise clusters
+    if (tier === 'enterprise') {
+      setHighAvailability(true);
+    } else {
+      setHighAvailability(undefined);
+    }
   };
 
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
     (type) => type.id === 'lke-ha'
+  );
+
+  const lkeEnterpriseType = kubernetesHighAvailabilityTypesData?.find(
+    (type) => type.id === 'lke-e'
   );
 
   const {
@@ -472,6 +483,7 @@ export const CreateCluster = () => {
             classes,
           ]}
           createCluster={createCluster}
+          enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
           pools={nodePools}
