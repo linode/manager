@@ -107,6 +107,11 @@ export const CreateCluster = () => {
 
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
+
+    // HA is enabled by default for enterprise clusters
+    if (tier === 'enterprise') {
+      setHighAvailability(true);
+    }
   };
 
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
