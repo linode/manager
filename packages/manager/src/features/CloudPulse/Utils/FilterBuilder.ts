@@ -65,6 +65,7 @@ export const getTagsProperties = (
   return {
     defaultValue: preferences?.[TAGS],
     handleTagsChange,
+    optional: props.config.configuration.isOptional,
     label,
     placeholder,
     resourceType: dashboard.service_type,
