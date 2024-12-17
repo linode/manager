@@ -44,7 +44,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       opacity: 0.7,
     },
     alignItems: 'center',
-    borderLeft: '1px solid #c4c4c4',
+    borderLeft: `1px solid ${theme.tokens.color.Neutrals[40]}`,
     cursor: 'pointer',
     display: 'flex',
   },

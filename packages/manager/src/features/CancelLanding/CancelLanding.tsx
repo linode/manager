@@ -14,7 +14,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   root: {
     '& button': {
-      backgroundColor: '#00b159',
+      backgroundColor: theme.tokens.color.Green[70],
       color: theme.tokens.color.Neutrals.White,
       marginTop: theme.spacing(8),
     },

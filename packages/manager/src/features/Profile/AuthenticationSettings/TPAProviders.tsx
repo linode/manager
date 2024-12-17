@@ -103,7 +103,7 @@ export const TPAProviders = (props: Props) => {
                     >
                       <ProviderIcon
                         style={{
-                          color: '#939598',
+                          color: theme.tokens.color.Neutrals[50],
                           height: 32,
                           marginRight: theme.spacing(2),
                           width: 32,

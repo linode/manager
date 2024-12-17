@@ -13,10 +13,10 @@ import type { ExtendedType } from 'src/utilities/extendType';
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '&:hover': {
-      color: '#6e6e6e',
+      color: theme.tokens.color.Neutrals[70],
     },
     alignItems: 'flex-start',
-    color: '#979797',
+    color: theme.tokens.color.Neutrals[50],
     marginTop: -4,
     padding: 0,
   },
