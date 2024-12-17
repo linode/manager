@@ -30,6 +30,7 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   disk_encryption: 'enabled',
   id: Factory.each((id) => id),
   nodes: kubeLinodeFactory.buildList(3),
+  tags: [],
   type: 'g6-standard-1',
 });
 
