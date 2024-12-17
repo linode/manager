@@ -23,7 +23,7 @@ export const ContactsRow = (props: ContactsRowProps) => {
         <TableCell>{contact.group}</TableCell>
       </Hidden>
       <TableCell>{contact.email}</TableCell>
-      <Hidden smDown>
+      <Hidden xsDown>
         <TableCell>{contact.phone.primary}</TableCell>
         <TableCell>{contact.phone.secondary}</TableCell>
       </Hidden>

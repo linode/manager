@@ -136,7 +136,7 @@ const Contacts = () => {
                           >
                             Name
                           </TableSortCell>
-                          <Hidden smDown>
+                          <Hidden mdDown>
                             <TableSortCell
                               active={orderBy === 'group'}
                               direction={order}
