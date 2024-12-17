@@ -3,7 +3,7 @@ export interface IamUserPermissions {
   resource_access: ResourceAccess[];
 }
 
-type ResourceType =
+export type ResourceTypePermissions =
   | 'linode'
   | 'firewall'
   | 'nodebalancer'
@@ -25,7 +25,7 @@ type RoleType = 'linode_contributor' | 'firewall_admin';
 
 export interface ResourceAccess {
   resource_id: number;
-  resource_type: ResourceType;
+  resource_type: ResourceTypePermissions;
   roles: RoleType[];
 }
 
@@ -42,7 +42,7 @@ type PermissionType =
   | 'view_linode';
 
 interface Access {
-  resource_type: ResourceType;
+  resource_type: ResourceTypePermissions;
   roles: Roles[];
 }
 
@@ -51,3 +51,5 @@ export interface Roles {
   description: string;
   permissions?: PermissionType[];
 }
+
+export type IamAccessType = keyof IamAccountPermissions;
