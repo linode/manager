@@ -110,6 +110,8 @@ export const CreateCluster = () => {
     // HA is enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setHighAvailability(true);
+    } else {
+      setHighAvailability(false);
     }
   };
 
