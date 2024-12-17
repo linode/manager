@@ -82,6 +82,7 @@ export const KubernetesClusterDetail = () => {
       <UpgradeKubernetesVersionBanner
         clusterID={cluster?.id}
         clusterLabel={cluster?.label}
+        clusterTier={cluster?.tier ?? 'standard'} // TODO LKE: remove fallback once LKE-E is in GA and tier is required
         currentVersion={cluster?.k8s_version}
       />
       <LandingHeader
