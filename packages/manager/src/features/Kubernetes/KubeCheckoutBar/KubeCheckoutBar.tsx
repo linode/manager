@@ -19,13 +19,14 @@ import {
 } from 'src/utilities/pricing/kubernetes';
 
 import { nodeWarning } from '../kubeUtils';
+import { StyledBox, StyledHeader } from './KubeCheckoutSummary.styles';
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
-import { StyledHeader, StyledBox } from './KubeCheckoutSummary.styles';
 
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
 
 export interface Props {
   createCluster: () => void;
+  enterprisePrice?: number;
   hasAgreed: boolean;
   highAvailability?: boolean;
   highAvailabilityPrice: string;
@@ -33,7 +34,6 @@ export interface Props {
   region: string | undefined;
   regionsData: Region[];
   removePool: (poolIdx: number) => void;
-  enterprisePrice?: number;
   showHighAvailability: boolean | undefined;
   submitting: boolean;
   toggleHasAgreed: () => void;
@@ -43,6 +43,7 @@ export interface Props {
 export const KubeCheckoutBar = (props: Props) => {
   const {
     createCluster,
+    enterprisePrice,
     hasAgreed,
     highAvailability,
     highAvailabilityPrice,
@@ -50,7 +51,6 @@ export const KubeCheckoutBar = (props: Props) => {
     region,
     regionsData,
     removePool,
-    enterprisePrice,
     showHighAvailability,
     submitting,
     toggleHasAgreed,
@@ -103,6 +103,7 @@ export const KubeCheckoutBar = (props: Props) => {
       calculatedPrice={
         region
           ? getTotalClusterPrice({
+              enterprisePrice: enterprisePrice ?? undefined,
               highAvailabilityPrice:
                 highAvailability && !enterprisePrice
                   ? Number(highAvailabilityPrice)
@@ -110,20 +111,19 @@ export const KubeCheckoutBar = (props: Props) => {
               pools,
               region,
               types: types ?? [],
-              enterprisePrice: enterprisePrice ?? undefined,
             })
           : undefined
+      }
+      priceSelectionText={
+        enterprisePrice
+          ? LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE
+          : LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE
       }
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"
       isMakingRequest={submitting}
       onDeploy={createCluster}
-      priceSelectionText={
-        enterprisePrice
-          ? LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE
-          : LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE
-      }
       submitText="Create Cluster"
     >
       <>

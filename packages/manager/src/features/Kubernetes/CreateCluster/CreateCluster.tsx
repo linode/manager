@@ -387,6 +387,11 @@ export const CreateCluster = () => {
           </StyledFieldWithDocsStack>
           <Divider sx={{ marginTop: 4 }} />
           <Autocomplete
+            loading={
+              versionLoading ||
+              (isLkeEnterpriseLAFeatureEnabled &&
+                enterpriseTierVersionDataIsLoading)
+            }
             onChange={(_, selected) => {
               setVersion(selected?.value);
             }}
@@ -396,11 +401,6 @@ export const CreateCluster = () => {
             options={versions}
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
-            loading={
-              versionLoading ||
-              (isLkeEnterpriseLAFeatureEnabled &&
-                enterpriseTierVersionDataIsLoading)
-            }
           />
           {showAPL && (
             <>
@@ -496,13 +496,13 @@ export const CreateCluster = () => {
             classes,
           ]}
           createCluster={createCluster}
+          enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
           pools={nodePools}
           region={selectedRegionId}
           regionsData={regionsData}
           removePool={removePool}
-          enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
           showHighAvailability={showHighAvailability}
           submitting={submitting}
           toggleHasAgreed={toggleHasAgreed}

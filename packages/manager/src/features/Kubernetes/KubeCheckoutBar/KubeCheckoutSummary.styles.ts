@@ -42,7 +42,7 @@ export const StyledPriceBox = styled(Box, {
   label: 'StyledPriceBox',
 })(({ theme }) => ({
   '& h3': {
-    color: `${theme.palette.text.primary} !important`,
+    color: theme.palette.text.primary,
     fontFamily: theme.font.normal,
   },
 }));
