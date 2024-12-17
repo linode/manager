@@ -111,7 +111,7 @@ export const CreateCluster = () => {
     if (tier === 'enterprise') {
       setHighAvailability(true);
     } else {
-      setHighAvailability(false);
+      setHighAvailability(undefined);
     }
   };
 
