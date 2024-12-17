@@ -29,6 +29,7 @@ import {
   mockGetControlPlaneACL,
   mockUpdateControlPlaneACLError,
   mockGetControlPlaneACLError,
+  mockGetTieredKubernetesVersions,
 } from 'support/intercepts/lke';
 import {
   mockGetLinodeType,
@@ -133,7 +134,7 @@ describe('LKE cluster updates', () => {
      * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
      * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
      */
-    it('can upgrade kubernetes version from the details page', () => {
+    it('can upgrade standard kubernetes version from the details page', () => {
       const oldVersion = '1.25';
       const newVersion = '1.26';
 
@@ -235,7 +236,7 @@ describe('LKE cluster updates', () => {
       ui.toast.findByMessage('Recycle started successfully.');
     });
 
-    it('can upgrade the kubernetes version from the landing page', () => {
+    it('can upgrade the standard kubernetes version from the landing page', () => {
       const oldVersion = '1.25';
       const newVersion = '1.26';
 
@@ -253,6 +254,208 @@ describe('LKE cluster updates', () => {
       cy.visitWithLogin(`/kubernetes/clusters`);
 
       cy.wait(['@getClusters', '@getVersions']);
+
+      cy.findByText(oldVersion).should('be.visible');
+
+      cy.findByText('UPGRADE')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.dialog
+        .findByTitle(
+          `Step 1: Upgrade ${cluster.label} to Kubernetes ${newVersion}`
+        )
+        .should('be.visible');
+
+      mockGetClusters([updatedCluster]).as('getClusters');
+
+      ui.button
+        .findByTitle('Upgrade Version')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.wait(['@updateCluster', '@getClusters']);
+
+      ui.dialog
+        .findByTitle('Step 2: Recycle All Cluster Nodes')
+        .should('be.visible');
+
+      ui.button
+        .findByTitle('Recycle All Nodes')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.wait('@recycleAllNodes');
+
+      ui.toast.assertMessage('Recycle started successfully.');
+
+      cy.findByText(newVersion).should('be.visible');
+    });
+
+    /*
+     * - Confirms UI flow of upgrading Kubernetes enterprise version using mocked API requests.
+     * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
+     * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
+     */
+    it('can upgrade enterprise kubernetes version from the details page', () => {
+      const oldVersion = '1.31.1+lke1';
+      const newVersion = '1.31.1+lke2';
+
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Kubernetes Enterprise'],
+        })
+      ).as('getAccount');
+
+      // TODO LKE-E: Remove once feature is in GA
+      mockAppendFeatureFlags({
+        lkeEnterprise: { enabled: true, la: true },
+      });
+
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: oldVersion,
+        tier: 'enterprise',
+      });
+
+      const mockClusterUpdated = {
+        ...mockCluster,
+        k8s_version: newVersion,
+      };
+
+      const upgradePrompt =
+        'A new version of Kubernetes is available (1.31.1+lke2).';
+
+      const upgradeNotes = [
+        'Once the upgrade is complete you will need to recycle all nodes in your cluster',
+        // Confirm that the old version and new version are both shown.
+        oldVersion,
+        newVersion,
+      ];
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetTieredKubernetesVersions('enterprise', [
+        { id: newVersion, tier: 'enterprise' },
+        { id: oldVersion, tier: 'enterprise' },
+      ]).as('getTieredVersions');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockUpdateCluster(mockCluster.id, mockClusterUpdated).as('updateCluster');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getAccount',
+        '@getCluster',
+        '@getNodePools',
+        '@getTieredVersions',
+      ]);
+
+      // Confirm that upgrade prompt is shown.
+      cy.findByText(upgradePrompt).should('be.visible');
+      ui.button
+        .findByTitle('Upgrade Version')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.dialog
+        .findByTitle(
+          `Step 1: Upgrade ${mockCluster.label} to Kubernetes ${newVersion}`
+        )
+        .should('be.visible')
+        .within(() => {
+          upgradeNotes.forEach((note: string) => {
+            cy.findAllByText(note, { exact: false }).should('be.visible');
+          });
+
+          ui.button
+            .findByTitle('Upgrade Version')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Wait for API response and assert toast message is shown.
+      cy.wait('@updateCluster');
+
+      // Verify the banner goes away because the version update has happened
+      cy.findByText(upgradePrompt).should('not.exist');
+
+      mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
+
+      const stepTwoDialogTitle = 'Step 2: Recycle All Cluster Nodes';
+
+      ui.dialog
+        .findByTitle(stepTwoDialogTitle)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Kubernetes version has been updated successfully.', {
+            exact: false,
+          }).should('be.visible');
+
+          cy.findByText(
+            'For the changes to take full effect you must recycle the nodes in your cluster.',
+            { exact: false }
+          ).should('be.visible');
+
+          ui.button
+            .findByTitle('Recycle All Nodes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Verify clicking the "Recycle All Nodes" makes an API call
+      cy.wait('@recycleAllNodes');
+
+      // Verify the upgrade dialog closed
+      cy.findByText(stepTwoDialogTitle).should('not.exist');
+
+      // Verify the banner is still gone after the flow
+      cy.findByText(upgradePrompt).should('not.exist');
+
+      // Verify the version is correct after the update
+      cy.findByText(`Version ${newVersion}`);
+
+      ui.toast.findByMessage('Recycle started successfully.');
+    });
+
+    it('can upgrade the enterprise kubernetes version from the landing page', () => {
+      const oldVersion = '1.31.1+lke1';
+      const newVersion = '1.32.1+lke2';
+
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Kubernetes Enterprise'],
+        })
+      ).as('getAccount');
+
+      // TODO LKE-E: Remove once feature is in GA
+      mockAppendFeatureFlags({
+        lkeEnterprise: { enabled: true, la: true },
+      });
+
+      const cluster = kubernetesClusterFactory.build({
+        k8s_version: oldVersion,
+        tier: 'enterprise',
+      });
+
+      const updatedCluster = { ...cluster, k8s_version: newVersion };
+
+      mockGetClusters([cluster]).as('getClusters');
+      mockGetTieredKubernetesVersions('enterprise', [
+        { id: newVersion, tier: 'enterprise' },
+        { id: oldVersion, tier: 'enterprise' },
+      ]).as('getTieredVersions');
+      mockUpdateCluster(cluster.id, updatedCluster).as('updateCluster');
+      mockRecycleAllNodes(cluster.id).as('recycleAllNodes');
+
+      cy.visitWithLogin(`/kubernetes/clusters`);
+
+      cy.wait(['@getAccount', '@getClusters', '@getTieredVersions']);
 
       cy.findByText(oldVersion).should('be.visible');
 
