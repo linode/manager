@@ -292,7 +292,7 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
         filter.configuration.dependency
     );
 
-    const optionalFilterSet = new Set(
+    const optionalFilters = new Set(
       filters
         .filter((filter) => filter.configuration.isOptional)
         .map((filter) => filter.configuration.filterKey)
@@ -303,7 +303,7 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
         const dependentFilter = dependentFilters[dependent];
 
         return (
-          !optionalFilterSet.has(dependent) &&
+          !optionalFilters.has(dependent) &&
           (!dependentFilter ||
             (Array.isArray(dependentFilter) && dependentFilter.length === 0))
         );
