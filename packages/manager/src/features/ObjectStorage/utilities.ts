@@ -1,12 +1,13 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
-import {
+import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+
+import type { AccountSettings } from '@linode/api-v4/lib/account';
+import type {
   ACLType,
   ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage';
-import { FormikProps } from 'formik';
-
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+import type { ObjectStorageEndpoint } from '@linode/api-v4/lib/object-storage';
+import type { FormikProps } from 'formik';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export const generateObjectUrl = (hostname: string, objectName: string) => {
   return `https://${hostname}/${objectName}`;
@@ -169,4 +170,25 @@ export const objectACLHelperText: Record<ACLType, string> = {
   private: 'Private ACL',
   'public-read': 'Public Read ACL',
   'public-read-write': 'Public Read/Write ACL',
+};
+
+/**
+ * For OBJ Gen2 users, filter regions based on available endpoints.
+ * Otherwise, we return the regions as is.
+ */
+export const filterRegionsByEndpoints = <T extends { id: string }>(
+  regions: T[] | undefined,
+  endpoints: ObjectStorageEndpoint[] | undefined
+): T[] => {
+  if (!regions) {
+    return [];
+  }
+
+  if (!endpoints) {
+    return regions;
+  }
+
+  const endpointRegions = new Set(endpoints.map((endpoint) => endpoint.region));
+
+  return regions.filter((region) => endpointRegions.has(region.id));
 };

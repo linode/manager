@@ -4,6 +4,8 @@ import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
+import { filterRegionsByEndpoints } from 'src/features/ObjectStorage/utilities';
+import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { pluralize } from 'src/utilities/pluralize';
 import { getRegionsByRegionId } from 'src/utilities/regions';
@@ -20,12 +22,19 @@ export const HostNameTableCell = (props: Props) => {
   const { setHostNames, setShowHostNamesDrawers, storageKeyData } = props;
 
   const { data: regionsData } = useRegionsQuery();
+  const { data: endpoints } = useObjectStorageEndpoints();
 
-  const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
+  const filteredRegions = React.useMemo(
+    () => filterRegionsByEndpoints(regionsData, endpoints),
+    [regionsData, endpoints]
+  );
+
+  const regionsLookup =
+    filteredRegions && getRegionsByRegionId(filteredRegions);
 
   const { regions } = storageKeyData;
 
-  if (!regionsLookup || !regionsData || !regions || regions.length === 0) {
+  if (!regionsLookup || !filteredRegions || !regions || regions.length === 0) {
     return <TableCell>None</TableCell>;
   }
   const formatEndpoint = (region: ObjectStorageKeyRegions) => {
