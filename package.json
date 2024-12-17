@@ -38,11 +38,11 @@
     "cy:component": "pnpm run --filter @linode/manager cy:component",
     "cy:component:run": "pnpm run --filter @linode/manager cy:component:run",
     "cy:rec-snap": "pnpm run --filter @linode/manager cy:rec-snap",
-    "changeset": "node ./scripts/changelog/changeset.mjs",
-    "generate-changelogs": "node ./scripts/changelog/generate-changelogs.mjs",
-    "package-versions": "node ./scripts/package-versions/index.js",
-    "junit:summary": "tsx ./scripts/junit-summary/index.ts",
-    "generate-tod": "tsx ./scripts/tod-payload/index.ts",
+    "changeset": "pnpm run --filter @linode/scripts changeset",
+    "generate-changelogs": "pnpm run --filter @linode/scripts generate-changelogs",
+    "package-versions": "pnpm run --filter @linode/scripts package-versions",
+    "junit:summary": "pnpm run --filter @linode/scripts --silent junit:summary",
+    "generate-tod": "pnpm run --filter @linode/scripts --silent generate-tod",
     "clean": "rm -rf node_modules && rm -rf packages/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/validation/node_modules && rm -rf packages/api-v4/lib && rm -rf packages/validation/lib",
     "prepare": "husky"
   },
@@ -50,11 +50,6 @@
     "node-fetch": "^2.6.7",
     "yaml": "^2.3.0",
     "semver": "^7.5.2"
-  },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
   },
   "version": "0.0.0",
   "volta": {

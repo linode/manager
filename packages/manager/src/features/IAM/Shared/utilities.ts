@@ -12,7 +12,7 @@ export const useIsIAMEnabled = () => {
   const isIAMEnabled = flags.iam?.enabled;
 
   return {
-    isIAMEnabled,
     isIAMBeta: flags.iam?.beta,
+    isIAMEnabled,
   };
 };
