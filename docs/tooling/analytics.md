@@ -2,7 +2,7 @@
 
 ## Pendo
 
-Cloud Manager uses [Pendo](https://www.pendo.io/pendo-for-your-customers/) to capture analytics, guide users, and improve the user experience.  Pendo is the **preferred** method for collecting analytics, including user events, since it requires no development effort and can be accomplished via the Pendo UI.
+Cloud Manager uses [Pendo](https://www.pendo.io/pendo-for-your-customers/) to capture analytics, guide users, and improve the user experience. Pendo is the **preferred** method for collecting analytics, including user events, since it requires no development effort and can be accomplished via the Pendo UI.
 
 To view Pendo dashboards, Cloud Manager developers must follow internal processes to request access.
 
