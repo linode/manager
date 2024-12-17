@@ -18,6 +18,7 @@ export interface CloudPulseTagsSelectProps {
   disabled?: boolean;
   handleTagsChange: (tags: CloudPulseTags[], savePref?: boolean) => void;
   label: string;
+  optional?: boolean;
   placeholder?: string;
   resourceType: string | undefined;
   savePreferences?: boolean;
@@ -29,6 +30,7 @@ export const CloudPulseTagsSelect = React.memo(
       defaultValue,
       handleTagsChange,
       label,
+      optional,
       placeholder,
       resourceType,
       savePreferences,
@@ -50,14 +52,6 @@ export const CloudPulseTagsSelect = React.memo(
     const [selectedTags, setSelectedTags] = React.useState<CloudPulseTags[]>();
 
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
-
-    const isOptionalFilter = resourceType
-      ? FILTER_CONFIG.get(resourceType)?.filters.some(
-          (filter) =>
-            filter.configuration.filterKey === TAGS &&
-            filter.configuration.isOptional
-        )
-      : undefined;
 
     React.useEffect(() => {
       if (tags && savePreferences && !selectedTags) {
@@ -112,7 +106,7 @@ export const CloudPulseTagsSelect = React.memo(
               },
             },
           },
-          optional: isOptionalFilter,
+          optional,
         }}
         autoHighlight
         clearOnBlur

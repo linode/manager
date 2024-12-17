@@ -45,6 +45,7 @@ describe('CloudPulseTagsSelect component tests', () => {
       <CloudPulseTagsSelect
         handleTagsChange={mockTagsHandler}
         label="Tags"
+        optional
         resourceType="linode"
       />
     );
@@ -85,6 +86,7 @@ describe('CloudPulseTagsSelect component tests', () => {
       <CloudPulseTagsSelect
         handleTagsChange={mockTagsHandler}
         label="Tags"
+        optional
         resourceType={'linode'}
       />
     );
@@ -123,6 +125,7 @@ describe('CloudPulseTagsSelect component tests', () => {
       <CloudPulseTagsSelect
         handleTagsChange={mockTagsHandler}
         label="Tags"
+        optional
         resourceType={'linode'}
       />
     );
