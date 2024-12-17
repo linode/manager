@@ -179,11 +179,11 @@ it('test buildXfilter method', () => {
   if (resourceSelectionConfig) {
     let result = buildXFilter(resourceSelectionConfig, {
       region: 'us-east',
-      tags: ['test1'],
+      tags: ['test1', 'test2'],
     });
 
     expect(JSON.stringify(result)).toEqual(
-      '{"+and":[{"region":"us-east"}],"+or":[{"tags":"test1"}]}'
+      '{"+and":[{"region":"us-east"}],"+or":[{"tags":"test1"},{"tags":"test2"}]}'
     );
 
     result = buildXFilter(resourceSelectionConfig, {});

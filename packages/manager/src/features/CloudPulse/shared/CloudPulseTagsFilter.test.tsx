@@ -2,22 +2,22 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { tagFactory } from 'src/factories';
+import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseTagsSelect } from './CloudPulseTagsFilter';
 
-import type { useTagsQuery } from 'src/queries/cloudpulse/tags';
+import type { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 const queryMocks = vi.hoisted(() => ({
-  useTagsQuery: vi.fn().mockReturnValue({}),
+  useAllLinodesQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/cloudpulse/tags', async () => {
-  const actual = await vi.importActual('src/queries/cloudpulse/tags');
+vi.mock('src/queries/linodes/linodes', async () => {
+  const actual = await vi.importActual('src/queries/linodes/linodes');
   return {
     ...actual,
-    useTagsQuery: queryMocks.useTagsQuery,
+    useAllLinodesQuery: queryMocks.useAllLinodesQuery,
   };
 });
 
@@ -28,12 +28,12 @@ const LABEL_SUBTITLE = 'Tags (optional)';
 
 describe('CloudPulseTagsSelect component tests', () => {
   beforeEach(() => {
-    tagFactory.resetSequenceNumber();
+    linodeFactory.resetSequenceNumber();
   });
 
   it('should render a tags select component', () => {
-    queryMocks.useTagsQuery.mockReturnValue({
-      data: tagFactory.buildList(2),
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2),
       isError: false,
       isLoading: false,
       status: 'success',
@@ -51,11 +51,11 @@ describe('CloudPulseTagsSelect component tests', () => {
   });
 
   it('should render a Tags Select component with error message on api call failure', () => {
-    queryMocks.useTagsQuery.mockReturnValue({
+    queryMocks.useAllLinodesQuery.mockReturnValue({
       data: undefined,
       isError: true,
       isLoading: false,
-    } as ReturnType<typeof useTagsQuery>);
+    } as ReturnType<typeof useAllLinodesQuery>);
     const { getByText } = renderWithTheme(
       <CloudPulseTagsSelect
         handleTagsChange={mockTagsHandler}
@@ -70,8 +70,10 @@ describe('CloudPulseTagsSelect component tests', () => {
   it('should select multiple tags', async () => {
     const user = userEvent.setup();
 
-    queryMocks.useTagsQuery.mockReturnValue({
-      data: tagFactory.buildList(3),
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: linodeFactory.buildList(3, {
+        tags: ['tag-2', 'tag-3', 'tag-4'],
+      }),
       isError: false,
       isLoading: false,
       status: 'success',
@@ -108,8 +110,8 @@ describe('CloudPulseTagsSelect component tests', () => {
   it('should be able to deselect the selected tags', async () => {
     const user = userEvent.setup();
 
-    queryMocks.useTagsQuery.mockReturnValue({
-      data: tagFactory.buildList(2),
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2, { tags: ['tag-2', 'tag-3'] }),
       isError: false,
       isLoading: false,
       status: 'success',
@@ -139,8 +141,8 @@ describe('CloudPulseTagsSelect component tests', () => {
 
   it('Should select the default tags returned from preferences', async () => {
     const user = userEvent.setup();
-    queryMocks.useTagsQuery.mockReturnValue({
-      data: tagFactory.buildList(2),
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2, { tags: ['tag-2', 'tag-3'] }),
       isError: false,
       isLoading: false,
       status: 'success',

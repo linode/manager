@@ -1,10 +1,10 @@
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { useTagsQuery } from 'src/queries/cloudpulse/tags';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { themes } from 'src/utilities/theme';
 
-import type { FilterValue } from '@linode/api-v4';
+import type { FilterValue, Linode } from '@linode/api-v4';
 
 export interface CloudPulseTags {
   label: string;
@@ -24,7 +24,6 @@ export const CloudPulseTagsSelect = React.memo(
   (props: CloudPulseTagsSelectProps) => {
     const {
       defaultValue,
-      disabled,
       handleTagsChange,
       label,
       placeholder,
@@ -32,11 +31,18 @@ export const CloudPulseTagsSelect = React.memo(
       savePreferences,
     } = props;
 
-    const { data: tags, isError, isLoading } = useTagsQuery(
-      disabled !== undefined ? !disabled : Boolean(resourceType),
-      resourceType,
-      {}
-    );
+    const { data: linodes, isError, isLoading } = useAllLinodesQuery();
+    // fetch all linode instances, consume the associated tags
+    const tags = React.useMemo(() => {
+      if (!linodes) {
+        return [];
+      }
+      return Array.from(
+        new Set(linodes.flatMap((linode: Linode) => linode.tags))
+      )
+        .sort()
+        .map((tag) => ({ label: tag })) as CloudPulseTags[];
+    }, [linodes]);
 
     const [selectedTags, setSelectedTags] = React.useState<CloudPulseTags[]>();
 
@@ -107,11 +113,10 @@ export const CloudPulseTagsSelect = React.memo(
         loading={isLoading}
         multiple
         noMarginTop
-        options={tags ?? []}
+        options={tags}
         placeholder={selectedTags?.length ? '' : placeholder || 'Select Tags'}
         value={selectedTags ?? []}
       />
     );
-  },
-  (prevProps, nextProps) => prevProps.resourceType === nextProps.resourceType
+  }
 );
