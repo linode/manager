@@ -17,7 +17,9 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   service_type: 'linode',
   severity: 0,
   status: 'enabled',
-  triggerCondition: {
+  tags: ['tag1', 'tag2'],
+  trigger_conditions: {
+    criteria_condition: 'ALL',
     evaluation_period_seconds: 0,
     polling_interval_seconds: 0,
     trigger_occurrences: 0,
