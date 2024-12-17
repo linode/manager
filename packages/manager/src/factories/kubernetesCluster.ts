@@ -81,14 +81,14 @@ export const kubernetesVersionFactory = Factory.Sync.makeFactory<KubernetesVersi
 
 export const kubernetesStandardTierVersionFactory = Factory.Sync.makeFactory<KubernetesTieredVersion>(
   {
-    id: '1.31',
+    id: Factory.each((id) => `'v1.3${id}'`),
     tier: 'standard',
   }
 );
 
 export const kubernetesEnterpriseTierVersionFactory = Factory.Sync.makeFactory<KubernetesTieredVersion>(
   {
-    id: 'v1.31.1+lke1',
+    id: Factory.each((id) => `'v1.31.${id}+lke1'`),
     tier: 'enterprise',
   }
 );
