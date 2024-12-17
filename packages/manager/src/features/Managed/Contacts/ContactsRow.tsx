@@ -1,4 +1,3 @@
-import { ManagedContact } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -6,6 +5,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
 import ActionMenu from './ContactsActionMenu';
+
+import type { ManagedContact } from '@linode/api-v4/lib/managed';
 
 interface ContactsRowProps {
   contact: ManagedContact;
