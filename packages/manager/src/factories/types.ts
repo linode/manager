@@ -212,6 +212,17 @@ export const lkeHighAvailabilityTypeFactory = Factory.Sync.makeFactory<PriceType
   }
 );
 
+export const lkeEnterpriseTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'lke-e',
+  label: 'LKE Enterprise',
+  price: {
+    hourly: 0.45,
+    monthly: 300,
+  },
+  region_prices: [],
+  transfer: 0,
+});
+
 export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType>({
   id: 'objectstorage',
   label: 'Object Storage',
