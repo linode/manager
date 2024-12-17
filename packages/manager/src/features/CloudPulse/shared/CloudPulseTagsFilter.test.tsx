@@ -1,4 +1,3 @@
-import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -38,15 +37,19 @@ describe('CloudPulseTagsSelect component tests', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getByPlaceholderText, getByTestId } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByPlaceholderText,
+      getByTestId,
+    } = renderWithTheme(
       <CloudPulseTagsSelect
         handleTagsChange={mockTagsHandler}
         label="Tags"
-        resourceType={undefined}
+        resourceType="linode"
       />
     );
     expect(getByTestId('tags-select')).toBeInTheDocument();
-    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
+    expect(getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
     expect(getByPlaceholderText('Select Tags')).toBeInTheDocument();
   });
 
@@ -78,30 +81,30 @@ describe('CloudPulseTagsSelect component tests', () => {
       isLoading: false,
       status: 'success',
     });
-    renderWithTheme(
+    const { getByLabelText, getByRole } = renderWithTheme(
       <CloudPulseTagsSelect
         handleTagsChange={mockTagsHandler}
         label="Tags"
         resourceType={'linode'}
       />
     );
-    await user.click(screen.getByRole('button', { name: 'Open' }));
-    await user.click(screen.getByRole('option', { name: 'tag-2' }));
-    await user.click(screen.getByRole('option', { name: 'tag-3' }));
-    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
+    await user.click(getByRole('button', { name: 'Open' }));
+    await user.click(getByRole('option', { name: 'tag-2' }));
+    await user.click(getByRole('option', { name: 'tag-3' }));
+    expect(getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
 
     expect(
-      screen.getByRole('option', {
+      getByRole('option', {
         name: 'tag-2',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
-      screen.getByRole('option', {
+      getByRole('option', {
         name: 'tag-3',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
-      screen.getByRole('option', {
+      getByRole('option', {
         name: 'tag-4',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
@@ -116,24 +119,24 @@ describe('CloudPulseTagsSelect component tests', () => {
       isLoading: false,
       status: 'success',
     });
-    renderWithTheme(
+    const { getByLabelText, getByRole } = renderWithTheme(
       <CloudPulseTagsSelect
         handleTagsChange={mockTagsHandler}
         label="Tags"
         resourceType={'linode'}
       />
     );
-    await user.click(screen.getByRole('button', { name: 'Open' }));
-    await user.click(screen.getByRole('option', { name: SELECT_ALL }));
-    await user.click(screen.getByRole('option', { name: 'Deselect All' }));
-    expect(screen.getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
+    await user.click(getByRole('button', { name: 'Open' }));
+    await user.click(getByRole('option', { name: SELECT_ALL }));
+    await user.click(getByRole('option', { name: 'Deselect All' }));
+    expect(getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
     expect(
-      screen.getByRole('option', {
+      getByRole('option', {
         name: 'tag-2',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(
-      screen.getByRole('option', {
+      getByRole('option', {
         name: 'tag-3',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
@@ -148,7 +151,7 @@ describe('CloudPulseTagsSelect component tests', () => {
       status: 'success',
     });
 
-    renderWithTheme(
+    const { getByRole } = renderWithTheme(
       <CloudPulseTagsSelect
         defaultValue={['tag-2']}
         handleTagsChange={mockTagsHandler}
@@ -159,15 +162,15 @@ describe('CloudPulseTagsSelect component tests', () => {
     );
 
     expect(
-      screen.getByRole('button', {
+      getByRole('button', {
         name: 'tag-2',
       })
     ).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Open' }));
+    await user.click(getByRole('button', { name: 'Open' }));
 
     expect(
-      screen.getByRole('option', {
+      getByRole('option', {
         name: 'tag-3',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');

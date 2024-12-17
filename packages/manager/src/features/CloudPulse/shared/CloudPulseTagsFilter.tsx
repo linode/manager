@@ -4,6 +4,9 @@ import React from 'react';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { themes } from 'src/utilities/theme';
 
+import { TAGS } from '../Utils/constants';
+import { FILTER_CONFIG } from '../Utils/FilterConfig';
+
 import type { FilterValue, Linode } from '@linode/api-v4';
 
 export interface CloudPulseTags {
@@ -47,6 +50,14 @@ export const CloudPulseTagsSelect = React.memo(
     const [selectedTags, setSelectedTags] = React.useState<CloudPulseTags[]>();
 
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
+
+    const isOptionalFilter = resourceType
+      ? FILTER_CONFIG.get(resourceType)?.filters.some(
+          (filter) =>
+            filter.configuration.filterKey === TAGS &&
+            filter.configuration.isOptional
+        )
+      : undefined;
 
     React.useEffect(() => {
       if (tags && savePreferences && !selectedTags) {
@@ -101,7 +112,7 @@ export const CloudPulseTagsSelect = React.memo(
               },
             },
           },
-          optional: true,
+          optional: isOptionalFilter,
         }}
         autoHighlight
         clearOnBlur
