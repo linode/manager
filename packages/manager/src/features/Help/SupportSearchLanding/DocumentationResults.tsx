@@ -1,9 +1,8 @@
-import { Paper, Typography } from '@linode/ui';
+import { ListItem, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
-import { ListItem } from 'src/components/ListItem';
 
 import type { Theme } from '@mui/material/styles';
 

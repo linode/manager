@@ -1,7 +1,6 @@
-import { FormControl, Radio, RadioGroup } from '@linode/ui';
+import { FormControl, FormControlLabel, Radio, RadioGroup } from '@linode/ui';
 import React from 'react';
 
-import { FormControlLabel } from './FormControlLabel';
 import { FormLabel } from './FormLabel';
 
 import type { Meta, StoryObj } from '@storybook/react';

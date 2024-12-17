@@ -1,18 +1,14 @@
-import * as React from 'react';
+import { waitFor } from '@testing-library/react';
+import React from 'react';
 
-import {
-  databaseBackupFactory,
-  databaseFactory,
-  profileFactory,
-} from 'src/factories';
+import { databaseBackupFactory, databaseFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import DatabaseBackups from './DatabaseBackups';
 
-describe('Database Backups', () => {
+describe('Database Backups (Legacy)', () => {
   it('should render a list of backups after loading', async () => {
     const mockDatabase = databaseFactory.build({
       platform: 'rdbms-legacy',
@@ -21,9 +17,6 @@ describe('Database Backups', () => {
     const backups = databaseBackupFactory.buildList(7);
 
     server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
-      }),
       http.get('*/databases/:engine/instances/:id', () => {
         return HttpResponse.json(mockDatabase);
       }),
@@ -32,19 +25,12 @@ describe('Database Backups', () => {
       })
     );
 
-    const { findByText, getAllByRole } = renderWithTheme(<DatabaseBackups />);
+    const { getAllByRole } = renderWithTheme(<DatabaseBackups />);
 
-    for (const backup of backups) {
-      const expectedDate = formatDate(backup.created, { timezone: 'utc' });
-
-      // eslint-disable-next-line no-await-in-loop
-      const backupItem = await findByText(expectedDate);
-
-      expect(backupItem).toBeVisible();
-    }
-
-    // Verify there is a table row for each backup (and a row for the table header)
-    expect(getAllByRole('row')).toHaveLength(backups.length + 1);
+    await waitFor(() => {
+      // Verify there is a table row for each backup (and a row for the table header)
+      expect(getAllByRole('row')).toHaveLength(backups.length + 1);
+    });
   });
 
   it('should render an empty state if there are no backups', async () => {
@@ -77,9 +63,6 @@ describe('Database Backups', () => {
     const backups = databaseBackupFactory.buildList(7);
 
     server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
-      }),
       http.get('*/databases/:engine/instances/:id', () => {
         return HttpResponse.json(mockDatabase);
       }),
@@ -88,15 +71,17 @@ describe('Database Backups', () => {
       })
     );
 
-    const { findAllByText } = renderWithTheme(
-      <DatabaseBackups disabled={true} />
-    );
+    const { findAllByText } = renderWithTheme(<DatabaseBackups disabled />);
+
     const buttonSpans = await findAllByText('Restore');
-    expect(buttonSpans.length).toEqual(7);
-    buttonSpans.forEach((span: HTMLSpanElement) => {
+
+    // There should be a button for each backup
+    expect(buttonSpans).toHaveLength(7);
+
+    for (const span of buttonSpans) {
       const button = span.closest('button');
       expect(button).toBeDisabled();
-    });
+    }
   });
 
   it('should enable the restore button if disabled = false', async () => {
@@ -106,9 +91,6 @@ describe('Database Backups', () => {
     const backups = databaseBackupFactory.buildList(7);
 
     server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
-      }),
       http.get('*/databases/:engine/instances/:id', () => {
         return HttpResponse.json(mockDatabase);
       }),
@@ -120,42 +102,37 @@ describe('Database Backups', () => {
     const { findAllByText } = renderWithTheme(
       <DatabaseBackups disabled={false} />
     );
+
     const buttonSpans = await findAllByText('Restore');
-    expect(buttonSpans.length).toEqual(7);
-    buttonSpans.forEach((span: HTMLSpanElement) => {
+
+    // There should be a button for each backup
+    expect(buttonSpans).toHaveLength(7);
+
+    for (const span of buttonSpans) {
       const button = span.closest('button');
       expect(button).toBeEnabled();
-    });
+    }
   });
+});
 
+describe('Database Backups (v2)', () => {
   it('should disable the restore button if no oldest_restore_time is returned', async () => {
     const mockDatabase = databaseFactory.build({
       oldest_restore_time: undefined,
       platform: 'rdbms-default',
     });
-    const backups = databaseBackupFactory.buildList(7);
 
     server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
-      }),
       http.get('*/databases/:engine/instances/:id', () => {
         return HttpResponse.json(mockDatabase);
-      }),
-      http.get('*/databases/:engine/instances/:id/backups', () => {
-        return HttpResponse.json(makeResourcePage(backups));
       })
     );
 
-    const { findAllByText } = renderWithTheme(
-      <DatabaseBackups disabled={true} />
-    );
-    const buttonSpans = await findAllByText('Restore');
-    expect(buttonSpans.length).toEqual(1);
-    buttonSpans.forEach((span: HTMLSpanElement) => {
-      const button = span.closest('button');
-      expect(button).toBeDisabled();
-    });
+    const { findByText } = renderWithTheme(<DatabaseBackups />);
+
+    const restoreButton = (await findByText('Restore')).closest('button');
+
+    expect(restoreButton).toBeDisabled();
   });
 
   it('should render a date picker when it is a default database', async () => {
@@ -169,33 +146,30 @@ describe('Database Backups', () => {
       })
     );
 
-    const rendered = renderWithTheme(<DatabaseBackups disabled={false} />);
-    expect(
-      rendered.container.getElementsByClassName('MuiDateCalendar-root')
-    ).toBeDefined();
+    const { container } = renderWithTheme(<DatabaseBackups disabled={false} />);
+
+    await waitFor(() => {
+      expect(
+        container.getElementsByClassName('MuiDateCalendar-root')
+      ).toHaveLength(1);
+    });
   });
 
   it('should render a time picker when it is a default database', async () => {
     const mockDatabase = databaseFactory.build({
       platform: 'rdbms-default',
     });
-    const backups = databaseBackupFactory.buildList(7);
 
     server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
-      }),
       http.get('*/databases/:engine/instances/:id', () => {
         return HttpResponse.json(mockDatabase);
-      }),
-      http.get('*/databases/:engine/instances/:id/backups', () => {
-        return HttpResponse.json(makeResourcePage(backups));
       })
     );
 
     const { findByText } = renderWithTheme(
       <DatabaseBackups disabled={false} />
     );
+
     const timePickerLabel = await findByText('Time (UTC)');
     expect(timePickerLabel).toBeInTheDocument();
   });

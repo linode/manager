@@ -5,8 +5,7 @@ import * as React from 'react';
 import Download from 'src/assets/icons/download.svg';
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { Drawer } from 'src/components/Drawer';
-import { DrawerContent } from 'src/components/DrawerContent';
-import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
+import { useKubernetesKubeConfigQuery } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 
 interface Props {
@@ -19,50 +18,39 @@ interface Props {
 export const KubeConfigDrawer = (props: Props) => {
   const { closeDrawer, clusterId, clusterLabel, open } = props;
 
-  const {
-    data,
-    error,
-    isFetching,
-    isLoading,
-    refetch,
-  } = useKubenetesKubeConfigQuery(clusterId, open);
-
-  // refetchOnMount isnt good enough for this query because
-  // it is already mounted in the rendered Drawer
-  React.useEffect(() => {
-    if (open && !isLoading && !isFetching) {
-      refetch();
-    }
-  }, [open]);
+  const { data, failureReason, isFetching } = useKubernetesKubeConfigQuery(
+    clusterId,
+    open
+  );
 
   return (
-    <Drawer onClose={closeDrawer} open={open} title="View Kubeconfig" wide>
-      <DrawerContent
-        error={!!error}
-        errorMessage={error?.[0].reason}
-        loading={isLoading}
-        title={clusterLabel}
-      >
-        <Box display="flex">
-          <Typography mr={2} variant="h3">
-            {clusterLabel}
-          </Typography>
-          <StyledDownloadButton
-            onClick={() =>
-              downloadFile(`${clusterLabel}-kubeconfig.yaml`, data ?? '')
-            }
-            title="Download"
-          >
-            <Download />
-          </StyledDownloadButton>
-        </Box>
-        <CodeBlock
-          command={data ?? ''}
-          commandType="Kube Config Yaml"
-          handleCopyIconClick={() => null}
-          language="yaml"
-        />
-      </DrawerContent>
+    <Drawer
+      error={failureReason}
+      isFetching={isFetching}
+      onClose={closeDrawer}
+      open={open}
+      title="View Kubeconfig"
+      wide
+    >
+      <Box display="flex">
+        <Typography mr={2} variant="h3">
+          {clusterLabel}
+        </Typography>
+        <StyledDownloadButton
+          onClick={() =>
+            downloadFile(`${clusterLabel}-kubeconfig.yaml`, data ?? '')
+          }
+          title="Download"
+        >
+          <Download />
+        </StyledDownloadButton>
+      </Box>
+      <CodeBlock
+        command={data ?? ''}
+        commandType="Kube Config Yaml"
+        handleCopyIconClick={() => null}
+        language="yaml"
+      />
     </Drawer>
   );
 };

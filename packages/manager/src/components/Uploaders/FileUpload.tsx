@@ -13,7 +13,7 @@ import {
   StyledLeftWrapper,
   StyledRightWrapper,
   StyledRootContainer,
-  StyledUploadPending,
+  StyledUploadPendingIcon,
   useStyles,
 } from './FileUpload.styles';
 
@@ -92,7 +92,8 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
             })}
             variant="body1"
           >
-            {readableBytes(props.sizeInBytes).formatted}
+            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
+            {readableBytes(props.sizeInBytes, { base10: true }).formatted}
           </StyledFileSizeTypography>
           {props.percentCompleted === 100 ? (
             <FileUploadComplete
@@ -112,7 +113,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
               width={22}
             />
           ) : (
-            <StyledUploadPending
+            <StyledUploadPendingIcon
               data-qa-file-upload-pending
               height={22}
               width={22}

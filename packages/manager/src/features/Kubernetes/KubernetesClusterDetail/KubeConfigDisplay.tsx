@@ -11,7 +11,7 @@ import ResetIcon from 'src/assets/icons/reset.svg';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
-  useKubenetesKubeConfigQuery,
+  useKubernetesKubeConfigQuery,
 } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -37,14 +37,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
     pointerEvents: 'none',
   },
   kubeconfigElement: {
+    '&:first-child': {
+      borderLeft: 'none',
+    },
     '&:hover': {
       opacity: 0.7,
     },
-    '&:last-child': {
-      borderRight: 'none',
-    },
     alignItems: 'center',
-    borderRight: `1px solid ${theme.tokens.color.Neutrals[40]}`,
+    borderLeft: `1px solid ${theme.tokens.color.Neutrals[40]}`,
     cursor: 'pointer',
     display: 'flex',
   },
@@ -52,6 +52,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     alignItems: 'center',
     color: theme.palette.primary.main,
     display: 'flex',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1),
   },
   kubeconfigFileText: {
     color: theme.textColors.linkActiveLight,
@@ -103,7 +105,7 @@ export const KubeConfigDisplay = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
 
-  const { isFetching, refetch: getKubeConfig } = useKubenetesKubeConfigQuery(
+  const { isFetching, refetch: getKubeConfig } = useKubernetesKubeConfigQuery(
     clusterId,
     false
   );
