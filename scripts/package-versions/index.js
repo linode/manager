@@ -184,7 +184,7 @@ const main = async () => {
     });
   };
 
-  for (writeTask of writeTasks) {
+  for (const writeTask of writeTasks) {
     try {
       fs.writeFileSync(writeTask.filepath, writeTask.contents);
       summary.push({
