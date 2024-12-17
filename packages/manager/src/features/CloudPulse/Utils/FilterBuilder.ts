@@ -292,15 +292,18 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
         filter.configuration.dependency
     );
 
+    const optionalFilterSet = new Set(
+      filters
+        .filter((filter) => filter.configuration.isOptional)
+        .map((filter) => filter.configuration.filterKey)
+    );
+
     if (filter) {
       return filter.configuration.dependency?.some((dependent) => {
         const dependentFilter = dependentFilters[dependent];
-        const optionalFilter = filters.find(
-          (filter) => filter.configuration.isOptional
-        )?.configuration.filterKey;
 
         return (
-          dependent !== optionalFilter &&
+          !optionalFilterSet.has(dependent) &&
           (!dependentFilter ||
             (Array.isArray(dependentFilter) && dependentFilter.length === 0))
         );
@@ -327,10 +330,11 @@ export const checkIfAllMandatoryFiltersAreSelected = (
     return false;
   }
 
-  const mandatoryFilters = serviceTypeConfig.filters.filter(
-    (filter) => !filter.configuration.isOptional
-  );
-  return mandatoryFilters.every((filter) => {
+  return serviceTypeConfig.filters.every((filter) => {
+    if (filter.configuration.isOptional) {
+      return true;
+    }
+
     const filterKey = filter.configuration.filterKey;
 
     if (filterKey === RELATIVE_TIME_DURATION) {

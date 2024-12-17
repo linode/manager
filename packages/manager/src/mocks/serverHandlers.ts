@@ -716,6 +716,7 @@ export const handlers = [
 
       let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
 
+      // filter the linodes based on id or region
       if (andFilters?.length) {
         filteredLinodes = filteredLinodes.filter((linode) => {
           const filteredById = andFilters.every(
@@ -729,6 +730,7 @@ export const handlers = [
         });
       }
 
+      // after the linodes are filtered based on region, filter the region-filtered linodes based on selected tags if any
       if (orFilters?.length) {
         filteredLinodes = filteredLinodes.filter((linode) => {
           return orFilters.some((filter: { tags: string }) =>
