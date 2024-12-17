@@ -1,6 +1,6 @@
+import { TextField } from '@linode/ui';
 import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
-import { TextField } from '@linode/ui';
 import { Grid, Popover } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -75,10 +75,19 @@ export const DateTimePicker = ({
   value = null,
 }: DateTimePickerProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  // Current and original states
   const [selectedDateTime, setSelectedDateTime] = useState<DateTime | null>(
     value
   );
   const [selectedTimeZone, setSelectedTimeZone] = useState<null | string>(
+    timeZoneSelectProps.value || null
+  );
+
+  const [originalDateTime, setOriginalDateTime] = useState<DateTime | null>(
+    value
+  );
+  const [originalTimeZone, setOriginalTimeZone] = useState<null | string>(
     timeZoneSelectProps.value || null
   );
 
@@ -115,6 +124,8 @@ export const DateTimePicker = ({
 
   const handleApply = () => {
     setAnchorEl(null);
+    setOriginalDateTime(selectedDateTime);
+    setOriginalTimeZone(selectedTimeZone);
     onChange(selectedDateTime);
 
     if (onApply) {
@@ -124,6 +135,9 @@ export const DateTimePicker = ({
 
   const handleClose = () => {
     setAnchorEl(null);
+    setSelectedDateTime(originalDateTime);
+    setSelectedTimeZone(originalTimeZone);
+
     if (onCancel) {
       onCancel();
     }
@@ -247,10 +261,6 @@ export const DateTimePicker = ({
         <Divider />
         <Box display="flex" justifyContent="flex-end">
           <ActionsPanel
-            primaryButtonProps={{
-              label: 'Apply',
-              onClick: handleApply,
-            }}
             secondaryButtonProps={{
               buttonType: 'outlined',
               label: 'Cancel',
@@ -260,6 +270,7 @@ export const DateTimePicker = ({
               marginBottom: theme.spacing(1),
               marginRight: theme.spacing(2),
             })}
+            primaryButtonProps={{ label: 'Apply', onClick: handleApply }}
           />
         </Box>
       </Popover>

@@ -21,7 +21,8 @@ interface DateTimeRangePickerProps {
   onChange?: (
     start: DateTime | null,
     end: DateTime | null,
-    startTimeZone?: null | string
+    startTimeZone?: null | string,
+    preset?: string
   ) => void;
   /** Whether to show the end timezone field for the end date picker */
   showEndTimeZone?: boolean;
@@ -35,9 +36,7 @@ interface DateTimeRangePickerProps {
   startLabel?: string;
   /** Initial or controlled value for the start timezone */
   startTimeZoneValue?: null | string;
-  /**
-   * Any additional styles to apply to the root element.
-   */
+  /** Any additional styles to apply to the root element */
   sx?: SxProps<Theme>;
 }
 
@@ -59,13 +58,10 @@ export const DateTimeRangePicker = ({
   const [startDateTime, setStartDateTime] = useState<DateTime | null>(
     startDateTimeValue
   );
-  const [presetValue, setPresetValue] = useState({
-    label: 'Select a preset',
-    value: '',
-  });
   const [endDateTime, setEndDateTime] = useState<DateTime | null>(
     endDateTimeValue
   );
+  const [presetValue, setPresetValue] = useState<string>('');
   const [startTimeZone, setStartTimeZone] = useState<null | string>(
     startTimeZoneValue
   );
@@ -88,35 +84,9 @@ export const DateTimeRangePicker = ({
         return;
       }
     }
-    // Reset validation errors if valid
+    // Reset validation errors
     setStartDateError(null);
     setEndDateError(null);
-  };
-
-  const handleStartDateTimeChange = (newStart: DateTime | null) => {
-    setStartDateTime(newStart);
-    validateDates(newStart, endDateTime, 'start');
-
-    if (onChange) {
-      onChange(newStart, endDateTime, startTimeZone);
-    }
-  };
-
-  const handleEndDateTimeChange = (newEnd: DateTime | null) => {
-    setEndDateTime(newEnd);
-    validateDates(startDateTime, newEnd, 'end');
-
-    if (onChange) {
-      onChange(startDateTime, newEnd, startTimeZone);
-    }
-  };
-
-  const handleStartTimeZoneChange = (newTimeZone: null | string) => {
-    setStartTimeZone(newTimeZone);
-
-    if (onChange) {
-      onChange(startDateTime, endDateTime, newTimeZone);
-    }
   };
 
   const handlePresetSelection = (value: string) => {
@@ -156,13 +126,31 @@ export const DateTimeRangePicker = ({
 
     setStartDateTime(newStartDateTime);
     setEndDateTime(newEndDateTime);
+    setPresetValue(value);
 
     if (onChange) {
-      onChange(newStartDateTime, newEndDateTime, startTimeZone);
+      onChange(newStartDateTime, newEndDateTime, startTimeZone, value);
     }
 
-    // Show date pickers after selecting a preset
-    setShowPresets(false);
+    setShowPresets(value !== 'custom_range');
+  };
+
+  const handleStartDateTimeChange = (newStart: DateTime | null) => {
+    setStartDateTime(newStart);
+    validateDates(newStart, endDateTime, 'start');
+
+    if (onChange) {
+      onChange(newStart, endDateTime, startTimeZone, 'custom_range');
+    }
+  };
+
+  const handleEndDateTimeChange = (newEnd: DateTime | null) => {
+    setEndDateTime(newEnd);
+    validateDates(startDateTime, newEnd, 'end');
+
+    if (onChange) {
+      onChange(startDateTime, newEnd, startTimeZone, 'custom_range');
+    }
   };
 
   return (
@@ -172,7 +160,6 @@ export const DateTimeRangePicker = ({
           onChange={(_, selection) => {
             if (selection) {
               handlePresetSelection(selection.value);
-              setPresetValue(selection);
             }
           }}
           options={[
@@ -181,19 +168,23 @@ export const DateTimeRangePicker = ({
             { label: 'Last 30 Days', value: '30days' },
             { label: 'This Month', value: 'this_month' },
             { label: 'Last Month', value: 'last_month' },
-            { label: 'Custom Range', value: 'custom_range' },
+            { label: 'Custom', value: 'custom_range' },
           ]}
+          value={
+            presetValue
+              ? { label: presetValue.replace('_', ' '), value: presetValue }
+              : null
+          }
           fullWidth
           label="Date Presets"
-          placeholder="Select Date"
-          value={presetValue}
+          placeholder="Select a preset"
         />
       ) : (
         <Box display="flex" gap={2}>
           <DateTimePicker
             timeZoneSelectProps={{
               label: 'Start TimeZone',
-              onChange: handleStartTimeZoneChange,
+              onChange: (value) => setStartTimeZone(value),
               value: startTimeZone,
             }}
             errorText={startDateError ?? undefined}
