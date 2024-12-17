@@ -83,10 +83,11 @@ describe('linode networking', () => {
     ui.toast.assertMessage(`Successfully updated RDNS for ${linodeIPv4}`);
   });
 
-  it('validates content of IP Address table row action menu aria Label', () => {
-    // Setting the viewport to 1279px x 800px (width < 1280px) to make Action menu visible
+  it('validates the action menu title (aria-label) for the IP address in the table row', () => {
+    // Set the viewport to 1279px x 800px (width < 1280px) to ensure the Action menu is visible.
     cy.viewport(1279, 800);
 
+    // Ensure the action menu has the correct aria-label for the IP address.
     cy.get(`[data-qa-ip="${linodeIPv4}"]`)
       .should('be.visible')
       .closest('tr')
