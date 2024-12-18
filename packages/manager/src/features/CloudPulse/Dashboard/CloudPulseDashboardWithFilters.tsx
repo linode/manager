@@ -1,4 +1,4 @@
-import { CircleProgress, Paper } from '@linode/ui';
+import { Box, CircleProgress, Divider, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
@@ -7,6 +7,7 @@ import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboar
 
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
+import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
@@ -118,52 +119,61 @@ export const CloudPulseDashboardWithFilters = React.memo(
     });
 
     return (
-      <>
+      <Box display="flex" flexDirection="column" gap={2.5}>
         <Paper
           sx={{
             padding: 0,
           }}
         >
-          <Grid
-            justifyContent={{
-              sm: 'flex-end',
-              xs: 'center',
-            }}
-            columnSpacing={2}
-            container
-            display={'flex'}
-            item
-            maxHeight={'120px'}
-            mb={1}
-            overflow={'auto'}
-            px={2}
-            py={1}
-            rowGap={2}
-            xs={12}
-          >
-            <Grid item md={4} sm={6} xs={12}>
-              <CloudPulseTimeRangeSelect
-                disabled={!dashboard}
-                handleStatsChange={handleTimeRangeChange}
-                savePreferences={true}
+          <Grid container>
+            <Grid container item m={3} rowGap={1} xs={12}>
+              <Grid
+                columnSpacing={2}
+                container
+                item
+                justifyContent="space-between"
+                rowSpacing={2}
+              >
+                <Grid display={'flex'} item md={4} sm={5} xs={12}>
+                  <CloudPulseDashboardSelect
+                    defaultValue={dashboardId}
+                    isServiceIntegration
+                  />
+                </Grid>
+                <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
+                  <CloudPulseTimeRangeSelect
+                    handleStatsChange={handleTimeRangeChange}
+                    savePreferences
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider
+                sx={(theme) => ({
+                  borderColor: theme.color.grey5,
+                  margin: 0,
+                })}
               />
             </Grid>
-          </Grid>
-          {isFilterBuilderNeeded && (
-            <CloudPulseDashboardFilterBuilder
-              dashboard={dashboard}
-              emitFilterChange={onFilterChange}
-              handleToggleAppliedFilter={toggleAppliedFilter}
-              isServiceAnalyticsIntegration={true}
-            />
-          )}
-          <Grid item mb={3} mt={-3} xs={12}>
-            {showAppliedFilters && (
-              <CloudPulseAppliedFilterRenderer
-                filters={filterData.label}
-                serviceType={dashboard.service_type}
+
+            {isFilterBuilderNeeded && (
+              <CloudPulseDashboardFilterBuilder
+                dashboard={dashboard}
+                emitFilterChange={onFilterChange}
+                handleToggleAppliedFilter={toggleAppliedFilter}
+                isServiceAnalyticsIntegration
               />
             )}
+            <Grid item mb={3} mt={-3} xs={12}>
+              {showAppliedFilters && (
+                <CloudPulseAppliedFilterRenderer
+                  filters={filterData.label}
+                  serviceType={dashboard.service_type}
+                />
+              )}
+            </Grid>
           </Grid>
         </Paper>
         {isMandatoryFiltersSelected ? (
@@ -178,7 +188,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
         ) : (
           renderPlaceHolder('Select filters to visualize metrics.')
         )}
-      </>
+      </Box>
     );
   }
 );

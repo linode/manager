@@ -18,6 +18,7 @@ import {
 } from '../Utils/constants';
 import {
   getCustomSelectProperties,
+  getFilters,
   getRegionProperties,
   getResourcesProperties,
 } from '../Utils/FilterBuilder';
@@ -234,7 +235,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     };
 
     const RenderFilters = React.useCallback(() => {
-      const filters = FILTER_CONFIG.get(dashboard.service_type)?.filters || [];
+      const filters = getFilters(dashboard, isServiceAnalyticsIntegration);
 
       if (!filters || filters.length === 0) {
         // if the filters are not defined , print an error state
@@ -296,13 +297,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           <Button
             startIcon={
               showFilter ? (
-                <KeyboardArrowDownIcon
-                  sx={{ color: 'grey', height: '30px', width: '30px' }}
-                />
+                <KeyboardArrowDownIcon />
               ) : (
-                <KeyboardArrowRightIcon
-                  sx={{ color: 'grey', height: '30px', width: '30px' }}
-                />
+                <KeyboardArrowRightIcon />
               )
             }
             sx={{

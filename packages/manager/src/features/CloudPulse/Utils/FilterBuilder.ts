@@ -449,3 +449,20 @@ const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
 
   return true;
 };
+
+/**
+ *
+ * @param dashboard dashboard for which filters to render
+ * @param isServiceAnalyticsIntegration boolean value to check if implementation is service analytics integration or not
+ * @returns list of CloudPulseServiceTypeFilters filtered by passed parameters
+ */
+export const getFilters = (
+  dashboard: Dashboard,
+  isServiceAnalyticsIntegration: boolean
+): CloudPulseServiceTypeFilters[] | undefined => {
+  return FILTER_CONFIG.get(dashboard.service_type)?.filters.filter((config) =>
+    isServiceAnalyticsIntegration
+      ? config.configuration.neededInServicePage
+      : config.configuration.filterKey !== RELATIVE_TIME_DURATION
+  );
+};

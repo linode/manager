@@ -2,7 +2,7 @@ import { dashboardFactory } from 'src/factories';
 import { databaseQueries } from 'src/queries/databases/databases';
 
 import { RESOURCES } from './constants';
-import { deepEqual } from './FilterBuilder';
+import { deepEqual, getFilters } from './FilterBuilder';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -342,4 +342,13 @@ it('returns false for different arrays', () => {
   const arr1 = [1, 2, 3];
   const arr2 = [1, 2, 4];
   expect(deepEqual(arr1, arr2)).toBe(false);
+});
+
+it('should return the filters based on dashboard', () => {
+  const filters = getFilters(
+    dashboardFactory.build({ service_type: 'dbaas' }),
+    true
+  );
+
+  expect(filters?.length).toBe(1);
 });
