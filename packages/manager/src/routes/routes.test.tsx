@@ -7,8 +7,25 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { migrationRouter } from './index';
 import { getAllRoutePaths } from './utils/allPaths';
 
+import type { useQuery } from '@tanstack/react-query';
 // TODO: Tanstack Router - replace AnyRouter once migration is complete.
 import type { AnyRouter } from '@tanstack/react-router';
+
+vi.mock('@tanstack/react-query', async () => {
+  const actual = await vi.importActual('@tanstack/react-query');
+  return {
+    ...actual,
+    useQuery: vi
+      .fn()
+      .mockImplementation((...args: Parameters<typeof useQuery>) => {
+        const actualResult = (actual.useQuery as typeof useQuery)(...args);
+        return {
+          ...actualResult,
+          isLoading: false,
+        };
+      }),
+  };
+});
 
 const allMigrationPaths = getAllRoutePaths(migrationRouter);
 

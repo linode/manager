@@ -2,7 +2,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { downloadFile } from 'src/utilities/downloadFile';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { DownloadDNSZoneFileButton } from './DownloadDNSZoneFileButton';
 
@@ -27,15 +27,15 @@ vi.mock('src/utilities/downloadFile', async () => {
 });
 
 describe('DownloadDNSZoneFileButton', () => {
-  it('renders button text correctly', () => {
-    const { getByText } = renderWithTheme(
+  it('renders button text correctly', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
       <DownloadDNSZoneFileButton domainId={1} domainLabel="test.com" />
     );
     expect(getByText('Download DNS Zone File')).toBeInTheDocument();
   });
 
   it('downloads DNS zone file when button is clicked', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <DownloadDNSZoneFileButton domainId={1} domainLabel="test.com" />
     );
     fireEvent.click(getByText('Download DNS Zone File'));
