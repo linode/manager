@@ -119,6 +119,12 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    * If this is true, multiselect will be enabled for the filter, only applicable for static and dynamic, not for predefined ones
    */
   isMultiSelect?: boolean;
+
+  /**
+   * If this is true, we will pass filter as an optional filter
+   */
+  isOptional?: boolean;
+
   /**
    * If this is true, we will only allow users to select a certain threshold, only applicable for static and dynamic, not for predefined ones
    */
