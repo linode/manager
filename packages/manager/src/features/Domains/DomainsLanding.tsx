@@ -189,6 +189,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
   if (domains?.results === 0) {
     return (
       <>
+        <DocumentTitleSegment segment="Domains" />
         <DomainsEmptyLandingState
           navigateToCreate={navigateToCreate}
           openImportZoneDrawer={openImportZoneDrawer}
