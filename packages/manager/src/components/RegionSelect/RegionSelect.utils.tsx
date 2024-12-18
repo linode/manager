@@ -15,6 +15,10 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
 interface RegionSelectOptionsOptions {
   currentCapability: Capabilities | undefined;
+  /**
+   * @TODO: This is a temporary property to gate the whitelisted regions to Gen2 users
+   */
+  isObjectStorageGen2Enabled?: boolean;
   regionFilter?: RegionFilterValue;
   regions: Region[];
 }
@@ -30,12 +34,13 @@ const WHITELISTED_REGIONS = new Set([
 
 export const getRegionOptions = ({
   currentCapability,
+  isObjectStorageGen2Enabled,
   regionFilter,
   regions,
 }: RegionSelectOptionsOptions) => {
   return regions
     .filter((region) => {
-      if (WHITELISTED_REGIONS.has(region.id)) {
+      if (isObjectStorageGen2Enabled && WHITELISTED_REGIONS.has(region.id)) {
         return true;
       }
 
