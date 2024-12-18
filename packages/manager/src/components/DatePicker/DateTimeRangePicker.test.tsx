@@ -10,7 +10,19 @@ import { DateTimeRangePicker } from './DateTimeRangePicker';
 describe('DateTimeRangePicker Component', () => {
   const onChangeMock = vi.fn();
 
+  let fixedNow: DateTime;
+
   beforeEach(() => {
+    // Mock DateTime.now to return a fixed datetime
+    fixedNow = DateTime.fromISO(
+      '2024-12-18T00:28:27.071-06:00'
+    ) as DateTime<true>;
+    vi.spyOn(DateTime, 'now').mockImplementation(() => fixedNow);
+  });
+
+  afterEach(() => {
+    // Restore the original DateTime.now implementation after each test
+    vi.restoreAllMocks();
     vi.clearAllMocks();
   });
 
@@ -30,12 +42,13 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(screen.getByRole('gridcell', { name: '10' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
-    // Check if the onChange function is called with the expected DateTime value
-    expect(onChangeMock).toHaveBeenCalledWith(
-      expect.objectContaining({ day: 10 }),
-      null,
-      null
-    );
+    // Check if the onChange function is called with the expected  value
+    expect(onChangeMock).toHaveBeenCalledWith({
+      end: null,
+      preset: 'custom_range',
+      start: '2024-12-10T00:00:00.000-06:00',
+      timeZone: null,
+    });
   });
 
   it('should show error when end date-time is before start date-time', async () => {
@@ -51,11 +64,11 @@ describe('DateTimeRangePicker Component', () => {
     const endDateField = screen.getByLabelText('End Date and Time');
     await userEvent.click(endDateField);
 
-    // Check if the date before the start date is disabled via a class or attribute
+    // Set start date-time to the 10th
     await userEvent.click(screen.getByRole('gridcell', { name: '10' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
-    // Confirm error message is not shown since the click was blocked
+    // Confirm error message is displayed
     expect(
       screen.getByText('End date/time cannot be before the start date/time.')
     ).toBeInTheDocument();
@@ -128,40 +141,20 @@ describe('DateTimeRangePicker Component', () => {
     const last24HoursOption = screen.getByText('Last 24 Hours');
     await userEvent.click(last24HoursOption);
 
-    // Verify that onChange is called with the correct date range
-    const now = DateTime.now();
-    const expectedStartDateTime = now.minus({ hours: 24 });
+    // Expected start and end dates in ISO format
+    const expectedStartDateISO = fixedNow.minus({ hours: 24 }).toISO(); // 2024-12-17T00:28:27.071-06:00
+    const expectedEndDateISO = fixedNow.toISO(); // 2024-12-18T00:28:27.071-06:00
 
-    const expectedEndDateTime = now;
-
-    const expectedStartDateValue = expectedStartDateTime.toFormat(
-      'yyyy-MM-dd HH:mm'
-    );
-    const expectedEndDateValue = expectedEndDateTime.toFormat(
-      'yyyy-MM-dd HH:mm'
-    );
-
-    expect(onChangeMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        day: expectedStartDateTime.day,
-        month: expectedStartDateTime.month,
-        year: expectedStartDateTime.year,
-      }),
-      expect.objectContaining({
-        day: expectedEndDateTime.day,
-        month: expectedEndDateTime.month,
-        year: expectedEndDateTime.year,
-      }),
-      null
-    );
-
-    // Verify that Date input fields has the correct date range
+    // Verify onChangeMock was called with correct ISO strings
+    expect(onChangeMock).toHaveBeenCalledWith({
+      end: expectedEndDateISO,
+      preset: '24hours',
+      start: expectedStartDateISO,
+      timeZone: null,
+    });
     expect(
-      screen.getByRole('textbox', { name: 'Start Date and Time' })
-    ).toHaveValue(expectedStartDateValue);
-    expect(
-      screen.getByRole('textbox', { name: 'End Date and Time' })
-    ).toHaveValue(expectedEndDateValue);
+      screen.queryByRole('button', { name: 'Presets' })
+    ).not.toBeInTheDocument();
   });
 
   it('should set the date range for the last 7 days when the "Last 7 Days" preset is selected', async () => {
@@ -177,39 +170,20 @@ describe('DateTimeRangePicker Component', () => {
     const last7DaysOption = screen.getByText('Last 7 Days');
     await userEvent.click(last7DaysOption);
 
+    // Expected start and end dates in ISO format
+    const expectedStartDateISO = fixedNow.minus({ days: 7 }).toISO();
+    const expectedEndDateISO = fixedNow.toISO();
+
     // Verify that onChange is called with the correct date range
-    const now = DateTime.now();
-    const expectedStartDateTime = now.minus({ days: 7 });
-    const expectedEndDateTime = now;
-
-    const expectedStartDateValue = expectedStartDateTime.toFormat(
-      'yyyy-MM-dd HH:mm'
-    );
-    const expectedEndDateValue = expectedEndDateTime.toFormat(
-      'yyyy-MM-dd HH:mm'
-    );
-
-    expect(onChangeMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        day: expectedStartDateTime.day,
-        month: expectedStartDateTime.month,
-        year: expectedStartDateTime.year,
-      }),
-      expect.objectContaining({
-        day: expectedEndDateTime.day,
-        month: expectedEndDateTime.month,
-        year: expectedEndDateTime.year,
-      }),
-      null
-    );
-
-    // Verify that Date input fields have the correct date range
+    expect(onChangeMock).toHaveBeenCalledWith({
+      end: expectedEndDateISO,
+      preset: '7days',
+      start: expectedStartDateISO,
+      timeZone: null,
+    });
     expect(
-      screen.getByRole('textbox', { name: 'Start Date and Time' })
-    ).toHaveValue(expectedStartDateValue);
-    expect(
-      screen.getByRole('textbox', { name: 'End Date and Time' })
-    ).toHaveValue(expectedEndDateValue);
+      screen.queryByRole('button', { name: 'Presets' })
+    ).not.toBeInTheDocument();
   });
 
   it('should set the date range for the last 30 days when the "Last 30 Days" preset is selected', async () => {
@@ -225,40 +199,20 @@ describe('DateTimeRangePicker Component', () => {
     const last30DaysOption = screen.getByText('Last 30 Days');
     await userEvent.click(last30DaysOption);
 
-    const now = DateTime.now();
-    const expectedStartDateTime = now.minus({ days: 30 });
-    const expectedEndDateTime = now;
-
-    // Use the same format as the component for verification
-    const expectedStartDateValue = expectedStartDateTime.toFormat(
-      'yyyy-MM-dd HH:mm'
-    );
-    const expectedEndDateValue = expectedEndDateTime.toFormat(
-      'yyyy-MM-dd HH:mm'
-    );
+    // Expected start and end dates in ISO format
+    const expectedStartDateISO = fixedNow.minus({ days: 30 }).toISO();
+    const expectedEndDateISO = fixedNow.toISO();
 
     // Verify that onChange is called with the correct date range
-    expect(onChangeMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        day: expectedStartDateTime.day,
-        month: expectedStartDateTime.month,
-        year: expectedStartDateTime.year,
-      }),
-      expect.objectContaining({
-        day: expectedEndDateTime.day,
-        month: expectedEndDateTime.month,
-        year: expectedEndDateTime.year,
-      }),
-      null
-    );
-
-    // Verify the input fields display the correct values
+    expect(onChangeMock).toHaveBeenCalledWith({
+      end: expectedEndDateISO,
+      preset: '30days',
+      start: expectedStartDateISO,
+      timeZone: null,
+    });
     expect(
-      screen.getByRole('textbox', { name: 'Start Date and Time' })
-    ).toHaveValue(expectedStartDateValue);
-    expect(
-      screen.getByRole('textbox', { name: 'End Date and Time' })
-    ).toHaveValue(expectedEndDateValue);
+      screen.queryByRole('button', { name: 'Presets' })
+    ).not.toBeInTheDocument();
   });
 
   it('should set the date range for this month when the "This Month" preset is selected', async () => {
@@ -274,40 +228,20 @@ describe('DateTimeRangePicker Component', () => {
     const thisMonthOption = screen.getByText('This Month');
     await userEvent.click(thisMonthOption);
 
-    const now = DateTime.now();
-    const expectedStartDateTime = now.startOf('month');
-    const expectedEndDateTime = now.endOf('month');
-
-    // Use the same format as the component for verification
-    const expectedStartDateValue = expectedStartDateTime.toFormat(
-      'yyyy-MM-dd HH:mm'
-    );
-    const expectedEndDateValue = expectedEndDateTime.toFormat(
-      'yyyy-MM-dd HH:mm'
-    );
+    // Expected start and end dates in ISO format
+    const expectedStartDateISO = fixedNow.startOf('month').toISO();
+    const expectedEndDateISO = fixedNow.endOf('month').toISO();
 
     // Verify that onChange is called with the correct date range
-    expect(onChangeMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        day: expectedStartDateTime.day,
-        month: expectedStartDateTime.month,
-        year: expectedStartDateTime.year,
-      }),
-      expect.objectContaining({
-        day: expectedEndDateTime.day,
-        month: expectedEndDateTime.month,
-        year: expectedEndDateTime.year,
-      }),
-      null
-    );
-
-    // Verify the input fields display the correct values
+    expect(onChangeMock).toHaveBeenCalledWith({
+      end: expectedEndDateISO,
+      preset: 'this_month',
+      start: expectedStartDateISO,
+      timeZone: null,
+    });
     expect(
-      screen.getByRole('textbox', { name: 'Start Date and Time' })
-    ).toHaveValue(expectedStartDateValue);
-    expect(
-      screen.getByRole('textbox', { name: 'End Date and Time' })
-    ).toHaveValue(expectedEndDateValue);
+      screen.queryByRole('button', { name: 'Presets' })
+    ).not.toBeInTheDocument();
   });
 
   it('should set the date range for last month when the "Last Month" preset is selected', async () => {
@@ -323,41 +257,22 @@ describe('DateTimeRangePicker Component', () => {
     const lastMonthOption = screen.getByText('Last Month');
     await userEvent.click(lastMonthOption);
 
-    const now = DateTime.now();
-    const lastMonth = now.minus({ months: 1 });
-    const expectedStartDateTime = lastMonth.startOf('month');
-    const expectedEndDateTime = lastMonth.endOf('month');
+    const lastMonth = fixedNow.minus({ months: 1 });
 
-    // Use the same format as the component for verification
-    const expectedStartDateValue = expectedStartDateTime.toFormat(
-      'yyyy-MM-dd HH:mm'
-    );
-    const expectedEndDateValue = expectedEndDateTime.toFormat(
-      'yyyy-MM-dd HH:mm'
-    );
+    // Expected start and end dates in ISO format
+    const expectedStartDateISO = lastMonth.startOf('month').toISO();
+    const expectedEndDateISO = lastMonth.endOf('month').toISO();
 
     // Verify that onChange is called with the correct date range
-    expect(onChangeMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        day: expectedStartDateTime.day,
-        month: expectedStartDateTime.month,
-        year: expectedStartDateTime.year,
-      }),
-      expect.objectContaining({
-        day: expectedEndDateTime.day,
-        month: expectedEndDateTime.month,
-        year: expectedEndDateTime.year,
-      }),
-      null
-    );
-
-    // Verify the input fields display the correct values
+    expect(onChangeMock).toHaveBeenCalledWith({
+      end: expectedEndDateISO,
+      preset: 'last_month',
+      start: expectedStartDateISO,
+      timeZone: null,
+    });
     expect(
-      screen.getByRole('textbox', { name: 'Start Date and Time' })
-    ).toHaveValue(expectedStartDateValue);
-    expect(
-      screen.getByRole('textbox', { name: 'End Date and Time' })
-    ).toHaveValue(expectedEndDateValue);
+      screen.queryByRole('button', { name: 'Presets' })
+    ).not.toBeInTheDocument();
   });
 
   it('should display the date range fields with empty values when the "Custom Range" preset is selected', async () => {
@@ -370,7 +285,7 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(presetsDropdown);
 
     // Select the "Custom Range" option
-    const customRange = screen.getByText('Custom Range');
+    const customRange = screen.getByText('Custom');
     await userEvent.click(customRange);
 
     // Verify the input fields display the correct values
@@ -381,5 +296,44 @@ describe('DateTimeRangePicker Component', () => {
       screen.getByRole('textbox', { name: 'End Date and Time' })
     ).toHaveValue('');
     expect(screen.getByRole('button', { name: 'Presets' })).toBeInTheDocument();
+
+    // Set start date-time to the 15th
+    const startDateField = screen.getByLabelText('Start Date and Time');
+    await userEvent.click(startDateField);
+    await userEvent.click(screen.getByRole('gridcell', { name: '15' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+    // Open the end date picker
+    const endDateField = screen.getByLabelText('End Date and Time');
+    await userEvent.click(endDateField);
+
+    // Set start date-time to the 12th
+    await userEvent.click(screen.getByRole('gridcell', { name: '12' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+    // Confirm error message is  shown since the click was blocked
+    expect(
+      screen.getByText('End date/time cannot be before the start date/time.')
+    ).toBeInTheDocument();
+
+    // Set start date-time to the 11th
+    await userEvent.click(startDateField);
+    await userEvent.click(screen.getByRole('gridcell', { name: '11' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+    // Confirm error message is not displayed
+    expect(
+      screen.queryByText('End date/time cannot be before the start date/time.')
+    ).not.toBeInTheDocument();
+
+    // Set start date-time to the 20th
+    await userEvent.click(startDateField);
+    await userEvent.click(screen.getByRole('gridcell', { name: '20' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+    // Confirm error message is not displayed
+    expect(
+      screen.queryByText('Start date/time cannot be after the end date/time.')
+    ).toBeInTheDocument();
   });
 });

@@ -18,12 +18,12 @@ interface DateTimeRangePickerProps {
   /** Format for displaying the date-time */
   format?: string;
   /** Callback when the date-time range changes */
-  onChange?: (
-    start: DateTime | null,
-    end: DateTime | null,
-    startTimeZone?: null | string,
-    preset?: string
-  ) => void;
+  onChange?: (params: {
+    end: null | string;
+    preset?: string;
+    start: null | string;
+    timeZone?: null | string;
+  }) => void;
   /** Whether to show the end timezone field for the end date picker */
   showEndTimeZone?: boolean;
   /** Whether to show the start timezone field for the start date picker */
@@ -129,7 +129,12 @@ export const DateTimeRangePicker = ({
     setPresetValue(value);
 
     if (onChange) {
-      onChange(newStartDateTime, newEndDateTime, startTimeZone, value);
+      onChange({
+        end: newEndDateTime?.toISO() ?? null,
+        preset: value,
+        start: newStartDateTime?.toISO() ?? null,
+        timeZone: startTimeZone,
+      });
     }
 
     setShowPresets(value !== 'custom_range');
@@ -140,7 +145,12 @@ export const DateTimeRangePicker = ({
     validateDates(newStart, endDateTime, 'start');
 
     if (onChange) {
-      onChange(newStart, endDateTime, startTimeZone, 'custom_range');
+      onChange({
+        end: endDateTime?.toISO() ?? null,
+        preset: 'custom_range',
+        start: newStart?.toISO() ?? null,
+        timeZone: startTimeZone,
+      });
     }
   };
 
@@ -149,7 +159,12 @@ export const DateTimeRangePicker = ({
     validateDates(startDateTime, newEnd, 'end');
 
     if (onChange) {
-      onChange(startDateTime, newEnd, startTimeZone, 'custom_range');
+      onChange({
+        end: newEnd?.toISO() ?? null,
+        preset: 'custom_range',
+        start: startDateTime?.toISO() ?? null,
+        timeZone: startTimeZone,
+      });
     }
   };
 
