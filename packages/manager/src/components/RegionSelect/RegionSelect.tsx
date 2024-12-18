@@ -1,9 +1,10 @@
+import { Autocomplete } from '@linode/ui';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-import { Autocomplete } from '@linode/ui';
 import { Flag } from 'src/components/Flag';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
@@ -53,6 +54,7 @@ export const RegionSelect = <
   } = props;
 
   const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
   const {
     data: accountAvailability,
@@ -61,6 +63,7 @@ export const RegionSelect = <
 
   const regionOptions = getRegionOptions({
     currentCapability,
+    isObjectStorageGen2Enabled,
     regionFilter,
     regions,
   });
