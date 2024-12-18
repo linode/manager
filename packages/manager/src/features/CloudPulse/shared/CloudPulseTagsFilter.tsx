@@ -4,9 +4,6 @@ import React from 'react';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { themes } from 'src/utilities/theme';
 
-import { TAGS } from '../Utils/constants';
-import { FILTER_CONFIG } from '../Utils/FilterConfig';
-
 import type { FilterValue, Linode } from '@linode/api-v4';
 
 export interface CloudPulseTags {
