@@ -1,4 +1,6 @@
 import { Autocomplete, Box, StyledActionButton } from '@linode/ui';
+import { useTheme } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 
@@ -67,6 +69,15 @@ export interface DateTimeRangePickerProps {
   sx?: SxProps<Theme>;
 }
 
+const presetsOptions = [
+  { label: 'Last 24 Hours', value: '24hours' },
+  { label: 'Last 7 Days', value: '7days' },
+  { label: 'Last 30 Days', value: '30days' },
+  { label: 'This Month', value: 'this_month' },
+  { label: 'Last Month', value: 'last_month' },
+  { label: 'Custom', value: 'custom_range' },
+];
+
 export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   const {
     endDateProps: {
@@ -82,7 +93,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     onChange,
 
     presetsProps: {
-      defaultValue: presetsDefaultValue,
+      defaultValue: presetsDefaultValue = { label: '', value: '' },
       enablePresets = false,
       label: presetsLabel = 'Time Range',
       placeholder: presetsPlaceholder = 'Select a preset',
@@ -104,13 +115,19 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   const [endDateTime, setEndDateTime] = useState<DateTime | null>(
     endDateTimeValue
   );
-  const [presetValue, setPresetValue] = useState<string>('');
+  const [presetValue, setPresetValue] = useState<{
+    label: string;
+    value: string;
+  }>(presetsDefaultValue);
   const [startTimeZone, setStartTimeZone] = useState<null | string>(
     startTimeZoneValue
   );
   const [startDateError, setStartDateError] = useState<null | string>(null);
   const [endDateError, setEndDateError] = useState<null | string>(null);
   const [showPresets, setShowPresets] = useState(enablePresets);
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const validateDates = (
     start: DateTime | null,
@@ -169,7 +186,10 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
 
     setStartDateTime(newStartDateTime);
     setEndDateTime(newEndDateTime);
-    setPresetValue(value);
+    setPresetValue(
+      presetsOptions.find((option) => option.value === value) ??
+        presetsDefaultValue
+    );
 
     if (onChange) {
       onChange({
@@ -220,28 +240,22 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
               handlePresetSelection(selection.value);
             }
           }}
-          options={[
-            { label: 'Last 24 Hours', value: '24hours' },
-            { label: 'Last 7 Days', value: '7days' },
-            { label: 'Last 30 Days', value: '30days' },
-            { label: 'This Month', value: 'this_month' },
-            { label: 'Last Month', value: 'last_month' },
-            { label: 'Custom', value: 'custom_range' },
-          ]}
-          value={
-            presetValue
-              ? { label: presetValue.replace('_', ' '), value: presetValue }
-              : null
-          }
           defaultValue={presetsDefaultValue}
+          disableClearable
           fullWidth
           isOptionEqualToValue={(option, value) => option.value === value.value}
           label={presetsLabel}
           noMarginTop
+          options={presetsOptions}
           placeholder={presetsPlaceholder}
+          value={presetValue}
         />
       ) : (
-        <Box display="flex" gap={2}>
+        <Box
+          display="flex"
+          flexDirection={isSmallScreen ? 'column' : 'row'}
+          gap={2}
+        >
           <DateTimePicker
             timeZoneSelectProps={{
               label: 'Start TimeZone',
@@ -274,7 +288,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
             <StyledActionButton
               onClick={() => {
                 setShowPresets(true);
-                setPresetValue('');
+                setPresetValue(presetsDefaultValue);
               }}
               style={{ alignSelf: 'flex-start' }}
               variant="text"
