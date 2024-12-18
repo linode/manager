@@ -46,10 +46,12 @@
   "devDependencies": {
     "@linode/eslint-plugin-cloud-manager": "^0.0.5",
     "@storybook/addon-actions": "^8.3.0",
+    "@storybook/preview-api": "^8.3.0",
     "@storybook/react": "^8.3.0",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "~6.4.2",
     "@testing-library/react": "~16.0.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.18",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
@@ -61,7 +63,6 @@
     "eslint-plugin-sonarjs": "^0.5.0",
     "lint-staged": "^15.2.9",
     "prettier": "~2.2.1",
-    "vite-plugin-svgr": "^3.2.0",
-    "@testing-library/user-event": "^14.5.2"
+    "vite-plugin-svgr": "^3.2.0"
   }
 }

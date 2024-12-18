@@ -610,6 +610,9 @@ importers:
       '@storybook/addon-actions':
         specifier: ^8.3.0
         version: 8.4.5(storybook@8.4.5(prettier@2.2.1))
+      '@storybook/preview-api':
+        specifier: ^8.3.0
+        version: 8.4.5(storybook@8.4.5(prettier@2.2.1))
       '@storybook/react':
         specifier: ^8.3.0
         version: 8.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.5(prettier@2.2.1))(typescript@5.6.3)
