@@ -1,5 +1,6 @@
 import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -30,6 +31,7 @@ import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
+import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
@@ -38,7 +40,6 @@ import { migrationRouter } from './routes';
 
 import type { Theme } from '@mui/material/styles';
 import type { AnyRouter } from '@tanstack/react-router';
-import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -130,7 +131,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() =>
   import('src/features/Domains').then((module) => ({
     default: module.DomainsRoutes,
@@ -205,8 +205,11 @@ const IAM = React.lazy(() =>
 
 export const MainContent = () => {
   const { classes, cx } = useStyles();
-  const { data: preferences } = usePreferences();
+  const { data: isDesktopSidebarOpenPreference } = usePreferences(
+    (preferences) => preferences?.desktop_sidebar_open
+  );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
+  const queryClient = useQueryClient();
 
   const globalErrors = useGlobalErrors();
 
@@ -286,11 +289,11 @@ export const MainContent = () => {
     return <MaintenanceScreen />;
   }
 
-  const desktopMenuIsOpen = preferences?.desktop_sidebar_open ?? false;
+  const desktopMenuIsOpen = isDesktopSidebarOpenPreference ?? false;
 
   const desktopMenuToggle = () => {
     updatePreferences({
-      desktop_sidebar_open: !preferences?.desktop_sidebar_open,
+      desktop_sidebar_open: !isDesktopSidebarOpenPreference,
     });
   };
 
@@ -336,8 +339,6 @@ export const MainContent = () => {
                               path="/placement-groups"
                             />
                           )}
-                          <Route component={Volumes} path="/volumes" />
-                          <Redirect path="/volumes*" to="/volumes" />
                           <Route
                             component={NodeBalancers}
                             path="/nodebalancers"
@@ -382,6 +383,7 @@ export const MainContent = () => {
                            */}
                           <Route path="*">
                             <RouterProvider
+                              context={{ queryClient }}
                               router={migrationRouter as AnyRouter}
                             />
                           </Route>

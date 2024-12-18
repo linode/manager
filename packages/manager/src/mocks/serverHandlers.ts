@@ -19,6 +19,7 @@ import {
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
+  alertFactory,
   appTokenFactory,
   betaFactory,
   contactFactory,
@@ -51,6 +52,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   lkeStandardAvailabilityTypeFactory,
   longviewActivePlanFactory,
@@ -105,8 +107,6 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
-
-import { alertFactory } from 'src/factories/cloudpulse/alerts';
 import { pickRandom } from 'src/utilities/random';
 
 import type {
@@ -128,6 +128,7 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
+import { userPermissionsFactory } from 'src/factories/userPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -388,6 +389,12 @@ const vpc = [
     const body = await request.json();
     const subnet = subnetFactory.build({ ...(body as any) });
     return HttpResponse.json(subnet);
+  }),
+];
+
+const iam = [
+  http.get('*/iam/role-permissions/users/:username', () => {
+    return HttpResponse.json(userPermissionsFactory.build());
   }),
 ];
 
@@ -801,6 +808,7 @@ export const handlers = [
     const lkeTypes = [
       lkeStandardAvailabilityTypeFactory.build(),
       lkeHighAvailabilityTypeFactory.build(),
+      lkeEnterpriseTypeFactory.build(),
     ];
     return HttpResponse.json(makeResourcePage(lkeTypes));
   }),
@@ -2346,7 +2354,7 @@ export const handlers = [
   http.post(
     '*/monitor/services/:service_type/alert-definitions',
     async ({ request }) => {
-      const types: AlertDefinitionType[] = ['custom', 'default'];
+      const types: AlertDefinitionType[] = ['system', 'user'];
       const status: AlertStatusType[] = ['enabled', 'disabled'];
       const severity: AlertSeverityType[] = [0, 1, 2, 3];
       const users = ['user1', 'user2', 'user3'];
@@ -2363,6 +2371,46 @@ export const handlers = [
         updated_by: pickRandom(users),
       });
       return HttpResponse.json(response);
+    }
+  ),
+  http.get('*/monitor/alert-definitions', async ({ request }) => {
+    const customAlerts = alertFactory.buildList(2, {
+      severity: 0,
+      type: 'user',
+    });
+    const customAlertsWithServiceType = alertFactory.buildList(2, {
+      service_type: 'dbaas',
+      severity: 1,
+      type: 'user',
+    });
+    const defaultAlerts = alertFactory.buildList(1, { type: 'system' });
+    const defaultAlertsWithServiceType = alertFactory.buildList(1, {
+      service_type: 'dbaas',
+      severity: 3,
+      type: 'system',
+    });
+    const alerts = [
+      ...defaultAlerts,
+      ...alertFactory.buildList(3, { status: 'disabled' }),
+      ...customAlerts,
+      ...defaultAlertsWithServiceType,
+      ...alertFactory.buildList(3),
+      ...customAlertsWithServiceType,
+    ];
+    return HttpResponse.json(makeResourcePage(alerts));
+  }),
+  http.get(
+    '*/monitor/services/:serviceType/alert-definitions/:id',
+    ({ params }) => {
+      if (params.id !== undefined) {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: Number(params.id),
+            service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
+          })
+        );
+      }
+      return HttpResponse.json({}, { status: 404 });
     }
   ),
   http.get('*/monitor/services', () => {
@@ -2535,9 +2583,9 @@ export const handlers = [
       id: params.id,
       label:
         params.id === '1'
-          ? 'Linode Service I/O Statistics'
-          : 'DBaaS Service I/O Statistics',
-      service_type: params.id === '1' ? 'linode' : 'dbaas', // just update the service type and label and use same widget configs
+          ? 'DBaaS Service I/O Statistics'
+          : 'Linode Service I/O Statistics',
+      service_type: params.id === '1' ? 'dbaas' : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,
       widgets: [
@@ -2666,4 +2714,5 @@ export const handlers = [
   ...statusPage,
   ...databases,
   ...vpc,
+  ...iam,
 ];

@@ -19,6 +19,7 @@ import {
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
+  useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -29,7 +30,6 @@ import {
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
-  useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
@@ -102,17 +102,25 @@ export const CreateCluster = () => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery();
+  } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
-    if (tier === 'enterprise') {
-      setHighAvailability(false);
-    }
     setSelectedTier(tier);
+
+    // HA is enabled by default for enterprise clusters
+    if (tier === 'enterprise') {
+      setHighAvailability(true);
+    } else {
+      setHighAvailability(undefined);
+    }
   };
 
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
     (type) => type.id === 'lke-ha'
+  );
+
+  const lkeEnterpriseType = kubernetesHighAvailabilityTypesData?.find(
+    (type) => type.id === 'lke-e'
   );
 
   const {
@@ -133,14 +141,15 @@ export const CreateCluster = () => {
   } = useCreateKubernetesClusterBetaMutation();
 
   const {
-    data: versionData,
-    isError: versionLoadError,
-  } = useKubernetesVersionQuery();
-
-  const {
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
   } = useIsLkeEnterpriseEnabled();
+
+  const {
+    isLoadingVersions,
+    versions: versionData,
+    versionsError,
+  } = useLkeStandardOrEnterpriseVersions(selectedTier);
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -210,6 +219,10 @@ export const CreateCluster = () => {
 
     if (showAPL) {
       payload = { ...payload, apl_enabled };
+    }
+
+    if (isLkeEnterpriseLAFeatureEnabled) {
+      payload = { ...payload, tier: selectedTier };
     }
 
     const createClusterFn =
@@ -285,7 +298,7 @@ export const CreateCluster = () => {
     selectedRegionID: selectedRegionId,
   });
 
-  if (typesError || regionsError || versionLoadError) {
+  if (typesError || regionsError || versionsError) {
     // This information is necessary to create a Cluster. Otherwise, show an error state.
     return <ErrorState errorText="An unexpected error occurred." />;
   }
@@ -371,6 +384,7 @@ export const CreateCluster = () => {
             disableClearable={!!version}
             errorText={errorMap.k8s_version}
             label="Kubernetes Version"
+            loading={isLoadingVersions}
             options={versions}
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
@@ -469,6 +483,7 @@ export const CreateCluster = () => {
             classes,
           ]}
           createCluster={createCluster}
+          enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
           pools={nodePools}
