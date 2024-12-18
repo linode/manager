@@ -3,13 +3,13 @@ import Request, { setData, setMethod, setURL } from '../request';
 import {
   JWEToken,
   JWETokenPayLoad,
-  MetricDefinitions,
+  MetricDefinition,
   ServiceTypesList,
 } from './types';
-import { ResourcePage as Page } from 'src/types';
+import { ResourcePage } from 'src/types';
 
 export const getMetricDefinitionsByServiceType = (serviceType: string) => {
-  return Request<Page<MetricDefinitions>>(
+  return Request<ResourcePage<MetricDefinition>>(
     setURL(
       `${API_ROOT}/monitor/services/${encodeURIComponent(
         serviceType

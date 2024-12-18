@@ -6,7 +6,8 @@ import type {
   APIError,
   JWEToken,
   JWETokenPayLoad,
-  MetricDefinitions,
+  MetricDefinition,
+  ResourcePage,
   ServiceTypesList,
 } from '@linode/api-v4';
 
@@ -14,7 +15,7 @@ export const useGetCloudPulseMetricDefinitionsByServiceType = (
   serviceType: string | undefined,
   enabled: boolean
 ) => {
-  return useQuery<MetricDefinitions, APIError[]>({
+  return useQuery<ResourcePage<MetricDefinition>, APIError[]>({
     ...queryFactory.metricsDefinitons(serviceType),
     enabled,
   });

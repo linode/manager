@@ -8,7 +8,7 @@ import { convertToSeconds } from '../utilities';
 import { MetricCriteriaField } from './MetricCriteria';
 
 import type { CreateAlertDefinitionForm } from '../types';
-import type { MetricDefinitions } from '@linode/api-v4';
+import type { MetricDefinition, ResourcePage } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   useGetCloudPulseMetricDefinitionsByServiceType: vi.fn().mockReturnValue({}),
@@ -23,7 +23,7 @@ vi.mock('src/queries/cloudpulse/services', async () => {
   };
 });
 
-const mockData: MetricDefinitions = {
+const mockData: ResourcePage<MetricDefinition> = {
   data: [
     {
       available_aggregate_functions: ['min', 'max', 'avg'],
@@ -87,6 +87,9 @@ const mockData: MetricDefinitions = {
       unit: 'byte',
     },
   ],
+  page: 1,
+  pages: 1,
+  results: 2,
 };
 
 queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({

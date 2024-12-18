@@ -13,7 +13,7 @@ import { ClearIconButton } from './ClearIconButton';
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from '../types';
 import type {
-  AvailableMetrics,
+  MetricDefinition,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
@@ -23,7 +23,7 @@ interface MetricCriteriaProps {
   /**
    * metric data fetched by the metric definitions endpoint
    */
-  data: AvailableMetrics[];
+  data: MetricDefinition[];
   /**
    * variable to check for metric definitions api call error state
    */

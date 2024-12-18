@@ -89,15 +89,13 @@ const dashboard = dashboardFactory.build({
   }),
 });
 
-const metricDefinitions = {
-  data: metrics.map(({ title, name, unit }) =>
-    dashboardMetricFactory.build({
-      label: title,
-      metric: name,
-      unit,
-    })
-  ),
-};
+const metricDefinitions = metrics.map(({ title, name, unit }) =>
+  dashboardMetricFactory.build({
+    label: title,
+    metric: name,
+    unit,
+  })
+);
 
 const mockLinode = linodeFactory.build({
   label: clusterName,

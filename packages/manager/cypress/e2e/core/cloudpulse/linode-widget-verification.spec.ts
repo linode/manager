@@ -62,8 +62,14 @@ const flags: Partial<Flags> = {
     },
   ],
 };
-const { metrics, id, serviceType, dashboardName, region, resource } =
-  widgetDetails.linode;
+const {
+  metrics,
+  id,
+  serviceType,
+  dashboardName,
+  region,
+  resource,
+} = widgetDetails.linode;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
@@ -78,15 +84,13 @@ const dashboard = dashboardFactory.build({
   }),
 });
 
-const metricDefinitions = {
-  data: metrics.map(({ title, name, unit }) =>
-    dashboardMetricFactory.build({
-      label: title,
-      metric: name,
-      unit,
-    })
-  ),
-};
+const metricDefinitions = metrics.map(({ title, name, unit }) =>
+  dashboardMetricFactory.build({
+    label: title,
+    metric: name,
+    unit,
+  })
+);
 
 const mockLinode = linodeFactory.build({
   label: resource,
