@@ -32,7 +32,7 @@ export const mockGetCloudPulseMetricDefinitions = (
   return cy.intercept(
     'GET',
     apiMatcher(`/monitor/services/${serviceType}/metric-definitions`),
-    makeResponse(paginate(metricDefinitions))
+    paginateResponse(metricDefinitions)
   );
 };
 
