@@ -113,7 +113,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             <CloudPulseTimeRangeSelect
               defaultValue={preferences?.timeDuration}
               handleStatsChange={handleTimeRangeChange}
-              hideLabel
               label="Time Range"
               savePreferences
             />
