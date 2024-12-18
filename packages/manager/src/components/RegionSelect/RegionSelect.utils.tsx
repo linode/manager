@@ -19,6 +19,15 @@ interface RegionSelectOptionsOptions {
   regions: Region[];
 }
 
+// @TODO: OBJ Gen2: This should be removed once these regions obtain the `Object Storage` capability.
+const WHITELISTED_REGIONS = new Set([
+  'gb-lon',
+  'au-mel',
+  'in-bom-2',
+  'de-fra-2',
+  'sg-sin-2',
+]);
+
 export const getRegionOptions = ({
   currentCapability,
   regionFilter,
@@ -26,6 +35,10 @@ export const getRegionOptions = ({
 }: RegionSelectOptionsOptions) => {
   return regions
     .filter((region) => {
+      if (WHITELISTED_REGIONS.has(region.id)) {
+        return true;
+      }
+
       if (
         currentCapability &&
         !region.capabilities.includes(currentCapability)
