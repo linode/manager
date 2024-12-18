@@ -41,14 +41,14 @@ export const transformUrl = (url: string) => {
   const oauthPathMatchingRegex = /(#access_token).*/;
   let transformedUrl = url;
 
-  // Replace any ids with XXXX and keep the rest of the URL intact
-  transformedUrl = url.replace(idMatchingRegex, '/XXXX');
+  // Replace any ids with * and keep the rest of the URL intact
+  transformedUrl = url.replace(idMatchingRegex, `/*`);
 
-  // Replace the region and bucket names with XXXX and keep the rest of the URL intact.
+  // Replace the region and bucket names with * and keep the rest of the URL intact.
   // Object storage file navigation is truncated via the 'clear search' transform.
   transformedUrl = transformedUrl.replace(
     bucketPathMatchingRegex,
-    'buckets/XXXX/XXXX'
+    'buckets/*/*'
   );
 
   // Remove everything after access_token
@@ -69,7 +69,8 @@ export const usePendo = () => {
   const accountId = hashUniquePendoId(account?.euuid);
   const visitorId = hashUniquePendoId(profile?.uid.toString());
 
-  const PENDO_URL = `https://cdn.pendo.io/agent/static/${PENDO_API_KEY}/pendo.js`;
+  // This URL uses a Pendo-configured CNAME (M3-8742).
+  const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;
 
   React.useEffect(() => {
     if (PENDO_API_KEY) {

@@ -54,7 +54,11 @@ interface CloudPulseMandatoryFilterCheckProps {
  */
 export const getRegionProperties = (
   props: CloudPulseFilterProperties,
-  handleRegionChange: (region: string | undefined, savePref?: boolean) => void
+  handleRegionChange: (
+    region: string | undefined,
+    labels: [],
+    savePref?: boolean
+  ) => void
 ): CloudPulseRegionSelectProps => {
   const { name: label, placeholder } = props.config.configuration;
   const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
@@ -119,6 +123,7 @@ export const getCustomSelectProperties = (
   handleCustomSelectChange: (
     filterKey: string,
     value: FilterValueType,
+    labels: string[],
     savePref?: boolean,
     updatedPreferenceData?: {}
   ) => void
@@ -443,4 +448,21 @@ const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
   }
 
   return true;
+};
+
+/**
+ *
+ * @param dashboard dashboard for which filters to render
+ * @param isServiceAnalyticsIntegration boolean value to check if implementation is service analytics integration or not
+ * @returns list of CloudPulseServiceTypeFilters filtered by passed parameters
+ */
+export const getFilters = (
+  dashboard: Dashboard,
+  isServiceAnalyticsIntegration: boolean
+): CloudPulseServiceTypeFilters[] | undefined => {
+  return FILTER_CONFIG.get(dashboard.service_type)?.filters.filter((config) =>
+    isServiceAnalyticsIntegration
+      ? config.configuration.neededInServicePage
+      : config.configuration.filterKey !== RELATIVE_TIME_DURATION
+  );
 };

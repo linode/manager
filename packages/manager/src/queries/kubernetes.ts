@@ -14,6 +14,7 @@ import {
   getKubernetesClustersBeta,
   getKubernetesTieredVersionsBeta,
   getKubernetesTypes,
+  getKubernetesTypesBeta,
   getKubernetesVersions,
   getNodePools,
   recycleAllNodes,
@@ -124,10 +125,12 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
     queryFn: () => getAllKubernetesTieredVersionsBeta(tier),
     queryKey: [tier],
   }),
-  types: {
-    queryFn: () => getAllKubernetesTypes(),
-    queryKey: null,
-  },
+  types: (useBetaEndpoint: boolean = false) => ({
+    queryFn: useBetaEndpoint
+      ? getAllKubernetesTypesBeta
+      : () => getAllKubernetesTypes(),
+    queryKey: [useBetaEndpoint ? 'v4beta' : 'v4'],
+  }),
   versions: {
     queryFn: () => getAllKubernetesVersions(),
     queryKey: null,
@@ -196,16 +199,18 @@ export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
   });
 };
 
-export const useKubenetesKubeConfigQuery = (
+export const useKubernetesKubeConfigQuery = (
   clusterId: number,
   enabled = false
 ) =>
   useQuery<string, APIError[]>({
     ...kubernetesQueries.cluster(clusterId)._ctx.kubeconfig,
     enabled,
-    refetchOnMount: true,
-    retry: true,
+    retry: 3,
     retryDelay: 5000,
+    // Disable stale time to prevent caching of the kubeconfig
+    // because it can take some time for config to get updated in the API
+    staleTime: 0,
   });
 
 export const useResetKubeConfigMutation = () => {
@@ -379,10 +384,14 @@ export const useKubernetesVersionQuery = () =>
     ...queryPresets.oneTimeFetch,
   });
 
-export const useKubernetesTieredVersionQuery = (tier: string) => {
-  useQuery<KubernetesTieredVersion[], APIError[]>({
+export const useKubernetesTieredVersionsQuery = (
+  tier: string,
+  enabled = true
+) => {
+  return useQuery<KubernetesTieredVersion[], APIError[]>({
     ...kubernetesQueries.tieredVersions(tier),
     ...queryPresets.oneTimeFetch,
+    enabled,
   });
 };
 
@@ -463,8 +472,13 @@ const getAllKubernetesTypes = () =>
     (results) => results.data
   );
 
-export const useKubernetesTypesQuery = () =>
+const getAllKubernetesTypesBeta = () =>
+  getAll<PriceType>((params) => getKubernetesTypesBeta(params))().then(
+    (results) => results.data
+  );
+
+export const useKubernetesTypesQuery = (useBetaEndpoint?: boolean) =>
   useQuery<PriceType[], APIError[]>({
     ...queryPresets.oneTimeFetch,
-    ...kubernetesQueries.types,
+    ...kubernetesQueries.types(useBetaEndpoint),
   });

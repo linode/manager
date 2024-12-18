@@ -1,5 +1,6 @@
 import { Box, Chip, Typography } from '@linode/ui';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
@@ -11,6 +12,7 @@ import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
+import { HighPerformanceVolumeIcon } from '../Linodes/HighPerformanceVolumeIcon';
 import {
   getDerivedVolumeStatusFromStatusAndEvent,
   getEventProgress,
@@ -19,7 +21,7 @@ import {
 import { VolumesActionMenu } from './VolumesActionMenu';
 
 import type { ActionHandlers } from './VolumesActionMenu';
-import type { Volume } from '@linode/api-v4';
+import type { LinodeCapabilities, Volume } from '@linode/api-v4';
 
 export const useStyles = makeStyles()({
   volumePath: {
@@ -32,6 +34,7 @@ interface Props {
   handlers: ActionHandlers;
   isBlockStorageEncryptionFeatureEnabled?: boolean;
   isDetailsPageRow?: boolean;
+  linodeCapabilities?: LinodeCapabilities[];
   volume: Volume;
 }
 
@@ -41,6 +44,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
     handlers,
     isBlockStorageEncryptionFeatureEnabled,
     isDetailsPageRow,
+    linodeCapabilities,
     volume,
   } = props;
 
@@ -114,7 +118,21 @@ export const VolumeTableRow = React.memo((props: Props) => {
             wrap: 'nowrap',
           }}
         >
-          {volume.label}
+          <Box
+            sx={(theme) => ({
+              alignItems: 'center',
+              display: 'flex',
+              gap: theme.spacing(),
+            })}
+          >
+            {volume.label}
+            {linodeCapabilities && (
+              <HighPerformanceVolumeIcon
+                linodeCapabilities={linodeCapabilities}
+              />
+            )}
+          </Box>
+
           {isEligibleForUpgradeToNVMe && (
             <Chip
               clickable

@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Button,
   Divider,
   FormHelperText,
@@ -11,7 +12,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Link } from 'src/components/Link';
 
 import { ActiveCheck } from './NodeBalancerActiveCheck';
@@ -166,6 +166,7 @@ export const NodeBalancerConfigPanel = (
 
   const algorithmHelperText = {
     leastconn: LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
+    ring_hash: '', // @todo Add copy as part of UDP NodeBalancer project
     roundrobin: ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
     source: SOURCE_ALGORITHM_HELPER_TEXT,
   };
@@ -274,8 +275,8 @@ export const NodeBalancerConfigPanel = (
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-proxy-protocol-select': true,
-                  errorGroup: forEdit ? `${configIdx}` : undefined,
                 },
+                errorGroup: forEdit ? `${configIdx}` : undefined,
               }}
               autoHighlight
               disableClearable

@@ -7,6 +7,7 @@ import {
   DEDICATED_512_GB_PLAN,
   LIMITED_AVAILABILITY_COPY,
   PLAN_IS_CURRENTLY_UNAVAILABLE_COPY,
+  PLAN_IS_SMALLER_THAN_USAGE_COPY,
   PLAN_IS_TOO_SMALL_FOR_APL_COPY,
   PLAN_NOT_AVAILABLE_IN_REGION_COPY,
   PREMIUM_512_GB_PLAN,
@@ -290,6 +291,7 @@ interface ExtractPlansInformationProps {
   disabledClasses?: LinodeTypeClass[];
   disabledSmallerPlans?: PlanSelectionType[];
   isAPLEnabled?: boolean;
+  isLegacyDatabase?: boolean;
   plans: PlanSelectionType[];
   regionAvailabilities: RegionAvailability[] | undefined;
   selectedRegionId: Region['id'] | undefined;
@@ -312,6 +314,7 @@ export const extractPlansInformation = ({
   disabledClasses,
   disabledSmallerPlans,
   isAPLEnabled,
+  isLegacyDatabase,
   plans,
   regionAvailabilities,
   selectedRegionId,
@@ -331,19 +334,25 @@ export const extractPlansInformation = ({
       const planBelongsToDisabledClass = Boolean(
         disabledClasses?.includes(plan.class)
       );
-      const planIsTooSmall = Boolean(
+      const disabledPlans = Boolean(
         disabledSmallerPlans?.find(
           (disabledPlan) => disabledPlan.id === plan.id
         )
       );
+      const planIsTooSmall = Boolean(isLegacyDatabase && disabledPlans);
+      const planIsSmallerThanUsage = Boolean(
+        !isLegacyDatabase && disabledPlans
+      );
+
       const planIsTooSmallForAPL =
-        isAPLEnabled && Boolean(plan.memory < 16000 || plan.vcpus < 4);
+        isAPLEnabled && Boolean(plan.memory < 8000 || plan.vcpus < 4);
 
       return {
         ...plan,
         planBelongsToDisabledClass,
         planHasLimitedAvailability,
         planIsDisabled512Gb,
+        planIsSmallerThanUsage,
         planIsTooSmall,
         planIsTooSmallForAPL,
       };
@@ -355,6 +364,7 @@ export const extractPlansInformation = ({
       planBelongsToDisabledClass,
       planHasLimitedAvailability,
       planIsDisabled512Gb,
+      planIsSmallerThanUsage,
       planIsTooSmall,
       planIsTooSmallForAPL,
     } = plan;
@@ -368,6 +378,7 @@ export const extractPlansInformation = ({
       planHasLimitedAvailability ||
       planIsDisabled512Gb ||
       planIsTooSmall ||
+      planIsSmallerThanUsage ||
       planIsTooSmallForAPL
     ) {
       return [...acc, plan];
@@ -395,6 +406,7 @@ export const getDisabledPlanReasonCopy = ({
   planBelongsToDisabledClass,
   planHasLimitedAvailability,
   planIsDisabled512Gb,
+  planIsSmallerThanUsage,
   planIsTooSmall,
   planIsTooSmallForAPL,
   wholePanelIsDisabled,
@@ -402,6 +414,7 @@ export const getDisabledPlanReasonCopy = ({
   planBelongsToDisabledClass: DisabledTooltipReasons['planBelongsToDisabledClass'];
   planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
   planIsDisabled512Gb: DisabledTooltipReasons['planIsDisabled512Gb'];
+  planIsSmallerThanUsage?: DisabledTooltipReasons['planIsSmallerThanUsage'];
   planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
   planIsTooSmallForAPL?: DisabledTooltipReasons['planIsTooSmallForAPL'];
   wholePanelIsDisabled?: DisabledTooltipReasons['wholePanelIsDisabled'];
@@ -416,6 +429,8 @@ export const getDisabledPlanReasonCopy = ({
 
   if (planIsTooSmall) {
     return SMALLER_PLAN_DISABLED_COPY;
+  } else if (planIsSmallerThanUsage) {
+    return PLAN_IS_SMALLER_THAN_USAGE_COPY;
   }
 
   if (planIsTooSmallForAPL) {

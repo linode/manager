@@ -1,6 +1,5 @@
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import type { FilterValue, TimeDuration } from '@linode/api-v4';
 import type {
@@ -19,6 +18,7 @@ export interface CloudPulseTimeRangeSelectProps
     timeDurationValue?: string,
     savePref?: boolean
   ) => void;
+  hideLabel?: boolean;
   savePreferences?: boolean;
 }
 
@@ -36,7 +36,13 @@ export type Labels =
 
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
-    const { defaultValue, handleStatsChange, label, savePreferences } = props;
+    const {
+      defaultValue,
+      handleStatsChange,
+      hideLabel,
+      label,
+      savePreferences,
+    } = props;
     const options = generateSelectOptions();
     const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
       if (!savePreferences) {
@@ -79,6 +85,9 @@ export const CloudPulseTimeRangeSelect = React.memo(
       <Autocomplete
         onChange={(e, value: Item<Labels, Labels>) => {
           handleChange(value);
+        }}
+        textFieldProps={{
+          hideLabel,
         }}
         autoHighlight
         data-testid="cloudpulse-time-duration"

@@ -1,6 +1,8 @@
 import {
+  Autocomplete,
   Divider,
   FormControl,
+  FormControlLabel,
   Radio,
   RadioGroup,
   Stack,
@@ -10,8 +12,6 @@ import {
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import PasswordInput from 'src/components/PasswordInput/PasswordInput';

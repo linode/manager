@@ -1,4 +1,6 @@
 import {
+  Autocomplete,
+  FormControlLabel,
   FormHelperText,
   Notice,
   Paper,
@@ -9,16 +11,13 @@ import {
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { reportException } from 'src/exceptionReporting';
@@ -46,6 +45,7 @@ import type {
 } from '@linode/api-v4/lib/domains';
 import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { DomainState } from 'src/routes/domains';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface DefaultRecordsSetting {
@@ -65,7 +65,7 @@ export const CreateDomain = () => {
   // of the payload and must be handled separately.
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const defaultRecords: DefaultRecordsSetting[] = [
     {
@@ -127,20 +127,24 @@ export const CreateDomain = () => {
   const isCreatingPrimaryDomain = values.type === 'master';
   const isCreatingSecondaryDomain = values.type === 'slave';
 
-  const redirect = (id: '' | number, state?: Record<string, string>) => {
+  const redirect = (id: null | number, state?: DomainState) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
-    history.push(returnPath, state);
+    navigate({
+      params: { domainId: Number(id) },
+      state: (prev) => ({ ...prev, ...state }),
+      to: returnPath,
+    });
   };
 
   const redirectToLandingOrDetail = (
     type: 'master' | 'slave',
     domainID: number,
-    state: Record<string, string> = {}
+    state: DomainState = {}
   ) => {
     if (type === 'master' && domainID) {
       redirect(domainID, state);
     } else {
-      redirect('', state);
+      redirect(null, state);
     }
   };
 
@@ -448,10 +452,6 @@ export const CreateDomain = () => {
     </Grid>
   );
 };
-
-export const createDomainLazyRoute = createLazyRoute('/domains/create')({
-  component: CreateDomain,
-});
 
 const StyledGrid = styled(Grid, { label: 'StyledGrid' })({
   width: '100%',

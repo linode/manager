@@ -1,9 +1,11 @@
 import {
+  Autocomplete,
   Box,
   Button,
   CircleProgress,
   Divider,
   FormControl,
+  FormControlLabel,
   FormHelperText,
   Notice,
   Radio,
@@ -21,10 +23,8 @@ import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
@@ -290,7 +290,7 @@ export const LinodeConfigDialog = (props: Props) => {
   const [
     primaryInterfaceIndex,
     setPrimaryInterfaceIndex,
-  ] = React.useState<number>();
+  ] = React.useState<number>(0);
 
   const regionHasVLANS = regions.some(
     (thisRegion) =>
@@ -418,7 +418,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
       if (vpcId) {
         queryClient.invalidateQueries({
-          queryKey: vpcQueries.all.queryKey,
+          queryKey: vpcQueries.all._def,
         });
         queryClient.invalidateQueries({
           queryKey: vpcQueries.paginated._def,
@@ -1004,7 +1004,7 @@ export const LinodeConfigDialog = (props: Props) => {
                   disabled={isReadOnly}
                   label="Primary Interface (Default Route)"
                   options={getPrimaryInterfaceOptions(values.interfaces)}
-                  value={primaryInterfaceOptions[primaryInterfaceIndex ?? 0]}
+                  value={primaryInterfaceOptions[primaryInterfaceIndex]}
                 />
                 <Divider
                   sx={{
@@ -1242,7 +1242,7 @@ export const unrecommendedConfigNoticeSelector = ({
   values,
 }: {
   _interface: ExtendedInterface;
-  primaryInterfaceIndex: number | undefined;
+  primaryInterfaceIndex: number;
   thisIndex: number;
   values: EditableFields;
 }): JSX.Element | null => {
@@ -1255,9 +1255,7 @@ export const unrecommendedConfigNoticeSelector = ({
 
   // Edge case: users w/ ability to have multiple VPC interfaces. Scenario 1 & 2 notices not helpful if that's done
   const primaryInterfaceIsVPC =
-    primaryInterfaceIndex !== undefined
-      ? values.interfaces[primaryInterfaceIndex].purpose === 'vpc'
-      : false;
+    values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
 
   /*
    Scenario 1:
