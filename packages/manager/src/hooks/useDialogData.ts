@@ -87,14 +87,3 @@ export const useDialogData = <TEntity>({
     isLoading: query.isLoading,
   };
 };
-
-// instance:
-// const {
-//  data: selectedVolume,
-//  isFetching: isFetchingSelectedVolume,
-// } = useDialogRouteGuard({
-//   enabled: !!params.volumeId,
-//   paramKey: 'volumeId',
-//   queryHook: useVolumeQuery,
-//   redirectToOnNotFound: '/volumes',
-// });
