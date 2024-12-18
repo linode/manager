@@ -93,6 +93,7 @@ export const ObjectStorageSettings = () => {
           subType: 'ObjectStorage',
           type: 'AccountSetting',
         }}
+        errors={error}
         label="Username"
         loading={isCancelLoading}
         onClick={handleCancelObjectStorage}
@@ -100,7 +101,6 @@ export const ObjectStorageSettings = () => {
         open={isCancelDialogOpen}
         title="Cancel Object Storage"
       >
-        {error && <Notice text={error[0].reason} variant="error" />}
         <Notice variant="warning">
           <Typography sx={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Canceling Object Storage will permanently

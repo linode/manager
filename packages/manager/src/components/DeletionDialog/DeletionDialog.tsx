@@ -73,12 +73,12 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   return (
     <ConfirmationDialog
       actions={renderActions}
+      error={error}
       onClose={onClose}
       open={open}
       title={`Delete ${titlecase(entity)} ${label}?`}
       {...rest}
     >
-      {error && <Notice text={error} variant="error" />}
       <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting this {entity} is permanent and
