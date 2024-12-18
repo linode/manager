@@ -19,13 +19,13 @@ import {
 import { regionQueries } from '../regions/regions';
 import { accountQueries } from './queries';
 
-export const useAccountBetasQuery = (params?: Params, filter?: Filter) =>
+const useAccountBetasQuery = (params?: Params, filter?: Filter) =>
   useQuery<ResourcePage<AccountBeta>, APIError[]>({
     ...accountQueries.betas._ctx.paginated(params, filter),
     placeholderData: keepPreviousData,
   });
 
-export const useCreateAccountBetaMutation = () => {
+const useCreateAccountBetaMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], EnrollInBetaPayload>({
     mutationFn: enrollInBeta,

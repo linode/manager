@@ -34,7 +34,7 @@ import type {
 } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-export const getAllDomains = () =>
+const getAllDomains = () =>
   getAll<Domain>((params) => getDomains(params))().then((data) => data.data);
 
 const getAllDomainRecords = (domainId: number) =>
@@ -68,7 +68,7 @@ const domainQueries = createQueryKeys('domains', {
   },
 });
 
-export const useDomainsQuery = (params: Params, filter: Filter) =>
+const useDomainsQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Domain>, APIError[]>({
     ...domainQueries.domains._ctx.paginated(params, filter),
     placeholderData: keepPreviousData,
@@ -80,13 +80,13 @@ export const useAllDomainsQuery = (enabled: boolean = false) =>
     enabled,
   });
 
-export const useDomainQuery = (id: number) =>
+const useDomainQuery = (id: number) =>
   useQuery<Domain, APIError[]>(domainQueries.domain(id));
 
-export const useDomainRecordsQuery = (id: number) =>
+const useDomainRecordsQuery = (id: number) =>
   useQuery<DomainRecord[], APIError[]>(domainQueries.domain(id)._ctx.records);
 
-export const useCreateDomainMutation = () => {
+const useCreateDomainMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Domain, APIError[], CreateDomainPayload>({
     mutationFn: createDomain,
@@ -110,7 +110,7 @@ export const useCreateDomainMutation = () => {
   });
 };
 
-export const useCloneDomainMutation = (id: number) => {
+const useCloneDomainMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<Domain, APIError[], CloneDomainPayload>({
     mutationFn: (data) => cloneDomain(id, data),
@@ -129,7 +129,7 @@ export const useCloneDomainMutation = (id: number) => {
   });
 };
 
-export const useImportZoneMutation = () => {
+const useImportZoneMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Domain, APIError[], ImportZonePayload>({
     mutationFn: importZone,
@@ -148,7 +148,7 @@ export const useImportZoneMutation = () => {
   });
 };
 
-export const useDeleteDomainMutation = (id: number) => {
+const useDeleteDomainMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteDomain(id),
@@ -170,7 +170,7 @@ interface UpdateDomainPayloadWithId extends UpdateDomainPayload {
   id: number;
 }
 
-export const useUpdateDomainMutation = () => {
+const useUpdateDomainMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Domain, APIError[], UpdateDomainPayloadWithId>({
     mutationFn: ({ id, ...data }) => updateDomain(id, data),

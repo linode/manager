@@ -26,7 +26,7 @@ export const StyledAutocompleteContainer = styled(Box, {
   },
 }));
 
-export const StyledLParentListItem = styled(ListItem, {
+const StyledLParentListItem = styled(ListItem, {
   label: 'RegionSelectParentListItem',
 })(() => ({
   '&.MuiListItem-root': {
@@ -38,7 +38,7 @@ export const StyledLParentListItem = styled(ListItem, {
   },
 }));
 
-export const StyledChip = styled(Chip)(({ theme }) => ({
+const StyledChip = styled(Chip)(({ theme }) => ({
   '& .MuiChip-deleteIcon': {
     '& svg': {
       borderRadius: '50%',

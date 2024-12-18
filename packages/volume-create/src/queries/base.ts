@@ -42,7 +42,7 @@ export const queryPresets = {
  *
  * @returns New `QueryClient` instance.
  */
-export const queryClientFactory = (
+const queryClientFactory = (
   preset: 'longLived' | 'oneTimeFetch' = 'oneTimeFetch'
 ) => {
   return new QueryClient({
@@ -53,7 +53,7 @@ export const queryClientFactory = (
 // =============================================================================
 // Types
 // =============================================================================
-export type ItemsByID<T> = Record<string, T>;
+type ItemsByID<T> = Record<string, T>;
 
 // =============================================================================
 // Utility Functions
@@ -69,7 +69,7 @@ export type ItemsByID<T> = Record<string, T>;
  *
  */
 
-export const listToItemsByID = <E extends { [id: number | string]: any }>(
+const listToItemsByID = <E extends { [id: number | string]: any }>(
   entityList: E[],
   indexer: string = 'id'
 ) => {
@@ -79,7 +79,7 @@ export const listToItemsByID = <E extends { [id: number | string]: any }>(
   );
 };
 
-export const mutationHandlers = <
+const mutationHandlers = <
   T,
   V extends Record<string, any>,
   E = APIError[]
@@ -99,7 +99,7 @@ export const mutationHandlers = <
   };
 };
 
-export const simpleMutationHandlers = <T, V, E = APIError[]>(
+const simpleMutationHandlers = <T, V, E = APIError[]>(
   queryKey: QueryKey,
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
@@ -113,7 +113,7 @@ export const simpleMutationHandlers = <T, V, E = APIError[]>(
   };
 };
 
-export const creationHandlers = <
+const creationHandlers = <
   T extends Record<string, any>,
   V,
   E = APIError[]
@@ -133,7 +133,7 @@ export const creationHandlers = <
   };
 };
 
-export const deletionHandlers = <
+const deletionHandlers = <
   T,
   V extends Record<string, any>,
   E = APIError[]
@@ -154,7 +154,7 @@ export const deletionHandlers = <
   };
 };
 
-export const itemInListMutationHandler = <
+const itemInListMutationHandler = <
   T extends { id: number | string },
   V,
   E = APIError[]
@@ -187,7 +187,7 @@ export const itemInListMutationHandler = <
   };
 };
 
-export const itemInListCreationHandler = <T, V, E = APIError[]>(
+const itemInListCreationHandler = <T, V, E = APIError[]>(
   queryKey: QueryKey,
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
@@ -206,7 +206,7 @@ export const itemInListCreationHandler = <T, V, E = APIError[]>(
   };
 };
 
-export const itemInListDeletionHandler = <
+const itemInListDeletionHandler = <
   T,
   V extends { id?: number | string },
   E = APIError[]
@@ -243,7 +243,7 @@ export const itemInListDeletionHandler = <
  * @param id the id of the entity of you want to update within this paginated data
  * @param newData the new data for the entity
  */
-export const updateInPaginatedStore = <T extends { id: number | string }>(
+const updateInPaginatedStore = <T extends { id: number | string }>(
   queryKey: QueryKey,
   id: number | string,
   newData: Partial<T>,
@@ -281,7 +281,7 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
   );
 };
 
-export const getItemInPaginatedStore = <T extends { id: number | string }>(
+const getItemInPaginatedStore = <T extends { id: number | string }>(
   queryKey: QueryKey,
   id: number,
   queryClient: QueryClient
@@ -301,7 +301,7 @@ export const getItemInPaginatedStore = <T extends { id: number | string }>(
   return null;
 };
 
-export const doesItemExistInPaginatedStore = <
+const doesItemExistInPaginatedStore = <
   T extends { id: number | string }
 >(
   queryKey: QueryKey,

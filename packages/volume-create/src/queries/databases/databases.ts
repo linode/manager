@@ -89,7 +89,7 @@ export const databaseQueries = createQueryKeys('databases', {
   },
 });
 
-export const useDatabaseQuery = (engine: Engine, id: number) =>
+const useDatabaseQuery = (engine: Engine, id: number) =>
   useQuery<Database, APIError[]>({
     ...databaseQueries.database(engine, id),
     // @TODO Consider removing polling
@@ -99,7 +99,7 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
     refetchInterval: 20000,
   });
 
-export const useDatabasesQuery = (
+const useDatabasesQuery = (
   params: Params,
   filter: Filter,
   isEnabled: boolean | undefined
@@ -122,7 +122,7 @@ export const useAllDatabasesQuery = (
     enabled,
   });
 
-export const useDatabaseMutation = (engine: Engine, id: number) => {
+const useDatabaseMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
   return useMutation<Database, APIError[], UpdateDatabasePayload>({
     mutationFn: (data) => updateDatabase(engine, id, data),
@@ -138,7 +138,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const usePatchDatabaseMutation = (engine: Engine, id: number) => {
+const usePatchDatabaseMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
   return useMutation<void, APIError[], void>({
     mutationFn: () => patchDatabase(engine, id),
@@ -154,7 +154,7 @@ export const usePatchDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useCreateDatabaseMutation = () => {
+const useCreateDatabaseMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Database, APIError[], CreateDatabasePayload>({
     mutationFn: (data) =>
@@ -175,7 +175,7 @@ export const useCreateDatabaseMutation = () => {
   });
 };
 
-export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
+const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteDatabase(engine, id),
@@ -190,7 +190,7 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useSuspendDatabaseMutation = (engine: Engine, id: number) => {
+const useSuspendDatabaseMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => suspendDatabase(engine, id),
@@ -205,7 +205,7 @@ export const useSuspendDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useResumeDatabaseMutation = (engine: Engine, id: number) => {
+const useResumeDatabaseMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => resumeDatabase(engine, id),
@@ -220,7 +220,7 @@ export const useResumeDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useDatabaseBackupsQuery = (
+const useDatabaseBackupsQuery = (
   engine: Engine,
   id: number,
   enabled: boolean = false
@@ -230,13 +230,13 @@ export const useDatabaseBackupsQuery = (
     enabled,
   });
 
-export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
+const useDatabaseEnginesQuery = (enabled: boolean = false) =>
   useQuery<DatabaseEngine[], APIError[]>({
     ...databaseQueries.engines,
     enabled,
   });
 
-export const useDatabaseTypesQuery = (
+const useDatabaseTypesQuery = (
   filter: Filter = {},
   enabled: boolean = true
 ) =>
@@ -245,7 +245,7 @@ export const useDatabaseTypesQuery = (
     enabled,
   });
 
-export const useDatabaseCredentialsQuery = (
+const useDatabaseCredentialsQuery = (
   engine: Engine,
   id: number,
   enabled: boolean = false
@@ -256,7 +256,7 @@ export const useDatabaseCredentialsQuery = (
     enabled,
   });
 
-export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
+const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => resetDatabaseCredentials(engine, id),
@@ -273,7 +273,7 @@ export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useLegacyRestoreFromBackupMutation = (
+const useLegacyRestoreFromBackupMutation = (
   engine: Engine,
   databaseId: number,
   backupId: number
@@ -292,7 +292,7 @@ export const useLegacyRestoreFromBackupMutation = (
   });
 };
 
-export const useRestoreFromBackupMutation = (
+const useRestoreFromBackupMutation = (
   engine: Engine,
   fork: DatabaseFork
 ) => {

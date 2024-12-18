@@ -1,4 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { pathOr } from 'ramda';
+
+import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 
 /**
  *
@@ -27,7 +30,7 @@ import { APIError } from '@linode/api-v4/lib/types';
  */
 export const getAPIErrorOrDefault = (
   errorResponse: APIError[],
-  defaultError: string = 'An unexpected error occurred.',
+  defaultError: string = DEFAULT_ERROR_MESSAGE,
   field?: string
 ): APIError[] => {
   const _defaultError = field
@@ -41,7 +44,7 @@ const isDefaultError = (errorResponse: APIError[]) => {
   return (
     errorResponse &&
     errorResponse.length === 1 &&
-    errorResponse[0].reason === 'An unexpected error occurred.'
+    errorResponse[0].reason === DEFAULT_ERROR_MESSAGE
   );
 };
 
@@ -52,7 +55,8 @@ export const getErrorStringOrDefault = (
   if (typeof errors === 'string') {
     return errors;
   }
-  return errors ? errors[0].reason : defaultError;
+  const apiErrors = pathOr(errors, ['response', 'data', 'errors'], errors);
+  return pathOr<string>(defaultError, [0, 'reason'], apiErrors);
 };
 
 /**

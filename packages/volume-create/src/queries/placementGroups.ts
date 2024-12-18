@@ -62,7 +62,7 @@ interface AllPlacementGroupsQueryOptions {
   params?: Params;
 }
 
-export const useAllPlacementGroupsQuery = ({
+const useAllPlacementGroupsQuery = ({
   enabled = true,
   filter = {},
   params = {},
@@ -72,7 +72,7 @@ export const useAllPlacementGroupsQuery = ({
     ...placementGroupQueries.all(params, filter),
   });
 
-export const usePlacementGroupsQuery = (
+const usePlacementGroupsQuery = (
   params: Params,
   filter: Filter,
   enabled: boolean = true
@@ -83,7 +83,7 @@ export const usePlacementGroupsQuery = (
     ...placementGroupQueries.paginated(params, filter),
   });
 
-export const usePlacementGroupQuery = (
+const usePlacementGroupQuery = (
   placementGroupId: number,
   enabled: boolean = true
 ) => {
@@ -93,7 +93,7 @@ export const usePlacementGroupQuery = (
   });
 };
 
-export const useCreatePlacementGroup = () => {
+const useCreatePlacementGroup = () => {
   const queryClient = useQueryClient();
 
   return useMutation<PlacementGroup, APIError[], CreatePlacementGroupPayload>({
@@ -118,7 +118,7 @@ export const useCreatePlacementGroup = () => {
   });
 };
 
-export const useMutatePlacementGroup = (id: number) => {
+const useMutatePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
   return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>({
@@ -138,7 +138,7 @@ export const useMutatePlacementGroup = (id: number) => {
   });
 };
 
-export const useDeletePlacementGroup = (id: number) => {
+const useDeletePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
   return useMutation<{}, APIError[]>({
@@ -157,7 +157,7 @@ export const useDeletePlacementGroup = (id: number) => {
   });
 };
 
-export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
+const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -190,7 +190,7 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
   });
 };
 
-export const useUnassignLinodesFromPlacementGroup = (
+const useUnassignLinodesFromPlacementGroup = (
   placementGroupId: number
 ) => {
   const queryClient = useQueryClient();

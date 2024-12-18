@@ -25,7 +25,7 @@ export const prefixToQueryKey = (prefix: string) => {
  * We have this function so we have an efficent way to update a single bucket
  * as opposed to re-fetching all buckets.
  */
-export const fetchBucketAndUpdateCache = async (
+const fetchBucketAndUpdateCache = async (
   regionOrCluster: string,
   bucketName: string,
   queryClient: QueryClient

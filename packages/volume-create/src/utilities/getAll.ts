@@ -1,19 +1,21 @@
 import { Filter, Params } from '@linode/api-v4';
 import { range } from 'ramda';
 
-export interface APIResponsePage<T> {
+import { API_MAX_PAGE_SIZE } from 'src/constants';
+
+interface APIResponsePage<T> {
   data: T;
   page: number;
   pages: number;
   results: number;
 }
 
-export type GetFunction<T> = (
+type GetFunction<T> = (
   params?: Params,
   filters?: Filter
 ) => Promise<APIResponsePage<T[]>>;
 
-export type GetFromEntity = (
+type GetFromEntity = (
   entityId?: number,
   params?: Params,
   filters?: Filter
@@ -53,7 +55,7 @@ export const getAll: <T>(
   cb?: (results: number) => void
 ) => (params?: Params, filter?: Filter) => Promise<GetAllData<T>> = (
   getter,
-  pageSize = 500,
+  pageSize = API_MAX_PAGE_SIZE,
   cb
 ) => (params?: Params, filter?: Filter) => {
   const pagination = { ...params, page_size: pageSize };

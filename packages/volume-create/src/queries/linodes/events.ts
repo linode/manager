@@ -163,7 +163,7 @@ export const diskEventHandler = ({
  * 3) In the next few minutes, the resize is kicked off.
  * 4) The `migration_imminent` notification on the Linode goes away.
  */
-export const shouldRequestNotifications = (event: Event) => {
+const shouldRequestNotifications = (event: Event) => {
   return (
     eventsWithRelevantNotifications.includes(event.action) &&
     ['error', 'finished', 'notification'].includes(event.status)

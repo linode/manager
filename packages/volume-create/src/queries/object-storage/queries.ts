@@ -117,7 +117,7 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
   },
 });
 
-export const useObjectStorageEndpoints = (enabled = true) => {
+const useObjectStorageEndpoints = (enabled = true) => {
   const flags = useFlags();
   const { data: account } = useAccount();
 
@@ -138,7 +138,7 @@ export const useObjectStorageEndpoints = (enabled = true) => {
  *
  * @deprecated This will be replaced by useObjectStorageEndpoints
  */
-export const useObjectStorageClusters = (enabled: boolean = true) =>
+const useObjectStorageClusters = (enabled: boolean = true) =>
   useQuery<ObjectStorageCluster[], APIError[]>({
     ...objectStorageQueries.clusters,
     ...queryPresets.oneTimeFetch,
@@ -197,13 +197,13 @@ export const useObjectStorageBuckets = (enabled = true) => {
   });
 };
 
-export const useObjectStorageAccessKeys = (params: Params) =>
+const useObjectStorageAccessKeys = (params: Params) =>
   useQuery<ResourcePage<ObjectStorageKey>, APIError[]>({
     ...objectStorageQueries.accessKeys(params),
     placeholderData: keepPreviousData,
   });
 
-export const useBucketAccess = (
+const useBucketAccess = (
   clusterOrRegion: string,
   bucket: string,
   queryEnabled: boolean
@@ -213,7 +213,7 @@ export const useBucketAccess = (
     enabled: queryEnabled,
   });
 
-export const useObjectAccess = (
+const useObjectAccess = (
   bucket: string,
   clusterId: string,
   params: { name: string },
@@ -226,7 +226,7 @@ export const useObjectAccess = (
       ._ctx.objects._ctx.acl(params.name),
   });
 
-export const useUpdateBucketAccessMutation = (
+const useUpdateBucketAccessMutation = (
   clusterOrRegion: string,
   bucket: string
 ) => {
@@ -248,7 +248,7 @@ export const useUpdateBucketAccessMutation = (
   });
 };
 
-export const useUpdateObjectAccessMutation = (
+const useUpdateObjectAccessMutation = (
   clusterId: string,
   bucketName: string,
   name: string
@@ -272,7 +272,7 @@ export const useUpdateObjectAccessMutation = (
   });
 };
 
-export const useCreateBucketMutation = () => {
+const useCreateBucketMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<
     ObjectStorageBucket,
@@ -310,7 +310,7 @@ export const useCreateBucketMutation = () => {
   });
 };
 
-export const useDeleteBucketMutation = () => {
+const useDeleteBucketMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { cluster: string; label: string }>({
     mutationFn: deleteBucket,
@@ -338,7 +338,7 @@ export const useDeleteBucketMutation = () => {
  once feature is rolled out we replace it with existing useDeleteBucketMutation
  by updating it with region instead of cluster.
 */
-export const useDeleteBucketWithRegionMutation = () => {
+const useDeleteBucketWithRegionMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { label: string; region: string }>({
     mutationFn: deleteBucketWithRegion,
@@ -361,7 +361,7 @@ export const useDeleteBucketWithRegionMutation = () => {
   });
 };
 
-export const getObjectBucketObjectsQueryKey = (
+const getObjectBucketObjectsQueryKey = (
   clusterId: string,
   bucket: string,
   prefix: string
@@ -370,7 +370,7 @@ export const getObjectBucketObjectsQueryKey = (
   ...prefixToQueryKey(prefix),
 ];
 
-export const useObjectBucketObjectsInfiniteQuery = (
+const useObjectBucketObjectsInfiniteQuery = (
   clusterId: string,
   bucket: string,
   prefix: string
@@ -387,7 +387,7 @@ export const useObjectBucketObjectsInfiniteQuery = (
     queryKey: getObjectBucketObjectsQueryKey(clusterId, bucket, prefix),
   });
 
-export const useCreateObjectUrlMutation = (
+const useCreateObjectUrlMutation = (
   clusterId: string,
   bucketName: string
 ) =>
@@ -404,12 +404,12 @@ export const useCreateObjectUrlMutation = (
       getObjectURL(clusterId, bucketName, name, method, options),
   });
 
-export const useBucketSSLQuery = (cluster: string, bucket: string) =>
+const useBucketSSLQuery = (cluster: string, bucket: string) =>
   useQuery<ObjectStorageBucketSSL, APIError[]>(
     objectStorageQueries.bucket(cluster, bucket)._ctx.ssl
   );
 
-export const useBucketSSLMutation = (cluster: string, bucket: string) => {
+const useBucketSSLMutation = (cluster: string, bucket: string) => {
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -427,7 +427,7 @@ export const useBucketSSLMutation = (cluster: string, bucket: string) => {
   });
 };
 
-export const useBucketSSLDeleteMutation = (cluster: string, bucket: string) => {
+const useBucketSSLDeleteMutation = (cluster: string, bucket: string) => {
   const queryClient = useQueryClient();
 
   return useMutation<{}, APIError[]>({
@@ -441,14 +441,14 @@ export const useBucketSSLDeleteMutation = (cluster: string, bucket: string) => {
   });
 };
 
-export const useObjectStorageTypesQuery = (enabled = true) =>
+const useObjectStorageTypesQuery = (enabled = true) =>
   useQuery<PriceType[], APIError[]>({
     ...objectStorageQueries.types,
     ...queryPresets.oneTimeFetch,
     enabled,
   });
 
-export const useCancelObjectStorageMutation = () => {
+const useCancelObjectStorageMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation<{}, APIError[]>({

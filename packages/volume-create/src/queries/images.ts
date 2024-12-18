@@ -33,7 +33,7 @@ import type {
 import type { UseQueryOptions } from '@tanstack/react-query';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-export const getAllImages = (
+const getAllImages = (
   passedParams: Params = {},
   passedFilter: Filter = {}
 ) =>
@@ -41,7 +41,7 @@ export const getAllImages = (
     getImages({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);
 
-export const imageQueries = createQueryKeys('images', {
+const imageQueries = createQueryKeys('images', {
   all: (params: Params = {}, filters: Filter = {}) => ({
     queryFn: () => getAllImages(params, filters),
     queryKey: [params, filters],
@@ -56,7 +56,7 @@ export const imageQueries = createQueryKeys('images', {
   }),
 });
 
-export const useImagesQuery = (
+const useImagesQuery = (
   params: Params,
   filters: Filter,
   options?: Partial<UseQueryOptions<ResourcePage<Image>, APIError[]>>
@@ -67,13 +67,13 @@ export const useImagesQuery = (
     ...options,
   });
 
-export const useImageQuery = (imageId: string, enabled = true) =>
+const useImageQuery = (imageId: string, enabled = true) =>
   useQuery<Image, APIError[]>({
     ...imageQueries.image(imageId),
     enabled,
   });
 
-export const useCreateImageMutation = () => {
+const useCreateImageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Image, APIError[], CreateImagePayload>({
     mutationFn: createImage,
@@ -93,7 +93,7 @@ export const useCreateImageMutation = () => {
   });
 };
 
-export const useUpdateImageMutation = () => {
+const useUpdateImageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<
     Image,
@@ -114,7 +114,7 @@ export const useUpdateImageMutation = () => {
   });
 };
 
-export const useDeleteImageMutation = () => {
+const useDeleteImageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { imageId: string }>({
     mutationFn: ({ imageId }) => deleteImage(imageId),
@@ -129,7 +129,7 @@ export const useDeleteImageMutation = () => {
   });
 };
 
-export const useAllImagesQuery = (
+const useAllImagesQuery = (
   params: Params = {},
   filters: Filter = {},
   enabled = true
@@ -139,7 +139,7 @@ export const useAllImagesQuery = (
     enabled,
   });
 
-export const useUploadImageMutation = () => {
+const useUploadImageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<UploadImageResponse, APIError[], ImageUploadPayload>({
     mutationFn: uploadImage,
@@ -158,7 +158,7 @@ export const useUploadImageMutation = () => {
   });
 };
 
-export const useUpdateImageRegionsMutation = (imageId: string) => {
+const useUpdateImageRegionsMutation = (imageId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Image, APIError[], UpdateImageRegionsPayload>({
     mutationFn: (data) => updateImageRegions(imageId, data),

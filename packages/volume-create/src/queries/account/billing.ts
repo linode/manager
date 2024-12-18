@@ -7,7 +7,7 @@ import type { Invoice, Payment } from '@linode/api-v4/lib/account';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-export const useAllAccountInvoices = (
+const useAllAccountInvoices = (
   params: Params = {},
   filter: Filter = {}
 ) => {
@@ -18,7 +18,7 @@ export const useAllAccountInvoices = (
   });
 };
 
-export const useAllAccountPayments = (
+const useAllAccountPayments = (
   params: Params = {},
   filter: Filter = {}
 ) => {

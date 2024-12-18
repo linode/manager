@@ -9,7 +9,11 @@
     "strict": true,
     "noUnusedLocals": true,
     "forceConsistentCasingInFileNames": true,
-    "incremental": true
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["src/*"]
+    },
   },
   "include": ["src"],
 }

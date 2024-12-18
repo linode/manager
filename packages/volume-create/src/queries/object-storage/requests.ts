@@ -24,7 +24,7 @@ import type {
 export const getAllObjectStorageClusters = () =>
   getAll<ObjectStorageCluster>(() => getClusters())().then((data) => data.data);
 
-export const getAllObjectStorageBuckets = () =>
+const getAllObjectStorageBuckets = () =>
   getAll<ObjectStorageBucket>(() => getBuckets())().then((data) => data.data);
 
 export const getAllObjectStorageTypes = () =>
@@ -40,7 +40,7 @@ export const getAllObjectStorageEndpoints = () =>
 /**
  * @deprecated This type will be deprecated and removed when OBJ Gen2 is in GA.
  */
-export interface BucketError {
+interface BucketError {
   cluster: ObjectStorageCluster;
   error: APIError[];
   region?: Region;
@@ -55,13 +55,13 @@ export interface BucketsResponse {
 }
 
 // TODO: OBJGen2 - Remove the `Gen2` suffix when Gen2 is in GA.
-export interface BucketsResponseGen2 {
+interface BucketsResponseGen2 {
   buckets: ObjectStorageBucket[];
   errors: BucketErrorGen2[];
 }
 
 // TODO: OBJGen2 - Remove the `Gen2` suffix when Gen2 is in GA.
-export interface BucketErrorGen2 {
+interface BucketErrorGen2 {
   endpoint: ObjectStorageEndpoint;
   error: APIError[];
 }
@@ -72,7 +72,7 @@ export type BucketsResponseType<T> = T extends true
   : BucketsResponse;
 
 // TODO: OBJGen2 - Only needed during interim period when Gen2 is in beta.
-export function isBucketError(
+function isBucketError(
   error: BucketError | BucketErrorGen2
 ): error is BucketError {
   return (error as BucketError).cluster !== undefined;

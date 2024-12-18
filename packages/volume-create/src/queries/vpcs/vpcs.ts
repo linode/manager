@@ -70,7 +70,7 @@ export const useAllVPCsQuery = (enabled = true) =>
     enabled,
   });
 
-export const useVPCsQuery = (
+const useVPCsQuery = (
   params: Params,
   filter: Filter,
   enabled = true
@@ -82,13 +82,13 @@ export const useVPCsQuery = (
   });
 };
 
-export const useVPCQuery = (id: number, enabled: boolean = true) =>
+const useVPCQuery = (id: number, enabled: boolean = true) =>
   useQuery<VPC, APIError[]>({
     ...vpcQueries.vpc(id),
     enabled,
   });
 
-export const useCreateVPCMutation = () => {
+const useCreateVPCMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<VPC, APIError[], CreateVPCPayload>({
     mutationFn: createVPC,
@@ -104,7 +104,7 @@ export const useCreateVPCMutation = () => {
   });
 };
 
-export const useUpdateVPCMutation = (id: number) => {
+const useUpdateVPCMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<VPC, APIError[], UpdateVPCPayload>({
     mutationFn: (data) => updateVPC(id, data),
@@ -117,7 +117,7 @@ export const useUpdateVPCMutation = (id: number) => {
   });
 };
 
-export const useDeleteVPCMutation = (id: number) => {
+const useDeleteVPCMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteVPC(id),
@@ -136,7 +136,7 @@ export const useDeleteVPCMutation = (id: number) => {
 };
 
 // Subnet queries
-export const useSubnetsQuery = (
+const useSubnetsQuery = (
   vpcId: number,
   params: Params,
   filter: Filter,
@@ -148,7 +148,7 @@ export const useSubnetsQuery = (
     placeholderData: keepPreviousData,
   });
 
-export const useCreateSubnetMutation = (vpcId: number) => {
+const useCreateSubnetMutation = (vpcId: number) => {
   const queryClient = useQueryClient();
   return useMutation<Subnet, APIError[], CreateSubnetPayload>({
     mutationFn: (data) => createSubnet(vpcId, data),
@@ -167,7 +167,7 @@ export const useCreateSubnetMutation = (vpcId: number) => {
   });
 };
 
-export const useUpdateSubnetMutation = (vpcId: number, subnetId: number) => {
+const useUpdateSubnetMutation = (vpcId: number, subnetId: number) => {
   const queryClient = useQueryClient();
   return useMutation<Subnet, APIError[], ModifySubnetPayload>({
     mutationFn: (data) => modifySubnet(vpcId, subnetId, data),
@@ -186,7 +186,7 @@ export const useUpdateSubnetMutation = (vpcId: number, subnetId: number) => {
   });
 };
 
-export const useDeleteSubnetMutation = (vpcId: number, subnetId: number) => {
+const useDeleteSubnetMutation = (vpcId: number, subnetId: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteSubnet(vpcId, subnetId),

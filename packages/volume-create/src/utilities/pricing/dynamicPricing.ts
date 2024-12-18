@@ -2,12 +2,12 @@ import { UNKNOWN_PRICE } from './constants';
 
 import type { PriceType, Region, RegionPriceObject } from '@linode/api-v4';
 
-export interface RegionPrice extends RegionPriceObject {
+interface RegionPrice extends RegionPriceObject {
   id: string;
 }
 
 // TODO: Delete once all products are using /types endpoints.
-export interface DataCenterPricingOptions {
+interface DataCenterPricingOptions {
   /**
    * The base price for an entity.
    * @example 5 or 5.50
@@ -20,7 +20,7 @@ export interface DataCenterPricingOptions {
   regionId: Region['id'] | undefined;
 }
 
-export interface DataCenterPricingByTypeOptions {
+interface DataCenterPricingByTypeOptions {
   /**
    * The number of decimal places to return for the price.
    *  @default 2
@@ -62,7 +62,7 @@ export const priceIncreaseMap = {
  * });
  * @returns a data center specific price
  */
-export const getDCSpecificPrice = ({
+const getDCSpecificPrice = ({
   basePrice,
   regionId,
 }: DataCenterPricingOptions) => {
@@ -119,7 +119,7 @@ export const getDCSpecificPriceByType = ({
   return price?.toFixed(decimalPrecision) ?? undefined;
 };
 
-export const renderMonthlyPriceToCorrectDecimalPlace = (
+const renderMonthlyPriceToCorrectDecimalPlace = (
   monthlyPrice: null | number | undefined
 ) => {
   if (typeof monthlyPrice !== 'number') {

@@ -21,11 +21,11 @@ export const vlanQueries = createQueryKeys('vlans', {
   }),
 });
 
-export const useVlansQuery = () => {
+const useVlansQuery = () => {
   return useQuery<VLAN[], APIError[]>(vlanQueries.all);
 };
 
-export const useVLANsInfiniteQuery = (filter: Filter = {}, enabled = true) => {
+const useVLANsInfiniteQuery = (filter: Filter = {}, enabled = true) => {
   return useInfiniteQuery<ResourcePage<VLAN>, APIError[]>({
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {

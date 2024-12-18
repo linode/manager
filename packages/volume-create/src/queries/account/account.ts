@@ -36,7 +36,7 @@ export const useAccount = () => {
   });
 };
 
-export const useMutateAccount = () => {
+const useMutateAccount = () => {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
@@ -76,7 +76,7 @@ export const useMutateAccount = () => {
   });
 };
 
-export const useChildAccountsInfiniteQuery = (options: RequestOptions) => {
+const useChildAccountsInfiniteQuery = (options: RequestOptions) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const hasExplicitAuthToken = Boolean(options.headers?.Authorization);
@@ -98,7 +98,7 @@ export const useChildAccountsInfiniteQuery = (options: RequestOptions) => {
   });
 };
 
-export const useCreateChildAccountPersonalAccessTokenMutation = () =>
+const useCreateChildAccountPersonalAccessTokenMutation = () =>
   useMutation<Token, APIError[], ChildAccountPayload>({
     mutationFn: ({ euuid, headers }: ChildAccountPayload) =>
       createChildAccountPersonalAccessToken({ euuid, headers }),

@@ -47,12 +47,12 @@ const getAllNodeBalancerTypes = () =>
     (results) => results.data
   );
 
-export const getAllNodeBalancerConfigs = (id: number) =>
+const getAllNodeBalancerConfigs = (id: number) =>
   getAll<NodeBalancerConfig>((params) =>
     getNodeBalancerConfigs(id, params)
   )().then((data) => data.data);
 
-export const getAllNodeBalancers = () =>
+const getAllNodeBalancers = () =>
   getAll<NodeBalancer>((params) => getNodeBalancers(params))().then(
     (data) => data.data
   );
@@ -111,7 +111,7 @@ export const useNodeBalancerStatsQuery = (id: number) => {
   });
 };
 
-export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
+const useNodeBalancersQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<NodeBalancer>, APIError[]>({
     ...nodebalancerQueries.nodebalancers._ctx.paginated(params, filter),
     placeholderData: keepPreviousData,
@@ -123,7 +123,7 @@ export const useNodeBalancerQuery = (id: number, enabled = true) =>
     enabled,
   });
 
-export const useNodebalancerUpdateMutation = (id: number) => {
+const useNodebalancerUpdateMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<NodeBalancer, APIError[], Partial<NodeBalancer>>({
     mutationFn: (data) => updateNodeBalancer(id, data),
@@ -141,7 +141,7 @@ export const useNodebalancerUpdateMutation = (id: number) => {
   });
 };
 
-export const useNodebalancerDeleteMutation = (id: number) => {
+const useNodebalancerDeleteMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteNodeBalancer(id),
@@ -158,7 +158,7 @@ export const useNodebalancerDeleteMutation = (id: number) => {
   });
 };
 
-export const useNodebalancerCreateMutation = () => {
+const useNodebalancerCreateMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<NodeBalancer, APIError[], CreateNodeBalancerPayload>({
     mutationFn: createNodeBalancer,
@@ -194,7 +194,7 @@ export const useNodebalancerCreateMutation = () => {
   });
 };
 
-export const useNodebalancerConfigCreateMutation = (id: number) => {
+const useNodebalancerConfigCreateMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<NodeBalancerConfig, APIError[], CreateNodeBalancerConfig>({
     mutationFn: (data) => createNodeBalancerConfig(id, data),
@@ -218,7 +218,7 @@ interface CreateNodeBalancerConfigWithConfig
   configId: number;
 }
 
-export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
+const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
   const queryClient = useQueryClient();
   return useMutation<
     NodeBalancerConfig,
@@ -251,7 +251,7 @@ export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
   });
 };
 
-export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
+const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { configId: number }>({
     mutationFn: ({ configId }) =>
@@ -270,7 +270,7 @@ export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
   });
 };
 
-export const useAllNodeBalancerConfigsQuery = (id: number) =>
+const useAllNodeBalancerConfigsQuery = (id: number) =>
   useQuery<NodeBalancerConfig[], APIError[]>({
     ...nodebalancerQueries.nodebalancer(id)._ctx.configurations,
     refetchInterval: 20000,
@@ -283,7 +283,7 @@ export const useAllNodeBalancersQuery = (enabled = true) =>
     enabled,
   });
 
-export const useInfiniteNodebalancersQuery = (filter: Filter) =>
+const useInfiniteNodebalancersQuery = (filter: Filter) =>
   useInfiniteQuery<ResourcePage<NodeBalancer>, APIError[]>({
     ...nodebalancerQueries.nodebalancers._ctx.infinite(filter),
     getNextPageParam: ({ page, pages }) => {
@@ -295,12 +295,12 @@ export const useInfiniteNodebalancersQuery = (filter: Filter) =>
     initialPageParam: 1,
   });
 
-export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
+const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
   useQuery<ResourcePage<Firewall>, APIError[]>(
     nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.firewalls
   );
 
-export const useNodeBalancerTypesQuery = () =>
+const useNodeBalancerTypesQuery = () =>
   useQuery<PriceType[], APIError[]>({
     ...queryPresets.oneTimeFetch,
     ...nodebalancerQueries.types,

@@ -20,7 +20,7 @@ import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 import { accountQueries } from './queries';
 
-export const useOAuthClientsQuery = (params?: Params, filter?: Filter) =>
+const useOAuthClientsQuery = (params?: Params, filter?: Filter) =>
   useQuery({
     ...accountQueries.oauthClients(params, filter),
     placeholderData: keepPreviousData,
@@ -30,12 +30,12 @@ interface OAuthClientWithSecret extends OAuthClient {
   secret: string;
 }
 
-export const useResetOAuthClientMutation = (id: string) =>
+const useResetOAuthClientMutation = (id: string) =>
   useMutation<OAuthClientWithSecret, APIError[]>({
     mutationFn: () => resetOAuthClientSecret(id),
   });
 
-export const useDeleteOAuthClientMutation = (id: string) => {
+const useDeleteOAuthClientMutation = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteOAuthClient(id),
@@ -51,7 +51,7 @@ interface OAuthClientWithSecret extends OAuthClient {
   secret: string;
 }
 
-export const useCreateOAuthClientMutation = () => {
+const useCreateOAuthClientMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<OAuthClientWithSecret, APIError[], OAuthClientRequest>({
     mutationFn: createOAuthClient,
@@ -63,7 +63,7 @@ export const useCreateOAuthClientMutation = () => {
   });
 };
 
-export const useUpdateOAuthClientMutation = (id: string) => {
+const useUpdateOAuthClientMutation = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation<OAuthClient, APIError[], Partial<OAuthClientRequest>>({
     mutationFn: (data) => updateOAuthClient(id, data),

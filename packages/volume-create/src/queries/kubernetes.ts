@@ -62,7 +62,7 @@ import type {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 
-export const kubernetesQueries = createQueryKeys('kubernetes', {
+const kubernetesQueries = createQueryKeys('kubernetes', {
   cluster: (id: number) => ({
     contextQueries: {
       acl: {
@@ -137,7 +137,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   },
 });
 
-export const useKubernetesClusterQuery = (id: number) => {
+const useKubernetesClusterQuery = (id: number) => {
   const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const useBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
@@ -148,7 +148,7 @@ export const useKubernetesClusterQuery = (id: number) => {
   });
 };
 
-export const useKubernetesClustersQuery = (
+const useKubernetesClustersQuery = (
   params: Params,
   filter: Filter,
   enabled = true
@@ -163,7 +163,7 @@ export const useKubernetesClustersQuery = (
   });
 };
 
-export const useKubernetesClusterMutation = (id: number) => {
+const useKubernetesClusterMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<KubernetesCluster, APIError[], Partial<KubernetesCluster>>(
     {
@@ -189,7 +189,7 @@ export const useKubernetesClusterMutation = (id: number) => {
   );
 };
 
-export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
+const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
   return useQuery<KubernetesEndpointResponse[], APIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.endpoints,
     placeholderData: keepPreviousData,
@@ -199,7 +199,7 @@ export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
   });
 };
 
-export const useKubernetesKubeConfigQuery = (
+const useKubernetesKubeConfigQuery = (
   clusterId: number,
   enabled = false
 ) =>
@@ -213,7 +213,7 @@ export const useKubernetesKubeConfigQuery = (
     staleTime: 0,
   });
 
-export const useResetKubeConfigMutation = () => {
+const useResetKubeConfigMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { id: number }>({
     mutationFn: ({ id }) => resetKubeConfig(id),
@@ -225,7 +225,7 @@ export const useResetKubeConfigMutation = () => {
   });
 };
 
-export const useDeleteKubernetesClusterMutation = () => {
+const useDeleteKubernetesClusterMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { id: number }>({
     mutationFn: ({ id }) => deleteKubernetesCluster(id),
@@ -240,7 +240,7 @@ export const useDeleteKubernetesClusterMutation = () => {
   });
 };
 
-export const useCreateKubernetesClusterMutation = () => {
+const useCreateKubernetesClusterMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<KubernetesCluster, APIError[], CreateKubeClusterPayload>({
     mutationFn: createKubernetesCluster,
@@ -261,7 +261,7 @@ export const useCreateKubernetesClusterMutation = () => {
  * necessary to call BETA_API_ROOT in a separate function based on feature flag
  */
 
-export const useCreateKubernetesClusterBetaMutation = () => {
+const useCreateKubernetesClusterBetaMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<KubernetesCluster, APIError[], CreateKubeClusterPayload>({
     mutationFn: createKubernetesClusterBeta,
@@ -277,7 +277,7 @@ export const useCreateKubernetesClusterBetaMutation = () => {
   });
 };
 
-export const useCreateNodePoolMutation = (clusterId: number) => {
+const useCreateNodePoolMutation = (clusterId: number) => {
   const queryClient = useQueryClient();
   return useMutation<KubeNodePoolResponse, APIError[], CreateNodePoolData>({
     mutationFn: (data) => createNodePool(clusterId, data),
@@ -289,7 +289,7 @@ export const useCreateNodePoolMutation = (clusterId: number) => {
   });
 };
 
-export const useUpdateNodePoolMutation = (
+const useUpdateNodePoolMutation = (
   clusterId: number,
   poolId: number
 ) => {
@@ -308,7 +308,7 @@ export const useUpdateNodePoolMutation = (
   });
 };
 
-export const useDeleteNodePoolMutation = (
+const useDeleteNodePoolMutation = (
   clusterId: number,
   poolId: number
 ) => {
@@ -323,7 +323,7 @@ export const useDeleteNodePoolMutation = (
   });
 };
 
-export const useRecycleNodePoolMutation = (
+const useRecycleNodePoolMutation = (
   clusterId: number,
   poolId: number
 ) => {
@@ -338,7 +338,7 @@ export const useRecycleNodePoolMutation = (
   });
 };
 
-export const useRecycleNodeMutation = (clusterId: number, nodeId: string) => {
+const useRecycleNodeMutation = (clusterId: number, nodeId: string) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => recycleNode(clusterId, nodeId),
@@ -350,7 +350,7 @@ export const useRecycleNodeMutation = (clusterId: number, nodeId: string) => {
   });
 };
 
-export const useRecycleClusterMutation = (clusterId: number) => {
+const useRecycleClusterMutation = (clusterId: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => recycleClusterNodes(clusterId),
@@ -362,7 +362,7 @@ export const useRecycleClusterMutation = (clusterId: number) => {
   });
 };
 
-export const useAllKubernetesNodePoolQuery = (
+const useAllKubernetesNodePoolQuery = (
   clusterId: number,
   options?: { enabled?: boolean; refetchInterval?: number }
 ) => {
@@ -372,7 +372,7 @@ export const useAllKubernetesNodePoolQuery = (
   });
 };
 
-export const useKubernetesDashboardQuery = (clusterId: number) => {
+const useKubernetesDashboardQuery = (clusterId: number) => {
   return useQuery<KubernetesDashboardResponse, APIError[]>(
     kubernetesQueries.cluster(clusterId)._ctx.dashboard
   );
@@ -409,7 +409,7 @@ export const useAllKubernetesClustersQuery = (enabled = false) => {
   });
 };
 
-export const useKubernetesControlPlaneACLQuery = (
+const useKubernetesControlPlaneACLQuery = (
   clusterId: number,
   enabled: boolean = true
 ) => {
@@ -420,7 +420,7 @@ export const useKubernetesControlPlaneACLQuery = (
   });
 };
 
-export const useKubernetesControlPlaneACLMutation = (id: number) => {
+const useKubernetesControlPlaneACLMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<
     KubernetesControlPlaneACLPayload,
@@ -477,7 +477,7 @@ const getAllKubernetesTypesBeta = () =>
     (results) => results.data
   );
 
-export const useKubernetesTypesQuery = (useBetaEndpoint?: boolean) =>
+const useKubernetesTypesQuery = (useBetaEndpoint?: boolean) =>
   useQuery<PriceType[], APIError[]>({
     ...queryPresets.oneTimeFetch,
     ...kubernetesQueries.types(useBetaEndpoint),

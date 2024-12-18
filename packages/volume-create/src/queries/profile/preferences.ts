@@ -41,7 +41,7 @@ export const useMutatePreferences = (replace = false) => {
   });
 };
 
-export const updatePreferenceData = (
+const updatePreferenceData = (
   newData: Partial<ManagerPreferences>,
   replace: boolean,
   queryClient: QueryClient

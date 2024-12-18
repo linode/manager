@@ -2,7 +2,7 @@ import { getRegion, getRegionAvailability } from '@linode/api-v4/lib/regions';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
-import { getNewRegionLabel } from '../../utilities/getNewRegionLabel';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 
 import { queryPresets } from '../base';
 import {
@@ -37,7 +37,7 @@ export const regionQueries = createQueryKeys('regions', {
   },
 });
 
-export const useRegionQuery = (regionId: string) => {
+const useRegionQuery = (regionId: string) => {
   return useQuery<Region, APIError>({
     ...regionQueries.region(regionId),
     enabled: Boolean(regionId),
@@ -59,13 +59,13 @@ export const useRegionsQuery = () =>
       })),
   });
 
-export const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>
+const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>
   useQuery<RegionAvailability[], APIError[]>({
     ...regionQueries.availability._ctx.all,
     enabled,
   });
 
-export const useRegionAvailabilityQuery = (
+const useRegionAvailabilityQuery = (
   regionId: string,
   enabled: boolean = true
 ) => {

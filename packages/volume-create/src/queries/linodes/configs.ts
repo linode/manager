@@ -20,7 +20,7 @@ export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   });
 };
 
-export const useLinodeConfigDeleteMutation = (
+const useLinodeConfigDeleteMutation = (
   linodeId: number,
   configId: number
 ) => {
@@ -35,7 +35,7 @@ export const useLinodeConfigDeleteMutation = (
   });
 };
 
-export const useLinodeConfigCreateMutation = (linodeId: number) => {
+const useLinodeConfigCreateMutation = (linodeId: number) => {
   const queryClient = useQueryClient();
   return useMutation<Config, APIError[], LinodeConfigCreationData>({
     mutationFn: (data) => createLinodeConfig(linodeId, data),
@@ -47,7 +47,7 @@ export const useLinodeConfigCreateMutation = (linodeId: number) => {
   });
 };
 
-export const useLinodeConfigUpdateMutation = (
+const useLinodeConfigUpdateMutation = (
   linodeId: number,
   configId: number
 ) => {

@@ -154,7 +154,7 @@ export const linodeQueries = createQueryKeys('linodes', {
   },
 });
 
-export const useLinodesQuery = (
+const useLinodesQuery = (
   params: Params = {},
   filter: Filter = {},
   enabled: boolean = true
@@ -180,7 +180,7 @@ export const useAllLinodesQuery = (
   });
 };
 
-export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
+const useInfiniteLinodesQuery = (filter: Filter = {}) =>
   useInfiniteQuery<ResourcePage<Linode>, APIError[]>({
     ...linodeQueries.linodes._ctx.infinite(filter),
     getNextPageParam: ({ page, pages }) => {
@@ -199,7 +199,7 @@ export const useLinodeQuery = (id: number, enabled = true) => {
   });
 };
 
-export const useLinodeUpdateMutation = (id: number) => {
+const useLinodeUpdateMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<Linode, APIError[], DeepPartial<Linode>>({
     mutationFn: (data) => updateLinode(id, data),
@@ -215,7 +215,7 @@ export const useLinodeUpdateMutation = (id: number) => {
   });
 };
 
-export const useAllLinodeKernelsQuery = (
+const useAllLinodeKernelsQuery = (
   params: Params = {},
   filter: Filter = {},
   enabled = true
@@ -226,18 +226,18 @@ export const useAllLinodeKernelsQuery = (
   });
 };
 
-export const useLinodeKernelQuery = (kernel: string) => {
+const useLinodeKernelQuery = (kernel: string) => {
   return useQuery<Kernel, APIError[]>(linodeQueries.kernel(kernel));
 };
 
-export const useLinodeLishQuery = (id: number) => {
+const useLinodeLishQuery = (id: number) => {
   return useQuery<LinodeLishData, APIError[]>({
     ...linodeQueries.linode(id)._ctx.lish,
     staleTime: Infinity,
   });
 };
 
-export const useDeleteLinodeMutation = (id: number) => {
+const useDeleteLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
 
   const linode = queryClient.getQueryData<Linode>(
@@ -270,7 +270,7 @@ export const useDeleteLinodeMutation = (id: number) => {
   });
 };
 
-export const useCreateLinodeMutation = () => {
+const useCreateLinodeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Linode, APIError[], CreateLinodeRequest>({
     mutationFn: createLinode,
@@ -336,7 +336,7 @@ interface LinodeCloneDataWithId extends LinodeCloneData {
   sourceLinodeId: number;
 }
 
-export const useCloneLinodeMutation = () => {
+const useCloneLinodeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Linode, APIError[], LinodeCloneDataWithId>({
     mutationFn: ({ sourceLinodeId, ...data }) =>
@@ -351,7 +351,7 @@ export const useCloneLinodeMutation = () => {
   });
 };
 
-export const useBootLinodeMutation = (
+const useBootLinodeMutation = (
   id: number,
   configsToUpdate?: Config[]
 ) => {
@@ -384,7 +384,7 @@ export const useBootLinodeMutation = (
   });
 };
 
-export const useRebootLinodeMutation = (
+const useRebootLinodeMutation = (
   id: number,
   configsToUpdate?: Config[]
 ) => {
@@ -417,7 +417,7 @@ export const useRebootLinodeMutation = (
   });
 };
 
-export const useShutdownLinodeMutation = (id: number) => {
+const useShutdownLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => linodeShutdown(id),
@@ -431,12 +431,12 @@ export const useShutdownLinodeMutation = (id: number) => {
   });
 };
 
-export const useLinodeChangePasswordMutation = (id: number) =>
+const useLinodeChangePasswordMutation = (id: number) =>
   useMutation<{}, APIError[], { root_pass: string }>({
     mutationFn: ({ root_pass }) => changeLinodePassword(id, root_pass),
   });
 
-export const useLinodeMigrateMutation = (id: number) => {
+const useLinodeMigrateMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], MigrateLinodeRequest>({
     mutationFn: (data) => scheduleOrQueueMigration(id, data),
@@ -464,7 +464,7 @@ export const useLinodeMigrateMutation = (id: number) => {
   });
 };
 
-export const useLinodeResizeMutation = (id: number) => {
+const useLinodeResizeMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], ResizeLinodePayload>({
     mutationFn: (data) => resizeLinode(id, data),
@@ -480,7 +480,7 @@ export const useLinodeResizeMutation = (id: number) => {
   });
 };
 
-export const useLinodeRescueMutation = (id: number) => {
+const useLinodeRescueMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], Devices>({
     mutationFn: (data) => rescueLinode(id, data),

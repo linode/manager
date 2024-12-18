@@ -23,14 +23,14 @@ import type {
 } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
+const useAppTokensQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
     ...profileQueries.appTokens(params, filter),
     placeholderData: keepPreviousData,
   });
 };
 
-export const usePersonalAccessTokensQuery = (
+const usePersonalAccessTokensQuery = (
   params?: Params,
   filter?: Filter,
   enabled = true
@@ -42,7 +42,7 @@ export const usePersonalAccessTokensQuery = (
   });
 };
 
-export const useCreatePersonalAccessTokenMutation = () => {
+const useCreatePersonalAccessTokenMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Token, APIError[], TokenRequest>({
     mutationFn: createPersonalAccessToken,
@@ -54,7 +54,7 @@ export const useCreatePersonalAccessTokenMutation = () => {
   });
 };
 
-export const useUpdatePersonalAccessTokenMutation = (id: number) => {
+const useUpdatePersonalAccessTokenMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<Token, APIError[], Partial<TokenRequest>>({
     mutationFn: (data) => updatePersonalAccessToken(id, data),
@@ -66,7 +66,7 @@ export const useUpdatePersonalAccessTokenMutation = (id: number) => {
   });
 };
 
-export const useRevokePersonalAccessTokenMutation = (id: number) => {
+const useRevokePersonalAccessTokenMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deletePersonalAccessToken(id),
@@ -81,7 +81,7 @@ export const useRevokePersonalAccessTokenMutation = (id: number) => {
   });
 };
 
-export const useRevokeAppAccessTokenMutation = (id: number) => {
+const useRevokeAppAccessTokenMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteAppToken(id),

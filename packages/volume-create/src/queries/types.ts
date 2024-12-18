@@ -6,7 +6,7 @@ import { linodeQueries } from './linodes/linodes';
 import type { APIError, LinodeType } from '@linode/api-v4';
 import type { UseQueryOptions } from '@tanstack/react-query';
 
-export const useAllTypes = (enabled = true) => {
+const useAllTypes = (enabled = true) => {
   return useQuery<LinodeType[], APIError[]>({
     ...linodeQueries.types._ctx.all,
     enabled,

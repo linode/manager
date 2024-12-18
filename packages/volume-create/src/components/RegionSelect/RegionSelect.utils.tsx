@@ -126,7 +126,7 @@ export const isRegionOptionUnavailable = ({
  *
  * @returns a boolean indicating whether or not the create type supports distributed regions.
  */
-export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
+const isDistributedRegionSupported = (createType: LinodeCreateType) => {
   const supportedDistributedRegionTypes = [
     'OS',
     'Images',
@@ -140,7 +140,7 @@ export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
  *
  * @returns a boolean indicating whether or not the selected region is a distributed region.
  */
-export const getIsDistributedRegion = (
+const getIsDistributedRegion = (
   regionsData: Region[],
   selectedRegion: string
 ) => {

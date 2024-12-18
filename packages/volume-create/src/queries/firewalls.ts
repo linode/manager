@@ -94,12 +94,12 @@ export const firewallQueries = createQueryKeys('firewalls', {
   },
 });
 
-export const useAllFirewallDevicesQuery = (id: number) =>
+const useAllFirewallDevicesQuery = (id: number) =>
   useQuery<FirewallDevice[], APIError[]>(
     firewallQueries.firewall(id)._ctx.devices
   );
 
-export const useAddFirewallDeviceMutation = (id: number) => {
+const useAddFirewallDeviceMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<FirewallDevice, APIError[], FirewallDevicePayload>({
     mutationFn: (data) => addFirewallDevice(id, data),
@@ -207,7 +207,7 @@ export const useAddFirewallDeviceMutation = (id: number) => {
   });
 };
 
-export const useRemoveFirewallDeviceMutation = (
+const useRemoveFirewallDeviceMutation = (
   firewallId: number,
   deviceId: number
 ) => {
@@ -238,14 +238,14 @@ export const useRemoveFirewallDeviceMutation = (
   });
 };
 
-export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
+const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Firewall>, APIError[]>({
     ...firewallQueries.firewalls._ctx.paginated(params, filter),
     placeholderData: keepPreviousData,
   });
 };
 
-export const useFirewallQuery = (id: number) =>
+const useFirewallQuery = (id: number) =>
   useQuery<Firewall, APIError[]>(firewallQueries.firewall(id));
 
 export const useAllFirewallsQuery = (enabled: boolean = true) => {
@@ -255,7 +255,7 @@ export const useAllFirewallsQuery = (enabled: boolean = true) => {
   });
 };
 
-export const useMutateFirewall = (id: number) => {
+const useMutateFirewall = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<Firewall, APIError[], Partial<Firewall>>({
     mutationFn: (data) => updateFirewall(id, data),
@@ -274,7 +274,7 @@ export const useMutateFirewall = (id: number) => {
   });
 };
 
-export const useCreateFirewall = () => {
+const useCreateFirewall = () => {
   const queryClient = useQueryClient();
   return useMutation<Firewall, APIError[], CreateFirewallPayload>({
     mutationFn: createFirewall,
@@ -315,7 +315,7 @@ export const useCreateFirewall = () => {
   });
 };
 
-export const useDeleteFirewall = (id: number) => {
+const useDeleteFirewall = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteFirewall(id),
@@ -333,7 +333,7 @@ export const useDeleteFirewall = (id: number) => {
   });
 };
 
-export const useUpdateFirewallRulesMutation = (firewallId: number) => {
+const useUpdateFirewallRulesMutation = (firewallId: number) => {
   const queryClient = useQueryClient();
   return useMutation<FirewallRules, APIError[], FirewallRules>({
     mutationFn: (data) => updateFirewallRules(firewallId, data),

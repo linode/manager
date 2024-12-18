@@ -74,14 +74,14 @@ export const volumeQueries = createQueryKeys('volumes', {
   }),
 });
 
-export const useVolumeQuery = (id: number, enabled = true) => {
+const useVolumeQuery = (id: number, enabled = true) => {
   return useQuery<Volume, APIError[]>({
     ...volumeQueries.volume(id),
     enabled,
   });
 };
 
-export const useVolumesQuery = (params: Params, filter: Filter) =>
+const useVolumesQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Volume>, APIError[]>({
     ...volumeQueries.lists._ctx.paginated(params, filter),
     placeholderData: keepPreviousData,
@@ -93,7 +93,7 @@ export const useVolumeTypesQuery = () =>
     ...queryPresets.oneTimeFetch,
   });
 
-export const useInfiniteVolumesQuery = (filter: Filter) =>
+const useInfiniteVolumesQuery = (filter: Filter) =>
   useInfiniteQuery<ResourcePage<Volume>, APIError[]>({
     ...volumeQueries.lists._ctx.infinite(filter),
     getNextPageParam: ({ page, pages }) => {
@@ -115,7 +115,7 @@ export const useAllVolumesQuery = (
     enabled,
   });
 
-export const useLinodeVolumesQuery = (
+const useLinodeVolumesQuery = (
   linodeId: number,
   params: Params = {},
   filter: Filter = {},
@@ -131,7 +131,7 @@ interface ResizeVolumePayloadWithId extends ResizeVolumePayload {
   volumeId: number;
 }
 
-export const useResizeVolumeMutation = () => {
+const useResizeVolumeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Volume, APIError[], ResizeVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => resizeVolume(volumeId, data),
@@ -159,7 +159,7 @@ interface CloneVolumePayloadWithId extends CloneVolumePayload {
   volumeId: number;
 }
 
-export const useCloneVolumeMutation = () => {
+const useCloneVolumeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Volume, APIError[], CloneVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => cloneVolume(volumeId, data),
@@ -171,7 +171,7 @@ export const useCloneVolumeMutation = () => {
   });
 };
 
-export const useDeleteVolumeMutation = () => {
+const useDeleteVolumeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { id: number }>({
     mutationFn: ({ id }) => deleteVolume(id),
@@ -204,7 +204,7 @@ export const useCreateVolumeMutation = () => {
   });
 };
 
-export const useVolumesMigrateMutation = () => {
+const useVolumesMigrateMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation<{}, APIError[], number[]>({
@@ -227,7 +227,7 @@ interface UpdateVolumePayloadWithId extends UpdateVolumeRequest {
   volumeId: number;
 }
 
-export const useUpdateVolumeMutation = () => {
+const useUpdateVolumeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Volume, APIError[], UpdateVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => updateVolume(volumeId, data),
@@ -255,7 +255,7 @@ interface AttachVolumePayloadWithId extends AttachVolumePayload {
   volumeId: number;
 }
 
-export const useAttachVolumeMutation = () => {
+const useAttachVolumeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Volume, APIError[], AttachVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => attachVolume(volumeId, data),
@@ -280,7 +280,7 @@ export const useAttachVolumeMutation = () => {
   });
 };
 
-export const useDetachVolumeMutation = () => {
+const useDetachVolumeMutation = () => {
   return useMutation<{}, APIError[], { id: number }>({
     mutationFn: ({ id }) => detachVolume(id),
   });

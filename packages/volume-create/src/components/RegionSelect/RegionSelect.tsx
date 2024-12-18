@@ -2,9 +2,9 @@ import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
 import { Autocomplete } from '@linode/ui';
-import { Flag } from '../Flag';
-import { useIsGeckoEnabled } from '../RegionSelect/RegionSelect.utils';
-import { useAllAccountAvailabilitiesQuery } from '/queries/account/availability';
+import { Flag } from 'src/components/Flag';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionOption } from './RegionOption';

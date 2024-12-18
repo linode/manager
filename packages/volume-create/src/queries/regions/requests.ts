@@ -1,6 +1,6 @@
 import { getRegionAvailabilities, getRegions } from '@linode/api-v4';
 
-import { getAll } from '../../utilities/getAll';
+import { getAll } from 'src/utilities/getAll';
 
 import type { Region, RegionAvailability } from '@linode/api-v4';
 

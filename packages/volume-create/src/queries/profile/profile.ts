@@ -86,7 +86,7 @@ export const useProfile = (options: RequestOptions = {}) => {
   });
 };
 
-export const useMutateProfile = () => {
+const useMutateProfile = () => {
   const queryClient = useQueryClient();
   return useMutation<Profile, APIError[], Partial<Profile>>({
     mutationFn: updateProfile,
@@ -108,7 +108,7 @@ export const useMutateProfile = () => {
   });
 };
 
-export const updateProfileData = (
+const updateProfileData = (
   newData: Partial<Profile>,
   queryClient: QueryClient
 ): void => {
@@ -130,7 +130,7 @@ export const useGrants = () => {
   });
 };
 
-export const useSMSOptOutMutation = () => {
+const useSMSOptOutMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: smsOptOut,
@@ -140,17 +140,17 @@ export const useSMSOptOutMutation = () => {
   });
 };
 
-export const useSendPhoneVerificationCodeMutation = () =>
+const useSendPhoneVerificationCodeMutation = () =>
   useMutation<{}, APIError[], SendPhoneVerificationCodePayload>({
     mutationFn: sendCodeToPhoneNumber,
   });
 
-export const useVerifyPhoneVerificationCodeMutation = () =>
+const useVerifyPhoneVerificationCodeMutation = () =>
   useMutation<{}, APIError[], VerifyVerificationCodePayload>({
     mutationFn: verifyPhoneNumberCode,
   });
 
-export const useSSHKeysQuery = (
+const useSSHKeysQuery = (
   params?: Params,
   filter?: Filter,
   enabled = true
@@ -161,7 +161,7 @@ export const useSSHKeysQuery = (
     placeholderData: keepPreviousData,
   });
 
-export const useCreateSSHKeyMutation = () => {
+const useCreateSSHKeyMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<SSHKey, APIError[], { label: string; ssh_key: string }>({
     mutationFn: createSSHKey,
@@ -177,7 +177,7 @@ export const useCreateSSHKeyMutation = () => {
   });
 };
 
-export const useUpdateSSHKeyMutation = (id: number) => {
+const useUpdateSSHKeyMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<SSHKey, APIError[], { label: string }>({
     mutationFn: (data) => updateSSHKey(id, data),
@@ -193,7 +193,7 @@ export const useUpdateSSHKeyMutation = (id: number) => {
   });
 };
 
-export const useDeleteSSHKeyMutation = (id: number) => {
+const useDeleteSSHKeyMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteSSHKey(id),
@@ -222,13 +222,13 @@ export const sshKeyEventHandler = ({ invalidateQueries }: EventHandlerData) => {
   });
 };
 
-export const useTrustedDevicesQuery = (params?: Params, filter?: Filter) =>
+const useTrustedDevicesQuery = (params?: Params, filter?: Filter) =>
   useQuery<ResourcePage<TrustedDevice>, APIError[]>({
     ...profileQueries.trustedDevices(params, filter),
     placeholderData: keepPreviousData,
   });
 
-export const useRevokeTrustedDeviceMutation = (id: number) => {
+const useRevokeTrustedDeviceMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteTrustedDevice(id),
@@ -240,7 +240,7 @@ export const useRevokeTrustedDeviceMutation = (id: number) => {
   });
 };
 
-export const useDisableTwoFactorMutation = () => {
+const useDisableTwoFactorMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: disableTwoFactor,

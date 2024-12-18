@@ -26,7 +26,7 @@ export const useAccountSettings = () => {
   });
 };
 
-export const useMutateAccountSettings = () => {
+const useMutateAccountSettings = () => {
   const queryClient = useQueryClient();
   return useMutation<AccountSettings, APIError[], Partial<AccountSettings>>({
     mutationFn: updateAccountSettings,

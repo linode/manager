@@ -2,28 +2,28 @@
  * Types for integrations with the StatusPage.io API
  */
 
-export type IncidentStatus =
+type IncidentStatus =
   | 'identified'
   | 'investigating'
   | 'monitoring'
   | 'postmortem'
   | 'resolved';
 
-export type MaintenanceStatus =
+type MaintenanceStatus =
   | 'completed'
   | 'in_progress'
   | 'scheduled'
   | 'verifying';
 
-export type ComponentStatus =
+type ComponentStatus =
   | 'degraded_performance'
   | 'major_outage'
   | 'operational'
   | 'partial_outage';
 
-export type IncidentImpact = 'critical' | 'major' | 'minor' | 'none';
+type IncidentImpact = 'critical' | 'major' | 'minor' | 'none';
 
-export interface IncidentComponent {
+interface IncidentComponent {
   code: string;
   name: string;
   new_status: ComponentStatus;

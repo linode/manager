@@ -14,7 +14,7 @@ export const doesRegionSupportFeature = (
   return regionMetaData.capabilities.includes(feature);
 };
 
-export const regionsWithFeature = (
+const regionsWithFeature = (
   regionsData: Region[],
   feature: Capabilities
 ) => {

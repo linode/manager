@@ -6,7 +6,7 @@ import {
   getVolumes,
 } from '@linode/api-v4';
 
-import { getAll } from '../../utilities/getAll';
+import { getAll } from 'src/utilities/getAll';
 
 import type { PriceType } from '@linode/api-v4';
 

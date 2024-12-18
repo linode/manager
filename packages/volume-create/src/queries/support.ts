@@ -46,7 +46,7 @@ const supportQueries = createQueryKeys('support', {
   }),
 });
 
-export const useSupportTicketsQuery = (params: Params, filter: Filter) =>
+const useSupportTicketsQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<SupportTicket>, APIError[]>({
     ...supportQueries.tickets(params, filter),
     placeholderData: keepPreviousData,

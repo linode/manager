@@ -32,14 +32,14 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
     : 'Other';
 };
 
-export const getSelectedRegion = (
+const getSelectedRegion = (
   regions: Region[],
   selectedRegionId: string | undefined
 ): Region | undefined => {
   return regions.find((thisRegion) => selectedRegionId === thisRegion.id);
 };
 
-export const getSelectedRegionGroup = (
+const getSelectedRegionGroup = (
   regions: Region[],
   selectedRegionId: string | undefined
 ): string | undefined => {
@@ -52,7 +52,7 @@ export const getSelectedRegionGroup = (
   return getRegionCountryGroup(selectedRegion);
 };
 
-export const isEURegion = (regionContinent: string | undefined): boolean => {
+const isEURegion = (regionContinent: string | undefined): boolean => {
   return regionContinent === CONTINENT_CODE_TO_CONTINENT.EU;
 };
 

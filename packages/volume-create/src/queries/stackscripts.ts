@@ -16,12 +16,12 @@ import type {
 } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-export const getAllOCAsRequest = (passedParams: Params = {}) =>
+const getAllOCAsRequest = (passedParams: Params = {}) =>
   getAll<StackScript>((params) =>
     getOneClickApps({ ...params, ...passedParams })
   )().then((data) => data.data);
 
-export const stackscriptQueries = createQueryKeys('stackscripts', {
+const stackscriptQueries = createQueryKeys('stackscripts', {
   infinite: (filter: Filter = {}) => ({
     queryFn: ({ pageParam }) =>
       getStackScripts({ page: pageParam as number, page_size: 25 }, filter),
@@ -37,7 +37,7 @@ export const stackscriptQueries = createQueryKeys('stackscripts', {
   }),
 });
 
-export const useMarketplaceAppsQuery = (enabled: boolean) => {
+const useMarketplaceAppsQuery = (enabled: boolean) => {
   return useQuery<StackScript[], APIError[]>({
     ...stackscriptQueries.marketplace,
     enabled,
@@ -45,13 +45,13 @@ export const useMarketplaceAppsQuery = (enabled: boolean) => {
   });
 };
 
-export const useStackScriptQuery = (id: number, enabled = true) =>
+const useStackScriptQuery = (id: number, enabled = true) =>
   useQuery<StackScript, APIError[]>({
     ...stackscriptQueries.stackscript(id),
     enabled,
   });
 
-export const useStackScriptsInfiniteQuery = (
+const useStackScriptsInfiniteQuery = (
   filter: Filter = {},
   enabled = true
 ) =>

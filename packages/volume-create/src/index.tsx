@@ -1,4 +1,4 @@
-import { MAX_VOLUME_SIZE } from '@linode/api-v4';
+import { createRoot } from 'react-dom/client';
 import {
   Box,
   Button,
@@ -17,7 +17,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { DocumentTitleSegment } from './components/DocumentTitle';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
   BLOCK_STORAGE_CHOOSE_REGION_COPY,
   BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY,
@@ -25,39 +25,42 @@ import {
   BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
   BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
   BLOCK_STORAGE_USER_SIDE_ENCRYPTION_CAVEAT,
-} from './components/Encryption/constants';
-import { Encryption } from './components/Encryption/Encryption';
-import { useIsBlockStorageEncryptionFeatureEnabled } from './components/Encryption/utils';
-import { ErrorMessage } from './components/ErrorMessage';
-import { LandingHeader } from './components/LandingHeader';
-import { RegionSelect } from './components/RegionSelect/RegionSelect';
-import { EUAgreementCheckbox } from './components/EUAgreementCheckbox';
-import { getRestrictedResourceText } from './utilities/getRestrictedResourceText';
-import { LinodeSelect } from './components/LinodeSelect';
+} from 'src/components/Encryption/constants';
+import { Encryption } from 'src/components/Encryption/Encryption';
+import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { ErrorMessage } from 'src/components/ErrorMessage';
+import { LandingHeader } from 'src/components/LandingHeader';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { MAX_VOLUME_SIZE } from 'src/constants';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from './queries/account/agreements';
-import { useLinodeQuery } from './queries/linodes/linodes';
-import { useGrants, useProfile } from './queries/profile/profile';
-import { useRegionsQuery } from './queries/regions/regions';
+} from 'src/queries/account/agreements';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
-} from './queries/volumes/volumes';
-import { doesRegionSupportFeature } from './utilities/doesRegionSupportFeature';
-import { getGDPRDetails } from './utilities/formatRegion';
+} from 'src/queries/volumes/volumes';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
+import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
   handleGeneralErrors,
-} from './utilities/formikErrorUtils';
-import { isNilOrEmpty } from './utilities/isNilOrEmpty';
-import { maybeCastToNumber } from './utilities/maybeCastToNumber';
-import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from './utilities/pricing/constants';
+} from 'src/utilities/formikErrorUtils';
+import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
+import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
-import { ConfigSelect } from './components/VolumeDrawer/ConfigSelect';
-import { SizeField } from './components/VolumeDrawer/SizeField';
+import { SIZE_FIELD_WIDTH } from 'src/features/Volumes/constants';
+import { ConfigSelect } from 'src/features/Volumes/VolumeDrawer/ConfigSelect';
+import { SizeField } from 'src/features/Volumes/VolumeDrawer/SizeField';
 
 import type { VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
@@ -113,7 +116,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   size: {
     position: 'relative',
-    width: 160,
+    width: SIZE_FIELD_WIDTH,
   },
   tooltip: {
     '& .MuiTooltip-tooltip': {
@@ -230,6 +233,8 @@ export const VolumeCreate = () => {
             },
             to: '/volumes/$volumeId/$action',
           });
+          // Analytics Event
+          sendCreateVolumeEvent(`Size: ${size}GB`, origin);
         })
         .catch((errorResponse) => {
           setSubmitting(false);

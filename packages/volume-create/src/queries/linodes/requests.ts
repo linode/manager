@@ -43,7 +43,7 @@ export const getAllLinodeConfigs = (id: number) =>
     getLinodeConfigs(id, params, filter)
   )().then((data) => data.data);
 
-export const getAllLinodeFirewalls = (
+const getAllLinodeFirewalls = (
   linodeId: number,
   passedParams: Params = {},
   passedFilter: Filter = {}

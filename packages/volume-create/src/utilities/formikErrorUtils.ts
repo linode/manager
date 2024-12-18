@@ -6,7 +6,7 @@ import { isNilOrEmpty } from './isNilOrEmpty';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { FormikErrors } from 'formik';
 
-export const getFormikErrorsFromAPIErrors = <T>(
+const getFormikErrorsFromAPIErrors = <T>(
   errors: APIError[],
   prefixToRemoveFromFields?: string
 ): FormikErrors<T> => {
@@ -35,7 +35,7 @@ const onlyDigitsRegex = /^\d+$/;
  * @param value — The value to set.
  * @return — Returns object.
  */
-export const set = <T>(
+const set = <T>(
   obj: FormikErrors<T>,
   path: string,
   value: string
@@ -121,7 +121,7 @@ export const handleGeneralErrors = (
   }
 };
 
-export const handleAPIErrors = (
+const handleAPIErrors = (
   errors: APIError[],
   setFieldError: (field: string, message: string) => void,
   setError?: (message: string) => void

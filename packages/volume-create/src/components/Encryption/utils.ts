@@ -1,5 +1,5 @@
-import { useFlags } from '../../hooks/useFlags';
-import { useAccount } from '../../queries/account/account';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account/account';
 
 /**
  * Hook to determine if the Disk Encryption feature should be visible to the user.
@@ -7,7 +7,7 @@ import { useAccount } from '../../queries/account/account';
  *
  * @returns { boolean } - Whether the Disk Encryption feature is enabled for the current user.
  */
-export const useIsDiskEncryptionFeatureEnabled = (): {
+const useIsDiskEncryptionFeatureEnabled = (): {
   isDiskEncryptionFeatureEnabled: boolean;
 } => {
   const { data: account, error } = useAccount();
