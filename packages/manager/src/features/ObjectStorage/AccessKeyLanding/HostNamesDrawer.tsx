@@ -3,10 +3,7 @@ import * as React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Drawer } from 'src/components/Drawer';
-import { filterRegionsByEndpoints } from 'src/features/ObjectStorage/utilities';
-import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getRegionsByRegionId } from 'src/utilities/regions';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 
 import { CopyAllHostnames } from './CopyAllHostnames';
 
@@ -20,18 +17,9 @@ interface Props {
 
 export const HostNamesDrawer = (props: Props) => {
   const { onClose, open, regions } = props;
-  const { data: regionsData } = useRegionsQuery();
-  const { data: endpoints } = useObjectStorageEndpoints();
+  const { availableStorageRegions, regionsByIdMap } = useObjectStorageRegions();
 
-  const filteredRegions = React.useMemo(
-    () => filterRegionsByEndpoints(regionsData, endpoints),
-    [regionsData, endpoints]
-  );
-
-  const regionsLookup =
-    filteredRegions && getRegionsByRegionId(filteredRegions);
-
-  if (!regionsData || !regionsLookup) {
+  if (!availableStorageRegions || !regionsByIdMap) {
     return null;
   }
 
@@ -42,7 +30,7 @@ export const HostNamesDrawer = (props: Props) => {
           text={
             regions
               .map((region) => {
-                const label = regionsLookup[region.id]?.label;
+                const label = regionsByIdMap[region.id]?.label;
                 const endpointType = region.endpoint_type
                   ? ` (${region.endpoint_type})`
                   : '';
@@ -71,9 +59,9 @@ export const HostNamesDrawer = (props: Props) => {
                 border: 'none',
                 maxWidth: '100%',
               }}
-              value={`${regionsLookup[region.id]?.label}${endpointTypeLabel}: ${
-                region.s3_endpoint
-              }`}
+              value={`${
+                regionsByIdMap[region.id]?.label
+              }${endpointTypeLabel}: ${region.s3_endpoint}`}
               hideLabel
               key={index}
               label={`${region.id}${endpointTypeLabel}: ${region.s3_endpoint}`}

@@ -4,11 +4,8 @@ import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
-import { filterRegionsByEndpoints } from 'src/features/ObjectStorage/utilities';
-import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { pluralize } from 'src/utilities/pluralize';
-import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type { ObjectStorageKey, ObjectStorageKeyRegions } from '@linode/api-v4';
 
@@ -21,24 +18,20 @@ interface Props {
 export const HostNameTableCell = (props: Props) => {
   const { setHostNames, setShowHostNamesDrawers, storageKeyData } = props;
 
-  const { data: regionsData } = useRegionsQuery();
-  const { data: endpoints } = useObjectStorageEndpoints();
-
-  const filteredRegions = React.useMemo(
-    () => filterRegionsByEndpoints(regionsData, endpoints),
-    [regionsData, endpoints]
-  );
-
-  const regionsLookup =
-    filteredRegions && getRegionsByRegionId(filteredRegions);
+  const { availableStorageRegions, regionsByIdMap } = useObjectStorageRegions();
 
   const { regions } = storageKeyData;
 
-  if (!regionsLookup || !filteredRegions || !regions || regions.length === 0) {
+  if (
+    !regionsByIdMap ||
+    !availableStorageRegions ||
+    !regions ||
+    regions.length === 0
+  ) {
     return <TableCell>None</TableCell>;
   }
   const formatEndpoint = (region: ObjectStorageKeyRegions) => {
-    const label = regionsLookup[region.id]?.label;
+    const label = regionsByIdMap[region.id]?.label;
     const endpointType = region.endpoint_type
       ? ` (${region.endpoint_type})`
       : '';

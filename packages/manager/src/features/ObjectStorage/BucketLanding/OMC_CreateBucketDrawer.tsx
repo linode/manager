@@ -8,7 +8,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
-import { filterRegionsByEndpoints } from 'src/features/ObjectStorage/utilities';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -19,11 +19,9 @@ import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
-  useObjectStorageEndpoints,
   useObjectStorageTypesQuery,
 } from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
@@ -67,17 +65,12 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
+
   const {
-    data: endpoints,
-    isFetching: isEndpointLoading,
-  } = useObjectStorageEndpoints();
-
-  const { data: regions } = useRegionsQuery();
-
-  const filteredRegions = React.useMemo(
-    () => filterRegionsByEndpoints(regions, endpoints),
-    [regions, endpoints]
-  );
+    availableStorageRegions,
+    isStorageEndpointsLoading,
+    storageEndpoints,
+  } = useObjectStorageRegions();
 
   const { data: bucketsData } = useObjectStorageBuckets();
 
@@ -171,7 +164,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     // Custom validation in the handleBucketFormSubmit function
     // to catch missing endpoint_type values before form submission
     // since this is optional in the schema.
-    if (Boolean(endpoints) && !formValues.endpoint_type) {
+    if (Boolean(storageEndpoints) && !formValues.endpoint_type) {
       setError('endpoint_type', {
         message: 'Endpoint Type is required.',
         type: 'manual',
@@ -187,10 +180,10 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   };
 
   const selectedRegion = watchRegion
-    ? filteredRegions?.find((region) => watchRegion === region.id)
+    ? availableStorageRegions?.find((region) => watchRegion === region.id)
     : undefined;
 
-  const filteredEndpoints = endpoints?.filter(
+  const filteredEndpoints = storageEndpoints?.filter(
     (endpoint) => selectedRegion?.id === endpoint.region
   );
 
@@ -246,7 +239,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
     profile,
-    regions: filteredRegions,
+    regions: availableStorageRegions,
     selectedRegionId: selectedRegion?.id ?? '',
   });
 
@@ -331,7 +324,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
           name="region"
         />
         {selectedRegion?.id && <OveragePricing regionId={selectedRegion.id} />}
-        {Boolean(endpoints) && selectedRegion && (
+        {Boolean(storageEndpoints) && selectedRegion && (
           <>
             <Controller
               render={({ field }) => (
@@ -358,7 +351,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                   disableClearable={hasSingleEndpointType}
                   errorText={errors.endpoint_type?.message}
                   label="Object Storage Endpoint Type"
-                  loading={isEndpointLoading}
+                  loading={isStorageEndpointsLoading}
                   onBlur={field.onBlur}
                   options={filteredEndpointOptions ?? []}
                   placeholder="Object Storage Endpoint Type"
@@ -368,7 +361,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
               control={control}
               name="endpoint_type"
             />
-            {Boolean(endpoints) && selectedEndpointOption && (
+            {Boolean(storageEndpoints) && selectedEndpointOption && (
               <BucketRateLimitTable
                 typographyProps={{
                   marginTop: 1,
