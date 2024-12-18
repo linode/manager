@@ -52,6 +52,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   lkeStandardAvailabilityTypeFactory,
   longviewActivePlanFactory,
@@ -127,6 +128,7 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
+import { userPermissionsFactory } from 'src/factories/userPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -387,6 +389,12 @@ const vpc = [
     const body = await request.json();
     const subnet = subnetFactory.build({ ...(body as any) });
     return HttpResponse.json(subnet);
+  }),
+];
+
+const iam = [
+  http.get('*/iam/role-permissions/users/:username', () => {
+    return HttpResponse.json(userPermissionsFactory.build());
   }),
 ];
 
@@ -800,6 +808,7 @@ export const handlers = [
     const lkeTypes = [
       lkeStandardAvailabilityTypeFactory.build(),
       lkeHighAvailabilityTypeFactory.build(),
+      lkeEnterpriseTypeFactory.build(),
     ];
     return HttpResponse.json(makeResourcePage(lkeTypes));
   }),
@@ -2574,9 +2583,9 @@ export const handlers = [
       id: params.id,
       label:
         params.id === '1'
-          ? 'Linode Service I/O Statistics'
-          : 'DBaaS Service I/O Statistics',
-      service_type: params.id === '1' ? 'linode' : 'dbaas', // just update the service type and label and use same widget configs
+          ? 'DBaaS Service I/O Statistics'
+          : 'Linode Service I/O Statistics',
+      service_type: params.id === '1' ? 'dbaas' : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,
       widgets: [
@@ -2705,4 +2714,5 @@ export const handlers = [
   ...statusPage,
   ...databases,
   ...vpc,
+  ...iam,
 ];

@@ -36,7 +36,7 @@ export const ClusterTypePanel = (props: Props) => {
     <Stack>
       <Stack flexDirection={mdDownBreakpoint ? 'column' : 'row'}>
         <Stack>
-          <Typography variant="h3">Cluster Type</Typography>
+          <Typography variant="h3">Cluster Tier</Typography>
           <Typography sx={{ marginTop: 1, maxWidth: 700 }}>
             Choose from a managed solution for smaller deployments or enterprise
             grade clusters with enhanced ingress, networking, and security.
