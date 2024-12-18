@@ -6,14 +6,14 @@
 
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
-import { paginateResponse } from 'support/util/paginate';
+import { paginate, paginateResponse } from 'support/util/paginate';
 import { randomString } from 'support/util/random';
 import { makeResponse } from 'support/util/response';
 
 import type {
   CloudPulseMetricsResponse,
   Dashboard,
-  MetricDefinitions,
+  MetricDefinition,
 } from '@linode/api-v4';
 
 /**
@@ -27,12 +27,12 @@ import type {
 
 export const mockGetCloudPulseMetricDefinitions = (
   serviceType: string,
-  metricDefinitions: MetricDefinitions
+  metricDefinitions: MetricDefinition[]
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
     apiMatcher(`/monitor/services/${serviceType}/metric-definitions`),
-    makeResponse(metricDefinitions)
+    makeResponse(paginate(metricDefinitions))
   );
 };
 
