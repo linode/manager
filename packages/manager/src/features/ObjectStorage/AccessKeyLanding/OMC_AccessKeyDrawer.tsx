@@ -9,7 +9,9 @@ import React, { useEffect, useState } from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { filterRegionsByEndpoints } from 'src/features/ObjectStorage/utilities';
 import { useAccountSettings } from 'src/queries/account/settings';
+import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
@@ -109,8 +111,15 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   } = props;
 
   const { data: regions } = useRegionsQuery();
+  const { data: endpoints } = useObjectStorageEndpoints();
 
-  const regionsLookup = regions && getRegionsByRegionId(regions);
+  const filteredRegions = React.useMemo(
+    () => filterRegionsByEndpoints(regions, endpoints),
+    [regions, endpoints]
+  );
+
+  const regionsLookup =
+    filteredRegions && getRegionsByRegionId(filteredRegions);
 
   const {
     data: objectStorageBuckets,
