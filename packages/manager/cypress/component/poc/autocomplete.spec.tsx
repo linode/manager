@@ -641,7 +641,7 @@ componentTests('Autocomplete', (mount) => {
           });
         });
 
-        describe('MultiSeelct', () => {
+        describe('MultiSelect', () => {
           it('passes aXe check when menu is closed without an item selected', () => {
             mount(
               <Autocomplete label={'Autocomplete'} multiple options={options} />
