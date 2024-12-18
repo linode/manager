@@ -179,6 +179,7 @@ export const DateTimePicker = ({
           }
           errorText={errorText}
           label={label}
+          noMarginTop
           onClick={(event) => setAnchorEl(event.currentTarget)}
           placeholder={placeholder}
         />
