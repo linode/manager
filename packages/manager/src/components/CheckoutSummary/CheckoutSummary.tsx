@@ -81,7 +81,7 @@ const StyledSummary = styled(Grid2)(({ theme }) => ({
       '&:last-child': {
         borderRight: 'none',
       },
-      borderRight: 'solid 1px #9DA4A6',
+      borderRight: `solid 1px ${theme.tokens.color.Neutrals[50]}`,
     },
   },
 }));

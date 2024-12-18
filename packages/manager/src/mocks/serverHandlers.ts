@@ -19,6 +19,7 @@ import {
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
+  alertFactory,
   appTokenFactory,
   betaFactory,
   contactFactory,
@@ -105,8 +106,6 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
-
-import { alertFactory } from 'src/factories/cloudpulse/alerts';
 import { pickRandom } from 'src/utilities/random';
 
 import type {
@@ -128,6 +127,7 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
+import { userPermissionsFactory } from 'src/factories/userPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -388,6 +388,12 @@ const vpc = [
     const body = await request.json();
     const subnet = subnetFactory.build({ ...(body as any) });
     return HttpResponse.json(subnet);
+  }),
+];
+
+const iam = [
+  http.get('*/iam/role-permissions/users/:username', () => {
+    return HttpResponse.json(userPermissionsFactory.build());
   }),
 ];
 
@@ -2391,6 +2397,20 @@ export const handlers = [
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
+  http.get(
+    '*/monitor/services/:serviceType/alert-definitions/:id',
+    ({ params }) => {
+      if (params.id !== undefined) {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: Number(params.id),
+            service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
+          })
+        );
+      }
+      return HttpResponse.json({}, { status: 404 });
+    }
+  ),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [
@@ -2692,4 +2712,5 @@ export const handlers = [
   ...statusPage,
   ...databases,
   ...vpc,
+  ...iam,
 ];
