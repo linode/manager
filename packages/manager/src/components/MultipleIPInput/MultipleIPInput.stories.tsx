@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { MultipleIPInput } from './MultipleIPInput';
 
+import type { MultipeIPInputProps } from './MultipleIPInput';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
 type Story = StoryObj<typeof MultipleIPInput>;
@@ -28,8 +29,8 @@ const meta: Meta<typeof MultipleIPInput> = {
 
 export default meta;
 
-const MultipleIPInputWithState = ({ ...args }: any) => {
-  const [ips, setIps] = useState(defaultArgs.ips);
+const MultipleIPInputWithState = ({ ...args }: MultipeIPInputProps) => {
+  const [ips, setIps] = useState(args.ips);
 
   const handleChange = (newIps: typeof ips) => {
     setIps(newIps);
