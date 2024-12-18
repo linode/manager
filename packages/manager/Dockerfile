@@ -1,8 +1,12 @@
+# Registry to use when pulling images.
+# Defaults to Docker Hub, but can be overriden to point to another registry if needed.
+ARG IMAGE_REGISTRY=docker.io
+
 # Node.js base image for Cloud Manager CI tasks.
 #
 # Extends from the Node.js base image that corresponds with our latest supported
 # version of Node, and includes other tools that we rely on like pnpm and bun.
-FROM node:20.17-bullseye-slim as nodejs-cloud-manager
+FROM ${IMAGE_REGISTRY}/node:20.17-bullseye-slim as nodejs-cloud-manager
 RUN npm install -g pnpm bun
 
 # `manager`
@@ -28,7 +32,7 @@ CMD yarn start:manager:ci
 #
 # Builds an image containing Cypress and miscellaneous system utilities required
 # by the tests.
-FROM cypress/included:13.11.0 as e2e-build
+FROM ${IMAGE_REGISTRY}/cypress/included:13.11.0 as e2e-build
 RUN npm install -g pnpm bun
 USER node
 WORKDIR /home/node/app
