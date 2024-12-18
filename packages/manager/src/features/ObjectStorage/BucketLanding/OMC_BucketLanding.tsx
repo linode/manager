@@ -9,13 +9,13 @@ import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
@@ -38,7 +38,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const OMC_BucketLanding = () => {
   const { data: profile } = useProfile();
-  const { data: regions } = useRegionsQuery();
+  const { availableStorageRegions } = useObjectStorageRegions();
 
   const isRestrictedUser = profile?.restricted;
 
@@ -124,7 +124,7 @@ export const OMC_BucketLanding = () => {
     // Single pass through errors to collect all region labels
     errors.forEach((error) => {
       if ('endpoint' in error && error.endpoint) {
-        const regionLabel = regions?.find(
+        const regionLabel = availableStorageRegions?.find(
           (region) => region.id === error.endpoint.region
         )?.label;
 
@@ -137,7 +137,7 @@ export const OMC_BucketLanding = () => {
     });
 
     return Array.from(regionMap.values());
-  }, [objectStorageBucketsResponse, regions]);
+  }, [objectStorageBucketsResponse, availableStorageRegions]);
 
   if (isRestrictedUser) {
     return <RenderEmpty />;

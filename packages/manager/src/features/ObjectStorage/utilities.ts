@@ -173,22 +173,24 @@ export const objectACLHelperText: Record<ACLType, string> = {
 };
 
 /**
- * For OBJ Gen2 users, filter regions based on available endpoints.
+ * For OBJ Gen2 users, filter regions based on available objecStorageEndpoints.
  * Otherwise, we return the regions as is.
  */
 export const filterRegionsByEndpoints = <T extends { id: string }>(
   regions: T[] | undefined,
-  endpoints: ObjectStorageEndpoint[] | undefined
+  objecStorageEndpoints: ObjectStorageEndpoint[] | undefined
 ): T[] => {
   if (!regions) {
     return [];
   }
 
-  if (!endpoints) {
+  if (!objecStorageEndpoints) {
     return regions;
   }
 
-  const endpointRegions = new Set(endpoints.map((endpoint) => endpoint.region));
+  const endpointRegions = new Set(
+    objecStorageEndpoints.map((endpoint) => endpoint.region)
+  );
 
   return regions.filter((region) => endpointRegions.has(region.id));
 };
