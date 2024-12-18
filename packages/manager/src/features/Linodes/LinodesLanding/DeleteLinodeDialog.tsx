@@ -47,7 +47,7 @@ export const DeleteLinodeDialog = (props: Props) => {
     // See PR #9814 for more details
     if (vpcIds.length > 0) {
       queryClient.invalidateQueries({
-        queryKey: vpcQueries.all.queryKey,
+        queryKey: vpcQueries.all._def,
       });
       queryClient.invalidateQueries({
         queryKey: vpcQueries.paginated._def,
