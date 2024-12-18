@@ -8,6 +8,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
+import { filterRegionsByEndpoints } from 'src/features/ObjectStorage/utilities';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -72,6 +73,11 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   } = useObjectStorageEndpoints();
 
   const { data: regions } = useRegionsQuery();
+
+  const filteredRegions = React.useMemo(
+    () => filterRegionsByEndpoints(regions, endpoints),
+    [regions, endpoints]
+  );
 
   const { data: bucketsData } = useObjectStorageBuckets();
 
@@ -181,7 +187,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   };
 
   const selectedRegion = watchRegion
-    ? regions?.find((region) => watchRegion === region.id)
+    ? filteredRegions?.find((region) => watchRegion === region.id)
     : undefined;
 
   const filteredEndpoints = endpoints?.filter(
@@ -240,7 +246,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
     profile,
-    regions,
+    regions: filteredRegions,
     selectedRegionId: selectedRegion?.id ?? '',
   });
 
