@@ -1,6 +1,7 @@
-import { TextField } from '@linode/ui';
 import { Divider } from '@linode/ui';
+import { InputAdornment, TextField } from '@linode/ui';
 import { Box } from '@linode/ui';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { Grid, Popover } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -66,7 +67,7 @@ export const DateTimePicker = ({
   onApply,
   onCancel,
   onChange,
-  placeholder = 'yyyy-MM-dd HH:mm',
+  placeholder = 'Select Date',
   showTime = true,
   showTimeZone = true,
   sx,
@@ -153,6 +154,22 @@ export const DateTimePicker = ({
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <Box sx={{ minWidth: '300px', ...sx }}>
         <TextField
+          InputProps={{
+            readOnly: true,
+            startAdornment: (
+              <InputAdornment position="start">
+                <CalendarTodayIcon
+                  sx={{
+                    color: '#c2c2ca !important',
+                    fontSize: '20px !important',
+                    left: '8px',
+                    position: 'absolute',
+                  }}
+                />
+              </InputAdornment>
+            ),
+            sx: { paddingLeft: '32px' },
+          }}
           value={
             selectedDateTime
               ? `${selectedDateTime.toFormat(format)}${
@@ -160,7 +177,6 @@ export const DateTimePicker = ({
                 }`
               : ''
           }
-          InputProps={{ readOnly: true }}
           errorText={errorText}
           label={label}
           onClick={(event) => setAnchorEl(event.currentTarget)}
