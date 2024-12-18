@@ -19,9 +19,8 @@ import {
   StyledTypography,
 } from './LinodePubKey.styles';
 
-// @todo: is this URL correct? Are there new docs being written?
 const DOC_URL =
-  'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-the-linode-managed-service#adding-the-public-key';
+  'https://techdocs.akamai.com/cloud-computing/docs/configure-ssh-access-for-managed-services';
 
 const LinodePubKey = () => {
   const { data, error, isLoading } = useManagedSSHKey();
