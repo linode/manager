@@ -55,9 +55,11 @@ componentTests('Autocomplete', (mount) => {
 
         cy.focused().type(options[0].label);
 
-        ui.autocompletePopper
-          .findByTitle(`${options[0].label}`)
-          .should('be.visible');
+        ui.autocompletePopper.find().within(() => {
+          cy.findByText(options[0].label).should('be.visible');
+          cy.findByText(options[1].label).should('not.exist');
+          cy.findByText(options[2].label).should('not.exist');
+        });
       });
 
       /**
@@ -97,7 +99,7 @@ componentTests('Autocomplete', (mount) => {
           .click();
 
         ui.autocompletePopper
-          .findByTitle(`${options[0].label}`)
+          .findByTitle(options[0].label)
           .should('be.visible');
 
         cy.get('input').type('{esc}');
@@ -126,7 +128,7 @@ componentTests('Autocomplete', (mount) => {
           .click();
 
         ui.autocompletePopper
-          .findByTitle(`${options[0].label}`)
+          .findByTitle(options[0].label)
           .should('be.visible');
 
         cy.get('#other-element').click();
@@ -189,7 +191,7 @@ componentTests('Autocomplete', (mount) => {
         cy.focused().type(options[0].label);
 
         ui.autocompletePopper
-          .findByTitle(`${options[0].label}`)
+          .findByTitle(options[0].label)
           .scrollIntoView()
           .should('be.visible')
           .click();
@@ -219,7 +221,7 @@ componentTests('Autocomplete', (mount) => {
         cy.focused().type(options[1].label);
 
         ui.autocompletePopper
-          .findByTitle(`${options[1].label}`)
+          .findByTitle(options[1].label)
           .scrollIntoView()
           .should('be.visible')
           .click();
@@ -408,7 +410,7 @@ componentTests('Autocomplete', (mount) => {
         cy.focused().type(options[0].label);
 
         ui.autocompletePopper
-          .findByTitle(`${options[0].label}`)
+          .findByTitle(options[0].label)
           .scrollIntoView()
           .should('be.visible')
           .click();
@@ -454,13 +456,13 @@ componentTests('Autocomplete', (mount) => {
         ui.autocompletePopper.findByTitle('Select All').should('be.visible');
 
         ui.autocompletePopper
-          .findByTitle(`${options[0].label}`)
+          .findByTitle(options[0].label)
           .should('be.visible')
           .click();
         cy.findByText('Number of selected options: 1').should('be.visible');
 
         ui.autocompletePopper
-          .findByTitle(`${options[1].label}`)
+          .findByTitle(options[1].label)
           .should('be.visible')
           .click();
         cy.findByText('Number of selected options: 2').should('be.visible');
