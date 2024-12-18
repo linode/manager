@@ -6,55 +6,98 @@ import { DateTimePicker } from './DateTimePicker';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 
-interface DateTimeRangePickerProps {
-  /** If true, shows the date presets field instead of the date pickers */
-  enablePresets?: boolean;
-  /** Custom error message for invalid end date */
-  endDateErrorMessage?: string;
-  /** Initial or controlled value for the end date-time */
-  endDateTimeValue?: DateTime | null;
-  /** Custom labels for the start and end date/time fields */
-  endLabel?: string;
+export interface DateTimeRangePickerProps {
+  /** Properties for the end date field */
+  endDateProps?: {
+    /** Custom error message for invalid end date */
+    errorMessage?: string;
+    /** Label for the end date field */
+    label?: string;
+    /** placeholder for the end date field */
+    placeholder?: string;
+    /** Whether to show the timezone selector for the end date */
+    showTimeZone?: boolean;
+    /** Initial or controlled value for the end date-time */
+    value?: DateTime | null;
+  };
+
   /** Format for displaying the date-time */
   format?: string;
-  /** Callback when the date-time range changes */
+
+  /** Callback when the date-time range changes,
+   * this returns start date, end date in ISO formate,
+   * preset value and timezone
+   * */
   onChange?: (params: {
     end: null | string;
     preset?: string;
     start: null | string;
     timeZone?: null | string;
   }) => void;
-  /** Whether to show the end timezone field for the end date picker */
-  showEndTimeZone?: boolean;
-  /** Whether to show the start timezone field for the start date picker */
-  showStartTimeZone?: boolean;
-  /** Custom error message for invalid start date */
-  startDateErrorMessage?: string;
-  /** Initial or controlled value for the start date-time */
-  startDateTimeValue?: DateTime | null;
-  /** Custom labels for the start and end date/time fields */
-  startLabel?: string;
-  /** Initial or controlled value for the start timezone */
-  startTimeZoneValue?: null | string;
+
+  /** Additional settings for the presets dropdown */
+  presetsProps?: {
+    /** Default value for the presets field */
+    defaultValue?: { label: string; value: string };
+    /** If true, shows the date presets field instead of the date pickers */
+    enablePresets?: boolean;
+    /** Label for the presets field */
+    label?: string;
+    /** placeholder for the presets field */
+    placeholder?: string;
+  };
+
+  /** Properties for the start date field */
+  startDateProps?: {
+    /** Custom error message for invalid start date */
+    errorMessage?: string;
+    /** Label for the start date field */
+    label?: string;
+    /** placeholder for the start date field */
+    placeholder?: string;
+    /** Whether to show the timezone selector for the start date */
+    showTimeZone?: boolean;
+    /** Initial or controlled value for the start timezone */
+    timeZoneValue?: null | string;
+    /** Initial or controlled value for the start date-time */
+    value?: DateTime | null;
+  };
+
   /** Any additional styles to apply to the root element */
   sx?: SxProps<Theme>;
 }
 
-export const DateTimeRangePicker = ({
-  enablePresets = false,
-  endDateErrorMessage = 'End date/time cannot be before the start date/time.',
-  endDateTimeValue = null,
-  endLabel = 'End Date and Time',
-  format = 'yyyy-MM-dd HH:mm',
-  onChange,
-  showEndTimeZone = false,
-  showStartTimeZone = false,
-  startDateErrorMessage = 'Start date/time cannot be after the end date/time.',
-  startDateTimeValue = null,
-  startLabel = 'Start Date and Time',
-  startTimeZoneValue = null,
-  sx,
-}: DateTimeRangePickerProps) => {
+export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
+  const {
+    endDateProps: {
+      errorMessage: endDateErrorMessage = 'End date/time cannot be before the start date/time.',
+      label: endLabel = 'End Date and Time',
+      placeholder: endDatePlaceholder,
+      showTimeZone: showEndTimeZone = false,
+      value: endDateTimeValue = null,
+    } = {},
+
+    format = 'yyyy-MM-dd HH:mm',
+
+    onChange,
+
+    presetsProps: {
+      defaultValue: presetsDefaultValue,
+      enablePresets = false,
+      label: presetsLabel = 'Time Range',
+      placeholder: presetsPlaceholder = 'Select a preset',
+    } = {},
+    startDateProps: {
+      errorMessage: startDateErrorMessage = 'Start date/time cannot be after the end date/time.',
+      label: startLabel = 'Start Date and Time',
+      placeholder: startDatePlaceholder,
+      showTimeZone: showStartTimeZone = false,
+      timeZoneValue: startTimeZoneValue = null,
+      value: startDateTimeValue = null,
+    } = {},
+    sx,
+  } = props;
+
   const [startDateTime, setStartDateTime] = useState<DateTime | null>(
     startDateTimeValue
   );
@@ -190,11 +233,12 @@ export const DateTimeRangePicker = ({
               ? { label: presetValue.replace('_', ' '), value: presetValue }
               : null
           }
+          defaultValue={presetsDefaultValue}
           fullWidth
           isOptionEqualToValue={(option, value) => option.value === value.value}
-          label="Date Presets"
+          label={presetsLabel}
           noMarginTop
-          placeholder="Select a preset"
+          placeholder={presetsPlaceholder}
         />
       ) : (
         <Box display="flex" gap={2}>
@@ -208,6 +252,7 @@ export const DateTimeRangePicker = ({
             format={format}
             label={startLabel}
             onChange={handleStartDateTimeChange}
+            placeholder={startDatePlaceholder}
             showTimeZone={showStartTimeZone}
             timeSelectProps={{ label: 'Start Time' }}
             value={startDateTime}
@@ -220,13 +265,17 @@ export const DateTimeRangePicker = ({
             format={format}
             label={endLabel}
             onChange={handleEndDateTimeChange}
+            placeholder={endDatePlaceholder}
             showTimeZone={showEndTimeZone}
             timeSelectProps={{ label: 'End Time' }}
             value={endDateTime}
           />
           <Box alignContent="flex-end">
             <StyledActionButton
-              onClick={() => setShowPresets(true)}
+              onClick={() => {
+                setShowPresets(true);
+                setPresetValue('');
+              }}
               style={{ alignSelf: 'flex-start' }}
               variant="text"
             >

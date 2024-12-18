@@ -7,9 +7,26 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DateTimeRangePicker } from './DateTimeRangePicker';
 
-describe('DateTimeRangePicker Component', () => {
-  const onChangeMock = vi.fn();
+import type { DateTimeRangePickerProps } from './DateTimeRangePicker';
 
+const onChangeMock = vi.fn();
+
+const Props: DateTimeRangePickerProps = {
+  endDateProps: {
+    label: 'End Date and Time',
+  },
+  onChange: onChangeMock,
+  presetsProps: {
+    enablePresets: true,
+    label: 'Date Presets',
+  },
+
+  startDateProps: {
+    label: 'Start Date and Time',
+  },
+};
+
+describe('DateTimeRangePicker Component', () => {
   let fixedNow: DateTime;
 
   beforeEach(() => {
@@ -75,13 +92,11 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should show error when start date-time is after end date-time', async () => {
-    renderWithTheme(
-      <DateTimeRangePicker
-        endLabel="End Date and Time"
-        onChange={onChangeMock}
-        startLabel="Start Date and Time"
-      />
-    );
+    const updateProps = {
+      ...Props,
+      presetsProps: { ...Props.presetsProps, enablePresets: false },
+    };
+    renderWithTheme(<DateTimeRangePicker {...updateProps} />);
 
     // Set the end date-time to the 15th
     const endDateField = screen.getByLabelText('End Date and Time');
@@ -102,15 +117,21 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should display custom error messages when start date-time is after end date-time', async () => {
-    renderWithTheme(
-      <DateTimeRangePicker
-        endDateErrorMessage="Custom end date error"
-        endLabel="End Date and Time"
-        onChange={onChangeMock}
-        startDateErrorMessage="Custom start date error"
-        startLabel="Start Date and Time"
-      />
-    );
+    const updatedProps = {
+      ...Props,
+      endDateProps: {
+        ...Props.endDateProps,
+        errorMessage: 'Custom end date error',
+        label: 'End Date and Time',
+      },
+      presetsProps: {},
+      startDateProps: {
+        ...Props.startDateProps,
+        errorMessage: 'Custom start date error',
+        label: 'Start Date and Time',
+      },
+    };
+    renderWithTheme(<DateTimeRangePicker {...updatedProps} />);
 
     // Set the end date-time to the 15th
     const endDateField = screen.getByLabelText('End Date and Time');
@@ -129,9 +150,7 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should set the date range for the last 24 hours when the "Last 24 Hours" preset is selected', async () => {
-    renderWithTheme(
-      <DateTimeRangePicker enablePresets={true} onChange={onChangeMock} />
-    );
+    renderWithTheme(<DateTimeRangePicker {...Props} />);
 
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
@@ -158,9 +177,7 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should set the date range for the last 7 days when the "Last 7 Days" preset is selected', async () => {
-    renderWithTheme(
-      <DateTimeRangePicker enablePresets={true} onChange={onChangeMock} />
-    );
+    renderWithTheme(<DateTimeRangePicker {...Props} />);
 
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
@@ -187,9 +204,7 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should set the date range for the last 30 days when the "Last 30 Days" preset is selected', async () => {
-    renderWithTheme(
-      <DateTimeRangePicker enablePresets={true} onChange={onChangeMock} />
-    );
+    renderWithTheme(<DateTimeRangePicker {...Props} />);
 
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
@@ -216,9 +231,7 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should set the date range for this month when the "This Month" preset is selected', async () => {
-    renderWithTheme(
-      <DateTimeRangePicker enablePresets={true} onChange={onChangeMock} />
-    );
+    renderWithTheme(<DateTimeRangePicker {...Props} />);
 
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
@@ -245,9 +258,7 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should set the date range for last month when the "Last Month" preset is selected', async () => {
-    renderWithTheme(
-      <DateTimeRangePicker enablePresets={true} onChange={onChangeMock} />
-    );
+    renderWithTheme(<DateTimeRangePicker {...Props} />);
 
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
@@ -276,9 +287,7 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should display the date range fields with empty values when the "Custom Range" preset is selected', async () => {
-    renderWithTheme(
-      <DateTimeRangePicker enablePresets={true} onChange={onChangeMock} />
-    );
+    renderWithTheme(<DateTimeRangePicker {...Props} />);
 
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
