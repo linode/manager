@@ -190,6 +190,7 @@ export const DateTimeRangePicker = ({
               ? { label: presetValue.replace('_', ' '), value: presetValue }
               : null
           }
+         isOptionEqualToValue={(option, value) => option.value === value.value}
           fullWidth
           label="Date Presets"
           placeholder="Select a preset"
