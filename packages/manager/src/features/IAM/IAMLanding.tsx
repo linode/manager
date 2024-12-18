@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { matchPath } from 'react-router-dom';
+import { matchPath, useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -24,7 +24,9 @@ const Roles = React.lazy(() =>
   }))
 );
 
-export const IdentityAccessManagementLanding = React.memo((props: Props) => {
+export const IdentityAccessLanding = React.memo((props: Props) => {
+  const history = useHistory();
+
   const tabs = [
     {
       routeName: `${props.match.url}/users`,
@@ -37,7 +39,7 @@ export const IdentityAccessManagementLanding = React.memo((props: Props) => {
   ];
 
   const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
+    history.push(tabs[index].routeName);
   };
 
   const getDefaultTabIndex = () => {
@@ -45,7 +47,13 @@ export const IdentityAccessManagementLanding = React.memo((props: Props) => {
       Boolean(matchPath(tab.routeName, { path: location.pathname }))
     );
 
-    return tabChoice;
+    if (tabChoice < 0) {
+      history.push('/iam/users');
+
+      return 0;
+    } else {
+      return tabChoice;
+    }
   };
 
   const landingHeaderProps = {

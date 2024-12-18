@@ -8,7 +8,7 @@ import type { RouteComponentProps } from 'react-router-dom';
 
 const IAMLanding = React.lazy(() =>
   import('./IAMLanding').then((module) => ({
-    default: module.IdentityAccessManagementLanding,
+    default: module.IdentityAccessLanding,
   }))
 );
 
@@ -23,8 +23,13 @@ export const IdentityAccessManagement = (props: RouteComponentProps) => {
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
-      <ProductInformationBanner bannerLocation="Identity and Access Management" />
+      <ProductInformationBanner bannerLocation="Identity and Access" />
       <Switch>
+        <Redirect
+          exact
+          from={`${path}/users/:username/`}
+          to={`${path}/users/:username/details`}
+        />
         <Route component={UserDetails} path={`${path}/users/:username/`} />
         <Redirect exact from={path} to={`${path}/users`} />
         <Route component={IAMLanding} path={path} />
