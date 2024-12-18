@@ -351,11 +351,8 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                       </Typography>
                     ),
                     helperTextPosition: 'top',
-                    sx: {
-                      marginBottom: 5,
-                    },
                     sxHelperText: {
-                      marginBottom: 2,
+                      marginBottom: 1,
                     },
                   }}
                   disableClearable={hasSingleEndpointType}
