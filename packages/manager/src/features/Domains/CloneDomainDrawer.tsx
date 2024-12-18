@@ -39,11 +39,11 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
     initialValues: { domain: '' },
     onSubmit: async (values) => {
       const newDomain = await cloneDomain(values);
+      onClose();
       navigate({
         params: { domainId: newDomain.id },
         to: '/domains/$domainId',
       });
-      onClose();
     },
   });
 
