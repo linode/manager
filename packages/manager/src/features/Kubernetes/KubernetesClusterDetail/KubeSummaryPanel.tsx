@@ -1,4 +1,4 @@
-import { Box, Chip, Stack, StyledActionButton, Typography } from '@linode/ui';
+import { Box, Stack, StyledActionButton, Typography } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -20,6 +20,7 @@ import {
 } from 'src/queries/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import { ClusterChips } from '../ClusterList/ClusterChips';
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
@@ -111,18 +112,19 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
               isResettingKubeConfig={isResettingKubeConfig}
               setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
             />
-            {cluster.control_plane.high_availability && (
-              <Chip
-                sx={(theme) => ({
-                  borderColor: theme.color.green,
-                  position: 'absolute',
-                  right: theme.spacing(3),
-                })}
-                label="HA CLUSTER"
-                size="small"
-                variant="outlined"
-              />
-            )}
+            <ClusterChips
+              sx={(theme) => ({
+                position: 'absolute',
+                right: theme.spacing(3),
+                [theme.breakpoints.down('sm')]: {
+                  '& .MuiChip-root': {
+                    marginRight: 0,
+                  },
+                  flexDirection: 'column',
+                },
+              })}
+              cluster={cluster}
+            />
           </Stack>
         }
         footer={
