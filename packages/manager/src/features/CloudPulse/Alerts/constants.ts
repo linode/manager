@@ -1,5 +1,6 @@
 import type {
   AlertSeverityType,
+  DimensionFilterOperatorType,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
@@ -71,3 +72,45 @@ export const MetricAggregationOptions: Item<string, MetricAggregationType>[] = [
     value: 'sum',
   },
 ];
+
+export const DimensionOperatorOptions: Item<
+  string,
+  DimensionFilterOperatorType
+>[] = [
+  {
+    label: 'Equal',
+    value: 'eq',
+  },
+  {
+    label: 'Ends with',
+    value: 'endswith',
+  },
+  {
+    label: 'Not Equal',
+    value: 'neq',
+  },
+  {
+    label: 'Starts with',
+    value: 'startswith',
+  },
+];
+
+export const EvaluationPeriodOptions = {
+  dbaas: [{ label: '5m', value: 300 }],
+  linode: [
+    { label: '1m', value: 60 },
+    { label: '5m', value: 300 },
+    { label: '15m', value: 900 },
+    { label: '30m', value: 1800 },
+    { label: '1hr', value: 3600 },
+  ],
+};
+
+export const PollingIntervalOptions = {
+  dbaas: [{ label: '5m', value: 300 }],
+  linode: [
+    { label: '1m', value: 60 },
+    { label: '5m', value: 300 },
+    { label: '10m', value: 600 },
+  ],
+};

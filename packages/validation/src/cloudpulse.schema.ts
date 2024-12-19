@@ -24,7 +24,8 @@ const triggerConditionValidation = object({
   ),
   trigger_occurrences: number()
     .required('Trigger Occurrences is required.')
-    .positive('Number of occurrences must be greater than zero.'),
+    .positive('Value must be greater than zero.')
+    .typeError('Threshold value should be a number.'),
 });
 
 export const createAlertDefinitionSchema = object({
