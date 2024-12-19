@@ -5,6 +5,8 @@ import * as React from 'react';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { createMaskedText } from 'src/utilities/createMaskedText';
 
+import type { SxProps, Theme } from '@mui/material';
+
 export type MaskableTextLength = 'ipv4' | 'ipv6' | 'plaintext';
 
 export interface MaskableTextProps {
@@ -13,7 +15,13 @@ export interface MaskableTextProps {
    */
   children?: JSX.Element | JSX.Element[];
   /**
+   * Optionally specifies the position of the VisibilityTooltip icon either before or after the text.
+   * @default end
+   */
+  iconPosition?: 'end' | 'start';
+  /**
    * If true, displays a VisibilityTooltip icon to toggle the masked and unmasked text.
+   * @default false
    */
   isToggleable?: boolean;
   /**
@@ -21,13 +29,24 @@ export interface MaskableTextProps {
    */
   length?: MaskableTextLength;
   /**
+   * Optional styling for VisibilityTooltip icon
+   */
+  sxVisibilityTooltip?: SxProps<Theme>;
+  /**
    * The original, maskable text; if the text is not masked, render this text or the styled text via children.
    */
   text: string | undefined;
 }
 
 export const MaskableText = (props: MaskableTextProps) => {
-  const { children, isToggleable = false, length, text } = props;
+  const {
+    children,
+    iconPosition = 'end',
+    isToggleable = false,
+    length,
+    sxVisibilityTooltip,
+    text,
+  } = props;
 
   const { data: maskedPreferenceSetting } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
@@ -54,6 +73,17 @@ export const MaskableText = (props: MaskableTextProps) => {
       flexDirection="row"
       justifyContent="flex-start"
     >
+      {iconPosition === 'start' && isToggleable && (
+        <VisibilityTooltip
+          sx={{
+            marginLeft: 'unset',
+            marginRight: '8px',
+            ...sxVisibilityTooltip,
+          }}
+          handleClick={() => setIsMasked(!isMasked)}
+          isVisible={!isMasked}
+        />
+      )}
       {isMasked ? (
         <Typography sx={{ overflowWrap: 'anywhere' }}>
           {createMaskedText(text, length)}
@@ -61,7 +91,7 @@ export const MaskableText = (props: MaskableTextProps) => {
       ) : (
         unmaskedText
       )}
-      {isToggleable && (
+      {iconPosition === 'end' && isToggleable && (
         <VisibilityTooltip
           handleClick={() => setIsMasked(!isMasked)}
           isVisible={!isMasked}
