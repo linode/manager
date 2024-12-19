@@ -134,7 +134,7 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   };
 
   return (
-    <Grid container direction="row" lg={3} xs={12}>
+    <Grid columnGap={2} container direction="row" lg={3} xs={12}>
       <Grid lg={6}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>
       <Grid lg={6}>{kubeSpecsRight.map(kubeSpecItem)}</Grid>
     </Grid>
