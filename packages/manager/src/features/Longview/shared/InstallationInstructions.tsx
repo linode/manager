@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 import {
   StyledContainerGrid,
@@ -41,9 +42,22 @@ export const InstallationInstructions = React.memo((props: Props) => {
               paddingTop: 0,
             }}
           >
-            <pre>
-              <code>{command}</code>
-            </pre>
+            <MaskableText
+              sxVisibilityTooltip={{
+                '& svg': {
+                  height: 'auto',
+                  width: '20px',
+                },
+                marginRight: '24px',
+              }}
+              iconPosition="start"
+              isToggleable
+              text={command}
+            >
+              <pre>
+                <code>{command}</code>
+              </pre>
+            </MaskableText>
           </Grid>
         </StyledContainerGrid>
       </Grid>
