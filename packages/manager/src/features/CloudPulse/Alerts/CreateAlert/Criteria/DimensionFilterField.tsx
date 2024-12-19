@@ -73,8 +73,6 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       : [];
   }, [selectedDimension]);
 
-  // eslint-disable-next-line no-console
-  console.log(dimensionFieldWatcher, selectedDimension, dataFieldOptions);
   return (
     <Grid alignItems="flex-start" container spacing={2}>
       <Grid item md={3} sm={6} xs={12}>
