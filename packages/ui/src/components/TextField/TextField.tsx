@@ -13,7 +13,6 @@ import { TooltipIcon } from '../TooltipIcon';
 
 import type { BoxProps } from '../Box';
 import type { TooltipProps } from '../Tooltip';
-import type { SxProps } from '@mui/material/styles';
 import type { StandardTextFieldProps } from '@mui/material/TextField';
 
 interface BaseProps {
@@ -94,10 +93,6 @@ interface BaseProps {
    */
   required?: boolean;
   /**
-   * Custom styles for the helper text
-   */
-  sxHelperText?: SxProps;
-  /**
    * The leading and trailing spacing should be trimmed from the textfield on blur; intended to be used for username, emails, and SSH key input only
    */
   trimmed?: boolean;
@@ -158,7 +153,6 @@ export const TextField = (props: TextFieldProps) => {
     onChange,
     optional,
     required,
-    sxHelperText,
     tooltipClasses,
     tooltipOnMouseEnter,
     tooltipPosition,
@@ -319,7 +313,6 @@ export const TextField = (props: TextFieldProps) => {
       {helperText && helperTextPosition === 'top' && (
         <FormHelperText
           sx={{
-            ...sxHelperText,
             marginTop: 0,
           }}
           data-qa-textfield-helper-text
