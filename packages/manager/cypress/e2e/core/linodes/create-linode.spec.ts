@@ -488,4 +488,25 @@ describe('Create Linode', () => {
     // Confirm the createLinodeErrorMessage disappears.
     cy.findByText(`${createLinodeErrorMessage}`).should('not.exist');
   });
+
+  it('shows correct validation errors if no backup or plan is selected', () => {
+    cy.visitWithLogin('/linodes/create');
+
+    // Navigate to Linode Create page "Backups" tab
+    cy.get('[role="tablist"]')
+      .should('be.visible')
+      .findByText('Backups')
+      .click();
+
+    // Submit without selecting any options
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Confirm the correct validation errors show up on the page.
+    cy.findByText('You must select a Backup.').should('be.visible');
+    cy.findByText('Plan is required.').should('be.visible');
+  });
 });
