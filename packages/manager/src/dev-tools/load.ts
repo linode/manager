@@ -74,7 +74,7 @@ export async function loadDevTools(
       seedContext[key] = seeds[key];
     };
 
-    const seeds = await populateSeeds(emptyStore);
+    const seeds = await populateSeeds(seedContext);
 
     const seedPromises = (Object.keys(
       seedContext
@@ -84,44 +84,19 @@ export async function loadDevTools(
 
     await mswDB.saveStore(seedContext ?? emptyStore, 'seedState');
 
-    // Merge the contexts
+    const stateKeys: (keyof MockState)[] = Object.keys(
+      emptyStore
+    ) as (keyof MockState)[];
+
     const mergedContext: MockState = {
       ...initialContext,
-      eventQueue: [
-        ...initialContext.eventQueue,
-        ...(seedContext?.eventQueue || []),
-      ],
-      firewalls: [
-        ...initialContext.firewalls,
-        ...(seedContext?.firewalls || []),
-      ],
-      linodeConfigs: [
-        ...initialContext.linodeConfigs,
-        ...(seedContext?.linodeConfigs || []),
-      ],
-      linodes: [...initialContext.linodes, ...(seedContext?.linodes || [])],
-      notificationQueue: [
-        ...initialContext.notificationQueue,
-        ...(seedContext?.notificationQueue || []),
-      ],
-      placementGroups: [
-        ...initialContext.placementGroups,
-        ...(seedContext?.placementGroups || []),
-      ],
-      regionAvailability: [
-        ...initialContext.regionAvailability,
-        ...(seedContext?.regionAvailability || []),
-      ],
-      regions: [...initialContext.regions, ...(seedContext?.regions || [])],
-      supportReplies: [
-        ...initialContext.supportReplies,
-        ...(seedContext?.supportReplies || []),
-      ],
-      supportTickets: [
-        ...initialContext.supportTickets,
-        ...(seedContext?.supportTickets || []),
-      ],
-      volumes: [...initialContext.volumes, ...(seedContext?.volumes || [])],
+      ...stateKeys.reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]: [...initialContext[key], ...(seedContext?.[key] || [])],
+        }),
+        {}
+      ),
     };
 
     const extraHandlers = extraMswPresets.reduce(
