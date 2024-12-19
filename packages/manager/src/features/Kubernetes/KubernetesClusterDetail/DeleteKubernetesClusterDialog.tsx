@@ -55,6 +55,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
         subType: 'Cluster',
         type: 'Kubernetes',
       }}
+      errors={error}
       label={'Cluster Name'}
       loading={isDeleting}
       onClick={onDelete}
@@ -62,7 +63,6 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       open={open}
       title={`Delete Cluster ${clusterLabel}`}
     >
-      {error ? <Notice text={error?.[0].reason} variant="error" /> : null}
       <Notice variant="warning">
         <Typography component="div" sx={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong>

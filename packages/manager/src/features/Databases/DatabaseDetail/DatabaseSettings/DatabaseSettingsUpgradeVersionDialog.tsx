@@ -1,10 +1,10 @@
+import { Autocomplete } from '@linode/ui';
 import { FormControl, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from '@linode/ui';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import {
   DATABASE_ENGINE_MAP,
@@ -109,11 +109,11 @@ export const DatabaseSettingsUpgradeVersionDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={renderActions}
+      error={error}
       onClose={onClose}
       open={open}
       title={`Upgrade ${dialogTitle}`}
     >
-      {error && <Notice text={error} variant="error" />}
       <Typography sx={{ mb: theme.spacing(1.5) }}>
         Current Version: v{databaseVersion}
       </Typography>

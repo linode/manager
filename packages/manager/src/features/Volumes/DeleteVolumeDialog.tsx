@@ -1,4 +1,3 @@
-import { Notice } from '@linode/ui';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
@@ -40,6 +39,7 @@ export const DeleteVolumeDialog = (props: Props) => {
         primaryBtnText: 'Delete',
         type: 'Volume',
       }}
+      errors={error}
       isFetching={isFetching}
       label="Volume Label"
       loading={isPending}
@@ -48,8 +48,6 @@ export const DeleteVolumeDialog = (props: Props) => {
       open={open}
       title={`Delete Volume ${volume?.label}?`}
       typographyStyle={{ marginTop: '10px' }}
-    >
-      {error && <Notice text={error?.[0]?.reason} variant="error" />}
-    </TypeToConfirmDialog>
+    />
   );
 };

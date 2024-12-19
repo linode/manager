@@ -1,4 +1,5 @@
 import { Stack } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Dialog } from 'src/components/Dialog/Dialog';
@@ -26,12 +27,12 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
 
   return (
     <Dialog {...dialogProps} PaperProps={{ role: undefined }}>
-      {children}
+      <StyledDialogContentSection>{children}</StyledDialogContentSection>
       <Stack
         direction="row"
         justifyContent="flex-end"
         spacing={2}
-        sx={{ mt: 4 }}
+        sx={{ mt: 2 }}
       >
         {actions && typeof actions === 'function'
           ? actions(dialogProps)
@@ -40,3 +41,10 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
     </Dialog>
   );
 };
+
+const StyledDialogContentSection = styled(Stack, {
+  label: 'StyledDialogContentSection',
+})(({ theme: { spacing } }) => ({
+  marginBottom: spacing(2),
+  order: -1,
+}));
