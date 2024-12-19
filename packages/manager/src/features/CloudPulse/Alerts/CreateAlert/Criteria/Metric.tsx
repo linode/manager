@@ -9,6 +9,7 @@ import {
   MetricOperatorOptions,
 } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
+import { DimensionFilters } from './DimensionFilter';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from '../types';
@@ -291,6 +292,11 @@ export const Metric = (props: MetricCriteriaProps) => {
             </Grid>
           </Grid>
         </Grid>
+        <DimensionFilters
+          dimensionOptions={selectedMetric?.dimensions ?? []}
+          key={metricWatcher}
+          name={`${name}.dimension_filters`}
+        />
       </Stack>
     </Box>
   );

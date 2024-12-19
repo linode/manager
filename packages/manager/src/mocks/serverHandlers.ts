@@ -2458,12 +2458,12 @@ export const handlers = [
           available_aggregate_functions: ['min', 'max', 'avg'],
           dimensions: [
             {
-              dim_label: 'cpu',
+              dimension_label: 'cpu',
               label: 'CPU name',
               values: null,
             },
             {
-              dim_label: 'state',
+              dimension_label: 'state',
               label: 'State of CPU',
               values: [
                 'user',
@@ -2477,7 +2477,7 @@ export const handlers = [
               ],
             },
             {
-              dim_label: 'LINODE_ID',
+              dimension_label: 'LINODE_ID',
               label: 'Linode ID',
               values: null,
             },
@@ -2492,7 +2492,7 @@ export const handlers = [
           available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
           dimensions: [
             {
-              dim_label: 'state',
+              dimension_label: 'state',
               label: 'State of memory',
               values: [
                 'used',
@@ -2504,7 +2504,7 @@ export const handlers = [
               ],
             },
             {
-              dim_label: 'LINODE_ID',
+              dimension_label: 'LINODE_ID',
               label: 'Linode ID',
               values: null,
             },
@@ -2519,17 +2519,17 @@ export const handlers = [
           available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
           dimensions: [
             {
-              dim_label: 'device',
+              dimension_label: 'device',
               label: 'Device name',
               values: ['lo', 'eth0'],
             },
             {
-              dim_label: 'direction',
+              dimension_label: 'direction',
               label: 'Direction of network transfer',
               values: ['transmit', 'receive'],
             },
             {
-              dim_label: 'LINODE_ID',
+              dimension_label: 'LINODE_ID',
               label: 'Linode ID',
               values: null,
             },
@@ -2544,17 +2544,17 @@ export const handlers = [
           available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
           dimensions: [
             {
-              dim_label: 'device',
+              dimension_label: 'device',
               label: 'Device name',
               values: ['loop0', 'sda', 'sdb'],
             },
             {
-              dim_label: 'direction',
+              dimension_label: 'direction',
               label: 'Operation direction',
               values: ['read', 'write'],
             },
             {
-              dim_label: 'LINODE_ID',
+              dimension_label: 'LINODE_ID',
               label: 'Linode ID',
               values: null,
             },
