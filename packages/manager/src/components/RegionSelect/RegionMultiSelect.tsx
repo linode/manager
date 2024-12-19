@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
+import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
@@ -50,12 +51,18 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     ...rest
   } = props;
 
+  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
+
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
   } = useAllAccountAvailabilitiesQuery();
 
-  const regionOptions = getRegionOptions({ currentCapability, regions });
+  const regionOptions = getRegionOptions({
+    currentCapability,
+    isObjectStorageGen2Enabled,
+    regions,
+  });
 
   const selectedRegions = regionOptions.filter((r) =>
     selectedIds.includes(r.id)
