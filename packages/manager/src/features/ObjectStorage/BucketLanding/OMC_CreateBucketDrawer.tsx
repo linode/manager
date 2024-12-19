@@ -333,6 +333,13 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                     updateEndpointType(endpointOption)
                   }
                   textFieldProps={{
+                    containerProps: {
+                      sx: {
+                        '> .MuiFormHelperText-root': {
+                          marginBottom: 1,
+                        },
+                      },
+                    },
                     helperText: (
                       <Typography component="span">
                         Endpoint types impact the performance, capacity, and
@@ -344,9 +351,6 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                       </Typography>
                     ),
                     helperTextPosition: 'top',
-                    sxHelperText: {
-                      marginBottom: 1,
-                    },
                   }}
                   disableClearable={hasSingleEndpointType}
                   errorText={errors.endpoint_type?.message}
