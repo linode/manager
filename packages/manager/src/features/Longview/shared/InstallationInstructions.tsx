@@ -86,12 +86,7 @@ export const InstallationInstructions = React.memo((props: Props) => {
               </Link>
             </Typography>
           </StyledInstructionGrid>
-          <StyledInstructionGrid
-            columnGap={1}
-            display="flex"
-            flexDirection="row"
-            justifyContent="center"
-          >
+          <StyledInstructionGrid>
             <Typography data-testid="api-key">API Key:</Typography>
             <MaskableText
               iconPosition="start"
