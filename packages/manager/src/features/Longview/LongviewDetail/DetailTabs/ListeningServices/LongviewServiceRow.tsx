@@ -1,8 +1,10 @@
 import * as React from 'react';
 
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { LongviewService } from 'src/features/Longview/request.types';
+
+import type { LongviewService } from 'src/features/Longview/request.types';
 
 interface Props {
   service: LongviewService;
@@ -26,7 +28,7 @@ export const LongviewServiceRow = (props: Props) => {
         {service.port}
       </TableCell>
       <TableCell data-qa-service-ip parentColumn="IP">
-        {service.ip}
+        <MaskableText isToggleable text={service.ip} />
       </TableCell>
     </TableRow>
   );
