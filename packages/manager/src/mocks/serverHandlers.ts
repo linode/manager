@@ -699,9 +699,19 @@ export const handlers = [
         type: 'g5-standard-20-s1',
       }),
       linodeFactory.build({
+        label: 'linode_with_tags_test1_test2',
         // eslint-disable-next-line sonarjs/no-duplicate-string
         region: 'us-central',
-        tags: ['test2'],
+        tags: ['test1', 'test2'],
+      }),
+      linodeFactory.build({
+        label: 'linode_with_tags_test2_test3',
+        region: 'us-central',
+        tags: ['test2', 'test3'],
+      }),
+      linodeFactory.build({
+        label: 'linode_with_no_tags',
+        region: 'us-central',
       }),
       linodeFactory.build({
         label: 'eu-linode',
