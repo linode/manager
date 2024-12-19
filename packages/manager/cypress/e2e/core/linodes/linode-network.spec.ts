@@ -1,5 +1,7 @@
 import { linodeFactory, ipAddressFactory } from '@src/factories';
 
+import type { IPRange } from '@linode/api-v4';
+
 import {
   mockGetLinodeDetails,
   mockGetLinodeIPAddresses,
@@ -17,6 +19,21 @@ describe('linode networking', () => {
     linode_id: mockLinode.id,
     rdns: mockRDNS,
   });
+  const _ipv6Range: IPRange = {
+    prefix: 64,
+    range: '2fff:db08:e003:1::',
+    region: 'us-east',
+    route_target: '2600:3c02::f03c:92ff:fe9d:0f25',
+  };
+  const ipv6Range = `${_ipv6Range.range}/${_ipv6Range.prefix}`;
+  const ipv6Address = ipAddressFactory.build({
+    address: mockLinode.ipv6 ?? '2600:3c00::f03c:92ff:fee2:6c40/64',
+    gateway: 'fe80::1',
+    linode_id: mockLinode.id,
+    prefix: 64,
+    subnet_mask: 'ffff:ffff:ffff:ffff::',
+    type: 'ipv6',
+  });
 
   beforeEach(() => {
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
@@ -27,6 +44,11 @@ describe('linode networking', () => {
         private: [],
         shared: [],
         reserved: [],
+      },
+      ipv6: {
+        global: [_ipv6Range],
+        link_local: ipv6Address,
+        slaac: ipv6Address,
       },
     }).as('getLinodeIPAddresses');
     mockUpdateIPAddress(linodeIPv4, mockRDNS).as('updateIPAddress');
@@ -92,8 +114,20 @@ describe('linode networking', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
+        cy.findByText('IPv4 – Public').should('be.visible');
         ui.actionMenu
           .findByTitle(`Action menu for IP Address ${linodeIPv4}`)
+          .should('be.visible');
+      });
+
+    // Ensure the action menu has the correct aria-label for the IP Range.
+    cy.get(`[data-qa-ip="${ipv6Range}"]`)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText('IPv6 – Range').should('be.visible');
+        ui.actionMenu
+          .findByTitle(`Action menu for IP Address ${_ipv6Range.range}`)
           .should('be.visible');
       });
   });
