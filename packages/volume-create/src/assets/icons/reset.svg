@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="17px" viewBox="0 0 17 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <g id="Reset-icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(1.000000, 1.000000)" stroke="#3683DC">
+            <path d="M13.7363253,3.32698217 C12.3899701,1.32056985 10.100209,0 7.50193269,0 C3.35872967,0 0,3.35786438 0,7.5 C0,11.6421356 3.35872967,15 7.50193269,15 C11.6451357,15 15.0038654,11.6421356 15.0038654,7.5 C15.0038654,7.40408797 15.0020646,7.30859644 14.9984949,7.21355735" id="Path"></path>
+            <polyline id="Path-2-Copy" stroke-linecap="round" stroke-linejoin="round" points="10.4333273 3.33095006 14.0038654 3.33095006 14.0038654 8.8817842e-16"></polyline>
+        </g>
+    </g>
+</svg>
