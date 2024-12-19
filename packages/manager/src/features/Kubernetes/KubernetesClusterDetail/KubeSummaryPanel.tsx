@@ -10,7 +10,10 @@ import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
-import { getKubeControlPlaneACL } from 'src/features/Kubernetes/kubeUtils';
+import {
+  getKubeControlPlaneACL,
+  useIsLkeEnterpriseEnabled,
+} from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -70,6 +73,8 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     error: isErrorKubernetesACL,
     isLoading: isLoadingKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(cluster.id, !!showControlPlaneACL);
+
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const [
     resetKubeConfigDialogOpen,
@@ -174,13 +179,16 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                 />
               </Hidden>
               <Hidden smDown>
-                <StyledActionButton
-                  disabled={Boolean(dashboardError) || !dashboard}
-                  endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
-                  onClick={() => window.open(dashboard?.url, '_blank')}
-                >
-                  Kubernetes Dashboard
-                </StyledActionButton>
+                {isLkeEnterpriseLAFeatureEnabled &&
+                  cluster.tier !== 'enterprise' && (
+                    <StyledActionButton
+                      disabled={Boolean(dashboardError) || !dashboard}
+                      endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
+                      onClick={() => window.open(dashboard?.url, '_blank')}
+                    >
+                      Kubernetes Dashboard
+                    </StyledActionButton>
+                  )}
                 <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
                   Delete Cluster
                 </StyledActionButton>
