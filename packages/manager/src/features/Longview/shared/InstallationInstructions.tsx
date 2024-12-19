@@ -1,4 +1,5 @@
-import { Box, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -18,6 +19,7 @@ interface Props {
 
 export const InstallationInstructions = React.memo((props: Props) => {
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
+  const theme = useTheme();
 
   return (
     <Grid container spacing={2}>
@@ -84,16 +86,19 @@ export const InstallationInstructions = React.memo((props: Props) => {
               </Link>
             </Typography>
           </StyledInstructionGrid>
-          <StyledInstructionGrid>
-            <Typography data-testid="api-key">
-              API Key:{' '}
-              <Box
-                component="span"
-                sx={(theme) => ({ color: theme.color.grey1 })}
-              >
-                {props.APIKey}
-              </Box>
-            </Typography>
+          <StyledInstructionGrid
+            columnGap={1}
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+          >
+            <Typography data-testid="api-key">API Key:</Typography>
+            <MaskableText
+              iconPosition="start"
+              isToggleable
+              sxTypography={{ color: theme.color.grey1 }}
+              text={props.APIKey}
+            />
           </StyledInstructionGrid>
         </Grid>
       </Grid>
