@@ -82,13 +82,13 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                   field.value !== null
                     ? getEvaluationPeriodOptions().find(
                         (option) => option.value === field.value
-                      ) ?? null
+                      )
                     : null
                 }
                 data-testid="Evaluation-period"
                 disabled={!serviceTypeWatcher}
                 errorText={fieldState.error?.message}
-                label={'Evaluation Period'}
+                label="Evaluation Period"
                 onBlur={field.onBlur}
                 options={getEvaluationPeriodOptions()}
                 placeholder="Select an Evaluation period"
@@ -122,13 +122,13 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                   field.value !== null
                     ? getPollingIntervalOptions().find(
                         (option) => option.value === field.value
-                      ) ?? null
+                      )
                     : null
                 }
                 data-testid="Polling-interval"
                 disabled={!serviceTypeWatcher}
                 errorText={fieldState.error?.message}
-                label={'Polling Interval'}
+                label="Polling Interval"
                 onBlur={field.onBlur}
                 options={getPollingIntervalOptions()}
                 placeholder="Select a Polling"
@@ -138,9 +138,9 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
             name={`${name}.polling_interval_seconds`}
           />
         </Grid>
-        <Grid item marginTop={{ sm: 1, xs: 0 }} md={'auto'} sm={12} xs={12}>
+        <Grid item marginTop={{ sm: 1, xs: 0 }} md="auto" sm={12} xs={12}>
           <Grid alignItems="flex-start" container>
-            <Grid item md={'auto'} sm={6} xs={12}>
+            <Grid item md="auto" sm={6} xs={12}>
               <Box marginTop={{ md: 4 }}>
                 <Typography
                   sx={{
@@ -157,9 +157,9 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
             <Grid
               item
               md={3}
-              sm={'auto'}
+              sm="auto"
               sx={{ marginTop: { md: 2.5 }, paddingLeft: { md: 1 } }}
-              xs={'auto'}
+              xs="auto"
             >
               <Controller
                 render={({ field, fieldState }) => (
@@ -171,9 +171,9 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                       height: '30px',
                       width: '30px',
                     }}
-                    data-testid={'Trigger-occurences'}
+                    data-testid="Trigger-occurences"
                     errorText={fieldState.error?.message}
-                    label={''}
+                    label=""
                     min={0}
                     name={`${name}.trigger_occurrences`}
                     onBlur={field.onBlur}
@@ -186,7 +186,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 name={`${name}.trigger_occurrences`}
               />
             </Grid>
-            <Grid item md={'auto'} paddingLeft={{ md: 2.5 }} sm={12} xs={12}>
+            <Grid item md="auto" paddingLeft={{ md: 2.5 }} sm={12} xs={12}>
               <Box sx={{ marginTop: { md: 4, sx: 2 } }}>
                 <Typography
                   sx={{

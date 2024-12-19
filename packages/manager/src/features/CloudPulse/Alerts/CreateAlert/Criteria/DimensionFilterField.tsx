@@ -130,7 +130,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               }
               data-testid="Operator"
               errorText={fieldState.error?.message}
-              label={'Operator'}
+              label="Operator"
               onBlur={field.onBlur}
               options={DimensionOperatorOptions}
             />

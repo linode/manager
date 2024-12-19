@@ -30,12 +30,8 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
   return (
     <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
       <>
-        <Box
-          alignItems={'center'}
-          display={'flex'}
-          justifyContent={'space-between'}
-        >
-          <Typography variant={'h3'}>
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          <Typography variant="h3">
             Dimension Filter
             <Typography component="span"> (optional)</Typography>
           </Typography>
