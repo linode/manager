@@ -85,7 +85,7 @@ export const MaskableText = (props: MaskableTextProps) => {
       {iconPosition === 'start' && isToggleable && (
         <VisibilityTooltip
           sx={{
-            marginLeft: 'unset',
+            marginLeft: 0,
             marginRight: '8px',
             ...sxVisibilityTooltip,
           }}

@@ -93,6 +93,7 @@ export const InstallationInstructions = React.memo((props: Props) => {
               isToggleable
               sxTypography={{ color: theme.color.grey1 }}
               text={props.APIKey}
+              sxVisibilityTooltip={{ marginLeft: 1 }}
             />
           </StyledInstructionGrid>
         </Grid>
