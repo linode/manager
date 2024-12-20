@@ -180,15 +180,15 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
               </Hidden>
               <Hidden smDown>
                 {isLkeEnterpriseLAFeatureEnabled &&
-                  cluster.tier !== 'enterprise' && (
-                    <StyledActionButton
-                      disabled={Boolean(dashboardError) || !dashboard}
-                      endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
-                      onClick={() => window.open(dashboard?.url, '_blank')}
-                    >
-                      Kubernetes Dashboard
-                    </StyledActionButton>
-                  )}
+                cluster.tier === 'enterprise' ? undefined : (
+                  <StyledActionButton
+                    disabled={Boolean(dashboardError) || !dashboard}
+                    endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
+                    onClick={() => window.open(dashboard?.url, '_blank')}
+                  >
+                    Kubernetes Dashboard
+                  </StyledActionButton>
+                )}
                 <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
                   Delete Cluster
                 </StyledActionButton>
