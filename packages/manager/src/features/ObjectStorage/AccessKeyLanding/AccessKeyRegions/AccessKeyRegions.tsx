@@ -5,6 +5,8 @@ import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObj
 import { sortByString } from 'src/utilities/sort-by';
 
 import type { Region } from '@linode/api-v4';
+import { useIsObjectStorageGen2Enabled } from '../../hooks/useIsObjectStorageGen2Enabled';
+import { WHITELISTED_REGIONS } from '../../utilities';
 
 interface Props {
   disabled?: boolean;
@@ -27,11 +29,16 @@ export const AccessKeyRegions = (props: Props) => {
     availableStorageRegions,
   } = useObjectStorageRegions();
 
+  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
+
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
   const errorText = error || allRegionsError?.[0]?.reason;
 
   return (
     <RegionMultiSelect
+      forcefullyShownRegionIds={
+        isObjectStorageGen2Enabled ? WHITELISTED_REGIONS : undefined
+      }
       placeholder={
         selectedRegion.length > 0 ? '' : 'Select regions or type to search'
       }
