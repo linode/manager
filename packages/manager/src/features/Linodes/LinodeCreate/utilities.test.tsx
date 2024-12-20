@@ -177,6 +177,7 @@ describe('getInterfacesPayload', () => {
       {
         ipam_address: '',
         label: '',
+        primary: true,
         purpose: 'vpc',
         vpc_id: 5,
       },
@@ -210,6 +211,7 @@ describe('getInterfacesPayload', () => {
       {
         ipam_address: '',
         label: '',
+        primary: true,
         purpose: 'vpc',
         vpc_id: 5,
       },
@@ -248,6 +250,7 @@ describe('getInterfacesPayload', () => {
       {
         ipam_address: '',
         label: '',
+        primary: true,
         purpose: 'vpc',
         vpc_id: 5,
       },
@@ -286,6 +289,7 @@ describe('getInterfacesPayload', () => {
       {
         ipam_address: '',
         label: '',
+        primary: true,
         purpose: 'vpc',
         vpc_id: 5,
       },
