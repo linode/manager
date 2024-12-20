@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
@@ -39,6 +38,7 @@ export const RegionSelect = <
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
+    forcefullyShownRegionIds,
     helperText,
     ignoreAccountAvailability,
     label,
@@ -54,7 +54,6 @@ export const RegionSelect = <
   } = props;
 
   const { isGeckoLAEnabled } = useIsGeckoEnabled();
-  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
   const {
     data: accountAvailability,
@@ -63,7 +62,7 @@ export const RegionSelect = <
 
   const regionOptions = getRegionOptions({
     currentCapability,
-    isObjectStorageGen2Enabled,
+    forcefullyShownRegionIds,
     regionFilter,
     regions,
   });
