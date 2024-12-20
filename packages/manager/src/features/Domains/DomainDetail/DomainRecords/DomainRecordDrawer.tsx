@@ -30,7 +30,7 @@ import {
   transferHelperText as helperText,
   isValidCNAME,
   isValidDomainRecord,
-} from './domainUtils';
+} from '../../domainUtils';
 
 import type {
   Domain,
