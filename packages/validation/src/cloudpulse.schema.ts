@@ -1,7 +1,7 @@
 import { array, number, object, string } from 'yup';
 
 const dimensionFilters = object({
-  dimension_label: string().required('Label is required for the filter.'),
+  dimension_label: string().required('Data Field is required for the filter.'),
   operator: string().required('Operator is required.'),
   value: string().required('Value is required.'),
 });
@@ -25,7 +25,7 @@ const triggerConditionValidation = object({
   trigger_occurrences: number()
     .required('Trigger Occurrences is required.')
     .positive('Value must be greater than zero.')
-    .typeError('Threshold value should be a number.'),
+    .typeError('Trigger Occurrences is required.'),
 });
 
 export const createAlertDefinitionSchema = object({
