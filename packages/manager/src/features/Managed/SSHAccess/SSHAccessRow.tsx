@@ -1,11 +1,13 @@
-import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
 import ActionMenu from './SSHAccessActionMenu';
+
+import type { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 
 interface SSHAccessRowProps {
   linodeSetting: ManagedLinodeSetting;
@@ -30,7 +32,15 @@ export const SSHAccessRow = (props: SSHAccessRowProps) => {
       <Hidden smDown>
         <TableCell data-qa-managed-user>{linodeSetting.ssh.user}</TableCell>
         <TableCell data-qa-managed-ip>
-          {linodeSetting.ssh.ip === 'any' ? 'Any' : linodeSetting.ssh.ip}
+          {linodeSetting.ssh.ip === 'any' ? (
+            'Any'
+          ) : (
+            <MaskableText
+              isToggleable
+              length="ipv4"
+              text={linodeSetting.ssh.ip}
+            />
+          )}
         </TableCell>
         <TableCell data-qa-managed-port>{linodeSetting.ssh.port}</TableCell>
       </Hidden>
