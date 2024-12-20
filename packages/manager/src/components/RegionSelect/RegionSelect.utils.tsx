@@ -40,7 +40,13 @@ export const getRegionOptions = ({
 }: RegionSelectOptionsOptions) => {
   return regions
     .filter((region) => {
-      if (isObjectStorageGen2Enabled && WHITELISTED_REGIONS.has(region.id)) {
+      // @TODO: OBJ Gen2: Remove this one-off logic once these regions (WHITELISTED_REGIONS)
+      // have the `Object Storage` capability.
+      if (
+        currentCapability === 'Object Storage' &&
+        isObjectStorageGen2Enabled &&
+        WHITELISTED_REGIONS.has(region.id)
+      ) {
         return true;
       }
 
