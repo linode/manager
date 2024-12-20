@@ -15,41 +15,17 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
 interface RegionSelectOptionsOptions {
   currentCapability: Capabilities | undefined;
-  /**
-   * @TODO: This is a temporary property to gate the whitelisted regions to Gen2 users
-   */
-  isObjectStorageGen2Enabled?: boolean;
   regionFilter?: RegionFilterValue;
   regions: Region[];
 }
 
-// @TODO: OBJ Gen2: This should be removed once these regions obtain the `Object Storage` capability.
-const WHITELISTED_REGIONS = new Set([
-  'gb-lon',
-  'au-mel',
-  'in-bom-2',
-  'de-fra-2',
-  'sg-sin-2',
-]);
-
 export const getRegionOptions = ({
   currentCapability,
-  isObjectStorageGen2Enabled,
   regionFilter,
   regions,
 }: RegionSelectOptionsOptions) => {
   return regions
     .filter((region) => {
-      // @TODO: OBJ Gen2: Remove this one-off logic once these regions (WHITELISTED_REGIONS)
-      // have the `Object Storage` capability.
-      if (
-        currentCapability === 'Object Storage' &&
-        isObjectStorageGen2Enabled &&
-        WHITELISTED_REGIONS.has(region.id)
-      ) {
-        return true;
-      }
-
       if (
         currentCapability &&
         !region.capabilities.includes(currentCapability)

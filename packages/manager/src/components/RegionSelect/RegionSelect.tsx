@@ -54,7 +54,6 @@ export const RegionSelect = <
   } = props;
 
   const { isGeckoLAEnabled } = useIsGeckoEnabled();
-  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
   const {
     data: accountAvailability,
@@ -63,7 +62,6 @@ export const RegionSelect = <
 
   const regionOptions = getRegionOptions({
     currentCapability,
-    isObjectStorageGen2Enabled,
     regionFilter,
     regions,
   });
