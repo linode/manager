@@ -10,12 +10,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,
@@ -26,13 +20,14 @@ import { truncateEnd } from 'src/utilities/truncate';
 
 import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { DomainRecordDrawer } from './DomainRecordDrawer';
-import { StyledDiv, StyledGrid, StyledTableCell } from './DomainRecords.styles';
+import { StyledDiv, StyledGrid } from './DomainRecords.styles';
 import {
   getNSRecords,
   getTTL,
   msToReadable,
   typeEq,
 } from './DomainRecordsUtils';
+import { DomainRecordTable } from './DomainRecordTable';
 
 import type {
   Domain,
@@ -74,7 +69,7 @@ interface State {
   types: IType[];
 }
 
-interface IType {
+export interface IType {
   columns: {
     render: (r: Domain | DomainRecord) => JSX.Element | null | string;
     title: string;
@@ -92,7 +87,7 @@ const createLink = (title: string, handler: () => void) => (
   </Button>
 );
 
-const DomainRecords = (props: Props) => {
+export const DomainRecords = (props: Props) => {
   const { domain, domainRecords, updateDomain, updateRecords } = props;
 
   const generateTypes = (): IType[] => [
@@ -479,7 +474,7 @@ const DomainRecords = (props: Props) => {
       submitting: false,
     },
     drawer: defaultDrawerState,
-    types: generateTypes(),
+    types: [],
   });
 
   const confirmDeletion = (recordId: number) =>
@@ -624,13 +619,6 @@ const DomainRecords = (props: Props) => {
 
   const resetDrawer = () => updateDrawer(() => defaultDrawerState);
 
-  //   const updateConfirmDialog = (
-  //     fn: (d: ConfirmationState) => ConfirmationState
-  //   ) =>
-  //     this.setState(over(lensPath(['confirmDialog']), fn), () => {
-  //       scrollErrorIntoView();
-  //     });
-
   const updateConfirmDialog = (
     fn: (d: ConfirmationState) => ConfirmationState
   ) => {
@@ -641,9 +629,6 @@ const DomainRecords = (props: Props) => {
       return newState;
     });
   };
-
-  //   const updateDrawer = (fn: (d: DrawerState) => DrawerState) =>
-  //     this.setState(over(lensPath(['drawer']), fn));
 
   const updateDrawer = (fn: (d: DrawerState) => DrawerState) => {
     setState((prevState) => {
@@ -709,49 +694,10 @@ const DomainRecords = (props: Props) => {
                     }) => {
                       return (
                         <>
-                          <Table aria-label={`List of Domains ${type.title}`}>
-                            <TableHead>
-                              <TableRow>
-                                {type.columns.length > 0 &&
-                                  type.columns.map((col, columnIndex) => {
-                                    return (
-                                      <TableCell key={columnIndex}>
-                                        {col.title}
-                                      </TableCell>
-                                    );
-                                  })}
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {type.data.length === 0 ? (
-                                <TableRowEmpty colSpan={type.columns.length} />
-                              ) : (
-                                paginatedData.map((data, idx) => {
-                                  return (
-                                    <TableRow
-                                      data-qa-record-row={type.title}
-                                      key={idx}
-                                    >
-                                      {type.columns.length > 0 &&
-                                        type.columns.map(
-                                          ({ render, title }, columnIndex) => {
-                                            return (
-                                              <StyledTableCell
-                                                data-qa-column={title}
-                                                key={columnIndex}
-                                                parentColumn={title}
-                                              >
-                                                {render(data)}
-                                              </StyledTableCell>
-                                            );
-                                          }
-                                        )}
-                                    </TableRow>
-                                  );
-                                })
-                              )}
-                            </TableBody>
-                          </Table>
+                          <DomainRecordTable
+                            paginatedData={paginatedData}
+                            type={type}
+                          />
                           <PaginationFooter
                             count={count}
                             eventCategory={`${type.title.toLowerCase()} panel`}
@@ -800,5 +746,3 @@ const DomainRecords = (props: Props) => {
     </>
   );
 };
-
-export default DomainRecords;
