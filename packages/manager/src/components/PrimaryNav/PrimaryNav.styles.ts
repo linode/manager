@@ -24,20 +24,14 @@ export const StyledGrid = styled(Grid, {
 
 export const StyledLogoBox = styled(Box, {
   label: 'StyledLogoBox',
-  shouldForwardProp: omittedProps(['isCollapsed']),
-})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
+})(({ theme }) => ({
   alignItems: 'center',
   backgroundColor: theme.name === 'dark' ? theme.bg.appBar : undefined,
   display: 'flex',
-  height: 50,
+  height: 32,
   paddingLeft: 13,
+  paddingRight: 16,
   transition: 'padding-left .03s linear',
-  ...(props.isCollapsed && {
-    '& .akamai-logo-name': {
-      opacity: 0,
-    },
-    paddingLeft: 8,
-  }),
 }));
 
 export const StyledAkamaiLogo = styled(AkamaiLogo, {

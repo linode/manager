@@ -77,13 +77,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
       paddingRight: 0,
       paddingTop: theme.spacing(2),
     },
+    [theme.breakpoints.up(960)]: {
+      marginLeft: SIDEBAR_WIDTH,
+    },
     transition: theme.transitions.create('opacity'),
   },
   content: {
     flex: 1,
-    [theme.breakpoints.up('md')]: {
-      marginLeft: SIDEBAR_WIDTH,
-    },
     transition: 'margin-left .1s linear',
   },
   fullWidthContent: {
@@ -303,10 +303,10 @@ export const MainContent = () => {
         <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
-              <SideMenu
-                closeMenu={() => toggleMenu(false)}
-                collapse={desktopMenuIsOpen || false}
-                open={menuIsOpen}
+              <MainContentBanner />
+              <TopMenu
+                desktopMenuToggle={desktopMenuToggle}
+                username={username}
               />
               <div
                 className={cx(classes.content, {
@@ -315,12 +315,10 @@ export const MainContent = () => {
                     (desktopMenuIsOpen && desktopMenuIsOpen === true),
                 })}
               >
-                <MainContentBanner />
-                <TopMenu
-                  desktopMenuToggle={desktopMenuToggle}
-                  isSideMenuOpen={!desktopMenuIsOpen}
-                  openSideMenu={() => toggleMenu(true)}
-                  username={username}
+                <SideMenu
+                  closeMenu={() => toggleMenu(false)}
+                  collapse={desktopMenuIsOpen || false}
+                  open={menuIsOpen}
                 />
                 <main
                   className={classes.cmrWrapper}

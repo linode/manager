@@ -1,9 +1,8 @@
 import { Box, Button, Divider } from '@linode/ui';
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Popover, Stack, useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
+import Add from 'src/assets/icons/add.svg';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
@@ -152,9 +151,10 @@ export const CreateMenu = () => {
         aria-haspopup="true"
         buttonType="primary"
         data-qa-add-new-menu-button
-        endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
         id="create-menu"
         onClick={handleClick}
+        startIcon={<Add />}
+        sx={{ height: '34px', width: '89px' }}
       >
         Create
       </Button>

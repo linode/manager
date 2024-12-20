@@ -1,18 +1,17 @@
 import { Box } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
+import IAM from 'src/assets/icons/entityIcons/iam.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import More from 'src/assets/icons/more.svg';
-import IAM from 'src/assets/icons/entityIcons/iam.svg';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountSettings } from 'src/queries/account/settings';
@@ -24,15 +23,12 @@ import {
 import PrimaryLink from './PrimaryLink';
 import {
   StyledAccordion,
-  StyledAkamaiLogo,
   StyledDivider,
   StyledGrid,
-  StyledLogoBox,
 } from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
 
 import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
-import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
 
 export type NavEntity =
   | 'Account'
@@ -91,7 +87,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
-  const { isIAMEnabled, isIAMBeta } = useIsIAMEnabled();
+  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
 
   const { data: collapsedSideNavPreference } = usePreferences(
     (preferences) => preferences?.collapsedSideNavProductFamilies
@@ -288,20 +284,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       spacing={0}
       wrap="nowrap"
     >
-      <Grid sx={{ width: '100%' }}>
-        <StyledLogoBox isCollapsed={isCollapsed}>
-          <Link
-            aria-label="Akamai - Dashboard"
-            onClick={closeMenu}
-            style={{ lineHeight: 0 }}
-            title="Akamai - Dashboard"
-            to={`/dashboard`}
-          >
-            <StyledAkamaiLogo width={83} />
-          </Link>
-        </StyledLogoBox>
-        <StyledDivider />
-      </Grid>
       {productFamilyLinkGroups.map((productFamily, idx) => {
         const filteredLinks = productFamily.links.filter((link) => !link.hide);
         if (filteredLinks.length === 0) {
