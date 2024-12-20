@@ -72,6 +72,7 @@ const StyledDrawer = styled(Drawer, {
     boxShadow: 'none',
     height: '100%',
     left: 'inherit',
+    marginTop: '50px',
     overflowX: 'hidden',
     transform: 'none',
     transition: 'width linear .1s',
