@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
+import { useIsObjectStorageGen2Enabled } from '../hooks/useIsObjectStorageGen2Enabled';
+import { WHITELISTED_REGIONS } from '../utilities';
 
 interface Props {
   disabled?: boolean;
@@ -20,11 +22,16 @@ export const BucketRegions = (props: Props) => {
     availableStorageRegions,
   } = useObjectStorageRegions();
 
+  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
+
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
   const errorText = error || allRegionsError?.[0]?.reason;
 
   return (
     <RegionSelect
+      forcefullyShownRegionIds={
+        isObjectStorageGen2Enabled ? WHITELISTED_REGIONS : undefined
+      }
       currentCapability="Object Storage"
       disableClearable
       disabled={disabled}
