@@ -25,7 +25,7 @@ export const BucketRegions = (props: Props) => {
 
   return (
     <RegionSelect
-      currentCapability="Object Storage"
+      currentCapability={undefined} // filtering is handled by the `useObjectStorageRegions` hook
       disableClearable
       disabled={disabled}
       errorText={errorText}

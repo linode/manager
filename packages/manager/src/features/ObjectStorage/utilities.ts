@@ -1,5 +1,6 @@
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 
+import type { Region } from '@linode/api-v4';
 import type { AccountSettings } from '@linode/api-v4/lib/account';
 import type {
   ACLType,
@@ -172,25 +173,48 @@ export const objectACLHelperText: Record<ACLType, string> = {
   'public-read-write': 'Public Read/Write ACL',
 };
 
+// @TODO: OBJ Gen2: This should be removed once these regions obtain the `Object Storage` capability.
+const WHITELISTED_REGIONS = new Set([
+  'gb-lon',
+  'au-mel',
+  'in-bom-2',
+  'de-fra-2',
+  'sg-sin-2',
+]);
+
 /**
  * For OBJ Gen2 users, filter regions based on available Object Storage endpoints.
  * Otherwise, we return the regions as is.
  */
-export const filterRegionsByEndpoints = <T extends { id: string }>(
-  regions: T[] | undefined,
-  objecStorageEndpoints: ObjectStorageEndpoint[] | undefined
-): T[] => {
+export const filterRegionsByEndpoints = (
+  regions: Region[] | undefined,
+  objecStorageEndpoints: ObjectStorageEndpoint[] | undefined,
+  isObjectStorageGen2Enabled: boolean
+): Region[] => {
   if (!regions) {
     return [];
   }
 
+  const regionsWithObjectStorage = regions.filter((r) => {
+    if (isObjectStorageGen2Enabled) {
+      // If Object Storage Gen2 is enabled, we need to include WHITELISTED_REGIONS
+      return (
+        r.capabilities.includes('Object Storage') ||
+        WHITELISTED_REGIONS.has(r.id)
+      );
+    }
+    return r.capabilities.includes('Object Storage');
+  });
+
   if (!objecStorageEndpoints) {
-    return regions;
+    return regionsWithObjectStorage;
   }
 
   const endpointRegions = new Set(
     objecStorageEndpoints.map((endpoint) => endpoint.region)
   );
 
-  return regions.filter((region) => endpointRegions.has(region.id));
+  return regionsWithObjectStorage.filter((region) =>
+    endpointRegions.has(region.id)
+  );
 };

@@ -35,7 +35,7 @@ export const AccessKeyRegions = (props: Props) => {
       placeholder={
         selectedRegion.length > 0 ? '' : 'Select regions or type to search'
       }
-      currentCapability="Object Storage"
+      currentCapability={undefined} // filtering is handled by the `useObjectStorageRegions` hook
       disabled={disabled}
       errorText={errorText}
       isClearable={false}
