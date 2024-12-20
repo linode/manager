@@ -196,16 +196,18 @@ export const getInterfacesPayload = (
   const hasVPC = Boolean(vpcInterface.vpc_id);
   const hasVLAN = Boolean(vlanInterface.label);
 
+  const vpcInterfaceAsPrimary = { ...vpcInterface, primary: true };
+
   if (hasVPC && hasVLAN && hasPrivateIP) {
-    return [vpcInterface, vlanInterface, publicInterface];
+    return [vpcInterfaceAsPrimary, vlanInterface, publicInterface];
   }
 
   if (hasVLAN && hasVPC) {
-    return [vpcInterface, vlanInterface];
+    return [vpcInterfaceAsPrimary, vlanInterface];
   }
 
   if (hasVPC && hasPrivateIP) {
-    return [vpcInterface, publicInterface];
+    return [vpcInterfaceAsPrimary, publicInterface];
   }
 
   if (hasVLAN) {
@@ -213,7 +215,7 @@ export const getInterfacesPayload = (
   }
 
   if (hasVPC) {
-    return [vpcInterface];
+    return [vpcInterfaceAsPrimary];
   }
 
   // If no special case is met, don't send `interfaces` in the Linode
