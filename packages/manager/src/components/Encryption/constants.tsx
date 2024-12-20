@@ -49,9 +49,6 @@ export const DISK_ENCRYPTION_DESCRIPTION_NODE_POOL_REBUILD_CAVEAT =
 export const DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY =
   'Virtual Machine Backups are not encrypted.';
 
-export const DISK_ENCRYPTION_IMAGES_CAVEAT_COPY =
-  'Virtual Machine Images are not encrypted.';
-
 export const ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON =
   'The Encrypt Disk setting cannot be changed for a Linode attached to a node pool.';
 
