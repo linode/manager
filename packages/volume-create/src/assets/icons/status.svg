@@ -1,0 +1,15 @@
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+  y="0px" style="enable-background:new 0 0 64 64;" xml:space="preserve" fill="none">
+  <title>Group</title>
+  <circle id="background" class="outerCircle" stroke-width="2" cx="31.9" cy="31.9" r="29.9"></circle>
+  <g id="Status-page-icon" fill-rule="evenodd" class="insidePath" transform="translate(16.000000, 19.000000)">
+    <g id="Artboard-Copy" transform="translate(-319.000000, -396.000000)">
+      <g id="Group" transform="translate(319.000000, 396.000000)">
+        <rect id="Rectangle" stroke-width="2" x="1" y="1" width="30" height="21"></rect>
+        <line x1="10.5" y1="25.5" x2="22.5" y2="25.5" id="Line" stroke-width="2" stroke-linecap="square"></line>
+        <polyline id="Path-2"
+          points="5.40261339 17.5963174 13.2194757 9.11530643 19.1871196 14.7389396 27.3256132 5.65051209"></polyline>
+      </g>
+    </g>
+  </g>
+</svg>
