@@ -22,7 +22,7 @@ export const BucketRegions = (props: Props) => {
     availableStorageRegions,
   } = useObjectStorageRegions();
 
-  const { isObjectStorageGen2Enabled}  = useIsObjectStorageGen2Enabled();
+  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
   const errorText = error || allRegionsError?.[0]?.reason;
