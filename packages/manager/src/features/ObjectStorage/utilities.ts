@@ -174,7 +174,7 @@ export const objectACLHelperText: Record<ACLType, string> = {
 };
 
 // @TODO: OBJ Gen2: This should be removed once these regions obtain the `Object Storage` capability.
-const WHITELISTED_REGIONS = new Set([
+export const WHITELISTED_REGIONS = new Set([
   'gb-lon',
   'au-mel',
   'in-bom-2',
@@ -186,35 +186,21 @@ const WHITELISTED_REGIONS = new Set([
  * For OBJ Gen2 users, filter regions based on available Object Storage endpoints.
  * Otherwise, we return the regions as is.
  */
-export const filterRegionsByEndpoints = (
-  regions: Region[] | undefined,
-  objecStorageEndpoints: ObjectStorageEndpoint[] | undefined,
-  isObjectStorageGen2Enabled: boolean
-): Region[] => {
+export const filterRegionsByEndpoints = <T extends { id: string }>(
+  regions: T[] | undefined,
+  objecStorageEndpoints: ObjectStorageEndpoint[] | undefined
+): T[] => {
   if (!regions) {
     return [];
   }
 
-  const regionsWithObjectStorage = regions.filter((r) => {
-    if (isObjectStorageGen2Enabled) {
-      // If Object Storage Gen2 is enabled, we need to include WHITELISTED_REGIONS
-      return (
-        r.capabilities.includes('Object Storage') ||
-        WHITELISTED_REGIONS.has(r.id)
-      );
-    }
-    return r.capabilities.includes('Object Storage');
-  });
-
   if (!objecStorageEndpoints) {
-    return regionsWithObjectStorage;
+    return regions;
   }
 
   const endpointRegions = new Set(
     objecStorageEndpoints.map((endpoint) => endpoint.region)
   );
 
-  return regionsWithObjectStorage.filter((region) =>
-    endpointRegions.has(region.id)
-  );
+  return regions.filter((region) => endpointRegions.has(region.id));
 };

@@ -38,6 +38,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
+    forcefullyShownRegionIds,
     helperText,
     isClearable,
     label,
@@ -51,8 +52,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     ...rest
   } = props;
 
-  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
-
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
@@ -60,7 +59,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
 
   const regionOptions = getRegionOptions({
     currentCapability,
-    isObjectStorageGen2Enabled,
+    forcefullyShownRegionIds,
     regions,
   });
 
