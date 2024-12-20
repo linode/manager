@@ -13,21 +13,27 @@ import type { CloudPulseMetricsResponse } from '@linode/api-v4';
 it('test generateMaxUnit method', () => {
   const legendRowsData = [
     {
-      data: { average: 30, last: 40, length: 3, max: 50, total: 120 },
+      data: { average: 1500, last: 1600, length: 3, max: 2000, total: 4500 },
       format: formatPercentage,
       legendColor: '#000',
       legendTitle: 'linode-1',
     },
     {
-      data: { average: 45, last: 60, length: 3, max: 75, total: 180 },
+      data: {
+        average: 2000000,
+        last: 2100000,
+        length: 3,
+        max: 2500000,
+        total: 6000000,
+      },
       format: formatPercentage,
       legendColor: '#000',
       legendTitle: 'linode-2',
     },
   ];
 
-  const result = generateMaxUnit(legendRowsData, '%');
-  expect(result).toBe('%');
+  const result = generateMaxUnit(legendRowsData, 'Bytes');
+  expect(result).toBe('MB');
 });
 
 it('test getLabelName method', () => {
