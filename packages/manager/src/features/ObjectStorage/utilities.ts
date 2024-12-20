@@ -1,6 +1,5 @@
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 
-import type { Region } from '@linode/api-v4';
 import type { AccountSettings } from '@linode/api-v4/lib/account';
 import type {
   ACLType,

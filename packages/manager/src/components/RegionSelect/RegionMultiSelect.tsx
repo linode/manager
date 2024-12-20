@@ -3,7 +3,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
-import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
