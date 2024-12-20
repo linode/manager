@@ -8,7 +8,7 @@ import { Metric } from './Metric';
 
 import type { CreateAlertDefinitionForm } from '../types';
 import type { AvailableMetrics } from '@linode/api-v4';
-const mockData: AvailableMetrics[] = [
+export const mockData: AvailableMetrics[] = [
   {
     available_aggregate_functions: ['min', 'max', 'avg'],
     dimensions: [

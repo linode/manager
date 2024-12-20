@@ -74,7 +74,12 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   }, [selectedDimension]);
 
   return (
-    <Grid alignItems="flex-start" container spacing={2}>
+    <Grid
+      alignItems="flex-start"
+      container
+      data-testid={`${name}-id`}
+      spacing={2}
+    >
       <Grid item md={3} sm={6} xs={12}>
         <Controller
           render={({ field, fieldState }) => (
