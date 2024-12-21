@@ -9,10 +9,9 @@ import React, { useEffect, useState } from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getRegionsByRegionId } from 'src/utilities/regions';
 import { sortByString } from 'src/utilities/sort-by';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
@@ -108,9 +107,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     open,
   } = props;
 
-  const { data: regions } = useRegionsQuery();
-
-  const regionsLookup = regions && getRegionsByRegionId(regions);
+  const { regionsByIdMap } = useObjectStorageRegions();
 
   const {
     data: objectStorageBuckets,
@@ -209,7 +206,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     );
     formik.setFieldValue(
       'bucket_access',
-      getDefaultScopes(bucketsInRegions, regionsLookup)
+      getDefaultScopes(bucketsInRegions, regionsByIdMap)
     );
   };
 
@@ -292,10 +289,9 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
               );
               formik.setFieldValue(
                 'bucket_access',
-                getDefaultScopes(bucketsInRegions, regionsLookup)
+                getDefaultScopes(bucketsInRegions, regionsByIdMap)
               );
               formik.setFieldValue('regions', values);
-              formik.setFieldTouched('regions', true, true);
             }}
             disabled={isRestrictedUser}
             name="regions"

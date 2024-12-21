@@ -418,7 +418,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
       if (vpcId) {
         queryClient.invalidateQueries({
-          queryKey: vpcQueries.all.queryKey,
+          queryKey: vpcQueries.all._def,
         });
         queryClient.invalidateQueries({
           queryKey: vpcQueries.paginated._def,

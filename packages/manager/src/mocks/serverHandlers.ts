@@ -699,9 +699,19 @@ export const handlers = [
         type: 'g5-standard-20-s1',
       }),
       linodeFactory.build({
+        label: 'linode_with_tags_test1_test2',
         // eslint-disable-next-line sonarjs/no-duplicate-string
         region: 'us-central',
-        tags: ['test2'],
+        tags: ['test1', 'test2'],
+      }),
+      linodeFactory.build({
+        label: 'linode_with_tags_test2_test3',
+        region: 'us-central',
+        tags: ['test2', 'test3'],
+      }),
+      linodeFactory.build({
+        label: 'linode_with_no_tags',
+        region: 'us-central',
       }),
       linodeFactory.build({
         label: 'eu-linode',
@@ -1196,9 +1206,17 @@ export const handlers = [
   http.delete('*object-storage/keys/:id', () => {
     return HttpResponse.json({});
   }),
-  http.get('*/domains', () => {
+  http.get('*/v4/domains', () => {
     const domains = domainFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(domains));
+  }),
+  http.get('*/v4/domains/:id', () => {
+    const domain = domainFactory.build();
+    return HttpResponse.json(domain);
+  }),
+  http.get('*/v4/domains/*/records', () => {
+    const records = domainRecordFactory.buildList(1);
+    return HttpResponse.json(makeResourcePage(records));
   }),
   http.post('*/domains/*/records', () => {
     const record = domainRecordFactory.build();
@@ -2106,6 +2124,11 @@ export const handlers = [
           enrolled: DateTime.now().minus({ days: 20 }).toISO(),
           started: DateTime.now().minus({ days: 30 }).toISO(),
         }),
+        accountBetaFactory.build({
+          ended: DateTime.now().plus({ days: 5 }).toISO(),
+          enrolled: undefined,
+          started: DateTime.now().minus({ days: 30 }).toISO(),
+        }),
       ])
     );
   }),
@@ -2727,6 +2750,13 @@ export const handlers = [
     };
 
     return HttpResponse.json(response);
+  }),
+  http.get('*/src/routes/*LazyRoutes', ({ request }) => {
+    return new Response('export const module = {};', {
+      headers: {
+        'Content-Type': 'application/javascript',
+      },
+    });
   }),
   ...entityTransfers,
   ...statusPage,

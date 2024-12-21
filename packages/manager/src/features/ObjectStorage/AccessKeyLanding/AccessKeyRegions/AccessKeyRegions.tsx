@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { sortByString } from 'src/utilities/sort-by';
 
 import type { Region } from '@linode/api-v4';
@@ -22,10 +22,13 @@ const sortRegionOptions = (a: Region, b: Region) => {
 export const AccessKeyRegions = (props: Props) => {
   const { disabled, error, onChange, required, selectedRegion } = props;
 
-  const { data: regions, error: regionsError } = useRegionsQuery();
+  const {
+    allRegionsError,
+    availableStorageRegions,
+  } = useObjectStorageRegions();
 
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
-  const errorText = error || regionsError?.[0]?.reason;
+  const errorText = error || allRegionsError?.[0]?.reason;
 
   return (
     <RegionMultiSelect
@@ -38,7 +41,7 @@ export const AccessKeyRegions = (props: Props) => {
       isClearable={false}
       label="Regions"
       onChange={onChange}
-      regions={regions ?? []}
+      regions={availableStorageRegions ?? []}
       required={required}
       selectedIds={selectedRegion}
       sortRegionOptions={sortRegionOptions}
