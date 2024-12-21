@@ -259,6 +259,7 @@ Omit<typeof basePermNameMap, T[number]['name']> => {
  * Determines whether a selection has been made for every scope, since by default, the scope permissions are set to null.
  *
  * @param scopeTuples - The array of scope tuples.
+ * @param excludedPerms - The permission keys to be excluded from this check.
  * @returns {boolean} True if all scopes have permissions set to none/read_only/read_write, false otherwise.
  */
 export const hasAccessBeenSelectedForAllScopes = (
