@@ -157,15 +157,15 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
       });
   });
 
-  it.skip('Verify the users tag preferences are correctly applied and reflected in the system', () => {
+  it('Verify the users tag preferences are correctly applied and reflected in the system', () => {
     mockGetUserPreferences({
       theme: 'dark',
       aclpPreference: {
         dashboardId: 1,
         widgets: {},
-        tags: ["tag-4"],
+        tags: ["tag-4","tag-2"],
         region: 'us-ord',
-        resources: ['1'],
+        resources: ['1','2'],
       },
     }).as('fetchPutPreferences');
 
@@ -188,9 +188,17 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
           .should('be.visible')
           .should('have.text', linodes[0].label);
 
+          cy.get(`[data-qa-value="Resources ${linodes[1].label}"]`)
+          .should('be.visible')
+          .should('have.text', linodes[1].label);
+
         cy.get('[data-qa-value="Tags tag-4"]')
           .should('be.visible')
           .should('have.text', 'tag-4');
+
+          cy.get('[data-qa-value="Tags tag-2"]')
+          .should('be.visible')
+          .should('have.text', 'tag-2');
       });
   });
 
