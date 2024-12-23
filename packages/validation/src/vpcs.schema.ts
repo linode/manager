@@ -2,17 +2,19 @@ import ipaddr from 'ipaddr.js';
 import { array, lazy, object, string } from 'yup';
 
 const LABEL_MESSAGE = 'Label must be between 1 and 64 characters.';
-const LABEL_REQUIRED = 'Label is required';
+const LABEL_REQUIRED = 'Label is required.';
 const LABEL_REQUIREMENTS =
-  'Must include only ASCII letters, numbers, and dashes';
+  'Label must include only ASCII letters, numbers, and dashes.';
 
 const labelTestDetails = {
   testName: 'no two dashes in a row',
-  testMessage: 'Must not contain two dashes in a row',
+  testMessage: 'Label must not contain two dashes in a row.',
 };
 
 const IP_EITHER_BOTH_NOT_NEITHER =
   'A subnet must have either IPv4 or IPv6, or both, but not neither.';
+// @TODO VPC - remove below constant when IPv6 is added
+const TEMPORARY_IPV4_REQUIRED_MESSAGE = 'A subnet must have an IPv4 range.';
 
 export const determineIPType = (ip: string) => {
   try {
@@ -114,11 +116,11 @@ const labelValidation = string()
   )
   .min(1, LABEL_MESSAGE)
   .max(64, LABEL_MESSAGE)
-  .matches(/[a-zA-Z0-9-]+/, LABEL_REQUIREMENTS);
+  .matches(/^[a-zA-Z0-9-]*$/, LABEL_REQUIREMENTS);
 
 export const updateVPCSchema = object({
-  label: labelValidation.notRequired(),
-  description: string().notRequired(),
+  label: labelValidation,
+  description: string(),
 });
 
 export const createSubnetSchema = object().shape(
@@ -128,9 +130,11 @@ export const createSubnetSchema = object().shape(
       is: (value: unknown) =>
         value === '' || value === null || value === undefined,
       then: (schema) =>
-        schema.required(IP_EITHER_BOTH_NOT_NEITHER).test({
+        // @TODO VPC - change required message back to IP_EITHER_BOTH_NOT_NEITHER when IPv6 is supported
+        // Since only IPv4 is currently supported, subnets must have an IPv4
+        schema.required(TEMPORARY_IPV4_REQUIRED_MESSAGE).test({
           name: 'IPv4 CIDR format',
-          message: 'The IPv4 range must be in CIDR format',
+          message: 'The IPv4 range must be in CIDR format.',
           test: (value) =>
             vpcsValidateIP({
               value,
@@ -147,7 +151,7 @@ export const createSubnetSchema = object().shape(
             case 'string':
               return schema.notRequired().test({
                 name: 'IPv4 CIDR format',
-                message: 'The IPv4 range must be in CIDR format',
+                message: 'The IPv4 range must be in CIDR format.',
                 test: (value) =>
                   vpcsValidateIP({
                     value,

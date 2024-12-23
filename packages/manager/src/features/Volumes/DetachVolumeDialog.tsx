@@ -10,13 +10,14 @@ import { useDetachVolumeMutation } from 'src/queries/volumes/volumes';
 import type { Volume } from '@linode/api-v4';
 
 interface Props {
+  isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: Volume | undefined;
 }
 
 export const DetachVolumeDialog = (props: Props) => {
-  const { onClose, open, volume } = props;
+  const { isFetching, onClose, open, volume } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -53,6 +54,7 @@ export const DetachVolumeDialog = (props: Props) => {
         primaryBtnText: 'Detach',
         type: 'Volume',
       }}
+      isFetching={isFetching}
       label="Volume Label"
       loading={isPending}
       onClick={onDetach}

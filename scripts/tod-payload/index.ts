@@ -24,7 +24,7 @@ program
   });
 
 const main = async (junitPath: string) => {
-  const resolvedJunitPath = resolve(junitPath);
+  const resolvedJunitPath = resolve(import.meta.dirname, '..', '..', junitPath);
 
   // Create an array of absolute file paths to JUnit XML report files.
   // Account for cases where `resolvedJunitPath` is a path to a directory
