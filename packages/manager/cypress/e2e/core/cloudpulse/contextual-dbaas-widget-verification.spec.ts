@@ -153,13 +153,12 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       aclp: { beta: true, enabled: true },
     });
     mockGetAccount(mockAccount);
-    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
+    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboard(1, dashboard).as('getDashboard');
     mockCreateCloudPulseJWEToken(serviceType).as('getServiceType');
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
     );
-    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices(serviceType).as('fetchServices');
     mockGetDatabase(databaseMock).as('getDatabase');

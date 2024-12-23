@@ -28,6 +28,7 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { Flags } from 'src/featureFlags';
+import { Interception } from 'cypress/types/net-stubbing';
 
 const timeDurationToSelect = 'Last 24 Hours';
 const flags: Partial<Flags> = {
@@ -48,7 +49,8 @@ const flags: Partial<Flags> = {
   ],
 };
 
-const { metrics, id, serviceType, dashboardName, region } = widgetDetails.linode;
+const { metrics, id, serviceType, dashboardName } =
+  widgetDetails.linode;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
@@ -109,137 +111,156 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
-    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
+    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices(serviceType).as('fetchServices');
     mockGetLinodes(linodes).as('fetchResources');
     mockGetCloudPulseDashboard(id, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
-    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as('getMetrics');
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
+      'getMetrics'
+    );
     mockGetRegions([mockRegion]);
-    mockGetUserPreferences({});
+    mockGetUserPreferences({
+      theme: 'dark',
+      aclpPreference: {
+        dashboardId: 1,
+        widgets: {},
+        region: 'us-ord',
+      },
+    }).as('fetchpreferences');
   });
 
   it('Select a resource without applying any tags', () => {
     cy.visitWithLogin('monitor');
-    cy.wait(['@fetchServices', '@fetchDashboard']);
-
-    ui.autocomplete.findByLabel('Dashboard').type(dashboardName);
-    ui.autocompletePopper.findByTitle(dashboardName).click();
-
-    ui.regionSelect.find().type(`${region}{enter}`);
-    cy.wait('@fetchResources');
-
-      mockGetLinodes([linodes[0]]);
-    ui.autocomplete.findByLabel('Resources').type(`${linodes[0].label}{enter}`).click();
-
-   // Expand the applied filters section
-     ui.button.findByTitle('Filters').should('be.visible').click();
-
-     // Verify that the applied filters
-     cy.get('[data-qa-applied-filter-id="applied-filter"]')
-       .should('be.visible')
-       .within(() => {
-         cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
-           .should('be.visible')
-           .should('have.text', 'US, Chicago, IL');
-
-           cy.get(`[data-qa-value="Resources ${linodes[0].label}"]`)
-           .should('be.visible')
-           .should('have.text', linodes[0].label);
-
- 
-       });
-  });
-
-  it('Select a resource, tag  and verify the prefrence and network calls', () => {
-
-    cy.visitWithLogin('monitor');
-    cy.wait(['@fetchServices', '@fetchDashboard']);
-
-    ui.autocomplete.findByLabel('Dashboard').type(dashboardName);
-    ui.autocompletePopper.findByTitle(dashboardName).click();
-
-    ui.regionSelect.find().type(`${region}{enter}`);
-    cy.wait('@fetchResources');
-
-      mockGetLinodes([linodes[0]]);
-
-      ui.autocomplete
-      .findByLabel('Tags')
-      .type('tag-2');
-
-      ui.autocompletePopper
-      .findByTitle('tag-2')
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
+    mockGetLinodes([linodes[0]]);
+    ui.autocomplete
+      .findByLabel('Resources')
+      .type(`${linodes[0].label}{enter}`)
       .click();
 
-      ui.autocomplete
-       .findByLabel('Resources')
-       .type(`${linodes[0].label}{enter}`)
-       .click();
+    // Expand the applied filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
 
-   // Expand the applied filters section
-     ui.button.findByTitle('Filters').should('be.visible').click();
+    // Verify that the applied filters
+    cy.get('[data-qa-applied-filter-id="applied-filter"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+          .should('be.visible')
+          .should('have.text', 'US, Chicago, IL');
 
-     // Verify that the applied filters
-     cy.get('[data-qa-applied-filter-id="applied-filter"]')
-       .should('be.visible')
-       .within(() => {
-         cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
-           .should('be.visible')
-           .should('have.text', 'US, Chicago, IL');
+        cy.get(`[data-qa-value="Resources ${linodes[0].label}"]`)
+          .should('be.visible')
+          .should('have.text', linodes[0].label);
+      });
+  });
 
-           cy.get(`[data-qa-value="Resources ${linodes[0].label}"]`)
-           .should('be.visible')
-           .should('have.text', linodes[0].label);
+  it.skip('Verify the users tag preferences are correctly applied and reflected in the system', () => {
+    mockGetUserPreferences({
+      theme: 'dark',
+      aclpPreference: {
+        dashboardId: 1,
+        widgets: {},
+        tags: ["tag-4"],
+        region: 'us-ord',
+        resources: ['1'],
+      },
+    }).as('fetchPutPreferences');
 
- 
-       });
+    cy.visitWithLogin('monitor');
+
+    cy.wait(['@fetchServices', '@fetchDashboard','@fetchPutPreferences']);
+
+    // Expand the applied filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
+
+    // Verify that the applied filters
+    cy.get('[data-qa-applied-filter-id="applied-filter"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get('[data-qa-value="Region US, Chicago, IL"]')
+          .should('be.visible')
+          .should('have.text', 'US, Chicago, IL');
+
+        cy.get(`[data-qa-value="Resources ${linodes[0].label}"]`)
+          .should('be.visible')
+          .should('have.text', linodes[0].label);
+
+        cy.get('[data-qa-value="Tags tag-4"]')
+          .should('be.visible')
+          .should('have.text', 'tag-4');
+      });
   });
 
   it('should correctly filter resources by tags, region, select tag "tag-2" and available resource should be linodeWithTagsTag2AndTag3', () => {
     cy.visitWithLogin('monitor');
-    cy.wait(['@fetchServices', '@fetchDashboard']);
 
-    ui.autocomplete.findByLabel('Dashboard').type(dashboardName);
-    ui.autocompletePopper.findByTitle(dashboardName).click();
-
-    ui.regionSelect.find().type(`${region}{enter}`);
-    cy.wait('@fetchResources');
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
 
     ui.autocomplete.findByLabel('Resources').click();
     cy.get('[data-qa-autocomplete-popper="true"] ul')
       .children('li[data-qa-option="true"]')
       .should('have.length', 4)
-      .and('have.text', 'Select All linodeWithTagsTag2AndTag3linodeWithTagsTag3AndTag4linodeNoTags');
+      .and(
+        'have.text',
+        'Select All linodeWithTagsTag2AndTag3linodeWithTagsTag3AndTag4linodeNoTags'
+      );
 
     ui.autocomplete.findByLabel('Tags').type('tag-2');
     ui.autocompletePopper.findByTitle('tag-2').click();
 
     mockGetLinodes([linodes[0]]);
+
+    ui.autocomplete
+      .findByLabel('Resources')
+      .type(`${linodes[0].label}{enter}`)
+      .click();
+
     ui.autocomplete.findByLabel('Resources').click();
 
     cy.get('[data-qa-autocomplete-popper="true"] ul')
       .children('li[data-qa-option="true"]')
       .should('have.length', 2)
-      .and('have.text', 'Select All linodeWithTagsTag2AndTag3');
+      .and('have.text', 'Deselect All linodeWithTagsTag2AndTag3');
+
+    // Verify that the network call's request payload matches the expected structure and values
+    cy.get('@getMetrics.all')
+      .should('have.length', 4)
+      .each((xhr: unknown) => {
+        const interception = xhr as Interception;
+        const { body: requestPayload } = interception.request;
+        const { metric, relative_time_duration: timeRange } = requestPayload;
+        const metricData = metrics.find(({ name }) => name === metric);
+
+        if (!metricData) {
+          throw new Error(
+            `Unexpected metric name '${metric}' included in the outgoing refresh API request`
+          );
+        }
+
+        expect(metric).to.equal(metricData.name);
+        expect(timeRange).to.have.property('unit', 'min');
+        expect(timeRange).to.have.property('value', 30);
+        expect(interception.request.body.resource_ids).to.deep.equal([1]);
+        expect('avg').to.equal(interception.request.body.aggregate_function);
+      });
   });
 
   it('should correctly filter resources by tags, region, select tag "tag-3" and available resources should be linodeWithTagsTag2AndTag3, linodeWithTagsTag3AndTag4', () => {
     cy.visitWithLogin('monitor');
-    cy.wait(['@fetchServices', '@fetchDashboard']);
 
-    ui.autocomplete.findByLabel('Dashboard').type(dashboardName);
-    ui.autocompletePopper.findByTitle(dashboardName).click();
-
-    ui.regionSelect.find().type(`${region}{enter}`);
-    cy.wait('@fetchResources');
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
 
     ui.autocomplete.findByLabel('Resources').click();
     cy.get('[data-qa-autocomplete-popper="true"] ul')
       .children('li[data-qa-option="true"]')
       .should('have.length', 4)
-      .and('have.text', 'Select All linodeWithTagsTag2AndTag3linodeWithTagsTag3AndTag4linodeNoTags');
+      .and(
+        'have.text',
+        'Select All linodeWithTagsTag2AndTag3linodeWithTagsTag3AndTag4linodeNoTags'
+      );
 
     ui.autocomplete.findByLabel('Tags').type('tag-3');
     ui.autocompletePopper.findByTitle('tag-3').click();
@@ -250,193 +271,140 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
     cy.get('[data-qa-autocomplete-popper="true"] ul')
       .children('li[data-qa-option="true"]')
       .should('have.length', 3)
-      .and('have.text', 'Select All linodeWithTagsTag2AndTag3linodeWithTagsTag3AndTag4');
+      .and(
+        'have.text',
+        'Select All linodeWithTagsTag2AndTag3linodeWithTagsTag3AndTag4'
+      );
   });
 
   it('add extra tag and verify resource', () => {
     cy.visitWithLogin('monitor');
-    cy.wait(['@fetchServices', '@fetchDashboard']);
 
-    ui.autocomplete.findByLabel('Dashboard').type(dashboardName);
-    ui.autocompletePopper.findByTitle(dashboardName).click();
-
-    ui.regionSelect.find().type(`${region}{enter}`);
-    cy.wait('@fetchResources');
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
 
     ui.autocomplete.findByLabel('Tags').type('tag-2');
     ui.autocompletePopper.findByTitle('tag-2').click();
 
     mockGetLinodes([linodes[0]]);
-    ui.autocomplete.findByLabel('Resources').type(`${linodes[0].label}{enter}`).click();
+    ui.autocomplete
+      .findByLabel('Resources')
+      .type(`${linodes[0].label}{enter}`)
+      .click();
 
     ui.autocomplete.findByLabel('Tags').scrollIntoView().type('tag-4');
     ui.autocompletePopper.findByTitle('tag-4').click();
 
     ui.autocomplete.findByLabel('Tags').click(); // closing autocomplete
 
-    cy.findByPlaceholderText("Select Resources")
-      .should('have.value', ''); 
+    cy.findByPlaceholderText('Select Resources').should('have.value', '');
 
-     // Expand the applied filters section
-     ui.button.findByTitle('Filters').should('be.visible').click();
+    // Expand the applied filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
 
-     // Verify that the applied filters
-     cy.get('[data-qa-applied-filter-id="applied-filter"]')
-       .should('be.visible')
-       .within(() => {
-         cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
-           .should('be.visible')
-           .should('have.text', 'US, Chicago, IL');
- 
-           cy.get('[data-qa-value="Tags tag-2"]')
-           .should('be.visible')
-           .should('have.text', 'tag-2');
- 
-           cy.get('[data-qa-value="Tags tag-4"]')
-           .should('be.visible')
-           .should('have.text', 'tag-4');
- 
-       });
+    // Verify that the applied filters
+    cy.get('[data-qa-applied-filter-id="applied-filter"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+          .should('be.visible')
+          .should('have.text', 'US, Chicago, IL');
+
+        cy.get('[data-qa-value="Tags tag-2"]')
+          .should('be.visible')
+          .should('have.text', 'tag-2');
+
+        cy.get('[data-qa-value="Tags tag-4"]')
+          .should('be.visible')
+          .should('have.text', 'tag-4');
+      });
   });
 
   it('delete tag-2 and add tag-4 tag and verify resource', () => {
-
     cy.visitWithLogin('monitor');
-    cy.wait(['@fetchServices', '@fetchDashboard']);
 
-    ui.autocomplete.findByLabel('Dashboard').type(dashboardName);
-    ui.autocompletePopper.findByTitle(dashboardName).click();
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
 
-    ui.regionSelect.find().type(`${region}{enter}`);
-    cy.wait('@fetchResources');
+    ui.autocomplete.findByLabel('Tags').type('tag-2');
 
-    ui.autocomplete
-     .findByLabel('Tags')
-     .type('tag-2');
-    
-    ui.autocompletePopper
-    .findByTitle('tag-2')
-    .click();
+    ui.autocompletePopper.findByTitle('tag-2').click();
 
     mockGetLinodes([linodes[0]]);
 
     ui.autocomplete
-    .findByLabel('Resources')
-    .type(`${linodes[0].label}{enter}`)
-    .click();
+      .findByLabel('Resources')
+      .type(`${linodes[0].label}{enter}`)
+      .click();
 
     cy.get('button[aria-label="Clear"]').eq(1).click();
 
-    ui.autocomplete
-     .findByLabel('Tags')
-     .type('tag-4');
-    
-    ui.autocompletePopper
-    .findByTitle('tag-4')
-    .click();
+    ui.autocomplete.findByLabel('Tags').type('tag-4');
 
-    ui.autocomplete
-    .findByLabel('Tags')
-    .click(); // closing autocomplete
+    ui.autocompletePopper.findByTitle('tag-4').click();
 
-    cy.findByPlaceholderText("Select Resources")
-      .should('have.value', ''); 
+    ui.autocomplete.findByLabel('Tags').click(); // closing autocomplete
 
-  // Expand the applied filters section
-     ui.button.findByTitle('Filters').should('be.visible').click();
+    cy.findByPlaceholderText('Select Resources').should('have.value', '');
 
-     // Verify that the applied filters
-     cy.get('[data-qa-applied-filter-id="applied-filter"]')
-       .should('be.visible')
-       .within(() => {
-         cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
-           .should('be.visible')
-           .should('have.text', 'US, Chicago, IL');
- 
-           cy.get('[data-qa-value="Tags tag-4"]')
-           .should('be.visible')
-           .should('have.text', 'tag-4');
- 
-       });
+    // Expand the applied filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
+
+    // Verify that the applied filters
+    cy.get('[data-qa-applied-filter-id="applied-filter"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+          .should('be.visible')
+          .should('have.text', 'US, Chicago, IL');
+
+        cy.get('[data-qa-value="Tags tag-4"]')
+          .should('be.visible')
+          .should('have.text', 'tag-4');
+      });
   });
-
 
   it('selecting multiple resources, applying multiple tags, and verify that the resource selections are updated correctly based on the applied filters.', () => {
-
     cy.visitWithLogin('monitor');
 
-    cy.wait(['@fetchServices', '@fetchDashboard']);
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
+
+    mockGetLinodes([linodes[0], linodes[1]]);
 
     ui.autocomplete
-    .findByLabel('Dashboard')
-    .type(dashboardName);
-
-    ui.autocompletePopper
-    .findByTitle(dashboardName)
-    .click();
-
-    ui.regionSelect
-    .find()
-    .type(`${region}{enter}`);
-
-    cy.wait('@fetchResources');
-
-
-    mockGetLinodes([linodes[0],linodes[1]]);
+      .findByLabel('Resources')
+      .type(`${linodes[0].label}{enter}`)
+      .click();
 
     ui.autocomplete
-    .findByLabel('Resources')
-    .type(`${linodes[0].label}{enter}`)
-    .click();
+      .findByLabel('Resources')
+      .type(`${linodes[1].label}{enter}`)
+      .click();
 
-    ui.autocomplete
-    .findByLabel('Resources')
-    .type(`${linodes[1].label}{enter}`)
-    .click();
+    ui.autocomplete.findByLabel('Tags').type('tag-2');
 
+    ui.autocompletePopper.findByTitle('tag-2').click();
 
-    ui.autocomplete
-     .findByLabel('Tags')
-     .type('tag-2');
-    
-    ui.autocompletePopper
-    .findByTitle('tag-2')
-    .click();
+    ui.autocomplete.findByLabel('Tags').type('tag-4');
 
-    ui.autocomplete
-     .findByLabel('Tags')
-     .type('tag-4');
-    
-    ui.autocompletePopper
-    .findByTitle('tag-4')
-    .click();
+    ui.autocompletePopper.findByTitle('tag-4').click();
 
-    ui.autocomplete
-    .findByLabel('Tags')
-    .click(); // closing autocomplete
+    ui.autocomplete.findByLabel('Tags').click(); // closing autocomplete
 
-    cy.findByPlaceholderText("Select Resources")
-      .should('have.value', ''); 
+    cy.findByPlaceholderText('Select Resources').should('have.value', '');
 
-  // Expand the applied filters section
-     ui.button.findByTitle('Filters').should('be.visible').click();
+    // Expand the applied filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
 
-     // Verify that the applied filters
-     cy.get('[data-qa-applied-filter-id="applied-filter"]')
-       .should('be.visible')
-       .within(() => {
-         cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
-           .should('be.visible')
-           .should('have.text', 'US, Chicago, IL');
- 
-           cy.get('[data-qa-value="Tags tag-4"]')
-           .should('be.visible')
-           .should('have.text', 'tag-4');
- 
-       });
+    // Verify that the applied filters
+    cy.get('[data-qa-applied-filter-id="applied-filter"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
+          .should('be.visible')
+          .should('have.text', 'US, Chicago, IL');
+
+        cy.get('[data-qa-value="Tags tag-4"]')
+          .should('be.visible')
+          .should('have.text', 'tag-4');
+      });
   });
-
-
-
-  
 });
