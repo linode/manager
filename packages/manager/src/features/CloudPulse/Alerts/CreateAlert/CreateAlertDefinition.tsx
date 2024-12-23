@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import { useCreateAlertDefinition, useNotificationChannels } from 'src/queries/cloudpulse/alerts';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -19,8 +19,11 @@ import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
-import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
+import type { NotificationChannel, TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
 import type { ObjectSchema } from 'yup';
+import { AddChannelListing } from './NotificationChannel/AddChannelListing';
+import { AddNotificationChannel } from './NotificationChannel/AddNotificationChannel';
+import { Drawer } from 'src/components/Drawer';
 
 const triggerConditionInitialValues: TriggerCondition = {
   criteria_condition: 'ALL',
@@ -74,7 +77,7 @@ export const CreateAlertDefinition = () => {
     ),
   });
 
-  const { control, formState, getValues, handleSubmit, setError } = formMethods;
+  const { control, formState, getValues, handleSubmit, setError, setValue } = formMethods;
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
     getValues('serviceType')!
@@ -106,7 +109,41 @@ export const CreateAlertDefinition = () => {
       }
     }
   });
+  const { data: notificationData } = useNotificationChannels();
+  const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
 
+  const onChangeNotifications = (notifications: NotificationChannel[]) => {
+    const notificationTemplateList = notifications.map(
+      (notification) => notification.id
+    );
+    setValue('channel_ids', notificationTemplateList);
+  };
+  const [openAddNotification, setOpenAddNotification] = React.useState(false);
+
+  const onSubmitAddNotification = (notificationId: number) => {
+    setValue('channel_ids', [...notificationChannelWatcher, notificationId], {
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: false,
+    });
+    setOpenAddNotification(false);
+  };
+
+  const getNotifications = React.useMemo(() => {
+    return (
+      notificationData?.data.filter(
+        (notification) => !notificationChannelWatcher.includes(notification.id)
+      ) ?? []
+    );
+  }, [notificationChannelWatcher, notificationData]);
+
+  const getSelectedNotifications = React.useMemo(() => {
+    return (
+      notificationData?.data.filter((notification) =>
+        notificationChannelWatcher.includes(notification.id)
+      ) ?? []
+    );
+  }, [notificationChannelWatcher, notificationData]);
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb crumbOverrides={overrides} pathname="/Definitions/Create" />
@@ -166,6 +203,11 @@ export const CreateAlertDefinition = () => {
           />
           {/* This is just being displayed to pass the typecheck-manager test. In the next PR maxScrapeInterval will be used by another component */}
           {maxScrapeInterval}
+          <AddChannelListing
+            notifications={getSelectedNotifications}
+            onChangeNotifications={onChangeNotifications}
+            onClickAddNotification={() => setOpenAddNotification(true)}
+          />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
@@ -178,6 +220,19 @@ export const CreateAlertDefinition = () => {
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />
+          {openAddNotification && (
+            <Drawer
+              onClose={() => setOpenAddNotification(false)}
+              open={openAddNotification}
+              title="Add Notification Channel"
+            >
+              <AddNotificationChannel
+                onCancel={() => setOpenAddNotification(false)}
+                onSubmitAddNotification={onSubmitAddNotification}
+                templateData={getNotifications}
+              />
+            </Drawer>
+          )}
         </form>
       </FormProvider>
     </Paper>

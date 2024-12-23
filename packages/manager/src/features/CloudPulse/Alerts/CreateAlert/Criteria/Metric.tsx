@@ -113,7 +113,8 @@ export const Metric = (props: MetricCriteriaProps) => {
     <Box
       sx={(theme) => ({
         backgroundColor:
-          theme.name === 'light' ? theme.color.grey5 : theme.color.grey9,
+          theme.name === 'light' ? theme.tokens.color.Neutrals[5]
+            : theme.tokens.color.Neutrals.Black,
         borderRadius: 1,
         p: 2,
       })}
@@ -164,7 +165,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   loading={isMetricDefinitionLoading}
                   onBlur={field.onBlur}
                   options={metricOptions}
-                  placeholder="Select a Data field"
+                  placeholder="Select a Data Field"
                   size="medium"
                 />
               )}
@@ -202,7 +203,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   label="Aggregation Type"
                   onBlur={field.onBlur}
                   options={aggOptions}
-                  placeholder="Select an Aggregation type"
+                  placeholder="Select an Aggregation Type"
                   sx={{ paddingTop: { sm: 1, xs: 0 } }}
                 />
               )}
@@ -239,7 +240,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   label="Operator"
                   onBlur={field.onBlur}
                   options={MetricOperatorOptions}
-                  placeholder="Select an operator"
+                  placeholder="Select an Operator"
                   sx={{ paddingTop: { sm: 1, xs: 0 } }}
                 />
               )}

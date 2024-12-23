@@ -1,6 +1,7 @@
 import type {
   AlertServiceType,
   AlertSeverityType,
+  ChannelTypes,
   CreateAlertDefinitionPayload,
   DimensionFilter,
   MetricAggregationType,
@@ -26,4 +27,9 @@ export interface MetricCriteriaForm
   dimension_filters: DimensionFilter[];
   metric: null | string;
   operator: MetricOperatorType | null;
+}
+
+export interface NotificationChannelForm {
+  channel_type: ChannelTypes | null;
+  label: null | string;
 }

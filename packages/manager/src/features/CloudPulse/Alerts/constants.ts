@@ -1,5 +1,6 @@
 import type {
   AlertSeverityType,
+  ChannelTypes,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
@@ -69,5 +70,12 @@ export const MetricAggregationOptions: Item<string, MetricAggregationType>[] = [
   {
     label: 'Sum',
     value: 'sum',
+  },
+];
+
+export const ChannelTypeOptions: Item<string, ChannelTypes>[] = [
+  {
+    label: 'Email',
+    value: 'email',
   },
 ];
