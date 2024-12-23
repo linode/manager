@@ -18,7 +18,7 @@ const props = {
   onClose: vi.fn(),
 };
 
-vi.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/Autocomplete/Autocomplete');
 
 describe('CreateBucketDrawer', () => {
   it.skip('Should show a general error notice if the API returns one', async () => {

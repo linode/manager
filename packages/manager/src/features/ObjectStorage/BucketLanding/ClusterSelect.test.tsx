@@ -4,7 +4,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import ClusterSelect from './ClusterSelect';
 
-vi.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/Autocomplete/Autocomplete');
 
 describe('ClusterSelect', () => {
   it('Renders a select with object storage clusters', () => {

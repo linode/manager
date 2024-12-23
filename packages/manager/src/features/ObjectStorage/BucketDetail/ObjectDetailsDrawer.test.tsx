@@ -23,7 +23,7 @@ vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
   };
 });
 
-vi.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/Autocomplete/Autocomplete');
 
 const props: ObjectDetailsDrawerProps = {
   bucketName: 'my-bucket',
