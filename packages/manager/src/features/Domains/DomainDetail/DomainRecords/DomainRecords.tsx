@@ -146,10 +146,7 @@ export const DomainRecords = (props: Props) => {
         {
           render: (r: DomainRecord) => {
             const sd = r.name;
-            const {
-              domain: { domain },
-            } = props;
-            return isEmpty(sd) ? domain : `${sd}.${domain}`;
+            return isEmpty(sd) ? domain.domain : `${sd}.${domain.domain}`;
           },
           title: 'Subdomain',
         },
