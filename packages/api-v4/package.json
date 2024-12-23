@@ -40,7 +40,7 @@
   "browser": "./lib/index.global.js",
   "unpkg": "./lib/index.global.js",
   "dependencies": {
-    "@linode/validation": "*",
+    "@linode/validation": "workspace:*",
     "axios": "~1.7.4",
     "ipaddr.js": "^2.0.0",
     "yup": "^1.4.0"
@@ -48,8 +48,8 @@
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
-    "test": "yarn vitest run",
-    "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
+    "test": "vitest run",
+    "lint": "eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
     "precommit": "lint-staged"
   },

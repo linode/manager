@@ -25,7 +25,7 @@ describe('AkamaiBanner', () => {
 
   it('should display text and link', () => {
     const props = {
-      link: { text: 'Link text', url: 'https://example.com' },
+      link: { text: 'Link text', url: 'https://example.com/' },
       text: 'Example text',
     };
 

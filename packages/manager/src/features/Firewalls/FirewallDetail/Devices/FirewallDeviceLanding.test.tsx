@@ -4,14 +4,12 @@ import * as React from 'react';
 import { Router } from 'react-router-dom';
 
 import { firewallDeviceFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  FirewallDeviceLanding,
-  FirewallDeviceLandingProps,
-} from './FirewallDeviceLanding';
+import { FirewallDeviceLanding } from './FirewallDeviceLanding';
 
+import type { FirewallDeviceLandingProps } from './FirewallDeviceLanding';
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
 
 const baseProps = (
