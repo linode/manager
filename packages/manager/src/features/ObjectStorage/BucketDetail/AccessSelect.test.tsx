@@ -15,7 +15,7 @@ const AUTHENTICATED_READ_TEXT = 'Authenticated Read';
 const BUCKET_ACCESS_URL = '*object-storage/buckets/*/*/access';
 const OBJECT_ACCESS_URL = '*object-storage/buckets/*/*/object-acl';
 
-vi.mock('src/components/EnhancedSelect/Select');
+vi.mock('src/components/Autocomplete/Autocomplete');
 
 const defaultProps: Props = {
   clusterOrRegion: 'in-maa',
