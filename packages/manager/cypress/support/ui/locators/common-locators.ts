@@ -32,3 +32,15 @@ export const topMenuItemsLocator = {
   searchInput: 'Search Products, IP Addresses, Tags...',
   toggleSideMenuButton: '[aria-label="open menu"]',
 };
+
+export const createMenuTopMenuItemsLocator = {
+  bucketsLink: '[href="/object-storage/buckets/create"]',
+  createMenu: '[aria-labelledby="create-menu"]',
+  domainsLink: '[href="/domains/create"]',
+  firewallsLink: '[href="/firewalls/create"]',
+  kubernetesLink: '[href="/kubernetes/create"]',
+  linodesLink: '[href="/linodes/create"]',
+  marketplaceOneClickLink: '[href="/linodes/create?type=One-Click"]',
+  nodeBalancersLink: '[href="/nodebalancers/create"]',
+  volumesLink: '[href="/volumes/create"]',
+};
