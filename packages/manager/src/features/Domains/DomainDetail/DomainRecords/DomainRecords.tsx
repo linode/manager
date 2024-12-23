@@ -9,7 +9,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,
@@ -491,6 +490,7 @@ export const DomainRecords = (props: Props) => {
     const {
       confirmDialog: { recordId },
     } = state;
+
     if (!domainId || !recordId) {
       return;
     }
@@ -520,6 +520,7 @@ export const DomainRecords = (props: Props) => {
           submitting: false,
         }));
       });
+
     updateConfirmDialog((c) => ({ ...c, submitting: true }));
   };
 
@@ -538,16 +539,13 @@ export const DomainRecords = (props: Props) => {
   };
 
   const openForCreateARecord = () => openForCreation('AAAA');
-
   const openForCreateCAARecord = () => openForCreation('CAA');
-
   const openForCreateCNAMERecord = () => openForCreation('CNAME');
   const openForCreateMXRecord = () => openForCreation('MX');
-
   const openForCreateNSRecord = () => openForCreation('NS');
   const openForCreateSRVRecord = () => openForCreation('SRV');
-
   const openForCreateTXTRecord = () => openForCreation('TXT');
+
   const openForCreation = (type: RecordType) =>
     updateDrawer(() => ({
       mode: 'create',
@@ -559,6 +557,7 @@ export const DomainRecords = (props: Props) => {
   const openForEditARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => openForEditing('AAAA', f);
+
   const openForEditCAARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
   ) => openForEditing('CAA', f);
@@ -566,6 +565,7 @@ export const DomainRecords = (props: Props) => {
   const openForEditCNAMERecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => openForEditing('CNAME', f);
+
   const openForEditMXRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'priority' | 'target' | 'ttl_sec'>
   ) => openForEditing('MX', f);
@@ -573,6 +573,7 @@ export const DomainRecords = (props: Props) => {
   const openForEditNSRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => openForEditing('NS', f);
+
   const openForEditPrimaryDomain = (f: Partial<Domain>) =>
     openForEditing('master', f);
 
@@ -582,6 +583,7 @@ export const DomainRecords = (props: Props) => {
       'id' | 'name' | 'port' | 'priority' | 'protocol' | 'target' | 'weight'
     >
   ) => openForEditing('SRV', f);
+
   const openForEditSecondaryDomain = (f: Partial<Domain>) =>
     openForEditing('slave', f);
 
@@ -691,26 +693,17 @@ export const DomainRecords = (props: Props) => {
                       handlePageSizeChange,
                       page,
                       pageSize,
-                    }) => {
-                      return (
-                        <>
-                          <DomainRecordTable
-                            paginatedData={paginatedData}
-                            type={type}
-                          />
-                          <PaginationFooter
-                            count={count}
-                            eventCategory={`${type.title.toLowerCase()} panel`}
-                            handlePageChange={handlePageChange}
-                            handleSizeChange={handlePageSizeChange}
-                            page={page}
-                            pageSize={pageSize}
-                            // Disabling show All as it is impacting page performance.
-                            showAll={false}
-                          />
-                        </>
-                      );
-                    }}
+                    }) => (
+                      <DomainRecordTable
+                        count={count}
+                        handlePageChange={handlePageChange}
+                        handlePageSizeChange={handlePageSizeChange}
+                        page={page}
+                        pageSize={pageSize}
+                        paginatedData={paginatedData}
+                        type={type}
+                      />
+                    )}
                   </Paginate>
                 );
               }}
