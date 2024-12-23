@@ -1,4 +1,4 @@
-import type { Algorithm } from '@linode/api-v4';
+import type { Algorithm, Protocol, Stickiness } from '@linode/api-v4';
 
 export const ALGORITHM_HELPER_TEXT: Record<Algorithm, string> = {
   leastconn:
@@ -7,4 +7,11 @@ export const ALGORITHM_HELPER_TEXT: Record<Algorithm, string> = {
   roundrobin:
     'Round robin distributes connection requests to backend servers in weighted circular order.',
   source: "Source uses the client's IPv4 address.",
+};
+
+export const SESSION_STICKINESS_DEFAULTS: Record<Protocol, Stickiness> = {
+  http: 'table',
+  https: 'table',
+  tcp: 'table',
+  udp: 'session',
 };

@@ -2,6 +2,8 @@ import { filter, isNil } from 'ramda';
 
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import { SESSION_STICKINESS_DEFAULTS } from './constants';
+
 import type {
   NodeBalancerConfigFields,
   NodeBalancerConfigFieldsWithStatus,
@@ -43,7 +45,7 @@ export const createNewNodeBalancerConfig = (
   proxy_protocol: 'none',
   ssl_cert: undefined,
   ssl_key: undefined,
-  stickiness: 'table',
+  stickiness: SESSION_STICKINESS_DEFAULTS['http'],
 });
 
 export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({

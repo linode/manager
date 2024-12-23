@@ -15,7 +15,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { ALGORITHM_HELPER_TEXT } from './constants';
+import { ALGORITHM_HELPER_TEXT, SESSION_STICKINESS_DEFAULTS } from './constants';
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
 import { PassiveCheck } from './NodeBalancerPassiveCheck';
@@ -89,7 +89,7 @@ export const NodeBalancerConfigPanel = (
       // we reset the stickiness selection for the user.
       // For example if UDP is selected with the "Session" stickiness option then the user selects TCP,
       // the stickiness will change to "None" because TCP does not support the "Session" stickiness option.
-      props.onSessionStickinessChange(newStickinessOptions[0].value);
+      props.onSessionStickinessChange(SESSION_STICKINESS_DEFAULTS[protocol]);
     }
 
     if (
