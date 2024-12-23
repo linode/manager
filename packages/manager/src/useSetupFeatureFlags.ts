@@ -58,22 +58,39 @@ export const useSetupFeatureFlags = () => {
         : account?.tax_id === ''
         ? 'Unknown'
         : account?.tax_id;
-      if (client && country && username && taxID) {
-        client
-          .identify({
-            anonymous: true,
-            country,
-            kind: 'user',
-            privateAttributes: ['country, taxID'],
-            taxID,
-          })
-          .then(() => setAreFeatureFlagsLoading(false))
-          /**
-           * We could handle this in other ways, but for now don't let a
-           * LD bung-up block the app from loading.
-           */
 
-          .catch(() => setAreFeatureFlagsLoading(false));
+      if (client && country && username && taxID) {
+        const TIMEOUT_MS = 10_000;
+        let timeoutId: NodeJS.Timeout;
+        let hasTimedOut = false;
+
+        Promise.race([
+          client
+            .identify({
+              anonymous: true,
+              country,
+              kind: 'user',
+              privateAttributes: ['country, taxID'],
+              taxID,
+            })
+            .then((result) => {
+              if (!hasTimedOut) {
+                clearTimeout(timeoutId);
+                setAreFeatureFlagsLoading(false);
+              }
+              return result;
+            }),
+          new Promise((_, reject) => {
+            timeoutId = setTimeout(() => {
+              hasTimedOut = true;
+              client.close();
+              setAreFeatureFlagsLoading(false);
+              reject(new Error('LaunchDarkly identify timeout'));
+            }, TIMEOUT_MS);
+          }),
+        ]).catch(() => {
+          setAreFeatureFlagsLoading(false);
+        });
       } else {
         // We "setFeatureFlagsLoaded" here because if the API is
         // in maintenance mode, we can't fetch the user's username.
