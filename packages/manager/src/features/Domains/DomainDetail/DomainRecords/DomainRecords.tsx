@@ -102,7 +102,7 @@ export const DomainRecords = (props: Props) => {
           title: 'Email',
         },
         {
-          render: compose(msToReadable, pathOr(0, ['ttl_sec'])),
+          render: getTTL,
           title: 'Default TTL',
         },
         {
@@ -538,14 +538,6 @@ export const DomainRecords = (props: Props) => {
       : openForEditSecondaryDomain(d);
   };
 
-  const openForCreateARecord = () => openForCreation('AAAA');
-  const openForCreateCAARecord = () => openForCreation('CAA');
-  const openForCreateCNAMERecord = () => openForCreation('CNAME');
-  const openForCreateMXRecord = () => openForCreation('MX');
-  const openForCreateNSRecord = () => openForCreation('NS');
-  const openForCreateSRVRecord = () => openForCreation('SRV');
-  const openForCreateTXTRecord = () => openForCreation('TXT');
-
   const openForCreation = (type: RecordType) =>
     updateDrawer(() => ({
       mode: 'create',
@@ -554,42 +546,13 @@ export const DomainRecords = (props: Props) => {
       type,
     }));
 
-  const openForEditARecord = (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => openForEditing('AAAA', f);
-
-  const openForEditCAARecord = (
-    f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
-  ) => openForEditing('CAA', f);
-
-  const openForEditCNAMERecord = (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => openForEditing('CNAME', f);
-
-  const openForEditMXRecord = (
-    f: Pick<DomainRecord, 'id' | 'name' | 'priority' | 'target' | 'ttl_sec'>
-  ) => openForEditing('MX', f);
-
-  const openForEditNSRecord = (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => openForEditing('NS', f);
-
-  const openForEditPrimaryDomain = (f: Partial<Domain>) =>
-    openForEditing('master', f);
-
-  const openForEditSRVRecord = (
-    f: Pick<
-      DomainRecord,
-      'id' | 'name' | 'port' | 'priority' | 'protocol' | 'target' | 'weight'
-    >
-  ) => openForEditing('SRV', f);
-
-  const openForEditSecondaryDomain = (f: Partial<Domain>) =>
-    openForEditing('slave', f);
-
-  const openForEditTXTRecord = (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
-  ) => openForEditing('TXT', f);
+  const openForCreateARecord = () => openForCreation('AAAA');
+  const openForCreateCAARecord = () => openForCreation('CAA');
+  const openForCreateCNAMERecord = () => openForCreation('CNAME');
+  const openForCreateMXRecord = () => openForCreation('MX');
+  const openForCreateNSRecord = () => openForCreation('NS');
+  const openForCreateSRVRecord = () => openForCreation('SRV');
+  const openForCreateTXTRecord = () => openForCreation('TXT');
 
   const openForEditing = (
     type: DomainType | RecordType,
@@ -602,6 +565,35 @@ export const DomainRecords = (props: Props) => {
       submitting: false,
       type,
     }));
+
+  const openForEditARecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+  ) => openForEditing('AAAA', f);
+  const openForEditCAARecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
+  ) => openForEditing('CAA', f);
+  const openForEditCNAMERecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+  ) => openForEditing('CNAME', f);
+  const openForEditMXRecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'priority' | 'target' | 'ttl_sec'>
+  ) => openForEditing('MX', f);
+  const openForEditNSRecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+  ) => openForEditing('NS', f);
+  const openForEditPrimaryDomain = (f: Partial<Domain>) =>
+    openForEditing('master', f);
+  const openForEditSRVRecord = (
+    f: Pick<
+      DomainRecord,
+      'id' | 'name' | 'port' | 'priority' | 'protocol' | 'target' | 'weight'
+    >
+  ) => openForEditing('SRV', f);
+  const openForEditSecondaryDomain = (f: Partial<Domain>) =>
+    openForEditing('slave', f);
+  const openForEditTXTRecord = (
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+  ) => openForEditing('TXT', f);
 
   const renderDialogActions = () => {
     return (
