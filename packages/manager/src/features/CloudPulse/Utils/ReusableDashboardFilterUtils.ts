@@ -69,8 +69,8 @@ export const checkMandatoryFiltersSelected = (
   return serviceTypeConfig.filters.every(({ configuration }) => {
     const { filterKey, neededInServicePage } = configuration;
 
-    // If the filter is not needed, skip it
-    if (!neededInServicePage) {
+    // If the filter is not needed or optional, skip it
+    if (!neededInServicePage || configuration.isOptional) {
       return true;
     }
 
