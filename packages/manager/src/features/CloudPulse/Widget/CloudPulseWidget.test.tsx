@@ -108,29 +108,25 @@ vi.mock('../Utils/UserPreference', () => ({
 
 describe('Cloud pulse widgets', () => {
   window.ResizeObserver = ResizeObserver;
-  it('should render the widget with correct title and unit', () => {
-    const { getByText } = renderWithTheme(<CloudPulseWidget {...props} />);
-    const title = getByText('CPU Utilization (%)');
-    expect(title).toBeInTheDocument();
-  });
 
-  it('should render interval select when scrape_interval is provided', () => {
-    const { getByTestId } = renderWithTheme(<CloudPulseWidget {...props} />);
+  it('should render widget with all required components', () => {
+    const { container, getByTestId, getByText } = renderWithTheme(
+      <CloudPulseWidget {...props} />
+    );
+
+    // Verify widget title and unit
+    expect(getByText('CPU Utilization (%)')).toBeInTheDocument();
+
+    // Verify interval select
     expect(getByTestId('Data aggregation interval')).toBeInTheDocument();
-  });
 
-  it('should render aggregate function select when available_aggregate_functions exist', () => {
-    const { getByTestId } = renderWithTheme(<CloudPulseWidget {...props} />);
+    // Verify aggregate function select
     expect(getByTestId('Aggregation function')).toBeInTheDocument();
-  });
 
-  it('should render zoom icon', async () => {
-    const { getByTestId } = renderWithTheme(<CloudPulseWidget {...props} />);
+    // Verify zoom icon
     expect(getByTestId('zoom-in')).toBeInTheDocument();
-  });
 
-  it('should render line graph component', () => {
-    const { container } = renderWithTheme(<CloudPulseWidget {...props} />);
+    // Verify graph component
     expect(
       container.querySelector('.recharts-responsive-container')
     ).toBeInTheDocument();
@@ -149,41 +145,52 @@ describe('Cloud pulse widgets', () => {
   });
 
   it('should update preferences for zoom toggle', async () => {
-    const user = userEvent.setup();
-
     const { getByTestId } = renderWithTheme(<CloudPulseWidget {...props} />);
     const zoomButton = getByTestId('zoom-in');
-    await user.click(zoomButton);
+    await userEvent.click(zoomButton);
     expect(mockUpdatePreferences).toHaveBeenCalledWith('CPU Utilization', {
       size: 6,
     });
   });
 
   it('should update preferences for aggregation function select', async () => {
-    const user = userEvent.setup();
-
     const { getByRole } = renderWithTheme(<CloudPulseWidget {...props} />);
 
-    await user.click(
+    await userEvent.click(
       getByRole('combobox', { name: 'Select an Aggregate Function' })
     );
 
-    await user.click(getByRole('option', { name: 'Max' }));
+    await userEvent.click(getByRole('option', { name: 'Max' }));
 
     expect(mockUpdatePreferences).toHaveBeenCalledWith('CPU Utilization', {
       aggregateFunction: 'max',
     });
+
+    expect(queryMocks.useCloudPulseMetricsQuery).toHaveBeenCalledWith(
+      'linode',
+      expect.objectContaining({
+        aggregate_function: 'max',
+      }),
+      expect.any(Object)
+    );
   });
 
   it('should update preferences for interval select', async () => {
-    const user = userEvent.setup();
-
     const { getByRole } = renderWithTheme(<CloudPulseWidget {...props} />);
-    await user.click(getByRole('combobox', { name: 'Select an Interval' }));
-    await user.click(getByRole('option', { name: '5 min' }));
+    await userEvent.click(
+      getByRole('combobox', { name: 'Select an Interval' })
+    );
+    await userEvent.click(getByRole('option', { name: '5 min' }));
 
     expect(mockUpdatePreferences).toHaveBeenCalledWith('CPU Utilization', {
       timeGranularity: { unit: 'min', value: 5 },
     });
+    expect(queryMocks.useCloudPulseMetricsQuery).toHaveBeenCalledWith(
+      'linode',
+      expect.objectContaining({
+        time_granularity: { unit: 'min', value: 5 }
+      }),
+      expect.any(Object)
+    );
   });
 });
