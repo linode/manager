@@ -11,6 +11,10 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 interface DimensionFilterProps {
   /**
+   * boolean value to disable the Data Field in dimension filter
+   */
+  dataFieldDisabled: boolean;
+  /**
    * dimension filter data for the selected metric
    */
   dimensionOptions: Dimension[];
@@ -20,7 +24,7 @@ interface DimensionFilterProps {
   name: FieldPathByValue<CreateAlertDefinitionForm, DimensionFilterForm[]>;
 }
 export const DimensionFilters = (props: DimensionFilterProps) => {
-  const { dimensionOptions, name } = props;
+  const { dataFieldDisabled, dimensionOptions, name } = props;
   const { control } = useFormContext<CreateAlertDefinitionForm>();
 
   const { append, fields, remove } = useFieldArray({
@@ -38,10 +42,10 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
         </Box>
 
         <Stack>
-          {fields !== null &&
-            fields.length !== 0 &&
+          {fields?.length > 0 &&
             fields.map((field, index) => (
               <DimensionFilterField
+                dataFieldDisabled={dataFieldDisabled}
                 dimensionOptions={dimensionOptions}
                 key={field.id}
                 name={`${name}.${index}`}

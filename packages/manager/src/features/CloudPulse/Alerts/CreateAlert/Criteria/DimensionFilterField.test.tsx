@@ -17,6 +17,7 @@ describe('Dimension filter field component', () => {
     renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <DimensionFilterField
+          dataFieldDisabled={false}
           dimensionOptions={dimensionFieldMockData}
           name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
           onFilterDelete={vi.fn()}
@@ -41,6 +42,7 @@ describe('Dimension filter field component', () => {
       {
         component: (
           <DimensionFilterField
+            dataFieldDisabled={false}
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
             onFilterDelete={vi.fn()}
@@ -60,7 +62,7 @@ describe('Dimension filter field component', () => {
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',
     });
-    user.click(dataFieldInput);
+    await user.click(dataFieldInput);
     expect(
       await container.findByRole('option', {
         name: dimensionFieldMockData[0].label,
@@ -85,6 +87,7 @@ describe('Dimension filter field component', () => {
       {
         component: (
           <DimensionFilterField
+            dataFieldDisabled={false}
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
             onFilterDelete={vi.fn()}
@@ -130,6 +133,7 @@ describe('Dimension filter field component', () => {
       {
         component: (
           <DimensionFilterField
+            dataFieldDisabled={false}
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
             onFilterDelete={vi.fn()}
@@ -149,7 +153,7 @@ describe('Dimension filter field component', () => {
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',
     });
-    user.click(dataFieldInput);
+    await user.click(dataFieldInput);
     await user.click(
       await container.findByRole('option', {
         name: dimensionFieldMockData[1].label,

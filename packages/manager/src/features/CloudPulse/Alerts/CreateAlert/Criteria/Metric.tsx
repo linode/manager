@@ -293,6 +293,7 @@ export const Metric = (props: MetricCriteriaProps) => {
           </Grid>
         </Grid>
         <DimensionFilters
+          dataFieldDisabled={metricWatcher === null}
           dimensionOptions={selectedMetric?.dimensions ?? []}
           key={metricWatcher}
           name={`${name}.dimension_filters`}

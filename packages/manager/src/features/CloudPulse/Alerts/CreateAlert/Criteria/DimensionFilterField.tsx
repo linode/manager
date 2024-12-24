@@ -12,6 +12,10 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 interface DimensionFilterFieldProps {
   /**
+   * boolean value to disable the Data Field in dimension filter
+   */
+  dataFieldDisabled: boolean;
+  /**
    * dimension filter data options to list in the Autocomplete component
    */
   dimensionOptions: Dimension[];
@@ -27,7 +31,7 @@ interface DimensionFilterFieldProps {
 }
 
 export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
-  const { dimensionOptions, name, onFilterDelete } = props;
+  const { dataFieldDisabled, dimensionOptions, name, onFilterDelete } = props;
 
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
 
@@ -46,12 +50,12 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       operator: null,
       value: null,
     };
-    if (operation === 'selectOption') {
-      setValue(name, { ...fieldValue, dimension_label: selected.value });
-    }
-    if (operation === 'clear') {
-      setValue(name, fieldValue);
-    }
+    setValue(
+      name,
+      operation === 'selectOption'
+        ? { ...fieldValue, dimension_label: selected.value }
+        : fieldValue
+    );
   };
 
   const dimensionFieldWatcher = useWatch({
@@ -59,19 +63,22 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     name: `${name}.dimension_label`,
   });
 
-  const selectedDimension = React.useMemo(() => {
-    return dimensionOptions && dimensionFieldWatcher
+  const selectedDimension =
+    dimensionOptions && dimensionFieldWatcher
       ? dimensionOptions.find(
           (dim) => dim.dimension_label === dimensionFieldWatcher
-        )
+        ) ?? null
       : null;
-  }, [dimensionFieldWatcher, dimensionOptions]);
 
-  const valueOptions = React.useMemo(() => {
-    return selectedDimension && selectedDimension.values
-      ? selectedDimension.values.map((val) => ({ label: val, value: val }))
-      : [];
-  }, [selectedDimension]);
+  const valueOptions = () => {
+    if (selectedDimension !== null) {
+      return selectedDimension.values.map((val) => ({
+        label: val,
+        value: val,
+      }));
+    }
+    return [];
+  };
 
   return (
     <Grid
@@ -92,13 +99,12 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 handleDataFieldChange(newValue, operation);
               }}
               value={
-                field.value !== null
-                  ? dataFieldOptions.find(
-                      (option) => option.value === field.value
-                    ) ?? null
-                  : null
+                dataFieldOptions.find(
+                  (option) => option.value === field.value
+                ) ?? null
               }
               data-testid="Data-field"
+              disabled={dataFieldDisabled}
               errorText={fieldState.error?.message}
               label="Data Field"
               onBlur={field.onBlur}
@@ -119,19 +125,14 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 newValue: { label: string; value: DimensionFilterOperatorType },
                 operation
               ) => {
-                if (operation === 'selectOption') {
-                  field.onChange(newValue.value);
-                }
-                if (operation === 'clear') {
-                  field.onChange(null);
-                }
+                field.onChange(
+                  operation === 'selectOption' ? newValue.value : null
+                );
               }}
               value={
-                field.value !== null
-                  ? DimensionOperatorOptions.find(
-                      (option) => option.value === field.value
-                    ) ?? null
-                  : null
+                DimensionOperatorOptions.find(
+                  (option) => option.value === field.value
+                ) ?? null
               }
               data-testid="Operator"
               errorText={fieldState.error?.message}
@@ -153,25 +154,20 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 selected: { label: string; value: string },
                 operation
               ) => {
-                if (operation === 'selectOption') {
-                  field.onChange(selected.value);
-                }
-                if (operation === 'clear') {
-                  field.onChange(null);
-                }
+                field.onChange(
+                  operation === 'selectOption' ? selected.value : null
+                );
               }}
               value={
-                field.value !== null
-                  ? valueOptions.find(
-                      (option) => option.value === field.value
-                    ) ?? null
-                  : null
+                valueOptions().find((option) => option.value === field.value) ??
+                null
               }
               data-testid="Value"
+              disabled={dimensionFieldWatcher === null}
               errorText={fieldState.error?.message}
               label="Value"
               onBlur={field.onBlur}
-              options={valueOptions}
+              options={valueOptions()}
               placeholder="Select a Value"
             />
           )}

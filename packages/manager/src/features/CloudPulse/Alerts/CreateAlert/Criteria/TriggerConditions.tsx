@@ -67,23 +67,18 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                   selected: { label: string; value: number },
                   operation
                 ) => {
-                  if (operation === 'selectOption') {
-                    field.onChange(selected.value);
-                  }
-                  if (operation === 'clear') {
-                    field.onChange(null);
-                  }
+                  field.onChange(
+                    operation === 'selectOption' ? selected.value : null
+                  );
                 }}
                 textFieldProps={{
                   labelTooltipText:
                     'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
                 }}
                 value={
-                  field.value !== null
-                    ? getEvaluationPeriodOptions().find(
-                        (option) => option.value === field.value
-                      )
-                    : null
+                  getEvaluationPeriodOptions().find(
+                    (option) => option.value === field.value
+                  ) ?? null
                 }
                 data-testid="Evaluation-period"
                 disabled={!serviceTypeWatcher}
@@ -98,7 +93,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
             name={`${name}.evaluation_period_seconds`}
           />
         </Grid>
-        <Grid item md={2.5} sm={6} xs={12}>
+        <Grid item md={3} sm={6} xs={12}>
           <Controller
             render={({ field, fieldState }) => (
               <Autocomplete
@@ -107,23 +102,18 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                   newValue: { label: string; value: number },
                   operation
                 ) => {
-                  if (operation === 'selectOption') {
-                    field.onChange(newValue.value);
-                  }
-                  if (operation === 'clear') {
-                    field.onChange(null);
-                  }
+                  field.onChange(
+                    operation === 'selectOption' ? newValue.value : null
+                  );
                 }}
                 textFieldProps={{
                   labelTooltipText:
                     'Choose how often you intend to evaulate the alert condition.',
                 }}
                 value={
-                  field.value !== null
-                    ? getPollingIntervalOptions().find(
-                        (option) => option.value === field.value
-                      )
-                    : null
+                  getPollingIntervalOptions().find(
+                    (option) => option.value === field.value
+                  ) ?? null
                 }
                 data-testid="Polling-interval"
                 disabled={!serviceTypeWatcher}
@@ -140,7 +130,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
         </Grid>
         <Grid item marginTop={{ sm: 1, xs: 0 }} md="auto" sm={12} xs={12}>
           <Grid alignItems="flex-start" container>
-            <Grid item md="auto" sm={6} xs={12}>
+            <Grid item md="auto" sm="auto" xs={'auto'}>
               <Box marginTop={{ md: 4 }}>
                 <Typography
                   sx={{
@@ -186,8 +176,14 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 name={`${name}.trigger_occurrences`}
               />
             </Grid>
-            <Grid item md="auto" paddingLeft={{ md: 2.5 }} sm={12} xs={12}>
-              <Box sx={{ marginTop: { md: 4, sx: 2 } }}>
+            <Grid
+              item
+              md="auto"
+              paddingLeft={{ md: 2.5 }}
+              sm={'auto'}
+              xs={'auto'}
+            >
+              <Box sx={{ marginTop: { md: 4, sm: 2, xs: 1 } }}>
                 <Typography
                   sx={{
                     alignItems: 'center',

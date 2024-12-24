@@ -18,6 +18,7 @@ describe('DimensionFilterField', () => {
       {
         component: (
           <DimensionFilters
+            dataFieldDisabled={true}
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters`}
           />
@@ -47,6 +48,7 @@ describe('DimensionFilterField', () => {
       {
         component: (
           <DimensionFilters
+            dataFieldDisabled={true}
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters`}
           />
@@ -70,6 +72,7 @@ describe('DimensionFilterField', () => {
       {
         component: (
           <DimensionFilters
+            dataFieldDisabled={true}
             dimensionOptions={mockData[0].dimensions}
             name={`rule_criteria.rules.${0}.dimension_filters`}
           />
