@@ -36,8 +36,8 @@ it('test generateMaxUnit method', () => {
   expect(result).toBe('MB');
 });
 
-it('test getLabelName method', () => {
-  const props = {
+describe('getLabelName method', () => {
+  const baseProps = {
     flags: {
       aclpResourceTypeMap: [
         { dimensionKey: 'resource_id', serviceType: 'linode' },
@@ -50,8 +50,28 @@ it('test getLabelName method', () => {
     unit: '%',
   };
 
-  const result = getLabelName(props);
-  expect(result).toBe('linode-1');
+  it('returns resource label when all data is valid', () => {
+    const result = getLabelName(baseProps);
+    expect(result).toBe('linode-1');
+  });
+
+  it('returns resource_id when resource is not found in resources array', () => {
+    const props = {
+      ...baseProps,
+      metric: { resource_id: '999' },
+    };
+    const result = getLabelName(props);
+    expect(result).toBe('999');
+  });
+
+  it('returns empty string when resource_id is empty', () => {
+    const props = {
+      ...baseProps,
+      metric: { resource_id: '' },
+    };
+    const result = getLabelName(props);
+    expect(result).toBe('');
+  });
 });
 
 it('test generateGraphData with metrics data', () => {
@@ -106,15 +126,81 @@ it('test generateGraphData with metrics data', () => {
   expect(result.unit).toBe('%');
 });
 
-it('test getDimensionName method', () => {
-  const props = {
+describe('getDimensionName method', () => {
+  const baseProps = {
     flag: { dimensionKey: 'resource_id', serviceType: 'linode' },
     metric: { resource_id: '123' },
     resources: [{ id: '123', label: 'linode-1' }],
   };
 
-  const result = getDimensionName(props);
-  expect(result).toBe('linode-1');
+  it('returns resource label when all data is valid', () => {
+    const result = getDimensionName(baseProps);
+    expect(result).toBe('linode-1');
+  });
+
+  it('returns resource_id when flag is undefined', () => {
+    const props = {
+      ...baseProps,
+      flag: undefined,
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('123');
+  });
+
+  it('returns empty string when metric is empty', () => {
+    const props = {
+      ...baseProps,
+      metric: {},
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('');
+  });
+
+  it('returns value directly when key does not match dimensionKey', () => {
+    const props = {
+      ...baseProps,
+      metric: { other_key: '456' },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('456');
+  });
+
+  it('joins multiple metric values with underscore', () => {
+    const props = {
+      ...baseProps,
+      metric: { other_key: 'test', resource_id: '123' },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('test_linode-1');
+  });
+
+  it('handles empty metric values by filtering them out', () => {
+    const props = {
+      ...baseProps,
+      metric: { other_key: '', resource_id: '123' },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('linode-1');
+  });
+
+  it('returns resource_id directly when resources array is empty', () => {
+    const props = {
+      ...baseProps,
+      resources: [],
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('123');
+  });
+
+  it('returns empty string when both resource_id is empty and flag is undefined', () => {
+    const props = {
+      ...baseProps,
+      flag: undefined,
+      metric: { resource_id: '' },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('');
+  });
 });
 
 it('test mapResourceIdToName method', () => {
