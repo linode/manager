@@ -58,7 +58,7 @@ export type CombinedProps<T> = Props<T>;
  */
 export const getInitialValuesFromUserPreferences = (
   preferenceKey: string,
-  preferences: ManagerPreferences,
+  preferences: ManagerPreferences['sortKeys'],
   params: Record<string, string>,
   defaultOrderBy?: string,
   defaultOrder?: Order,
@@ -91,7 +91,7 @@ export const getInitialValuesFromUserPreferences = (
     };
   }
   return (
-    preferences?.sortKeys?.[preferenceKey] ?? {
+    preferences?.[preferenceKey] ?? {
       order: defaultOrder,
       orderBy: defaultOrderBy,
     }
@@ -156,7 +156,9 @@ export const sortData = <T,>(orderBy: string, order: Order) => {
 };
 
 export const OrderBy = <T,>(props: CombinedProps<T>) => {
-  const { data: preferences } = usePreferences();
+  const { data: sortPreferences } = usePreferences(
+    (preferences) => preferences?.sortKeys
+  );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
   const history = useHistory();
@@ -164,7 +166,7 @@ export const OrderBy = <T,>(props: CombinedProps<T>) => {
 
   const initialValues = getInitialValuesFromUserPreferences(
     props.preferenceKey ?? '',
-    preferences ?? {},
+    sortPreferences ?? {},
     params,
     props.orderBy,
     props.order
@@ -210,7 +212,7 @@ export const OrderBy = <T,>(props: CombinedProps<T>) => {
       if (props.preferenceKey) {
         updatePreferences({
           sortKeys: {
-            ...(preferences?.sortKeys ?? {}),
+            ...(sortPreferences ?? {}),
             [props.preferenceKey]: { order, orderBy },
           },
         });

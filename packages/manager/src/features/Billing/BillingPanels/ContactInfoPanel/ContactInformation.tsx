@@ -72,7 +72,9 @@ export const ContactInformation = React.memo((props: Props) => {
 
   const { data: notifications } = useNotificationsQuery();
 
-  const { data: preferences } = usePreferences();
+  const { data: maskSensitiveDataPreference } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
+  );
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
@@ -118,7 +120,7 @@ export const ContactInformation = React.memo((props: Props) => {
   }, [editContactDrawerOpen, history.location.state]);
 
   const [isContactInfoMasked, setIsContactInfoMasked] = useState(
-    preferences?.maskSensitiveData
+    maskSensitiveDataPreference
   );
 
   /**
@@ -176,7 +178,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 {EDIT_BILLING_CONTACT}
               </BillingActionButton>
             )}
-            {preferences?.maskSensitiveData && (
+            {maskSensitiveDataPreference && (
               <BillingActionButton
                 disableFocusRipple
                 disableRipple
@@ -195,7 +197,7 @@ export const ContactInformation = React.memo((props: Props) => {
             )}
           </Box>
         </BillingBox>
-        {preferences?.maskSensitiveData && isContactInfoMasked ? (
+        {maskSensitiveDataPreference && isContactInfoMasked ? (
           <Typography>
             This data is sensitive and hidden for privacy. To unmask all
             sensitive data by default, go to{' '}

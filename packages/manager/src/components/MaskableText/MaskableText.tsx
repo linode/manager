@@ -27,10 +27,11 @@ export interface MaskableTextProps {
 }
 
 export const MaskableText = (props: MaskableTextProps) => {
-  const { children, isToggleable = false, text, length } = props;
+  const { children, isToggleable = false, length, text } = props;
 
-  const { data: preferences } = usePreferences();
-  const maskedPreferenceSetting = preferences?.maskSensitiveData;
+  const { data: maskedPreferenceSetting } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
+  );
 
   const [isMasked, setIsMasked] = React.useState(maskedPreferenceSetting);
 

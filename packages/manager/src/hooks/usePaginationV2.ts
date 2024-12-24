@@ -55,7 +55,9 @@ export const usePaginationV2 = <T extends TableSearchParams>({
   queryParamsPrefix,
   searchParams,
 }: UsePaginationV2Props<T>): PaginationPropsV2 => {
-  const { data: preferences } = usePreferences();
+  const { data: pageSizePreferences } = usePreferences(
+    (preferences) => preferences?.pageSizes
+  );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const search: TableSearchParams = useSearch({ strict: false });
@@ -70,7 +72,7 @@ export const usePaginationV2 = <T extends TableSearchParams>({
     : 'pageSize';
 
   const preferredPageSize = preferenceKey
-    ? preferences?.pageSizes?.[preferenceKey] ?? MIN_PAGE_SIZE
+    ? pageSizePreferences?.[preferenceKey] ?? MIN_PAGE_SIZE
     : MIN_PAGE_SIZE;
 
   const page = searchParamPage ? Number(searchParamPage) : initialPage;
@@ -108,7 +110,7 @@ export const usePaginationV2 = <T extends TableSearchParams>({
     if (preferenceKey) {
       updatePreferences({
         pageSizes: {
-          ...(preferences?.pageSizes ?? {}),
+          ...(pageSizePreferences ?? {}),
           [preferenceKey]: newPageSize,
         },
         [preferenceKey]: undefined, // This may seem weird, but this cleans up the old format so user's preferences don't get too big

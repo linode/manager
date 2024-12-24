@@ -35,17 +35,19 @@ export const PreferenceToggle = <Key extends keyof ManagerPreferences>(
     value,
   } = props;
 
-  const { data: preferences } = usePreferences();
+  const { data: preference } = usePreferences(
+    (preferences) => preferences?.[preferenceKey]
+  );
 
   const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
   const togglePreference = () => {
     let newPreferenceToSet: ManagerPreferences[Key];
 
-    if (preferences?.[preferenceKey] === undefined) {
+    if (preference === undefined) {
       // Because we default to preferenceOptions[0], toggling with no preference should pick preferenceOptions[1]
       newPreferenceToSet = preferenceOptions[1];
-    } else if (preferences[preferenceKey] === preferenceOptions[0]) {
+    } else if (preference === preferenceOptions[0]) {
       newPreferenceToSet = preferenceOptions[1];
     } else {
       newPreferenceToSet = preferenceOptions[0];
@@ -64,7 +66,7 @@ export const PreferenceToggle = <Key extends keyof ManagerPreferences>(
   };
 
   return children({
-    preference: value ?? preferences?.[preferenceKey] ?? preferenceOptions[0]!,
+    preference: value ?? preference ?? preferenceOptions[0]!,
     togglePreference,
   });
 };
