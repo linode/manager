@@ -4,7 +4,7 @@ import React from 'react';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 export const Notifications = () => {
-  const { data: profile } = useProfile();
+  const { data: profile, isLoading } = useProfile();
   const { isPending, mutateAsync: updateProfile } = useMutateProfile();
 
   const areEmailNotificationsEnabled = Boolean(profile?.email_notifications);
@@ -28,7 +28,7 @@ export const Notifications = () => {
         label={`Email alerts for account activity are ${
           areEmailNotificationsEnabled ? 'enabled' : 'disabled'
         }`}
-        disabled={isPending}
+        disabled={isPending || isLoading}
       />
     </Paper>
   );

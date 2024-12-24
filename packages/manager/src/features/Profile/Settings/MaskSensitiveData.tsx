@@ -7,7 +7,7 @@ import {
 } from 'src/queries/profile/preferences';
 
 export const MaskSensitiveData = () => {
-  const { data: isSensitiveDataMasked } = usePreferences(
+  const { data: isSensitiveDataMasked, isLoading } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
   );
 
@@ -27,12 +27,13 @@ export const MaskSensitiveData = () => {
             onChange={(_, checked) =>
               updatePreferences({ maskSensitiveData: checked })
             }
-            checked={isSensitiveDataMasked}
+            checked={Boolean(isSensitiveDataMasked)}
           />
         }
         label={`Sensitive data is ${
           isSensitiveDataMasked ? 'masked' : 'visible'
         }`}
+        disabled={isLoading}
       />
     </Paper>
   );

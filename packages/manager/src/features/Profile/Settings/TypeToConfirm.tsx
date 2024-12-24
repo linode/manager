@@ -7,7 +7,7 @@ import {
 } from 'src/queries/profile/preferences';
 
 export const TypeToConfirm = () => {
-  const { data: typeToConfirmPreference } = usePreferences(
+  const { data: typeToConfirmPreference, isLoading } = usePreferences(
     (preferences) => preferences?.type_to_confirm
   );
 
@@ -39,6 +39,7 @@ export const TypeToConfirm = () => {
         label={`Type-to-confirm is ${
           isTypeToConfirmEnabled ? 'enabled' : 'disabled'
         }`}
+        disabled={isLoading}
       />
     </Paper>
   );
