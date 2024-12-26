@@ -364,6 +364,18 @@ const StyledTableCell = styled(TableCell, {
 const StyledTableSortCell = styled(TableSortCell, {
   label: 'StyledTableSortCell',
 })(({ theme }) => ({
+  '& svg path': {
+    fill: theme.tokens.table.HeaderFilled.Icon,
+  },
+  '&:hover': {
+    '& span': {
+      color: theme.tokens.color.Brand[60],
+    },
+    '& svg path': {
+      fill: theme.tokens.color.Brand[60],
+    },
+    cursor: 'pointer',
+  },
   borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
   whiteSpace: 'nowrap',
 }));

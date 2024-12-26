@@ -21,10 +21,11 @@ export const StyledTableWrapper = styled('div', {
       '&:last-of-type': {
         borderRight: 'none',
       },
-      backgroundColor: theme.bg.tableHeader,
+      backgroundColor: theme.tokens.table.HeaderFilled.Background,
       borderBottom: `1px solid ${theme.borderColors.borderTable}`,
       borderRight: `1px solid ${theme.borderColors.borderTable}`,
       borderTop: `1px solid ${theme.borderColors.borderTable}`,
+      color: theme.tokens.table.HeaderFilled.Text,
       fontFamily: theme.font.bold,
     },
   },

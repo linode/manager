@@ -7,19 +7,8 @@ import { TableHead } from 'src/components/TableHead';
 import type { StackScriptTableHeadProps } from './StackScriptTableHead';
 import type { Theme } from '@mui/material/styles';
 
-const tableHeadStyles = (theme: Theme) => {
-  return {
-    '& span': {
-      color: theme.textColors.tableHeader,
-    },
-    color: theme.textColors.tableHeader,
-    top: 104,
-  };
-};
-
 export const sharedDeployCellStyles = (theme: Theme) => {
   return {
-    ...tableHeadStyles(theme),
     [theme.breakpoints.down('lg')]: {
       width: '15%',
     },
@@ -29,19 +18,20 @@ export const sharedDeployCellStyles = (theme: Theme) => {
     [theme.breakpoints.down('sm')]: {
       width: '28%',
     },
+    top: 104,
     width: '10%',
   };
 };
 
 export const sharedRevisionsCellStyles = (theme: Theme) => {
   return {
-    ...tableHeadStyles(theme),
     [theme.breakpoints.down('lg')]: {
       width: '17%',
     },
     [theme.breakpoints.down('md')]: {
       width: '23%',
     },
+    top: 104,
     whiteSpace: 'nowrap' as const,
     width: '13%',
   };
@@ -53,7 +43,7 @@ export const sharedStackScriptCellStyles = (
   theme: Theme
 ) => {
   return {
-    ...tableHeadStyles(theme),
+    top: 104,
     ...(category === 'account'
       ? {
           [theme.breakpoints.down('lg')]: {
@@ -91,8 +81,8 @@ type CompatibleImageCellProps = Pick<StackScriptTableHeadProps, 'category'>;
 export const StyledCompatibleImagesCell = styled(TableCell, {
   label: 'StyledCompatibleImagesCell',
   shouldForwardProp: omittedProps(['category']),
-})<CompatibleImageCellProps>(({ category, theme }) => ({
-  ...tableHeadStyles(theme),
+})<CompatibleImageCellProps>(({ category }) => ({
+  top: 104,
   ...(category === 'account'
     ? {
         width: '20%',
@@ -105,9 +95,9 @@ export const StyledCompatibleImagesCell = styled(TableCell, {
 
 export const StyledEmptyTableCell = styled(TableCell, {
   label: 'StyledEmptyTableCell',
-})(({ theme }) => ({
-  ...tableHeadStyles(theme),
+})(({}) => ({
   cursor: 'default !important',
+  top: 104,
 }));
 
 export const StyledRootTableHead = styled(TableHead, {
@@ -116,9 +106,6 @@ export const StyledRootTableHead = styled(TableHead, {
   '& th': {
     '&:first-of-type': {
       borderLeft: 'none',
-    },
-    '&:hover': {
-      ...theme.applyTableHeaderStyles,
     },
     '&:last-of-type': {
       borderRight: 'none',
@@ -133,8 +120,8 @@ export const StyledRootTableHead = styled(TableHead, {
 
 export const StyledStatusCell = styled(TableCell, {
   label: 'StyledStatusCell',
-})(({ theme }) => ({
-  ...tableHeadStyles(theme),
+})(({}) => ({
   cursor: 'default !important',
+  top: 104,
   width: '7%',
 }));

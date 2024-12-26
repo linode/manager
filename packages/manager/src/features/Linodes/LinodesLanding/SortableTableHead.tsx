@@ -149,7 +149,7 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
         <TableCell sx={{ padding: '0 !important' }}>
           <div
             style={{
-              backgroundColor: theme.bg.tableHeader,
+              backgroundColor: theme.tokens.table.HeaderFilled.Background,
               display: 'flex',
               justifyContent: 'flex-end',
             }}

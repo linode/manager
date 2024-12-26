@@ -16,6 +16,7 @@ import {
   Radius,
   Select,
   Spacing,
+  Table,
   Typography,
 } from '@linode/design-language-system';
 
@@ -1663,6 +1664,7 @@ export const lightTheme: ThemeOptions = {
     interaction: Interaction,
     radius: Radius,
     spacing: Spacing,
+    table: Table,
     typography: Typography,
   },
   typography: {

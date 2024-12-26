@@ -19,6 +19,7 @@ import type {
   InteractionTypes as InteractionTypesLight,
   RadiusTypes,
   SpacingTypes,
+  TableTypes,
   TypographyTypes,
 } from '@linode/design-language-system';
 import type {
@@ -123,6 +124,7 @@ declare module '@mui/material/styles/createTheme' {
       elevation: ElevationTypes;
       interaction: InteractionTypes;
       radius: RadiusTypes;
+      table: TableTypes;
       typography: TypographyTypes;
     };
     visually: any;
@@ -160,6 +162,7 @@ declare module '@mui/material/styles/createTheme' {
       elevation?: ElevationTypes;
       interaction?: InteractionTypes;
       radius?: RadiusTypes;
+      table?: TableTypes;
       typography?: TypographyTypes;
     };
     visually?: any;

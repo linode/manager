@@ -25,19 +25,17 @@ const useStyles = makeStyles()((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   root: {
-    '& svg': {
+    '& svg path': {
+      fill: theme.tokens.table.HeaderFilled.Icon,
       marginLeft: 4,
       width: 20,
     },
     '&:hover': {
-      '& .MuiTableSortLabel-icon': {
-        color: theme.textColors.linkActiveLight,
-      },
       '& span': {
-        color: theme.textColors.linkActiveLight,
+        color: theme.tokens.color.Brand[60],
       },
-      '& svg g': {
-        fill: theme.textColors.linkActiveLight,
+      '& svg path': {
+        fill: theme.tokens.color.Brand[60],
       },
       cursor: 'pointer',
     },
@@ -86,6 +84,11 @@ export const TableSortCell = (props: TableSortCellProps) => {
       sortDirection={direction}
     >
       <TableSortLabel
+        sx={(theme) => ({
+          '&.Mui-active': {
+            color: theme.tokens.table.HeaderFilled.Text,
+          },
+        })}
         IconComponent={SortUp}
         active={active}
         aria-label={`Sort by ${label}`}
