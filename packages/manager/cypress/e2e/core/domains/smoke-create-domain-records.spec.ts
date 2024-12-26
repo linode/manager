@@ -83,7 +83,7 @@ describe('Creates Domains records with Form', () => {
 });
 
 describe('Tests for Editable Domain CAA Records', () => {
-  it('Validates that "iodef" domain records can be edited with valid record', () => {
+  beforeEach(() => {
     // Create the initial record with a valid email
     createCaaRecord(
       'securitytest',
@@ -99,29 +99,15 @@ describe('Tests for Editable Domain CAA Records', () => {
       'mailto:security@linodian.com',
       '5 minutes'
     );
+  });
 
+  it('Validates that "iodef" domain records can be edited with valid record', () => {
     // Edit the record with a valid email and verify the updated record
     editCaaRecord('securitytest', 'mailto:secdef@linodian.com');
     cy.get('table').should('contain', 'mailto:secdef@linodian.com');
   });
 
   it('Validates that "iodef" domain records returns error with invalid record', () => {
-    // Create the initial record with a valid email
-    createCaaRecord(
-      'securitytest',
-      'iodef',
-      'mailto:security@linodian.com',
-      '5 minutes'
-    );
-
-    // Verify the initial record is in the table
-    verifyRecordInTable(
-      'securitytest',
-      'iodef',
-      'mailto:security@linodian.com',
-      '5 minutes'
-    );
-
     // Edit the record with invalid email and validate form validation
     editCaaRecord('securitytest', 'invalid-email-format');
     cy.get('p[role="alert"][data-qa-textfield-error-text="Value"]')
