@@ -700,62 +700,6 @@ export const darkTheme: ThemeOptions = {
         },
       },
     },
-    MuiTable: {
-      styleOverrides: {
-        root: {
-          // For nested tables like VPC
-          '& table': {
-            border: 0,
-          },
-          border: `1px solid ${customDarkModeOptions.borderColors.borderTable}`,
-          borderBottom: 0,
-          borderTop: 0,
-        },
-      },
-    },
-    MuiTableCell: {
-      styleOverrides: {
-        head: {
-          backgroundColor: 'rgba(0, 0, 0, 0.15)',
-          color: primaryColors.text,
-        },
-        root: {
-          '& a': {
-            color: Action.Primary.Default,
-          },
-          '& a:hover': {
-            color: Action.Primary.Hover,
-          },
-          borderBottom: `1px solid ${primaryColors.divider}`,
-          borderTop: `1px solid ${primaryColors.divider}`,
-        },
-      },
-    },
-    MuiTableRow: {
-      styleOverrides: {
-        head: {
-          '&:before': {
-            backgroundColor: 'rgba(0, 0, 0, 0.15) !important',
-          },
-          backgroundColor: Color.Neutrals[100],
-        },
-        hover: {
-          '& a': {
-            color: primaryColors.text,
-          },
-        },
-        root: {
-          '&:before': {
-            borderLeftColor: Color.Neutrals[90],
-          },
-          '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[80],
-          },
-          backgroundColor: Color.Neutrals[90],
-          border: `1px solid ${Color.Neutrals[50]}`,
-        },
-      },
-    },
     MuiTabs: {
       styleOverrides: {
         flexContainer: {

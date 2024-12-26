@@ -2,45 +2,11 @@ import { CircleProgress } from '@linode/ui';
 import { default as TableCell } from '@mui/material/TableCell';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import SortUp from 'src/assets/icons/sort-up.svg';
 import Sort from 'src/assets/icons/unsorted.svg';
 
-import type { Theme } from '@mui/material/styles';
 import type { TableCellProps as _TableCellProps } from '@mui/material/TableCell';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  initialIcon: {
-    margin: 0,
-    marginLeft: 4,
-    marginRight: 4,
-  },
-  label: {
-    fontSize: '.875rem',
-    minHeight: 20,
-    transition: 'none',
-  },
-  noWrap: {
-    whiteSpace: 'nowrap',
-  },
-  root: {
-    '& svg path': {
-      fill: theme.tokens.table.HeaderFilled.Icon,
-      marginLeft: 4,
-      width: 20,
-    },
-    '&:hover': {
-      '& span': {
-        color: theme.tokens.color.Brand[60],
-      },
-      '& svg path': {
-        fill: theme.tokens.color.Brand[60],
-      },
-      cursor: 'pointer',
-    },
-  },
-}));
 
 export interface TableSortCellProps extends _TableCellProps {
   active: boolean;
@@ -52,7 +18,7 @@ export interface TableSortCellProps extends _TableCellProps {
 }
 
 export const TableSortCell = (props: TableSortCellProps) => {
-  const { classes, cx } = useStyles();
+  // const { classes, cx } = useStyles();
 
   const {
     active,
@@ -74,30 +40,23 @@ export const TableSortCell = (props: TableSortCellProps) => {
 
   return (
     <TableCell
-      className={cx(props.className, {
-        [classes.noWrap]: noWrap,
-        [classes.root]: true,
-      })}
       {...rest}
+      sx={{
+        whiteSpace: noWrap ? 'nowrap' : '',
+      }}
       onClick={onHandleClick}
       role="columnheader"
       sortDirection={direction}
     >
       <TableSortLabel
-        sx={(theme) => ({
-          '&.Mui-active': {
-            color: theme.tokens.table.HeaderFilled.Text,
-          },
-        })}
         IconComponent={SortUp}
         active={active}
         aria-label={`Sort by ${label}`}
-        className={classes.label}
         direction={direction}
         hideSortIcon={true}
       >
         {children}
-        {!active && <Sort className={classes.initialIcon} />}
+        {!active && <Sort />}
       </TableSortLabel>
       {isLoading && <CircleProgress size="sm" />}
     </TableCell>

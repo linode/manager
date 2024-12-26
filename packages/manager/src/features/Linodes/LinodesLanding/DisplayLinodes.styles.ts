@@ -27,11 +27,11 @@ export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
 })(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: theme.bg.tableHeader,
+  backgroundColor: theme.tokens.table.HeaderFilled.Background,
   display: 'flex',
-  height: 46,
+  height: 44,
   justifyContent: 'flex-end',
-  marginBottom: theme.spacing(4),
+  marginBottom: theme.spacing(1.25),
 }));
 
 export const StyledToggleButton = styled(IconButton, {

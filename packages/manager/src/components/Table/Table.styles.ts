@@ -13,31 +13,17 @@ export const StyledTableWrapper = styled('div', {
     'spacingTop',
   ]),
 })<TableProps>(({ theme, ...props }) => ({
-  '& thead': {
-    '& th': {
-      '&:first-of-type': {
-        borderLeft: 'none',
-      },
-      '&:last-of-type': {
-        borderRight: 'none',
-      },
-      backgroundColor: theme.tokens.table.HeaderFilled.Background,
-      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-      borderRight: `1px solid ${theme.borderColors.borderTable}`,
-      borderTop: `1px solid ${theme.borderColors.borderTable}`,
-      color: theme.tokens.table.HeaderFilled.Text,
-      fontFamily: theme.font.bold,
-    },
-  },
   marginBottom: props.spacingBottom !== undefined ? props.spacingBottom : 0,
   marginTop: props.spacingTop !== undefined ? props.spacingTop : 0,
   ...(!props.noOverflow && {
     overflowX: 'auto',
     overflowY: 'hidden',
   }),
-  ...(props.noBorder && {
-    '& thead th': {
-      border: 0,
-    },
-  }),
+  // TODO: DO this????????  CHECK PLEASE
+  ...(props.noBorder &&
+    {
+      // '& thead th': {
+      //   border: 0,
+      // },
+    }),
 }));

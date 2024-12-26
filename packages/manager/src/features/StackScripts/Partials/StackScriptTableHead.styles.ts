@@ -1,10 +1,3 @@
-import { omittedProps } from '@linode/ui';
-import { styled } from '@mui/material/styles';
-
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-
-import type { StackScriptTableHeadProps } from './StackScriptTableHead';
 import type { Theme } from '@mui/material/styles';
 
 export const sharedDeployCellStyles = (theme: Theme) => {
@@ -75,53 +68,3 @@ export const sharedStackScriptCellStyles = (
     }),
   };
 };
-
-type CompatibleImageCellProps = Pick<StackScriptTableHeadProps, 'category'>;
-
-export const StyledCompatibleImagesCell = styled(TableCell, {
-  label: 'StyledCompatibleImagesCell',
-  shouldForwardProp: omittedProps(['category']),
-})<CompatibleImageCellProps>(({ category }) => ({
-  top: 104,
-  ...(category === 'account'
-    ? {
-        width: '20%',
-      }
-    : {
-        width: '26%',
-      }),
-  cursor: 'default !important',
-}));
-
-export const StyledEmptyTableCell = styled(TableCell, {
-  label: 'StyledEmptyTableCell',
-})(({}) => ({
-  cursor: 'default !important',
-  top: 104,
-}));
-
-export const StyledRootTableHead = styled(TableHead, {
-  label: 'StyledRootTableHead',
-})(({ theme }) => ({
-  '& th': {
-    '&:first-of-type': {
-      borderLeft: 'none',
-    },
-    '&:last-of-type': {
-      borderRight: 'none',
-    },
-    backgroundColor: theme.bg.tableHeader,
-    borderBottom: `2px solid ${theme.borderColors.borderTable}`,
-    borderTop: `2px solid ${theme.borderColors.borderTable}`,
-    fontFamily: theme.font.bold,
-    padding: '10px 15px',
-  },
-}));
-
-export const StyledStatusCell = styled(TableCell, {
-  label: 'StyledStatusCell',
-})(({}) => ({
-  cursor: 'default !important',
-  top: 104,
-  width: '7%',
-}));

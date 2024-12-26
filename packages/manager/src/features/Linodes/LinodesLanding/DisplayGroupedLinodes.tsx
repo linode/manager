@@ -1,3 +1,4 @@
+import { IconButton } from '@linode/ui';
 import { Box, Paper, Tooltip, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { compose } from 'ramda';
@@ -23,7 +24,6 @@ import {
   StyledControlHeader,
   StyledTagHeader,
   StyledTagHeaderRow,
-  StyledToggleButton,
 } from './DisplayLinodes.styles';
 import { RegionTypeFilter } from './RegionTypeFilter';
 import TableWrapper from './TableWrapper';
@@ -111,16 +111,15 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
             </div>
             <Box>
               <Tooltip placement="top" title="List view">
-                <StyledToggleButton
+                <IconButton
                   aria-describedby={displayViewDescriptionId}
                   aria-label="Toggle display"
+                  className={linodesAreGrouped ? 'MuiIconButton-isActive' : ''}
                   disableRipple
-                  isActive={linodesAreGrouped}
                   onClick={toggleLinodeView}
-                  size="large"
                 >
                   <GridView />
-                </StyledToggleButton>
+                </IconButton>
               </Tooltip>
 
               <div className="visually-hidden" id={groupByDescriptionId}>
@@ -129,16 +128,21 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                   : 'group by tag is currently disabled'}
               </div>
               <Tooltip placement="top-end" title="Ungroup by tag">
-                <StyledToggleButton
+                <IconButton
+                  sx={(theme) => ({
+                    ':hover': {
+                      color: theme.tokens.color.Brand[60],
+                    },
+                    color: theme.tokens.table.HeaderFilled.Icon,
+                  })}
                   aria-describedby={groupByDescriptionId}
                   aria-label="Toggle group by tag"
+                  className={linodesAreGrouped ? 'MuiIconButton-isActive' : ''}
                   disableRipple
-                  isActive={linodesAreGrouped}
                   onClick={toggleGroupLinodes}
-                  size="large"
                 >
                   <GroupByTag />
-                </StyledToggleButton>
+                </IconButton>
               </Tooltip>
             </Box>
           </StyledControlHeader>

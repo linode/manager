@@ -7,20 +7,8 @@ import type { Theme } from '@mui/material/styles';
 import type { TableCellProps as _TableCellProps } from '@mui/material/TableCell';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  actionCell: {
-    textAlign: 'right',
-  },
-  center: {
-    '&:last-child': {
-      paddingRight: '15px',
-    },
-    textAlign: 'center',
-  },
   compact: {
     padding: 6,
-  },
-  noWrap: {
-    whiteSpace: 'nowrap',
   },
   root: {
     '&.emptyCell': {
@@ -77,7 +65,7 @@ export interface TableCellProps extends _TableCellProps {
 }
 
 export const TableCell = (props: TableCellProps) => {
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
 
   const {
     actionCell,
@@ -94,24 +82,32 @@ export const TableCell = (props: TableCellProps) => {
   } = props;
 
   return (
+    // TODO: I NEED TO DO THIS!!!!!!!!!!!
     <_TableCell
-      className={cx(
-        {
-          [classes.actionCell]: actionCell,
-          [classes.center]: center,
-          [classes.compact]: compact,
-          [classes.noWrap]: noWrap,
-          [classes.root]: true,
-          [classes.sortable]: sortable,
-          // hide the cell at small breakpoints if it's empty with no parent column
-          emptyCell:
-            (!parentColumn && !props.children) ||
-            (!parentColumn &&
-              Array.isArray(props.children) &&
-              !props.children[0]),
-        },
-        className
-      )}
+      // className={
+      //   cx(
+      //   {
+      //     [classes.actionCell]: actionCell,
+      //     [classes.center]: center,
+      //     [classes.compact]: compact,
+      //     [classes.noWrap]: noWrap,
+      //     [classes.root]: true,
+      //     [classes.sortable]: sortable,
+      //     // hide the cell at small breakpoints if it's empty with no parent column
+      //     emptyCell:
+      //       (!parentColumn && !props.children) ||
+      //       (!parentColumn &&
+      //         Array.isArray(props.children) &&
+      //         !props.children[0]),
+      //   },
+      //   className
+      sx={{
+        paddingRight: actionCell ? 0 : '',
+        textAlign: actionCell ? 'right' : center ? 'center' : '',
+        whiteSpace: noWrap ? 'nowrap' : '',
+      }}
+      // )}
+      className={className}
       {...rest}
     >
       {statusCell ? (

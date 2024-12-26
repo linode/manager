@@ -789,6 +789,13 @@ export const lightTheme: ThemeOptions = {
           marginRight: 0,
         },
         root: {
+          '&.MuiIconButton-isActive': {
+            svg: {
+              path: {
+                fill: Color.Brand[60],
+              },
+            },
+          },
           '&:hover': {
             backgroundColor: 'transparent',
             color: primaryColors.main,
@@ -1293,83 +1300,134 @@ export const lightTheme: ThemeOptions = {
     MuiTable: {
       styleOverrides: {
         root: {
-          border: `1px solid ${borderColors.borderTable}`,
+          // Group by Tag
+          '&.MuiTable-groupByTag': {
+            '.MuiTableRow-root:last-child': {
+              '.MuiTableCell-root': {
+                borderBottom: 0,
+              },
+            },
+
+            border: 0,
+          },
+          // Collapsible Rows
+          '.MuiCollapse-root': {
+            borderBottom: `1px solid ${Border.Normal}`,
+          },
+          // Nested Tables
+          '.MuiTable-root': {
+            '.MuiTableCell-head': {
+              color: Table.HeaderOutlined.Text,
+            },
+            '.MuiTableRow-head': {
+              background: Background.Neutralsubtle,
+            },
+            '.MuiTableRow-root:last-child': {
+              '.MuiTableCell-root': {
+                borderBottom: 0,
+              },
+            },
+            border: 0,
+          },
+          border: `1px solid ${Border.Normal}`,
           borderBottom: 0,
           borderCollapse: 'initial',
-          borderTop: 0,
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
-        body: {
-          fontSize: '.9rem',
-        },
         head: {
-          fontSize: '.9rem',
-          height: 40,
-          lineHeight: 1.1,
+          '&:last-of-type': {
+            borderRight: 'none',
+          },
+          // Icons in TH (i.e.: Summary View, Group by Tag)
+          '.MuiIconButton-root': {
+            '&.MuiIconButton-isActive': {
+              svg: {
+                path: {
+                  fill: Color.Brand[60],
+                },
+              },
+            },
+            ':hover': {
+              color: Color.Brand[60],
+              svg: {
+                path: {
+                  fill: Color.Brand[60],
+                },
+              },
+            },
+            svg: {
+              path: {
+                fill: Color.Neutrals.White,
+              },
+            },
+          },
+          borderBottom: 0,
+          color: Table.HeaderFilled.Text,
+          fontWeight: Font.FontWeight.Bold,
+          lineHeight: Font.LineHeight.Xxxs,
+          padding: Spacing[50],
+          whiteSpace: 'noWrap',
         },
         root: {
-          borderBottom: `1px solid ${primaryColors.divider}`,
-          borderTop: `1px solid ${primaryColors.divider}`,
-          padding: `0 15px`,
+          // Spacing for collapsible inner content
+          '.MuiCollapse-root': {
+            padding: Spacing[60],
+          },
+          borderBottom: `1px solid ${Table.Row.Border}`,
+          fontSize: Font.FontSize.Xs,
+          lineHeight: Font.LineHeight.Xs,
+          padding: `0 ${Spacing[50]}`,
+        },
+        stickyHeader: {
+          // No idea where sticky cells are getting their background from
+          background: 'transparent',
         },
       },
     },
     MuiTableRow: {
       styleOverrides: {
         head: {
-          backgroundColor: Color.Neutrals[5],
-          height: 'auto',
+          background: Table.HeaderFilled.Background,
         },
         hover: {
-          '& a': {
-            color: primaryColors.text,
-          },
-          '& a.secondaryLink': {
-            '&:hover': {
-              textDecoration: 'underline',
-            },
-            color: primaryColors.main,
-          },
-          cursor: 'pointer',
+          background: Table.Row.Background.Hover,
         },
         root: {
-          '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[5],
-          },
-          backfaceVisibility: 'hidden',
-          backgroundColor: primaryColors.white,
-          height: 40,
-          position: 'relative',
-          zIndex: 1,
+          background: Table.Row.Background.Default,
         },
       },
     },
     MuiTableSortLabel: {
       styleOverrides: {
         icon: {
-          color: 'inherit !important',
-          marginTop: 2,
           opacity: 1,
         },
-        iconDirectionAsc: {
-          transform: 'rotate(0deg)',
-        },
-        iconDirectionDesc: {
-          transform: 'rotate(180deg)',
-        },
         root: {
-          '&:focus': {
-            outline: `1px dotted ${Color.Neutrals[60]}`,
+          '&.Mui-active': {
+            color: Table.HeaderFilled.Text,
           },
-          '&:hover': {
-            color: primaryColors.main,
+          ':hover': {
+            // Targeting `svg` since we have an indeterminate state
+            '.MuiTableSortLabel-icon, svg': {
+              path: {
+                fill: Color.Brand[60],
+              },
+            },
+            color: Color.Brand[60],
+            cursor: 'pointer',
           },
-          fontSize: '.9rem',
-          lineHeight: '1.1rem',
-          transition: 'color 225ms ease-in-out',
+          fontSize: Font.FontSize.Xs,
+          svg: {
+            height: '16px',
+            margin: `0 ${Spacing[20]}`,
+            path: {
+              fill: Table.HeaderFilled.Text,
+            },
+            width: '16px',
+          },
         },
       },
     },

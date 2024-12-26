@@ -41,6 +41,7 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
           colCount={5}
           rowCount={dataLength}
           stickyHeader
+          tableClass={linodesAreGrouped ? 'MuiTable-groupByTag' : ''}
           {...tableProps}
         >
           <SortableTableHead
