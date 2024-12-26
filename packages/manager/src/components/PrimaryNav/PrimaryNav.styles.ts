@@ -1,8 +1,9 @@
-import { Accordion, Box, Divider, omittedProps } from '@linode/ui';
+import { Accordion, Box, Divider, IconButton, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'react-router-dom';
 
+import AkamaiColorLogo from 'src/assets/logo/akamai-logo-color.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 
@@ -24,24 +25,30 @@ export const StyledGrid = styled(Grid, {
 
 export const StyledLogoBox = styled(Box, {
   label: 'StyledLogoBox',
-  shouldForwardProp: omittedProps(['isCollapsed']),
-})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
+})(({ theme }) => ({
   alignItems: 'center',
   backgroundColor: theme.name === 'dark' ? theme.bg.appBar : undefined,
   display: 'flex',
   height: 50,
-  paddingLeft: 13,
+  paddingBottom: 16,
+  paddingLeft: 12,
+  paddingRight: 24,
+  paddingTop: 16,
   transition: 'padding-left .03s linear',
-  ...(props.isCollapsed && {
-    '& .akamai-logo-name': {
-      opacity: 0,
-    },
-    paddingLeft: 8,
-  }),
 }));
 
 export const StyledAkamaiLogo = styled(AkamaiLogo, {
   label: 'StyledAkamaiLogo',
+})(({ theme }) => ({
+  '& .akamai-logo-name': {
+    transition: theme.transitions.create(['opacity']),
+  },
+  // give the svg a transition so it smoothly resizes
+  transition: 'width .1s linear',
+}));
+
+export const StyledAkamaiColorLogo = styled(AkamaiColorLogo, {
+  label: 'StyledAkamaiColorLogo',
 })(({ theme }) => ({
   '& .akamai-logo-name': {
     transition: theme.transitions.create(['opacity']),
@@ -150,3 +157,12 @@ export const StyledAccordion = styled(Accordion, {
     backgroundColor: theme.name === 'dark' ? theme.bg.appBar : 'transparent',
   })
 );
+
+export const StyledIconButton = styled(IconButton, {
+  label: 'styledIconButton',
+})(({ theme }) => ({
+  '& svg': {
+    color: theme.tokens.color.Neutrals.White,
+    transition: theme.transitions.create(['color']),
+  },
+}));

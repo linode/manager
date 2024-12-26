@@ -1,9 +1,17 @@
 import { Box, IconButton, Typography } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useTheme } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import { AppBar } from 'src/components/AppBar';
 import { Hidden } from 'src/components/Hidden';
+import {
+  StyledAkamaiColorLogo,
+  StyledAkamaiLogo,
+  StyledLogoBox,
+} from 'src/components/PrimaryNav/PrimaryNav.styles';
 import { Toolbar } from 'src/components/Toolbar';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 
@@ -15,21 +23,25 @@ import SearchBar from './SearchBar/SearchBar';
 import { TopMenuTooltip } from './TopMenuTooltip';
 import { UserMenu } from './UserMenu';
 
+import type { Theme } from '@mui/material';
+
 export interface TopMenuProps {
-  desktopMenuToggle: () => void;
   isSideMenuOpen: boolean;
   openSideMenu: () => void;
   username: string;
 }
+
+export const TOPMENU_HEIGHT = 56;
 
 /**
  * - Items presented in the top navigation are considered universally important and should be available regardless of any particular task.
  * - The number of items should be limited. In the future, **Help & Support** could become a drop down with links to **Community**, **Guides**, and etc.
  */
 export const TopMenu = React.memo((props: TopMenuProps) => {
-  const { desktopMenuToggle, isSideMenuOpen, openSideMenu, username } = props;
+  const { isSideMenuOpen, openSideMenu, username } = props;
 
   const { loggedInAsCustomer } = useAuthentication();
+  const theme = useTheme<Theme>();
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'
@@ -55,7 +67,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
         <Toolbar
           sx={(theme) => ({
             '&.MuiToolbar-root': {
-              height: `50px`,
+              height: TOPMENU_HEIGHT,
               padding: theme.spacing(0),
               width: '100%',
             },
@@ -63,17 +75,22 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           variant="dense"
         >
           <Hidden mdDown>
-            <TopMenuTooltip title={navHoverText}>
-              <IconButton
-                aria-label="open menu"
-                color="inherit"
-                data-testid="open-nav-menu"
-                onClick={desktopMenuToggle}
-                size="large"
-              >
-                <MenuIcon />
-              </IconButton>
-            </TopMenuTooltip>
+            <Grid>
+              <StyledLogoBox>
+                <Link
+                  aria-label="Akamai - Dashboard"
+                  style={{ lineHeight: 0 }}
+                  title="Akamai - Dashboard"
+                  to={`/dashboard`}
+                >
+                  {theme.name === 'dark' ? (
+                    <StyledAkamaiLogo width={83} />
+                  ) : (
+                    <StyledAkamaiColorLogo width={83} />
+                  )}
+                </Link>
+              </StyledLogoBox>
+            </Grid>
           </Hidden>
           <Hidden mdUp>
             <TopMenuTooltip title={navHoverText}>

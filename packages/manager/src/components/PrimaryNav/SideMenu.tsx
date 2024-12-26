@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
+import { TOPMENU_HEIGHT } from 'src/features/TopMenu/TopMenu';
 
 import PrimaryNav from './PrimaryNav';
 
@@ -18,6 +19,7 @@ export interface SideMenuProps {
    * If true, the menu will be collapsed.
    */
   collapse: boolean;
+  desktopMenuToggle: () => void;
   /**
    * If true, the menu will be open. Has no effect unless the viewport is less than 960px.
    */
@@ -30,7 +32,7 @@ export interface SideMenuProps {
  * The Linodes landing page is considered the homepage unless the account is managed. Otherwise, clicking on the Linode logo will take the user to the Managed landing page.
  */
 export const SideMenu = (props: SideMenuProps) => {
-  const { closeMenu, collapse, open } = props;
+  const { closeMenu, collapse, desktopMenuToggle, open } = props;
 
   return (
     <>
@@ -44,7 +46,11 @@ export const SideMenu = (props: SideMenuProps) => {
           open={open}
           variant="temporary"
         >
-          <PrimaryNav closeMenu={closeMenu} isCollapsed={false} />
+          <PrimaryNav
+            closeMenu={closeMenu}
+            desktopMenuToggle={desktopMenuToggle}
+            isCollapsed={false}
+          />
         </StyledDrawer>
       </Hidden>
       <Hidden implementation="css" mdDown>
@@ -54,7 +60,11 @@ export const SideMenu = (props: SideMenuProps) => {
           open
           variant="permanent"
         >
-          <PrimaryNav closeMenu={closeMenu} isCollapsed={collapse} />
+          <PrimaryNav
+            closeMenu={closeMenu}
+            desktopMenuToggle={desktopMenuToggle}
+            isCollapsed={collapse}
+          />
         </StyledDrawer>
       </Hidden>
     </>
@@ -73,6 +83,10 @@ const StyledDrawer = styled(Drawer, {
     height: '100%',
     left: 'inherit',
     overflowX: 'hidden',
+    [theme.breakpoints.up('md')]: {
+      height: `calc(100% - ${TOPMENU_HEIGHT}px)`,
+      top: TOPMENU_HEIGHT,
+    },
     transform: 'none',
     transition: 'width linear .1s',
     width: SIDEBAR_WIDTH,

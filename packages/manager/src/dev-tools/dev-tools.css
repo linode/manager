@@ -241,10 +241,12 @@
   width: 70px;
   height: 54px;
   border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
   position: absolute;
-  left: 0;
+  left: 50%;
   bottom: 0;
   z-index: 1;
+  transform: translateX(-50%);
 }
 
 .dev-tools__toggle button {
