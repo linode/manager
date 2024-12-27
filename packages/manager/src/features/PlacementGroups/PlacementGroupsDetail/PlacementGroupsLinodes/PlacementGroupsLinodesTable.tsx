@@ -92,6 +92,7 @@ export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
                     {paginatedAndOrderedLinodes.map((linode) => (
                       <PlacementGroupsLinodesTableRow
                         handleUnassignLinodeModal={handleUnassignLinodeModal}
+                        hover
                         key={`placement-group-linode-${linode.id}`}
                         linode={linode}
                       />

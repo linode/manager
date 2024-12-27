@@ -8,9 +8,11 @@ import { TableRow } from 'src/components/TableRow';
 import { truncate } from 'src/utilities/truncate';
 
 import type { StackScript } from '@linode/api-v4';
+import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
   disabled?: boolean;
+  hover?: TableRowOwnProps['hover'];
   isSelected: boolean;
   onOpenDetails: () => void;
   onSelect?: () => void;
@@ -18,7 +20,14 @@ interface Props {
 }
 
 export const StackScriptSelectionRow = (props: Props) => {
-  const { disabled, isSelected, onOpenDetails, onSelect, stackscript } = props;
+  const {
+    disabled,
+    hover,
+    isSelected,
+    onOpenDetails,
+    onSelect,
+    stackscript,
+  } = props;
 
   // Never show LKE StackScripts. We try to hide these from the user, even though they
   // are returned by the API.
@@ -27,7 +36,7 @@ export const StackScriptSelectionRow = (props: Props) => {
   }
 
   return (
-    <TableRow>
+    <TableRow hover={hover}>
       <TableCell>
         <Radio
           checked={isSelected}

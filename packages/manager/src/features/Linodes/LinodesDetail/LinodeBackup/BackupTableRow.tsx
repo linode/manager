@@ -11,6 +11,7 @@ import { formatDuration } from 'src/utilities/formatDuration';
 import { LinodeBackupActionMenu } from './LinodeBackupActionMenu';
 
 import type { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import type { TableRowOwnProps } from '@mui/material';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
   disabled: boolean;
   handleDeploy: () => void;
   handleRestore: () => void;
+  hover?: TableRowOwnProps['hover'];
 }
 
 const typeMap = {
@@ -46,10 +48,10 @@ const statusIconMap: Record<LinodeBackup['status'], Status> = {
 };
 
 export const BackupTableRow = (props: Props) => {
-  const { backup, disabled, handleDeploy, handleRestore } = props;
+  const { backup, disabled, handleDeploy, handleRestore, hover } = props;
 
   return (
-    <TableRow data-qa-backup key={backup.id}>
+    <TableRow data-qa-backup hover={hover} key={backup.id}>
       <TableCell data-qa-backup-name={backup.label || typeMap[backup.type]}>
         {backup.label || typeMap[backup.type]}
       </TableCell>

@@ -88,7 +88,7 @@ const TrustedDevices = () => {
 
     return data?.data.map((device) => {
       return (
-        <TableRow key={device.id}>
+        <TableRow hover key={device.id}>
           <TableCell>
             <MaskableText isToggleable text={device.user_agent} />
           </TableCell>

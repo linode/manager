@@ -22,12 +22,14 @@ import { getDisabledPlanReasonCopy } from './utils';
 
 import type { PlanWithAvailability } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
+import type { TableRowOwnProps } from '@mui/material';
 
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabledClasses?: LinodeTypeClass[];
   hasMajorityOfPlansDisabled: boolean;
   header?: string;
+  hover?: TableRowOwnProps['hover'];
   idx: number;
   isCreate?: boolean;
   linodeID?: number | undefined;
@@ -44,6 +46,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const {
     currentPlanHeading,
     hasMajorityOfPlansDisabled,
+    hover,
     idx,
     isCreate,
     linodeID,
@@ -124,6 +127,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
         <TableRow
           className={rowIsDisabled ? 'disabled-row' : ''}
           data-qa-plan-row={plan.formattedLabel}
+          hover={hover}
           key={plan.id}
           onClick={() => (!rowIsDisabled ? onSelect(plan.id) : undefined)}
         >

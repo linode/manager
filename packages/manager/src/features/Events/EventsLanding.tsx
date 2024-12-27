@@ -74,6 +74,7 @@ export const EventsLanding = (props: Props) => {
             <EventRow
               entityId={entityId}
               event={event}
+              hover
               key={`event-${event.id}`}
             />
           ))}

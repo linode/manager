@@ -17,8 +17,11 @@ import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 import { InterfaceListItem } from './InterfaceListItem';
 import { ConfigActionMenu } from './LinodeConfigActionMenu';
 
+import type { TableRowOwnProps } from '@mui/material';
+
 interface Props {
   config: Config;
+  hover?: TableRowOwnProps['hover'];
   linodeId: number;
   onBoot: () => void;
   onDelete: () => void;
@@ -39,7 +42,7 @@ const isVolumeDevice = (
 };
 
 export const ConfigRow = React.memo((props: Props) => {
-  const { config, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
+  const { config, hover, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
 
   const { data: kernel } = useLinodeKernelQuery(config.kernel);
 
@@ -105,7 +108,7 @@ export const ConfigRow = React.memo((props: Props) => {
   const defaultInterfaceLabel = 'eth0 – Public Internet';
 
   return (
-    <TableRow data-qa-config={config.label} key={config.id}>
+    <TableRow data-qa-config={config.label} hover={hover} key={config.id}>
       <TableCell>
         {config.label} – {kernel?.label ?? config.kernel}
       </TableCell>

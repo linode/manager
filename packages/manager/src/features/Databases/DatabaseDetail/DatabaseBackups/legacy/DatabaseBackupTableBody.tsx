@@ -58,6 +58,7 @@ const DatabaseBackupTableBody = (props: Props) => {
         <BackupTableRow
           backup={backup}
           disabled={disabled}
+          hover
           key={backup.id}
           onRestore={onRestore}
         />

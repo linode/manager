@@ -10,12 +10,14 @@ import { TableRow } from 'src/components/TableRow';
 
 import { FolderActionMenu } from './FolderActionMenu';
 
+import type { TableRowOwnProps } from '@mui/material';
 import type { TableRowProps } from 'src/components/TableRow';
 
 export interface FolderTableRowProps extends TableRowProps {
   displayName: string;
   folderName: string;
   handleClickDelete: (objectName: string) => void;
+  hover?: TableRowOwnProps['hover'];
 }
 
 export const FolderTableRow = (props: FolderTableRowProps) => {
@@ -23,11 +25,12 @@ export const FolderTableRow = (props: FolderTableRowProps) => {
     displayName,
     folderName,
     handleClickDelete,
+    hover,
     ...tableRowProps
   } = props;
 
   return (
-    <TableRow key={folderName} {...tableRowProps}>
+    <TableRow hover={hover} key={folderName} {...tableRowProps}>
       <TableCell>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <StyledIconWrapper>

@@ -69,6 +69,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
     return attachedFirewalls.map((attachedFirewall) => (
       <NodeBalancerFirewallsRow
         firewall={attachedFirewall}
+        hover
         key={`firewall-${attachedFirewall.id}`}
         nodeBalancerID={nodeBalancerId}
         onClickUnassign={handleClickUnassign}

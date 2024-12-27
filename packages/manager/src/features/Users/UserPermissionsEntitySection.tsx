@@ -21,18 +21,27 @@ import { grantTypeMap } from 'src/features/Account/constants';
 import { usePagination } from 'src/hooks/usePagination';
 
 import type { Grant, GrantLevel, GrantType } from '@linode/api-v4/lib/account';
+import type { TableRowOwnProps } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 
 interface Props {
   entity: GrantType;
   entitySetAllTo: (entity: GrantType, value: GrantLevel) => () => void;
   grants: Grant[] | undefined;
+  hover?: TableRowOwnProps['hover'];
   setGrantTo: (entity: string, idx: number, value: GrantLevel) => () => void;
   showHeading?: boolean;
 }
 
 export const UserPermissionsEntitySection = React.memo(
-  ({ entity, entitySetAllTo, grants, setGrantTo, showHeading }: Props) => {
+  ({
+    entity,
+    entitySetAllTo,
+    grants,
+    hover,
+    setGrantTo,
+    showHeading,
+  }: Props) => {
     const theme: Theme = useTheme();
     const pagination = usePagination(1);
 
@@ -135,7 +144,11 @@ export const UserPermissionsEntitySection = React.memo(
               // Index must be corrected to account for pagination
               const idx = (pagination.page - 1) * pagination.pageSize + _idx;
               return (
-                <TableRow data-qa-specific-grant={grant.label} key={grant.id}>
+                <TableRow
+                  data-qa-specific-grant={grant.label}
+                  hover={hover}
+                  key={grant.id}
+                >
                   <TableCell
                     sx={{
                       '& div': {

@@ -18,14 +18,16 @@ import {
 } from './utils';
 
 import type { Event } from '@linode/api-v4/lib/account';
+import type { TableRowOwnProps } from '@mui/material';
 
 interface EventRowProps {
   entityId?: number;
   event: Event;
+  hover?: TableRowOwnProps['hover'];
 }
 
 export const EventRow = (props: EventRowProps) => {
-  const { event } = props;
+  const { event, hover } = props;
   const theme = useTheme();
   const timestamp = getEventTimestamp(event);
   const { action, message, username } = {
@@ -42,7 +44,7 @@ export const EventRow = (props: EventRowProps) => {
   const { progressEventDisplay, showProgress } = formatProgressEvent(event);
 
   return (
-    <TableRow data-qa-event-row data-test-id={action}>
+    <TableRow data-qa-event-row data-test-id={action} hover={hover}>
       <TableCell data-qa-event-message-cell>
         <Box sx={{ mt: showProgress ? 0.5 : 0 }}>{message}</Box>
         {showProgress && (

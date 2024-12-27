@@ -195,6 +195,7 @@ export const LinodeSelectTable = (props: Props) => {
                         }
                       : undefined
                   }
+                  hover
                   key={linode.id}
                   linode={linode}
                   onSelect={() => handleSelect(linode)}

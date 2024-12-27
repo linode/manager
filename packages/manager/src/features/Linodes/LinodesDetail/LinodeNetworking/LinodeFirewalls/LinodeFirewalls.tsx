@@ -63,6 +63,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
     return attachedFirewalls.map((attachedFirewall) => (
       <LinodeFirewallsRow
         firewall={attachedFirewall}
+        hover
         key={`firewall-${attachedFirewall.id}`}
         linodeID={linodeID}
         onClickUnassign={handleClickUnassign}

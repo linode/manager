@@ -14,16 +14,18 @@ import { getDomainDisplayType } from './domainUtils';
 
 import type { Handlers } from './DomainActionMenu';
 import type { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
+import type { TableRowOwnProps } from '@mui/material';
 
 interface DomainTableRowProps extends Handlers {
   domain: Domain;
+  hover?: TableRowOwnProps['hover'];
 }
 
 export const DomainTableRow = React.memo((props: DomainTableRowProps) => {
-  const { domain, onClone, onDisableOrEnable, onEdit, onRemove } = props;
+  const { domain, hover, onClone, onDisableOrEnable, onEdit, onRemove } = props;
 
   return (
-    <TableRow data-qa-domain-cell={domain.domain} key={domain.id}>
+    <TableRow data-qa-domain-cell={domain.domain} hover={hover} key={domain.id}>
       <TableCell data-qa-domain-label>
         <StyledDiv>
           {domain.type !== 'slave' ? (

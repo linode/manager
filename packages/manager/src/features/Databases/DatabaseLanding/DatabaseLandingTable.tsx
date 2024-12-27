@@ -176,6 +176,7 @@ const DatabaseLandingTable = ({
               }}
               database={database}
               events={events}
+              hover
               isNewDatabase={isNewDatabase}
               key={database.id}
             />
