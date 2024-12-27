@@ -148,7 +148,7 @@ declare module '@mui/material/styles/createTheme' {
     textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
       //  ---- Global tokens: theme agnostic ----
-      border?: BorderTypes;
+      borderRadius?: BorderRadiusTypes;
       color?: ColorTypes;
       font?: FontTypes;
       footer?: GlobalFooterTypes;
@@ -157,7 +157,7 @@ declare module '@mui/material/styles/createTheme' {
       accent?: AccentTypes;
       action?: ActionTypes;
       background?: BackgroundTypes;
-      borderRadius?: BorderRadiusTypes;
+      border?: BorderTypes;
       chart?: ChartTypes;
       content?: ContentTypes;
       elevation?: ElevationTypes;
