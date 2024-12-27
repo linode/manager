@@ -128,75 +128,48 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
             name={`${name}.polling_interval_seconds`}
           />
         </Grid>
-        <Grid item marginTop={{ sm: 1, xs: 0 }} md="auto" sm={12} xs={12}>
-          <Grid alignItems="flex-start" container>
-            <Grid item md="auto" sm="auto" xs={'auto'}>
-              <Box marginTop={{ md: 4 }}>
-                <Typography
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    height: { sm: '56px', xs: '50px' },
-                  }}
-                  variant="body1"
-                >
-                  criteria are met for at least
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid
-              item
-              md={3}
-              sm="auto"
-              sx={{ marginTop: { md: 2.5 }, paddingLeft: { md: 1 } }}
-              xs="auto"
-            >
-              <Controller
-                render={({ field, fieldState }) => (
-                  <TextField
-                    onWheel={(event) =>
-                      event.target instanceof HTMLElement && event.target.blur()
-                    }
-                    sx={{
-                      height: '30px',
-                      width: '30px',
-                    }}
-                    data-testid="Trigger-occurences"
-                    errorText={fieldState.error?.message}
-                    label=""
-                    min={0}
-                    name={`${name}.trigger_occurrences`}
-                    onBlur={field.onBlur}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    type="number"
-                    value={field.value ?? 0}
-                  />
-                )}
-                control={control}
+        <Grid
+          alignItems={'center'}
+          display={'flex'}
+          gap={1}
+          item
+          md="auto"
+          mt={{ lg: 3.5, xs: 0 }}
+          sm={12}
+          xs={12}
+        >
+          <Typography mt={3} variant="body1">
+            criteria are met for at least
+          </Typography>
+
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                onWheel={(event) =>
+                  event.target instanceof HTMLElement && event.target.blur()
+                }
+                sx={{
+                  height: '30px',
+                  width: '30px',
+                }}
+                data-testid="Trigger-occurences"
+                errorText={fieldState.error?.message}
+                label=""
+                min={0}
                 name={`${name}.trigger_occurrences`}
+                onBlur={field.onBlur}
+                onChange={(e) => field.onChange(e.target.value)}
+                type="number"
+                value={field.value ?? 0}
               />
-            </Grid>
-            <Grid
-              item
-              md="auto"
-              paddingLeft={{ md: 2.5 }}
-              sm={'auto'}
-              xs={'auto'}
-            >
-              <Box sx={{ marginTop: { md: 4, sm: 2, xs: 1 } }}>
-                <Typography
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    height: { sm: '56px', xs: '50px' },
-                  }}
-                  variant="body1"
-                >
-                  consecutive occurences.
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
+            )}
+            control={control}
+            name={`${name}.trigger_occurrences`}
+          />
+
+          <Typography mt={3} textAlign={'start'} variant="body1">
+            consecutive occurences.
+          </Typography>
         </Grid>
       </Grid>
     </Box>

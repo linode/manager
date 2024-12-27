@@ -1,4 +1,4 @@
-import { Autocomplete } from '@linode/ui';
+import { Autocomplete, Box } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -81,13 +81,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   };
 
   return (
-    <Grid
-      alignItems="flex-start"
-      container
-      data-testid={`${name}-id`}
-      spacing={2}
-    >
-      <Grid item md={3} sm={6} xs={12}>
+    <Grid container gap={2}>
+      <Grid item md={3} xs={12}>
         <Controller
           render={({ field, fieldState }) => (
             <Autocomplete
@@ -116,7 +111,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           name={`${name}.dimension_label`}
         />
       </Grid>
-      <Grid item md={2} sm={3} xs={12}>
+      <Grid item md={2} xs={12}>
         <Controller
           render={({ field, fieldState }) => (
             <Autocomplete
@@ -145,38 +140,42 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           name={`${name}.operator`}
         />
       </Grid>
-      <Grid item md={3} sm={4} xs={12}>
-        <Controller
-          render={({ field, fieldState }) => (
-            <Autocomplete
-              onChange={(
-                _,
-                selected: { label: string; value: string },
-                operation
-              ) => {
-                field.onChange(
-                  operation === 'selectOption' ? selected.value : null
-                );
-              }}
-              value={
-                valueOptions().find((option) => option.value === field.value) ??
-                null
-              }
-              data-testid="Value"
-              disabled={dimensionFieldWatcher === null}
-              errorText={fieldState.error?.message}
-              label="Value"
-              onBlur={field.onBlur}
-              options={valueOptions()}
-              placeholder="Select a Value"
-            />
-          )}
-          control={control}
-          name={`${name}.value`}
-        />
-      </Grid>
-      <Grid item marginTop={6} paddingLeft={1}>
-        <ClearIconButton handleClick={onFilterDelete} />
+      <Grid item md={3} xs={12}>
+        <Box display={'flex'} gap={2}>
+          <Controller
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                onChange={(
+                  _,
+                  selected: { label: string; value: string },
+                  operation
+                ) => {
+                  field.onChange(
+                    operation === 'selectOption' ? selected.value : null
+                  );
+                }}
+                value={
+                  valueOptions().find(
+                    (option) => option.value === field.value
+                  ) ?? null
+                }
+                data-testid="Value"
+                disabled={dimensionFieldWatcher === null}
+                errorText={fieldState.error?.message}
+                label="Value"
+                onBlur={field.onBlur}
+                options={valueOptions()}
+                placeholder="Select a Value"
+                sx={{ flex: 1 }}
+              />
+            )}
+            control={control}
+            name={`${name}.value`}
+          />
+          <Box alignContent={'center'} mt={5}>
+            <ClearIconButton handleClick={onFilterDelete} />
+          </Box>
+        </Box>
       </Grid>
     </Grid>
   );
