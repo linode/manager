@@ -238,6 +238,17 @@ const MuiTableHeadSvgStyles = {
   },
 };
 
+const MuiTableZebraHoverStyles = {
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+    background: Table.Row.Background.Hover,
+  },
+};
+
+const MuiTableZebraStyles = {
+  background: Table.Row.Background.Zebra,
+  ...MuiTableZebraHoverStyles,
+};
+
 export const lightTheme: ThemeOptions = {
   addCircleHoverEffect: {
     ...iconCircleHoverEffect,
@@ -1315,8 +1326,18 @@ export const lightTheme: ThemeOptions = {
                 borderBottom: 0,
               },
             },
-
             border: 0,
+          },
+          // Zebra Striping
+          '&.MuiTable-zebra': {
+            // Linodes Group by Tag: First Row is the Title
+            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
+            // Default Striping
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:nth-of-type(even)': MuiTableZebraStyles,
+          },
+          // Zebra Striping for Nested Tables
+          '&.MuiTable-zebra-nested': {
+            '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
           },
           // Collapsible Rows
           '.MuiCollapse-root': {
@@ -1373,6 +1394,11 @@ export const lightTheme: ThemeOptions = {
           whiteSpace: 'noWrap',
         },
         root: {
+          '&.MuiTableCell-nested': {
+            border: 0,
+            height: 'inherit', // Override default height - hidden by default
+            padding: 0,
+          },
           // Spacing for collapsible inner content
           '.MuiCollapse-root': {
             padding: Spacing[60],
@@ -1394,11 +1420,18 @@ export const lightTheme: ThemeOptions = {
         head: {
           background: Table.HeaderFilled.Background,
         },
-        hover: {
-          background: Table.Row.Background.Hover,
-        },
         root: {
+          // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: Table.Row.Background.Hover,
+          },
+          '&.disabled-row .MuiTableCell-root': {
+            // TODO: These may be right, but look into Table disabled tokens
+            backgroundColor: Interaction.Background.Disabled,
+            color: Content.Text.Primary.Disabled,
+          },
           background: Table.Row.Background.Default,
+          position: 'relative',
         },
       },
     },

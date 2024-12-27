@@ -37,8 +37,8 @@ export const CollapsibleRow = (props: Props) => {
         </TableCell>
         {OuterTableCells}
       </TableRow>
-      <TableRow className="inner-table-row">
-        <TableCell colSpan={6} style={{ border: 'none', padding: 0 }}>
+      <TableRow className="MuiTableRow-nested">
+        <TableCell className="MuiTableCell-nested" colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box>{InnerTable}</Box>
           </Collapse>

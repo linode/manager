@@ -41,6 +41,7 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
           colCount={5}
           rowCount={dataLength}
           stickyHeader
+          striped
           tableClass={linodesAreGrouped ? 'MuiTable-groupByTag' : ''}
           {...tableProps}
         >

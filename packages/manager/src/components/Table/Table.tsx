@@ -35,6 +35,11 @@ export interface TableProps extends _TableProps {
    * @default 0
    */
   spacingTop?: 0 | 8 | 16 | 24;
+  /**
+   * Optional boolean to enable or disable striped rows
+   * @default false
+   */
+  striped?: boolean;
   /** Optional caption to add to the table */
   tableCaption?: string;
   /** Optional additional css class name to pass to the table */
@@ -66,7 +71,8 @@ export const Table = (props: TableProps) => {
     rowHoverState = true,
     spacingBottom,
     spacingTop,
-    tableClass,
+    striped,
+    tableClass = '',
     ...rest
   } = props;
 
@@ -79,7 +85,7 @@ export const Table = (props: TableProps) => {
       spacingTop={spacingTop}
     >
       <_Table
-        className={tableClass}
+        className={`${tableClass} ${striped ? 'MuiTable-zebra' : ''}`}
         {...rest}
         aria-colcount={colCount}
         aria-rowcount={rowCount}

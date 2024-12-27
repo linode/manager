@@ -7,6 +7,7 @@ import { compose } from 'recompose';
 
 import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Table } from 'src/components/Table';
 import { withProfile } from 'src/containers/profile.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -25,7 +26,6 @@ import {
   StyledEmptyStateDiv,
   StyledLoaderDiv,
   StyledPlaceholder,
-  StyledTable,
 } from './StackScriptBase.styles';
 import { StackScriptsEmptyLandingState } from './StackScriptsEmptyLandingPage';
 
@@ -525,11 +525,12 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   value={query ?? ''}
                 />
               </StyledContentDiv>
-              <StyledTable
+              <Table
                 aria-label="List of StackScripts"
                 colCount={isSelecting ? 1 : 4}
                 noOverflow={true}
                 rowCount={listOfStackScripts.length}
+                striped
                 style={!isSelecting ? { tableLayout: 'fixed' } : undefined}
               >
                 <StackScriptTableHead
@@ -545,7 +546,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   getDataAtPage={this.getDataAtPage}
                   getNext={this.getNext}
                 />
-              </StyledTable>
+              </Table>
 
               {/*
                * show loading indicator if we're getting more stackscripts
@@ -578,7 +579,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                    * would never be scrolled into view no matter how much you scrolled on the
                    * trackpad. Especially finicky at zoomed in browser sizes
                    */}
-                  <div style={{ minHeight: '150px' }}></div>
+                  <div style={{ minHeight: '150px' }} />
                 </Waypoint>
               ) : (
                 <Button

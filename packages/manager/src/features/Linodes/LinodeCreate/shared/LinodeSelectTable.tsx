@@ -154,7 +154,7 @@ export const LinodeSelectTable = (props: Props) => {
       />
       <Box>
         {matchesMdUp ? (
-          <Table>
+          <Table striped>
             <TableHead>
               <TableRow>
                 <TableSortCell

@@ -262,7 +262,7 @@ export const VolumesLanding = () => {
         placeholder="Search Volumes"
         value={query ?? ''}
       />
-      <Table>
+      <Table striped>
         <TableHead>
           <TableRow>
             <TableSortCell

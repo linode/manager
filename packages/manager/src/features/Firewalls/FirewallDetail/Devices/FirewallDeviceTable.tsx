@@ -1,5 +1,3 @@
-import { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import OrderBy from 'src/components/OrderBy';
@@ -17,6 +15,8 @@ import { formattedTypes } from './FirewallDeviceLanding';
 import { FirewallDeviceRow } from './FirewallDeviceRow';
 
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
+import type { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface FirewallDeviceTableProps {
   deviceType: FirewallDeviceEntityType;
@@ -60,7 +60,7 @@ export const FirewallDeviceTable = React.memo(
               pageSize,
             }) => (
               <>
-                <Table aria-label={ariaLabel}>
+                <Table aria-label={ariaLabel} striped>
                   <TableHead>
                     <TableRow>
                       <TableSortCell

@@ -6,13 +6,13 @@ import { TableRow } from 'src/components/TableRow';
 export const StyledTagHeaderRow = styled(TableRow, {
   label: 'StyledTagHeaderRow',
 })(({ theme }) => ({
-  '& td': {
+  '& .MuiTableCell-root': {
     borderBottom: 'none',
     borderTop: 'none',
     // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
     padding: `${theme.spacing(1.25)} 0 2px`,
   },
-  backgroundColor: 'transparent !important',
+  backgroundColor: 'transparent',
   height: 'auto',
 }));
 

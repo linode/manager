@@ -116,7 +116,7 @@ export const SSHKeys = () => {
           </Button>
         </StyledAddNewWrapperGridItem>
       </Grid>
-      <Table>
+      <Table striped>
         <TableHead>
           <TableRow>
             <TableCell>Label</TableCell>

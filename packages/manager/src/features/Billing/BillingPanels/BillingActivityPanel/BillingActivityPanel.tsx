@@ -449,7 +449,11 @@ export const BillingActivityPanel = React.memo((props: Props) => {
             />
           </div>
         </StyledBillingAndPaymentHistoryHeader>
-        <Table aria-label="List of Invoices and Payments" sx={{ border: 0 }}>
+        <Table
+          aria-label="List of Invoices and Payments"
+          striped
+          sx={{ border: 0 }}
+        >
           <TableHead>
             <TableRow>
               <TableCell className={classes.descriptionColumn}>

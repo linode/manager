@@ -182,7 +182,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         sx={{ mb: 4 }}
         value={query}
       />
-      <Table aria-label="List of Placement Groups">
+      <Table aria-label="List of Placement Groups" striped>
         <TableHead>
           <TableRow>
             <TableSortCell

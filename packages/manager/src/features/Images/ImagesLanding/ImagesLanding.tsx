@@ -469,7 +469,7 @@ export const ImagesLanding = () => {
             in any region.
           </Typography>
         </div>
-        <Table>
+        <Table striped>
           <TableHead>
             <TableRow>
               <TableSortCell

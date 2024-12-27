@@ -23,7 +23,7 @@ export const CollapsibleTable = (props: Props) => {
   const { TableItems, TableRowEmpty, TableRowHead } = props;
 
   return (
-    <Table aria-label="collapsible table">
+    <Table aria-label="collapsible table" tableClass="MuiTable-zebra-nested">
       <TableHead data-qa-table-row="collapsible-table-headers-row">
         {TableRowHead}
       </TableHead>

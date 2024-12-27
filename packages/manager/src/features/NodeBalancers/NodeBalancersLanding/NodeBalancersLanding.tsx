@@ -104,7 +104,7 @@ export const NodeBalancersLanding = () => {
         onButtonClick={() => history.push('/nodebalancers/create')}
         title="NodeBalancers"
       />
-      <Table>
+      <Table striped>
         <TableHead>
           <TableRow>
             <TableSortCell
@@ -133,7 +133,7 @@ export const NodeBalancersLanding = () => {
                 Region
               </TableSortCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

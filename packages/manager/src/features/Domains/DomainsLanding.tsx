@@ -236,7 +236,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         onButtonClick={navigateToCreate}
         title="Domains"
       />
-      <Table>
+      <Table striped>
         <TableHead>
           <TableRow>
             <TableSortCell

@@ -116,9 +116,13 @@ export const InvoiceTable = (props: Props) => {
                 <TableRow>
                   <TableCell
                     colSpan={NUM_COLUMNS}
-                    sx={{ paddingLeft: '0px !important' }}
+                    sx={{ paddingLeft: 0, paddingRight: 0 }}
                   >
                     <PaginationFooter
+                      sx={{
+                        border: 0,
+                        width: '100%',
+                      }}
                       count={count}
                       eventCategory="invoice_items"
                       handlePageChange={handlePageChange}
@@ -139,7 +143,7 @@ export const InvoiceTable = (props: Props) => {
   };
 
   return (
-    <Table aria-label="Invoice Details">
+    <Table aria-label="Invoice Details" striped>
       <TableHead>
         <TableRow>
           <TableCell>Description</TableCell>

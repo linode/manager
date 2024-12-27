@@ -88,7 +88,7 @@ export const TransfersTable = React.memo((props: Props) => {
           defaultExpanded={transfersCount > 0}
           heading={`${capitalize(transferType)} Service Transfers`}
         >
-          <StyledTable>
+          <StyledTable striped>
             <TableHead>
               <TableRow>
                 <TableCell key="transfer-token-table-header-token">
