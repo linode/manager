@@ -1,6 +1,5 @@
 import { Box, IconButton, Typography } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -8,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { AppBar } from 'src/components/AppBar';
 import { Hidden } from 'src/components/Hidden';
 import {
-  StyledAkamaiColorLogo,
   StyledAkamaiLogo,
   StyledLogoBox,
 } from 'src/components/PrimaryNav/PrimaryNav.styles';
@@ -22,8 +20,6 @@ import { NotificationMenu } from './NotificationMenu/NotificationMenu';
 import SearchBar from './SearchBar/SearchBar';
 import { TopMenuTooltip } from './TopMenuTooltip';
 import { UserMenu } from './UserMenu';
-
-import type { Theme } from '@mui/material';
 
 export interface TopMenuProps {
   isSideMenuOpen: boolean;
@@ -41,7 +37,6 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
   const { isSideMenuOpen, openSideMenu, username } = props;
 
   const { loggedInAsCustomer } = useAuthentication();
-  const theme = useTheme<Theme>();
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'
@@ -83,11 +78,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
                   title="Akamai - Dashboard"
                   to={`/dashboard`}
                 >
-                  {theme.name === 'dark' ? (
-                    <StyledAkamaiLogo width={83} />
-                  ) : (
-                    <StyledAkamaiColorLogo width={83} />
-                  )}
+                  <StyledAkamaiLogo width={83} />
                 </Link>
               </StyledLogoBox>
             </Grid>

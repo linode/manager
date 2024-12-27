@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'react-router-dom';
 
-import AkamaiColorLogo from 'src/assets/logo/akamai-logo-color.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 
@@ -39,16 +38,6 @@ export const StyledLogoBox = styled(Box, {
 
 export const StyledAkamaiLogo = styled(AkamaiLogo, {
   label: 'StyledAkamaiLogo',
-})(({ theme }) => ({
-  '& .akamai-logo-name': {
-    transition: theme.transitions.create(['opacity']),
-  },
-  // give the svg a transition so it smoothly resizes
-  transition: 'width .1s linear',
-}));
-
-export const StyledAkamaiColorLogo = styled(AkamaiColorLogo, {
-  label: 'StyledAkamaiColorLogo',
 })(({ theme }) => ({
   '& .akamai-logo-name': {
     transition: theme.transitions.create(['opacity']),
