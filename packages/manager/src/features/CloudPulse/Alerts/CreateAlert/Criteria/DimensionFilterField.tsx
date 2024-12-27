@@ -145,6 +145,9 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           <Controller
             render={({ field, fieldState }) => (
               <Autocomplete
+                isOptionEqualToValue={(option, value) =>
+                  option.value === value.value
+                }
                 onChange={(
                   _,
                   selected: { label: string; value: string },

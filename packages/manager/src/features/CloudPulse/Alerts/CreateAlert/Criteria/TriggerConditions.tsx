@@ -139,7 +139,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           xs={12}
         >
           <Typography mt={3} variant="body1">
-            criteria are met for at least
+            Trigger alert when all criteria are met for
           </Typography>
 
           <Controller
@@ -168,7 +168,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           />
 
           <Typography mt={3} textAlign={'start'} variant="body1">
-            consecutive occurences.
+            consecutive occurrence(s).
           </Typography>
         </Grid>
       </Grid>

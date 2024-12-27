@@ -1,5 +1,5 @@
 import { Autocomplete, Box } from '@linode/ui';
-import { Stack, TextField, Typography } from '@linode/ui';
+import { TextField, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -69,15 +69,12 @@ export const Metric = (props: MetricCriteriaProps) => {
       operator: null,
       threshold: 0,
     };
-    if (operation === 'selectOption') {
-      setValue(name, {
-        ...fieldValue,
-        metric: selected.value,
-      });
-    }
-    if (operation === 'clear') {
-      setValue(name, fieldValue);
-    }
+    setValue(
+      name,
+      operation === 'selectOption'
+        ? { ...fieldValue, metric: selected.value }
+        : fieldValue
+    );
   };
 
   const metricOptions = React.useMemo(() => {
@@ -155,11 +152,9 @@ export const Metric = (props: MetricCriteriaProps) => {
                       'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way.',
                   }}
                   value={
-                    field.value !== null
-                      ? metricOptions.find(
-                          (option) => option.value === field.value
-                        )
-                      : null
+                    metricOptions.find(
+                      (option) => option.value === field.value
+                    ) ?? null
                   }
                   data-testid="Data-field"
                   disabled={!serviceWatcher}
@@ -185,19 +180,13 @@ export const Metric = (props: MetricCriteriaProps) => {
                     newValue: { label: string; value: MetricAggregationType },
                     operation
                   ) => {
-                    if (operation === 'selectOption') {
-                      field.onChange(newValue.value);
-                    }
-                    if (operation === 'clear') {
-                      field.onChange(null);
-                    }
+                    field.onChange(
+                      operation === 'selectOption' ? newValue.value : null
+                    );
                   }}
                   value={
-                    field.value !== null
-                      ? aggOptions.find(
-                          (option) => option.value === field.value
-                        )
-                      : null
+                    aggOptions.find((option) => option.value === field.value) ??
+                    null
                   }
                   data-testid="Aggregation-type"
                   disabled={aggOptions.length === 0}
@@ -224,12 +213,9 @@ export const Metric = (props: MetricCriteriaProps) => {
                     selected: { label: string; value: MetricOperatorType },
                     operation
                   ) => {
-                    if (operation === 'selectOption') {
-                      field.onChange(selected.value);
-                    }
-                    if (operation === 'clear') {
-                      field.onChange(null);
-                    }
+                    field.onChange(
+                      operation === 'selectOption' ? selected.value : null
+                    );
                   }}
                   value={
                     field.value !== null
