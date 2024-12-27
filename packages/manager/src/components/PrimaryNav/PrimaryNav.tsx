@@ -385,7 +385,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       <Hidden mdDown>
         <Box padding={1}>
           {!isCollapsed ? (
-            <Tooltip placement="top-end" title={'collapse side menu'}>
+            <Tooltip placement="top-end" title={'unpin side menu'}>
               <StyledIconButton
                 aria-label="unpin menu"
                 data-testid="unpin-nav-menu"
@@ -396,7 +396,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               </StyledIconButton>
             </Tooltip>
           ) : (
-            <Tooltip placement="top-end" title={'expand side menu'}>
+            <Tooltip placement="top-end" title={'pin side menu'}>
               <StyledIconButton
                 aria-label="pin menu"
                 data-testid="pin-nav-menu"
