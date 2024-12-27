@@ -87,7 +87,7 @@ export const TicketList = (props: Props) => {
 
     if (data && data.results > 0) {
       return data.data.map((ticket, idx) => (
-        <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />
+        <TicketRow hover key={`ticket-row-${idx}`} ticket={ticket} />
       ));
     }
 

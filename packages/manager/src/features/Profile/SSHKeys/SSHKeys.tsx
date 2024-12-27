@@ -73,7 +73,7 @@ export const SSHKeys = () => {
     }
 
     return data?.data.map((key) => (
-      <TableRow key={key.id}>
+      <TableRow hover key={key.id}>
         <TableCell>{key.label}</TableCell>
         <TableCell>
           <Typography variant="body1">{key.ssh_key.slice(0, 26)}</Typography>

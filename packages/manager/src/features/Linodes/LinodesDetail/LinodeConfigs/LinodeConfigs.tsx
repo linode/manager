@@ -162,6 +162,7 @@ const LinodeConfigs = () => {
                           return (
                             <ConfigRow
                               config={thisConfig}
+                              hover
                               key={`config-row-${thisConfig.id}`}
                               linodeId={id}
                               onBoot={() => onBoot(thisConfig.id)}

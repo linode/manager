@@ -23,6 +23,8 @@ import {
 } from '../kubeUtils';
 import { ClusterActionMenu } from './ClusterActionMenu';
 
+import type { TableRowOwnProps } from '@mui/material';
+
 const useStyles = makeStyles()(() => ({
   clusterRow: {
     '&:before': {
@@ -52,6 +54,7 @@ const useStyles = makeStyles()(() => ({
 
 export interface Props {
   cluster: KubernetesCluster;
+  hover?: TableRowOwnProps['hover'];
   openDeleteDialog: (
     clusterID: number,
     clusterLabel: string,
@@ -61,7 +64,7 @@ export interface Props {
 }
 
 export const KubernetesClusterRow = (props: Props) => {
-  const { cluster, openDeleteDialog, openUpgradeDialog } = props;
+  const { cluster, hover, openDeleteDialog, openUpgradeDialog } = props;
   const { classes } = useStyles();
 
   const { data: versions } = useKubernetesVersionQuery();
@@ -86,6 +89,7 @@ export const KubernetesClusterRow = (props: Props) => {
       className={classes.clusterRow}
       data-qa-cluster-cell={cluster.id}
       data-testid={'cluster-row'}
+      hover={hover}
       key={cluster.id}
     >
       <TableCell data-qa-cluster-label>

@@ -14,8 +14,11 @@ import { capitalize } from 'src/utilities/capitalize';
 
 import { LinodeFirewallsActionMenu } from './LinodeFirewallsActionMenu';
 
+import type { TableRowOwnProps } from '@mui/material';
+
 interface LinodeFirewallsRowProps {
   firewall: Firewall;
+  hover?: TableRowOwnProps['hover'];
   linodeID: number;
   onClickUnassign: (
     device: FirewallDevice | undefined,
@@ -24,7 +27,7 @@ interface LinodeFirewallsRowProps {
 }
 
 export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
-  const { firewall, linodeID, onClickUnassign } = props;
+  const { firewall, hover, linodeID, onClickUnassign } = props;
 
   const { id: firewallID, label, rules, status } = firewall;
 
@@ -37,7 +40,11 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
   const count = getCountOfRules(rules);
 
   return (
-    <TableRow data-qa-linode-firewall-row key={`firewall-${firewallID}`}>
+    <TableRow
+      data-qa-linode-firewall-row
+      hover={hover}
+      key={`firewall-${firewallID}`}
+    >
       <TableCell data-qa-firewall-label>
         <Link tabIndex={0} to={`/firewalls/${firewallID}`}>
           {label}

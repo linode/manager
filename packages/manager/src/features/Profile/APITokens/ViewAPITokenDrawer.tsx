@@ -72,6 +72,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
             return (
               <TableRow
                 data-qa-row={basePermNameMap[scopeTup[0]]}
+                hover
                 key={scopeTup[0]}
               >
                 <StyledAccessCell padding="checkbox">

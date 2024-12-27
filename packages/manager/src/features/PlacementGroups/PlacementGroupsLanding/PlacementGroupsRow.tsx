@@ -15,6 +15,7 @@ import { TextTooltip } from 'src/components/TextTooltip';
 import { StyledWarningIcon } from './PlacementGroupsRow.styles';
 
 import type { Linode, PlacementGroup, Region } from '@linode/api-v4';
+import type { TableRowOwnProps } from '@mui/material';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface PlacementGroupsRowProps {
@@ -22,6 +23,7 @@ interface PlacementGroupsRowProps {
   disabled: boolean;
   handleDeletePlacementGroup: () => void;
   handleEditPlacementGroup: () => void;
+  hover?: TableRowOwnProps['hover'];
   placementGroup: PlacementGroup;
   region: Region | undefined;
 }
@@ -33,6 +35,7 @@ export const PlacementGroupsRow = React.memo(
       disabled,
       handleDeletePlacementGroup,
       handleEditPlacementGroup,
+      hover,
       placementGroup,
       region,
     } = props;
@@ -55,7 +58,7 @@ export const PlacementGroupsRow = React.memo(
     ];
 
     return (
-      <TableRow data-testid={`placement-group-${id}`}>
+      <TableRow data-testid={`placement-group-${id}`} hover={hover}>
         <TableCell>
           <Link
             data-testid={`link-to-placement-group-${id}`}

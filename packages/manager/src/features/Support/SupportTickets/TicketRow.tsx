@@ -13,8 +13,10 @@ import { SEVERITY_LABEL_MAP } from './constants';
 import { useTicketSeverityCapability } from './ticketUtils';
 
 import type { SupportTicket } from '@linode/api-v4/lib/support';
+import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
+  hover?: TableRowOwnProps['hover'];
   ticket: SupportTicket;
 }
 
@@ -36,7 +38,7 @@ const renderEntityLink = (ticket: SupportTicket) => {
   null;
 };
 
-export const TicketRow = ({ ticket }: Props) => {
+export const TicketRow = ({ hover, ticket }: Props) => {
   const hasSeverityCapability = useTicketSeverityCapability();
 
   const ticketSummary = sanitizeHTML({
@@ -49,6 +51,7 @@ export const TicketRow = ({ ticket }: Props) => {
     <TableRow
       data-qa-support-ticket={ticket.id}
       data-testid="ticket-row"
+      hover={hover}
       key={`ticket-${ticket.id}`}
     >
       <TableCell data-qa-support-subject>

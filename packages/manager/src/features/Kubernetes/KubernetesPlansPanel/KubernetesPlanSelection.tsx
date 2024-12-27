@@ -20,11 +20,13 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import type { PriceObject } from '@linode/api-v4';
 import type { Region } from '@linode/api-v4/lib/regions';
+import type { TableRowOwnProps } from '@mui/material';
 import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 export interface KubernetesPlanSelectionProps {
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
+  hover?: TableRowOwnProps['hover'];
   idx: number;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
@@ -40,6 +42,7 @@ export const KubernetesPlanSelection = (
   const {
     getTypeCount,
     hasMajorityOfPlansDisabled,
+    hover,
     idx,
     onAdd,
     onSelect,
@@ -126,6 +129,7 @@ export const KubernetesPlanSelection = (
           className={rowIsDisabled ? 'disabled-row' : ''}
           data-qa-plan-row={plan.formattedLabel}
           disabled={rowIsDisabled}
+          hover={hover}
           key={plan.id}
         >
           <TableCell data-qa-plan-name>

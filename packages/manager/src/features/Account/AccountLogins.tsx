@@ -89,7 +89,7 @@ const AccountLogins = () => {
     }
     if (data) {
       return data.data.map((item: AccountLogin) => (
-        <AccountLoginsTableRow key={item.id} {...item} />
+        <AccountLoginsTableRow hover key={item.id} {...item} />
       ));
     }
 

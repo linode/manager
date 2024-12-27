@@ -25,16 +25,18 @@ import { usePlacementGroupQuery } from 'src/queries/placementGroups';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 import type { Linode } from '@linode/api-v4';
+import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
   handleUnassignLinodeModal: (linode: Linode) => void;
+  hover?: TableRowOwnProps['hover'];
   linode: Linode;
 }
 
 type MigrationType = 'inbound' | 'outbound' | null;
 
 export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
-  const { handleUnassignLinodeModal, linode } = props;
+  const { handleUnassignLinodeModal, hover, linode } = props;
   const { label, status } = linode;
   const { id: placementGroupId } = useParams<{ id: string }>();
   const notificationContext = React.useContext(notificationCenterContext);
@@ -76,7 +78,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
   }, [placementGroup, linode.id]);
 
   return (
-    <TableRow data-testid={`placement-group-linode-${linode.id}`}>
+    <TableRow data-testid={`placement-group-linode-${linode.id}`} hover={hover}>
       <TableCell>
         <Link to={`/linodes/${linode.id}`}>{label}</Link>
       </TableCell>

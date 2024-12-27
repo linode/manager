@@ -40,6 +40,7 @@ import {
 } from './utils';
 
 import type { Permission } from './utils';
+import type { TableRowOwnProps } from '@mui/material';
 
 type Expiry = [string, string];
 
@@ -87,6 +88,7 @@ interface RadioButton extends HTMLInputElement {
 }
 
 interface Props {
+  hover?: TableRowOwnProps['hover'];
   onClose: () => void;
   open: boolean;
   showSecret: (token: string) => void;
@@ -94,7 +96,7 @@ interface Props {
 
 export const CreateAPITokenDrawer = (props: Props) => {
   const expiryTups = genExpiryTups();
-  const { onClose, open, showSecret } = props;
+  const { hover, onClose, open, showSecret } = props;
 
   const initialValues = {
     expiry: expiryTups[0][1],
@@ -261,7 +263,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow data-qa-row="Select All">
+          <TableRow data-qa-row="Select All" hover={hover}>
             <StyledSelectCell padding="checkbox">Select All</StyledSelectCell>
             <StyledSelectAllPermissionsCell padding="checkbox">
               <Radio
@@ -317,6 +319,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
             return (
               <TableRow
                 data-qa-row={basePermNameMap[scopeTup[0]]}
+                hover={hover}
                 key={scopeTup[0]}
               >
                 <StyledAccessCell padding="checkbox">

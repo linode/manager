@@ -156,6 +156,7 @@ const VPCLanding = () => {
             <VPCRow
               handleDeleteVPC={() => handleDeleteVPC(vpc)}
               handleEditVPC={() => handleEditVPC(vpc)}
+              hover
               key={vpc.id}
               vpc={vpc}
             />

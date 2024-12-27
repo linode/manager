@@ -23,8 +23,10 @@ import {
 } from './BucketTableRow.styles';
 
 import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import type { TableRowOwnProps } from '@mui/material';
 
 export interface BucketTableRowProps extends ObjectStorageBucket {
+  hover?: TableRowOwnProps['hover'];
   onDetails: () => void;
   onRemove: () => void;
 }
@@ -35,6 +37,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
     created,
     endpoint_type,
     hostname,
+    hover,
     label,
     objects,
     onDetails,
@@ -67,7 +70,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const typeLabel = isLegacy ? 'Legacy' : 'Standard';
 
   return (
-    <TableRow data-qa-bucket-cell={label} key={label}>
+    <TableRow data-qa-bucket-cell={label} hover={hover} key={label}>
       <TableCell>
         <MaskableText isToggleable text={hostname}>
           <Stack>

@@ -235,6 +235,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                     isVPCOnlyLinode={
                       isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public'
                     }
+                    hover
                     key={`${ipDisplay.address}-${ipDisplay.type}`}
                     linodeId={linodeID}
                     readOnly={isLinodesGrantReadOnly}

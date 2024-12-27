@@ -47,6 +47,7 @@ import { getAll } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
 
 import type { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
+import type { TableRowOwnProps } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -372,6 +373,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
                 : {}
             }
             hasError={pdfErrors.has(`${thisItem.type}-${thisItem.id}`)}
+            hover
             isLoading={pdfLoading.has(`${thisItem.type}-${thisItem.id}`)}
             key={`${thisItem.type}-${thisItem.id}`}
             {...thisItem}
@@ -497,6 +499,7 @@ const StyledBillingAndPaymentHistoryHeader = styled('div', {
 interface ActivityFeedItemProps extends ActivityFeedItem {
   downloadPDF: (id: number) => void;
   hasError: boolean;
+  hover?: TableRowOwnProps['hover'];
   isLoading: boolean;
   sxRow: SxProps<Theme>;
 }
@@ -508,6 +511,7 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
     date,
     downloadPDF,
     hasError,
+    hover,
     id,
     isLoading,
     label,
@@ -532,7 +536,7 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   };
 
   return (
-    <TableRow data-testid={`${type}-${id}`} sx={sxRow}>
+    <TableRow data-testid={`${type}-${id}`} hover={hover} sx={sxRow}>
       <TableCell>
         {type === 'invoice' ? (
           <Link to={`/account/billing/invoices/${id}`}>{label}</Link>

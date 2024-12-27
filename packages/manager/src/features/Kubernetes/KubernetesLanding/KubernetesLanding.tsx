@@ -248,6 +248,7 @@ export const KubernetesLanding = () => {
                 )
               }
               cluster={cluster}
+              hover
               key={`kubernetes-cluster-list-${cluster.id}`}
               openDeleteDialog={openDialog}
             />

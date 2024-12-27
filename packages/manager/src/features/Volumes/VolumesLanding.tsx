@@ -316,6 +316,7 @@ export const VolumesLanding = () => {
               isBlockStorageEncryptionFeatureEnabled={
                 isBlockStorageEncryptionFeatureEnabled
               }
+              hover
               key={volume.id}
               volume={volume}
             />

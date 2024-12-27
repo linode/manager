@@ -78,6 +78,7 @@ export const AlertListing = () => {
                 handleDetails: () => handleDetails(alert),
               }}
               alert={alert}
+              hover
               key={alert.id}
             />
           ))}

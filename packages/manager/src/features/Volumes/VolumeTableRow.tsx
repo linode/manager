@@ -22,6 +22,7 @@ import { VolumesActionMenu } from './VolumesActionMenu';
 
 import type { ActionHandlers } from './VolumesActionMenu';
 import type { LinodeCapabilities, Volume } from '@linode/api-v4';
+import type { TableRowOwnProps } from '@mui/material';
 
 export const useStyles = makeStyles()({
   volumePath: {
@@ -32,6 +33,7 @@ export const useStyles = makeStyles()({
 
 interface Props {
   handlers: ActionHandlers;
+  hover?: TableRowOwnProps['hover'];
   isBlockStorageEncryptionFeatureEnabled?: boolean;
   isDetailsPageRow?: boolean;
   linodeCapabilities?: LinodeCapabilities[];
@@ -42,6 +44,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();
   const {
     handlers,
+    hover,
     isBlockStorageEncryptionFeatureEnabled,
     isDetailsPageRow,
     linodeCapabilities,
@@ -107,7 +110,11 @@ export const VolumeTableRow = React.memo((props: Props) => {
     volume.encryption === 'enabled' ? 'Encrypted' : 'Not Encrypted';
 
   return (
-    <TableRow data-qa-volume-cell={volume.id} key={`volume-row-${volume.id}`}>
+    <TableRow
+      data-qa-volume-cell={volume.id}
+      hover={hover}
+      key={`volume-row-${volume.id}`}
+    >
       <TableCell data-qa-volume-cell-label={volume.label}>
         <Box
           sx={{

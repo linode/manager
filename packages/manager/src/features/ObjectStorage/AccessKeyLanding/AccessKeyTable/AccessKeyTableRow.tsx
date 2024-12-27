@@ -16,8 +16,10 @@ import { HostNameTableCell } from './HostNameTableCell';
 
 import type { OpenAccessDrawer } from '../types';
 import type { ObjectStorageKey, ObjectStorageKeyRegions } from '@linode/api-v4';
+import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
+  hover?: TableRowOwnProps['hover'];
   openDrawer: OpenAccessDrawer;
   openRevokeDialog: (storageKeyData: ObjectStorageKey) => void;
   setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
@@ -27,6 +29,7 @@ interface Props {
 
 export const AccessKeyTableRow = (props: Props) => {
   const {
+    hover,
     openDrawer,
     openRevokeDialog,
     setHostNames,
@@ -44,7 +47,11 @@ export const AccessKeyTableRow = (props: Props) => {
   );
 
   return (
-    <TableRow data-qa-table-row={storageKeyData.label} key={storageKeyData.id}>
+    <TableRow
+      data-qa-table-row={storageKeyData.label}
+      hover={hover}
+      key={storageKeyData.id}
+    >
       <TableCell>{storageKeyData.label}</TableCell>
       <TableCell>
         <Stack direction="row">

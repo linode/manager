@@ -244,6 +244,7 @@ export const PlacementGroupsLanding = React.memo(() => {
                 handleEditPlacementGroup(placementGroup)
               }
               disabled={isLinodeReadOnly}
+              hover
               key={`pg-${placementGroup.id}`}
               placementGroup={placementGroup}
               region={getPlacementGroupRegion(placementGroup)}

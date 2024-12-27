@@ -61,6 +61,7 @@ export const KubernetesPlanContainer = (
         <KubernetesPlanSelection
           getTypeCount={getTypeCount}
           hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+          hover
           idx={id}
           key={id}
           onAdd={onAdd}

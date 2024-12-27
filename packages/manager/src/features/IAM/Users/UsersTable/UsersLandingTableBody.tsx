@@ -34,7 +34,7 @@ export const UsersLandingTableBody = (props: Props) => {
   return (
     <>
       {users.map((user) => (
-        <UserRow key={user.username} onDelete={onDelete} user={user} />
+        <UserRow hover key={user.username} onDelete={onDelete} user={user} />
       ))}
     </>
   );
