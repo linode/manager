@@ -116,18 +116,20 @@ export const Metric = (props: MetricCriteriaProps) => {
         backgroundColor:
           theme.name === 'light' ? theme.color.grey5 : theme.color.grey9,
         borderRadius: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
         p: 2,
       })}
       data-testid={`${name}-id`}
     >
-      <Stack>
+      <Box display="flex" flexDirection="column" gap={1}>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h3">Metric Threshold</Typography>
-          <Box>
-            {showDeleteIcon && <ClearIconButton handleClick={onMetricDelete} />}
-          </Box>
+          {showDeleteIcon && <ClearIconButton handleClick={onMetricDelete} />}
         </Box>
-        <Grid alignItems="flex-start" container spacing={2}>
+
+        <Grid container spacing={2}>
           <Grid item md={3} sm={6} xs={12}>
             <Controller
               render={({ field, fieldState }) => (
@@ -163,6 +165,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   disabled={!serviceWatcher}
                   label="Data Field"
                   loading={isMetricDefinitionLoading}
+                  noMarginTop
                   onBlur={field.onBlur}
                   options={metricOptions}
                   placeholder="Select a Data field"
@@ -201,6 +204,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
                   label="Aggregation Type"
+                  noMarginTop
                   onBlur={field.onBlur}
                   options={aggOptions}
                   placeholder="Select an Aggregation type"
@@ -211,7 +215,7 @@ export const Metric = (props: MetricCriteriaProps) => {
               name={`${name}.aggregation_type`}
             />
           </Grid>
-          <Grid item md={2} sm={6} xs={12}>
+          <Grid item lg={2} md={3} sm={6} xs={12}>
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
@@ -238,6 +242,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
                   label="Operator"
+                  noMarginTop
                   onBlur={field.onBlur}
                   options={MetricOperatorOptions}
                   placeholder="Select an operator"
@@ -248,57 +253,53 @@ export const Metric = (props: MetricCriteriaProps) => {
               name={`${name}.operator`}
             />
           </Grid>
-          <Grid item marginTop={{ sm: 1, xs: 0 }} md={3} sm={6} xs={12}>
-            <Grid alignItems="flex-start" container spacing={2}>
-              <Grid item md={6} sm={6} xs={6}>
-                <Controller
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      onWheel={(event: React.SyntheticEvent<Element, Event>) =>
-                        event.target instanceof HTMLElement &&
-                        event.target.blur()
-                      }
-                      data-testid="threshold"
-                      errorText={fieldState.error?.message}
-                      label="Threshold"
-                      min={0}
-                      name={`${name}.threshold`}
-                      onBlur={field.onBlur}
-                      onChange={(e) => field.onChange(e.target.value)}
-                      sx={{ height: '34px' }}
-                      type="number"
-                      value={field.value ?? 0}
-                    />
-                  )}
-                  control={control}
-                  name={`${name}.threshold`}
-                />
-              </Grid>
-              <Grid item marginTop={1.75} md={6} sm={6} xs={6}>
-                <Typography
-                  sx={{
-                    alignItems: 'flex-end',
-                    display: 'flex',
-                    height: '56px',
-                  }}
-                  variant="body1"
-                >
-                  {/* There are discussions going on with the UX and within the team about the
-                   * units being outside of the TextField or inside as an adornments
-                   */}
-                  {unit}
-                </Typography>
-              </Grid>
-            </Grid>
+          <Grid item lg={2} md={3} sm={6} xs={12}>
+            <Box display="flex" gap={1}>
+              <Controller
+                render={({ field, fieldState }) => (
+                  <TextField
+                    onWheel={(event: React.SyntheticEvent<Element, Event>) =>
+                      event.target instanceof HTMLElement && event.target.blur()
+                    }
+                    data-testid="threshold"
+                    errorText={fieldState.error?.message}
+                    label="Threshold"
+                    min={0}
+                    name={`${name}.threshold`}
+                    noMarginTop
+                    onBlur={field.onBlur}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    sx={{ height: '34px', marginTop: { sm: 1, xs: 0 } }}
+                    type="number"
+                    value={field.value ?? 0}
+                  />
+                )}
+                control={control}
+                name={`${name}.threshold`}
+              />
+              <Typography
+                sx={{
+                  alignItems: 'flex-end',
+                  display: 'flex',
+                  height: '56px',
+                }}
+                variant="body1"
+              >
+                {/* There are discussions going on with the UX and within the team about the
+                 * units being outside of the TextField or inside as an adornments
+                 */}
+                {unit}
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
-        <DimensionFilters
-          dataFieldDisabled={metricWatcher === null}
-          dimensionOptions={selectedMetric?.dimensions ?? []}
-          key={metricWatcher}
-          name={`${name}.dimension_filters`}
-        />
-      </Stack>
+      </Box>
+      <DimensionFilters
+        dataFieldDisabled={metricWatcher === null}
+        dimensionOptions={selectedMetric?.dimensions ?? []}
+        key={metricWatcher}
+        name={`${name}.dimension_filters`}
+      />
     </Box>
   );
 };

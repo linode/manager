@@ -32,43 +32,40 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
     name,
   });
   return (
-    <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
-      <>
-        <Box alignItems="center" display="flex" justifyContent="space-between">
-          <Typography variant="h3">
-            Dimension Filter
-            <Typography component="span"> (optional)</Typography>
-          </Typography>
-        </Box>
+    <Box display={'flex'} flexDirection={'column'} gap={1}>
+      <Typography variant="h3">
+        Dimension Filter
+        <Typography component="span"> (optional)</Typography>
+      </Typography>
 
-        <Stack>
-          {fields?.length > 0 &&
-            fields.map((field, index) => (
-              <DimensionFilterField
-                dataFieldDisabled={dataFieldDisabled}
-                dimensionOptions={dimensionOptions}
-                key={field.id}
-                name={`${name}.${index}`}
-                onFilterDelete={() => remove(index)}
-              />
-            ))}
-        </Stack>
-        <Button
-          onClick={() =>
-            append({
-              dimension_label: null,
-              operator: null,
-              value: null,
-            })
-          }
-          buttonType="secondary"
-          compactX={true}
-          size="small"
-          sx={(theme) => ({ marginTop: theme.spacing(1) })}
-        >
-          Add dimension filter
-        </Button>
-      </>
+      <Stack gap={1}>
+        {fields?.length > 0 &&
+          fields.map((field, index) => (
+            <DimensionFilterField
+              dataFieldDisabled={dataFieldDisabled}
+              dimensionOptions={dimensionOptions}
+              key={field.id}
+              name={`${name}.${index}`}
+              onFilterDelete={() => remove(index)}
+            />
+          ))}
+      </Stack>
+      <Button
+        onClick={() =>
+          append({
+            dimension_label: null,
+            operator: null,
+            value: null,
+          })
+        }
+        buttonType="secondary"
+        compactX={true}
+        fullWidth={false}
+        size="small"
+        sx={{ justifyContent: 'start' }}
+      >
+        Add dimension filter
+      </Button>
     </Box>
   );
 };
