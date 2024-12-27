@@ -130,6 +130,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           hover={hover}
           key={plan.id}
           onClick={() => (!rowIsDisabled ? onSelect(plan.id) : undefined)}
+          selected={Boolean(plan.id === String(selectedId))}
         >
           <StyledRadioCell>
             {(!isSamePlan || (isDatabaseFlow && isSamePlan)) && (
