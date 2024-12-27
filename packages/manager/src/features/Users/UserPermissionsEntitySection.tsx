@@ -67,7 +67,7 @@ export const UserPermissionsEntitySection = React.memo(
             {grantTypeMap[entity]}
           </Typography>
         )}
-        <Table aria-label="User Permissions" noBorder>
+        <Table aria-label="User Permissions">
           <TableHead data-qa-table-head>
             <TableRow
               sx={(theme) => ({
@@ -144,11 +144,10 @@ export const UserPermissionsEntitySection = React.memo(
                         },
                       },
                     }}
-                    parentColumn="Label"
                   >
                     {grant.label}
                   </TableCell>
-                  <TableCell padding="checkbox" parentColumn="None">
+                  <TableCell padding="checkbox">
                     <Radio
                       inputProps={{
                         'aria-label': `Disallow access for ${grant.label}`,
@@ -161,7 +160,7 @@ export const UserPermissionsEntitySection = React.memo(
                       value="null"
                     />
                   </TableCell>
-                  <TableCell padding="checkbox" parentColumn="Read Only">
+                  <TableCell padding="checkbox">
                     <Radio
                       inputProps={{
                         'aria-label': `Allow read-only access for ${grant.label}`,
@@ -174,7 +173,7 @@ export const UserPermissionsEntitySection = React.memo(
                       value="read_only"
                     />
                   </TableCell>
-                  <TableCell padding="checkbox" parentColumn="Read-Write">
+                  <TableCell padding="checkbox">
                     <Radio
                       inputProps={{
                         'aria-label': `Allow read-write access for ${grant.label}`,

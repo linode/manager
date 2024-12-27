@@ -115,10 +115,10 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
       <TableBody>
         {mode === 'creating' && (
           <StyledSelectAllRadioRow data-qa-row="Select All" disabled={disabled}>
-            <TableCell colSpan={2} padding="checkbox" parentColumn="Region">
+            <TableCell colSpan={2} padding="checkbox">
               <strong>Select All</strong>
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="None">
+            <TableCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select none for all',
@@ -132,7 +132,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                 value="none"
               />
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="Read Only">
+            <TableCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select read-only for all',
@@ -146,7 +146,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                 value="read-only"
               />
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="Read/Write">
+            <TableCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select read/write for all',

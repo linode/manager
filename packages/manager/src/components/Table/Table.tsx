@@ -13,11 +13,6 @@ export interface TableProps extends _TableProps {
    * This option is used to render predictable row loading patterns (ex: skeletons)
    */
   colCount?: number;
-  /**
-   * Optional boolean to remove the border from the table
-   * @default false
-   */
-  noBorder?: boolean;
   /** Optional boolean to remove the overflow from the table */
   noOverflow?: boolean;
   /**
@@ -66,7 +61,6 @@ export const Table = (props: TableProps) => {
   const {
     className,
     colCount,
-    noBorder,
     noOverflow,
     rowCount,
     rowHoverState = true,
@@ -79,7 +73,6 @@ export const Table = (props: TableProps) => {
   return (
     <StyledTableWrapper
       className={className}
-      noBorder={noBorder}
       noOverflow={noOverflow}
       rowHoverState={rowHoverState}
       spacingBottom={spacingBottom}

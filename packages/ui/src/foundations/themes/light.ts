@@ -1341,6 +1341,10 @@ export const lightTheme: ThemeOptions = {
           '&:last-of-type': {
             borderRight: 'none',
           },
+          // User Permissions Table
+          '.MuiFormControlLabel-label': {
+            color: Table.HeaderFilled.Text,
+          },
           // Icons in TH (i.e.: Summary View, Group by Tag)
           '.MuiIconButton-root': {
             '&.MuiIconButton-isActive': {
@@ -1368,7 +1372,6 @@ export const lightTheme: ThemeOptions = {
           color: Table.HeaderFilled.Text,
           fontWeight: Font.FontWeight.Bold,
           lineHeight: Font.LineHeight.Xxxs,
-          padding: Spacing[50],
           whiteSpace: 'noWrap',
         },
         root: {
@@ -1378,6 +1381,7 @@ export const lightTheme: ThemeOptions = {
           },
           borderBottom: `1px solid ${Table.Row.Border}`,
           fontSize: Font.FontSize.Xs,
+          height: '40px',
           lineHeight: Font.LineHeight.Xs,
           padding: `0 ${Spacing[50]}`,
         },

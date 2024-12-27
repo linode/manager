@@ -27,6 +27,9 @@ export const GroupByTagToggle = React.memo((props: GroupByTagToggleProps) => {
         title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
       >
         <IconButton
+          sx={{
+            padding: 0,
+          }}
           aria-describedby={groupByDescriptionId}
           aria-label={`Toggle group by tag`}
           className={isGroupedByTag ? 'MuiIconButton-isActive' : ''}

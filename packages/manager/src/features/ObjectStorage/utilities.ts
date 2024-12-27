@@ -1,12 +1,12 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
-import {
+import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+
+import type { AccountSettings } from '@linode/api-v4/lib/account';
+import type {
   ACLType,
   ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage';
-import { FormikProps } from 'formik';
-
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+import type { FormikProps } from 'formik';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export const generateObjectUrl = (hostname: string, objectName: string) => {
   return `https://${hostname}/${objectName}`;
@@ -45,14 +45,12 @@ export const basename = (
 export interface ExtendedObject extends ObjectStorageObject {
   _displayName: string;
   _isFolder: boolean;
-  _manuallyCreated: boolean;
   _shouldDisplayObject: boolean;
 }
 
 export const extendObject = (
   object: ObjectStorageObject,
-  prefix: string,
-  manuallyCreated = false
+  prefix: string
 ): ExtendedObject => {
   const _isFolder = isFolder(object);
 
@@ -67,9 +65,6 @@ export const extendObject = (
     ...object,
     _displayName,
     _isFolder,
-    // If we're in a folder called "my-folder", we don't want to show the object
-    // called "my-folder/". We can look at the prefix to make this decision,
-    _manuallyCreated: manuallyCreated,
     // since it will also be "my-folder/".
     _shouldDisplayObject: object.name !== prefix,
   };

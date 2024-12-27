@@ -43,7 +43,7 @@ export const EventRow = (props: EventRowProps) => {
 
   return (
     <TableRow data-qa-event-row data-test-id={action}>
-      <TableCell data-qa-event-message-cell parentColumn="Event">
+      <TableCell data-qa-event-message-cell>
         <Box sx={{ mt: showProgress ? 0.5 : 0 }}>{message}</Box>
         {showProgress && (
           <BarPercent
@@ -56,7 +56,7 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell data-qa-event-username-cell parentColumn="Username">
+        <TableCell data-qa-event-username-cell>
           <Box alignItems="center" display="flex" gap={1}>
             <Avatar
               color={
@@ -72,7 +72,7 @@ export const EventRow = (props: EventRowProps) => {
           </Box>
         </TableCell>
       </Hidden>
-      <TableCell parentColumn="Relative Date">
+      <TableCell>
         {progressEventDisplay}
         {username && (
           <Hidden smUp>
@@ -84,7 +84,7 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden mdDown>
-        <TableCell data-qa-event-created-cell parentColumn="Absolute Date">
+        <TableCell data-qa-event-created-cell>
           <DateTimeDisplay value={timestamp.toString()} />
         </TableCell>
       </Hidden>

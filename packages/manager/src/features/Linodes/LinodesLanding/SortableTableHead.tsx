@@ -1,5 +1,6 @@
 import { IconButton } from '@linode/ui';
 import { Tooltip } from '@linode/ui';
+import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -141,12 +142,15 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
           </TableSortCell>
         </Hidden>
         <TableCell sx={{ padding: '0 !important' }}>
-          <div
-            style={{
+          <Box
+            sx={{
               backgroundColor: theme.tokens.table.HeaderFilled.Background,
-              display: 'flex',
-              justifyContent: 'flex-end',
             }}
+            alignItems="center"
+            display="flex"
+            gap={3}
+            justifyContent="flex-end"
+            paddingRight={1.5}
           >
             <div className="visually-hidden" id={displayViewDescriptionId}>
               Currently in {linodeViewPreference} view
@@ -158,6 +162,9 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
                     ? 'MuiIconButton-isActive'
                     : ''
                 }
+                sx={{
+                  padding: 0,
+                }}
                 aria-describedby={displayViewDescriptionId}
                 aria-label="Toggle display"
                 disableRipple
@@ -170,7 +177,7 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
               isGroupedByTag={linodesAreGrouped}
               toggleGroupByTag={toggleGroupLinodes}
             />
-          </div>
+          </Box>
         </TableCell>
       </TableRow>
     </TableHead>

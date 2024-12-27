@@ -29,7 +29,7 @@ export const StyledControlHeader = styled('div', {
   alignItems: 'center',
   backgroundColor: theme.tokens.table.HeaderFilled.Background,
   display: 'flex',
-  height: 44,
+  height: 42,
   justifyContent: 'flex-end',
   marginBottom: theme.spacing(1.25),
 }));

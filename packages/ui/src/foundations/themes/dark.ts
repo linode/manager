@@ -12,6 +12,7 @@ import {
   Interaction,
   NotificationToast,
   Select,
+  Table,
   TextField,
   Typography,
 } from '@linode/design-language-system/themes/dark';
@@ -700,6 +701,60 @@ export const darkTheme: ThemeOptions = {
         },
       },
     },
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          // Collapsible Rows
+          '.MuiCollapse-root': {
+            borderBottom: `1px solid ${Border.Normal}`,
+          },
+          // Nested Tables
+          '.MuiTable-root': {
+            '.MuiTableCell-head': {
+              color: Table.HeaderOutlined.Text,
+            },
+          },
+          border: `1px solid ${Border.Normal}`,
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        head: {
+          color: Table.HeaderFilled.Text,
+        },
+        root: {
+          borderBottom: `1px solid ${Table.Row.Border}`,
+        },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        head: {
+          background: Table.HeaderFilled.Background,
+        },
+        hover: {
+          background: Table.Row.Background.Hover,
+        },
+        root: {
+          background: Table.Row.Background.Default,
+        },
+      },
+    },
+    MuiTableSortLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-active': {
+            color: Table.HeaderFilled.Text,
+          },
+          svg: {
+            path: {
+              fill: Table.HeaderFilled.Text,
+            },
+          },
+        },
+      },
+    },
     MuiTabs: {
       styleOverrides: {
         flexContainer: {
@@ -833,6 +888,7 @@ export const darkTheme: ThemeOptions = {
     content: Content,
     elevation: Elevation,
     interaction: Interaction,
+    table: Table,
     typography: Typography,
   },
   typography: {
