@@ -48,6 +48,11 @@ export interface TimeDuration {
   value: number;
 }
 
+export interface TimeDurationDate {
+  end: string;
+  start: string;
+}
+
 export interface Widgets {
   label: string;
   metric: string;
@@ -125,7 +130,8 @@ export interface CloudPulseMetricsRequest {
   filters?: Filters[];
   aggregate_function: string;
   group_by: string;
-  relative_time_duration: TimeDuration;
+  relative_time_duration: TimeDuration | undefined;
+  absolute_time_duration: TimeDurationDate | undefined;
   time_granularity: TimeGranularity | undefined;
   entity_ids: number[];
 }

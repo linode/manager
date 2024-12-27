@@ -19,6 +19,7 @@ import type {
   CloudPulseMetricsRequest,
   CloudPulseMetricsResponse,
   TimeDuration,
+  TimeDurationDate,
   Widgets,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
@@ -100,7 +101,7 @@ interface MetricRequestProps {
   /**
    * time duration for the metrics data
    */
-  duration: TimeDuration;
+  duration: TimeDurationDate;
 
   /**
    * entity ids selected by user
@@ -288,6 +289,7 @@ export const getCloudPulseMetricRequest = (
 ): CloudPulseMetricsRequest => {
   const { duration, entityIds, resources, widget } = props;
   return {
+    absolute_time_duration: widget.time_duration ? undefined : duration,
     aggregate_function: widget.aggregate_function,
     entity_ids: resources
       ? entityIds.map((id) => parseInt(id, 10))

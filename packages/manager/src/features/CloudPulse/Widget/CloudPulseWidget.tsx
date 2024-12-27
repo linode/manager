@@ -23,7 +23,7 @@ import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { Widgets } from '@linode/api-v4';
+import type { TimeDurationDate, Widgets } from '@linode/api-v4';
 import type {
   MetricDefinition,
   TimeDuration,
@@ -61,7 +61,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * time duration to fetch the metrics data in this widget
    */
-  duration: TimeDuration;
+  duration: TimeDurationDate;
 
   /**
    * entity ids selected by user to show metrics for

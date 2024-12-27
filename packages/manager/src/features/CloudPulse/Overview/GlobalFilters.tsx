@@ -1,6 +1,6 @@
 import { Divider } from '@linode/ui';
-import { IconButton, useTheme } from '@mui/material';
 import { Grid } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -8,13 +8,19 @@ import Reload from 'src/assets/icons/refresh.svg';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
+import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { AclpConfig, Dashboard, TimeDuration } from '@linode/api-v4';
+import type {
+  AclpConfig,
+  Dashboard,
+  TimeDuration,
+  TimeDurationDate,
+} from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(
@@ -23,7 +29,7 @@ export interface GlobalFilterProperties {
     labels: string[]
   ): void;
   handleDashboardChange(dashboard: Dashboard | undefined): void;
-  handleTimeDurationChange(timeDuration: TimeDuration): void;
+  handleTimeDurationChange(timeDuration: TimeDurationDate): void;
   handleToggleAppliedFilter(isVisible: boolean): void;
 }
 
@@ -44,15 +50,11 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   >();
 
   const handleTimeRangeChange = React.useCallback(
-    (
-      timerDuration: TimeDuration,
-      timeDurationValue: string = 'Auto',
-      savePref: boolean = false
-    ) => {
-      if (savePref) {
-        updatePreferences({ [TIME_DURATION]: timeDurationValue });
-      }
-      handleTimeDurationChange(timerDuration);
+    (timeDuration: TimeDurationDate, savePref: boolean = false) => {
+      // if (savePref) {
+      //   updatePreferences({ [TIME_DURATION]: timeDurationValue });
+      // }
+      handleTimeDurationChange(timeDuration);
     },
     []
   );
@@ -109,12 +111,23 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               savePreferences
             />
           </Grid>
-          <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
-            <CloudPulseTimeRangeSelect
+          <Grid
+            display="flex"
+            gap={1}
+            item
+            justifyContent={'end'}
+            md={8}
+            sm={5}
+            xs={12}
+          >
+            {/* <CloudPulseTimeRangeSelect
               defaultValue={preferences?.timeDuration}
               handleStatsChange={handleTimeRangeChange}
               label="Time Range"
               savePreferences
+            /> */}
+            <CloudPulseDateTimeRangePicker
+              handleStatsChange={handleTimeRangeChange}
             />
             <CloudPulseTooltip placement="bottom-end" title="Refresh">
               <IconButton

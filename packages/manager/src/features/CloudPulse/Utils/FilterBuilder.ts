@@ -28,6 +28,7 @@ import type {
   Filter,
   Filters,
   TimeDuration,
+  TimeDurationDate,
 } from '@linode/api-v4';
 
 interface CloudPulseFilterProperties {
@@ -45,7 +46,7 @@ interface CloudPulseMandatoryFilterCheckProps {
   filterValue: {
     [key: string]: FilterValueType;
   };
-  timeDuration: TimeDuration | undefined;
+  timeDuration: TimeDurationDate | undefined;
 }
 /**
  * This function helps in building the properties needed for tags selection component
