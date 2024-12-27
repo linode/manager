@@ -198,6 +198,9 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                       <Component {...finalProps} />
                       <Grid xs={12}>
                         <PaginationFooter
+                          sx={{
+                            border: 0,
+                          }}
                           count={count}
                           eventCategory={'linodes landing'}
                           handlePageChange={handlePageChange}
@@ -280,6 +283,10 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                           <TableRow>
                             <TableCell colSpan={7} sx={{ padding: 0 }}>
                               <PaginationFooter
+                                sx={{
+                                  borderLeft: 0,
+                                  borderRight: 0,
+                                }}
                                 count={count}
                                 eventCategory={'linodes landing'}
                                 handlePageChange={handlePageChange}

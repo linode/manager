@@ -223,6 +223,9 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
             <Grid xs={12}>
               {
                 <PaginationFooter
+                  sx={{
+                    border: 0,
+                  }}
                   count={data.length}
                   eventCategory={'linodes landing'}
                   handlePageChange={handlePageChange}
