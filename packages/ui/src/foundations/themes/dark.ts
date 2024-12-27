@@ -187,6 +187,25 @@ const genericTableHeaderStyle = {
   },
 };
 
+const MuiTableHeadSvgStyles = {
+  svg: {
+    path: {
+      fill: Color.Brand[60],
+    },
+  },
+};
+
+const MuiTableZebraHoverStyles = {
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+    background: Table.Row.Background.Hover,
+  },
+};
+
+const MuiTableZebraStyles = {
+  background: Table.Row.Background.Zebra,
+  ...MuiTableZebraHoverStyles,
+};
+
 export const darkTheme: ThemeOptions = {
   animateCircleIcon: {
     ...iconCircleAnimation,
@@ -704,6 +723,17 @@ export const darkTheme: ThemeOptions = {
     MuiTable: {
       styleOverrides: {
         root: {
+          // Zebra Striping
+          '&.MuiTable-zebra': {
+            // Linodes Group by Tag: First Row is the Title
+            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
+            // Default Striping
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:nth-of-type(even)': MuiTableZebraStyles,
+          },
+          // Zebra Striping for Nested Tables
+          '&.MuiTable-zebra-nested': {
+            '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
+          },
           // Collapsible Rows
           '.MuiCollapse-root': {
             borderBottom: `1px solid ${Border.Normal}`,
@@ -713,6 +743,9 @@ export const darkTheme: ThemeOptions = {
             '.MuiTableCell-head': {
               color: Table.HeaderOutlined.Text,
             },
+            '.MuiTableRow-head': {
+              background: Background.Neutralsubtle,
+            },
           },
           border: `1px solid ${Border.Normal}`,
         },
@@ -721,6 +754,23 @@ export const darkTheme: ThemeOptions = {
     MuiTableCell: {
       styleOverrides: {
         head: {
+          // User Permissions Table
+          '.MuiFormControlLabel-label': {
+            color: Table.HeaderFilled.Text,
+          },
+          // Icons in TH (i.e.: Summary View, Group by Tag)
+          '.MuiIconButton-root': {
+            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
+            ':hover': {
+              color: Color.Brand[60],
+              ...MuiTableHeadSvgStyles,
+            },
+            svg: {
+              path: {
+                fill: Color.Neutrals.White,
+              },
+            },
+          },
           color: Table.HeaderFilled.Text,
         },
         root: {
@@ -733,10 +783,16 @@ export const darkTheme: ThemeOptions = {
         head: {
           background: Table.HeaderFilled.Background,
         },
-        hover: {
-          background: Table.Row.Background.Hover,
-        },
         root: {
+          // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: Table.Row.Background.Hover,
+          },
+          '&.disabled-row .MuiTableCell-root': {
+            // TODO: These may be right, but look into Table disabled tokens
+            backgroundColor: Interaction.Background.Disabled,
+            color: Content.Text.Primary.Disabled,
+          },
           background: Table.Row.Background.Default,
         },
       },
@@ -746,6 +802,10 @@ export const darkTheme: ThemeOptions = {
         root: {
           '&.Mui-active': {
             color: Table.HeaderFilled.Text,
+          },
+          ':hover': {
+            ...MuiTableHeadSvgStyles,
+            color: Color.Brand[60],
           },
           svg: {
             path: {
