@@ -23,13 +23,14 @@ import type {
   MetricDefinition,
   ResourcePage,
   TimeDuration,
+  TimeDurationDate,
   Widgets,
 } from '@linode/api-v4';
 
 interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
   dashboard?: Dashboard | undefined;
-  duration: TimeDuration;
+  duration: TimeDurationDate;
   isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
   manualRefreshTimeStamp?: number;
@@ -171,7 +172,7 @@ export const RenderWidgets = React.memo(
               />
             );
           } else {
-            return <React.Fragment key={index}></React.Fragment>;
+            return <React.Fragment key={index} />;
           }
         })}
       </Grid>

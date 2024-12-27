@@ -14,7 +14,11 @@ import { useAclpPreference } from '../Utils/UserPreference';
 import { RenderWidgets } from '../Widget/CloudPulseWidgetRenderer';
 
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
-import type { JWETokenPayLoad, TimeDuration } from '@linode/api-v4';
+import type {
+  JWETokenPayLoad,
+  TimeDuration,
+  TimeDurationDate,
+} from '@linode/api-v4';
 
 export interface DashboardProperties {
   /**
@@ -30,7 +34,7 @@ export interface DashboardProperties {
   /**
    * time duration to fetch the metrics data in this widget
    */
-  duration: TimeDuration;
+  duration: TimeDurationDate;
 
   /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
