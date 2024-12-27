@@ -18,8 +18,6 @@ export interface TableSortCellProps extends _TableCellProps {
 }
 
 export const TableSortCell = (props: TableSortCellProps) => {
-  // const { classes, cx } = useStyles();
-
   const {
     active,
     children,

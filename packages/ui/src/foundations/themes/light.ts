@@ -230,6 +230,14 @@ const graphTransparency = '0.7';
 
 const spacing = 8;
 
+const MuiTableHeadSvgStyles = {
+  svg: {
+    path: {
+      fill: Color.Brand[60],
+    },
+  },
+};
+
 export const lightTheme: ThemeOptions = {
   addCircleHoverEffect: {
     ...iconCircleHoverEffect,
@@ -1347,20 +1355,10 @@ export const lightTheme: ThemeOptions = {
           },
           // Icons in TH (i.e.: Summary View, Group by Tag)
           '.MuiIconButton-root': {
-            '&.MuiIconButton-isActive': {
-              svg: {
-                path: {
-                  fill: Color.Brand[60],
-                },
-              },
-            },
+            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
             ':hover': {
               color: Color.Brand[60],
-              svg: {
-                path: {
-                  fill: Color.Brand[60],
-                },
-              },
+              ...MuiTableHeadSvgStyles,
             },
             svg: {
               path: {
@@ -1414,12 +1412,7 @@ export const lightTheme: ThemeOptions = {
             color: Table.HeaderFilled.Text,
           },
           ':hover': {
-            // Targeting `svg` since we have an indeterminate state
-            '.MuiTableSortLabel-icon, svg': {
-              path: {
-                fill: Color.Brand[60],
-              },
-            },
+            ...MuiTableHeadSvgStyles,
             color: Color.Brand[60],
             cursor: 'pointer',
           },
