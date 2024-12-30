@@ -1,6 +1,6 @@
 import { serviceTypesFactory } from 'src/factories';
 
-import { formatTimestamp, getServiceTypeLabel } from './utils';
+import { convertSecondsToMinutes, formatTimestamp, getServiceTypeLabel } from './utils';
 
 it('test formatTimestamp method', () => {
   expect(formatTimestamp('2024-11-30T12:42:00')).toBe('Nov 30, 2024, 12:42 PM');
@@ -21,4 +21,13 @@ it('test getServiceTypeLabel method', () => {
   ).toBe(services[2].label);
   expect(getServiceTypeLabel('test', { data: services })).toBe('test');
   expect(getServiceTypeLabel('', { data: services })).toBe('');
+});
+
+it('test convertSecondsToMinutes method', () => {
+  expect(convertSecondsToMinutes(0)).toBe('0 minutes');
+  expect(convertSecondsToMinutes(60)).toBe('1 minute');
+  expect(convertSecondsToMinutes(120)).toBe('2 minutes');
+  expect(convertSecondsToMinutes(65)).toBe('1 minute and 5 seconds');
+  expect(convertSecondsToMinutes(1)).toBe('1 second');
+  expect(convertSecondsToMinutes(59)).toBe('59 seconds');
 });

@@ -78,3 +78,26 @@ export const severityMap = {
   2: 'Low',
   3: 'Info',
 };
+
+export const operators = {
+  eq: '=',
+  gt: '>',
+  gte: '>=',
+  lt: '<',
+  lte: '<=',
+};
+
+export const aggregationTypes = {
+  avg: 'Average',
+  count: 'Count',
+  max: 'Maximum',
+  min: 'Minimum',
+  sum: 'Sum',
+};
+
+export const operatorLabel = {
+  endswith: 'ends with',
+  eq: 'equals',
+  neq: 'not equals',
+  startswith: 'starts with',
+};
