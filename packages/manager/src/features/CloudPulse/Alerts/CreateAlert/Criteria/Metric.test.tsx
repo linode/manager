@@ -7,8 +7,9 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { Metric } from './Metric';
 
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AvailableMetrics } from '@linode/api-v4';
-export const mockData: AvailableMetrics[] = [
+
+import type { MetricDefinition } from '@linode/api-v4';
+const mockData: MetricDefinition[] = [
   {
     available_aggregate_functions: ['min', 'max', 'avg'],
     dimensions: [

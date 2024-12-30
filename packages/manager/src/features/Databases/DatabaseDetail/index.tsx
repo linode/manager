@@ -90,7 +90,7 @@ export const DatabaseDetail = () => {
   }
 
   const isDefault = database.platform === 'rdbms-default';
-  const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
+  const isMonitorEnabled = true;
 
   const tabs: Tab[] = [
     {
@@ -112,7 +112,7 @@ export const DatabaseDetail = () => {
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
-      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
+      chip: <BetaChip />,
       routeName: `/databases/${engine}/${id}/monitor`,
       title: 'Monitor',
     });

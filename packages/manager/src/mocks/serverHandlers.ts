@@ -699,6 +699,21 @@ export const handlers = [
         type: 'g5-standard-20-s1',
       }),
       linodeFactory.build({
+        label: 'linode_with_tags_test1_test2',
+        // eslint-disable-next-line sonarjs/no-duplicate-string
+        region: 'us-central',
+        tags: ['test1', 'test2'],
+      }),
+      linodeFactory.build({
+        label: 'linode_with_tags_test2_test3',
+        region: 'us-central',
+        tags: ['test2', 'test3'],
+      }),
+      linodeFactory.build({
+        label: 'linode_with_no_tags',
+        region: 'us-central',
+      }),
+      linodeFactory.build({
         label: 'eu-linode',
         region: 'eu-west',
       }),
@@ -714,21 +729,34 @@ export const handlers = [
     if (request.headers.get('x-filter')) {
       const headers = JSON.parse(request.headers.get('x-filter') || '{}');
       const orFilters = headers['+or'];
+      const andFilters = headers['+and'];
 
-      if (orFilters) {
-        const filteredLinodes = linodes.filter((linode) => {
-          const filteredById = orFilters.some(
+      let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
+
+      // filter the linodes based on id or region
+      if (andFilters?.length) {
+        filteredLinodes = filteredLinodes.filter((linode) => {
+          const filteredById = andFilters.every(
             (filter: { id: number }) => filter.id === linode.id
           );
-          const filteredByRegion = orFilters.some(
+          const filteredByRegion = andFilters.every(
             (filter: { region: string }) => filter.region === linode.region
           );
 
-          return (filteredById || filteredByRegion) ?? linodes;
+          return filteredById || filteredByRegion;
         });
-
-        return HttpResponse.json(makeResourcePage(filteredLinodes));
       }
+
+      // after the linodes are filtered based on region, filter the region-filtered linodes based on selected tags if any
+      if (orFilters?.length) {
+        filteredLinodes = filteredLinodes.filter((linode) => {
+          return orFilters.some((filter: { tags: string }) =>
+            linode.tags.includes(filter.tags)
+          );
+        });
+      }
+
+      return HttpResponse.json(makeResourcePage(filteredLinodes));
     }
     return HttpResponse.json(makeResourcePage(linodes));
   }),
@@ -1178,9 +1206,17 @@ export const handlers = [
   http.delete('*object-storage/keys/:id', () => {
     return HttpResponse.json({});
   }),
-  http.get('*/domains', () => {
+  http.get('*/v4/domains', () => {
     const domains = domainFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(domains));
+  }),
+  http.get('*/v4/domains/:id', () => {
+    const domain = domainFactory.build();
+    return HttpResponse.json(domain);
+  }),
+  http.get('*/v4/domains/*/records', () => {
+    const records = domainRecordFactory.buildList(1);
+    return HttpResponse.json(makeResourcePage(records));
   }),
   http.post('*/domains/*/records', () => {
     const record = domainRecordFactory.build();
@@ -2088,6 +2124,11 @@ export const handlers = [
           enrolled: DateTime.now().minus({ days: 20 }).toISO(),
           started: DateTime.now().minus({ days: 30 }).toISO(),
         }),
+        accountBetaFactory.build({
+          ended: DateTime.now().plus({ days: 5 }).toISO(),
+          enrolled: undefined,
+          started: DateTime.now().minus({ days: 30 }).toISO(),
+        }),
       ])
     );
   }),
@@ -2709,6 +2750,13 @@ export const handlers = [
     };
 
     return HttpResponse.json(response);
+  }),
+  http.get('*/src/routes/*LazyRoutes', ({ request }) => {
+    return new Response('export const module = {};', {
+      headers: {
+        'Content-Type': 'application/javascript',
+      },
+    });
   }),
   ...entityTransfers,
   ...statusPage,

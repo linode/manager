@@ -17,6 +17,7 @@ export const CloudPulseAppliedFilter = (
         overflowX: 'hidden',
         overflowY: 'auto',
       }}
+      data-qa-applied-filter-id="applied-filter"
       data-testid="applied-filter"
       display="flex"
       flexDirection={{ sm: 'row', xs: 'column' }}
@@ -50,6 +51,7 @@ export const CloudPulseAppliedFilter = (
                     py: 0.5,
                     width: { sm: 'fit-content', xs: '98%' },
                   })}
+                  data-qa-value={`${label} ${value}`}
                   key={`${label} ${value}`}
                   label={value}
                 />

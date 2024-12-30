@@ -29,7 +29,6 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
@@ -129,11 +128,6 @@ const Account = React.lazy(() =>
 const LinodesRoutes = React.lazy(() =>
   import('src/features/Linodes').then((module) => ({
     default: module.LinodesRoutes,
-  }))
-);
-const Domains = React.lazy(() =>
-  import('src/features/Domains').then((module) => ({
-    default: module.DomainsRoutes,
   }))
 );
 const Images = React.lazy(() => import('src/features/Images'));
@@ -240,8 +234,6 @@ export const MainContent = () => {
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
-  const { isACLPEnabled } = useIsACLPEnabled();
-
   const { isIAMEnabled } = useIsIAMEnabled();
 
   /**
@@ -343,7 +335,6 @@ export const MainContent = () => {
                             component={NodeBalancers}
                             path="/nodebalancers"
                           />
-                          <Route component={Domains} path="/domains" />
                           <Route component={Managed} path="/managed" />
                           <Route component={Longview} path="/longview" />
                           <Route component={Images} path="/images" />
@@ -369,9 +360,9 @@ export const MainContent = () => {
                             <Route component={Databases} path="/databases" />
                           )}
                           <Route component={VPC} path="/vpcs" />
-                          {isACLPEnabled && (
-                            <Route component={CloudPulse} path="/monitor" />
-                          )}
+                          {/* {isACLPEnabled && ( */}
+                          <Route component={CloudPulse} path="/monitor" />
+                          {/* )} */}
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                           <Redirect from="/dashboard" to={defaultRoot} />
