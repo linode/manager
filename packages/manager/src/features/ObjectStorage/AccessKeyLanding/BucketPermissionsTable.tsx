@@ -25,6 +25,7 @@ import type {
   ObjectStorageKeyBucketAccess,
   ObjectStorageKeyBucketAccessPermissions,
 } from '@linode/api-v4/lib/object-storage/types';
+import type { TableRowOwnProps } from '@mui/material';
 
 export const getUpdatedScopes = (
   oldScopes: ObjectStorageKeyBucketAccess[],
@@ -51,13 +52,21 @@ export const SCOPES: Record<string, ObjectStorageKeyBucketAccessPermissions> = {
 interface Props {
   bucket_access: ObjectStorageKeyBucketAccess[] | null;
   checked: boolean;
+  hover?: TableRowOwnProps['hover'];
   mode: MODE;
   selectedRegions?: string[];
   updateScopes: (newScopes: ObjectStorageKeyBucketAccess[]) => void;
 }
 
 export const BucketPermissionsTable = React.memo((props: Props) => {
-  const { bucket_access, checked, mode, selectedRegions, updateScopes } = props;
+  const {
+    bucket_access,
+    checked,
+    hover,
+    mode,
+    selectedRegions,
+    updateScopes,
+  } = props;
 
   const { data: regionsData } = useRegionsQuery();
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
@@ -114,7 +123,11 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
       </TableHead>
       <TableBody>
         {mode === 'creating' && (
-          <StyledSelectAllRadioRow data-qa-row="Select All" disabled={disabled}>
+          <StyledSelectAllRadioRow
+            data-qa-row="Select All"
+            disabled={disabled}
+            hover={hover}
+          >
             <TableCell colSpan={2} padding="checkbox">
               <strong>Select All</strong>
             </TableCell>
@@ -178,6 +191,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
               <StyledRadioRow
                 data-testid={scopeName}
                 disabled={disabled}
+                hover={hover}
                 key={scopeName}
                 mode={mode}
               >

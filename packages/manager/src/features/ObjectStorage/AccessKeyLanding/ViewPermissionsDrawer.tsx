@@ -56,6 +56,7 @@ export const ViewPermissionsDrawer = (props: Props) => {
             <AccessTable
               bucket_access={objectStorageKey.bucket_access}
               checked={objectStorageKey.limited}
+              hover
               mode="viewing"
               updateScopes={() => null}
             />

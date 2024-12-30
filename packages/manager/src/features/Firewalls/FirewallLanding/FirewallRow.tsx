@@ -11,8 +11,11 @@ import { FirewallActionMenu } from './FirewallActionMenu';
 
 import type { ActionHandlers } from './FirewallActionMenu';
 import type { Firewall, FirewallDeviceEntity } from '@linode/api-v4';
+import type { TableRowOwnProps } from '@mui/material';
 
-export interface FirewallRowProps extends Firewall, ActionHandlers {}
+export interface FirewallRowProps extends Firewall, ActionHandlers {
+  hover?: TableRowOwnProps['hover'];
+}
 
 export const FirewallRow = React.memo((props: FirewallRowProps) => {
   const {

@@ -14,6 +14,7 @@ import { useDatabaseMutation } from 'src/queries/databases/databases';
 import AddAccessControlDrawer from './AddAccessControlDrawer';
 
 import type { APIError, Database } from '@linode/api-v4';
+import type { TableRowOwnProps } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -79,10 +80,11 @@ interface Props {
   database: Database;
   description?: JSX.Element;
   disabled?: boolean;
+  hover?: TableRowOwnProps['hover'];
 }
 
 export const AccessControls = (props: Props) => {
-  const { database, description, disabled } = props;
+  const { database, description, disabled, hover } = props;
 
   const { classes } = useStyles();
 
@@ -137,7 +139,11 @@ export const AccessControls = (props: Props) => {
       <Table className={classes.table} data-qa-access-controls>
         <TableBody>
           {accessControlsList.map((accessControl) => (
-            <TableRow className={classes.row} key={`${accessControl}-row`}>
+            <TableRow
+              className={classes.row}
+              hover={hover}
+              key={`${accessControl}-row`}
+            >
               <TableCell
                 className={classes.cell}
                 key={`${accessControl}-tablecell`}

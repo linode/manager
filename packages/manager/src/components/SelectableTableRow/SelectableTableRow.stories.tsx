@@ -49,6 +49,7 @@ export const Default: Story = {
       return (
         <SelectableTableRow
           handleToggleCheck={() => setChecked(!checked)}
+          hover
           isChecked={checked}
         >
           {cells.map((cell) => (

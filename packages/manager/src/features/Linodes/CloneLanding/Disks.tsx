@@ -68,7 +68,11 @@ export const Disks = (props: DisksProps) => {
                           ).length > 0;
 
                         return (
-                          <TableRow data-qa-disk={disk.label} key={disk.id}>
+                          <TableRow
+                            data-qa-disk={disk.label}
+                            hover
+                            key={disk.id}
+                          >
                             <TableCell>
                               <Checkbox
                                 checked={isDiskSelected || isConfigSelected}
