@@ -59,7 +59,6 @@ export const TableRowLoading = ({
         }}
         aria-label="Table content is loading"
         data-testid="table-row-loading"
-        hover
         key={`table-loading-row-${i}`}
       >
         {cols}

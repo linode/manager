@@ -710,7 +710,6 @@ class DomainRecords extends React.Component<Props, State> {
                                     return (
                                       <TableRow
                                         data-qa-record-row={type.title}
-                                        hover
                                         key={idx}
                                       >
                                         {type.columns.length > 0 &&

@@ -43,7 +43,6 @@ export const SSHAccessTableContent = (props: SSHAccessTableContentProps) => {
       {linodeSettings.map(
         (linodeSetting: ManagedLinodeSetting, idx: number) => (
           <SSHAccessRow
-            hover
             key={`linode-setting-row-${idx}`}
             linodeSetting={linodeSetting}
             openDrawer={openDrawer}

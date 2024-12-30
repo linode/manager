@@ -155,7 +155,6 @@ export const TransfersTable = React.memo((props: Props) => {
                     entities={transfer.entities}
                     expiry={transfer.expiry}
                     handleTokenClick={handleTokenClick}
-                    hover
                     key={`${transferType}-${idx}`}
                     status={transfer.status}
                     token={transfer.token}

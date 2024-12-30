@@ -18,7 +18,6 @@ import { StyledItemGrid } from './CommonStyles.styles';
 import { StyledLink } from './TopProcesses.styles';
 
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { TableRowOwnProps } from '@mui/material';
 import type {
   LongviewTopProcesses,
   TopProcessStat,
@@ -131,7 +130,6 @@ const renderLoadingErrorData = (
       .map((thisTopProcessStat, idx) => (
         <TopProcessRow
           cpu={thisTopProcessStat.cpu}
-          hover
           key={`longview-top-process-${idx}`}
           mem={thisTopProcessStat.mem}
           name={thisTopProcessStat.name}
@@ -142,19 +140,18 @@ const renderLoadingErrorData = (
 
 interface TopProcessRowProps {
   cpu: number;
-  hover?: TableRowOwnProps['hover'];
   mem: number;
   name: string;
 }
 
 export const TopProcessRow = React.memo((props: TopProcessRowProps) => {
-  const { cpu, hover, mem, name } = props;
+  const { cpu, mem, name } = props;
 
   // Memory is given from the API in KB.
   const memInBytes = mem * 1024;
 
   return (
-    <TableRow data-testid="longview-top-process-row" hover={hover}>
+    <TableRow data-testid="longview-top-process-row">
       <TableCell data-qa-top-process-process>{name}</TableCell>
       <TableCell data-qa-top-process-cpu>{formatCPU(cpu)}</TableCell>
       <TableCell data-qa-top-process-memory>

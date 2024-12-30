@@ -164,10 +164,6 @@ const renderLoadingErrorData = (
   }
 
   return data.map((thisService, idx) => (
-    <LongviewServiceRow
-      hover
-      key={`longview-service-${idx}`}
-      service={thisService}
-    />
+    <LongviewServiceRow key={`longview-service-${idx}`} service={thisService} />
   ));
 };

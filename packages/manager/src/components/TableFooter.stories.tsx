@@ -14,7 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 export const Default: StoryObj<typeof TableFooter> = {
   args: {
     children: (
-      <TableRow hover>
+      <TableRow>
         <TableCell colSpan={3}>
           <Typography>This is a Table Footer</Typography>
         </TableCell>
@@ -32,7 +32,7 @@ export const Default: StoryObj<typeof TableFooter> = {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow hover>
+          <TableRow>
             <TableCell>Test 1</TableCell>
             <TableCell>Test 2</TableCell>
             <TableCell>Test 3</TableCell>

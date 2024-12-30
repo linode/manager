@@ -118,7 +118,6 @@ const LinodeRow = (props: RowProps) => {
   return (
     <SelectableTableRow
       handleToggleCheck={handleToggleCheck}
-      hover
       isChecked={isChecked}
     >
       <TableCell>{linode.label}</TableCell>

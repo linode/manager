@@ -40,7 +40,6 @@ export const CredentialTableContent = (props: CredentialTableContentProps) => {
       {credentials.map((credential: ManagedCredential, idx: number) => (
         <CredentialRow
           credential={credential}
-          hover
           key={`managed-credential-row-${idx}`}
           openDialog={openDialog}
           openForEdit={openForEdit}

@@ -27,13 +27,13 @@ export const Default: StoryObj<typeof CollapsibleTable> = {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow hover>
+              <TableRow>
                 <TableCell style={{ paddingLeft: 48 }}>2020-01-05</TableCell>
                 <TableCell>11091700</TableCell>
                 <TableCell>3</TableCell>
                 <TableCell>11.97</TableCell>
               </TableRow>
-              <TableRow hover>
+              <TableRow>
                 <TableCell style={{ paddingLeft: 48 }}>2020-01-02</TableCell>
                 <TableCell>Anonymous</TableCell>
                 <TableCell>1</TableCell>

@@ -9,7 +9,6 @@ import { TableRow } from 'src/components/TableRow';
 
 import { StyledLegend } from './MetricsDisplay.styles';
 
-import type { TableRowOwnProps } from '@mui/material';
 import type { Metrics } from 'src/utilities/statMetrics';
 
 const ROW_HEADERS = ['Max', 'Avg', 'Last'] as const;
@@ -57,17 +56,15 @@ const HeaderRow = () => {
 
 const MetricRow = ({
   hidden,
-  hover,
   row,
 }: {
   hidden?: boolean;
-  hover?: TableRowOwnProps['hover'];
   row: MetricsDisplayRow;
 }) => {
   const { data, format, handleLegendClick, legendColor, legendTitle } = row;
 
   return (
-    <TableRow data-qa-metric-row hover={hover}>
+    <TableRow data-qa-metric-row>
       <TableCell>
         <StyledLegend
           data-testid="legend-title"
@@ -113,7 +110,6 @@ export const MetricsDisplay = ({
       {rows.map((row) => (
         <MetricRow
           hidden={hiddenRows.includes(row.legendTitle)}
-          hover
           key={row.legendTitle}
           row={row}
         />

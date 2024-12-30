@@ -16,11 +16,9 @@ import {
 } from './MonitorRow.styles';
 
 import type { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
-import type { TableRowOwnProps } from '@mui/material';
 import type { ExtendedIssue } from 'src/queries/managed/types';
 
 interface MonitorRowProps {
-  hover?: TableRowOwnProps['hover'];
   issues: ExtendedIssue[];
   monitor: ManagedServiceMonitor;
   openDialog: (id: number, label: string) => void;
@@ -30,7 +28,6 @@ interface MonitorRowProps {
 
 export const MonitorRow = (props: MonitorRowProps) => {
   const {
-    hover,
     issues,
     monitor,
     openDialog,
@@ -50,7 +47,6 @@ export const MonitorRow = (props: MonitorRowProps) => {
     <StyledTableRow
       data-qa-monitor-cell={monitor.id}
       data-testid={'monitor-row'}
-      hover={hover}
       key={monitor.id}
     >
       <StyledTableCell data-qa-monitor-label>

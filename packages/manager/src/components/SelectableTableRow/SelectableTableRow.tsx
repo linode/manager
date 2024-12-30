@@ -5,8 +5,6 @@ import * as React from 'react';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import type { TableRowOwnProps } from '@mui/material';
-
 interface SelectableTableRowProps {
   /**
    * The content to be rendered inside the table row.
@@ -18,7 +16,6 @@ interface SelectableTableRowProps {
    * This function will be called when the row is clicked to select or deselect it.
    */
   handleToggleCheck: () => void;
-  hover?: TableRowOwnProps['hover'];
   /**
    * A boolean indicating whether the row is currently checked or not.
    */
@@ -27,7 +24,7 @@ interface SelectableTableRowProps {
 
 export const SelectableTableRow = React.memo(
   (props: SelectableTableRowProps) => {
-    const { handleToggleCheck, hover, isChecked } = props;
+    const { handleToggleCheck, isChecked } = props;
 
     return (
       <TableRow
@@ -36,7 +33,6 @@ export const SelectableTableRow = React.memo(
             padding: '0px 15px',
           },
         }}
-        hover={hover}
       >
         <StyledTableCell>
           <Checkbox

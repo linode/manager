@@ -110,7 +110,7 @@ export const BucketRateLimitTable = ({
           </TableHead>
           <TableBody>
             {tableData({ endpointType }).map((row, rowIndex) => (
-              <TableRow hover key={rowIndex}>
+              <TableRow key={rowIndex}>
                 <TableCell>
                   <FormControlLabel
                     control={

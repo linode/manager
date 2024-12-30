@@ -18,7 +18,7 @@ export interface TableRowErrorProps {
 
 export const TableRowError = (props: TableRowErrorProps) => {
   return (
-    <TableRow data-testid="table-row-error" hover>
+    <TableRow data-testid="table-row-error">
       <TableCell colSpan={props.colSpan}>
         <ErrorState compact errorText={props.message} />
       </TableCell>

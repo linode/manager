@@ -88,7 +88,6 @@ export const FirewallDeviceTable = React.memo(
                           deviceLabel={thisDevice.entity.label}
                           deviceType={deviceType}
                           disabled={disabled}
-                          hover
                           key={`device-row-${thisDevice.id}`}
                           triggerRemoveDevice={triggerRemoveDevice}
                         />

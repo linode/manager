@@ -54,7 +54,6 @@ export const MonitorTableContent = (props: MonitorTableContentProps) => {
     <>
       {monitors.map((monitor: ManagedServiceMonitor, idx: number) => (
         <MonitorRow
-          hover
           issues={issues.filter((i) => i.services.includes(monitor.id))}
           key={`service-monitor-row-${idx}`}
           monitor={monitor}

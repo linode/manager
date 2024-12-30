@@ -18,7 +18,6 @@ import { StyledDiv } from './ProcessesTable.styles';
 
 import type { Process } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { TableRowOwnProps } from '@mui/material';
 
 export interface ProcessesTableProps {
   error?: string;
@@ -150,7 +149,6 @@ const renderLoadingErrorData = (
         selectedProcess?.name === thisProcess.name &&
         selectedProcess?.user === thisProcess.user
       }
-      hover
       key={`process-${idx}`}
       setSelectedProcess={setSelectedProcess}
       {...thisProcess}
@@ -159,7 +157,6 @@ const renderLoadingErrorData = (
 };
 
 export interface ProcessTableRowProps extends ExtendedProcess {
-  hover?: TableRowOwnProps['hover'];
   isSelected: boolean;
   setSelectedProcess: (process: Process) => void;
 }
@@ -169,7 +166,6 @@ export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
     averageCPU,
     averageIO,
     averageMem,
-    hover,
     isSelected,
     maxCount,
     name,
@@ -184,7 +180,6 @@ export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
       }
       data-testid="longview-service-row"
       forceIndex
-      hover={hover}
       onClick={() => setSelectedProcess({ name, user })}
       selected={isSelected}
     >

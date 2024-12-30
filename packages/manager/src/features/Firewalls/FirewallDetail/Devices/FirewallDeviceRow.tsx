@@ -9,25 +9,24 @@ import {
   FirewallDeviceActionMenuProps,
 } from './FirewallDeviceActionMenu';
 
-import type { TableRowOwnProps } from '@mui/material';
+export const FirewallDeviceRow = React.memo(
+  (props: FirewallDeviceActionMenuProps) => {
+    const { deviceEntityID, deviceID, deviceLabel, deviceType } = props;
 
-interface Props extends FirewallDeviceActionMenuProps {
-  hover?: TableRowOwnProps['hover'];
-}
-
-export const FirewallDeviceRow = React.memo((props: Props) => {
-  const { deviceEntityID, deviceID, deviceLabel, deviceType, hover } = props;
-
-  return (
-    <TableRow data-testid={`firewall-device-row-${deviceID}`} hover={hover}>
-      <TableCell>
-        <Link tabIndex={0} to={`/${deviceType}s/${deviceEntityID}/networking`}>
-          {deviceLabel}
-        </Link>
-      </TableCell>
-      <TableCell actionCell>
-        <FirewallDeviceActionMenu {...props} />
-      </TableCell>
-    </TableRow>
-  );
-});
+    return (
+      <TableRow data-testid={`firewall-device-row-${deviceID}`}>
+        <TableCell>
+          <Link
+            tabIndex={0}
+            to={`/${deviceType}s/${deviceEntityID}/networking`}
+          >
+            {deviceLabel}
+          </Link>
+        </TableCell>
+        <TableCell actionCell>
+          <FirewallDeviceActionMenu {...props} />
+        </TableCell>
+      </TableRow>
+    );
+  }
+);

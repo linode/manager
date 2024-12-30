@@ -146,7 +146,6 @@ const renderLoadingErrorData = (
   return data.map((thisConnection, idx) => (
     <ConnectionRow
       connection={thisConnection}
-      hover
       key={`longview-active-connection-${idx}`}
     />
   ));

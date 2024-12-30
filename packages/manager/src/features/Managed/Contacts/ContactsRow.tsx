@@ -7,20 +7,17 @@ import { TableRow } from 'src/components/TableRow';
 
 import ActionMenu from './ContactsActionMenu';
 
-import type { TableRowOwnProps } from '@mui/material';
-
 interface ContactsRowProps {
   contact: ManagedContact;
-  hover?: TableRowOwnProps['hover'];
   openDialog: (contactId: number) => void;
   openDrawer: (linodeId: number) => void;
 }
 
 export const ContactsRow = (props: ContactsRowProps) => {
-  const { contact, hover, openDialog, openDrawer } = props;
+  const { contact, openDialog, openDrawer } = props;
 
   return (
-    <TableRow hover={hover} key={contact.id}>
+    <TableRow key={contact.id}>
       <TableCell>{contact.name}</TableCell>
       <Hidden mdDown>
         <TableCell>{contact.group}</TableCell>

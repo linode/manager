@@ -118,11 +118,7 @@ export const MaintenanceTable = ({ type }: Props) => {
 
     if (data) {
       return data.data.map((item: AccountMaintenance) => (
-        <MaintenanceTableRow
-          hover
-          key={`${item.entity.id}-${item.type}`}
-          {...item}
-        />
+        <MaintenanceTableRow key={`${item.entity.id}-${item.type}`} {...item} />
       ));
     }
 

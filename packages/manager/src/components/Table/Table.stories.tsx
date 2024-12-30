@@ -26,17 +26,17 @@ const meta: Meta<TableProps> = {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow hover>
+          <TableRow>
             <TableCell>test-0</TableCell>
             <TableCell>Linode 2 GB</TableCell>
             <TableCell>Atlanta, GA</TableCell>
           </TableRow>
-          <TableRow hover>
+          <TableRow>
             <TableCell>test-1</TableCell>
             <TableCell>Linode 4 GB</TableCell>
             <TableCell>Dallas, TX</TableCell>
           </TableRow>
-          <TableRow hover>
+          <TableRow>
             <TableCell>test-2</TableCell>
             <TableCell>Linode 8 GB</TableCell>
             <TableCell>Newark, NJ</TableCell>

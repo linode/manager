@@ -14,12 +14,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { truncate } from 'src/utilities/truncate';
 
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
-import type { TableRowOwnProps } from '@mui/material';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
-
-interface Props extends AccountMaintenance {
-  hover?: TableRowOwnProps['hover'];
-}
 
 const statusTextMap: Record<AccountMaintenance['status'], string> = {
   completed: 'Completed',
@@ -33,8 +28,8 @@ const statusIconMap: Record<AccountMaintenance['status'], Status> = {
   started: 'other',
 };
 
-export const MaintenanceTableRow = (props: Props) => {
-  const { entity, hover, reason, status, type, when } = props;
+export const MaintenanceTableRow = (props: AccountMaintenance) => {
+  const { entity, reason, status, type, when } = props;
 
   const { data: profile } = useProfile();
 
@@ -43,7 +38,7 @@ export const MaintenanceTableRow = (props: Props) => {
   const isTruncated = reason !== truncatedReason;
 
   return (
-    <TableRow hover={hover} key={entity.id}>
+    <TableRow key={entity.id}>
       <TableCell style={{ textTransform: 'capitalize' }}>
         {entity.type}
       </TableCell>

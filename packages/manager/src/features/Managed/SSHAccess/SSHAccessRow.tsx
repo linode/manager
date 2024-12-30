@@ -7,16 +7,13 @@ import { TableRow } from 'src/components/TableRow';
 
 import ActionMenu from './SSHAccessActionMenu';
 
-import type { TableRowOwnProps } from '@mui/material';
-
 interface SSHAccessRowProps {
-  hover?: TableRowOwnProps['hover'];
   linodeSetting: ManagedLinodeSetting;
   openDrawer: (linodeId: number) => void;
 }
 
 export const SSHAccessRow = (props: SSHAccessRowProps) => {
-  const { hover, linodeSetting, openDrawer } = props;
+  const { linodeSetting, openDrawer } = props;
 
   const isAccessEnabled = linodeSetting.ssh.access;
 
@@ -24,7 +21,6 @@ export const SSHAccessRow = (props: SSHAccessRowProps) => {
     <TableRow
       data-qa-monitor-cell={linodeSetting.id}
       data-testid={'linode-row'}
-      hover={hover}
       key={linodeSetting.id}
     >
       <TableCell data-qa-managed-linode>{linodeSetting.label}</TableCell>

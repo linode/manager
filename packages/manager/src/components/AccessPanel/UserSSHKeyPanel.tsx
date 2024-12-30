@@ -20,7 +20,6 @@ import { Avatar } from '../Avatar/Avatar';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
 
-import type { TableRowOwnProps } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 
 export const MAX_SSH_KEYS_DISPLAY = 25;
@@ -47,14 +46,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   authorizedUsers: string[];
   disabled?: boolean;
-  hover?: TableRowOwnProps['hover'];
   setAuthorizedUsers: (usernames: string[]) => void;
 }
 
 const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
   const theme = useTheme();
-  const { authorizedUsers, disabled, hover, setAuthorizedUsers } = props;
+  const { authorizedUsers, disabled, setAuthorizedUsers } = props;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -129,7 +127,7 @@ const UserSSHKeyPanel = (props: Props) => {
     // Special case for restricted users
     if (profile && isRestricted) {
       return (
-        <TableRow hover={hover}>
+        <TableRow>
           <TableCell className={classes.cellCheckbox}>
             <Checkbox
               inputProps={{
@@ -158,7 +156,7 @@ const UserSSHKeyPanel = (props: Props) => {
     }
 
     return users?.data.map((user) => (
-      <TableRow hover={hover} key={user.username}>
+      <TableRow key={user.username}>
         <TableCell className={classes.cellCheckbox}>
           <Checkbox
             inputProps={{

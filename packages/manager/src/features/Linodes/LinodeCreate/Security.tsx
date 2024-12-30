@@ -85,7 +85,6 @@ export const Security = () => {
           <UserSSHKeyPanel
             authorizedUsers={field.value ?? []}
             disabled={isLinodeCreateRestricted}
-            hover
             setAuthorizedUsers={field.onChange}
           />
         )}

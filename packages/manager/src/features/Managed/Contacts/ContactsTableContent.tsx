@@ -54,7 +54,6 @@ export const ContactsTableContent = (props: ContactsTableContentProps) => {
       {contacts.map((contact: ManagedContact, idx: number) => (
         <ContactsRow
           contact={contact}
-          hover
           key={`managed-contact-row-${idx}`}
           openDialog={openDialog}
           openDrawer={openDrawer}
