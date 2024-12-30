@@ -76,14 +76,13 @@ const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== 'collapse',
 })<{ collapse?: boolean }>(({ theme, ...props }) => ({
   '& .MuiDrawer-paper': {
-    backgroundColor:
-      theme.name === 'dark' ? theme.bg.appBar : theme.bg.primaryNavPaper,
-    borderRight: 'none',
+    backgroundColor: theme.tokens.sideNavigation.Background.Default,
     boxShadow: 'none',
     height: '100%',
     left: 'inherit',
     overflowX: 'hidden',
     [theme.breakpoints.up('md')]: {
+      borderRight: `1px solid ${theme.tokens.sideNavigation.Border}`,
       height: `calc(100% - ${TOPMENU_HEIGHT}px)`,
       top: TOPMENU_HEIGHT,
     },
@@ -110,7 +109,7 @@ const StyledDrawer = styled(Drawer, {
         width: `${SIDEBAR_COLLAPSED_WIDTH}px`,
       },
       '& a[aria-current="true"]': {
-        background: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+        background: theme.tokens.sideNavigation.SelectedMenuItem.Background,
       },
       '&.MuiDrawer-docked': {
         height: '100%',

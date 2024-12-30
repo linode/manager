@@ -12,6 +12,7 @@ import {
   Interaction,
   NotificationToast,
   Select,
+  SideNavigation,
   TextField,
   Typography,
 } from '@linode/design-language-system/themes/dark';
@@ -889,6 +890,7 @@ export const darkTheme: ThemeOptions = {
     content: Content,
     elevation: Elevation,
     interaction: Interaction,
+    sideNavigation: SideNavigation,
     typography: Typography,
   },
   typography: {

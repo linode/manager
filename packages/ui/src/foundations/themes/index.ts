@@ -5,31 +5,6 @@ import { deepmerge } from '@mui/utils';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
 
-import type {
-  AccentTypes as AccentTypesLight,
-  ActionTypes as ActionTypesLight,
-  BackgroundTypes as BackgroundTypesLight,
-  BorderRadiusTypes,
-  BorderTypes as BorderTypesLight,
-  ChartTypes,
-  ColorTypes,
-  ContentTypes as ContentTypesLight,
-  ElevationTypes as ElevationTypesLight,
-  FontTypes,
-  InteractionTypes as InteractionTypesLight,
-  RadiusTypes,
-  SpacingTypes,
-  TypographyTypes,
-} from '@linode/design-language-system';
-import type {
-  AccentTypes as AccentTypesDark,
-  ActionTypes as ActionTypesDark,
-  BackgroundTypes as BackgroundTypesDark,
-  BorderTypes as BorderTypesDark,
-  ContentTypes as ContentTypesDark,
-  ElevationTypes as ElevationTypesDark,
-  InteractionTypes as InteractionTypesDark,
-} from '@linode/design-language-system/themes/dark';
 import type { latoWeb } from '../fonts';
 // Types & Interfaces
 import type {
@@ -43,6 +18,33 @@ import type {
   notificationToast,
   textColors,
 } from './light';
+import type {
+  AccentTypes as AccentTypesLight,
+  ActionTypes as ActionTypesLight,
+  BackgroundTypes as BackgroundTypesLight,
+  BorderRadiusTypes,
+  BorderTypes as BorderTypesLight,
+  ChartTypes,
+  ColorTypes,
+  ContentTypes as ContentTypesLight,
+  ElevationTypes as ElevationTypesLight,
+  FontTypes,
+  InteractionTypes as InteractionTypesLight,
+  RadiusTypes,
+  SideNavigationTypes as SideNavigationTypesLight,
+  SpacingTypes,
+  TypographyTypes,
+} from '@linode/design-language-system';
+import type {
+  AccentTypes as AccentTypesDark,
+  ActionTypes as ActionTypesDark,
+  BackgroundTypes as BackgroundTypesDark,
+  BorderTypes as BorderTypesDark,
+  ContentTypes as ContentTypesDark,
+  ElevationTypes as ElevationTypesDark,
+  InteractionTypes as InteractionTypesDark,
+  SideNavigationTypes as SideNavigationTypesDark,
+} from '@linode/design-language-system/themes/dark';
 
 export type ThemeName = 'dark' | 'light';
 
@@ -53,6 +55,10 @@ type BorderTypes = MergeTypes<BorderTypesLight, BorderTypesDark>;
 type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
 type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
 type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
+type SideNavigationTypes = MergeTypes<
+  SideNavigationTypesLight,
+  SideNavigationTypesDark
+>;
 
 type Fonts = typeof latoWeb;
 
@@ -108,21 +114,22 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast: NotificationToast;
     textColors: TextColors;
     tokens: {
-      //  ---- Global tokens: theme agnostic ----
-      borderRadius: BorderRadiusTypes;
-      color: ColorTypes;
-      font: FontTypes;
-      spacing: SpacingTypes;
       // ----------------------------------------
       accent: AccentTypes;
       action: ActionTypes;
       background: BackgroundTypes;
       border: BorderTypes;
+      //  ---- Global tokens: theme agnostic ----
+      borderRadius: BorderRadiusTypes;
       chart: ChartTypes;
+      color: ColorTypes;
       content: ContentTypes;
       elevation: ElevationTypes;
+      font: FontTypes;
       interaction: InteractionTypes;
       radius: RadiusTypes;
+      sideNavigation: SideNavigationTypes;
+      spacing: SpacingTypes;
       typography: TypographyTypes;
     };
     visually: any;
@@ -145,21 +152,22 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
-      //  ---- Global tokens: theme agnostic ----
-      borderRadius?: BorderRadiusTypes;
-      color?: ColorTypes;
-      font?: FontTypes;
-      spacing?: SpacingTypes;
       // ----------------------------------------
       accent?: AccentTypes;
       action?: ActionTypes;
       background?: BackgroundTypes;
       border?: BorderTypes;
+      //  ---- Global tokens: theme agnostic ----
+      borderRadius?: BorderRadiusTypes;
       chart?: ChartTypes;
+      color?: ColorTypes;
       content?: ContentTypes;
       elevation?: ElevationTypes;
+      font?: FontTypes;
       interaction?: InteractionTypes;
       radius?: RadiusTypes;
+      sideNavigation?: SideNavigationTypes;
+      spacing?: SpacingTypes;
       typography?: TypographyTypes;
     };
     visually?: any;
