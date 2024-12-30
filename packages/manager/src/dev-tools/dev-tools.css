@@ -11,7 +11,7 @@
   position: fixed;
   width: 100%;
   bottom: 0;
-  left: 0;
+  right: 0;
   z-index: 1;
   color: white;
   font-size: 11pt;
@@ -243,8 +243,7 @@
   border-top-right-radius: 12px;
   border-top-left-radius: 12px;
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 0;
   bottom: 0;
   z-index: 1;
 }
@@ -307,7 +306,7 @@
     background: #1d1d1e;
     background-blend-mode: overlay;
     border: 0;
-    
+
     cursor: pointer;
     padding: 4px;
     position: relative;
@@ -318,7 +317,7 @@
 
   svg {
     color: white;
-   
+
   }
 }
 
