@@ -99,7 +99,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   (option) => option.value === field.value
                 ) ?? null
               }
-              data-testid="Data-field"
+              data-testid="data-field"
               disabled={dataFieldDisabled}
               errorText={fieldState.error?.message}
               label="Data Field"
@@ -130,7 +130,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   (option) => option.value === field.value
                 ) ?? null
               }
-              data-testid="Operator"
+              data-testid="operator"
               errorText={fieldState.error?.message}
               label="Operator"
               onBlur={field.onBlur}
@@ -142,7 +142,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
         />
       </Grid>
       <Grid item md={3} xs={12}>
-        <Box display={'flex'} gap={2}>
+        <Box display="flex" gap={2}>
           <Controller
             render={({ field, fieldState }) => (
               <Autocomplete
@@ -163,8 +163,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                     (option) => option.value === field.value
                   ) ?? null
                 }
-                data-testid="Value"
-                disabled={dimensionFieldWatcher === null}
+                data-testid="value"
+                disabled={!dimensionFieldWatcher}
                 errorText={fieldState.error?.message}
                 label="Value"
                 onBlur={field.onBlur}
@@ -176,7 +176,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
             control={control}
             name={`${name}.value`}
           />
-          <Box alignContent={'center'} mt={5}>
+          <Box alignContent="center" mt={5}>
             <ClearIconButton handleClick={onFilterDelete} />
           </Box>
         </Box>

@@ -112,7 +112,9 @@ export const Metric = (props: MetricCriteriaProps) => {
     <Box
       sx={(theme) => ({
         backgroundColor:
-          theme.name === 'light' ? theme.color.grey5 : theme.color.grey9,
+          theme.name === 'light'
+            ? theme.tokens.color.Neutrals[5]
+            : theme.tokens.color.Neutrals.Black,
         borderRadius: 1,
         display: 'flex',
         flexDirection: 'column',
@@ -157,7 +159,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                       (option) => option.value === field.value
                     ) ?? null
                   }
-                  data-testid="Data-field"
+                  data-testid="data-field"
                   disabled={!serviceWatcher}
                   label="Data Field"
                   loading={isMetricDefinitionLoading}
@@ -189,7 +191,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                     aggOptions.find((option) => option.value === field.value) ??
                     null
                   }
-                  data-testid="Aggregation-type"
+                  data-testid="aggregation-type"
                   disabled={aggOptions.length === 0}
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
@@ -225,7 +227,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                         )
                       : null
                   }
-                  data-testid="Operator"
+                  data-testid="operator"
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
                   label="Operator"

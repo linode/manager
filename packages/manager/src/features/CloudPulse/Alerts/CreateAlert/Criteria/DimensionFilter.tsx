@@ -32,7 +32,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
     name,
   });
   return (
-    <Box display={'flex'} flexDirection={'column'} gap={1}>
+    <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h3">
         Dimension Filter
         <Typography component="span"> (optional)</Typography>
@@ -59,8 +59,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
           })
         }
         buttonType="secondary"
-        compactX={true}
-        fullWidth={false}
+        compactX
         size="small"
         sx={{ justifyContent: 'start' }}
       >

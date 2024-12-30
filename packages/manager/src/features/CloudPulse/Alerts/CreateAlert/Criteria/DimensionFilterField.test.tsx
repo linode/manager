@@ -58,7 +58,7 @@ describe('Dimension filter field component', () => {
         },
       }
     );
-    const dataFieldContainer = container.getByTestId('Data-field');
+    const dataFieldContainer = container.getByTestId('data-field');
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',
     });
@@ -103,7 +103,7 @@ describe('Dimension filter field component', () => {
         },
       }
     );
-    const operatorContainer = container.getByTestId('Operator');
+    const operatorContainer = container.getByTestId('operator');
     const operatorInput = within(operatorContainer).getByRole('button', {
       name: 'Open',
     });
@@ -149,7 +149,7 @@ describe('Dimension filter field component', () => {
         },
       }
     );
-    const dataFieldContainer = container.getByTestId('Data-field');
+    const dataFieldContainer = container.getByTestId('data-field');
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',
     });
@@ -159,7 +159,7 @@ describe('Dimension filter field component', () => {
         name: dimensionFieldMockData[1].label,
       })
     );
-    const valueContainer = container.getByTestId('Value');
+    const valueContainer = container.getByTestId('value');
     const valueInput = within(valueContainer).getByRole('button', {
       name: 'Open',
     });

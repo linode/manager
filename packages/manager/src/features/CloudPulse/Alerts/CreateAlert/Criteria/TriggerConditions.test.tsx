@@ -12,9 +12,9 @@ import { TriggerConditions } from './TriggerConditions';
 
 import type { CreateAlertDefinitionForm } from '../types';
 
-const EvaluationPeriodTestId = 'Evaluation-period';
+const EvaluationPeriodTestId = 'evaluation-period';
 
-const PollingIntervalTestId = 'Polling-interval';
+const PollingIntervalTestId = 'polling-interval';
 describe('Trigger Conditions', () => {
   const user = userEvent.setup();
 

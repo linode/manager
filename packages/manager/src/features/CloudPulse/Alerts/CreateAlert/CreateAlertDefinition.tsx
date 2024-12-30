@@ -170,7 +170,7 @@ export const CreateAlertDefinition = () => {
           />
           <TriggerConditions
             maxScrapingInterval={maxScrapeInterval}
-            name={'trigger_conditions'}
+            name="trigger_conditions"
           />
           <ActionsPanel
             primaryButtonProps={{

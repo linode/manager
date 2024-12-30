@@ -50,7 +50,9 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
     <Box
       sx={(theme) => ({
         backgroundColor:
-          theme.name === 'light' ? theme.color.grey5 : theme.color.grey9,
+          theme.name === 'light'
+            ? theme.tokens.color.Neutrals[5]
+            : theme.tokens.color.Neutrals.Black,
         borderRadius: 1,
         marginTop: theme.spacing(2),
         p: 2,
@@ -80,7 +82,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                     (option) => option.value === field.value
                   ) ?? null
                 }
-                data-testid="Evaluation-period"
+                data-testid="evaluation-period"
                 disabled={!serviceTypeWatcher}
                 errorText={fieldState.error?.message}
                 label="Evaluation Period"
@@ -115,7 +117,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                     (option) => option.value === field.value
                   ) ?? null
                 }
-                data-testid="Polling-interval"
+                data-testid="polling-interval"
                 disabled={!serviceTypeWatcher}
                 errorText={fieldState.error?.message}
                 label="Polling Interval"
@@ -129,8 +131,8 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           />
         </Grid>
         <Grid
-          alignItems={'center'}
-          display={'flex'}
+          alignItems="center"
+          display="flex"
           gap={1}
           item
           md="auto"
@@ -152,7 +154,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                   height: '30px',
                   width: '30px',
                 }}
-                data-testid="Trigger-occurences"
+                data-testid="trigger-occurences"
                 errorText={fieldState.error?.message}
                 label=""
                 min={0}
@@ -167,7 +169,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
             name={`${name}.trigger_occurrences`}
           />
 
-          <Typography mt={3} textAlign={'start'} variant="body1">
+          <Typography mt={3} textAlign="start" variant="body1">
             consecutive occurrence(s).
           </Typography>
         </Grid>
