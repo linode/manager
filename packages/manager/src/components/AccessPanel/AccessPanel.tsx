@@ -267,6 +267,7 @@ export const AccessPanel = (props: Props) => {
           <UserSSHKeyPanel
             authorizedUsers={authorizedUsers}
             disabled={disabled}
+            hover
             setAuthorizedUsers={setAuthorizedUsers}
           />
         </>

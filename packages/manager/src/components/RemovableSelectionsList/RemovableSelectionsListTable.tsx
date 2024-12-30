@@ -15,6 +15,8 @@ import {
   StyledLabel,
 } from './RemovableSelectionsList.style';
 
+import type { TableRowOwnProps } from '@mui/material';
+
 export type RemovableItem = {
   // The remaining key-value pairs must have their values typed
   // as 'any' because we do not know what types they could be.
@@ -29,6 +31,10 @@ export interface RemovableSelectionsListTableProps {
    * The descriptive text to display above the list
    */
   headerText: string;
+  /**
+   * If true, hover transition will appear on the tablerow
+   */
+  hover?: TableRowOwnProps['hover'];
   /**
    * If false, hide the remove button
    */
@@ -62,6 +68,7 @@ export const RemovableSelectionsListTable = (
 ) => {
   const {
     headerText,
+    hover,
     isRemovable = true,
     noDataText,
     onRemove,
@@ -79,7 +86,7 @@ export const RemovableSelectionsListTable = (
       <TableRowEmpty colSpan={4} message={noDataText} />
     ) : (
       selectionData.map((selection) => (
-        <TableRow key={selection.id}>
+        <TableRow hover={hover} key={selection.id}>
           <TableCell>
             <StyledLabel>
               {preferredDataLabel

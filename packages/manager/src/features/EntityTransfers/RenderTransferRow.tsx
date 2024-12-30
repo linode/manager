@@ -20,6 +20,7 @@ import {
 import { TransfersPendingActionMenu } from './TransfersPendingActionMenu';
 
 import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
+import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
   created: string;
@@ -30,6 +31,7 @@ interface Props {
     entities: TransferEntities
   ) => void;
   handleTokenClick: (token: string, entities: TransferEntities) => void;
+  hover?: TableRowOwnProps['hover'];
   status?: string;
   token: string;
   transferType?: 'pending' | 'received' | 'sent';
@@ -42,6 +44,7 @@ export const RenderTransferRow = React.memo((props: Props) => {
     expiry,
     handleCancelPendingTransferClick,
     handleTokenClick,
+    hover,
     status,
     token,
     transferType,
@@ -58,7 +61,7 @@ export const RenderTransferRow = React.memo((props: Props) => {
     : StyledTableCell;
 
   return (
-    <StyledTableRow>
+    <StyledTableRow hover={hover}>
       <StyledTokenTableCell noWrap>
         <StyledDiv>
           <MaskableText isToggleable text={token}>

@@ -66,6 +66,7 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
           {lvPackages.length > 0 ? (
             lvPackages.map((thisPackage, idx) => (
               <LongviewPackageRow
+                hover
                 key={`package-drawer-row-${idx}`}
                 lvPackage={thisPackage}
               />

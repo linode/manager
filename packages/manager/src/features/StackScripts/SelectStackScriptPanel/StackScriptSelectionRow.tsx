@@ -16,12 +16,15 @@ import {
   StyledUsernameLabel,
 } from '../CommonStackScript.styles';
 
+import type { TableRowOwnProps } from '@mui/material';
+
 interface Props {
   checked?: boolean;
   deploymentsActive: number;
   description: string;
   disabled?: boolean;
   disabledCheckedSelect?: boolean;
+  hover?: TableRowOwnProps['hover'];
   label: string;
   onSelect?: (e: React.ChangeEvent<HTMLElement>, value: boolean) => void;
   openStackScriptDetailsDialog: (stackscriptId: number) => void;
@@ -37,6 +40,7 @@ export class StackScriptSelectionRow extends React.Component<Props, {}> {
       description,
       disabled,
       disabledCheckedSelect,
+      hover,
       label,
       onSelect,
       openStackScriptDetailsDialog,
@@ -78,7 +82,7 @@ export class StackScriptSelectionRow extends React.Component<Props, {}> {
     };
 
     return (
-      <TableRow data-qa-table-row={label}>
+      <TableRow data-qa-table-row={label} hover={hover}>
         <TableCell>
           <Radio
             checked={!disabled && checked}

@@ -316,6 +316,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
               <RemovableSelectionsListTable
                 headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
+                hover
                 isRemovable={!Boolean(singleLinodeToBeUnassigned)}
                 noDataText="Select Linodes to be Unassigned from Subnet."
                 onRemove={handleRemoveLinode}

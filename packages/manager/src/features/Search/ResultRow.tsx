@@ -15,17 +15,19 @@ import {
   StyledTagTableCell,
 } from './ResultRow.styles';
 
+import type { TableRowOwnProps } from '@mui/material';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface ResultRowProps {
+  hover?: TableRowOwnProps['hover'];
   result: Item;
 }
 
 export const ResultRow = (props: ResultRowProps) => {
-  const { result } = props;
+  const { hover, result } = props;
 
   return (
-    <StyledTableRow data-qa-result-row={result.label}>
+    <StyledTableRow data-qa-result-row={result.label} hover={hover}>
       <StyledLabelTableCell>
         <StyledLink title={result.label} to={result.data.path}>
           {result.label}

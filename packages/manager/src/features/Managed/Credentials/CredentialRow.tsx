@@ -8,19 +8,23 @@ import { TableRow } from 'src/components/TableRow';
 
 import ActionMenu from './CredentialActionMenu';
 
+import type { TableRowOwnProps } from '@mui/material';
+
 interface CredentialRowProps {
   credential: ManagedCredential;
+  hover?: TableRowOwnProps['hover'];
   openDialog: (id: number, label: string) => void;
   openForEdit: (id: number) => void;
 }
 
 export const CredentialRow = (props: CredentialRowProps) => {
-  const { credential, openDialog, openForEdit } = props;
+  const { credential, hover, openDialog, openForEdit } = props;
 
   return (
     <StyledTableRow
       data-qa-credential-cell={credential.id}
       data-testid={'credential-row'}
+      hover={hover}
       key={credential.id}
     >
       <TableCell data-qa-credential-label>{credential.label}</TableCell>

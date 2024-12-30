@@ -550,6 +550,7 @@ export const SubnetAssignLinodesDrawer = (
           setUnassignLinodesErrors([]);
         }}
         headerText={`Linodes recently assigned to Subnet (${assignedLinodesAndConfigData.length})`}
+        hover
         noDataText={'No Linodes have been assigned.'}
         preferredDataLabel="linodeConfigLabel"
         selectionData={assignedLinodesAndConfigData}

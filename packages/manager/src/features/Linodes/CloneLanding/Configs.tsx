@@ -48,7 +48,11 @@ export const Configs = (props: ConfigsProps) => {
                   <TableRowEmpty colSpan={1} />
                 ) : (
                   paginatedData.map((config: Config) => (
-                    <TableRow data-qa-config={config.label} key={config.id}>
+                    <TableRow
+                      data-qa-config={config.label}
+                      hover
+                      key={config.id}
+                    >
                       <TableCell>
                         <Checkbox
                           checked={

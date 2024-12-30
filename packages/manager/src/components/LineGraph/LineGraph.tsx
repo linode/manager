@@ -382,7 +382,7 @@ export const LineGraph = (props: LineGraphProps) => {
                 const hidden = hiddenDatasets.includes(idx);
                 const { data: metricsData, format } = legendRows[idx];
                 return (
-                  <TableRow key={idx}>
+                  <TableRow hover key={idx}>
                     <TableCell noWrap>
                       <StyledButton
                         aria-label={`Toggle ${title} visibility`}

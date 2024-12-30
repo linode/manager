@@ -54,12 +54,18 @@ export const ResultGroup = (props: ResultGroupProps) => {
         </TableHead>
         <TableBody>
           {initial.map((result, idx: number) => (
-            <ResultRow data-qa-result-row-component key={idx} result={result} />
+            <ResultRow
+              data-qa-result-row-component
+              hover
+              key={idx}
+              result={result}
+            />
           ))}
           {showMore &&
             hidden.map((result, idx: number) => (
               <ResultRow
                 data-qa-result-row-component
+                hover
                 key={idx}
                 result={result}
               />

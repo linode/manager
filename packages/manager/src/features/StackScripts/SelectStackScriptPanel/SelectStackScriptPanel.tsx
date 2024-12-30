@@ -147,6 +147,7 @@ class SelectStackScriptPanel extends React.Component<
                   deploymentsActive={stackScript.deployments_active}
                   description={truncate(stackScript.description, 100)}
                   disabledCheckedSelect
+                  hover
                   key={stackScript.id}
                   label={stackScript.label}
                   stackScriptID={stackScript.id}

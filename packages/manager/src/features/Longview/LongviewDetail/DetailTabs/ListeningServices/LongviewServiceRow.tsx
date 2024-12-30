@@ -3,17 +3,19 @@ import * as React from 'react';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
+import type { TableRowOwnProps } from '@mui/material';
 import type { LongviewService } from 'src/features/Longview/request.types';
 
 interface Props {
+  hover?: TableRowOwnProps['hover'];
   service: LongviewService;
 }
 
 export const LongviewServiceRow = (props: Props) => {
-  const { service } = props;
+  const { hover, service } = props;
 
   return (
-    <TableRow data-testid="longview-service-row">
+    <TableRow data-testid="longview-service-row" hover={hover}>
       <TableCell data-qa-service-process>{service.name}</TableCell>
       <TableCell data-qa-service-user>{service.user}</TableCell>
       <TableCell data-qa-service-protocol>{service.type}</TableCell>

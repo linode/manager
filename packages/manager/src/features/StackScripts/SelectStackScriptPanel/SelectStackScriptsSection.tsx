@@ -12,11 +12,13 @@ import StackScriptSelectionRow from './StackScriptSelectionRow';
 
 import type { Image } from '@linode/api-v4/lib/images';
 import type { StackScript } from '@linode/api-v4/lib/stackscripts';
+import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
   currentUser: string;
   data: StackScript[];
   disabled?: boolean;
+  hover?: TableRowOwnProps['hover'];
   isSorting: boolean;
   onSelect: (s: StackScript) => void;
   openStackScriptDetailsDialog: (stackscriptId: number) => void;
@@ -28,6 +30,7 @@ export const SelectStackScriptsSection = (props: Props) => {
   const {
     data,
     disabled,
+    hover,
     isSorting,
     onSelect,
     openStackScriptDetailsDialog,
@@ -46,6 +49,7 @@ export const SelectStackScriptsSection = (props: Props) => {
       deploymentsActive={s.deployments_active}
       description={truncate(s.description, 100)}
       disabled={disabled}
+      hover
       key={s.id}
       label={s.label}
       onSelect={() => onSelect(s)}
@@ -61,7 +65,7 @@ export const SelectStackScriptsSection = (props: Props) => {
       {!isSorting ? (
         data && data.map(selectStackScript)
       ) : (
-        <TableRow>
+        <TableRow hover={hover}>
           <StyledStackScriptSectionTableCell colSpan={5}>
             <CircleProgress />
           </StyledStackScriptSectionTableCell>

@@ -21,7 +21,7 @@ export interface TableRowEmptyProps {
  */
 export const TableRowEmpty = (props: TableRowEmptyProps) => {
   return (
-    <TableRow data-testid={'table-row-empty'}>
+    <TableRow data-testid={'table-row-empty'} hover>
       <TableCell
         sx={{
           height: '40px',

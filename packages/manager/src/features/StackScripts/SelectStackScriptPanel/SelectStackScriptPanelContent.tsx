@@ -46,6 +46,7 @@ class SelectStackScriptPanelContent extends React.Component<
         currentUser={this.props.currentUser}
         data={listOfStackScripts}
         disabled={this.props.disabled}
+        hover
         isSorting={this.props.isSorting}
         onSelect={this.handleSelectStackScript}
         openStackScriptDetailsDialog={this.props.openStackScriptDetailsDialog}
