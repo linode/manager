@@ -96,21 +96,21 @@ export const DimensionOperatorOptions: Item<
 ];
 
 export const EvaluationPeriodOptions = {
-  dbaas: [{ label: '5m', value: 300 }],
+  dbaas: [{ label: '5 min', value: 300 }],
   linode: [
-    { label: '1m', value: 60 },
-    { label: '5m', value: 300 },
-    { label: '15m', value: 900 },
-    { label: '30m', value: 1800 },
-    { label: '1hr', value: 3600 },
+    { label: '1 min', value: 60 },
+    { label: '5 min', value: 300 },
+    { label: '15 min', value: 900 },
+    { label: '30 min', value: 1800 },
+    { label: '1 hr', value: 3600 },
   ],
 };
 
 export const PollingIntervalOptions = {
-  dbaas: [{ label: '5m', value: 300 }],
+  dbaas: [{ label: '5 min', value: 300 }],
   linode: [
-    { label: '1m', value: 60 },
-    { label: '5m', value: 300 },
-    { label: '10m', value: 600 },
+    { label: '1 min', value: 60 },
+    { label: '5 min', value: 300 },
+    { label: '10 min', value: 600 },
   ],
 };

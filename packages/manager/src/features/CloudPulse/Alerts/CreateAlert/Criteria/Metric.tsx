@@ -73,7 +73,8 @@ export const Metric = (props: MetricCriteriaProps) => {
       name,
       operation === 'selectOption'
         ? { ...fieldValue, metric: selected.value }
-        : fieldValue
+        : fieldValue,
+      { shouldValidate: true }
     );
   };
 

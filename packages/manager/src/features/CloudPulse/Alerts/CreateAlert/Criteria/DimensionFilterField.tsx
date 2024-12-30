@@ -54,7 +54,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       name,
       operation === 'selectOption'
         ? { ...fieldValue, dimension_label: selected.value }
-        : fieldValue
+        : fieldValue,
+      { shouldValidate: true }
     );
   };
 
@@ -81,7 +82,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   };
 
   return (
-    <Grid container gap={2}>
+    <Grid container data-testid={`${name}-id`} gap={2}>
       <Grid item md={3} xs={12}>
         <Controller
           render={({ field, fieldState }) => (

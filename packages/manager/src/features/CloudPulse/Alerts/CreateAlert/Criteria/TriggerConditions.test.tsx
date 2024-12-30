@@ -27,9 +27,11 @@ describe('Trigger Conditions', () => {
     expect(container.getByLabelText('Evaluation Period')).toBeInTheDocument();
     expect(container.getByLabelText('Polling Interval')).toBeInTheDocument();
     expect(
-      container.getByText('criteria are met for at least')
+      container.getByText('Trigger alert when all criteria are met for')
     ).toBeInTheDocument();
-    expect(container.getByText('consecutive occurences.')).toBeInTheDocument();
+    expect(
+      container.getByText('consecutive occurrence(s).')
+    ).toBeInTheDocument();
   });
 
   it('should render the tooltips for the Autocomplete components', () => {
