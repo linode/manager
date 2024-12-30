@@ -122,9 +122,7 @@ export const StyledAccordion = styled(Accordion, {
   ({ theme, ...props }) => ({
     '& h3': {
       '& p': {
-        color: props.isActiveProductFamily
-          ? theme.tokens.sideNavigation.SelectedMenuItem.Text
-          : theme.tokens.sideNavigation.DefaultMenuItem.Text,
+        color: theme.tokens.sideNavigation.DefaultMenuItem.Text,
         transition: theme.transitions.create(['opacity']),
         ...(props.isCollapsed && {
           opacity: 0,
@@ -132,9 +130,7 @@ export const StyledAccordion = styled(Accordion, {
       },
       // product family icon
       '& svg': {
-        color: props.isActiveProductFamily
-          ? theme.tokens.sideNavigation.SelectedMenuItem.Icon
-          : theme.tokens.sideNavigation.DefaultMenuItem.Icon,
+        color: theme.tokens.sideNavigation.DefaultMenuItem.Icon,
         height: 20,
         marginRight: 14,
         transition: theme.transitions.create(['color']),
@@ -157,9 +153,7 @@ export const StyledAccordion = styled(Accordion, {
         maxHeight: '42px',
         minHeight: '42px',
       },
-      backgroundColor: props.isActiveProductFamily
-        ? theme.tokens.sideNavigation.SelectedMenuItem.Background
-        : theme.tokens.sideNavigation.DefaultMenuItem.Background,
+      backgroundColor: theme.tokens.sideNavigation.DefaultMenuItem.Background,
       maxHeight: '42px',
       minHeight: '42px',
       paddingLeft: 4,
@@ -203,5 +197,7 @@ export const StyledChip = styled(Chip, {
   color: props.isActiveLink
     ? theme.tokens.sideNavigation.SelectedMenuItem.Label.Text
     : theme.tokens.sideNavigation.DefaultMenuItem.Label.Text,
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
   width: '30px',
 }));
