@@ -112,20 +112,23 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast: NotificationToast;
     textColors: TextColors;
     tokens: {
+      //  ---- Global tokens: theme agnostic ----
+      border: BorderTypes;
+      color: ColorTypes;
+      font: FontTypes;
+      spacing: SpacingTypes;
+      footer: GlobalFooterTypes;
+      // ----------------------------------------
       accent: AccentTypes;
       action: ActionTypes;
       background: BackgroundTypes;
-      border: BorderTypes;
       borderRadius: BorderRadiusTypes;
       chart: ChartTypes;
-      color: ColorTypes;
       content: ContentTypes;
+      table: TableTypes;
       elevation: ElevationTypes;
-      font: FontTypes;
       interaction: InteractionTypes;
       radius: RadiusTypes;
-      spacing: SpacingTypes;
-      table: TableTypes;
       typography: TypographyTypes;
     };
     visually: any;
@@ -148,20 +151,23 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
+      //  ---- Global tokens: theme agnostic ----
+      borderRadius?: BorderRadiusTypes;
+      color?: ColorTypes;
+      font?: FontTypes;
+      footer?: GlobalFooterTypes;
+      spacing?: SpacingTypes;
+      // ----------------------------------------
       accent?: AccentTypes;
       action?: ActionTypes;
       background?: BackgroundTypes;
       border?: BorderTypes;
-      borderRadius?: BorderRadiusTypes;
       chart?: ChartTypes;
-      color?: ColorTypes;
       content?: ContentTypes;
       elevation?: ElevationTypes;
-      font?: FontTypes;
       interaction?: InteractionTypes;
       radius?: RadiusTypes;
-      spacing?: SpacingTypes;
-      table?: TableTypes;
+      table: TableTypes;
       typography?: TypographyTypes;
     };
     visually?: any;
