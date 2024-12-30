@@ -9,31 +9,53 @@ import {
 } from './CloudPulseWidgetUtils';
 
 import type { CloudPulseMetricsResponse } from '@linode/api-v4';
+import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
-it('test generateMaxUnit method', () => {
-  const legendRowsData = [
-    {
-      data: { average: 1500, last: 1600, length: 3, max: 2000, total: 4500 },
-      format: formatPercentage,
-      legendColor: '#000',
-      legendTitle: 'linode-1',
-    },
-    {
-      data: {
-        average: 2000000,
-        last: 2100000,
-        length: 3,
-        max: 2500000,
-        total: 6000000,
+describe('generateMaxUnit method', () => {
+  it('returns the appropriate unit for mixed data values', () => {
+    const legendRowsData: MetricsDisplayRow[] = [
+      {
+        data: { average: 1500, last: 1600, length: 3, max: 2000, total: 4500 },
+        format: formatPercentage,
+        legendColor: '#000',
+        legendTitle: 'linode-1',
       },
-      format: formatPercentage,
-      legendColor: '#000',
-      legendTitle: 'linode-2',
-    },
-  ];
+      {
+        data: {
+          average: 2000000,
+          last: 2100000,
+          length: 3,
+          max: 2500000,
+          total: 6000000,
+        },
+        format: formatPercentage,
+        legendColor: '#000',
+        legendTitle: 'linode-2',
+      },
+    ];
 
-  const result = generateMaxUnit(legendRowsData, 'Bytes');
-  expect(result).toBe('MB');
+    const result = generateMaxUnit(legendRowsData, 'Bytes');
+    expect(result).toBe('MB');
+  });
+
+  it('returns correct unit for empty array', () => {
+    const legendRowsData: MetricsDisplayRow[] = [];
+    const result = generateMaxUnit(legendRowsData, 'Bytes');
+    expect(result).toBe('B');
+  });
+
+  it('returns correct unit when max is zero', () => {
+    const legendRowsData: MetricsDisplayRow[] = [
+      {
+        data: { average: 0, last: 0, length: 3, max: 0, total: 0 },
+        format: formatPercentage,
+        legendColor: '#000',
+        legendTitle: 'linode-1',
+      },
+    ];
+    const result = generateMaxUnit(legendRowsData, 'Bytes');
+    expect(result).toBe('B');
+  });
 });
 
 describe('getLabelName method', () => {
