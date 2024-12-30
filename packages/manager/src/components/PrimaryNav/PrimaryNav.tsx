@@ -217,7 +217,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         links: [
           {
             display: 'Databases',
-            hide: false,
+            hide: !isDatabasesEnabled,
             href: '/databases',
             isBeta: isDatabasesV2Beta,
             label: 'DB',
@@ -235,7 +235,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           },
           {
             display: 'Monitor',
-            hide: false,
+            hide: !isACLPEnabled,
             href: '/monitor',
             isBeta: flags.aclp?.beta,
             label: 'MON',
@@ -355,7 +355,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               closeMenu,
               isActiveLink,
               isCollapsed,
-              label: link.label,
               ...link,
             };
             return <PrimaryLink {...props} key={link.display} />;
