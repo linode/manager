@@ -1,4 +1,4 @@
-import { Box, CircleProgress } from '@linode/ui';
+import { Box, Chip, CircleProgress } from '@linode/ui';
 import { styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
 import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailOverview } from './AlertDetailOverview';
+import { AlertDetailCriteria } from './AlertDetailCriteria';
 
 interface RouteParams {
   /**
@@ -98,6 +99,16 @@ export const AlertDetail = () => {
           >
             <AlertDetailOverview alertDetails={alertDetails} />
           </Box>
+          <Box
+            sx={{
+              ...getAlertBoxStyles(theme),
+              overflow: 'auto',
+            }}
+            flexBasis="100%"
+            maxHeight={theme.spacing(98.125)}
+          >
+            <AlertDetailCriteria alert={alertDetails} />
+          </Box>
         </Box>
       </Box>
     </>
@@ -113,4 +124,20 @@ export const StyledPlaceholder = styled(Placeholder, {
   svg: {
     maxHeight: theme.spacing(10),
   },
+}));
+
+export const StyledAlertChip = styled(Chip, {
+  label: 'StyledAlertChip',
+  shouldForwardProp: (prop) => prop !== 'borderRadius',
+})<{
+  borderRadius?: string;
+}>(({ borderRadius, theme }) => ({
+  '& .MuiChip-label': {
+    color: theme.tokens.color.Neutrals.Black,
+    marginRight: theme.spacing(1), // Add padding inside the label
+  },
+  backgroundColor: theme.tokens.color.Neutrals.White,
+  borderRadius: borderRadius || 0,
+  height: theme.spacing(3),
+  lineHeight: '1.5rem',
 }));
