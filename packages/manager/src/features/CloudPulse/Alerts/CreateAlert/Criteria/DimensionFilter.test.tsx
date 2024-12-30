@@ -5,10 +5,46 @@ import React from 'react';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { DimensionFilters } from './DimensionFilter';
-import { mockData } from './Metric.test';
 
 import type { CreateAlertDefinitionForm } from '../types';
+import type { AvailableMetrics } from '@linode/api-v4';
 
+const mockData: AvailableMetrics[] = [
+  {
+    available_aggregate_functions: ['min', 'max', 'avg'],
+    dimensions: [
+      {
+        dimension_label: 'cpu',
+        label: 'CPU name',
+        values: [],
+      },
+      {
+        dimension_label: 'state',
+        label: 'State of CPU',
+        values: [
+          'user',
+          'system',
+          'idle',
+          'interrupt',
+          'nice',
+          'softirq',
+          'steal',
+          'wait',
+        ],
+      },
+      {
+        dimension_label: 'LINODE_ID',
+        label: 'Linode ID',
+        values: [],
+      },
+    ],
+    label: 'CPU utilization',
+    metric: 'system_cpu_utilization_percent',
+    metric_type: 'gauge',
+    scrape_interval: '2m',
+    unit: 'percent',
+  },
+];
 const dimensionFilterButton = 'Add dimension filter';
 describe('DimensionFilterField', () => {
   const user = userEvent.setup();
