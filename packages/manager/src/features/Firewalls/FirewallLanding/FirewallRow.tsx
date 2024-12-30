@@ -15,20 +15,12 @@ import type { Firewall, FirewallDeviceEntity } from '@linode/api-v4';
 export interface FirewallRowProps extends Firewall, ActionHandlers {}
 
 export const FirewallRow = React.memo((props: FirewallRowProps) => {
-  const {
-    entities,
-    hover,
-    id,
-    label,
-    rules,
-    status,
-    ...actionHandlers
-  } = props;
+  const { entities, id, label, rules, status, ...actionHandlers } = props;
 
   const count = getCountOfRules(rules);
 
   return (
-    <TableRow data-testid={`firewall-row-${id}`} hover={hover}>
+    <TableRow data-testid={`firewall-row-${id}`}>
       <TableCell>
         <Link tabIndex={0} to={`/firewalls/${id}`}>
           {label}

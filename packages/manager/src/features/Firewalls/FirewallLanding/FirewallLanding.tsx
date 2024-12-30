@@ -192,7 +192,7 @@ const FirewallLanding = () => {
         </TableHead>
         <TableBody>
           {data?.data.map((firewall) => (
-            <FirewallRow hover key={firewall.id} {...firewall} {...handlers} />
+            <FirewallRow key={firewall.id} {...firewall} {...handlers} />
           ))}
         </TableBody>
       </Table>

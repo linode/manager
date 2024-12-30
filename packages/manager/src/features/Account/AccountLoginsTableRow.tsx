@@ -14,24 +14,19 @@ import type {
   AccountLogin,
   AccountLoginStatus,
 } from '@linode/api-v4/lib/account/types';
-import type { TableRowOwnProps } from '@mui/material';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
-
-interface AccountLoginProps extends AccountLogin {
-  hover?: TableRowOwnProps['hover'];
-}
 
 const accessIconMap: Record<AccountLoginStatus, Status> = {
   failed: 'other',
   successful: 'active',
 };
 
-const AccountLoginsTableRow = (props: AccountLoginProps) => {
-  const { datetime, hover, id, ip, restricted, status, username } = props;
+const AccountLoginsTableRow = (props: AccountLogin) => {
+  const { datetime, id, ip, restricted, status, username } = props;
   const { data: profile } = useProfile();
 
   return (
-    <TableRow hover={hover} key={id}>
+    <TableRow key={id}>
       <TableCell>
         {formatDate(datetime, {
           timezone: profile?.timezone,

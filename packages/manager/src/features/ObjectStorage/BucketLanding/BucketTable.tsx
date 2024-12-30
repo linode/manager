@@ -156,7 +156,6 @@ const RenderData: React.FC<RenderDataProps> = (props) => {
       {data.map((bucket, index) => (
         <BucketTableRow
           {...bucket}
-          hover
           key={`${bucket.label}-${index}-${bucket.region ?? bucket.cluster}`}
           onDetails={() => onDetails(bucket)}
           onRemove={() => onRemove(bucket)}

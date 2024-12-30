@@ -100,7 +100,6 @@ export const BackupDrawer = (props: Props) => {
               result.linode.id === linode.id && result.status === 'rejected'
           ) as EnableBackupsRejectedResult | undefined)?.reason?.[0]?.reason
         }
-        hover
         key={linode.id}
         linode={linode}
       />

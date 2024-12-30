@@ -13,10 +13,8 @@ import { capitalize } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import type { Linode } from '@linode/api-v4';
-import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
-  hover?: TableRowOwnProps['hover'];
   linode: Linode;
   onPowerOff?: () => void;
   onSelect: () => void;
@@ -24,7 +22,7 @@ interface Props {
 }
 
 export const LinodeSelectTableRow = (props: Props) => {
-  const { hover, linode, onPowerOff, onSelect, selected } = props;
+  const { linode, onPowerOff, onSelect, selected } = props;
 
   const { data: image } = useImageQuery(
     linode.image ?? '',
@@ -38,7 +36,7 @@ export const LinodeSelectTableRow = (props: Props) => {
   const region = regions?.find((r) => r.id === linode.region);
 
   return (
-    <TableRow hover={hover} key={linode.label}>
+    <TableRow key={linode.label}>
       <TableCell>
         <FormControlLabel
           checked={selected}

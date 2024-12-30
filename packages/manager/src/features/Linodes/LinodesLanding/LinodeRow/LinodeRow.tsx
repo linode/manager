@@ -30,20 +30,17 @@ import {
 } from './LinodeRow.styles';
 
 import type { LinodeHandlers } from '../LinodesLanding';
-import type { TableRowOwnProps } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 interface Props extends LinodeWithMaintenance {
   handlers: LinodeHandlers;
-  hover?: TableRowOwnProps['hover'];
 }
 
 export const LinodeRow = (props: Props) => {
   const {
     backups,
     handlers,
-    hover,
     id,
     ipv4,
     label,
@@ -97,7 +94,6 @@ export const LinodeRow = (props: Props) => {
     <TableRow
       data-qa-linode={label}
       data-qa-loading
-      hover={hover}
       key={id}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

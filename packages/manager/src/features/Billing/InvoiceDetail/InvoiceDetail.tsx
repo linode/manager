@@ -204,7 +204,6 @@ export const InvoiceDetail = () => {
           )}
           <InvoiceTable
             errors={errors}
-            hover
             items={items}
             loading={loading}
             shouldShowRegion={shouldShowRegion}

@@ -94,7 +94,6 @@ const ObjectTableContent: React.FC<Props> = (props) => {
                 )}
                 folderName={object.name}
                 handleClickDelete={handleClickDelete}
-                hover
                 key={object.name}
               />
             );
@@ -116,7 +115,6 @@ const ObjectTableContent: React.FC<Props> = (props) => {
               handleClickDelete={handleClickDelete}
               handleClickDetails={() => handleClickDetails(object)}
               handleClickDownload={handleClickDownload}
-              hover
               key={object.name}
               objectLastModified={object.last_modified || ''}
               objectSize={object.size || 0}

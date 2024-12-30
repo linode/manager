@@ -21,7 +21,6 @@ import type {
   DatabaseInstance,
   DatabaseType,
 } from '@linode/api-v4/lib/databases/types';
-import type { TableRowOwnProps } from '@mui/material';
 import type { ActionHandlers } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 
 interface Props {
@@ -32,7 +31,6 @@ interface Props {
    * @since DBaaS V2 GA
    */
   handlers?: ActionHandlers;
-  hover?: TableRowOwnProps['hover'];
   isNewDatabase?: boolean;
 }
 
@@ -40,7 +38,6 @@ export const DatabaseRow = ({
   database,
   events,
   handlers,
-  hover,
   isNewDatabase,
 }: Props) => {
   const {
@@ -84,11 +81,7 @@ export const DatabaseRow = ({
       </>
     );
   return (
-    <TableRow
-      data-qa-database-cluster-id={id}
-      hover={hover}
-      key={`database-row-${id}`}
-    >
+    <TableRow data-qa-database-cluster-id={id} key={`database-row-${id}`}>
       <TableCell>
         {isDatabasesV2GA && isLinkInactive ? (
           label

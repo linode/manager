@@ -139,7 +139,6 @@ export const NodeBalancersLanding = () => {
         <TableBody>
           {data?.data.map((nodebalancer) => (
             <NodeBalancerTableRow
-              hover
               key={nodebalancer.id}
               onDelete={() => onDelete(nodebalancer.id)}
               {...nodebalancer}

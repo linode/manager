@@ -14,7 +14,6 @@ import { usePreferences } from 'src/queries/profile/preferences';
 import NodeActionMenu from './NodeActionMenu';
 
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { TableRowOwnProps } from '@mui/material';
 
 export interface NodeRow {
   instanceId?: number;
@@ -26,7 +25,6 @@ export interface NodeRow {
 }
 
 interface NodeRowProps extends NodeRow {
-  hover?: TableRowOwnProps['hover'];
   linodeError?: APIError[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   typeLabel: string;
@@ -34,7 +32,6 @@ interface NodeRowProps extends NodeRow {
 
 export const NodeRow = React.memo((props: NodeRowProps) => {
   const {
-    hover,
     instanceId,
     instanceStatus,
     ip,
@@ -76,7 +73,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   const displayIP = ip ?? '';
 
   return (
-    <TableRow data-qa-node-row={nodeId} hover={hover}>
+    <TableRow data-qa-node-row={nodeId}>
       <TableCell>
         <Grid alignItems="center" container wrap="nowrap">
           <Grid>

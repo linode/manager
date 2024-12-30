@@ -11,11 +11,9 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
 import type { Disk, EventAction, Linode } from '@linode/api-v4';
-import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
   disk: Disk;
-  hover?: TableRowOwnProps['hover'];
   linodeId: number;
   linodeStatus: Linode['status'];
   onDelete: () => void;
@@ -29,7 +27,6 @@ export const LinodeDiskRow = React.memo((props: Props) => {
   const theme = useTheme();
   const {
     disk,
-    hover,
     linodeId,
     linodeStatus,
     onDelete,
@@ -53,7 +50,7 @@ export const LinodeDiskRow = React.memo((props: Props) => {
   );
 
   return (
-    <TableRow data-qa-disk={disk.label} hover={hover}>
+    <TableRow data-qa-disk={disk.label}>
       <TableCell sx={{ width: '20%' }}>{disk.label}</TableCell>
       <TableCell sx={{ width: '10%' }}>{disk.filesystem}</TableCell>
       <TableCell sx={{ width: '15%' }}>

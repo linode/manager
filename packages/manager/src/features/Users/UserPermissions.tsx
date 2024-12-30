@@ -627,7 +627,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                       entity={entity}
                       entitySetAllTo={this.entitySetAllTo}
                       grants={this.state.grants?.[entity]}
-                      hover
                       key={entity}
                       setGrantTo={this.setGrantTo}
                     />
@@ -642,7 +641,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 entity={entity}
                 entitySetAllTo={this.entitySetAllTo}
                 grants={this.state.grants?.[entity]}
-                hover
                 key={entity}
                 setGrantTo={this.setGrantTo}
                 showHeading

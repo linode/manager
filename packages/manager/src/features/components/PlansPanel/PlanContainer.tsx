@@ -115,7 +115,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
           <PlanSelection
             currentPlanHeading={currentPlanHeading}
             hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-            hover
             idx={id}
             isCreate={isCreate}
             key={id}

@@ -8,25 +8,17 @@ import { parseAPIDate } from 'src/utilities/date';
 
 import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
 
-import type { TableRowOwnProps } from '@mui/material';
-
 interface Props {
   backup: DatabaseBackup;
   disabled?: boolean;
-  hover?: TableRowOwnProps['hover'];
   onRestore: (id: number) => void;
 }
 
-export const BackupTableRow = ({
-  backup,
-  disabled,
-  hover,
-  onRestore,
-}: Props) => {
+export const BackupTableRow = ({ backup, disabled, onRestore }: Props) => {
   const { created, id } = backup;
 
   return (
-    <TableRow hover={hover} key={id}>
+    <TableRow key={id}>
       <TableCell>
         <DateTimeDisplay value={created} />
       </TableCell>

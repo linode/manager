@@ -90,7 +90,6 @@ export const LinodeDisks = () => {
     return disks?.map((disk) => (
       <LinodeDiskRow
         disk={disk}
-        hover
         key={disk.id}
         linodeId={id}
         linodeStatus={linode?.status ?? 'offline'}

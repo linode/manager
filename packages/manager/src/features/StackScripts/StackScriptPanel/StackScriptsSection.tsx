@@ -54,7 +54,6 @@ export const StackScriptsSection = (props: Props) => {
       category={category}
       deploymentsTotal={s.deployments_total}
       description={s.description}
-      hover
       images={stripImageName(s.images)}
       isPublic={s.is_public}
       key={s.id}

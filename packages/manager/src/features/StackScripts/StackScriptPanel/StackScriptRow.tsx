@@ -17,7 +17,6 @@ import {
   StyledUsernameSpan,
 } from '../CommonStackScript.styles';
 
-import type { TableRowOwnProps } from '@mui/material';
 import type { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 
 export interface Props {
@@ -27,7 +26,6 @@ export interface Props {
   category: StackScriptCategory | string;
   deploymentsTotal: number;
   description: string;
-  hover?: TableRowOwnProps['hover'];
   images: string[];
   isPublic: boolean;
   label: string;
@@ -48,7 +46,6 @@ export const StackScriptRow = (props: Props) => {
     category,
     deploymentsTotal,
     description,
-    hover,
     images,
     isPublic,
     label,
@@ -82,7 +79,7 @@ export const StackScriptRow = (props: Props) => {
   };
 
   return (
-    <StyledTableRow data-qa-table-row={label} hover={hover}>
+    <StyledTableRow data-qa-table-row={label}>
       <StyledTitleTableCell data-qa-stackscript-title>
         {renderLabel()}
       </StyledTitleTableCell>

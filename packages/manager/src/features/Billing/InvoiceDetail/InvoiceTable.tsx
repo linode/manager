@@ -19,11 +19,9 @@ import { getInvoiceRegion } from '../PdfGenerator/utils';
 
 import type { InvoiceItem } from '@linode/api-v4/lib/account';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
   errors?: APIError[];
-  hover?: TableRowOwnProps['hover'];
   items?: InvoiceItem[];
   loading: boolean;
   shouldShowRegion: boolean;
@@ -38,7 +36,7 @@ export const InvoiceTable = (props: Props) => {
     isLoading: regionsLoading,
   } = useRegionsQuery();
 
-  const { errors, hover, items, loading, shouldShowRegion } = props;
+  const { errors, items, loading, shouldShowRegion } = props;
   const NUM_COLUMNS = shouldShowRegion ? 9 : 8;
 
   const renderTableContent = () => {
@@ -78,7 +76,6 @@ export const InvoiceTable = (props: Props) => {
             <React.Fragment>
               {paginatedData.map((invoiceItem: InvoiceItem) => (
                 <TableRow
-                  hover={hover}
                   key={`${invoiceItem.label}-${invoiceItem.from}-${invoiceItem.to}`}
                 >
                   <TableCell data-qa-description>{invoiceItem.label}</TableCell>

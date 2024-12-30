@@ -45,7 +45,7 @@ export const EventMessages: StoryObj = {
           </Typography>
           <Table>
             <TableHead>
-              <TableRow hover>
+              <TableRow>
                 <TableCell style={{ width: '15%' }}>Status</TableCell>
                 <TableCell>Message</TableCell>
               </TableRow>
@@ -55,7 +55,7 @@ export const EventMessages: StoryObj = {
                 const message = statuses[status]?.(event);
 
                 return (
-                  <TableRow hover key={`status-${key}`}>
+                  <TableRow key={`status-${key}`}>
                     <TableCell>
                       <Chip label={status} />
                     </TableCell>

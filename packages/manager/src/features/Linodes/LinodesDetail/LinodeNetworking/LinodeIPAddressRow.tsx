@@ -15,7 +15,6 @@ import { usePreferences } from 'src/queries/profile/preferences';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 
 import type { IPAddress, IPRange } from '@linode/api-v4';
-import type { TableRowOwnProps } from '@mui/material';
 import type { IPv6 } from 'ipaddr.js';
 import type { IPDisplay } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 
@@ -28,7 +27,6 @@ export interface IPAddressRowHandlers {
 }
 
 interface LinodeIPAddressRowProps extends IPAddressRowHandlers, IPDisplay {
-  hover?: TableRowOwnProps['hover'];
   isVPCOnlyLinode: boolean;
   linodeId: number;
   readOnly: boolean;
@@ -43,7 +41,6 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     handleOpenEditRDNS,
     handleOpenEditRDNSForRange,
     handleOpenIPV6Details,
-    hover,
     isVPCOnlyLinode,
     linodeId,
     openRemoveIPDialog,
@@ -64,7 +61,6 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     <StyledTableRow
       data-qa-ip={address}
       disabled={isVPCOnlyLinode}
-      hover={hover}
       key={`${address}-${type}`}
     >
       <TableCell data-qa-ip-address sx={{ whiteSpace: 'nowrap' }}>

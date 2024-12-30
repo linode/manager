@@ -12,16 +12,14 @@ import {
 } from 'src/utilities/pricing/constants';
 
 import type { Linode, PriceObject } from '@linode/api-v4';
-import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
   error?: string;
-  hover?: TableRowOwnProps['hover'];
   linode: Linode;
 }
 
 export const BackupLinodeRow = (props: Props) => {
-  const { error, hover, linode } = props;
+  const { error, linode } = props;
   const { data: type } = useTypeQuery(linode.type ?? '', Boolean(linode.type));
   const { data: regions } = useRegionsQuery();
 
@@ -39,7 +37,7 @@ export const BackupLinodeRow = (props: Props) => {
     backupsMonthlyPrice === null || backupsMonthlyPrice === undefined;
 
   return (
-    <TableRow hover={hover} key={`backup-linode-${linode.id}`}>
+    <TableRow key={`backup-linode-${linode.id}`}>
       <TableCell>
         <Typography variant="body1">{linode.label}</Typography>
         {error && (

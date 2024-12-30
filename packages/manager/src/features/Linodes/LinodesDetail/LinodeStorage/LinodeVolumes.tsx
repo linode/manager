@@ -162,7 +162,6 @@ export const LinodeVolumes = () => {
             isBlockStorageEncryptionFeatureEnabled={
               isBlockStorageEncryptionFeatureEnabled
             }
-            hover
             isDetailsPageRow
             key={volume.id}
             linodeCapabilities={linode?.capabilities}

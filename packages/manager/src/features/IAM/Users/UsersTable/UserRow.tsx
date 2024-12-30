@@ -15,15 +15,13 @@ import { capitalize } from 'src/utilities/capitalize';
 import { UsersActionMenu } from './UsersActionMenu';
 
 import type { User } from '@linode/api-v4';
-import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
-  hover?: TableRowOwnProps['hover'];
   onDelete: (username: string) => void;
   user: User;
 }
 
-export const UserRow = ({ hover, onDelete, user }: Props) => {
+export const UserRow = ({ onDelete, user }: Props) => {
   const theme = useTheme();
 
   const { data: profile } = useProfile();
@@ -31,11 +29,7 @@ export const UserRow = ({ hover, onDelete, user }: Props) => {
   const isProxyUser = Boolean(user.user_type === 'proxy');
 
   return (
-    <TableRow
-      data-qa-table-row={user.username}
-      hover={hover}
-      key={user.username}
-    >
+    <TableRow data-qa-table-row={user.username} key={user.username}>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1.5}>
           <Avatar

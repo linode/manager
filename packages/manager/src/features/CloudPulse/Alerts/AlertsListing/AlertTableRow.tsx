@@ -11,7 +11,6 @@ import { AlertActionMenu } from './AlertActionMenu';
 
 import type { ActionHandlers } from './AlertActionMenu';
 import type { Alert } from '@linode/api-v4';
-import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
   /**
@@ -22,15 +21,14 @@ interface Props {
    * The callback handlers for clicking an action menu item like Show Details, Delete, etc.
    */
   handlers: ActionHandlers;
-  hover?: TableRowOwnProps['hover'];
 }
 
 export const AlertTableRow = (props: Props) => {
-  const { alert, handlers, hover } = props;
+  const { alert, handlers } = props;
   const { created_by, id, label, service_type, status, type, updated } = alert;
   const theme = useTheme();
   return (
-    <TableRow data-qa-alert-cell={id} hover={hover} key={`alert-row-${id}`}>
+    <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>{label}</TableCell>
       <TableCell>{service_type}</TableCell>
       <TableCell>

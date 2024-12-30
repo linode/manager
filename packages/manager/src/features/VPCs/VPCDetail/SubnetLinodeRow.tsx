@@ -28,13 +28,11 @@ import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 import type { APIError, Firewall, Linode } from '@linode/api-v4';
 import type { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
-import type { TableRowOwnProps } from '@mui/material';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
   handlePowerActionsLinode: (linode: Linode, action: Action) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
-  hover?: TableRowOwnProps['hover'];
   linodeId: number;
   subnet?: Subnet;
   subnetId: number;
@@ -44,7 +42,6 @@ export const SubnetLinodeRow = (props: Props) => {
   const {
     handlePowerActionsLinode,
     handleUnassignLinode,
-    hover,
     linodeId,
     subnet,
     subnetId,
@@ -144,7 +141,7 @@ export const SubnetLinodeRow = (props: Props) => {
   const showPowerButton = !isRebootNeeded && (isRunning || isOffline);
 
   return (
-    <TableRow hover={hover}>
+    <TableRow>
       <TableCell component="th" scope="row">
         {labelCell}
       </TableCell>

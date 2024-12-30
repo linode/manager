@@ -41,7 +41,6 @@ export const ListView = (props: RenderLinodesProps) => {
           capabilities={linode.capabilities}
           created={linode.created}
           group={linode.group}
-          hover
           hypervisor={linode.hypervisor}
           id={linode.id}
           image={linode.image}

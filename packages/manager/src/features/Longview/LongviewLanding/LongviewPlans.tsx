@@ -31,7 +31,6 @@ import {
 
 import type { LongviewSubscription } from '@linode/api-v4/lib/longview';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { TableRowOwnProps } from '@mui/material';
 import type { UseAPIRequest } from 'src/hooks/useAPIRequest';
 
 // If an account has the "free" Longview plan,
@@ -283,7 +282,6 @@ export const LongviewPlansTableBody = React.memo(
           clients={10}
           dataResolution="Every 5 minutes"
           dataRetention="Limited to 12 hours"
-          hover
           id={LONGVIEW_FREE_ID}
           isSelected={selectedSub === LONGVIEW_FREE_ID}
           key={LONGVIEW_FREE_ID}
@@ -298,7 +296,6 @@ export const LongviewPlansTableBody = React.memo(
             clients={sub.clients_included}
             dataResolution="Every minute"
             dataRetention="Unlimited"
-            hover
             id={sub.id}
             isSelected={selectedSub === sub.id}
             key={sub.id}
@@ -321,7 +318,6 @@ export interface LongviewSubscriptionRowProps {
   dataResolution: string;
   dataRetention: string;
   disabled: boolean;
-  hover?: TableRowOwnProps['hover'];
   id: string;
   isSelected: boolean;
   onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
@@ -338,7 +334,6 @@ export const LongviewSubscriptionRow = React.memo(
       dataResolution,
       dataRetention,
       disabled,
-      hover,
       id,
       isSelected,
       onRadioSelect,
@@ -360,7 +355,6 @@ export const LongviewSubscriptionRow = React.memo(
       <StyledTableRow
         data-testid={`lv-sub-table-row-${id}`}
         disabled={disabled}
-        hover={hover}
         key={id}
         onClick={handleClick}
       >

@@ -621,7 +621,6 @@ export const ImagesLanding = () => {
               <ImageRow
                 event={automaticImagesEvents[automaticImage.id]}
                 handlers={handlers}
-                hover
                 image={automaticImage}
                 key={automaticImage.id}
               />

@@ -134,7 +134,6 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             {stackscript && (
               <StackScriptSelectionRow
                 disabled
-                hover
                 isSelected={field.value === stackscript.id}
                 onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
                 stackscript={stackscript}
@@ -247,7 +246,6 @@ export const StackScriptSelectionList = ({ type }: Props) => {
                   );
                 }
               }}
-              hover
               isSelected={field.value === stackscript.id}
               key={stackscript.id}
               onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}

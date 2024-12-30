@@ -278,12 +278,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         </TableHead>
         <TableBody>
           {domains?.data.map((domain: Domain) => (
-            <DomainTableRow
-              domain={domain}
-              hover
-              key={domain.id}
-              {...handlers}
-            />
+            <DomainTableRow domain={domain} key={domain.id} {...handlers} />
           ))}
         </TableBody>
       </Table>

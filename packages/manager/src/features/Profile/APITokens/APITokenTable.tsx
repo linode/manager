@@ -135,7 +135,7 @@ export const APITokenTable = (props: Props) => {
 
   const renderRows = (tokens: Token[]) => {
     return tokens.map((token: Token) => (
-      <TableRow data-qa-table-row={token.label} hover key={token.id}>
+      <TableRow data-qa-table-row={token.label} key={token.id}>
         <TableCell data-qa-token-label>{token.label}</TableCell>
         <TableCell>
           <Typography data-qa-token-created variant="body1">
@@ -247,7 +247,6 @@ export const APITokenTable = (props: Props) => {
         pageSize={pagination.pageSize}
       />
       <CreateAPITokenDrawer
-        hover
         onClose={() => setIsCreateOpen(false)}
         open={isCreateOpen}
         showSecret={showSecret}

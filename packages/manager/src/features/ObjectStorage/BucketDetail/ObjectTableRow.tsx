@@ -11,15 +11,12 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import ObjectActionMenu from './ObjectActionMenu';
 
-import type { TableRowOwnProps } from '@mui/material';
-
 interface Props {
   displayName: string;
   fullName: string;
   handleClickDelete: (objectName: string) => void;
   handleClickDetails: () => void;
   handleClickDownload: (objectName: string, newTab: boolean) => void;
-  hover?: TableRowOwnProps['hover'];
   objectLastModified: string;
   objectSize: number;
 }
@@ -30,13 +27,12 @@ export const ObjectTableRow = (props: Props) => {
     handleClickDelete,
     handleClickDetails,
     handleClickDownload,
-    hover,
     objectLastModified,
     objectSize,
   } = props;
 
   return (
-    <TableRow hover={hover}>
+    <TableRow>
       <TableCell>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <Grid className="py0">

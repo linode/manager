@@ -14,11 +14,9 @@ import { capitalize } from 'src/utilities/capitalize';
 import { NodeBalancerFirewallsActionMenu } from './NodeBalancerFirewallsActionMenu';
 
 import type { Firewall, FirewallDevice } from '@linode/api-v4';
-import type { TableRowOwnProps } from '@mui/material';
 
 interface Props {
   firewall: Firewall;
-  hover?: TableRowOwnProps['hover'];
   nodeBalancerID: number;
   onClickUnassign: (
     device: FirewallDevice | undefined,
@@ -27,7 +25,7 @@ interface Props {
 }
 
 export const NodeBalancerFirewallsRow = (props: Props) => {
-  const { firewall, hover, nodeBalancerID, onClickUnassign } = props;
+  const { firewall, nodeBalancerID, onClickUnassign } = props;
 
   const { id: firewallID, label, rules, status } = firewall;
 
@@ -42,11 +40,7 @@ export const NodeBalancerFirewallsRow = (props: Props) => {
   const count = getCountOfRules(rules);
 
   return (
-    <TableRow
-      data-qa-linode-firewall-row
-      hover={hover}
-      key={`firewall-${firewallID}`}
-    >
+    <TableRow data-qa-linode-firewall-row key={`firewall-${firewallID}`}>
       <TableCell data-qa-firewall-label>
         <Link tabIndex={0} to={`/firewalls/${firewallID}`}>
           {label}

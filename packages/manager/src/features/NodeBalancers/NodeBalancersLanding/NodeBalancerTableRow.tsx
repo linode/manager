@@ -13,15 +13,13 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
 
 import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import type { TableRowOwnProps } from '@mui/material';
 
 interface Props extends NodeBalancer {
-  hover?: TableRowOwnProps['hover'];
   onDelete: () => void;
 }
 
 export const NodeBalancerTableRow = (props: Props) => {
-  const { hover, id, ipv4, label, onDelete, region, transfer } = props;
+  const { id, ipv4, label, onDelete, region, transfer } = props;
 
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
 
@@ -33,7 +31,7 @@ export const NodeBalancerTableRow = (props: Props) => {
     0;
 
   return (
-    <TableRow hover={hover} key={id}>
+    <TableRow key={id}>
       <TableCell>
         <Link tabIndex={0} to={`/nodebalancers/${id}`}>
           {label}

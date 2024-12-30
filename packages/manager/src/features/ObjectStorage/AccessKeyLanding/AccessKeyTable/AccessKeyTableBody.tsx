@@ -68,7 +68,6 @@ export const AccessKeyTableBody = (props: Props) => {
 
   return data?.map((key) => (
     <AccessKeyTableRow
-      hover
       key={key.id}
       openDrawer={openDrawer}
       openRevokeDialog={openRevokeDialog}

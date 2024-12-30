@@ -116,7 +116,6 @@ export const NodeTable = React.memo((props: Props) => {
                     {paginatedAndOrderedData.map((eachRow) => {
                       return (
                         <_NodeRow
-                          hover
                           instanceId={eachRow.instanceId}
                           instanceStatus={eachRow.instanceStatus}
                           ip={eachRow.ip}

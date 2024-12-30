@@ -137,7 +137,6 @@ export const LinodeBackups = () => {
                     disabled={doesNotHavePermission}
                     handleDeploy={() => handleDeploy(backup)}
                     handleRestore={() => onRestoreBackup(backup)}
-                    hover
                     key={idx}
                   />
                 ))}

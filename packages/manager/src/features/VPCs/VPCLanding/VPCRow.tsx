@@ -11,21 +11,13 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
-import type { TableRowOwnProps } from '@mui/material';
-
 interface Props {
   handleDeleteVPC: () => void;
   handleEditVPC: () => void;
-  hover?: TableRowOwnProps['hover'];
   vpc: VPC;
 }
 
-export const VPCRow = ({
-  handleDeleteVPC,
-  handleEditVPC,
-  hover,
-  vpc,
-}: Props) => {
+export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
   const { id, label, subnets } = vpc;
   const { data: regions } = useRegionsQuery();
 
@@ -69,7 +61,7 @@ export const VPCRow = ({
   ];
 
   return (
-    <TableRow data-qa-vpc-id={id} hover={hover} key={`vpc-row-${id}`}>
+    <TableRow data-qa-vpc-id={id} key={`vpc-row-${id}`}>
       <TableCell>
         <Link to={`/vpcs/${id}`}>{label}</Link>
       </TableCell>
