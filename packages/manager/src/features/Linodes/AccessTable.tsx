@@ -16,7 +16,6 @@ import {
   StyledTableRow,
 } from './LinodeEntityDetail.styles';
 
-import type { TableRowOwnProps } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { MaskableTextLength } from 'src/components/MaskableText/MaskableText';
 
@@ -33,7 +32,6 @@ interface AccessTableProps {
     lg: number;
     xs: number;
   };
-  hover?: TableRowOwnProps['hover'];
   isVPCOnlyLinode: boolean;
   rows: AccessTableRow[];
   sx?: SxProps<Theme>;
@@ -41,7 +39,7 @@ interface AccessTableProps {
 }
 
 export const AccessTable = React.memo((props: AccessTableProps) => {
-  const { footer, gridSize, hover, isVPCOnlyLinode, rows, sx, title } = props;
+  const { footer, gridSize, isVPCOnlyLinode, rows, sx, title } = props;
 
   const isDisabled = isVPCOnlyLinode && title.includes('Public IP Address');
 
@@ -55,11 +53,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
           <TableBody>
             {rows.map((thisRow) => {
               return thisRow.text ? (
-                <StyledTableRow
-                  disabled={isDisabled}
-                  hover={hover}
-                  key={thisRow.text}
-                >
+                <StyledTableRow disabled={isDisabled} key={thisRow.text}>
                   {thisRow.heading ? (
                     <TableCell component="th" scope="row">
                       {thisRow.heading}

@@ -79,9 +79,9 @@ export const LimitedAccessControls = React.memo((props: Props) => {
         create.
       </Typography>
       {isObjMultiClusterEnabled ? (
-        <BucketPermissionsTable checked={checked} hover {...rest} />
+        <BucketPermissionsTable checked={checked} {...rest} />
       ) : (
-        <AccessTable checked={checked} hover {...rest} />
+        <AccessTable checked={checked} {...rest} />
       )}
     </>
   );

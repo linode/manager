@@ -70,7 +70,6 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
             database={database}
             description={description}
             disabled={disabled}
-            hover
           />
         </>
       )}

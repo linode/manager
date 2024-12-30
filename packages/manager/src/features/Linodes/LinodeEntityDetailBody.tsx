@@ -225,7 +225,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 },
               ]}
               gridSize={{ lg: 5, xs: 12 }}
-              hover
               isVPCOnlyLinode={isVPCOnlyLinode}
               sx={{ padding: 0 }}
               title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
@@ -248,7 +247,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 },
               ]}
               gridSize={{ lg: 7, xs: 12 }}
-              hover
               isVPCOnlyLinode={isVPCOnlyLinode}
               sx={{ padding: 0, pt: matchesLgUp ? 0 : 2 }}
               title="Access"

@@ -137,7 +137,6 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
             database={database}
             description={accessControlCopy}
             disabled={disabled}
-            hover
           />
           <DatabaseSettingsMenuItem
             buttonText="Reset Root Password"
