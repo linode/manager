@@ -1421,6 +1421,10 @@ export const lightTheme: ThemeOptions = {
           background: Table.HeaderFilled.Background,
         },
         root: {
+          // Prevent needing `hover={false}` on header TableRows
+          '&.MuiTableRow-head.MuiTableRow-hover:hover': {
+            backgroundColor: Table.HeaderFilled.Background,
+          },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
           '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
             backgroundColor: Table.Row.Background.Hover,

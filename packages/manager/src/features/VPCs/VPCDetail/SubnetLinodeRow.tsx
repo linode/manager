@@ -33,6 +33,7 @@ import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 interface Props {
   handlePowerActionsLinode: (linode: Linode, action: Action) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
+  hover?: boolean;
   linodeId: number;
   subnet?: Subnet;
   subnetId: number;
@@ -42,6 +43,7 @@ export const SubnetLinodeRow = (props: Props) => {
   const {
     handlePowerActionsLinode,
     handleUnassignLinode,
+    hover = false,
     linodeId,
     subnet,
     subnetId,
@@ -72,7 +74,7 @@ export const SubnetLinodeRow = (props: Props) => {
 
   if (linodeLoading || !linode) {
     return (
-      <TableRow>
+      <TableRow hover={hover}>
         <TableCell colSpan={6}>
           <CircleProgress size="sm" />
         </TableCell>
@@ -82,7 +84,7 @@ export const SubnetLinodeRow = (props: Props) => {
 
   if (linodeError) {
     return (
-      <TableRow data-testid="subnet-linode-row-error">
+      <TableRow data-testid="subnet-linode-row-error" hover={hover}>
         <TableCell colSpan={5} style={{ paddingLeft: 24 }}>
           <Box alignItems="center" display="flex">
             <ErrorOutline

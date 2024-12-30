@@ -17,7 +17,6 @@ import { ImageStatus } from './ImageStatus';
 
 import type { Handlers } from './ImagesActionMenu';
 import type { Event, Image, ImageCapabilities } from '@linode/api-v4';
-import type { TableRowOwnProps } from '@mui/material';
 
 const capabilityMap: Record<ImageCapabilities, string> = {
   'cloud-init': 'Cloud-init',
@@ -27,13 +26,12 @@ const capabilityMap: Record<ImageCapabilities, string> = {
 interface Props {
   event?: Event;
   handlers: Handlers;
-  hover?: TableRowOwnProps['hover'];
   image: Image;
   multiRegionsEnabled?: boolean; // TODO Image Service v2: delete after GA
 }
 
 export const ImageRow = (props: Props) => {
-  const { event, handlers, hover, image, multiRegionsEnabled } = props;
+  const { event, handlers, image, multiRegionsEnabled } = props;
 
   const {
     capabilities,
@@ -79,7 +77,7 @@ export const ImageRow = (props: Props) => {
   };
 
   return (
-    <TableRow data-qa-image-cell={id} hover={hover} key={id}>
+    <TableRow data-qa-image-cell={id} key={id}>
       <TableCell data-qa-image-label noWrap>
         {capabilities.includes('cloud-init') &&
         flags.imageServiceGen2 &&

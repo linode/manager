@@ -541,7 +541,6 @@ export const ImagesLanding = () => {
               <ImageRow
                 event={manualImagesEvents[manualImage.id]}
                 handlers={handlers}
-                hover
                 image={manualImage}
                 key={manualImage.id}
                 multiRegionsEnabled={multiRegionsEnabled}

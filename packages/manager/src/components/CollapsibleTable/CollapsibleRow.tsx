@@ -21,7 +21,7 @@ export const CollapsibleRow = (props: Props) => {
 
   return (
     <>
-      <TableRow hover>
+      <TableRow>
         <TableCell scope="row">
           <Box alignItems="center" display="flex">
             <IconButton
