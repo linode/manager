@@ -23,7 +23,10 @@ export const Footer = React.memo(() => {
           backgroundColor: theme.tokens.footer.Background,
           paddingX: theme.spacing(4),
           paddingY: theme.spacing(1.5),
-          textAlign: 'center',
+          textAlign: 'left',
+          [theme.breakpoints.down('sm')]: {
+            textAlign: 'center',
+          },
         })}
         alignItems="center"
         direction={{ sm: 'row', xs: 'column' }}
