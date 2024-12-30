@@ -139,7 +139,9 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
               </StyledSummaryTextTypography>
               <StyledSummaryTextTypography>
                 <span style={{ fontFamily: theme.font.bold }}>Used</span>{' '}
-                {database.used_disk_size_gb} GB
+                {database.used_disk_size_gb !== null
+                  ? `${database.used_disk_size_gb} GB`
+                  : 'N/A'}
               </StyledSummaryTextTypography>
             </>
           ) : (

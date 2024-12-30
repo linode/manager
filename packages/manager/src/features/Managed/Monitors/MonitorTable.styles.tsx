@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
 export const StyledGrid = styled(Grid, {
-  label: 'SyledGrid',
+  label: 'StyledGrid',
 })(({ theme }) => ({
   marginBottom: 5,
   [theme.breakpoints.down('md')]: {

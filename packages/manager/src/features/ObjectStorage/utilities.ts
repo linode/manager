@@ -5,6 +5,7 @@ import type {
   ACLType,
   ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage';
+import type { ObjectStorageEndpoint } from '@linode/api-v4/lib/object-storage';
 import type { FormikProps } from 'formik';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 
@@ -164,4 +165,36 @@ export const objectACLHelperText: Record<ACLType, string> = {
   private: 'Private ACL',
   'public-read': 'Public Read ACL',
   'public-read-write': 'Public Read/Write ACL',
+};
+
+// @TODO: OBJ Gen2: This should be removed once these regions obtain the `Object Storage` capability.
+export const WHITELISTED_REGIONS = new Set([
+  'gb-lon',
+  'au-mel',
+  'in-bom-2',
+  'de-fra-2',
+  'sg-sin-2',
+]);
+
+/**
+ * For OBJ Gen2 users, filter regions based on available Object Storage endpoints.
+ * Otherwise, we return the regions as is.
+ */
+export const filterRegionsByEndpoints = <T extends { id: string }>(
+  regions: T[] | undefined,
+  objecStorageEndpoints: ObjectStorageEndpoint[] | undefined
+): T[] => {
+  if (!regions) {
+    return [];
+  }
+
+  if (!objecStorageEndpoints) {
+    return regions;
+  }
+
+  const endpointRegions = new Set(
+    objecStorageEndpoints.map((endpoint) => endpoint.region)
+  );
+
+  return regions.filter((region) => endpointRegions.has(region.id));
 };
