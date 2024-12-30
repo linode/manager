@@ -90,6 +90,7 @@ module.exports = {
       files: [
         // for each new features added to the migration router, add its directory here
         'src/features/Betas/**/*',
+        'src/features/Domains/**/*',
         'src/features/Volumes/**/*',
       ],
       rules: {

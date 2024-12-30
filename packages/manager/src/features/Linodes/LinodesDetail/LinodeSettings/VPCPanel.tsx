@@ -83,7 +83,10 @@ export const VPCPanel = (props: VPCPanelProps) => {
     'VPCs'
   );
 
-  const { data: vpcsData, error, isLoading } = useAllVPCsQuery();
+  const { data: vpcsData, error, isLoading } = useAllVPCsQuery({
+    enabled: regionSupportsVPCs,
+    filter: { region },
+  });
 
   React.useEffect(() => {
     if (subnetError || vpcIPv4Error) {
@@ -99,12 +102,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
   }
 
   const vpcDropdownOptions: DropdownOption[] = React.useMemo(() => {
-    return vpcs.reduce((accumulator, vpc) => {
-      return vpc.region === region
-        ? [...accumulator, { label: vpc.label, value: vpc.id }]
-        : accumulator;
-    }, []);
-  }, [vpcs, region]);
+    return vpcs.map((vpc) => ({ label: vpc.label, value: vpc.id }));
+  }, [vpcs]);
 
   const defaultVPCValue = null;
 
