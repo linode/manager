@@ -2437,7 +2437,10 @@ export const handlers = [
           channel_type: 'email',
           content: {
             email: {
-              email_addresses: ['custom@mail.com', 'admin@email.com'],
+              email_addresses: [
+                'custom@mail.com',
+                'adminadminadminadminadminadminadminadminadminadminadminadminadmin@email.com',
+              ],
               message: 'Resources have breached the alert',
               subject: 'Default alert',
             },

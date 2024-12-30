@@ -17,8 +17,20 @@ import type { ChannelTypes, NotificationChannel } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
 interface AddNotificationChannelProps {
+  /**
+   * method to exit the Drawer on cancel
+   * @returns void
+   */
   onCancel: () => void;
+  /**
+   * method to add the notification id to the form context
+   * @param notificationId id of the Notification that is being submitted
+   * @returns void
+   */
   onSubmitAddNotification: (notificationId: number) => void;
+  /**
+   * notification template data fetched from the api
+   */
   templateData: NotificationChannel[];
 }
 
@@ -36,7 +48,7 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
     ),
   });
 
-  const { control, handleSubmit } = formMethods;
+  const { control, handleSubmit, setValue } = formMethods;
   const onSubmit = handleSubmit(() => {
     onSubmitAddNotification(selectedTemplate?.id ?? 0);
   });
@@ -73,13 +85,19 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
                 ? theme.tokens.color.Neutrals[5]
                 : theme.tokens.color.Neutrals.Black,
             borderRadius: 1,
+            overflow: 'auto',
             p: 2,
           })}
         >
           <Typography
+            sx={(theme) => ({
+              color:
+                theme.name === 'light'
+                  ? theme.tokens.color.Neutrals.Black
+                  : theme.tokens.color.Neutrals[5],
+            })}
             gutterBottom
-            sx={(theme) => ({ color: theme.color.black })}
-            variant="body2"
+            variant="h3"
           >
             Channel Settings
           </Typography>
@@ -91,26 +109,24 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
                   newValue: { label: string; value: ChannelTypes },
                   reason
                 ) => {
-                  if (reason === 'selectOption') {
-                    field.onChange(newValue?.value);
-                  }
-
-                  if (reason === 'clear') {
-                    field.onChange(null);
+                  field.onChange(
+                    reason === 'selectOption' ? newValue.value : null
+                  );
+                  if (reason !== 'selectOption') {
+                    setValue('label', null);
                   }
                 }}
                 value={
-                  field.value !== null
-                    ? ChannelTypeOptions.find(
-                        (option) => option.value === field.value
-                      )
-                    : null
+                  ChannelTypeOptions.find(
+                    (option) => option.value === field.value
+                  ) ?? null
                 }
                 data-testid="channel-type"
                 errorText={fieldState.error?.message}
                 label="Type"
                 onBlur={field.onBlur}
                 options={ChannelTypeOptions}
+                placeholder="Select a Type"
               />
             )}
             control={control}
@@ -120,43 +136,49 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
-                  onChange={(_, selected, reason) => {
-                    if (reason === 'selectOption') {
-                      field.onChange(selected?.value);
-                    }
-
-                    if (reason === 'clear') {
-                      field.onChange(null);
-                    }
+                  onChange={(
+                    _,
+                    selected: { label: string; value: string },
+                    reason
+                  ) => {
+                    field.onChange(
+                      reason === 'selectOption' ? selected.value : null
+                    );
                   }}
                   value={
-                    field.value !== null
-                      ? templateOptions.find(
-                          (option) => option.value === field.value
-                        )
-                      : null
+                    templateOptions.find(
+                      (option) => option.value === field.value
+                    ) ?? null
                   }
                   data-testid="channel-label"
-                  disabled={selectedTypeTemplate === null}
+                  disabled={!selectedTypeTemplate}
                   errorText={fieldState.error?.message}
                   key={channelTypeWatcher}
                   label="Channel"
                   onBlur={field.onBlur}
                   options={templateOptions}
+                  placeholder="Select a Channel"
                 />
               )}
               control={control}
               name="label"
             />
           </Box>
-
-          {selectedTemplate && (
+          {/* This is not the complete end solution, this is to satsify the current requirements of email type channels and the default email notification channel */}
+          {selectedTemplate && selectedTemplate.channel_type === 'email' && (
             <Box paddingTop={2}>
               <Grid container>
-                <Grid item md={2}>
+                <Grid item md={1} sm={1} xs={2}>
                   <Typography variant="h3">To:</Typography>
                 </Grid>
-                <Grid item md={10}>
+                <Grid
+                  item
+                  md="auto"
+                  overflow="auto"
+                  paddingRight={1}
+                  sm="auto"
+                  xs="auto"
+                >
                   <RenderChannelDetails template={selectedTemplate} />
                 </Grid>
               </Grid>

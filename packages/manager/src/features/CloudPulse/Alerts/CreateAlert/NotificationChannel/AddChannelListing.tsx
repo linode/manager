@@ -2,6 +2,9 @@ import { Box, Button, Stack, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
+import { capitalize } from 'src/utilities/capitalize';
+
+import { ChannelTypeOptions } from '../../constants';
 import { ClearIconButton } from '../Criteria/ClearIconButton';
 import { RenderChannelDetails } from './RenderChannelDetails';
 
@@ -48,10 +51,11 @@ export const AddChannelListing = (props: ChannelListProps) => {
                 sx={(theme) => ({
                   backgroundColor:
                     theme.name === 'light'
-                      ? theme.color.grey5
-                      : theme.color.grey9,
+                      ? theme.tokens.color.Neutrals[5]
+                      : theme.tokens.color.Neutrals.Black,
                   borderRadius: 1,
-                  p: 1,
+                  overflow: 'auto',
+                  paddingBottom: 2,
                 })}
                 data-testid={`Notification-channel-${id}`}
                 key={id}
@@ -61,28 +65,37 @@ export const AddChannelListing = (props: ChannelListProps) => {
                     alignItems: 'center',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    p: 2,
+                    paddingBottom: 1,
+                    paddingLeft: 2,
+                    paddingRight: 2,
+                    paddingTop: 2,
                     width: '100%',
                   }}
                 >
-                  <Typography variant="h3"> {notification.label}</Typography>
+                  <Typography alignItems="flex-end" variant="h3">
+                    {capitalize(notification.label)}
+                  </Typography>
                   <ClearIconButton handleClick={() => handleRemove(id)} />
                 </Box>
                 <Grid container paddingLeft={2}>
-                  <Grid item md={1} paddingBottom={1}>
+                  <Grid alignItems="center" container item md={1} sm={1} xs={2}>
                     <Typography variant="h3">Type:</Typography>
                   </Grid>
-                  <Grid item md={11}>
-                    <Typography variant="subtitle2">
-                      {notification.channel_type}
+                  <Grid container item md="auto" sm="auto" xs={2}>
+                    <Typography alignItems="center" variant="subtitle2">
+                      {
+                        ChannelTypeOptions.find(
+                          (option) => option.value === notification.channel_type
+                        )?.label
+                      }
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid container paddingLeft={2}>
-                  <Grid alignContent="center" item md={1}>
+                  <Grid alignContent="center" item md={1} sm={1} xs={2}>
                     <Typography variant="h3">To:</Typography>
                   </Grid>
-                  <Grid item md={11}>
+                  <Grid item md="auto" paddingRight={1} sm="auto" xs="auto">
                     {notification && (
                       <RenderChannelDetails template={notification} />
                     )}

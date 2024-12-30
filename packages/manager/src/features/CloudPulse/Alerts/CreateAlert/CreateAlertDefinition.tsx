@@ -7,7 +7,11 @@ import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { useCreateAlertDefinition, useNotificationChannels } from 'src/queries/cloudpulse/alerts';
+import { Drawer } from 'src/components/Drawer';
+import {
+  useCreateAlertDefinition,
+  useNotificationChannels,
+} from 'src/queries/cloudpulse/alerts';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -15,15 +19,17 @@ import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
 import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
+import { AddChannelListing } from './NotificationChannel/AddChannelListing';
+import { AddNotificationChannel } from './NotificationChannel/AddNotificationChannel';
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
-import type { NotificationChannel, TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
+import type {
+  NotificationChannel,
+  TriggerCondition,
+} from '@linode/api-v4/lib/cloudpulse/types';
 import type { ObjectSchema } from 'yup';
-import { AddChannelListing } from './NotificationChannel/AddChannelListing';
-import { AddNotificationChannel } from './NotificationChannel/AddNotificationChannel';
-import { Drawer } from 'src/components/Drawer';
 
 const triggerConditionInitialValues: TriggerCondition = {
   criteria_condition: 'ALL',
@@ -77,7 +83,14 @@ export const CreateAlertDefinition = () => {
     ),
   });
 
-  const { control, formState, getValues, handleSubmit, setError, setValue } = formMethods;
+  const {
+    control,
+    formState,
+    getValues,
+    handleSubmit,
+    setError,
+    setValue,
+  } = formMethods;
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
     getValues('serviceType')!
@@ -129,7 +142,7 @@ export const CreateAlertDefinition = () => {
     setOpenAddNotification(false);
   };
 
-  const getNotifications = React.useMemo(() => {
+  const notifications = React.useMemo(() => {
     return (
       notificationData?.data.filter(
         (notification) => !notificationChannelWatcher.includes(notification.id)
@@ -137,11 +150,18 @@ export const CreateAlertDefinition = () => {
     );
   }, [notificationChannelWatcher, notificationData]);
 
-  const getSelectedNotifications = React.useMemo(() => {
+  const selectedNotifications = React.useMemo(() => {
+    // return (
+    //   notificationData?.data.filter((notification) =>
+    //     notificationChannelWatcher.includes(notification.id)
+    //   ) ?? []
+    // );
     return (
-      notificationData?.data.filter((notification) =>
-        notificationChannelWatcher.includes(notification.id)
-      ) ?? []
+      notificationChannelWatcher
+        .map((id) =>
+          notificationData?.data.find((notification) => notification.id === id)
+        )
+        .filter((notification) => notification !== undefined) ?? []
     );
   }, [notificationChannelWatcher, notificationData]);
   return (
@@ -204,10 +224,11 @@ export const CreateAlertDefinition = () => {
           {/* This is just being displayed to pass the typecheck-manager test. In the next PR maxScrapeInterval will be used by another component */}
           {maxScrapeInterval}
           <AddChannelListing
-            notifications={getSelectedNotifications}
+            notifications={selectedNotifications}
             onChangeNotifications={onChangeNotifications}
             onClickAddNotification={() => setOpenAddNotification(true)}
           />
+
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
@@ -229,7 +250,7 @@ export const CreateAlertDefinition = () => {
               <AddNotificationChannel
                 onCancel={() => setOpenAddNotification(false)}
                 onSubmitAddNotification={onSubmitAddNotification}
-                templateData={getNotifications}
+                templateData={notifications}
               />
             </Drawer>
           )}
