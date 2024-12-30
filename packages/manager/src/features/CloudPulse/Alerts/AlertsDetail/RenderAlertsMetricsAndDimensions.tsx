@@ -6,14 +6,14 @@ import NullComponent from 'src/components/NullComponent';
 import { aggregationTypes, operators } from '../constants';
 import { DisplayAlertChips } from './AlertDetailChips';
 
-import type { MetricCriteria } from '@linode/api-v4';
+import type { AlertDefinitionMetricCriteria } from '@linode/api-v4';
 
 interface AlertMetricAndDimensionsProp {
   /*
    * The rule criteria associated with the alert for which the dimension filters are needed to be displayed
    */
   ruleCriteria: {
-    rules: MetricCriteria[];
+    rules: AlertDefinitionMetricCriteria[];
   };
 }
 
@@ -30,9 +30,10 @@ export const RenderAlertMetricsAndDimensions = React.memo(
         {
           aggregation_type: aggregationType,
           dimension_filters: dimensionFilters,
-          metric: label,
+          label,
           operator,
           threshold,
+          unit,
         },
         idx
       ) => (
@@ -46,6 +47,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                 label,
                 operator ? operators[operator] : operator,
                 String(threshold),
+                unit,
               ]}
               isJoin
               label="Metric Threshold"
