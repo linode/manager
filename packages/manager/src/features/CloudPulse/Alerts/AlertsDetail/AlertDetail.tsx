@@ -1,11 +1,16 @@
 import { Box, CircleProgress } from '@linode/ui';
-import { useTheme } from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
+import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
+
+import { getAlertBoxStyles } from '../Utils/utils';
+import { AlertDetailOverview } from './AlertDetailOverview';
 
 interface RouteParams {
   /**
@@ -21,7 +26,7 @@ interface RouteParams {
 export const AlertDetail = () => {
   const { alertId, serviceType } = useParams<RouteParams>();
 
-  const { isError, isFetching } = useAlertDefinitionQuery(
+  const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
     Number(alertId),
     serviceType
   );
@@ -65,6 +70,50 @@ export const AlertDetail = () => {
       </>
     );
   }
+
+  if (!alertDetails) {
+    return (
+      <>
+        <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
+        <Box alignContent="center" height={theme.spacing(75)}>
+          <StyledPlaceholder
+            icon={AlertsIcon}
+            isEntity
+            title="No Data to display."
+          />
+        </Box>
+      </>
+    );
+  }
   // TODO: The overview, criteria, resources details for alerts will be added by consuming the results of useAlertDefinitionQuery call in the coming PR's
-  return <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />;
+  return (
+    <React.Fragment>
+      <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
+      <Box display="flex" flexDirection="column" gap={2}>
+        <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
+          <Box
+            flexBasis="100%"
+            maxHeight={theme.spacing(98.125)}
+            sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
+          >
+            <AlertDetailOverview alert={alertDetails} />
+          </Box>
+        </Box>
+      </Box>
+    </React.Fragment>
+  );
 };
+
+export const StyledPlaceholder = styled(Placeholder, {
+  label: 'StyledPlaceholder',
+})(({ theme }) => ({
+  h1: {
+    fontSize: theme.spacing(2.5),
+  },
+  h2: {
+    fontSize: theme.spacing(2),
+  },
+  svg: {
+    maxHeight: theme.spacing(10.5),
+  },
+}));

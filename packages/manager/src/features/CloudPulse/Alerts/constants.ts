@@ -71,3 +71,10 @@ export const MetricAggregationOptions: Item<string, MetricAggregationType>[] = [
     value: 'sum',
   },
 ];
+
+export const severityMap = {
+  0: 'Severe',
+  1: 'Medium',
+  2: 'Low',
+  3: 'Info',
+};
