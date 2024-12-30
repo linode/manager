@@ -47,7 +47,7 @@ describe('Channel Listing component', () => {
       ),
     });
     expect(container.getByText('3. Notification Channels')).toBeVisible();
-    expect(container.getByText('default')).toBeVisible();
+    expect(container.getByText('Default')).toBeVisible();
     expect(container.getByText('default@mail.com')).toBeInTheDocument();
     expect(container.getByText('admin@mail.com')).toBeInTheDocument();
   });

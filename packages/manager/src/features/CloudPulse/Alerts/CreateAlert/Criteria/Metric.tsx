@@ -13,8 +13,8 @@ import { ClearIconButton } from './ClearIconButton';
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from '../types';
 import type {
-  MetricDefinition,
   MetricAggregationType,
+  MetricDefinition,
   MetricOperatorType,
 } from '@linode/api-v4';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -69,10 +69,14 @@ export const Metric = (props: MetricCriteriaProps) => {
       threshold: 0,
     };
     if (operation === 'selectOption') {
-      setValue(name, {
-        ...fieldValue,
-        metric: selected.value,
-      });
+      setValue(
+        name,
+        {
+          ...fieldValue,
+          metric: selected.value,
+        },
+        { shouldValidate: true }
+      );
     }
     if (operation === 'clear') {
       setValue(name, fieldValue);
@@ -113,7 +117,8 @@ export const Metric = (props: MetricCriteriaProps) => {
     <Box
       sx={(theme) => ({
         backgroundColor:
-          theme.name === 'light' ? theme.tokens.color.Neutrals[5]
+          theme.name === 'light'
+            ? theme.tokens.color.Neutrals[5]
             : theme.tokens.color.Neutrals.Black,
         borderRadius: 1,
         p: 2,
