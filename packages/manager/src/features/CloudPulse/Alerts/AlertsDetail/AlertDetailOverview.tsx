@@ -62,7 +62,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
         />
         <AlertDetailRow label="Created By" value={createdBy} />
         <AlertDetailRow
-          value={formatDate(updated, {
+          value={formatDate(new Date(updated).toISOString(), {
             format: 'MMM dd, yyyy, h:mm a',
           })}
           label="Last Modified"
