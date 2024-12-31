@@ -51,10 +51,13 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   const handleTimeRangeChange = React.useCallback(
     (timeDuration: TimeDurationDate, savePref: boolean = false) => {
-      // if (savePref) {
-      //   updatePreferences({ [TIME_DURATION]: timeDurationValue });
-      // }
-      handleTimeDurationChange(timeDuration);
+      if (savePref) {
+        updatePreferences({ [TIME_DURATION]: timeDuration });
+      }
+      handleTimeDurationChange({
+        end: timeDuration.end,
+        start: timeDuration.start,
+      });
     },
     []
   );
@@ -120,14 +123,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             sm={5}
             xs={12}
           >
-            {/* <CloudPulseTimeRangeSelect
+            <CloudPulseDateTimeRangePicker
               defaultValue={preferences?.timeDuration}
               handleStatsChange={handleTimeRangeChange}
-              label="Time Range"
               savePreferences
-            /> */}
-            <CloudPulseDateTimeRangePicker
-              handleStatsChange={handleTimeRangeChange}
             />
             <CloudPulseTooltip placement="bottom-end" title="Refresh">
               <IconButton
