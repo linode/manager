@@ -1,7 +1,11 @@
 import { BetaChip } from '@linode/ui';
 import * as React from 'react';
 
-import { StyledActiveLink, StyledPrimaryLinkBox } from './PrimaryNav.styles';
+import {
+  StyledActiveLink,
+  StyledChip,
+  StyledPrimaryLinkBox,
+} from './PrimaryNav.styles';
 
 import type { NavEntity } from './PrimaryNav';
 import type { CreateEntity } from 'src/features/TopMenu/CreateMenu/CreateMenu';
@@ -17,6 +21,7 @@ export interface PrimaryLink extends BaseNavLink {
   activeLinks?: Array<string>;
   betaChipClassName?: string;
   isBeta?: boolean;
+  label?: string;
   onClick?: (e: React.ChangeEvent<any>) => void;
 }
 
@@ -36,6 +41,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
     isActiveLink,
     isBeta,
     isCollapsed,
+    label,
     onClick,
   } = props;
 
@@ -54,8 +60,10 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
       isActiveLink={isActiveLink}
       isCollapsed={isCollapsed}
     >
+      <StyledChip isActiveLink={isActiveLink} label={label} size="small" />
       <StyledPrimaryLinkBox
         className="primaryNavLink"
+        isActiveLink={isActiveLink}
         isCollapsed={isCollapsed}
       >
         {display}

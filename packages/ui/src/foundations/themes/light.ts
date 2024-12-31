@@ -12,11 +12,14 @@ import {
   Elevation,
   Font,
   GlobalFooter,
+  GlobalHeader,
   Interaction,
   NotificationToast,
   Radius,
   Select,
+  SideNavigation,
   Spacing,
+  Table,
   Typography,
 } from '@linode/design-language-system';
 
@@ -230,6 +233,25 @@ const graphTransparency = '0.7';
 
 const spacing = 8;
 
+const MuiTableHeadSvgStyles = {
+  svg: {
+    path: {
+      fill: Color.Brand[60],
+    },
+  },
+};
+
+const MuiTableZebraHoverStyles = {
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+    background: Table.Row.Background.Hover,
+  },
+};
+
+const MuiTableZebraStyles = {
+  background: Table.Row.Background.Zebra,
+  ...MuiTableZebraHoverStyles,
+};
+
 export const lightTheme: ThemeOptions = {
   addCircleHoverEffect: {
     ...iconCircleHoverEffect,
@@ -312,8 +334,8 @@ export const lightTheme: ThemeOptions = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: bg.bgPaper,
-          color: primaryColors.text,
+          backgroundColor: GlobalHeader.Background,
+          color: GlobalHeader.Text.Default,
           position: 'relative',
         },
       },
@@ -789,6 +811,13 @@ export const lightTheme: ThemeOptions = {
           marginRight: 0,
         },
         root: {
+          '&.MuiIconButton-isActive': {
+            svg: {
+              path: {
+                fill: Color.Brand[60],
+              },
+            },
+          },
           '&:hover': {
             backgroundColor: 'transparent',
             color: primaryColors.main,
@@ -1293,83 +1322,153 @@ export const lightTheme: ThemeOptions = {
     MuiTable: {
       styleOverrides: {
         root: {
-          border: `1px solid ${borderColors.borderTable}`,
+          // Group by Tag
+          '&.MuiTable-groupByTag': {
+            '.MuiTableRow-root:last-child': {
+              '.MuiTableCell-root': {
+                borderBottom: 0,
+              },
+            },
+            border: 0,
+          },
+          // Zebra Striping
+          '&.MuiTable-zebra': {
+            // Linodes Group by Tag: First Row is the Title
+            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
+            // Default Striping
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
+          },
+          // Zebra Striping for Nested Tables
+          '&.MuiTable-zebra-nested': {
+            '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
+          },
+          // Collapsible Rows
+          '.MuiCollapse-root': {
+            borderBottom: `1px solid ${Border.Normal}`,
+          },
+          // Nested Tables
+          '.MuiTable-root': {
+            '.MuiTableCell-head': {
+              color: Table.HeaderOutlined.Text,
+            },
+            '.MuiTableRow-head, .MuiTableRow-head.MuiTableRow-hover:hover': {
+              background: Background.Neutralsubtle,
+            },
+            '.MuiTableRow-root:last-child': {
+              '.MuiTableCell-root': {
+                borderBottom: 0,
+              },
+            },
+            border: 0,
+          },
+          border: `1px solid ${Border.Normal}`,
           borderBottom: 0,
           borderCollapse: 'initial',
-          borderTop: 0,
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
-        body: {
-          fontSize: '.9rem',
-        },
         head: {
-          fontSize: '.9rem',
-          height: 40,
-          lineHeight: 1.1,
+          '&:last-of-type': {
+            borderRight: 'none',
+          },
+          // User Permissions Table
+          '.MuiFormControlLabel-label': {
+            color: Table.HeaderFilled.Text,
+          },
+          // Icons in TH (i.e.: Summary View, Group by Tag)
+          '.MuiIconButton-root': {
+            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
+            ':hover': {
+              color: Color.Brand[60],
+              ...MuiTableHeadSvgStyles,
+            },
+            svg: {
+              path: {
+                fill: Color.Neutrals.White,
+              },
+            },
+          },
+          borderBottom: 0,
+          color: Table.HeaderFilled.Text,
+          fontWeight: Font.FontWeight.Bold,
+          lineHeight: Font.LineHeight.Xxxs,
+          whiteSpace: 'noWrap',
         },
         root: {
-          borderBottom: `1px solid ${primaryColors.divider}`,
-          borderTop: `1px solid ${primaryColors.divider}`,
-          padding: `0 15px`,
+          '&.MuiTableCell-nested': {
+            border: 0,
+            height: 'inherit', // Override default height - hidden by default
+            padding: 0,
+          },
+          // Spacing for collapsible inner content
+          '.MuiCollapse-root': {
+            padding: Spacing[60],
+          },
+          borderBottom: `1px solid ${Table.Row.Border}`,
+          fontSize: Font.FontSize.Xs,
+          height: '40px',
+          lineHeight: Font.LineHeight.Xs,
+          padding: `0 ${Spacing[50]}`,
+        },
+        stickyHeader: {
+          // No idea where sticky cells are getting their background from
+          background: 'transparent',
         },
       },
     },
     MuiTableRow: {
       styleOverrides: {
         head: {
-          backgroundColor: Color.Neutrals[5],
-          height: 'auto',
-        },
-        hover: {
-          '& a': {
-            color: primaryColors.text,
-          },
-          '& a.secondaryLink': {
-            '&:hover': {
-              textDecoration: 'underline',
-            },
-            color: primaryColors.main,
-          },
-          cursor: 'pointer',
+          background: Table.HeaderFilled.Background,
         },
         root: {
-          '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[5],
+          // Prevent needing `hover={false}` on header TableRows
+          '&.MuiTableRow-head.MuiTableRow-hover:hover': {
+            backgroundColor: Table.HeaderFilled.Background,
           },
-          backfaceVisibility: 'hidden',
-          backgroundColor: primaryColors.white,
-          height: 40,
+          // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: Table.Row.Background.Hover,
+          },
+          // Disable hover for nested rows (VPC)
+          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover': {
+            backgroundColor: Table.Row.Background.Default,
+          },
+          '&.disabled-row .MuiTableCell-root': {
+            // TODO: Use design tokens in future when ready
+            backgroundColor: Interaction.Background.Disabled,
+            color: Content.Text.Primary.Disabled,
+          },
+          background: Table.Row.Background.Default,
           position: 'relative',
-          zIndex: 1,
         },
       },
     },
     MuiTableSortLabel: {
       styleOverrides: {
         icon: {
-          color: 'inherit !important',
-          marginTop: 2,
           opacity: 1,
         },
-        iconDirectionAsc: {
-          transform: 'rotate(0deg)',
-        },
-        iconDirectionDesc: {
-          transform: 'rotate(180deg)',
-        },
         root: {
-          '&:focus': {
-            outline: `1px dotted ${Color.Neutrals[60]}`,
+          '&.Mui-active': {
+            color: Table.HeaderFilled.Text,
           },
-          '&:hover': {
-            color: primaryColors.main,
+          ':hover, :focus': {
+            ...MuiTableHeadSvgStyles,
+            color: Color.Brand[60],
+            cursor: 'pointer',
           },
-          fontSize: '.9rem',
-          lineHeight: '1.1rem',
-          transition: 'color 225ms ease-in-out',
+          fontSize: Font.FontSize.Xs,
+          svg: {
+            height: '16px',
+            margin: `0 ${Spacing[20]}`,
+            path: {
+              fill: Table.HeaderFilled.Text,
+            },
+            width: '16px',
+          },
         },
       },
     },
@@ -1662,9 +1761,12 @@ export const lightTheme: ThemeOptions = {
     elevation: Elevation,
     font: Font,
     footer: GlobalFooter,
+    header: GlobalHeader,
     interaction: Interaction,
     radius: Radius,
+    sideNavigation: SideNavigation,
     spacing: Spacing,
+    table: Table,
     typography: Typography,
   },
   typography: {

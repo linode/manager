@@ -30,9 +30,12 @@ import type {
   ElevationTypes as ElevationTypesLight,
   FontTypes,
   GlobalFooterTypes,
+  GlobalHeaderTypes,
   InteractionTypes as InteractionTypesLight,
   RadiusTypes,
+  SideNavigationTypes as SideNavigationTypesLight,
   SpacingTypes,
+  TableTypes as TableTypesLight,
   TypographyTypes,
 } from '@linode/design-language-system';
 import type {
@@ -43,6 +46,8 @@ import type {
   ContentTypes as ContentTypesDark,
   ElevationTypes as ElevationTypesDark,
   InteractionTypes as InteractionTypesDark,
+  TableTypes as TableTypesDark,
+  SideNavigationTypes as SideNavigationTypesDark,
 } from '@linode/design-language-system/themes/dark';
 
 export type ThemeName = 'dark' | 'light';
@@ -54,6 +59,12 @@ type BorderTypes = MergeTypes<BorderTypesLight, BorderTypesDark>;
 type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
 type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
 type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
+type SideNavigationTypes = MergeTypes<
+  SideNavigationTypesLight,
+  SideNavigationTypesDark
+>;
+
+type TableTypes = MergeTypes<TableTypesLight, TableTypesDark>;
 
 type Fonts = typeof latoWeb;
 
@@ -113,8 +124,9 @@ declare module '@mui/material/styles/createTheme' {
       border: BorderTypes;
       color: ColorTypes;
       font: FontTypes;
-      spacing: SpacingTypes;
       footer: GlobalFooterTypes;
+      header: GlobalHeaderTypes;
+      spacing: SpacingTypes;
       // ----------------------------------------
       accent: AccentTypes;
       action: ActionTypes;
@@ -122,9 +134,11 @@ declare module '@mui/material/styles/createTheme' {
       borderRadius: BorderRadiusTypes;
       chart: ChartTypes;
       content: ContentTypes;
+      table: TableTypes;
       elevation: ElevationTypes;
       interaction: InteractionTypes;
       radius: RadiusTypes;
+      sideNavigation: SideNavigationTypes;
       typography: TypographyTypes;
     };
     visually: any;
@@ -152,6 +166,7 @@ declare module '@mui/material/styles/createTheme' {
       color?: ColorTypes;
       font?: FontTypes;
       footer?: GlobalFooterTypes;
+      header?: GlobalHeaderTypes;
       spacing?: SpacingTypes;
       // ----------------------------------------
       accent?: AccentTypes;
@@ -163,6 +178,8 @@ declare module '@mui/material/styles/createTheme' {
       elevation?: ElevationTypes;
       interaction?: InteractionTypes;
       radius?: RadiusTypes;
+      table?: TableTypes;
+      sideNavigation?: SideNavigationTypes;
       typography?: TypographyTypes;
     };
     visually?: any;
