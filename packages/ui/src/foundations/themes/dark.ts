@@ -12,6 +12,7 @@ import {
   Interaction,
   NotificationToast,
   Select,
+  SideNavigation,
   Table,
   TextField,
   Typography,
@@ -728,7 +729,7 @@ export const darkTheme: ThemeOptions = {
             // Linodes Group by Tag: First Row is the Title
             '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
             // Default Striping
-            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:nth-of-type(even)': MuiTableZebraStyles,
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
           },
           // Zebra Striping for Nested Tables
           '&.MuiTable-zebra-nested': {
@@ -740,10 +741,7 @@ export const darkTheme: ThemeOptions = {
           },
           // Nested Tables
           '.MuiTable-root': {
-            '.MuiTableCell-head': {
-              color: Table.HeaderOutlined.Text,
-            },
-            '.MuiTableRow-head': {
+            '.MuiTableRow-head, .MuiTableRow-head.MuiTableRow-hover:hover': {
               background: Background.Neutralsubtle,
             },
           },
@@ -784,12 +782,20 @@ export const darkTheme: ThemeOptions = {
           background: Table.HeaderFilled.Background,
         },
         root: {
+          // Prevent needing `hover={false}` on header TableRows
+          '&.MuiTableRow-head.MuiTableRow-hover:hover': {
+            backgroundColor: Table.HeaderFilled.Background,
+          },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
           '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
             backgroundColor: Table.Row.Background.Hover,
           },
+          // Disable hover for nested rows (VPC)
+          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover': {
+            backgroundColor: Table.Row.Background.Default,
+          },
           '&.disabled-row .MuiTableCell-root': {
-            // TODO: These may be right, but look into Table disabled tokens
+            // TODO: Use design tokens in future when ready
             backgroundColor: Interaction.Background.Disabled,
             color: Content.Text.Primary.Disabled,
           },
@@ -948,6 +954,7 @@ export const darkTheme: ThemeOptions = {
     content: Content,
     elevation: Elevation,
     interaction: Interaction,
+    sideNavigation: SideNavigation,
     table: Table,
     typography: Typography,
   },

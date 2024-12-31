@@ -298,9 +298,15 @@ export const MainContent = () => {
         <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
+              <TopMenu
+                isSideMenuOpen={!desktopMenuIsOpen}
+                openSideMenu={() => toggleMenu(true)}
+                username={username}
+              />
               <SideMenu
                 closeMenu={() => toggleMenu(false)}
                 collapse={desktopMenuIsOpen || false}
+                desktopMenuToggle={desktopMenuToggle}
                 open={menuIsOpen}
               />
               <div
@@ -311,12 +317,6 @@ export const MainContent = () => {
                 })}
               >
                 <MainContentBanner />
-                <TopMenu
-                  desktopMenuToggle={desktopMenuToggle}
-                  isSideMenuOpen={!desktopMenuIsOpen}
-                  openSideMenu={() => toggleMenu(true)}
-                  username={username}
-                />
                 <main
                   className={classes.cmrWrapper}
                   id="main-content"

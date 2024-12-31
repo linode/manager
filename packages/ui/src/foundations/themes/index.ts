@@ -29,8 +29,10 @@ import type {
   ContentTypes as ContentTypesLight,
   ElevationTypes as ElevationTypesLight,
   FontTypes,
+  GlobalFooterTypes,
   InteractionTypes as InteractionTypesLight,
   RadiusTypes,
+  SideNavigationTypes as SideNavigationTypesLight,
   SpacingTypes,
   TableTypes as TableTypesLight,
   TypographyTypes,
@@ -44,6 +46,7 @@ import type {
   ElevationTypes as ElevationTypesDark,
   InteractionTypes as InteractionTypesDark,
   TableTypes as TableTypesDark,
+  SideNavigationTypes as SideNavigationTypesDark,
 } from '@linode/design-language-system/themes/dark';
 
 export type ThemeName = 'dark' | 'light';
@@ -55,6 +58,10 @@ type BorderTypes = MergeTypes<BorderTypesLight, BorderTypesDark>;
 type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
 type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
 type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
+type SideNavigationTypes = MergeTypes<
+  SideNavigationTypesLight,
+  SideNavigationTypesDark
+>;
 
 type TableTypes = MergeTypes<TableTypesLight, TableTypesDark>;
 
@@ -116,8 +123,8 @@ declare module '@mui/material/styles/createTheme' {
       border: BorderTypes;
       color: ColorTypes;
       font: FontTypes;
-      spacing: SpacingTypes;
       footer: GlobalFooterTypes;
+      spacing: SpacingTypes;
       // ----------------------------------------
       accent: AccentTypes;
       action: ActionTypes;
@@ -129,6 +136,7 @@ declare module '@mui/material/styles/createTheme' {
       elevation: ElevationTypes;
       interaction: InteractionTypes;
       radius: RadiusTypes;
+      sideNavigation: SideNavigationTypes;
       typography: TypographyTypes;
     };
     visually: any;
@@ -167,7 +175,8 @@ declare module '@mui/material/styles/createTheme' {
       elevation?: ElevationTypes;
       interaction?: InteractionTypes;
       radius?: RadiusTypes;
-      table: TableTypes;
+      table?: TableTypes;
+      sideNavigation?: SideNavigationTypes;
       typography?: TypographyTypes;
     };
     visually?: any;
