@@ -1,8 +1,6 @@
 import { CircleProgress, Notice, Paper } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { matchPath } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -16,6 +14,7 @@ import withLongviewClients from 'src/containers/longview.container';
 import withClientStats from 'src/containers/longview.stats.container';
 import { get } from 'src/features/Longview/request';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { useTabs } from 'src/hooks/useTabs';
 import { useProfile } from 'src/queries/profile/profile';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
@@ -27,7 +26,6 @@ import { ProcessesLanding } from './DetailTabs/Processes/ProcessesLanding';
 import { StyledTabs } from './LongviewDetail.styles';
 
 import type { LongviewClient } from '@linode/api-v4/lib/longview';
-import type { RouteComponentProps } from 'react-router-dom';
 import type {
   DispatchProps,
   Props as LVProps,
@@ -53,10 +51,7 @@ const Overview = React.lazy(
 const Installation = React.lazy(() => import('./DetailTabs/Installation'));
 const Disks = React.lazy(() => import('./DetailTabs/Disks/Disks'));
 
-export type CombinedProps = RouteComponentProps<{ id: string }> &
-  Props &
-  LVDataProps &
-  DispatchProps;
+export type CombinedProps = Props & LVDataProps & DispatchProps;
 
 export const LongviewDetail = (props: CombinedProps) => {
   const {
@@ -111,59 +106,43 @@ export const LongviewDetail = (props: CombinedProps) => {
     [clientAPIKey, lastUpdated]
   );
 
-  const tabOptions = [
+  const { currentIndex, handleTabChange, tabs } = useTabs([
     {
-      display: true,
-      routeName: `${props.match.url}/overview`,
       title: 'Overview',
+      to: '/longview/clients/$id/overview',
     },
     {
-      display: true,
-      routeName: `${props.match.url}/processes`,
       title: 'Processes',
+      to: '/longview/clients/$id/processes',
     },
     {
-      display: true,
-      routeName: `${props.match.url}/network`,
       title: 'Network',
+      to: '/longview/clients/$id/network',
     },
     {
-      display: true,
-      routeName: `${props.match.url}/disks`,
       title: 'Disks',
+      to: '/longview/clients/$id/disks',
     },
     {
-      display: client && client.apps.apache,
-      routeName: `${props.match.url}/apache`,
+      hide: !client?.apps.apache,
       title: 'Apache',
+      to: '/longview/clients/$id/apache',
     },
     {
-      display: client && client.apps.nginx,
-      routeName: `${props.match.url}/nginx`,
+      hide: !client?.apps.nginx,
       title: 'Nginx',
+      to: '/longview/clients/$id/nginx',
     },
     {
-      display: client && client.apps.mysql,
-      routeName: `${props.match.url}/mysql`,
+      hide: !client?.apps.mysql,
       title: 'MySQL',
+      to: '/longview/clients/$id/mysql',
     },
     {
-      display: true,
-      routeName: `${props.match.url}/installation`,
       title: 'Installation',
+      to: '/longview/clients/$id/installation',
     },
-  ];
-
-  // Filtering out conditional tabs if they don't exist on client
-  const tabs = tabOptions.filter((tab) => tab.display === true);
-
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
-  };
+  ]);
 
   if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
     return (
@@ -194,16 +173,14 @@ export const LongviewDetail = (props: CombinedProps) => {
     return null;
   }
 
-  // Determining true tab count for indexing based on tab display
-  const displayedTabs = tabs.filter((tab) => tab.display === true);
-
   return (
     <React.Fragment>
       <LandingHeader
         breadcrumbProps={{
           firstAndLastOnly: true,
           labelOptions: { noCap: true },
-          pathname: props.location.pathname,
+          labelTitle: `longview${client?.id}`,
+          pathname: `/longview/clients/${client?.id}`,
         }}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
@@ -218,13 +195,7 @@ export const LongviewDetail = (props: CombinedProps) => {
           variant="warning"
         />
       ))}
-      <StyledTabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
+      <StyledTabs index={currentIndex} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
@@ -311,7 +282,7 @@ export const LongviewDetail = (props: CombinedProps) => {
               </SafeTabPanel>
             )}
 
-            <SafeTabPanel index={Number(displayedTabs.length - 1)}>
+            <SafeTabPanel index={tabs.length - 1}>
               <Installation
                 clientAPIKey={client.api_key}
                 clientInstallationKey={client.install_code}
@@ -326,10 +297,10 @@ export const LongviewDetail = (props: CombinedProps) => {
 
 const EnhancedLongviewDetail = compose<CombinedProps, {}>(
   React.memo,
-  withClientStats<RouteComponentProps<{ id: string }>>((ownProps) => {
+  withClientStats((ownProps) => {
     return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
   }),
-  withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
+  withLongviewClients<Props, any>(
     (
       own,
       {
@@ -353,17 +324,5 @@ const EnhancedLongviewDetail = compose<CombinedProps, {}>(
     }
   )
 )(LongviewDetail);
-
-export const longviewDetailLazyRoute = createLazyRoute('/longview/clients/$id')(
-  {
-    component: React.lazy(() =>
-      import('src/features/Longview/LongviewDetail/LongviewDetail').then(
-        () => ({
-          default: (props: any) => <EnhancedLongviewDetail {...props} />,
-        })
-      )
-    ),
-  }
-);
 
 export default EnhancedLongviewDetail;

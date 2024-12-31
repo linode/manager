@@ -142,7 +142,9 @@ export const LongviewClientHeader = enhanced(
           )}
         </StyledUpdatesGrid>
         <Grid>
-          <Link to={`/longview/clients/${clientID}`}>View Details</Link>
+          <Link to={`/longview/clients/${clientID}/overview`}>
+            View Details
+          </Link>
           {!loading && (
             <StyledDiv>
               <Typography sx={{ fontSize: '0.75rem' }} variant="caption">
