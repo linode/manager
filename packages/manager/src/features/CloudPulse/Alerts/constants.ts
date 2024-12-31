@@ -4,7 +4,7 @@ import type {
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
-import { Status } from 'src/components/StatusIcon/StatusIcon';
+import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 export interface Item<L extends string, T> {
   label: L;
@@ -74,7 +74,7 @@ export const MetricAggregationOptions: Item<string, MetricAggregationType>[] = [
   },
 ];
 
-export const severityMap = {
+export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',
   1: 'Medium',
   2: 'Low',
