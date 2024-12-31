@@ -141,7 +141,10 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
             {display === 'list' && (
               <>
                 {isGeckoLAEnabled && (
-                  <Paper sx={{ padding: 1 }}>
+                  <Paper
+                    sx={{ borderBottom: 0, padding: 1 }}
+                    variant="outlined"
+                  >
                     <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
                   </Paper>
                 )}
@@ -162,7 +165,10 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
               <>
                 <Grid className={'px0'} xs={12}>
                   {isGeckoLAEnabled && (
-                    <Paper sx={{ padding: 1 }}>
+                    <Paper
+                      sx={{ borderBottom: 0, padding: 1 }}
+                      variant="outlined"
+                    >
                       <RegionTypeFilter
                         handleRegionFilter={handleRegionFilter}
                       />
