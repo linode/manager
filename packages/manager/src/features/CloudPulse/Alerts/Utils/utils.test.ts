@@ -1,11 +1,6 @@
 import { serviceTypesFactory } from 'src/factories';
 
-import { formatTimestamp, getServiceTypeLabel } from './utils';
-
-it('test formatTimestamp method', () => {
-  expect(formatTimestamp('2024-11-30T12:42:00')).toBe('Nov 30, 2024, 12:42 PM');
-  expect(formatTimestamp('2023-07-15T09:30:00')).toBe('Jul 15, 2023, 9:30 AM');
-});
+import { getServiceTypeLabel } from './utils';
 
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
