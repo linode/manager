@@ -30,22 +30,41 @@ queryMocks.useCloudPulseServiceTypes.mockReturnValue({
 
 describe('AlertDetailOverview component tests', () => {
   it('should render alert detail overview with required props', () => {
-    const alert = alertFactory.build({
+    const alertDetails = alertFactory.build({
       description: 'This is test description',
       label: 'Test alert',
       severity: 3,
     });
     const { getByText } = renderWithTheme(
-      <AlertDetailOverview alert={alert} />
+      <AlertDetailOverview alertDetails={alertDetails} />
     );
 
-    const { description, label, severity, type } = alert;
+    const { description, label, severity, type } = alertDetails;
 
     expect(getByText(description)).toBeInTheDocument();
-    expect(getByText(String(severityMap[severity]))).toBeInTheDocument();
+    expect(getByText(severityMap[severity])).toBeInTheDocument();
     expect(getByText(label)).toBeInTheDocument();
     expect(
       getByText(convertStringToCamelCasesWithSpaces(type))
     ).toBeInTheDocument();
+  });
+
+  it('should render circle progress if the service types call is fetching', () => {
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: { data: serviceTypes },
+      isError: false,
+      isFetching: true,
+    });
+    const alert = alertFactory.build({
+      description: 'This is test description',
+      label: 'Test alert',
+      severity: 3,
+    });
+    const { getByTestId, queryByText } = renderWithTheme(
+      <AlertDetailOverview alertDetails={alert} />
+    );
+
+    expect(getByTestId('circle-progress')).toBeInTheDocument();
+    expect(queryByText('Overview')).not.toBeInTheDocument();
   });
 });

@@ -1,5 +1,5 @@
 import { CircleProgress } from '@linode/ui';
-import { Grid, Typography, useTheme } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import React from 'react';
 
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
@@ -7,19 +7,19 @@ import { formatDate } from 'src/utilities/formatDate';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 import { severityMap, statusColorMap } from '../constants';
-import { formatTimestamp, getServiceTypeLabel } from '../Utils/utils';
+import { getServiceTypeLabel } from '../Utils/utils';
 import { AlertDetailRow } from './AlertDetailRow';
 
 import type { Alert } from '@linode/api-v4';
 
 interface OverviewProps {
   /*
-   * The alert for which the criteria is displayed
+   * The alert object containing all the details (e.g., description, severity, status) for which the overview needs to be displayed.
    */
-  alert: Alert;
+  alertDetails: Alert;
 }
 export const AlertDetailOverview = (props: OverviewProps) => {
-  const { alert } = props;
+  const { alertDetails: alert } = props;
 
   const {
     created_by: createdBy,
@@ -34,20 +34,13 @@ export const AlertDetailOverview = (props: OverviewProps) => {
 
   const { data: serviceTypes, isFetching } = useCloudPulseServiceTypes(true);
 
-  const theme = useTheme();
-
   if (isFetching) {
     return <CircleProgress />;
   }
 
   return (
-    <React.Fragment>
-      <Typography
-        fontSize={theme.spacing(2.25)}
-        gutterBottom
-        marginBottom={2}
-        variant="h2"
-      >
+    <>
+      <Typography marginBottom={2} variant="h2">
         Overview
       </Typography>
       <Grid alignItems="center" container spacing={2}>
@@ -58,10 +51,7 @@ export const AlertDetailOverview = (props: OverviewProps) => {
           status={statusColorMap[status]}
           value={convertStringToCamelCasesWithSpaces(status)}
         />
-        <AlertDetailRow
-          label="Severity"
-          value={severity !== undefined ? severityMap[severity] : severity}
-        />
+        <AlertDetailRow label="Severity" value={severityMap[severity]} />
         <AlertDetailRow
           label="Service"
           value={getServiceTypeLabel(serviceType, serviceTypes)}
@@ -78,6 +68,6 @@ export const AlertDetailOverview = (props: OverviewProps) => {
           label="Last Modified"
         />
       </Grid>
-    </React.Fragment>
+    </>
   );
 };

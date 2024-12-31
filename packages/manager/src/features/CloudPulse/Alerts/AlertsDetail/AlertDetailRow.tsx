@@ -6,61 +6,62 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 interface AlertDetailRowProps {
-  /*
-   * The typography label under which the value will be displayed
+  /**
+   * The label or title of the row
    */
   label: string;
-  /*
-   * Controls the size of the typography label from medium to larger screens
+  /**
+   * Number of grid columns for the label on small and larger screens.
+   * Defaults to 4. This controls the width of the label in the grid layout.
    */
-  labelWidth?: number;
-  /*
-   * If the row is a status, this property can be passed to indicate a valid status like active, inactive
+  labelColumns?: number;
+  /**
+   * The status icon to be displayed in the row. It can represent states like "active", "inactive", etc.
+   * Pass a valid status (e.g., 'active', 'inactive') to display the appropriate status icon.
    */
   status?: Status;
-  /*
-   * The typography value to be displayed
+  /**
+   * The value of the row
    */
   value: null | string;
-  /*
-   * Controls the size of the typography value from medium to larger screens
+  /**
+   * Number of grid columns for the value on medium and larger screens.
+   * Defaults to 8. This controls the width of the value in the grid layout.
    */
-  valueWidth?: number;
+  valueColumns?: number;
 }
 
 export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
-  const { label, labelWidth = 4, status, value, valueWidth = 8 } = props;
+  const { label, labelColumns = 4, status, value, valueColumns = 8 } = props;
 
   const theme = useTheme();
 
   return (
-    <Grid item xs={12}>
-      <Grid container>
-        <Grid item sm={labelWidth} xs={12}>
-          <Typography fontSize={theme.spacing(1.75)} variant="h2">
-            {label}:
-          </Typography>
-        </Grid>
-        <Grid display="flex" item sm={valueWidth} xs={12}>
-          {status && (
-            <StatusIcon
-              marginTop={theme.spacing(0.7)}
-              maxHeight={theme.spacing(1)}
-              maxWidth={theme.spacing(1)}
-              pulse={false}
-              status={status}
-            />
-          )}
-          <Typography
-            sx={{
-              color: theme.color.offBlack,
-            }}
-            fontSize={theme.spacing(1.75)}
-            variant="body2"
-          >
-            {value}
-          </Typography>
-        </Grid>
+    <Grid container item xs={12}>
+      <Grid item sm={labelColumns} xs={12}>
+        <Typography fontSize="14px" variant="h3">
+          {label}:
+        </Typography>
+      </Grid>
+      <Grid container item sm={valueColumns} xs={12}>
+        {status && (
+          <StatusIcon
+            marginTop={theme.spacing(0.7)}
+            maxHeight={theme.spacing(1)}
+            maxWidth={theme.spacing(1)}
+            pulse={false}
+            status={status}
+          />
+        )}
+        <Typography
+          sx={{
+            color: theme.color.offBlack,
+          }}
+          fontSize="14px"
+          variant="body2"
+        >
+          {value}
+        </Typography>
       </Grid>
     </Grid>
   );

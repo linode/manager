@@ -96,7 +96,7 @@ export const AlertDetail = () => {
             maxHeight={theme.spacing(98.125)}
             sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
           >
-            <AlertDetailOverview alert={alertDetails} />
+            <AlertDetailOverview alertDetails={alertDetails} />
           </Box>
         </Box>
       </Box>

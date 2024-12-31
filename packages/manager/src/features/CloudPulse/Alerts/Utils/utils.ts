@@ -3,8 +3,8 @@ import type { Theme } from '@mui/material';
 
 /**
  * @param serviceType Service type for which the label needs to be displayed
- * @param serviceTypes List of available service types in cloud pulse
- * @returns The label for the given service type
+ * @param serviceTypes List of available service types in Cloud Pulse
+ * @returns The label for the given service type, or the serviceType itself if not found or serviceTypes is undefined.
  */
 export const getServiceTypeLabel = (
   serviceType: string,
@@ -22,9 +22,8 @@ export const getServiceTypeLabel = (
 };
 
 /**
- *
- * @param theme mui theme
- * @returns The style needed for box in alerts
+ * @param theme MUI theme object
+ * @returns The style object for the alert box, including background color and padding
  */
 export const getAlertBoxStyles = (theme: Theme) => ({
   backgroundColor:
