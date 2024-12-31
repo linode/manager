@@ -75,7 +75,7 @@ export const UsersLanding = () => {
           />
           <Button buttonType="primary">Add a User</Button>
         </Box>
-        <Table aria-label="List of Users" striped>
+        <Table aria-label="List of Users">
           <UsersLandingTableHead order={order} />
           <TableBody>
             <UsersLandingTableBody

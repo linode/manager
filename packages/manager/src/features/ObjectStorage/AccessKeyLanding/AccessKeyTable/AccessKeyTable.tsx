@@ -59,7 +59,6 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
         aria-label="List of Object Storage Access Keys"
         data-testid="data-qa-access-key-table"
         rowCount={data?.length}
-        striped
       >
         <TableHead>
           <TableRow>

@@ -9,11 +9,6 @@ export interface TableRowEmptyProps {
    */
   colSpan: number;
   /**
-   * Indicates if the row should be highlighted on hover
-   * @default true
-   */
-  hover?: boolean;
-  /**
    * The message to display in the empty state
    * @default 'No items to display.'
    */
@@ -25,10 +20,10 @@ export interface TableRowEmptyProps {
  * - An empty table should have language that clearly says why the table has no data and what action to take to populate with data.
  */
 export const TableRowEmpty = (props: TableRowEmptyProps) => {
-  const { colSpan, hover, message } = props;
+  const { colSpan, message } = props;
 
   return (
-    <TableRow data-testid={'table-row-empty'} hover={hover}>
+    <TableRow data-testid={'table-row-empty'} hover={false}>
       <TableCell
         sx={{
           height: '40px',

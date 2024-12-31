@@ -87,7 +87,6 @@ export const AccessTable = React.memo((props: TableProps) => {
     <StyledTableRoot
       aria-label="Object Storage Access Key Permissions"
       spacingTop={24}
-      striped
     >
       <TableHead>
         <TableRow>

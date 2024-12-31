@@ -46,7 +46,7 @@ export const BucketTable = (props: Props) => {
         pageSize,
       }) => (
         <React.Fragment>
-          <Table aria-label="List of your Buckets" striped>
+          <Table aria-label="List of your Buckets">
             <TableHead>
               <TableRow>
                 <TableSortCell

@@ -206,7 +206,7 @@ export const APITokenTable = (props: Props) => {
           </Button>
         )}
       </Paper>
-      <Table aria-label={`List of ${title}`} striped>
+      <Table aria-label={`List of ${title}`}>
         <TableHead>
           <TableRow data-qa-table-head>
             <StyledTableSortCell

@@ -93,7 +93,7 @@ export const EventsLanding = (props: Props) => {
     <>
       {/* Only display this title on the main Events landing page */}
       {!entityId && <StyledH1Header title="Events" />}
-      <Table aria-label="List of Events" striped>
+      <Table aria-label="List of Events">
         <TableHead>
           <TableRow>
             <StyledLabelTableCell>Event</StyledLabelTableCell>

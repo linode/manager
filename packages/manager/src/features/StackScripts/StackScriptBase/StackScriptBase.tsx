@@ -530,7 +530,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                 colCount={isSelecting ? 1 : 4}
                 noOverflow={true}
                 rowCount={listOfStackScripts.length}
-                striped
                 style={!isSelecting ? { tableLayout: 'fixed' } : undefined}
               >
                 <StackScriptTableHead

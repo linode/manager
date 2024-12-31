@@ -101,7 +101,7 @@ const AccountLogins = () => {
       <Typography className={classes.copy} variant="body1">
         Logins across all users on your account over the last 90 days.
       </Typography>
-      <Table aria-label="Account Logins" striped>
+      <Table aria-label="Account Logins">
         <TableHead>
           <TableRow>
             <TableSortCell

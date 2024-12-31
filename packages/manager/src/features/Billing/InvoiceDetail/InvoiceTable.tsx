@@ -143,7 +143,7 @@ export const InvoiceTable = (props: Props) => {
   };
 
   return (
-    <Table aria-label="Invoice Details" striped>
+    <Table aria-label="Invoice Details">
       <TableHead>
         <TableRow>
           <TableCell>Description</TableCell>

@@ -1333,7 +1333,7 @@ export const lightTheme: ThemeOptions = {
             // Linodes Group by Tag: First Row is the Title
             '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
             // Default Striping
-            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:nth-of-type(even)': MuiTableZebraStyles,
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
           },
           // Zebra Striping for Nested Tables
           '&.MuiTable-zebra-nested': {
@@ -1348,7 +1348,7 @@ export const lightTheme: ThemeOptions = {
             '.MuiTableCell-head': {
               color: Table.HeaderOutlined.Text,
             },
-            '.MuiTableRow-head': {
+            '.MuiTableRow-head, .MuiTableRow-head.MuiTableRow-hover:hover': {
               background: Background.Neutralsubtle,
             },
             '.MuiTableRow-root:last-child': {
@@ -1429,8 +1429,12 @@ export const lightTheme: ThemeOptions = {
           '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
             backgroundColor: Table.Row.Background.Hover,
           },
+          // Disable hover for nested rows (VPC)
+          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover': {
+            backgroundColor: Table.Row.Background.Default,
+          },
           '&.disabled-row .MuiTableCell-root': {
-            // TODO: These may be right, but look into Table disabled tokens
+            // TODO: Use design tokens in future when ready
             backgroundColor: Interaction.Background.Disabled,
             color: Content.Text.Primary.Disabled,
           },

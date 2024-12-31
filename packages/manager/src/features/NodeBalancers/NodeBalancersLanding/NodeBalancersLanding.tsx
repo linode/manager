@@ -104,7 +104,7 @@ export const NodeBalancersLanding = () => {
         onButtonClick={() => history.push('/nodebalancers/create')}
         title="NodeBalancers"
       />
-      <Table striped>
+      <Table>
         <TableHead>
           <TableRow>
             <TableSortCell

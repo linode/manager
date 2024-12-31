@@ -116,7 +116,7 @@ export const LinodeBackups = () => {
   return (
     <Stack spacing={2}>
       <Paper style={{ padding: 0 }}>
-        <Table aria-label="List of Backups" striped>
+        <Table aria-label="List of Backups">
           <TableHead>
             <TableRow>
               <TableCell>Label</TableCell>

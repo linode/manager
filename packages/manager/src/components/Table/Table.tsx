@@ -1,9 +1,13 @@
 import { default as _Table } from '@mui/material/Table';
 import * as React from 'react';
 
+import { usePreferences } from 'src/queries/profile/preferences';
+
 import { StyledTableWrapper } from './Table.styles';
 
 import type { TableProps as _TableProps } from '@mui/material/Table';
+
+type SpacingSize = 0 | 8 | 16 | 24;
 
 export interface TableProps extends _TableProps {
   /** Optional additional css class to pass to the component */
@@ -13,6 +17,11 @@ export interface TableProps extends _TableProps {
    * This option is used to render predictable row loading patterns (ex: skeletons)
    */
   colCount?: number;
+  /**
+   * Optional boolean to enable or disable nested tables
+   * @default false
+   */
+  nested?: boolean;
   /** Optional boolean to remove the overflow from the table */
   noOverflow?: boolean;
   /**
@@ -29,15 +38,15 @@ export interface TableProps extends _TableProps {
    * Optional spacing to add to the bottom of the table
    * @default 0
    */
-  spacingBottom?: 0 | 8 | 16 | 24;
+  spacingBottom?: SpacingSize;
   /**
    * Optional spacing to add to the top of the table
    * @default 0
    */
-  spacingTop?: 0 | 8 | 16 | 24;
+  spacingTop?: SpacingSize;
   /**
    * Optional boolean to enable or disable striped rows
-   * @default false
+   * @default true
    */
   striped?: boolean;
   /** Optional caption to add to the table */
@@ -66,15 +75,20 @@ export const Table = (props: TableProps) => {
   const {
     className,
     colCount,
+    nested = false,
     noOverflow,
     rowCount,
     rowHoverState = true,
     spacingBottom,
     spacingTop,
-    striped,
+    striped = true,
     tableClass = '',
     ...rest
   } = props;
+  const { data: preferences } = usePreferences();
+  const isTableStripingEnabled = Boolean(
+    preferences?.isTableStripingEnabled && striped
+  );
 
   return (
     <StyledTableWrapper
@@ -85,7 +99,13 @@ export const Table = (props: TableProps) => {
       spacingTop={spacingTop}
     >
       <_Table
-        className={`${tableClass} ${striped ? 'MuiTable-zebra' : ''}`}
+        className={`${tableClass} ${
+          isTableStripingEnabled && !nested
+            ? 'MuiTable-zebra'
+            : nested
+            ? 'MuiTable-zebra-nested'
+            : ''
+        }`}
         {...rest}
         aria-colcount={colCount}
         aria-rowcount={rowCount}

@@ -98,7 +98,7 @@ export const TicketList = (props: Props) => {
 
   return (
     <>
-      <Table aria-label="List of Tickets" striped>
+      <Table aria-label="List of Tickets">
         <TableHead>
           <TableRow>
             <TableSortCell

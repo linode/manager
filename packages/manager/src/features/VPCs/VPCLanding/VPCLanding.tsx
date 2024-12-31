@@ -113,7 +113,7 @@ const VPCLanding = () => {
         onButtonClick={createVPC}
         title={VPC_LABEL}
       />
-      <Table striped>
+      <Table>
         <TableHead>
           <TableRow>
             <TableSortCell

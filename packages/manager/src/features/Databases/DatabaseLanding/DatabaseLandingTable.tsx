@@ -94,7 +94,7 @@ const DatabaseLandingTable = ({
 
   return (
     <>
-      <Table striped sx={{ marginTop: '10px' }}>
+      <Table sx={{ marginTop: '10px' }}>
         <TableHead>
           <TableRow>
             <TableSortCell

@@ -234,7 +234,7 @@ export const VPCSubnetsTable = (props: Props) => {
       );
 
       const InnerTable = (
-        <Table aria-label="Linode" size="small">
+        <Table aria-label="Linode" size="small" striped={false}>
           <TableHead style={{ fontSize: '.875rem' }}>
             {SubnetLinodeTableRowHead}
           </TableHead>

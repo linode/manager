@@ -60,7 +60,7 @@ export const FirewallDeviceTable = React.memo(
               pageSize,
             }) => (
               <>
-                <Table aria-label={ariaLabel} striped>
+                <Table aria-label={ariaLabel}>
                   <TableHead>
                     <TableRow>
                       <TableSortCell
