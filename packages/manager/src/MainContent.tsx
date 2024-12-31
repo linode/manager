@@ -388,7 +388,7 @@ export const MainContent = () => {
                 </main>
               </div>
             </NotificationProvider>
-            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+            <Footer />
           </ComplianceUpdateProvider>
         </SwitchAccountSessionProvider>
       </SessionExpirationProvider>

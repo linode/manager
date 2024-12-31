@@ -5,6 +5,19 @@ import { deepmerge } from '@mui/utils';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
 
+import type { latoWeb } from '../fonts';
+// Types & Interfaces
+import type {
+  customDarkModeOptions,
+  notificationToast as notificationToastDark,
+} from './dark';
+import type {
+  bg,
+  borderColors,
+  color,
+  notificationToast,
+  textColors,
+} from './light';
 import type {
   AccentTypes as AccentTypesLight,
   ActionTypes as ActionTypesLight,
@@ -16,6 +29,7 @@ import type {
   ContentTypes as ContentTypesLight,
   ElevationTypes as ElevationTypesLight,
   FontTypes,
+  GlobalFooterTypes,
   InteractionTypes as InteractionTypesLight,
   RadiusTypes,
   SideNavigationTypes as SideNavigationTypesLight,
@@ -32,19 +46,6 @@ import type {
   InteractionTypes as InteractionTypesDark,
   SideNavigationTypes as SideNavigationTypesDark,
 } from '@linode/design-language-system/themes/dark';
-import type { latoWeb } from '../fonts';
-// Types & Interfaces
-import type {
-  customDarkModeOptions,
-  notificationToast as notificationToastDark,
-} from './dark';
-import type {
-  bg,
-  borderColors,
-  color,
-  notificationToast,
-  textColors,
-} from './light';
 
 export type ThemeName = 'dark' | 'light';
 
@@ -114,16 +115,17 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast: NotificationToast;
     textColors: TextColors;
     tokens: {
-       //  ---- Global tokens: theme agnostic ----
-      borderRadius: BorderRadiusTypes;
+      //  ---- Global tokens: theme agnostic ----
+      border: BorderTypes;
       color: ColorTypes;
       font: FontTypes;
+      footer: GlobalFooterTypes;
       spacing: SpacingTypes;
       // ----------------------------------------
       accent: AccentTypes;
       action: ActionTypes;
       background: BackgroundTypes;
-      border: BorderTypes;
+      borderRadius: BorderRadiusTypes;
       chart: ChartTypes;
       content: ContentTypes;
       elevation: ElevationTypes;
@@ -152,22 +154,23 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
+      //  ---- Global tokens: theme agnostic ----
+      borderRadius?: BorderRadiusTypes;
+      color?: ColorTypes;
+      font?: FontTypes;
+      footer?: GlobalFooterTypes;
+      spacing?: SpacingTypes;
       // ----------------------------------------
       accent?: AccentTypes;
       action?: ActionTypes;
       background?: BackgroundTypes;
       border?: BorderTypes;
-      //  ---- Global tokens: theme agnostic ----
-      borderRadius?: BorderRadiusTypes;
       chart?: ChartTypes;
-      color?: ColorTypes;
       content?: ContentTypes;
       elevation?: ElevationTypes;
-      font?: FontTypes;
       interaction?: InteractionTypes;
       radius?: RadiusTypes;
       sideNavigation?: SideNavigationTypes;
-      spacing?: SpacingTypes;
       typography?: TypographyTypes;
     };
     visually?: any;
