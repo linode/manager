@@ -1,4 +1,5 @@
-import { useRouter } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
+import * as React from 'react';
 
 import type { LinkProps } from '@tanstack/react-router';
 
@@ -30,6 +31,9 @@ export interface Tab {
 }
 
 interface UseTabsOptions {
+  /**
+   * The index of the tab to select by default.
+   */
   defaultIndex?: number;
 }
 
@@ -37,22 +41,27 @@ export function useTabs<T extends Tab>(
   tabs: T[],
   options: UseTabsOptions = {}
 ) {
-  const router = useRouter();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { defaultIndex = 0 } = options;
-
-  const visibleTabs = tabs.filter((tab) => !tab.hide);
-
-  const currentIndex = Math.max(
-    visibleTabs.findIndex((tab) => router.state.location.pathname === tab.to),
-    defaultIndex
-  );
+  const visibleTabs = React.useMemo(() => tabs.filter((tab) => !tab.hide), [
+    tabs,
+  ]);
+  const initialIndex = React.useCallback(() => {
+    return Math.max(
+      visibleTabs.findIndex((tab) => location.pathname === tab.to),
+      defaultIndex
+    );
+  }, [visibleTabs, location.pathname, defaultIndex]);
+  const [currentIndex, setCurrentIndex] = React.useState(initialIndex);
 
   const handleTabChange = (index: number) => {
     if (visibleTabs[index]?.disabled) {
       return;
     }
 
-    router.navigate({
+    setCurrentIndex(index);
+    navigate({
       to: visibleTabs[index].to,
     });
   };

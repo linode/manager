@@ -32,7 +32,7 @@ const longviewLandingPlanDetailsRoute = createRoute({
   getParentRoute: () => longviewRoute,
   path: 'plan-details',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewDetailLazyRoute)
+  import('./longviewLazyRoutes').then((m) => m.longviewLandingLazyRoute)
 );
 
 const longviewDetailRoute = createRoute({
