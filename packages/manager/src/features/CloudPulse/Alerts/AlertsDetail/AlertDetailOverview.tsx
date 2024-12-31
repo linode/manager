@@ -18,7 +18,7 @@ interface OverviewProps {
    */
   alertDetails: Alert;
 }
-export const AlertDetailOverview = (props: OverviewProps) => {
+export const AlertDetailOverview = React.memo((props: OverviewProps) => {
   const { alertDetails: alert } = props;
 
   const {
@@ -70,4 +70,4 @@ export const AlertDetailOverview = (props: OverviewProps) => {
       </Grid>
     </>
   );
-};
+});

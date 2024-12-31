@@ -14,7 +14,7 @@ interface AlertDetailRowProps {
    * Number of grid columns for the label on small and larger screens.
    * Defaults to 4. This controls the width of the label in the grid layout.
    */
-  labelColumns?: number;
+  labelGridColumns?: number;
   /**
    * The status icon to be displayed in the row. It can represent states like "active", "inactive", etc.
    * Pass a valid status (e.g., 'active', 'inactive') to display the appropriate status icon.
@@ -28,22 +28,28 @@ interface AlertDetailRowProps {
    * Number of grid columns for the value on medium and larger screens.
    * Defaults to 8. This controls the width of the value in the grid layout.
    */
-  valueColumns?: number;
+  valueGridColumns?: number;
 }
 
 export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
-  const { label, labelColumns = 4, status, value, valueColumns = 8 } = props;
+  const {
+    label,
+    labelGridColumns = 4,
+    status,
+    value,
+    valueGridColumns = 8,
+  } = props;
 
   const theme = useTheme();
 
   return (
     <Grid container item xs={12}>
-      <Grid item sm={labelColumns} xs={12}>
+      <Grid item sm={labelGridColumns} xs={12}>
         <Typography fontSize="14px" variant="h3">
           {label}:
         </Typography>
       </Grid>
-      <Grid container item sm={valueColumns} xs={12}>
+      <Grid container item sm={valueGridColumns} xs={12}>
         {status && (
           <StatusIcon
             marginTop={theme.spacing(0.7)}

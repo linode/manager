@@ -22,10 +22,13 @@ vi.mock('src/queries/cloudpulse/services', () => ({
   useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
 }));
 
-queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-  data: { data: serviceTypes },
-  isError: false,
-  isFetching: false,
+// Shared Setup
+beforeEach(() => {
+  queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+    data: { data: serviceTypes },
+    isError: false,
+    isFetching: false,
+  });
 });
 
 describe('AlertDetailOverview component tests', () => {
