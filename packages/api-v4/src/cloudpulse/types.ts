@@ -51,6 +51,7 @@ export interface TimeDuration {
 export interface TimeDurationDate {
   end: string;
   start: string;
+  preset?: string;
 }
 
 export interface Widgets {
@@ -85,6 +86,7 @@ export type FilterValue =
   | string[]
   | number[]
   | WidgetFilterValue
+  | TimeDurationDate
   | undefined;
 
 type WidgetFilterValue = { [key: string]: AclpWidget };
