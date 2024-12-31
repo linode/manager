@@ -9,8 +9,8 @@ import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
 import IAM from 'src/assets/icons/entityIcons/iam.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
-import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import Longview from 'src/assets/icons/longview.svg';
+import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
+import Networking from 'src/assets/icons/entityIcons/Networking.svg';
 import More from 'src/assets/icons/more.svg';
 import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
 import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
@@ -187,7 +187,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         name: 'Storage',
       },
       {
-        icon: <NodeBalancer />,
+        icon: <Networking />,
         links: [
           {
             display: 'VPC',
@@ -226,7 +226,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         name: 'Databases',
       },
       {
-        icon: <Longview />,
+        icon: <Monitor />,
         links: [
           {
             display: 'Longview',
