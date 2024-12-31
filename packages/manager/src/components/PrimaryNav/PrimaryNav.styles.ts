@@ -92,8 +92,7 @@ export const StyledPrimaryLinkBox = styled(Box, {
     ? theme.tokens.sideNavigation.SelectedMenuItem.Text
     : theme.tokens.sideNavigation.DefaultMenuItem.Text,
   display: 'flex',
-  fontFamily: 'LatoWebBold',
-  fontSize: '0.875rem',
+  font: theme.tokens.typography.Label.Semibold.S,
   justifyContent: 'space-between',
   transition: theme.transitions.create(['color', 'opacity']),
   width: '100%',
@@ -136,17 +135,14 @@ export const StyledAccordion = styled(Accordion, {
           ? theme.tokens.sideNavigation.SelectedMenuItem.Icon
           : theme.tokens.sideNavigation.DefaultMenuItem.Icon,
         height: 20,
-        marginRight: 14,
+        marginRight: 12,
         transition: theme.transitions.create(['color']),
         width: 20,
       },
       alignItems: 'center',
       display: 'flex',
-      fontSize: '0.7rem',
-      letterSpacing: '1px',
-      lineheight: 20,
+      font: theme.tokens.typography.Label.Bold.S,
       padding: '0 10px',
-      textTransform: 'uppercase',
     },
     '.MuiAccordionDetails-root': {
       padding: 0,
@@ -203,5 +199,8 @@ export const StyledChip = styled(Chip, {
   color: props.isActiveLink
     ? theme.tokens.sideNavigation.SelectedMenuItem.Label.Text
     : theme.tokens.sideNavigation.DefaultMenuItem.Label.Text,
+  marginRight: '12px',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
   width: '30px',
 }));
