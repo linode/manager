@@ -722,7 +722,6 @@ class DomainRecords extends React.Component<Props, State> {
                                                 <StyledTableCell
                                                   data-qa-column={title}
                                                   key={columnIndex}
-                                                  parentColumn={title}
                                                 >
                                                   {render(data)}
                                                 </StyledTableCell>

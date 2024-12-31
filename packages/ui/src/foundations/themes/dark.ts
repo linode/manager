@@ -13,6 +13,7 @@ import {
   NotificationToast,
   Select,
   SideNavigation,
+  Table,
   TextField,
   Typography,
 } from '@linode/design-language-system/themes/dark';
@@ -185,6 +186,25 @@ const genericTableHeaderStyle = {
     },
     cursor: 'pointer',
   },
+};
+
+const MuiTableHeadSvgStyles = {
+  svg: {
+    path: {
+      fill: Color.Brand[60],
+    },
+  },
+};
+
+const MuiTableZebraHoverStyles = {
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+    background: Table.Row.Background.Hover,
+  },
+};
+
+const MuiTableZebraStyles = {
+  background: Table.Row.Background.Zebra,
+  ...MuiTableZebraHoverStyles,
 };
 
 export const darkTheme: ThemeOptions = {
@@ -704,56 +724,100 @@ export const darkTheme: ThemeOptions = {
     MuiTable: {
       styleOverrides: {
         root: {
-          // For nested tables like VPC
-          '& table': {
-            border: 0,
+          // Zebra Striping
+          '&.MuiTable-zebra': {
+            // Linodes Group by Tag: First Row is the Title
+            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
+            // Default Striping
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
           },
-          border: `1px solid ${customDarkModeOptions.borderColors.borderTable}`,
-          borderBottom: 0,
-          borderTop: 0,
+          // Zebra Striping for Nested Tables
+          '&.MuiTable-zebra-nested': {
+            '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
+          },
+          // Collapsible Rows
+          '.MuiCollapse-root': {
+            borderBottom: `1px solid ${Border.Normal}`,
+          },
+          // Nested Tables
+          '.MuiTable-root': {
+            '.MuiTableRow-head, .MuiTableRow-head.MuiTableRow-hover:hover': {
+              background: Background.Neutralsubtle,
+            },
+          },
+          border: `1px solid ${Border.Normal}`,
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
         head: {
-          backgroundColor: 'rgba(0, 0, 0, 0.15)',
-          color: primaryColors.text,
+          // User Permissions Table
+          '.MuiFormControlLabel-label': {
+            color: Table.HeaderFilled.Text,
+          },
+          // Icons in TH (i.e.: Summary View, Group by Tag)
+          '.MuiIconButton-root': {
+            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
+            ':hover': {
+              color: Color.Brand[60],
+              ...MuiTableHeadSvgStyles,
+            },
+            svg: {
+              path: {
+                fill: Color.Neutrals.White,
+              },
+            },
+          },
+          color: Table.HeaderFilled.Text,
         },
         root: {
-          '& a': {
-            color: Action.Primary.Default,
-          },
-          '& a:hover': {
-            color: Action.Primary.Hover,
-          },
-          borderBottom: `1px solid ${primaryColors.divider}`,
-          borderTop: `1px solid ${primaryColors.divider}`,
+          borderBottom: `1px solid ${Table.Row.Border}`,
         },
       },
     },
     MuiTableRow: {
       styleOverrides: {
         head: {
-          '&:before': {
-            backgroundColor: 'rgba(0, 0, 0, 0.15) !important',
-          },
-          backgroundColor: Color.Neutrals[100],
-        },
-        hover: {
-          '& a': {
-            color: primaryColors.text,
-          },
+          background: Table.HeaderFilled.Background,
         },
         root: {
-          '&:before': {
-            borderLeftColor: Color.Neutrals[90],
+          // Prevent needing `hover={false}` on header TableRows
+          '&.MuiTableRow-head.MuiTableRow-hover:hover': {
+            backgroundColor: Table.HeaderFilled.Background,
           },
-          '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[80],
+          // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: Table.Row.Background.Hover,
           },
-          backgroundColor: Color.Neutrals[90],
-          border: `1px solid ${Color.Neutrals[50]}`,
+          // Disable hover for nested rows (VPC)
+          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover': {
+            backgroundColor: Table.Row.Background.Default,
+          },
+          '&.disabled-row .MuiTableCell-root': {
+            // TODO: Use design tokens in future when ready
+            backgroundColor: Interaction.Background.Disabled,
+            color: Content.Text.Primary.Disabled,
+          },
+          background: Table.Row.Background.Default,
+        },
+      },
+    },
+    MuiTableSortLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-active': {
+            color: Table.HeaderFilled.Text,
+          },
+          ':hover': {
+            ...MuiTableHeadSvgStyles,
+            color: Color.Brand[60],
+          },
+          svg: {
+            path: {
+              fill: Table.HeaderFilled.Text,
+            },
+          },
         },
       },
     },
@@ -891,6 +955,7 @@ export const darkTheme: ThemeOptions = {
     elevation: Elevation,
     interaction: Interaction,
     sideNavigation: SideNavigation,
+    table: Table,
     typography: Typography,
   },
   typography: {

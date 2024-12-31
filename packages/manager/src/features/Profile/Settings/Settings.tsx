@@ -54,6 +54,7 @@ export const ProfileSettings = () => {
   // Email notifications and masking sensitive data are disabled by default until the user explicitly enables it.
   const areEmailNotificationsEnabled = profile?.email_notifications === true;
   const isSensitiveDataMasked = preferences?.maskSensitiveData === true;
+  const isTableStripingEnabled = preferences?.isTableStripingEnabled === true;
 
   return (
     <Stack spacing={2}>
@@ -140,6 +141,27 @@ export const ProfileSettings = () => {
           }
           label={`Sensitive data is ${
             isSensitiveDataMasked ? 'masked' : 'visible'
+          }`}
+        />
+      </Paper>
+      <Paper>
+        <Typography marginBottom={1} variant="h2">
+          Enable Table Striping
+        </Typography>
+        <Typography marginBottom={1} variant="body1">
+          Enable table striping for better readability.
+        </Typography>
+        <FormControlLabel
+          control={
+            <Toggle
+              onChange={(_, checked) =>
+                updatePreferences({ isTableStripingEnabled: checked })
+              }
+              checked={isTableStripingEnabled}
+            />
+          }
+          label={`Table striping is ${
+            isTableStripingEnabled ? 'enabled' : 'disabled'
           }`}
         />
       </Paper>

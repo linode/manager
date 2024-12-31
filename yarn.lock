@@ -1232,10 +1232,10 @@
   resolved "https://registry.yarnpkg.com/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz#8ace5259254426ccef57f3175bc64ed7095ed919"
   integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
 
-"@linode/design-language-system@^2.6.1":
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/@linode/design-language-system/-/design-language-system-2.7.1.tgz#03ee024529a2543249ad986bd7ab85c39e8aa797"
-  integrity sha512-rrQbFOJD/tG+8Xz7lt3YO6E6sIPSeHGW8nRSqQYLQrw2hJssN1wdGTK92Uluyy+msJQkXSenkTmDf2l1iOGTrQ==
+"@linode/design-language-system@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@linode/design-language-system/-/design-language-system-2.9.0.tgz#52e5bce84011d5e9dad21ca6bdc8568ba59c90f7"
+  integrity sha512-mli6PBJt1cxpVMOhDdbMphBphbHeW1M/Fs+GuYNr7ktQS/vAkXkAIKV8rvmrWsWC9Ba7Mkx6tJN1g13v8pgulQ==
 
 "@linode/eslint-plugin-cloud-manager@^0.0.5":
   version "0.0.5"
