@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { alertFactory } from 'src/factories/';
+import { alertFactory, serviceTypesFactory } from 'src/factories/';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertDetail } from './AlertDetail';
@@ -11,6 +11,7 @@ const alertDetails = alertFactory.build({ service_type: 'linode' });
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
+  useCloudPulseServiceTypes: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
@@ -18,11 +19,23 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
 }));
 
+vi.mock('src/queries/cloudpulse/services', async () => {
+  const actual = await vi.importActual('src/queries/cloudpulse/services');
+  return {
+    ...actual,
+    useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
+  };
+});
+
 // Shared Setup
 beforeEach(() => {
   queryMocks.useAlertDefinitionQuery.mockReturnValue({
     data: alertDetails,
     isError: false,
+    isFetching: false,
+  });
+  queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+    data: { data: serviceTypesFactory.buildList(1) },
     isFetching: false,
   });
 });
@@ -63,6 +76,14 @@ describe('AlertDetail component tests', () => {
 
     // validate breadcrumbs on loading state
     validateBreadcrumbs(getByTestId('link-text'));
+  });
+
+  it('should render the component successfully with alert details overview', () => {
+    const { getByText } = renderWithTheme(<AlertDetail />);
+    // validate overview is present with its couple of properties (values will be validated in its own components test)
+    expect(getByText('Overview')).toBeInTheDocument();
+    expect(getByText('Name:')).toBeInTheDocument();
+    expect(getByText('Description:')).toBeInTheDocument();
   });
 });
 
