@@ -3,6 +3,8 @@ import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 
+import type { Status } from 'src/components/StatusIcon/StatusIcon';
+
 interface AlertDetailRowProps {
   /*
    * The typography label under which the value will be displayed
@@ -13,9 +15,9 @@ interface AlertDetailRowProps {
    */
   labelWidth?: number;
   /*
-   * The color of the status icon that needs to be displayed
+   * If the row is a status, this property can be passed to indicate a valid status like active, inactive
    */
-  statusColor?: string;
+  status?: Status;
   /*
    * The typography value to be displayed
    */
@@ -27,7 +29,7 @@ interface AlertDetailRowProps {
 }
 
 export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
-  const { label, labelWidth = 4, statusColor, value, valueWidth = 8 } = props;
+  const { label, labelWidth = 4, status, value, valueWidth = 8 } = props;
 
   const theme = useTheme();
 
@@ -40,16 +42,13 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
           </Typography>
         </Grid>
         <Grid display="flex" item sm={valueWidth} xs={12}>
-          {statusColor && ( // if the status color is passed, we will display a status icon with color needed
+          {status && (
             <StatusIcon
-              sx={{
-                backgroundColor: statusColor, // here the background color is controlled by alerting component since there can be more statuses than active, inactive and other
-              }}
               marginTop={theme.spacing(0.7)}
               maxHeight={theme.spacing(1)}
               maxWidth={theme.spacing(1)}
               pulse={false}
-              status="other"
+              status={status}
             />
           )}
           <Typography

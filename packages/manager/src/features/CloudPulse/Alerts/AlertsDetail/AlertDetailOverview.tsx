@@ -5,7 +5,7 @@ import React from 'react';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
-import { severityMap } from '../constants';
+import { severityMap, statusColorMap } from '../constants';
 import { formatTimestamp, getServiceTypeLabel } from '../Utils/utils';
 import { AlertDetailRow } from './AlertDetailRow';
 
@@ -35,13 +35,6 @@ export const AlertDetailOverview = (props: OverviewProps) => {
 
   const theme = useTheme();
 
-  const statusColorMap: Record<string, string> = {
-    disabled: theme.color.grey8,
-    enabled: theme.palette.success.dark,
-    failed: theme.palette.error.dark,
-    provisioning: theme.palette.warning.dark,
-  };
-
   if (isFetching) {
     return <CircleProgress />;
   }
@@ -61,7 +54,7 @@ export const AlertDetailOverview = (props: OverviewProps) => {
         <AlertDetailRow label="Description" value={description} />
         <AlertDetailRow
           label="Status"
-          statusColor={statusColorMap[status]}
+          status={statusColorMap[status]}
           value={convertStringToCamelCasesWithSpaces(status)}
         />
         <AlertDetailRow

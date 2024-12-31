@@ -79,7 +79,7 @@ export const AlertDetail = () => {
           <StyledPlaceholder
             icon={AlertsIcon}
             isEntity
-            title="No Data to display."
+            title="No data to display."
           />
         </Box>
       </>
@@ -108,12 +108,9 @@ export const StyledPlaceholder = styled(Placeholder, {
   label: 'StyledPlaceholder',
 })(({ theme }) => ({
   h1: {
-    fontSize: theme.spacing(2.5),
-  },
-  h2: {
     fontSize: theme.spacing(2),
   },
   svg: {
-    maxHeight: theme.spacing(10.5),
+    maxHeight: theme.spacing(10),
   },
 }));

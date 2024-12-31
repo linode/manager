@@ -1,5 +1,5 @@
 import type { ServiceTypesList } from '@linode/api-v4';
-import { Theme } from '@mui/material';
+import type { Theme } from '@mui/material';
 
 /**
  * @param timestamp The timestamp that needs to be converted

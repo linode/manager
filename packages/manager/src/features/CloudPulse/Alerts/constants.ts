@@ -1,8 +1,10 @@
 import type {
   AlertSeverityType,
+  AlertStatusType,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
+import { Status } from 'src/components/StatusIcon/StatusIcon';
 
 export interface Item<L extends string, T> {
   label: L;
@@ -77,4 +79,9 @@ export const severityMap = {
   1: 'Medium',
   2: 'Low',
   3: 'Info',
+};
+
+export const statusColorMap: Record<AlertStatusType, Status> = {
+  disabled: 'inactive',
+  enabled: 'active',
 };
