@@ -29,8 +29,12 @@ export const AlertListing = () => {
 
   const history = useHistory();
 
-  const handleDetails = ({ id, service_type: serviceType }: Alert) => {
-    history.push(`${location.pathname}/detail/${serviceType}/${id}`);
+  const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
+    history.push(
+      `${location.pathname}/detail/${serviceType}/${
+        serviceType === 'linode' ? '1001' : '20000' // only these two ids are available, so using this
+      }`
+    );
   };
 
   if (alerts?.length === 0) {
