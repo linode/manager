@@ -19,7 +19,7 @@ interface OverviewProps {
   alertDetails: Alert;
 }
 export const AlertDetailOverview = React.memo((props: OverviewProps) => {
-  const { alertDetails: alert } = props;
+  const { alertDetails } = props;
 
   const {
     created_by: createdBy,
@@ -30,7 +30,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
     status,
     type,
     updated,
-  } = alert;
+  } = alertDetails;
 
   const { data: serviceTypes, isFetching } = useCloudPulseServiceTypes(true);
 
