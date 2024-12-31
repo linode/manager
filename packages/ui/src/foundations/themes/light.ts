@@ -16,6 +16,7 @@ import {
   NotificationToast,
   Radius,
   Select,
+  SideNavigation,
   Spacing,
   Typography,
 } from '@linode/design-language-system';
@@ -1664,6 +1665,7 @@ export const lightTheme: ThemeOptions = {
     footer: GlobalFooter,
     interaction: Interaction,
     radius: Radius,
+    sideNavigation: SideNavigation,
     spacing: Spacing,
     typography: Typography,
   },

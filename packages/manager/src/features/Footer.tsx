@@ -15,12 +15,15 @@ const StyledLink = styled(Link)(({ theme }) => ({
   color: theme.tokens.footer.Text.Default,
 }));
 
+export const FOOTER_HEIGHT = 40;
+
 export const Footer = React.memo(() => {
   return (
     <footer role="contentinfo" style={{ zIndex: 1300 }}>
       <Stack
         sx={(theme) => ({
           backgroundColor: theme.tokens.footer.Background,
+          height: FOOTER_HEIGHT,
           paddingX: theme.spacing(4),
           paddingY: theme.spacing(1.5),
           textAlign: 'left',
