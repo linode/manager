@@ -1,5 +1,5 @@
 import { Box, Button, CircleProgress } from '@linode/ui';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -175,7 +175,7 @@ export const VPCSubnetsTable = (props: Props) => {
 
   const SubnetTableRowHead = (
     <TableRow>
-      <StyledTableSortCell
+      <TableSortCell
         sx={(theme) => ({
           [theme.breakpoints.down('sm')]: {
             width: '50%',
@@ -188,9 +188,9 @@ export const VPCSubnetsTable = (props: Props) => {
         label="label"
       >
         Subnet Label
-      </StyledTableSortCell>
+      </TableSortCell>
       <Hidden smDown>
-        <StyledTableSortCell
+        <TableSortCell
           active={orderBy === 'id'}
           direction={order}
           handleClick={handleOrderChange}
@@ -198,13 +198,13 @@ export const VPCSubnetsTable = (props: Props) => {
           sx={{ width: '10%' }}
         >
           Subnet ID
-        </StyledTableSortCell>
+        </TableSortCell>
       </Hidden>
-      <StyledTableCell sx={{ width: '18%' }}>Subnet IP Range</StyledTableCell>
+      <TableCell sx={{ width: '18%' }}>Subnet IP Range</TableCell>
       <Hidden smDown>
-        <StyledTableCell sx={{ width: '10%' }}>Linodes</StyledTableCell>
+        <TableCell sx={{ width: '10%' }}>Linodes</TableCell>
       </Hidden>
-      <StyledTableCell></StyledTableCell>
+      <TableCell />
     </TableRow>
   );
 
@@ -219,7 +219,7 @@ export const VPCSubnetsTable = (props: Props) => {
           <Hidden smDown>
             <TableCell>{subnet.linodes.length}</TableCell>
           </Hidden>
-          <TableCell align="right">
+          <TableCell actionCell>
             <SubnetActionMenu
               handleAssignLinodes={handleSubnetAssignLinodes}
               handleDelete={handleSubnetDelete}
@@ -234,7 +234,7 @@ export const VPCSubnetsTable = (props: Props) => {
       );
 
       const InnerTable = (
-        <Table aria-label="Linode" size="small">
+        <Table aria-label="Linode" size="small" striped={false}>
           <TableHead style={{ fontSize: '.875rem' }}>
             {SubnetLinodeTableRowHead}
           </TableHead>
@@ -353,17 +353,3 @@ export const VPCSubnetsTable = (props: Props) => {
     </>
   );
 };
-
-const StyledTableCell = styled(TableCell, {
-  label: 'StyledTableCell',
-})(({ theme }) => ({
-  borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
-  whiteSpace: 'nowrap',
-}));
-
-const StyledTableSortCell = styled(TableSortCell, {
-  label: 'StyledTableSortCell',
-})(({ theme }) => ({
-  borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
-  whiteSpace: 'nowrap',
-}));

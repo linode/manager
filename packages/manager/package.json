@@ -21,7 +21,7 @@
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "3.9.1",
     "@linode/api-v4": "*",
-    "@linode/design-language-system": "^2.6.1",
+    "@linode/design-language-system": "^2.9.0",
     "@linode/search": "*",
     "@linode/ui": "*",
     "@linode/validation": "*",

@@ -34,6 +34,7 @@ import type {
   RadiusTypes,
   SideNavigationTypes as SideNavigationTypesLight,
   SpacingTypes,
+  TableTypes as TableTypesLight,
   TypographyTypes,
 } from '@linode/design-language-system';
 import type {
@@ -44,6 +45,7 @@ import type {
   ContentTypes as ContentTypesDark,
   ElevationTypes as ElevationTypesDark,
   InteractionTypes as InteractionTypesDark,
+  TableTypes as TableTypesDark,
   SideNavigationTypes as SideNavigationTypesDark,
 } from '@linode/design-language-system/themes/dark';
 
@@ -60,6 +62,8 @@ type SideNavigationTypes = MergeTypes<
   SideNavigationTypesLight,
   SideNavigationTypesDark
 >;
+
+type TableTypes = MergeTypes<TableTypesLight, TableTypesDark>;
 
 type Fonts = typeof latoWeb;
 
@@ -128,6 +132,7 @@ declare module '@mui/material/styles/createTheme' {
       borderRadius: BorderRadiusTypes;
       chart: ChartTypes;
       content: ContentTypes;
+      table: TableTypes;
       elevation: ElevationTypes;
       interaction: InteractionTypes;
       radius: RadiusTypes;
@@ -170,6 +175,7 @@ declare module '@mui/material/styles/createTheme' {
       elevation?: ElevationTypes;
       interaction?: InteractionTypes;
       radius?: RadiusTypes;
+      table?: TableTypes;
       sideNavigation?: SideNavigationTypes;
       typography?: TypographyTypes;
     };
