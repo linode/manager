@@ -107,10 +107,7 @@ export const StyledMenuGrid = styled(Grid, {
   flex: '1 1 0%',
   overflowX: 'hidden',
   overflowY: 'auto',
-  scrollbarColor:
-    theme.name === 'dark'
-      ? `${theme.color.grey4} transparent `
-      : `${theme.color.grey9} transparent`,
+  scrollbarColor: `${theme.color.grey4} transparent `,
   width: '100%',
 }));
 

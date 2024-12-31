@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
+import { FOOTER_HEIGHT } from 'src/features/Footer';
 import { TOPMENU_HEIGHT } from 'src/features/TopMenu/TopMenu';
 
 import PrimaryNav from './PrimaryNav';
@@ -83,7 +84,7 @@ const StyledDrawer = styled(Drawer, {
     overflowX: 'hidden',
     [theme.breakpoints.up('md')]: {
       borderRight: `1px solid ${theme.tokens.sideNavigation.Border}`,
-      height: `calc(100% - ${TOPMENU_HEIGHT}px)`,
+      height: `calc(100% - ${TOPMENU_HEIGHT}px - ${FOOTER_HEIGHT}px)`,
       top: TOPMENU_HEIGHT,
     },
     transform: 'none',
