@@ -9,6 +9,7 @@ import {
   Content,
   Dropdown,
   Elevation,
+  GlobalHeader,
   Interaction,
   NotificationToast,
   Select,
@@ -228,8 +229,8 @@ export const darkTheme: ThemeOptions = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: tempReplacementforColorNeutralsBlack,
-          color: primaryColors.text,
+          backgroundColor: GlobalHeader.Background,
+          color: GlobalHeader.Text.Default,
         },
       },
     },

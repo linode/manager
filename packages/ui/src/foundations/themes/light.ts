@@ -12,6 +12,7 @@ import {
   Elevation,
   Font,
   GlobalFooter,
+  GlobalHeader,
   Interaction,
   NotificationToast,
   Radius,
@@ -333,8 +334,8 @@ export const lightTheme: ThemeOptions = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: bg.bgPaper,
-          color: primaryColors.text,
+          backgroundColor: GlobalHeader.Background,
+          color: GlobalHeader.Text.Default,
           position: 'relative',
         },
       },
@@ -1454,7 +1455,7 @@ export const lightTheme: ThemeOptions = {
           '&.Mui-active': {
             color: Table.HeaderFilled.Text,
           },
-          ':hover': {
+          ':hover, :focus': {
             ...MuiTableHeadSvgStyles,
             color: Color.Brand[60],
             cursor: 'pointer',

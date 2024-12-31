@@ -30,6 +30,7 @@ import type {
   ElevationTypes as ElevationTypesLight,
   FontTypes,
   GlobalFooterTypes,
+  GlobalHeaderTypes,
   InteractionTypes as InteractionTypesLight,
   RadiusTypes,
   SideNavigationTypes as SideNavigationTypesLight,
@@ -124,6 +125,7 @@ declare module '@mui/material/styles/createTheme' {
       color: ColorTypes;
       font: FontTypes;
       footer: GlobalFooterTypes;
+      header: GlobalHeaderTypes;
       spacing: SpacingTypes;
       // ----------------------------------------
       accent: AccentTypes;
@@ -164,6 +166,7 @@ declare module '@mui/material/styles/createTheme' {
       color?: ColorTypes;
       font?: FontTypes;
       footer?: GlobalFooterTypes;
+      header?: GlobalHeaderTypes;
       spacing?: SpacingTypes;
       // ----------------------------------------
       accent?: AccentTypes;
