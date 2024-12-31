@@ -90,7 +90,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
         cursor: 'text',
       },
       '&--is-focused, &--is-focused:hover': {
-        border: `1px dotted #999`,
+        border: `1px dotted ${theme.tokens.color.Neutrals[50]}`,
       },
       backgroundColor: theme.bg.white,
       border: `1px solid transparent`,
@@ -294,7 +294,7 @@ export const reactSelectStyles = (theme: Theme) => ({
       cursor: 'text',
     },
     '&--is-focused, &--is-focused:hover': {
-      border: `1px dotted #999`,
+      border: `1px dotted ${theme.tokens.color.Neutrals[50]}`,
     },
     backgroundColor: theme.bg.white,
     border: `1px solid transparent`,

@@ -1,4 +1,4 @@
-import { Notice, TextField } from '@linode/ui';
+import { Notice, Select, TextField } from '@linode/ui';
 import { createContactSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
@@ -7,7 +7,6 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import Select from 'src/components/EnhancedSelect/Select';
 import {
   useCreateContactMutation,
   useUpdateContactMutation,
@@ -189,9 +188,8 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                   </Grid>
                 </Grid>
 
-                {/* @todo: This <Select /> should be clearable eventually, but isn't currently allowed by the API. */}
                 <Select
-                  onChange={(selectedGroup) =>
+                  onChange={(_, selectedGroup) =>
                     setFieldValue('group', selectedGroup?.value)
                   }
                   options={groups.map((group) => ({
@@ -208,7 +206,6 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                   }
                   creatable
                   errorText={errors.group}
-                  isClearable={false}
                   label="Group"
                   placeholder="Create or Select a Group"
                 />

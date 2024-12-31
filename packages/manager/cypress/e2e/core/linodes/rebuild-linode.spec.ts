@@ -199,6 +199,7 @@ describe('rebuild linode', () => {
 
         cy.wait('@getStackScripts');
         cy.findByLabelText('Search by Label, Username, or Description')
+          .scrollIntoView()
           .should('be.visible')
           .type(`${stackScriptName}`);
 
@@ -273,6 +274,7 @@ describe('rebuild linode', () => {
           .click();
 
         cy.findByLabelText('Search by Label, Username, or Description')
+          .scrollIntoView()
           .should('be.visible')
           .type(`${stackScript.label}`);
 

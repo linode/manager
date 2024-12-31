@@ -9,8 +9,8 @@ import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
 import IAM from 'src/assets/icons/entityIcons/iam.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
-import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import Longview from 'src/assets/icons/longview.svg';
+import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
+import Networking from 'src/assets/icons/entityIcons/Networking.svg';
 import More from 'src/assets/icons/more.svg';
 import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
 import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
@@ -33,6 +33,7 @@ import {
   StyledGrid,
   StyledIconButton,
   StyledLogoBox,
+  StyledMenuGrid,
 } from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
 
@@ -116,6 +117,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             display: 'Managed',
             hide: !isManaged,
             href: '/managed',
+            label: 'MGD',
           },
         ],
       },
@@ -126,6 +128,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             activeLinks: ['/linodes', '/linodes/create'],
             display: 'Linodes',
             href: '/linodes',
+            label: 'LND',
           },
           {
             activeLinks: [
@@ -134,26 +137,31 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             ],
             display: 'Images',
             href: '/images',
+            label: 'IMG',
           },
           {
             activeLinks: ['/kubernetes/create'],
             display: 'Kubernetes',
             href: '/kubernetes/clusters',
+            label: 'K8',
           },
           {
             display: 'StackScripts',
             href: '/stackscripts',
+            label: 'SKS',
           },
           {
             betaChipClassName: 'beta-chip-placement-groups',
             display: 'Placement Groups',
             hide: !isPlacementGroupsEnabled,
             href: '/placement-groups',
+            label: 'PG',
           },
           {
             attr: { 'data-qa-one-click-nav-btn': true },
             display: 'Marketplace',
             href: '/linodes/create?type=One-Click',
+            label: 'M',
           },
         ],
         name: 'Compute',
@@ -168,32 +176,38 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             ],
             display: 'Object Storage',
             href: '/object-storage/buckets',
+            label: 'OBJ',
           },
           {
             display: 'Volumes',
             href: '/volumes',
+            label: 'VOL',
           },
         ],
         name: 'Storage',
       },
       {
-        icon: <NodeBalancer />,
+        icon: <Networking />,
         links: [
           {
             display: 'VPC',
             href: '/vpcs',
+            label: 'VPC',
           },
           {
             display: 'Firewalls',
             href: '/firewalls',
+            label: 'FW',
           },
           {
             display: 'NodeBalancers',
             href: '/nodebalancers',
+            label: 'NB',
           },
           {
             display: 'Domains',
             href: '/domains',
+            label: 'D',
           },
         ],
         name: 'Networking',
@@ -206,22 +220,25 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             hide: !isDatabasesEnabled,
             href: '/databases',
             isBeta: isDatabasesV2Beta,
+            label: 'DB',
           },
         ],
         name: 'Databases',
       },
       {
-        icon: <Longview />,
+        icon: <Monitor />,
         links: [
           {
             display: 'Longview',
             href: '/longview',
+            label: 'LV',
           },
           {
             display: 'Monitor',
             hide: !isACLPEnabled,
             href: '/monitor',
             isBeta: flags.aclp?.beta,
+            label: 'MON',
           },
         ],
         name: 'Monitor',
@@ -233,6 +250,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             display: 'Betas',
             hide: !flags.selfServeBetas,
             href: '/betas',
+            label: 'B',
           },
           {
             display: 'Identity and Access',
@@ -240,14 +258,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/iam',
             icon: <IAM />,
             isBeta: isIAMBeta,
+            label: 'IAM',
           },
           {
             display: 'Account',
             href: '/account',
+            label: 'ACC',
           },
           {
             display: 'Help & Support',
             href: '/support',
+            label: 'HEL',
           },
         ],
         name: 'More',
@@ -309,19 +330,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           <StyledDivider />
         </Grid>
       </Hidden>
-      <Grid
-        sx={(theme) => ({
-          flex: '1 1 0%',
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          scrollbarColor:
-            theme.name === 'dark'
-              ? `${theme.bg.primaryNavPaper} ${theme.bg.appBar} `
-              : `${theme.color.grey4} ${theme.bg.primaryNavPaper}`,
-          width: '100%',
-        })}
-        direction="column"
-      >
+      <StyledMenuGrid direction="column">
         {productFamilyLinkGroups.map((productFamily, idx) => {
           const filteredLinks = productFamily.links.filter(
             (link) => !link.hide
@@ -354,25 +363,22 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           return (
             <div key={idx} style={{ width: 'inherit' }}>
               {productFamily.name ? ( // TODO: we can remove this conditional when Managed is removed
-                <>
-                  <StyledAccordion
-                    heading={
-                      <>
-                        {productFamily.icon}
-                        <p>{productFamily.name}</p>
-                      </>
-                    }
-                    isActiveProductFamily={
-                      activeProductFamily === productFamily.name
-                    }
-                    expanded={!collapsedAccordions.includes(idx)}
-                    isCollapsed={isCollapsed}
-                    onChange={() => accordionClicked(idx)}
-                  >
-                    {PrimaryLinks}
-                  </StyledAccordion>
-                  <StyledDivider />
-                </>
+                <StyledAccordion
+                  heading={
+                    <>
+                      {productFamily.icon}
+                      <p>{productFamily.name}</p>
+                    </>
+                  }
+                  isActiveProductFamily={
+                    activeProductFamily === productFamily.name
+                  }
+                  expanded={!collapsedAccordions.includes(idx)}
+                  isCollapsed={isCollapsed}
+                  onChange={() => accordionClicked(idx)}
+                >
+                  {PrimaryLinks}
+                </StyledAccordion>
               ) : (
                 <Box className={`StyledSingleLinkBox-${idx}`}>
                   {PrimaryLinks}
@@ -381,7 +387,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             </div>
           );
         })}
-      </Grid>
+      </StyledMenuGrid>
       <Hidden mdDown>
         <Box padding={1}>
           {!isCollapsed ? (
