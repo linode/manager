@@ -38,7 +38,7 @@ export const BackupLinodeRow = (props: Props) => {
 
   return (
     <TableRow key={`backup-linode-${linode.id}`}>
-      <TableCell parentColumn="Label">
+      <TableCell>
         <Typography variant="body1">{linode.label}</Typography>
         {error && (
           <Typography
@@ -52,14 +52,11 @@ export const BackupLinodeRow = (props: Props) => {
           </Typography>
         )}
       </TableCell>
-      <TableCell parentColumn="Plan">
-        {type?.label ?? linode.type ?? 'Unknown'}
-      </TableCell>
-      <TableCell parentColumn="Region">{regionLabel ?? 'Unknown'}</TableCell>
+      <TableCell>{type?.label ?? linode.type ?? 'Unknown'}</TableCell>
+      <TableCell>{regionLabel ?? 'Unknown'}</TableCell>
       <TableCell
         errorCell={hasInvalidPrice}
         errorText={hasInvalidPrice ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
-        parentColumn="Price"
       >
         {`$${backupsMonthlyPrice?.toFixed(2) ?? UNKNOWN_PRICE}/mo`}
       </TableCell>

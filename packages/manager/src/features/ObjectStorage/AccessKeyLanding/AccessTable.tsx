@@ -100,10 +100,10 @@ export const AccessTable = React.memo((props: TableProps) => {
       <TableBody>
         {mode === 'creating' && (
           <StyledRadioRow data-qa-row="Select All" disabled={disabled}>
-            <TableCell colSpan={2} padding="checkbox" parentColumn="Cluster">
+            <TableCell colSpan={2} padding="checkbox">
               <strong>Select All</strong>
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="None">
+            <TableCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select none for all',
@@ -117,7 +117,7 @@ export const AccessTable = React.memo((props: TableProps) => {
                 value="none"
               />
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="Read Only">
+            <TableCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select read-only for all',
@@ -131,7 +131,7 @@ export const AccessTable = React.memo((props: TableProps) => {
                 value="read-only"
               />
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="Read/Write">
+            <TableCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select read/write for all',

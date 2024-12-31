@@ -1,5 +1,4 @@
 import { Box, StyledLinkButton, Typography } from '@linode/ui';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -18,7 +17,6 @@ interface Props {
   handleClickDelete: (objectName: string) => void;
   handleClickDetails: () => void;
   handleClickDownload: (objectName: string, newTab: boolean) => void;
-  manuallyCreated: boolean;
   objectLastModified: string;
   objectSize: number;
 }
@@ -38,7 +36,7 @@ export const ObjectTableRow = (props: Props) => {
       <TableCell>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <Grid className="py0">
-            <StyledEntityIcon size={20} variant="object" {...props} />
+            <EntityIcon size={20} variant="object" {...props} />
           </Grid>
           <Grid>
             <Box alignItems="center" display="flex">
@@ -70,13 +68,3 @@ export const ObjectTableRow = (props: Props) => {
     </TableRow>
   );
 };
-
-const StyledEntityIcon = styled(EntityIcon, {
-  label: 'StyledEntityIcon',
-})<Partial<Props>>(({ theme, ...props }) => ({
-  ...(props.manuallyCreated && {
-    '& g': {
-      fill: theme.bg.lightBlue1,
-    },
-  }),
-}));

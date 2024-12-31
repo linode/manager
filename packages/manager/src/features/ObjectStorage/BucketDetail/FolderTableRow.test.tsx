@@ -12,7 +12,6 @@ describe('FolderTableRow', () => {
       displayName: 'folder-with-special-chars...',
       folderName: 'folder-with-special-chars <>#%+{}|^[]`;?:@=&$',
       handleClickDelete: () => {},
-      manuallyCreated: false,
     };
 
     const { getByRole } = render(

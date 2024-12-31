@@ -44,7 +44,6 @@ const meta: Meta<TableProps> = {
         </TableBody>
       </>
     ),
-    noBorder: false,
     padding: 'normal',
     rowHoverState: true,
     size: 'medium',

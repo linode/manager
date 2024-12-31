@@ -45,8 +45,8 @@ export const AccessKeyTableRow = (props: Props) => {
 
   return (
     <TableRow data-qa-table-row={storageKeyData.label} key={storageKeyData.id}>
-      <TableCell parentColumn="Label">{storageKeyData.label}</TableCell>
-      <TableCell parentColumn="Access Key">
+      <TableCell>{storageKeyData.label}</TableCell>
+      <TableCell>
         <Stack direction="row">
           <MaskableText isToggleable text={storageKeyData.access_key}>
             <Typography variant="body1">{storageKeyData.access_key}</Typography>

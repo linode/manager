@@ -11,6 +11,7 @@ import type { Flags } from 'src/featureFlags';
 
 const props = {
   closeMenu: vi.fn(),
+  desktopMenuToggle: vi.fn(),
   isCollapsed: false,
   toggleSpacing: vi.fn(),
   toggleTheme: vi.fn(),

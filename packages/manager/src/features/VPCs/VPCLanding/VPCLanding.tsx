@@ -1,8 +1,8 @@
+import { CircleProgress } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from '@linode/ui';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -13,13 +13,13 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useVPCsQuery } from 'src/queries/vpcs/vpcs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import { VPCDeleteDialog } from './VPCDeleteDialog';
 import { VPCEditDrawer } from './VPCEditDrawer';
@@ -100,10 +100,6 @@ const VPCLanding = () => {
   return (
     <>
       <LandingHeader
-        createButtonText="Create VPC"
-        docsLink={VPC_DOCS_LINK}
-        onButtonClick={createVPC}
-        title={VPC_LABEL}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -111,7 +107,11 @@ const VPCLanding = () => {
             resourceType: 'VPCs',
           }),
         }}
+        createButtonText="Create VPC"
         disabledCreateButton={isVPCCreationRestricted}
+        docsLink={VPC_DOCS_LINK}
+        onButtonClick={createVPC}
+        title={VPC_LABEL}
       />
       <Table>
         <TableHead>
@@ -148,7 +148,7 @@ const VPCLanding = () => {
             <Hidden mdDown>
               <TableCell>Linodes</TableCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

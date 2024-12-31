@@ -1,7 +1,7 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import OrderBy from 'src/components/OrderBy';
+import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -14,8 +14,10 @@ import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-import { StyledDiv, StyledTable } from './ProcessesTable.styles';
-import { Process } from './types';
+import { StyledDiv } from './ProcessesTable.styles';
+
+import type { Process } from './types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface ProcessesTableProps {
   error?: string;
@@ -45,7 +47,7 @@ export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
       preferenceKey="lv-detail-processes"
     >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-        <StyledTable
+        <Table
           // This prop is necessary to show the "ActiveCaret", and we only
           // want it on large viewports.
           noOverflow={width >= 1280}
@@ -118,7 +120,7 @@ export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
               error
             )}
           </TableBody>
-        </StyledTable>
+        </Table>
       )}
     </OrderBy>
   );
