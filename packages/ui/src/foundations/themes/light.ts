@@ -1761,6 +1761,7 @@ export const lightTheme: ThemeOptions = {
     elevation: Elevation,
     font: Font,
     footer: GlobalFooter,
+    header: GlobalHeader,
     interaction: Interaction,
     radius: Radius,
     sideNavigation: SideNavigation,
