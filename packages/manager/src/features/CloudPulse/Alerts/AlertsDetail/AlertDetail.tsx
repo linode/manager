@@ -85,9 +85,9 @@ export const AlertDetail = () => {
       </>
     );
   }
-  // TODO: The overview, criteria, resources details for alerts will be added by consuming the results of useAlertDefinitionQuery call in the coming PR's
+  // TODO: The criteria, resources details for alerts will be added by consuming the results of useAlertDefinitionQuery call in the coming PR's
   return (
-    <React.Fragment>
+    <>
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
       <Box display="flex" flexDirection="column" gap={2}>
         <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
@@ -100,7 +100,7 @@ export const AlertDetail = () => {
           </Box>
         </Box>
       </Box>
-    </React.Fragment>
+    </>
   );
 };
 
