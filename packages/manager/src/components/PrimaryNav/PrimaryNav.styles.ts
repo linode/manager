@@ -25,7 +25,7 @@ export const StyledGrid = styled(Grid, {
 
 export const StyledLogoBox = styled(Box, {
   label: 'StyledLogoBox',
-})(() => ({
+})(({ theme }) => ({
   alignItems: 'center',
   display: 'flex',
   height: 50,
@@ -33,6 +33,9 @@ export const StyledLogoBox = styled(Box, {
   paddingLeft: 12,
   paddingRight: 24,
   paddingTop: 16,
+  [theme.breakpoints.down('md')]: {
+    borderRight: `1px solid ${theme.tokens.border.Normal}`,
+  },
   transition: 'padding-left .03s linear',
 }));
 
@@ -49,10 +52,7 @@ export const StyledAkamaiLogo = styled(AkamaiLogo, {
 export const StyledDivider = styled(Divider, {
   label: 'StyledDivider',
 })(({ theme }) => ({
-  borderColor:
-    theme.name === 'light'
-      ? theme.borderColors.dividerDark
-      : 'rgba(0, 0, 0, 0.19)',
+  borderColor: theme.tokens.border.Normal,
   margin: 0,
 }));
 
@@ -108,6 +108,9 @@ export const StyledMenuGrid = styled(Grid, {
   overflowX: 'hidden',
   overflowY: 'auto',
   scrollbarColor: `${theme.color.grey4} transparent `,
+  [theme.breakpoints.down('md')]: {
+    borderRight: `1px solid ${theme.tokens.border.Normal}`,
+  },
   width: '100%',
 }));
 
