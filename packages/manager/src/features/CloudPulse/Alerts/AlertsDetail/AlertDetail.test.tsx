@@ -19,10 +19,9 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
 }));
 
-vi.mock('src/queries/cloudpulse/services', async () => {
-  const actual = await vi.importActual('src/queries/cloudpulse/services');
+vi.mock('src/queries/cloudpulse/services', () => {
   return {
-    ...actual,
+    ...vi.importActual('src/queries/cloudpulse/services'),
     useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
   };
 });
