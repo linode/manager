@@ -4,7 +4,7 @@ import type { Theme } from '@mui/material';
 /**
  * @param serviceType Service type for which the label needs to be displayed
  * @param serviceTypes List of available service types in Cloud Pulse
- * @returns The label for the given service type, or the serviceType itself if not found or serviceTypes is undefined.
+ * @returns The label for the given service type from available service types
  */
 export const getServiceTypeLabel = (
   serviceType: string,
