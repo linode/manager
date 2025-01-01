@@ -6,7 +6,7 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
-import { severityMap, alertStatusToIconStatusMap } from '../constants';
+import { alertStatusToIconStatusMap, severityMap } from '../constants';
 import { getServiceTypeLabel } from '../Utils/utils';
 import { AlertDetailRow } from './AlertDetailRow';
 
