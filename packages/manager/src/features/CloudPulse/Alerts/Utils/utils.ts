@@ -23,7 +23,7 @@ export const getServiceTypeLabel = (
 
 /**
  * @param theme MUI theme object
- * @returns The style object for the alert box, including background color and padding
+ * @returns The style object for the box used in alert details page
  */
 export const getAlertBoxStyles = (theme: Theme) => ({
   backgroundColor:
