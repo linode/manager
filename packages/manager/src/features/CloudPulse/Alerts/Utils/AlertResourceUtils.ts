@@ -7,14 +7,6 @@ interface FilterResourceProps {
    */
   data?: CloudPulseResources[];
   /*
-   * The selected regions on which the data needs to be filtered
-   */
-  filteredRegions?: string[];
-  /**
-   * Property to integrate in edit the resources associated with resources
-   */
-  isAdditionOrDeletionNeeded?: boolean;
-  /*
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
   regionsIdToLabelMap: Map<string, Region>;
@@ -22,21 +14,6 @@ interface FilterResourceProps {
    * The resources associated with the alerts
    */
   resourceIds: string[];
-
-  /*
-   * The search text with which the resources needed to be filtered
-   */
-  searchText?: string;
-
-  /**
-   * If it set to true,  only show selected resources
-   */
-  selectedOnly?: boolean;
-
-  /*
-   * This property helps to be track the list of selected resources
-   */
-  selectedResources?: number[];
 }
 
 /**

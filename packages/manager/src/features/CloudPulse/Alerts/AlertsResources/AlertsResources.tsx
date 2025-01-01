@@ -118,7 +118,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                 hideLabel
                 isSearching={false}
                 placeholder="Search for a Resource"
-                value={searchText ?? ''}
+                value={searchText || ''}
                 label="Search for a Resource"
               />
             </Grid>
@@ -132,7 +132,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             </Grid>
           </Grid>
 
-          {/** TODO: Here a table will be added to display the resources based the filters applied*/}
+          {/* TODO: Here a table will be added to display the resources based the filters applied and also error handling */}
         </Grid>
       )}
     </React.Fragment>
