@@ -2,19 +2,21 @@ import { CircleProgress, Typography } from '@linode/ui';
 import { Grid, styled, useTheme } from '@mui/material';
 import React from 'react';
 
-import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
+import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import {
+  getFilteredResources,
   getRegionOptions,
   getRegionsIdLabelMap,
 } from '../Utils/AlertResourceUtils';
+import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { Region } from '@linode/api-v4';
-import { AlertsRegionFilter } from './AlertsRegionFilter';
 
 export interface AlertResourcesProp {
   /**
@@ -42,6 +44,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const [searchText, setSearchText] = React.useState<string>();
 
+  const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
+  const pageSize = 25;
+
   const {
     data: resources,
     isError: isResourcesError,
@@ -55,8 +60,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const theme = useTheme();
 
-  const [, setFilteredRegions] = React.useState<string[]>([]);
-
   const {
     data: regions,
     isError: isRegionsError,
@@ -67,6 +70,26 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const regionsIdToLabelMap: Map<string, Region> = React.useMemo(() => {
     return getRegionsIdLabelMap(regions);
   }, [regions]);
+
+  /**
+   * Holds the resources that are
+   * filtered based on the passed resourceIds, typed searchText and filtered regions
+   */
+  const filteredResources = React.useMemo(() => {
+    return getFilteredResources({
+      data: resources,
+      filteredRegions,
+      regionsIdToLabelMap,
+      resourceIds,
+      searchText,
+    });
+  }, [
+    resources,
+    resourceIds,
+    searchText,
+    filteredRegions,
+    regionsIdToLabelMap,
+  ]);
 
   /**
    * Holds the regions associated with the resources from list of regions
@@ -85,6 +108,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     return <CircleProgress />;
   }
 
+  const scrollToTitle = () => {
+    if (titleRef.current) {
+      window.scrollTo({
+        behavior: 'smooth',
+        top: titleRef.current.getBoundingClientRect().top + window.scrollY - 40, // Adjust offset if needed
+      });
+    }
+  };
+
   return (
     <React.Fragment>
       <Typography
@@ -100,7 +132,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           title={
             'No resources are currently assigned to this alert definition.'
           }
-          icon={AlertsIcon}
+          icon={EntityIcon}
           subtitle="You can assign alerts during the resource creation process."
         />
       )}
@@ -113,13 +145,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                 onSearch={(value) => {
                   setSearchText(value);
                 }}
+                sx={{
+                  maxHeight: theme.spacing(4.25),
+                }}
                 clearable
                 debounceTime={300}
                 hideLabel
                 isSearching={false}
-                placeholder="Search for a Resource"
-                value={searchText || ''}
                 label="Search for a Resource"
+                placeholder="Search for a Resource"
+                value={searchText ?? ''}
               />
             </Grid>
             <Grid item md={4} xs={12}>
@@ -132,7 +167,24 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             </Grid>
           </Grid>
 
-          {/* TODO: Here a table will be added to display the resources based the filters applied and also error handling */}
+          <Grid container item rowGap={3} xs={12}>
+            {/* Pass filtered data */}
+            <Grid item xs={12}>
+              <DisplayAlertResources
+                noDataText={
+                  !(isResourcesError || isRegionsError) &&
+                    !Boolean(filteredResources?.length)
+                    ? 'No Results found.'
+                    : undefined
+                }
+                errorText={'Table data is unavailable. Please try again later.'}
+                filteredResources={filteredResources}
+                isDataLoadingError={isResourcesError || isRegionsError}
+                pageSize={pageSize}
+                scrollToTitle={scrollToTitle}
+              />
+            </Grid>
+          </Grid>
         </Grid>
       )}
     </React.Fragment>
