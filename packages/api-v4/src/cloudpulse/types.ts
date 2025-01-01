@@ -2,12 +2,8 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
 export type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
 export type AlertServiceType = 'linode' | 'dbaas';
-export type DimensionFilterOperatorType =
-  | 'eq'
-  | 'neq'
-  | 'startswith'
-  | 'endswith';
-export type AlertDefinitionType = 'system' | 'user';
+type DimensionFilterOperatorType = 'eq' | 'neq' | 'startswith' | 'endswith';
+export type AlertDefinitionType = 'system' | 'user' | 'custom' | 'default';
 export type AlertStatusType = 'enabled' | 'disabled';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =

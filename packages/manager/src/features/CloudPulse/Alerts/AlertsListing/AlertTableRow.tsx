@@ -43,7 +43,7 @@ export const AlertTableRow = (props: Props) => {
         </Typography>
       </TableCell>
       <TableCell>
-        <DateTimeDisplay value={updated} />
+        <DateTimeDisplay value={new Date(updated).toISOString()} />
       </TableCell>
       <TableCell>{created_by}</TableCell>
       <TableCell actionCell>
