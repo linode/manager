@@ -3,19 +3,19 @@ import type { Theme } from '@mui/material';
 
 /**
  * @param serviceType Service type for which the label needs to be displayed
- * @param serviceTypes List of available service types in Cloud Pulse
+ * @param serviceTypeList List of available service types in Cloud Pulse
  * @returns The label for the given service type from available service types
  */
 export const getServiceTypeLabel = (
   serviceType: string,
-  serviceTypes: ServiceTypesList | undefined
+  serviceTypeList: ServiceTypesList | undefined
 ) => {
-  if (!serviceTypes) {
+  if (!serviceTypeList) {
     return serviceType;
   }
 
   return (
-    serviceTypes.data.find(
+    serviceTypeList.data.find(
       ({ service_type: serviceTypeObj }) => serviceTypeObj === serviceType
     )?.label || serviceType
   );

@@ -32,7 +32,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
     updated,
   } = alertDetails;
 
-  const { data: serviceTypes, isFetching } = useCloudPulseServiceTypes(true);
+  const { data: serviceTypeList, isFetching } = useCloudPulseServiceTypes(true);
 
   if (isFetching) {
     return <CircleProgress />;
@@ -54,7 +54,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
         <AlertDetailRow label="Severity" value={severityMap[severity]} />
         <AlertDetailRow
           label="Service"
-          value={getServiceTypeLabel(serviceType, serviceTypes)}
+          value={getServiceTypeLabel(serviceType, serviceTypeList)}
         />
         <AlertDetailRow
           label="Type"
