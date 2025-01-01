@@ -1,4 +1,5 @@
-import { Grid, Typography, useTheme } from '@mui/material';
+import { Typography } from '@linode/ui';
+import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';

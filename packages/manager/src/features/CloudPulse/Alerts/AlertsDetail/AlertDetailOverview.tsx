@@ -1,5 +1,5 @@
-import { CircleProgress } from '@linode/ui';
-import { Grid, Typography } from '@mui/material';
+import { CircleProgress, Typography } from '@linode/ui';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
