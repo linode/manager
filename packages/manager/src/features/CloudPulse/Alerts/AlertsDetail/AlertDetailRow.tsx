@@ -59,7 +59,6 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
             marginTop={theme.spacing(0.7)}
             maxHeight={theme.spacing(1)}
             maxWidth={theme.spacing(1)}
-            pulse={false}
             status={status}
           />
         )}

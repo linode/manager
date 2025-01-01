@@ -6,7 +6,7 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
-import { severityMap, statusColorMap } from '../constants';
+import { severityMap, alertStatusToIconStatusMap } from '../constants';
 import { getServiceTypeLabel } from '../Utils/utils';
 import { AlertDetailRow } from './AlertDetailRow';
 
@@ -48,7 +48,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
         <AlertDetailRow label="Description" value={description} />
         <AlertDetailRow
           label="Status"
-          status={statusColorMap[status]}
+          status={alertStatusToIconStatusMap[status]}
           value={convertStringToCamelCasesWithSpaces(status)}
         />
         <AlertDetailRow label="Severity" value={severityMap[severity]} />

@@ -81,7 +81,7 @@ export const severityMap: Record<AlertSeverityType, string> = {
   3: 'Info',
 };
 
-export const statusColorMap: Record<AlertStatusType, Status> = {
+export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',
 };
