@@ -2366,27 +2366,29 @@ export const handlers = [
     }
   ),
   http.get('*/monitor/alert-definitions', async ({ request }) => {
-    const customAlerts = alertFactory.buildList(2, {
+    const customAlerts = alertFactory.buildList(5, {
       severity: 0,
       type: 'user',
+      updated: '2021-10-16T04:00:00',
     });
-    const customAlertsWithServiceType = alertFactory.buildList(2, {
+    const customAlertsWithServiceType = alertFactory.buildList(4, {
       service_type: 'dbaas',
       severity: 1,
       type: 'user',
+      created_by: 'user2',
     });
-    const defaultAlerts = alertFactory.buildList(1, { type: 'system' });
-    const defaultAlertsWithServiceType = alertFactory.buildList(1, {
+    const defaultAlerts = alertFactory.buildList(4, { type: 'system' });
+    const defaultAlertsWithServiceType = alertFactory.buildList(3, {
       service_type: 'dbaas',
       severity: 3,
       type: 'system',
     });
     const alerts = [
       ...defaultAlerts,
-      ...alertFactory.buildList(3, { status: 'disabled' }),
+      ...alertFactory.buildList(5, { status: 'disabled' }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
-      ...alertFactory.buildList(3),
+      ...alertFactory.buildList(36, { updated: '2021-10-16T04:00:00', status: 'disabled'}),
       ...customAlertsWithServiceType,
     ];
     return HttpResponse.json(makeResourcePage(alerts));

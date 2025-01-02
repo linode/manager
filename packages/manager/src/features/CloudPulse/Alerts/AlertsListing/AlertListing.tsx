@@ -1,28 +1,73 @@
-import { Paper } from '@linode/ui';
+import { Autocomplete, Paper, Stack } from '@linode/ui';
 import { Grid } from '@mui/material';
-import React from 'react';
+import * as React from 'react';
 
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { TableSortCell } from 'src/components/TableSortCell';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
+import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
-import { AlertTableRow } from './AlertTableRow';
-import { AlertListingTableLabelMap } from './constants';
+import { alertStatusOptions } from '../constants';
+import { AlertsListTable } from './AlertsListTable';
+
+import type { Item } from '../constants';
+import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
 
 export const AlertListing = () => {
-  // These are dummy order value and handleOrder methods, will replace them in the next PR
-  const order = 'asc';
-  const handleOrderChange = () => {
-    return 'asc';
-  };
-  const { data: alerts, isError, isLoading } = useAllAlertDefinitionsQuery();
+  const { data: alerts, error, isLoading } = useAllAlertDefinitionsQuery();
+  const {
+    data: serviceOptions,
+    error: serviceTypesError,
+    isLoading: serviceTypesLoading,
+  } = useCloudPulseServiceTypes(true);
+
+  const getServicesList = React.useMemo((): Item<
+    string,
+    AlertServiceType
+  >[] => {
+    return serviceOptions && serviceOptions.data.length > 0
+      ? serviceOptions.data.map((service) => ({
+          label: service.label,
+          value: service.service_type as AlertServiceType,
+        }))
+      : [];
+  }, [serviceOptions]);
+
+  React.useEffect(() => {
+    setServiceFilters(getServicesList);
+  }, [getServicesList]);
+  const [searchText, setSearchText] = React.useState<string>('');
+
+  const [serviceFilters, setServiceFilters] = React.useState<
+    Item<string, AlertServiceType>[]
+  >([]);
+  const [statusFilters, setStatusFilters] = React.useState<
+    Item<string, AlertStatusType>[]
+  >(alertStatusOptions);
+
+  const serviceFilteredAlerts = React.useMemo(() => {
+    if (serviceFilters && serviceFilters.length !== 0 && alerts) {
+      return alerts.filter((alert: Alert) => {
+        return serviceFilters.some(
+          (serviceFilter) => serviceFilter.value === alert.service_type
+        );
+      });
+    }
+
+    return alerts;
+  }, [serviceFilters, alerts]);
+
+  const statusFilteredAlerts = React.useMemo(() => {
+    if (statusFilters && statusFilters?.length !== 0 && alerts) {
+      return alerts.filter((alert: Alert) => {
+        return statusFilters.some(
+          (statusFilter) => statusFilter.value === alert.status
+        );
+      });
+    }
+    return alerts;
+  }, [statusFilters, alerts]);
+
   if (alerts?.length === 0) {
     return (
       <Grid item xs={12}>
@@ -35,38 +80,95 @@ export const AlertListing = () => {
       </Grid>
     );
   }
+
+  const getAlertsList = () => {
+    if (!alerts) {
+      return [];
+    }
+    let filteredAlerts = alerts;
+
+    if (serviceFilters && serviceFilters.length > 0) {
+      filteredAlerts = serviceFilteredAlerts ?? [];
+    }
+
+    if (statusFilters && statusFilters.length > 0) {
+      filteredAlerts = statusFilteredAlerts ?? [];
+    }
+
+    if (serviceFilters.length > 0 && statusFilters.length > 0) {
+      filteredAlerts = filteredAlerts.filter((alert) => {
+        return (
+          serviceFilters.some(
+            (serviceFilter) => serviceFilter.value === alert.service_type
+          ) &&
+          statusFilters.some(
+            (statusFilter) => statusFilter.value === alert.status
+          )
+        );
+      });
+    }
+
+    if (searchText) {
+      filteredAlerts = filteredAlerts.filter((alert: Alert) => {
+        return alert.label.toLowerCase().includes(searchText.toLowerCase());
+      });
+    }
+
+    return filteredAlerts;
+  };
+
+  // eslint-disable-next-line no-console
+  console.log(serviceFilters);
   return (
-    <Grid marginTop={2}>
-      <Table colCount={7} size="small">
-        <TableHead>
-          <TableRow>
-            {AlertListingTableLabelMap.map((value) => (
-              <TableSortCell
-                active={true}
-                direction={order}
-                handleClick={handleOrderChange}
-                key={value.label}
-                label={value.label}
-              >
-                {value.colName}
-              </TableSortCell>
-            ))}
-            <TableCell actionCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {isError && (
-            <TableRowError
-              colSpan={7}
-              message={'Error in fetching the alerts.'}
-            />
-          )}
-          {isLoading && <TableRowLoading columns={7} />}
-          {alerts?.map((alert) => (
-            <AlertTableRow alert={alert} key={alert.id} />
-          ))}
-        </TableBody>
-      </Table>
-    </Grid>
+    <Stack spacing={2}>
+      <Grid container display="flex" gap={2} overflow="auto">
+        <Grid item md={3} sm={5} sx={{ paddingLeft: 0 }} xs={10}>
+          <DebouncedSearchTextField
+            debounceTime={250}
+            label=""
+            noMarginTop
+            onSearch={setSearchText}
+            placeholder="Search for Alerts"
+            value={searchText}
+          />
+        </Grid>
+        <Grid item md={3} sm={5} xs={10}>
+          <Autocomplete
+            errorText={
+              serviceTypesError ? 'An error in fetching the services.' : ''
+            }
+            onChange={(_, selected) => {
+              setServiceFilters(selected);
+            }}
+            label={''}
+            loading={serviceTypesLoading}
+            multiple
+            noMarginTop
+            options={getServicesList}
+            placeholder={serviceFilters.length > 0 ? '' : 'Select a Service'}
+            value={serviceFilters}
+          />
+        </Grid>
+        <Grid item md={3} sm={5} xs={10}>
+          <Autocomplete
+            onChange={(_, selected) => {
+              setStatusFilters(selected);
+            }}
+            label={''}
+            multiple
+            noMarginTop
+            options={alertStatusOptions}
+            placeholder={statusFilters.length > 0 ? '' : 'Select a Status'}
+            value={statusFilters}
+          />
+        </Grid>
+      </Grid>
+      <AlertsListTable
+        alerts={getAlertsList()}
+        error={error ?? undefined}
+        isLoading={isLoading}
+        services={getServicesList}
+      />
+    </Stack>
   );
 };

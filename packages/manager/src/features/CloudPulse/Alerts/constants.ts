@@ -1,4 +1,4 @@
-import type { AlertSeverityType } from '@linode/api-v4';
+import type { AlertSeverityType, AlertStatusType } from '@linode/api-v4';
 
 export interface Item<L extends string, T> {
   label: L;
@@ -20,4 +20,9 @@ export const engineTypeOptions: Item<string, string>[] = [
     label: 'PostgreSQL',
     value: 'postgresql',
   },
+];
+
+export const alertStatusOptions: Item<string, AlertStatusType>[] = [
+  { label: 'Enabled', value: 'enabled' },
+  { label: 'Disabled', value: 'disabled' },
 ];
