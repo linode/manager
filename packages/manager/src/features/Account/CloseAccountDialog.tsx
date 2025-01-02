@@ -3,25 +3,16 @@ import { Notice, TextField, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useProfile } from 'src/queries/profile/profile';
 
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Theme } from '@mui/material/styles';
 
 interface Props {
   closeDialog: () => void;
   open: boolean;
 }
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  dontgo: {
-    marginTop: theme.spacing(2),
-    order: 1,
-  },
-}));
 
 const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
@@ -29,7 +20,6 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   );
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [comments, setComments] = React.useState<string>('');
-  const { classes } = useStyles();
   const history = useHistory();
   const { data: profile } = useProfile();
 
@@ -75,32 +65,46 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       });
   };
 
-  if (!profile?.username) {
+  if (!profile?.email) {
     return null;
   }
 
   return (
     <TypeToConfirmDialog
       entity={{
-        name: profile.username,
+        name: profile.email,
         primaryBtnText: 'Close Account',
         subType: 'CloseAccount',
         type: 'AccountSetting',
       }}
+      typographyStyleSx={(theme) => ({
+        borderTop: `1px solid ${theme.tokens.border.Normal}`,
+        marginBottom: theme.tokens.spacing[40],
+        marginTop: theme.tokens.spacing[60],
+        paddingTop: theme.tokens.spacing[60],
+        width: '100%',
+      })}
       inputRef={inputRef}
-      label={`Please enter your Username (${profile.username}) to confirm.`}
+      label={`Enter your email address (${profile.email})`}
       loading={isClosingAccount}
       onClick={handleCancelAccount}
       onClose={closeDialog}
       open={open}
-      textFieldStyle={{ maxWidth: '415px' }}
+      reverseButtons
       title="Are you sure you want to close your cloud computing services account?"
     >
       {errors ? (
         <Notice text={errors ? errors[0].reason : ''} variant="error" />
       ) : null}
       <StyledNoticeWrapper>
-        <Notice spacingBottom={12} variant="warning">
+        <Notice
+          sx={(theme) => ({
+            border: `1px solid ${theme.tokens.action.Negative.Default}`,
+          })}
+          important
+          spacingBottom={12}
+          variant="error"
+        >
           <Typography sx={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Please note this is an extremely
             destructive action. Closing your account means that all services
@@ -109,7 +113,12 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
           </Typography>
         </Notice>
       </StyledNoticeWrapper>
-      <Typography className={classes.dontgo}>
+      <Typography
+        sx={(theme) => ({
+          marginTop: theme.tokens.spacing[60],
+          order: 1,
+        })}
+      >
         We&rsquo;d hate to see you go. Please let us know what we could be doing
         better in the comments section below. After your account is closed,
         you&rsquo;ll be directed to a quick survey so we can better gauge your

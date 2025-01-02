@@ -60,6 +60,13 @@ export const Secondary: Story = {
   render: (args) => <Button {...args} />,
 };
 
+export const SecondaryWarning: Story = {
+  args: {
+    buttonType: 'secondary',
+  },
+  render: (args) => <Button {...args} color="warning" />,
+};
+
 /** Outlined Button
  * This hybrid button style should be used with discretion. It is used when:
  * - A primary button is appropriate but is distracting or misleading. One example is a Delete button on an entity and we do not want to suggest deleting is the preferred action.

@@ -506,7 +506,7 @@ export const lightTheme: ThemeOptions = {
           color: textColors.linkActiveLight,
           minHeight: 34,
         },
-        root: {
+        root: ({ ownerState }) => ({
           '&[aria-disabled="true"]': {
             cursor: 'not-allowed',
           },
@@ -520,8 +520,32 @@ export const lightTheme: ThemeOptions = {
           minWidth: 105,
           textTransform: 'capitalize',
           transition: 'none',
-        },
+          ...(ownerState.color === 'warning' && {
+            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus': {
+              backgroundColor: Background.Negativesubtle,
+              border: `1px solid ${Border.Negative}`,
+              color: Action.Negative.Default,
+            },
+            '&[aria-disabled="true"]': {
+              backgroundColor: 'transparent',
+              border: `1px solid ${Button.Secondary.Disabled.Border}`,
+              color: Button.Secondary.Disabled.Text,
+            },
+            backgroundColor: 'transparent',
+            border: `1px solid ${Border.Negative}`,
+            color: Action.Negative.Default,
+          }),
+        }),
       },
+      variants: [
+        {
+          props: { variant: 'loading' },
+          style: {
+            backgroundColor: Button.Primary.Disabled.Background,
+            border: 0,
+          },
+        },
+      ],
     },
     MuiButtonBase: {
       styleOverrides: {

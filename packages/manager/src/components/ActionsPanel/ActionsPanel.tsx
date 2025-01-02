@@ -1,11 +1,11 @@
-import { Box, Button } from '@linode/ui';
+import { Box, Button, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useStyles } from 'tss-react/mui';
 
 import type { BoxProps, ButtonProps } from '@linode/ui';
 
-interface ActionButtonsProps extends ButtonProps {
+export interface ActionButtonsProps extends ButtonProps {
   'data-node-idx'?: number;
   'data-qa-form-data-loading'?: boolean;
   'data-testid'?: string;
@@ -13,6 +13,11 @@ interface ActionButtonsProps extends ButtonProps {
 }
 
 export interface ActionPanelProps extends BoxProps {
+  /**
+   * Determines the position of the primary button within the actions panel.
+   * Can be either 'left' or 'right'.
+   */
+  primaryButtonPosition?: 'left' | 'right';
   /**
    * primary type actionable button custom aria descripton.
    */
@@ -30,6 +35,7 @@ export interface ActionPanelProps extends BoxProps {
 export const ActionsPanel = (props: ActionPanelProps) => {
   const {
     className,
+    primaryButtonPosition = 'right',
     primaryButtonProps,
     secondaryButtonProps,
     ...rest
@@ -44,6 +50,7 @@ export const ActionsPanel = (props: ActionPanelProps) => {
     <StyledBox
       className={cx(className, 'actionPanel')}
       data-qa-buttons
+      primaryButtonPosition={primaryButtonPosition}
       {...rest}
     >
       {secondaryButtonProps ? (
@@ -69,14 +76,13 @@ export const ActionsPanel = (props: ActionPanelProps) => {
   );
 };
 
-const StyledBox = styled(Box)(({ theme: { spacing } }) => ({
-  '& > :first-of-type': {
-    marginLeft: 0,
-    marginRight: spacing(),
-  },
-  '& > :only-child': {
-    marginRight: 0,
-  },
+const StyledBox = styled(Box, {
+  label: 'StyledActionsPanel',
+  shouldForwardProp: omittedProps(['primaryButtonPosition']),
+})<ActionPanelProps>(({ theme: { spacing }, ...props }) => ({
+  display: 'flex',
+  flexDirection: props.primaryButtonPosition === 'left' ? 'row-reverse' : 'row',
+  gap: spacing(),
   justifyContent: 'flex-end',
   marginTop: spacing(1),
   paddingBottom: spacing(1),
