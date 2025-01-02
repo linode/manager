@@ -21,7 +21,6 @@ const mockStandardCluster = kubernetesClusterFactory.build({
 
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
-  useFlags: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/account/account', () => {
@@ -29,14 +28,6 @@ vi.mock('src/queries/account/account', () => {
   return {
     ...actual,
     useAccount: queryMocks.useAccount,
-  };
-});
-
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: queryMocks.useFlags,
   };
 });
 
@@ -63,15 +54,17 @@ describe('Kubernetes cluster action menu', () => {
         capabilities: ['Kubernetes Enterprise'],
       },
     });
-    queryMocks.useFlags.mockReturnValue({
-      lkeEnterprise: {
-        enabled: true,
-        la: true,
-      },
-    });
 
     const { getByText } = render(
-      wrapWithTheme(<ClusterChips cluster={mockEnterpriseCluster} />)
+      wrapWithTheme(<ClusterChips cluster={mockEnterpriseCluster} />, {
+        flags: {
+          lkeEnterprise: {
+            enabled: true,
+            ga: false,
+            la: true,
+          },
+        },
+      })
     );
 
     expect(getByText('HA', { exact: false })).toBeVisible();
@@ -84,15 +77,17 @@ describe('Kubernetes cluster action menu', () => {
         capabilities: ['Kubernetes Enterprise'],
       },
     });
-    queryMocks.useFlags.mockReturnValue({
-      lkeEnterprise: {
-        enabled: false,
-        la: true,
-      },
-    });
 
     const { getByText, queryByText } = render(
-      wrapWithTheme(<ClusterChips cluster={mockEnterpriseCluster} />)
+      wrapWithTheme(<ClusterChips cluster={mockEnterpriseCluster} />, {
+        flags: {
+          lkeEnterprise: {
+            enabled: false,
+            ga: false,
+            la: true,
+          },
+        },
+      })
     );
 
     expect(getByText('HA', { exact: false })).toBeVisible();
@@ -105,15 +100,17 @@ describe('Kubernetes cluster action menu', () => {
         capabilities: ['Kubernetes Enterprise'],
       },
     });
-    queryMocks.useFlags.mockReturnValue({
-      lkeEnterprise: {
-        enabled: true,
-        la: true,
-      },
-    });
 
     const { queryByText } = render(
-      wrapWithTheme(<ClusterChips cluster={mockStandardCluster} />)
+      wrapWithTheme(<ClusterChips cluster={mockStandardCluster} />, {
+        flags: {
+          lkeEnterprise: {
+            enabled: true,
+            ga: false,
+            la: true,
+          },
+        },
+      })
     );
 
     expect(queryByText('HA')).toBe(null);
