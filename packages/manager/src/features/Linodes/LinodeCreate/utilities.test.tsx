@@ -157,6 +157,8 @@ describe('getInterfacesPayload', () => {
           {
             ipam_address: '',
             label: '',
+            // Confirms VPC interface passed in is returned as expected - VPC interfaces should be marked as primary if they exist
+            primary: true,
             purpose: 'vpc',
             vpc_id: 5,
           },
@@ -191,6 +193,7 @@ describe('getInterfacesPayload', () => {
           {
             ipam_address: '',
             label: '',
+            primary: true,
             purpose: 'vpc',
             vpc_id: 5,
           },
@@ -230,6 +233,7 @@ describe('getInterfacesPayload', () => {
           {
             ipam_address: '',
             label: '',
+            primary: true,
             purpose: 'vpc',
             vpc_id: 5,
           },
@@ -269,6 +273,7 @@ describe('getInterfacesPayload', () => {
           {
             ipam_address: '',
             label: '',
+            primary: true,
             purpose: 'vpc',
             vpc_id: 5,
           },
