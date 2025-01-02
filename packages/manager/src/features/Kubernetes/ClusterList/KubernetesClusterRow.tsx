@@ -19,6 +19,7 @@ import {
   useLkeStandardOrEnterpriseVersions,
 } from '../kubeUtils';
 import { ClusterActionMenu } from './ClusterActionMenu';
+import { ClusterChips } from './ClusterChips';
 
 import type { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 
@@ -71,7 +72,7 @@ export const KubernetesClusterRow = (props: Props) => {
   const region = regions?.find((r) => r.id === cluster.region);
 
   const { versions } = useLkeStandardOrEnterpriseVersions(
-    cluster.tier ?? 'standard' //TODO LKE: remove fallback once LKE-E is in GA and tier is required
+    cluster.tier ?? 'standard' // TODO LKE: remove fallback once LKE-E is in GA and tier is required
   );
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
@@ -108,17 +109,7 @@ export const KubernetesClusterRow = (props: Props) => {
               </Link>
             </div>
           </Grid>
-          {cluster.control_plane.high_availability && (
-            <Grid>
-              <Chip
-                data-testid="ha-chip"
-                label="HA"
-                size="small"
-                sx={(theme) => ({ borderColor: theme.color.green })}
-                variant="outlined"
-              />
-            </Grid>
-          )}
+          <ClusterChips cluster={cluster} sx={{ marginLeft: 1 }} />
         </Grid>
       </TableCell>
       <Hidden mdDown>
