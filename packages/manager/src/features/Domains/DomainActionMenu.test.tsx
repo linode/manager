@@ -2,7 +2,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { domainFactory } from 'src/factories/domain';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { DomainActionMenu } from './DomainActionMenu';
 
@@ -15,7 +15,7 @@ const props = {
 
 describe('Domain action menu', () => {
   it('should include basic Domain actions', async () => {
-    const { getByText, queryByLabelText } = renderWithTheme(
+    const { getByText, queryByLabelText } = await renderWithThemeAndRouter(
       <DomainActionMenu domain={domainFactory.build()} {...props} />
     );
 

@@ -8,9 +8,9 @@ import { DimensionOperatorOptions } from '../../constants';
 import { DimensionFilterField } from './DimensionFilterField';
 
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AvailableMetrics } from '@linode/api-v4';
+import type { MetricDefinition } from '@linode/api-v4';
 
-const mockData: AvailableMetrics[] = [
+const mockData: MetricDefinition[] = [
   {
     available_aggregate_functions: ['min', 'max', 'avg'],
     dimensions: [

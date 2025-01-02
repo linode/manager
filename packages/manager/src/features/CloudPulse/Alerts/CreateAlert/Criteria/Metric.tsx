@@ -14,8 +14,8 @@ import { DimensionFilters } from './DimensionFilter';
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from '../types';
 import type {
-  AvailableMetrics,
   MetricAggregationType,
+  MetricDefinition,
   MetricOperatorType,
 } from '@linode/api-v4';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -24,7 +24,7 @@ interface MetricCriteriaProps {
   /**
    * metric data fetched by the metric definitions endpoint
    */
-  data: AvailableMetrics[];
+  data: MetricDefinition[];
   /**
    * variable to check for metric definitions api call error state
    */
