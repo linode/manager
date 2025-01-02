@@ -12,6 +12,12 @@ const serviceTypes = serviceTypesFactory.buildList(1, {
   label: 'Databases',
   service_type: 'dbaas',
 });
+
+const alertDetails = alertFactory.build({
+  description: 'This is test description',
+  label: 'Test alert',
+  severity: 3,
+});
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseServiceTypes: vi.fn(),
@@ -33,11 +39,6 @@ beforeEach(() => {
 
 describe('AlertDetailOverview component tests', () => {
   it('should render alert detail overview with required props', () => {
-    const alertDetails = alertFactory.build({
-      description: 'This is test description',
-      label: 'Test alert',
-      severity: 3,
-    });
     const { getByText } = renderWithTheme(
       <AlertDetailOverview alertDetails={alertDetails} />
     );
@@ -58,13 +59,8 @@ describe('AlertDetailOverview component tests', () => {
       isError: false,
       isFetching: true,
     });
-    const alert = alertFactory.build({
-      description: 'This is test description',
-      label: 'Test alert',
-      severity: 3,
-    });
     const { getByTestId, queryByText } = renderWithTheme(
-      <AlertDetailOverview alertDetails={alert} />
+      <AlertDetailOverview alertDetails={alertDetails} />
     );
 
     expect(getByTestId('circle-progress')).toBeInTheDocument();
