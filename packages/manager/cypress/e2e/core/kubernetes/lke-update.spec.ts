@@ -6,6 +6,7 @@ import {
   linodeFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
+  linodeTypeFactory,
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -43,6 +44,7 @@ import { getRegionById } from 'support/util/regions';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { randomString } from 'support/util/random';
+import { buildArray } from 'support/util/arrays';
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
@@ -1068,9 +1070,24 @@ describe('LKE cluster updates', () => {
       k8s_version: latestKubernetesVersion,
     });
 
+    const mockType = linodeTypeFactory.build();
+
+    const mockNodePoolInstances = buildArray(3, () =>
+      linodeFactory.build({ label: randomLabel() })
+    );
+
+    const mockNodes = mockNodePoolInstances.map((linode, i) =>
+      kubeLinodeFactory.build({
+        id: `id-${i * 5000}`,
+        instance_id: linode.id,
+        status: 'ready',
+      })
+    );
+
     const mockNodePoolNoTags = nodePoolFactory.build({
       id: 1,
-      type: 'g6-dedicated-4',
+      type: mockType.id,
+      nodes: mockNodes,
     });
 
     const mockNodePoolWithTags = {
@@ -1078,17 +1095,41 @@ describe('LKE cluster updates', () => {
       tags: ['test-tag'],
     };
 
+    mockGetLinodes(mockNodePoolInstances);
+    mockGetLinodeType(linodeTypeFactory.build({ id: mockType.id })).as(
+      'getType'
+    );
     mockGetCluster(mockCluster).as('getCluster');
     mockGetClusterPools(mockCluster.id, [mockNodePoolNoTags]).as(
       'getNodePoolsNoTags'
     );
     mockGetKubernetesVersions().as('getVersions');
+    mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
+      'getControlPlaneAcl'
+    );
     mockUpdateNodePool(mockCluster.id, mockNodePoolWithTags).as('addTag');
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait(['@getCluster', '@getNodePoolsNoTags', '@getVersions']);
+    cy.wait([
+      '@getCluster',
+      '@getNodePoolsNoTags',
+      '@getVersions',
+      '@getType',
+      '@getControlPlaneAcl',
+    ]);
+
+    // Confirm that Linode instance info has finished loading before attempting
+    // to interact with the tag button.
+    mockNodePoolInstances.forEach((linode) => {
+      cy.findByText(linode.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText('Running').should('be.visible');
+        });
+    });
 
     cy.get(`[data-qa-node-pool-id="${mockNodePoolNoTags.id}"]`).within(() => {
       ui.button.findByTitle('Add a tag').should('be.visible').click();
