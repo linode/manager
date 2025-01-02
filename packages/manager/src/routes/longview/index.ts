@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { LongviewRoute } from './LongviewRoute';
@@ -15,6 +15,9 @@ const longviewRoute = createRoute({
 });
 
 const longviewLandingRoute = createRoute({
+  beforeLoad: () => {
+    throw redirect({ to: '/longview/clients' });
+  },
   getParentRoute: () => longviewRoute,
   path: '/',
 }).lazy(() =>
