@@ -62,7 +62,7 @@ export const LongviewLanding = (props: LongviewProps) => {
     setSubscriptionDialogOpen,
   ] = React.useState<boolean>(false);
 
-  const { currentIndex, handleTabChange, tabs } = useTabs([
+  const { handleTabChange, tabs, tabIndex } = useTabs([
     {
       title: 'Clients',
       to: '/longview/clients',
@@ -138,7 +138,7 @@ export const LongviewLanding = (props: LongviewProps) => {
         removeCrumbX={1}
         title="Longview"
       />
-      <StyledTabs index={currentIndex} onChange={handleTabChange}>
+      <StyledTabs index={tabIndex} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>

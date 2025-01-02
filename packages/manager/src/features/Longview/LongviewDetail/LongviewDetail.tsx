@@ -106,7 +106,7 @@ export const LongviewDetail = (props: CombinedProps) => {
     [clientAPIKey, lastUpdated]
   );
 
-  const { currentIndex, handleTabChange, tabs } = useTabs([
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
       title: 'Overview',
       to: '/longview/clients/$id/overview',
@@ -195,7 +195,7 @@ export const LongviewDetail = (props: CombinedProps) => {
           variant="warning"
         />
       ))}
-      <StyledTabs index={currentIndex} onChange={handleTabChange}>
+      <StyledTabs index={tabIndex} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>

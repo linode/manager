@@ -34,15 +34,16 @@ export function useTabs<T extends Tab>(tabs: T[]) {
   const navigate = useNavigate();
   const matchRoute = useMatchRoute();
 
+  // Filter out hidden tabs
   const visibleTabs = React.useMemo(() => tabs.filter((tab) => !tab.hide), [
     tabs,
   ]);
-
   // Get initial index from route
-  const currentIndex = React.useMemo(
+  const initialIndex = React.useMemo(
     () => visibleTabs.findIndex((tab) => matchRoute({ to: tab.to })),
     [visibleTabs, matchRoute]
   );
+  const indexRef = React.useRef(initialIndex);
 
   const handleTabChange = React.useCallback(
     (index: number) => {
@@ -51,17 +52,20 @@ export function useTabs<T extends Tab>(tabs: T[]) {
         return;
       }
 
-      // 2. Schedule the navigation for the next tick to let Reach update first
-      Promise.resolve().then(() => {
-        navigate({ to: visibleTabs[index].to });
+      // 2. Update the index
+      indexRef.current = index;
+
+      // 3. Update the index and navigate
+      navigate({
+        to: visibleTabs[indexRef.current].to,
       });
     },
     [visibleTabs, navigate]
   );
 
   return {
-    currentIndex,
     handleTabChange,
+    tabIndex: indexRef.current,
     tabs: visibleTabs,
   };
 }
