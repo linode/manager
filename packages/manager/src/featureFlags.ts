@@ -231,7 +231,7 @@ export type ProductInformationBannerLocation =
   | 'Databases'
   | 'Domains'
   | 'Firewalls'
-  | 'Identity and Access Management'
+  | 'Identity and Access'
   | 'Images'
   | 'Kubernetes'
   | 'LinodeCreate' // Use for Marketplace banners
