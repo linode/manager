@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useMatchRoute, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import type { LinkProps } from '@tanstack/react-router';
@@ -30,41 +30,34 @@ export interface Tab {
   to: LinkProps['to'];
 }
 
-interface UseTabsOptions {
-  /**
-   * The index of the tab to select by default.
-   */
-  defaultIndex?: number;
-}
-
-export function useTabs<T extends Tab>(
-  tabs: T[],
-  options: UseTabsOptions = {}
-) {
+export function useTabs<T extends Tab>(tabs: T[]) {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { defaultIndex = 0 } = options;
+  const matchRoute = useMatchRoute();
+
   const visibleTabs = React.useMemo(() => tabs.filter((tab) => !tab.hide), [
     tabs,
   ]);
-  const initialIndex = React.useCallback(() => {
-    return Math.max(
-      visibleTabs.findIndex((tab) => location.pathname === tab.to),
-      defaultIndex
-    );
-  }, [visibleTabs, location.pathname, defaultIndex]);
-  const [currentIndex, setCurrentIndex] = React.useState(initialIndex);
 
-  const handleTabChange = (index: number) => {
-    if (visibleTabs[index]?.disabled) {
-      return;
-    }
+  // Get initial index from route
+  const currentIndex = React.useMemo(
+    () => visibleTabs.findIndex((tab) => matchRoute({ to: tab.to })),
+    [visibleTabs, matchRoute]
+  );
 
-    setCurrentIndex(index);
-    navigate({
-      to: visibleTabs[index].to,
-    });
-  };
+  const handleTabChange = React.useCallback(
+    (index: number) => {
+      // 1. Prevent a navigate call if the tab is disabled
+      if (visibleTabs[index]?.disabled) {
+        return;
+      }
+
+      // 2. Schedule the navigation for the next tick to let Reach update first
+      Promise.resolve().then(() => {
+        navigate({ to: visibleTabs[index].to });
+      });
+    },
+    [visibleTabs, navigate]
+  );
 
   return {
     currentIndex,
