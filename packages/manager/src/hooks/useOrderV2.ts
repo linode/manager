@@ -48,7 +48,9 @@ export const useOrderV2 = ({
   preferenceKey,
   prefix,
 }: UseOrderV2Props) => {
-  const { data: preferences } = usePreferences();
+  const { data: orderPreferences } = usePreferences(
+    (preferences) => preferences?.sortKeys
+  );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const searchParams = useSearch({ from: initialRoute.from });
   const navigate = useNavigate();
@@ -77,8 +79,8 @@ export const useOrderV2 = ({
 
     // 3. Stored preferences
     const prefKey = prefix ? `${prefix}-${preferenceKey}` : preferenceKey;
-    if (preferenceKey && preferences?.sortKeys?.[prefKey]) {
-      return preferences.sortKeys[prefKey];
+    if (preferenceKey && orderPreferences?.[prefKey]) {
+      return orderPreferences[prefKey];
     }
 
     // 4. Default values
@@ -110,7 +112,7 @@ export const useOrderV2 = ({
     const prefKey = prefix ? `${prefix}-${preferenceKey}` : preferenceKey;
     updatePreferences({
       sortKeys: {
-        ...(preferences?.sortKeys ?? {}),
+        ...(orderPreferences ?? {}),
         [prefKey]: { order: newOrder, orderBy: newOrderBy },
       },
     });
