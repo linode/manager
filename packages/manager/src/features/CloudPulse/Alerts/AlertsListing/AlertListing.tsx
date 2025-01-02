@@ -37,6 +37,14 @@ export const AlertListing = () => {
     );
   };
 
+  const handleEdit = ({ id: _id, service_type: serviceType }: Alert) => {
+    history.push(
+      `${location.pathname}/edit/${serviceType}/${
+        serviceType === 'linode' ? '1001' : '20000' // only these two ids are available, so using this
+      }`
+    );
+  };
+
   if (alerts?.length === 0) {
     return (
       <Grid item xs={12}>
@@ -80,6 +88,7 @@ export const AlertListing = () => {
             <AlertTableRow
               handlers={{
                 handleDetails: () => handleDetails(alert),
+                handleEdit: () => handleEdit(alert),
               }}
               alert={alert}
               key={alert.id}

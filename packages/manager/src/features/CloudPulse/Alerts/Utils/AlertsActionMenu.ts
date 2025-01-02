@@ -20,12 +20,20 @@ export const getAlertTypeToActionsList = ({
       onClick: handleDetails,
       title: 'Show Details',
     },
+    {
+      onClick: handleDetails,
+      title: 'Edit',
+    },
   ],
   // for now there is system and user alert types, in future more alert types can be added and action items will differ according to alert types
   system: [
     {
       onClick: handleDetails,
       title: 'Show Details',
+    },
+    {
+      onClick: handleDetails,
+      title: 'Edit',
     },
   ],
   user: [
