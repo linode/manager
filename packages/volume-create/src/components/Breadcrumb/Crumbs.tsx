@@ -1,15 +1,15 @@
-import { LocationDescriptor } from 'history';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { LocationDescriptor } from "history";
+import * as React from "react";
+import { Link } from "react-router-dom";
 
 import {
   StyledDiv,
   StyledSlashTypography,
   StyledTypography,
-} from './Crumbs.styles';
-import { FinalCrumb } from './FinalCrumb';
-import { FinalCrumbPrefix } from './FinalCrumbPrefix';
-import { EditableProps, LabelProps } from './types';
+} from "./Crumbs.styles";
+import { FinalCrumb } from "./FinalCrumb";
+import { FinalCrumbPrefix } from "./FinalCrumbPrefix";
+import { EditableProps, LabelProps } from "./types";
 
 export interface CrumbOverridesProps {
   label?: string;
@@ -49,7 +49,7 @@ export const Crumbs = React.memo((props: Props) => {
     <>
       {finalCrumbs.map((crumb: string, key: number) => {
         const link =
-          '/' + pathMap.slice(0, -(pathMap.length - (key + 1))).join('/');
+          "/" + pathMap.slice(0, -(pathMap.length - (key + 1))).join("/");
         const override =
           crumbOverrides && crumbOverrides.find((e) => e.position === key + 1);
 
@@ -68,10 +68,10 @@ export const Crumbs = React.memo((props: Props) => {
               <StyledTypography
                 sx={{
                   ...(override &&
-                    override.noCap && { textTransform: 'initial' }),
+                    override.noCap && { textTransform: "initial" }),
                 }}
                 data-qa-link-text
-                data-testid={'link-text'}
+                data-testid={"link-text"}
               >
                 {crumbOverrides && override
                   ? override.label

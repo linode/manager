@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { accountQueries } from './queries';
+import { accountQueries } from "./queries";
 
-import type { APIError, AccountAvailability } from '@linode/api-v4';
+import type { APIError, AccountAvailability } from "@linode/api-v4";
 
 export const useAllAccountAvailabilitiesQuery = (enabled: boolean = true) =>
   useQuery<AccountAvailability[], APIError[]>({

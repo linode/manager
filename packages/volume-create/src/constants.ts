@@ -1,4 +1,4 @@
-import { getBooleanEnv } from './utilities/env';
+import { getBooleanEnv } from "./utilities/env";
 
 // whether or not this is a Vite production build
 // This does not necessarily mean Cloud is running in a production environment.
@@ -6,40 +6,37 @@ import { getBooleanEnv } from './utilities/env';
 const isProductionBuild = import.meta.env.PROD;
 
 // allow us to explicity enable dev tools
-export const ENABLE_DEV_TOOLS = getBooleanEnv(
-  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS
+const ENABLE_DEV_TOOLS = getBooleanEnv(
+  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS,
 );
 
 // allow us to explicity enable maintenance mode
 const ENABLE_MAINTENANCE_MODE =
-  import.meta.env.REACT_APP_ENABLE_MAINTENANCE_MODE === 'true';
+  import.meta.env.REACT_APP_ENABLE_MAINTENANCE_MODE === "true";
 
 /** required for the app to function */
-export const APP_ROOT =
-  import.meta.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
-export const LOGIN_ROOT =
-  import.meta.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
+const APP_ROOT = import.meta.env.REACT_APP_APP_ROOT || "http://localhost:3000";
+const LOGIN_ROOT =
+  import.meta.env.REACT_APP_LOGIN_ROOT || "https://login.linode.com";
 const API_ROOT =
-  import.meta.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
-const BETA_API_ROOT = API_ROOT + 'beta';
+  import.meta.env.REACT_APP_API_ROOT || "https://api.linode.com/v4";
+const BETA_API_ROOT = API_ROOT + "beta";
 /** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
-export const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
+const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
 /** All of the following used specifically for Algolia search */
-const DOCS_BASE_URL = 'https://linode.com';
-const COMMUNITY_BASE_URL = 'https://linode.com/community/';
+const DOCS_BASE_URL = "https://linode.com";
+const COMMUNITY_BASE_URL = "https://linode.com/community/";
 const DOCS_SEARCH_URL =
-  'https://www.linode.com/docs/topresults/?docType=products%2Cguides%2Capi%2Creference-architecture&lndq=';
+  "https://www.linode.com/docs/topresults/?docType=products%2Cguides%2Capi%2Creference-architecture&lndq=";
 const COMMUNITY_SEARCH_URL =
-  'https://linode.com/community/questions/search?query=';
+  "https://linode.com/community/questions/search?query=";
 const ALGOLIA_APPLICATION_ID =
-  import.meta.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
-const ALGOLIA_SEARCH_KEY =
-  import.meta.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
-export const LAUNCH_DARKLY_API_KEY =
-  import.meta.env.REACT_APP_LAUNCH_DARKLY_ID || '';
-export const LINODE_STATUS_PAGE_URL =
+  import.meta.env.REACT_APP_ALGOLIA_APPLICATION_ID || "";
+const ALGOLIA_SEARCH_KEY = import.meta.env.REACT_APP_ALGOLIA_SEARCH_KEY || "";
+const LAUNCH_DARKLY_API_KEY = import.meta.env.REACT_APP_LAUNCH_DARKLY_ID || "";
+const LINODE_STATUS_PAGE_URL =
   import.meta.env.REACT_APP_STATUS_PAGE_URL ||
-  'https://status.linode.com/api/v2';
+  "https://status.linode.com/api/v2";
 
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
@@ -51,26 +48,23 @@ export const API_MAX_PAGE_SIZE =
 const LARGE_ACCOUNT_THRESHOLD = 1500;
 
 // PayPal Client ID
-const PAYPAL_CLIENT_ID =
-  import.meta.env.REACT_APP_PAYPAL_CLIENT_ID || 'sb';
+const PAYPAL_CLIENT_ID = import.meta.env.REACT_APP_PAYPAL_CLIENT_ID || "sb";
 
 // Google Pay Merchant ID
 const GPAY_MERCHANT_ID = import.meta.env.REACT_APP_GPAY_MERCHANT_ID;
 
 // Google Pay Environment: 'TEST|PRODUCTION'
-const GPAY_CLIENT_ENV =
-  import.meta.env.REACT_APP_GPAY_ENV || 'PRODUCTION';
+const GPAY_CLIENT_ENV = import.meta.env.REACT_APP_GPAY_ENV || "PRODUCTION";
 
-export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
+const LONGVIEW_ROOT = "https://longview.linode.com/fetch";
 
 /** optional variables */
-export const SENTRY_URL = import.meta.env.REACT_APP_SENTRY_URL;
+const SENTRY_URL = import.meta.env.REACT_APP_SENTRY_URL;
 const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 
 /** Adobe Analytics */
-export const ADOBE_ANALYTICS_URL = import.meta.env
-  .REACT_APP_ADOBE_ANALYTICS_URL;
+const ADOBE_ANALYTICS_URL = import.meta.env.REACT_APP_ADOBE_ANALYTICS_URL;
 const NUM_ADOBE_SCRIPTS = 3;
 
 /** Pendo */
@@ -81,16 +75,16 @@ const ACCESS_TOKEN = import.meta.env.REACT_APP_ACCESS_TOKEN;
 
 const LOG_PERFORMANCE_METRICS =
   !isProductionBuild &&
-  import.meta.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
+  import.meta.env.REACT_APP_LOG_PERFORMANCE_METRICS === "true";
 
 const DISABLE_EVENT_THROTTLE =
   Boolean(import.meta.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
 
 // read about luxon formats https://moment.github.io/luxon/docs/manual/formatting.html
 // this format is not ISO
-export const DATETIME_DISPLAY_FORMAT = 'yyyy-MM-dd HH:mm';
+const DATETIME_DISPLAY_FORMAT = "yyyy-MM-dd HH:mm";
 // ISO 8601 formats
-export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
+const ISO_DATE_FORMAT = "yyyy-MM-dd";
 const ISO_DATETIME_NO_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
 export const MAX_VOLUME_SIZE = 16384;
@@ -128,56 +122,49 @@ const POLLING_INTERVALS = {
 const REFRESH_INTERVAL = 60 * 30 * 1000;
 
 // Default error message for non-API errors
-export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
+export const DEFAULT_ERROR_MESSAGE = "An unexpected error occurred.";
 
 // Default size limit for Images (some users have custom limits)
 const IMAGE_DEFAULT_LIMIT = 6144;
 
-export const allowedHTMLTagsStrict: string[] = [
-  'a',
-  'p',
-  'b',
-  'del',
-  'em',
-  'i',
-  'code',
-  'strong',
+const allowedHTMLTagsStrict: string[] = [
+  "a",
+  "p",
+  "b",
+  "del",
+  "em",
+  "i",
+  "code",
+  "strong",
 ];
 
-export const allowedHTMLTagsFlexible: string[] = [
+const allowedHTMLTagsFlexible: string[] = [
   ...allowedHTMLTagsStrict,
-  'abbr',
-  'acronym',
-  'blockquote',
-  'br',
-  'hr',
-  'li',
-  'ol',
-  'ul',
-  'pre',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'span',
-  'table',
-  'tbody',
-  'td',
-  'th',
-  'thead',
-  'tr',
+  "abbr",
+  "acronym",
+  "blockquote",
+  "br",
+  "hr",
+  "li",
+  "ol",
+  "ul",
+  "pre",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "span",
+  "table",
+  "tbody",
+  "td",
+  "th",
+  "thead",
+  "tr",
 ];
 
-export const allowedHTMLAttr = [
-  'href',
-  'lang',
-  'title',
-  'align',
-  'class',
-  'rel',
-];
+const allowedHTMLAttr = ["href", "lang", "title", "align", "class", "rel"];
 
 /**
  * MBps rate for intra DC migrations (AKA Mutations)
@@ -192,20 +179,20 @@ const MBpsInterDC = 7.5;
 /**
  * The incoming network rate (in Gbps) that is standard for all Linodes
  */
-export const LINODE_NETWORK_IN = 40;
+const LINODE_NETWORK_IN = 40;
 
 /**
  * Events that have entities or otherwise would
  * be calculated as "clickable" in menus, but for which
  * there is no sensible destination.
  */
-export const nonClickEvents = ['profile_update'];
+const nonClickEvents = ["profile_update"];
 
 /**
  * Root URL for Object Storage clusters and buckets.
  * A bucket can be accessed at: {bucket}.{cluster}.OBJECT_STORAGE_ROOT
  */
-const OBJECT_STORAGE_ROOT = 'linodeobjects.com';
+const OBJECT_STORAGE_ROOT = "linodeobjects.com";
 
 /**
  * This delimiter is used to retrieve objects at just one hierarchical level.
@@ -219,14 +206,14 @@ const OBJECT_STORAGE_ROOT = 'linodeobjects.com';
  * only. This mechanism, in combination with "prefix" and "marker", allow us
  * to simulate folder traversal of a bucket.
  */
-export const OBJECT_STORAGE_DELIMITER = '/';
+const OBJECT_STORAGE_DELIMITER = "/";
 
 // Value from  1-4 reflecting a minimum score from zxcvbn
 const MINIMUM_PASSWORD_STRENGTH = 4;
 
 // When true, use the mock API defined in serverHandlers.ts instead of making network requests
 const MOCK_SERVICE_WORKER =
-  import.meta.env.REACT_APP_MOCK_SERVICE_WORKER === 'true';
+  import.meta.env.REACT_APP_MOCK_SERVICE_WORKER === "true";
 
 // Maximum payment methods
 const MAXIMUM_PAYMENT_METHODS = 6;
@@ -236,92 +223,93 @@ const PAYMENT_MIN = 5;
 const PAYMENT_SOFT_MAX = 2_000;
 const PAYMENT_HARD_MAX = 50_000;
 
-const DB_ROOT_USERNAME = 'linroot';
+const DB_ROOT_USERNAME = "linroot";
 
 // The date Linode switching to Akamai (for purposes of billing)
-const AKAMAI_DATE = '2022-12-15 00:00:00';
+const AKAMAI_DATE = "2022-12-15 00:00:00";
 
 const ADDRESSES = {
   akamai: {
     international: {
-      address1: 'Grafenauweg 8',
-      city: 'Zug',
-      country: 'Switzerland',
-      entity: 'Akamai Technologies International AG',
-      state: 'Zug',
-      zip: 'CH-6300',
+      address1: "Grafenauweg 8",
+      city: "Zug",
+      country: "Switzerland",
+      entity: "Akamai Technologies International AG",
+      state: "Zug",
+      zip: "CH-6300",
     },
     us: {
-      address1: '145 Broadway',
-      city: 'Cambridge',
-      country: 'USA',
-      entity: 'Akamai Technologies, Inc.',
-      state: 'MA',
-      zip: '02142',
+      address1: "145 Broadway",
+      city: "Cambridge",
+      country: "USA",
+      entity: "Akamai Technologies, Inc.",
+      state: "MA",
+      zip: "02142",
     },
   },
   linode: {
-    address1: '249 Arch St.',
-    city: 'Philadelphia',
-    country: 'USA',
-    entity: 'Linode',
-    state: 'PA',
-    zip: '19106',
+    address1: "249 Arch St.",
+    city: "Philadelphia",
+    country: "USA",
+    entity: "Linode",
+    state: "PA",
+    zip: "19106",
   },
 };
 
 const ACCESS_LEVELS = {
-  none: 'none',
-  readOnly: 'read_only',
-  readWrite: 'read_write',
+  none: "none",
+  readOnly: "read_only",
+  readWrite: "read_write",
 };
 
 // Linode Community URL accessible from the TopMenu Community icon
-const LINODE_COMMUNITY_URL = 'https://linode.com/community';
+const LINODE_COMMUNITY_URL = "https://linode.com/community";
 
-const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
+const FEEDBACK_LINK = "https://www.linode.com/feedback/";
 
-const DEVELOPERS_LINK = 'https://developers.linode.com';
+const DEVELOPERS_LINK = "https://developers.linode.com";
 
 // URL validators
-export const OFFSITE_URL_REGEX = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
-export const ONSITE_URL_REGEX = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
+const OFFSITE_URL_REGEX =
+  /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
+const ONSITE_URL_REGEX = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
 
 // Firewall links
 const CREATE_FIREWALL_LINK =
-  'https://techdocs.akamai.com/cloud-computing/docs/create-a-cloud-firewall';
+  "https://techdocs.akamai.com/cloud-computing/docs/create-a-cloud-firewall";
 const FIREWALL_GET_STARTED_LINK =
-  'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls';
+  "https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls";
 const FIREWALL_LIMITS_CONSIDERATIONS_LINK =
-  'https://techdocs.akamai.com/cloud-computing/docs/cloud-firewall#limits-and-considerations';
+  "https://techdocs.akamai.com/cloud-computing/docs/cloud-firewall#limits-and-considerations";
 
 // A/B Testing LD metrics keys for DX Tools
 const LD_DX_TOOLS_METRICS_KEYS = {
-  CURL_CODE_SNIPPET: 'A/B Test: Step 2 : cURL copy code snippet (copy icon)',
-  CURL_RESOURCE_LINKS: 'A/B Test: Step 2 : DX Tools cURL resources links',
-  CURL_TAB_SELECTION: 'A/B Test: Step 2 : DX Tools cURL tab selection',
+  CURL_CODE_SNIPPET: "A/B Test: Step 2 : cURL copy code snippet (copy icon)",
+  CURL_RESOURCE_LINKS: "A/B Test: Step 2 : DX Tools cURL resources links",
+  CURL_TAB_SELECTION: "A/B Test: Step 2 : DX Tools cURL tab selection",
   INTEGRATION_ANSIBLE_CODE_SNIPPET:
-    'A/B Test: Step 2 : Integrations: Ansible copy code snippet (copy icon)',
+    "A/B Test: Step 2 : Integrations: Ansible copy code snippet (copy icon)",
   INTEGRATION_ANSIBLE_RESOURCE_LINKS:
-    'a-b-test-step-2-dx-tools-integrations-ansible-resources-links',
+    "a-b-test-step-2-dx-tools-integrations-ansible-resources-links",
   INTEGRATION_TAB_SELECTION:
-    'A/B Test: Step 2 : DX Tools Integrations tab selection',
+    "A/B Test: Step 2 : DX Tools Integrations tab selection",
   INTEGRATION_TERRAFORM_CODE_SNIPPET:
-    'A/B Test: Step 2 : Integrations: Terraform copy code snippet (copy icon)',
+    "A/B Test: Step 2 : Integrations: Terraform copy code snippet (copy icon)",
   INTEGRATION_TERRAFORM_RESOURCE_LINKS:
-    'A/B Test: Step 2 : DX Tools integrations terraform resources links',
+    "A/B Test: Step 2 : DX Tools integrations terraform resources links",
   LINODE_CLI_CODE_SNIPPET:
-    'A/B Test: Step 2 : Linode CLI Tab selection and copy code snippet (copy icon)',
+    "A/B Test: Step 2 : Linode CLI Tab selection and copy code snippet (copy icon)",
   LINODE_CLI_RESOURCE_LINKS:
-    'A/B Test: Step 2 : DX Tools Linode CLI resources links',
-  LINODE_CLI_TAB_SELECTION: 'A/B Test: Step 2 : Linode CLI Tab Selection',
-  OPEN_MODAL: 'A/B Test: Step 1 : DX Tools Open Modal',
+    "A/B Test: Step 2 : DX Tools Linode CLI resources links",
+  LINODE_CLI_TAB_SELECTION: "A/B Test: Step 2 : Linode CLI Tab Selection",
+  OPEN_MODAL: "A/B Test: Step 1 : DX Tools Open Modal",
   SDK_GO_CODE_SNIPPET:
-    'A/B Test: Step 2 : SDK: GO copy code snippet (copy icon)',
-  SDK_GO_RESOURCE_LINKS: 'A/B Test: Step 2 : DX Tools SDK GO resources links',
+    "A/B Test: Step 2 : SDK: GO copy code snippet (copy icon)",
+  SDK_GO_RESOURCE_LINKS: "A/B Test: Step 2 : DX Tools SDK GO resources links",
   SDK_PYTHON_CODE_SNIPPET:
-    'A/B Test: Step 2 : SDK: Python copy code snippet (copy icon)',
+    "A/B Test: Step 2 : SDK: Python copy code snippet (copy icon)",
   SDK_PYTHON_RESOURCE_LINKS:
-    'A/B Test: Step 2 : DX Tools SDK Python resources links',
-  SDK_TAB_SELECTION: 'A/B Test: Step 2 : DX Tools SDK tab selection',
+    "A/B Test: Step 2 : DX Tools SDK Python resources links",
+  SDK_TAB_SELECTION: "A/B Test: Step 2 : DX Tools SDK tab selection",
 };

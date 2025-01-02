@@ -5,9 +5,9 @@ import {
   getNotifications,
   getPaymentMethods,
   getPayments,
-} from '@linode/api-v4';
+} from "@linode/api-v4";
 
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from "src/utilities/getAll";
 
 import type {
   AccountAvailability,
@@ -18,7 +18,7 @@ import type {
   Params,
   Payment,
   PaymentMethod,
-} from '@linode/api-v4';
+} from "@linode/api-v4";
 
 export const getAllNotifications = () =>
   getAll<Notification>(getNotifications)().then((data) => data.data);
@@ -28,36 +28,36 @@ export const getAllPaymentMethodsRequest = () =>
 
 export const getAllAccountMaintenance = (
   passedParams: Params = {},
-  passedFilter: Filter = {}
+  passedFilter: Filter = {},
 ) =>
   getAll<AccountMaintenance>((params, filter) =>
     getAccountMaintenance(
       { ...params, ...passedParams },
-      { ...filter, ...passedFilter }
-    )
+      { ...filter, ...passedFilter },
+    ),
   )().then((res) => res.data);
 
 export const getAllAccountInvoices = async (
   passedParams: Params = {},
-  passedFilter: Filter = {}
+  passedFilter: Filter = {},
 ) => {
   const res = await getAll<Invoice>((params, filter) =>
-    getInvoices({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+    getInvoices({ ...params, ...passedParams }, { ...filter, ...passedFilter }),
   )();
   return res.data;
 };
 
 export const getAllAccountPayments = async (
   passedParams: Params = {},
-  passedFilter: Filter = {}
+  passedFilter: Filter = {},
 ) => {
   const res = await getAll<Payment>((params, filter) =>
-    getPayments({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+    getPayments({ ...params, ...passedParams }, { ...filter, ...passedFilter }),
   )();
   return res.data;
 };
 
 export const getAllAccountAvailabilitiesRequest = () =>
   getAll<AccountAvailability>((params, filters) =>
-    getAccountAvailabilities(params, filters)
+    getAccountAvailabilities(params, filters),
   )().then((data) => data.data);

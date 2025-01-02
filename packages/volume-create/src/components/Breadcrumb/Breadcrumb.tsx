@@ -1,8 +1,8 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { StyledPreContainerDiv, StyledRootDiv } from './Breadcrumb.styles';
-import { CrumbOverridesProps, Crumbs } from './Crumbs';
-import { EditableProps, LabelProps } from './types';
+import { StyledPreContainerDiv, StyledRootDiv } from "./Breadcrumb.styles";
+import { CrumbOverridesProps, Crumbs } from "./Crumbs";
+import { EditableProps, LabelProps } from "./types";
 
 export interface BreadcrumbProps {
   /**
@@ -62,7 +62,7 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
   } = props;
 
   const url = pathname && pathname.slice(1);
-  const allPaths = url.split('/');
+  const allPaths = url.split("/");
 
   let pathMap;
 
@@ -85,7 +85,7 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
       {...breadcrumbDataAttrs}
     >
       <StyledPreContainerDiv
-        sx={{ ...(onEditHandlers !== undefined && { alignItems: 'center' }) }}
+        sx={{ ...(onEditHandlers !== undefined && { alignItems: "center" }) }}
       >
         <Crumbs
           crumbOverrides={crumbOverrides}

@@ -1,7 +1,7 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import { pathOr } from 'ramda';
+import { APIError } from "@linode/api-v4/lib/types";
+import { pathOr } from "ramda";
 
-import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
+import { DEFAULT_ERROR_MESSAGE } from "src/constants";
 
 /**
  *
@@ -31,7 +31,7 @@ import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 export const getAPIErrorOrDefault = (
   errorResponse: APIError[],
   defaultError: string = DEFAULT_ERROR_MESSAGE,
-  field?: string
+  field?: string,
 ): APIError[] => {
   const _defaultError = field
     ? [{ field, reason: defaultError }]
@@ -48,15 +48,15 @@ const isDefaultError = (errorResponse: APIError[]) => {
   );
 };
 
-export const getErrorStringOrDefault = (
+const getErrorStringOrDefault = (
   errors: APIError[] | string,
-  defaultError: string = 'An unexpected error occurred.'
+  defaultError: string = "An unexpected error occurred.",
 ): string => {
-  if (typeof errors === 'string') {
+  if (typeof errors === "string") {
     return errors;
   }
-  const apiErrors = pathOr(errors, ['response', 'data', 'errors'], errors);
-  return pathOr<string>(defaultError, [0, 'reason'], apiErrors);
+  const apiErrors = pathOr(errors, ["response", "data", "errors"], errors);
+  return pathOr<string>(defaultError, [0, "reason"], apiErrors);
 };
 
 /**
@@ -82,10 +82,10 @@ export const getErrorStringOrDefault = (
  * @param errors an API error response
  */
 // type = GetReturnType<E, Record<T | 'none', (string | undefined)>>
-export const getErrorMap = <T extends string = string>(
+const getErrorMap = <T extends string = string>(
   fields: T[] = [],
-  errors?: APIError[] | null
-): Partial<Record<'none' | T, string | undefined>> => {
+  errors?: APIError[] | null,
+): Partial<Record<"none" | T, string | undefined>> => {
   if (!errors) {
     return {} as Partial<Record<any, any>>;
   }
@@ -105,6 +105,6 @@ export const getErrorMap = <T extends string = string>(
         };
       }
     },
-    { none: undefined } as Record<string, string | undefined>
-  ) as Record<'none' | T, string | undefined>;
+    { none: undefined } as Record<string, string | undefined>,
+  ) as Record<"none" | T, string | undefined>;
 };

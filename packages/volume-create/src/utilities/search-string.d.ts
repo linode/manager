@@ -1,3 +1,3 @@
 // @todo: add types
 
-declare module 'search-string';
+declare module "search-string";

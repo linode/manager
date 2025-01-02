@@ -1,10 +1,10 @@
 import {
   CONTINENT_CODE_TO_CONTINENT,
   COUNTRY_CODE_TO_CONTINENT_CODE,
-} from '@linode/api-v4';
+} from "@linode/api-v4";
 
-import type { Agreements, Country, Profile } from '@linode/api-v4';
-import type { Region } from '@linode/api-v4';
+import type { Agreements, Country, Profile } from "@linode/api-v4";
+import type { Region } from "@linode/api-v4";
 
 interface GDPRConfiguration {
   /** The user's agreements */
@@ -19,7 +19,7 @@ interface GDPRConfiguration {
 
 export const getRegionCountryGroup = (region: Region | undefined) => {
   if (!region) {
-    return 'Other';
+    return "Other";
   }
 
   const continentCode =
@@ -28,20 +28,20 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
     ];
 
   return continentCode
-    ? CONTINENT_CODE_TO_CONTINENT[continentCode] ?? 'Other'
-    : 'Other';
+    ? (CONTINENT_CODE_TO_CONTINENT[continentCode] ?? "Other")
+    : "Other";
 };
 
 const getSelectedRegion = (
   regions: Region[],
-  selectedRegionId: string | undefined
+  selectedRegionId: string | undefined,
 ): Region | undefined => {
   return regions.find((thisRegion) => selectedRegionId === thisRegion.id);
 };
 
 const getSelectedRegionGroup = (
   regions: Region[],
-  selectedRegionId: string | undefined
+  selectedRegionId: string | undefined,
 ): string | undefined => {
   const selectedRegion = getSelectedRegion(regions, selectedRegionId);
 
@@ -67,7 +67,7 @@ const isEURegion = (regionContinent: string | undefined): boolean => {
  *    selectedRegionId,
  * });
  */
-export const getGDPRDetails = ({
+const getGDPRDetails = ({
   agreements,
   profile,
   regions,

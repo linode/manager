@@ -10,20 +10,20 @@ import {
   migrateVolumes,
   resizeVolume,
   updateVolume,
-} from '@linode/api-v4';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
+} from "@linode/api-v4";
+import { createQueryKeys } from "@lukemorales/query-key-factory";
 import {
   keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
-import { accountQueries } from '../account/queries';
-import { queryPresets } from '../base';
-import { profileQueries } from '../profile/profile';
-import { getAllVolumeTypes, getAllVolumes } from './requests';
+import { accountQueries } from "../account/queries";
+import { queryPresets } from "../base";
+import { profileQueries } from "../profile/profile";
+import { getAllVolumeTypes, getAllVolumes } from "./requests";
 
 import type {
   AttachVolumePayload,
@@ -32,11 +32,11 @@ import type {
   UpdateVolumeRequest,
   Volume,
   VolumeRequestPayload,
-} from '@linode/api-v4';
-import type { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import type { Filter, Params, PriceType } from '@linode/api-v4/src/types';
+} from "@linode/api-v4";
+import type { APIError, ResourcePage } from "@linode/api-v4/lib/types";
+import type { Filter, Params, PriceType } from "@linode/api-v4/lib/types";
 
-export const volumeQueries = createQueryKeys('volumes', {
+const volumeQueries = createQueryKeys("volumes", {
   linode: (linodeId: number) => ({
     contextQueries: {
       volumes: (params: Params = {}, filter: Filter = {}) => ({
@@ -105,10 +105,10 @@ const useInfiniteVolumesQuery = (filter: Filter) =>
     initialPageParam: 1,
   });
 
-export const useAllVolumesQuery = (
+const useAllVolumesQuery = (
   params: Params = {},
   filter: Filter = {},
-  enabled = true
+  enabled = true,
 ) =>
   useQuery<Volume[], APIError[]>({
     ...volumeQueries.lists._ctx.all(params, filter),
@@ -119,7 +119,7 @@ const useLinodeVolumesQuery = (
   linodeId: number,
   params: Params = {},
   filter: Filter = {},
-  enabled = true
+  enabled = true,
 ) =>
   useQuery<ResourcePage<Volume>, APIError[]>({
     ...volumeQueries.linode(linodeId)._ctx.volumes(params, filter),
@@ -139,7 +139,7 @@ const useResizeVolumeMutation = () => {
       // Update the specific volume
       queryClient.setQueryData<Volume>(
         volumeQueries.volume(volume.id).queryKey,
-        volume
+        volume,
       );
       // Invalidate all lists
       queryClient.invalidateQueries({
@@ -235,7 +235,7 @@ const useUpdateVolumeMutation = () => {
       // Update the specific volume
       queryClient.setQueryData<Volume>(
         volumeQueries.volume(volume.id).queryKey,
-        volume
+        volume,
       );
       // Invalidate all lists
       queryClient.invalidateQueries({
@@ -263,7 +263,7 @@ const useAttachVolumeMutation = () => {
       // Update the specific volume
       queryClient.setQueryData<Volume>(
         volumeQueries.volume(volume.id).queryKey,
-        volume
+        volume,
       );
       // Invalidate all lists
       queryClient.invalidateQueries({

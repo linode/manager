@@ -1,15 +1,15 @@
-import { getVlans } from '@linode/api-v4/lib/vlans';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { getVlans } from "@linode/api-v4/lib/vlans";
+import { createQueryKeys } from "@lukemorales/query-key-factory";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from "src/utilities/getAll";
 
-import type { APIError, Filter, ResourcePage, VLAN } from '@linode/api-v4';
+import type { APIError, Filter, ResourcePage, VLAN } from "@linode/api-v4";
 
 const getAllVLANs = (): Promise<VLAN[]> =>
   getAll<VLAN>((params) => getVlans(params))().then(({ data }) => data);
 
-export const vlanQueries = createQueryKeys('vlans', {
+export const vlanQueries = createQueryKeys("vlans", {
   all: {
     queryFn: getAllVLANs,
     queryKey: null,

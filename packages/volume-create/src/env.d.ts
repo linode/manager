@@ -18,7 +18,7 @@ interface ImportMetaEnv {
   REACT_APP_DISABLE_NEW_RELIC?: boolean;
   REACT_APP_ENABLE_DEV_TOOLS?: boolean;
   REACT_APP_ENABLE_MAINTENANCE_MODE?: string;
-  REACT_APP_GPAY_ENV?: 'PRODUCTION' | 'TEST';
+  REACT_APP_GPAY_ENV?: "PRODUCTION" | "TEST";
   REACT_APP_GPAY_MERCHANT_ID?: string;
   REACT_APP_LAUNCH_DARKLY_ID?: string;
   REACT_APP_LOG_PERFORMANCE_METRICS?: string;
@@ -38,12 +38,12 @@ interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
-declare module '*.svg' {
+declare module "*.svg" {
   const src: ComponentClass<any, any>;
   export default src;
 }
 
-declare module '*?raw' {
+declare module "*?raw" {
   const src: string;
   export default src;
 }

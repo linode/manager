@@ -1,19 +1,19 @@
-import { reverse } from 'ramda';
+import { reverse } from "ramda";
 
-import { getAPIErrorOrDefault } from './errorUtils';
-import { isNilOrEmpty } from './isNilOrEmpty';
+import { getAPIErrorOrDefault } from "./errorUtils";
+import { isNilOrEmpty } from "./isNilOrEmpty";
 
-import type { APIError } from '@linode/api-v4/lib/types';
-import type { FormikErrors } from 'formik';
+import type { APIError } from "@linode/api-v4/lib/types";
+import type { FormikErrors } from "formik";
 
 const getFormikErrorsFromAPIErrors = <T>(
   errors: APIError[],
-  prefixToRemoveFromFields?: string
+  prefixToRemoveFromFields?: string,
 ): FormikErrors<T> => {
   return errors.reduce((acc: FormikErrors<T>, error: APIError) => {
     if (error.field) {
       const field = prefixToRemoveFromFields
-        ? error.field.replace(prefixToRemoveFromFields, '')
+        ? error.field.replace(prefixToRemoveFromFields, "")
         : error.field;
 
       set(acc, field, error.reason);
@@ -38,7 +38,7 @@ const onlyDigitsRegex = /^\d+$/;
 const set = <T>(
   obj: FormikErrors<T>,
   path: string,
-  value: string
+  value: string,
 ): FormikErrors<T> => {
   const parts = path.split(/\.|\[|\]/).filter(Boolean);
 
@@ -61,7 +61,7 @@ const set = <T>(
       const potentialNextVal = parts[index + 1].match(onlyDigitsRegex)
         ? []
         : {};
-      acc[part] = typeof acc[part] === 'object' ? acc[part] : potentialNextVal;
+      acc[part] = typeof acc[part] === "object" ? acc[part] : potentialNextVal;
     }
     return acc[part];
   }, obj);
@@ -78,19 +78,19 @@ const set = <T>(
 const isPrototypePollutionSafe = (path: string[]): boolean => {
   return path.reduce((safeSoFar, val) => {
     const isCurKeySafe =
-      val !== '__proto__' && val !== 'prototype' && val !== 'constructor';
+      val !== "__proto__" && val !== "prototype" && val !== "constructor";
     return safeSoFar && isCurKeySafe;
   }, true);
 };
 
 export const handleFieldErrors = (
   callback: (error: unknown) => void,
-  fieldErrors: APIError[] = []
+  fieldErrors: APIError[] = [],
 ) => {
   const mappedFieldErrors = reverse(fieldErrors).reduce(
     (result, { field, reason }) =>
       field ? { ...result, [field]: reason } : result,
-    {}
+    {},
   );
 
   if (!isNilOrEmpty(mappedFieldErrors)) {
@@ -101,7 +101,7 @@ export const handleFieldErrors = (
 export const handleGeneralErrors = (
   callback: (error: unknown) => void,
   apiErrors: APIError[],
-  defaultMessage: string = 'An error has occurred.'
+  defaultMessage: string = "An error has occurred.",
 ) => {
   if (!apiErrors) {
     return callback(defaultMessage);
@@ -112,9 +112,9 @@ export const handleGeneralErrors = (
   const generalError = _apiErrors
     .reduce(
       (result, { field, reason }) => (field ? result : [...result, reason]),
-      []
+      [],
     )
-    .join(',');
+    .join(",");
 
   if (!isNilOrEmpty(generalError)) {
     return callback(generalError);
@@ -124,7 +124,7 @@ export const handleGeneralErrors = (
 const handleAPIErrors = (
   errors: APIError[],
   setFieldError: (field: string, message: string) => void,
-  setError?: (message: string) => void
+  setError?: (message: string) => void,
 ) => {
   errors.forEach((error: APIError) => {
     if (error.field) {
@@ -133,7 +133,7 @@ const handleAPIErrors = (
        * {"errors": [{"reason": "Invalid credit card number", "field": "data.card_number"}]}
        * It takes 'data.card_number' and translates it to 'card_number'
        */
-      const key = error.field.split('.')[error.field.split('.').length - 1];
+      const key = error.field.split(".")[error.field.split(".").length - 1];
       if (key) {
         setFieldError(key, error.reason);
       }

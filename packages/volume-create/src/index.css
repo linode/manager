@@ -15,10 +15,11 @@ body {
   height: 100%;
   margin: 0;
   padding: 0 !important;
-  font-family: 'LatoWeb', sans-serif;
+  font-family: "LatoWeb", sans-serif;
 
-  strong, b {
-    font-family: 'LatoWebBold', sans-serif;
+  strong,
+  b {
+    font-family: "LatoWebBold", sans-serif;
     font-weight: normal;
   }
 }
@@ -326,7 +327,7 @@ button::-moz-focus-inner {
   background: #3683dc;
   color: white;
   font-size: 14px;
-  font-family: 'LatoWebBold', sans-serif;
+  font-family: "LatoWebBold", sans-serif;
   padding: 8px;
   position: absolute;
   top: -40px;

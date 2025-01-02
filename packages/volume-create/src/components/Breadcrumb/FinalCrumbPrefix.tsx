@@ -1,5 +1,5 @@
-import { styled } from '@mui/material';
-import * as React from 'react';
+import { styled } from "@mui/material";
+import * as React from "react";
 
 interface Props {
   prefixComponent: JSX.Element | null;
@@ -16,11 +16,11 @@ export const FinalCrumbPrefix = (props: Props) => {
   );
 };
 
-const StyledDiv = styled('div')(({ theme }) => ({
-  '& svg, & img': {
+const StyledDiv = styled("div")(({ theme }) => ({
+  "& svg, & img": {
     marginLeft: theme.spacing(0.5),
     marginRight: theme.spacing(1),
-    position: 'relative',
+    position: "relative",
     top: -2,
   },
 }));

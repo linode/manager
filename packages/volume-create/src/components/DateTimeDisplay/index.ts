@@ -1,2 +1,0 @@
-;
-export { DateTimeDisplay } from './DateTimeDisplay';

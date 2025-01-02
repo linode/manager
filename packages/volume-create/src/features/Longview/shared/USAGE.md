@@ -13,7 +13,7 @@ The `<TimeRangeSelect />` aims to simplify the developer experience here.
 ### Props
 
 | Prop Name         | Type                                  | Description                                                                                                                                                      |
-|-------------------|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ----------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | handleStatsChange | (start: number, end: number) => void; | Function that returns the start and end times in seconds - these values should be used when requesting values from the Longview API with the `getValues` action. |
 
 ### Usage

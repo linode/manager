@@ -1,15 +1,13 @@
-import { Button } from '@linode/ui';
-import { styled, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import * as React from 'react';
+import { Button } from "@linode/ui";
+import { styled, useTheme } from "@mui/material/styles";
+import Grid from "@mui/material/Unstable_Grid2";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import * as React from "react";
 
-import BetaFeedbackIcon from 'src/assets/icons/icon-feedback.svg';
-import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { DocsLink } from 'src/components/DocsLink/DocsLink';
+import { Breadcrumb } from "src/components/Breadcrumb/Breadcrumb";
 
-import type { Theme } from '@mui/material/styles';
-import type { BreadcrumbProps } from 'src/components/Breadcrumb/Breadcrumb';
+import type { Theme } from "@mui/material/styles";
+import type { BreadcrumbProps } from "src/components/Breadcrumb/Breadcrumb";
 
 interface LandingHeaderProps {
   analyticsLabel?: string;
@@ -62,12 +60,12 @@ export const LandingHeader = ({
   const renderActions = Boolean(onButtonClick || extraActions);
   const labelTitle = title?.toString();
 
-  const xsDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+  const xsDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const customXsDownBreakpoint = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down(636)
+    theme.breakpoints.down(636),
   );
   const customSmMdBetweenBreakpoint = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.between(636, 'md')
+    theme.breakpoints.between(636, "md"),
   );
 
   const docsAnalyticsLabel = analyticsLabel
@@ -80,7 +78,7 @@ export const LandingHeader = ({
       container
       data-qa-entity-header
       justifyContent="space-between"
-      sx={{ width: '100%' }}
+      sx={{ width: "100%" }}
     >
       <Grid>
         <Breadcrumb
@@ -98,41 +96,19 @@ export const LandingHeader = ({
         <Grid>
           <Grid
             sx={{
-              flex: '1 1 auto',
+              flex: "1 1 auto",
               marginLeft: customSmMdBetweenBreakpoint
                 ? theme.spacing(2)
                 : customXsDownBreakpoint
-                ? theme.spacing(1)
-                : undefined,
+                  ? theme.spacing(1)
+                  : undefined,
             }}
             alignItems="center"
             display="flex"
-            flexWrap={xsDown ? 'wrap' : 'nowrap'}
+            flexWrap={xsDown ? "wrap" : "nowrap"}
             gap={3}
             justifyContent="flex-end"
           >
-            {betaFeedbackLink && (
-              <span
-                style={{
-                  marginLeft: xsDown ? `${theme.spacing(2)}` : undefined,
-                  marginRight: `${theme.spacing(2)}`,
-                }}
-              >
-                <DocsLink
-                  href={betaFeedbackLink}
-                  icon={<BetaFeedbackIcon />}
-                  label="BETA Feedback"
-                />
-              </span>
-            )}
-            {docsLink ? (
-              <DocsLink
-                analyticsLabel={docsAnalyticsLabel}
-                href={docsLink}
-                label={docsLabel}
-                onClick={onDocsClick}
-              />
-            ) : null}
             {renderActions && (
               <Actions>
                 {extraActions}
@@ -157,8 +133,8 @@ export const LandingHeader = ({
   );
 };
 
-const Actions = styled('div')(() => ({
-  display: 'flex',
-  gap: '24px',
-  justifyContent: 'flex-end',
+const Actions = styled("div")(() => ({
+  display: "flex",
+  gap: "24px",
+  justifyContent: "flex-end",
 }));

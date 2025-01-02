@@ -1,2 +1,1 @@
-;
-export { LandingHeader } from './LandingHeader';
+export { LandingHeader } from "./LandingHeader";

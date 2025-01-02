@@ -3,19 +3,19 @@ import type {
   Capabilities,
   Region,
   RegionSite,
-} from '@linode/api-v4';
-import type { EnhancedAutocompleteProps } from '@linode/ui';
-import type React from 'react';
-import type { DisableItemOption } from 'src/components/ListItemOption';
+} from "@linode/api-v4";
+import type { EnhancedAutocompleteProps } from "@linode/ui";
+import type React from "react";
+import type { DisableItemOption } from "src/components/ListItemOption";
 
 export type RegionFilterValue =
-  | 'distributed-AF'
-  | 'distributed-ALL'
-  | 'distributed-AS'
-  | 'distributed-EU'
-  | 'distributed-NA'
-  | 'distributed-OC'
-  | 'distributed-SA'
+  | "distributed-AF"
+  | "distributed-ALL"
+  | "distributed-AS"
+  | "distributed-EU"
+  | "distributed-NA"
+  | "distributed-OC"
+  | "distributed-SA"
   | RegionSite;
 
 interface GetRegionLabel {
@@ -23,10 +23,10 @@ interface GetRegionLabel {
   region: Region;
 }
 export interface RegionSelectProps<
-  DisableClearable extends boolean | undefined = undefined
+  DisableClearable extends boolean | undefined = undefined,
 > extends Omit<
     EnhancedAutocompleteProps<Region, false, DisableClearable>,
-    'label' | 'options' | 'value'
+    "label" | "options" | "value"
   > {
   /**
    * The specified capability to filter the regions on. Any region that does not have the `currentCapability` will not appear in the RegionSelect dropdown.
@@ -59,7 +59,7 @@ export interface RegionSelectProps<
 interface RegionMultiSelectProps
   extends Omit<
     EnhancedAutocompleteProps<Region, true>,
-    'label' | 'onChange' | 'options'
+    "label" | "onChange" | "options"
   > {
   SelectedRegionsList?: React.ComponentType<{
     onRemove: (region: string) => void;

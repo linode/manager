@@ -1,6 +1,6 @@
-import { UNKNOWN_PRICE } from './constants';
+import { UNKNOWN_PRICE } from "./constants";
 
-import type { PriceType, Region, RegionPriceObject } from '@linode/api-v4';
+import type { PriceType, Region, RegionPriceObject } from "@linode/api-v4";
 
 interface RegionPrice extends RegionPriceObject {
   id: string;
@@ -17,7 +17,7 @@ interface DataCenterPricingOptions {
    * The `id` of the region we intended to get the price for.
    * @example us-east
    */
-  regionId: Region['id'] | undefined;
+  regionId: Region["id"] | undefined;
 }
 
 interface DataCenterPricingByTypeOptions {
@@ -30,12 +30,12 @@ interface DataCenterPricingByTypeOptions {
    * The time period for which to find pricing data for (hourly or monthly).
    *  @default monthly
    */
-  interval?: 'hourly' | 'monthly';
+  interval?: "hourly" | "monthly";
   /**
    * The `id` of the region we intended to get the price for.
    * @example us-east
    */
-  regionId: Region['id'] | undefined;
+  regionId: Region["id"] | undefined;
   /**
    * Optionally allows price to be calculated by a factor of entity size.
    * @example 20 (GB) for a volume
@@ -48,9 +48,9 @@ interface DataCenterPricingByTypeOptions {
 }
 
 // The key is a region id and the value is the percentage increase in price.
-export const priceIncreaseMap = {
-  'br-gru': 0.4, // Sao Paulo
-  'id-cgk': 0.2, // Jakarta
+const priceIncreaseMap = {
+  "br-gru": 0.4, // Sao Paulo
+  "id-cgk": 0.2, // Jakarta
 };
 
 /**
@@ -97,7 +97,7 @@ const getDCSpecificPrice = ({
  */
 export const getDCSpecificPriceByType = ({
   decimalPrecision = 2,
-  interval = 'monthly',
+  interval = "monthly",
   regionId,
   size,
   type,
@@ -120,9 +120,9 @@ export const getDCSpecificPriceByType = ({
 };
 
 const renderMonthlyPriceToCorrectDecimalPlace = (
-  monthlyPrice: null | number | undefined
+  monthlyPrice: null | number | undefined,
 ) => {
-  if (typeof monthlyPrice !== 'number') {
+  if (typeof monthlyPrice !== "number") {
     return UNKNOWN_PRICE;
   }
   return Number.isInteger(monthlyPrice)

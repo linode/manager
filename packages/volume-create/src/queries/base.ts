@@ -1,10 +1,10 @@
-import { isEmpty } from '@linode/api-v4/lib/request';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { isEmpty } from "@linode/api-v4/lib/request";
+import { APIError, ResourcePage } from "@linode/api-v4/lib/types";
 import {
   QueryClient,
   QueryKey,
   UseMutationOptions,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
 // =============================================================================
 // Config
@@ -43,7 +43,7 @@ export const queryPresets = {
  * @returns New `QueryClient` instance.
  */
 const queryClientFactory = (
-  preset: 'longLived' | 'oneTimeFetch' = 'oneTimeFetch'
+  preset: "longLived" | "oneTimeFetch" = "oneTimeFetch",
 ) => {
   return new QueryClient({
     defaultOptions: { queries: queryPresets[preset] },
@@ -71,22 +71,18 @@ type ItemsByID<T> = Record<string, T>;
 
 const listToItemsByID = <E extends { [id: number | string]: any }>(
   entityList: E[],
-  indexer: string = 'id'
+  indexer: string = "id",
 ) => {
   return entityList.reduce<Record<string, E>>(
     (map, item) => ({ ...map, [item[indexer]]: item }),
-    {}
+    {},
   );
 };
 
-const mutationHandlers = <
-  T,
-  V extends Record<string, any>,
-  E = APIError[]
->(
+const mutationHandlers = <T, V extends Record<string, any>, E = APIError[]>(
   queryKey: QueryKey,
-  indexer: string = 'id',
-  queryClient: QueryClient
+  indexer: string = "id",
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables) => {
@@ -101,7 +97,7 @@ const mutationHandlers = <
 
 const simpleMutationHandlers = <T, V, E = APIError[]>(
   queryKey: QueryKey,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables: V) => {
@@ -113,14 +109,10 @@ const simpleMutationHandlers = <T, V, E = APIError[]>(
   };
 };
 
-const creationHandlers = <
-  T extends Record<string, any>,
-  V,
-  E = APIError[]
->(
+const creationHandlers = <T extends Record<string, any>, V, E = APIError[]>(
   queryKey: QueryKey,
-  indexer: string = 'id',
-  queryClient: QueryClient
+  indexer: string = "id",
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity) => {
@@ -133,14 +125,10 @@ const creationHandlers = <
   };
 };
 
-const deletionHandlers = <
-  T,
-  V extends Record<string, any>,
-  E = APIError[]
->(
+const deletionHandlers = <T, V extends Record<string, any>, E = APIError[]>(
   queryKey: QueryKey,
-  indexer: string = 'id',
-  queryClient: QueryClient
+  indexer: string = "id",
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (_, variables) => {
@@ -157,10 +145,10 @@ const deletionHandlers = <
 const itemInListMutationHandler = <
   T extends { id: number | string },
   V,
-  E = APIError[]
+  E = APIError[],
 >(
   queryKey: QueryKey,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables) => {
@@ -170,7 +158,7 @@ const itemInListMutationHandler = <
         }
 
         const index = oldData?.findIndex(
-          (item) => item.id === updatedEntity.id
+          (item) => item.id === updatedEntity.id,
         );
 
         if (index === -1) {
@@ -189,7 +177,7 @@ const itemInListMutationHandler = <
 
 const itemInListCreationHandler = <T, V, E = APIError[]>(
   queryKey: QueryKey,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (createdEntity) => {
@@ -209,10 +197,10 @@ const itemInListCreationHandler = <T, V, E = APIError[]>(
 const itemInListDeletionHandler = <
   T,
   V extends { id?: number | string },
-  E = APIError[]
+  E = APIError[],
 >(
   queryKey: QueryKey,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (_, variables) => {
@@ -247,7 +235,7 @@ const updateInPaginatedStore = <T extends { id: number | string }>(
   queryKey: QueryKey,
   id: number | string,
   newData: Partial<T>,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) => {
   queryClient.setQueriesData<ResourcePage<T> | undefined>(
     { queryKey },
@@ -257,7 +245,7 @@ const updateInPaginatedStore = <T extends { id: number | string }>(
       }
 
       const toUpdateIndex = oldData.data.findIndex(
-        (entity) => entity.id === id
+        (entity) => entity.id === id,
       );
 
       const isEntityOnPage = toUpdateIndex !== -1;
@@ -277,14 +265,14 @@ const updateInPaginatedStore = <T extends { id: number | string }>(
         ...oldData,
         data: updatedPaginatedData,
       };
-    }
+    },
   );
 };
 
 const getItemInPaginatedStore = <T extends { id: number | string }>(
   queryKey: QueryKey,
   id: number,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) => {
   const stores = queryClient.getQueriesData<ResourcePage<T> | undefined>({
     queryKey,
@@ -301,12 +289,10 @@ const getItemInPaginatedStore = <T extends { id: number | string }>(
   return null;
 };
 
-const doesItemExistInPaginatedStore = <
-  T extends { id: number | string }
->(
+const doesItemExistInPaginatedStore = <T extends { id: number | string }>(
   queryKey: QueryKey,
   id: number,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) => {
   const item = getItemInPaginatedStore<T>(queryKey, id, queryClient);
   return item !== null;

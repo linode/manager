@@ -15,26 +15,26 @@ import {
   getVPCs,
   modifySubnet,
   updateVPC,
-} from '@linode/api-v4';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
+} from "@linode/api-v4";
+import { createQueryKeys } from "@lukemorales/query-key-factory";
 import {
   keepPreviousData,
   useMutation,
   useQuery,
   useQueryClient,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
-import { getAllVPCsRequest } from './requests';
+import { getAllVPCsRequest } from "./requests";
 
 import type {
   APIError,
   Filter,
   Params,
   ResourcePage,
-} from '@linode/api-v4/lib/types';
+} from "@linode/api-v4/lib/types";
 
 // VPC queries
-export const vpcQueries = createQueryKeys('vpcs', {
+export const vpcQueries = createQueryKeys("vpcs", {
   all: {
     queryFn: getAllVPCsRequest,
     queryKey: null,
@@ -64,17 +64,13 @@ export const vpcQueries = createQueryKeys('vpcs', {
   }),
 });
 
-export const useAllVPCsQuery = (enabled = true) =>
+const useAllVPCsQuery = (enabled = true) =>
   useQuery<VPC[], APIError[]>({
     ...vpcQueries.all,
     enabled,
   });
 
-const useVPCsQuery = (
-  params: Params,
-  filter: Filter,
-  enabled = true
-) => {
+const useVPCsQuery = (params: Params, filter: Filter, enabled = true) => {
   return useQuery<ResourcePage<VPC>, APIError[]>({
     ...vpcQueries.paginated(params, filter),
     enabled,
@@ -140,7 +136,7 @@ const useSubnetsQuery = (
   vpcId: number,
   params: Params,
   filter: Filter,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) =>
   useQuery<ResourcePage<Subnet>, APIError[]>({
     ...vpcQueries.vpc(vpcId)._ctx.subnets._ctx.paginated(params, filter),

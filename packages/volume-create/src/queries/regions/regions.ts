@@ -1,19 +1,19 @@
-import { getRegion, getRegionAvailability } from '@linode/api-v4/lib/regions';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useQuery } from '@tanstack/react-query';
+import { getRegion, getRegionAvailability } from "@linode/api-v4/lib/regions";
+import { createQueryKeys } from "@lukemorales/query-key-factory";
+import { useQuery } from "@tanstack/react-query";
 
-import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getNewRegionLabel } from "src/components/RegionSelect/RegionSelect.utils";
 
-import { queryPresets } from '../base';
+import { queryPresets } from "../base";
 import {
   getAllRegionAvailabilitiesRequest,
   getAllRegionsRequest,
-} from './requests';
+} from "./requests";
 
-import type { Region, RegionAvailability } from '@linode/api-v4/lib/regions';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { Region, RegionAvailability } from "@linode/api-v4/lib/regions";
+import type { APIError } from "@linode/api-v4/lib/types";
 
-export const regionQueries = createQueryKeys('regions', {
+const regionQueries = createQueryKeys("regions", {
   availability: {
     contextQueries: {
       all: {
@@ -67,7 +67,7 @@ const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>
 
 const useRegionAvailabilityQuery = (
   regionId: string,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<RegionAvailability[], APIError[]>({
     ...regionQueries.availability._ctx.region(regionId),

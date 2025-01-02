@@ -6,19 +6,19 @@ import {
   getPlacementGroups,
   unassignLinodesFromPlacementGroup,
   updatePlacementGroup,
-} from '@linode/api-v4';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
+} from "@linode/api-v4";
+import { createQueryKeys } from "@lukemorales/query-key-factory";
 import {
   keepPreviousData,
   useMutation,
   useQuery,
   useQueryClient,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from "src/utilities/getAll";
 
-import { linodeQueries } from './linodes/linodes';
-import { profileQueries } from './profile/profile';
+import { linodeQueries } from "./linodes/linodes";
+import { profileQueries } from "./profile/profile";
 
 import type {
   APIError,
@@ -30,18 +30,17 @@ import type {
   ResourcePage,
   UnassignLinodesFromPlacementGroupPayload,
   UpdatePlacementGroupPayload,
-} from '@linode/api-v4';
-import type { EventHandlerData } from 'src/hooks/useEventHandlers';
+} from "@linode/api-v4";
 
 const getAllPlacementGroupsRequest = (
   _params: Params = {},
-  _filter: Filter = {}
+  _filter: Filter = {},
 ) =>
   getAll<PlacementGroup>((params, filter) =>
-    getPlacementGroups({ ...params, ..._params }, { ...filter, ..._filter })
+    getPlacementGroups({ ...params, ..._params }, { ...filter, ..._filter }),
   )().then((data) => data.data);
 
-export const placementGroupQueries = createQueryKeys('placement-groups', {
+export const placementGroupQueries = createQueryKeys("placement-groups", {
   all: (params: Params = {}, filter: Filter = {}) => ({
     queryFn: () => getAllPlacementGroupsRequest(params, filter),
     queryKey: [params, filter],
@@ -75,7 +74,7 @@ const useAllPlacementGroupsQuery = ({
 const usePlacementGroupsQuery = (
   params: Params,
   filter: Filter,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) =>
   useQuery<ResourcePage<PlacementGroup>, APIError[]>({
     enabled,
@@ -85,7 +84,7 @@ const usePlacementGroupsQuery = (
 
 const usePlacementGroupQuery = (
   placementGroupId: number,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<PlacementGroup, APIError[]>({
     enabled,
@@ -107,7 +106,7 @@ const useCreatePlacementGroup = () => {
       });
       queryClient.setQueryData<PlacementGroup>(
         placementGroupQueries.placementGroup(placementGroup.id).queryKey,
-        placementGroup
+        placementGroup,
       );
 
       // If a restricted user creates an entity, we must make sure grants are up to date.
@@ -132,7 +131,7 @@ const useMutatePlacementGroup = (id: number) => {
       });
       queryClient.setQueryData<PlacementGroup>(
         placementGroupQueries.placementGroup(id).queryKey,
-        placementGroup
+        placementGroup,
       );
     },
   });
@@ -174,8 +173,8 @@ const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
         queryKey: placementGroupQueries.all._def,
       });
       queryClient.invalidateQueries({
-        queryKey: placementGroupQueries.placementGroup(placementGroupId)
-          .queryKey,
+        queryKey:
+          placementGroupQueries.placementGroup(placementGroupId).queryKey,
       });
 
       queryClient.invalidateQueries(linodeQueries.linodes);
@@ -190,9 +189,7 @@ const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
   });
 };
 
-const useUnassignLinodesFromPlacementGroup = (
-  placementGroupId: number
-) => {
+const useUnassignLinodesFromPlacementGroup = (placementGroupId: number) => {
   const queryClient = useQueryClient();
   return useMutation<
     PlacementGroup,
@@ -209,8 +206,8 @@ const useUnassignLinodesFromPlacementGroup = (
         queryKey: placementGroupQueries.all._def,
       });
       queryClient.invalidateQueries({
-        queryKey: placementGroupQueries.placementGroup(placementGroupId)
-          .queryKey,
+        queryKey:
+          placementGroupQueries.placementGroup(placementGroupId).queryKey,
       });
 
       queryClient.invalidateQueries(linodeQueries.linodes);
@@ -225,7 +222,7 @@ const useUnassignLinodesFromPlacementGroup = (
   });
 };
 
-export const placementGroupEventHandler = ({
+const placementGroupEventHandler = ({
   event,
   invalidateQueries,
 }: EventHandlerData) => {
@@ -262,8 +259,8 @@ export const placementGroupEventHandler = ({
   //   "message": ""
   // }
   if (
-    action !== 'placement_group_unassign' &&
-    action !== 'placement_group_assign'
+    action !== "placement_group_unassign" &&
+    action !== "placement_group_assign"
   ) {
     return;
   }

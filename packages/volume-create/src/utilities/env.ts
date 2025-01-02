@@ -5,7 +5,7 @@ export function getBooleanEnv(value: boolean | string | undefined) {
   if (value === undefined) {
     return undefined;
   }
-  if (value === true || value === 'true') {
+  if (value === true || value === "true") {
     return true;
   }
   return false;

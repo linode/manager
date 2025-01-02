@@ -5,18 +5,18 @@ import {
   InputAdornment,
   TextField,
   Typography,
-} from '@linode/ui';
-import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+} from "@linode/ui";
+import * as React from "react";
+import { makeStyles } from "tss-react/mui";
 
-import { MAX_VOLUME_SIZE } from 'src/constants';
-import { useVolumeTypesQuery } from 'src/queries/volumes/volumes';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
-import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
+import { MAX_VOLUME_SIZE } from "src/constants";
+import { useVolumeTypesQuery } from "src/queries/volumes/volumes";
+import { UNKNOWN_PRICE } from "src/utilities/pricing/constants";
+import { getDCSpecificPriceByType } from "src/utilities/pricing/dynamicPricing";
 
-import { SIZE_FIELD_WIDTH } from '../constants';
+import { SIZE_FIELD_WIDTH } from "../constants";
 
-import type { Theme } from '@mui/material/styles';
+import type { Theme } from "@mui/material/styles";
 
 interface Props {
   disabled?: boolean;
@@ -34,17 +34,17 @@ interface Props {
 
 const useStyles = makeStyles()((theme: Theme) => ({
   createVolumeText: {
-    display: 'block',
+    display: "block",
     marginLeft: theme.spacing(1.5),
   },
   priceDisplay: {
-    '& p': {
+    "& p": {
       lineHeight: 1,
       marginTop: 4,
     },
 
     left: `calc(${SIZE_FIELD_WIDTH}px + ${theme.spacing(2)})`,
-    position: 'absolute',
+    position: "absolute",
     top: 50,
   },
 }));
@@ -94,7 +94,7 @@ export const SizeField = (props: Props) => {
     regionId && isLoading && shouldShowPrice;
 
   const dynamicPricingHelperText = shouldShowPrice && (
-    <Box marginLeft={'10px'} marginTop={'4px'}>
+    <Box marginLeft={"10px"} marginTop={"4px"}>
       <Typography>Select a region to see cost per month.</Typography>
     </Box>
   );

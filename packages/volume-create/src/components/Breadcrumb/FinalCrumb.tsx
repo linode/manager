@@ -1,11 +1,11 @@
-import * as React from 'react';
+import * as React from "react";
 
 import {
   StyledDiv,
   StyledEditableText,
   StyledH1Header,
-} from './FinalCrumb.styles';
-import { EditableProps, LabelProps } from './types';
+} from "./FinalCrumb.styles";
+import { EditableProps, LabelProps } from "./types";
 
 interface Props {
   crumb: string;
@@ -15,12 +15,8 @@ interface Props {
 }
 
 export const FinalCrumb = React.memo((props: Props) => {
-  const {
-    crumb,
-    disabledBreadcrumbEditButton,
-    labelOptions,
-    onEditHandlers,
-  } = props;
+  const { crumb, disabledBreadcrumbEditButton, labelOptions, onEditHandlers } =
+    props;
 
   if (onEditHandlers) {
     return (
@@ -42,7 +38,7 @@ export const FinalCrumb = React.memo((props: Props) => {
       <StyledH1Header
         sx={{
           ...(labelOptions &&
-            labelOptions.noCap && { textTransform: 'initial' }),
+            labelOptions.noCap && { textTransform: "initial" }),
         }}
         dataQaEl={crumb}
         title={crumb}

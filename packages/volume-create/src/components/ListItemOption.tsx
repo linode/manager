@@ -1,9 +1,9 @@
-import { Box, ListItem, SelectedIcon, Tooltip } from '@linode/ui';
-import { styled } from '@mui/material/styles';
-import { visuallyHidden } from '@mui/utils';
-import React from 'react';
+import { Box, ListItem, SelectedIcon, Tooltip } from "@linode/ui";
+import { styled } from "@mui/material/styles";
+import { visuallyHidden } from "@mui/utils";
+import React from "react";
 
-import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
+import type { ListItemComponentsPropsOverrides } from "@mui/material/ListItem";
 
 export interface ListItemProps<T> {
   children?: React.ReactNode;
@@ -43,7 +43,7 @@ export const ListItemOption = <T,>({
     <Tooltip
       PopperProps={{
         sx: {
-          '& .MuiTooltip-tooltip': {
+          "& .MuiTooltip-tooltip": {
             minWidth: disabledOptions?.tooltipWidth ?? 215,
           },
         },
@@ -51,7 +51,7 @@ export const ListItemOption = <T,>({
       title={
         isItemOptionDisabled && itemOptionDisabledReason
           ? itemOptionDisabledReason
-          : ''
+          : ""
       }
       disableFocusListener={!isItemOptionDisabled}
       disableHoverListener={!isItemOptionDisabled}
@@ -67,20 +67,20 @@ export const ListItemOption = <T,>({
         }
         componentsProps={{
           root: {
-            'data-qa-option': item.id,
-            'data-testid': item.id,
+            "data-qa-option": item.id,
+            "data-testid": item.id,
           } as ListItemComponentsPropsOverrides,
         }}
         onClick={(e) =>
           isItemOptionDisabled
             ? e.preventDefault()
             : onClick
-            ? onClick(e)
-            : null
+              ? onClick(e)
+              : null
         }
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
+          display: "flex",
+          justifyContent: "space-between",
           maxHeight,
         }}
         aria-disabled={undefined}
@@ -97,16 +97,16 @@ export const ListItemOption = <T,>({
 };
 
 const StyledDisabledItem = styled(ListItem, {
-  label: 'StyledDisabledItem',
+  label: "StyledDisabledItem",
 })(() => ({
-  '&.Mui-disabled': {
-    cursor: 'not-allowed',
+  "&.Mui-disabled": {
+    cursor: "not-allowed",
   },
-  '&.MuiAutocomplete-option': {
-    minHeight: 'auto !important',
-    padding: '8px 10px !important',
+  "&.MuiAutocomplete-option": {
+    minHeight: "auto !important",
+    padding: "8px 10px !important",
   },
   '&.MuiListItem-root[aria-disabled="true"]:active': {
-    pointerEvents: 'none !important',
+    pointerEvents: "none !important",
   },
 }));

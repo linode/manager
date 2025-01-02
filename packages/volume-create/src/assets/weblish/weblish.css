@@ -7,7 +7,9 @@ body {
   padding: 0;
   background-color: #000;
   background-size: 10px 10px;
-  background-position: 0 0, 5px 5px;
+  background-position:
+    0 0,
+    5px 5px;
 }
 
 canvas {

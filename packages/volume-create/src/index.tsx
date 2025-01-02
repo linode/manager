@@ -1,4 +1,3 @@
-import { createRoot } from 'react-dom/client';
 import {
   Box,
   Button,
@@ -8,81 +7,54 @@ import {
   TextField,
   TooltipIcon,
   Typography,
-} from '@linode/ui';
-import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
-import { useTheme } from '@mui/material/styles';
-import { useNavigate } from '@tanstack/react-router';
-import { useFormik } from 'formik';
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+} from "@linode/ui";
+import { CreateVolumeSchema } from "@linode/validation/lib/volumes.schema";
+import { useTheme } from "@mui/material/styles";
+import { useNavigate } from "@tanstack/react-router";
+import { useFormik } from "formik";
+import { useSnackbar } from "notistack";
+import * as React from "react";
+import { makeStyles } from "tss-react/mui";
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import {
-  BLOCK_STORAGE_CHOOSE_REGION_COPY,
-  BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY,
-  BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION,
-  BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
-  BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
-  BLOCK_STORAGE_USER_SIDE_ENCRYPTION_CAVEAT,
-} from 'src/components/Encryption/constants';
-import { Encryption } from 'src/components/Encryption/Encryption';
-import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { ErrorMessage } from 'src/components/ErrorMessage';
-import { LandingHeader } from 'src/components/LandingHeader';
-import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { MAX_VOLUME_SIZE } from 'src/constants';
-import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { LandingHeader } from "src/components/LandingHeader";
+import { RegionSelect } from "src/components/RegionSelect/RegionSelect";
+import { LinodeSelect } from "src/features/Linodes/LinodeSelect/LinodeSelect";
+import { useGrants, useProfile } from "src/queries/profile/profile";
+import { useRegionsQuery } from "src/queries/regions/regions";
 import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
-} from 'src/queries/volumes/volumes';
-import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
-import { getGDPRDetails } from 'src/utilities/formatRegion';
+} from "src/queries/volumes/volumes";
 import {
   handleFieldErrors,
   handleGeneralErrors,
-} from 'src/utilities/formikErrorUtils';
-import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
-import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+} from "src/utilities/formikErrorUtils";
+import { isNilOrEmpty } from "src/utilities/isNilOrEmpty";
+import { maybeCastToNumber } from "src/utilities/maybeCastToNumber";
 
-import { SIZE_FIELD_WIDTH } from 'src/features/Volumes/constants';
-import { ConfigSelect } from 'src/features/Volumes/VolumeDrawer/ConfigSelect';
-import { SizeField } from 'src/features/Volumes/VolumeDrawer/SizeField';
+import { ConfigSelect } from "src/features/Volumes/VolumeDrawer/ConfigSelect";
+import { SizeField } from "src/features/Volumes/VolumeDrawer/SizeField";
 
-import type { VolumeEncryption } from '@linode/api-v4';
-import type { Linode } from '@linode/api-v4/lib/linodes/types';
-import type { Theme } from '@mui/material/styles';
+import type { Linode } from "@linode/api-v4/lib/linodes/types";
+import type { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles()((theme: Theme) => ({
   agreement: {
-    maxWidth: '70%',
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: 'unset',
+    maxWidth: "70%",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "unset",
     },
   },
   button: {
     marginTop: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       marginRight: theme.spacing(),
     },
   },
   buttonGroup: {
     marginTop: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'flex-end',
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "flex-end",
     },
   },
   copy: {
@@ -90,14 +62,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
     maxWidth: 700,
   },
   labelTooltip: {
-    '& .MuiTooltip-tooltip': {
+    "& .MuiTooltip-tooltip": {
       minWidth: 220,
     },
   },
   linodeConfigSelectWrapper: {
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'flex-start',
-      flexDirection: 'column',
+    [theme.breakpoints.down("md")]: {
+      alignItems: "flex-start",
+      flexDirection: "column",
     },
   },
   linodeSelect: {
@@ -106,20 +78,20 @@ const useStyles = makeStyles()((theme: Theme) => ({
   notice: {
     borderColor: theme.color.green,
     fontSize: 15,
-    lineHeight: '18px',
+    lineHeight: "18px",
   },
   select: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       width: 320,
     },
     width: 400,
   },
   size: {
-    position: 'relative',
-    width: SIZE_FIELD_WIDTH,
+    position: "relative",
+    width: 160,
   },
   tooltip: {
-    '& .MuiTooltip-tooltip': {
+    "& .MuiTooltip-tooltip": {
       minWidth: 320,
     },
   },
@@ -139,18 +111,10 @@ export const VolumeCreate = () => {
 
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
-  const { data: accountAgreements } = useAccountAgreements();
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState(false);
-  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
-
   const regionsWithBlockStorage =
     regions
       ?.filter((thisRegion) =>
-        thisRegion.capabilities.includes('Block Storage')
+        thisRegion.capabilities.includes("Block Storage"),
       )
       .map((thisRegion) => thisRegion.id) ?? [];
 
@@ -161,7 +125,7 @@ export const VolumeCreate = () => {
     return (
       <TooltipIcon
         sxTooltipIcon={{
-          marginBottom: '6px',
+          marginBottom: "6px",
           marginLeft: theme.spacing(),
           padding: 0,
         }}
@@ -188,53 +152,35 @@ export const VolumeCreate = () => {
   } = useFormik({
     initialValues,
     onSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting }) => {
-      const { config_id, encryption, label, linode_id, region, size } = values;
+      const { config_id, label, linode_id, region, size } = values;
 
       setSubmitting(true);
 
       /** Status holds our success and generalError messages. */
       setStatus(undefined);
 
-      // If the BSE feature is not enabled or the selected region does not support BSE, set `encryption` in the payload to undefined.
-      // Otherwise, set it to `enabled` if the checkbox is checked, or `disabled` if it is not
-      const blockStorageEncryptionPayloadValue =
-        !isBlockStorageEncryptionFeatureEnabled ||
-        !regionSupportsBlockStorageEncryption
-          ? undefined
-          : encryption;
-
       createVolume({
         config_id:
           config_id === null ? undefined : maybeCastToNumber(config_id),
-        encryption: blockStorageEncryptionPayloadValue,
         label,
         linode_id:
           linode_id === null ? undefined : maybeCastToNumber(linode_id),
-        region: isNilOrEmpty(region) || region === 'none' ? undefined : region,
+        region: isNilOrEmpty(region) || region === "none" ? undefined : region,
         size: maybeCastToNumber(size),
       })
         .then((volume) => {
-          if (hasSignedAgreement) {
-            updateAccountAgreements({
-              eu_model: true,
-              privacy_policy: true,
-            }).catch(reportAgreementSigningError);
-          }
-
           resetForm({ values: initialValues });
           setSubmitting(false);
           enqueueSnackbar(`Volume scheduled for creation.`, {
-            variant: 'success',
+            variant: "success",
           });
           navigate({
             params: {
-              action: 'details',
+              action: "details",
               volumeId: volume.id,
             },
-            to: '/volumes/$volumeId/$action',
+            to: "/volumes/$volumeId/$action",
           });
-          // Analytics Event
-          sendCreateVolumeEvent(`Size: ${size}GB`, origin);
         })
         .catch((errorResponse) => {
           setSubmitting(false);
@@ -242,7 +188,7 @@ export const VolumeCreate = () => {
           handleGeneralErrors(
             setStatus,
             errorResponse,
-            `Unable to create a volume at this time. Please try again later.`
+            `Unable to create a volume at this time. Please try again later.`,
           );
         });
     },
@@ -251,71 +197,29 @@ export const VolumeCreate = () => {
 
   const { config_id, linode_id } = values;
 
-  const { data: linode } = useLinodeQuery(
-    linode_id ?? -1,
-    isBlockStorageEncryptionFeatureEnabled && linode_id !== null
-  );
-
-  const linodeSupportsBlockStorageEncryption = Boolean(
-    linode?.capabilities?.includes('Block Storage Encryption')
-  );
-
   const linodeError = touched.linode_id ? errors.linode_id : undefined;
-
-  const { showGDPRCheckbox } = getGDPRDetails({
-    agreements: accountAgreements,
-    profile,
-    regions,
-    selectedRegionId: values.region,
-  });
 
   const isInvalidPrice = !types || isError;
 
-  const disabled = Boolean(
-    doesNotHavePermission ||
-      (showGDPRCheckbox && !hasSignedAgreement) ||
-      isInvalidPrice
-  );
+  const disabled = Boolean(doesNotHavePermission || isInvalidPrice);
 
   const handleLinodeChange = (linode: Linode | null) => {
     if (linode !== null) {
-      setFieldValue('linode_id', linode.id);
-      setFieldValue('region', linode.region);
+      setFieldValue("linode_id", linode.id);
+      setFieldValue("region", linode.region);
     } else {
-      setFieldValue('linode_id', null);
-      setFieldValue('config_id', null);
+      setFieldValue("linode_id", null);
+      setFieldValue("config_id", null);
     }
   };
-
-  const regionSupportsBlockStorageEncryption = doesRegionSupportFeature(
-    values.region ?? '',
-    regions ?? [],
-    'Block Storage Encryption'
-  );
-
-  const toggleVolumeEncryptionEnabled = (
-    encryption: VolumeEncryption | undefined
-  ) => {
-    if (encryption === 'enabled') {
-      setFieldValue('encryption', 'disabled');
-    } else {
-      setFieldValue('encryption', 'enabled');
-    }
-  };
-
-  const shouldDisplayClientLibraryCopy =
-    isBlockStorageEncryptionFeatureEnabled &&
-    linode_id !== null &&
-    !linodeSupportsBlockStorageEncryption;
 
   return (
     <>
-      <DocumentTitleSegment segment="Create a Volume" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Volumes',
+              label: "Volumes",
               position: 1,
             },
           ],
@@ -323,17 +227,6 @@ export const VolumeCreate = () => {
         }}
         title="Create"
       />
-      {doesNotHavePermission && (
-        <Notice
-          text={getRestrictedResourceText({
-            action: 'create',
-            resourceType: 'Volumes',
-          })}
-          important
-          spacingTop={16}
-          variant="error"
-        />
-      )}
       <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column">
           <Paper>
@@ -343,14 +236,14 @@ export const VolumeCreate = () => {
               variant="body1"
             >
               <span>
-                A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                size. Up to to eight Volumes can be attached to a single Linode.
-                Select a region to see cost per GB.
+                A single Volume can range from 10 to 16384 GB in size. Up to to
+                eight Volumes can be attached to a single Linode. Select a
+                region to see cost per GB.
               </span>
             </Typography>
             {error && (
               <Notice spacingBottom={0} spacingTop={12} variant="error">
-                <ErrorMessage entity={{ type: 'volume_id' }} message={error} />
+                {error}
               </Notice>
             )}
             <TextField
@@ -371,8 +264,8 @@ export const VolumeCreate = () => {
             <Box alignItems="flex-end" display="flex">
               <RegionSelect
                 onChange={(e, region) => {
-                  setFieldValue('region', region?.id ?? null);
-                  setFieldValue('linode_id', null);
+                  setFieldValue("region", region?.id ?? null);
+                  setFieldValue("linode_id", null);
                 }}
                 currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
@@ -384,7 +277,7 @@ export const VolumeCreate = () => {
                 width={400}
               />
               {renderSelectTooltip(
-                'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
+                "Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.",
               )}
             </Box>
             <Box
@@ -414,10 +307,10 @@ export const VolumeCreate = () => {
                             linodeRegion === valuesRegion;
                     }}
                     sx={{
-                      [theme.breakpoints.down('sm')]: {
+                      [theme.breakpoints.down("sm")]: {
                         width: 320,
                       },
-                      width: '400px',
+                      width: "400px",
                     }}
                     clearable
                     disabled={doesNotHavePermission}
@@ -427,17 +320,9 @@ export const VolumeCreate = () => {
                     value={values.linode_id}
                   />
                   {renderSelectTooltip(
-                    'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
+                    "If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.",
                   )}
                 </Box>
-                {shouldDisplayClientLibraryCopy &&
-                  values.encryption === 'enabled' && (
-                    <Notice spacingBottom={0} spacingTop={16} variant="warning">
-                      <Typography maxWidth="416px">
-                        {BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY}
-                      </Typography>
-                    </Notice>
-                  )}
               </Stack>
               <ConfigSelect
                 disabled={doesNotHavePermission || config_id === null}
@@ -445,7 +330,7 @@ export const VolumeCreate = () => {
                 linodeId={linode_id}
                 name="configId"
                 onBlur={handleBlur}
-                onChange={(id: number) => setFieldValue('config_id', id)}
+                onChange={(id: number) => setFieldValue("config_id", id)}
                 value={config_id}
                 width={320}
               />
@@ -463,62 +348,14 @@ export const VolumeCreate = () => {
                 value={values.size}
               />
             </Box>
-            <Box
-              alignItems="center"
-              className={classes.buttonGroup}
-              display="flex"
-              flexWrap="wrap"
-              justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
-            >
-              {showGDPRCheckbox ? (
-                <EUAgreementCheckbox
-                  centerCheckbox
-                  checked={hasSignedAgreement}
-                  className={classes.agreement}
-                  onChange={(e) => setHasSignedAgreement(e.target.checked)}
-                />
-              ) : null}
-            </Box>
-            {isBlockStorageEncryptionFeatureEnabled && (
-              <Box>
-                <Encryption
-                  disabledReason={
-                    values.region
-                      ? BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY
-                      : BLOCK_STORAGE_CHOOSE_REGION_COPY
-                  }
-                  notices={
-                    values.encryption === 'enabled'
-                      ? [
-                          BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
-                          BLOCK_STORAGE_USER_SIDE_ENCRYPTION_CAVEAT,
-                        ]
-                      : []
-                  }
-                  onChange={() =>
-                    toggleVolumeEncryptionEnabled(values.encryption)
-                  }
-                  descriptionCopy={BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION}
-                  disabled={!regionSupportsBlockStorageEncryption}
-                  entityType="Volume"
-                  isEncryptEntityChecked={values.encryption === 'enabled'}
-                />
-              </Box>
-            )}
           </Paper>
           <Box display="flex" justifyContent="flex-end">
             <Button
-              disabled={
-                disabled ||
-                (isBlockStorageEncryptionFeatureEnabled && // @TODO BSE: Once BSE is fully rolled out, remove feature enabled check/condition
-                  linode_id !== null &&
-                  !linodeSupportsBlockStorageEncryption &&
-                  values.encryption === 'enabled')
-              }
+              disabled={disabled}
               tooltipText={
                 !isLoading && isInvalidPrice
-                  ? PRICES_RELOAD_ERROR_NOTICE_TEXT
-                  : ''
+                  ? "There was an error retrieving prices. Please reload and try again."
+                  : ""
               }
               buttonType="primary"
               className={classes.button}
@@ -538,7 +375,6 @@ export const VolumeCreate = () => {
 
 interface FormState {
   config_id: null | number;
-  encryption: VolumeEncryption | undefined;
   label: string;
   linode_id: null | number;
   region: string;
@@ -547,9 +383,8 @@ interface FormState {
 
 const initialValues: FormState = {
   config_id: null,
-  encryption: 'disabled',
-  label: '',
+  label: "",
   linode_id: null,
-  region: '',
+  region: "",
   size: 20,
 };

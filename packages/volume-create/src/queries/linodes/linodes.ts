@@ -22,32 +22,32 @@ import {
   resizeLinode,
   scheduleOrQueueMigration,
   updateLinode,
-} from '@linode/api-v4';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
+} from "@linode/api-v4";
+import { createQueryKeys } from "@lukemorales/query-key-factory";
 import {
   keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
-import { placementGroupQueries } from 'src/queries/placementGroups';
-import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
+import { placementGroupQueries } from "src/queries/placementGroups";
+import { manuallySetVPCConfigInterfacesToActive } from "src/utilities/configs";
 
-import { accountQueries } from '../account/queries';
-import { queryPresets } from '../base';
-import { firewallQueries } from '../firewalls';
-import { profileQueries } from '../profile/profile';
-import { vlanQueries } from '../vlans';
-import { vpcQueries } from '../vpcs/vpcs';
+import { accountQueries } from "../account/queries";
+import { queryPresets } from "../base";
+import { firewallQueries } from "../firewalls";
+import { profileQueries } from "../profile/profile";
+import { vlanQueries } from "../vlans";
+import { vpcQueries } from "../vpcs/vpcs";
 import {
   getAllLinodeConfigs,
   getAllLinodeDisks,
   getAllLinodeKernelsRequest,
   getAllLinodeTypes,
   getAllLinodesRequest,
-} from './requests';
+} from "./requests";
 
 import type {
   APIError,
@@ -64,9 +64,9 @@ import type {
   Params,
   ResizeLinodePayload,
   ResourcePage,
-} from '@linode/api-v4';
+} from "@linode/api-v4";
 
-export const linodeQueries = createQueryKeys('linodes', {
+export const linodeQueries = createQueryKeys("linodes", {
   kernel: (id: string) => ({
     queryFn: () => getLinodeKernel(id),
     queryKey: [id],
@@ -157,7 +157,7 @@ export const linodeQueries = createQueryKeys('linodes', {
 const useLinodesQuery = (
   params: Params = {},
   filter: Filter = {},
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<ResourcePage<Linode>, APIError[]>({
     ...linodeQueries.linodes._ctx.paginated(params, filter),
@@ -170,7 +170,7 @@ const useLinodesQuery = (
 export const useAllLinodesQuery = (
   params: Params = {},
   filter: Filter = {},
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<Linode[], APIError[]>({
     ...linodeQueries.linodes._ctx.all(params, filter),
@@ -192,7 +192,7 @@ const useInfiniteLinodesQuery = (filter: Filter = {}) =>
     initialPageParam: 1,
   });
 
-export const useLinodeQuery = (id: number, enabled = true) => {
+const useLinodeQuery = (id: number, enabled = true) => {
   return useQuery<Linode, APIError[]>({
     ...linodeQueries.linode(id),
     enabled,
@@ -209,7 +209,7 @@ const useLinodeUpdateMutation = (id: number) => {
       });
       queryClient.setQueryData<Linode>(
         linodeQueries.linode(id).queryKey,
-        linode
+        linode,
       );
     },
   });
@@ -218,7 +218,7 @@ const useLinodeUpdateMutation = (id: number) => {
 const useAllLinodeKernelsQuery = (
   params: Params = {},
   filter: Filter = {},
-  enabled = true
+  enabled = true,
 ) => {
   return useQuery<Kernel[], APIError[]>({
     ...linodeQueries.kernels(params, filter),
@@ -241,7 +241,7 @@ const useDeleteLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
 
   const linode = queryClient.getQueryData<Linode>(
-    linodeQueries.linode(id).queryKey
+    linodeQueries.linode(id).queryKey,
   );
 
   const placementGroupId = linode?.placement_group?.id;
@@ -256,8 +256,8 @@ const useDeleteLinodeMutation = (id: number) => {
       // we need to invalidate the placement group queries
       if (placementGroupId) {
         queryClient.invalidateQueries({
-          queryKey: placementGroupQueries.placementGroup(placementGroupId)
-            .queryKey,
+          queryKey:
+            placementGroupQueries.placementGroup(placementGroupId).queryKey,
         });
         queryClient.invalidateQueries({
           queryKey: placementGroupQueries.all._def,
@@ -278,20 +278,21 @@ const useCreateLinodeMutation = () => {
       queryClient.invalidateQueries(linodeQueries.linodes);
       queryClient.setQueryData<Linode>(
         linodeQueries.linode(linode.id).queryKey,
-        linode
+        linode,
       );
 
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries(profileQueries.grants);
 
-      if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
+      if (variables.interfaces?.some((i) => i.purpose === "vlan")) {
         // If a Linode is created with a VLAN, invalidate vlans because
         // they are derived from Linode configs.
         queryClient.invalidateQueries({ queryKey: vlanQueries._def });
       }
 
-      const vpcId = variables.interfaces?.find((i) => i.purpose === 'vpc')
-        ?.vpc_id;
+      const vpcId = variables.interfaces?.find(
+        (i) => i.purpose === "vpc",
+      )?.vpc_id;
 
       if (vpcId) {
         // If a Linode is created with a VPC, invalidate the related VPC queries.
@@ -307,7 +308,7 @@ const useCreateLinodeMutation = () => {
       if (variables.placement_group?.id) {
         queryClient.invalidateQueries({
           queryKey: placementGroupQueries.placementGroup(
-            variables.placement_group.id
+            variables.placement_group.id,
           ).queryKey,
         });
         queryClient.invalidateQueries({
@@ -345,16 +346,13 @@ const useCloneLinodeMutation = () => {
       queryClient.invalidateQueries(linodeQueries.linodes);
       queryClient.setQueryData<Linode>(
         linodeQueries.linode(linode.id).queryKey,
-        linode
+        linode,
       );
     },
   });
 };
 
-const useBootLinodeMutation = (
-  id: number,
-  configsToUpdate?: Config[]
-) => {
+const useBootLinodeMutation = (id: number, configsToUpdate?: Config[]) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { config_id?: number }>({
     mutationFn: ({ config_id }) => linodeBoot(id, config_id),
@@ -372,22 +370,18 @@ const useBootLinodeMutation = (
          * shows up as 'Running' right after being booting. Note that the configs query eventually gets invalidated
          * and refetched after the Linode's status changes, ensuring that the actual data will be up to date.
          */
-        const updatedConfigs: Config[] = manuallySetVPCConfigInterfacesToActive(
-          configsToUpdate
-        );
+        const updatedConfigs: Config[] =
+          manuallySetVPCConfigInterfacesToActive(configsToUpdate);
         queryClient.setQueryData(
           linodeQueries.linode(id)._ctx.configs.queryKey,
-          updatedConfigs
+          updatedConfigs,
         );
       }
     },
   });
 };
 
-const useRebootLinodeMutation = (
-  id: number,
-  configsToUpdate?: Config[]
-) => {
+const useRebootLinodeMutation = (id: number, configsToUpdate?: Config[]) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { config_id?: number }>({
     mutationFn: ({ config_id }) => linodeReboot(id, config_id),
@@ -405,12 +399,11 @@ const useRebootLinodeMutation = (
        * and refetched after the Linode's status changes, ensuring that the actual data will be up to date.
        */
       if (configsToUpdate) {
-        const updatedConfigs: Config[] = manuallySetVPCConfigInterfacesToActive(
-          configsToUpdate
-        );
+        const updatedConfigs: Config[] =
+          manuallySetVPCConfigInterfacesToActive(configsToUpdate);
         queryClient.setQueryData(
           linodeQueries.linode(id)._ctx.configs.queryKey,
-          updatedConfigs
+          updatedConfigs,
         );
       }
     },
@@ -450,7 +443,7 @@ const useLinodeMigrateMutation = (id: number) => {
       if (variables.placement_group?.id) {
         queryClient.invalidateQueries({
           queryKey: placementGroupQueries.placementGroup(
-            variables.placement_group.id
+            variables.placement_group.id,
           ).queryKey,
         });
         queryClient.invalidateQueries({

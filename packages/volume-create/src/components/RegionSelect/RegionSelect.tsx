@@ -1,22 +1,21 @@
-import { createFilterOptions } from '@mui/material/Autocomplete';
-import * as React from 'react';
+import { createFilterOptions } from "@mui/material/Autocomplete";
+import * as React from "react";
 
-import { Autocomplete } from '@linode/ui';
-import { Flag } from 'src/components/Flag';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
-import { getRegionCountryGroup } from 'src/utilities/formatRegion';
+import { Autocomplete } from "@linode/ui";
+import { Flag } from "src/components/Flag";
+import { useAllAccountAvailabilitiesQuery } from "src/queries/account/availability";
+import { getRegionCountryGroup } from "src/utilities/formatRegion";
 
-import { RegionOption } from './RegionOption';
-import { StyledAutocompleteContainer } from './RegionSelect.styles';
+import { RegionOption } from "./RegionOption";
+import { StyledAutocompleteContainer } from "./RegionSelect.styles";
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
-} from './RegionSelect.utils';
+} from "./RegionSelect.utils";
 
-import type { RegionSelectProps } from './RegionSelect.types';
-import type { Region } from '@linode/api-v4';
-import type { DisableItemOption } from 'src/components/ListItemOption';
+import type { RegionSelectProps } from "./RegionSelect.types";
+import type { Region } from "@linode/api-v4";
+import type { DisableItemOption } from "src/components/ListItemOption";
 
 /**
  * A specific select for regions.
@@ -28,9 +27,9 @@ import type { DisableItemOption } from 'src/components/ListItemOption';
  * We do not display the selected check mark for single selects.
  */
 export const RegionSelect = <
-  DisableClearable extends boolean | undefined = undefined
+  DisableClearable extends boolean | undefined = undefined,
 >(
-  props: RegionSelectProps<DisableClearable>
+  props: RegionSelectProps<DisableClearable>,
 ) => {
   const {
     currentCapability,
@@ -52,12 +51,10 @@ export const RegionSelect = <
     width,
   } = props;
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const isGeckoLAEnabled = true;
 
-  const {
-    data: accountAvailability,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+  const { data: accountAvailability, isLoading: accountAvailabilityLoading } =
+    useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -85,7 +82,7 @@ export const RegionSelect = <
     ) {
       acc[region.id] = {
         reason:
-          'This region is currently unavailable. For help, open a support ticket.',
+          "This region is currently unavailable. For help, open a support ticket.",
       };
     }
     return acc;
@@ -120,8 +117,8 @@ export const RegionSelect = <
           );
         }}
         sx={(theme) => ({
-          [theme.breakpoints.up('md')]: {
-            width: tooltipText ? '458px' : '416px',
+          [theme.breakpoints.up("md")]: {
+            width: tooltipText ? "458px" : "416px",
           },
         })}
         textFieldProps={{
@@ -146,14 +143,14 @@ export const RegionSelect = <
         getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
         groupBy={(option) => getRegionCountryGroup(option)}
         helperText={helperText}
-        label={label ?? 'Region'}
+        label={label ?? "Region"}
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."
         noMarginTop={noMarginTop}
         noOptionsText="No results"
         onChange={onChange}
         options={regionOptions}
-        placeholder={placeholder ?? 'Select a Region'}
+        placeholder={placeholder ?? "Select a Region"}
         value={selectedRegion as Region}
       />
     </StyledAutocompleteContainer>

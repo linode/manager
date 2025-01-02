@@ -13,8 +13,8 @@ import {
   getOAuthClients,
   getUser,
   getUsers,
-} from '@linode/api-v4';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
+} from "@linode/api-v4";
+import { createQueryKeys } from "@lukemorales/query-key-factory";
 
 import {
   getAllAccountAvailabilitiesRequest,
@@ -23,11 +23,11 @@ import {
   getAllAccountPayments,
   getAllNotifications,
   getAllPaymentMethodsRequest,
-} from './requests';
+} from "./requests";
 
-import type { Filter, Params, RequestOptions } from '@linode/api-v4';
+import type { Filter, Params, RequestOptions } from "@linode/api-v4";
 
-export const accountQueries = createQueryKeys('account', {
+export const accountQueries = createQueryKeys("account", {
   account: {
     queryFn: getAccountInfo,
     queryKey: null,

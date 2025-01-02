@@ -1,13 +1,13 @@
-import { Autocomplete, CustomPopper } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import React from 'react';
+import { Autocomplete, CustomPopper } from "@linode/ui";
+import CloseIcon from "@mui/icons-material/Close";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import React from "react";
 
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
+import { useAllLinodesQuery } from "src/queries/linodes/linodes";
+import { mapIdsToDevices } from "src/utilities/mapIdsToDevices";
 
-import type { APIError, Filter, Linode } from '@linode/api-v4';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { APIError, Filter, Linode } from "@linode/api-v4";
+import type { SxProps, Theme } from "@mui/material/styles";
 
 interface LinodeSelectProps {
   /** Determine whether isOptionEqualToValue prop should be defined for Autocomplete
@@ -73,7 +73,7 @@ interface LinodeSingleSelectProps extends LinodeSelectProps {
  * A select input allowing selection between account Linodes.
  */
 export const LinodeSelect = (
-  props: LinodeMultiSelectProps | LinodeSingleSelectProps
+  props: LinodeMultiSelectProps | LinodeSingleSelectProps,
 ) => {
   const {
     checkIsOptionEqualToValue,
@@ -100,7 +100,7 @@ export const LinodeSelect = (
 
   const { data, error, isFetching } = useAllLinodesQuery({}, filter, !options);
 
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = React.useState("");
 
   const linodes = optionsFilter ? data?.filter(optionsFilter) : data;
 
@@ -110,7 +110,7 @@ export const LinodeSelect = (
      * they had selected is no longer available.
      */
     if (value === null) {
-      setInputValue('');
+      setInputValue("");
     }
   }, [value]);
 
@@ -133,14 +133,14 @@ export const LinodeSelect = (
         placeholder
           ? placeholder
           : multiple
-          ? 'Select Linodes'
-          : 'Select a Linode'
+            ? "Select Linodes"
+            : "Select a Linode"
       }
       value={
-        typeof value === 'function'
+        typeof value === "function"
           ? multiple && Array.isArray(value)
-            ? linodes?.filter(value) ?? null
-            : linodes?.find(value) ?? null
+            ? (linodes?.filter(value) ?? null)
+            : (linodes?.find(value) ?? null)
           : mapIdsToDevices<Linode>(value, linodes)
       }
       ChipProps={{ deleteIcon: <CloseIcon /> }}
@@ -156,7 +156,7 @@ export const LinodeSelect = (
       helperText={helperText}
       id={id}
       inputValue={inputValue}
-      label={label ? label : multiple ? 'Linodes' : 'Linode'}
+      label={label ? label : multiple ? "Linodes" : "Linode"}
       loading={isFetching || loading}
       multiple={multiple}
       noMarginTop={noMarginTop}
@@ -171,13 +171,13 @@ export const LinodeSelect = (
 
 const getDefaultNoOptionsMessage = (
   error: APIError[] | null,
-  loading: boolean
+  loading: boolean,
 ) => {
   if (error) {
-    return 'An error occurred while fetching your Linodes';
+    return "An error occurred while fetching your Linodes";
   } else if (loading) {
-    return 'Loading your Linodes...';
+    return "Loading your Linodes...";
   } else {
-    return 'No available Linodes';
+    return "No available Linodes";
   }
 };

@@ -1,15 +1,13 @@
-import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
+import { CONTINENT_CODE_TO_CONTINENT } from "@linode/api-v4";
 
-import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getRegionCountryGroup } from 'src/utilities/formatRegion';
+import { getRegionCountryGroup } from "src/utilities/formatRegion";
 
 import type {
   GetRegionOptionAvailability,
   RegionFilterValue,
-} from './RegionSelect.types';
-import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
+} from "./RegionSelect.types";
+import type { AccountAvailability, Capabilities, Region } from "@linode/api-v4";
+import type { LinodeCreateType } from "src/features/Linodes/LinodeCreate/types";
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
@@ -33,12 +31,12 @@ export const getRegionOptions = ({
         return false;
       }
       if (regionFilter) {
-        const [, distributedContinentCode] = regionFilter.split('distributed-');
+        const [, distributedContinentCode] = regionFilter.split("distributed-");
         // Filter distributed regions by geographical area
-        if (distributedContinentCode && distributedContinentCode !== 'ALL') {
+        if (distributedContinentCode && distributedContinentCode !== "ALL") {
           const group = getRegionCountryGroup(region);
           return (
-            region.site_type === 'distributed' &&
+            region.site_type === "distributed" &&
             CONTINENT_CODE_TO_CONTINENT[
               distributedContinentCode as keyof typeof CONTINENT_CODE_TO_CONTINENT
             ] === group
@@ -54,8 +52,8 @@ export const getRegionOptions = ({
 
       // North America group comes first
       if (
-        region1Group === 'North America' &&
-        region2Group !== 'North America'
+        region1Group === "North America" &&
+        region2Group !== "North America"
       ) {
         return -1;
       }
@@ -72,7 +70,7 @@ export const getRegionOptions = ({
       }
 
       // Group US first
-      if (region1.country === 'us' || region2.country === 'us') {
+      if (region1.country === "us" || region2.country === "us") {
         if (region1.country < region2.country) {
           return 1;
         }
@@ -107,12 +105,11 @@ export const isRegionOptionUnavailable = ({
     return false;
   }
 
-  const regionWithUnavailability:
-    | AccountAvailability
-    | undefined = accountAvailabilityData.find(
-    (regionAvailability: AccountAvailability) =>
-      regionAvailability.region === region.id
-  );
+  const regionWithUnavailability: AccountAvailability | undefined =
+    accountAvailabilityData.find(
+      (regionAvailability: AccountAvailability) =>
+        regionAvailability.region === region.id,
+    );
 
   if (!regionWithUnavailability) {
     return false;
@@ -128,8 +125,8 @@ export const isRegionOptionUnavailable = ({
  */
 const isDistributedRegionSupported = (createType: LinodeCreateType) => {
   const supportedDistributedRegionTypes = [
-    'OS',
-    'Images',
+    "OS",
+    "Images",
     undefined, // /linodes/create route
   ];
   return supportedDistributedRegionTypes.includes(createType);
@@ -142,34 +139,19 @@ const isDistributedRegionSupported = (createType: LinodeCreateType) => {
  */
 const getIsDistributedRegion = (
   regionsData: Region[],
-  selectedRegion: string
+  selectedRegion: string,
 ) => {
   const region = regionsData.find(
-    (region) => region.id === selectedRegion || region.label === selectedRegion
+    (region) => region.id === selectedRegion || region.label === selectedRegion,
   );
-  return region?.site_type === 'distributed';
+  return region?.site_type === "distributed";
 };
 
 export const getNewRegionLabel = (region: Region) => {
-  const [city] = region.label.split(', ');
+  const [city] = region.label.split(", ");
   // Include state for the US
-  if (region.country === 'us') {
+  if (region.country === "us") {
     return `${region.country.toUpperCase()}, ${region.label}`;
   }
   return `${region.country.toUpperCase()}, ${city}`;
-};
-
-export const useIsGeckoEnabled = () => {
-  const flags = useFlags();
-  const isGeckoLA = flags?.gecko2?.enabled && flags.gecko2.la;
-  const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.la;
-  const { data: regions } = useRegionsQuery();
-
-  const hasDistributedRegionCapability = regions?.some((region: Region) =>
-    region.capabilities.includes('Distributed Plans')
-  );
-  const isGeckoLAEnabled = hasDistributedRegionCapability && isGeckoLA;
-  const isGeckoBetaEnabled = hasDistributedRegionCapability && isGeckoBeta;
-
-  return { isGeckoBetaEnabled, isGeckoLAEnabled };
 };

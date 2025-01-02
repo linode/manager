@@ -1,3 +1,3 @@
 // @todo: add types
 
-declare module 'logic-query-parser';
+declare module "logic-query-parser";

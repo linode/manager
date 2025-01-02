@@ -1,7 +1,7 @@
-import { Autocomplete, FormControl } from '@linode/ui';
-import * as React from 'react';
+import { Autocomplete, FormControl } from "@linode/ui";
+import * as React from "react";
 
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
+import { useAllLinodeConfigsQuery } from "src/queries/linodes/configs";
 
 interface Props {
   disabled?: boolean;
@@ -15,20 +15,12 @@ interface Props {
 }
 
 export const ConfigSelect = React.memo((props: Props) => {
-  const {
-    error,
-    linodeId,
-    name,
-    onBlur,
-    onChange,
-    value,
-    width,
-    ...rest
-  } = props;
+  const { error, linodeId, name, onBlur, onChange, value, width, ...rest } =
+    props;
 
   const { data: configs, error: configsError } = useAllLinodeConfigsQuery(
     linodeId ?? -1,
-    linodeId !== null
+    linodeId !== null,
   );
 
   const configList = configs?.map((config) => {
@@ -52,14 +44,14 @@ export const ConfigSelect = React.memo((props: Props) => {
     >
       <Autocomplete
         errorText={
-          error ?? configsError
-            ? 'An error occurred while retrieving configs for this Linode.'
+          (error ?? configsError)
+            ? "An error occurred while retrieving configs for this Linode."
             : undefined
         }
         noOptionsText={
           !configs || configs.length == 0
-            ? 'No configs are available for this Linode.'
-            : 'No options.'
+            ? "No configs are available for this Linode."
+            : "No options."
         }
         onChange={(_, selected) => {
           onChange(selected !== null ? +selected?.value : undefined);

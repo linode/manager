@@ -2,16 +2,16 @@ import {
   createLinodeConfig,
   deleteLinodeConfig,
   updateLinodeConfig,
-} from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+} from "@linode/api-v4";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { linodeQueries } from './linodes';
+import { linodeQueries } from "./linodes";
 
 import type {
   APIError,
   Config,
   LinodeConfigCreationData,
-} from '@linode/api-v4';
+} from "@linode/api-v4";
 
 export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   return useQuery<Config[], APIError[]>({
@@ -20,10 +20,7 @@ export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   });
 };
 
-const useLinodeConfigDeleteMutation = (
-  linodeId: number,
-  configId: number
-) => {
+const useLinodeConfigDeleteMutation = (linodeId: number, configId: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteLinodeConfig(linodeId, configId),
@@ -47,10 +44,7 @@ const useLinodeConfigCreateMutation = (linodeId: number) => {
   });
 };
 
-const useLinodeConfigUpdateMutation = (
-  linodeId: number,
-  configId: number
-) => {
+const useLinodeConfigUpdateMutation = (linodeId: number, configId: number) => {
   const queryClient = useQueryClient();
   return useMutation<Config, APIError[], Partial<LinodeConfigCreationData>>({
     mutationFn: (data) => updateLinodeConfig(linodeId, configId, data),

@@ -1,12 +1,12 @@
-import { Box, Stack } from '@linode/ui';
-import React from 'react';
+import { Box, Stack } from "@linode/ui";
+import React from "react";
 
-import { Flag } from 'src/components/Flag';
-import { ListItemOption } from 'src/components/ListItemOption';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { Flag } from "src/components/Flag";
+import { ListItemOption } from "src/components/ListItemOption";
+import { useIsGeckoEnabled } from "src/components/RegionSelect/RegionSelect.utils";
 
-import type { Region } from '@linode/api-v4';
-import type { ListItemProps } from 'src/components/ListItemOption';
+import type { Region } from "@linode/api-v4";
+import type { ListItemProps } from "src/components/ListItemOption";
 
 export const RegionOption = ({
   disabledOptions,
