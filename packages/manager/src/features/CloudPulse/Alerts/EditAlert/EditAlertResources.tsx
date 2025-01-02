@@ -126,7 +126,7 @@ export const EditAlertResources = () => {
       resource_ids: selectedResources.map((id) => String(id)),
     }).then(() => {
       // on success land on the alert definition list page and show a success snackbar
-      history.push('/monitor/cloudpulse/alerts/definitions');
+      history.push('/monitor/alerts/definitions');
       enqueueSnackbar('Alert resources successfully updated.', {
         anchorOrigin: {
           horizontal: 'right',
@@ -190,7 +190,7 @@ export const EditAlertResources = () => {
         <Box alignSelf={'flex-end'} m={3} mb={0}>
           <Button
             onClick={() => {
-              history.push('/monitor/cloudpulse/alerts/definitions');
+              history.push('/monitor/alerts/definitions');
             }}
             data-testid="cancelsaveresources"
             variant="text"
