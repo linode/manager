@@ -10,7 +10,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
 import { StyledTableCell } from './DomainRecords.styles';
 
-import type { IType } from './DomainRecords';
+import type { IType } from './generateTypes';
 import type { Domain, DomainRecord } from '@linode/api-v4/lib/domains';
 
 interface DomainRecordTableProps {
