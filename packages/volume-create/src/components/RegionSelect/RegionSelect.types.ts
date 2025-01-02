@@ -5,7 +5,6 @@ import type {
   RegionSite,
 } from "@linode/api-v4";
 import type { EnhancedAutocompleteProps } from "@linode/ui";
-import type React from "react";
 import type { DisableItemOption } from "src/components/ListItemOption";
 
 export type RegionFilterValue =
@@ -18,10 +17,6 @@ export type RegionFilterValue =
   | "distributed-SA"
   | RegionSite;
 
-interface GetRegionLabel {
-  includeSlug?: boolean;
-  region: Region;
-}
 export interface RegionSelectProps<
   DisableClearable extends boolean | undefined = undefined,
 > extends Omit<
@@ -53,29 +48,6 @@ export interface RegionSelectProps<
    * The ID of the selected region.
    */
   value: string | undefined;
-  width?: number;
-}
-
-interface RegionMultiSelectProps
-  extends Omit<
-    EnhancedAutocompleteProps<Region, true>,
-    "label" | "onChange" | "options"
-  > {
-  SelectedRegionsList?: React.ComponentType<{
-    onRemove: (region: string) => void;
-    selectedRegions: Region[];
-  }>;
-  currentCapability: Capabilities | undefined;
-  disabledRegions?: Record<string, DisableItemOption>;
-  helperText?: string;
-  isClearable?: boolean;
-  label?: string;
-  onChange: (ids: string[]) => void;
-  regions: Region[];
-  required?: boolean;
-  selectedIds: string[];
-  sortRegionOptions?: (a: Region, b: Region) => number;
-  tooltipText?: string;
   width?: number;
 }
 

@@ -21,7 +21,6 @@ import type {
   Profile,
   RequestOptions,
 } from "@linode/api-v4";
-import type { QueryClient } from "@tanstack/react-query";
 
 export const profileQueries = createQueryKeys("profile", {
   appTokens: (params: Params = {}, filter: Filter = {}) => ({
@@ -63,19 +62,6 @@ export const useProfile = (options: RequestOptions = {}) => {
     ...profileQueries.profile(options),
     ...queryPresets.oneTimeFetch,
   });
-};
-
-const updateProfileData = (
-  newData: Partial<Profile>,
-  queryClient: QueryClient,
-): void => {
-  queryClient.setQueryData<Profile>(
-    profileQueries.profile().queryKey,
-    (oldData: Profile) => ({
-      ...oldData,
-      ...newData,
-    }),
-  );
 };
 
 export const useGrants = () => {

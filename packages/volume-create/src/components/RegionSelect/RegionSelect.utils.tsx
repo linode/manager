@@ -7,7 +7,6 @@ import type {
   RegionFilterValue,
 } from "./RegionSelect.types";
 import type { AccountAvailability, Capabilities, Region } from "@linode/api-v4";
-import type { LinodeCreateType } from "src/features/Linodes/LinodeCreate/types";
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
@@ -116,35 +115,6 @@ export const isRegionOptionUnavailable = ({
   }
 
   return regionWithUnavailability.unavailable.includes(currentCapability);
-};
-
-/**
- * Util to determine whether a create type has support for distributed regions.
- *
- * @returns a boolean indicating whether or not the create type supports distributed regions.
- */
-const isDistributedRegionSupported = (createType: LinodeCreateType) => {
-  const supportedDistributedRegionTypes = [
-    "OS",
-    "Images",
-    undefined, // /linodes/create route
-  ];
-  return supportedDistributedRegionTypes.includes(createType);
-};
-
-/**
- * Util to determine whether a selected region is a distributed region.
- *
- * @returns a boolean indicating whether or not the selected region is a distributed region.
- */
-const getIsDistributedRegion = (
-  regionsData: Region[],
-  selectedRegion: string,
-) => {
-  const region = regionsData.find(
-    (region) => region.id === selectedRegion || region.label === selectedRegion,
-  );
-  return region?.site_type === "distributed";
 };
 
 export const getNewRegionLabel = (region: Region) => {

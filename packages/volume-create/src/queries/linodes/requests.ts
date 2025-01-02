@@ -1,7 +1,6 @@
 import {
   getLinodeConfigs,
   getLinodeDisks,
-  getLinodeFirewalls,
   getLinodeKernels,
   getLinodeTypes,
   getLinodes,
@@ -13,7 +12,6 @@ import type {
   Config,
   Disk,
   Filter,
-  Firewall,
   Kernel,
   Linode,
   Params,
@@ -41,19 +39,6 @@ export const getAllLinodeKernelsRequest = (
 export const getAllLinodeConfigs = (id: number) =>
   getAll<Config>((params, filter) =>
     getLinodeConfigs(id, params, filter),
-  )().then((data) => data.data);
-
-const getAllLinodeFirewalls = (
-  linodeId: number,
-  passedParams: Params = {},
-  passedFilter: Filter = {},
-) =>
-  getAll<Firewall>((params, filter) =>
-    getLinodeFirewalls(
-      linodeId,
-      { ...params, ...passedParams },
-      { ...filter, ...passedFilter },
-    ),
   )().then((data) => data.data);
 
 export const getAllLinodeDisks = (id: number) =>

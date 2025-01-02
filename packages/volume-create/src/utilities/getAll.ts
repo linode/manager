@@ -15,12 +15,6 @@ type GetFunction<T> = (
   filters?: Filter,
 ) => Promise<APIResponsePage<T[]>>;
 
-type GetFromEntity = (
-  entityId?: number,
-  params?: Params,
-  filters?: Filter,
-) => Promise<APIResponsePage<any>>;
-
 interface GetAllData<T> {
   data: T[];
   results: number;

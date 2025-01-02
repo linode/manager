@@ -68,10 +68,6 @@ export const LandingHeader = ({
     theme.breakpoints.between(636, "md"),
   );
 
-  const docsAnalyticsLabel = analyticsLabel
-    ? analyticsLabel
-    : `${title} Landing`;
-
   return (
     <Grid
       alignItems="center"
