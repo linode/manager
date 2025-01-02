@@ -11,7 +11,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { StyledTableCell } from './DomainRecords.styles';
 
 import type { IType } from './DomainRecords';
-import type { DomainRecord } from '@linode/api-v4';
+import type { Domain, DomainRecord } from '@linode/api-v4/lib/domains';
 
 interface DomainRecordTableProps {
   count: number;
@@ -19,7 +19,7 @@ interface DomainRecordTableProps {
   handlePageSizeChange: (pageSize: number) => void;
   page: number;
   pageSize: number;
-  paginatedData: DomainRecord[];
+  paginatedData: Domain[] | DomainRecord[];
   type: IType;
 }
 
