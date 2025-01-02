@@ -53,17 +53,19 @@ export const RenderAlertMetricsAndDimensions = React.memo(
               label="Metric Threshold"
             />
           </Grid>
-          <Grid item xs={12}>
-            <DisplayAlertChips
-              values={dimensionFilters.map(({ label, operator, value }) => [
-                label,
-                operator,
-                value,
-              ])}
-              isJoin
-              label="Dimension Filter"
-            />
-          </Grid>
+          {dimensionFilters !== undefined && dimensionFilters.length > 0 && (
+            <Grid item xs={12}>
+              <DisplayAlertChips
+                values={dimensionFilters.map(({ label, operator, value }) => [
+                  label,
+                  operator,
+                  value,
+                ])}
+                isJoin
+                label="Dimension Filter"
+              />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Divider />
           </Grid>
