@@ -1,5 +1,4 @@
-import { ManagedContact } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
+import { useMediaQuery } from '@mui/material';
 import { equals } from 'ramda';
 import * as React from 'react';
 
@@ -10,6 +9,10 @@ import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ContactsRow from './ContactsRow';
+
+import type { ManagedContact } from '@linode/api-v4/lib/managed';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material';
 
 interface ContactsTableContentProps {
   contacts: ManagedContact[];
@@ -30,19 +33,25 @@ export const ContactsTableContent = (props: ContactsTableContentProps) => {
     openDrawer,
   } = props;
 
+  const matchesMdDownBreakpoint = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('md')
+  );
+
+  const NUM_COLUMNS = matchesMdDownBreakpoint ? 5 : 6;
+
   if (loading && lastUpdated === 0) {
-    return <TableRowLoading columns={6} />;
+    return <TableRowLoading columns={NUM_COLUMNS} />;
   }
 
   if (error) {
     const errorMessage = getErrorStringOrDefault(error);
-    return <TableRowError colSpan={6} message={errorMessage} />;
+    return <TableRowError colSpan={NUM_COLUMNS} message={errorMessage} />;
   }
 
   if (contacts.length === 0 && lastUpdated !== 0) {
     return (
       <TableRowEmpty
-        colSpan={12}
+        colSpan={NUM_COLUMNS}
         message={"You don't have any Contacts on your account."}
       />
     );
