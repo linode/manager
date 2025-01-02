@@ -40,7 +40,7 @@ describe('Kubernetes cluster action menu', () => {
     expect(getByText('HA', { exact: false }));
   });
 
-  it('does not render an HA chip if the cluster is high availability', () => {
+  it('does not render an HA chip if the cluster is not high availability', () => {
     const { queryByText } = render(
       wrapWithTheme(<ClusterChips cluster={mockCluster} />)
     );
