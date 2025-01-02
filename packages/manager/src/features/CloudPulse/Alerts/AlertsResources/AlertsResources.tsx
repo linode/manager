@@ -209,8 +209,28 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
       {resourceIds.length > 0 && (
         <Grid container spacing={3}>
-          <Box columnGap={3} display="flex" flexDirection="row" ml={3} mt={3}>
-            <Box columnGap={1} display={'flex'} flexDirection={'row'}>
+          <Box
+            sx={{
+              flexDirection: {
+                md: 'row',
+                xs: 'column',
+              },
+            }}
+            display="flex"
+            gap={3}
+            ml={3}
+            mt={3}
+          >
+            <Box
+              sx={{
+                flexDirection: {
+                  md: 'row',
+                  xs: 'column',
+                },
+              }}
+              display={'flex'}
+              gap={1}
+            >
               <DebouncedSearchTextField
                 onSearch={(value) => {
                   setSearchText(value);
