@@ -7,7 +7,7 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
  * @returns The actions based on the type of the alert
  */
 export const getAlertTypeToActionsList = ({
-  handleDetails,
+  handleDetails, handleEdit
 }: ActionHandlers): Record<AlertDefinitionType, Action[]> => ({
   custom: [
     {
@@ -21,7 +21,7 @@ export const getAlertTypeToActionsList = ({
       title: 'Show Details',
     },
     {
-      onClick: handleDetails,
+      onClick: handleEdit,
       title: 'Edit',
     },
   ],
@@ -32,7 +32,7 @@ export const getAlertTypeToActionsList = ({
       title: 'Show Details',
     },
     {
-      onClick: handleDetails,
+      onClick: handleEdit,
       title: 'Edit',
     },
   ],

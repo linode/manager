@@ -151,6 +151,10 @@ export interface ServiceTypesList {
   data: ServiceTypes[];
 }
 
+export interface EditAlertResourcesPayload {
+  resource_ids?: string[];
+}
+
 export interface CreateAlertDefinitionPayload {
   label: string;
   tags?: string[];

@@ -13,6 +13,7 @@ describe('Alert Row', () => {
       <AlertTableRow
         handlers={{
           handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
         }}
         alert={alert}
       />
@@ -32,6 +33,7 @@ describe('Alert Row', () => {
       <AlertTableRow
         handlers={{
           handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
         }}
         alert={alert}
       />

@@ -11,6 +11,12 @@ interface FilterResourceProps {
    * The selected regions on which the data needs to be filtered
    */
   filteredRegions?: string[];
+
+  /**
+   * Property to integrate in edit the resources associated with resources
+   */
+  isAdditionOrDeletionNeeded?: boolean;
+
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
@@ -24,6 +30,16 @@ interface FilterResourceProps {
    * The search text with which the resources needed to be filtered
    */
   searchText?: string;
+
+  /**
+   * If it set to true,  only show selected resources
+   */
+  selectedOnly?: boolean;
+
+  /*
+   * This property helps to be track the list of selected resources
+   */
+  selectedResources?: number[];
 }
 
 /**
@@ -50,13 +66,17 @@ export const getFilteredResources = (
   const {
     data,
     filteredRegions,
+    isAdditionOrDeletionNeeded,
     regionsIdToLabelMap,
     resourceIds,
     searchText,
+    selectedOnly,
+    selectedResources,
   } = filterProps;
   return data
     ?.filter(
-      (resource) => resourceIds.includes(String(resource.id)) // if we can edit like add or delete no need to filter on resources associated with alerts
+      (resource) =>
+        isAdditionOrDeletionNeeded || resourceIds.includes(String(resource.id)) // if we can edit like add or delete no need to filter on resources associated with alerts
     )
     .filter((resource) => {
       if (filteredRegions) {
@@ -67,10 +87,13 @@ export const getFilteredResources = (
     .map((resource) => {
       return {
         ...resource,
-        region: resource.region // here replace region id with region label for regionsIdToLabelMap, formatted to Chicago, US(us-west)
+        checked: selectedResources
+          ? selectedResources.includes(Number(resource.id))
+          : false, // check for selections and drive the resources
+        region: resource.region
           ? regionsIdToLabelMap.get(resource.region)
-            ? `${regionsIdToLabelMap.get(resource.region)?.label}
-               (${resource.region})`
+            ? regionsIdToLabelMap.get(resource.region)?.label +
+              ` (${resource.region})`
             : resource.region
           : resource.region,
       };
@@ -87,7 +110,8 @@ export const getFilteredResources = (
         );
       }
       return true;
-    });
+    })
+    .filter((resource) => (selectedOnly ? resource.checked : true));
 };
 
 /**

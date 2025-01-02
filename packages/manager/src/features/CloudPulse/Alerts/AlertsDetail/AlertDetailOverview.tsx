@@ -3,10 +3,11 @@ import { Grid, Typography, useTheme } from '@mui/material';
 import React from 'react';
 
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
+import { formatDate } from 'src/utilities/formatDate';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 import { severityMap } from '../constants';
-import { formatTimestamp, getServiceTypeLabel } from '../Utils/utils';
+import { getServiceTypeLabel } from '../Utils/utils';
 import { AlertDetailRow } from './AlertDetailRow';
 
 import type { Alert } from '@linode/api-v4';
@@ -78,8 +79,10 @@ export const AlertDetailOverview = (props: OverviewProps) => {
         />
         <AlertDetailRow label="Created By" value={createdBy} />
         <AlertDetailRow
+          value={formatDate(updated, {
+            format: 'MMM dd, yyyy, h:mm a',
+          })}
           label="Last Modified"
-          value={formatTimestamp(updated)}
         />
       </Grid>
     </React.Fragment>

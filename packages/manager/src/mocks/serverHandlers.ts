@@ -2454,6 +2454,10 @@ export const handlers = [
       return HttpResponse.json({}, { status: 404 });
     }
   ),
+  http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
+    sleep(2000);
+    return HttpResponse.json({});
+  }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [

@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { AlertDetail } from '../AlertsDetail/AlertDetail';
 import { AlertListing } from '../AlertsListing/AlertListing';
 import { CreateAlertDefinition } from '../CreateAlert/CreateAlertDefinition';
+import { EditAlertResources } from '../EditAlert/EditAlertResources';
 
 export const AlertDefinitionLanding = () => {
   return (
@@ -23,6 +24,12 @@ export const AlertDefinitionLanding = () => {
         component={CreateAlertDefinition}
         path="/monitor/alerts/definitions/create"
       />
+      <Route
+        exact
+        path="/monitor/alerts/definitions/edit/:serviceType/:alertId"
+      >
+        <EditAlertResources />
+      </Route>
     </Switch>
   );
 };

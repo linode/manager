@@ -7,7 +7,7 @@ import Request, {
   setXFilter,
   setHeaders,
 } from '../request';
-import { Alert, AlertServiceType, CreateAlertDefinitionPayload } from './types';
+import { Alert, AlertServiceType, CreateAlertDefinitionPayload, EditAlertResourcesPayload } from './types';
 import { BETA_API_ROOT as API_ROOT } from '../constants';
 import { Params, Filter, ResourcePage } from '../types';
 
@@ -23,6 +23,21 @@ export const createAlertDefinition = (
     ),
     setMethod('POST'),
     setData(data, createAlertDefinitionSchema)
+  );
+
+export const editAlertDefinitionResources = (
+  data: EditAlertResourcesPayload,
+  serviceType: string,
+  alertId: number
+) =>
+  Request<Alert>(
+    setURL(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/alert-definitions/${encodeURIComponent(alertId)}`
+    ),
+    setMethod('PUT'),
+    setData(data)
   );
 
 export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
@@ -44,7 +59,7 @@ export const getAlertDefinitionByServiceTypeAndId = (
 ) =>
   Request<Alert>(
     setURL(
-      `http://blr-lhvk5r.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
         // updating only here as this is the only API ready
         serviceType
       )}/alert-definitions/${encodeURIComponent(alertId)}`

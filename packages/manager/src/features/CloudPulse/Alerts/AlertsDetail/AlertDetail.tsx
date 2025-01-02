@@ -14,7 +14,7 @@ import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailOverview } from './AlertDetailOverview';
 
-interface RouteParams {
+export interface AlertRouteParams {
   /**
    * The id of the alert for which the data needs to be shown
    */
@@ -26,7 +26,7 @@ interface RouteParams {
 }
 
 export const AlertDetail = () => {
-  const { alertId, serviceType } = useParams<RouteParams>();
+  const { alertId, serviceType } = useParams<AlertRouteParams>();
 
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
     Number(alertId),
