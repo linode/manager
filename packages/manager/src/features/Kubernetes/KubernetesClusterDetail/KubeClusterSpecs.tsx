@@ -71,7 +71,7 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   } = useKubernetesTypesQuery();
 
   const matchesColGapBreakpointDown = useMediaQuery(
-    theme.breakpoints.down(1280)
+    theme.breakpoints.down(theme.breakpoints.values.lg)
   );
 
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
