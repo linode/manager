@@ -10,8 +10,8 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock('@tanstack/react-query', async () => {
+  const actual = await vi.importActual('@tanstack/react-query');
   return {
     ...actual,
     useParams: queryMocks.useParams,
@@ -27,7 +27,20 @@ vi.mock('src/queries/linodes/linodes', async () => {
 });
 
 describe('PlacementGroupsUnassignModal', () => {
+  beforeAll(() => {
+    vi.useFakeTimers({
+      shouldAdvanceTime: true,
+    });
+  });
+  afterAll(() => {
+    vi.useRealTimers();
+  });
+
   it('should render and have the proper content and CTAs', async () => {
+    const date = new Date(2024, 9, 1);
+
+    vi.useFakeTimers();
+    vi.setSystemTime(date);
     queryMocks.useLinodeQuery.mockReturnValue({
       data: linodeFactory.build({
         id: 1,
