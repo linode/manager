@@ -1,8 +1,8 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { placementGroupFactory, regionFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsEditDrawer } from './PlacementGroupsEditDrawer';
 
@@ -34,12 +34,16 @@ describe('PlacementGroupsCreateDrawer', () => {
   it('should render, have the proper fields populated with PG values, and have uneditable fields disabled', async () => {
     queryMocks.useParams.mockReturnValue({ id: '1' });
 
-    const { getByLabelText, getByRole, getByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByRole,
+      getByText,
+    } = await renderWithThemeAndRouter(
       <PlacementGroupsEditDrawer
         selectedPlacementGroup={placementGroupFactory.build({
-          placement_group_type: 'anti_affinity:local',
           id: 1,
           label: 'PG-to-edit',
+          placement_group_type: 'anti_affinity:local',
           region: 'us-east',
         })}
         disableEditButton={false}
@@ -62,7 +66,7 @@ describe('PlacementGroupsCreateDrawer', () => {
 
     const editButton = getByRole('button', { name: 'Edit' });
     expect(editButton).toBeEnabled();
-    fireEvent.click(editButton);
+    await userEvent.click(editButton);
 
     expect(queryMocks.useMutatePlacementGroup).toHaveBeenCalled();
   });

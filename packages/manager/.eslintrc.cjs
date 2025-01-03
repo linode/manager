@@ -88,9 +88,10 @@ module.exports = {
     // TODO: TanStack Router - remove this override when migration is complete
     {
       files: [
-        // for each new features added to the migration router, add its directory here
+        // for each new feature added to the migration router, add its directory here
         'src/features/Betas/**/*',
         'src/features/Domains/**/*',
+        'src/features/PlacementGroups/**/*',
         'src/features/Volumes/**/*',
       ],
       rules: {

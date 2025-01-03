@@ -6,7 +6,7 @@ import {
   regionFactory,
 } from 'src/factories';
 import {
-  renderWithTheme,
+  renderWithThemeAndRouter,
   resizeScreenSize,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
@@ -22,7 +22,6 @@ const linode = linodeFactory.build({
 });
 
 const placementGroup = placementGroupFactory.build({
-  placement_group_type: 'anti_affinity:local',
   id: 1,
   is_compliant: false,
   label: 'group 1',
@@ -32,6 +31,7 @@ const placementGroup = placementGroupFactory.build({
       linode_id: 1,
     },
   ],
+  placement_group_type: 'anti_affinity:local',
   region: 'us-east',
 });
 
@@ -43,9 +43,13 @@ const region = regionFactory.build({
 });
 
 describe('PlacementGroupsRow', () => {
-  it('renders the columns with proper data', () => {
+  it('renders the columns with proper data', async () => {
     resizeScreenSize(1200);
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
+    const {
+      getByRole,
+      getByTestId,
+      getByText,
+    } = await renderWithThemeAndRouter(
       wrapWithTableBody(
         <PlacementGroupsRow
           assignedLinodes={[linode]}

@@ -1,9 +1,7 @@
 import { CircleProgress } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -39,9 +37,9 @@ import type { Filter, PlacementGroup } from '@linode/api-v4';
 const preferenceKey = 'placement-groups';
 
 export const PlacementGroupsLanding = React.memo(() => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const pagination = usePagination(1, preferenceKey);
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams({ from: '/placement-groups/$id' });
   const theme = useTheme();
   const [query, setQuery] = React.useState<string>('');
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -104,19 +102,25 @@ export const PlacementGroupsLanding = React.memo(() => {
   });
 
   const handleCreatePlacementGroup = () => {
-    history.push('/placement-groups/create');
+    navigate({ to: '/placement-groups/create' });
   };
 
   const handleEditPlacementGroup = (placementGroup: PlacementGroup) => {
-    history.push(`/placement-groups/edit/${placementGroup.id}`);
+    navigate({
+      params: { id: placementGroup.id },
+      to: '/placement-groups/edit/$id',
+    });
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
-    history.push(`/placement-groups/delete/${placementGroup.id}`);
+    navigate({
+      params: { id: placementGroup.id },
+      to: '/placement-groups/delete/$id',
+    });
   };
 
   const onClosePlacementGroupDrawer = () => {
-    history.push('/placement-groups');
+    navigate({ to: '/placement-groups' });
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
@@ -280,10 +284,4 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
     </>
   );
-});
-
-export const placementGroupsLandingLazyRoute = createLazyRoute(
-  '/placement-groups'
-)({
-  component: PlacementGroupsLanding,
 });

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { linodeFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsUnassignModal } from './PlacementGroupsUnassignModal';
 
@@ -10,8 +10,8 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock('@tanstack/react-query', async () => {
+  const actual = await vi.importActual('@tanstack/react-query');
   return {
     ...actual,
     useParams: queryMocks.useParams,
@@ -27,7 +27,20 @@ vi.mock('src/queries/linodes/linodes', async () => {
 });
 
 describe('PlacementGroupsUnassignModal', () => {
-  it('should render and have the proper content and CTAs', () => {
+  beforeAll(() => {
+    vi.useFakeTimers({
+      shouldAdvanceTime: true,
+    });
+  });
+  afterAll(() => {
+    vi.useRealTimers();
+  });
+
+  it('should render and have the proper content and CTAs', async () => {
+    const date = new Date(2024, 9, 1);
+
+    vi.useFakeTimers();
+    vi.setSystemTime(date);
     queryMocks.useLinodeQuery.mockReturnValue({
       data: linodeFactory.build({
         id: 1,
@@ -39,7 +52,7 @@ describe('PlacementGroupsUnassignModal', () => {
       linodeId: '1',
     });
 
-    const { getByLabelText, getByRole } = renderWithTheme(
+    const { getByLabelText, getByRole } = await renderWithThemeAndRouter(
       <PlacementGroupsUnassignModal
         onClose={() => null}
         open
