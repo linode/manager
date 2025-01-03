@@ -28,6 +28,7 @@ export interface CloudPulseResourcesSelectProps {
   region?: string;
   resourceType: string | undefined;
   savePreferences?: boolean;
+  tags?: string[];
   xFilter?: Filter;
 }
 
@@ -42,17 +43,14 @@ export const CloudPulseResourcesSelect = React.memo(
       region,
       resourceType,
       savePreferences,
+      tags,
       xFilter,
     } = props;
 
     const flags = useFlags();
 
     const resourceFilterMap: Record<string, Filter> = {
-      dbaas: {
-        '+order': 'asc',
-        '+order_by': 'label',
-        platform: 'rdbms-default',
-      },
+      dbaas: { '+order': 'asc', '+order_by': 'label', platform: 'rdbms-default' },
     };
 
     const { data: resources, isError, isLoading } = useResourcesQuery(
@@ -67,6 +65,7 @@ export const CloudPulseResourcesSelect = React.memo(
         : {
             ...(resourceFilterMap[resourceType ?? ''] ?? {}),
             region,
+            ...(tags ?? []),
           }
     );
 
