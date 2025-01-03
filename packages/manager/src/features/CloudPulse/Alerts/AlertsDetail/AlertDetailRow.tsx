@@ -54,7 +54,7 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
           )}
           <Typography
             sx={{
-              color: theme.color.offBlack,
+              color: theme.tokens.content.Text.Primary.Default,
             }}
             fontSize={theme.spacing(1.75)}
             variant="body2"
