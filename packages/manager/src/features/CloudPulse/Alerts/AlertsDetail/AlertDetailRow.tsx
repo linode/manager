@@ -47,7 +47,7 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
     <Grid container item xs={12}>
       <Grid item sm={labelGridColumns} xs={12}>
         <Typography
-          color={theme.color.offBlack}
+          color={theme.tokens.content.Text.Primary.Default}
           fontFamily={theme.font.bold}
           variant="body1"
         >
@@ -63,7 +63,10 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
             status={status}
           />
         )}
-        <Typography color={theme.color.offBlack} variant="body1">
+        <Typography
+          color={theme.tokens.content.Text.Primary.Default}
+          variant="body1"
+        >
           {value}
         </Typography>
       </Grid>
