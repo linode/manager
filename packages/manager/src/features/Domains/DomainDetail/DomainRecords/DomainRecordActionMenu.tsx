@@ -1,8 +1,10 @@
-import { Domain } from '@linode/api-v4/lib/domains';
 import { has } from 'ramda';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+
+import type { Domain } from '@linode/api-v4/lib/domains';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface EditPayload {
   id?: number;
