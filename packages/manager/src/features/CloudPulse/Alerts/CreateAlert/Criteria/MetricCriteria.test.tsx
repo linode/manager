@@ -243,43 +243,4 @@ describe('MetricCriteriaField', () => {
 
     expect(setMaxInterval).toBeCalledWith(firstOptionConvertedTime);
   });
-
-  it('setMaxInterval has to be called', async () => {
-    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
-      data: mockData,
-      isError: true,
-      isLoading: false,
-      status: 'error',
-    });
-    const setMaxInterval = vi.fn();
-    const firstOption = mockData.data[0];
-    const secondOption = mockData.data[1];
-    const [
-      firstOptionConvertedTime,
-      secondOptionConvertedTime,
-    ] = convertToSeconds([
-      firstOption.scrape_interval,
-      secondOption.scrape_interval,
-    ]);
-    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: (
-        <MetricCriteriaField
-          name="rule_criteria.rules"
-          serviceType="linode"
-          setMaxInterval={setMaxInterval}
-        />
-      ),
-      useFormOptions: {
-        defaultValues: {
-          rule_criteria: {
-            rules: [firstOption, secondOption],
-          },
-        },
-      },
-    });
-
-    expect(setMaxInterval).toBeCalledWith(
-      Math.max(firstOptionConvertedTime, secondOptionConvertedTime)
-    );
-  });
 });

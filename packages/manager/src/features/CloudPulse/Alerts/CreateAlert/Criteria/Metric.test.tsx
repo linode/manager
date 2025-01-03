@@ -91,7 +91,7 @@ describe('Metric component tests', () => {
         },
       }
     );
-    const dataFieldContainer = container.getByTestId('Data-field');
+    const dataFieldContainer = container.getByTestId('data-field');
     expect(
       within(dataFieldContainer).getByRole('button', {
         name:
@@ -140,7 +140,7 @@ describe('Metric component tests', () => {
       }
     );
 
-    const aggregationTypeContainer = container.getByTestId('Aggregation-type');
+    const aggregationTypeContainer = container.getByTestId('aggregation-type');
     const aggregationTypeInput = within(
       aggregationTypeContainer
     ).getByRole('button', { name: 'Open' });
@@ -185,7 +185,7 @@ describe('Metric component tests', () => {
         },
       }
     );
-    const operatorContainer = container.getByTestId('Operator');
+    const operatorContainer = container.getByTestId('operator');
     const operatorInput = within(operatorContainer).getByRole('button', {
       name: 'Open',
     });
