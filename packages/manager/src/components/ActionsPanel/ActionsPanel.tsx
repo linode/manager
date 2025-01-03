@@ -14,14 +14,13 @@ export interface ActionButtonsProps extends ButtonProps {
 
 export interface ActionPanelProps extends BoxProps {
   /**
-   * Determines the position of the primary button within the actions panel.
-   * Can be either 'left' or 'right'.
-   */
-  primaryButtonPosition?: 'left' | 'right';
-  /**
    * primary type actionable button custom aria descripton.
    */
   primaryButtonProps?: ActionButtonsProps;
+  /**
+   * Determines the position of the primary button within the actions panel.
+   */
+  reversePrimaryButtonPosition?: boolean;
   /**
    * secondary type actionable button custom aria descripton.
    */
@@ -35,8 +34,8 @@ export interface ActionPanelProps extends BoxProps {
 export const ActionsPanel = (props: ActionPanelProps) => {
   const {
     className,
-    primaryButtonPosition = 'right',
     primaryButtonProps,
+    reversePrimaryButtonPosition = false,
     secondaryButtonProps,
     ...rest
   } = props;
@@ -50,7 +49,7 @@ export const ActionsPanel = (props: ActionPanelProps) => {
     <StyledBox
       className={cx(className, 'actionPanel')}
       data-qa-buttons
-      primaryButtonPosition={primaryButtonPosition}
+      reversePrimaryButtonPosition={reversePrimaryButtonPosition}
       {...rest}
     >
       {secondaryButtonProps ? (
@@ -78,10 +77,10 @@ export const ActionsPanel = (props: ActionPanelProps) => {
 
 const StyledBox = styled(Box, {
   label: 'StyledActionsPanel',
-  shouldForwardProp: omittedProps(['primaryButtonPosition']),
+  shouldForwardProp: omittedProps(['reversePrimaryButtonPosition']),
 })<ActionPanelProps>(({ theme: { spacing }, ...props }) => ({
   display: 'flex',
-  flexDirection: props.primaryButtonPosition === 'left' ? 'row-reverse' : 'row',
+  flexDirection: props.reversePrimaryButtonPosition ? 'row-reverse' : 'row',
   gap: spacing(),
   justifyContent: 'flex-end',
   marginTop: spacing(1),

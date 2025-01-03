@@ -14,6 +14,7 @@ export interface TypeToConfirmProps extends Omit<TextFieldProps, 'onChange'> {
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
   hideInstructions?: boolean;
+  isCloseAccount?: boolean;
   onChange: (value: string) => void;
   textFieldStyle?: React.CSSProperties;
   title?: string;
@@ -27,6 +28,7 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
     confirmationText,
     handleDeleteAccountServices,
     hideInstructions,
+    isCloseAccount,
     onChange,
     textFieldStyle,
     title,
@@ -53,30 +55,35 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
           <Typography style={typographyStyle} sx={typographyStyleSx}>
             {confirmationText}
           </Typography>
-          <FormGroup
-            sx={(theme) => ({
-              marginTop: theme.tokens.spacing[20],
-              paddingLeft: theme.tokens.spacing[10],
-            })}
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="services"
-                  onChange={handleDeleteAccountServices}
-                />
-              }
-              data-qa-checkbox="deleteAccountServices"
-              label="Delete all account services and entities (Linodes, Volumes, DNS Records, etc.)"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox name="users" onChange={handleDeleteAccountServices} />
-              }
-              data-qa-checkbox="deleteAccountUsers"
-              label="Delete all user accounts, including your own."
-            />
-          </FormGroup>
+          {isCloseAccount && (
+            <FormGroup
+              sx={(theme) => ({
+                marginTop: theme.tokens.spacing[20],
+                paddingLeft: theme.tokens.spacing[10],
+              })}
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="services"
+                    onChange={handleDeleteAccountServices}
+                  />
+                }
+                data-qa-checkbox="deleteAccountServices"
+                label="Delete all account services and entities (Linodes, Volumes, DNS Records, etc.)"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="users"
+                    onChange={handleDeleteAccountServices}
+                  />
+                }
+                data-qa-checkbox="deleteAccountUsers"
+                label="Delete all user accounts, including your own."
+              />
+            </FormGroup>
+          )}
           <TextField
             onChange={(e) => onChange(e.target.value)}
             style={textFieldStyle}

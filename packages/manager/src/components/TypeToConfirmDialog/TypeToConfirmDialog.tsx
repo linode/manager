@@ -74,7 +74,7 @@ interface TypeToConfirmDialogProps {
    * Determines the order of the primary and secondary buttons within the actions panel.
    * If true, the primary button will be on the left and the secondary button on the right.
    */
-  reverseButtons?: boolean;
+  reversePrimaryButtonPosition?: boolean;
   /** Props for the secondary button */
   secondaryButtonProps?: Omit<ActionButtonsProps, 'label'>;
 }
@@ -98,13 +98,14 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     onClose,
     open,
     primaryButtonProps,
-    reverseButtons,
+    reversePrimaryButtonPosition,
     secondaryButtonProps,
     textFieldStyle,
     title,
     typographyStyle,
     typographyStyleSx,
   } = props;
+
   const [deleteAccount, setDeleteAccount] = React.useState({
     confirmText: '',
     services: false,
@@ -135,8 +136,6 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     !isCloseAccountValid ||
     disableTypeToConfirmSubmit;
 
-  const isTypeToConfirmInputDisabled = disableTypeToConfirmInput;
-
   React.useEffect(() => {
     if (open) {
       setDeleteAccount({
@@ -146,58 +145,75 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     }
   }, [open]);
 
-  const typeInstructions =
-    entity.action === 'cancellation'
-      ? `type your Username `
-      : `type  the name of the ${entity.type} ${entity.subType || ''} `;
+  const getButtonProps = () => {
+    const confirmProps: ActionButtonsProps = {
+      ...primaryButtonProps,
+      'data-testid': 'confirm',
+      disabled: isPrimaryButtonDisabled,
+      label: entity.primaryBtnText,
+      loading,
+      onClick,
+      ...(reversePrimaryButtonPosition && { color: 'warning' }),
+    };
 
-  const actions = (
-    <ActionsPanel
-      primaryButtonProps={
-        reverseButtons
-          ? {
-              ...secondaryButtonProps,
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              loading: reverseButtons && loading,
-              onClick: onClose ? () => onClose({}, 'escapeKeyDown') : undefined,
-            }
-          : {
-              ...primaryButtonProps,
-              'data-testid': 'confirm',
-              disabled: isPrimaryButtonDisabled,
-              label: entity.primaryBtnText,
-              loading: !reverseButtons && loading,
-              onClick,
-            }
-      }
-      secondaryButtonProps={
-        reverseButtons
-          ? {
-              ...primaryButtonProps,
-              color: 'warning',
-              'data-testid': 'confirm',
-              disabled: isPrimaryButtonDisabled,
-              label: entity.primaryBtnText,
-              loading: reverseButtons && loading,
-              onClick,
-            }
-          : {
-              ...secondaryButtonProps,
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              loading: !reverseButtons && loading,
-              onClick: onClose ? () => onClose({}, 'escapeKeyDown') : undefined,
-            }
-      }
-      primaryButtonPosition={reverseButtons ? 'left' : 'right'}
-      style={{ padding: 0 }}
-    />
-  );
+    const cancelProps: ActionButtonsProps = {
+      ...secondaryButtonProps,
+      'data-testid': 'cancel',
+      label: 'Cancel',
+      loading,
+      onClick: () => onClose?.({}, 'escapeKeyDown'),
+    };
+
+    return {
+      primaryButtonProps: reversePrimaryButtonPosition
+        ? cancelProps
+        : confirmProps,
+      secondaryButtonProps: reversePrimaryButtonPosition
+        ? confirmProps
+        : cancelProps,
+    };
+  };
+
+  const getTypeToConfirmProps = () => {
+    if (isCloseAccount) {
+      return {
+        confirmationText: (
+          <FormLabel>
+            Please confirm you want to close your cloud computing services
+            account
+          </FormLabel>
+        ),
+        hideInstructions: true,
+        placeholder: 'Email',
+      };
+    }
+
+    const typeInstructions =
+      entity.action === 'cancellation'
+        ? 'type your Username '
+        : `type the name of the ${entity.type} ${entity.subType || ''} `;
+
+    return {
+      confirmationText: (
+        <span>
+          To confirm {entity.action}, {typeInstructions}(<b>{entity.name}</b>)
+          in the field below:
+        </span>
+      ),
+      hideInstructions: false,
+      placeholder: '',
+    };
+  };
 
   return (
     <ConfirmationDialog
-      actions={actions}
+      actions={
+        <ActionsPanel
+          {...getButtonProps()}
+          reversePrimaryButtonPosition
+          style={{ padding: 0 }}
+        />
+      }
       error={errors ? errors[0].reason : undefined}
       isFetching={isFetching}
       onClose={onClose}
@@ -206,19 +222,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     >
       {children}
       <TypeToConfirm
-        confirmationText={
-          entity.subType === 'CloseAccount' ? (
-            <FormLabel>
-              Please confirm you want to close your cloud computing services
-              account
-            </FormLabel>
-          ) : (
-            <span>
-              To confirm {entity.action}, {typeInstructions}(
-              <b>{entity.name}</b>) in the field below:
-            </span>
-          )
-        }
+        {...getTypeToConfirmProps()}
         onChange={(input) => {
           setDeleteAccount({
             ...deleteAccount,
@@ -226,13 +230,12 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
           });
         }}
         data-testid={'dialog-confirm-text-input'}
-        disabled={isTypeToConfirmInputDisabled}
+        disabled={disableTypeToConfirmInput}
         expand
         handleDeleteAccountServices={handleDeleteAccountServices}
-        hideInstructions={entity.subType === 'CloseAccount'}
         inputProps={inputProps}
+        isCloseAccount={isCloseAccount}
         label={label}
-        placeholder={entity.subType === 'CloseAccount' ? 'Email' : ''}
         textFieldStyle={textFieldStyle}
         typographyStyle={typographyStyle}
         typographyStyleSx={typographyStyleSx}

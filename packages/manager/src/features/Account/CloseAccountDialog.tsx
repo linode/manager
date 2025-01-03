@@ -90,7 +90,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       onClick={handleCancelAccount}
       onClose={closeDialog}
       open={open}
-      reverseButtons
+      reversePrimaryButtonPosition
       title="Are you sure you want to close your cloud computing services account?"
     >
       {errors ? (
