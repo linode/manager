@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { Autocomplete, Notice } from '@linode/ui';
 import Search from '@mui/icons-material/Search';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -6,16 +6,12 @@ import { withRouter } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
-import EnhancedSelect from 'src/components/EnhancedSelect';
-import { selectStyles } from 'src/features/TopMenu/SearchBar/SearchBar';
-
 import withSearch from '../SearchHOC';
 import { SearchItem } from './SearchItem';
 
 import type { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import type { Theme } from '@mui/material/styles';
 import type { RouteComponentProps } from 'react-router-dom';
-import type { Item } from 'src/components/EnhancedSelect';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   enhancedSelectWrapper: {
@@ -46,13 +42,15 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   root: {
-    position: 'relative',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 12,
   },
   searchIcon: {
+    alignSelf: 'center',
     color: theme.color.grey1,
-    left: 5,
-    position: 'absolute',
-    top: 4,
+    left: 4,
+    top: 40,
     zIndex: 3,
   },
 }));
@@ -98,17 +96,25 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       : '/support/search/';
   };
 
-  const handleSelect = (selected: Item<string>) => {
+  const handleSelect = (selected: number | string) => {
     if (!selected || !inputValue) {
       return;
     }
 
-    if (selected.value === 'search') {
+    if (selected === 'search') {
       const link = getLinkTarget(inputValue);
       history.push(link);
     } else {
       const href = pathOr('', ['data', 'href'], selected);
-      window.open(href, '_blank', 'noopener');
+      if (href) {
+        window.open(href, '_blank', 'noopener');
+      }
+    }
+  };
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' && inputValue) {
+      const link = getLinkTarget(inputValue);
+      history.push(link);
     }
   };
 
@@ -121,22 +127,27 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       )}
       <div className={classes.root}>
         <Search className={classes.searchIcon} data-qa-search-icon />
-        <EnhancedSelect
-          components={
-            { DropdownIndicator: () => null, Option: SearchItem } as any
-          }
+        <Autocomplete
+          renderOption={(props, option) => {
+            return (
+              <SearchItem
+                data={option}
+                searchText={option.data.source}
+                {...props}
+              />
+            );
+          }}
           className={classes.enhancedSelectWrapper}
+          disableClearable
           disabled={!searchEnabled}
-          hideLabel
           inputValue={inputValue}
-          isClearable={true}
-          isMulti={false}
           label="Search for answers"
-          onChange={handleSelect}
-          onInputChange={onInputValueChange}
+          multiple={false}
+          onChange={(_, selected) => handleSelect(selected.value)}
+          onInputChange={(_, value) => onInputValueChange(value)}
           options={options}
           placeholder="Search for answers..."
-          styles={selectStyles}
+          textFieldProps={{ hideLabel: true, onKeyDown: handleKeyDown }}
         />
       </div>
     </React.Fragment>
