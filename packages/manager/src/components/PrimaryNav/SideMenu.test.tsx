@@ -4,7 +4,8 @@ import React from 'react';
 
 import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 
-import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH, SideMenu } from './SideMenu';
+import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from './constants';
+import { SideMenu } from './SideMenu';
 
 // Mock PrimaryNav component
 vi.mock('./PrimaryNav', () => {

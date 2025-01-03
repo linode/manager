@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'react-router-dom';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
 
 export const StyledGrid = styled(Grid, {
   label: 'StyledGrid',
@@ -33,9 +33,6 @@ export const StyledLogoBox = styled(Box, {
   paddingLeft: 12,
   paddingRight: 24,
   paddingTop: 16,
-  [theme.breakpoints.down('md')]: {
-    borderRight: `1px solid ${theme.tokens.border.Normal}`,
-  },
   transition: 'padding-left .03s linear',
 }));
 

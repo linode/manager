@@ -4,12 +4,10 @@ import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
 import { FOOTER_HEIGHT } from 'src/features/Footer';
-import { TOPMENU_HEIGHT } from 'src/features/TopMenu/TopMenu';
+import { TOPMENU_HEIGHT } from 'src/features/TopMenu/constants';
 
+import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from './constants';
 import PrimaryNav from './PrimaryNav';
-
-export const SIDEBAR_WIDTH = 232;
-export const SIDEBAR_COLLAPSED_WIDTH = 52;
 
 export interface SideMenuProps {
   /**

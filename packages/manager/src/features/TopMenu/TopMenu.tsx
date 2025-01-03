@@ -1,11 +1,8 @@
-import { Box, IconButton, Typography } from '@linode/ui';
-import MenuIcon from '@mui/icons-material/Menu';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { AppBar } from 'src/components/AppBar';
-import { Hidden } from 'src/components/Hidden';
 import {
   StyledAkamaiLogo,
   StyledLogoBox,
@@ -14,33 +11,26 @@ import { Toolbar } from 'src/components/Toolbar';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 
 import { Community } from './Community';
+import { TOPMENU_HEIGHT } from './constants';
 import { CreateMenu } from './CreateMenu/CreateMenu';
 import { Help } from './Help';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
 import SearchBar from './SearchBar/SearchBar';
-import { TopMenuTooltip } from './TopMenuTooltip';
 import { UserMenu } from './UserMenu';
 
 export interface TopMenuProps {
-  isSideMenuOpen: boolean;
-  openSideMenu: () => void;
+  desktopMenuToggle: () => void;
   username: string;
 }
-
-export const TOPMENU_HEIGHT = 56;
 
 /**
  * - Items presented in the top navigation are considered universally important and should be available regardless of any particular task.
  * - The number of items should be limited. In the future, **Help & Support** could become a drop down with links to **Community**, **Guides**, and etc.
  */
 export const TopMenu = React.memo((props: TopMenuProps) => {
-  const { isSideMenuOpen, openSideMenu, username } = props;
+  const { username } = props;
 
   const { loggedInAsCustomer } = useAuthentication();
-
-  const navHoverText = isSideMenuOpen
-    ? 'Collapse side menu'
-    : 'Expand side menu';
 
   return (
     <React.Fragment>
@@ -58,7 +48,14 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           </Typography>
         </Box>
       )}
-      <AppBar data-qa-appbar>
+      <AppBar
+        sx={(theme) => ({
+          backgroundColor: theme.tokens.background.Black,
+          position: 'sticky',
+          zIndex: 1500,
+        })}
+        data-qa-appbar
+      >
         <Toolbar
           sx={(theme) => ({
             '&.MuiToolbar-root': {
@@ -69,40 +66,31 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           })}
           variant="dense"
         >
-          <Hidden mdDown>
-            <Grid>
-              <StyledLogoBox>
-                <Link
-                  aria-label="Akamai - Dashboard"
-                  style={{ lineHeight: 0 }}
-                  title="Akamai - Dashboard"
-                  to={`/dashboard`}
-                >
-                  <StyledAkamaiLogo width={83} />
-                </Link>
-              </StyledLogoBox>
-            </Grid>
-          </Hidden>
-          <Hidden mdUp>
-            <TopMenuTooltip title={navHoverText}>
-              <IconButton
-                aria-label="open menu"
-                color="inherit"
-                onClick={openSideMenu}
-                size="large"
-              >
-                <MenuIcon />
-              </IconButton>
-            </TopMenuTooltip>
-          </Hidden>
-          <CreateMenu />
+          <StyledLogoBox>
+            <Link
+              aria-label="Akamai - Dashboard"
+              style={{ lineHeight: 0 }}
+              title="Akamai - Dashboard"
+              to={`/dashboard`}
+            >
+              <StyledAkamaiLogo width={83} />
+            </Link>
+          </StyledLogoBox>
           <SearchBar />
-          <Help />
-          <Community />
 
-          <NotificationMenu />
+          <Stack
+            direction="row"
+            sx={{ alignItems: 'center', margin: '0 0 0 auto' }}
+          >
+            <CreateMenu />
 
-          <UserMenu />
+            <Help />
+            <Community />
+
+            <NotificationMenu />
+
+            <UserMenu />
+          </Stack>
         </Toolbar>
       </AppBar>
     </React.Fragment>

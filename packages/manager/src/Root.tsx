@@ -90,23 +90,18 @@ export const Root = () => {
         <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
+              <MainContentBanner />
               <TopMenu
-                isSideMenuOpen={!desktopMenuIsOpen}
-                openSideMenu={() => toggleMenu(true)}
+                desktopMenuToggle={desktopMenuToggle}
                 username={username}
               />
-              <SideMenu
-                closeMenu={() => toggleMenu(false)}
-                collapse={desktopMenuIsOpen || false}
-                desktopMenuToggle={desktopMenuToggle}
-                open={menuIsOpen}
-              />
-              <div
-                className={cx(classes.content, {
-                  [classes.fullWidthContent]: desktopMenuIsOpen,
-                })}
-              >
-                <MainContentBanner />
+              <div className={classes.content}>
+                <SideMenu
+                  closeMenu={() => toggleMenu(false)}
+                  collapse={desktopMenuIsOpen || false}
+                  desktopMenuToggle={desktopMenuToggle}
+                  open={menuIsOpen}
+                />
                 <main
                   className={classes.cmrWrapper}
                   id="main-content"

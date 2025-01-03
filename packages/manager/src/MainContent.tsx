@@ -9,8 +9,8 @@ import { makeStyles } from 'tss-react/mui';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
-import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
@@ -77,20 +77,17 @@ const useStyles = makeStyles()((theme: Theme) => ({
       paddingRight: 0,
       paddingTop: theme.spacing(2),
     },
+    [theme.breakpoints.up(960)]: {
+      marginLeft: SIDEBAR_WIDTH,
+    },
     transition: theme.transitions.create('opacity'),
   },
   content: {
     flex: 1,
-    [theme.breakpoints.up('md')]: {
-      marginLeft: SIDEBAR_WIDTH,
-    },
     transition: 'margin-left .1s linear',
   },
   fullWidthContent: {
     marginLeft: 0,
-    [theme.breakpoints.up('md')]: {
-      marginLeft: 52,
-    },
   },
   grid: {
     marginLeft: 0,
@@ -298,16 +295,10 @@ export const MainContent = () => {
         <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
+              <MainContentBanner />
               <TopMenu
-                isSideMenuOpen={!desktopMenuIsOpen}
-                openSideMenu={() => toggleMenu(true)}
-                username={username}
-              />
-              <SideMenu
-                closeMenu={() => toggleMenu(false)}
-                collapse={desktopMenuIsOpen || false}
                 desktopMenuToggle={desktopMenuToggle}
-                open={menuIsOpen}
+                username={username}
               />
               <div
                 className={cx(classes.content, {
@@ -316,7 +307,12 @@ export const MainContent = () => {
                     (desktopMenuIsOpen && desktopMenuIsOpen === true),
                 })}
               >
-                <MainContentBanner />
+                <SideMenu
+                  closeMenu={() => toggleMenu(false)}
+                  collapse={desktopMenuIsOpen || false}
+                  desktopMenuToggle={desktopMenuToggle}
+                  open={menuIsOpen}
+                />
                 <main
                   className={classes.cmrWrapper}
                   id="main-content"
