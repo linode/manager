@@ -8,8 +8,8 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { TextTooltip } from 'src/components/TextTooltip';
 import { useProfile } from 'src/queries/profile/profile';
-import { getEventTimestamp } from 'src/utilities/eventUtils';
 
 import {
   formatProgressEvent,
@@ -27,7 +27,6 @@ interface EventRowProps {
 export const EventRow = (props: EventRowProps) => {
   const { event } = props;
   const theme = useTheme();
-  const timestamp = getEventTimestamp(event);
   const { action, message, username } = {
     action: event.action,
     message: getEventMessage(event),
@@ -39,11 +38,15 @@ export const EventRow = (props: EventRowProps) => {
     return null;
   }
 
-  const { progressEventDisplay, showProgress } = formatProgressEvent(event);
+  const {
+    progressEventDate,
+    progressEventDuration,
+    showProgress,
+  } = formatProgressEvent(event);
 
   return (
     <TableRow data-qa-event-row data-test-id={action}>
-      <TableCell data-qa-event-message-cell parentColumn="Event">
+      <TableCell data-qa-event-message-cell>
         <Box sx={{ mt: showProgress ? 0.5 : 0 }}>{message}</Box>
         {showProgress && (
           <BarPercent
@@ -56,7 +59,7 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell data-qa-event-username-cell parentColumn="Username">
+        <TableCell data-qa-event-username-cell>
           <Box alignItems="center" display="flex" gap={1}>
             <Avatar
               color={
@@ -72,8 +75,13 @@ export const EventRow = (props: EventRowProps) => {
           </Box>
         </TableCell>
       </Hidden>
-      <TableCell parentColumn="Relative Date">
-        {progressEventDisplay}
+      <TableCell>
+        <TextTooltip
+          displayText={progressEventDate}
+          minWidth={130}
+          placement="top"
+          tooltipText={<DateTimeDisplay value={event.created} />}
+        />
         {username && (
           <Hidden smUp>
             <br />
@@ -84,8 +92,8 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden mdDown>
-        <TableCell data-qa-event-created-cell parentColumn="Absolute Date">
-          <DateTimeDisplay value={timestamp.toString()} />
+        <TableCell data-qa-event-created-cell>
+          {progressEventDuration}
         </TableCell>
       </Hidden>
     </TableRow>

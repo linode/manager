@@ -63,11 +63,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
       disabled={isVPCOnlyLinode}
       key={`${address}-${type}`}
     >
-      <TableCell
-        data-qa-ip-address
-        parentColumn="Address"
-        sx={{ whiteSpace: 'nowrap' }}
-      >
+      <TableCell data-qa-ip-address sx={{ whiteSpace: 'nowrap' }}>
         <CopyTooltip
           copyableText
           disabled={isVPCOnlyLinode}
@@ -77,16 +73,12 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
         />
         {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}
       </TableCell>
-      <TableCell
-        data-qa-ip-address
-        parentColumn="Type"
-        sx={{ whiteSpace: 'nowrap' }}
-      >
+      <TableCell data-qa-ip-address sx={{ whiteSpace: 'nowrap' }}>
         {type}
       </TableCell>
-      <TableCell parentColumn="Default Gateway">{gateway}</TableCell>
-      <TableCell parentColumn="Subnet Mask">{subnetMask}</TableCell>
-      <TableCell data-qa-rdns parentColumn="Reverse DNS">
+      <TableCell>{gateway}</TableCell>
+      <TableCell>{subnetMask}</TableCell>
+      <TableCell data-qa-rdns>
         {/* Ranges have special handling for RDNS. */}
         {_range ? (
           <RangeRDNSCell

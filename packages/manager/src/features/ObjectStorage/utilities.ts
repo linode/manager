@@ -1,12 +1,13 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
-import {
+import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+
+import type { AccountSettings } from '@linode/api-v4/lib/account';
+import type {
   ACLType,
   ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage';
-import { FormikProps } from 'formik';
-
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+import type { ObjectStorageEndpoint } from '@linode/api-v4/lib/object-storage';
+import type { FormikProps } from 'formik';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export const generateObjectUrl = (hostname: string, objectName: string) => {
   return `https://${hostname}/${objectName}`;
@@ -45,14 +46,12 @@ export const basename = (
 export interface ExtendedObject extends ObjectStorageObject {
   _displayName: string;
   _isFolder: boolean;
-  _manuallyCreated: boolean;
   _shouldDisplayObject: boolean;
 }
 
 export const extendObject = (
   object: ObjectStorageObject,
-  prefix: string,
-  manuallyCreated = false
+  prefix: string
 ): ExtendedObject => {
   const _isFolder = isFolder(object);
 
@@ -67,9 +66,6 @@ export const extendObject = (
     ...object,
     _displayName,
     _isFolder,
-    // If we're in a folder called "my-folder", we don't want to show the object
-    // called "my-folder/". We can look at the prefix to make this decision,
-    _manuallyCreated: manuallyCreated,
     // since it will also be "my-folder/".
     _shouldDisplayObject: object.name !== prefix,
   };
@@ -169,4 +165,36 @@ export const objectACLHelperText: Record<ACLType, string> = {
   private: 'Private ACL',
   'public-read': 'Public Read ACL',
   'public-read-write': 'Public Read/Write ACL',
+};
+
+// @TODO: OBJ Gen2: This should be removed once these regions obtain the `Object Storage` capability.
+export const WHITELISTED_REGIONS = new Set([
+  'gb-lon',
+  'au-mel',
+  'in-bom-2',
+  'de-fra-2',
+  'sg-sin-2',
+]);
+
+/**
+ * For OBJ Gen2 users, filter regions based on available Object Storage endpoints.
+ * Otherwise, we return the regions as is.
+ */
+export const filterRegionsByEndpoints = <T extends { id: string }>(
+  regions: T[] | undefined,
+  objecStorageEndpoints: ObjectStorageEndpoint[] | undefined
+): T[] => {
+  if (!regions) {
+    return [];
+  }
+
+  if (!objecStorageEndpoints) {
+    return regions;
+  }
+
+  const endpointRegions = new Set(
+    objecStorageEndpoints.map((endpoint) => endpoint.region)
+  );
+
+  return regions.filter((region) => endpointRegions.has(region.id));
 };

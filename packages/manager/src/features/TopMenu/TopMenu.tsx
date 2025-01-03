@@ -11,6 +11,7 @@ import { Toolbar } from 'src/components/Toolbar';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 
 import { Community } from './Community';
+import { TOPMENU_HEIGHT } from './constants';
 import { CreateMenu } from './CreateMenu/CreateMenu';
 import { Help } from './Help';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
@@ -58,7 +59,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
         <Toolbar
           sx={(theme) => ({
             '&.MuiToolbar-root': {
-              height: `50px`,
+              height: TOPMENU_HEIGHT,
               padding: theme.spacing(0),
               width: '100%',
             },

@@ -1,49 +1,19 @@
-import { Box, Divider, IconButton, Typography } from '@linode/ui';
+import { Box, Divider, Typography } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { pluralize } from 'src/utilities/pluralize';
 
-import type { Theme } from '@mui/material/styles';
-import type { ExtendedType } from 'src/utilities/extendType';
+import {
+  StyledHeader,
+  StyledIconButton,
+  StyledNodePoolSummaryBox,
+  StyledPriceBox,
+} from './KubeCheckoutSummary.styles';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  button: {
-    '&:hover': {
-      color: '#6e6e6e',
-    },
-    alignItems: 'flex-start',
-    color: '#979797',
-    marginTop: -4,
-    padding: 0,
-  },
-  numberInput: {
-    marginBottom: theme.spacing(1.5),
-    marginTop: theme.spacing(2),
-  },
-  price: {
-    '& h3': {
-      color: `${theme.palette.text.primary} !important`,
-      fontFamily: theme.font.normal,
-    },
-  },
-  root: {
-    '& $textField': {
-      width: 53,
-    },
-  },
-  typeHeader: {
-    fontFamily: theme.font.bold,
-    fontSize: '16px',
-    paddingBottom: theme.spacing(0.5),
-  },
-  typeSubheader: {
-    fontSize: '14px',
-  },
-}));
+import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface Props {
   nodeCount: number;
@@ -53,8 +23,7 @@ export interface Props {
   updateNodeCount: (count: number) => void;
 }
 
-export const NodePoolSummary = React.memo((props: Props) => {
-  const { classes } = useStyles();
+export const NodePoolSummaryItem = React.memo((props: Props) => {
   const { nodeCount, onRemove, poolType, price, updateNodeCount } = props;
 
   // This should never happen but TS wants us to account for the situation
@@ -66,45 +35,37 @@ export const NodePoolSummary = React.memo((props: Props) => {
   return (
     <>
       <Divider dark spacingBottom={12} spacingTop={24} />
-      <Box
-        className={classes.root}
-        data-testid="node-pool-summary"
-        display="flex"
-        flexDirection="column"
-      >
+      <StyledNodePoolSummaryBox data-testid="node-pool-summary">
         <Box display="flex" justifyContent="space-between">
           <div>
-            <Typography className={classes.typeHeader}>
-              {poolType.formattedLabel} Plan
-            </Typography>
-            <Typography className={classes.typeSubheader}>
+            <StyledHeader>{poolType.formattedLabel} Plan</StyledHeader>
+            <Typography>
               {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}
               GB Storage
             </Typography>
           </div>
-          <IconButton
-            className={classes.button}
+          <StyledIconButton
             data-testid="remove-pool-button"
             onClick={onRemove}
             size="large"
             title={`Remove ${poolType.label} Node Pool`}
           >
             <Close />
-          </IconButton>
+          </StyledIconButton>
         </Box>
-        <div className={classes.numberInput}>
+        <Box mb={1.5} mt={2}>
           <EnhancedNumberInput
             min={1}
             setValue={updateNodeCount}
             value={nodeCount}
           />
-        </div>
-        <div className={classes.price}>
+        </Box>
+        <StyledPriceBox>
           {price ? (
             <DisplayPrice fontSize="14px" interval="month" price={price} />
           ) : undefined}
-        </div>
-      </Box>
+        </StyledPriceBox>
+      </StyledNodePoolSummaryBox>
     </>
   );
 });

@@ -99,6 +99,7 @@ export const Root = () => {
                 <SideMenu
                   closeMenu={() => toggleMenu(false)}
                   collapse={desktopMenuIsOpen || false}
+                  desktopMenuToggle={desktopMenuToggle}
                   open={menuIsOpen}
                 />
                 <main
@@ -117,7 +118,7 @@ export const Root = () => {
                 </main>
               </div>
             </NotificationProvider>
-            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+            <Footer />
           </ComplianceUpdateProvider>
         </SwitchAccountSessionProvider>
       </SessionExpirationProvider>

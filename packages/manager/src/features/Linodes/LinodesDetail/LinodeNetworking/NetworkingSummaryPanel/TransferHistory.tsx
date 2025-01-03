@@ -161,7 +161,7 @@ export const TransferHistory = React.memo((props: Props) => {
         <AreaChart
           areas={[
             {
-              color: '#1CB35C',
+              color: theme.tokens.color.Green[70],
               dataKey: 'Public Outbound Traffic',
             },
           ]}

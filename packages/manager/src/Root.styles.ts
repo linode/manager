@@ -1,6 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
-import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
 
 import type { Theme } from '@mui/material/styles';
 

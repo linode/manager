@@ -69,8 +69,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
     padding: 0,
   },
   imageTableHeader: {
-    marginLeft: theme.spacing(),
+    border: `1px solid ${theme.tokens.border.Normal}`,
+    borderBottom: 0,
     padding: theme.spacing(),
+    paddingLeft: theme.spacing(1.5),
   },
   imageTableSubheader: {
     marginTop: theme.spacing(),

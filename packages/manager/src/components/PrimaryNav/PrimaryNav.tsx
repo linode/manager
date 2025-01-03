@@ -1,4 +1,5 @@
-import { Box } from '@linode/ui';
+import { Box, Tooltip } from '@linode/ui';
+import { Hidden } from '@mui/material';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -6,9 +7,11 @@ import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
 import IAM from 'src/assets/icons/entityIcons/iam.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
-import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import Longview from 'src/assets/icons/longview.svg';
+import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
+import Networking from 'src/assets/icons/entityIcons/Networking.svg';
 import More from 'src/assets/icons/more.svg';
+import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
+import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
@@ -23,8 +26,9 @@ import {
 import PrimaryLink from './PrimaryLink';
 import {
   StyledAccordion,
-  StyledDivider,
   StyledGrid,
+  StyledIconButton,
+  StyledMenuGrid,
 } from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
 
@@ -70,11 +74,12 @@ export interface ProductFamilyLinkGroup<T> {
 
 export interface PrimaryNavProps {
   closeMenu: () => void;
+  desktopMenuToggle: () => void;
   isCollapsed: boolean;
 }
 
 export const PrimaryNav = (props: PrimaryNavProps) => {
-  const { closeMenu, isCollapsed } = props;
+  const { closeMenu, desktopMenuToggle, isCollapsed } = props;
 
   const flags = useFlags();
   const location = useLocation();
@@ -107,6 +112,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             display: 'Managed',
             hide: !isManaged,
             href: '/managed',
+            label: 'MGD',
           },
         ],
       },
@@ -117,6 +123,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             activeLinks: ['/linodes', '/linodes/create'],
             display: 'Linodes',
             href: '/linodes',
+            label: 'LND',
           },
           {
             activeLinks: [
@@ -125,26 +132,31 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             ],
             display: 'Images',
             href: '/images',
+            label: 'IMG',
           },
           {
             activeLinks: ['/kubernetes/create'],
             display: 'Kubernetes',
             href: '/kubernetes/clusters',
+            label: 'K8',
           },
           {
             display: 'StackScripts',
             href: '/stackscripts',
+            label: 'SKS',
           },
           {
             betaChipClassName: 'beta-chip-placement-groups',
             display: 'Placement Groups',
             hide: !isPlacementGroupsEnabled,
             href: '/placement-groups',
+            label: 'PG',
           },
           {
             attr: { 'data-qa-one-click-nav-btn': true },
             display: 'Marketplace',
             href: '/linodes/create?type=One-Click',
+            label: 'M',
           },
         ],
         name: 'Compute',
@@ -159,32 +171,38 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             ],
             display: 'Object Storage',
             href: '/object-storage/buckets',
+            label: 'OBJ',
           },
           {
             display: 'Volumes',
             href: '/volumes',
+            label: 'VOL',
           },
         ],
         name: 'Storage',
       },
       {
-        icon: <NodeBalancer />,
+        icon: <Networking />,
         links: [
           {
             display: 'VPC',
             href: '/vpcs',
+            label: 'VPC',
           },
           {
             display: 'Firewalls',
             href: '/firewalls',
+            label: 'FW',
           },
           {
             display: 'NodeBalancers',
             href: '/nodebalancers',
+            label: 'NB',
           },
           {
             display: 'Domains',
             href: '/domains',
+            label: 'D',
           },
         ],
         name: 'Networking',
@@ -197,22 +215,25 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             hide: !isDatabasesEnabled,
             href: '/databases',
             isBeta: isDatabasesV2Beta,
+            label: 'DB',
           },
         ],
         name: 'Databases',
       },
       {
-        icon: <Longview />,
+        icon: <Monitor />,
         links: [
           {
             display: 'Longview',
             href: '/longview',
+            label: 'LV',
           },
           {
             display: 'Monitor',
             hide: !isACLPEnabled,
             href: '/monitor',
             isBeta: flags.aclp?.beta,
+            label: 'MON',
           },
         ],
         name: 'Monitor',
@@ -224,6 +245,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             display: 'Betas',
             hide: !flags.selfServeBetas,
             href: '/betas',
+            label: 'B',
           },
           {
             display: 'Identity and Access',
@@ -231,14 +253,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/iam',
             icon: <IAM />,
             isBeta: isIAMBeta,
+            label: 'IAM',
           },
           {
             display: 'Account',
             href: '/account',
+            label: 'ACC',
           },
           {
             display: 'Help & Support',
             href: '/support',
+            label: 'HEL',
           },
         ],
         name: 'More',
@@ -284,37 +309,39 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       spacing={0}
       wrap="nowrap"
     >
-      {productFamilyLinkGroups.map((productFamily, idx) => {
-        const filteredLinks = productFamily.links.filter((link) => !link.hide);
-        if (filteredLinks.length === 0) {
-          return null;
-        }
-
-        const PrimaryLinks = filteredLinks.map((link) => {
-          const isActiveLink = Boolean(
-            linkIsActive(
-              link.href,
-              location.search,
-              location.pathname,
-              link.activeLinks
-            )
+      <StyledMenuGrid direction="column">
+        {productFamilyLinkGroups.map((productFamily, idx) => {
+          const filteredLinks = productFamily.links.filter(
+            (link) => !link.hide
           );
-          if (isActiveLink) {
-            activeProductFamily = productFamily.name ?? '';
+          if (filteredLinks.length === 0) {
+            return null;
           }
-          const props = {
-            closeMenu,
-            isActiveLink,
-            isCollapsed,
-            ...link,
-          };
-          return <PrimaryLink {...props} key={link.display} />;
-        });
 
-        return (
-          <div key={idx} style={{ width: 'inherit' }}>
-            {productFamily.name ? ( // TODO: we can remove this conditional when Managed is removed
-              <>
+          const PrimaryLinks = filteredLinks.map((link) => {
+            const isActiveLink = Boolean(
+              linkIsActive(
+                link.href,
+                location.search,
+                location.pathname,
+                link.activeLinks
+              )
+            );
+            if (isActiveLink) {
+              activeProductFamily = productFamily.name ?? '';
+            }
+            const props = {
+              closeMenu,
+              isActiveLink,
+              isCollapsed,
+              ...link,
+            };
+            return <PrimaryLink {...props} key={link.display} />;
+          });
+
+          return (
+            <div key={idx} style={{ width: 'inherit' }}>
+              {productFamily.name ? ( // TODO: we can remove this conditional when Managed is removed
                 <StyledAccordion
                   heading={
                     <>
@@ -331,14 +358,42 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 >
                   {PrimaryLinks}
                 </StyledAccordion>
-                <StyledDivider />
-              </>
-            ) : (
-              <Box className={`StyledSingleLinkBox-${idx}`}>{PrimaryLinks}</Box>
-            )}
-          </div>
-        );
-      })}
+              ) : (
+                <Box className={`StyledSingleLinkBox-${idx}`}>
+                  {PrimaryLinks}
+                </Box>
+              )}
+            </div>
+          );
+        })}
+      </StyledMenuGrid>
+      <Hidden mdDown>
+        <Box padding={1}>
+          {!isCollapsed ? (
+            <Tooltip placement="top-end" title={'unpin side menu'}>
+              <StyledIconButton
+                aria-label="unpin menu"
+                data-testid="unpin-nav-menu"
+                onClick={desktopMenuToggle}
+                size="small"
+              >
+                <PinFilledIcon />
+              </StyledIconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip placement="top-end" title={'pin side menu'}>
+              <StyledIconButton
+                aria-label="pin menu"
+                data-testid="pin-nav-menu"
+                onClick={desktopMenuToggle}
+                size="small"
+              >
+                <PinOutlineIcon sx={{ fontSize: 16 }} />
+              </StyledIconButton>
+            </Tooltip>
+          )}
+        </Box>
+      </Hidden>
     </StyledGrid>
   );
 };

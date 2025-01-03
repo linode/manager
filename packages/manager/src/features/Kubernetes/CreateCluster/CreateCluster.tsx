@@ -19,6 +19,7 @@ import {
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
+  useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -28,9 +29,7 @@ import {
 import {
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
-  useKubernetesTieredVersionsQuery,
   useKubernetesTypesQuery,
-  useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
@@ -103,14 +102,25 @@ export const CreateCluster = () => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery();
+  } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
+
+    // HA is enabled by default for enterprise clusters
+    if (tier === 'enterprise') {
+      setHighAvailability(true);
+    } else {
+      setHighAvailability(undefined);
+    }
   };
 
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
     (type) => type.id === 'lke-ha'
+  );
+
+  const lkeEnterpriseType = kubernetesHighAvailabilityTypesData?.find(
+    (type) => type.id === 'lke-e'
   );
 
   const {
@@ -131,30 +141,15 @@ export const CreateCluster = () => {
   } = useCreateKubernetesClusterBetaMutation();
 
   const {
-    data: _versionData,
-    isError: versionLoadError,
-    isLoading: versionLoading,
-  } = useKubernetesVersionQuery();
-
-  const {
-    data: enterpriseTierVersionData,
-    isLoading: enterpriseTierVersionDataIsLoading,
-  } = useKubernetesTieredVersionsQuery('enterprise');
-
-  const {
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
   } = useIsLkeEnterpriseEnabled();
 
-  /**
-   * If LKE-E is enabled, use the new /versions/<tier> endpoint data, which supports enterprise tiers.
-   * If LKE-E is disabled, use the data from the existing /versions endpoint.
-   * @todo LKE-E: Clean up use of versionData once LKE-E is in GA.
-   */
-  const versionData =
-    isLkeEnterpriseLAFeatureEnabled && selectedTier === 'enterprise'
-      ? enterpriseTierVersionData
-      : _versionData;
+  const {
+    isLoadingVersions,
+    versions: versionData,
+    versionsError,
+  } = useLkeStandardOrEnterpriseVersions(selectedTier);
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -303,7 +298,7 @@ export const CreateCluster = () => {
     selectedRegionID: selectedRegionId,
   });
 
-  if (typesError || regionsError || versionLoadError) {
+  if (typesError || regionsError || versionsError) {
     // This information is necessary to create a Cluster. Otherwise, show an error state.
     return <ErrorState errorText="An unexpected error occurred." />;
   }
@@ -389,14 +384,10 @@ export const CreateCluster = () => {
             disableClearable={!!version}
             errorText={errorMap.k8s_version}
             label="Kubernetes Version"
+            loading={isLoadingVersions}
             options={versions}
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
-            loading={
-              versionLoading ||
-              (isLkeEnterpriseLAFeatureEnabled &&
-                enterpriseTierVersionDataIsLoading)
-            }
           />
           {showAPL && (
             <>
@@ -492,6 +483,7 @@ export const CreateCluster = () => {
             classes,
           ]}
           createCluster={createCluster}
+          enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
           pools={nodePools}

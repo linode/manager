@@ -9,8 +9,8 @@ import { makeStyles } from 'tss-react/mui';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
-import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
@@ -88,9 +88,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   fullWidthContent: {
     marginLeft: 0,
-    [theme.breakpoints.up('md')]: {
-      marginLeft: 52,
-    },
   },
   grid: {
     marginLeft: 0,
@@ -129,11 +126,6 @@ const Account = React.lazy(() =>
 const LinodesRoutes = React.lazy(() =>
   import('src/features/Linodes').then((module) => ({
     default: module.LinodesRoutes,
-  }))
-);
-const Domains = React.lazy(() =>
-  import('src/features/Domains').then((module) => ({
-    default: module.DomainsRoutes,
   }))
 );
 const Images = React.lazy(() => import('src/features/Images'));
@@ -318,6 +310,7 @@ export const MainContent = () => {
                 <SideMenu
                   closeMenu={() => toggleMenu(false)}
                   collapse={desktopMenuIsOpen || false}
+                  desktopMenuToggle={desktopMenuToggle}
                   open={menuIsOpen}
                 />
                 <main
@@ -341,7 +334,6 @@ export const MainContent = () => {
                             component={NodeBalancers}
                             path="/nodebalancers"
                           />
-                          <Route component={Domains} path="/domains" />
                           <Route component={Managed} path="/managed" />
                           <Route component={Longview} path="/longview" />
                           <Route component={Images} path="/images" />
@@ -392,7 +384,7 @@ export const MainContent = () => {
                 </main>
               </div>
             </NotificationProvider>
-            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+            <Footer />
           </ComplianceUpdateProvider>
         </SwitchAccountSessionProvider>
       </SessionExpirationProvider>
