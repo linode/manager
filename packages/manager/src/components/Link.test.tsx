@@ -37,7 +37,7 @@ describe('Link component', () => {
     expect(linkElement.tagName).toBe('A');
     expect(linkElement).toHaveAttribute('rel', 'noopener noreferrer');
     expect(linkElement).toHaveAttribute('target', '_blank');
-    expect(linkElement.getAttribute('href')).toBe('https://example.com');
+    expect(linkElement.getAttribute('href')).toBe('https://example.com/');
     expect(linkElement.getAttribute('target')).toBe('_blank');
     expect(linkElement).toHaveTextContent(/External Link/);
   });
@@ -55,7 +55,7 @@ describe('Link component', () => {
     expect(linkElement.tagName).toBe('A');
     expect(linkElement).toHaveAttribute('rel', 'noopener noreferrer');
     expect(linkElement).toHaveAttribute('target', '_blank');
-    expect(linkElement.getAttribute('href')).toBe('https://example.com');
+    expect(linkElement.getAttribute('href')).toBe('https://example.com/');
     expect(linkElement.getAttribute('target')).toBe('_blank');
     expect(linkElement).toHaveTextContent(/External Link/);
   });

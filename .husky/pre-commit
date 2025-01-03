@@ -1,1 +1,1 @@
-yarn workspaces run precommit
+pnpm run -r --if-present precommit 
