@@ -197,6 +197,10 @@ describe('Account cancellation', () => {
       )
       .should('be.visible')
       .within(() => {
+        // Check both boxes but verify submit remains disabled without username
+        cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
+        cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
+
         cy.findByLabelText(`Enter your email address (${mockProfile.email})`)
           .should('be.visible')
           .should('be.enabled')
@@ -374,6 +378,10 @@ describe('Parent/Child account cancellation', () => {
           .findByTitle('Close Account')
           .should('be.visible')
           .should('be.disabled');
+
+        // Check both boxes but verify submit remains disabled without username
+        cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
+        cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
 
         // Enter email, confirm that submit button becomes enabled, and click
         // the submit button.
