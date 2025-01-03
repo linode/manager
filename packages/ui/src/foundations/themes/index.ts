@@ -172,5 +172,11 @@ declare module '@mui/material/Button' {
   }
 }
 
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    error: true;
+  }
+}
+
 export const light = createTheme(lightTheme);
 export const dark = createTheme(deepmerge(lightTheme, darkTheme));

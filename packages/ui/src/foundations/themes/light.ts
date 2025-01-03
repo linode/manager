@@ -506,7 +506,7 @@ export const lightTheme: ThemeOptions = {
           color: textColors.linkActiveLight,
           minHeight: 34,
         },
-        root: ({ ownerState }) => ({
+        root: {
           '&[aria-disabled="true"]': {
             cursor: 'not-allowed',
           },
@@ -520,11 +520,23 @@ export const lightTheme: ThemeOptions = {
           minWidth: 105,
           textTransform: 'capitalize',
           transition: 'none',
-          ...(ownerState.color === 'warning' && {
+        },
+      },
+      variants: [
+        {
+          props: { variant: 'loading' },
+          style: {
+            backgroundColor: Button.Primary.Disabled.Background,
+            border: 0,
+          },
+        },
+        {
+          props: { color: 'error' },
+          style: {
             '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus': {
               backgroundColor: Background.Negativesubtle,
               border: `1px solid ${Border.Negative}`,
-              color: Action.Negative.Default,
+              color: Content.Text.Negative,
             },
             '&[aria-disabled="true"]': {
               backgroundColor: 'transparent',
@@ -533,16 +545,7 @@ export const lightTheme: ThemeOptions = {
             },
             backgroundColor: 'transparent',
             border: `1px solid ${Border.Negative}`,
-            color: Action.Negative.Default,
-          }),
-        }),
-      },
-      variants: [
-        {
-          props: { variant: 'loading' },
-          style: {
-            backgroundColor: Button.Primary.Disabled.Background,
-            border: 0,
+            color: Content.Text.Negative,
           },
         },
       ],

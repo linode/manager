@@ -13,24 +13,13 @@ import type { SxProps, Theme } from '@mui/material/styles';
 
 export type ButtonType = 'outlined' | 'primary' | 'secondary';
 
-type ButtonColor =
-  | 'error'
-  | 'info'
-  | 'inherit'
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'warning';
-
-type ButtonVariant = 'contained' | 'outlined' | 'text';
-
-const buttonTypeToColor: Record<ButtonType, ButtonColor> = {
+const buttonTypeToColor: Record<ButtonType, _ButtonProps['color']> = {
   outlined: 'secondary', // We're treating this as a secondary
   primary: 'primary',
   secondary: 'secondary',
 } as const;
 
-const buttonTypeToVariant: Record<ButtonType, ButtonVariant> = {
+const buttonTypeToVariant: Record<ButtonType, _ButtonProps['variant']> = {
   outlined: 'outlined',
   primary: 'contained',
   secondary: 'contained',
@@ -165,7 +154,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-disabled={disabled}
         buttonType={buttonType}
         className={className}
-        color={(color === 'warning' && color) || buttonTypeToColor[buttonType]}
+        color={(color === 'error' && color) || buttonTypeToColor[buttonType]}
         compactX={compactX}
         compactY={compactY}
         data-testid={rest['data-testid'] || 'button'}

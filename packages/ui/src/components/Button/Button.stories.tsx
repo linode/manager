@@ -63,8 +63,9 @@ export const Secondary: Story = {
 export const SecondaryWarning: Story = {
   args: {
     buttonType: 'secondary',
+    color: 'error',
   },
-  render: (args) => <Button {...args} color="warning" />,
+  render: (args) => <Button {...args} />,
 };
 
 /** Outlined Button

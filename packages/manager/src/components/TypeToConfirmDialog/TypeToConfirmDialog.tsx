@@ -153,7 +153,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       label: entity.primaryBtnText,
       loading,
       onClick,
-      ...(reversePrimaryButtonPosition && { color: 'warning' }),
+      ...(reversePrimaryButtonPosition && { color: 'error' }),
     };
 
     const cancelProps: ActionButtonsProps = {
