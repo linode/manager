@@ -61,7 +61,7 @@ export const DisplayAlertChips = React.memo((props: AlertDimensionsProp) => {
   };
 
   return (
-    <Grid container item spacing={1}>
+    <Grid container data-qa-item={label} item spacing={1}>
       {iterables.map((value, idx) => (
         <React.Fragment key={idx}>
           <Grid item md={mdLabel} xs={12}>
@@ -85,6 +85,7 @@ export const DisplayAlertChips = React.memo((props: AlertDimensionsProp) => {
                 >
                   <StyledAlertChip
                     borderRadius={getBorderRadius(index, value.length)}
+                    data-qa-chip={label}
                     label={label}
                     variant="outlined"
                   />

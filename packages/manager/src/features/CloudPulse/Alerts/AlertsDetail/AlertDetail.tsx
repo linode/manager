@@ -94,6 +94,7 @@ export const AlertDetail = () => {
       <Box display="flex" flexDirection="column" gap={2}>
         <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
           <Box
+            data-qa-section="Overview"
             flexBasis="100%"
             maxHeight={theme.spacing(98.125)}
             sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
@@ -105,6 +106,7 @@ export const AlertDetail = () => {
               ...getAlertBoxStyles(theme),
               overflow: 'auto',
             }}
+            data-qa-section="Criteria"
             flexBasis="100%"
             maxHeight={theme.spacing(98.125)}
           >
@@ -116,6 +118,7 @@ export const AlertDetail = () => {
             ...getAlertBoxStyles(theme),
             overflow: 'auto',
           }}
+          data-qa-section="Resources"
         >
           <AlertResources
             resourceIds={alertDetails.entity_ids}
