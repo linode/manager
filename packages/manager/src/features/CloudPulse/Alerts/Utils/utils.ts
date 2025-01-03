@@ -49,10 +49,7 @@ export const getServiceTypeLabel = (
  * @returns The style needed for box in alerts
  */
 export const getAlertBoxStyles = (theme: Theme) => ({
-  backgroundColor:
-    theme.name === 'light'
-      ? theme.tokens.color.Neutrals[5]
-      : theme.tokens.color.Neutrals.Black,
+  backgroundColor: theme.tokens.background.Neutral,
   padding: theme.spacing(3),
 });
 
