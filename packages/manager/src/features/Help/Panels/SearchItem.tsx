@@ -1,48 +1,46 @@
-import { Typography } from '@linode/ui';
+import { ListItem, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useStyles } from 'tss-react/mui';
 
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
-import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import type { OptionProps } from 'react-select';
-
-interface Props extends OptionProps<any, any> {
+interface Props {
   data: {
-    data: any;
+    data: {
+      source: string;
+    };
     label: string;
   };
+  isFocused?: boolean;
   searchText: string;
+  selectProps?: any;
 }
 
 export const SearchItem = (props: Props) => {
   const getLabel = () => {
     if (isFinal) {
-      return props.label ? `Search for "${props.label}"` : 'Search';
+      return props.data.label ? `Search for "${props.data.label}"` : 'Search';
     } else {
-      return props.label;
+      return props.data.label;
     }
   };
 
   const { cx } = useStyles();
 
-  const {
-    data,
-    isFocused,
-    selectProps: { classes },
-  } = props;
+  const { data, isFocused, selectProps } = props;
   const source = data.data ? data.data.source : '';
   const isFinal = source === 'finalLink';
 
+  const classes = selectProps?.classes || {};
+
   return (
-    <Option
+    <ListItem
       className={cx({
         [classes.algoliaRoot]: true,
         [classes.selectedMenuItem]: isFocused,
       })}
       aria-label={!isFinal ? `${getLabel()} - opens in a new tab` : undefined}
-      attrs={{ ['data-qa-search-result']: source }}
       value={data.label}
       {...props}
     >
@@ -67,6 +65,6 @@ export const SearchItem = (props: Props) => {
           <Typography className={classes.source}>{source}</Typography>
         </>
       )}
-    </Option>
+    </ListItem>
   );
 };

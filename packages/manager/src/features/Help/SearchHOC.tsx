@@ -1,8 +1,7 @@
-import Algolia, { SearchClient } from 'algoliasearch';
+import Algolia from 'algoliasearch';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
-import { Item } from 'src/components/EnhancedSelect/Select';
 import {
   ALGOLIA_APPLICATION_ID,
   ALGOLIA_SEARCH_KEY,
@@ -10,6 +9,8 @@ import {
   DOCS_BASE_URL,
 } from 'src/constants';
 import { truncate } from 'src/utilities/truncate';
+
+import type { SearchClient } from 'algoliasearch';
 
 interface SearchHit {
   _highlightResult?: any;
@@ -24,7 +25,7 @@ export interface AlgoliaState {
   searchAlgolia: (inputValue: string) => void;
   searchEnabled: boolean;
   searchError?: string;
-  searchResults: [Item[], Item[]];
+  searchResults: [ConvertedItems[], ConvertedItems[]];
 }
 
 interface SearchOptions {
@@ -36,11 +37,17 @@ interface AlgoliaContent {
   results: unknown;
 }
 
+interface ConvertedItems {
+  data: { href: string; source: string };
+  label: any;
+  value: number;
+}
+
 // Functional helper methods
 export const convertDocsToItems = (
   highlight: boolean,
   hits: SearchHit[] = []
-): Item[] => {
+): ConvertedItems[] => {
   return hits.map((hit: SearchHit, idx: number) => {
     return {
       data: {
@@ -56,7 +63,7 @@ export const convertDocsToItems = (
 export const convertCommunityToItems = (
   highlight: boolean,
   hits: SearchHit[] = []
-): Item[] => {
+): ConvertedItems[] => {
   return hits.map((hit: SearchHit, idx: number) => {
     return {
       data: {
