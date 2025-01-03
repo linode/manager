@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { linodeFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
@@ -13,8 +13,8 @@ const defaultProps = {
 };
 
 describe('PlacementGroupsLinodesTable', () => {
-  it('renders an error state when encountering an API error', () => {
-    const { getByText } = renderWithTheme(
+  it('renders an error state when encountering an API error', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
       <PlacementGroupsLinodesTable
         {...defaultProps}
         error={[{ reason: 'Not found' }]}
@@ -24,24 +24,24 @@ describe('PlacementGroupsLinodesTable', () => {
     expect(getByText(/not found/i)).toBeInTheDocument();
   });
 
-  it('renders a loading skeleton based on the loading prop', () => {
-    const { getByTestId } = renderWithTheme(
+  it('renders a loading skeleton based on the loading prop', async () => {
+    const { getByTestId } = await renderWithThemeAndRouter(
       <PlacementGroupsLinodesTable {...defaultProps} isFetchingLinodes />
     );
 
     expect(getByTestId('table-row-loading')).toBeInTheDocument();
   });
 
-  it('should have the correct number of columns', () => {
-    const { getAllByRole } = renderWithTheme(
+  it('should have the correct number of columns', async () => {
+    const { getAllByRole } = await renderWithThemeAndRouter(
       <PlacementGroupsLinodesTable {...defaultProps} />
     );
 
     expect(getAllByRole('columnheader')).toHaveLength(3);
   });
 
-  it('should have the correct number of rows', () => {
-    const { getAllByTestId } = renderWithTheme(
+  it('should have the correct number of rows', async () => {
+    const { getAllByTestId } = await renderWithThemeAndRouter(
       <PlacementGroupsLinodesTable {...defaultProps} />
     );
 

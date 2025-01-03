@@ -1,4 +1,4 @@
-import { PlacementGroup, Region } from '@linode/api-v4';
+import type { PlacementGroup, Region } from '@linode/api-v4';
 
 export interface PlacementGroupsDrawerPropsBase {
   onClose: () => void;

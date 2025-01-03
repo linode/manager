@@ -1,8 +1,8 @@
+import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
-import { userEvent } from '@testing-library/user-event';
 import { linodeFactory, placementGroupFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDeleteModal } from './PlacementGroupsDeleteModal';
 
@@ -29,7 +29,11 @@ const props = {
 
 describe('PlacementGroupsDeleteModal', () => {
   it('should render the right form elements', async () => {
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
+    const {
+      getByRole,
+      getByTestId,
+      getByText,
+    } = await renderWithThemeAndRouter(
       <PlacementGroupsDeleteModal
         {...props}
         linodes={[
@@ -40,7 +44,6 @@ describe('PlacementGroupsDeleteModal', () => {
           }),
         ]}
         selectedPlacementGroup={placementGroupFactory.build({
-          placement_group_type: 'anti_affinity:local',
           id: 1,
           label: 'PG-to-delete',
           members: [
@@ -49,6 +52,7 @@ describe('PlacementGroupsDeleteModal', () => {
               linode_id: 1,
             },
           ],
+          placement_group_type: 'anti_affinity:local',
           region: 'us-east',
         })}
         disableUnassignButton={false}
@@ -73,7 +77,7 @@ describe('PlacementGroupsDeleteModal', () => {
   });
 
   it("should be enabled when there's no assigned linodes", async () => {
-    const { getByRole, getByTestId } = renderWithTheme(
+    const { getByRole, getByTestId } = await renderWithThemeAndRouter(
       <PlacementGroupsDeleteModal
         {...props}
         linodes={[
@@ -84,10 +88,10 @@ describe('PlacementGroupsDeleteModal', () => {
           }),
         ]}
         selectedPlacementGroup={placementGroupFactory.build({
-          placement_group_type: 'anti_affinity:local',
           id: 1,
           label: 'PG-to-delete',
           members: [],
+          placement_group_type: 'anti_affinity:local',
         })}
         disableUnassignButton={false}
       />
