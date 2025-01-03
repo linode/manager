@@ -1,11 +1,18 @@
-import { Box, Button, Typography } from '@linode/ui';
+import { Button, Stack, Typography } from '@linode/ui';
+import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
+import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
+import {
+  StyledVisibilityHideIcon,
+  StyledVisibilityShowIcon,
+} from 'src/features/Billing/BillingPanels/ContactInfoPanel/ContactInformation.styles';
 import { useManagedSSHKey } from 'src/queries/managed/managed';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -19,15 +26,23 @@ import {
   StyledTypography,
 } from './LinodePubKey.styles';
 
-// @todo: is this URL correct? Are there new docs being written?
+import type { Theme } from '@storybook/core/theming';
+
 const DOC_URL =
-  'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-the-linode-managed-service#adding-the-public-key';
+  'https://techdocs.akamai.com/cloud-computing/docs/configure-ssh-access-for-managed-services';
 
 const LinodePubKey = () => {
   const { data, error, isLoading } = useManagedSSHKey();
+  const { data: preferences } = usePreferences();
 
   const [copied, setCopied] = React.useState<boolean>(false);
+  const [isSSHKeyMasked, setIsSSHKeyMasked] = React.useState(
+    preferences?.maskSensitiveData
+  );
   const timeout = React.useRef<NodeJS.Timeout>();
+  const matchesSmDownBreakpoint = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
 
   React.useEffect(() => {
     if (copied) {
@@ -71,27 +86,45 @@ const LinodePubKey = () => {
     <StyledRootPaper>
       <Grid container justifyContent="space-between" spacing={2}>
         <Grid lg={4} md={3} xs={12}>
-          <Box display="flex" flexDirection="row">
+          <Stack flexDirection="row">
             <StyledSSHKeyIcon />
             <Typography variant="h3">Linode Public Key</Typography>
-          </Box>
+          </Stack>
           <Typography>
             You must <Link to={DOC_URL}>install our public SSH key</Link> on all
             managed Linodes so we can access them and diagnose issues.
           </Typography>
         </Grid>
-        {/* Hide the SSH key on x-small viewports */}
-        <StyledSSHKeyContainerGrid md={6} sm={5} xs={12}>
+        <StyledSSHKeyContainerGrid md={6} sm={7} xs={12}>
           <StyledTypography variant="subtitle1">
-            {data?.ssh_key || ''}
+            {preferences?.maskSensitiveData && isSSHKeyMasked ? (
+              <MaskableTextAreaCopy />
+            ) : (
+              data?.ssh_key || ''
+            )}
             {/* See NOTE A. If that CSS is removed, we can use the following instead: */}
             {/* pubKey.slice(0, 160)} . . . */}
           </StyledTypography>
         </StyledSSHKeyContainerGrid>
         <StyledCopyToClipboardGrid lg={2} md={3} sm={4} xs={12}>
-          <Button buttonType="secondary" onClick={handleCopy}>
-            {!copied ? 'Copy to clipboard' : 'Copied!'}
-          </Button>
+          <Stack
+            flexDirection={matchesSmDownBreakpoint ? 'row' : 'column'}
+            marginLeft={matchesSmDownBreakpoint ? 'auto' : undefined}
+          >
+            <Button buttonType="secondary" onClick={handleCopy}>
+              {!copied ? 'Copy to clipboard' : 'Copied!'}
+            </Button>
+            {preferences?.maskSensitiveData && (
+              <Button onClick={() => setIsSSHKeyMasked(!isSSHKeyMasked)}>
+                {isSSHKeyMasked ? (
+                  <StyledVisibilityShowIcon />
+                ) : (
+                  <StyledVisibilityHideIcon />
+                )}
+                {isSSHKeyMasked ? 'Show Key' : 'Hide Key'}
+              </Button>
+            )}
+          </Stack>
         </StyledCopyToClipboardGrid>
       </Grid>
     </StyledRootPaper>
