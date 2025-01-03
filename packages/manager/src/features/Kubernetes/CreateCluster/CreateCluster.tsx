@@ -61,13 +61,14 @@ import type {
   KubeNodePoolResponse,
   KubernetesTier,
 } from '@linode/api-v4/lib/kubernetes';
+import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
-  const [selectedRegionId, setSelectedRegionId] = React.useState<
-    string | undefined
+  const [selectedRegion, setSelectedRegion] = React.useState<
+    Region | undefined
   >();
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
@@ -162,6 +163,17 @@ export const CreateCluster = () => {
     }
   }, [versionData]);
 
+  // When changing the tier to Enterprise, we want to check if the pre-selected region has the capability
+  React.useEffect(() => {
+    if (
+      isLkeEnterpriseLAFeatureEnabled &&
+      selectedTier === 'enterprise' &&
+      !selectedRegion?.capabilities.includes('Kubernetes Enterprise')
+    ) {
+      setSelectedRegion(undefined);
+    }
+  }, [isLkeEnterpriseLAFeatureEnabled, selectedRegion, selectedTier]);
+
   const createCluster = () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
       scrollErrorIntoViewV2(formContainerRef);
@@ -214,7 +226,7 @@ export const CreateCluster = () => {
       k8s_version: version,
       label,
       node_pools,
-      region: selectedRegionId,
+      region: selectedRegion?.id,
     };
 
     if (showAPL) {
@@ -271,7 +283,7 @@ export const CreateCluster = () => {
   };
 
   const highAvailabilityPrice = getDCSpecificPriceByType({
-    regionId: selectedRegionId,
+    regionId: selectedRegion?.id,
     type: lkeHAType,
   });
 
@@ -295,7 +307,7 @@ export const CreateCluster = () => {
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
     regionsData,
-    selectedRegionID: selectedRegionId,
+    selectedRegionID: selectedRegion?.id,
   });
 
   if (typesError || regionsError || versionsError) {
@@ -362,9 +374,9 @@ export const CreateCluster = () => {
                 }
                 disableClearable
                 errorText={errorMap.region}
-                onChange={(e, region) => setSelectedRegionId(region.id)}
+                onChange={(e, region) => setSelectedRegion(region)}
                 regions={regionsData}
-                value={selectedRegionId}
+                value={selectedRegion?.id}
               />
             </Stack>
             <StyledDocsLinkContainer
@@ -414,7 +426,7 @@ export const CreateCluster = () => {
                 isAPLEnabled={apl_enabled}
                 isErrorKubernetesTypes={isErrorKubernetesTypes}
                 isLoadingKubernetesTypes={isLoadingKubernetesTypes}
-                selectedRegionId={selectedRegionId}
+                selectedRegionId={selectedRegion?.id}
                 setHighAvailability={setHighAvailability}
               />
             </Box>
@@ -454,7 +466,7 @@ export const CreateCluster = () => {
             isPlanPanelDisabled={isPlanPanelDisabled}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}
-            selectedRegionId={selectedRegionId}
+            selectedRegionId={selectedRegion?.id}
             types={typesData || []}
             typesLoading={typesLoading}
           />
@@ -473,7 +485,7 @@ export const CreateCluster = () => {
           updateFor={[
             hasAgreed,
             highAvailability,
-            selectedRegionId,
+            selectedRegion?.id,
             nodePools,
             submitting,
             typesData,
@@ -487,7 +499,7 @@ export const CreateCluster = () => {
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
           pools={nodePools}
-          region={selectedRegionId}
+          region={selectedRegion?.id}
           regionsData={regionsData}
           removePool={removePool}
           showHighAvailability={showHighAvailability}
