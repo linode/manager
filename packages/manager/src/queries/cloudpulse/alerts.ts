@@ -38,3 +38,12 @@ export const useAllAlertDefinitionsQuery = (
     placeholderData: keepPreviousData,
   });
 };
+
+export const useAlertDefinitionQuery = (
+  alertId: number,
+  serviceType: string
+) => {
+  return useQuery<Alert, APIError[]>({
+    ...queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId),
+  });
+};

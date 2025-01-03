@@ -363,13 +363,17 @@ describe('Create Linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getLinodeTypes', '@getVPCs']);
+    cy.wait('@getLinodeTypes');
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
     // Check the 'Backups' add on
     cy.get('[data-testid="backups"]').should('be.visible').click();
     ui.regionSelect.find().click().type(`${region.label} {enter}`);
+
+    // Verify VPCs get fetched once a region is selected
+    cy.wait('@getVPCs');
+
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
 
@@ -486,5 +490,26 @@ describe('Create Linode', () => {
     ui.toast.assertMessage(`Your Linode ${linodeLabel} is being created.`);
     // Confirm the createLinodeErrorMessage disappears.
     cy.findByText(`${createLinodeErrorMessage}`).should('not.exist');
+  });
+
+  it('shows correct validation errors if no backup or plan is selected', () => {
+    cy.visitWithLogin('/linodes/create');
+
+    // Navigate to Linode Create page "Backups" tab
+    cy.get('[role="tablist"]')
+      .should('be.visible')
+      .findByText('Backups')
+      .click();
+
+    // Submit without selecting any options
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Confirm the correct validation errors show up on the page.
+    cy.findByText('You must select a Backup.').should('be.visible');
+    cy.findByText('Plan is required.').should('be.visible');
   });
 });
