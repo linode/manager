@@ -120,9 +120,11 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     });
   };
 
-  const { data: preferences } = usePreferences();
+  const { data: typeToConfirmPreference } = usePreferences(
+    (preferences) => preferences?.type_to_confirm
+  );
 
-  const isTypeToConfirmEnabled = preferences?.type_to_confirm !== false;
+  const isTypeToConfirmEnabled = typeToConfirmPreference !== false;
   const isTextConfirmationValid = deleteAccount.confirmText === entity.name;
   const isCloseAccount = entity.subType === 'CloseAccount';
   const isCloseAccountValid =
@@ -235,7 +237,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         typographyStyle={typographyStyle}
         typographyStyleSx={typographyStyleSx}
         value={deleteAccount.confirmText}
-        visible={preferences?.type_to_confirm}
+        visible={typeToConfirmPreference}
       />
     </ConfirmationDialog>
   );
