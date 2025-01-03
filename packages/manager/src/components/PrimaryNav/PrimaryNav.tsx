@@ -54,6 +54,7 @@ export type NavEntity =
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
+  | 'Tags'
   | 'StackScripts'
   | 'VPC'
   | 'Volumes';
@@ -228,6 +229,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             display: 'Betas',
             hide: !flags.selfServeBetas,
             href: '/betas',
+          },
+          {
+            display: 'Tags',
+            href: '/tags',
           },
           {
             display: 'Identity and Access',

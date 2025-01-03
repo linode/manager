@@ -1,3 +1,4 @@
+import { Image } from '../images';
 import { Linode } from '../linodes';
 
 export interface Tag {
@@ -9,4 +10,6 @@ export interface TagRequest {
   linodes?: number[];
 }
 
-export type TaggedObject = { type: 'linode'; data: Linode };
+export type TaggedObject =
+  | { type: 'linode'; data: Linode }
+  | { type: 'image'; data: Image };

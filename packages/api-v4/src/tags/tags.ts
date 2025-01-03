@@ -26,8 +26,9 @@ export const deleteTag = (label: string) =>
     setMethod('DELETE')
   );
 
-export const getTaggedObjects = (label: string) =>
+export const getTaggedObjects = (label: string, params?: Params) =>
   Request<ResourcePage<TaggedObject>>(
     setURL(`${API_ROOT}/tags/${encodeURIComponent(label)}`),
+    setParams(params),
     setMethod('GET')
   );

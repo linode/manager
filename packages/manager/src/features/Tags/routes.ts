@@ -3,8 +3,8 @@ import { createRoute } from '@tanstack/react-router';
 import { rootRoute } from 'src/routes/root';
 
 const tagsRoute = createRoute({
-  path: 'tags',
   getParentRoute: () => rootRoute,
+  path: 'tags',
 });
 
 export const tagsLandingRoute = createRoute({

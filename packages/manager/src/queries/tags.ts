@@ -6,7 +6,13 @@ import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
 
-import type { APIError, Filter, Params, Tag } from '@linode/api-v4';
+import type {
+  APIError,
+  Filter,
+  Params,
+  Tag,
+  TaggedObject,
+} from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 
 const tagQueries = createQueryKeys('tags', {
@@ -14,10 +20,10 @@ const tagQueries = createQueryKeys('tags', {
     queryFn: () => getAllTags(),
     queryKey: null,
   },
-  tagObjects:  (label: string) => ({
-    queryFn: () => getTaggedObjects(label),
-    queryKey: [label]
-  })
+  tagObjects: (label: string) => ({
+    queryFn: () => getAllTaggedObjected(label),
+    queryKey: [label],
+  }),
 });
 
 export const useAllTagsQuery = (enabled = true) =>
@@ -28,12 +34,19 @@ export const useAllTagsQuery = (enabled = true) =>
   });
 
 export const useTagObjectsQuery = (label: string) =>
-  useQuery(tagQueries.tagObjects(label));
+  useQuery({
+    ...tagQueries.tagObjects(label),
+  });
 
 const getAllTags = (passedParams: Params = {}, passedFilter: Filter = {}) =>
   getAll<Tag>((params, filter) =>
     getTags({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);
+
+const getAllTaggedObjected = (tag: string) =>
+  getAll<TaggedObject>((params) => getTaggedObjects(tag, params))().then(
+    (data) => data.data
+  );
 
 export const updateTagsSuggestionsData = (
   newData: Tag[],
