@@ -222,12 +222,18 @@ export const DomainRecords = (props: Props) => {
     openForEditTXTRecord: (f) => openForEditing('TXT', f),
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const types = React.useMemo(() => generateTypes(props, handlers), [
+    domain,
+    domainRecords,
+  ]);
+
   React.useEffect(() => {
     setState((prevState) => ({
       ...prevState,
-      types: generateTypes(props, handlers),
+      types,
     }));
-  }, [domain, domainRecords]);
+  }, [types]);
 
   return (
     <>
