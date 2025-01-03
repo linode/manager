@@ -33,7 +33,7 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
 
   return (
     <Grid item xs={12}>
-      <Grid container>
+      <Grid container data-qa-item={label}>
         <Grid item sm={labelWidth} xs={12}>
           <Typography fontSize={theme.spacing(1.75)} variant="h2">
             {label}:
