@@ -1,11 +1,23 @@
-import { linodeFactory, createLinodeRequestFactory } from '@src/factories';
+import {
+  createLinodeRequestFactory,
+  linodeConfigFactory,
+  LinodeConfigInterfaceFactory,
+  linodeFactory,
+  VLANFactory,
+  volumeFactory,
+} from '@src/factories';
 import {
   interceptCloneLinode,
   mockGetLinodeDetails,
   mockGetLinodes,
   mockGetLinodeType,
   mockGetLinodeTypes,
+  mockCreateLinode,
+  mockCloneLinode,
+  mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
+import { linodeCreatePage } from 'support/ui/pages';
+import { mockGetVLANs } from 'support/intercepts/vlans';
 import { ui } from 'support/ui';
 import {
   dcPricingMockLinodeTypes,
@@ -14,11 +26,17 @@ import {
   dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
 import { chooseRegion, getRegionById } from 'support/util/regions';
-import { randomLabel } from 'support/util/random';
+import {
+  randomLabel,
+  randomNumber,
+  randomString,
+  randomIp,
+} from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import type { Linode } from '@linode/api-v4';
+import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 
 /**
  * Returns the Cloud Manager URL to clone a given Linode.
@@ -29,7 +47,7 @@ import type { Linode } from '@linode/api-v4';
  */
 const getLinodeCloneUrl = (linode: Linode): string => {
   const regionQuery = `&regionID=${linode.region}`;
-  const typeQuery = `&typeID=${linode.type}`;
+  const typeQuery = linode.type ? `&typeID=${linode.type}` : '';
   return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone+Linode${typeQuery}`;
 };
 
@@ -111,6 +129,167 @@ describe('clone linode', () => {
         { timeout: CLONE_TIMEOUT }
       );
     });
+  });
+
+  /*
+   * - Confirms Linode Clone flow can handle null type gracefully.
+   * - Confirms that Linode (mock) can be cloned successfully.
+   */
+  it('can clone a Linode with null type', () => {
+    const mockLinodeRegion = chooseRegion({
+      capabilities: ['Linodes', 'Vlans'],
+    });
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      region: mockLinodeRegion.id,
+      status: 'offline',
+      type: null,
+    });
+    const mockVolume = volumeFactory.build();
+    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
+      ipam_address: null,
+      purpose: 'public',
+    });
+    const mockConfig = linodeConfigFactory.build({
+      id: randomNumber(),
+      interfaces: [
+        // The order of this array is significant. Index 0 (eth0) should be public.
+        mockPublicConfigInterface,
+      ],
+    });
+    const mockVlan = VLANFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      region: mockLinodeRegion.id,
+      cidr_block: `${randomIp()}/24`,
+      linodes: [],
+    });
+
+    const linodeNullTypePayload = createLinodeRequestFactory.build({
+      label: mockLinode.label,
+      region: mockLinodeRegion.id,
+      booted: false,
+    });
+    const newLinodeLabel = `${linodeNullTypePayload.label}-clone`;
+    const clonedLinode = {
+      ...mockLinode,
+      id: mockLinode.id + 1,
+      label: newLinodeLabel,
+    };
+
+    mockGetVLANs([mockVlan]);
+    mockCreateLinode(mockLinode).as('createLinode');
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    mockGetLinodeVolumes(clonedLinode.id, [mockVolume]).as('getLinodeVolumes');
+    mockGetLinodeConfigs(clonedLinode.id, [mockConfig]).as('getLinodeConfigs');
+    cy.visitWithLogin('/linodes/create');
+
+    // Fill out necessary Linode create fields.
+    linodeCreatePage.selectRegionById(mockLinodeRegion.id);
+    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.setLabel(mockLinode.label);
+    linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
+    linodeCreatePage.setRootPassword(randomString(32));
+
+    // Open VLAN accordion and select existing VLAN.
+    ui.accordionHeading.findByTitle('VLAN').click();
+    ui.accordion
+      .findByTitle('VLAN')
+      .scrollIntoView()
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
+
+        ui.autocompletePopper
+          .findByTitle(mockVlan.label)
+          .should('be.visible')
+          .click();
+
+        cy.findByLabelText(/IPAM Address/)
+          .should('be.enabled')
+          .type(mockVlan.cidr_block);
+      });
+
+    // Confirm that VLAN attachment is listed in summary, then create Linode.
+    cy.get('[data-qa-linode-create-summary]')
+      .scrollIntoView()
+      .within(() => {
+        cy.findByText('VLAN Attached').should('be.visible');
+      });
+
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Confirm outgoing API request payload has expected data.
+    cy.wait('@createLinode').then((xhr) => {
+      const requestPayload = xhr.request.body;
+      const expectedPublicInterface = requestPayload['interfaces'][0];
+      const expectedVlanInterface = requestPayload['interfaces'][1];
+
+      // Confirm that first interface is for public internet.
+      expect(expectedPublicInterface['purpose']).to.equal('public');
+
+      // Confirm that second interface is our chosen VLAN.
+      expect(expectedVlanInterface['purpose']).to.equal('vlan');
+      expect(expectedVlanInterface['label']).to.equal(mockVlan.label);
+      expect(expectedVlanInterface['ipam_address']).to.equal(
+        mockVlan.cidr_block
+      );
+    });
+
+    cy.url().should('endWith', `/linodes/${mockLinode.id}`);
+    // Confirm toast notification should appear on Linode create.
+    ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
+
+    mockCloneLinode(mockLinode.id, clonedLinode).as('cloneLinode');
+    cy.visitWithLogin(`/linodes/${mockLinode.id}`);
+
+    // Wait for Linode to boot, then initiate clone flow.
+    cy.findByText('OFFLINE').should('be.visible');
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Linode ${mockLinode.label}`)
+      .should('be.visible')
+      .click();
+
+    ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
+    const url = getLinodeCloneUrl(mockLinode);
+    console.log(`linode clone url: ${url}`);
+    cy.url().should('endWith', getLinodeCloneUrl(mockLinode));
+
+    // Select clone region and Linode type.
+    ui.regionSelect.find().click();
+    ui.regionSelect.findItemByRegionId(mockLinodeRegion.id).click();
+
+    cy.findByText('Shared CPU').should('be.visible').click();
+
+    cy.get('[id="g6-standard-1"]')
+      .closest('[data-qa-radio]')
+      .should('be.visible')
+      .click();
+
+    // Confirm summary displays expected information and begin clone.
+    cy.findByText(`Summary ${newLinodeLabel}`).should('be.visible');
+
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@cloneLinode').then((xhr) => {
+      const newLinodeId = xhr.response?.body?.id;
+      assert.equal(xhr.response?.statusCode, 200);
+      console.log(`cy.url(): ${cy.url()}`);
+      cy.url().should('endWith', `linodes/${newLinodeId}`);
+    });
+
+    cy.wait(['@getLinodeVolumes', '@getLinodeConfigs']);
+    ui.toast.assertMessage(`Your Linode ${newLinodeLabel} is being created.`);
   });
 
   /*
