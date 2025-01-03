@@ -31,12 +31,14 @@ export interface SelectProps
     EnhancedAutocompleteProps<SelectOptionType>,
     | 'errorText'
     | 'helperText'
+    | 'id'
     | 'isOptionEqualToValue'
     | 'loading'
     | 'noOptionsText'
     | 'onBlur'
     | 'options'
     | 'placeholder'
+    | 'sx'
     | 'textFieldProps'
     | 'value'
   > {
@@ -103,6 +105,7 @@ export const Select = (props: SelectProps) => {
     onChange,
     options,
     searchable = false,
+    sx,
     textFieldProps,
     ...rest
   } = props;
@@ -201,8 +204,9 @@ export const Select = (props: SelectProps) => {
           </ListItem>
         );
       }}
-      sx={
-        !creatable && !searchable
+      sx={{
+        ...sx,
+        ...(!creatable && !searchable
           ? {
               '& .MuiInputBase-input': {
                 '&::selection': {
@@ -210,8 +214,8 @@ export const Select = (props: SelectProps) => {
                 },
               },
             }
-          : null
-      }
+          : null),
+      }}
       disableClearable={!clearable}
       forcePopupIcon
       freeSolo={creatable}

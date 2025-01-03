@@ -246,8 +246,8 @@ importers:
         specifier: ~3.1.0
         version: 3.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-vnc:
-        specifier: ^0.5.3
-        version: 0.5.16(react-dom@18.3.1(react@18.3.1))(react-scripts@5.0.1(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@swc/core@1.9.2)(@types/babel__core@7.20.5)(esbuild@0.24.0)(eslint@7.32.0)(react@18.3.1)(type-fest@4.27.0)(typescript@5.6.3))(react@18.3.1)
+        specifier: ^2.0.2
+        version: 2.0.2(react-dom@18.3.1(react@18.3.1))(react-scripts@5.0.1(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@swc/core@1.9.2)(@types/babel__core@7.20.5)(esbuild@0.24.0)(eslint@7.32.0)(react@18.3.1)(type-fest@4.27.0)(typescript@5.6.3))(react@18.3.1)(rollup@2.79.2)(tslib@2.8.1)(typescript@5.6.3)
       react-waypoint:
         specifier: ^10.3.0
         version: 10.3.0(react@18.3.1)
@@ -2709,6 +2709,19 @@ packages:
     resolution: {integrity: sha512-IGcu+cydlUMZ5En85jxHH4qj2hta/11BHq95iHEyb2sbgiN0eCdzvUcHw5gt9pBL5lTi4JDYJ1acCoMGpTvEZg==}
     peerDependencies:
       rollup: ^1.20.0 || ^2.0.0
+
+  '@rollup/plugin-typescript@11.1.6':
+    resolution: {integrity: sha512-R92yOmIACgYdJ7dJ97p4K69I8gg6IEHt8M7dUBxN3W6nrO8uUxX5ixl0yU/N3aZTi8WhPuICvOHXQvF6FaykAA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.14.0||^3.0.0||^4.0.0
+      tslib: '*'
+      typescript: '>=3.7.0'
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+      tslib:
+        optional: true
 
   '@rollup/pluginutils@3.1.0':
     resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
@@ -8415,12 +8428,12 @@ packages:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
 
-  react-vnc@0.5.16:
-    resolution: {integrity: sha512-rM2VmY03cwbwl9v4y6DHjXGqLjHbZGBJxgG1P74QzrjagVG3WkH5+K1zgDgYK4x0Mjk/80WztWX56Q8lZ9F3Cg==}
+  react-vnc@2.0.2:
+    resolution: {integrity: sha512-1Ay4YrBE+zX0MzpOF5uCQGUBi1eH8VDFQ65rR6h7woDbIIi0gQz1RBwn3ywcYOUwdbMhv5T6TIRE2mHcOYemQQ==}
     peerDependencies:
-      react: '>=16.0.0'
-      react-dom: '>=16.0.0'
-      react-scripts: '>=4.0.0'
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+      react-scripts: '>=5.0.0'
 
   react-waypoint@10.3.0:
     resolution: {integrity: sha512-iF1y2c1BsoXuEGz08NoahaLFIGI9gTUAAOKip96HUmylRT6DUtpgoBPjk/Y8dfcFVmfVDvUzWjNXpZyKTOV0SQ==}
@@ -9911,6 +9924,7 @@ packages:
 
   workbox-google-analytics@6.6.0:
     resolution: {integrity: sha512-p4DJa6OldXWd6M9zRl0H6vB9lkrmqYFkRQ2xEiNdBFp9U0LhsGO7hsBscVEyH9H2/3eZZt8c97NB2FD9U2NJ+Q==}
+    deprecated: It is not compatible with newer versions of GA starting with v4, as long as you are using GAv3 it should be ok, but the package is not longer being maintained
 
   workbox-navigation-preload@6.6.0:
     resolution: {integrity: sha512-utNEWG+uOfXdaZmvhshrh7KzhDu/1iMHyQOV6Aqup8Mm78D286ugu5k9MFD9SzBT5TcwgwSORVvInaXWbvKz9Q==}
@@ -12265,6 +12279,15 @@ snapshots:
       '@rollup/pluginutils': 3.1.0(rollup@2.79.2)
       magic-string: 0.25.9
       rollup: 2.79.2
+
+  '@rollup/plugin-typescript@11.1.6(rollup@2.79.2)(tslib@2.8.1)(typescript@5.6.3)':
+    dependencies:
+      '@rollup/pluginutils': 5.1.3(rollup@2.79.2)
+      resolve: 1.22.8
+      typescript: 5.6.3
+    optionalDependencies:
+      rollup: 2.79.2
+      tslib: 2.8.1
 
   '@rollup/pluginutils@3.1.0(rollup@2.79.2)':
     dependencies:
@@ -19140,11 +19163,16 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  react-vnc@0.5.16(react-dom@18.3.1(react@18.3.1))(react-scripts@5.0.1(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@swc/core@1.9.2)(@types/babel__core@7.20.5)(esbuild@0.24.0)(eslint@7.32.0)(react@18.3.1)(type-fest@4.27.0)(typescript@5.6.3))(react@18.3.1):
+  react-vnc@2.0.2(react-dom@18.3.1(react@18.3.1))(react-scripts@5.0.1(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@swc/core@1.9.2)(@types/babel__core@7.20.5)(esbuild@0.24.0)(eslint@7.32.0)(react@18.3.1)(type-fest@4.27.0)(typescript@5.6.3))(react@18.3.1)(rollup@2.79.2)(tslib@2.8.1)(typescript@5.6.3):
     dependencies:
+      '@rollup/plugin-typescript': 11.1.6(rollup@2.79.2)(tslib@2.8.1)(typescript@5.6.3)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-scripts: 5.0.1(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@swc/core@1.9.2)(@types/babel__core@7.20.5)(esbuild@0.24.0)(eslint@7.32.0)(react@18.3.1)(type-fest@4.27.0)(typescript@5.6.3)
+    transitivePeerDependencies:
+      - rollup
+      - tslib
+      - typescript
 
   react-waypoint@10.3.0(react@18.3.1):
     dependencies:
