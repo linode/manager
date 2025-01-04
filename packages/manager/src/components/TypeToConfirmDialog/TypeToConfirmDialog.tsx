@@ -125,9 +125,10 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     (preferences) => preferences?.type_to_confirm
   );
 
-  const isTypeToConfirmEnabled = typeToConfirmPreference !== false;
-  const isTextConfirmationValid = deleteAccount.confirmText === entity.name;
   const isCloseAccount = entity.subType === 'CloseAccount';
+  const isTypeToConfirmEnabled =
+    typeToConfirmPreference !== false || isCloseAccount;
+  const isTextConfirmationValid = deleteAccount.confirmText === entity.name;
   const isCloseAccountValid =
     !isCloseAccount || (deleteAccount.services && deleteAccount.users);
 
