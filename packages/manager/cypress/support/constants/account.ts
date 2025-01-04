@@ -1,10 +1,9 @@
+import { CANCELLATION_DATA_LOSS_WARNING } from 'src/features/Account/constants';
+
 /**
  * Data loss warning which is displayed in the account cancellation dialog.
  */
-export const cancellationDataLossWarning =
-  'Please note this is an extremely destructive action. Closing your account \
-means that all services Linodes, Volumes, DNS Records, etc will be lost and \
-may not be able be restored.';
+export const cancellationDataLossWarning = CANCELLATION_DATA_LOSS_WARNING;
 
 /**
  * Error message that appears when a payment failure occurs upon cancellation attempt.

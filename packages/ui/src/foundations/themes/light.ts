@@ -522,6 +522,33 @@ export const lightTheme: ThemeOptions = {
           transition: 'none',
         },
       },
+      variants: [
+        {
+          props: { variant: 'loading' },
+          style: {
+            backgroundColor: Button.Primary.Disabled.Background,
+            border: 0,
+          },
+        },
+        {
+          props: { color: 'error' },
+          style: {
+            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus': {
+              backgroundColor: Background.Negativesubtle,
+              border: `1px solid ${Border.Negative}`,
+              color: Content.Text.Negative,
+            },
+            '&[aria-disabled="true"]': {
+              backgroundColor: 'transparent',
+              border: `1px solid ${Button.Secondary.Disabled.Border}`,
+              color: Button.Secondary.Disabled.Text,
+            },
+            backgroundColor: 'transparent',
+            border: `1px solid ${Border.Negative}`,
+            color: Content.Text.Negative,
+          },
+        },
+      ],
     },
     MuiButtonBase: {
       styleOverrides: {

@@ -32,3 +32,7 @@ export const PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT = `Contact ${CUSTOMER_SUPPORT
 
 // Child User Messaging
 export const CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT = `Contact your ${PARENT_USER} to close your account.`;
+
+export const CANCELLATION_DATA_LOSS_WARNING = `Please note this is an extremely destructive action. Closing your account \
+means that all services Linodes, Volumes, DNS Records, etc will be lost and \
+may not be able be restored.`;
