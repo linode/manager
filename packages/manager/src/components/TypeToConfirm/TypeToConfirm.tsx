@@ -44,7 +44,7 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
     did not match. If 'visible' is not explicitly false, we treat it as true.
   */
 
-  const showTypeToConfirmInput = visible !== false && isCloseAccount;
+  const showTypeToConfirmInput = visible !== false;
   const disableOrEnable = showTypeToConfirmInput ? 'disable' : 'enable';
 
   return (
