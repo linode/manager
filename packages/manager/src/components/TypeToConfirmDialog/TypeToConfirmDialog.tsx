@@ -160,7 +160,6 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       ...secondaryButtonProps,
       'data-testid': 'cancel',
       label: 'Cancel',
-      loading,
       onClick: () => onClose?.({}, 'escapeKeyDown'),
     };
 
@@ -210,7 +209,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       actions={
         <ActionsPanel
           {...getButtonProps()}
-          reversePrimaryButtonPosition
+          reversePrimaryButtonPosition={reversePrimaryButtonPosition}
           style={{ padding: 0 }}
         />
       }
@@ -240,7 +239,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         typographyStyle={typographyStyle}
         typographyStyleSx={typographyStyleSx}
         value={deleteAccount.confirmText}
-        visible={typeToConfirmPreference}
+        visible={typeToConfirmPreference || isCloseAccount}
       />
     </ConfirmationDialog>
   );
