@@ -1,5 +1,3 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account';
-
 import {
   isEventRelevantToLinode,
   isInProgressEvent,
@@ -7,6 +5,8 @@ import {
   isSecondaryEntity,
 } from 'src/queries/events/event.helpers';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
+
+import type { Event, EventAction } from '@linode/api-v4/lib/account';
 
 export const transitionStatus = [
   'booting',
@@ -28,7 +28,8 @@ const transitionActionMap: Partial<Record<EventAction, string>> = {
   disk_imagize: 'Capturing Image',
   disk_resize: 'Disk Resizing',
   linode_clone: 'Cloning',
-  linode_migrate_datacenter: 'Migrating',
+  linode_migrate: 'Warm Migrating',
+  linode_migrate_datacenter: 'Cold Migrating',
   linode_mutate: 'Upgrading',
   linode_rebuild: 'Rebuilding',
   linode_resize: 'Resizing',
