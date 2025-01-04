@@ -1,4 +1,4 @@
-import { Notice, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -36,11 +36,11 @@ export const CreditCardDialog = (props: Props) => {
           }}
         />
       }
+      error={error ?? undefined}
       onClose={cancel}
       open={open}
       title="Confirm Payment"
     >
-      {error && <Notice text={error} variant="error" />}
       <Typography>{`Confirm payment of $${usd} USD to Linode LLC?`}</Typography>
     </ConfirmationDialog>
   );
