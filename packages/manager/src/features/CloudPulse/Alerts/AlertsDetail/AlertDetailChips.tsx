@@ -89,16 +89,9 @@ export const DisplayAlertChips = React.memo((props: AlertDimensionsProp) => {
                   p={0}
                 >
                   <StyledAlertChip
-                    label={
-                      <Typography
-                        color={theme.tokens.content.Text.Primary.Default}
-                        variant="body1"
-                      >
-                        {label}
-                      </Typography>
-                    }
                     borderRadius={getBorderRadius(index, value.length)}
                     data-qa-chip={label}
+                    label={label}
                     variant="outlined"
                   />
                 </Grid>
