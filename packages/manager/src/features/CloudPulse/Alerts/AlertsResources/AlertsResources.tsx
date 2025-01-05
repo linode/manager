@@ -173,7 +173,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               <DisplayAlertResources
                 noDataText={
                   !(isResourcesError || isRegionsError) &&
-                    !Boolean(filteredResources?.length)
+                  !Boolean(filteredResources?.length)
                     ? 'No Results found.'
                     : undefined
                 }
