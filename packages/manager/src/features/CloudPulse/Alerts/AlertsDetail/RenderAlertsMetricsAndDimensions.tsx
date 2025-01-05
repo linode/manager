@@ -67,7 +67,9 @@ export const RenderAlertMetricsAndDimensions = React.memo(
             </Grid>
           )}
           <Grid item xs={12}>
-            <Divider />
+            <Divider sx={{
+              margin:0, padding:0
+            }} />
           </Grid>
         </React.Fragment>
       )

@@ -89,17 +89,17 @@ export const AlertDetail = () => {
   }
   // TODO: The overview, criteria, resources details for alerts will be added by consuming the results of useAlertDefinitionQuery call in the coming PR's
   return (
-    <React.Fragment>
+    <>
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
       <Box display="flex" flexDirection="column" gap={2}>
         <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
           <Box
             data-qa-section="Overview"
-            flexBasis="100%"
+            flexBasis="50%"
             maxHeight={theme.spacing(98.125)}
             sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
           >
-            <AlertDetailOverview alert={alertDetails} />
+            <AlertDetailOverview alertDetails={alertDetails} />
           </Box>
           <Box
             sx={{
@@ -107,7 +107,7 @@ export const AlertDetail = () => {
               overflow: 'auto',
             }}
             data-qa-section="Criteria"
-            flexBasis="100%"
+            flexBasis="50%"
             maxHeight={theme.spacing(98.125)}
           >
             <AlertDetailCriteria alert={alertDetails} />
@@ -126,7 +126,7 @@ export const AlertDetail = () => {
           />
         </Box>
       </Box>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -134,13 +134,10 @@ export const StyledPlaceholder = styled(Placeholder, {
   label: 'StyledPlaceholder',
 })(({ theme }) => ({
   h1: {
-    fontSize: theme.spacing(2.5),
-  },
-  h2: {
     fontSize: theme.spacing(2),
   },
   svg: {
-    maxHeight: theme.spacing(10.5),
+    maxHeight: theme.spacing(10),
   },
 }));
 

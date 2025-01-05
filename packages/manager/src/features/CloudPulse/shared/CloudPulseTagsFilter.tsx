@@ -51,21 +51,20 @@ export const CloudPulseTagsSelect = React.memo(
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     React.useEffect(() => {
-      if (tags && savePreferences) {
-        const defaultTags =
-          defaultValue && Array.isArray(defaultValue)
-            ? defaultValue.map((tag) => String(tag))
-            : [];
-        const tag = tags.filter((tag) =>
-          defaultTags.includes(String(tag.label))
-        );
-        handleTagsChange(tag);
-        setSelectedTags(tag);
-      } else {
+      if (!tags || !savePreferences) {
         setSelectedTags([]);
         handleTagsChange([]);
+        return;
       }
-
+      const defaultTags =
+        defaultValue && Array.isArray(defaultValue)
+          ? defaultValue.map((tag) => String(tag))
+          : [];
+      const filteredTags = tags.filter((tag) =>
+        defaultTags.includes(String(tag.label))
+      );
+      handleTagsChange(filteredTags);
+      setSelectedTags(filteredTags);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tags, resourceType]);
 

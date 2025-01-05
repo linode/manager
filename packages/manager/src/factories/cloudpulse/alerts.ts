@@ -6,7 +6,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   channels: [],
   created: new Date().toISOString(),
   created_by: 'user1',
-  description: '',
+  description: 'Test description',
   entity_ids: ['0', '1', '2', '3'],
   has_more_resources: true,
   id: Factory.each((i) => i),

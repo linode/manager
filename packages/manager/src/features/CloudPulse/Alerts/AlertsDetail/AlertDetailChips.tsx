@@ -66,7 +66,11 @@ export const DisplayAlertChips = React.memo((props: AlertDimensionsProp) => {
         <React.Fragment key={idx}>
           <Grid item md={mdLabel} xs={12}>
             {idx === 0 && (
-              <Typography fontSize={theme.spacing(1.75)} variant="h2">
+              <Typography
+                color={theme.tokens.content.Text.Primary.Default}
+                fontFamily={theme.font.bold}
+                variant="body1"
+              >
                 {label}:
               </Typography>
             )}
@@ -82,11 +86,19 @@ export const DisplayAlertChips = React.memo((props: AlertDimensionsProp) => {
                   item
                   key={index}
                   marginLeft={isJoin && index > 0 ? -1 : 0}
+                  p={0}
                 >
                   <StyledAlertChip
+                    label={
+                      <Typography
+                        color={theme.tokens.content.Text.Primary.Default}
+                        variant="body1"
+                      >
+                        {label}
+                      </Typography>
+                    }
                     borderRadius={getBorderRadius(index, value.length)}
                     data-qa-chip={label}
-                    label={label}
                     variant="outlined"
                   />
                 </Grid>
