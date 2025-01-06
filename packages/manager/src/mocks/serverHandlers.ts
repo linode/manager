@@ -19,7 +19,9 @@ import {
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
+  alertDimensionsFactory,
   alertFactory,
+  alertRulesFactory,
   appTokenFactory,
   betaFactory,
   contactFactory,
@@ -2447,6 +2449,14 @@ export const handlers = [
         return HttpResponse.json(
           alertFactory.build({
             id: Number(params.id),
+            rule_criteria: {
+              rules: [
+                ...alertRulesFactory.buildList(2, {
+                  dimension_filters: alertDimensionsFactory.buildList(2),
+                }),
+                ...alertRulesFactory.buildList(1, { dimension_filters: [] }),
+              ],
+            },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
           })
         );

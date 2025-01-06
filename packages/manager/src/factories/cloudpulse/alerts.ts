@@ -36,12 +36,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   id: Factory.each((i) => i),
   label: Factory.each((id) => `Alert-${id}`),
   rule_criteria: {
-    rules: [
-      ...alertRulesFactory.buildList(2, {
-        dimension_filters: alertDimensionsFactory.buildList(2),
-      }),
-      ...alertRulesFactory.buildList(1, { dimension_filters: [] }),
-    ],
+    rules: [],
   },
   service_type: 'linode',
   severity: 0,
