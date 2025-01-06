@@ -13,6 +13,14 @@ const StyledLink = styled(Link)(({ theme }) => ({
     color: theme.tokens.footer.Text.Hover,
   },
   color: theme.tokens.footer.Text.Default,
+  [theme.breakpoints.down('sm')]: {
+    '&&': {
+      marginTop: theme.tokens.spacing[20],
+    },
+    '&:first-child': {
+      marginTop: 0,
+    },
+  },
 }));
 
 export const FOOTER_HEIGHT = 40;
@@ -50,7 +58,14 @@ export const Footer = React.memo(() => {
           <StyledLink to={FEEDBACK_LINK}>Provide Feedback</StyledLink>
         </Stack>
         <Typography
-          sx={(theme) => ({ color: theme.tokens.footer.Text.Default })}
+          sx={(theme) => ({
+            color: theme.tokens.footer.Text.Default,
+            [theme.breakpoints.down('sm')]: {
+              '&&': {
+                marginTop: theme.tokens.spacing[20],
+              },
+            },
+          })}
           variant="body1"
         >
           Copyright ©2024 Akamai Technologies, Inc. All Rights Reserved

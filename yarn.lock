@@ -1495,6 +1495,14 @@
     tslib "^2.0.0"
     warning "^4.0.3"
 
+"@rollup/plugin-typescript@^11.1.6":
+  version "11.1.6"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-typescript/-/plugin-typescript-11.1.6.tgz#724237d5ec12609ec01429f619d2a3e7d4d1b22b"
+  integrity sha512-R92yOmIACgYdJ7dJ97p4K69I8gg6IEHt8M7dUBxN3W6nrO8uUxX5ixl0yU/N3aZTi8WhPuICvOHXQvF6FaykAA==
+  dependencies:
+    "@rollup/pluginutils" "^5.1.0"
+    resolve "^1.22.1"
+
 "@rollup/pluginutils@^5.0.2", "@rollup/pluginutils@^5.0.4":
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-5.1.2.tgz#d3bc9f0fea4fd4086aaac6aa102f3fa587ce8bd9"
@@ -1503,6 +1511,15 @@
     "@types/estree" "^1.0.0"
     estree-walker "^2.0.2"
     picomatch "^2.3.1"
+
+"@rollup/pluginutils@^5.1.0":
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-5.1.4.tgz#bb94f1f9eaaac944da237767cdfee6c5b2262d4a"
+  integrity sha512-USm05zrsFxYLPdWWq+K3STlWiT/3ELn3RcV5hJMghpeAIhxfsUIg6mt12CBJBInWMV4VneoV7SfGv8xIwo2qNQ==
+  dependencies:
+    "@types/estree" "^1.0.0"
+    estree-walker "^2.0.2"
+    picomatch "^4.0.2"
 
 "@rollup/rollup-android-arm-eabi@4.22.4":
   version "4.22.4"
@@ -8659,10 +8676,12 @@ react-transition-group@^4.3.0, react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-vnc@^0.5.3:
-  version "0.5.16"
-  resolved "https://registry.yarnpkg.com/react-vnc/-/react-vnc-0.5.16.tgz#8198fad16358c45add6ec877d9c947590b8ca533"
-  integrity sha512-rM2VmY03cwbwl9v4y6DHjXGqLjHbZGBJxgG1P74QzrjagVG3WkH5+K1zgDgYK4x0Mjk/80WztWX56Q8lZ9F3Cg==
+react-vnc@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-vnc/-/react-vnc-2.0.2.tgz#636ccf651ec9c6b419a9622c97be7789b2c2967b"
+  integrity sha512-1Ay4YrBE+zX0MzpOF5uCQGUBi1eH8VDFQ65rR6h7woDbIIi0gQz1RBwn3ywcYOUwdbMhv5T6TIRE2mHcOYemQQ==
+  dependencies:
+    "@rollup/plugin-typescript" "^11.1.6"
 
 react-waypoint@^10.3.0:
   version "10.3.0"
