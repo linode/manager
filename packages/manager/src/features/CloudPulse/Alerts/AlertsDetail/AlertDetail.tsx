@@ -10,8 +10,8 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
 import { getAlertBoxStyles } from '../Utils/utils';
-import { AlertDetailOverview } from './AlertDetailOverview';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
+import { AlertDetailOverview } from './AlertDetailOverview';
 
 interface RouteParams {
   /**
@@ -104,7 +104,7 @@ export const AlertDetail = () => {
               ...getAlertBoxStyles(theme),
               overflow: 'auto',
             }}
-            flexBasis="100%"
+            flexBasis="50%"
             maxHeight={theme.spacing(98.125)}
           >
             <AlertDetailCriteria alert={alertDetails} />
