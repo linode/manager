@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.133.0",
+  "version": "1.133.2",
   "private": true,
   "type": "module",
   "bugs": {
@@ -73,7 +73,7 @@
     "react-router-dom": "~5.3.4",
     "react-router-hash-link": "^2.3.1",
     "react-select": "~3.1.0",
-    "react-vnc": "^0.5.3",
+    "react-vnc": "^2.0.2",
     "react-waypoint": "^10.3.0",
     "recharts": "^2.14.1",
     "recompose": "^0.30.0",
