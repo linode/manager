@@ -170,7 +170,7 @@ describe('LKE landing page', () => {
     readDownload(mockKubeconfigFilename).should('eq', mockKubeconfigContents);
   });
 
-  it('does not show an Upgrade chip when there is no new kubernetes version', () => {
+  it('does not show an Upgrade chip when there is no new kubernetes standard version', () => {
     const oldVersion = '1.25';
     const newVersion = '1.26';
 
