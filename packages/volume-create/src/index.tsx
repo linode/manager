@@ -76,7 +76,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginRight: theme.spacing(4),
   },
   notice: {
-    borderColor: theme.color.green,
+    borderColor: "green",
     fontSize: 15,
     lineHeight: "18px",
   },
@@ -388,3 +388,5 @@ const initialValues: FormState = {
   region: "",
   size: 20,
 };
+
+export default VolumeCreate;

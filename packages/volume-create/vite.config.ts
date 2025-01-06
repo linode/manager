@@ -1,4 +1,5 @@
 import react from "@vitejs/plugin-react-swc";
+import federation from "@originjs/vite-plugin-federation";
 import svgr from "vite-plugin-svgr";
 import { defineConfig } from "vite";
 import { URL } from "url";
@@ -8,7 +9,10 @@ const DIRNAME = new URL(".", import.meta.url).pathname;
 
 export default defineConfig({
   build: {
-    outDir: "build",
+    modulePreload: false,
+    target: 'esnext',
+    minify: false,
+    cssCodeSplit: false
   },
   envPrefix: "REACT_APP_",
   resolve: {
@@ -16,7 +20,18 @@ export default defineConfig({
       src: `${DIRNAME}/src`,
     },
   },
-  plugins: [react(), svgr({ exportAsDefault: true })],
+  plugins: [
+      react(),
+      svgr({ exportAsDefault: true }),
+      federation({
+        name: "volume-create",
+        filename: "remoteEntry.js",
+        exposes: {
+          './VolumeCreate': './src/index.tsx'
+        },
+        shared: ['react', 'react-dom']
+    })
+  ],
   server: {
     port: 3001,
   },
