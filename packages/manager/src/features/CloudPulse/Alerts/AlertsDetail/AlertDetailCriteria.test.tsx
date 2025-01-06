@@ -15,16 +15,14 @@ describe('AlertDetailCriteria component tests', () => {
   it('should render the alert detail criteria successfully on correct inputs', () => {
     const alertDetails = alertFactory.build({
       rule_criteria: {
-        rules: [
-          ...alertRulesFactory.buildList(2, {
-            aggregation_type: 'avg',
-            dimension_filters: alertDimensionsFactory.buildList(2),
-            label: 'CPU Usage',
-            metric: 'cpu_usage',
-            operator: 'gt',
-            unit: 'bytes',
-          }),
-        ],
+        rules: alertRulesFactory.buildList(2, {
+          aggregation_type: 'avg',
+          dimension_filters: alertDimensionsFactory.buildList(2),
+          label: 'CPU Usage',
+          metric: 'cpu_usage',
+          operator: 'gt',
+          unit: 'bytes',
+        }),
       },
     });
     const { getAllByText, getByText } = renderWithTheme(

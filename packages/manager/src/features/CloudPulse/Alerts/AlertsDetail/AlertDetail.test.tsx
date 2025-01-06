@@ -81,6 +81,7 @@ describe('AlertDetail component tests', () => {
     const { getByText } = renderWithTheme(<AlertDetail />);
     // validate overview is present with its couple of properties (values will be validated in its own components test)
     expect(getByText('Overview')).toBeInTheDocument();
+    expect(getByText('Criteria')).toBeInTheDocument(); // criteria is present
     expect(getByText('Name:')).toBeInTheDocument();
     expect(getByText('Description:')).toBeInTheDocument();
   });

@@ -29,7 +29,6 @@ export const getAlertBoxStyles = (theme: Theme) => ({
   backgroundColor: theme.tokens.background.Neutral,
   padding: theme.spacing(3),
 });
-
 /**
  * Converts seconds into a human-readable minutes and seconds format.
  * @param seconds The seconds that need to be converted into minutes.
@@ -51,7 +50,6 @@ export const convertSecondsToMinutes = (seconds: number): string => {
       : undefined;
   return [minuteString, secondString].filter(Boolean).join(' and ');
 };
-
 /**
  * @param index  The index of the list of chips that we are rendering
  * @param length The length of the iteration so far
