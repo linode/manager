@@ -1,6 +1,30 @@
 import Factory from 'src/factories/factoryProxy';
+import { pickRandom } from 'src/utilities/random';
 
+import type { DimensionFilter } from '@linode/api-v4';
+import type { AlertDefinitionMetricCriteria } from '@linode/api-v4';
 import type { Alert } from '@linode/api-v4';
+
+export const alertDimensionsFactory = Factory.Sync.makeFactory<DimensionFilter>(
+  {
+    dimension_label: 'operating_system',
+    label: 'Operating System',
+    operator: Factory.each(() => pickRandom(['neq', 'eq'])),
+    value: Factory.each(() => pickRandom(['Windows', 'Linux'])),
+  }
+);
+
+export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>(
+  {
+    aggregation_type: Factory.each(() => pickRandom(['avg', 'sum'])),
+    dimension_filters: alertDimensionsFactory.buildList(1),
+    label: Factory.each(() => pickRandom(['CPU Usage', 'Memory Usage'])),
+    metric: Factory.each(() => pickRandom(['CPU Usage', 'Memory Usage'])),
+    operator: Factory.each(() => pickRandom(['eq', 'gt'])),
+    threshold: 60,
+    unit: Factory.each(() => pickRandom(['Bytes', 'Percentage'])),
+  }
+);
 
 export const alertFactory = Factory.Sync.makeFactory<Alert>({
   channels: [],
@@ -13,50 +37,10 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   label: Factory.each((id) => `Alert-${id}`),
   rule_criteria: {
     rules: [
-      {
-        aggregation_type: 'avg',
-        dimension_filters: [
-          {
-            dimension_label: 'Test',
-            label: 'Test',
-            operator: 'eq',
-            value: '40',
-          },
-        ],
-        label: 'CPU Usage',
-        metric: 'CPU Usage',
-        operator: 'gt',
-        threshold: 60,
-        unit: 'Bytes',
-      },
-      {
-        aggregation_type: 'avg',
-        dimension_filters: [
-          {
-            dimension_label: 'OperatingSystem',
-            label: 'OperatingSystem',
-            operator: 'eq',
-            value: 'MacOS',
-          },
-          {
-            dimension_label: 'OperatingSystem',
-            label: 'OperatingSystem',
-            operator: 'eq',
-            value: 'Windows',
-          },
-          {
-            dimension_label: 'Test',
-            label: 'Test',
-            operator: 'neq',
-            value: '40',
-          },
-        ],
-        label: 'CPU Usage',
-        metric: 'CPU Usage',
-        operator: 'gt',
-        threshold: 50,
-        unit: 'Percentage',
-      },
+      ...alertRulesFactory.buildList(2, {
+        dimension_filters: alertDimensionsFactory.buildList(2),
+      }),
+      ...alertRulesFactory.buildList(1, { dimension_filters: [] }),
     ],
   },
   service_type: 'linode',

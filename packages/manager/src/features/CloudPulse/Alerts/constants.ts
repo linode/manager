@@ -1,6 +1,7 @@
 import type {
   AlertSeverityType,
   AlertStatusType,
+  DimensionFilterOperatorType,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
@@ -100,4 +101,11 @@ export const aggregationTypes: Record<MetricAggregationType, string> = {
   max: 'Maximum',
   min: 'Minimum',
   sum: 'Sum',
+};
+
+export const operatorLabel: Record<DimensionFilterOperatorType, string> = {
+  endswith: 'ends with',
+  eq: 'equals',
+  neq: 'not equals',
+  startswith: 'starts with',
 };

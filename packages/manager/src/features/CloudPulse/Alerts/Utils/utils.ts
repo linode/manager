@@ -32,7 +32,6 @@ export const getAlertBoxStyles = (theme: Theme) => ({
 
 /**
  * Converts seconds into a human-readable minutes and seconds format.
- *
  * @param seconds The seconds that need to be converted into minutes.
  * @returns A string representing the time in minutes and seconds.
  */

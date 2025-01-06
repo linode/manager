@@ -3,7 +3,7 @@ import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
-import { aggregationTypes, operators } from '../constants';
+import { aggregationTypes, operatorLabel, operators } from '../constants';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 
 import type { AlertDefinitionMetricCriteria } from '@linode/api-v4';
@@ -59,7 +59,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
               <DisplayAlertDetailChips
                 values={dimensionFilters.map(({ label, operator, value }) => [
                   label,
-                  operator,
+                  operatorLabel[operator],
                   value,
                 ])}
                 label="Dimension Filter"
