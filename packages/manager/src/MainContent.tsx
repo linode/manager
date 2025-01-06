@@ -1,4 +1,5 @@
 import { Box } from '@linode/ui';
+import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
@@ -9,7 +10,10 @@ import { makeStyles } from 'tss-react/mui';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
-import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
+import {
+  SIDEBAR_COLLAPSED_WIDTH,
+  SIDEBAR_WIDTH,
+} from 'src/components/PrimaryNav/constants';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
@@ -76,9 +80,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       paddingLeft: 0,
       paddingRight: 0,
       paddingTop: theme.spacing(2),
-    },
-    [theme.breakpoints.up(960)]: {
-      marginLeft: SIDEBAR_WIDTH,
     },
     transition: theme.transitions.create('opacity'),
   },
@@ -236,6 +237,10 @@ export const MainContent = () => {
 
   const { isIAMEnabled } = useIsIAMEnabled();
 
+  const isNarrowViewport = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down(960)
+  );
+
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -298,6 +303,8 @@ export const MainContent = () => {
               <MainContentBanner />
               <TopMenu
                 desktopMenuToggle={desktopMenuToggle}
+                isSideMenuOpen={!desktopMenuIsOpen}
+                openSideMenu={() => toggleMenu(true)}
                 username={username}
               />
               <div
@@ -314,6 +321,19 @@ export const MainContent = () => {
                   open={menuIsOpen}
                 />
                 <main
+                  /*
+                  - Narrow viewports (<960px) never have a left margin
+                  - If the user has unpinned the side menu, the left margin === the width of the collapsed side menu
+                  - Otherwise, the left margin === the width of the fully expanded side menu
+                  */
+                  style={{
+                    marginLeft: isNarrowViewport
+                      ? 0
+                      : desktopMenuIsOpen ||
+                        (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                      ? SIDEBAR_COLLAPSED_WIDTH
+                      : SIDEBAR_WIDTH,
+                  }}
                   className={classes.cmrWrapper}
                   id="main-content"
                   role="main"

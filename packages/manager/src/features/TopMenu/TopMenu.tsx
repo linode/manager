@@ -1,4 +1,6 @@
 import { Box, Stack, Typography } from '@linode/ui';
+import MenuIcon from '@mui/icons-material/Menu';
+import { IconButton, useMediaQuery } from '@mui/material';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -16,10 +18,15 @@ import { CreateMenu } from './CreateMenu/CreateMenu';
 import { Help } from './Help';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
 import SearchBar from './SearchBar/SearchBar';
+import { TopMenuTooltip } from './TopMenuTooltip';
 import { UserMenu } from './UserMenu';
+
+import type { Theme } from '@mui/material';
 
 export interface TopMenuProps {
   desktopMenuToggle: () => void;
+  isSideMenuOpen: boolean;
+  openSideMenu: () => void;
   username: string;
 }
 
@@ -28,9 +35,17 @@ export interface TopMenuProps {
  * - The number of items should be limited. In the future, **Help & Support** could become a drop down with links to **Community**, **Guides**, and etc.
  */
 export const TopMenu = React.memo((props: TopMenuProps) => {
-  const { username } = props;
+  const { isSideMenuOpen, openSideMenu, username } = props;
 
   const { loggedInAsCustomer } = useAuthentication();
+
+  const isNarrowViewport = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down(960)
+  );
+
+  const navHoverText = isSideMenuOpen
+    ? 'Collapse side menu'
+    : 'Expand side menu';
 
   return (
     <React.Fragment>
@@ -66,6 +81,18 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           })}
           variant="dense"
         >
+          {isNarrowViewport && (
+            <TopMenuTooltip title={navHoverText}>
+              <IconButton
+                aria-label="open menu"
+                color="inherit"
+                onClick={openSideMenu}
+                size="large"
+              >
+                <MenuIcon />
+              </IconButton>
+            </TopMenuTooltip>
+          )}
           <StyledLogoBox>
             <Link
               aria-label="Akamai - Dashboard"
@@ -79,10 +106,16 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           <SearchBar />
 
           <Stack
+            sx={{
+              alignItems: 'center',
+              margin: '0 0 0 auto',
+              paddingLeft: '8px',
+            }}
             direction="row"
-            sx={{ alignItems: 'center', margin: '0 0 0 auto' }}
           >
-            <CreateMenu />
+            <Box sx={{ paddingRight: '8px' }}>
+              <CreateMenu />
+            </Box>
 
             <Help />
             <Community />

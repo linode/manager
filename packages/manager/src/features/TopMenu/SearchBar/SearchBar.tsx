@@ -1,11 +1,11 @@
 import Close from '@mui/icons-material/Close';
-import Search from '@mui/icons-material/Search';
 import { take } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { components } from 'react-select';
 import { debounce } from 'throttle-debounce';
 
+import Search from 'src/assets/icons/search.svg';
 import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
@@ -322,13 +322,7 @@ const SearchBar = (props: SearchProps) => {
         <Search />
       </StyledIconButton>
       <StyledSearchBarWrapperDiv className={searchActive ? 'active' : ''}>
-        <Search
-          sx={(theme) => ({
-            color: theme.tokens.color.Neutrals[40],
-            fontSize: '2rem',
-          })}
-          data-qa-search-icon
-        />
+        <Search data-qa-search-icon />
         <label className="visually-hidden" htmlFor="main-search">
           Main search
         </label>
@@ -352,7 +346,7 @@ const SearchBar = (props: SearchProps) => {
           openMenuOnClick={false}
           openMenuOnFocus={false}
           options={finalOptions}
-          placeholder="Search Products, IP Addresses, Tags..."
+          placeholder="Search"
           styles={selectStyles}
           value={value}
         />

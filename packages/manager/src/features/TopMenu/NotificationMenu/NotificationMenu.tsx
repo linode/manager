@@ -99,7 +99,7 @@ export const NotificationMenu = () => {
           onClick={handleNotificationMenuToggle}
           ref={anchorRef}
         >
-          <Bell height="20px" width="20px" />
+          <Bell height="24px" width="24px" />
           {numNotifications > 0 && (
             <StyledChip
               color="primary"

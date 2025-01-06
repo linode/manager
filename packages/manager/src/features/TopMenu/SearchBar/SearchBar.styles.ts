@@ -31,6 +31,7 @@ export const StyledSearchBarWrapperDiv = styled('div', {
 })(({ theme }) => ({
   '& > div .react-select__control': {
     '&:hover': {
+      backgroundColor: 'transparent',
       borderColor: 'transparent',
     },
     backgroundColor: 'transparent',
@@ -62,6 +63,7 @@ export const StyledSearchBarWrapperDiv = styled('div', {
     overflow: 'hidden',
   },
   '& svg': {
+    color: theme.tokens.color.Neutrals[30],
     height: 20,
     width: 20,
   },
@@ -69,13 +71,17 @@ export const StyledSearchBarWrapperDiv = styled('div', {
     ...theme.inputStyles.focused,
     '&:hover': {
       ...theme.inputStyles.focused,
+      // backgroundColor: 'transparent',
     },
   },
   '&:hover': {
     ...theme.inputStyles.hover,
+    // backgroundColor: 'transparent',
   },
   ...theme.inputStyles.default,
   alignItems: 'center',
+  backgroundColor: theme.tokens.color.Neutrals[90],
+  border: 'none',
   display: 'flex',
   flex: 1,
   height: 32,

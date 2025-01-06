@@ -15,7 +15,7 @@ export const Community = () => {
         sx={topMenuIconButtonSx}
         target="_blank"
       >
-        <CommunitySVGIcon height="20px" width="20px" />
+        <CommunitySVGIcon height="24px" width="24px" />
       </IconButton>
     </TopMenuTooltip>
   );

@@ -15,7 +15,7 @@ export const Help = () => {
         sx={topMenuIconButtonSx}
         to="/support"
       >
-        <HelpSVGIcon height="20px" width="20px" />
+        <HelpSVGIcon height="24px" width="24px" />
       </IconButton>
     </TopMenuTooltip>
   );

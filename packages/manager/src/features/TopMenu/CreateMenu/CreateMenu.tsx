@@ -39,9 +39,15 @@ export interface CreateMenuLink extends BaseNavLink {
 export const CreateMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
-  const isSmallScreen = useMediaQuery((theme: Theme) =>
+
+  const isMediumScreen = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('md')
   );
+
+  const isSmallScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
+
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
@@ -144,8 +150,16 @@ export const CreateMenu = () => {
   ];
 
   return (
-    <Box sx={{ flexGrow: isSmallScreen ? 1 : 0 }}>
+    <Box sx={{ flexGrow: isMediumScreen ? 1 : 0 }}>
       <Button
+        sx={(theme) => ({
+          backgroundColor: theme.tokens.color.Brand[90],
+          height: '34px',
+          maxWidth: '89px',
+          minWidth: '42px',
+          paddingLeft: isSmallScreen ? 0 : '20px',
+          paddingRight: isSmallScreen ? 0 : '20px',
+        })}
         aria-controls={open ? 'basic-menu' : undefined}
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"
@@ -153,10 +167,9 @@ export const CreateMenu = () => {
         data-qa-add-new-menu-button
         id="create-menu"
         onClick={handleClick}
-        startIcon={<Add />}
-        sx={{ height: '34px', width: '89px' }}
+        startIcon={!isSmallScreen && <Add />}
       >
-        Create
+        {isSmallScreen ? <Add /> : 'Create'}
       </Button>
       <Popover
         anchorOrigin={{

@@ -44,9 +44,6 @@ export const StyledAkamaiLogo = styled(AkamaiLogo, {
   },
   'path, polygon': {
     fill: theme.tokens.color.Neutrals.White,
-    [theme.breakpoints.down('md')]: {
-      fill: theme.tokens.sideNavigation.Icon,
-    },
   },
   // give the svg a transition so it smoothly resizes
   transition: 'width .1s linear',

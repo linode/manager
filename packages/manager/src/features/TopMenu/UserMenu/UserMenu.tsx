@@ -20,6 +20,7 @@ import { useAccount } from 'src/queries/account/account';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
+import { truncateEnd } from 'src/utilities/truncate';
 
 import { getCompanyNameOrEmail } from './utils';
 
@@ -204,12 +205,12 @@ export const UserMenu = React.memo(() => {
         title="Profile & Account"
       >
         <Button
-          sx={(theme) => ({
-            backgroundColor: open ? theme.bg.app : undefined,
+          sx={{
+            alignItems: 'center',
             height: '50px',
             minWidth: 'unset',
             textTransform: 'none',
-          })}
+          }}
           aria-describedby={id}
           data-testid="nav-group-profile"
           disableRipple
@@ -218,7 +219,12 @@ export const UserMenu = React.memo(() => {
           startIcon={isProxyUser ? <AvatarForProxy /> : <Avatar />}
         >
           <Hidden mdDown>
-            <Stack alignItems={'flex-start'}>
+            <Stack
+              sx={(theme) => ({
+                '& p': { color: theme.tokens.color.Neutrals[30] },
+              })}
+              alignItems={'flex-end'}
+            >
               <Typography
                 sx={{
                   fontSize: companyNameOrEmail ? '0.775rem' : '0.875rem',
@@ -229,11 +235,11 @@ export const UserMenu = React.memo(() => {
               {companyNameOrEmail && (
                 <Typography
                   sx={(theme) => ({
-                    fontFamily: theme.font.bold,
-                    fontSize: '0.875rem',
+                    font: `${theme.tokens.font.FontWeight.Bold} ${theme.tokens.font.FontSize.Xs} ${theme.tokens.font.FontFamily.Brand}, sans-serif`,
+                    textTransform: 'uppercase',
                   })}
                 >
-                  {companyNameOrEmail}
+                  {truncateEnd(companyNameOrEmail, 24)}
                 </Typography>
               )}
             </Stack>
