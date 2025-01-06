@@ -111,6 +111,11 @@ export const CreateCluster = () => {
     // HA is enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setHighAvailability(true);
+
+      // When changing the tier to enterprise, we want to check if the pre-selected region has the capability
+      if (!selectedRegion?.capabilities.includes('Kubernetes Enterprise')) {
+        setSelectedRegion(undefined);
+      }
     } else {
       setHighAvailability(undefined);
     }
@@ -162,17 +167,6 @@ export const CreateCluster = () => {
       setVersion(getLatestVersion(versions).value);
     }
   }, [versionData]);
-
-  // When changing the tier to Enterprise, we want to check if the pre-selected region has the capability
-  React.useEffect(() => {
-    if (
-      isLkeEnterpriseLAFeatureEnabled &&
-      selectedTier === 'enterprise' &&
-      !selectedRegion?.capabilities.includes('Kubernetes Enterprise')
-    ) {
-      setSelectedRegion(undefined);
-    }
-  }, [isLkeEnterpriseLAFeatureEnabled, selectedRegion, selectedTier]);
 
   const createCluster = () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
