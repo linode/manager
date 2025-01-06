@@ -21,7 +21,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
   (props: AlertMetricAndDimensionsProp) => {
     const { ruleCriteria } = props;
 
-    if (!Boolean(ruleCriteria.rules?.length)) {
+    if (!ruleCriteria.rules?.length) {
       return <NullComponent />;
     }
 
@@ -35,9 +35,9 @@ export const RenderAlertMetricsAndDimensions = React.memo(
           threshold,
           unit,
         },
-        idx
+        index
       ) => (
-        <React.Fragment key={idx}>
+        <React.Fragment key={index}>
           <Grid item xs={12}>
             <DisplayAlertDetailChips
               values={[
@@ -49,21 +49,25 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                 String(threshold),
                 unit,
               ]}
-              isJoin
               label="Metric Threshold"
+              mergeChips
             />
           </Grid>
-          <Grid item xs={12}>
-            <DisplayAlertDetailChips
-              values={dimensionFilters.map(({ label, operator, value }) => [
-                label,
-                operator,
-                value,
-              ])}
-              isJoin
-              label="Dimension Filter"
-            />
-          </Grid>
+
+          {dimensionFilters.length > 0 && (
+            <Grid item xs={12}>
+              <DisplayAlertDetailChips
+                values={dimensionFilters.map(({ label, operator, value }) => [
+                  label,
+                  operator,
+                  value,
+                ])}
+                label="Dimension Filter"
+                mergeChips
+              />
+            </Grid>
+          )}
+
           <Grid item xs={12}>
             <Divider />
           </Grid>

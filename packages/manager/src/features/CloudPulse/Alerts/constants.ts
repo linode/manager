@@ -1,7 +1,6 @@
 import type {
   AlertSeverityType,
   AlertStatusType,
-  DimensionFilterOperatorType,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';

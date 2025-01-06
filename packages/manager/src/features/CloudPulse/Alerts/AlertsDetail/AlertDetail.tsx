@@ -107,7 +107,7 @@ export const AlertDetail = () => {
             flexBasis="50%"
             maxHeight={theme.spacing(98.125)}
           >
-            <AlertDetailCriteria alert={alertDetails} />
+            <AlertDetailCriteria alertDetails={alertDetails} />
           </Box>
         </Box>
       </Box>

@@ -11,7 +11,7 @@ describe('AlertDetailCriteria component tests', () => {
   it('should render the alert detail criteria successfully on correct inputs', () => {
     const alertDetails = alertFactory.build();
     const { getAllByText, getByText } = renderWithTheme(
-      <AlertDetailCriteria alert={alertDetails} />
+      <AlertDetailCriteria alertDetails={alertDetails} />
     );
     const { rules } = alertDetails.rule_criteria;
     expect(getAllByText('Metric Threshold:').length).toBe(rules.length);
@@ -40,7 +40,7 @@ describe('AlertDetailCriteria component tests', () => {
       },
     });
     const { getByText, queryByText } = renderWithTheme(
-      <AlertDetailCriteria alert={alert} />
+      <AlertDetailCriteria alertDetails={alert} />
     );
     expect(getByText('Criteria')).toBeInTheDocument(); // empty criteria should be there
     expect(queryByText('Metric Threshold:')).not.toBeInTheDocument();

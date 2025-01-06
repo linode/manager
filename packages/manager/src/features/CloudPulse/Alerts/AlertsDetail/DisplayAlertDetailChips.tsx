@@ -5,24 +5,29 @@ import React from 'react';
 import { StyledAlertChip } from './AlertDetail';
 
 export interface AlertDimensionsProp {
-  /*
-   * Controls whether we need to display the chips one by one or join and display
-   */
-  isJoin?: boolean;
-  /*
-   * The label under which the chips will be displayed
+  /**
+   * The label or title of the chips
    */
   label: string;
-  /*
-   * Controls the size of the chip label from medium to larger screens
+  /**
+   * Number of grid columns for the label on medium to larger screens.
+   * Defaults to 4. This controls the width of the label in the grid layout.
    */
-  labelWidth?: number;
-  /*
-   * Controls the size of the chip value from medium to larger screens
+  labelGridColumns?: number;
+  /**
+   * Determines whether chips should be displayed individually
+   * or merged into a single row
    */
-  valueWidth?: number;
-  /*
-   * The chips that needs to be displayed
+  mergeChips?: boolean;
+  /**
+   * Number of grid columns for the value on medium to larger screens.
+   * Defaults to 8. This controls the width of the value in the grid layout.
+   */
+  valueGridColumns?: number;
+  /**
+   * The list of chip labels to be displayed.
+   * Can be a flat array of strings or a nested array for grouped chips.
+   * Example: ['chip1', 'chip2'] or [['group1-chip1', 'group1-chip2'], ['group2-chip1']]
    */
   values: Array<string> | Array<string[]>;
 }
@@ -30,26 +35,31 @@ export interface AlertDimensionsProp {
 export const DisplayAlertDetailChips = React.memo(
   (props: AlertDimensionsProp) => {
     const {
-      isJoin,
       label,
-      labelWidth: mdLabel = 4,
-      valueWidth: mdValue = 8,
+      labelGridColumns = 4,
+      mergeChips,
+      valueGridColumns = 8,
       values: values,
     } = props;
 
-    const iterables: string[][] =
-      Array.isArray(values) && values.every(Array.isArray) ? values : [values];
+    const iterables: string[][] = Array.isArray(values)
+      ? values.every(Array.isArray)
+        ? values
+        : [values]
+      : [];
 
     const theme = useTheme();
 
     /**
-     * @param isJoin Whether to join the chips or not
      * @param index  The index of the list of chips that we are rendering
      * @param length The length of the iteration so far
      * @returns The border radius to be applied on chips based on the parameters
      */
-    const getBorderRadius = (index: number, length: number) => {
-      if (!isJoin || length === 1) {
+    const getAlertChipBorderRadius = (
+      index: number,
+      length: number
+    ): string => {
+      if (!mergeChips || length === 1) {
         return theme.spacing(0.3);
       }
       if (index === 0) {
@@ -65,27 +75,34 @@ export const DisplayAlertDetailChips = React.memo(
       <Grid container item spacing={1}>
         {iterables.map((value, idx) => (
           <React.Fragment key={idx}>
-            <Grid item md={mdLabel} xs={12}>
+            <Grid item md={labelGridColumns} xs={12}>
               {idx === 0 && (
-                <Typography fontSize={theme.spacing(1.75)} variant="h2">
+                <Typography
+                  color={theme.tokens.content.Text.Primary.Default}
+                  fontFamily={theme.font.bold}
+                  variant="body1"
+                >
                   {label}:
                 </Typography>
               )}
             </Grid>
-            <Grid item md={mdValue} xs={12}>
+            <Grid item md={valueGridColumns} xs={12}>
               <Grid
                 container
-                flexWrap={isJoin ? 'nowrap' : 'wrap'}
-                gap={isJoin ? 0 : 1}
+                flexWrap={mergeChips ? 'nowrap' : 'wrap'}
+                gap={mergeChips ? 0 : 1}
               >
                 {value.map((label, index) => (
                   <Grid
                     item
                     key={index}
-                    marginLeft={isJoin && index > 0 ? -1 : 0}
+                    marginLeft={mergeChips && index > 0 ? -1 : 0}
                   >
                     <StyledAlertChip
-                      borderRadius={getBorderRadius(index, value.length)}
+                      borderRadius={getAlertChipBorderRadius(
+                        index,
+                        value.length
+                      )}
                       label={label}
                       variant="outlined"
                     />

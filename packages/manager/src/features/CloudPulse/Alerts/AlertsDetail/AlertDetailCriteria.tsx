@@ -11,13 +11,13 @@ import type { Alert } from '@linode/api-v4';
 
 interface CriteriaProps {
   /*
-   * The alert for which the criteria is displayed
+   * The alert detail object for which the criteria needs to be displayed
    */
-  alert: Alert;
+  alertDetails: Alert;
 }
 
 export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
-  const { alert } = props;
+  const { alertDetails: alert } = props;
 
   const {
     evaluation_period_seconds: evaluationPeriod,
@@ -80,20 +80,16 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
       {Boolean(ruleCriteria.rules.length) && (
         <Grid alignItems="center" container spacing={1}>
           <RenderAlertMetricsAndDimensions ruleCriteria={ruleCriteria} />
-          <Grid item xs={12}>
-            <DisplayAlertDetailChips // label chip for polling interval
-              isJoin
-              label="Polling Interval"
-              values={[convertSecondsToMinutes(pollingIntervalSeconds)]}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <DisplayAlertDetailChips // label chip for evaluation period
-              isJoin
-              label="Evaluation Periods"
-              values={[convertSecondsToMinutes(evaluationPeriod)]}
-            />
-          </Grid>
+          <DisplayAlertDetailChips // label chip for polling interval
+            label="Polling Interval"
+            mergeChips
+            values={[convertSecondsToMinutes(pollingIntervalSeconds)]}
+          />
+          <DisplayAlertDetailChips // label chip for evaluation period
+            label="Evaluation Periods"
+            mergeChips
+            values={[convertSecondsToMinutes(evaluationPeriod)]}
+          />
           {renderTriggerCriteria} {/** Render the trigger criteria */}
         </Grid>
       )}
