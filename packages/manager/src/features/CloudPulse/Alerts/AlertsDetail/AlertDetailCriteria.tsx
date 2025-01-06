@@ -17,15 +17,15 @@ interface CriteriaProps {
 }
 
 export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
-  const { alertDetails: alert } = props;
+  const { alertDetails } = props;
 
   const {
     evaluation_period_seconds: evaluationPeriod,
     polling_interval_seconds: pollingIntervalSeconds,
     trigger_occurrences: triggerOccurrences,
-  } = alert.trigger_conditions;
+  } = alertDetails.trigger_conditions;
 
-  const { rule_criteria: ruleCriteria = { rules: [] } } = alert;
+  const { rule_criteria: ruleCriteria = { rules: [] } } = alertDetails;
 
   const theme = useTheme();
 
@@ -77,22 +77,20 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
       <Typography marginBottom={2} variant="h2">
         Criteria
       </Typography>
-      {Boolean(ruleCriteria.rules.length) && (
-        <Grid alignItems="center" container spacing={1}>
-          <RenderAlertMetricsAndDimensions ruleCriteria={ruleCriteria} />
-          <DisplayAlertDetailChips // label chip for polling interval
-            label="Polling Interval"
-            mergeChips
-            values={[convertSecondsToMinutes(pollingIntervalSeconds)]}
-          />
-          <DisplayAlertDetailChips // label chip for evaluation period
-            label="Evaluation Periods"
-            mergeChips
-            values={[convertSecondsToMinutes(evaluationPeriod)]}
-          />
-          {renderTriggerCriteria} {/** Render the trigger criteria */}
-        </Grid>
-      )}
+      <Grid alignItems="center" container spacing={1}>
+        <RenderAlertMetricsAndDimensions ruleCriteria={ruleCriteria} />
+        <DisplayAlertDetailChips // label chip for polling interval
+          label="Polling Interval"
+          mergeChips
+          values={[convertSecondsToMinutes(pollingIntervalSeconds)]}
+        />
+        <DisplayAlertDetailChips // label chip for evaluation period
+          label="Evaluation Periods"
+          mergeChips
+          values={[convertSecondsToMinutes(evaluationPeriod)]}
+        />
+        {renderTriggerCriteria} {/** Render the trigger criteria */}
+      </Grid>
     </>
   );
 });
