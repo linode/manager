@@ -1,6 +1,7 @@
 import type {
   AlertSeverityType,
   AlertStatusType,
+  DimensionFilterOperatorType,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
@@ -86,7 +87,7 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   enabled: 'active',
 };
 
-export const operators = {
+export const operators: Record<MetricOperatorType, string> = {
   eq: '=',
   gt: '>',
   gte: '>=',
@@ -94,17 +95,10 @@ export const operators = {
   lte: '<=',
 };
 
-export const aggregationTypes = {
+export const aggregationTypes: Record<MetricAggregationType, string> = {
   avg: 'Average',
   count: 'Count',
   max: 'Maximum',
   min: 'Minimum',
   sum: 'Sum',
-};
-
-export const operatorLabel = {
-  endswith: 'ends with',
-  eq: 'equals',
-  neq: 'not equals',
-  startswith: 'starts with',
 };
