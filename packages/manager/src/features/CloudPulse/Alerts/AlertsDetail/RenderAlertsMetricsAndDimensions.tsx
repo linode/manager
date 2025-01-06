@@ -3,7 +3,11 @@ import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
-import { aggregationTypes, operatorLabel, operators } from '../constants';
+import {
+  aggregationTypeMap,
+  dimensionOperatorTypeMap,
+  metricOperatorTypeMap,
+} from '../constants';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 
 import type { AlertDefinitionMetricCriteria } from '@linode/api-v4';
@@ -41,11 +45,9 @@ export const RenderAlertMetricsAndDimensions = React.memo(
           <Grid item xs={12}>
             <DisplayAlertDetailChips
               values={[
-                aggregationType
-                  ? aggregationTypes[aggregationType]
-                  : aggregationType,
+                aggregationTypeMap[aggregationType],
                 label,
-                operator ? operators[operator] : operator,
+                metricOperatorTypeMap[operator],
                 String(threshold),
                 unit,
               ]}
@@ -57,11 +59,17 @@ export const RenderAlertMetricsAndDimensions = React.memo(
           {dimensionFilters.length > 0 && (
             <Grid item xs={12}>
               <DisplayAlertDetailChips
-                values={dimensionFilters.map(({ label, operator, value }) => [
-                  label,
-                  operatorLabel[operator],
-                  value,
-                ])}
+                values={dimensionFilters.map(
+                  ({
+                    label: dimensionLabel,
+                    operator: dimensionOperator,
+                    value,
+                  }) => [
+                    dimensionLabel,
+                    dimensionOperatorTypeMap[dimensionOperator],
+                    value,
+                  ]
+                )}
                 label="Dimension Filter"
                 mergeChips
               />

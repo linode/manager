@@ -87,7 +87,7 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   enabled: 'active',
 };
 
-export const operators: Record<MetricOperatorType, string> = {
+export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   eq: '=',
   gt: '>',
   gte: '>=',
@@ -95,7 +95,7 @@ export const operators: Record<MetricOperatorType, string> = {
   lte: '<=',
 };
 
-export const aggregationTypes: Record<MetricAggregationType, string> = {
+export const aggregationTypeMap: Record<MetricAggregationType, string> = {
   avg: 'Average',
   count: 'Count',
   max: 'Maximum',
@@ -103,7 +103,10 @@ export const aggregationTypes: Record<MetricAggregationType, string> = {
   sum: 'Sum',
 };
 
-export const operatorLabel: Record<DimensionFilterOperatorType, string> = {
+export const dimensionOperatorTypeMap: Record<
+  DimensionFilterOperatorType,
+  string
+> = {
   endswith: 'ends with',
   eq: 'equals',
   neq: 'not equals',

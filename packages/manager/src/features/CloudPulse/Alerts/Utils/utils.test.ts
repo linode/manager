@@ -15,7 +15,7 @@ it('test getServiceTypeLabel method', () => {
 });
 
 it('test convertSecondsToMinutes method', () => {
-  expect(convertSecondsToMinutes(0)).toBe('0 minutes');
+  expect(convertSecondsToMinutes(0)).toBe('0 minute');
   expect(convertSecondsToMinutes(60)).toBe('1 minute');
   expect(convertSecondsToMinutes(120)).toBe('2 minutes');
   expect(convertSecondsToMinutes(65)).toBe('1 minute and 5 seconds');

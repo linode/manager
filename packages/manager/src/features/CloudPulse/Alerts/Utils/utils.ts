@@ -36,24 +36,41 @@ export const getAlertBoxStyles = (theme: Theme) => ({
  * @returns A string representing the time in minutes and seconds.
  */
 export const convertSecondsToMinutes = (seconds: number): string => {
-  if (seconds === 0) {
-    return '0 minutes';
+  if (seconds <= 0) {
+    return '0 minute';
   }
-
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
+  const minuteString =
+    minutes > 0
+      ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`
+      : undefined;
+  const secondString =
+    remainingSeconds > 0
+      ? `${remainingSeconds} ${remainingSeconds <= 1 ? 'second' : 'seconds'}`
+      : undefined;
+  return [minuteString, secondString].filter(Boolean).join(' and ');
+};
 
-  const minuteString = `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
-  const secondString = `${remainingSeconds} ${
-    remainingSeconds === 1 ? 'second' : 'seconds'
-  }`;
-
-  if (!minutes) {
-    return secondString;
+/**
+ * @param index  The index of the list of chips that we are rendering
+ * @param length The length of the iteration so far
+ * @returns The border radius to be applied on chips based on the parameters
+ */
+export const getAlertChipBorderRadius = (
+  index: number,
+  length: number,
+  mergeChips: boolean | undefined,
+  theme: Theme
+): string => {
+  if (!mergeChips || length === 1) {
+    return theme.spacing(0.3);
   }
-  if (!remainingSeconds) {
-    return minuteString;
+  if (index === 0) {
+    return `${theme.spacing(0.3)} 0 0 ${theme.spacing(0.3)}`;
   }
-
-  return `${minuteString} and ${secondString}`;
+  if (index === length - 1) {
+    return `0 ${theme.spacing(0.3)} ${theme.spacing(0.3)} 0`;
+  }
+  return '0';
 };

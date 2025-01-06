@@ -2,6 +2,7 @@ import { Typography } from '@linode/ui';
 import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
+import { getAlertChipBorderRadius } from '../Utils/utils';
 import { StyledAlertChip } from './AlertDetail';
 
 export interface AlertDimensionsProp {
@@ -42,7 +43,7 @@ export const DisplayAlertDetailChips = React.memo(
       values: values,
     } = props;
 
-    const iterables: string[][] = Array.isArray(values)
+    const chipValues: string[][] = Array.isArray(values)
       ? values.every(Array.isArray)
         ? values
         : [values]
@@ -50,33 +51,12 @@ export const DisplayAlertDetailChips = React.memo(
 
     const theme = useTheme();
 
-    /**
-     * @param index  The index of the list of chips that we are rendering
-     * @param length The length of the iteration so far
-     * @returns The border radius to be applied on chips based on the parameters
-     */
-    const getAlertChipBorderRadius = (
-      index: number,
-      length: number
-    ): string => {
-      if (!mergeChips || length === 1) {
-        return theme.spacing(0.3);
-      }
-      if (index === 0) {
-        return `${theme.spacing(0.3)} 0 0 ${theme.spacing(0.3)}`;
-      }
-      if (index === length - 1) {
-        return `0 ${theme.spacing(0.3)} ${theme.spacing(0.3)} 0`;
-      }
-      return '0';
-    };
-
     return (
       <Grid container item spacing={1}>
-        {iterables.map((value, idx) => (
-          <React.Fragment key={idx}>
+        {chipValues.map((value, index) => (
+          <React.Fragment key={`${label}_${index}`}>
             <Grid item md={labelGridColumns} xs={12}>
-              {idx === 0 && (
+              {index === 0 && (
                 <Typography
                   color={theme.tokens.content.Text.Primary.Default}
                   fontFamily={theme.font.bold}
@@ -101,7 +81,9 @@ export const DisplayAlertDetailChips = React.memo(
                     <StyledAlertChip
                       borderRadius={getAlertChipBorderRadius(
                         index,
-                        value.length
+                        value.length,
+                        mergeChips,
+                        theme
                       )}
                       label={label}
                       variant="outlined"
