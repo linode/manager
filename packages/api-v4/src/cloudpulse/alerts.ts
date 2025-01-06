@@ -44,7 +44,7 @@ export const getAlertDefinitionByServiceTypeAndId = (
 ) =>
   Request<Alert>(
     setURL(
-      `http://blr-lhvk5r.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
         // updating only here as this is the only API ready
         serviceType
       )}/alert-definitions/${encodeURIComponent(alertId)}`
