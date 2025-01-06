@@ -12,6 +12,7 @@ import {
 import {
   cancellationDataLossWarning,
   cancellationPaymentErrorMessage,
+  cancellationDialogTitle,
 } from 'support/constants/account';
 import {
   CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
@@ -74,9 +75,7 @@ describe('Account cancellation', () => {
       });
 
     ui.dialog
-      .findByTitle(
-        'Are you sure you want to close your Akamai cloud computing services account?'
-      )
+      .findByTitle(cancellationDialogTitle)
       .should('be.visible')
       .within(() => {
         cy.findByText(cancellationDataLossWarning, { exact: false }).should(
@@ -192,9 +191,7 @@ describe('Account cancellation', () => {
 
     // Fill out cancellation dialog and attempt submission.
     ui.dialog
-      .findByTitle(
-        'Are you sure you want to close your Akamai cloud computing services account?'
-      )
+      .findByTitle(cancellationDialogTitle)
       .should('be.visible')
       .within(() => {
         // Check both boxes but verify submit remains disabled without username
@@ -364,9 +361,7 @@ describe('Parent/Child account cancellation', () => {
       });
 
     ui.dialog
-      .findByTitle(
-        'Are you sure you want to close your Akamai cloud computing services account?'
-      )
+      .findByTitle(cancellationDialogTitle)
       .should('be.visible')
       .within(() => {
         cy.findByText(cancellationDataLossWarning, { exact: false }).should(

@@ -1,9 +1,16 @@
-import { CANCELLATION_DATA_LOSS_WARNING } from 'src/features/Account/constants';
-
 /**
  * Data loss warning which is displayed in the account cancellation dialog.
  */
-export const cancellationDataLossWarning = CANCELLATION_DATA_LOSS_WARNING;
+export const cancellationDataLossWarning =
+  'This is an extremely destructive action. All services, Linodes, volumes, \
+DNS records, and user accounts will be permanently lost.';
+
+/**
+ * Title text displayed in the account cancellation confirmation dialog.
+ */
+export const cancellationDialogTitle =
+  'Are you sure you want to close your Akamai cloud \
+computing services account?';
 
 /**
  * Error message that appears when a payment failure occurs upon cancellation attempt.

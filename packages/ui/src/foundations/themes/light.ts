@@ -442,10 +442,6 @@ export const lightTheme: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         containedPrimary: {
-          // TODO: We can remove this after migration since we can define variants
-          '&.loading': {
-            backgroundColor: primaryColors.text,
-          },
           '&:active': {
             backgroundColor: Button.Primary.Pressed.Background,
           },
@@ -466,10 +462,6 @@ export const lightTheme: ThemeOptions = {
           padding: '2px 20px',
         },
         containedSecondary: {
-          // TODO: We can remove this after migration since we can define variants
-          '&.loading': {
-            color: primaryColors.text,
-          },
           '&:active': {
             backgroundColor: 'transparent',
             borderColor: Button.Secondary.Pressed.Text,
@@ -523,13 +515,6 @@ export const lightTheme: ThemeOptions = {
         },
       },
       variants: [
-        {
-          props: { variant: 'loading' },
-          style: {
-            backgroundColor: Button.Primary.Disabled.Background,
-            border: 0,
-          },
-        },
         {
           props: { color: 'error' },
           style: {

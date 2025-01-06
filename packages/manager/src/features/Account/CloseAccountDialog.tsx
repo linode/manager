@@ -5,6 +5,10 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import {
+  CANCELLATION_DATA_LOSS_WARNING,
+  CANCELLATION_DIALOG_TITLE,
+} from 'src/features/Account/constants';
 import { useProfile } from 'src/queries/profile/profile';
 
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -92,7 +96,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       onClose={closeDialog}
       open={open}
       reversePrimaryButtonPosition
-      title="Are you sure you want to close your Akamai cloud computing services account?"
+      title={CANCELLATION_DIALOG_TITLE}
     >
       {errors ? (
         <Notice text={errors ? errors[0].reason : ''} variant="error" />
@@ -107,9 +111,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
           variant="error"
         >
           <Typography sx={{ fontSize: '0.875rem' }}>
-            <strong>Warning:</strong> This is an extremely destructive action.
-            All services, Linodes, volumes, DNS records, and user accounts will
-            be permanently lost.
+            <strong>Warning:</strong> {CANCELLATION_DATA_LOSS_WARNING}
           </Typography>
         </Notice>
       </StyledNoticeWrapper>

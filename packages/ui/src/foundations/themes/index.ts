@@ -167,12 +167,6 @@ declare module '@mui/material/styles/createTheme' {
 }
 
 declare module '@mui/material/Button' {
-  interface ButtonPropsVariantOverrides {
-    loading: true;
-  }
-}
-
-declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
     error: true;
   }

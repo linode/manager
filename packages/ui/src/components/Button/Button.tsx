@@ -148,9 +148,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         endIcon={
           (showTooltip && <HelpOutline sx={sxEndIcon} />) || rest.endIcon
         }
-        variant={
-          loading ? 'loading' : buttonTypeToVariant[buttonType] || 'text'
-        }
         aria-disabled={disabled}
         buttonType={buttonType}
         className={className}
@@ -165,6 +162,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         onKeyDown={disabled ? handleDisabledKeyDown : rest.onKeyDown}
         ref={ref}
         sx={sx}
+        variant={buttonTypeToVariant[buttonType] || 'text'}
       >
         <Span data-testid="loadingIcon">
           {loading ? <ReloadIcon /> : children}
