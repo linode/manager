@@ -4,7 +4,7 @@ import React from 'react';
 import NullComponent from 'src/components/NullComponent';
 
 import { aggregationTypes, operators } from '../constants';
-import { DisplayAlertChips } from './AlertDetailChips';
+import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 
 import type { AlertDefinitionMetricCriteria } from '@linode/api-v4';
 
@@ -39,7 +39,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
       ) => (
         <React.Fragment key={idx}>
           <Grid item xs={12}>
-            <DisplayAlertChips
+            <DisplayAlertDetailChips
               values={[
                 aggregationType
                   ? aggregationTypes[aggregationType]
@@ -54,7 +54,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
             />
           </Grid>
           <Grid item xs={12}>
-            <DisplayAlertChips
+            <DisplayAlertDetailChips
               values={dimensionFilters.map(({ label, operator, value }) => [
                 label,
                 operator,

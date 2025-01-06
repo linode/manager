@@ -4,7 +4,7 @@ import React from 'react';
 
 import { convertSecondsToMinutes } from '../Utils/utils';
 import { StyledAlertChip } from './AlertDetail';
-import { DisplayAlertChips } from './AlertDetailChips';
+import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 import { RenderAlertMetricsAndDimensions } from './RenderAlertsMetricsAndDimensions';
 
 import type { Alert } from '@linode/api-v4';
@@ -67,14 +67,14 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
         <Grid alignItems="center" container spacing={2}>
           <RenderAlertMetricsAndDimensions ruleCriteria={ruleCriteria} />
           <Grid item xs={12}>
-            <DisplayAlertChips // label chip for polling interval
+            <DisplayAlertDetailChips // label chip for polling interval
               isJoin
               label="Polling Interval"
               values={[convertSecondsToMinutes(pollingIntervalSeconds)]}
             />
           </Grid>
           <Grid item xs={12}>
-            <DisplayAlertChips // label chip for evaluation period
+            <DisplayAlertDetailChips // label chip for evaluation period
               isJoin
               label="Evaluation Periods"
               values={[convertSecondsToMinutes(evaluationPeriod)]}
