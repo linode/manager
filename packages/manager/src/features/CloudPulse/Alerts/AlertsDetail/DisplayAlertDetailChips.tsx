@@ -48,9 +48,7 @@ export const DisplayAlertDetailChips = React.memo(
         ? values
         : [values]
       : [];
-
     const theme = useTheme();
-
     return (
       <Grid container item spacing={1}>
         {chipValues.map((value, index) => (

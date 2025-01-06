@@ -18,15 +18,12 @@ interface CriteriaProps {
 
 export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
   const { alertDetails } = props;
-
   const {
     evaluation_period_seconds: evaluationPeriod,
     polling_interval_seconds: pollingIntervalSeconds,
     trigger_occurrences: triggerOccurrences,
   } = alertDetails.trigger_conditions;
-
   const { rule_criteria: ruleCriteria = { rules: [] } } = alertDetails;
-
   const theme = useTheme();
 
   // Memoized trigger criteria rendering
@@ -71,7 +68,6 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
     ),
     [theme, triggerOccurrences]
   );
-
   return (
     <>
       <Typography marginBottom={2} variant="h2">
