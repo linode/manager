@@ -1,13 +1,13 @@
 import * as React from 'react';
 
 import { placementGroupFactory, regionFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsSummary } from './PlacementGroupsSummary';
 
 describe('PlacementGroups Summary', () => {
-  it('renders the placement group detail summary panel', () => {
-    const { getByTestId, getByText } = renderWithTheme(
+  it('renders the placement group detail summary panel', async () => {
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
       <PlacementGroupsSummary
         placementGroup={placementGroupFactory.build({
           placement_group_type: 'affinity:local',

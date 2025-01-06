@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { linodeFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsUnassignModal } from './PlacementGroupsUnassignModal';
 
@@ -27,7 +27,7 @@ vi.mock('src/queries/linodes/linodes', async () => {
 });
 
 describe('PlacementGroupsUnassignModal', () => {
-  it('should render and have the proper content and CTAs', () => {
+  it('should render and have the proper content and CTAs', async () => {
     queryMocks.useLinodeQuery.mockReturnValue({
       data: linodeFactory.build({
         id: 1,
@@ -39,7 +39,7 @@ describe('PlacementGroupsUnassignModal', () => {
       linodeId: '1',
     });
 
-    const { getByLabelText, getByRole } = renderWithTheme(
+    const { getByLabelText, getByRole } = await renderWithThemeAndRouter(
       <PlacementGroupsUnassignModal
         onClose={() => null}
         open

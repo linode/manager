@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { placementGroupFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLanding } from './PlacementGroupsLanding';
 import { headers } from './PlacementGroupsLandingEmptyStateData';
@@ -19,27 +19,31 @@ vi.mock('src/queries/placementGroups', async () => {
 });
 
 describe('PlacementGroupsLanding', () => {
-  it('renders loading state', () => {
+  it('renders loading state', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       isLoading: true,
     });
 
-    const { getByRole } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByRole } = await renderWithThemeAndRouter(
+      <PlacementGroupsLanding />
+    );
 
     expect(getByRole('progressbar')).toBeInTheDocument();
   });
 
-  it('renders error state', () => {
+  it('renders error state', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       error: [{ reason: 'Not found' }],
     });
 
-    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByText } = await renderWithThemeAndRouter(
+      <PlacementGroupsLanding />
+    );
 
     expect(getByText(/not found/i)).toBeInTheDocument();
   });
 
-  it('renders docs link and create button', () => {
+  it('renders docs link and create button', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       data: {
         data: [
@@ -51,13 +55,15 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByText } = await renderWithThemeAndRouter(
+      <PlacementGroupsLanding />
+    );
 
     expect(getByText(/create placement group/i)).toBeInTheDocument();
     expect(getByText(/docs/i)).toBeInTheDocument();
   });
 
-  it('renders placement groups', () => {
+  it('renders placement groups', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       data: {
         data: [
@@ -72,13 +78,15 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByText } = await renderWithThemeAndRouter(
+      <PlacementGroupsLanding />
+    );
 
     expect(getByText(/group 1/i)).toBeInTheDocument();
     expect(getByText(/group 2/i)).toBeInTheDocument();
   });
 
-  it('should render placement group landing with empty state', () => {
+  it('should render placement group landing with empty state', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       data: {
         data: [],
@@ -86,12 +94,14 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByText } = await renderWithThemeAndRouter(
+      <PlacementGroupsLanding />
+    );
 
     expect(getByText(headers.description)).toBeInTheDocument();
   });
 
-  it('should render placement group Getting Started Guides on landing page with empty state', () => {
+  it('should render placement group Getting Started Guides on landing page with empty state', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       data: {
         data: [],
@@ -99,7 +109,9 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByText } = await renderWithThemeAndRouter(
+      <PlacementGroupsLanding />
+    );
 
     expect(getByText('Getting Started Guides')).toBeInTheDocument();
   });

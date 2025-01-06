@@ -2,7 +2,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { linodeFactory, placementGroupFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDeleteModal } from './PlacementGroupsDeleteModal';
 
@@ -50,7 +50,11 @@ describe('PlacementGroupsDeleteModal', () => {
       data: preference,
     });
 
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
+    const {
+      getByRole,
+      getByTestId,
+      getByText,
+    } = await renderWithThemeAndRouter(
       <PlacementGroupsDeleteModal
         {...props}
         linodes={[
@@ -98,7 +102,7 @@ describe('PlacementGroupsDeleteModal', () => {
       data: preference,
     });
 
-    const { getByRole, getByTestId } = renderWithTheme(
+    const { getByRole, getByTestId } = await renderWithThemeAndRouter(
       <PlacementGroupsDeleteModal
         {...props}
         linodes={[
