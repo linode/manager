@@ -84,6 +84,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         paddingTop: theme.tokens.spacing[60],
         width: '100%',
       })}
+      expand
       inputRef={inputRef}
       label={`Enter your email address (${profile.email})`}
       loading={isClosingAccount}
@@ -125,6 +126,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       <StyledCommentSectionWrapper>
         <TextField
           aria-label="Optional comments field"
+          expand
           label="Comments"
           multiline
           onChange={(e) => setComments(e.target.value)}

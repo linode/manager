@@ -52,6 +52,11 @@ interface TypeToConfirmDialogProps {
    * Error to be displayed in the dialog
    */
   errors?: APIError[] | null | undefined;
+  /**
+   * Makes the TextField use 100% of the available width
+   * @default false
+   */
+  expand?: boolean;
   /*
    * The label for the dialog
    */
@@ -90,6 +95,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     disableTypeToConfirmSubmit,
     entity,
     errors,
+    expand,
     inputProps,
     isFetching,
     label,
@@ -231,7 +237,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         }}
         data-testid={'dialog-confirm-text-input'}
         disabled={disableTypeToConfirmInput}
-        expand
+        expand={expand}
         handleDeleteAccountServices={handleDeleteAccountServices}
         inputProps={inputProps}
         isCloseAccount={isCloseAccount}
