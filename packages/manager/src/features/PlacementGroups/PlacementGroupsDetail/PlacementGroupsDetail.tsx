@@ -1,6 +1,5 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
 import { CircleProgress, Notice } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -134,15 +133,3 @@ export const PlacementGroupsDetail = () => {
     </>
   );
 };
-
-export const placementGroupsDetailLazyRoute = createLazyRoute(
-  '/placement-groups/$id'
-)({
-  component: PlacementGroupsDetail,
-});
-
-export const placementGroupsUnassignLazyRoute = createLazyRoute(
-  '/placement-groups/$id/linodes/unassign/$linodeId'
-)({
-  component: PlacementGroupsDetail,
-});

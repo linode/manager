@@ -13,18 +13,18 @@ const placementGroupsIndexRoute = createRoute({
   getParentRoute: () => placementGroupsRoute,
   path: '/',
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.placementGroupsLandingLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsLandingLazyRoute
+  )
 );
 
 const placementGroupsCreateRoute = createRoute({
   getParentRoute: () => placementGroupsRoute,
   path: 'create',
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.placementGroupsLandingLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsLandingLazyRoute
+  )
 );
 
 const placementGroupsEditRoute = createRoute({
@@ -34,9 +34,9 @@ const placementGroupsEditRoute = createRoute({
   }),
   path: 'edit/$id',
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.placementGroupsLandingLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsLandingLazyRoute
+  )
 );
 
 const placementGroupsDeleteRoute = createRoute({
@@ -46,9 +46,9 @@ const placementGroupsDeleteRoute = createRoute({
   }),
   path: 'delete/$id',
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.placementGroupsLandingLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsLandingLazyRoute
+  )
 );
 
 const placementGroupsDetailRoute = createRoute({
@@ -58,27 +58,27 @@ const placementGroupsDetailRoute = createRoute({
   }),
   path: '$id',
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.placementGroupsDetailLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsDetailLazyRoute
+  )
 );
 
 const placementGroupsDetailLinodesRoute = createRoute({
   getParentRoute: () => placementGroupsDetailRoute,
   path: 'linodes',
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.placementGroupsDetailLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsDetailLazyRoute
+  )
 );
 
 const placementGroupsAssignRoute = createRoute({
   getParentRoute: () => placementGroupsDetailLinodesRoute,
   path: 'assign',
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.placementGroupsUnassignLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsUnassignLazyRoute
+  )
 );
 
 const placementGroupsUnassignRoute = createRoute({
@@ -88,9 +88,9 @@ const placementGroupsUnassignRoute = createRoute({
   }),
   path: 'unassign/$linodeId',
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.placementGroupsUnassignLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsUnassignLazyRoute
+  )
 );
 
 export const placementGroupsRouteTree = placementGroupsRoute.addChildren([
