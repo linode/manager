@@ -3,6 +3,8 @@ import {
   mockGetClusters,
   mockGetClusterPools,
   mockGetKubeconfig,
+  mockGetKubernetesVersions,
+  mockGetTieredKubernetesVersions,
 } from 'support/intercepts/lke';
 import {
   accountFactory,
@@ -164,5 +166,60 @@ describe('LKE landing page', () => {
 
     cy.wait('@getKubeconfig');
     readDownload(mockKubeconfigFilename).should('eq', mockKubeconfigContents);
+  });
+
+  it('does not show an Upgrade chip when there is no new kubernetes version', () => {
+    const oldVersion = '1.25';
+    const newVersion = '1.26';
+
+    const cluster = kubernetesClusterFactory.build({
+      k8s_version: newVersion,
+    });
+
+    mockGetClusters([cluster]).as('getClusters');
+    mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
+
+    cy.visitWithLogin(`/kubernetes/clusters`);
+
+    cy.wait(['@getClusters', '@getVersions']);
+
+    cy.findByText(newVersion).should('be.visible');
+
+    cy.findByText('UPGRADE').should('not.exist');
+  });
+
+  it('does not show an Upgrade chip when there is no new kubernetes enterprise version', () => {
+    const oldVersion = '1.31.1+lke1';
+    const newVersion = '1.32.1+lke2';
+
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    ).as('getAccount');
+
+    // TODO LKE-E: Remove once feature is in GA
+    mockAppendFeatureFlags({
+      lkeEnterprise: { enabled: true, la: true },
+    });
+
+    const cluster = kubernetesClusterFactory.build({
+      k8s_version: newVersion,
+      tier: 'enterprise',
+    });
+
+    mockGetClusters([cluster]).as('getClusters');
+    mockGetTieredKubernetesVersions('enterprise', [
+      { id: newVersion, tier: 'enterprise' },
+      { id: oldVersion, tier: 'enterprise' },
+    ]).as('getTieredVersions');
+
+    cy.visitWithLogin(`/kubernetes/clusters`);
+
+    cy.wait(['@getAccount', '@getClusters', '@getTieredVersions']);
+
+    cy.findByText(newVersion).should('be.visible');
+
+    cy.findByText('UPGRADE').should('not.exist');
   });
 });
