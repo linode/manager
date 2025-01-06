@@ -89,7 +89,7 @@ const StyledDrawer = styled(Drawer, {
       borderRight: `1px solid ${theme.tokens.sideNavigation.Border}`,
     },
     transform: 'none',
-    transition: 'width linear .1s',
+    transition: 'width linear 100ms, height linear 250ms',
     width: SIDEBAR_WIDTH,
   },
   ...(props.collapse && {

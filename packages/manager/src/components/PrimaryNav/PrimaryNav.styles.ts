@@ -99,7 +99,9 @@ export const StyledPrimaryLinkBox = styled(Box, {
     ? theme.tokens.sideNavigation.SelectedMenuItem.Text
     : theme.tokens.sideNavigation.DefaultMenuItem.Text,
   display: 'flex',
-  font: theme.tokens.typography.Label.Semibold.S,
+  // TODO: Enable token once we have imported Nunito
+  // font: theme.tokens.typography.Label.Semibold.S,
+  fontFamily: 'LatoWeb',
   justifyContent: 'space-between',
   transition: theme.transitions.create(['color', 'opacity']),
   width: '100%',
@@ -149,7 +151,9 @@ export const StyledAccordion = styled(Accordion, {
       },
       alignItems: 'center',
       display: 'flex',
-      font: theme.tokens.typography.Label.Bold.S,
+      // TODO: Enable token once we have imported Nunito
+      // font: theme.tokens.typography.Label.Bold.S,
+      fontFamily: 'LatoWebBold',
       padding: '0 10px',
     },
     '.MuiAccordionDetails-root': {
