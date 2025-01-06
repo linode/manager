@@ -87,8 +87,8 @@ declare module '@tanstack/react-router' {
 export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
   domainsRouteTree,
-  placementGroupsRouteTree,
   longviewRouteTree,
+  placementGroupsRouteTree,
   volumesRouteTree,
 ]);
 export type MigrationRouteTree = typeof migrationRouteTree;
