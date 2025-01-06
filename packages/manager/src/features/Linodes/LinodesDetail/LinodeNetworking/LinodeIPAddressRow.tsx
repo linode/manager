@@ -52,7 +52,9 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
   } = props;
 
   const { data: ips } = useLinodeIPsQuery(linodeId);
-  const { data: preferences } = usePreferences();
+  const { data: maskSensitiveDataPreference } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
+  );
 
   const isOnlyPublicIP =
     ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
@@ -67,7 +69,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
         <CopyTooltip
           copyableText
           disabled={isVPCOnlyLinode}
-          masked={Boolean(preferences?.maskSensitiveData)}
+          masked={Boolean(maskSensitiveDataPreference)}
           maskedTextLength={type.includes('IPv6') ? 'ipv6' : 'ipv4'}
           text={address}
         />
