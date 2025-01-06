@@ -2,6 +2,8 @@ import { authenticate } from 'support/api/authentication';
 import { createDomain } from 'support/api/domains';
 import { interceptCreateDomainRecord } from 'support/intercepts/domains';
 import { createDomainRecords } from 'support/constants/domains';
+import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 
 const createCaaRecord = (
   name: string,
@@ -12,26 +14,36 @@ const createCaaRecord = (
   cy.findByText('Add a CAA Record').click();
 
   // Fill in the form fields
-  cy.get('input#name').type(name);
-  cy.get('[data-qa-autocomplete="Tag"]').click();
-  cy.get('li').contains(tag).click();
-  cy.get('input#value').type(value);
-  cy.get('[data-qa-autocomplete="TTL"]').click();
-  cy.get('li').contains(ttl).click();
+  cy.findByLabelText('Name').type(name);
+
+  ui.autocomplete.findByLabel('Tag').click();
+  ui.autocompletePopper.findByTitle(tag).click();
+
+  cy.findByLabelText('Value').type(value);
+
+  ui.autocomplete.findByLabel('TTL').click();
+  ui.autocompletePopper.findByTitle(ttl).click();
 
   // Save the record
-  cy.get('button[data-testid="save"]').click();
-  cy.wait('@apiCreateRecord');
+  ui.button
+    .findByTitle('Save')
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
 };
 
 // Reusable function to edit a CAA record
 const editCaaRecord = (name: string, newValue: string) => {
-  cy.get(`#action-menu-for-record-${name}-button`).click();
-  cy.get('li').contains('Edit').click();
+  ui.actionMenu
+    .findByTitle(`Action menu for Record ${name}`)
+    .should('be.visible')
+    .click();
+
+  ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
 
   // Edit the value field
-  cy.get('input#value').clear().type(newValue);
-  cy.get('button[data-testid="save"]').click();
+  cy.findByLabelText('Value').clear().type(newValue);
+  ui.button.findByTitle('Save').click();
 };
 
 // Reusable function to verify record details in the table
@@ -49,6 +61,10 @@ const verifyRecordInTable = (
 };
 
 authenticate();
+
+before(() => {
+  cleanUp('domains');
+});
 
 beforeEach(() => {
   cy.tag('method:e2e');
@@ -88,7 +104,7 @@ describe('Tests for Editable Domain CAA Records', () => {
     createCaaRecord(
       'securitytest',
       'iodef',
-      'mailto:security@linodian.com',
+      'mailto:security@example.com',
       '5 minutes'
     );
 
@@ -96,15 +112,15 @@ describe('Tests for Editable Domain CAA Records', () => {
     verifyRecordInTable(
       'securitytest',
       'iodef',
-      'mailto:security@linodian.com',
+      'mailto:security@example.com',
       '5 minutes'
     );
   });
 
   it('Validates that "iodef" domain records can be edited with valid record', () => {
     // Edit the record with a valid email and verify the updated record
-    editCaaRecord('securitytest', 'mailto:secdef@linodian.com');
-    cy.get('table').should('contain', 'mailto:secdef@linodian.com');
+    editCaaRecord('securitytest', 'mailto:secdef@example.com');
+    cy.get('table').should('contain', 'mailto:secdef@example.com');
   });
 
   it('Validates that "iodef" domain records returns error with invalid record', () => {
