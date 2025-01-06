@@ -9,8 +9,8 @@ import { makeStyles } from 'tss-react/mui';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
-import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
@@ -303,90 +303,94 @@ export const MainContent = () => {
                 openSideMenu={() => toggleMenu(true)}
                 username={username}
               />
-              <SideMenu
-                closeMenu={() => toggleMenu(false)}
-                collapse={desktopMenuIsOpen || false}
-                desktopMenuToggle={desktopMenuToggle}
-                open={menuIsOpen}
-              />
-              <div
-                className={cx(classes.content, {
-                  [classes.fullWidthContent]:
-                    desktopMenuIsOpen ||
-                    (desktopMenuIsOpen && desktopMenuIsOpen === true),
-                })}
-              >
-                <MainContentBanner />
-                <main
-                  className={classes.cmrWrapper}
-                  id="main-content"
-                  role="main"
+              <Box display="flex">
+                <Box height="100vh" position="sticky" top="0" zIndex={10000}>
+                  <SideMenu
+                    closeMenu={() => toggleMenu(false)}
+                    collapse={desktopMenuIsOpen || false}
+                    desktopMenuToggle={desktopMenuToggle}
+                    open={menuIsOpen}
+                  />
+                </Box>
+                <div
+                  className={cx(classes.content, {
+                    [classes.fullWidthContent]:
+                      desktopMenuIsOpen ||
+                      (desktopMenuIsOpen && desktopMenuIsOpen === true),
+                  })}
                 >
-                  <Grid className={classes.grid} container spacing={0}>
-                    <Grid className={cx(classes.switchWrapper, 'p0')}>
-                      <GlobalNotifications />
-                      <React.Suspense fallback={<SuspenseLoader />}>
-                        <Switch>
-                          <Route component={LinodesRoutes} path="/linodes" />
-                          {isPlacementGroupsEnabled && (
+                  <MainContentBanner />
+                  <main
+                    className={classes.cmrWrapper}
+                    id="main-content"
+                    role="main"
+                  >
+                    <Grid className={classes.grid} container spacing={0}>
+                      <Grid className={cx(classes.switchWrapper, 'p0')}>
+                        <GlobalNotifications />
+                        <React.Suspense fallback={<SuspenseLoader />}>
+                          <Switch>
+                            <Route component={LinodesRoutes} path="/linodes" />
+                            {isPlacementGroupsEnabled && (
+                              <Route
+                                component={PlacementGroups}
+                                path="/placement-groups"
+                              />
+                            )}
                             <Route
-                              component={PlacementGroups}
-                              path="/placement-groups"
+                              component={NodeBalancers}
+                              path="/nodebalancers"
                             />
-                          )}
-                          <Route
-                            component={NodeBalancers}
-                            path="/nodebalancers"
-                          />
-                          <Route component={Managed} path="/managed" />
-                          <Route component={Longview} path="/longview" />
-                          <Route component={Images} path="/images" />
-                          <Route
-                            component={StackScripts}
-                            path="/stackscripts"
-                          />
-                          <Route
-                            component={ObjectStorage}
-                            path="/object-storage"
-                          />
-                          <Route component={Kubernetes} path="/kubernetes" />
-                          {isIAMEnabled && (
-                            <Route component={IAM} path="/iam" />
-                          )}
-                          <Route component={Account} path="/account" />
-                          <Route component={Profile} path="/profile" />
-                          <Route component={Help} path="/support" />
-                          <Route component={SearchLanding} path="/search" />
-                          <Route component={EventsLanding} path="/events" />
-                          <Route component={Firewalls} path="/firewalls" />
-                          {isDatabasesEnabled && (
-                            <Route component={Databases} path="/databases" />
-                          )}
-                          <Route component={VPC} path="/vpcs" />
-                          {isACLPEnabled && (
-                            <Route component={CloudPulse} path="/monitor" />
-                          )}
-                          <Redirect exact from="/" to={defaultRoot} />
-                          {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                          <Redirect from="/dashboard" to={defaultRoot} />
-                          {/**
-                           * This is the catch all routes that allows TanStack Router to take over.
-                           * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
-                           * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
-                           * This is a temporary solution until we are ready to fully migrate to TanStack Router.
-                           */}
-                          <Route path="*">
-                            <RouterProvider
-                              context={{ queryClient }}
-                              router={migrationRouter as AnyRouter}
+                            <Route component={Managed} path="/managed" />
+                            <Route component={Longview} path="/longview" />
+                            <Route component={Images} path="/images" />
+                            <Route
+                              component={StackScripts}
+                              path="/stackscripts"
                             />
-                          </Route>
-                        </Switch>
-                      </React.Suspense>
+                            <Route
+                              component={ObjectStorage}
+                              path="/object-storage"
+                            />
+                            <Route component={Kubernetes} path="/kubernetes" />
+                            {isIAMEnabled && (
+                              <Route component={IAM} path="/iam" />
+                            )}
+                            <Route component={Account} path="/account" />
+                            <Route component={Profile} path="/profile" />
+                            <Route component={Help} path="/support" />
+                            <Route component={SearchLanding} path="/search" />
+                            <Route component={EventsLanding} path="/events" />
+                            <Route component={Firewalls} path="/firewalls" />
+                            {isDatabasesEnabled && (
+                              <Route component={Databases} path="/databases" />
+                            )}
+                            <Route component={VPC} path="/vpcs" />
+                            {isACLPEnabled && (
+                              <Route component={CloudPulse} path="/monitor" />
+                            )}
+                            <Redirect exact from="/" to={defaultRoot} />
+                            {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                            <Redirect from="/dashboard" to={defaultRoot} />
+                            {/**
+                             * This is the catch all routes that allows TanStack Router to take over.
+                             * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
+                             * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
+                             * This is a temporary solution until we are ready to fully migrate to TanStack Router.
+                             */}
+                            <Route path="*">
+                              <RouterProvider
+                                context={{ queryClient }}
+                                router={migrationRouter as AnyRouter}
+                              />
+                            </Route>
+                          </Switch>
+                        </React.Suspense>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </main>
-              </div>
+                  </main>
+                </div>
+              </Box>
             </NotificationProvider>
             <Footer />
           </ComplianceUpdateProvider>

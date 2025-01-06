@@ -3,13 +3,14 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
-import { FOOTER_HEIGHT } from 'src/features/Footer';
+import {
+  SIDEBAR_COLLAPSED_WIDTH,
+  SIDEBAR_WIDTH,
+} from 'src/components/PrimaryNav/constants';
 import { TOPMENU_HEIGHT } from 'src/features/TopMenu/TopMenu';
 
 import PrimaryNav from './PrimaryNav';
-
-export const SIDEBAR_WIDTH = 232;
-export const SIDEBAR_COLLAPSED_WIDTH = 52;
+import { useScrollingUtils } from './utils';
 
 export interface SideMenuProps {
   /**
@@ -34,7 +35,7 @@ export interface SideMenuProps {
  */
 export const SideMenu = (props: SideMenuProps) => {
   const { closeMenu, collapse, desktopMenuToggle, open } = props;
-
+  const { isAtTop } = useScrollingUtils();
   return (
     <>
       <Hidden mdUp>
@@ -58,6 +59,7 @@ export const SideMenu = (props: SideMenuProps) => {
         <StyledDrawer
           collapse={collapse}
           data-testid="side-menu"
+          isAtTop={isAtTop}
           open
           variant="permanent"
         >
@@ -74,18 +76,17 @@ export const SideMenu = (props: SideMenuProps) => {
 
 const StyledDrawer = styled(Drawer, {
   label: 'StyledSideMenuDrawer',
-  shouldForwardProp: (prop) => prop !== 'collapse',
-})<{ collapse?: boolean }>(({ theme, ...props }) => ({
+  shouldForwardProp: (prop) => prop !== 'collapse' && prop !== 'isAtTop',
+})<{ collapse?: boolean; isAtTop?: boolean }>(({ theme, ...props }) => ({
   '& .MuiDrawer-paper': {
     backgroundColor: theme.tokens.sideNavigation.Background.Default,
     boxShadow: 'none',
-    height: '100%',
+    height: props.isAtTop ? `calc(100% - ${TOPMENU_HEIGHT}px)` : '100%',
     left: 'inherit',
     overflowX: 'hidden',
+    position: 'absolute',
     [theme.breakpoints.up('md')]: {
       borderRight: `1px solid ${theme.tokens.sideNavigation.Border}`,
-      height: `calc(100% - ${TOPMENU_HEIGHT}px - ${FOOTER_HEIGHT}px)`,
-      top: TOPMENU_HEIGHT,
     },
     transform: 'none',
     transition: 'width linear .1s',
