@@ -32,39 +32,53 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
   // Memoized trigger criteria rendering
   const renderTriggerCriteria = React.useMemo(
     () => (
-      <Grid alignItems="center" container item md={8} xs={12}>
-        <StyledAlertChip
-          borderRadius={theme.spacing(0.3)}
-          label="All"
-          variant="outlined"
-        />
-        <Typography
-          color={theme.color.offBlack}
-          marginRight={0.5}
-          variant="body1"
-        >
-          criteria are met for
-        </Typography>
-        <StyledAlertChip
-          borderRadius={theme.spacing(0.3)}
-          label={triggerOccurrences}
-          variant="outlined"
-        />
-        <Typography color={theme.color.offBlack} variant="body1">
-          consecutive occurrences.
-        </Typography>
-      </Grid>
+      <>
+        <Grid item sm={4} xs={12}>
+          <Typography
+            color={theme.tokens.content.Text.Primary.Default}
+            fontFamily={theme.font.bold}
+            variant="body1"
+          >
+            Trigger Alert When:
+          </Typography>
+        </Grid>
+        <Grid alignItems="center" container item md={8} xs={12}>
+          <StyledAlertChip
+            borderRadius={theme.spacing(0.3)}
+            label="All"
+            variant="outlined"
+          />
+          <Typography
+            color={theme.tokens.content.Text.Primary.Default}
+            marginRight={0.5}
+            variant="body1"
+          >
+            criteria are met for
+          </Typography>
+          <StyledAlertChip
+            borderRadius={theme.spacing(0.3)}
+            label={triggerOccurrences}
+            variant="outlined"
+          />
+          <Typography
+            color={theme.tokens.content.Text.Primary.Default}
+            variant="body1"
+          >
+            consecutive occurrences.
+          </Typography>
+        </Grid>
+      </>
     ),
     [theme, triggerOccurrences]
   );
 
   return (
-    <React.Fragment>
-      <Typography fontSize={theme.spacing(2.25)} marginBottom={2} variant="h2">
+    <>
+      <Typography marginBottom={2} variant="h2">
         Criteria
       </Typography>
       {Boolean(ruleCriteria.rules.length) && (
-        <Grid alignItems="center" container spacing={2}>
+        <Grid alignItems="center" container spacing={1}>
           <RenderAlertMetricsAndDimensions ruleCriteria={ruleCriteria} />
           <Grid item xs={12}>
             <DisplayAlertDetailChips // label chip for polling interval
@@ -80,14 +94,9 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
               values={[convertSecondsToMinutes(evaluationPeriod)]}
             />
           </Grid>
-          <Grid item sm={4} xs={12}>
-            <Typography fontSize={theme.spacing(1.75)} variant="h2">
-              Trigger Alert When:
-            </Typography>
-          </Grid>
-          {renderTriggerCriteria}
+          {renderTriggerCriteria} {/** Render the trigger criteria */}
         </Grid>
       )}
-    </React.Fragment>
+    </>
   );
 });

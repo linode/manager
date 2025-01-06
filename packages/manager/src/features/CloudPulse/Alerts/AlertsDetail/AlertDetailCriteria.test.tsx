@@ -9,11 +9,11 @@ import { AlertDetailCriteria } from './AlertDetailCriteria';
 
 describe('AlertDetailCriteria component tests', () => {
   it('should render the alert detail criteria successfully on correct inputs', () => {
-    const alert = alertFactory.build();
+    const alertDetails = alertFactory.build();
     const { getAllByText, getByText } = renderWithTheme(
-      <AlertDetailCriteria alert={alert} />
+      <AlertDetailCriteria alert={alertDetails} />
     );
-    const { rules } = alert.rule_criteria;
+    const { rules } = alertDetails.rule_criteria;
     expect(getAllByText('Metric Threshold:').length).toBe(rules.length);
     expect(getAllByText('Dimension Filter:').length).toBe(rules.length);
     expect(getByText('Criteria')).toBeInTheDocument();
@@ -24,7 +24,7 @@ describe('AlertDetailCriteria component tests', () => {
     const {
       evaluation_period_seconds,
       polling_interval_seconds,
-    } = alert.trigger_conditions;
+    } = alertDetails.trigger_conditions;
     expect(
       getByText(convertSecondsToMinutes(polling_interval_seconds))
     ).toBeInTheDocument();
@@ -39,9 +39,11 @@ describe('AlertDetailCriteria component tests', () => {
         rules: [],
       },
     });
-    const { getByText } = renderWithTheme(
+    const { getByText, queryByText } = renderWithTheme(
       <AlertDetailCriteria alert={alert} />
     );
     expect(getByText('Criteria')).toBeInTheDocument(); // empty criteria should be there
+    expect(queryByText('Metric Threshold:')).not.toBeInTheDocument();
+    expect(queryByText('Dimension Filter:')).not.toBeInTheDocument();
   });
 });

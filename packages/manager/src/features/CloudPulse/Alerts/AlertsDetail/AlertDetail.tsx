@@ -133,11 +133,10 @@ export const StyledAlertChip = styled(Chip, {
   borderRadius?: string;
 }>(({ borderRadius, theme }) => ({
   '& .MuiChip-label': {
-    color: theme.tokens.color.Neutrals.Black,
-    marginRight: theme.spacing(1), // Add padding inside the label
+    color: theme.tokens.color.Neutrals.Black, // color needs to be in black in both light and dark mode
+    marginRight: theme.spacing(1),
   },
-  backgroundColor: theme.tokens.color.Neutrals.White,
+  backgroundColor: theme.tokens.color.Neutrals.White, // background needs to be in white in both light and dark mode
   borderRadius: borderRadius || 0,
   height: theme.spacing(3),
-  lineHeight: '1.5rem',
 }));
