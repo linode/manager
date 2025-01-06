@@ -81,7 +81,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
           values={[convertSecondsToMinutes(pollingIntervalSeconds)]}
         />
         <DisplayAlertDetailChips // label chip for evaluation period
-          label="Evaluation Periods"
+          label="Evaluation Period"
           mergeChips
           values={[convertSecondsToMinutes(evaluationPeriod)]}
         />

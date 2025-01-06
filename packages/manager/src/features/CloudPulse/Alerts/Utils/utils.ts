@@ -51,6 +51,8 @@ export const convertSecondsToMinutes = (seconds: number): string => {
 /**
  * @param index  The index of the list of chips that we are rendering
  * @param length The length of the iteration so far
+ * @param mergeChips Indicates if the chips are merged into single or individual
+ * @param theme The MUI theme object
  * @returns The border radius to be applied on chips based on the parameters
  */
 export const getAlertChipBorderRadius = (
