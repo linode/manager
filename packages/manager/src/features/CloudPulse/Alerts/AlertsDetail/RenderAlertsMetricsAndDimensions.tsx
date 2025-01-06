@@ -1,4 +1,5 @@
-import { Divider, Grid } from '@mui/material';
+import { Divider } from '@linode/ui';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';

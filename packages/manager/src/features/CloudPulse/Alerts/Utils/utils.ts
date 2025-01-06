@@ -41,13 +41,11 @@ export const convertSecondsToMinutes = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
   const minuteString =
-    minutes > 0
-      ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`
-      : undefined;
+    minutes > 0 ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}` : '';
   const secondString =
     remainingSeconds > 0
-      ? `${remainingSeconds} ${remainingSeconds <= 1 ? 'second' : 'seconds'}`
-      : undefined;
+      ? `${remainingSeconds} ${remainingSeconds === 1 ? 'second' : 'seconds'}`
+      : '';
   return [minuteString, secondString].filter(Boolean).join(' and ');
 };
 /**
