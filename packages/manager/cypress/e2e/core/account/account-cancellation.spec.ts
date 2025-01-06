@@ -75,7 +75,7 @@ describe('Account cancellation', () => {
 
     ui.dialog
       .findByTitle(
-        'Are you sure you want to close your cloud computing services account?'
+        'Are you sure you want to close your Akamai cloud computing services account?'
       )
       .should('be.visible')
       .within(() => {
@@ -193,7 +193,7 @@ describe('Account cancellation', () => {
     // Fill out cancellation dialog and attempt submission.
     ui.dialog
       .findByTitle(
-        'Are you sure you want to close your cloud computing services account?'
+        'Are you sure you want to close your Akamai cloud computing services account?'
       )
       .should('be.visible')
       .within(() => {
@@ -365,7 +365,7 @@ describe('Parent/Child account cancellation', () => {
 
     ui.dialog
       .findByTitle(
-        'Are you sure you want to close your cloud computing services account?'
+        'Are you sure you want to close your Akamai cloud computing services account?'
       )
       .should('be.visible')
       .within(() => {

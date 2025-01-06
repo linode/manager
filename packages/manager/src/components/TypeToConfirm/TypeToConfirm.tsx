@@ -70,7 +70,7 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
                   />
                 }
                 data-qa-checkbox="deleteAccountServices"
-                label="Delete all account services and entities (Linodes, Volumes, DNS Records, etc.)"
+                label="Delete all account services and entities (Linodes, volumes, DNS records, etc.)"
               />
               <FormControlLabel
                 control={

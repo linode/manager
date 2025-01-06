@@ -91,7 +91,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       onClose={closeDialog}
       open={open}
       reversePrimaryButtonPosition
-      title="Are you sure you want to close your cloud computing services account?"
+      title="Are you sure you want to close your Akamai cloud computing services account?"
     >
       {errors ? (
         <Notice text={errors ? errors[0].reason : ''} variant="error" />
@@ -106,10 +106,9 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
           variant="error"
         >
           <Typography sx={{ fontSize: '0.875rem' }}>
-            <strong>Warning:</strong> Please note this is an extremely
-            destructive action. Closing your account means that all services
-            Linodes, Volumes, DNS Records, etc will be lost and may not be able
-            be restored.
+            <strong>Warning:</strong> This is an extremely destructive action.
+            All services, Linodes, volumes, DNS records, and user accounts will
+            be permanently lost.
           </Typography>
         </Notice>
       </StyledNoticeWrapper>
@@ -119,10 +118,9 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
           order: 1,
         })}
       >
-        We&rsquo;d hate to see you go. Please let us know what we could be doing
-        better in the comments section below. After your account is closed,
-        you&rsquo;ll be directed to a quick survey so we can better gauge your
-        feedback.
+        Please let us know what we could be doing better in the comments section
+        below. After your account is closed, you&rsquo;ll be directed to a quick
+        survey that will help us understand your experience.
       </Typography>
       <StyledCommentSectionWrapper>
         <TextField
