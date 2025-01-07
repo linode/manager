@@ -42,7 +42,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
         },
         index
       ) => (
-        <React.Fragment key={index}>
+        <React.Fragment key={`${label}_${index}`}>
           <Grid item xs={12}>
             <DisplayAlertDetailChips
               values={[
