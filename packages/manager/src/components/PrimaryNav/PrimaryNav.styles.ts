@@ -25,7 +25,7 @@ export const StyledGrid = styled(Grid, {
 
 export const StyledLogoBox = styled(Box, {
   label: 'StyledLogoBox',
-})(({ theme }) => ({
+})(() => ({
   alignItems: 'center',
   display: 'flex',
   height: 50,

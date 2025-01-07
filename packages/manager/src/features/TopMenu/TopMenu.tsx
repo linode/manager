@@ -65,7 +65,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
       )}
       <AppBar
         sx={(theme) => ({
-          backgroundColor: theme.tokens.background.Black,
+          backgroundColor: theme.tokens.header.Background,
           position: 'sticky',
           zIndex: 1500,
         })}

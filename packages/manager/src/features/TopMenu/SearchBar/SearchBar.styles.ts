@@ -12,11 +12,11 @@ export const StyledIconButton = styled(IconButton, {
     width: 25,
   },
   '&:hover, &:focus': {
-    color: theme.tokens.color.Neutrals[40],
+    color: theme.tokens.header.Search.Icon.Hover,
   },
   backgroundColor: 'inherit',
   border: 'none',
-  color: theme.tokens.color.Neutrals[40],
+  color: theme.tokens.header.Search.Icon.Default,
   cursor: 'pointer',
   padding: theme.spacing(),
   position: 'relative',
@@ -29,6 +29,9 @@ export const StyledIconButton = styled(IconButton, {
 export const StyledSearchBarWrapperDiv = styled('div', {
   label: 'StyledSearchBarWrapperDiv',
 })(({ theme }) => ({
+  '& .react-select__single-value, & .react-select__input': {
+    color: theme.tokens.header.Search.Text.Filled,
+  },
   '& > div .react-select__control': {
     '&:hover': {
       backgroundColor: 'transparent',
@@ -63,24 +66,20 @@ export const StyledSearchBarWrapperDiv = styled('div', {
     overflow: 'hidden',
   },
   '& svg': {
-    color: theme.tokens.color.Neutrals[30],
+    color: theme.tokens.header.Icon.Default,
     height: 20,
     width: 20,
   },
-  '&.active': {
-    ...theme.inputStyles.focused,
-    '&:hover': {
-      ...theme.inputStyles.focused,
-      // backgroundColor: 'transparent',
-    },
-  },
   '&:hover': {
     ...theme.inputStyles.hover,
-    // backgroundColor: 'transparent',
+    '& svg': {
+      color: theme.tokens.header.Icon.Default,
+    }, // 'transparent',
+    backgroundColor: theme.tokens.header.Search.Background,
   },
   ...theme.inputStyles.default,
   alignItems: 'center',
-  backgroundColor: theme.tokens.color.Neutrals[90],
+  backgroundColor: theme.tokens.header.Search.Background,
   border: 'none',
   display: 'flex',
   flex: 1,

@@ -1,12 +1,12 @@
 import { Box, Button, Divider, Stack, Tooltip, Typography } from '@linode/ui';
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import KeyboardArrowDown from 'src/assets/icons/keyboardarrowdown.svg';
+import KeyboardArrowUp from 'src/assets/icons/keyboardarrowup.svg';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { Hidden } from 'src/components/Hidden';
@@ -173,15 +173,23 @@ export const UserMenu = React.memo(() => {
 
   const getEndIcon = () => {
     const sx = {
-      height: 26,
-      width: 26,
+      height: 16,
+      width: 16,
     };
 
     return matchesSmDown ? undefined : open ? (
-      <KeyboardArrowUp sx={sx} />
+      <KeyboardArrowUp
+        sx={(theme: Theme) => ({
+          color: theme.tokens.header.Icon.Default,
+          ...sx,
+        })}
+      />
     ) : (
       <KeyboardArrowDown
-        sx={(theme) => ({ color: theme.tokens.color.Neutrals[50], ...sx })}
+        sx={(theme: Theme) => ({
+          color: theme.tokens.header.Icon.Default,
+          ...sx,
+        })}
       />
     );
   };

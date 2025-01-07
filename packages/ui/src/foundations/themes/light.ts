@@ -486,7 +486,7 @@ export const lightTheme: ThemeOptions = {
           },
           backgroundColor: Button.Primary.Default.Background,
           color: Button.Primary.Default.Text,
-          padding: '2px 20px',
+          padding: '8px 12px',
         },
         containedSecondary: {
           // TODO: We can remove this after migration since we can define variants
@@ -540,7 +540,6 @@ export const lightTheme: ThemeOptions = {
           fontSize: '1rem',
           lineHeight: 1,
           minHeight: 34,
-          minWidth: 105,
           textTransform: 'capitalize',
           transition: 'none',
         },

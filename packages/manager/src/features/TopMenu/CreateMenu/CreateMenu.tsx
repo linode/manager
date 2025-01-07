@@ -2,7 +2,6 @@ import { Box, Button, Divider } from '@linode/ui';
 import { Popover, Stack, useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
-import Add from 'src/assets/icons/add.svg';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
@@ -10,7 +9,12 @@ import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
-import { StyledMenuList, StyledPaper, StyledStack } from './CreateMenu.styles';
+import {
+  StyledAddIcon,
+  StyledMenuList,
+  StyledPaper,
+  StyledStack,
+} from './CreateMenu.styles';
 import { ProductFamilyGroup } from './ProductFamilyGroup';
 
 import type { Theme } from '@mui/material';
@@ -152,14 +156,14 @@ export const CreateMenu = () => {
   return (
     <Box sx={{ flexGrow: isMediumScreen ? 1 : 0 }}>
       <Button
-        sx={(theme) => ({
-          backgroundColor: theme.tokens.color.Brand[90],
-          height: '34px',
-          maxWidth: '89px',
-          minWidth: '42px',
-          paddingLeft: isSmallScreen ? 0 : '20px',
-          paddingRight: isSmallScreen ? 0 : '20px',
-        })}
+        // sx={(theme) => ({
+        //   backgroundColor: theme.tokens.color.Brand[90],
+        //   height: '34px',
+        //   maxWidth: '89px',
+        //   minWidth: '42px',
+        //   paddingLeft: isSmallScreen ? 0 : '20px',
+        //   paddingRight: isSmallScreen ? 0 : '20px',
+        // })}
         aria-controls={open ? 'basic-menu' : undefined}
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"
@@ -167,9 +171,9 @@ export const CreateMenu = () => {
         data-qa-add-new-menu-button
         id="create-menu"
         onClick={handleClick}
-        startIcon={!isSmallScreen && <Add />}
+        startIcon={!isSmallScreen && <StyledAddIcon />}
       >
-        {isSmallScreen ? <Add /> : 'Create'}
+        {isSmallScreen ? <StyledAddIcon /> : 'Create'}
       </Button>
       <Popover
         anchorOrigin={{
