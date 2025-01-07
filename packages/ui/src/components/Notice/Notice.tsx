@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { CheckIcon, AlertIcon as Error, WarningIcon } from '../../assets/icons';
+import {
+  CheckIcon,
+  AlertIcon as ErrorIcon,
+  WarningIcon,
+} from '../../assets/icons';
 import { Box } from '../Box';
 import { Typography } from '../Typography';
 import { useStyles } from './Notice.styles';
@@ -155,21 +159,14 @@ export const Notice = (props: NoticeProps) => {
       {...dataAttributes}
       {...rest}
     >
-      {important &&
-        ((variantMap.success && (
-          <CheckIcon className={classes.icon} data-qa-success-img />
-        )) ||
-          ((variantMap.warning || variantMap.info) && (
-            <WarningIcon
-              className={cx(classes.icon, {
-                [classes.warningIcon]: variantMap.warning,
-              })}
-              data-qa-warning-img
-            />
-          )) ||
-          (variantMap.error && (
-            <Error className={classes.icon} data-qa-error-img />
-          )))}
+      {important && variantMap.error && <ErrorIcon className={classes.icon} />}
+      {important && variantMap.info && <WarningIcon className={classes.icon} />}
+      {important && variantMap.success && (
+        <CheckIcon className={classes.icon} />
+      )}
+      {important && variantMap.warning && (
+        <WarningIcon className={cx(classes.icon, classes.warningIcon)} />
+      )}
       {text || typeof children === 'string' ? (
         <Typography
           className={cx(classes.noticeText, 'noticeText')}
