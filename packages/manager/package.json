@@ -97,6 +97,7 @@
     "build:analyze": "bunx vite-bundle-visualizer",
     "precommit": "lint-staged && pnpm typecheck",
     "test": "vitest run",
+    "test:ui": "vitest --ui",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "NODE_OPTIONS='--max-old-space-size=4096' storybook dev -p 6006",
     "storybook-static": "storybook build -c .storybook -o .out",

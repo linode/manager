@@ -49,7 +49,8 @@
   "resolutions": {
     "node-fetch": "^2.6.7",
     "yaml": "^2.3.0",
-    "semver": "^7.5.2"
+    "semver": "^7.5.2",
+    "cookie": "^0.7.0"
   },
   "version": "0.0.0",
   "volta": {
