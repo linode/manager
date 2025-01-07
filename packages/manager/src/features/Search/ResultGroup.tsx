@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { capitalize } from 'src/utilities/capitalize';
-import { splitArrayAt } from 'src/utilities/splitAt';
+import { splitAt } from 'src/utilities/splitAt';
 
 import { StyledButton, StyledTypography } from './ResultGroup.styles';
 import { ResultRow } from './ResultRow';
@@ -36,9 +36,7 @@ export const ResultGroup = (props: ResultGroupProps) => {
   }
 
   const [initial, hidden] =
-    results.length > groupSize
-      ? splitArrayAt(groupSize, results)
-      : [results, []];
+    results.length > groupSize ? splitAt(groupSize, results) : [results, []];
 
   return (
     <Grid>

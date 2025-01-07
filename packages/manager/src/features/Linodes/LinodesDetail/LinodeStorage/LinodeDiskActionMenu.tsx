@@ -7,11 +7,11 @@ import { useHistory } from 'react-router-dom';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { sendEvent } from 'src/utilities/analytics/utils';
+import { splitAt } from 'src/utilities/splitAt';
 
 import type { Disk, Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
-import { splitArrayAt } from 'src/utilities/splitAt';
 
 interface Props {
   disk: Disk;
@@ -87,10 +87,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
   ];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitArrayAt(
-    splitActionsArrayIndex,
-    actions
-  );
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
     <Box alignItems="center" display="flex" justifyContent="flex-end">

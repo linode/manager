@@ -5,7 +5,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { splitArrayAt } from 'src/utilities/splitAt';
+import { splitAt } from 'src/utilities/splitAt';
 
 import type { Domain } from '@linode/api-v4/lib/domains';
 import type { Theme } from '@mui/material/styles';
@@ -77,10 +77,7 @@ export const DomainActionMenu = React.memo((props: DomainActionMenuProps) => {
   // Index at which non-inline actions begin. Our convention: place actions that are inline (at non-mobile/non-tablet viewports) at start of the array.
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
 
-  const [inlineActions, menuActions] = splitArrayAt(
-    splitActionsArrayIndex,
-    actions
-  );
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
     <>

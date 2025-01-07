@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { Tag } from 'src/components/Tag/Tag';
-import { splitArrayAt } from 'src/utilities/splitAt';
+import { splitAt } from 'src/utilities/splitAt';
 
 export interface TagsProps {
   /**
@@ -35,7 +35,7 @@ export const Tags = (props: TagsProps) => {
     return null;
   }
 
-  const [visibleTags, additionalTags] = splitArrayAt(3, tags);
+  const [visibleTags, additionalTags] = splitAt(3, tags);
   return (
     <>
       {renderTags(visibleTags)}

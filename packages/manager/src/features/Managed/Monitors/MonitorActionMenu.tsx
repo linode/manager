@@ -10,7 +10,7 @@ import {
   useEnableMonitorMutation,
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { splitArrayAt } from 'src/utilities/splitAt';
+import { splitAt } from 'src/utilities/splitAt';
 
 import type { MonitorStatus } from '@linode/api-v4/lib/managed';
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -102,10 +102,7 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
   ];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitArrayAt(
-    splitActionsArrayIndex,
-    actions
-  );
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
     <>
