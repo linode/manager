@@ -1,10 +1,8 @@
-import { Typography } from '@linode/ui';
 import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import { getAlertChipBorderRadius } from '../Utils/utils';
-import { StyledAlertChip } from './AlertDetail';
-import { AlertTypography } from './AlertDetailCriteria';
+import { AlertTypography, StyledAlertChip } from './AlertDetail';
 
 export interface AlertDimensionsProp {
   /**

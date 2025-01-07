@@ -1,4 +1,4 @@
-import { Box, Chip, CircleProgress } from '@linode/ui';
+import { Box, Chip, CircleProgress, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -139,4 +139,11 @@ export const StyledAlertChip = styled(Chip, {
   backgroundColor: theme.tokens.color.Neutrals.White, // background needs to be in white in both light and dark mode
   borderRadius: borderRadius || 0,
   height: theme.spacing(3),
+}));
+
+export const AlertTypography = styled(Typography, {
+  label: 'AlertTypography',
+})(({ theme }) => ({
+  color: theme.tokens.content.Text.Primary.Default,
+  fontSize: theme.typography.body1.fontSize,
 }));

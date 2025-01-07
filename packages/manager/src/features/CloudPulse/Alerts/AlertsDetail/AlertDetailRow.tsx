@@ -1,8 +1,9 @@
-import { Typography } from '@linode/ui';
 import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+
+import { AlertTypography } from './AlertDetail';
 
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
@@ -46,13 +47,7 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
   return (
     <Grid container item xs={12}>
       <Grid item sm={labelGridColumns} xs={12}>
-        <Typography
-          color={theme.tokens.content.Text.Primary.Default}
-          fontFamily={theme.font.bold}
-          variant="body1"
-        >
-          {label}:
-        </Typography>
+        <AlertTypography fontFamily={theme.font.bold}>{label}:</AlertTypography>
       </Grid>
       <Grid container item sm={valueGridColumns} xs={12}>
         {status && (
@@ -63,12 +58,7 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
             status={status}
           />
         )}
-        <Typography
-          color={theme.tokens.content.Text.Primary.Default}
-          variant="body1"
-        >
-          {value}
-        </Typography>
+        <AlertTypography>{value}</AlertTypography>
       </Grid>
     </Grid>
   );

@@ -1,9 +1,9 @@
 import { Typography } from '@linode/ui';
-import { Grid, styled, useTheme } from '@mui/material';
+import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import { convertSecondsToMinutes } from '../Utils/utils';
-import { StyledAlertChip } from './AlertDetail';
+import { AlertTypography, StyledAlertChip } from './AlertDetail';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 import { RenderAlertMetricsAndDimensions } from './RenderAlertsMetricsAndDimensions';
 
@@ -77,10 +77,3 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
     </>
   );
 });
-
-export const AlertTypography = styled(Typography, {
-  label: 'AlertTypography',
-})(({ theme }) => ({
-  color: theme.tokens.content.Text.Primary.Default,
-  fontSize: theme.typography.body1.fontSize,
-}));
