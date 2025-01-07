@@ -60,7 +60,11 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
           label={triggerOccurrences}
           variant="outlined"
         />
-        <Typography color={theme.color.offBlack} variant="body1">
+        <Typography
+          color={theme.color.offBlack}
+          data-qa-item="consecutive occurrences"
+          variant="body1"
+        >
           consecutive occurrences.
         </Typography>
       </Grid>
