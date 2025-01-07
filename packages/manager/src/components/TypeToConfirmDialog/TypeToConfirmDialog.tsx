@@ -112,7 +112,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     typographyStyleSx,
   } = props;
 
-  const [deleteAccount, setDeleteAccount] = React.useState({
+  const [confirmationValues, setConfirmationValues] = React.useState({
     confirmText: '',
     services: false,
     users: false,
@@ -121,8 +121,8 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   const handleDeleteAccountServices = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setDeleteAccount({
-      ...deleteAccount,
+    setConfirmationValues({
+      ...confirmationValues,
       [e.target.name]: e?.target.checked,
     });
   };
@@ -134,9 +134,11 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   const isCloseAccount = entity.subType === 'CloseAccount';
   const isTypeToConfirmEnabled =
     typeToConfirmPreference !== false || isCloseAccount;
-  const isTextConfirmationValid = deleteAccount.confirmText === entity.name;
+  const isTextConfirmationValid =
+    confirmationValues.confirmText === entity.name;
   const isCloseAccountValid =
-    !isCloseAccount || (deleteAccount.services && deleteAccount.users);
+    !isCloseAccount ||
+    (confirmationValues.services && confirmationValues.users);
 
   const isPrimaryButtonDisabled =
     (isTypeToConfirmEnabled && !isTextConfirmationValid) ||
@@ -145,8 +147,8 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
 
   React.useEffect(() => {
     if (open) {
-      setDeleteAccount({
-        ...deleteAccount,
+      setConfirmationValues({
+        ...confirmationValues,
         confirmText: '',
       });
     }
@@ -230,8 +232,8 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       <TypeToConfirm
         {...getTypeToConfirmProps()}
         onChange={(input) => {
-          setDeleteAccount({
-            ...deleteAccount,
+          setConfirmationValues({
+            ...confirmationValues,
             confirmText: input,
           });
         }}
@@ -245,7 +247,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         textFieldStyle={textFieldStyle}
         typographyStyle={typographyStyle}
         typographyStyleSx={typographyStyleSx}
-        value={deleteAccount.confirmText}
+        value={confirmationValues.confirmText}
         visible={typeToConfirmPreference || isCloseAccount}
       />
     </ConfirmationDialog>
