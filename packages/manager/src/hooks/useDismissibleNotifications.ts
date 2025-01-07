@@ -50,11 +50,13 @@ export interface DismissibleNotificationsHook {
 }
 
 export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
-  const { data: preferences } = usePreferences();
+  const { data: dismissedNotificationPreferences } = usePreferences(
+    (preferences) => preferences?.dismissed_notifications
+  );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const [dismissed, setDismissed] = useState(false);
 
-  const dismissedNotifications = preferences?.dismissed_notifications ?? {};
+  const dismissedNotifications = dismissedNotificationPreferences ?? {};
 
   const dismissNotifications = (
     _notifications: unknown[],
