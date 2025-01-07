@@ -1,4 +1,4 @@
-import { Accordion, Box, Divider, IconButton, omittedProps } from '@linode/ui';
+import { Accordion, Box, Divider, omittedProps } from '@linode/ui';
 import { Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -185,15 +185,6 @@ export const StyledAccordion = styled(Accordion, {
     backgroundColor: theme.tokens.sideNavigation.DefaultMenuItem.Background,
   })
 );
-
-export const StyledIconButton = styled(IconButton, {
-  label: 'styledIconButton',
-})(({ theme }) => ({
-  '& svg': {
-    color: theme.tokens.sideNavigation.Icon,
-    transition: theme.transitions.create(['color']),
-  },
-}));
 
 export const StyledChip = styled(Chip, {
   label: 'styledChip',

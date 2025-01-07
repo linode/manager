@@ -1,9 +1,9 @@
-import { Box, Tooltip } from '@linode/ui';
+import { Box } from '@linode/ui';
 import { Hidden } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -12,11 +12,8 @@ import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
 import Networking from 'src/assets/icons/entityIcons/Networking.svg';
 import More from 'src/assets/icons/more.svg';
-import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
-import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { FOOTER_HEIGHT } from 'src/features/Footer';
 import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -26,17 +23,16 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
-import { SIDEBAR_WIDTH } from './constants';
 import PrimaryLink from './PrimaryLink';
 import {
   StyledAccordion,
   StyledAkamaiLogo,
   StyledDivider,
   StyledGrid,
-  StyledIconButton,
   StyledLogoBox,
   StyledMenuGrid,
 } from './PrimaryNav.styles';
+import { PrimaryNavToggle } from './PrimaryNavToggle';
 import { linkIsActive } from './utils';
 
 import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
@@ -83,11 +79,10 @@ export interface PrimaryNavProps {
   closeMenu: () => void;
   desktopMenuToggle: () => void;
   isCollapsed: boolean;
-  isPageAtBottom?: boolean;
 }
 
 export const PrimaryNav = (props: PrimaryNavProps) => {
-  const { closeMenu, desktopMenuToggle, isCollapsed, isPageAtBottom } = props;
+  const { closeMenu, desktopMenuToggle, isCollapsed } = props;
 
   const flags = useFlags();
   const location = useLocation();
@@ -392,38 +387,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           );
         })}
       </StyledMenuGrid>
-      <Hidden mdDown>
-        <Box
-          sx={{
-            bottom: isPageAtBottom ? FOOTER_HEIGHT : 0,
-            left: isCollapsed ? 0 : SIDEBAR_WIDTH - 52,
-            padding: 1,
-            position: 'fixed',
-            transition: 'bottom 0.1s linear',
-          }}
-        >
-          <Tooltip
-            PopperProps={{
-              sx: {
-                '& .MuiTooltip-tooltip': {
-                  padding: '4px 6px',
-                },
-              },
-            }}
-            placement="left"
-            title={isCollapsed ? 'pin side menu' : 'unpin side menu'}
-          >
-            <StyledIconButton
-              aria-label="unpin menu"
-              data-testid="unpin-nav-menu"
-              onClick={desktopMenuToggle}
-              size="small"
-            >
-              {isCollapsed ? <PinOutlineIcon /> : <PinFilledIcon />}
-            </StyledIconButton>
-          </Tooltip>
-        </Box>
-      </Hidden>
+      <PrimaryNavToggle
+        desktopMenuToggle={desktopMenuToggle}
+        isCollapsed={isCollapsed}
+      />
     </StyledGrid>
   );
 };

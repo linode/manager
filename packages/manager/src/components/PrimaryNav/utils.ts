@@ -22,33 +22,12 @@ export const linkIsActive = (
   return isPathOneOf([href, ...activeLinks], locationPathname);
 };
 
-export const useScrollable = (
+export const useIsPageScrollable = (
   contentRef: React.RefObject<HTMLElement>
-): {
-  isPageAtBottom: boolean;
-  isPageScrollable: boolean;
-} => {
+): { isPageScrollable: boolean } => {
   const [isPageScrollable, setIsPageScrollable] = React.useState(false);
-  const [isPageAtBottom, setIsPageAtBottom] = React.useState(false);
-
-  const checkIfPageAtBottom = React.useCallback(() => {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollTop = window.scrollY;
-    const bottom = Math.ceil(windowHeight + scrollTop) >= documentHeight;
-
-    setIsPageAtBottom(bottom);
-  }, []);
 
   React.useEffect(() => {
-    // Initial check
-    checkIfPageAtBottom();
-
-    // Set up scroll listener
-    const onScroll = () => requestAnimationFrame(checkIfPageAtBottom);
-    document.body.onscroll = onScroll;
-
-    // Set up mutation observer
     const observer = new MutationObserver(() => {
       requestAnimationFrame(() => {
         if (!contentRef.current) {
@@ -57,10 +36,8 @@ export const useScrollable = (
 
         const contentHeight = contentRef.current.scrollHeight;
         const windowHeight = window.innerHeight;
-        const scrollTop = window.scrollY;
 
         setIsPageScrollable(contentHeight > windowHeight);
-        setIsPageAtBottom(Math.ceil(windowHeight + scrollTop) >= contentHeight);
       });
     });
 
@@ -71,13 +48,7 @@ export const useScrollable = (
         subtree: true,
       });
     }
+  }, [contentRef]);
 
-    // Cleanup
-    return () => {
-      document.body.onscroll = null;
-      observer.disconnect();
-    };
-  }, [contentRef, checkIfPageAtBottom]);
-
-  return { isPageAtBottom, isPageScrollable };
+  return { isPageScrollable };
 };

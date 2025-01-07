@@ -11,7 +11,7 @@ import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
-import { useScrollable } from 'src/components/PrimaryNav/utils';
+import { useIsPageScrollable } from 'src/components/PrimaryNav/utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
@@ -241,7 +241,7 @@ export const MainContent = () => {
 
   const { isIAMEnabled } = useIsIAMEnabled();
 
-  const { isPageAtBottom, isPageScrollable } = useScrollable(contentRef);
+  const { isPageScrollable } = useIsPageScrollable(contentRef);
 
   /**
    * this is the case where the user has successfully completed signup
@@ -319,7 +319,6 @@ export const MainContent = () => {
                     closeMenu={() => toggleMenu(false)}
                     collapse={desktopMenuIsOpen || false}
                     desktopMenuToggle={desktopMenuToggle}
-                    isPageAtBottom={isPageAtBottom}
                     open={menuIsOpen}
                   />
                 </Box>
