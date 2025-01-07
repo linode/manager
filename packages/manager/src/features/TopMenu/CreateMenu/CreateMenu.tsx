@@ -156,14 +156,6 @@ export const CreateMenu = () => {
   return (
     <Box sx={{ flexGrow: isMediumScreen ? 1 : 0 }}>
       <Button
-        // sx={(theme) => ({
-        //   backgroundColor: theme.tokens.color.Brand[90],
-        //   height: '34px',
-        //   maxWidth: '89px',
-        //   minWidth: '42px',
-        //   paddingLeft: isSmallScreen ? 0 : '20px',
-        //   paddingRight: isSmallScreen ? 0 : '20px',
-        // })}
         aria-controls={open ? 'basic-menu' : undefined}
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"
