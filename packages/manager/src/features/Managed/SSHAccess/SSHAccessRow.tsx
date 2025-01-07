@@ -30,7 +30,9 @@ export const SSHAccessRow = (props: SSHAccessRowProps) => {
         {isAccessEnabled ? 'Enabled' : 'Disabled'}
       </TableCell>
       <Hidden smDown>
-        <TableCell data-qa-managed-user>{linodeSetting.ssh.user}</TableCell>
+        <TableCell data-qa-managed-user>
+          <MaskableText isToggleable text={linodeSetting.ssh.user} />
+        </TableCell>
         <TableCell data-qa-managed-ip>
           {linodeSetting.ssh.ip === 'any' ? (
             'Any'

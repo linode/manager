@@ -19,7 +19,7 @@ export const LongviewServiceRow = (props: Props) => {
         {service.name}
       </TableCell>
       <TableCell data-qa-service-user parentColumn="User">
-        {service.user}
+        <MaskableText isToggleable text={service.user} />
       </TableCell>
       <TableCell data-qa-service-protocol parentColumn="Protocol">
         {service.type}
