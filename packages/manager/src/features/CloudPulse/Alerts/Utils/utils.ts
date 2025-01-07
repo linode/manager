@@ -5,7 +5,7 @@ interface AlertChipBorderProps {
   /**
    * The radius needed for the border
    */
-  borderRadius: string;
+  borderRadiusPxValue: string;
   /**
    * The index of the chip
    */
@@ -78,15 +78,15 @@ export const convertSecondsToMinutes = (seconds: number): string => {
 export const getAlertChipBorderRadius = (
   props: AlertChipBorderProps
 ): string => {
-  const { borderRadius, index, length, mergeChips } = props;
+  const { borderRadiusPxValue, index, length, mergeChips } = props;
   if (!mergeChips || length === 1) {
-    return borderRadius;
+    return borderRadiusPxValue;
   }
   if (index === 0) {
-    return `${borderRadius} 0 0 ${borderRadius}`;
+    return `${borderRadiusPxValue} 0 0 ${borderRadiusPxValue}`;
   }
   if (index === length - 1) {
-    return `0 ${borderRadius} ${borderRadius} 0`;
+    return `0 ${borderRadiusPxValue} ${borderRadiusPxValue} 0`;
   }
   return '0';
 };

@@ -73,7 +73,7 @@ export const DisplayAlertDetailChips = React.memo(
                   >
                     <StyledAlertChip
                       borderRadius={getAlertChipBorderRadius({
-                        borderRadius: theme.spacing(0.3),
+                        borderRadiusPxValue: theme.spacing(0.3),
                         index,
                         length: value.length,
                         mergeChips,
