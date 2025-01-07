@@ -1,7 +1,7 @@
 import { Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -21,7 +21,7 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { error, mutateAsync: importZone, reset } = useImportZoneMutation();
 
@@ -32,7 +32,10 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
     },
     onSubmit: async (values) => {
       const result = await importZone(values);
-      history.push(`/domains/${result.id}`);
+      navigate({
+        params: { domainId: result.id },
+        to: '/domains/$domainId',
+      });
     },
   });
 
