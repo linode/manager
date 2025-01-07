@@ -37,7 +37,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     pointerEvents: 'none',
   },
   kubeconfigElement: {
-    '&:first-child': {
+    '&:first-of-type': {
       borderLeft: 'none',
     },
     '&:hover': {
