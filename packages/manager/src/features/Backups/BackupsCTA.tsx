@@ -49,6 +49,7 @@ export const BackupsCTA = () => {
       display="flex"
       flexDirection="row"
       justifyContent="space-between"
+      spacingBottom={8}
       variant="marketing"
     >
       <Typography sx={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
@@ -60,7 +61,7 @@ export const BackupsCTA = () => {
       <IconButton
         aria-label="Dismiss notice enabling Linode backups"
         onClick={handleDismiss}
-        sx={{ padding: 1 }}
+        sx={{ padding: 0.75 }}
       >
         <Close />
       </IconButton>
