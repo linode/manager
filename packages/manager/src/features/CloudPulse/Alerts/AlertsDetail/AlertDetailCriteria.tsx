@@ -32,7 +32,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
   // Memoized trigger criteria rendering
   const renderTriggerCriteria = React.useMemo(
     () => (
-      <Grid alignItems="center" container item md={8} xs={12}>
+      <Grid alignItems="center" container item md={8} xs={12} data-qa-item="Trigger Alert When">
         <StyledAlertChip
           borderRadius={theme.spacing(0.3)}
           label="All"
