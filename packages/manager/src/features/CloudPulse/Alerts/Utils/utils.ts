@@ -69,10 +69,7 @@ export const convertSecondsToMinutes = (seconds: number): string => {
   return [minuteString, secondString].filter(Boolean).join(' and ');
 };
 /**
- * @param index  The index of the list of chips that we are rendering
- * @param length The length of the iteration so far
- * @param mergeChips Indicates if the chips are merged into single or individual
- * @param theme The MUI theme object
+ * @param props The props/parameters needed to determine the alert chip's border
  * @returns The border radius to be applied on chips based on the parameters
  */
 export const getAlertChipBorderRadius = (
