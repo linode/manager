@@ -147,7 +147,7 @@ describe('Object Storage Multicluster access keys', () => {
   });
 
   /*
-   * - COnfirms user can create access keys with limited access when OBJ Multicluster is enabled.
+   * - Confirms user can create access keys with limited access when OBJ Multicluster is enabled.
    * - Confirms that UI updates to reflect created access key.
    * - Confirms that "Permissions" drawer contains expected scope and permission data.
    */

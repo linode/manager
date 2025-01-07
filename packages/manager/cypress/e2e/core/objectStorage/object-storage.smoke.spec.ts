@@ -166,7 +166,7 @@ describe('object storage smoke tests', () => {
    * - Mocks existing buckets.
    * - Deletes mocked bucket, confirms that landing page reflects deletion.
    */
-  it('can delete object storage bucket - smoke - Multi Cluster Disabled', () => {
+  it('can delete object storage bucket - smoke', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
     const bucketMock = objectStorageBucketFactory.build({

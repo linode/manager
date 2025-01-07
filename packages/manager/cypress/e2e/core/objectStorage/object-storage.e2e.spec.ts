@@ -148,6 +148,8 @@ describe('object storage end-to-end tests', () => {
 
   /*
    * - Confirms that user can update Bucket access.
+   * - Confirms user can switch bucket access from Private to Public Read.
+   * - Confirms that toast notification appears confirming operation.
    */
   it('can update bucket access', () => {
     const bucketLabel = randomLabel();
@@ -186,6 +188,7 @@ describe('object storage end-to-end tests', () => {
 
     ui.button.findByTitle('Save').should('be.visible').click();
 
+    // TODO Confirm that outgoing API request contains expected values.
     cy.wait('@updateBucketAccess');
 
     cy.findByText('Bucket access updated successfully.');
