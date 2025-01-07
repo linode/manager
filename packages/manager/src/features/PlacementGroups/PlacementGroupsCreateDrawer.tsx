@@ -8,10 +8,10 @@ import {
   Typography,
 } from '@linode/ui';
 import { createPlacementGroupSchema } from '@linode/validation';
+import { useLocation } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
@@ -73,7 +73,9 @@ export const PlacementGroupsCreateDrawer = (
 
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString(
+    location.pathname.split('?')[1] // todo connie - fix this to be more robust, but just getting rid of type errors for now
+  );
 
   const handleRegionSelect = (region: Region['id']) => {
     setFieldValue('region', region);

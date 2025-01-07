@@ -1,7 +1,20 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { PlacementGroupsRoute } from './PlacementGroupsRoute';
+
+import type { TableSearchParams } from '../types';
+
+export interface PlacementGroupsSearchParams extends TableSearchParams {
+  query?: string;
+}
+
+const placementGroupAction = {
+  delete: 'delete',
+  edit: 'edit',
+} as const;
+
+export type PlacementGroupAction = typeof placementGroupAction[keyof typeof placementGroupAction];
 
 export const placementGroupsRoute = createRoute({
   component: PlacementGroupsRoute,
@@ -12,6 +25,7 @@ export const placementGroupsRoute = createRoute({
 const placementGroupsIndexRoute = createRoute({
   getParentRoute: () => placementGroupsRoute,
   path: '/',
+  validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
   import('./placementGroupsLazyRoutes').then(
     (m) => m.placementGroupsLandingLazyRoute
@@ -27,24 +41,33 @@ const placementGroupsCreateRoute = createRoute({
   )
 );
 
-const placementGroupsEditRoute = createRoute({
-  getParentRoute: () => placementGroupsRoute,
-  parseParams: (params) => ({
-    id: Number(params.id),
-  }),
-  path: 'edit/$id',
-}).lazy(() =>
-  import('./placementGroupsLazyRoutes').then(
-    (m) => m.placementGroupsLandingLazyRoute
-  )
-);
+type PlacementGroupActionRouteParams<P = number | string> = {
+  action: PlacementGroupAction;
+  id: P;
+};
 
-const placementGroupsDeleteRoute = createRoute({
+const placementGroupActionRoute = createRoute({
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in placementGroupAction)) {
+      throw redirect({
+        search: () => ({}),
+        to: '/placement-groups',
+      });
+    }
+  },
   getParentRoute: () => placementGroupsRoute,
-  parseParams: (params) => ({
-    id: Number(params.id),
-  }),
-  path: 'delete/$id',
+  params: {
+    parse: ({ action, id }: PlacementGroupActionRouteParams<string>) => ({
+      action,
+      id: Number(id),
+    }),
+    stringify: ({ action, id }: PlacementGroupActionRouteParams<number>) => ({
+      action,
+      id: String(id),
+    }),
+  },
+  path: '$action/$id',
+  validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
   import('./placementGroupsLazyRoutes').then(
     (m) => m.placementGroupsLandingLazyRoute
@@ -94,10 +117,8 @@ const placementGroupsUnassignRoute = createRoute({
 );
 
 export const placementGroupsRouteTree = placementGroupsRoute.addChildren([
-  placementGroupsIndexRoute,
+  placementGroupsIndexRoute.addChildren([placementGroupActionRoute]),
   placementGroupsCreateRoute,
-  placementGroupsEditRoute,
-  placementGroupsDeleteRoute,
   placementGroupsDetailRoute.addChildren([
     placementGroupsDetailLinodesRoute,
     placementGroupsAssignRoute,

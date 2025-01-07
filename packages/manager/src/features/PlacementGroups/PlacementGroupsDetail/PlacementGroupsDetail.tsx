@@ -1,7 +1,7 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
 import { CircleProgress, Notice } from '@linode/ui';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from '@tanstack/react-router';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -22,7 +22,7 @@ import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroups
 import { PlacementGroupsSummary } from './PlacementGroupsSummary/PlacementGroupsSummary';
 
 export const PlacementGroupsDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams({ from: '/placement-groups/$id' });
   const placementGroupId = +id;
 
   const {

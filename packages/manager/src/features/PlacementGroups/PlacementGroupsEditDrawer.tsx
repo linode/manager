@@ -7,7 +7,7 @@ import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from '@tanstack/react-router';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
@@ -36,13 +36,15 @@ export const PlacementGroupsEditDrawer = (
     region,
     selectedPlacementGroup: placementGroupFromProps,
   } = props;
-  const { id } = useParams<{ id: string }>();
+  // todo connie - try to consolidate params/remove params from drawers?
+  // figure out error with NaN
+  const params = useParams({ strict: false });
   const {
     data: placementGroupFromParam,
     isFetching,
     status,
   } = usePlacementGroupQuery(
-    Number(id),
+    Number(params.id),
     open && placementGroupFromProps === undefined
   );
 

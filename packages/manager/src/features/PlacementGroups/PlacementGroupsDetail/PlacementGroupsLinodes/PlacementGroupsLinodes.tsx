@@ -1,7 +1,7 @@
 import { Button, Stack } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -33,7 +33,8 @@ export const PlacementGroupsLinodes = (props: Props) => {
     placementGroup,
     region,
   } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [searchText, setSearchText] = React.useState('');
   const [selectedLinode, setSelectedLinode] = React.useState<
     Linode | undefined
@@ -63,24 +64,27 @@ export const PlacementGroupsLinodes = (props: Props) => {
   });
 
   const handleAssignLinodesDrawer = () => {
-    history.replace(`/placement-groups/${placementGroup.id}/linodes/assign`);
+    navigate({
+      params: { id: placementGroup.id },
+      to: '/placement-groups/$id/linodes/assign',
+    });
   };
   const handleUnassignLinodeModal = (linode: Linode) => {
     setSelectedLinode(linode);
-    history.replace(
-      `/placement-groups/${placementGroup.id}/linodes/unassign/${linode.id}`
-    );
+    navigate({
+      params: { id: placementGroup.id, linodeId: linode.id },
+      to: '/placement-groups/$id/linodes/unassign/$linodeId',
+    });
   };
   const handleCloseDrawer = () => {
     setSelectedLinode(undefined);
-    history.replace(`/placement-groups/${placementGroup.id}/linodes`);
+    navigate({
+      params: { id: placementGroup.id },
+      to: '/placement-groups/$id',
+    });
   };
-  const isAssignLinodesDrawerOpen = history.location.pathname.includes(
-    '/assign'
-  );
-  const isUnassignLinodesDrawerOpen = history.location.pathname.includes(
-    '/unassign'
-  );
+  const isAssignLinodesDrawerOpen = location.pathname.includes('/assign');
+  const isUnassignLinodesDrawerOpen = location.pathname.includes('/unassign');
 
   return (
     <Stack spacing={2}>

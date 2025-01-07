@@ -1,7 +1,7 @@
 import { CircleProgress, Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from '@tanstack/react-router';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -25,10 +25,9 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
   const { onClose, open, selectedLinode } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { id: placementGroupId, linodeId } = useParams<{
-    id: string;
-    linodeId: string;
-  }>();
+  const { id: placementGroupId, linodeId } = useParams({
+    strict: false,
+  });
 
   const [linode, setLinode] = React.useState<Linode | undefined>(
     selectedLinode
@@ -38,10 +37,12 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
     error,
     isPending,
     mutateAsync: unassignLinodes,
-  } = useUnassignLinodesFromPlacementGroup(+placementGroupId);
+  } = useUnassignLinodesFromPlacementGroup(
+    placementGroupId ? +placementGroupId : -1
+  );
 
   const { data: linodeFromQuery, isFetching } = useLinodeQuery(
-    +linodeId,
+    linodeId ? +linodeId : -1,
     open && selectedLinode === undefined
   );
 
@@ -69,7 +70,7 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
   const isLinodeReadOnly = useIsResourceRestricted({
     grantLevel: 'read_write',
     grantType: 'linode',
-    id: +linodeId,
+    id: linodeId ? +linodeId : -1,
   });
 
   const actions = (
