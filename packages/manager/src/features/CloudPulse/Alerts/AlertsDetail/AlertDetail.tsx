@@ -141,8 +141,8 @@ export const StyledAlertChip = styled(Chip, {
   height: theme.spacing(3),
 }));
 
-export const AlertTypography = styled(Typography, {
-  label: 'AlertTypography',
+export const StyledAlertTypography = styled(Typography, {
+  label: 'StyledAlertTypography',
 })(({ theme }) => ({
   color: theme.tokens.content.Text.Primary.Default,
   fontSize: theme.typography.body1.fontSize,

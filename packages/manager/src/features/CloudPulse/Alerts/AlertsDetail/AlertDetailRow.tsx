@@ -3,7 +3,7 @@ import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 
-import { AlertTypography } from './AlertDetail';
+import { StyledAlertTypography } from './AlertDetail';
 
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
@@ -47,7 +47,9 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
   return (
     <Grid container item xs={12}>
       <Grid item sm={labelGridColumns} xs={12}>
-        <AlertTypography fontFamily={theme.font.bold}>{label}:</AlertTypography>
+        <StyledAlertTypography fontFamily={theme.font.bold}>
+          {label}:
+        </StyledAlertTypography>
       </Grid>
       <Grid container item sm={valueGridColumns} xs={12}>
         {status && (
@@ -58,7 +60,7 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
             status={status}
           />
         )}
-        <AlertTypography>{value}</AlertTypography>
+        <StyledAlertTypography>{value}</StyledAlertTypography>
       </Grid>
     </Grid>
   );

@@ -2,7 +2,7 @@ import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import { getAlertChipBorderRadius } from '../Utils/utils';
-import { AlertTypography, StyledAlertChip } from './AlertDetail';
+import { StyledAlertChip, StyledAlertTypography } from './AlertDetail';
 
 export interface AlertDimensionsProp {
   /**
@@ -54,9 +54,9 @@ export const DisplayAlertDetailChips = React.memo(
           <React.Fragment key={`${label}_${index}`}>
             <Grid item md={labelGridColumns} xs={12}>
               {index === 0 && (
-                <AlertTypography fontFamily={theme.font.bold}>
+                <StyledAlertTypography fontFamily={theme.font.bold}>
                   {label}:
-                </AlertTypography>
+                </StyledAlertTypography>
               )}
             </Grid>
             <Grid item md={valueGridColumns} xs={12}>

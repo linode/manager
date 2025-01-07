@@ -3,7 +3,7 @@ import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import { convertSecondsToMinutes } from '../Utils/utils';
-import { AlertTypography, StyledAlertChip } from './AlertDetail';
+import { StyledAlertChip, StyledAlertTypography } from './AlertDetail';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 import { RenderAlertMetricsAndDimensions } from './RenderAlertsMetricsAndDimensions';
 
@@ -31,9 +31,9 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
     () => (
       <>
         <Grid item sm={4} xs={12}>
-          <AlertTypography fontFamily={theme.font.bold}>
+          <StyledAlertTypography fontFamily={theme.font.bold}>
             Trigger Alert When:
-          </AlertTypography>
+          </StyledAlertTypography>
         </Grid>
         <Grid alignItems="center" container item md={8} xs={12}>
           <StyledAlertChip
@@ -41,15 +41,17 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
             label="All"
             variant="outlined"
           />
-          <AlertTypography marginRight={0.5}>
+          <StyledAlertTypography marginRight={0.5}>
             criteria are met for
-          </AlertTypography>
+          </StyledAlertTypography>
           <StyledAlertChip
             borderRadius={theme.spacing(0.3)}
             label={triggerOccurrences}
             variant="outlined"
           />
-          <AlertTypography>consecutive occurrences.</AlertTypography>
+          <StyledAlertTypography>
+            consecutive occurrences.
+          </StyledAlertTypography>
         </Grid>
       </>
     ),
