@@ -10,11 +10,14 @@ import { paginateResponse } from 'support/util/paginate';
 import { randomString } from 'support/util/random';
 import { makeResponse } from 'support/util/response';
 
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+
 import type {
   CloudPulseMetricsResponse,
   Dashboard,
   MetricDefinition,
 } from '@linode/api-v4';
+import type { Alert } from '@linode/api-v4';
 
 /**
  * Intercepts GET requests for metric definitions.
@@ -257,5 +260,52 @@ export const mockGetCloudPulseDashboardByIdError = (
     'GET',
     apiMatcher(`/monitor/dashboards/${id}`),
     makeErrorResponse(errorMessage, status)
+  );
+};
+
+/**
+ * Mocks the API response for retrieving alert definitions for a given service type and alert ID.
+ * This is useful for testing the behavior of the system when fetching alert definitions.
+ *
+ * @param {string} serviceType - The type of the service for which we are mocking the alert definition (e.g., 'dbaas').
+ * @param {number} id - The unique identifier for the alert definition to be retrieved.
+ * @param {Alert} alert - The mock alert object that should be returned by the API in place of a real response.
+ *
+ * @returns {Cypress.Chainable<null>} A Cypress chainable object that represents the intercepted API call.
+ */
+
+export const mockGetAlertDefinitions = (
+  serviceType: string,
+  id: number,
+  alert: Alert
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/monitor/services/${serviceType}/alert-definitions/${id}`),
+    makeResponse(alert)
+  );
+};
+
+/**
+ * Mocks the API response for retrieving all alert definitions from the monitoring service.
+ * This function intercepts a GET request to fetch alert definitions and returns a mock
+ * response, simulating the behavior of the real API by providing a list of alert definitions.
+ *
+ * The mock response is paginated, with a page size of 500, allowing the test to simulate
+ * the scenario where the system is retrieving a large set of alert definitions.
+ *
+ * @param {Alert[]} alert - An array of `Alert` objects to mock as the response. This should
+ *                          represent the alert definitions being fetched by the API.
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted
+ */
+
+export const mockGetAllAlertDefinitions = (
+  alert: Alert[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('/monitor/alert-definitions?page_size=500'),
+    makeResourcePage(alert)
   );
 };
