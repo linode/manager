@@ -27,10 +27,19 @@ export default defineConfig({
         name: "volume-create",
         filename: "remoteEntry.js",
         exposes: {
-          './VolumeCreate': './src/index.tsx'
+          './VolumeCreate': './src/index.tsx',
+          './Hello': './src/hello.tsx'
         },
-        shared: ['react', 'react-dom']
-    })
+        shared: [
+          'react',
+          'react-dom',
+          '@tanstack/react-query',
+          '@mui/material',
+          '@mui/material/styles',
+          '@mui/material/useMediaQuery',
+          '@mui/material/ListItem'
+        ],
+      })
   ],
   server: {
     port: 3001,

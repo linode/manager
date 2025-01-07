@@ -20,7 +20,15 @@ export default defineConfig({
       remotes: {
         volume_create: 'http://localhost:3001/assets/remoteEntry.js',
       },
-      shared: ['react', 'react-dom'],
+      shared: [
+        'react',
+        'react-dom',
+        '@tanstack/react-query',
+        '@mui/material',
+        '@mui/material/styles',
+        '@mui/material/useMediaQuery',
+        '@mui/material/ListItem',
+      ],
     }),
   ],
   resolve: {
