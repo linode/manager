@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
-import { FOOTER_HEIGHT } from 'src/features/Footer';
 
 export const StyledGrid = styled(Grid, {
   label: 'StyledGrid',
@@ -116,7 +115,6 @@ export const StyledMenuGrid = styled(Grid, {
   flex: '1 1 0%',
   overflowX: 'hidden',
   overflowY: 'auto',
-  paddingBottom: FOOTER_HEIGHT,
   scrollbarColor: `${theme.color.grey4} transparent `,
   [theme.breakpoints.down('md')]: {
     borderRight: `1px solid ${theme.tokens.border.Normal}`,

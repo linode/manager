@@ -1,5 +1,4 @@
 import React from 'react';
-import { debounce } from 'throttle-debounce';
 
 import { isPathOneOf } from 'src/utilities/routing/isPathOneOf';
 
@@ -23,46 +22,62 @@ export const linkIsActive = (
   return isPathOneOf([href, ...activeLinks], locationPathname);
 };
 
-/**
- * A hook to provide scrolling information relative to the viewport
- *
- * documentHeight - the height of the document
- * isAtBottom - whether the user is at the bottom of the viewport
- * isAtTop - whether the user is at the top of the viewport
- * scrollTop - the current scroll position
- * windowHeight - the height of the window
- *
- * @returns {boolean}
- */
-export const useScrollingUtils = () => {
-  const [isAtBottom, setIsAtBottom] = React.useState(false);
-  const [isAtTop, setIsAtTop] = React.useState(false);
-  let windowHeight = 0;
-  let documentHeight = 0;
-  let scrollTop = 0;
+export const useScrollable = (
+  contentRef: React.RefObject<HTMLElement>
+): {
+  isPageAtBottom: boolean;
+  isPageScrollable: boolean;
+} => {
+  const [isPageScrollable, setIsPageScrollable] = React.useState(false);
+  const [isPageAtBottom, setIsPageAtBottom] = React.useState(false);
 
-  const checkIfBottom = React.useCallback(
-    debounce(10, () => {
-      windowHeight = window.innerHeight;
-      documentHeight = document.documentElement.scrollHeight;
-      scrollTop = window.scrollY;
-      const bottom = Math.ceil(windowHeight + scrollTop) >= documentHeight;
-      const top = scrollTop === 0;
+  const checkIfPageAtBottom = React.useCallback(() => {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.scrollY;
+    const bottom = Math.ceil(windowHeight + scrollTop) >= documentHeight;
 
-      setIsAtBottom(bottom);
-      setIsAtTop(top);
-    }),
-    []
-  );
+    setIsPageAtBottom(bottom);
+  }, []);
 
   React.useEffect(() => {
-    checkIfBottom();
-    const onScroll = () => requestAnimationFrame(checkIfBottom);
+    // Initial check
+    checkIfPageAtBottom();
+
+    // Set up scroll listener
+    const onScroll = () => requestAnimationFrame(checkIfPageAtBottom);
     document.body.onscroll = onScroll;
+
+    // Set up mutation observer
+    const observer = new MutationObserver(() => {
+      requestAnimationFrame(() => {
+        if (!contentRef.current) {
+          return;
+        }
+
+        const contentHeight = contentRef.current.scrollHeight;
+        const windowHeight = window.innerHeight;
+        const scrollTop = window.scrollY;
+
+        setIsPageScrollable(contentHeight > windowHeight);
+        setIsPageAtBottom(Math.ceil(windowHeight + scrollTop) >= contentHeight);
+      });
+    });
+
+    if (contentRef.current) {
+      observer.observe(contentRef.current, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    // Cleanup
     return () => {
       document.body.onscroll = null;
+      observer.disconnect();
     };
-  }, [checkIfBottom]);
+  }, [contentRef, checkIfPageAtBottom]);
 
-  return { documentHeight, isAtBottom, isAtTop, scrollTop, windowHeight };
+  return { isPageAtBottom, isPageScrollable };
 };

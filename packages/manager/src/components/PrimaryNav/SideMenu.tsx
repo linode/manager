@@ -7,10 +7,8 @@ import {
   SIDEBAR_COLLAPSED_WIDTH,
   SIDEBAR_WIDTH,
 } from 'src/components/PrimaryNav/constants';
-import { TOPMENU_HEIGHT } from 'src/features/TopMenu/TopMenu';
 
 import PrimaryNav from './PrimaryNav';
-import { useScrollingUtils } from './utils';
 
 export interface SideMenuProps {
   /**
@@ -21,7 +19,14 @@ export interface SideMenuProps {
    * If true, the menu will be collapsed.
    */
   collapse: boolean;
+  /**
+   * Callback to toggle the desktop menu.
+   */
   desktopMenuToggle: () => void;
+  /**
+   * If true, the menu will be at the bottom of the page.
+   */
+  isPageAtBottom?: boolean;
   /**
    * If true, the menu will be open. Has no effect unless the viewport is less than 960px.
    */
@@ -34,8 +39,14 @@ export interface SideMenuProps {
  * The Linodes landing page is considered the homepage unless the account is managed. Otherwise, clicking on the Linode logo will take the user to the Managed landing page.
  */
 export const SideMenu = (props: SideMenuProps) => {
-  const { closeMenu, collapse, desktopMenuToggle, open } = props;
-  const { isAtTop } = useScrollingUtils();
+  const {
+    closeMenu,
+    collapse,
+    desktopMenuToggle,
+    isPageAtBottom,
+    open,
+  } = props;
+
   return (
     <>
       <Hidden mdUp>
@@ -59,7 +70,6 @@ export const SideMenu = (props: SideMenuProps) => {
         <StyledDrawer
           collapse={collapse}
           data-testid="side-menu"
-          isAtTop={isAtTop}
           open
           variant="permanent"
         >
@@ -67,6 +77,7 @@ export const SideMenu = (props: SideMenuProps) => {
             closeMenu={closeMenu}
             desktopMenuToggle={desktopMenuToggle}
             isCollapsed={collapse}
+            isPageAtBottom={isPageAtBottom}
           />
         </StyledDrawer>
       </Hidden>
@@ -76,14 +87,13 @@ export const SideMenu = (props: SideMenuProps) => {
 
 const StyledDrawer = styled(Drawer, {
   label: 'StyledSideMenuDrawer',
-  shouldForwardProp: (prop) => prop !== 'collapse' && prop !== 'isAtTop',
-})<{ collapse?: boolean; isAtTop?: boolean }>(({ theme, ...props }) => ({
+  shouldForwardProp: (prop) => prop !== 'collapse',
+})<{ collapse?: boolean }>(({ theme, ...props }) => ({
   '& .MuiDrawer-paper': {
     backgroundColor: theme.tokens.sideNavigation.Background.Default,
     boxShadow: 'none',
-    height: props.isAtTop ? `calc(100% - ${TOPMENU_HEIGHT}px)` : '100%',
     left: 'inherit',
-    overflowX: 'hidden',
+    overflow: 'hidden',
     position: 'absolute',
     [theme.breakpoints.up('md')]: {
       borderRight: `1px solid ${theme.tokens.sideNavigation.Border}`,

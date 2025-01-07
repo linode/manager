@@ -16,6 +16,7 @@ import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
 import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import { FOOTER_HEIGHT } from 'src/features/Footer';
 import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -25,6 +26,7 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
+import { SIDEBAR_WIDTH } from './constants';
 import PrimaryLink from './PrimaryLink';
 import {
   StyledAccordion,
@@ -81,10 +83,11 @@ export interface PrimaryNavProps {
   closeMenu: () => void;
   desktopMenuToggle: () => void;
   isCollapsed: boolean;
+  isPageAtBottom?: boolean;
 }
 
 export const PrimaryNav = (props: PrimaryNavProps) => {
-  const { closeMenu, desktopMenuToggle, isCollapsed } = props;
+  const { closeMenu, desktopMenuToggle, isCollapsed, isPageAtBottom } = props;
 
   const flags = useFlags();
   const location = useLocation();
@@ -335,6 +338,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           const filteredLinks = productFamily.links.filter(
             (link) => !link.hide
           );
+
           if (filteredLinks.length === 0) {
             return null;
           }
@@ -389,30 +393,35 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         })}
       </StyledMenuGrid>
       <Hidden mdDown>
-        <Box padding={1}>
-          {!isCollapsed ? (
-            <Tooltip placement="top-end" title={'unpin side menu'}>
-              <StyledIconButton
-                aria-label="unpin menu"
-                data-testid="unpin-nav-menu"
-                onClick={desktopMenuToggle}
-                size="small"
-              >
-                <PinFilledIcon />
-              </StyledIconButton>
-            </Tooltip>
-          ) : (
-            <Tooltip placement="top-end" title={'pin side menu'}>
-              <StyledIconButton
-                aria-label="pin menu"
-                data-testid="pin-nav-menu"
-                onClick={desktopMenuToggle}
-                size="small"
-              >
-                <PinOutlineIcon sx={{ fontSize: 16 }} />
-              </StyledIconButton>
-            </Tooltip>
-          )}
+        <Box
+          sx={{
+            bottom: isPageAtBottom ? FOOTER_HEIGHT : 0,
+            left: isCollapsed ? 0 : SIDEBAR_WIDTH - 52,
+            padding: 1,
+            position: 'fixed',
+            transition: 'bottom 0.1s linear',
+          }}
+        >
+          <Tooltip
+            PopperProps={{
+              sx: {
+                '& .MuiTooltip-tooltip': {
+                  padding: '4px 6px',
+                },
+              },
+            }}
+            placement="left"
+            title={isCollapsed ? 'pin side menu' : 'unpin side menu'}
+          >
+            <StyledIconButton
+              aria-label="unpin menu"
+              data-testid="unpin-nav-menu"
+              onClick={desktopMenuToggle}
+              size="small"
+            >
+              {isCollapsed ? <PinOutlineIcon /> : <PinFilledIcon />}
+            </StyledIconButton>
+          </Tooltip>
         </Box>
       </Hidden>
     </StyledGrid>

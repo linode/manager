@@ -11,6 +11,7 @@ import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
+import { useScrollable } from 'src/components/PrimaryNav/utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
@@ -199,6 +200,7 @@ const IAM = React.lazy(() =>
 );
 
 export const MainContent = () => {
+  const contentRef = React.useRef<HTMLDivElement>(null);
   const { classes, cx } = useStyles();
   const { data: isDesktopSidebarOpenPreference } = usePreferences(
     (preferences) => preferences?.desktop_sidebar_open
@@ -238,6 +240,8 @@ export const MainContent = () => {
   const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isIAMEnabled } = useIsIAMEnabled();
+
+  const { isPageAtBottom, isPageScrollable } = useScrollable(contentRef);
 
   /**
    * this is the case where the user has successfully completed signup
@@ -303,21 +307,27 @@ export const MainContent = () => {
                 openSideMenu={() => toggleMenu(true)}
                 username={username}
               />
-              <Box display="flex">
-                <Box height="100vh" position="sticky" top="0" zIndex={10000}>
+              <Box display="flex" flex={1} position="relative">
+                <Box
+                  alignSelf="flex-start"
+                  height={isPageScrollable ? '100vh' : 'auto'}
+                  position={isPageScrollable ? 'sticky' : 'static'}
+                  top={0}
+                  zIndex={10000}
+                >
                   <SideMenu
                     closeMenu={() => toggleMenu(false)}
                     collapse={desktopMenuIsOpen || false}
                     desktopMenuToggle={desktopMenuToggle}
+                    isPageAtBottom={isPageAtBottom}
                     open={menuIsOpen}
                   />
                 </Box>
                 <div
                   className={cx(classes.content, {
-                    [classes.fullWidthContent]:
-                      desktopMenuIsOpen ||
-                      (desktopMenuIsOpen && desktopMenuIsOpen === true),
+                    [classes.fullWidthContent]: desktopMenuIsOpen === true,
                   })}
+                  ref={contentRef}
                 >
                   <MainContentBanner />
                   <main
