@@ -63,6 +63,4 @@ describe('Create Linode in Distributed Region', () => {
     });
     ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
   });
-
-  afterEach(() => {});
 });
