@@ -9,7 +9,7 @@ import { CloudPulseAlertSeveritySelect } from './AlertSeveritySelect';
 describe('Severity component tests', () => {
   it('should render the component', () => {
     const { getByLabelText, getByTestId } = renderWithThemeAndHookFormContext({
-      component: <CloudPulseAlertSeveritySelect name={'severity'} />,
+      component: <CloudPulseAlertSeveritySelect name="severity" />,
     });
     expect(getByLabelText('Severity')).toBeInTheDocument();
     expect(getByTestId('severity')).toBeInTheDocument();
