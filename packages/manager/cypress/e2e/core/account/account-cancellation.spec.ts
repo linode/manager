@@ -97,7 +97,7 @@ describe('Account cancellation', () => {
           .should('be.visible')
           .should('not.be.checked');
 
-        // Check both boxes but verify submit remains disabled without username
+        // Check both boxes but verify submit remains disabled without email
         cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
         cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
 
