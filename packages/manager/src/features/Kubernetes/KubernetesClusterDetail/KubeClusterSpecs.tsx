@@ -68,7 +68,7 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery();
+  } = useKubernetesTypesQuery(cluster.tier === 'enterprise');
 
   const matchesColGapBreakpointDown = useMediaQuery(
     theme.breakpoints.down(theme.breakpoints.values.lg)
@@ -78,12 +78,17 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
     (type) => type.id === 'lke-ha'
   );
 
+  const lkeEnterpriseType = kubernetesHighAvailabilityTypesData?.find(
+    (type) => type.id === 'lke-e'
+  );
+
   const region = regions?.find((r) => r.id === cluster.region);
   const displayRegion = region?.label ?? cluster.region;
 
   const highAvailabilityPrice = cluster.control_plane.high_availability
     ? getDCSpecificPriceByType({ regionId: region?.id, type: lkeHAType })
     : undefined;
+  const enterprisePrice = lkeEnterpriseType?.price.monthly ?? undefined;
 
   const kubeSpecsLeft = [
     `Version ${cluster.k8s_version}`,
@@ -107,6 +112,7 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
       </>
     ) : (
       `$${getTotalClusterPrice({
+        enterprisePrice: enterprisePrice,
         highAvailabilityPrice: highAvailabilityPrice
           ? Number(highAvailabilityPrice)
           : undefined,
