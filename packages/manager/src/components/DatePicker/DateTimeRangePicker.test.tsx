@@ -51,6 +51,9 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should call onChange when start date is changed', async () => {
+    const currentYear = new Date().getFullYear(); // Dynamically get the current year
+    const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0'); // Get current month (1-based)
+
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
 
     // Open start date picker
@@ -63,7 +66,7 @@ describe('DateTimeRangePicker Component', () => {
     expect(onChangeMock).toHaveBeenCalledWith({
       end: null,
       preset: 'custom_range',
-      start: '2024-12-10T00:00:00.000-06:00',
+      start: `${currentYear}-${currentMonth}-10T00:00:00.000-06:00`,
       timeZone: null,
     });
   });

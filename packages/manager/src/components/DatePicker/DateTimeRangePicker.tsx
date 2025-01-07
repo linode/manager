@@ -69,7 +69,15 @@ export interface DateTimeRangePickerProps {
   sx?: SxProps<Theme>;
 }
 
-const presetsOptions = [
+type DatePresetType =
+  | '7days'
+  | '24hours'
+  | '30days'
+  | 'custom_range'
+  | 'last_month'
+  | 'this_month';
+
+const presetsOptions: { label: string; value: DatePresetType }[] = [
   { label: 'Last 24 Hours', value: '24hours' },
   { label: 'Last 7 Days', value: '7days' },
   { label: 'Last 30 Days', value: '30days' },
@@ -149,7 +157,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     setEndDateError(null);
   };
 
-  const handlePresetSelection = (value: string) => {
+  const handlePresetSelection = (value: DatePresetType) => {
     const now = DateTime.now();
     let newStartDateTime: DateTime | null = null;
     let newEndDateTime: DateTime | null = null;
@@ -237,13 +245,12 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
         <Autocomplete
           onChange={(_, selection) => {
             if (selection) {
-              handlePresetSelection(selection.value);
+              handlePresetSelection(selection.value as DatePresetType);
             }
           }}
           defaultValue={presetsDefaultValue}
           disableClearable
           fullWidth
-          isOptionEqualToValue={(option, value) => option.value === value.value}
           label={presetsLabel}
           noMarginTop
           options={presetsOptions}
@@ -284,13 +291,16 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
             timeSelectProps={{ label: 'End Time' }}
             value={endDateTime}
           />
-          <Box alignContent="flex-end">
+          <Box
+            alignContent={
+              startDateError || endDateError ? 'center' : 'flex-end'
+            }
+          >
             <StyledActionButton
               onClick={() => {
                 setShowPresets(true);
                 setPresetValue(presetsDefaultValue);
               }}
-              style={{ alignSelf: 'flex-start' }}
               variant="text"
             >
               Presets
