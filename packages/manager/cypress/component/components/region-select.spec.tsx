@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { componentTests, visualTests } from 'support/util/components';
-import { checkComponentA11y } from 'support/util/accessibility';
-import { accountAvailabilityFactory, regionFactory } from 'src/factories';
-import { ui } from 'support/ui';
 import { mockGetAccountAvailability } from 'support/intercepts/account';
+import { ui } from 'support/ui';
+import { checkComponentA11y } from 'support/util/accessibility';
 import { createSpy } from 'support/util/components';
+import { componentTests, visualTests } from 'support/util/components';
+
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { accountAvailabilityFactory, regionFactory } from 'src/factories';
 
 componentTests('RegionSelect', (mount) => {
   beforeEach(() => {
@@ -24,10 +25,10 @@ componentTests('RegionSelect', (mount) => {
 
         mount(
           <RegionSelect
-            regions={[region]}
             currentCapability="Object Storage"
-            value={undefined}
             onChange={() => {}}
+            regions={[region]}
+            value={undefined}
           />
         );
 
@@ -52,10 +53,10 @@ componentTests('RegionSelect', (mount) => {
 
         mount(
           <RegionSelect
-            regions={[region]}
             currentCapability="Object Storage"
-            value={undefined}
             onChange={() => {}}
+            regions={[region]}
+            value={undefined}
           />
         );
 
@@ -81,10 +82,10 @@ componentTests('RegionSelect', (mount) => {
 
         mount(
           <RegionSelect
-            regions={[region]}
             currentCapability="Object Storage"
-            value={undefined}
             onChange={() => {}}
+            regions={[region]}
+            value={undefined}
           />
         );
 
@@ -110,10 +111,10 @@ componentTests('RegionSelect', (mount) => {
           <>
             <span id="other-element">Other Element</span>
             <RegionSelect
-              regions={[region]}
               currentCapability="Object Storage"
-              value={undefined}
               onChange={() => {}}
+              regions={[region]}
+              value={undefined}
             />
           </>
         );
@@ -143,10 +144,10 @@ componentTests('RegionSelect', (mount) => {
       it('can select a region initially', () => {
         mount(
           <RegionSelect
-            regions={regions}
             currentCapability={undefined}
-            value={undefined}
             onChange={() => {}}
+            regions={regions}
+            value={undefined}
           />
         );
 
@@ -177,10 +178,10 @@ componentTests('RegionSelect', (mount) => {
       it('can change region selection', () => {
         mount(
           <RegionSelect
-            regions={regions}
             currentCapability={undefined}
-            value={regionToPreselect.id}
             onChange={() => {}}
+            regions={regions}
+            value={regionToPreselect.id}
           />
         );
 
@@ -212,10 +213,10 @@ componentTests('RegionSelect', (mount) => {
       it('can clear region selection', () => {
         mount(
           <RegionSelect
-            regions={regions}
             currentCapability={undefined}
-            value={regionToSelect.id}
             onChange={() => {}}
+            regions={regions}
+            value={regionToSelect.id}
           />
         );
 
@@ -238,11 +239,11 @@ componentTests('RegionSelect', (mount) => {
       it('cannot clear region selection when clearable is disabled', () => {
         mount(
           <RegionSelect
-            regions={regions}
             currentCapability={undefined}
-            value={regionToSelect.id}
             disableClearable={true}
             onChange={() => {}}
+            regions={regions}
+            value={regionToSelect.id}
           />
         );
 
@@ -258,10 +259,10 @@ componentTests('RegionSelect', (mount) => {
       it('cannot clear region selection when no region is selected', () => {
         mount(
           <RegionSelect
-            regions={regions}
             currentCapability={undefined}
-            value={undefined}
             onChange={() => {}}
+            regions={regions}
+            value={undefined}
           />
         );
 
@@ -275,10 +276,10 @@ componentTests('RegionSelect', (mount) => {
         const spyFn = createSpy(() => {}, 'changeSpy');
         mount(
           <RegionSelect
-            regions={regions}
             currentCapability={undefined}
-            value={undefined}
             onChange={spyFn}
+            regions={regions}
+            value={undefined}
           />
         );
 
@@ -299,10 +300,10 @@ componentTests('RegionSelect', (mount) => {
         const spyFn = createSpy(() => {}, 'changeSpy');
         mount(
           <RegionSelect
-            regions={regions}
             currentCapability={undefined}
-            value={regionToSelect.id}
             onChange={spyFn}
+            regions={regions}
+            value={regionToSelect.id}
           />
         );
 
@@ -343,10 +344,10 @@ componentTests('RegionSelect', (mount) => {
       // TODO Remove `dcGetWell` flag override when feature flag is removed from codebase.
       mount(
         <RegionSelect
-          regions={regions}
           currentCapability="Object Storage"
-          value={undefined}
           onChange={() => {}}
+          regions={regions}
+          value={undefined}
         />,
         {
           dcGetWell: true,
@@ -377,10 +378,10 @@ componentTests('RegionSelect', (mount) => {
     it('only lists regions with the specified capability', () => {
       mount(
         <RegionSelect
-          regions={regions}
           currentCapability="Object Storage"
-          value={undefined}
           onChange={() => {}}
+          regions={regions}
+          value={undefined}
         />
       );
 
@@ -406,10 +407,10 @@ componentTests('RegionSelect', (mount) => {
     it('lists all regions when no capability is specified', () => {
       mount(
         <RegionSelect
-          regions={regions}
           currentCapability={undefined}
-          value={undefined}
           onChange={() => {}}
+          regions={regions}
+          value={undefined}
         />
       );
 
@@ -436,10 +437,10 @@ componentTests('RegionSelect', (mount) => {
       it('passes aXe check when menu is closed without an item selected', () => {
         mount(
           <RegionSelect
-            regions={regions}
             currentCapability={undefined}
-            value={undefined}
             onChange={() => {}}
+            regions={regions}
+            value={undefined}
           />
         );
         checkComponentA11y();
@@ -448,10 +449,10 @@ componentTests('RegionSelect', (mount) => {
       it('passes aXe check when menu is closed with an item selected', () => {
         mount(
           <RegionSelect
-            regions={regions}
             currentCapability={undefined}
-            value={selectedRegion.id}
             onChange={() => {}}
+            regions={regions}
+            value={selectedRegion.id}
           />
         );
         checkComponentA11y();
@@ -460,10 +461,10 @@ componentTests('RegionSelect', (mount) => {
       it('passes aXe check when menu is open', () => {
         mount(
           <RegionSelect
-            regions={regions}
             currentCapability={undefined}
-            value={selectedRegion.id}
             onChange={() => {}}
+            regions={regions}
+            value={selectedRegion.id}
           />
         );
 
