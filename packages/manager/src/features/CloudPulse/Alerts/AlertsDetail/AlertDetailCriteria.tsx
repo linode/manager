@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import { Grid, useTheme } from '@mui/material';
+import { Grid, styled, useTheme } from '@mui/material';
 import React from 'react';
 
 import { convertSecondsToMinutes } from '../Utils/utils';
@@ -31,13 +31,9 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
     () => (
       <>
         <Grid item sm={4} xs={12}>
-          <Typography
-            color={theme.tokens.content.Text.Primary.Default}
-            fontFamily={theme.font.bold}
-            variant="body1"
-          >
+          <AlertTypography fontFamily={theme.font.bold}>
             Trigger Alert When:
-          </Typography>
+          </AlertTypography>
         </Grid>
         <Grid alignItems="center" container item md={8} xs={12}>
           <StyledAlertChip
@@ -45,24 +41,15 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
             label="All"
             variant="outlined"
           />
-          <Typography
-            color={theme.tokens.content.Text.Primary.Default}
-            marginRight={0.5}
-            variant="body1"
-          >
+          <AlertTypography marginRight={0.5}>
             criteria are met for
-          </Typography>
+          </AlertTypography>
           <StyledAlertChip
             borderRadius={theme.spacing(0.3)}
             label={triggerOccurrences}
             variant="outlined"
           />
-          <Typography
-            color={theme.tokens.content.Text.Primary.Default}
-            variant="body1"
-          >
-            consecutive occurrences.
-          </Typography>
+          <AlertTypography>consecutive occurrences.</AlertTypography>
         </Grid>
       </>
     ),
@@ -90,3 +77,10 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
     </>
   );
 });
+
+export const AlertTypography = styled(Typography, {
+  label: 'AlertTypography',
+})(({ theme }) => ({
+  color: theme.tokens.content.Text.Primary.Default,
+  fontSize: theme.typography.body1.fontSize,
+}));
