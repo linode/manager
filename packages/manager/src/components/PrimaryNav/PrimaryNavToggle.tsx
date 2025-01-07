@@ -1,5 +1,4 @@
 import { Box, IconButton, Tooltip } from '@linode/ui';
-import { useScrollTrigger } from '@mui/material';
 import { Hidden, styled } from '@mui/material';
 import React from 'react';
 
@@ -8,6 +7,7 @@ import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
 import { FOOTER_HEIGHT } from 'src/features/Footer';
 
 import { SIDEBAR_WIDTH } from './constants';
+import { useIsWindowAtBottom } from './utils';
 
 interface PrimaryNavToggleProps {
   desktopMenuToggle: () => void;
@@ -17,20 +17,17 @@ interface PrimaryNavToggleProps {
 export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
   const { desktopMenuToggle, isCollapsed } = props;
 
-  const isPageAtBottom = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: window.innerHeight,
-  });
+  const isBottom = useIsWindowAtBottom();
 
   return (
     <Hidden mdDown>
       <Box
         sx={{
-          bottom: isPageAtBottom ? FOOTER_HEIGHT : 0,
+          bottom: isBottom ? FOOTER_HEIGHT : 0,
           left: isCollapsed ? 0 : SIDEBAR_WIDTH - 52,
           padding: 1,
           position: 'fixed',
-          transition: 'bottom 0.1s linear',
+          transition: 'bottom 150ms linear',
         }}
       >
         <Tooltip
