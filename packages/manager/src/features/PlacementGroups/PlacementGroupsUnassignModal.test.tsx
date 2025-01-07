@@ -10,8 +10,8 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
     useParams: queryMocks.useParams,

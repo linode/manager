@@ -7,8 +7,26 @@ import { PlacementGroupsLanding } from './PlacementGroupsLanding';
 import { headers } from './PlacementGroupsLandingEmptyStateData';
 
 const queryMocks = vi.hoisted(() => ({
+  useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups' }),
+  useParams: vi.fn().mockReturnValue({}),
   usePlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useLocation: queryMocks.useLocation,
+  };
+});
 
 vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
@@ -25,7 +43,10 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByRole } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />
+      <PlacementGroupsLanding />,
+      {
+        initialRoute: '/placement-groups',
+      }
     );
 
     expect(getByRole('progressbar')).toBeInTheDocument();
@@ -37,7 +58,10 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />
+      <PlacementGroupsLanding />,
+      {
+        initialRoute: '/placement-groups',
+      }
     );
 
     expect(getByText(/not found/i)).toBeInTheDocument();
@@ -56,7 +80,10 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />
+      <PlacementGroupsLanding />,
+      {
+        initialRoute: '/placement-groups',
+      }
     );
 
     expect(getByText(/create placement group/i)).toBeInTheDocument();
@@ -79,7 +106,10 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />
+      <PlacementGroupsLanding />,
+      {
+        initialRoute: '/placement-groups',
+      }
     );
 
     expect(getByText(/group 1/i)).toBeInTheDocument();
@@ -95,7 +125,10 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />
+      <PlacementGroupsLanding />,
+      {
+        initialRoute: '/placement-groups',
+      }
     );
 
     expect(getByText(headers.description)).toBeInTheDocument();
@@ -110,7 +143,10 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsLanding />
+      <PlacementGroupsLanding />,
+      {
+        initialRoute: '/placement-groups',
+      }
     );
 
     expect(getByText('Getting Started Guides')).toBeInTheDocument();

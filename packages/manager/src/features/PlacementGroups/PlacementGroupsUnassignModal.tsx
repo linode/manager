@@ -1,7 +1,7 @@
 import { CircleProgress, Notice, Typography } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from '@tanstack/react-router';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';

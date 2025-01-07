@@ -5,6 +5,20 @@ import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
+const queryMocks = vi.hoisted(() => ({
+  useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups/1' }),
+  useParams: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useLocation: queryMocks.useLocation,
+    useParams: queryMocks.useParams,
+  };
+});
+
 const defaultProps = {
   error: [],
   handleUnassignLinodeModal: vi.fn(),

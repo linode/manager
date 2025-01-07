@@ -2,7 +2,8 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { placementGroupFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+// eslint-disable-next-line no-restricted-imports
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
 
@@ -31,12 +32,8 @@ vi.mock('src/queries/placementGroups', async () => {
 });
 
 describe('PlacementGroupsCreateDrawer', () => {
-  it('should render and have its fields enabled', async () => {
-    const {
-      getAllByRole,
-      getByLabelText,
-      getByText,
-    } = await renderWithThemeAndRouter(
+  it('should render and have its fields enabled', () => {
+    const { getAllByRole, getByLabelText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
@@ -50,8 +47,8 @@ describe('PlacementGroupsCreateDrawer', () => {
     expect(radioInputs[0]).toBeChecked();
   });
 
-  it('Placement Group Type select should have the correct options', async () => {
-    const { getByPlaceholderText, getByText } = await renderWithThemeAndRouter(
+  it('Placement Group Type select should have the correct options', () => {
+    const { getByPlaceholderText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
@@ -66,13 +63,15 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should populate the region select with the selected region prop', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         selectedRegionId="us-east"
         {...commonProps}
       />,
       {
-        initialRoute: 'linodes/create',
+        MemoryRouter: {
+          initialEntries: ['/linodes/create'],
+        },
       }
     );
 
@@ -87,9 +86,7 @@ describe('PlacementGroupsCreateDrawer', () => {
       getByPlaceholderText,
       getByRole,
       getByText,
-    } = await renderWithThemeAndRouter(
-      <PlacementGroupsCreateDrawer {...commonProps} />
-    );
+    } = renderWithTheme(<PlacementGroupsCreateDrawer {...commonProps} />);
 
     fireEvent.change(getByLabelText('Label'), {
       target: { value: 'my-label' },
@@ -124,7 +121,7 @@ describe('PlacementGroupsCreateDrawer', () => {
       data: [placementGroupFactory.build({ region: 'us-west' })],
     });
     const regionWithoutCapacity = 'US, Fremont, CA (us-west)';
-    const { getByPlaceholderText, getByText } = await renderWithThemeAndRouter(
+    const { getByPlaceholderText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );
 

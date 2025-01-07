@@ -12,8 +12,26 @@ const defaultProps = {
 
 const queryMocks = vi.hoisted(() => ({
   useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
+  useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups/1' }),
+  useParams: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useLocation: queryMocks.useLocation,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
 
 vi.mock('src/queries/regions/regions', async () => {
   const actual = await vi.importActual('src/queries/regions/regions');
@@ -61,10 +79,8 @@ describe('PlacementGroupsDetailPanel', () => {
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          placement_group_type: 'affinity:local',
           id: 1,
           is_compliant: true,
-          placement_group_policy: 'strict',
           label: 'my-placement-group',
           members: [
             {
@@ -72,6 +88,8 @@ describe('PlacementGroupsDetailPanel', () => {
               linode_id: 1,
             },
           ],
+          placement_group_policy: 'strict',
+          placement_group_type: 'affinity:local',
           region: 'us-west',
         }),
       ],
@@ -104,7 +122,11 @@ describe('PlacementGroupsDetailPanel', () => {
   });
 
   it('should have its select disabled and no create PG button when provided a region without PG capability', async () => {
-    const { getByRole, getByTestId, queryByRole } = await renderWithThemeAndRouter(
+    const {
+      getByRole,
+      getByTestId,
+      queryByRole,
+    } = await renderWithThemeAndRouter(
       <PlacementGroupsDetailPanel
         {...defaultProps}
         selectedRegionId="us-southeast"

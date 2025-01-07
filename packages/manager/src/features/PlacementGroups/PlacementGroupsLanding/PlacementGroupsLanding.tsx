@@ -168,7 +168,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     return <CircleProgress />;
   }
 
-  if (placementGroups?.results === 0 && query === '') {
+  if (placementGroups?.results === 0 && !query) {
     return (
       <>
         <PlacementGroupsLandingEmptyState

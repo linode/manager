@@ -1,6 +1,6 @@
 import { Button, Stack } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -10,12 +10,14 @@ import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/u
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
   PLACEMENT_GROUP_LINODES_ERROR_MESSAGE,
+  PLACEMENT_GROUPS_DETAILS_ROUTE,
 } from '../../constants';
 import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
 import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
 import type { Linode, PlacementGroup, Region } from '@linode/api-v4';
+import type { PlacementGroupsSearchParams } from 'src/routes/placementGroups';
 
 interface Props {
   assignedLinodes: Linode[] | undefined;
@@ -24,6 +26,8 @@ interface Props {
   placementGroup: PlacementGroup | undefined;
   region: Region | undefined;
 }
+
+type PlacementGroupLinodesSearchParams = PlacementGroupsSearchParams;
 
 export const PlacementGroupsLinodes = (props: Props) => {
   const {
@@ -35,7 +39,10 @@ export const PlacementGroupsLinodes = (props: Props) => {
   } = props;
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchText, setSearchText] = React.useState('');
+  const search: PlacementGroupLinodesSearchParams = useSearch({
+    from: PLACEMENT_GROUPS_DETAILS_ROUTE,
+  });
+  const { query } = search;
   const [selectedLinode, setSelectedLinode] = React.useState<
     Linode | undefined
   >();
@@ -49,13 +56,25 @@ export const PlacementGroupsLinodes = (props: Props) => {
       return [];
     }
 
-    if (searchText) {
+    if (query) {
       return assignedLinodes.filter((linode: Linode) => {
-        return linode.label.toLowerCase().includes(searchText.toLowerCase());
+        return linode.label.toLowerCase().includes(query.toLowerCase());
       });
     }
 
     return assignedLinodes;
+  };
+
+  const onSearch = (searchString: string) => {
+    navigate({
+      params: { id: placementGroup.id },
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        query: searchString || undefined,
+      }),
+      to: PLACEMENT_GROUPS_DETAILS_ROUTE,
+    });
   };
 
   const hasReachedCapacity = hasPlacementGroupReachedCapacity({
@@ -66,6 +85,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
   const handleAssignLinodesDrawer = () => {
     navigate({
       params: { id: placementGroup.id },
+      search: (prev) => prev,
       to: '/placement-groups/$id/linodes/assign',
     });
   };
@@ -73,6 +93,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
     setSelectedLinode(linode);
     navigate({
       params: { id: placementGroup.id, linodeId: linode.id },
+      search: (prev) => prev,
       to: '/placement-groups/$id/linodes/unassign/$linodeId',
     });
   };
@@ -80,7 +101,8 @@ export const PlacementGroupsLinodes = (props: Props) => {
     setSelectedLinode(undefined);
     navigate({
       params: { id: placementGroup.id },
-      to: '/placement-groups/$id',
+      search: (prev) => prev,
+      to: PLACEMENT_GROUPS_DETAILS_ROUTE,
     });
   };
   const isAssignLinodesDrawerOpen = location.pathname.includes('/assign');
@@ -95,9 +117,9 @@ export const PlacementGroupsLinodes = (props: Props) => {
             debounceTime={250}
             hideLabel
             label="Search Linodes"
-            onSearch={setSearchText}
+            onSearch={onSearch}
             placeholder="Search Linodes"
-            value={searchText}
+            value={query ?? ''}
           />
         </Grid>
         <Grid>

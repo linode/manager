@@ -1,7 +1,7 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
 import { CircleProgress, Notice } from '@linode/ui';
-import * as React from 'react';
 import { useParams } from '@tanstack/react-router';
+import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';

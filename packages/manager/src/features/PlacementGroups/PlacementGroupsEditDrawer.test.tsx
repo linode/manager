@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { placementGroupFactory, regionFactory } from 'src/factories';
@@ -14,8 +14,8 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
     useParams: queryMocks.useParams,
@@ -66,7 +66,7 @@ describe('PlacementGroupsCreateDrawer', () => {
 
     const editButton = getByRole('button', { name: 'Edit' });
     expect(editButton).toBeEnabled();
-    fireEvent.click(editButton);
+    await userEvent.click(editButton);
 
     expect(queryMocks.useMutatePlacementGroup).toHaveBeenCalled();
   });

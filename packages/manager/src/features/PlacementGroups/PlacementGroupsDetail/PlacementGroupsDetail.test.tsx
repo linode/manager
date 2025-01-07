@@ -11,6 +11,7 @@ import { PlacementGroupsDetail } from './PlacementGroupsDetail';
 
 const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
+  useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups/1' }),
   useParams: vi.fn().mockReturnValue({}),
   usePlacementGroupQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
@@ -32,11 +33,19 @@ vi.mock('src/queries/linodes/linodes', async () => {
   };
 });
 
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
+
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useParams: queryMocks.useParams,
+    useLocation: queryMocks.useLocation,
   };
 });
 
@@ -51,7 +60,10 @@ vi.mock('src/queries/regions/regions', async () => {
 describe('PlacementGroupsLanding', () => {
   it('renders a error page', async () => {
     const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsDetail />
+      <PlacementGroupsDetail />,
+      {
+        initialRoute: '/placement-groups/1',
+      }
     );
 
     expect(getByText('Not Found')).toBeInTheDocument();

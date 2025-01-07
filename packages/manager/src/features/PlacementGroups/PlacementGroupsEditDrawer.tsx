@@ -4,10 +4,10 @@ import {
 } from '@linode/api-v4';
 import { CircleProgress, Divider, Notice, Stack, TextField } from '@linode/ui';
 import { updatePlacementGroupSchema } from '@linode/validation';
+import { useParams } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from '@tanstack/react-router';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
@@ -36,8 +36,7 @@ export const PlacementGroupsEditDrawer = (
     region,
     selectedPlacementGroup: placementGroupFromProps,
   } = props;
-  // todo connie - try to consolidate params/remove params from drawers?
-  // figure out error with NaN
+  // todo connie - try to consolidate params/remove params from drawers / switch to dialog props
   const params = useParams({ strict: false });
   const {
     data: placementGroupFromParam,
@@ -45,7 +44,9 @@ export const PlacementGroupsEditDrawer = (
     status,
   } = usePlacementGroupQuery(
     Number(params.id),
-    open && placementGroupFromProps === undefined
+    open &&
+      placementGroupFromProps === undefined &&
+      !Number.isNaN(Number(params.id))
   );
 
   const placementGroup = React.useMemo(
