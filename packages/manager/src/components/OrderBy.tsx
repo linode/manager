@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { equals, pathOr, sort, splitAt } from 'ramda';
+import { equals, pathOr, sort } from 'ramda';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
@@ -16,6 +16,7 @@ import {
   sortByString,
   sortByUTFDate,
 } from 'src/utilities/sort-by';
+import { splitStringAt } from 'src/utilities/splitAt';
 
 import type { Order } from 'src/hooks/useOrder';
 import type { ManagerPreferences } from 'src/types/ManagerPreferences';
@@ -113,7 +114,7 @@ export const sortData = <T,>(orderBy: string, order: Order) => {
      */
     let orderByProp;
     if (orderBy.includes('[')) {
-      orderByProp = splitAt(orderBy.indexOf('['), orderBy) // will end up like ['ipv4', '[0]']
+      orderByProp = splitStringAt(orderBy.indexOf('['), orderBy) // will end up like ['ipv4', '[0]']
         .map((eachValue) =>
           eachValue.includes('[')
             ? /** if the element has square brackets, remove them and convert to a number */

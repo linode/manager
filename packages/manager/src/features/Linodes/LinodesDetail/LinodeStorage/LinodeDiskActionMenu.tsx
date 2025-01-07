@@ -1,7 +1,6 @@
 import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { splitAt } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -12,6 +11,7 @@ import { sendEvent } from 'src/utilities/analytics/utils';
 import type { Disk, Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import { splitArrayAt } from 'src/utilities/splitAt';
 
 interface Props {
   disk: Disk;
@@ -87,7 +87,10 @@ export const LinodeDiskActionMenu = (props: Props) => {
   ];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
+  const [inlineActions, menuActions] = splitArrayAt(
+    splitActionsArrayIndex,
+    actions
+  );
 
   return (
     <Box alignItems="center" display="flex" justifyContent="flex-end">

@@ -1,12 +1,15 @@
-import { Domain } from '@linode/api-v4/lib/domains';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { splitAt } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { splitArrayAt } from 'src/utilities/splitAt';
+
+import type { Domain } from '@linode/api-v4/lib/domains';
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 const useStyles = makeStyles()(() => ({
   button: {
@@ -74,7 +77,10 @@ export const DomainActionMenu = React.memo((props: DomainActionMenuProps) => {
   // Index at which non-inline actions begin. Our convention: place actions that are inline (at non-mobile/non-tablet viewports) at start of the array.
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
 
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
+  const [inlineActions, menuActions] = splitArrayAt(
+    splitActionsArrayIndex,
+    actions
+  );
 
   return (
     <>

@@ -1,8 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { isEmpty, splitAt } from 'ramda';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -10,9 +9,12 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { capitalize } from 'src/utilities/capitalize';
+import { splitArrayAt } from 'src/utilities/splitAt';
 
 import { StyledButton, StyledTypography } from './ResultGroup.styles';
 import { ResultRow } from './ResultRow';
+
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface ResultGroupProps {
   entity: string;
@@ -34,7 +36,9 @@ export const ResultGroup = (props: ResultGroupProps) => {
   }
 
   const [initial, hidden] =
-    results.length > groupSize ? splitAt(groupSize, results) : [results, []];
+    results.length > groupSize
+      ? splitArrayAt(groupSize, results)
+      : [results, []];
 
   return (
     <Grid>

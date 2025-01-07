@@ -1,18 +1,20 @@
-import { MonitorStatus } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
-import { splitAt } from 'ramda';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import {
   useDisableMonitorMutation,
   useEnableMonitorMutation,
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { splitArrayAt } from 'src/utilities/splitAt';
+
+import type { MonitorStatus } from '@linode/api-v4/lib/managed';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface MonitorActionMenuProps {
   label: string;
@@ -100,7 +102,10 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
   ];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
+  const [inlineActions, menuActions] = splitArrayAt(
+    splitActionsArrayIndex,
+    actions
+  );
 
   return (
     <>
