@@ -1,18 +1,7 @@
 import { makeStyles } from 'tss-react/mui';
 
-import type { Theme } from '@mui/material/styles';
-
-export const useStyles = makeStyles<
-  void,
-  'error' | 'icon' | 'important' | 'noticeText'
->()((theme: Theme, _params, classes) => ({
+export const useStyles = makeStyles()((theme) => ({
   error: {
-    [`&.${classes.important}`]: {
-      borderLeftWidth: 32,
-    },
-    borderLeft: `5px solid ${theme.palette.error.dark}`,
-  },
-  errorList: {
     borderLeft: `5px solid ${theme.palette.error.dark}`,
   },
   icon: {
@@ -21,26 +10,13 @@ export const useStyles = makeStyles<
     position: 'absolute',
   },
   important: {
-    '&.MuiGrid2-root': {
-      padding: theme.spacing(1),
-      paddingRight: 18,
-    },
-    [`& .${classes.noticeText}`]: {
-      fontFamily: theme.font.normal,
-    },
-    backgroundColor: theme.bg.bgPaper,
+    backgroundColor: theme.palette.background.paper,
+    borderLeftWidth: 32,
+    fontFamily: theme.font.normal,
+    padding: theme.spacing(1),
   },
   info: {
-    [`&.${classes.important}`]: {
-      borderLeftWidth: 32,
-    },
     borderLeft: `5px solid ${theme.palette.info.dark}`,
-  },
-  infoList: {
-    borderLeft: `5px solid ${theme.palette.info.dark}`,
-  },
-  inner: {
-    width: '100%',
   },
   marketing: {
     borderLeft: `5px solid ${theme.color.green}`,
@@ -54,37 +30,21 @@ export const useStyles = makeStyles<
     '& + .notice': {
       marginTop: `${theme.spacing()} !important`,
     },
-    [`& .${classes.error}`]: {
-      borderLeftColor: theme.color.red,
-    },
     alignItems: 'center',
     borderRadius: 1,
     display: 'flex',
     fontSize: '1rem',
     maxWidth: '100%',
-    padding: '4px 16px',
-    paddingRight: 18,
+    padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
     position: 'relative',
   },
   success: {
-    [`&.${classes.important}`]: {
-      borderLeftWidth: 32,
-    },
-    borderLeft: `5px solid ${theme.palette.success.dark}`,
-  },
-  successList: {
     borderLeft: `5px solid ${theme.palette.success.dark}`,
   },
   warning: {
-    [`& .${classes.icon}`]: {
-      color: theme.tokens.color.Neutrals[80],
-    },
-    [`&.${classes.important}`]: {
-      borderLeftWidth: 32,
-    },
     borderLeft: `5px solid ${theme.palette.warning.dark}`,
   },
-  warningList: {
-    borderLeft: `5px solid ${theme.palette.warning.dark}`,
+  warningIcon: {
+    color: theme.tokens.color.Neutrals[80],
   },
 }));
