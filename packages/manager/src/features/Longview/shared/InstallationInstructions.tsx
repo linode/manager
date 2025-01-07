@@ -87,13 +87,15 @@ export const InstallationInstructions = React.memo((props: Props) => {
             </Typography>
           </StyledInstructionGrid>
           <StyledInstructionGrid>
-            <Typography data-testid="api-key">API Key:</Typography>
+            <Typography data-testid="api-key" sx={{ marginRight: 0.5 }}>
+              API Key:
+            </Typography>
             <MaskableText
               iconPosition="start"
               isToggleable
               sxTypography={{ color: theme.color.grey1 }}
-              text={props.APIKey}
               sxVisibilityTooltip={{ marginLeft: 1 }}
+              text={props.APIKey}
             />
           </StyledInstructionGrid>
         </Grid>
