@@ -61,14 +61,15 @@ export const getAlertChipBorderRadius = (
   mergeChips: boolean | undefined,
   theme: Theme
 ): string => {
+  const alertSpacing = theme.spacing(0.3);
   if (!mergeChips || length === 1) {
-    return theme.spacing(0.3);
+    return alertSpacing;
   }
   if (index === 0) {
-    return `${theme.spacing(0.3)} 0 0 ${theme.spacing(0.3)}`;
+    return `${alertSpacing} 0 0 ${alertSpacing}`;
   }
   if (index === length - 1) {
-    return `0 ${theme.spacing(0.3)} ${theme.spacing(0.3)} 0`;
+    return `0 ${alertSpacing} ${alertSpacing} 0`;
   }
   return '0';
 };
