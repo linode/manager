@@ -267,7 +267,10 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
  * @param unit base unit of the values
  * @returns maximum possible rolled up unit based on the unit
  */
-export const generateMaxUnit = (legendRowsData: MetricsDisplayRow[], unit: string) => {
+export const generateMaxUnit = (
+  legendRowsData: MetricsDisplayRow[],
+  unit: string
+) => {
   const maxValue = Math.max(
     0,
     ...legendRowsData?.map((row) => row?.data.max ?? 0)

@@ -15,7 +15,10 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { ALGORITHM_HELPER_TEXT, SESSION_STICKINESS_DEFAULTS } from './constants';
+import {
+  ALGORITHM_HELPER_TEXT,
+  SESSION_STICKINESS_DEFAULTS,
+} from './constants';
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
 import { PassiveCheck } from './NodeBalancerPassiveCheck';

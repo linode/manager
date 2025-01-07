@@ -30,6 +30,7 @@ import {
   mockUpdateControlPlaneACLError,
   mockGetControlPlaneACLError,
   mockGetTieredKubernetesVersions,
+  mockUpdateClusterError,
 } from 'support/intercepts/lke';
 import {
   mockGetLinodeType,
@@ -928,6 +929,74 @@ describe('LKE cluster updates', () => {
         .findByTitle('Delete Pool')
         .should('be.visible')
         .should('be.disabled');
+    });
+
+    /*
+     * - Confirms LKE summary page updates to reflect new cluster name.
+     */
+    it('can rename cluster', () => {
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+      });
+      const mockNewCluster = kubernetesClusterFactory.build({
+        label: 'newClusterName',
+      });
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockUpdateCluster(mockCluster.id, mockNewCluster).as('updateCluster');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+      // LKE clusters can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
+      cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
+      cy.findByTestId('textfield-input')
+        .should('be.visible')
+        .should('have.value', mockCluster.label)
+        .clear()
+        .type(`${mockNewCluster.label}{enter}`);
+
+      cy.wait('@updateCluster');
+
+      cy.findAllByText(mockNewCluster.label).should('be.visible');
+      cy.findAllByText(mockCluster.label).should('not.exist');
+    });
+
+    /*
+     * - Confirms error message shows when the API request fails.
+     */
+    it('can handle API errors when renaming cluster', () => {
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+      });
+      const mockErrorCluster = kubernetesClusterFactory.build({
+        label: 'errorClusterName',
+      });
+      const mockErrorMessage = 'API request fails';
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockUpdateClusterError(mockCluster.id, mockErrorMessage).as(
+        'updateClusterError'
+      );
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+      // LKE cluster can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
+      cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
+      cy.findByTestId('textfield-input')
+        .should('be.visible')
+        .should('have.value', mockCluster.label)
+        .clear()
+        .type(`${mockErrorCluster.label}{enter}`);
+
+      // Error message shows when API request fails.
+      cy.wait('@updateClusterError');
+      cy.findAllByText(mockErrorMessage).should('be.visible');
     });
   });
 

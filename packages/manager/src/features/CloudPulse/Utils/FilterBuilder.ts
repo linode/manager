@@ -139,7 +139,7 @@ export const getResourcesProperties = (
     placeholder,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
-    xFilter: buildXFilter(config, dependentFilters ?? {})
+    xFilter: buildXFilter(config, dependentFilters ?? {}),
   };
 };
 

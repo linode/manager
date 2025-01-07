@@ -50,7 +50,11 @@ export const CloudPulseResourcesSelect = React.memo(
     const flags = useFlags();
 
     const resourceFilterMap: Record<string, Filter> = {
-      dbaas: { '+order': 'asc', '+order_by': 'label', platform: 'rdbms-default' },
+      dbaas: {
+        '+order': 'asc',
+        '+order_by': 'label',
+        platform: 'rdbms-default',
+      },
     };
 
     const { data: resources, isError, isLoading } = useResourcesQuery(
