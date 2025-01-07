@@ -14,7 +14,7 @@ import { useVolumeTypesQuery } from 'src/queries/volumes/volumes';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
-import { SIZE_FIELD_WIDTH } from '../constants';
+import { SIZE_FIELD_WIDTH } from '../../constants';
 
 import type { Theme } from '@mui/material/styles';
 

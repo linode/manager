@@ -1,19 +1,25 @@
-import { Box, Checkbox, Notice, TextField } from '@linode/ui';
-import { UpdateVolumeSchema } from '@linode/validation';
+import { Box, Checkbox, Notice, TextField, Typography } from '@linode/ui';
+import { CloneVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
-import React from 'react';
+import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
+import { BLOCK_STORAGE_CLONING_INHERITANCE_CAVEAT } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { TagsInput } from 'src/components/TagsInput/TagsInput';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants } from 'src/queries/profile/profile';
-import { useUpdateVolumeMutation } from 'src/queries/volumes/volumes';
+import {
+  useCloneVolumeMutation,
+  useVolumeTypesQuery,
+} from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+
+import { PricePanel } from './VolumeDrawer/PricePanel';
 
 import type { Volume } from '@linode/api-v4';
 
@@ -24,56 +30,58 @@ interface Props {
   volume: Volume | undefined;
 }
 
-export const EditVolumeDrawer = (props: Props) => {
+const initialValues = { label: '' };
+
+export const CloneVolumeDrawer = (props: Props) => {
   const { isFetching, onClose: _onClose, open, volume } = props;
 
-  const { data: grants } = useGrants();
+  const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
 
-  const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
+  const { checkForNewEvents } = useEventsPollingActions();
+
+  const { data: grants } = useGrants();
+  const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   const {
     isBlockStorageEncryptionFeatureEnabled,
   } = useIsBlockStorageEncryptionFeatureEnabled();
 
+  // Even if a restricted user has the ability to create Volumes, they
+  // can't clone a Volume they only have read only permission on.
   const isReadOnly =
     grants !== undefined &&
     grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
       'read_only';
 
+  const isInvalidPrice = !types || isError;
+
   const {
-    dirty,
     errors,
     handleBlur,
     handleChange,
     handleSubmit,
     isSubmitting,
     resetForm,
-    setFieldValue,
     status: error,
     touched,
     values,
   } = useFormik({
-    enableReinitialize: true,
-    initialValues: { label: volume?.label ?? '', tags: volume?.tags ?? [] },
+    initialValues,
     async onSubmit(values, { setErrors, setStatus }) {
       try {
-        await updateVolume({
-          label: values.label ?? '',
-          tags: values.tags,
-          volumeId: volume?.id ?? -1,
-        });
-
+        await cloneVolume({ label: values.label, volumeId: volume?.id ?? -1 });
         onClose();
+        checkForNewEvents();
       } catch (error) {
         handleFieldErrors(setErrors, error);
         handleGeneralErrors(
           setStatus,
           error,
-          `Unable to edit this Volume at this time. Please try again later.`
+          `Unable to clone this volume at this time. Please try again later.`
         );
       }
     },
-    validationSchema: UpdateVolumeSchema,
+    validationSchema: CloneVolumeSchema,
   });
 
   const onClose = () => {
@@ -86,45 +94,31 @@ export const EditVolumeDrawer = (props: Props) => {
       isFetching={isFetching}
       onClose={onClose}
       open={open}
-      title="Edit Volume"
+      title="Clone Volume"
     >
       <form onSubmit={handleSubmit}>
         {isReadOnly && (
           <Notice
-            spacingBottom={0}
-            text="You don't have permission to edit this volume."
+            spacingBottom={12}
+            text="You don't have permission to clone this volume."
             variant="error"
           />
         )}
         {error && <Notice text={error} variant="error" />}
+        <Typography variant="body1">
+          The newly created volume will be an exact clone of{' '}
+          <b>{volume?.label}</b>. It will have a size of {volume?.size} GB and
+          be available in {volume?.region}.
+        </Typography>
         <TextField
           disabled={isReadOnly}
-          errorText={errors.label}
+          errorText={touched.label ? errors.label : undefined}
           label="Label"
           name="label"
           onBlur={handleBlur}
           onChange={handleChange}
           required
           value={values.label}
-        />
-        <TagsInput
-          onChange={(selected) =>
-            setFieldValue(
-              'tags',
-              selected.map((item) => item.value)
-            )
-          }
-          tagError={
-            touched.tags
-              ? errors.tags
-                ? 'Unable to tag volume.'
-                : undefined
-              : undefined
-          }
-          disabled={isReadOnly}
-          label="Tags"
-          name="tags"
-          value={values.tags?.map((t) => ({ label: t, value: t })) ?? []}
         />
         {isBlockStorageEncryptionFeatureEnabled && (
           <Box
@@ -137,15 +131,24 @@ export const EditVolumeDrawer = (props: Props) => {
               checked={volume?.encryption === 'enabled'}
               disabled
               text="Encrypt Volume"
-              toolTipText={BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY}
+              toolTipText={BLOCK_STORAGE_CLONING_INHERITANCE_CAVEAT}
             />
           </Box>
         )}
+        <PricePanel
+          currentSize={volume?.size ?? -1}
+          regionId={volume?.region ?? ''}
+          value={volume?.size ?? -1}
+        />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: isReadOnly || !dirty,
-            label: 'Save Changes',
+            disabled: isReadOnly || isInvalidPrice,
+            label: 'Clone Volume',
             loading: isSubmitting,
+            tooltipText:
+              !isLoading && isInvalidPrice
+                ? PRICES_RELOAD_ERROR_NOTICE_TEXT
+                : '',
             type: 'submit',
           }}
           secondaryButtonProps={{
