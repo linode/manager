@@ -1,6 +1,26 @@
 import type { ServiceTypesList } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
+interface AlertChipBorderProps {
+  /**
+   * The radius needed for the border
+   */
+  borderRadius: string;
+  /**
+   * The index of the chip
+   */
+  index: number;
+  /**
+   * The total length of the chips to be build
+   */
+  length: number;
+
+  /**
+   * Indicates Whether to merge the chips into single or keep it individually
+   */
+  mergeChips: boolean | undefined;
+}
+
 /**
  * @param serviceType Service type for which the label needs to be displayed
  * @param serviceTypeList List of available service types in Cloud Pulse
@@ -56,20 +76,17 @@ export const convertSecondsToMinutes = (seconds: number): string => {
  * @returns The border radius to be applied on chips based on the parameters
  */
 export const getAlertChipBorderRadius = (
-  index: number,
-  length: number,
-  mergeChips: boolean | undefined,
-  theme: Theme
+  props: AlertChipBorderProps
 ): string => {
-  const alertSpacing = theme.spacing(0.3);
+  const { borderRadius, index, length, mergeChips } = props;
   if (!mergeChips || length === 1) {
-    return alertSpacing;
+    return borderRadius;
   }
   if (index === 0) {
-    return `${alertSpacing} 0 0 ${alertSpacing}`;
+    return `${borderRadius} 0 0 ${borderRadius}`;
   }
   if (index === length - 1) {
-    return `0 ${alertSpacing} ${alertSpacing} 0`;
+    return `0 ${borderRadius} ${borderRadius} 0`;
   }
   return '0';
 };

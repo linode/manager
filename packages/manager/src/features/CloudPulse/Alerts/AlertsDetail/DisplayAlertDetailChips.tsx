@@ -72,12 +72,12 @@ export const DisplayAlertDetailChips = React.memo(
                     marginLeft={mergeChips && index > 0 ? -1 : 0}
                   >
                     <StyledAlertChip
-                      borderRadius={getAlertChipBorderRadius(
+                      borderRadius={getAlertChipBorderRadius({
+                        borderRadius: theme.spacing(0.3),
                         index,
-                        value.length,
+                        length: value.length,
                         mergeChips,
-                        theme
-                      )}
+                      })}
                       label={label}
                       variant="outlined"
                     />

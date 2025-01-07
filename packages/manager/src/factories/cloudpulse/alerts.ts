@@ -19,7 +19,7 @@ export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricC
     aggregation_type: Factory.each(() => pickRandom(['avg', 'sum'])),
     dimension_filters: alertDimensionsFactory.buildList(1),
     label: Factory.each(() => pickRandom(['CPU Usage', 'Memory Usage'])),
-    metric: Factory.each(() => pickRandom(['CPU Usage', 'Memory Usage'])),
+    metric: Factory.each(() => pickRandom(['cpu_usage', 'memory_usage'])),
     operator: Factory.each(() => pickRandom(['eq', 'gt'])),
     threshold: 60,
     unit: Factory.each(() => pickRandom(['Bytes', 'Percentage'])),

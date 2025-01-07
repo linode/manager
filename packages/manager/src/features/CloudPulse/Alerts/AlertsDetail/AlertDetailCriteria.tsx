@@ -10,7 +10,7 @@ import { RenderAlertMetricsAndDimensions } from './RenderAlertsMetricsAndDimensi
 import type { Alert } from '@linode/api-v4';
 
 interface CriteriaProps {
-  /*
+  /**
    * The alert detail object for which the criteria needs to be displayed
    */
   alertDetails: Alert;
