@@ -23,8 +23,6 @@ vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
   };
 });
 
-vi.mock('src/components/Autocomplete/Autocomplete');
-
 const props: ObjectDetailsDrawerProps = {
   bucketName: 'my-bucket',
   clusterId: 'cluster-id',
