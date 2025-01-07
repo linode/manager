@@ -8,7 +8,7 @@ import {
 } from 'src/factories';
 import { randomLabel } from 'support/util/random';
 
-describe('Object Storage Gen 1 Bucket Details Tabs', () => {
+describe('Object Storage Multicluster Bucket Details Tabs', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       objMultiCluster: true,
