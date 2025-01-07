@@ -97,7 +97,7 @@ describe('Account cancellation', () => {
           .should('be.visible')
           .should('not.be.checked');
 
-        // Check both boxes but verify submit remains disabled without username
+        // Check both boxes but verify submit remains disabled without email
         cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
         cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
 
@@ -194,9 +194,14 @@ describe('Account cancellation', () => {
       .findByTitle(cancellationDialogTitle)
       .should('be.visible')
       .within(() => {
-        // Check both boxes but verify submit remains disabled without username
+        // Check both boxes but verify submit remains disabled without email
         cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
         cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
+        
+        ui.button
+          .findByTitle('Close Account')
+          .should('be.visible')
+          .should('be.disabled');
 
         cy.findByLabelText(`Enter your email address (${mockProfile.email})`)
           .should('be.visible')
@@ -374,9 +379,14 @@ describe('Parent/Child account cancellation', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        // Check both boxes but verify submit remains disabled without username
+        // Check both boxes but verify submit remains disabled without email
         cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
         cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
+        
+        ui.button
+          .findByTitle('Close Account')
+          .should('be.visible')
+          .should('be.disabled');
 
         // Enter email, confirm that submit button becomes enabled, and click
         // the submit button.
