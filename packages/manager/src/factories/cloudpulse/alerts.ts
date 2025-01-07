@@ -6,7 +6,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   channels: [],
   created: new Date().toISOString(),
   created_by: 'user1',
-  description: '',
+  description: 'Test description',
   entity_ids: ['0', '1', '2', '3'],
   has_more_resources: true,
   id: Factory.each((i) => i),
@@ -17,7 +17,9 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   service_type: 'linode',
   severity: 0,
   status: 'enabled',
-  triggerCondition: {
+  tags: ['tag1', 'tag2'],
+  trigger_conditions: {
+    criteria_condition: 'ALL',
     evaluation_period_seconds: 0,
     polling_interval_seconds: 0,
     trigger_occurrences: 0,

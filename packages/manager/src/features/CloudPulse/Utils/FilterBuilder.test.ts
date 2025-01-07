@@ -2,7 +2,7 @@ import { dashboardFactory } from 'src/factories';
 import { databaseQueries } from 'src/queries/databases/databases';
 
 import { RESOURCES } from './constants';
-import { deepEqual } from './FilterBuilder';
+import { deepEqual, getFilters } from './FilterBuilder';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -104,7 +104,9 @@ it('test getResourceSelectionProperties method', () => {
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(false);
-    expect(JSON.stringify(xFilter)).toEqual('{"+and":[{"region":"us-east"}]}');
+    expect(JSON.stringify(xFilter)).toEqual(
+      '{"+and":[{"region":"us-east"}],"+or":[]}'
+    );
     expect(label).toEqual(name);
   }
 });
@@ -136,7 +138,7 @@ it('test getResourceSelectionProperties method with disabled true', () => {
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(true);
-    expect(JSON.stringify(xFilter)).toEqual('{"+and":[]}');
+    expect(JSON.stringify(xFilter)).toEqual('{"+and":[],"+or":[]}');
     expect(label).toEqual(name);
   }
 });
@@ -177,13 +179,16 @@ it('test buildXfilter method', () => {
   if (resourceSelectionConfig) {
     let result = buildXFilter(resourceSelectionConfig, {
       region: 'us-east',
+      tags: ['test1', 'test2'],
     });
 
-    expect(JSON.stringify(result)).toEqual('{"+and":[{"region":"us-east"}]}');
+    expect(JSON.stringify(result)).toEqual(
+      '{"+and":[{"region":"us-east"}],"+or":[{"tags":"test1"},{"tags":"test2"}]}'
+    );
 
     result = buildXFilter(resourceSelectionConfig, {});
 
-    expect(JSON.stringify(result)).toEqual('{"+and":[]}');
+    expect(JSON.stringify(result)).toEqual('{"+and":[],"+or":[]}');
   }
 });
 
@@ -342,4 +347,13 @@ it('returns false for different arrays', () => {
   const arr1 = [1, 2, 3];
   const arr2 = [1, 2, 4];
   expect(deepEqual(arr1, arr2)).toBe(false);
+});
+
+it('should return the filters based on dashboard', () => {
+  const filters = getFilters(
+    dashboardFactory.build({ service_type: 'dbaas' }),
+    true
+  );
+
+  expect(filters?.length).toBe(1);
 });

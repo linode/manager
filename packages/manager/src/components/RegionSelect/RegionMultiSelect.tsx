@@ -37,6 +37,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
+    forcefullyShownRegionIds,
     helperText,
     isClearable,
     label,
@@ -55,7 +56,11 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     isLoading: accountAvailabilityLoading,
   } = useAllAccountAvailabilitiesQuery();
 
-  const regionOptions = getRegionOptions({ currentCapability, regions });
+  const regionOptions = getRegionOptions({
+    currentCapability,
+    forcefullyShownRegionIds,
+    regions,
+  });
 
   const selectedRegions = regionOptions.filter((r) =>
     selectedIds.includes(r.id)
