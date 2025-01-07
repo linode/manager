@@ -1101,7 +1101,7 @@ describe('LKE cluster updates', () => {
     /*
      * - Confirms error message shows when the API request fails.
      */
-    it('can handle API errors when rename cluster', () => {
+    it('can handle API errors when renaming cluster', () => {
       const mockCluster = kubernetesClusterFactory.build({
         k8s_version: latestKubernetesVersion,
       });
