@@ -32,14 +32,23 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
   // Memoized trigger criteria rendering
   const renderTriggerCriteria = React.useMemo(
     () => (
-      <Grid alignItems="center" container item md={8} xs={12} data-qa-item="Trigger Alert When">
+      <Grid
+        alignItems="center"
+        container
+        data-qa-item="Trigger Alert When"
+        item
+        md={8}
+        xs={12}
+      >
         <StyledAlertChip
           borderRadius={theme.spacing(0.3)}
+          data-qa-chip="All"
           label="All"
           variant="outlined"
         />
         <Typography
           color={theme.color.offBlack}
+          data-qa-item="criteria are met for"
           marginRight={0.5}
           variant="body1"
         >
@@ -47,6 +56,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
         </Typography>
         <StyledAlertChip
           borderRadius={theme.spacing(0.3)}
+          data-qa-chip={triggerOccurrences}
           label={triggerOccurrences}
           variant="outlined"
         />
