@@ -10,7 +10,7 @@ import Database from 'src/assets/icons/entityIcons/database.svg';
 import IAM from 'src/assets/icons/entityIcons/iam.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
-import Networking from 'src/assets/icons/entityIcons/Networking.svg';
+import Networking from 'src/assets/icons/entityIcons/networking.svg';
 import More from 'src/assets/icons/more.svg';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
