@@ -27,6 +27,8 @@ export interface DateTimePickerProps {
   format?: string;
   /** Label for the input field */
   label?: string;
+  /** Minimum date-time before which all date-time will be disabled */
+  minDate?: DateTime;
   /** Callback when the "Apply" button is clicked */
   onApply?: () => void;
   /** Callback when the "Cancel" button is clicked */
@@ -64,6 +66,7 @@ export const DateTimePicker = ({
   errorText = '',
   format = 'yyyy-MM-dd HH:mm',
   label = 'Select Date and Time',
+  minDate,
   onApply,
   onCancel,
   onChange,
@@ -193,6 +196,7 @@ export const DateTimePicker = ({
       >
         <Box padding={2}>
           <DateCalendar
+            minDate={minDate}
             onChange={handleDateChange}
             value={selectedDateTime || null}
             {...dateCalendarProps}
@@ -228,6 +232,12 @@ export const DateTimePicker = ({
             {showTime && (
               <Grid item xs={4}>
                 <TimePicker
+                  minTime={
+                    minDate &&
+                    minDate.toISODate() === selectedDateTime?.toISODate()
+                      ? minDate
+                      : undefined
+                  }
                   slotProps={{
                     actionBar: {
                       sx: (theme: Theme) => ({

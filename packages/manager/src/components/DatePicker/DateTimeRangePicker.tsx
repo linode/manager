@@ -9,6 +9,9 @@ import { DateTimePicker } from './DateTimePicker';
 import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface DateTimeRangePickerProps {
+  /** If true, shows the date presets field instead of the date pickers */
+  enablePresets?: boolean;
+
   /** Properties for the end date field */
   endDateProps?: {
     /** Custom error message for invalid end date */
@@ -69,13 +72,17 @@ export interface DateTimeRangePickerProps {
 
 type DatePresetType =
   | '7days'
+  | '12hours'
   | '24hours'
   | '30days'
+  | '30minutes'
   | 'custom_range'
   | 'last_month'
   | 'this_month';
 
 const presetsOptions: { label: string; value: DatePresetType }[] = [
+  { label: 'Last 30 Minutes', value: '30minutes' },
+  { label: 'Last 12 Hours', value: '12hours' },
   { label: 'Last 24 Hours', value: '24hours' },
   { label: 'Last 7 Days', value: '7days' },
   { label: 'Last 30 Days', value: '30days' },
@@ -86,6 +93,8 @@ const presetsOptions: { label: string; value: DatePresetType }[] = [
 
 export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   const {
+    enablePresets = false,
+
     endDateProps: {
       errorMessage: endDateErrorMessage = 'End date/time cannot be before the start date/time.',
       label: endLabel = 'End Date and Time',
@@ -93,9 +102,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
       showTimeZone: showEndTimeZone = false,
       value: endDateTimeValue = null,
     } = {},
-
     format = 'yyyy-MM-dd HH:mm',
-
     onChange,
 
     presetsProps: {
@@ -165,20 +172,23 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   const handlePresetSelection = (value: DatePresetType) => {
     const now = DateTime.now();
     let newStartDateTime: DateTime | null = null;
-    let newEndDateTime: DateTime | null = null;
+    let newEndDateTime: DateTime | null = now;
 
     switch (value) {
+      case '30minutes':
+        newStartDateTime = now.minus({ minutes: 30 });
+        break;
+      case '12hours':
+        newStartDateTime = now.minus({ hours: 12 });
+        break;
       case '24hours':
         newStartDateTime = now.minus({ hours: 24 });
-        newEndDateTime = now;
         break;
       case '7days':
         newStartDateTime = now.minus({ days: 7 });
-        newEndDateTime = now;
         break;
       case '30days':
         newStartDateTime = now.minus({ days: 30 });
-        newEndDateTime = now;
         break;
       case 'this_month':
         newStartDateTime = now.startOf('month');
@@ -290,6 +300,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
             errorText={endDateError ?? undefined}
             format={format}
             label={endLabel}
+            minDate={startDateTime || undefined}
             onChange={handleEndDateTimeChange}
             placeholder={endDatePlaceholder}
             showTimeZone={showEndTimeZone}
