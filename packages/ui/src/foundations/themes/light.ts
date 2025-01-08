@@ -643,18 +643,6 @@ export const lightTheme: ThemeOptions = {
         },
       },
     },
-    MuiDateCalendar: {
-      styleOverrides: {
-        root: {
-          '& .MuiDayCalendar-header, & .MuiDayCalendar-weekContainer': {
-            justifyContent: 'space-between',
-          },
-          '& .MuiDayCalendar-weekDayLabel': {
-            fontSize: '0.875rem',
-          },
-        },
-      },
-    },
     MuiDialog: {
       styleOverrides: {
         paper: {
@@ -1061,24 +1049,6 @@ export const lightTheme: ThemeOptions = {
         },
       },
     },
-    MuiPickersCalendarHeader: {
-      styleOverrides: {
-        root: {
-          borderBottom: `1px solid ${borderColors.divider}`,
-          fontFamily: latoWeb.bold,
-          fontSize: '0.875rem',
-          paddingBottom: '8px',
-        },
-      },
-    },
-    MuiPickersDay: {
-      styleOverrides: {
-        root: {
-          fontSize: '0.875rem',
-          margin: '4px',
-        },
-      },
-    },
     MuiPopover: {
       styleOverrides: {
         paper: {
@@ -1445,38 +1415,6 @@ export const lightTheme: ThemeOptions = {
         },
         scrollButtons: {
           flex: '0 0 40px',
-        },
-      },
-    },
-    MuiTimePicker: {
-      defaultProps: {
-        slotProps: {
-          actionBar: {
-            sx: () => ({
-              justifyContent: 'center',
-              marginBottom: '4px',
-              marginTop: '4px',
-              padding: 0,
-            }),
-          },
-          layout: {
-            sx: () => ({
-              '& .MuiPickersLayout-contentWrapper': {
-                borderBottom: `1px solid ${borderColors.divider}`,
-              },
-              border: `1px solid ${borderColors.divider}`,
-            }),
-          },
-          openPickerButton: {
-            sx: { padding: 0 },
-          },
-          popper: {
-            sx: () => ({
-              ul: {
-                borderColor: `${borderColors.divider} !important`,
-              },
-            }),
-          },
         },
       },
     },
