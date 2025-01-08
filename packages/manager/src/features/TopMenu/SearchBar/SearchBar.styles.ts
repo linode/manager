@@ -74,8 +74,9 @@ export const StyledSearchBarWrapperDiv = styled('div', {
     ...theme.inputStyles.hover,
     '& svg': {
       color: theme.tokens.header.Icon.Default,
-    }, // 'transparent',
+    },
     backgroundColor: theme.tokens.header.Search.Background,
+    border: 'none',
   },
   ...theme.inputStyles.default,
   alignItems: 'center',
