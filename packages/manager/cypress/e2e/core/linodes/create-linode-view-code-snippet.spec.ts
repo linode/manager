@@ -20,7 +20,7 @@ describe('Create Linode flow to validate code snippet modal', () => {
 
     // Set Linode label, distribution, plan type, password, etc.
     linodeCreatePage.setLabel(linodeLabel);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById('us-east');
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(rootPass);
