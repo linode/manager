@@ -3,7 +3,7 @@ import { mockGetDomains } from 'support/intercepts/domains';
 
 describe('Domains empty landing page', () => {
   /**
-   * - Confirms Domains landing page empty state is shown when no Domains are present:
+   * - Confirms Domains landing page empty state is shown when no Domains are present: testing
    * - Confirms that "Getting Started Guides" and "Video Playlist" are listed on landing page.
    * - Confirms that clicking on "Import A Zone" opens "Import a Zone" drawer.
    * - Confirms that clicking "Create Domain" navigates user to domain create page.
