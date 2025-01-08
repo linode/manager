@@ -14,50 +14,71 @@ interface CloudPulseDateTimeRangePickerProps {
   ) => void;
   savePreferences?: boolean;
 }
-export const CloudPulseDateTimeRangePicker = (
-  props: CloudPulseDateTimeRangePickerProps
-) => {
-  const { defaultValue, handleStatsChange, savePreferences } = props;
-  const defaultSelected: TimeDurationDate = defaultValue as TimeDurationDate;
 
-  React.useEffect(() => {
-    if (defaultSelected) {
-      handleStatsChange(defaultSelected);
-    }
-  }, []);
+export const CloudPulseDateTimeRangePicker = React.memo(
+  (props: CloudPulseDateTimeRangePickerProps) => {
+    const { defaultValue, handleStatsChange, savePreferences } = props;
+    const defaultSelected: TimeDurationDate = defaultValue as TimeDurationDate;
+    React.useEffect(() => {
+      if (defaultSelected) {
+        handleStatsChange(defaultSelected);
+      }
+    }, []);
 
-  const end = DateTime.fromISO(defaultSelected.end, { zone: 'GMT' });
-  const start = DateTime.fromISO(defaultSelected.start, { zone: 'GMT' });
+    const end = DateTime.fromISO(defaultSelected?.end, { zone: 'GMT' });
+    const start = DateTime.fromISO(defaultSelected?.start, { zone: 'GMT' });
 
-  return (
-    <DateTimeRangePicker
-      endDateProps={{
-        value: end,
-      }}
-      onChange={({ end, preset, start }) => {
-        if (!end || !start || !preset) {
-          return;
-        }
+    return (
+      <DateTimeRangePicker
+        endDateProps={{
+          label: 'End Date',
+          placeholder: 'Select End Date',
+          value: end,
+        }}
+        onChange={({ end, preset, start }) => {
+          if (!end || !start || !preset) {
+            return;
+          }
+          handleStatsChange(
+            {
+              end: convertToGmt(end),
+              preset,
+              start: convertToGmt(start),
+            },
+            savePreferences
+          );
+        }}
+        presetsProps={{
+          defaultValue: defaultSelected?.preset,
+        }}
+        startDateProps={{
+          label: 'Start Date',
+          placeholder: 'Select Start Date',
+          value: start,
+        }}
+        sx={{
+          minWidth: '226px',
+        }}
+        enablePresets
+      />
+    );
+  }
+);
 
-        handleStatsChange(
-          {
-            end: end.split('.')[0] + 'Z',
-            preset,
-            start: start.split('.')[0] + 'Z',
-          },
-          savePreferences
-        );
-      }}
-      presetsProps={{
-        defaultValue: defaultSelected.preset,
-      }}
-      startDateProps={{
-        value: start,
-      }}
-      sx={{
-        minWidth: '226px',
-      }}
-      enablePresets
-    />
-  );
+export const defaultTimeDuration = (): TimeDurationDate => {
+  const date = DateTime.now().setZone('GMT');
+
+  const start = convertToGmt(date.minus({ minutes: 30 }).toISO() ?? '');
+  const end = convertToGmt(date.toISO() ?? '');
+
+  return {
+    end,
+    start,
+  };
+};
+
+const convertToGmt = (date: string): string => {
+  const dateObject = DateTime.fromISO(date);
+  const updatedDate = dateObject.setZone('GMT');
+  return updatedDate.toISO()?.split('.')[0] + 'Z';
 };

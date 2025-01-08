@@ -4,9 +4,10 @@ import * as React from 'react';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
+import { defaultTimeDuration } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseDashboardRenderer } from './CloudPulseDashboardRenderer';
 
-import type { Dashboard, TimeDuration, TimeDurationDate } from '@linode/api-v4';
+import type { Dashboard, TimeDurationDate } from '@linode/api-v4';
 
 export type FilterValueType = number | number[] | string | string[] | undefined;
 
@@ -28,7 +29,9 @@ export const CloudPulseDashboardLanding = () => {
     label: {},
   });
 
-  const [timeDuration, setTimeDuration] = React.useState<TimeDurationDate>();
+  const [timeDuration, setTimeDuration] = React.useState<TimeDurationDate>(
+    defaultTimeDuration()
+  );
 
   const [dashboard, setDashboard] = React.useState<Dashboard>();
 

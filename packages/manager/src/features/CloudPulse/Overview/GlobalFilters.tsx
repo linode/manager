@@ -9,18 +9,12 @@ import Reload from 'src/assets/icons/refresh.svg';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
-import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type {
-  AclpConfig,
-  Dashboard,
-  TimeDuration,
-  TimeDurationDate,
-} from '@linode/api-v4';
+import type { AclpConfig, Dashboard, TimeDurationDate } from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(

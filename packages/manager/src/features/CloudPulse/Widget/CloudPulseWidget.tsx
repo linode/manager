@@ -269,9 +269,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   }
 
   const metricsApiCallError = error?.[0]?.reason;
-
-  const tickFormat =
-    duration.unit === 'min' || duration.unit === 'hr' ? 'hh:mm a' : 'LLL dd';
+  const start = DateTime.fromISO(duration.start, { zone: 'GMT' });
+  const end = DateTime.fromISO(duration.end, { zone: 'GMT' });
+  const hours = end.diff(start, 'hours').hours;
+  const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
   return (
     <Grid container item lg={widget.size} xs={12}>
       <Stack flexGrow={1} spacing={2}>
