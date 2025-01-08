@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
-import { Link } from 'src/components/Link';
+import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
@@ -198,11 +198,7 @@ export const ContactInformation = React.memo((props: Props) => {
           </Box>
         </BillingBox>
         {maskSensitiveDataPreference && isContactInfoMasked ? (
-          <Typography>
-            This data is sensitive and hidden for privacy. To unmask all
-            sensitive data by default, go to{' '}
-            <Link to="/profile/settings">profile settings</Link>.
-          </Typography>
+          <MaskableTextAreaCopy />
         ) : (
           <Grid container spacing={2}>
             {(firstName ||

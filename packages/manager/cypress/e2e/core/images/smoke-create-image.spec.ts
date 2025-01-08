@@ -10,7 +10,7 @@ import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
 describe('create image (using mocks)', () => {
   it('create image from a linode', () => {
     const mockDisks = [
-      linodeDiskFactory.build({ label: 'Debian 10 Disk', filesystem: 'ext4' }),
+      linodeDiskFactory.build({ label: 'Debian 12 Disk', filesystem: 'ext4' }),
       linodeDiskFactory.build({
         label: '512 MB Swap Image',
         filesystem: 'swap',
