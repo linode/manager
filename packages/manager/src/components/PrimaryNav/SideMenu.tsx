@@ -3,13 +3,12 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
-import { FOOTER_HEIGHT } from 'src/features/Footer';
-import { TOPMENU_HEIGHT } from 'src/features/TopMenu/TopMenu';
+import {
+  SIDEBAR_COLLAPSED_WIDTH,
+  SIDEBAR_WIDTH,
+} from 'src/components/PrimaryNav/constants';
 
 import PrimaryNav from './PrimaryNav';
-
-export const SIDEBAR_WIDTH = 232;
-export const SIDEBAR_COLLAPSED_WIDTH = 52;
 
 export interface SideMenuProps {
   /**
@@ -20,7 +19,14 @@ export interface SideMenuProps {
    * If true, the menu will be collapsed.
    */
   collapse: boolean;
+  /**
+   * Callback to toggle the desktop menu.
+   */
   desktopMenuToggle: () => void;
+  /**
+   * Whether the page is scrollable.
+   */
+  isPageScrollable?: boolean;
   /**
    * If true, the menu will be open. Has no effect unless the viewport is less than 960px.
    */
@@ -33,7 +39,13 @@ export interface SideMenuProps {
  * The Linodes landing page is considered the homepage unless the account is managed. Otherwise, clicking on the Linode logo will take the user to the Managed landing page.
  */
 export const SideMenu = (props: SideMenuProps) => {
-  const { closeMenu, collapse, desktopMenuToggle, open } = props;
+  const {
+    closeMenu,
+    collapse,
+    desktopMenuToggle,
+    isPageScrollable,
+    open,
+  } = props;
 
   return (
     <>
@@ -65,6 +77,7 @@ export const SideMenu = (props: SideMenuProps) => {
             closeMenu={closeMenu}
             desktopMenuToggle={desktopMenuToggle}
             isCollapsed={collapse}
+            isPageScrollable={isPageScrollable}
           />
         </StyledDrawer>
       </Hidden>
@@ -79,16 +92,14 @@ const StyledDrawer = styled(Drawer, {
   '& .MuiDrawer-paper': {
     backgroundColor: theme.tokens.sideNavigation.Background.Default,
     boxShadow: 'none',
-    height: '100%',
     left: 'inherit',
-    overflowX: 'hidden',
+    overflow: 'hidden',
+    position: 'absolute',
     [theme.breakpoints.up('md')]: {
       borderRight: `1px solid ${theme.tokens.sideNavigation.Border}`,
-      height: `calc(100% - ${TOPMENU_HEIGHT}px - ${FOOTER_HEIGHT}px)`,
-      top: TOPMENU_HEIGHT,
     },
     transform: 'none',
-    transition: 'width linear .1s',
+    transition: 'width linear 100ms, height linear 250ms',
     width: SIDEBAR_WIDTH,
   },
   ...(props.collapse && {

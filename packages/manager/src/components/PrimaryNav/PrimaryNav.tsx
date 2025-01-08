@@ -1,4 +1,4 @@
-import { Box, Tooltip } from '@linode/ui';
+import { Box } from '@linode/ui';
 import { Hidden } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -10,10 +10,8 @@ import Database from 'src/assets/icons/entityIcons/database.svg';
 import IAM from 'src/assets/icons/entityIcons/iam.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
-import Networking from 'src/assets/icons/entityIcons/Networking.svg';
+import Networking from 'src/assets/icons/entityIcons/networking.svg';
 import More from 'src/assets/icons/more.svg';
-import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
-import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
@@ -31,10 +29,10 @@ import {
   StyledAkamaiLogo,
   StyledDivider,
   StyledGrid,
-  StyledIconButton,
   StyledLogoBox,
   StyledMenuGrid,
 } from './PrimaryNav.styles';
+import { PrimaryNavToggle } from './PrimaryNavToggle';
 import { linkIsActive } from './utils';
 
 import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
@@ -81,10 +79,11 @@ export interface PrimaryNavProps {
   closeMenu: () => void;
   desktopMenuToggle: () => void;
   isCollapsed: boolean;
+  isPageScrollable?: boolean;
 }
 
 export const PrimaryNav = (props: PrimaryNavProps) => {
-  const { closeMenu, desktopMenuToggle, isCollapsed } = props;
+  const { closeMenu, desktopMenuToggle, isCollapsed, isPageScrollable } = props;
 
   const flags = useFlags();
   const location = useLocation();
@@ -335,6 +334,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           const filteredLinks = productFamily.links.filter(
             (link) => !link.hide
           );
+
           if (filteredLinks.length === 0) {
             return null;
           }
@@ -388,33 +388,11 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           );
         })}
       </StyledMenuGrid>
-      <Hidden mdDown>
-        <Box padding={1}>
-          {!isCollapsed ? (
-            <Tooltip placement="top-end" title={'unpin side menu'}>
-              <StyledIconButton
-                aria-label="unpin menu"
-                data-testid="unpin-nav-menu"
-                onClick={desktopMenuToggle}
-                size="small"
-              >
-                <PinFilledIcon />
-              </StyledIconButton>
-            </Tooltip>
-          ) : (
-            <Tooltip placement="top-end" title={'pin side menu'}>
-              <StyledIconButton
-                aria-label="pin menu"
-                data-testid="pin-nav-menu"
-                onClick={desktopMenuToggle}
-                size="small"
-              >
-                <PinOutlineIcon sx={{ fontSize: 16 }} />
-              </StyledIconButton>
-            </Tooltip>
-          )}
-        </Box>
-      </Hidden>
+      <PrimaryNavToggle
+        desktopMenuToggle={desktopMenuToggle}
+        isCollapsed={isCollapsed}
+        isPageScrollable={isPageScrollable}
+      />
     </StyledGrid>
   );
 };
