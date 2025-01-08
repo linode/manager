@@ -10,14 +10,12 @@ import { paginateResponse } from 'support/util/paginate';
 import { randomString } from 'support/util/random';
 import { makeResponse } from 'support/util/response';
 
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-
+import type { Alert } from '@linode/api-v4';
 import type {
   CloudPulseMetricsResponse,
   Dashboard,
   MetricDefinition,
 } from '@linode/api-v4';
-import type { Alert } from '@linode/api-v4';
 
 /**
  * Intercepts GET requests for metric definitions.
@@ -306,6 +304,6 @@ export const mockGetAllAlertDefinitions = (
   return cy.intercept(
     'GET',
     apiMatcher('/monitor/alert-definitions?page_size=500'),
-    makeResourcePage(alert)
+    paginateResponse(alert)
   );
 };
