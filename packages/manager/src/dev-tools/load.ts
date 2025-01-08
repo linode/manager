@@ -87,6 +87,7 @@ export async function loadDevTools(
     // Merge the contexts
     const mergedContext: MockState = {
       ...initialContext,
+      domains: [...initialContext.domains, ...(seedContext?.domains || [])],
       eventQueue: [
         ...initialContext.eventQueue,
         ...(seedContext?.eventQueue || []),
