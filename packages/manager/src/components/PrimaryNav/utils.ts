@@ -1,7 +1,5 @@
-import { useScrollTrigger } from '@mui/material';
 import React from 'react';
 
-import { FOOTER_HEIGHT } from 'src/features/Footer';
 import { isPathOneOf } from 'src/utilities/routing/isPathOneOf';
 
 export const linkIsActive = (
@@ -31,7 +29,7 @@ export const linkIsActive = (
 export const useIsPageScrollable = (
   contentRef: React.RefObject<HTMLElement>
 ): { isPageScrollable: boolean } => {
-  const [isPageScrollable, setIsPageScrollable] = React.useState(true);
+  const [isPageScrollable, setIsPageScrollable] = React.useState(false);
 
   React.useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -57,21 +55,4 @@ export const useIsPageScrollable = (
   }, [contentRef]);
 
   return { isPageScrollable };
-};
-
-/**
- * This hook is used to determine if the window is at the bottom of the page.
- * It is used to adjust the position of the pin menu button with the footer.
- */
-export const useIsWindowAtBottom = () => {
-  const isAtBottom = useScrollTrigger({
-    disableHysteresis: true,
-    target: window,
-    threshold:
-      document.documentElement.scrollHeight -
-      window.innerHeight -
-      FOOTER_HEIGHT,
-  });
-
-  return { isAtBottom };
 };

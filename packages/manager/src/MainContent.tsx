@@ -14,13 +14,13 @@ import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { useIsPageScrollable } from 'src/components/PrimaryNav/utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
-import { Footer } from 'src/features/Footer';
+import { FOOTER_HEIGHT, Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
   notificationCenterContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationCenterContext';
-import { TopMenu } from 'src/features/TopMenu/TopMenu';
+import { TOPMENU_HEIGHT, TopMenu } from 'src/features/TopMenu/TopMenu';
 import {
   useMutatePreferences,
   usePreferences,
@@ -296,6 +296,11 @@ export const MainContent = () => {
     });
   };
 
+  const sideMenuContainerHeight =
+    isPageScrollable === true
+      ? '100vh'
+      : `calc(100vh - ${FOOTER_HEIGHT + TOPMENU_HEIGHT}px)`;
+
   return (
     <div className={classes.appFrame}>
       <SessionExpirationProvider value={sessionExpirationContextValue}>
@@ -310,8 +315,8 @@ export const MainContent = () => {
               <Box display="flex" flex={1} position="relative">
                 <Box
                   alignSelf="flex-start"
-                  height={isPageScrollable ? '100vh' : 'auto'}
-                  position={isPageScrollable ? 'sticky' : 'static'}
+                  height={sideMenuContainerHeight}
+                  position="sticky"
                   top={0}
                   zIndex={10000}
                 >

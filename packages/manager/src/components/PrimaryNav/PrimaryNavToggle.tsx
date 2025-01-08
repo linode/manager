@@ -1,13 +1,12 @@
 import { Box, IconButton, Tooltip } from '@linode/ui';
-import { Hidden, styled } from '@mui/material';
+import { Hidden, styled, useScrollTrigger } from '@mui/material';
 import React from 'react';
 
 import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
 import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
-import { FOOTER_HEIGHT } from 'src/features/Footer';
+import { TOPMENU_HEIGHT } from 'src/features/TopMenu/TopMenu';
 
 import { SIDEBAR_WIDTH } from './constants';
-import { useIsWindowAtBottom } from './utils';
 
 interface PrimaryNavToggleProps {
   desktopMenuToggle: () => void;
@@ -18,22 +17,26 @@ interface PrimaryNavToggleProps {
 export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
   const { desktopMenuToggle, isCollapsed, isPageScrollable } = props;
 
-  const { isAtBottom } = useIsWindowAtBottom();
+  const hasScrolledPastTopMenu = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: TOPMENU_HEIGHT,
+  });
 
   return (
     <Hidden mdDown>
       <Box
+        position={
+          isPageScrollable && !hasScrolledPastTopMenu ? 'fixed' : 'relative'
+        }
         sx={{
-          bottom:
-            isPageScrollable === false || isAtBottom === true
-              ? FOOTER_HEIGHT
-              : 0,
-          left: isCollapsed ? 0 : SIDEBAR_WIDTH - 52,
-          padding: 1,
-          position: 'fixed',
-          transition: 'bottom 150ms linear, left 100ms linear',
+          transition: 'left 100ms ease-in-out',
         }}
+        bottom={isPageScrollable && !hasScrolledPastTopMenu ? 0 : 'auto'}
         className="primary-nav-toggle"
+        display="flex"
+        justifyContent="flex-end"
+        left={isCollapsed ? 0 : SIDEBAR_WIDTH - 52}
+        padding={1}
       >
         <Tooltip
           PopperProps={{
@@ -47,6 +50,9 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
           title={isCollapsed ? 'pin side menu' : 'unpin side menu'}
         >
           <StyledIconButton
+            sx={{
+              left: 1,
+            }}
             aria-label="unpin menu"
             data-testid="unpin-nav-menu"
             onClick={desktopMenuToggle}

@@ -31,16 +31,16 @@ export const Footer = React.memo(() => {
       <Stack
         sx={(theme) => ({
           backgroundColor: theme.tokens.footer.Background,
-          height: FOOTER_HEIGHT,
-          paddingX: theme.spacing(4),
-          paddingY: theme.spacing(1.5),
-          textAlign: 'center',
         })}
         alignItems="center"
         direction="row"
         display="flex"
-        justifyContent="center"
+        height={FOOTER_HEIGHT}
+        justifyContent="space-between"
+        paddingX={{ md: 4, xs: 2 }}
+        paddingY={1.5}
         spacing={{ xs: 1 }}
+        textAlign="center"
       >
         <Hidden mdDown>
           <Stack direction="row" spacing={3}>
@@ -49,6 +49,8 @@ export const Footer = React.memo(() => {
             >
               v{packageJson.version}
             </StyledLink>
+          </Stack>
+          <Stack direction="row" spacing={3}>
             <StyledLink to={DEVELOPERS_LINK}>API Reference</StyledLink>
             <StyledLink to={FEEDBACK_LINK}>Provide Feedback</StyledLink>
             <Typography
@@ -67,11 +69,13 @@ export const Footer = React.memo(() => {
             >
               v{packageJson.version}
             </StyledLink>
+          </Stack>
+          <Stack direction="row" spacing={1}>
             <Typography
               sx={(theme) => ({ color: theme.tokens.footer.Text.Default })}
               variant="body1"
             >
-              ©{new Date().getFullYear()} Akamai
+              ©{new Date().getFullYear()} Akamai Technologies, Inc.
             </Typography>
           </Stack>
         </Hidden>
