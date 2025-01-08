@@ -24,6 +24,10 @@ export const linkIsActive = (
   return isPathOneOf([href, ...activeLinks], locationPathname);
 };
 
+/**
+ * This hook is used to determine if the page is scrollable.
+ * It is used to determine if the side menu should be sticky.
+ */
 export const useIsPageScrollable = (
   contentRef: React.RefObject<HTMLElement>
 ): { isPageScrollable: boolean } => {
@@ -55,6 +59,10 @@ export const useIsPageScrollable = (
   return { isPageScrollable };
 };
 
+/**
+ * This hook is used to determine if the window is at the bottom of the page.
+ * It is used to adjust the position of the pin menu button with the footer.
+ */
 export const useIsWindowAtBottom = () => {
   const isAtBottom = useScrollTrigger({
     disableHysteresis: true,

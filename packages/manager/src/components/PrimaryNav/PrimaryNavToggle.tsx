@@ -43,7 +43,7 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
               },
             },
           }}
-          placement="left"
+          placement="top-end"
           title={isCollapsed ? 'pin side menu' : 'unpin side menu'}
         >
           <StyledIconButton
