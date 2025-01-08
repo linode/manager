@@ -97,7 +97,7 @@ describe('Create Linode', () => {
 
           // Set Linode label, OS, plan type, password, etc.
           linodeCreatePage.setLabel(linodeLabel);
-          linodeCreatePage.selectImage('Debian 11');
+          linodeCreatePage.selectImage('Debian 12');
           linodeCreatePage.selectRegionById(linodeRegion.id);
           linodeCreatePage.selectPlan(
             planConfig.planType,
@@ -109,7 +109,7 @@ describe('Create Linode', () => {
           cy.get('[data-qa-linode-create-summary]')
             .scrollIntoView()
             .within(() => {
-              cy.findByText('Debian 11').should('be.visible');
+              cy.findByText('Debian 12').should('be.visible');
               cy.findByText(linodeRegion.label).should('be.visible');
               cy.findByText(planConfig.planLabel).should('be.visible');
             });
@@ -223,7 +223,7 @@ describe('Create Linode', () => {
 
     // Set Linode label, OS, plan type, password, etc.
     linodeCreatePage.setLabel(linodeLabel);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Accelerated', mockAcceleratedType[0].label);
     linodeCreatePage.setRootPassword(randomString(32));
@@ -232,7 +232,7 @@ describe('Create Linode', () => {
     cy.get('[data-qa-linode-create-summary]')
       .scrollIntoView()
       .within(() => {
-        cy.findByText('Debian 11').should('be.visible');
+        cy.findByText('Debian 12').should('be.visible');
         cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
         cy.findByText(mockAcceleratedType[0].label).should('be.visible');
       });
@@ -459,7 +459,7 @@ describe('Create Linode', () => {
 
     // Set Linode label, OS, plan type, password, etc.
     linodeCreatePage.setLabel(linodeLabel);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
