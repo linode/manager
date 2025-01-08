@@ -1,14 +1,14 @@
-import { Divider } from '@linode/ui';
 import { InputAdornment, TextField } from '@linode/ui';
+import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import { Grid, Popover } from '@mui/material';
+import { Grid, Popover, useTheme } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import React, { useEffect, useState } from 'react';
 
+import Calendar from 'src/assets/icons/calendar.svg';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import { TimeZoneSelect } from './TimeZoneSelect';
@@ -75,6 +75,8 @@ export const DateTimePicker = ({
   timeZoneSelectProps = {},
   value = null,
 }: DateTimePickerProps) => {
+  const theme = useTheme<Theme>();
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   // Current and original states
@@ -158,17 +160,10 @@ export const DateTimePicker = ({
             readOnly: true,
             startAdornment: (
               <InputAdornment position="start">
-                <CalendarTodayIcon
-                  sx={{
-                    color: '#c2c2ca !important',
-                    fontSize: '20px !important',
-                    left: '8px',
-                    position: 'absolute',
-                  }}
-                />
+                <Calendar />
               </InputAdornment>
             ),
-            sx: { paddingLeft: '32px' },
+            sx: { paddingLeft: theme.spacing() },
           }}
           value={
             selectedDateTime
@@ -196,29 +191,6 @@ export const DateTimePicker = ({
             onChange={handleDateChange}
             value={selectedDateTime || null}
             {...dateCalendarProps}
-            // TODO: Move styling customization to global theme styles.
-            sx={(theme: Theme) => ({
-              '& .MuiDayCalendar-weekContainer, & .MuiDayCalendar-header': {
-                justifyContent: 'space-between',
-              },
-              '& .MuiDayCalendar-weekDayLabel': {
-                fontSize: '0.875rem',
-              },
-              '& .MuiPickersCalendarHeader-label': {
-                fontFamily: theme.font.bold,
-              },
-              '& .MuiPickersCalendarHeader-root': {
-                borderBottom: `1px solid ${theme.borderColors.divider}`,
-                fontSize: '0.875rem',
-                paddingBottom: theme.spacing(1),
-              },
-              '& .MuiPickersDay-root': {
-                fontSize: '0.875rem',
-                margin: `${theme.spacing(0.5)}px`,
-              },
-              borderRadius: `${theme.spacing(2)}`,
-              borderWidth: '0px',
-            })}
           />
           <Grid
             container
@@ -229,32 +201,6 @@ export const DateTimePicker = ({
               <Grid item xs={4}>
                 <TimePicker
                   slotProps={{
-                    actionBar: {
-                      sx: (theme: Theme) => ({
-                        justifyContent: 'center',
-                        marginBottom: theme.spacing(1 / 2),
-                        marginTop: theme.spacing(1 / 2),
-                        padding: 0,
-                      }),
-                    },
-                    layout: {
-                      sx: (theme: Theme) => ({
-                        '& .MuiPickersLayout-contentWrapper': {
-                          borderBottom: `1px solid ${theme.borderColors.divider}`,
-                        },
-                        border: `1px solid ${theme.borderColors.divider}`,
-                      }),
-                    },
-                    openPickerButton: {
-                      sx: { padding: 0 },
-                    },
-                    popper: {
-                      sx: (theme: Theme) => ({
-                        ul: {
-                          borderColor: `${theme.borderColors.divider} !important`,
-                        },
-                      }),
-                    },
                     textField: TimePickerFieldProps,
                   }}
                   onChange={handleTimeChange}
