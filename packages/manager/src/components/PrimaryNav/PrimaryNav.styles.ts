@@ -83,7 +83,6 @@ export const StyledActiveLink = styled(Link, {
   display: 'flex',
   minWidth: SIDEBAR_WIDTH,
   padding: '7px 16px',
-  paddingLeft: '10px',
   position: 'relative',
   ...(props.isActiveLink && {
     backgroundColor: theme.tokens.sideNavigation.SelectedMenuItem.Background,
@@ -175,14 +174,6 @@ export const StyledAccordion = styled(Accordion, {
         stroke: 'transparent',
       },
     },
-    ...(props.isCollapsed &&
-      props.isActiveProductFamily && {
-        [theme.breakpoints.up('md')]: {
-          '.MuiAccordion-region, div[class*="StyledSingleLinkBox"]': {
-            maxHeight: 'fit-content',
-          },
-        },
-      }),
     backgroundColor: theme.tokens.sideNavigation.DefaultMenuItem.Background,
   })
 );

@@ -13,14 +13,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
     color: theme.tokens.footer.Text.Hover,
   },
   color: theme.tokens.footer.Text.Default,
-  [theme.breakpoints.down('sm')]: {
-    '&&': {
-      marginTop: theme.tokens.spacing[20],
-    },
-    '&:first-child': {
-      marginTop: 0,
-    },
-  },
 }));
 
 export const FOOTER_HEIGHT = 40;
