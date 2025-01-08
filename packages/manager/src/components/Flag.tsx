@@ -39,7 +39,7 @@ const getFlagClass = (country: Country | string) => {
 
 const StyledFlag = styled(Box, { label: 'StyledFlag' })(({ theme }) => ({
   boxShadow:
-    theme.palette.mode === 'light' ? `0px 0px 0px 1px #00000010` : undefined,
+    theme.palette.mode === 'light' ? `0px 0px 0px 1px #000000` : undefined,
   fontSize: '1.5rem',
   verticalAlign: 'top',
   width: '1.41rem',
