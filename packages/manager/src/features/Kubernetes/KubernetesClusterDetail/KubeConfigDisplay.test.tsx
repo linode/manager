@@ -17,7 +17,7 @@ const props = {
 };
 
 describe('KubeConfigDisplay', () => {
-  it('should display the 443 endpoint if it exists', async () => {
+  it('should display the endpoint with port 443 if it exists', async () => {
     const endpoints = [
       kubeEndpointFactory.build({
         endpoint: `https://test.linodelke.net:6443`,
@@ -40,7 +40,7 @@ describe('KubeConfigDisplay', () => {
     });
   });
 
-  it('should display first endpoint if the 443 port does not exist', async () => {
+  it('should display first endpoint if the endpoint with port 443 does not exist', async () => {
     const endpoints = [
       kubeEndpointFactory.build({
         endpoint: `https://test.linodelke.net:6443`,
