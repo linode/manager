@@ -540,6 +540,7 @@ export const lightTheme: ThemeOptions = {
           fontSize: '1rem',
           lineHeight: 1,
           minHeight: 34,
+          minWidth: 'initial',
           textTransform: 'capitalize',
           transition: 'none',
         },
