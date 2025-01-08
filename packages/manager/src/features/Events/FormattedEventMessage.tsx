@@ -35,9 +35,14 @@ const formatMessage = (message: string): JSX.Element => {
         let formattedPart: JSX.Element | string = part;
 
         if (part.startsWith('`') && part.endsWith('`')) {
-          formattedPart = (
-            <StyledPre key={`${i}-${part}`}>{part.slice(1, -1)}</StyledPre>
-          );
+          const content = part.slice(1, -1);
+          if (content.length > 0) {
+            formattedPart = (
+              <StyledPre key={`${i}-${part}`}>{content}</StyledPre>
+            );
+          } else {
+            formattedPart = '';
+          }
         }
 
         if (part.match(supportLinkMatch)) {
