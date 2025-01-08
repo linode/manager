@@ -1,5 +1,4 @@
 import Factory from 'src/factories/factoryProxy';
-import { pickRandom } from 'src/utilities/random';
 
 import type { DimensionFilter } from '@linode/api-v4';
 import type { AlertDefinitionMetricCriteria } from '@linode/api-v4';
@@ -9,20 +8,20 @@ export const alertDimensionsFactory = Factory.Sync.makeFactory<DimensionFilter>(
   {
     dimension_label: 'operating_system',
     label: 'Operating System',
-    operator: Factory.each(() => pickRandom(['neq', 'eq'])),
-    value: Factory.each(() => pickRandom(['Windows', 'Linux'])),
+    operator: 'eq',
+    value: 'Linux',
   }
 );
 
 export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>(
   {
-    aggregation_type: Factory.each(() => pickRandom(['avg', 'sum'])),
+    aggregation_type: 'avg',
     dimension_filters: alertDimensionsFactory.buildList(1),
-    label: Factory.each(() => pickRandom(['CPU Usage', 'Memory Usage'])),
-    metric: Factory.each(() => pickRandom(['cpu_usage', 'memory_usage'])),
-    operator: Factory.each(() => pickRandom(['eq', 'gt'])),
+    label: 'CPU Usage',
+    metric: 'cpu_usage',
+    operator: 'eq',
     threshold: 60,
-    unit: Factory.each(() => pickRandom(['Bytes', 'Percentage'])),
+    unit: 'Bytes',
   }
 );
 
