@@ -4,7 +4,6 @@ import {
   domainZoneFileFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { fbtClick, fbtVisible } from 'support/helpers';
 import {
   mockGetDomains,
   mockGetDomain,
@@ -46,8 +45,8 @@ describe('Download a Zone file', () => {
 
     mockGetDomain(mockDomain.id, mockDomain).as('getDomain');
     mockGetDomainRecords([mockDomainRecords]).as('getDomainRecords');
-    fbtVisible(mockDomain.domain);
-    fbtClick(mockDomain.domain);
+    cy.findByText(mockDomain.domain).should('be.visible').should('be.visible');
+    cy.findByText(mockDomain.domain).click();
     cy.wait('@getDomain');
     cy.wait('@getDomainRecords');
 

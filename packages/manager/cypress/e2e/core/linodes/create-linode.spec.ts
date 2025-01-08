@@ -40,13 +40,6 @@ import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
-import {
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-  containsVisible,
-} from 'support/helpers';
 
 let username: string;
 
@@ -370,23 +363,27 @@ describe('Create Linode', () => {
     // Check the 'Backups' add on
     cy.get('[data-testid="backups"]').should('be.visible').click();
     ui.regionSelect.find().click().type(`${region.label} {enter}`);
-    fbtClick('Shared CPU');
-    getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
+    cy.findByText('Shared CPU').click();
+    cy.get(`[id="${dcPricingMockLinodeTypes[0].id}"]`).click();
 
     // the "VPC" section is present, and the VPC in the same region of
     // the linode can be selected.
-    getVisible('[data-testid="vpc-panel"]').within(() => {
-      containsVisible('Assign this Linode to an existing VPC.');
-      // select VPC
-      cy.findByLabelText('Assign VPC')
-        .should('be.visible')
-        .focus()
-        .type(`${mockVPC.label}{downArrow}{enter}`);
-      // select subnet
-      cy.findByPlaceholderText('Select Subnet')
-        .should('be.visible')
-        .type(`${mockSubnet.label}{downArrow}{enter}`);
-    });
+    cy.get('[data-testid="vpc-panel"]')
+      .should('be.visible')
+      .within(() => {
+        cy.contains('Assign this Linode to an existing VPC.').should(
+          'be.visible'
+        );
+        // select VPC
+        cy.findByLabelText('Assign VPC')
+          .should('be.visible')
+          .focus()
+          .type(`${mockVPC.label}{downArrow}{enter}`);
+        // select subnet
+        cy.findByPlaceholderText('Select Subnet')
+          .should('be.visible')
+          .type(`${mockSubnet.label}{downArrow}{enter}`);
+      });
 
     // The drawer opens when clicking "Add an SSH Key" button
     ui.button
@@ -426,13 +423,13 @@ describe('Create Linode', () => {
     // When a user creates an SSH key, the list of SSH keys for each user updates to show the new key for the signed in user
     cy.findByText(sshPublicKeyLabel, { exact: false }).should('be.visible');
 
-    getClick('#linode-label').clear().type(linodeLabel);
+    cy.get('#linode-label').clear().type(linodeLabel).click();
     cy.get('#root-password').type(rootpass);
 
     ui.button.findByTitle('Create Linode').click();
 
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
-    fbtVisible(linodeLabel);
+    cy.findByText(linodeLabel).should('be.visible');
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
   });
 
