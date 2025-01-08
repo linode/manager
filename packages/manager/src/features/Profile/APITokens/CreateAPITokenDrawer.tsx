@@ -35,6 +35,7 @@ import {
   allScopesAreTheSame,
   basePermNameMap,
   hasAccessBeenSelectedForAllScopes,
+  levelMap,
   permTuplesToScopeString,
   scopeStringToPermTuples,
 } from './utils';
@@ -178,8 +179,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
   // Permission scopes with a different default when Selecting All for the specified access level.
   const excludedScopesFromSelectAll: ExcludedScope[] = [
     {
-      defaultAccessLevel: 0,
-      invalidAccessLevels: [1],
+      defaultAccessLevel: levelMap.none,
+      invalidAccessLevels: [levelMap.read_only],
       name: 'vpc',
     },
   ];
@@ -366,7 +367,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'create-button',
-          disabled: !hasAccessBeenSelectedForAllScopes(form.values.scopes),
+          disabled: !hasAccessBeenSelectedForAllScopes(
+            form.values.scopes,
+            hideChildAccountAccessScope ? ['child_account'] : []
+          ),
           label: 'Create Token',
           loading: isPending,
           onClick: () => form.handleSubmit(),

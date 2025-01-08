@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -186,7 +187,9 @@ export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
       <TableCell data-testid={`name-${name}`}>
         <StyledDiv>{name}</StyledDiv>
       </TableCell>
-      <TableCell data-testid={`user-${user}`}>{user}</TableCell>
+      <TableCell data-testid={`user-${user}`}>
+        <MaskableText isToggleable text={user} />
+      </TableCell>
       <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
         {Math.round(maxCount)}
       </TableCell>
