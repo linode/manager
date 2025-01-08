@@ -1,6 +1,7 @@
 import { Box, Button, Divider, Stack, Tooltip, Typography } from '@linode/ui';
 import { styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -56,6 +57,8 @@ export const UserMenu = React.memo(() => {
     null
   );
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
+
+  const theme = useTheme();
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
@@ -172,25 +175,10 @@ export const UserMenu = React.memo(() => {
   };
 
   const getEndIcon = () => {
-    const sx = {
-      height: 16,
-      width: 16,
-    };
-
     return matchesSmDown ? undefined : open ? (
-      <KeyboardArrowUp
-        sx={(theme: Theme) => ({
-          color: theme.tokens.header.Icon.Default,
-          ...sx,
-        })}
-      />
+      <KeyboardArrowUp style={{ color: theme.tokens.header.Icon.Default }} />
     ) : (
-      <KeyboardArrowDown
-        sx={(theme: Theme) => ({
-          color: theme.tokens.header.Icon.Default,
-          ...sx,
-        })}
-      />
+      <KeyboardArrowDown style={{ color: theme.tokens.header.Icon.Default }} />
     );
   };
 
@@ -228,9 +216,9 @@ export const UserMenu = React.memo(() => {
         >
           <Hidden mdDown>
             <Stack
-              sx={(theme) => ({
+              sx={{
                 '& p': { color: theme.tokens.color.Neutrals[30] },
-              })}
+              }}
               alignItems={'flex-end'}
             >
               <Typography
@@ -242,10 +230,10 @@ export const UserMenu = React.memo(() => {
               </Typography>
               {companyNameOrEmail && (
                 <Typography
-                  sx={(theme) => ({
+                  sx={{
                     font: `${theme.tokens.font.FontWeight.Bold} ${theme.tokens.font.FontSize.Xs} ${theme.tokens.font.FontFamily.Brand}, sans-serif`,
                     textTransform: 'uppercase',
-                  })}
+                  }}
                 >
                   {truncateEnd(companyNameOrEmail, 24)}
                 </Typography>
