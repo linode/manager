@@ -3,9 +3,6 @@ import { Linode } from '@linode/api-v4';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-// import {
-//   cy.findByText,
-// } from 'support/helpers';
 import { ui } from 'support/ui';
 import { routes } from 'support/ui/constants';
 import { apiMatcher } from 'support/util/intercepts';
