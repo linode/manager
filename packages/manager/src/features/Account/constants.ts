@@ -32,3 +32,8 @@ export const PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT = `Contact ${CUSTOMER_SUPPORT
 
 // Child User Messaging
 export const CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT = `Contact your ${PARENT_USER} to close your account.`;
+
+export const CANCELLATION_DATA_LOSS_WARNING = `This is an extremely destructive action. All services, Linodes, volumes, DNS records, and user accounts will be permanently lost.`;
+
+export const CANCELLATION_DIALOG_TITLE =
+  'Are you sure you want to close your Akamai cloud computing services account?';

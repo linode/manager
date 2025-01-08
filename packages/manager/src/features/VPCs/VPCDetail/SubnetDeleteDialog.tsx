@@ -46,6 +46,7 @@ export const SubnetDeleteDialog = (props: Props) => {
         type: 'Subnet',
       }}
       errors={error}
+      expand
       label="Subnet Label"
       loading={isPending}
       onClick={onDeleteSubnet}

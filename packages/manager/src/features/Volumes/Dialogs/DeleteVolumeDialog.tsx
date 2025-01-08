@@ -40,6 +40,7 @@ export const DeleteVolumeDialog = (props: Props) => {
         primaryBtnText: 'Delete',
         type: 'Volume',
       }}
+      expand
       isFetching={isFetching}
       label="Volume Label"
       loading={isPending}

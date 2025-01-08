@@ -55,6 +55,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
         subType: 'Cluster',
         type: 'Database',
       }}
+      expand
       label={'Cluster Name'}
       loading={isLoading}
       onClick={onDeleteCluster}

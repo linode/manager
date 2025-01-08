@@ -76,6 +76,7 @@ export const DeleteLinodeDialog = (props: Props) => {
         type: 'Linode',
       }}
       errors={error}
+      expand
       label="Linode Label"
       loading={isPending}
       onClick={onDelete}
