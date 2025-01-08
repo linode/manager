@@ -1,4 +1,4 @@
-import { Accordion, Box, Divider, IconButton, omittedProps } from '@linode/ui';
+import { Accordion, Box, Divider, omittedProps } from '@linode/ui';
 import { Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -15,10 +15,11 @@ export const StyledGrid = styled(Grid, {
   minHeight: 64,
   padding: 0,
   [theme.breakpoints.up('md')]: {
-    minHeight: 80,
-  },
-  [theme.breakpoints.up('sm')]: {
-    minHeight: 72,
+    '&:hover': {
+      '.primary-nav-toggle': {
+        left: SIDEBAR_WIDTH - 52,
+      },
+    },
   },
   width: '100%',
 }));
@@ -76,7 +77,6 @@ export const StyledActiveLink = styled(Link, {
   display: 'flex',
   minWidth: SIDEBAR_WIDTH,
   padding: '7px 16px',
-  paddingLeft: '10px',
   position: 'relative',
   ...(props.isActiveLink && {
     backgroundColor: theme.tokens.sideNavigation.SelectedMenuItem.Background,
@@ -92,7 +92,9 @@ export const StyledPrimaryLinkBox = styled(Box, {
     ? theme.tokens.sideNavigation.SelectedMenuItem.Text
     : theme.tokens.sideNavigation.DefaultMenuItem.Text,
   display: 'flex',
-  font: theme.tokens.typography.Label.Semibold.S,
+  // TODO: Enable token once we have imported Nunito
+  // font: theme.tokens.typography.Label.Semibold.S,
+  fontFamily: 'LatoWeb',
   justifyContent: 'space-between',
   transition: theme.transitions.create(['color', 'opacity']),
   width: '100%',
@@ -104,7 +106,7 @@ export const StyledPrimaryLinkBox = styled(Box, {
 export const StyledMenuGrid = styled(Grid, {
   label: 'StyledMenuGrid',
 })(({ theme }) => ({
-  flex: '1 1 0%',
+  flexGrow: 1,
   overflowX: 'hidden',
   overflowY: 'auto',
   scrollbarColor: `${theme.color.grey4} transparent `,
@@ -141,7 +143,9 @@ export const StyledAccordion = styled(Accordion, {
       },
       alignItems: 'center',
       display: 'flex',
-      font: theme.tokens.typography.Label.Bold.S,
+      // TODO: Enable token once we have imported Nunito
+      // font: theme.tokens.typography.Label.Bold.S,
+      fontFamily: 'LatoWebBold',
       padding: '0 10px',
     },
     '.MuiAccordionDetails-root': {
@@ -164,26 +168,9 @@ export const StyledAccordion = styled(Accordion, {
         stroke: 'transparent',
       },
     },
-    ...(props.isCollapsed &&
-      props.isActiveProductFamily && {
-        [theme.breakpoints.up('md')]: {
-          '.MuiAccordion-region, div[class*="StyledSingleLinkBox"]': {
-            maxHeight: 'fit-content',
-          },
-        },
-      }),
     backgroundColor: theme.tokens.sideNavigation.DefaultMenuItem.Background,
   })
 );
-
-export const StyledIconButton = styled(IconButton, {
-  label: 'styledIconButton',
-})(({ theme }) => ({
-  '& svg': {
-    color: theme.tokens.sideNavigation.Icon,
-    transition: theme.transitions.create(['color']),
-  },
-}));
 
 export const StyledChip = styled(Chip, {
   label: 'styledChip',
