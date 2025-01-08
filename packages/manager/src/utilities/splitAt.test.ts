@@ -40,12 +40,12 @@ describe('splitAt', () => {
     expect(result).toEqual([[1, 2, 3, 4], [5]]);
   });
 
+  // For strings
   it('splits a string at the given index', () => {
     const result = splitAt(3, 'abcdefgh');
     expect(result).toEqual(['abc', 'defgh']);
   });
 
-  // For strings
   it('splits a string when index is 0', () => {
     const result = splitAt(0, 'abcdefgh');
     expect(result).toEqual(['', 'abcdefgh']);
