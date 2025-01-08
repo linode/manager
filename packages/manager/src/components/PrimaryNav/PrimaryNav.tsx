@@ -79,10 +79,11 @@ export interface PrimaryNavProps {
   closeMenu: () => void;
   desktopMenuToggle: () => void;
   isCollapsed: boolean;
+  isPageScrollable?: boolean;
 }
 
 export const PrimaryNav = (props: PrimaryNavProps) => {
-  const { closeMenu, desktopMenuToggle, isCollapsed } = props;
+  const { closeMenu, desktopMenuToggle, isCollapsed, isPageScrollable } = props;
 
   const flags = useFlags();
   const location = useLocation();
@@ -390,6 +391,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       <PrimaryNavToggle
         desktopMenuToggle={desktopMenuToggle}
         isCollapsed={isCollapsed}
+        isPageScrollable={isPageScrollable}
       />
     </StyledGrid>
   );

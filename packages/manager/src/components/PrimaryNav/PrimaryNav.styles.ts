@@ -7,14 +7,23 @@ import { Link } from 'react-router-dom';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
 import { FOOTER_HEIGHT } from 'src/features/Footer';
+
 export const StyledGrid = styled(Grid, {
   label: 'StyledGrid',
-})(() => ({
+})(({ theme }) => ({
   height: '100%',
   margin: 0,
   minHeight: 64,
   padding: 0,
   paddingBottom: FOOTER_HEIGHT,
+  [theme.breakpoints.up('md')]: {
+    '&:hover': {
+      '.primary-nav-toggle': {
+        left: SIDEBAR_WIDTH - 52,
+      },
+    },
+  },
+
   width: '100%',
 }));
 

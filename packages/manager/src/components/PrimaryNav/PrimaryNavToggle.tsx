@@ -12,23 +12,28 @@ import { useIsWindowAtBottom } from './utils';
 interface PrimaryNavToggleProps {
   desktopMenuToggle: () => void;
   isCollapsed: boolean;
+  isPageScrollable?: boolean;
 }
 
 export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
-  const { desktopMenuToggle, isCollapsed } = props;
+  const { desktopMenuToggle, isCollapsed, isPageScrollable } = props;
 
-  const isBottom = useIsWindowAtBottom();
+  const { isAtBottom } = useIsWindowAtBottom();
 
   return (
     <Hidden mdDown>
       <Box
         sx={{
-          bottom: isBottom ? FOOTER_HEIGHT : 0,
+          bottom:
+            isPageScrollable === false || isAtBottom === true
+              ? FOOTER_HEIGHT
+              : 0,
           left: isCollapsed ? 0 : SIDEBAR_WIDTH - 52,
           padding: 1,
           position: 'fixed',
-          transition: 'bottom 150ms linear',
+          transition: 'bottom 150ms linear, left 100ms linear',
         }}
+        className="primary-nav-toggle"
       >
         <Tooltip
           PopperProps={{

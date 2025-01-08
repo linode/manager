@@ -1,7 +1,8 @@
+import { useScrollTrigger } from '@mui/material';
 import React from 'react';
 
-import { isPathOneOf } from 'src/utilities/routing/isPathOneOf';
 import { FOOTER_HEIGHT } from 'src/features/Footer';
+import { isPathOneOf } from 'src/utilities/routing/isPathOneOf';
 
 export const linkIsActive = (
   href: string,
@@ -26,7 +27,7 @@ export const linkIsActive = (
 export const useIsPageScrollable = (
   contentRef: React.RefObject<HTMLElement>
 ): { isPageScrollable: boolean } => {
-  const [isPageScrollable, setIsPageScrollable] = React.useState(false);
+  const [isPageScrollable, setIsPageScrollable] = React.useState(true);
 
   React.useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -55,25 +56,14 @@ export const useIsPageScrollable = (
 };
 
 export const useIsWindowAtBottom = () => {
-  const [isBottom, setIsBottom] = React.useState(false);
-  const checkIfBottom = React.useCallback(() => {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollTop = window.scrollY;
-    const bottom =
-      Math.ceil(windowHeight + scrollTop) >= documentHeight - FOOTER_HEIGHT;
+  const isAtBottom = useScrollTrigger({
+    disableHysteresis: true,
+    target: window,
+    threshold:
+      document.documentElement.scrollHeight -
+      window.innerHeight -
+      FOOTER_HEIGHT,
+  });
 
-    setIsBottom(bottom);
-  }, []);
-
-  React.useEffect(() => {
-    checkIfBottom();
-    const onScroll = () => requestAnimationFrame(checkIfBottom);
-    document.body.onscroll = onScroll;
-    return () => {
-      document.body.onscroll = null;
-    };
-  }, [checkIfBottom]);
-
-  return isBottom;
+  return { isAtBottom };
 };

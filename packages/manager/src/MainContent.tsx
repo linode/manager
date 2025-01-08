@@ -319,6 +319,7 @@ export const MainContent = () => {
                     closeMenu={() => toggleMenu(false)}
                     collapse={desktopMenuIsOpen || false}
                     desktopMenuToggle={desktopMenuToggle}
+                    isPageScrollable={isPageScrollable}
                     open={menuIsOpen}
                   />
                 </Box>
