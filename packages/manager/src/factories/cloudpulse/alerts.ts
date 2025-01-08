@@ -1,10 +1,10 @@
 import Factory from 'src/factories/factoryProxy';
 
-import type { DimensionFilter } from '@linode/api-v4';
+import type { AlertDefinitionDimensionFilter } from '@linode/api-v4';
 import type { AlertDefinitionMetricCriteria } from '@linode/api-v4';
 import type { Alert } from '@linode/api-v4';
 
-export const alertDimensionsFactory = Factory.Sync.makeFactory<DimensionFilter>(
+export const alertDimensionsFactory = Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>(
   {
     dimension_label: 'operating_system',
     label: 'Operating System',

@@ -57,7 +57,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
             />
           </Grid>
 
-          {dimensionFilters.length > 0 && (
+          {dimensionFilters && dimensionFilters.length > 0 && (
             <Grid item xs={12}>
               <DisplayAlertDetailChips // build the dimensions associated with metric threshold like label|dimension_operator|value
                 values={dimensionFilters.map(

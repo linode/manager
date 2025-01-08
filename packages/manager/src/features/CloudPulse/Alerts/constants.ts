@@ -1,6 +1,5 @@
 import type {
   AlertSeverityType,
-  DimensionFilterOperatorType,
   AlertStatusType,
   DimensionFilterOperatorType,
   MetricAggregationType,
