@@ -117,6 +117,18 @@ export const PollingIntervalOptions = {
   ],
 };
 
+export const severityMap: Record<AlertSeverityType, string> = {
+  0: 'Severe',
+  1: 'Medium',
+  2: 'Low',
+  3: 'Info',
+};
+
+export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
+  disabled: 'inactive',
+  enabled: 'active',
+};
+
 export const operators = {
   eq: '=',
   gt: '>',
@@ -138,16 +150,4 @@ export const operatorLabel = {
   eq: 'equals',
   neq: 'not equals',
   startswith: 'starts with',
-};
-
-export const severityMap: Record<AlertSeverityType, string> = {
-  0: 'Severe',
-  1: 'Medium',
-  2: 'Low',
-  3: 'Info',
-};
-
-export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
-  disabled: 'inactive',
-  enabled: 'active',
 };

@@ -188,7 +188,7 @@ describe('Cloud pulse widgets', () => {
     expect(queryMocks.useCloudPulseMetricsQuery).toHaveBeenCalledWith(
       'linode',
       expect.objectContaining({
-        time_granularity: { unit: 'min', value: 5 }
+        time_granularity: { unit: 'min', value: 5 },
       }),
       expect.any(Object)
     );
