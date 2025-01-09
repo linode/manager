@@ -99,8 +99,8 @@ export const DomainRecords = (props: Props) => {
       return;
     }
 
-    updateConfirmDialog((c) => ({
-      ...c,
+    updateConfirmDialog((confirmDialog) => ({
+      ...confirmDialog,
       errors: undefined,
       submitting: true,
     }));
@@ -118,14 +118,17 @@ export const DomainRecords = (props: Props) => {
       })
       .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);
-        updateConfirmDialog((c) => ({
-          ...c,
+        updateConfirmDialog((confirmDialog) => ({
+          ...confirmDialog,
           errors,
           submitting: false,
         }));
       });
 
-    updateConfirmDialog((c) => ({ ...c, submitting: true }));
+    updateConfirmDialog((confirmDialog) => ({
+      ...confirmDialog,
+      submitting: true,
+    }));
   };
 
   const handleCloseDialog = () => {
@@ -136,10 +139,10 @@ export const DomainRecords = (props: Props) => {
     }));
   };
 
-  const handleOpenSOADrawer = (d: Domain) => {
-    return d.type === 'master'
-      ? openForEditPrimaryDomain(d)
-      : openForEditSecondaryDomain(d);
+  const handleOpenSOADrawer = (domain: Domain) => {
+    return domain.type === 'master'
+      ? openForEditPrimaryDomain(domain)
+      : openForEditSecondaryDomain(domain);
   };
 
   const openForCreation = (type: RecordType) =>
@@ -162,11 +165,11 @@ export const DomainRecords = (props: Props) => {
       type,
     }));
 
-  const openForEditPrimaryDomain = (f: Partial<Domain>) =>
-    openForEditing('master', f);
+  const openForEditPrimaryDomain = (fields: Partial<Domain>) =>
+    openForEditing('master', fields);
 
-  const openForEditSecondaryDomain = (f: Partial<Domain>) =>
-    openForEditing('slave', f);
+  const openForEditSecondaryDomain = (fields: Partial<Domain>) =>
+    openForEditing('slave', fields);
 
   const renderDialogActions = () => {
     return (
@@ -187,7 +190,7 @@ export const DomainRecords = (props: Props) => {
   const resetDrawer = () => updateDrawer(() => defaultDrawerState);
 
   const updateConfirmDialog = (
-    fn: (d: ConfirmationState) => ConfirmationState
+    fn: (confirmDialog: ConfirmationState) => ConfirmationState
   ) => {
     setState((prevState) => {
       const newState = over(lensPath(['confirmDialog']), fn, prevState);
@@ -197,7 +200,7 @@ export const DomainRecords = (props: Props) => {
     });
   };
 
-  const updateDrawer = (fn: (d: DrawerState) => DrawerState) => {
+  const updateDrawer = (fn: (drawer: DrawerState) => DrawerState) => {
     setState((prevState) => {
       return over(lensPath(['drawer']), fn, prevState);
     });
@@ -213,13 +216,13 @@ export const DomainRecords = (props: Props) => {
     openForCreateNSRecord: () => openForCreation('NS'),
     openForCreateSRVRecord: () => openForCreation('SRV'),
     openForCreateTXTRecord: () => openForCreation('TXT'),
-    openForEditARecord: (f) => openForEditing('AAAA', f),
-    openForEditCAARecord: (f) => openForEditing('CAA', f),
-    openForEditCNAMERecord: (f) => openForEditing('CNAME', f),
-    openForEditMXRecord: (f) => openForEditing('MX', f),
-    openForEditNSRecord: (f) => openForEditing('NS', f),
-    openForEditSRVRecord: (f) => openForEditing('SRV', f),
-    openForEditTXTRecord: (f) => openForEditing('TXT', f),
+    openForEditARecord: (fields) => openForEditing('AAAA', fields),
+    openForEditCAARecord: (fields) => openForEditing('CAA', fields),
+    openForEditCNAMERecord: (fields) => openForEditing('CNAME', fields),
+    openForEditMXRecord: (fields) => openForEditing('MX', fields),
+    openForEditNSRecord: (fields) => openForEditing('NS', fields),
+    openForEditSRVRecord: (fields) => openForEditing('SRV', fields),
+    openForEditTXTRecord: (fields) => openForEditing('TXT', fields),
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

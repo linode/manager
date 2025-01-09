@@ -17,7 +17,7 @@ import type { Domain, DomainRecord } from '@linode/api-v4/lib/domains';
 
 export interface IType {
   columns: {
-    render: (r: Domain | DomainRecord) => JSX.Element | null | string;
+    render: (record: Domain | DomainRecord) => JSX.Element | null | string;
     title: string;
   }[];
   data: any[];
@@ -29,7 +29,7 @@ export interface IType {
 
 export interface GenerateTypesHandlers {
   confirmDeletion: (recordId: number) => void;
-  handleOpenSOADrawer: (d: Domain) => void;
+  handleOpenSOADrawer: (domain: Domain) => void;
   openForCreateARecord: () => void;
   openForCreateCAARecord: () => void;
   openForCreateCNAMERecord: () => void;
@@ -38,28 +38,31 @@ export interface GenerateTypesHandlers {
   openForCreateSRVRecord: () => void;
   openForCreateTXTRecord: () => void;
   openForEditARecord: (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+    fields: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => void;
   openForEditCAARecord: (
-    f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
+    fields: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
   ) => void;
   openForEditCNAMERecord: (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+    fields: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => void;
   openForEditMXRecord: (
-    f: Pick<DomainRecord, 'id' | 'name' | 'priority' | 'target' | 'ttl_sec'>
+    fields: Pick<
+      DomainRecord,
+      'id' | 'name' | 'priority' | 'target' | 'ttl_sec'
+    >
   ) => void;
   openForEditNSRecord: (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+    fields: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => void;
   openForEditSRVRecord: (
-    f: Pick<
+    fields: Pick<
       DomainRecord,
       'id' | 'name' | 'port' | 'priority' | 'protocol' | 'target' | 'weight'
     >
   ) => void;
   openForEditTXTRecord: (
-    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+    fields: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => void;
 }
 
@@ -77,11 +80,11 @@ export const generateTypes = (
   {
     columns: [
       {
-        render: (d: Domain) => d.domain,
+        render: (domain: Domain) => domain.domain,
         title: 'Primary Domain',
       },
       {
-        render: (d: Domain) => d.soa_email,
+        render: (domain: Domain) => domain.soa_email,
         title: 'Email',
       },
       {
@@ -101,10 +104,10 @@ export const generateTypes = (
         title: 'Expire Time',
       },
       {
-        render: (d: Domain) => {
-          return d.type === 'master' ? (
+        render: (domain: Domain) => {
+          return domain.type === 'master' ? (
             <DomainRecordActionMenu
-              editPayload={d}
+              editPayload={domain}
               label={props.domain.domain}
               onEdit={handlers.handleOpenSOADrawer}
             />
@@ -123,15 +126,15 @@ export const generateTypes = (
   {
     columns: [
       {
-        render: (r: DomainRecord) => r.target,
+        render: (record: DomainRecord) => record.target,
         title: 'Name Server',
       },
       {
-        render: (r: DomainRecord) => {
-          const sd = r.name;
-          return isEmpty(sd)
+        render: (record: DomainRecord) => {
+          const subdomain = record.name;
+          return isEmpty(subdomain)
             ? props.domain.domain
-            : `${sd}.${props.domain.domain}`;
+            : `${subdomain}.${props.domain.domain}`;
         },
         title: 'Subdomain',
       },
@@ -182,15 +185,15 @@ export const generateTypes = (
   {
     columns: [
       {
-        render: (r: DomainRecord) => r.target,
+        render: (record: DomainRecord) => record.target,
         title: 'Mail Server',
       },
       {
-        render: (r: DomainRecord) => String(r.priority),
+        render: (record: DomainRecord) => String(record.priority),
         title: 'Preference',
       },
       {
-        render: (r: DomainRecord) => r.name,
+        render: (record: DomainRecord) => record.name,
         title: 'Subdomain',
       },
       {
@@ -232,10 +235,10 @@ export const generateTypes = (
   {
     columns: [
       {
-        render: (r: DomainRecord) => r.name || props.domain.domain,
+        render: (record: DomainRecord) => record.name || props.domain.domain,
         title: 'Hostname',
       },
-      { render: (r: DomainRecord) => r.target, title: 'IP Address' },
+      { render: (record: DomainRecord) => record.target, title: 'IP Address' },
       { render: getTTL, title: 'TTL' },
       {
         render: (domainRecordParams: DomainRecord) => {
@@ -261,7 +264,7 @@ export const generateTypes = (
       },
     ],
     data: props.domainRecords.filter(
-      (r) => typeEq('AAAA', r) || typeEq('A', r)
+      (record) => typeEq('AAAA', record) || typeEq('A', record)
     ),
     link: () =>
       createLink('Add an A/AAAA Record', handlers.openForCreateARecord),
@@ -273,8 +276,8 @@ export const generateTypes = (
   /** CNAME Record */
   {
     columns: [
-      { render: (r: DomainRecord) => r.name, title: 'Hostname' },
-      { render: (r: DomainRecord) => r.target, title: 'Aliases to' },
+      { render: (record: DomainRecord) => record.name, title: 'Hostname' },
+      { render: (record: DomainRecord) => record.target, title: 'Aliases to' },
       { render: getTTL, title: 'TTL' },
       {
         render: (domainRecordParams: DomainRecord) => {
@@ -311,11 +314,11 @@ export const generateTypes = (
   {
     columns: [
       {
-        render: (r: DomainRecord) => r.name || props.domain.domain,
+        render: (record: DomainRecord) => record.name || props.domain.domain,
         title: 'Hostname',
       },
       {
-        render: (r: DomainRecord) => truncateEnd(r.target, 100),
+        render: (record: DomainRecord) => truncateEnd(record.target, 100),
         title: 'Value',
       },
       { render: getTTL, title: 'TTL' },
@@ -351,21 +354,24 @@ export const generateTypes = (
   /** SRV Record */
   {
     columns: [
-      { render: (r: DomainRecord) => r.name, title: 'Service/Protocol' },
+      {
+        render: (record: DomainRecord) => record.name,
+        title: 'Service/Protocol',
+      },
       {
         render: () => props.domain.domain,
         title: 'Name',
       },
       {
-        render: (r: DomainRecord) => String(r.priority),
+        render: (record: DomainRecord) => String(record.priority),
         title: 'Priority',
       },
       {
-        render: (r: DomainRecord) => String(r.weight),
+        render: (record: DomainRecord) => String(record.weight),
         title: 'Weight',
       },
-      { render: (r: DomainRecord) => String(r.port), title: 'Port' },
-      { render: (r: DomainRecord) => r.target, title: 'Target' },
+      { render: (record: DomainRecord) => String(record.port), title: 'Port' },
+      { render: (record: DomainRecord) => record.target, title: 'Target' },
       { render: getTTL, title: 'TTL' },
       {
         render: ({
@@ -409,10 +415,10 @@ export const generateTypes = (
   /** CAA Record */
   {
     columns: [
-      { render: (r: DomainRecord) => r.name, title: 'Name' },
-      { render: (r: DomainRecord) => r.tag, title: 'Tag' },
+      { render: (record: DomainRecord) => record.name, title: 'Name' },
+      { render: (record: DomainRecord) => record.tag, title: 'Tag' },
       {
-        render: (r: DomainRecord) => r.target,
+        render: (record: DomainRecord) => record.target,
         title: 'Value',
       },
       { render: getTTL, title: 'TTL' },
