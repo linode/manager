@@ -322,7 +322,7 @@ export const MainContent = () => {
                   height={sideMenuContainerHeight}
                   position="sticky"
                   top={0}
-                  zIndex={10000}
+                  zIndex={1400}
                 >
                   <SideMenu
                     closeMenu={() => toggleMenu(false)}
