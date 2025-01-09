@@ -54,7 +54,7 @@ export const AlertDetail = () => {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
+        <Box alignContent="center" height="600px">
           <CircleProgress />
         </Box>
       </>
@@ -65,7 +65,7 @@ export const AlertDetail = () => {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
+        <Box alignContent="center" height="600px">
           <ErrorState errorText="An error occurred while loading the definitions. Please try again later." />
         </Box>
       </>
@@ -76,7 +76,7 @@ export const AlertDetail = () => {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
+        <Box alignContent="center" height="600px">
           <StyledPlaceholder
             icon={AlertsIcon}
             isEntity
@@ -94,7 +94,7 @@ export const AlertDetail = () => {
         <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
           <Box
             flexBasis="50%"
-            maxHeight={theme.spacing(98.125)}
+            maxHeight="785px"
             sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
           >
             <AlertDetailOverview alertDetails={alertDetails} />
@@ -105,7 +105,7 @@ export const AlertDetail = () => {
               overflow: 'auto',
             }}
             flexBasis="50%"
-            maxHeight={theme.spacing(98.125)}
+            maxHeight="785px"
           >
             <AlertDetailCriteria alertDetails={alertDetails} />
           </Box>
