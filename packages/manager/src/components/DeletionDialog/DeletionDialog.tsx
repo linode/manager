@@ -49,7 +49,7 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   const [confirmationText, setConfirmationText] = React.useState('');
 
   const typeToConfirmRequired =
-    typeToConfirm && Boolean(typeToConfirmPreference);
+    typeToConfirm || Boolean(typeToConfirmPreference);
 
   const renderActions = () => (
     <ActionsPanel
