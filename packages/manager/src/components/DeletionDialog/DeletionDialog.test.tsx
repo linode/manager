@@ -91,12 +91,21 @@ describe('DeletionDialog', () => {
   });
 
   it('should call onDelete when the DeletionDialog delete button is clicked', () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
     const { getByTestId } = renderWithTheme(
       <DeletionDialog {...defaultArgs} open={true} />
     );
 
     const deleteButton = getByTestId('confirm');
-    expect(deleteButton).not.toBeDisabled();
+    expect(deleteButton).toBeDisabled();
+
+    const input = getByTestId('textfield-input');
+    fireEvent.change(input, { target: { value: defaultArgs.label } });
+
+    expect(deleteButton).toBeEnabled();
+
     fireEvent.click(deleteButton);
 
     expect(defaultArgs.onDelete).toHaveBeenCalled();
@@ -148,15 +157,11 @@ describe('DeletionDialog', () => {
     'should %s input field with label when typeToConfirm is %s',
     (_, typeToConfirm) => {
       queryMocks.usePreferences.mockReturnValue({
-        data: preference,
+        data: typeToConfirm,
       });
 
       const { queryByTestId } = renderWithTheme(
-        <DeletionDialog
-          {...defaultArgs}
-          open={true}
-          typeToConfirm={typeToConfirm}
-        />
+        <DeletionDialog {...defaultArgs} open={true} />
       );
 
       if (typeToConfirm) {
