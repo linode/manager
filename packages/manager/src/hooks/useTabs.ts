@@ -1,4 +1,4 @@
-import { useMatchRoute, useNavigate } from '@tanstack/react-router';
+import { useMatchRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import type { LinkProps } from '@tanstack/react-router';
@@ -30,42 +30,31 @@ export interface Tab {
   to: LinkProps['to'];
 }
 
+/**
+ * This hook is a necessary evil to sync routing and tabs.
+ */
 export function useTabs<T extends Tab>(tabs: T[]) {
-  const navigate = useNavigate();
   const matchRoute = useMatchRoute();
 
   // Filter out hidden tabs
   const visibleTabs = React.useMemo(() => tabs.filter((tab) => !tab.hide), [
     tabs,
   ]);
-  // Get initial index from route
-  const initialIndex = React.useMemo(
-    () => visibleTabs.findIndex((tab) => matchRoute({ to: tab.to })),
-    [visibleTabs, matchRoute]
-  );
-  const indexRef = React.useRef(initialIndex);
 
-  const handleTabChange = React.useCallback(
-    (index: number) => {
-      // 1. Prevent a navigate call if the tab is disabled
-      if (visibleTabs[index]?.disabled) {
-        return;
-      }
+  // Calculate current index based on route
+  const tabIndex = React.useMemo(() => {
+    const index = visibleTabs.findIndex((tab) => matchRoute({ to: tab.to }));
+    return index === -1 ? 0 : index;
+  }, [visibleTabs, matchRoute]);
 
-      // 2. Update the index
-      indexRef.current = index;
-
-      // 3. Update the index and navigate
-      navigate({
-        to: visibleTabs[indexRef.current].to,
-      });
-    },
-    [visibleTabs, navigate]
-  );
+  // Simple handler to satisfy Reach Tabs props
+  const handleTabChange = React.useCallback(() => {
+    // No-op - navigation is handled by Tanstack Router `Link`
+  }, []);
 
   return {
     handleTabChange,
-    tabIndex: indexRef.current,
+    tabIndex,
     tabs: visibleTabs,
   };
 }

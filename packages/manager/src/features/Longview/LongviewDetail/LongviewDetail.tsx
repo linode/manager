@@ -8,8 +8,8 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import withLongviewClients from 'src/containers/longview.container';
 import withClientStats from 'src/containers/longview.stats.container';
 import { get } from 'src/features/Longview/request';
@@ -196,7 +196,7 @@ export const LongviewDetail = (props: CombinedProps) => {
         />
       ))}
       <StyledTabs index={tabIndex} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
+        <TanStackTabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>

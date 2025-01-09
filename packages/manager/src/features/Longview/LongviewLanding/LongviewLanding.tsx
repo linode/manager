@@ -11,9 +11,9 @@ import * as React from 'react';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import withLongviewClients from 'src/containers/longview.container';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
@@ -62,7 +62,7 @@ export const LongviewLanding = (props: LongviewProps) => {
     setSubscriptionDialogOpen,
   ] = React.useState<boolean>(false);
 
-  const { handleTabChange, tabs, tabIndex } = useTabs([
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
       title: 'Clients',
       to: '/longview/clients',
@@ -139,7 +139,7 @@ export const LongviewLanding = (props: LongviewProps) => {
         title="Longview"
       />
       <StyledTabs index={tabIndex} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
+        <TanStackTabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>

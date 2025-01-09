@@ -120,7 +120,7 @@ module.exports = {
                   'withRouter',
                 ],
                 message:
-                  'Please use routing utilities from @tanstack/react-router.',
+                  'Please use routing utilities intended for @tanstack/react-router.',
                 name: 'react-router-dom',
               },
               {
@@ -128,6 +128,12 @@ module.exports = {
                 message:
                   'Please use the wrapWithThemeAndRouter helper function for testing components being migrated to TanStack Router.',
                 name: 'src/utilities/testHelpers',
+              },
+              {
+                importNames: ['TabLinkList'],
+                message:
+                  'Please use the TanStackTabLinkList component for components being migrated to TanStack Router.',
+                name: 'src/components/Tabs/TabLinkList',
               },
             ],
           },
