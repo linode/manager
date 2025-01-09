@@ -128,12 +128,12 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   };
 
   const { data: typeToConfirmPreference } = usePreferences(
-    (preferences) => preferences?.type_to_confirm
+    (preferences) => preferences?.type_to_confirm ?? true
   );
 
   const isCloseAccount = entity.subType === 'CloseAccount';
   const isTypeToConfirmEnabled =
-    typeToConfirmPreference !== false || isCloseAccount;
+    Boolean(typeToConfirmPreference) || isCloseAccount;
   const isTextConfirmationValid =
     confirmationValues.confirmText === entity.name;
   const isCloseAccountValid =
