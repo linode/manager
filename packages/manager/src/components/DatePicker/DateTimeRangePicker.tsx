@@ -143,9 +143,10 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   const [startDateError, setStartDateError] = useState<null | string>(null);
   const [endDateError, setEndDateError] = useState<null | string>(null);
   const [showPresets, setShowPresets] = useState(
-    presetsDefaultValue ? presetsDefaultValue !== 'custom_range' : enablePresets
+    presetsDefaultValue
+      ? presetsDefaultValue !== 'custom_range' && enablePresets
+      : enablePresets
   );
-
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
