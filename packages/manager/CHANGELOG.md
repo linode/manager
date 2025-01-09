@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Update layout in CloudPulseDashboardWithFilters component, add a `getFilters` util method in `FilterBuilder.ts` ([#11388](https://github.com/linode/manager/pull/11388))
 - Database Resize: Updated tooltip text, plan selection descriptions, and summary text for new databases ([#11406](https://github.com/linode/manager/pull/11406))
+- Database Resize: Disable plans when the usable storage equals the used storage of the database cluster ([#11481](https://github.com/linode/manager/pull/11481))
 - DBaaS Settings Maintenance field Upgrade Version pending updates tooltip should display accurate text ([#11417](https://github.com/linode/manager/pull/11417))
 
 ### Fixed:
