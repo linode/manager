@@ -25,6 +25,7 @@
     ]
   },
   "devDependencies": {
+    "@module-federation/vite": "^1.2.1",
     "@originjs/vite-plugin-federation": "^1.3.7"
   },
   "scripts": {

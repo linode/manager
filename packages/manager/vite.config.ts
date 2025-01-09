@@ -1,4 +1,5 @@
-import federation from '@originjs/vite-plugin-federation';
+// import federation from '@originjs/vite-plugin-federation';
+import { federation } from '@module-federation/vite';
 import react from '@vitejs/plugin-react-swc';
 import { URL } from 'url';
 import svgr from 'vite-plugin-svgr';
@@ -17,17 +18,25 @@ export default defineConfig({
     svgr({ exportAsDefault: true }),
     federation({
       name: 'manager',
+      // remotes: {
+      //   volume_create: 'http://localhost:3001/assets/remoteEntry.js',
+      // },
       remotes: {
-        volume_create: 'http://localhost:3001/assets/remoteEntry.js',
+        // For @module-federation/vite
+        volume_create: {
+          entry: 'http://localhost:3001/remoteEntry.js',
+          entryGlobalName: 'volume_create',
+          name: 'volume_create',
+          shareScope: 'default',
+          type: 'module',
+        },
       },
       shared: [
         'react',
         'react-dom',
         '@tanstack/react-query',
         '@mui/material',
-        '@mui/material/styles',
-        '@mui/material/useMediaQuery',
-        '@mui/material/ListItem',
+        '@emotion/react',
       ],
     }),
   ],

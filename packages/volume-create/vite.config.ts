@@ -1,5 +1,6 @@
 import react from "@vitejs/plugin-react-swc";
-import federation from "@originjs/vite-plugin-federation";
+// import federation from "@originjs/vite-plugin-federation";
+import { federation } from "@module-federation/vite";
 import svgr from "vite-plugin-svgr";
 import { defineConfig } from "vite";
 import { URL } from "url";
@@ -35,9 +36,7 @@ export default defineConfig({
           'react-dom',
           '@tanstack/react-query',
           '@mui/material',
-          '@mui/material/styles',
-          '@mui/material/useMediaQuery',
-          '@mui/material/ListItem'
+          '@emotion/react'
         ],
       })
   ],
