@@ -96,7 +96,9 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     data: vpcs,
     error: vpcsError,
     isLoading: vpcsLoading,
-  } = useAllVPCsQuery(entityType === 'vpc_id');
+  } = useAllVPCsQuery({
+    enabled: entityType === 'vpc_id',
+  });
 
   const getEntityOptions = (): { label: string; value: number | string }[] => {
     const reactQueryEntityDataMap = {

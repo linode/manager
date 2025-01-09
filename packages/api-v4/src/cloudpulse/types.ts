@@ -2,9 +2,24 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
 export type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
 export type AlertServiceType = 'linode' | 'dbaas';
-type DimensionFilterOperatorType = 'eq' | 'neq' | 'startswith' | 'endswith';
+export type DimensionFilterOperatorType =
+  | 'eq'
+  | 'neq'
+  | 'startswith'
+  | 'endswith';
 export type AlertDefinitionType = 'system' | 'user';
 export type AlertStatusType = 'enabled' | 'disabled';
+export type CriteriaConditionType = 'ALL';
+export type MetricUnitType =
+  | 'number'
+  | 'byte'
+  | 'second'
+  | 'percent'
+  | 'bit_per_second'
+  | 'millisecond'
+  | 'KB'
+  | 'MB'
+  | 'GB';
 export interface Dashboard {
   id: number;
   label: string;
@@ -74,11 +89,7 @@ export interface AclpWidget {
   size: number;
 }
 
-export interface MetricDefinitions {
-  data: AvailableMetrics[];
-}
-
-export interface AvailableMetrics {
+export interface MetricDefinition {
   label: string;
   metric: string;
   metric_type: string;
@@ -142,36 +153,49 @@ export interface ServiceTypesList {
 
 export interface CreateAlertDefinitionPayload {
   label: string;
+  tags?: string[];
   description?: string;
   entity_ids?: string[];
   severity: AlertSeverityType;
   rule_criteria: {
     rules: MetricCriteria[];
   };
-  trigger_condition: TriggerCondition;
+  trigger_conditions: TriggerCondition;
   channel_ids: number[];
 }
 export interface MetricCriteria {
   metric: string;
   aggregation_type: MetricAggregationType;
   operator: MetricOperatorType;
-  dimension_filters: DimensionFilter[];
+  threshold: number;
+  dimension_filters?: DimensionFilter[];
 }
 
+export interface AlertDefinitionMetricCriteria
+  extends Omit<MetricCriteria, 'dimension_filters'> {
+  unit: string;
+  label: string;
+  dimension_filters?: AlertDefinitionDimensionFilter[];
+}
 export interface DimensionFilter {
   dimension_label: string;
   operator: DimensionFilterOperatorType;
   value: string;
 }
 
+export interface AlertDefinitionDimensionFilter extends DimensionFilter {
+  label: string;
+}
 export interface TriggerCondition {
   polling_interval_seconds: number;
   evaluation_period_seconds: number;
   trigger_occurrences: number;
+  criteria_condition: CriteriaConditionType;
 }
 export interface Alert {
   id: number;
   label: string;
+  tags: string[];
   description: string;
   has_more_resources: boolean;
   status: AlertStatusType;
@@ -180,9 +204,9 @@ export interface Alert {
   service_type: AlertServiceType;
   entity_ids: string[];
   rule_criteria: {
-    rules: MetricCriteria[];
+    rules: AlertDefinitionMetricCriteria[];
   };
-  triggerCondition: TriggerCondition;
+  trigger_conditions: TriggerCondition;
   channels: {
     id: string;
     label: string;

@@ -1,7 +1,7 @@
 import { array, number, object, string } from 'yup';
 
 const dimensionFilters = object({
-  dimension_label: string().required('Label is required for the filter.'),
+  dimension_label: string().required('Data Field is required for the filter.'),
   operator: string().required('Operator is required.'),
   value: string().required('Value is required.'),
 });
@@ -12,18 +12,20 @@ const metricCriteria = object({
   operator: string().required('Criteria Operator is required.'),
   threshold: number()
     .required('Threshold value is required.')
-    .min(0, 'Threshold value cannot be negative.'),
+    .min(0, 'Threshold value cannot be negative.')
+    .typeError('Threshold value should be a number.'),
   dimension_filters: array().of(dimensionFilters).notRequired(),
 });
 
-const trigger_condition = object({
+const triggerConditionValidation = object({
   polling_interval_seconds: number().required('Polling Interval is required.'),
   evaluation_period_seconds: number().required(
     'Evaluation Period is required.'
   ),
   trigger_occurrences: number()
     .required('Trigger Occurrences is required.')
-    .positive('Number of occurrences must be greater than zero.'),
+    .positive('Value must be greater than zero.')
+    .typeError('Trigger Occurrences is required.'),
 });
 
 export const createAlertDefinitionSchema = object({
@@ -38,6 +40,7 @@ export const createAlertDefinitionSchema = object({
       .of(metricCriteria)
       .min(1, 'At least one metric criteria is needed.'),
   }),
-  trigger_condition,
+  trigger_conditions: triggerConditionValidation,
   channel_ids: array(number()),
+  tags: array().of(string()).notRequired(),
 });

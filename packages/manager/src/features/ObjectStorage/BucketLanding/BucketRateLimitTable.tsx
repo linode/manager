@@ -60,9 +60,10 @@ export const BucketRateLimitTable = ({
     <Box>
       <FormLabel>
         <Typography
+          {...typographyProps}
           data-testid="bucketRateLimit"
           marginBottom={1}
-          {...typographyProps}
+          marginTop={2}
         >
           Bucket Rate Limits
         </Typography>

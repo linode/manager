@@ -34,19 +34,23 @@ import {
 import { VOLUME_TABLE_PREFERENCE_KEY } from 'src/routes/volumes/constants';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { AttachVolumeDrawer } from './AttachVolumeDrawer';
-import { CloneVolumeDrawer } from './CloneVolumeDrawer';
-import { DeleteVolumeDialog } from './DeleteVolumeDialog';
-import { DetachVolumeDialog } from './DetachVolumeDialog';
-import { EditVolumeDrawer } from './EditVolumeDrawer';
-import { ResizeVolumeDrawer } from './ResizeVolumeDrawer';
-import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
-import { VolumeDetailsDrawer } from './VolumeDetailsDrawer';
+import { DeleteVolumeDialog } from './Dialogs/DeleteVolumeDialog';
+import { DetachVolumeDialog } from './Dialogs/DetachVolumeDialog';
+import { UpgradeVolumeDialog } from './Dialogs/UpgradeVolumeDialog';
+import { AttachVolumeDrawer } from './Drawers/AttachVolumeDrawer';
+import { CloneVolumeDrawer } from './Drawers/CloneVolumeDrawer';
+import { EditVolumeDrawer } from './Drawers/EditVolumeDrawer';
+import { ManageTagsDrawer } from './Drawers/ManageTagsDrawer';
+import { ResizeVolumeDrawer } from './Drawers/ResizeVolumeDrawer';
+import { VolumeDetailsDrawer } from './Drawers/VolumeDetailsDrawer';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
 import { VolumeTableRow } from './VolumeTableRow';
 
 import type { Filter, Volume } from '@linode/api-v4';
-import type { VolumesSearchParams } from 'src/routes/volumes/index';
+import type {
+  VolumeAction,
+  VolumesSearchParams,
+} from 'src/routes/volumes/index';
 
 export const VolumesLanding = () => {
   const navigate = useNavigate();
@@ -105,65 +109,9 @@ export const VolumesLanding = () => {
     redirectToOnNotFound: '/volumes',
   });
 
-  const handleDetach = (volume: Volume) => {
+  const handleVolumeAction = (action: VolumeAction, volume: Volume) => {
     navigate({
-      params: { action: 'detach', volumeId: volume.id },
-      search: (prev) => prev,
-      to: `/volumes/$volumeId/$action`,
-    });
-  };
-
-  const handleDelete = (volume: Volume) => {
-    navigate({
-      params: { action: 'delete', volumeId: volume.id },
-      search: (prev) => prev,
-      to: `/volumes/$volumeId/$action`,
-    });
-  };
-
-  const handleDetails = (volume: Volume) => {
-    navigate({
-      params: { action: 'details', volumeId: volume.id },
-      search: (prev) => prev,
-      to: `/volumes/$volumeId/$action`,
-    });
-  };
-
-  const handleEdit = (volume: Volume) => {
-    navigate({
-      params: { action: 'edit', volumeId: volume.id },
-      search: (prev) => prev,
-      to: `/volumes/$volumeId/$action`,
-    });
-  };
-
-  const handleResize = (volume: Volume) => {
-    navigate({
-      params: { action: 'resize', volumeId: volume.id },
-      search: (prev) => prev,
-      to: `/volumes/$volumeId/$action`,
-    });
-  };
-
-  const handleClone = (volume: Volume) => {
-    navigate({
-      params: { action: 'clone', volumeId: volume.id },
-      search: (prev) => prev,
-      to: `/volumes/$volumeId/$action`,
-    });
-  };
-
-  const handleAttach = (volume: Volume) => {
-    navigate({
-      params: { action: 'attach', volumeId: volume.id },
-      search: (prev) => prev,
-      to: `/volumes/$volumeId/$action`,
-    });
-  };
-
-  const handleUpgrade = (volume: Volume) => {
-    navigate({
-      params: { action: 'upgrade', volumeId: volume.id },
+      params: { action, volumeId: volume.id },
       search: (prev) => prev,
       to: `/volumes/$volumeId/$action`,
     });
@@ -304,14 +252,16 @@ export const VolumesLanding = () => {
           {volumes?.data.map((volume) => (
             <VolumeTableRow
               handlers={{
-                handleAttach: () => handleAttach(volume),
-                handleClone: () => handleClone(volume),
-                handleDelete: () => handleDelete(volume),
-                handleDetach: () => handleDetach(volume),
-                handleDetails: () => handleDetails(volume),
-                handleEdit: () => handleEdit(volume),
-                handleResize: () => handleResize(volume),
-                handleUpgrade: () => handleUpgrade(volume),
+                handleAttach: () => handleVolumeAction('attach', volume),
+                handleClone: () => handleVolumeAction('clone', volume),
+                handleDelete: () => handleVolumeAction('delete', volume),
+                handleDetach: () => handleVolumeAction('detach', volume),
+                handleDetails: () => handleVolumeAction('details', volume),
+                handleEdit: () => handleVolumeAction('edit', volume),
+                handleManageTags: () =>
+                  handleVolumeAction('manage-tags', volume),
+                handleResize: () => handleVolumeAction('resize', volume),
+                handleUpgrade: () => handleVolumeAction('upgrade', volume),
               }}
               isBlockStorageEncryptionFeatureEnabled={
                 isBlockStorageEncryptionFeatureEnabled
@@ -340,6 +290,12 @@ export const VolumesLanding = () => {
         isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'details'}
+        volume={selectedVolume}
+      />
+      <ManageTagsDrawer
+        isFetching={isFetchingVolume}
+        onClose={navigateToVolumes}
+        open={params.action === 'manage-tags'}
         volume={selectedVolume}
       />
       <EditVolumeDrawer
