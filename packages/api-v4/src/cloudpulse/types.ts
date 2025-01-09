@@ -55,7 +55,7 @@ export interface Widgets {
   filters: Filters[];
   serviceType: string;
   service_type: string;
-  entity_id: string[];
+  entity_ids: string[];
   time_granularity: TimeGranularity;
   time_duration: TimeDuration;
   unit: string;

@@ -287,8 +287,8 @@ export const getCloudPulseMetricRequest = (
   return {
     aggregate_function: widget.aggregate_function,
     entity_ids: resources
-      ? entityIds.map((obj) => parseInt(obj, 10))
-      : widget.entity_id.map((obj) => parseInt(obj, 10)),
+      ? entityIds.map((id) => parseInt(id, 10))
+      : widget.entity_ids.map((id) => parseInt(id, 10)),
     filters: undefined,
     group_by: widget.group_by,
     metric: widget.metric,
