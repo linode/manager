@@ -1,7 +1,4 @@
-import {
-  queryByAttribute,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
@@ -17,6 +14,9 @@ import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseResize } from './DatabaseResize';
+import { isSmallerOrEqualCurrentPlan } from './DatabaseResize.utils';
+
+import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 
 const loadingTestId = 'circle-progress';
 
@@ -24,22 +24,26 @@ beforeAll(() => mockMatchMedia());
 
 describe('database resize', () => {
   const database = databaseFactory.build();
+  const mockDatabase = databaseFactory.build({
+    cluster_size: 3,
+    engine: 'mysql',
+    platform: 'rdbms-default',
+    type: 'g6-nanode-1',
+    used_disk_size_gb: 0,
+  });
   const dedicatedTypes = databaseTypeFactory.buildList(7, {
     class: 'dedicated',
   });
-
-  it('should render a loading state', async () => {
-    // Mock database types
-    const standardTypes = [
-      databaseTypeFactory.build({
-        class: 'nanode',
-        id: 'g6-nanode-1',
-        label: `Nanode 1 GB`,
-        memory: 1024,
-      }),
-      ...databaseTypeFactory.buildList(7, { class: 'standard' }),
-    ];
-
+  const standardTypes = [
+    databaseTypeFactory.build({
+      class: 'nanode',
+      id: 'g6-nanode-1',
+      label: `Nanode 1 GB`,
+      memory: 1024,
+    }),
+    ...databaseTypeFactory.buildList(7, { class: 'standard' }),
+  ];
+  beforeEach(() => {
     server.use(
       http.get('*/databases/types', () => {
         return HttpResponse.json(
@@ -51,38 +55,17 @@ describe('database resize', () => {
         return HttpResponse.json(account);
       })
     );
+  });
 
+  it('should render a loading state', async () => {
     const { getByTestId } = renderWithTheme(
       <DatabaseResize database={database} />
     );
-
     // Should render a loading state
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
   });
 
   it('should render configuration, summary sections and input field to choose a plan', async () => {
-    // Mock database types
-    const standardTypes = [
-      databaseTypeFactory.build({
-        class: 'nanode',
-        id: 'g6-nanode-1',
-        label: `Nanode 1 GB`,
-        memory: 1024,
-      }),
-      ...databaseTypeFactory.buildList(7, { class: 'standard' }),
-    ];
-    server.use(
-      http.get('*/databases/types', () => {
-        return HttpResponse.json(
-          makeResourcePage([...standardTypes, ...dedicatedTypes])
-        );
-      }),
-      http.get('*/account', () => {
-        const account = accountFactory.build();
-        return HttpResponse.json(account);
-      })
-    );
-
     const { getByTestId, getByText } = renderWithTheme(
       <DatabaseResize database={database} />
     );
@@ -96,34 +79,12 @@ describe('database resize', () => {
   });
 
   describe('On rendering of page', () => {
-    const examplePlanType = 'g6-dedicated-50';
-    const dedicatedTypes = databaseTypeFactory.buildList(7, {
-      class: 'dedicated',
-    });
-    const database = databaseFactory.build();
-    beforeEach(() => {
-      // Mock database types
-      const standardTypes = [
-        databaseTypeFactory.build({
-          class: 'nanode',
-          id: 'g6-nanode-1',
-          label: `Nanode 1 GB`,
-          memory: 1024,
-        }),
-        ...databaseTypeFactory.buildList(7, { class: 'standard' }),
-      ];
-      server.use(
-        http.get('*/databases/types', () => {
-          return HttpResponse.json(
-            makeResourcePage([...standardTypes, ...dedicatedTypes])
-          );
-        }),
-        http.get('*/account', () => {
-          const account = accountFactory.build();
-          return HttpResponse.json(account);
-        })
-      );
-    });
+    const flags = {
+      dbaasV2: {
+        beta: false,
+        enabled: true,
+      },
+    };
 
     it('resize button should be disabled when no input is provided in the form', async () => {
       const { getByTestId, getByText } = renderWithTheme(
@@ -139,26 +100,35 @@ describe('database resize', () => {
       // Mock route history so the Plan Selection table displays prices without requiring a region in the DB resize flow.
       const history = createMemoryHistory();
       history.push(`databases/${database.engine}/${database.id}/resize`);
-      const { container, getByTestId, getByText } = renderWithTheme(
+      const { getByRole, getByTestId, getByText } = renderWithTheme(
         <Router history={history}>
-          <DatabaseResize database={database} />
-        </Router>
+          <DatabaseResize database={mockDatabase} />
+        </Router>,
+        { flags }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
-      const getById = queryByAttribute.bind(null, 'id');
-      await userEvent.click(getById(container, examplePlanType));
+
+      const planRadioButton = document.getElementById('g6-standard-6');
+      await userEvent.click(planRadioButton as HTMLInputElement);
+
       const resizeButton = getByText(/Resize Database Cluster/i);
       expect(resizeButton.closest('button')).toHaveAttribute(
         'aria-disabled',
         'false'
       );
+
       await userEvent.click(resizeButton);
-      getByText(`Resize Database Cluster ${database.label}?`);
+
+      const dialogElement = getByRole('dialog');
+      expect(dialogElement).toBeInTheDocument();
+      expect(dialogElement).toHaveTextContent(
+        `Resize Database Cluster ${mockDatabase.label}?`
+      );
     });
 
     it('Should disable the "Resize Database Cluster" button when disabled = true', async () => {
       const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseResize database={database} disabled={true} />
+        <DatabaseResize database={mockDatabase} disabled={true} />
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       const resizeDatabaseBtn = getByText('Resize Database Cluster').closest(
@@ -169,13 +139,6 @@ describe('database resize', () => {
   });
 
   describe('on rendering of page and isDatabasesV2GA is true and the Shared CPU tab is preselected ', () => {
-    const mockDatabase = databaseFactory.build({
-      cluster_size: 3,
-      engine: 'mysql',
-      platform: 'rdbms-default',
-      type: 'g6-nanode-1',
-    });
-
     const flags = {
       dbaasV2: {
         beta: false,
@@ -403,51 +366,41 @@ describe('database resize', () => {
   });
 
   describe('should be disabled smaller plans', () => {
-    const database = databaseFactory.build({
-      type: 'g6-dedicated-8',
-    });
+    // Mock database types
+    const dedicatedTypes = [
+      databaseTypeFactory.build({
+        class: 'dedicated',
+        disk: 1,
+        id: 'g6-dedicated-2',
+        label: 'Dedicated 4 GB',
+      }) as PlanSelectionWithDatabaseType,
+      databaseTypeFactory.build({
+        class: 'dedicated',
+        disk: 2,
+        id: 'g6-dedicated-4',
+        label: 'Dedicated 8 GB',
+      }) as PlanSelectionWithDatabaseType,
+      databaseTypeFactory.build({
+        class: 'dedicated',
+        disk: 3,
+        id: 'g6-dedicated-8',
+        label: `Linode 16 GB`,
+      }) as PlanSelectionWithDatabaseType,
+    ];
+
+    const disabledTypes = isSmallerOrEqualCurrentPlan(
+      'g6-dedicated-8',
+      3,
+      dedicatedTypes,
+      true
+    );
+
     it('disabled smaller plans', async () => {
-      // Mock database types
-      const dedicatedTypes = [
-        databaseTypeFactory.build({
-          class: 'dedicated',
-          disk: 81920,
-          id: 'g6-dedicated-2',
-          label: 'Dedicated 4 GB',
-          memory: 4096,
-        }),
-        databaseTypeFactory.build({
-          class: 'dedicated',
-          disk: 163840,
-          id: 'g6-dedicated-4',
-          label: 'Dedicated 8 GB',
-          memory: 8192,
-        }),
-        databaseTypeFactory.build({
-          class: 'dedicated',
-          disk: 327680,
-          id: 'g6-dedicated-8',
-          label: `Linode 16 GB`,
-          memory: 16384,
-        }),
-      ];
-      server.use(
-        http.get('*/databases/types', () => {
-          return HttpResponse.json(makeResourcePage([...dedicatedTypes]));
-        }),
-        http.get('*/account', () => {
-          const account = accountFactory.build();
-          return HttpResponse.json(account);
-        })
-      );
-      const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={database} />
-      );
-      expect(getByTestId(loadingTestId)).toBeInTheDocument();
-      await waitForElementToBeRemoved(getByTestId(loadingTestId));
-      expect(
-        document.getElementById('g6-dedicated-4')?.hasAttribute('disabled')
-      );
+      expect(disabledTypes.includes(dedicatedTypes[1])).toBe(true);
+    });
+
+    it('disable plan if it is the same size as used storage', async () => {
+      expect(disabledTypes.includes(dedicatedTypes[2])).toBe(true);
     });
   });
 
