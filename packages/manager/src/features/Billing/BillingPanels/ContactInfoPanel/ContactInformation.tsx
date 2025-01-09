@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
-import { Link } from 'src/components/Link';
+import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
@@ -72,7 +72,9 @@ export const ContactInformation = React.memo((props: Props) => {
 
   const { data: notifications } = useNotificationsQuery();
 
-  const { data: preferences } = usePreferences();
+  const { data: maskSensitiveDataPreference } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
+  );
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
@@ -118,7 +120,7 @@ export const ContactInformation = React.memo((props: Props) => {
   }, [editContactDrawerOpen, history.location.state]);
 
   const [isContactInfoMasked, setIsContactInfoMasked] = useState(
-    preferences?.maskSensitiveData
+    maskSensitiveDataPreference
   );
 
   /**
@@ -176,7 +178,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 {EDIT_BILLING_CONTACT}
               </BillingActionButton>
             )}
-            {preferences?.maskSensitiveData && (
+            {maskSensitiveDataPreference && (
               <BillingActionButton
                 disableFocusRipple
                 disableRipple
@@ -195,12 +197,8 @@ export const ContactInformation = React.memo((props: Props) => {
             )}
           </Box>
         </BillingBox>
-        {preferences?.maskSensitiveData && isContactInfoMasked ? (
-          <Typography>
-            This data is sensitive and hidden for privacy. To unmask all
-            sensitive data by default, go to{' '}
-            <Link to="/profile/settings">profile settings</Link>.
-          </Typography>
+        {maskSensitiveDataPreference && isContactInfoMasked ? (
+          <MaskableTextAreaCopy />
         ) : (
           <Grid container spacing={2}>
             {(firstName ||
@@ -216,7 +214,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 {(firstName || lastName) && (
                   <StyledTypography
                     data-qa-contact-name
-                    sx={{ wordBreak: 'break-all' }}
+                    sx={{ wordBreak: 'keep-all' }}
                   >
                     {firstName} {lastName}
                   </StyledTypography>
@@ -224,7 +222,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 {company && (
                   <StyledTypography
                     data-qa-company
-                    sx={{ wordBreak: 'break-all' }}
+                    sx={{ wordBreak: 'keep-all' }}
                   >
                     {company}
                   </StyledTypography>
