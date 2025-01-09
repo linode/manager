@@ -1,7 +1,9 @@
 import Factory from 'src/factories/factoryProxy';
 
-import type { AlertDefinitionDimensionFilter } from '@linode/api-v4';
-import type { AlertDefinitionMetricCriteria } from '@linode/api-v4';
+import type {
+  AlertDefinitionDimensionFilter,
+  AlertDefinitionMetricCriteria,
+} from '@linode/api-v4';
 import type { Alert } from '@linode/api-v4';
 
 export const alertDimensionsFactory = Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>(
