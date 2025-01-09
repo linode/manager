@@ -11,17 +11,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - New DatePicker Component ([#11151](https://github.com/linode/manager/pull/11151))
 - Date Presets Functionality to Date Picker component ([#11395](https://github.com/linode/manager/pull/11395))
 - Notice for OS Distro Nearing EOL/EOS ([#11253](https://github.com/linode/manager/pull/11253))
-- AlertListing component and AlertTableRow component with Unit Tests ([#11346](https://github.com/linode/manager/pull/11346))
 - aria-describedby to TextField with helper text ([#11351](https://github.com/linode/manager/pull/11351))
 - Node Pool Tags to LKE Cluster details page ([#11368](https://github.com/linode/manager/pull/11368))
 - MultipleIPInput Story in Storybook ([#11389](https://github.com/linode/manager/pull/11389))
-- Metric, MetricCriteria, ClearIconButton components with Unit Tests ([#11392](https://github.com/linode/manager/pull/11392))
-- DimensionFilter, DimensionFilterField, TriggerCondition component along with Unit Tests ([#11445](https://github.com/linode/manager/pull/11445))
 - Manage Tags to Volumes table action menu and moved actions inside menu ([#11421](https://github.com/linode/manager/pull/11421))
 
 ### Changed:
 
-- Update layout in CloudPulseDashboardWithFilters component, add a `getFilters` util method in `FilterBuilder.ts` ([#11388](https://github.com/linode/manager/pull/11388))
 - Database Resize: Updated tooltip text, plan selection descriptions, and summary text for new databases ([#11406](https://github.com/linode/manager/pull/11406))
 - Database Resize: Disable plans when the usable storage equals the used storage of the database cluster ([#11481](https://github.com/linode/manager/pull/11481))
 - DBaaS Settings Maintenance field Upgrade Version pending updates tooltip should display accurate text ([#11417](https://github.com/linode/manager/pull/11417))
@@ -122,6 +118,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add column for actions to Cloud Pulse alert definitions listing view and scaffolding for Definition Details page ([#11399](https://github.com/linode/manager/pull/11399))
 - Exhaustive unit tests for CloudPulse widgets ([#11464](https://github.com/linode/manager/pull/11464))
 - Add Alert Details Overview section in Cloud Pulse Alert Details page ([#11466](https://github.com/linode/manager/pull/11466))
+- AlertListing component and AlertTableRow component with Unit Tests ([#11346](https://github.com/linode/manager/pull/11346))
+- Update layout in CloudPulseDashboardWithFilters component, add a `getFilters` util method in `FilterBuilder.ts` ([#11388](https://github.com/linode/manager/pull/11388))
+- Metric, MetricCriteria, ClearIconButton components with Unit Tests ([#11392](https://github.com/linode/manager/pull/11392))
+- DimensionFilter, DimensionFilterField, TriggerCondition component along with Unit Tests ([#11445](https://github.com/linode/manager/pull/11445))
 - Improve Close Account Dialog UI ([#11469](https://github.com/linode/manager/pull/11469))
 
 ## [2024-12-20] - v1.133.2
