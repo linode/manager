@@ -55,7 +55,7 @@ export interface Widgets {
   filters: Filters[];
   serviceType: string;
   service_type: string;
-  resource_id: string[];
+  entity_id: string[];
   time_granularity: TimeGranularity;
   time_duration: TimeDuration;
   unit: string;
@@ -120,7 +120,7 @@ export interface CloudPulseMetricsRequest {
   group_by: string;
   relative_time_duration: TimeDuration;
   time_granularity: TimeGranularity | undefined;
-  resource_ids: number[];
+  entity_ids: number[];
 }
 
 export interface CloudPulseMetricsResponse {
