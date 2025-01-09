@@ -24,8 +24,6 @@ describe('PlacementGroupsLinodes', () => {
   it('renders an error state if placement groups are undefined', async () => {
     const { getByText } = await renderWithThemeAndRouter(
       <PlacementGroupsLinodes
-        assignedLinodes={[]}
-        isFetchingLinodes={false}
         isLinodeReadOnly={false}
         placementGroup={undefined}
         region={undefined}
@@ -49,8 +47,6 @@ describe('PlacementGroupsLinodes', () => {
 
     const { getByPlaceholderText, getByRole } = await renderWithThemeAndRouter(
       <PlacementGroupsLinodes
-        assignedLinodes={[]}
-        isFetchingLinodes={false}
         isLinodeReadOnly={false}
         placementGroup={placementGroup}
         region={undefined}

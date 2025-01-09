@@ -5,6 +5,8 @@ import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
+import type { Order } from 'src/hooks/useOrderV2';
+
 const queryMocks = vi.hoisted(() => ({
   useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups/1' }),
   useParams: vi.fn().mockReturnValue({}),
@@ -24,6 +26,11 @@ const defaultProps = {
   handleUnassignLinodeModal: vi.fn(),
   isFetchingLinodes: false,
   linodes: linodeFactory.buildList(5),
+  orderByProps: {
+    handleOrderChange: vi.fn(),
+    order: 'asc' as Order,
+    orderBy: 'label',
+  },
 };
 
 describe('PlacementGroupsLinodesTable', () => {

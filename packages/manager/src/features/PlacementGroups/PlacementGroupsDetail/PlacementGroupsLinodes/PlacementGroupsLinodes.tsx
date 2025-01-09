@@ -6,9 +6,14 @@ import * as React from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
+  PG_LANDING_TABLE_DEFAULT_ORDER,
+  PG_LANDING_TABLE_DEFAULT_ORDER_BY,
+  PG_LINODES_TABLE_PREFERENCE_KEY,
   PLACEMENT_GROUP_LINODES_ERROR_MESSAGE,
   PLACEMENT_GROUPS_DETAILS_ROUTE,
 } from '../../constants';
@@ -16,12 +21,10 @@ import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignL
 import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
-import type { Linode, PlacementGroup, Region } from '@linode/api-v4';
+import type { Filter, Linode, PlacementGroup, Region } from '@linode/api-v4';
 import type { PlacementGroupsSearchParams } from 'src/routes/placementGroups';
 
 interface Props {
-  assignedLinodes: Linode[] | undefined;
-  isFetchingLinodes: boolean;
   isLinodeReadOnly: boolean;
   placementGroup: PlacementGroup | undefined;
   region: Region | undefined;
@@ -30,19 +33,44 @@ interface Props {
 type PlacementGroupLinodesSearchParams = PlacementGroupsSearchParams;
 
 export const PlacementGroupsLinodes = (props: Props) => {
-  const {
-    assignedLinodes,
-    isFetchingLinodes,
-    isLinodeReadOnly,
-    placementGroup,
-    region,
-  } = props;
+  const { isLinodeReadOnly, placementGroup, region } = props;
   const navigate = useNavigate();
   const location = useLocation();
+
   const search: PlacementGroupLinodesSearchParams = useSearch({
     from: PLACEMENT_GROUPS_DETAILS_ROUTE,
   });
   const { query } = search;
+
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: PG_LANDING_TABLE_DEFAULT_ORDER,
+        orderBy: PG_LANDING_TABLE_DEFAULT_ORDER_BY,
+      },
+      from: PLACEMENT_GROUPS_DETAILS_ROUTE,
+    },
+    preferenceKey: `${PG_LINODES_TABLE_PREFERENCE_KEY}-order`,
+  });
+
+  const filter: Filter = {
+    ['+or']: placementGroup?.members.map((member) => ({
+      id: member.linode_id,
+    })),
+    ['+order']: order,
+    ['+order_by']: orderBy,
+    ...(query && { label: { '+contains': query } }),
+  };
+
+  const { data: linodes, isFetching: isFetchingLinodes } = useAllLinodesQuery(
+    {},
+    filter
+  );
+
+  const assignedLinodes = linodes?.filter((linode) =>
+    placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
+  );
+
   const [selectedLinode, setSelectedLinode] = React.useState<
     Linode | undefined
   >();
@@ -50,20 +78,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
   if (!placementGroup) {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
   }
-
-  const getLinodesList = () => {
-    if (!assignedLinodes) {
-      return [];
-    }
-
-    if (query) {
-      return assignedLinodes.filter((linode: Linode) => {
-        return linode.label.toLowerCase().includes(query.toLowerCase());
-      });
-    }
-
-    return assignedLinodes;
-  };
 
   const onSearch = (searchString: string) => {
     navigate({
@@ -141,7 +155,8 @@ export const PlacementGroupsLinodes = (props: Props) => {
       <PlacementGroupsLinodesTable
         handleUnassignLinodeModal={handleUnassignLinodeModal}
         isFetchingLinodes={isFetchingLinodes}
-        linodes={getLinodesList() ?? []}
+        linodes={assignedLinodes ?? []}
+        orderByProps={{ handleOrderChange, order, orderBy }}
       />
       <PlacementGroupsAssignLinodesDrawer
         onClose={handleCloseDrawer}

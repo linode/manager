@@ -9,7 +9,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
   useMutatePlacementGroup,
   usePlacementGroupQuery,
@@ -30,14 +29,6 @@ export const PlacementGroupsDetail = () => {
     error: placementGroupError,
     isLoading,
   } = usePlacementGroupQuery(placementGroupId);
-  const { data: linodes, isFetching: isFetchingLinodes } = useAllLinodesQuery(
-    {},
-    {
-      '+or': placementGroup?.members.map((member) => ({
-        id: member.linode_id,
-      })),
-    }
-  );
   const { data: regions } = useRegionsQuery();
 
   const region = regions?.find(
@@ -69,10 +60,6 @@ export const PlacementGroupsDetail = () => {
       <ErrorState errorText="There was a problem retrieving your Placement Group. Please try again." />
     );
   }
-
-  const assignedLinodes = linodes?.filter((linode) =>
-    placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
-  );
 
   const { label, placement_group_type } = placementGroup;
 
@@ -124,8 +111,6 @@ export const PlacementGroupsDetail = () => {
       )}
       <PlacementGroupsSummary placementGroup={placementGroup} region={region} />
       <PlacementGroupsLinodes
-        assignedLinodes={assignedLinodes}
-        isFetchingLinodes={isFetchingLinodes}
         isLinodeReadOnly={isLinodeReadOnly}
         placementGroup={placementGroup}
         region={region}
