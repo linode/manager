@@ -77,6 +77,7 @@ describe('PlacementGroupsDeleteModal', () => {
           region: 'us-east',
         })}
         disableUnassignButton={false}
+        isFetching={false}
       />
     );
 
@@ -119,6 +120,7 @@ describe('PlacementGroupsDeleteModal', () => {
           placement_group_type: 'anti_affinity:local',
         })}
         disableUnassignButton={false}
+        isFetching={false}
       />
     );
 

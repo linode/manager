@@ -21,11 +21,15 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
+import {
+  usePlacementGroupQuery,
+  usePlacementGroupsQuery,
+} from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -94,10 +98,6 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter
   );
 
-  const selectedPlacementGroup = placementGroups?.data.find(
-    (pg) => pg.id === Number(params.id)
-  );
-
   const allLinodeIDsAssigned = placementGroups?.data.reduce(
     (acc, placementGroup) => {
       return acc.concat(
@@ -107,12 +107,22 @@ export const PlacementGroupsLanding = React.memo(() => {
     [] as number[]
   );
 
-  const { data: linodes } = useAllLinodesQuery(
+  const { data: linodes, isFetching: isFetchingLinodes } = useAllLinodesQuery(
     {},
     {
       '+or': allLinodeIDsAssigned?.map((linodeId) => ({ id: linodeId })),
     }
   );
+
+  const {
+    data: selectedPlacementGroup,
+    isFetching: isFetchingPlacementGroup,
+  } = useDialogData({
+    enabled: !!params.id,
+    paramKey: 'id',
+    queryHook: usePlacementGroupQuery,
+    redirectToOnNotFound: '/placement-groups',
+  });
 
   const { data: regions } = useRegionsQuery();
   const getPlacementGroupRegion = (
@@ -150,8 +160,6 @@ export const PlacementGroupsLanding = React.memo(() => {
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
-  const isPlacementGroupDeleteModalOpen = location.pathname.includes('delete');
-  const isPlacementGroupEditDrawerOpen = location.pathname.includes('edit');
 
   const onSearch = (searchString: string) => {
     navigate({
@@ -307,16 +315,18 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
       <PlacementGroupsEditDrawer
         disableEditButton={isLinodeReadOnly}
+        isFetching={isFetchingPlacementGroup}
         onClose={onClosePlacementGroupDrawer}
-        open={isPlacementGroupEditDrawerOpen}
+        open={params.action === 'edit'}
         region={getPlacementGroupRegion(selectedPlacementGroup)}
         selectedPlacementGroup={selectedPlacementGroup}
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
+        isFetching={isFetchingPlacementGroup || isFetchingLinodes}
         linodes={linodes}
         onClose={onClosePlacementGroupDrawer}
-        open={isPlacementGroupDeleteModalOpen}
+        open={params.action === 'delete'}
         selectedPlacementGroup={selectedPlacementGroup}
       />
     </>

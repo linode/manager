@@ -15,6 +15,7 @@ export interface PlacementGroupsCreateDrawerProps {
 
 export interface PlacementGroupsEditDrawerProps {
   disableEditButton: boolean;
+  isFetching: boolean;
   onClose: PlacementGroupsDrawerPropsBase['onClose'];
   onPlacementGroupEdit?: (placementGroup: PlacementGroup) => void;
   open: PlacementGroupsDrawerPropsBase['open'];

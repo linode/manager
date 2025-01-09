@@ -47,6 +47,7 @@ describe('PlacementGroupsCreateDrawer', () => {
           region: 'us-east',
         })}
         disableEditButton={false}
+        isFetching={false}
         onClose={vi.fn()}
         onPlacementGroupEdit={vi.fn()}
         open={true}

@@ -1,15 +1,7 @@
-import {
-  Button,
-  CircleProgress,
-  List,
-  ListItem,
-  Notice,
-  Typography,
-} from '@linode/ui';
+import { Button, List, ListItem, Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import {
@@ -28,6 +20,7 @@ import type { ButtonProps } from '@linode/ui';
 
 interface Props {
   disableUnassignButton: boolean;
+  isFetching: boolean;
   linodes: Linode[] | undefined;
   onClose: () => void;
   open: boolean;
@@ -37,6 +30,7 @@ interface Props {
 export const PlacementGroupsDeleteModal = (props: Props) => {
   const {
     disableUnassignButton,
+    isFetching,
     linodes,
     onClose,
     open,
@@ -105,28 +99,6 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     return null;
   }
 
-  if (!assignedLinodes) {
-    return (
-      <ConfirmationDialog
-        sx={{
-          '& .MuiDialog-paper': {
-            '& > .MuiDialogContent-root > div': {
-              maxHeight: 300,
-              padding: 4,
-            },
-            maxHeight: 500,
-            width: 500,
-          },
-        }}
-        onClose={handleClose}
-        open={open}
-        title="Delete Placement Group"
-      >
-        <CircleProgress />
-      </ConfirmationDialog>
-    );
-  }
-
   return (
     <TypeToConfirmDialog
       entity={{
@@ -138,6 +110,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       disableTypeToConfirmInput={isDisabled}
       disableTypeToConfirmSubmit={isDisabled}
       expand
+      isFetching={isFetching}
       label="Placement Group"
       loading={deletePlacementLoading}
       onClick={onDelete}

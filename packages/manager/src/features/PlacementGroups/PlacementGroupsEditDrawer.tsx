@@ -2,9 +2,8 @@ import {
   PLACEMENT_GROUP_POLICIES,
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
-import { CircleProgress, Divider, Notice, Stack, TextField } from '@linode/ui';
+import { Divider, Notice, Stack, TextField } from '@linode/ui';
 import { updatePlacementGroupSchema } from '@linode/validation';
-import { useParams } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -14,10 +13,7 @@ import { DescriptionList } from 'src/components/DescriptionList/DescriptionList'
 import { Drawer } from 'src/components/Drawer';
 import { NotFound } from 'src/components/NotFound';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import {
-  useMutatePlacementGroup,
-  usePlacementGroupQuery,
-} from 'src/queries/placementGroups';
+import { useMutatePlacementGroup } from 'src/queries/placementGroups';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -30,30 +26,13 @@ export const PlacementGroupsEditDrawer = (
 ) => {
   const {
     disableEditButton,
+    isFetching,
     onClose,
     onPlacementGroupEdit,
     open,
     region,
-    selectedPlacementGroup: placementGroupFromProps,
+    selectedPlacementGroup: placementGroup,
   } = props;
-  // todo connie - try to consolidate params/remove params from drawers / switch to dialog props
-  const params = useParams({ strict: false });
-  const {
-    data: placementGroupFromParam,
-    isFetching,
-    status,
-  } = usePlacementGroupQuery(
-    Number(params.id),
-    open &&
-      placementGroupFromProps === undefined &&
-      !Number.isNaN(Number(params.id))
-  );
-
-  const placementGroup = React.useMemo(
-    () =>
-      open ? placementGroupFromProps ?? placementGroupFromParam : undefined,
-    [open, placementGroupFromProps, placementGroupFromParam]
-  );
 
   const { error, mutateAsync } = useMutatePlacementGroup(
     placementGroup?.id ?? -1
@@ -127,6 +106,7 @@ export const PlacementGroupsEditDrawer = (
           ? `Edit Placement Group ${placementGroup.label}`
           : 'Edit Placement Group'
       }
+      isFetching={isFetching}
       onClose={handleClose}
       open={open}
     >
@@ -192,8 +172,6 @@ export const PlacementGroupsEditDrawer = (
             </Stack>
           </form>
         </>
-      ) : isFetching ? (
-        <CircleProgress />
       ) : status === 'error' ? (
         <NotFound />
       ) : null}
