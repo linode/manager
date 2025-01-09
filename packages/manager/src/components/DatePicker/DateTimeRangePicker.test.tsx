@@ -66,7 +66,7 @@ describe('DateTimeRangePicker Component', () => {
     expect(onChangeMock).toHaveBeenCalledWith({
       end: null,
       preset: 'custom_range',
-      start: `${currentYear}-${currentMonth}-10T00:00:00.000-06:00`,
+      start: `${currentYear}-${currentMonth}-10T00:00:00.000+00:00`,
       timeZone: null,
     });
   });
