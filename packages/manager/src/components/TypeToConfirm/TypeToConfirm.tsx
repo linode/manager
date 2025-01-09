@@ -3,10 +3,11 @@ import * as React from 'react';
 
 import { FormGroup } from 'src/components/FormGroup';
 import { Link } from 'src/components/Link';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import type { TextFieldProps } from '@linode/ui';
-import type { Theme } from '@mui/material';
 import type { SxProps } from '@mui/material';
+import type { Theme } from '@mui/material';
 
 export interface TypeToConfirmProps extends Omit<TextFieldProps, 'onChange'> {
   confirmationText?: JSX.Element | string;
@@ -36,18 +37,25 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
     title,
     typographyStyle,
     typographyStyleSx,
-    visible,
+    visible = false,
     ...rest
   } = props;
 
+  const { data: typeToConfirmPreference } = usePreferences(
+    (preferences) => preferences?.type_to_confirm ?? true
+  );
+
   /*
-    There was an edge case bug where, when preferences?.type_to_confirm was undefined,
-    the type-to-confirm input did not appear and the language in the instruction text
-    did not match. If 'visible' is not explicitly false, we treat it as true.
+    There is an edge case where preferences?.type_to_confirm is undefined
+    when the user has not yet set a preference as seen in /profile/settings?preferenceEditor=true.
+    Therefore, the 'visible' prop defaults to true unless explicitly set to false, ensuring this feature is enabled by default.
   */
 
-  const showTypeToConfirmInput = visible !== false;
-  const disableOrEnable = showTypeToConfirmInput ? 'disable' : 'enable';
+  const showTypeToConfirmInput = Boolean(visible);
+  const disableOrEnable =
+    showTypeToConfirmInput || Boolean(typeToConfirmPreference)
+      ? 'disable'
+      : 'enable';
 
   return (
     <>

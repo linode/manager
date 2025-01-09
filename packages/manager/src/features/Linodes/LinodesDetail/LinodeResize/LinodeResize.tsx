@@ -74,7 +74,7 @@ export const LinodeResize = (props: Props) => {
   const { data: types } = useAllTypes(open);
 
   const { data: typeToConfirmPreference } = usePreferences(
-    (preferences) => preferences?.type_to_confirm,
+    (preferences) => preferences?.type_to_confirm ?? true,
     open
   );
 
@@ -167,7 +167,7 @@ export const LinodeResize = (props: Props) => {
   const tableDisabled = hostMaintenance || isLinodesGrantReadOnly;
 
   const submitButtonDisabled =
-    typeToConfirmPreference !== false && confirmationText !== linode?.label;
+    Boolean(typeToConfirmPreference) && confirmationText !== linode?.label;
 
   const type = types?.find((t) => t.id === linode?.type);
 
