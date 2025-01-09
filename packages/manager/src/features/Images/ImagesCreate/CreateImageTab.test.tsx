@@ -197,38 +197,6 @@ describe('CreateImageTab', () => {
     );
   });
 
-  it('should render an encryption notice if disk encryption is enabled and the Linode is not in a distributed compute region', async () => {
-    const region = regionFactory.build({ site_type: 'core' });
-    const linode = linodeFactory.build({ region: region.id });
-
-    server.use(
-      http.get('*/v4/linode/instances', () => {
-        return HttpResponse.json(makeResourcePage([linode]));
-      }),
-      http.get('*/v4/linode/instances/:id', () => {
-        return HttpResponse.json(linode);
-      }),
-      http.get('*/v4/regions', () => {
-        return HttpResponse.json(makeResourcePage([region]));
-      })
-    );
-
-    const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />, {
-      flags: { linodeDiskEncryption: true },
-    });
-
-    const linodeSelect = getByLabelText('Linode');
-
-    await userEvent.click(linodeSelect);
-
-    const linodeOption = await findByText(linode.label);
-
-    await userEvent.click(linodeOption);
-
-    // Verify encryption notice renders
-    await findByText('Virtual Machine Images are not encrypted.');
-  });
-
   it('should auto-populate image label based on linode and disk', async () => {
     const linode = linodeFactory.build();
     const disk1 = linodeDiskFactory.build();

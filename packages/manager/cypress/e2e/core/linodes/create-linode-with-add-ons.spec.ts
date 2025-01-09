@@ -29,7 +29,7 @@ describe('Create Linode with Add-ons', () => {
     cy.visitWithLogin('/linodes/create');
 
     linodeCreatePage.setLabel(mockLinode.label);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
@@ -83,7 +83,7 @@ describe('Create Linode with Add-ons', () => {
     cy.visitWithLogin('/linodes/create');
 
     linodeCreatePage.setLabel(mockLinode.label);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));

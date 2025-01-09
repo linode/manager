@@ -5,11 +5,10 @@ import { baselineApiUnstablePreset } from './baseline/apiUnstable';
 import { baselineCrudPreset } from './baseline/crud';
 import { baselineLegacyPreset } from './baseline/legacy';
 import { baselineNoMocksPreset } from './baseline/noMocks';
-import { childAccountPreset } from './extra/account/childAccount';
-import { lkeEnterpriseEnabledPreset } from './extra/account/lkeEnterpriseEnabled';
+import { customAccountPreset } from './extra/account/customAccount';
+import { customProfilePreset } from './extra/account/customProfile';
 import { managedDisabledPreset } from './extra/account/managedDisabled';
 import { managedEnabledPreset } from './extra/account/managedEnabled';
-import { parentAccountPreset } from './extra/account/parentAccount';
 import { apiResponseTimePreset } from './extra/api/api';
 import { linodeLimitsPreset } from './extra/limits/linode-limits';
 import { lkeLimitsPreset } from './extra/limits/lke-limits';
@@ -40,11 +39,10 @@ export const baselineMockPresets: MockPresetBaseline[] = [
  * */
 export const extraMockPresets: MockPresetExtra[] = [
   apiResponseTimePreset,
-  parentAccountPreset,
-  childAccountPreset,
+  customAccountPreset,
+  customProfilePreset,
   linodeLimitsPreset,
   lkeLimitsPreset,
-  lkeEnterpriseEnabledPreset,
   managedEnabledPreset,
   managedDisabledPreset,
   coreAndDistributedRegionsPreset,

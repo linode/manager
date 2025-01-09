@@ -53,6 +53,7 @@ export * from './volume';
 export * from './vpcs';
 export * from './dashboards';
 export * from './cloudpulse/services';
+export * from './cloudpulse/alerts';
 
 // Convert factory output to our itemsById pattern
 export const normalizeEntities = (entities: any[]) => {

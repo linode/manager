@@ -73,11 +73,13 @@ const StyledLinearProgress = styled(LinearProgress, {
   shouldForwardProp: omittedProps(['rounded', 'narrow']),
 })<Partial<BarPercentProps>>(({ theme, ...props }) => ({
   '& .MuiLinearProgress-bar2Buffer': {
-    backgroundColor: '#5ad865',
+    backgroundColor: theme.tokens.color.Green[60],
   },
   '& .MuiLinearProgress-barColorPrimary': {
     // Increase contrast if we have a buffer bar
-    backgroundColor: props.valueBuffer ? '#1CB35C' : '#5ad865',
+    backgroundColor: props.valueBuffer
+      ? theme.tokens.color.Green[70]
+      : theme.tokens.color.Green[60],
   },
   '& .MuiLinearProgress-dashed': {
     display: 'none',

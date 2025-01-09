@@ -2,6 +2,7 @@ import { Divider, Paper, Stack } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useProfile } from 'src/queries/profile/profile';
 
 import { AvatarForm } from './AvatarForm';
@@ -15,14 +16,20 @@ export const DisplaySettings = () => {
   const isProxyUser = profile?.user_type === 'proxy';
 
   return (
-    <Paper>
-      <Stack divider={<Divider spacingBottom={0} spacingTop={0} />} spacing={3}>
-        {!isProxyUser && <AvatarForm />}
-        <UsernameForm />
-        <EmailForm />
-        <TimezoneForm />
-      </Stack>
-    </Paper>
+    <>
+      <DocumentTitleSegment segment="Display" />
+      <Paper>
+        <Stack
+          divider={<Divider spacingBottom={0} spacingTop={0} />}
+          spacing={3}
+        >
+          {!isProxyUser && <AvatarForm />}
+          <UsernameForm />
+          <EmailForm />
+          <TimezoneForm />
+        </Stack>
+      </Paper>
+    </>
   );
 };
 

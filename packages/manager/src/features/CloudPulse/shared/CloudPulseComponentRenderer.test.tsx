@@ -8,12 +8,49 @@ import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
   getRegionProperties,
   getResourcesProperties,
+  getTagsProperties,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 const linodeFilterConfig = FILTER_CONFIG.get('linode');
 
 describe('ComponentRenderer component tests', () => {
+  it('it should render provided tag filter in props', () => {
+    const tagProps = linodeFilterConfig?.filters.find(
+      (filter) => filter.configuration.filterKey === 'tags'
+    );
+
+    const mockDashboard = dashboardFactory.build({
+      service_type: 'linode',
+    });
+
+    if (tagProps === undefined) {
+      expect(true).toEqual(false); // fail test
+      return;
+    }
+
+    const { getByPlaceholderText } = renderWithTheme(
+      <Grid item sx={{ marginLeft: 2 }} xs>
+        {RenderComponent({
+          componentKey: 'tags',
+          componentProps: {
+            ...getTagsProperties(
+              {
+                config: tagProps,
+                dashboard: mockDashboard,
+                isServiceAnalyticsIntegration: false,
+              },
+              vi.fn()
+            ),
+          },
+          key: 'tags',
+        })}
+      </Grid>
+    );
+
+    expect(getByPlaceholderText('Select Tags')).toBeDefined();
+  });
+
   it('it should render provided region filter in props', () => {
     const regionProps = linodeFilterConfig?.filters.find(
       (filter) => filter.configuration.filterKey === 'region'

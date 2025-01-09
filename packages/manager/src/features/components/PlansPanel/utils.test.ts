@@ -285,6 +285,8 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planIsSmallerThanUsage: false,
+          planIsTooSmallForAPL: undefined,
         },
       },
     ]);
@@ -296,18 +298,24 @@ describe('extractPlansInformation', () => {
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: true,
         planIsDisabled512Gb: false,
+        planIsSmallerThanUsage: false,
+        planIsTooSmallForAPL: undefined,
       },
       {
         ...g7Standard1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
         planIsDisabled512Gb: false,
+        planIsSmallerThanUsage: false,
+        planIsTooSmallForAPL: undefined,
       },
       {
         ...g6Nanode1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
         planIsDisabled512Gb: false,
+        planIsSmallerThanUsage: false,
+        planIsTooSmallForAPL: undefined,
       },
     ]);
   });
@@ -316,6 +324,7 @@ describe('extractPlansInformation', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
       disabledSmallerPlans: [g7Standard1],
+      isLegacyDatabase: true,
       plans: [g6Standard1, g6Nanode1, g7Standard1],
       regionAvailabilities: [
         regionAvailabilityFactory.build({
@@ -344,7 +353,9 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: false,
+          planIsTooSmallForAPL: undefined,
         },
       },
       {
@@ -353,7 +364,9 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: false,
+          planIsTooSmallForAPL: undefined,
         },
       },
       {
@@ -362,7 +375,9 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: false,
           planIsDisabled512Gb: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: true,
+          planIsTooSmallForAPL: undefined,
         },
       },
     ]);
@@ -375,7 +390,9 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: false,
+          planIsTooSmallForAPL: undefined,
         },
       },
       {
@@ -384,7 +401,9 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: false,
+          planIsTooSmallForAPL: undefined,
         },
       },
       {
@@ -393,7 +412,9 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: false,
           planIsDisabled512Gb: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: true,
+          planIsTooSmallForAPL: undefined,
         },
       },
     ]);
@@ -428,14 +449,18 @@ describe('extractPlansInformation', () => {
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
         planIsDisabled512Gb: false,
+        planIsSmallerThanUsage: false,
         planIsTooSmall: false,
+        planIsTooSmallForAPL: undefined,
       },
       {
         ...g6Nanode1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
         planIsDisabled512Gb: false,
+        planIsSmallerThanUsage: false,
         planIsTooSmall: false,
+        planIsTooSmallForAPL: undefined,
       },
     ]);
   });

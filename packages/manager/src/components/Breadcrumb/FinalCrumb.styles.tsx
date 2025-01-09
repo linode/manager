@@ -1,6 +1,8 @@
 import { EditableText, H1Header } from '@linode/ui';
 import { styled } from '@mui/material';
 
+import type { EditableTextProps } from '@linode/ui';
+
 export const StyledDiv = styled('div', { label: 'StyledDiv' })({
   display: 'flex',
   flexDirection: 'column',
@@ -8,7 +10,7 @@ export const StyledDiv = styled('div', { label: 'StyledDiv' })({
 
 export const StyledEditableText = styled(EditableText, {
   label: 'StyledEditableText',
-})(({ theme }) => ({
+})<EditableTextProps>(({ theme }) => ({
   '& > div': {
     width: 250,
   },

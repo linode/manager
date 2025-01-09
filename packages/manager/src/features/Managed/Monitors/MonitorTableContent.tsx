@@ -1,8 +1,3 @@
-import {
-  ManagedIssue,
-  ManagedServiceMonitor,
-} from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
@@ -10,6 +5,12 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
 import MonitorRow from './MonitorRow';
+
+import type {
+  ManagedIssue,
+  ManagedServiceMonitor,
+} from '@linode/api-v4/lib/managed';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface MonitorTableContentProps {
   error?: APIError[] | null;
@@ -33,7 +34,7 @@ export const MonitorTableContent = (props: MonitorTableContentProps) => {
   } = props;
 
   if (loading) {
-    return <TableRowLoading columns={3} />;
+    return <TableRowLoading columns={4} />;
   }
 
   if (error) {
@@ -44,7 +45,7 @@ export const MonitorTableContent = (props: MonitorTableContentProps) => {
     return (
       <TableRowEmpty
         colSpan={4}
-        message={"You don't have any Monitors on your account."}
+        message="You don't have any Monitors on your account."
       />
     );
   }

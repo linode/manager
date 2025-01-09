@@ -91,4 +91,36 @@ describe('TextField', () => {
     fireEvent.change(input, { target: { value: '1' } });
     expect(input?.getAttribute('value')).toBe('2');
   });
+
+  it('renders a helper text with an input id', () => {
+    const { getByText } = renderWithTheme(
+      <TextField helperText="Helper text" inputId="input-id" label="" />
+    );
+
+    expect(getByText('Helper text')).toBeInTheDocument();
+    const helperText = getByText('Helper text');
+    expect(helperText.getAttribute('id')).toBe('input-id-helper-text');
+  });
+
+  it('renders a helper text with a label', () => {
+    const { getByText } = renderWithTheme(
+      <TextField helperText="Helper text" label="Label" />
+    );
+
+    const helperText = getByText('Helper text');
+
+    expect(helperText).toBeInTheDocument();
+    expect(helperText.getAttribute('id')).toBe('label-helper-text');
+  });
+
+  it('renders a helper text with a fallback id', () => {
+    const { getByText } = renderWithTheme(
+      <TextField helperText="Helper text" label="" />
+    );
+
+    const helperText = getByText('Helper text');
+
+    // ':rg:' being the default react generated id
+    expect(helperText.getAttribute('id')).toBe(':rg:-helper-text');
+  });
 });

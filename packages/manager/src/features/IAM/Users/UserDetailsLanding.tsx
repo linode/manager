@@ -1,21 +1,44 @@
 import React from 'react';
 import {
+  matchPath,
   useHistory,
   useLocation,
   useParams,
-  matchPath,
 } from 'react-router-dom';
+
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useAccountUserPermissions } from 'src/queries/iam/iam';
+
 import { IAM_LABEL } from '../Shared/constants';
+
+const UserDetails = React.lazy(() =>
+  import('./UserDetails/UserProfile').then((module) => ({
+    default: module.UserProfile,
+  }))
+);
+
+const UserRoles = React.lazy(() =>
+  import('./UserRoles/UserRoles').then((module) => ({
+    default: module.UserRoles,
+  }))
+);
+
+const UserEntities = React.lazy(() =>
+  import('./UserEntities/UserEntities').then((module) => ({
+    default: module.UserEntities,
+  }))
+);
 
 export const UserDetailsLanding = () => {
   const { username } = useParams<{ username: string }>();
   const location = useLocation();
   const history = useHistory();
+
+  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
   const tabs = [
     {
@@ -27,8 +50,8 @@ export const UserDetailsLanding = () => {
       title: 'Assigned Roles',
     },
     {
-      routeName: `/iam/users/${username}/resources`,
-      title: 'Assigned Resources',
+      routeName: `/iam/users/${username}/entities`,
+      title: 'Assigned Entities',
     },
   ];
 
@@ -37,11 +60,11 @@ export const UserDetailsLanding = () => {
   };
 
   const getDefaultTabIndex = () => {
-    const tabChoice = tabs.findIndex((tab) =>
-      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    return (
+      tabs.findIndex((tab) =>
+        Boolean(matchPath(tab.routeName, { path: location.pathname }))
+      ) || 0
     );
-
-    return tabChoice;
   };
 
   let idx = 0;
@@ -68,13 +91,13 @@ export const UserDetailsLanding = () => {
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={idx}>
-            <p>user details - UIE-8137</p>
+            <UserDetails />
           </SafeTabPanel>
           <SafeTabPanel index={++idx}>
-            <p>UIE-8138 - User Roles - Assigned Roles Table</p>
+            <UserRoles assignedRoles={assignedRoles} />
           </SafeTabPanel>
           <SafeTabPanel index={++idx}>
-            <p>Resources</p>
+            <UserEntities assignedRoles={assignedRoles} />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>

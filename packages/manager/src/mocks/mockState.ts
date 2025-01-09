@@ -22,6 +22,8 @@ export const getStateSeederGroups = (
 };
 
 export const emptyStore: MockState = {
+  domainRecords: [],
+  domains: [],
   eventQueue: [],
   firewalls: [],
   linodeConfigs: [],

@@ -16,14 +16,13 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
-import { VPCSelect } from 'src/components/VPCSelect';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useVPCQuery, useVPCsQuery } from 'src/queries/vpcs/vpcs';
+import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
@@ -65,16 +64,15 @@ export const VPC = () => {
     'VPCs'
   );
 
-  const { data: selectedVPC } = useVPCQuery(
-    selectedVPCId ?? -1,
-    Boolean(selectedVPCId)
-  );
+  const { data: vpcs, error, isLoading } = useAllVPCsQuery({
+    enabled: regionSupportsVPCs,
+    filter: { region: regionId },
+  });
 
-  // This is here only to determine which copy to show...
-  const { data } = useVPCsQuery({}, { region: regionId }, regionSupportsVPCs);
+  const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
 
   const copy =
-    data?.results === 0
+    vpcs?.length === 0
       ? 'Allow Linode to communicate in an isolated environment.'
       : 'Assign this Linode to an existing VPC.';
 
@@ -108,7 +106,7 @@ export const VPC = () => {
         <Stack spacing={1.5}>
           <Controller
             render={({ field, fieldState }) => (
-              <VPCSelect
+              <Autocomplete
                 helperText={
                   regionId && !regionSupportsVPCs
                     ? 'VPC is not available in the selected region.'
@@ -146,21 +144,17 @@ export const VPC = () => {
                   }
                 }}
                 textFieldProps={{
-                  sx: (theme) => ({
-                    [theme.breakpoints.up('sm')]: {
-                      minWidth: theme.inputMaxWidth,
-                    },
-                  }),
                   tooltipText: REGION_CAVEAT_HELPER_TEXT,
                 }}
                 disabled={!regionSupportsVPCs}
-                errorText={fieldState.error?.message}
-                filter={{ region: regionId }}
+                errorText={error?.[0].reason ?? fieldState.error?.message}
                 label="Assign VPC"
+                loading={isLoading}
                 noMarginTop
                 onBlur={field.onBlur}
+                options={vpcs ?? []}
                 placeholder="None"
-                value={field.value ?? null}
+                value={selectedVPC ?? null}
               />
             )}
             control={control}

@@ -9,17 +9,37 @@ import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
 import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
+  /**
+   * default value selected on initial render
+   */
   defaultValue?: Partial<FilterValue>;
-  handleDashboardChange: (
+  /**
+   *
+   * @param dashboard latest dashboard object selected from dropdown
+   * @param savePref boolean value to check whether changes to be saved on preferences or not
+   */
+  handleDashboardChange?: (
     dashboard: Dashboard | undefined,
     savePref?: boolean
   ) => void;
+  /**
+   * flag value to identify whether this component is being used in service level integration or not
+   */
+  isServiceIntegration?: boolean;
+  /**
+   * boolean value to identify whether changes to be saved on preferences or not
+   */
   savePreferences?: boolean;
 }
 
 export const CloudPulseDashboardSelect = React.memo(
   (props: CloudPulseDashboardSelectProps) => {
-    const { defaultValue, handleDashboardChange, savePreferences } = props;
+    const {
+      defaultValue,
+      handleDashboardChange = () => {},
+      isServiceIntegration,
+      savePreferences,
+    } = props;
 
     const {
       data: serviceTypesList,
@@ -72,7 +92,7 @@ export const CloudPulseDashboardSelect = React.memo(
     React.useEffect(() => {
       // only call this code when the component is rendered initially
       if (
-        savePreferences &&
+        (savePreferences || isServiceIntegration) &&
         dashboardsList.length > 0 &&
         selectedDashboard === undefined
       ) {
@@ -98,10 +118,18 @@ export const CloudPulseDashboardSelect = React.memo(
             {params.children}
           </Box>
         )}
+        sx={(theme) => ({
+          '& .MuiInputBase-input.Mui-disabled': {
+            WebkitTextFillColor: theme.tokens.color.Neutrals.Black,
+          },
+        })}
+        textFieldProps={{
+          color: 'primary',
+        }}
         autoHighlight
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
-        disabled={!dashboardsList}
+        disabled={isServiceIntegration || !dashboardsList}
         errorText={Boolean(dashboardsList?.length) ? '' : errorText}
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}

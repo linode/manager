@@ -4,7 +4,7 @@ import React from 'react';
 import { grantsFactory, profileFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
 
@@ -24,7 +24,9 @@ describe('VolumesLandingEmptyState', () => {
       })
     );
 
-    const { getByText } = renderWithTheme(<VolumesLandingEmptyState />);
+    const { getByText } = await renderWithThemeAndRouter(
+      <VolumesLandingEmptyState />
+    );
 
     await waitFor(() => {
       const createVolumeButton = getByText('Create Volume').closest('button');

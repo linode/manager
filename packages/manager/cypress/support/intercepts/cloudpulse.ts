@@ -13,7 +13,7 @@ import { makeResponse } from 'support/util/response';
 import type {
   CloudPulseMetricsResponse,
   Dashboard,
-  MetricDefinitions,
+  MetricDefinition,
 } from '@linode/api-v4';
 
 /**
@@ -27,12 +27,12 @@ import type {
 
 export const mockGetCloudPulseMetricDefinitions = (
   serviceType: string,
-  metricDefinitions: MetricDefinitions
+  metricDefinitions: MetricDefinition[]
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
     apiMatcher(`/monitor/services/${serviceType}/metric-definitions`),
-    makeResponse(metricDefinitions)
+    paginateResponse(metricDefinitions)
   );
 };
 

@@ -25,7 +25,7 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { Widgets } from '@linode/api-v4';
 import type {
-  AvailableMetrics,
+  MetricDefinition,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
@@ -56,7 +56,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * metrics defined of this widget
    */
-  availableMetrics: AvailableMetrics | undefined;
+  availableMetrics: MetricDefinition | undefined;
 
   /**
    * time duration to fetch the metrics data in this widget

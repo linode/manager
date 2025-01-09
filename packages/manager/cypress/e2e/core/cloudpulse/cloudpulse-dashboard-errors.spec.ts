@@ -35,6 +35,7 @@ import {
 } from 'support/intercepts/databases';
 import { Database } from '@linode/api-v4';
 import { mockGetAccount } from 'support/intercepts/account';
+import { Flags } from 'src/featureFlags';
 
 /**
  * Verifies the presence and values of specific properties within the aclpPreference object
@@ -44,6 +45,24 @@ import { mockGetAccount } from 'support/intercepts/account';
  * @param requestPayload - The payload received from the request, containing the aclpPreference object.
  * @param expectedValues - An object containing the expected values for properties to validate against the requestPayload.
  */
+
+const flags: Partial<Flags> = {
+  aclp: { enabled: true, beta: true },
+  aclpResourceTypeMap: [
+    {
+      dimensionKey: 'LINODE_ID',
+      maxResourceSelections: 10,
+      serviceType: 'linode',
+      supportedRegionIds: 'us-ord',
+    },
+    {
+      dimensionKey: 'cluster_id',
+      maxResourceSelections: 10,
+      serviceType: 'dbaas',
+      supportedRegionIds: 'us-ord',
+    },
+  ],
+};
 const {
   metrics,
   id,
@@ -67,21 +86,18 @@ const dashboard = dashboardFactory.build({
   }),
 });
 
-const metricDefinitions = {
-  data: metrics.map(({ title, name, unit }) =>
-    dashboardMetricFactory.build({
-      label: title,
-      metric: name,
-      unit,
-    })
-  ),
-};
+const metricDefinitions = metrics.map(({ title, name, unit }) =>
+  dashboardMetricFactory.build({
+    label: title,
+    metric: name,
+    unit,
+  })
+);
 
 const mockRegion = regionFactory.build({
-  capabilities: ['Linodes'],
+  capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
-  country: 'us',
 });
 
 const databaseMock: Database = databaseFactory.build({
@@ -97,9 +113,7 @@ const mockAccount = accountFactory.build();
 
 describe('Tests for API error handling', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags({
-      aclp: { beta: true, enabled: true },
-    });
+    mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');

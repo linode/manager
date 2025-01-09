@@ -82,9 +82,9 @@ export const RebuildFromImage = (props: Props) => {
   } = props;
 
   const {
-    data: preferences,
+    data: typeToConfirmPreference,
     isLoading: isLoadingPreferences,
-  } = usePreferences();
+  } = usePreferences((preferences) => preferences?.type_to_confirm ?? true);
 
   const { checkForNewEvents } = useEventsPollingActions();
 
@@ -126,7 +126,7 @@ export const RebuildFromImage = (props: Props) => {
   }, [shouldReuseUserData]);
 
   const submitButtonDisabled =
-    preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
+    Boolean(typeToConfirmPreference) && confirmationText !== linodeLabel;
 
   const handleFormSubmit = (
     { authorized_users, image, root_pass }: RebuildFromImageForm,
@@ -315,7 +315,7 @@ export const RebuildFromImage = (props: Props) => {
                   title="Confirm"
                   typographyStyle={{ marginBottom: 8 }}
                   value={confirmationText}
-                  visible={preferences?.type_to_confirm}
+                  visible={typeToConfirmPreference}
                 />
 
                 <StyledActionsPanel

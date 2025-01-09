@@ -73,6 +73,7 @@ export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
   serviceType: string;
+  supportedRegionIds?: string;
 }
 
 interface gpuV2 {
@@ -140,6 +141,7 @@ export interface Flags {
   taxId: BaseFeatureFlag;
   taxes: Taxes;
   tpaProviders: Provider[];
+  udp: boolean;
 }
 
 interface MarketplaceAppOverride {
@@ -230,7 +232,7 @@ export type ProductInformationBannerLocation =
   | 'Databases'
   | 'Domains'
   | 'Firewalls'
-  | 'Identity and Access Management'
+  | 'Identity and Access'
   | 'Images'
   | 'Kubernetes'
   | 'LinodeCreate' // Use for Marketplace banners
