@@ -107,6 +107,8 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
+import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
+import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { pickRandom } from 'src/utilities/random';
 
 import type {
@@ -128,7 +130,6 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -2441,48 +2442,8 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(alerts));
   }),
   http.get('*/monitor/alert-channels', () => {
-    const response = {
-      data: [
-        {
-          alerts: {},
-          channel_type: 'email',
-          content: {
-            email: {
-              email_addresses: ['default@mail.com', 'admin@email.com'],
-              message: 'Resources have breached the alert',
-              subject: 'Default alert',
-            },
-          },
-          created_at: '2021-10-16T04:00:00',
-          created_by: 'user1',
-          id: Math.ceil(Math.random() * 1000),
-          label: 'default',
-          updated_at: '2021-10-16T04:00:00',
-          updated_by: 'user2',
-        },
-        {
-          alerts: {},
-          channel_type: 'email',
-          content: {
-            email: {
-              email_addresses: [
-                'custom@mail.com',
-                'adminadminadminadminadminadminadminadminadminadminadminadminadmin@email.com',
-              ],
-              message: 'Resources have breached the alert',
-              subject: 'Default alert',
-            },
-          },
-          created_at: '2021-10-16T04:00:00',
-          created_by: 'user1',
-          id: Math.ceil(Math.random() * 1000),
-          label: 'custom',
-          updated_at: '2021-10-16T04:00:00',
-          updated_by: 'user2',
-        },
-      ],
-    };
-    return HttpResponse.json(response);
+    const notificationChannels = notificationChannelFactory.buildList(2);
+    return HttpResponse.json(makeResourcePage(notificationChannels));
   }),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions/:id',

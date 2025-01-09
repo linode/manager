@@ -23,6 +23,10 @@ export type MetricUnitType =
 export type NotificationStatus = 'Enabled' | 'Disabled';
 export type ChannelTypes = 'email' | 'slack' | 'pagerduty' | 'webhook';
 export type AlertNotificationType = 'default' | 'custom';
+type AlertNotificationEmail = 'email';
+type AlertNotificationSlack = 'slack';
+type AlertNotificationPagerDuty = 'pagerduty';
+type AlertNotificationWebHook = 'webhook';
 export interface Dashboard {
   id: number;
   label: string;
@@ -227,19 +231,19 @@ export interface DataSet {
   timestamp: number;
 }
 
-
+interface NotificationChannelAlerts {
+  id: number;
+  label: string;
+  url: string;
+  type: 'alerts-definitions';
+}
 interface NotificationChannelBase {
   id: number;
   label: string;
   channel_type: ChannelTypes;
   type: AlertNotificationType;
   status: NotificationStatus;
-  alerts: {
-    id: number;
-    label: string;
-    url: string;
-    type: 'alert-definitions';
-  };
+  alerts: NotificationChannelAlerts[];
   created_by: string;
   updated_by: string;
   created_at: string;
@@ -247,7 +251,7 @@ interface NotificationChannelBase {
 }
 
 interface NotificationChannelEmail extends NotificationChannelBase {
-  channel_type: 'email';
+  channel_type: AlertNotificationEmail;
   content: {
     email: {
       email_addresses: string[];
@@ -258,7 +262,7 @@ interface NotificationChannelEmail extends NotificationChannelBase {
 }
 
 interface NotificationChannelSlack extends NotificationChannelBase {
-  channel_type: 'slack';
+  channel_type: AlertNotificationSlack;
   content: {
     slack: {
       slack_webhook_url: string;
@@ -269,7 +273,7 @@ interface NotificationChannelSlack extends NotificationChannelBase {
 }
 
 interface NotificationChannelPagerDuty extends NotificationChannelBase {
-  channel_type: 'pagerduty';
+  channel_type: AlertNotificationPagerDuty;
   content: {
     pagerduty: {
       service_api_key: string;
@@ -279,7 +283,7 @@ interface NotificationChannelPagerDuty extends NotificationChannelBase {
   };
 }
 interface NotificationChannelWebHook extends NotificationChannelBase {
-  channel_type: 'webhook';
+  channel_type: AlertNotificationWebHook;
   content: {
     webhook: {
       webhook_url: string;

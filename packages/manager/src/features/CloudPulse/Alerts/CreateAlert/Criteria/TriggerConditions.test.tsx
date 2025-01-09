@@ -5,8 +5,8 @@ import * as React from 'react';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import {
-  EvaluationPeriodOptions,
-  PollingIntervalOptions,
+  evaluationPeriodOptions,
+  pollingIntervalOptions,
 } from '../../constants';
 import { TriggerConditions } from './TriggerConditions';
 
@@ -96,24 +96,24 @@ describe('Trigger Conditions', () => {
 
     expect(
       await container.findByRole('option', {
-        name: EvaluationPeriodOptions.linode[1].label,
+        name: evaluationPeriodOptions.linode[1].label,
       })
     ).toBeInTheDocument();
     expect(
       await container.findByRole('option', {
-        name: EvaluationPeriodOptions.linode[2].label,
+        name: evaluationPeriodOptions.linode[2].label,
       })
     );
 
     await user.click(
       container.getByRole('option', {
-        name: EvaluationPeriodOptions.linode[0].label,
+        name: evaluationPeriodOptions.linode[0].label,
       })
     );
 
     expect(
       within(evaluationPeriodContainer).getByRole('combobox')
-    ).toHaveAttribute('value', EvaluationPeriodOptions.linode[0].label);
+    ).toHaveAttribute('value', evaluationPeriodOptions.linode[0].label);
   });
 
   it('should render the Polling Interval component with options happy path and select an option', async () => {
@@ -143,24 +143,24 @@ describe('Trigger Conditions', () => {
 
     expect(
       await container.findByRole('option', {
-        name: PollingIntervalOptions.linode[1].label,
+        name: pollingIntervalOptions.linode[1].label,
       })
     ).toBeInTheDocument();
 
     expect(
       await container.findByRole('option', {
-        name: PollingIntervalOptions.linode[2].label,
+        name: pollingIntervalOptions.linode[2].label,
       })
     );
 
     await user.click(
       container.getByRole('option', {
-        name: PollingIntervalOptions.linode[0].label,
+        name: pollingIntervalOptions.linode[0].label,
       })
     );
     expect(
       within(pollingIntervalContainer).getByRole('combobox')
-    ).toHaveAttribute('value', PollingIntervalOptions.linode[0].label);
+    ).toHaveAttribute('value', pollingIntervalOptions.linode[0].label);
   });
 
   it('should be able to show the options that are greater than or equal to max scraping Interval', () => {
@@ -187,7 +187,7 @@ describe('Trigger Conditions', () => {
     user.click(evaluationPeriodInput);
 
     expect(
-      screen.queryByText(EvaluationPeriodOptions.linode[0].label)
+      screen.queryByText(evaluationPeriodOptions.linode[0].label)
     ).not.toBeInTheDocument();
 
     const pollingIntervalContainer = container.getByTestId(
@@ -198,7 +198,7 @@ describe('Trigger Conditions', () => {
     ).getByRole('button', { name: 'Open' });
     user.click(pollingIntervalInput);
     expect(
-      screen.queryByText(PollingIntervalOptions.linode[0].label)
+      screen.queryByText(pollingIntervalOptions.linode[0].label)
     ).not.toBeInTheDocument();
   });
 });

@@ -12,11 +12,8 @@ interface RenderChannelDetailProps {
 export const RenderChannelDetails = (props: RenderChannelDetailProps) => {
   const { template } = props;
   if (template.channel_type === 'email') {
-    return (
-      template.channel_type === 'email' &&
-      template.content.email.email_addresses.map(
-        (email: string, id: number) => <Chip key={id} label={email} />
-      )
+    return template.content.email.email_addresses.map(
+      (email: string, id: number) => <Chip key={id} label={email} />
     );
   }
   return null;

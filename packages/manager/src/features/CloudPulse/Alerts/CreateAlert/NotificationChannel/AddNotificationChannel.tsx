@@ -1,14 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box } from '@linode/ui';
-import { Typography } from '@linode/ui';
-import { Autocomplete } from '@linode/ui';
+import { Autocomplete, Box, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
-import { ChannelTypeOptions } from '../../constants';
+import { channelTypeOptions } from '../../constants';
+import { getAlertBoxStyles } from '../../Utils/utils';
 import { notificationChannelSchema } from '../schemas';
 import { RenderChannelDetails } from './RenderChannelDetails';
 
@@ -18,24 +17,38 @@ import type { ObjectSchema } from 'yup';
 
 interface AddNotificationChannelProps {
   /**
-   * method to exit the Drawer on cancel
+   * Boolean for the Notification channels api error response
+   */
+  isNotificationChannelsError: boolean;
+  /**
+   * Boolean for the Notification channels api loading response
+   */
+  isNotificationChannelsLoading: boolean;
+  /**
+   * Method to exit the Drawer on cancel
    * @returns void
    */
   onCancel: () => void;
   /**
-   * method to add the notification id to the form context
+   * Method to add the notification id to the form context
    * @param notificationId id of the Notification that is being submitted
    * @returns void
    */
   onSubmitAddNotification: (notificationId: number) => void;
   /**
-   * notification template data fetched from the api
+   * Notification template data fetched from the api
    */
   templateData: NotificationChannel[];
 }
 
 export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
-  const { onCancel, onSubmitAddNotification, templateData } = props;
+  const {
+    isNotificationChannelsError,
+    isNotificationChannelsLoading,
+    onCancel,
+    onSubmitAddNotification,
+    templateData,
+  } = props;
 
   const formMethods = useForm<NotificationChannelForm>({
     defaultValues: {
@@ -55,7 +68,7 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
 
   const channelTypeWatcher = useWatch({ control, name: 'channel_type' });
   const channelLabelWatcher = useWatch({ control, name: 'label' });
-  const selectedTypeTemplate =
+  const selectedChannelTypeTemplate =
     channelTypeWatcher && templateData
       ? templateData.filter(
           (template) => template.channel_type === channelTypeWatcher
@@ -63,15 +76,15 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
       : null;
 
   const templateOptions = React.useMemo(() => {
-    return selectedTypeTemplate
-      ? selectedTypeTemplate.map((template) => ({
+    return selectedChannelTypeTemplate
+      ? selectedChannelTypeTemplate.map((template) => ({
           label: template.label,
           value: template.label,
         }))
       : [];
-  }, [selectedTypeTemplate]);
+  }, [selectedChannelTypeTemplate]);
 
-  const selectedTemplate = selectedTypeTemplate?.find(
+  const selectedTemplate = selectedChannelTypeTemplate?.find(
     (template) => template.label === channelLabelWatcher
   );
 
@@ -80,10 +93,7 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
       <form onSubmit={onSubmit}>
         <Box
           sx={(theme) => ({
-            backgroundColor:
-              theme.name === 'light'
-                ? theme.tokens.color.Neutrals[5]
-                : theme.tokens.color.Neutrals.Black,
+            ...getAlertBoxStyles(theme),
             borderRadius: 1,
             overflow: 'auto',
             p: 2,
@@ -91,10 +101,7 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
         >
           <Typography
             sx={(theme) => ({
-              color:
-                theme.name === 'light'
-                  ? theme.tokens.color.Neutrals.Black
-                  : theme.tokens.color.Neutrals[5],
+              color: theme.tokens.content.Text,
             })}
             gutterBottom
             variant="h3"
@@ -104,6 +111,15 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
           <Controller
             render={({ field, fieldState }) => (
               <Autocomplete
+                disabled={
+                  isNotificationChannelsLoading && !isNotificationChannelsError
+                }
+                errorText={
+                  fieldState.error?.message ??
+                  (isNotificationChannelsError
+                    ? 'Error in fetching the data.'
+                    : '')
+                }
                 onChange={(
                   _,
                   newValue: { label: string; value: ChannelTypes },
@@ -117,15 +133,14 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
                   }
                 }}
                 value={
-                  ChannelTypeOptions.find(
+                  channelTypeOptions.find(
                     (option) => option.value === field.value
                   ) ?? null
                 }
                 data-testid="channel-type"
-                errorText={fieldState.error?.message}
                 label="Type"
                 onBlur={field.onBlur}
-                options={ChannelTypeOptions}
+                options={channelTypeOptions}
                 placeholder="Select a Type"
               />
             )}
@@ -151,7 +166,7 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
                     ) ?? null
                   }
                   data-testid="channel-label"
-                  disabled={!selectedTypeTemplate}
+                  disabled={!selectedChannelTypeTemplate}
                   errorText={fieldState.error?.message}
                   key={channelTypeWatcher}
                   label="Channel"
@@ -164,7 +179,6 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
               name="label"
             />
           </Box>
-          {/* This is not the complete end solution, this is to satsify the current requirements of email type channels and the default email notification channel */}
           {selectedTemplate && selectedTemplate.channel_type === 'email' && (
             <Box paddingTop={2}>
               <Grid container>

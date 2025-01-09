@@ -4,7 +4,8 @@ import React from 'react';
 
 import { capitalize } from 'src/utilities/capitalize';
 
-import { ChannelTypeOptions } from '../../constants';
+import { channelTypeOptions } from '../../constants';
+import { getAlertBoxStyles } from '../../Utils/utils';
 import { ClearIconButton } from '../Criteria/ClearIconButton';
 import { RenderChannelDetails } from './RenderChannelDetails';
 
@@ -12,23 +13,23 @@ import type { NotificationChannel } from '@linode/api-v4';
 
 interface ChannelListProps {
   /**
-   * notification channel list passed to the component to be displayed in the form
+   * Notification channel list passed to the component to be displayed in the form
    */
   notifications: NotificationChannel[];
   /**
-   * method to handle the deletions of the Notification Channels in the form
+   * Method to handle the deletions of the Notification Channels in the form
    * @param notifications sends the latest list of notification channels
    * @returns void
    */
   onChangeNotifications: (notifications: NotificationChannel[]) => void;
   /**
-   * to enable the add notification channel drawer
+   * Method to enable the add notification channel drawer
    * @returns void
    */
   onClickAddNotification: () => void;
 }
 
-export const AddChannelListing = (props: ChannelListProps) => {
+export const AddChannelListing = React.memo((props: ChannelListProps) => {
   const {
     notifications,
     onChangeNotifications,
@@ -49,28 +50,25 @@ export const AddChannelListing = (props: ChannelListProps) => {
             return (
               <Box
                 sx={(theme) => ({
-                  backgroundColor:
-                    theme.name === 'light'
-                      ? theme.tokens.color.Neutrals[5]
-                      : theme.tokens.color.Neutrals.Black,
+                  ...getAlertBoxStyles(theme),
                   borderRadius: 1,
                   overflow: 'auto',
-                  paddingBottom: 2,
+                  padding: 0,
+                  paddingBottom: theme.spacing(2),
                 })}
-                data-testid={`Notification-channel-${id}`}
+                data-testid={`notification-channel-${id}`}
                 key={id}
               >
                 <Box
-                  sx={{
+                  sx={(theme) => ({
                     alignItems: 'center',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    paddingBottom: 1,
-                    paddingLeft: 2,
-                    paddingRight: 2,
-                    paddingTop: 2,
-                    width: '100%',
-                  }}
+                    paddingBottom: theme.spacing(1),
+                    paddingLeft: theme.spacing(2),
+                    paddingRight: theme.spacing(2),
+                    paddingTop: theme.spacing(2),
+                  })}
                 >
                   <Typography alignItems="flex-end" variant="h3">
                     {capitalize(notification.label)}
@@ -84,7 +82,7 @@ export const AddChannelListing = (props: ChannelListProps) => {
                   <Grid container item md="auto" sm="auto" xs={2}>
                     <Typography alignItems="center" variant="subtitle2">
                       {
-                        ChannelTypeOptions.find(
+                        channelTypeOptions.find(
                           (option) => option.value === notification.channel_type
                         )?.label
                       }
@@ -116,4 +114,4 @@ export const AddChannelListing = (props: ChannelListProps) => {
       </Box>
     </>
   );
-};
+});

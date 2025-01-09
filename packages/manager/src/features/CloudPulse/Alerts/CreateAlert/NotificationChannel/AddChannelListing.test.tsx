@@ -2,6 +2,8 @@ import { within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
+import { capitalize } from 'src/utilities/capitalize';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { AddChannelListing } from './AddChannelListing';
@@ -9,35 +11,18 @@ import { AddChannelListing } from './AddChannelListing';
 import type { NotificationChannel } from '@linode/api-v4';
 
 export const mockNotificationData: NotificationChannel[] = [
-  {
-    alerts: {
-      id: 0,
-      label: '',
-      type: 'alert-definitions',
-      url: '',
-    },
-    channel_type: 'email',
-    content: {
-      email: {
-        email_addresses: ['default@mail.com', 'admin@mail.com'],
-        message: 'Resources have breached the alert',
-        subject: 'Default alert',
-      },
-    },
-    created_at: '2021-10-16T04:00:00',
-    created_by: 'user1',
-    id: 22,
-    label: 'default',
-    status: 'Enabled',
-    type: 'default',
-    updated_at: '2021-10-16T04:00:00',
-    updated_by: 'user2',
-  },
+  notificationChannelFactory.build(),
 ];
 describe('Channel Listing component', () => {
   const user = userEvent.setup();
   it('should render the notification channels ', () => {
-    const container = renderWithThemeAndHookFormContext({
+    const emailAddresses =
+      mockNotificationData[0].channel_type === 'email' &&
+      mockNotificationData[0].content.email
+        ? mockNotificationData[0].content.email.email_addresses
+        : [];
+
+    const { getByText } = renderWithThemeAndHookFormContext({
       component: (
         <AddChannelListing
           notifications={mockNotificationData}
@@ -46,15 +31,15 @@ describe('Channel Listing component', () => {
         />
       ),
     });
-    expect(container.getByText('3. Notification Channels')).toBeVisible();
-    expect(container.getByText('Default')).toBeVisible();
-    expect(container.getByText('default@mail.com')).toBeInTheDocument();
-    expect(container.getByText('admin@mail.com')).toBeInTheDocument();
+    expect(getByText('3. Notification Channels')).toBeVisible();
+    expect(getByText(capitalize(mockNotificationData[0].label))).toBeVisible();
+    expect(getByText(emailAddresses[0])).toBeInTheDocument();
+    expect(getByText(emailAddresses[1])).toBeInTheDocument();
   });
 
   it('should remove the fields', async () => {
     const mockOnChangeNotifications = vi.fn();
-    const container = renderWithThemeAndHookFormContext({
+    const { getByTestId } = renderWithThemeAndHookFormContext({
       component: (
         <AddChannelListing
           notifications={mockNotificationData}
@@ -63,9 +48,7 @@ describe('Channel Listing component', () => {
         />
       ),
     });
-    const notificationContainer = container.getByTestId(
-      'Notification-channel-0'
-    );
+    const notificationContainer = getByTestId('notification-channel-0');
     expect(notificationContainer).toBeInTheDocument();
     const clearButton = within(notificationContainer).getByTestId('clear-icon');
     await user.click(clearButton);

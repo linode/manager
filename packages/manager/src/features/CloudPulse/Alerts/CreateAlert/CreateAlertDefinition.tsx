@@ -25,9 +25,12 @@ import { AddNotificationChannel } from './NotificationChannel/AddNotificationCha
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
-import type { CreateAlertDefinitionForm, MetricCriteriaForm, TriggerConditionForm } from './types';
 import type {
-  NotificationChannel,} from '@linode/api-v4/lib/cloudpulse/types';
+  CreateAlertDefinitionForm,
+  MetricCriteriaForm,
+  TriggerConditionForm,
+} from './types';
+import type { NotificationChannel } from '@linode/api-v4/lib/cloudpulse/types';
 import type { ObjectSchema } from 'yup';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
@@ -121,7 +124,11 @@ export const CreateAlertDefinition = () => {
       }
     }
   });
-  const { data: notificationData } = useNotificationChannels();
+  const {
+    data: notificationData,
+    isError: notificationChannelsError,
+    isLoading: notificationChannelsLoading,
+  } = useNotificationChannels();
   const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
 
   const onChangeNotifications = (notifications: NotificationChannel[]) => {
@@ -150,11 +157,6 @@ export const CreateAlertDefinition = () => {
   }, [notificationChannelWatcher, notificationData]);
 
   const selectedNotifications = React.useMemo(() => {
-    // return (
-    //   notificationData?.data.filter((notification) =>
-    //     notificationChannelWatcher.includes(notification.id)
-    //   ) ?? []
-    // );
     return (
       notificationChannelWatcher
         .map((id) =>
@@ -163,6 +165,15 @@ export const CreateAlertDefinition = () => {
         .filter((notification) => notification !== undefined) ?? []
     );
   }, [notificationChannelWatcher, notificationData]);
+
+  const onExitNotifications = React.useCallback(() => {
+    setOpenAddNotification(false);
+  }, []);
+
+  const onAddNotifications = React.useCallback(() => {
+    setOpenAddNotification(true);
+  }, []);
+
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb crumbOverrides={overrides} pathname="/Definitions/Create" />
@@ -227,9 +238,8 @@ export const CreateAlertDefinition = () => {
           <AddChannelListing
             notifications={selectedNotifications}
             onChangeNotifications={onChangeNotifications}
-            onClickAddNotification={() => setOpenAddNotification(true)}
+            onClickAddNotification={onAddNotifications}
           />
-
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
@@ -244,12 +254,14 @@ export const CreateAlertDefinition = () => {
           />
           {openAddNotification && (
             <Drawer
-              onClose={() => setOpenAddNotification(false)}
+              onClose={onExitNotifications}
               open={openAddNotification}
               title="Add Notification Channel"
             >
               <AddNotificationChannel
-                onCancel={() => setOpenAddNotification(false)}
+                isNotificationChannelsError={notificationChannelsError}
+                isNotificationChannelsLoading={notificationChannelsLoading}
+                onCancel={onExitNotifications}
                 onSubmitAddNotification={onSubmitAddNotification}
                 templateData={notifications}
               />
