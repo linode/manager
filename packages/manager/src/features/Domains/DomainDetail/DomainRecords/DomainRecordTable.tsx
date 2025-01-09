@@ -51,7 +51,10 @@ export const DomainRecordTable = (props: DomainRecordTableProps) => {
           ) : (
             paginatedData.map((data, idx) => {
               return (
-                <TableRow data-qa-record-row={type.title} key={idx}>
+                <TableRow
+                  data-qa-record-row={type.title}
+                  key={`domain-record-${idx}`}
+                >
                   {type.columns.length > 0 &&
                     type.columns.map(({ render, title }, columnIndex) => {
                       return (
