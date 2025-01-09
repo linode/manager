@@ -29,7 +29,6 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
@@ -235,8 +234,6 @@ export const MainContent = () => {
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
-  const { isACLPEnabled } = useIsACLPEnabled();
-
   const { isIAMEnabled } = useIsIAMEnabled();
 
   /**
@@ -363,9 +360,9 @@ export const MainContent = () => {
                             <Route component={Databases} path="/databases" />
                           )}
                           <Route component={VPC} path="/vpcs" />
-                          {isACLPEnabled && (
-                            <Route component={CloudPulse} path="/monitor" />
-                          )}
+                          {/* {isACLPEnabled && ( */}
+                          <Route component={CloudPulse} path="/monitor" />
+                          {/* )} */}
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                           <Redirect from="/dashboard" to={defaultRoot} />

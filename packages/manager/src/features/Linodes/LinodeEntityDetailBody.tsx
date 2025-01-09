@@ -99,7 +99,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   } = props;
 
   const { data: profile } = useProfile();
-  const { data: preferences } = usePreferences();
+  const { data: maskSensitiveDataPreference } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
+  );
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
@@ -214,12 +216,12 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               }
               rows={[
                 {
-                  isMasked: preferences?.maskSensitiveData,
+                  isMasked: maskSensitiveDataPreference,
                   maskedTextLength: 'ipv4',
                   text: firstAddress,
                 },
                 {
-                  isMasked: preferences?.maskSensitiveData,
+                  isMasked: maskSensitiveDataPreference,
                   maskedTextLength: 'ipv6',
                   text: secondAddress,
                 },
@@ -233,13 +235,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               rows={[
                 {
                   heading: 'SSH Access',
-                  isMasked: preferences?.maskSensitiveData,
+                  isMasked: maskSensitiveDataPreference,
                   text: sshLink(ipv4[0]),
                 },
                 {
                   heading: 'LISH Console via SSH',
                   isMasked: !linodeIsInDistributedRegion
-                    ? preferences?.maskSensitiveData
+                    ? maskSensitiveDataPreference
                     : false,
                   text: linodeIsInDistributedRegion
                     ? 'N/A'

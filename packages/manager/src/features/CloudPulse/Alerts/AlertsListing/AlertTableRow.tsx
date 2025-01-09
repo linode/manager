@@ -43,10 +43,10 @@ export const AlertTableRow = (props: Props) => {
         </Typography>
       </TableCell>
       <TableCell>
-        <DateTimeDisplay value={updated} />
+        <DateTimeDisplay value={new Date(updated).toISOString()} />
       </TableCell>
       <TableCell>{created_by}</TableCell>
-      <TableCell actionCell>
+      <TableCell actionCell data-qa-alert-action-cell={`alert_${id}`}>
         <AlertActionMenu alertType={type} handlers={handlers} />
       </TableCell>
     </TableRow>
