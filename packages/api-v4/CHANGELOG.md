@@ -3,7 +3,7 @@
 ### Added:
 
 - Types for UDP NodeBalancer support ([#11321](https://github.com/linode/manager/pull/11321))
-- Tags to `KubeNodePoolResponse` and `CreateNodePoolData` ([#11368](https://github.com/linode/manager/pull/11368))
+- Tags to `KubeNodePoolResponse` and `UpdateNodePoolData` ([#11368](https://github.com/linode/manager/pull/11368))
 
 ### Changed:
 
