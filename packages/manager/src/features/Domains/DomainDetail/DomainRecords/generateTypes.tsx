@@ -8,7 +8,7 @@ import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import {
   getNSRecords,
   getTTL,
-  msToReadable,
+  msToReadableTime,
   typeEq,
 } from './DomainRecordsUtils';
 
@@ -89,15 +89,15 @@ export const generateTypes = (
         title: 'Default TTL',
       },
       {
-        render: compose(msToReadable, pathOr(0, ['refresh_sec'])),
+        render: compose(msToReadableTime, pathOr(0, ['refresh_sec'])),
         title: 'Refresh Rate',
       },
       {
-        render: compose(msToReadable, pathOr(0, ['retry_sec'])),
+        render: compose(msToReadableTime, pathOr(0, ['retry_sec'])),
         title: 'Retry Rate',
       },
       {
-        render: compose(msToReadable, pathOr(0, ['expire_sec'])),
+        render: compose(msToReadableTime, pathOr(0, ['expire_sec'])),
         title: 'Expire Time',
       },
       {

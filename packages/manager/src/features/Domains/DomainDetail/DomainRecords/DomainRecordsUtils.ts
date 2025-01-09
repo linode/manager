@@ -3,7 +3,7 @@ import { compose, filter, flatten, pathOr, prepend, propEq } from 'ramda';
 import type { Props } from './DomainRecords';
 import type { DomainRecord } from '@linode/api-v4/lib/domains';
 
-export const msToReadable = (v: number): null | string =>
+export const msToReadableTime = (v: number): null | string =>
   pathOr(null, [v], {
     0: 'Default',
     30: '30 seconds',
@@ -22,7 +22,7 @@ export const msToReadable = (v: number): null | string =>
     2419200: '4 weeks',
   });
 
-export const getTTL = compose(msToReadable, pathOr(0, ['ttl_sec']));
+export const getTTL = compose(msToReadableTime, pathOr(0, ['ttl_sec']));
 
 export const typeEq = propEq('type');
 
