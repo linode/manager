@@ -18,16 +18,16 @@ import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/Da
 import { DatabaseResizeCurrentConfiguration } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResizeCurrentConfiguration';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
+import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import {
   StyledGrid,
   StyledPlansPanel,
   StyledResizeButton,
 } from './DatabaseResize.style';
+import { isSmallerOrEqualCurrentPlan } from './DatabaseResize.utils';
 
 import type {
   ClusterSize,
@@ -216,21 +216,12 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     setSelectedTab(initialTab);
   }, []);
 
-  const currentPlanDisk = currentPlan ? currentPlan.disk : 0;
-  const disabledPlans = !isNewDatabaseGA
-    ? displayTypes?.filter((type) =>
-        type.class === 'dedicated'
-          ? type.disk < currentPlanDisk
-          : type.disk <= currentPlanDisk
-      )
-    : displayTypes?.filter(
-        (type) =>
-          database?.used_disk_size_gb &&
-          database.used_disk_size_gb >
-            +convertMegabytesTo(type.disk, true)
-              .split(/(GB|MB|KB)/i)[0]
-              .trim()
-      );
+  const disabledPlans = isSmallerOrEqualCurrentPlan(
+    currentPlan?.id,
+    database?.used_disk_size_gb,
+    displayTypes,
+    isNewDatabaseGA
+  );
   const isDisabledSharedTab = database.cluster_size === 2;
 
   const shouldSubmitBeDisabled = React.useMemo(() => {
