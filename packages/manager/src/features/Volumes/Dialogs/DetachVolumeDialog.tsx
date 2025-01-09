@@ -54,6 +54,7 @@ export const DetachVolumeDialog = (props: Props) => {
         primaryBtnText: 'Detach',
         type: 'Volume',
       }}
+      expand
       isFetching={isFetching}
       label="Volume Label"
       loading={isPending}

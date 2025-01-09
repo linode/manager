@@ -1,7 +1,9 @@
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { CheckIcon, AlertIcon as Error, WarningIcon } from '../../assets/icons';
+import { omittedProps } from '../../utilities';
 import { Typography } from '../Typography';
 import { useStyles } from './Notice.styles';
 
@@ -92,7 +94,6 @@ export const Notice = (props: NoticeProps) => {
     typeProps,
     variant,
   } = props;
-
   const { classes, cx } = useStyles();
 
   const innerText = text ? (
@@ -146,7 +147,7 @@ export const Notice = (props: NoticeProps) => {
       };
 
   return (
-    <Grid
+    <StyledNoticeGrid
       className={cx({
         [classes.error]: variantMap.error,
         [classes.errorList]: variantMap.error,
@@ -166,13 +167,10 @@ export const Notice = (props: NoticeProps) => {
       data-testid={`notice${variant ? `-${variant}` : ''}${
         important ? '-important' : ''
       }`}
-      sx={(theme) => ({
-        marginBottom:
-          spacingBottom !== undefined ? `${spacingBottom}px` : theme.spacing(3),
-        marginLeft: spacingLeft !== undefined ? `${spacingLeft}px` : 0,
-        marginTop: spacingTop !== undefined ? `${spacingTop}px` : 0,
-        sx,
-      })}
+      spacingBottom={spacingBottom}
+      spacingLeft={spacingLeft}
+      spacingTop={spacingTop}
+      sx={sx}
       {...dataAttributes}
       role="alert"
     >
@@ -189,6 +187,19 @@ export const Notice = (props: NoticeProps) => {
       <div className={classes.inner} data-testid={dataTestId}>
         {innerText || _children}
       </div>
-    </Grid>
+    </StyledNoticeGrid>
   );
 };
+
+export const StyledNoticeGrid = styled(Grid, {
+  label: 'StyledNoticeGrid',
+  shouldForwardProp: omittedProps([
+    'spacingBottom',
+    'spacingLeft',
+    'spacingTop',
+  ]),
+})<NoticeProps>(({ theme, ...props }) => ({
+  marginBottom: props.spacingBottom ?? theme.spacing(3),
+  marginLeft: props.spacingLeft ?? 0,
+  marginTop: props.spacingTop ?? 0,
+}));
