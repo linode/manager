@@ -1,4 +1,4 @@
-import { deleteDomainRecord as deleteDomain } from '@linode/api-v4/lib/domains';
+import { deleteDomainRecord as _deleteDomainRecord } from '@linode/api-v4/lib/domains';
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { lensPath, over } from 'ramda';
@@ -13,7 +13,6 @@ import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
 import { DomainRecordDrawer } from './DomainRecordDrawer';
@@ -30,6 +29,7 @@ import type {
   UpdateDomainPayload,
 } from '@linode/api-v4/lib/domains';
 import type { APIError } from '@linode/api-v4/lib/types';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 interface UpdateDomainDataProps extends UpdateDomainPayload {
   id: number;
@@ -80,6 +80,8 @@ export const DomainRecords = (props: Props) => {
     types: [],
   });
 
+  const confirmDialogRef = React.useRef<HTMLDivElement>(null);
+
   const confirmDeletion = (recordId: number) =>
     updateConfirmDialog((confirmDialog) => ({
       ...confirmDialog,
@@ -105,7 +107,7 @@ export const DomainRecords = (props: Props) => {
       submitting: true,
     }));
 
-    deleteDomain(domainId, recordId)
+    _deleteDomainRecord(domainId, recordId)
       .then(() => {
         updateRecords();
 
@@ -194,7 +196,7 @@ export const DomainRecords = (props: Props) => {
   ) => {
     setState((prevState) => {
       const newState = over(lensPath(['confirmDialog']), fn, prevState);
-      scrollErrorIntoView();
+      scrollErrorIntoViewV2(confirmDialogRef);
 
       return newState;
     });
@@ -313,6 +315,7 @@ export const DomainRecords = (props: Props) => {
         actions={renderDialogActions}
         onClose={handleCloseDialog}
         open={state.confirmDialog.open}
+        ref={confirmDialogRef}
         title="Confirm Deletion"
       >
         Are you sure you want to delete this record?
