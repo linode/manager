@@ -13,6 +13,7 @@ import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { storage } from 'src/utilities/storage';
 
 import { DomainRecordDrawer } from './DomainRecordDrawer';
@@ -29,7 +30,6 @@ import type {
   UpdateDomainPayload,
 } from '@linode/api-v4/lib/domains';
 import type { APIError } from '@linode/api-v4/lib/types';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 interface UpdateDomainDataProps extends UpdateDomainPayload {
   id: number;
