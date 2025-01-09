@@ -2,9 +2,15 @@
  * Data loss warning which is displayed in the account cancellation dialog.
  */
 export const cancellationDataLossWarning =
-  'Please note this is an extremely destructive action. Closing your account \
-means that all services Linodes, Volumes, DNS Records, etc will be lost and \
-may not be able be restored.';
+  'This is an extremely destructive action. All services, Linodes, volumes, \
+DNS records, and user accounts will be permanently lost.';
+
+/**
+ * Title text displayed in the account cancellation confirmation dialog.
+ */
+export const cancellationDialogTitle =
+  'Are you sure you want to close your Akamai cloud \
+computing services account?';
 
 /**
  * Error message that appears when a payment failure occurs upon cancellation attempt.

@@ -7,16 +7,12 @@ import {
 } from 'src/queries/profile/preferences';
 
 export const TypeToConfirm = () => {
+  // Type-to-confirm is enabled by default when no preference is set.
   const { data: typeToConfirmPreference, isLoading } = usePreferences(
-    (preferences) => preferences?.type_to_confirm
+    (preferences) => preferences?.type_to_confirm ?? true
   );
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
-
-  // Type-to-confirm is enabled by default (no preference is set)
-  // or if the user explicitly enables it.
-  const isTypeToConfirmEnabled =
-    typeToConfirmPreference === undefined || typeToConfirmPreference === true;
 
   return (
     <Paper>
@@ -33,11 +29,11 @@ export const TypeToConfirm = () => {
             onChange={(_, checked) =>
               updatePreferences({ type_to_confirm: checked })
             }
-            checked={isTypeToConfirmEnabled}
+            checked={typeToConfirmPreference}
           />
         }
         label={`Type-to-confirm is ${
-          isTypeToConfirmEnabled ? 'enabled' : 'disabled'
+          typeToConfirmPreference ? 'enabled' : 'disabled'
         }`}
         disabled={isLoading}
       />
