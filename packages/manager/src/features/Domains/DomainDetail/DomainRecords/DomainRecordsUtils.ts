@@ -1,7 +1,7 @@
-import { compose, filter, flatten, pathOr, prepend, propEq } from 'ramda';
+import { compose, pathOr } from 'ramda';
 
 import type { Props } from './DomainRecords';
-import type { DomainRecord } from '@linode/api-v4/lib/domains';
+import type { DomainRecord, RecordType } from '@linode/api-v4/lib/domains';
 
 export const msToReadableTime = (v: number): null | string =>
   pathOr(null, [v], {
@@ -24,82 +24,79 @@ export const msToReadableTime = (v: number): null | string =>
 
 export const getTTL = compose(msToReadableTime, pathOr(0, ['ttl_sec']));
 
-export const typeEq = propEq('type');
+export const typeEq = (type: RecordType) => (record: DomainRecord): boolean =>
+  record.type === type;
 
-export const prependLinodeNS = compose<any, any, DomainRecord[]>(
-  flatten,
-  prepend([
-    {
-      id: -1,
-      name: '',
-      port: 0,
-      priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns1.linode.com',
-      ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
-    },
-    {
-      id: -1,
-      name: '',
-      port: 0,
-      priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns2.linode.com',
-      ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
-    },
-    {
-      id: -1,
-      name: '',
-      port: 0,
-      priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns3.linode.com',
-      ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
-    },
-    {
-      id: -1,
-      name: '',
-      port: 0,
-      priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns4.linode.com',
-      ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
-    },
-    {
-      id: -1,
-      name: '',
-      port: 0,
-      priority: 0,
-      protocol: null,
-      service: null,
-      tag: null,
-      target: 'ns5.linode.com',
-      ttl_sec: 0,
-      type: 'NS',
-      weight: 0,
-    },
-  ])
-);
+const prependLinodeNS: Partial<DomainRecord>[] = [
+  {
+    id: -1,
+    name: '',
+    port: 0,
+    priority: 0,
+    protocol: null,
+    service: null,
+    tag: null,
+    target: 'ns1.linode.com',
+    ttl_sec: 0,
+    type: 'NS',
+    weight: 0,
+  },
+  {
+    id: -1,
+    name: '',
+    port: 0,
+    priority: 0,
+    protocol: null,
+    service: null,
+    tag: null,
+    target: 'ns2.linode.com',
+    ttl_sec: 0,
+    type: 'NS',
+    weight: 0,
+  },
+  {
+    id: -1,
+    name: '',
+    port: 0,
+    priority: 0,
+    protocol: null,
+    service: null,
+    tag: null,
+    target: 'ns3.linode.com',
+    ttl_sec: 0,
+    type: 'NS',
+    weight: 0,
+  },
+  {
+    id: -1,
+    name: '',
+    port: 0,
+    priority: 0,
+    protocol: null,
+    service: null,
+    tag: null,
+    target: 'ns4.linode.com',
+    ttl_sec: 0,
+    type: 'NS',
+    weight: 0,
+  },
+  {
+    id: -1,
+    name: '',
+    port: 0,
+    priority: 0,
+    protocol: null,
+    service: null,
+    tag: null,
+    target: 'ns5.linode.com',
+    ttl_sec: 0,
+    type: 'NS',
+    weight: 0,
+  },
+];
 
-export const getNSRecords = compose<
-  Props,
-  DomainRecord[],
-  DomainRecord[],
-  DomainRecord[]
->(prependLinodeNS, filter(typeEq('NS')), pathOr([], ['domainRecords']));
+export const getNSRecords = (props: Props): Partial<DomainRecord>[] => {
+  const domainRecords = props.domainRecords || [];
+  const filteredNSRecords = domainRecords.filter(typeEq('NS'));
+  return [...prependLinodeNS, ...filteredNSRecords];
+};

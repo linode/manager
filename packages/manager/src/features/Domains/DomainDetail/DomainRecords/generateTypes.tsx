@@ -264,7 +264,7 @@ export const generateTypes = (
       },
     ],
     data: props.domainRecords.filter(
-      (record) => typeEq('AAAA', record) || typeEq('A', record)
+      (record) => typeEq('AAAA')(record) || typeEq('A')(record)
     ),
     link: () =>
       createLink('Add an A/AAAA Record', handlers.openForCreateARecord),
