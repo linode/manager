@@ -18,12 +18,11 @@ export const StyledIconButton = styled(IconButton, {
   border: 'none',
   color: theme.tokens.header.Search.Icon.Default,
   cursor: 'pointer',
-  padding: theme.spacing(),
+  padding: theme.spacing(0.75),
   position: 'relative',
   [theme.breakpoints.up('md')]: {
     display: 'none',
   },
-  top: 1,
 }));
 
 export const StyledSearchBarWrapperDiv = styled('div', {
