@@ -7,7 +7,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2025-01-14] - v1.134.0
 
 ### Added:
-
 - New DatePicker Component ([#11151](https://github.com/linode/manager/pull/11151))
 - Date Presets Functionality to Date Picker component ([#11395](https://github.com/linode/manager/pull/11395))
 - Notice for OS Distro Nearing EOL/EOS ([#11253](https://github.com/linode/manager/pull/11253))
@@ -27,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
+- Preferences type_to_confirm being undefined no longer causes button to be disabled
 - Create support ticket for buckets created through legacy flow ([#11300](https://github.com/linode/manager/pull/11300))
 - Incorrect Cloning Commands in Linode CLI Modal ([#11303](https://github.com/linode/manager/pull/11303))
 - Events landing page lists events in wrong order ([#11339](https://github.com/linode/manager/pull/11339))
