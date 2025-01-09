@@ -53,7 +53,32 @@ describe('DateTimeRangePicker Component', () => {
   it('should call onChange when start date is changed', async () => {
     const currentYear = new Date().getFullYear(); // Dynamically get the current year
     const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0'); // Get current month (1-based)
-
+    const offSet = new Date().getTimezoneOffset() / 60;
+    const absValue = Math.floor(Math.abs(offSet));
+    let offSetString = '';
+    if (offSet <= 0) {
+      if (absValue < 10) {
+        offSetString = `+0${absValue}`;
+      } else {
+        offSetString = `+${absValue}`;
+      }
+      if (Math.round(offSet) === offSet) {
+        offSetString = `${offSetString}:00`;
+      } else {
+        offSetString = `${offSetString}:30`;
+      }
+    } else {
+      if (absValue < 10) {
+        offSetString = `-0${absValue}`;
+      } else {
+        offSetString = `-${absValue}`;
+      }
+      if (Math.round(offSet) === offSet) {
+        offSetString = `${offSetString}:00`;
+      } else {
+        offSetString = `${offSetString}:30`;
+      }
+    }
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
 
     // Open start date picker
@@ -66,7 +91,7 @@ describe('DateTimeRangePicker Component', () => {
     expect(onChangeMock).toHaveBeenCalledWith({
       end: null,
       preset: 'custom_range',
-      start: `${currentYear}-${currentMonth}-10T00:00:00.000+00:00`,
+      start: `${currentYear}-${currentMonth}-10T00:00:00.000${offSetString}`,
       timeZone: null,
     });
   });
