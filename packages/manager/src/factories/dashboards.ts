@@ -30,7 +30,7 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   aggregate_function: 'avg',
   chart_type: Factory.each((i) => chart_type[i % chart_type.length]),
   color: Factory.each((i) => color[i % color.length]),
-  entity_id: Factory.each((i) => [`resource-${i}`]),
+  entity_ids: Factory.each((i) => [`resource-${i}`]),
   filters: [],
   group_by: 'region',
   label: Factory.each((i) => `widget_label_${i}`),
