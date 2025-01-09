@@ -24,7 +24,7 @@ export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(
   })
 );
 
-export const StyledTableCell = styled(TableCell, { label: 'StyledTabelCell' })(
+export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
   ({ theme }) => ({
     '& .data': {
       maxWidth: 300,
