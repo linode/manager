@@ -35,8 +35,15 @@ CMD yarn start:manager:ci
 #
 # Builds an image containing Cypress and miscellaneous system utilities required
 # by the tests.
-FROM ${IMAGE_REGISTRY}/cypress/included:13.16.1 as e2e-build
-RUN npm install -g pnpm bun
+FROM nodejs-cloud-manager as e2e-build
+RUN apt install -y wget \
+  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+  && apt update \
+  && apt -y install google-chrome-stable \
+  && rm -rf /var/cache/apt/* \
+  && rm -rf /var/lib/apt/lists/* \
+  && apt-get clean
 USER node
 WORKDIR /home/node/app
 VOLUME /home/node/app
