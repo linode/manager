@@ -49,7 +49,7 @@ USER node
 WORKDIR /home/node/app
 VOLUME /home/node/app
 ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
-RUN mkdir -p /home/node/.cache/Cypress && cypress install
+RUN mkdir -p /home/node/.cache/Cypress
 
 # e2e
 #
