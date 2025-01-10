@@ -23,6 +23,7 @@ interface Props {
   autoscaler: AutoscaleSettings;
   clusterId: number;
   encryptionStatus: EncryptionStatus | undefined;
+  handleClickLabelsAndTaints: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
   isOnlyNodePool: boolean;
   nodes: PoolNodeResponse[];
@@ -40,6 +41,7 @@ export const NodePool = (props: Props) => {
     autoscaler,
     clusterId,
     encryptionStatus,
+    handleClickLabelsAndTaints,
     handleClickResize,
     isOnlyNodePool,
     nodes,
@@ -95,6 +97,12 @@ export const NodePool = (props: Props) => {
         </Hidden>
         <Hidden smDown>
           <Stack alignItems="center" direction="row">
+            <StyledActionButton
+              compactY
+              onClick={() => handleClickLabelsAndTaints(poolId)}
+            >
+              Labels and Taints
+            </StyledActionButton>
             <StyledActionButton
               compactY
               onClick={() => openAutoscalePoolDialog(poolId)}

@@ -12,6 +12,7 @@ import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
 import { AutoscalePoolDialog } from './AutoscalePoolDialog';
 import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
+import { LabelsAndTaintsDrawer } from './LabelsAndTaints/LabelsAndTaintsDrawer';
 import { NodePool } from './NodePool';
 import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
@@ -40,6 +41,10 @@ export const NodePoolsDisplay = (props: Props) => {
   const selectedPool = pools?.find((pool) => pool.id === selectedPoolId);
 
   const [isDeleteNodePoolOpen, setIsDeleteNodePoolOpen] = useState(false);
+  const [
+    isLabelsAndTaintsDrawerOpen,
+    setIsLabelsAndTaintsDrawerOpen,
+  ] = useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = useState(false);
   const [isRecycleAllPoolNodesOpen, setIsRecycleAllPoolNodesOpen] = useState(
     false
@@ -72,6 +77,11 @@ export const NodePoolsDisplay = (props: Props) => {
   const handleOpenResizeDrawer = (poolId: number) => {
     setSelectedPoolId(poolId);
     setIsResizeDrawerOpen(true);
+  };
+
+  const handleOpenLabelsAndTaintsDrawer = (poolId: number) => {
+    setSelectedPoolId(poolId);
+    setIsLabelsAndTaintsDrawerOpen(true);
   };
 
   if (isLoading || pools === undefined) {
@@ -133,6 +143,7 @@ export const NodePoolsDisplay = (props: Props) => {
               autoscaler={thisPool.autoscaler}
               clusterId={clusterID}
               encryptionStatus={disk_encryption}
+              handleClickLabelsAndTaints={handleOpenLabelsAndTaintsDrawer}
               handleClickResize={handleOpenResizeDrawer}
               isOnlyNodePool={pools?.length === 1}
               key={id}
@@ -157,6 +168,11 @@ export const NodePoolsDisplay = (props: Props) => {
         open={addDrawerOpen}
         regionsData={regionsData}
       />
+      <LabelsAndTaintsDrawer
+        nodePool={selectedPool}
+        onClose={() => setIsLabelsAndTaintsDrawerOpen(false)}
+        open={isLabelsAndTaintsDrawerOpen}
+      />
       <ResizeNodePoolDrawer
         kubernetesClusterId={clusterID}
         kubernetesRegionId={clusterRegionId}
@@ -164,18 +180,23 @@ export const NodePoolsDisplay = (props: Props) => {
         onClose={() => setIsResizeDrawerOpen(false)}
         open={isResizeDrawerOpen}
       />
-      <DeleteNodePoolDialog
-        kubernetesClusterId={clusterID}
-        nodePool={selectedPool}
-        onClose={() => setIsDeleteNodePoolOpen(false)}
-        open={isDeleteNodePoolOpen}
-      />
       <AutoscalePoolDialog
         clusterId={clusterID}
         handleOpenResizeDrawer={handleOpenResizeDrawer}
         nodePool={selectedPool}
         onClose={() => setIsAutoscaleDialogOpen(false)}
         open={isAutoscaleDialogOpen}
+      />
+      <DeleteNodePoolDialog
+        kubernetesClusterId={clusterID}
+        nodePool={selectedPool}
+        onClose={() => setIsDeleteNodePoolOpen(false)}
+        open={isDeleteNodePoolOpen}
+      />
+      <RecycleClusterDialog
+        clusterId={clusterID}
+        onClose={() => setIsRecycleClusterOpen(false)}
+        open={isRecycleClusterOpen}
       />
       <RecycleNodeDialog
         clusterId={clusterID}
@@ -188,11 +209,6 @@ export const NodePoolsDisplay = (props: Props) => {
         nodePoolId={selectedPoolId}
         onClose={() => setIsRecycleAllPoolNodesOpen(false)}
         open={isRecycleAllPoolNodesOpen}
-      />
-      <RecycleClusterDialog
-        clusterId={clusterID}
-        onClose={() => setIsRecycleClusterOpen(false)}
-        open={isRecycleClusterOpen}
       />
     </>
   );
