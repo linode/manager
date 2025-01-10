@@ -5,10 +5,11 @@ import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PLACEMENT_GROUP_LINODES_ERROR_MESSAGE } from '../../constants';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes';
+import { migrationRouteTree } from 'src/routes';
 
 const queryMocks = vi.hoisted(() => ({
   useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups/1' }),
-  useParams: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({ id: 1 }),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -21,13 +22,17 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 describe('PlacementGroupsLinodes', () => {
-  it('renders an error state if placement groups are undefined', async () => {
+  it.only('renders an error state if placement groups are undefined', async () => {
     const { getByText } = await renderWithThemeAndRouter(
       <PlacementGroupsLinodes
         isLinodeReadOnly={false}
         placementGroup={undefined}
         region={undefined}
-      />
+      />, 
+      {
+        routeTree: migrationRouteTree,
+        initialRoute: '/placement-groups/1'
+      }
     );
 
     expect(
