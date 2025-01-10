@@ -360,7 +360,6 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         onClose={navigateToDomains}
         onDelete={removeDomain}
         open={params.action === 'delete'}
-        typeToConfirm
       />
     </>
   );

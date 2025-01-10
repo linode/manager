@@ -27,14 +27,12 @@ const Props: DateTimeRangePickerProps = {
 };
 
 describe('DateTimeRangePicker Component', () => {
-  let fixedNow: DateTime;
-
   beforeEach(() => {
     // Mock DateTime.now to return a fixed datetime
-    fixedNow = DateTime.fromISO(
+    const fixedNow = DateTime.fromISO(
       '2024-12-18T00:28:27.071-06:00'
-    ) as DateTime<true>;
-    vi.spyOn(DateTime, 'now').mockImplementation(() => fixedNow);
+    ).toUTC() as DateTime<true>;
+    vi.setSystemTime(fixedNow.toJSDate());
   });
 
   afterEach(() => {
@@ -51,34 +49,8 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should call onChange when start date is changed', async () => {
-    const currentYear = new Date().getFullYear(); // Dynamically get the current year
-    const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0'); // Get current month (1-based)
-    const offSet = new Date().getTimezoneOffset() / 60;
-    const absValue = Math.floor(Math.abs(offSet));
-    let offSetString = '';
-    if (offSet <= 0) {
-      if (absValue < 10) {
-        offSetString = `+0${absValue}`;
-      } else {
-        offSetString = `+${absValue}`;
-      }
-      if (Math.round(offSet) === offSet) {
-        offSetString = `${offSetString}:00`;
-      } else {
-        offSetString = `${offSetString}:30`;
-      }
-    } else {
-      if (absValue < 10) {
-        offSetString = `-0${absValue}`;
-      } else {
-        offSetString = `-${absValue}`;
-      }
-      if (Math.round(offSet) === offSet) {
-        offSetString = `${offSetString}:00`;
-      } else {
-        offSetString = `${offSetString}:30`;
-      }
-    }
+    vi.setSystemTime(vi.getRealSystemTime());
+
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
 
     // Open start date picker
@@ -87,11 +59,17 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(screen.getByRole('gridcell', { name: '10' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
+    const expectedStartTime = DateTime.fromObject({
+      day: 10,
+      month: DateTime.now().month,
+      year: DateTime.now().year,
+    }).toISO();
+
     // Check if the onChange function is called with the expected  value
     expect(onChangeMock).toHaveBeenCalledWith({
       end: null,
       preset: 'custom_range',
-      start: `${currentYear}-${currentMonth}-10T00:00:00.000${offSetString}`,
+      start: expectedStartTime,
       timeZone: null,
     });
   });
@@ -184,8 +162,8 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(last24HoursOption);
 
     // Expected start and end dates in ISO format
-    const expectedStartDateISO = fixedNow.minus({ hours: 24 }).toISO(); // 2024-12-17T00:28:27.071-06:00
-    const expectedEndDateISO = fixedNow.toISO(); // 2024-12-18T00:28:27.071-06:00
+    const expectedStartDateISO = DateTime.now().minus({ hours: 24 }).toISO(); // 2024-12-17T00:28:27.071-06:00
+    const expectedEndDateISO = DateTime.now().toISO(); // 2024-12-18T00:28:27.071-06:00
 
     // Verify onChangeMock was called with correct ISO strings
     expect(onChangeMock).toHaveBeenCalledWith({
@@ -211,8 +189,8 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(last7DaysOption);
 
     // Expected start and end dates in ISO format
-    const expectedStartDateISO = fixedNow.minus({ days: 7 }).toISO();
-    const expectedEndDateISO = fixedNow.toISO();
+    const expectedStartDateISO = DateTime.now().minus({ days: 7 }).toISO();
+    const expectedEndDateISO = DateTime.now().toISO();
 
     // Verify that onChange is called with the correct date range
     expect(onChangeMock).toHaveBeenCalledWith({
@@ -238,8 +216,8 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(last30DaysOption);
 
     // Expected start and end dates in ISO format
-    const expectedStartDateISO = fixedNow.minus({ days: 30 }).toISO();
-    const expectedEndDateISO = fixedNow.toISO();
+    const expectedStartDateISO = DateTime.now().minus({ days: 30 }).toISO();
+    const expectedEndDateISO = DateTime.now().toISO();
 
     // Verify that onChange is called with the correct date range
     expect(onChangeMock).toHaveBeenCalledWith({
@@ -265,8 +243,8 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(thisMonthOption);
 
     // Expected start and end dates in ISO format
-    const expectedStartDateISO = fixedNow.startOf('month').toISO();
-    const expectedEndDateISO = fixedNow.endOf('month').toISO();
+    const expectedStartDateISO = DateTime.now().startOf('month').toISO();
+    const expectedEndDateISO = DateTime.now().endOf('month').toISO();
 
     // Verify that onChange is called with the correct date range
     expect(onChangeMock).toHaveBeenCalledWith({
@@ -291,7 +269,7 @@ describe('DateTimeRangePicker Component', () => {
     const lastMonthOption = screen.getByText('Last Month');
     await userEvent.click(lastMonthOption);
 
-    const lastMonth = fixedNow.minus({ months: 1 });
+    const lastMonth = DateTime.now().minus({ months: 1 });
 
     // Expected start and end dates in ISO format
     const expectedStartDateISO = lastMonth.startOf('month').toISO();
