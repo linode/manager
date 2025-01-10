@@ -6,6 +6,25 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DeletionDialog } from './DeletionDialog';
 
 import type { DeletionDialogProps } from './DeletionDialog';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+
+const preference: ManagerPreferences['type_to_confirm'] = true;
+
+const queryMocks = vi.hoisted(() => ({
+  usePreferences: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/profile/preferences', async () => {
+  const actual = await vi.importActual('src/queries/profile/preferences');
+  return {
+    ...actual,
+    usePreferences: queryMocks.usePreferences,
+  };
+});
+
+queryMocks.usePreferences.mockReturnValue({
+  data: preference,
+});
 
 describe('DeletionDialog', () => {
   const defaultArgs: DeletionDialogProps = {
@@ -72,12 +91,21 @@ describe('DeletionDialog', () => {
   });
 
   it('should call onDelete when the DeletionDialog delete button is clicked', () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
     const { getByTestId } = renderWithTheme(
       <DeletionDialog {...defaultArgs} open={true} />
     );
 
     const deleteButton = getByTestId('confirm');
-    expect(deleteButton).not.toBeDisabled();
+    expect(deleteButton).toBeDisabled();
+
+    const input = getByTestId('textfield-input');
+    fireEvent.change(input, { target: { value: defaultArgs.label } });
+
+    expect(deleteButton).toBeEnabled();
+
     fireEvent.click(deleteButton);
 
     expect(defaultArgs.onDelete).toHaveBeenCalled();
@@ -128,12 +156,12 @@ describe('DeletionDialog', () => {
   ])(
     'should %s input field with label when typeToConfirm is %s',
     (_, typeToConfirm) => {
+      queryMocks.usePreferences.mockReturnValue({
+        data: typeToConfirm,
+      });
+
       const { queryByTestId } = renderWithTheme(
-        <DeletionDialog
-          {...defaultArgs}
-          open={true}
-          typeToConfirm={typeToConfirm}
-        />
+        <DeletionDialog {...defaultArgs} open={true} />
       );
 
       if (typeToConfirm) {

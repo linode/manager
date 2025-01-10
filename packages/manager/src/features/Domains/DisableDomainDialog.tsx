@@ -9,13 +9,14 @@ import type { Domain } from '@linode/api-v4';
 
 interface DisableDomainDialogProps {
   domain: Domain | undefined;
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const DisableDomainDialog = React.memo(
   (props: DisableDomainDialogProps) => {
-    const { domain, onClose, open } = props;
+    const { domain, isFetching, onClose, open } = props;
     const {
       error,
       isPending,
@@ -56,6 +57,7 @@ export const DisableDomainDialog = React.memo(
           />
         }
         error={error?.[0]?.reason}
+        isFetching={isFetching}
         onClose={onClose}
         open={open}
         title={`Disable Domain ${domain?.domain}?`}

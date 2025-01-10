@@ -230,9 +230,7 @@ export const getDatabasesDescription = (
 };
 
 export const hasPendingUpdates = (pendingUpdates?: PendingUpdates[]) =>
-  Boolean(
-    pendingUpdates?.some((update) => update.deadline || update.planned_for)
-  );
+  Boolean(pendingUpdates && pendingUpdates?.length > 0);
 
 export const isDefaultDatabase = (
   database: Pick<DatabaseInstance, 'platform'>

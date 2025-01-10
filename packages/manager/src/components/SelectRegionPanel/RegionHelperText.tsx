@@ -11,11 +11,15 @@ interface RegionHelperTextProps extends BoxProps {
 }
 
 export const RegionHelperText = (props: RegionHelperTextProps) => {
-  const { onClick, showCoreHelperText, ...rest } = props;
+  const { onClick, showCoreHelperText, sx, ...rest } = props;
 
   return (
-    <Box {...rest}>
-      <Typography data-testid="region-select-helper-test" variant="body1">
+    <Box {...rest} component="span" sx={{ ...sx, display: 'block' }}>
+      <Typography
+        component="span"
+        data-testid="region-select-helper-test"
+        variant="body1"
+      >
         {showCoreHelperText &&
           `Data centers in central locations support a robust set of cloud computing services. `}
         You can use

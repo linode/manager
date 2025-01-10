@@ -31,6 +31,7 @@ import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
+import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
@@ -39,7 +40,6 @@ import { migrationRouter } from './routes';
 
 import type { Theme } from '@mui/material/styles';
 import type { AnyRouter } from '@tanstack/react-router';
-import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -131,11 +131,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Domains = React.lazy(() =>
-  import('src/features/Domains').then((module) => ({
-    default: module.DomainsRoutes,
-  }))
-);
 const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() =>
   import('src/features/Kubernetes').then((module) => ({
@@ -205,7 +200,9 @@ const IAM = React.lazy(() =>
 
 export const MainContent = () => {
   const { classes, cx } = useStyles();
-  const { data: preferences } = usePreferences();
+  const { data: isDesktopSidebarOpenPreference } = usePreferences(
+    (preferences) => preferences?.desktop_sidebar_open
+  );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const queryClient = useQueryClient();
 
@@ -287,11 +284,11 @@ export const MainContent = () => {
     return <MaintenanceScreen />;
   }
 
-  const desktopMenuIsOpen = preferences?.desktop_sidebar_open ?? false;
+  const desktopMenuIsOpen = isDesktopSidebarOpenPreference ?? false;
 
   const desktopMenuToggle = () => {
     updatePreferences({
-      desktop_sidebar_open: !preferences?.desktop_sidebar_open,
+      desktop_sidebar_open: !isDesktopSidebarOpenPreference,
     });
   };
 
@@ -341,7 +338,6 @@ export const MainContent = () => {
                             component={NodeBalancers}
                             path="/nodebalancers"
                           />
-                          <Route component={Domains} path="/domains" />
                           <Route component={Managed} path="/managed" />
                           <Route component={Longview} path="/longview" />
                           <Route component={Images} path="/images" />

@@ -17,8 +17,9 @@ import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 import { pluralize } from 'src/utilities/pluralize';
 
-import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,
   StyledColumnLabelGrid,
@@ -41,6 +42,7 @@ import type {
   EncryptionStatus,
   Interface,
   Linode,
+  LinodeCapabilities,
 } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
 import type { TypographyProps } from '@linode/ui';
@@ -66,6 +68,7 @@ export interface BodyProps {
   ipv6: Linode['ipv6'];
   isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
   isVPCOnlyLinode: boolean;
+  linodeCapabilities: LinodeCapabilities[];
   linodeId: number;
   linodeIsInDistributedRegion: boolean;
   linodeLabel: string;
@@ -85,6 +88,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     ipv6,
     isLKELinode,
     isVPCOnlyLinode,
+    linodeCapabilities,
     linodeId,
     linodeIsInDistributedRegion,
     linodeLabel,
@@ -95,7 +99,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   } = props;
 
   const { data: profile } = useProfile();
-  const { data: preferences } = usePreferences();
+  const { data: maskSensitiveDataPreference } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
+  );
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
@@ -151,9 +157,23 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               <Typography>{gbRAM} GB RAM</Typography>
             </Grid>
             <Grid lg={6} sm={12} xs={6}>
-              <Typography>
-                {pluralize('Volume', 'Volumes', numVolumes)}
-              </Typography>
+              <Box
+                sx={(theme) => ({
+                  alignItems: 'center',
+                  display: 'flex',
+                  gap: theme.spacing(),
+                })}
+              >
+                <Typography>
+                  {pluralize('Volume', 'Volumes', numVolumes)}
+                </Typography>
+
+                {numVolumes > 0 && (
+                  <HighPerformanceVolumeIcon
+                    linodeCapabilities={linodeCapabilities}
+                  />
+                )}
+              </Box>
             </Grid>
             {isDiskEncryptionFeatureEnabled && encryptionStatus && (
               <Grid>
@@ -196,12 +216,12 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               }
               rows={[
                 {
-                  isMasked: preferences?.maskSensitiveData,
+                  isMasked: maskSensitiveDataPreference,
                   maskedTextLength: 'ipv4',
                   text: firstAddress,
                 },
                 {
-                  isMasked: preferences?.maskSensitiveData,
+                  isMasked: maskSensitiveDataPreference,
                   maskedTextLength: 'ipv6',
                   text: secondAddress,
                 },
@@ -215,13 +235,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               rows={[
                 {
                   heading: 'SSH Access',
-                  isMasked: preferences?.maskSensitiveData,
+                  isMasked: maskSensitiveDataPreference,
                   text: sshLink(ipv4[0]),
                 },
                 {
                   heading: 'LISH Console via SSH',
                   isMasked: !linodeIsInDistributedRegion
-                    ? preferences?.maskSensitiveData
+                    ? maskSensitiveDataPreference
                     : false,
                   text: linodeIsInDistributedRegion
                     ? 'N/A'

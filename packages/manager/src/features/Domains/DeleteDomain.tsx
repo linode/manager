@@ -54,7 +54,6 @@ export const DeleteDomain = (props: DeleteDomainProps) => {
         onClose={() => setOpen(false)}
         onDelete={onDelete}
         open={open}
-        typeToConfirm
       />
     </>
   );
