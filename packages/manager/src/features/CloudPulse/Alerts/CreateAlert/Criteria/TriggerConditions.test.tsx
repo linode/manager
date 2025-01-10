@@ -15,6 +15,7 @@ import type { CreateAlertDefinitionForm } from '../types';
 const EvaluationPeriodTestId = 'evaluation-period';
 
 const PollingIntervalTestId = 'polling-interval';
+
 describe('Trigger Conditions', () => {
   const user = userEvent.setup();
 

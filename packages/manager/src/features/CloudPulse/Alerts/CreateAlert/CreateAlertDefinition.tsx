@@ -166,13 +166,13 @@ export const CreateAlertDefinition = () => {
     );
   }, [notificationChannelWatcher, notificationData]);
 
-  const onExitNotifications = React.useCallback(() => {
+  const onExitNotifications = () => {
     setOpenAddNotification(false);
-  }, []);
+  };
 
-  const onAddNotifications = React.useCallback(() => {
+  const onAddNotifications = () => {
     setOpenAddNotification(true);
-  }, []);
+  };
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
