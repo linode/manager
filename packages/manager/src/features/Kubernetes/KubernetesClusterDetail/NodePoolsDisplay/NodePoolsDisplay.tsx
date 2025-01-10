@@ -12,7 +12,7 @@ import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
 import { AutoscalePoolDialog } from './AutoscalePoolDialog';
 import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
-import { LabelsAndTaintsDrawer } from './LabelsAndTaints/LabelsAndTaintsDrawer';
+import { LabelAndTaintDrawer } from './LabelsAndTaints/LabelAndTaintDrawer';
 import { NodePool } from './NodePool';
 import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
@@ -168,7 +168,7 @@ export const NodePoolsDisplay = (props: Props) => {
         open={addDrawerOpen}
         regionsData={regionsData}
       />
-      <LabelsAndTaintsDrawer
+      <LabelAndTaintDrawer
         nodePool={selectedPool}
         onClose={() => setIsLabelsAndTaintsDrawerOpen(false)}
         open={isLabelsAndTaintsDrawerOpen}

@@ -5,6 +5,8 @@ import { Drawer } from 'src/components/Drawer';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
+import { LabelTable } from './LabelTable';
+
 import type { KubeNodePoolResponse } from '@linode/api-v4';
 
 export interface Props {
@@ -13,7 +15,7 @@ export interface Props {
   open: boolean;
 }
 
-export const LabelsAndTaintsDrawer = (props: Props) => {
+export const LabelAndTaintDrawer = (props: Props) => {
   const { nodePool, onClose, open } = props;
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
@@ -28,11 +30,17 @@ export const LabelsAndTaintsDrawer = (props: Props) => {
       open={open}
       title={`Labels and Taints: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
     >
-      <Typography>
+      <Typography
+        marginBottom={(theme) => theme.spacing(4)}
+        marginTop={(theme) => theme.spacing()}
+      >
         Labels and Taints will be applied to Nodes in this Node Pool. They can
         be further defined using the Kubernetes API, although edits with be
         overwritten when Nodes or Pools are recycled.
       </Typography>
+      <Typography variant="h3"> Labels </Typography>
+      <LabelTable labels={nodePool?.labels} />
+      <Typography variant="h3"> Taints </Typography>
     </Drawer>
   );
 };

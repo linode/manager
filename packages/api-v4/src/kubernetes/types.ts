@@ -2,6 +2,10 @@ import type { EncryptionStatus } from '../linodes';
 
 export type KubernetesTier = 'standard' | 'enterprise';
 
+export type Label = {
+  [key: string]: string;
+};
+
 export interface KubernetesCluster {
   created: string;
   updated: string;
@@ -22,6 +26,7 @@ export interface KubernetesCluster {
 export interface KubeNodePoolResponse {
   count: number;
   id: number;
+  labels: Label;
   nodes: PoolNodeResponse[];
   tags: string[];
   type: string;
