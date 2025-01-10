@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { placementGroupFactory, regionFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsEditDrawer } from './PlacementGroupsEditDrawer';
 
@@ -34,11 +34,7 @@ describe('PlacementGroupsCreateDrawer', () => {
   it('should render, have the proper fields populated with PG values, and have uneditable fields disabled', async () => {
     queryMocks.useParams.mockReturnValue({ id: '1' });
 
-    const {
-      getByLabelText,
-      getByRole,
-      getByText,
-    } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsEditDrawer
         selectedPlacementGroup={placementGroupFactory.build({
           id: 1,

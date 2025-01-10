@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { linodeFactory } from 'src/factories';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLinodesTableRow } from './PlacementGroupsLinodesTableRow';
 
@@ -27,8 +27,8 @@ const defaultProps = {
 };
 
 describe('PlacementGroupsLinodesTableRow', () => {
-  it('should feature the right table row data', async () => {
-    const { getAllByRole } = await renderWithThemeAndRouter(
+  it('should feature the right table row data', () => {
+    const { getAllByRole } = renderWithTheme(
       wrapWithTableBody(<PlacementGroupsLinodesTableRow {...defaultProps} />)
     );
 

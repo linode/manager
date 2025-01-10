@@ -6,7 +6,7 @@ import {
   placementGroupFactory,
   regionFactory,
 } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsAssignLinodesDrawer } from './PlacementGroupsAssignLinodesDrawer';
 
@@ -42,12 +42,12 @@ vi.mock('src/queries/placementGroups', async () => {
 });
 
 describe('PlacementGroupsAssignLinodesDrawer', () => {
-  it('should render the error state', async () => {
+  it('should render the error state', () => {
     queryMocks.useAllLinodesQuery.mockReturnValue({
       error: [{ reason: 'Not found' }],
     });
 
-    const { container } = await renderWithThemeAndRouter(
+    const { container } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
         onClose={vi.fn()}
         open={true}
@@ -59,7 +59,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it('should render the drawer components', async () => {
+  it('should render the drawer components', () => {
     queryMocks.useAllLinodesQuery.mockReturnValue({
       data: [
         linodeFactory.build({ id: 1, label: 'Linode-1', region: 'us-east' }),
@@ -117,11 +117,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       })
     );
 
-    const {
-      getByPlaceholderText,
-      getByRole,
-      getByText,
-    } = await renderWithThemeAndRouter(
+    const { getByPlaceholderText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
         selectedPlacementGroup={placementGroupFactory.build({
           label: 'PG-1',

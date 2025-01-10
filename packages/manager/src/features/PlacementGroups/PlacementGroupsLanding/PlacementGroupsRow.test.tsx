@@ -6,7 +6,7 @@ import {
   regionFactory,
 } from 'src/factories';
 import {
-  renderWithThemeAndRouter,
+  renderWithTheme,
   resizeScreenSize,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
@@ -43,13 +43,9 @@ const region = regionFactory.build({
 });
 
 describe('PlacementGroupsRow', () => {
-  it('renders the columns with proper data', async () => {
+  it('renders the columns with proper data', () => {
     resizeScreenSize(1200);
-    const {
-      getByRole,
-      getByTestId,
-      getByText,
-    } = await renderWithThemeAndRouter(
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
         <PlacementGroupsRow
           assignedLinodes={[linode]}

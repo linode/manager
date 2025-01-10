@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { placementGroupFactory, regionFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDetailPanel } from './PlacementGroupsDetailPanel';
 
@@ -96,8 +96,8 @@ describe('PlacementGroupsDetailPanel', () => {
     });
   });
 
-  it('should have its select disabled and no create PG button on initial render', async () => {
-    const { getByRole, queryByRole } = await renderWithThemeAndRouter(
+  it('should have its select disabled and no create PG button on initial render', () => {
+    const { getByRole, queryByRole } = renderWithTheme(
       <PlacementGroupsDetailPanel {...defaultProps} />
     );
 
@@ -107,8 +107,8 @@ describe('PlacementGroupsDetailPanel', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('should have its select enabled and a create PG button when provided a region', async () => {
-    const { getByRole } = await renderWithThemeAndRouter(
+  it('should have its select enabled and a create PG button when provided a region', () => {
+    const { getByRole } = renderWithTheme(
       <PlacementGroupsDetailPanel
         {...defaultProps}
         selectedRegionId="us-east"
@@ -121,12 +121,8 @@ describe('PlacementGroupsDetailPanel', () => {
     ).toBeEnabled();
   });
 
-  it('should have its select disabled and no create PG button when provided a region without PG capability', async () => {
-    const {
-      getByRole,
-      getByTestId,
-      queryByRole,
-    } = await renderWithThemeAndRouter(
+  it('should have its select disabled and no create PG button when provided a region without PG capability', () => {
+    const { getByRole, getByTestId, queryByRole } = renderWithTheme(
       <PlacementGroupsDetailPanel
         {...defaultProps}
         selectedRegionId="us-southeast"
@@ -144,8 +140,8 @@ describe('PlacementGroupsDetailPanel', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('should have its PG select enabled and Create Placement Group button disabled if the region has reached its PG capacity', async () => {
-    const { getByPlaceholderText, getByRole } = await renderWithThemeAndRouter(
+  it('should have its PG select enabled and Create Placement Group button disabled if the region has reached its PG capacity', () => {
+    const { getByPlaceholderText, getByRole } = renderWithTheme(
       <PlacementGroupsDetailPanel
         {...defaultProps}
         selectedRegionId="us-west"

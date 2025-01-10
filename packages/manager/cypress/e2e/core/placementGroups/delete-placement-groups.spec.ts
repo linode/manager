@@ -137,7 +137,7 @@ describe('Placement Group deletion', () => {
    * - Confirms that UI automatically updates to reflect deleted Placement Group.
    * - Confirms that user can retry and continue with unassignment when unexpected error happens.
    */
-  it.only('can delete with Linodes assigned when unexpected error show up and retry', () => {
+  it('can delete with Linodes assigned when unexpected error show up and retry', () => {
     const mockPlacementGroupRegion = chooseRegion();
 
     // Linodes that are assigned to the Placement Group being deleted.

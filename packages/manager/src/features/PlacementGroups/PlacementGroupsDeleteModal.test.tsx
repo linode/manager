@@ -2,7 +2,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { linodeFactory, placementGroupFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDeleteModal } from './PlacementGroupsDeleteModal';
 
@@ -45,16 +45,12 @@ const props = {
 };
 
 describe('PlacementGroupsDeleteModal', () => {
-  it('should render the right form elements', async () => {
+  it('should render the right form elements', () => {
     queryMocks.usePreferences.mockReturnValue({
       data: preference,
     });
 
-    const {
-      getByRole,
-      getByTestId,
-      getByText,
-    } = await renderWithThemeAndRouter(
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
       <PlacementGroupsDeleteModal
         {...props}
         linodes={[
@@ -103,7 +99,7 @@ describe('PlacementGroupsDeleteModal', () => {
       data: preference,
     });
 
-    const { getByRole, getByTestId } = await renderWithThemeAndRouter(
+    const { getByRole, getByTestId } = renderWithTheme(
       <PlacementGroupsDeleteModal
         {...props}
         linodes={[
