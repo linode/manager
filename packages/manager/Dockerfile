@@ -5,9 +5,6 @@ ARG IMAGE_REGISTRY=docker.io
 # Node.js version to use.
 ARG NODE_VERSION=20.17.0
 
-# Cypress version to use.
-ARG CYPRESS_VERSION=13.16.1
-
 # Node.js base image for Cloud Manager CI tasks.
 #
 # Extends from the Node.js base image that corresponds with our latest supported
@@ -39,6 +36,7 @@ CMD yarn start:manager:ci
 # Builds an image containing Cypress and miscellaneous system utilities required
 # by the tests.
 FROM nodejs-cloud-manager as e2e-build
+ENV CYPRESS_INSTALL_VERSION=13.16.1
 RUN apt-get update
 RUN apt-get install -y wget gnupg2
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
@@ -49,7 +47,7 @@ RUN rm -rf /var/cache/apt/*
 RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get clean
 USER node
-RUN npm install -g "cypress@$CYPRESS_VERSION"
+RUN npm install -g "cypress@$CYPRESS_INSTALL_VERSION"
 WORKDIR /home/node/app
 VOLUME /home/node/app
 ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
