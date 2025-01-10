@@ -54,7 +54,7 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
   const isLinodeReadOnly = useIsResourceRestricted({
     grantLevel: 'read_write',
     grantType: 'linode',
-    id: linodeId ? +linodeId : -1,
+    id: linodeId ? linodeId : -1,
   });
 
   const actions = (

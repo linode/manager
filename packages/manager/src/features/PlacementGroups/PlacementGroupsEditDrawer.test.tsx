@@ -11,16 +11,7 @@ const queryMocks = vi.hoisted(() => ({
     mutateAsync: vi.fn().mockResolvedValue({}),
     reset: vi.fn(),
   }),
-  useParams: vi.fn().mockReturnValue({}),
 }));
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useParams: queryMocks.useParams,
-  };
-});
 
 vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
@@ -30,10 +21,8 @@ vi.mock('src/queries/placementGroups', async () => {
   };
 });
 
-describe('PlacementGroupsCreateDrawer', () => {
+describe('PlacementGroupsEditDrawer', () => {
   it('should render, have the proper fields populated with PG values, and have uneditable fields disabled', async () => {
-    queryMocks.useParams.mockReturnValue({ id: '1' });
-
     const { getByLabelText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsEditDrawer
         selectedPlacementGroup={placementGroupFactory.build({

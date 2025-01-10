@@ -14,7 +14,13 @@ const placementGroupAction = {
   edit: 'edit',
 } as const;
 
+const placementGroupLinodeAction = {
+  assign: 'assign',
+  unassign: 'unassign',
+} as const;
+
 export type PlacementGroupAction = typeof placementGroupAction[keyof typeof placementGroupAction];
+export type PlacementGroupLinodesAction = typeof placementGroupLinodeAction[keyof typeof placementGroupLinodeAction];
 
 export const placementGroupsRoute = createRoute({
   component: PlacementGroupsRoute,
@@ -86,33 +92,47 @@ const placementGroupsDetailRoute = createRoute({
   )
 );
 
-const placementGroupsDetailLinodesRoute = createRoute({
+type PlacementGroupLinodesActionRouteParams<P = number | string> = {
+  action: PlacementGroupLinodesAction;
+};
+
+const placementGroupLinodesActionBaseRoute = createRoute({
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in placementGroupLinodeAction)) {
+      throw redirect({
+        search: () => ({}),
+        to: `/placement-groups/${params.id}`,
+      });
+    }
+  },
   getParentRoute: () => placementGroupsDetailRoute,
-  path: 'linodes',
+  params: {
+    parse: ({ action }: PlacementGroupLinodesActionRouteParams<string>) => ({
+      action,
+    }),
+    stringify: ({
+      action,
+    }: PlacementGroupLinodesActionRouteParams<number>) => ({
+      action,
+    }),
+  },
+  path: 'linodes/$action',
+  validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
   import('./placementGroupsLazyRoutes').then(
     (m) => m.placementGroupsDetailLazyRoute
   )
 );
 
-const placementGroupsAssignRoute = createRoute({
-  getParentRoute: () => placementGroupsDetailLinodesRoute,
-  path: 'assign',
-}).lazy(() =>
-  import('./placementGroupsLazyRoutes').then(
-    (m) => m.placementGroupsUnassignLazyRoute
-  )
-);
-
 const placementGroupsUnassignRoute = createRoute({
-  getParentRoute: () => placementGroupsDetailLinodesRoute,
+  getParentRoute: () => placementGroupLinodesActionBaseRoute,
   parseParams: (params) => ({
     linodeId: Number(params.linodeId),
   }),
-  path: 'unassign/$linodeId',
+  path: '$linodeId',
 }).lazy(() =>
   import('./placementGroupsLazyRoutes').then(
-    (m) => m.placementGroupsUnassignLazyRoute
+    (m) => m.placementGroupsDetailLazyRoute
   )
 );
 
@@ -120,8 +140,8 @@ export const placementGroupsRouteTree = placementGroupsRoute.addChildren([
   placementGroupsIndexRoute.addChildren([placementGroupActionRoute]),
   placementGroupsCreateRoute,
   placementGroupsDetailRoute.addChildren([
-    placementGroupsDetailLinodesRoute,
-    placementGroupsAssignRoute,
-    placementGroupsUnassignRoute,
+    placementGroupLinodesActionBaseRoute.addChildren([
+      placementGroupsUnassignRoute,
+    ]),
   ]),
 ]);

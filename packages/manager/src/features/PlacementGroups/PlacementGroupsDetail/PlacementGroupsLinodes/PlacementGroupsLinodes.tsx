@@ -1,11 +1,6 @@
 import { Button, Stack } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearch,
-} from '@tanstack/react-router';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -46,7 +41,6 @@ type PlacementGroupLinodesSearchParams = PlacementGroupsSearchParams;
 export const PlacementGroupsLinodes = (props: Props) => {
   const { isLinodeReadOnly, placementGroup, region } = props;
   const navigate = useNavigate();
-  const location = useLocation();
   const params = useParams({ strict: false });
 
   const search: PlacementGroupLinodesSearchParams = useSearch({
@@ -125,17 +119,21 @@ export const PlacementGroupsLinodes = (props: Props) => {
 
   const handleAssignLinodesDrawer = () => {
     navigate({
-      params: { id: placementGroup.id },
+      params: { action: 'assign', id: placementGroup.id },
       search: (prev) => prev,
-      to: '/placement-groups/$id/linodes/assign',
+      to: '/placement-groups/$id/linodes/$action',
     });
   };
 
   const handleUnassignLinodeModal = (linode: Linode) => {
     navigate({
-      params: { id: placementGroup.id, linodeId: linode.id },
+      params: {
+        action: 'unassign',
+        id: placementGroup.id,
+        linodeId: linode.id,
+      },
       search: (prev) => prev,
-      to: '/placement-groups/$id/linodes/unassign/$linodeId',
+      to: '/placement-groups/$id/linodes/$action/$linodeId',
     });
   };
 
@@ -146,9 +144,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
       to: PLACEMENT_GROUPS_DETAILS_ROUTE,
     });
   };
-
-  const isAssignLinodesDrawerOpen = location.pathname.includes('/assign');
-  const isUnassignLinodesDrawerOpen = location.pathname.includes('/unassign');
 
   return (
     <Stack spacing={2}>
@@ -196,14 +191,14 @@ export const PlacementGroupsLinodes = (props: Props) => {
       />
       <PlacementGroupsAssignLinodesDrawer
         onClose={handleCloseDrawer}
-        open={isAssignLinodesDrawerOpen}
+        open={params.action === 'assign'}
         region={region}
         selectedPlacementGroup={placementGroup}
       />
       <PlacementGroupsUnassignModal
         isFetching={isFetchingLinode}
         onClose={handleCloseDrawer}
-        open={isUnassignLinodesDrawerOpen}
+        open={params.action === 'unassign'}
         selectedLinode={selectedLinode}
       />
     </Stack>

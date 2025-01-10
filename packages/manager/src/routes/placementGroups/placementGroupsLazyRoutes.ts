@@ -9,12 +9,6 @@ export const placementGroupsDetailLazyRoute = createLazyRoute(
   component: PlacementGroupsDetail,
 });
 
-export const placementGroupsUnassignLazyRoute = createLazyRoute(
-  '/placement-groups/$id/linodes/unassign/$linodeId'
-)({
-  component: PlacementGroupsDetail,
-});
-
 export const placementGroupsLandingLazyRoute = createLazyRoute(
   '/placement-groups'
 )({

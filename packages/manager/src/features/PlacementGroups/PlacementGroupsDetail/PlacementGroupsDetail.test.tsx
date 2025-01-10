@@ -11,8 +11,6 @@ import { PlacementGroupsDetail } from './PlacementGroupsDetail';
 
 const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
-  useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups/1' }),
-  useNavigate: vi.fn(),
   useParams: vi.fn().mockReturnValue({ id: 1 }),
   usePlacementGroupQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
@@ -39,7 +37,6 @@ vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
-    useNavigate: queryMocks.useNavigate,
     useParams: queryMocks.useParams,
     useSearch: queryMocks.useSearch,
   };

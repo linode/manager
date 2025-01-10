@@ -7,7 +7,6 @@ import { PlacementGroupsLanding } from './PlacementGroupsLanding';
 import { headers } from './PlacementGroupsLandingEmptyStateData';
 
 const queryMocks = vi.hoisted(() => ({
-  useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups' }),
   useParams: vi.fn().mockReturnValue({}),
   usePlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));

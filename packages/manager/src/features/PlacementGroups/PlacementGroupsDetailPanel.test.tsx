@@ -12,26 +12,8 @@ const defaultProps = {
 
 const queryMocks = vi.hoisted(() => ({
   useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
-  useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups/1' }),
-  useParams: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
-
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useLocation: queryMocks.useLocation,
-  };
-});
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useParams: queryMocks.useParams,
-  };
-});
 
 vi.mock('src/queries/regions/regions', async () => {
   const actual = await vi.importActual('src/queries/regions/regions');
