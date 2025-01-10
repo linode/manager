@@ -124,12 +124,6 @@ module.exports = {
                 name: 'react-router-dom',
               },
               {
-                importNames: ['renderWithTheme'],
-                message:
-                  'Please use the wrapWithThemeAndRouter helper function for testing components being migrated to TanStack Router.',
-                name: 'src/utilities/testHelpers',
-              },
-              {
                 importNames: ['TabLinkList'],
                 message:
                   'Please use the TanStackTabLinkList component for components being migrated to TanStack Router.',
