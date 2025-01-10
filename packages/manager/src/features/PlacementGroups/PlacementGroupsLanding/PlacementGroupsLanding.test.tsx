@@ -5,7 +5,6 @@ import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLanding } from './PlacementGroupsLanding';
 import { headers } from './PlacementGroupsLandingEmptyStateData';
-import { TanstackLink } from 'src/components/TanstackLinks';
 
 const queryMocks = vi.hoisted(() => ({
   useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups' }),
@@ -21,27 +20,11 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useLocation: queryMocks.useLocation,
-  };
-});
-
 vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
     usePlacementGroupsQuery: queryMocks.usePlacementGroupsQuery,
-  };
-});
-
-vi.mock('src/components/Link', async () => {
-  const actual = await vi.importActual('src/components/Link');
-  return {
-    ...actual,
-    Link: TanstackLink,
   };
 });
 

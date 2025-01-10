@@ -18,6 +18,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, MemoryRouter, Route } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { BrowserRouter } from 'react-router-dom';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { queryClientFactory } from 'src/queries/base';

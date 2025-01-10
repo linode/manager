@@ -12,9 +12,11 @@ import { PlacementGroupsDetail } from './PlacementGroupsDetail';
 const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
   useLocation: vi.fn().mockReturnValue({ pathname: '/placement-groups/1' }),
-  useParams: vi.fn().mockReturnValue({}),
+  useNavigate: vi.fn(),
+  useParams: vi.fn().mockReturnValue({ id: 1 }),
   usePlacementGroupQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({ query: undefined }),
 }));
 
 vi.mock('src/queries/placementGroups', async () => {
@@ -37,15 +39,9 @@ vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
+    useNavigate: queryMocks.useNavigate,
     useParams: queryMocks.useParams,
-  };
-});
-
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useLocation: queryMocks.useLocation,
+    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -57,13 +53,10 @@ vi.mock('src/queries/regions/regions', async () => {
   };
 });
 
-describe('PlacementGroupsLanding', () => {
+describe('PlacementGroupsDetail', () => {
   it('renders a error page', async () => {
     const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsDetail />,
-      {
-        initialRoute: '/placement-groups/1',
-      }
+      <PlacementGroupsDetail />
     );
 
     expect(getByText('Not Found')).toBeInTheDocument();
@@ -74,7 +67,6 @@ describe('PlacementGroupsLanding', () => {
       data: placementGroupFactory.build({
         id: 1,
       }),
-
       isLoading: true,
     });
     queryMocks.useAllLinodesQuery.mockReturnValue({
@@ -95,10 +87,7 @@ describe('PlacementGroupsLanding', () => {
     });
 
     const { getByRole } = await renderWithThemeAndRouter(
-      <PlacementGroupsDetail />,
-      {
-        initialRoute: '/placement-groups/1',
-      }
+      <PlacementGroupsDetail />
     );
 
     expect(getByRole('progressbar')).toBeInTheDocument();
@@ -113,12 +102,16 @@ describe('PlacementGroupsLanding', () => {
         placement_group_type: 'anti_affinity:local',
       }),
     });
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: [],
+      isLoading: false,
+      page: 1,
+      pages: 1,
+      results: 0,
+    });
 
     const { getByText } = await renderWithThemeAndRouter(
-      <PlacementGroupsDetail />,
-      {
-        initialRoute: '/placement-groups/1',
-      }
+      <PlacementGroupsDetail />
     );
 
     expect(getByText(/my first pg/i)).toBeInTheDocument();

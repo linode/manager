@@ -21,8 +21,7 @@ import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroups
 import { PlacementGroupsSummary } from './PlacementGroupsSummary/PlacementGroupsSummary';
 
 export const PlacementGroupsDetail = () => {
-  const { id } = useParams({ from: '/placement-groups/$id' });
-  const placementGroupId = +id;
+  const { id: placementGroupId } = useParams({ from: '/placement-groups/$id' });
 
   const {
     data: placementGroup,
