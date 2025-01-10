@@ -1,13 +1,24 @@
 import { Button, Stack } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearch,
+} from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
+import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import {
+  useAllLinodesQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
@@ -36,6 +47,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
   const { isLinodeReadOnly, placementGroup, region } = props;
   const navigate = useNavigate();
   const location = useLocation();
+  const params = useParams({ strict: false });
 
   const search: PlacementGroupLinodesSearchParams = useSearch({
     from: PLACEMENT_GROUPS_DETAILS_ROUTE,
@@ -53,6 +65,15 @@ export const PlacementGroupsLinodes = (props: Props) => {
     preferenceKey: `${PG_LINODES_TABLE_PREFERENCE_KEY}-order`,
   });
 
+  const pagination = usePaginationV2({
+    currentRoute: PLACEMENT_GROUPS_DETAILS_ROUTE,
+    preferenceKey: PG_LINODES_TABLE_PREFERENCE_KEY,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
+
   const filter: Filter = {
     ['+or']: placementGroup?.members.map((member) => ({
       id: member.linode_id,
@@ -63,7 +84,10 @@ export const PlacementGroupsLinodes = (props: Props) => {
   };
 
   const { data: linodes, isFetching: isFetchingLinodes } = useAllLinodesQuery(
-    {},
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
     filter
   );
 
@@ -71,9 +95,12 @@ export const PlacementGroupsLinodes = (props: Props) => {
     placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
   );
 
-  const [selectedLinode, setSelectedLinode] = React.useState<
-    Linode | undefined
-  >();
+  const { data: selectedLinode, isFetching: isFetchingLinode } = useDialogData({
+    enabled: !!params.linodeId,
+    paramKey: 'linodeId',
+    queryHook: useLinodeQuery,
+    redirectToOnNotFound: '/placement-groups/$id',
+  });
 
   if (!placementGroup) {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
@@ -103,22 +130,23 @@ export const PlacementGroupsLinodes = (props: Props) => {
       to: '/placement-groups/$id/linodes/assign',
     });
   };
+
   const handleUnassignLinodeModal = (linode: Linode) => {
-    setSelectedLinode(linode);
     navigate({
       params: { id: placementGroup.id, linodeId: linode.id },
       search: (prev) => prev,
       to: '/placement-groups/$id/linodes/unassign/$linodeId',
     });
   };
+
   const handleCloseDrawer = () => {
-    setSelectedLinode(undefined);
     navigate({
       params: { id: placementGroup.id },
       search: (prev) => prev,
       to: PLACEMENT_GROUPS_DETAILS_ROUTE,
     });
   };
+
   const isAssignLinodesDrawerOpen = location.pathname.includes('/assign');
   const isUnassignLinodesDrawerOpen = location.pathname.includes('/unassign');
 
@@ -158,6 +186,14 @@ export const PlacementGroupsLinodes = (props: Props) => {
         linodes={assignedLinodes ?? []}
         orderByProps={{ handleOrderChange, order, orderBy }}
       />
+      <PaginationFooter
+        count={assignedLinodes?.length ?? 0}
+        eventCategory="Placement Group Linodes Table"
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+      />
       <PlacementGroupsAssignLinodesDrawer
         onClose={handleCloseDrawer}
         open={isAssignLinodesDrawerOpen}
@@ -165,6 +201,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
         selectedPlacementGroup={placementGroup}
       />
       <PlacementGroupsUnassignModal
+        isFetching={isFetchingLinode}
         onClose={handleCloseDrawer}
         open={isUnassignLinodesDrawerOpen}
         selectedLinode={selectedLinode}

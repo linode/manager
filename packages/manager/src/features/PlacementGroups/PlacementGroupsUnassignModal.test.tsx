@@ -41,6 +41,7 @@ describe('PlacementGroupsUnassignModal', () => {
 
     const { getByLabelText, getByRole } = await renderWithThemeAndRouter(
       <PlacementGroupsUnassignModal
+        isFetching={false}
         onClose={() => null}
         open
         selectedLinode={undefined}
