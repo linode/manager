@@ -52,7 +52,9 @@ export const Creatable: Story = {
             onChange={(_, newValue) =>
               setValue({
                 label: newValue?.label ?? '',
-                value: newValue?.value.replace(' ', '-').toLowerCase() ?? '',
+                value:
+                  newValue?.value.toString().replace(' ', '-').toLowerCase() ??
+                  '',
               })
             }
             textFieldProps={{
