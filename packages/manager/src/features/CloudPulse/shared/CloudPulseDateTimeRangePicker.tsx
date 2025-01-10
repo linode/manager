@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import React from 'react';
 
 import { DateTimeRangePicker } from 'src/components/DatePicker/DateTimeRangePicker';
+import { useProfile } from 'src/queries/profile/profile';
 
 import type { FilterValue, TimeDurationDate } from '@linode/api-v4';
 
@@ -18,6 +19,8 @@ interface CloudPulseDateTimeRangePickerProps {
 export const CloudPulseDateTimeRangePicker = React.memo(
   (props: CloudPulseDateTimeRangePickerProps) => {
     const { defaultValue, handleStatsChange, savePreferences } = props;
+    const { data: profile } = useProfile();
+    const timezone = profile?.timezone ?? DateTime.local().zoneName;
     const defaultSelected: TimeDurationDate = defaultValue as TimeDurationDate;
     React.useEffect(() => {
       if (defaultSelected) {
@@ -33,6 +36,7 @@ export const CloudPulseDateTimeRangePicker = React.memo(
         endDateProps={{
           label: 'End Date',
           placeholder: 'Select End Date',
+          showTimeZone: true,
           value: end,
         }}
         onChange={({ end, preset, start }) => {
@@ -54,12 +58,15 @@ export const CloudPulseDateTimeRangePicker = React.memo(
         startDateProps={{
           label: 'Start Date',
           placeholder: 'Select Start Date',
+          showTimeZone: true,
+          timeZoneValue: timezone,
           value: start,
         }}
         sx={{
           minWidth: '226px',
         }}
         enablePresets
+        readOnlyTimezone
       />
     );
   }
