@@ -251,7 +251,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
         expect(metric).to.equal(metricData.name);
         expect(timeRange).to.have.property('unit', 'min');
         expect(timeRange).to.have.property('value', 30);
-        expect(interception.request.body.resource_ids).to.deep.equal([1]);
+        expect(interception.request.body.entity_ids).to.deep.equal([1]);
         expect('avg').to.equal(interception.request.body.aggregate_function);
       });
   });
