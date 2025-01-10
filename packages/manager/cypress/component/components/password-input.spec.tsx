@@ -162,8 +162,20 @@ componentTests('PasswordInput', (mount) => {
         checkComponentA11y();
       });
 
-      it('passes aXe check when strength is hidden', () => {
+      it('passes aXe check when password input is designated as required', () => {
+        mount(<PasswordInput {...props} required />);
+
+        checkComponentA11y();
+      });
+
+      it('passes aXe check when strength value is hidden', () => {
         mount(<PasswordInput {...props} hideValidation />);
+
+        checkComponentA11y();
+      });
+
+      it('passes aXe check when strength label is shown', () => {
+        mount(<PasswordInput {...props} hideStrengthLabel={false} />);
 
         checkComponentA11y();
       });
