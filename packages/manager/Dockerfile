@@ -49,7 +49,7 @@ RUN rm -rf /var/cache/apt/*
 RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get clean
 USER node
-RUN npm install -g cypress@${CYPRESS_VERSION}
+RUN npm install -g "cypress@$CYPRESS_VERSION"
 WORKDIR /home/node/app
 VOLUME /home/node/app
 ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
