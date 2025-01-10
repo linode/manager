@@ -17,7 +17,20 @@ import type { TextFieldProps } from '../TextField';
 import type {
   AutocompleteProps,
   AutocompleteRenderInputParams,
+  AutocompleteValue,
 } from '@mui/material/Autocomplete';
+
+type Option<T = number | string> = {
+  label: string;
+  value: T;
+};
+
+export type AutocompleteOption<
+  T = number | string,
+  Nullable extends boolean = false
+> = Nullable extends true
+  ? AutocompleteValue<Option<T>, false, false, false>
+  : Option<T>;
 
 export interface EnhancedAutocompleteProps<
   T extends { label: string },

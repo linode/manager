@@ -10,7 +10,7 @@ import type { EnhancedAutocompleteProps } from '../Autocomplete';
 
 export type SelectOptionType = {
   label: string;
-  value: string;
+  value: number | string;
 };
 interface InternalOptionType extends SelectOptionType {
   /**
@@ -29,6 +29,7 @@ interface InternalOptionType extends SelectOptionType {
 export interface SelectProps
   extends Pick<
     EnhancedAutocompleteProps<SelectOptionType>,
+    | 'disabled'
     | 'errorText'
     | 'helperText'
     | 'id'
@@ -265,13 +266,13 @@ const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
     const matchingOptions = options.filter(
       (opt) =>
         opt.label.toLowerCase().includes(inputValue.toLowerCase()) ||
-        opt.value.toLowerCase().includes(inputValue.toLowerCase())
+        opt.value.toString().toLowerCase().includes(inputValue.toLowerCase())
     );
 
     const exactMatch = matchingOptions.some(
       (opt) =>
         opt.label.toLowerCase() === inputValue.toLowerCase() ||
-        opt.value.toLowerCase() === inputValue.toLowerCase()
+        opt.value.toString().toLowerCase() === inputValue.toLowerCase()
     );
 
     // If there's an exact match, don't show is as a create option
