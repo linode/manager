@@ -299,6 +299,9 @@ describe('Placement Group deletion', () => {
               placementGroupAfterUnassignment,
               secondMockPlacementGroup,
             ]).as('getPlacementGroups');
+            mockGetPlacementGroup(placementGroupAfterUnassignment).as(
+              'getPlacementGroups'
+            );
 
             cy.findByText(mockLinode.label)
               .should('be.visible')
