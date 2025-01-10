@@ -3,6 +3,7 @@ import {
   CircleProgress,
   Divider,
   Notice,
+  Select,
   TextField,
   Typography,
 } from '@linode/ui';
@@ -13,7 +14,6 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -32,7 +32,7 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { IPRangeInformation } from '@linode/api-v4/lib/networking';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { AutocompleteOption } from '@linode/ui';
 
 interface Props {
   linodeId: number;
@@ -165,7 +165,7 @@ const IPSharingPanel = (props: Props) => {
     }
   }, [ips, ranges]);
 
-  const onIPSelect = (ipIdx: number, e: Item<string>) => {
+  const onIPSelect = (ipIdx: number, e: AutocompleteOption<string>) => {
     setIpsToShare((currentIps) => {
       return ipIdx >= currentIps.length
         ? [...currentIps, e.value]
@@ -470,7 +470,7 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
 interface SharingRowProps extends RowProps {
   getRemainingChoices: (ip: string | undefined) => string[];
   handleDelete?: (idx: number) => void;
-  handleSelect: (idx: number, selected: Item<string>) => void;
+  handleSelect: (idx: number, selected: AutocompleteOption<string>) => void;
   idx: number;
   labels: Record<string, string>;
   readOnly: boolean;
@@ -506,6 +506,9 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       </Grid>
       <Grid sm={10} xs={12}>
         <StyledSelect
+          onChange={(_, selected: AutocompleteOption<string>) =>
+            handleSelect(idx, selected)
+          }
           textFieldProps={{
             dataAttrs: {
               'data-qa-share-ip': true,
@@ -513,12 +516,8 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
           }}
           disabled={readOnly}
           hideLabel
-          inputId={`ip-select-${idx}`}
-          isClearable={false}
           label="Select an IP"
-          onChange={(selected: Item<string>) => handleSelect(idx, selected)}
           options={ipList}
-          overflowPortal
           placeholder="Select an IP"
           value={selectedIP}
         />
