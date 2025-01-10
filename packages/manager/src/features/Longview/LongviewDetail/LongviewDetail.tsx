@@ -295,12 +295,16 @@ export const LongviewDetail = (props: CombinedProps) => {
   );
 };
 
+type LongviewDetailParams = {
+  id: string;
+};
+
 const EnhancedLongviewDetail = compose<CombinedProps, {}>(
   React.memo,
-  withClientStats((ownProps) => {
+  withClientStats<{ params: LongviewDetailParams }>((ownProps) => {
     return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
   }),
-  withLongviewClients<Props, any>(
+  withLongviewClients<Props, { params: LongviewDetailParams }>(
     (
       own,
       {

@@ -31,7 +31,8 @@ export interface Tab {
 }
 
 /**
- * This hook is a necessary evil to sync routing and tabs.
+ * This hook is a necessary evil to sync routing and tabs,
+ * since Reach Tabs maintains its own index state.
  */
 export function useTabs<T extends Tab>(tabs: T[]) {
   const matchRoute = useMatchRoute();
