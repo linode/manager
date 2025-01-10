@@ -4,9 +4,10 @@ import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
-  EvaluationPeriodOptions,
-  PollingIntervalOptions,
+  evaluationPeriodOptions,
+  pollingIntervalOptions,
 } from '../../constants';
+import { getAlertBoxStyles } from '../../Utils/utils';
 
 import type { CreateAlertDefinitionForm } from '../types';
 import type {
@@ -34,14 +35,14 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
   });
   const getPollingIntervalOptions = () => {
     const options = serviceTypeWatcher
-      ? PollingIntervalOptions[serviceTypeWatcher]
+      ? pollingIntervalOptions[serviceTypeWatcher]
       : [];
     return options.filter((item) => item.value >= maxScrapingInterval);
   };
 
   const getEvaluationPeriodOptions = () => {
     const options = serviceTypeWatcher
-      ? EvaluationPeriodOptions[serviceTypeWatcher]
+      ? evaluationPeriodOptions[serviceTypeWatcher]
       : [];
     return options.filter((item) => item.value >= maxScrapingInterval);
   };
@@ -49,10 +50,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
   return (
     <Box
       sx={(theme) => ({
-        backgroundColor:
-          theme.name === 'light'
-            ? theme.tokens.color.Neutrals[5]
-            : theme.tokens.color.Neutrals.Black,
+        ...getAlertBoxStyles(theme),
         borderRadius: 1,
         marginTop: theme.spacing(2),
         p: 2,

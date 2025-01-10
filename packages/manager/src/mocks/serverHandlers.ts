@@ -107,6 +107,8 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
+import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
+import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { pickRandom } from 'src/utilities/random';
 
 import type {
@@ -128,7 +130,6 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -2439,6 +2440,10 @@ export const handlers = [
       ...customAlertsWithServiceType,
     ];
     return HttpResponse.json(makeResourcePage(alerts));
+  }),
+  http.get('*/monitor/alert-channels', () => {
+    const notificationChannels = notificationChannelFactory.buildList(2);
+    return HttpResponse.json(makeResourcePage(notificationChannels));
   }),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions/:id',

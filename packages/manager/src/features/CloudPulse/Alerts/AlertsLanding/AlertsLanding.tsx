@@ -84,7 +84,7 @@ export const AlertsLanding = React.memo(() => {
         <Switch>
           <Route
             component={AlertDefinitionLanding}
-            path={'/monitor/alerts/definitions'}
+            path="/monitor/alerts/definitions"
           />
           <Redirect from="*" to="/monitor/alerts/definitions" />
         </Switch>

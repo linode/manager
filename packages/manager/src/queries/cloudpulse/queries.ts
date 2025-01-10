@@ -5,6 +5,7 @@ import {
   getDashboards,
   getJWEToken,
   getMetricDefinitionsByServiceType,
+  getNotificationChannels,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
@@ -75,6 +76,10 @@ export const queryFactory = createQueryKeys(key, {
     queryFn: () => getMetricDefinitionsByServiceType(serviceType!),
     queryKey: [serviceType],
   }),
+  notificationChannels: {
+    queryFn: () => getNotificationChannels(),
+    queryKey: null,
+  },
 
   resources: (
     resourceType: string | undefined,

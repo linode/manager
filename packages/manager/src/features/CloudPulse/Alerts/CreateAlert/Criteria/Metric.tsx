@@ -5,9 +5,10 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
-  MetricAggregationOptions,
-  MetricOperatorOptions,
+  metricAggregationOptions,
+  metricOperatorOptions,
 } from '../../constants';
+import { getAlertBoxStyles } from '../../Utils/utils';
 import { ClearIconButton } from './ClearIconButton';
 import { DimensionFilters } from './DimensionFilter';
 
@@ -101,7 +102,7 @@ export const Metric = (props: MetricCriteriaProps) => {
     MetricAggregationType
   >[] => {
     return selectedMetric && selectedMetric.available_aggregate_functions
-      ? MetricAggregationOptions.filter((option) =>
+      ? metricAggregationOptions.filter((option) =>
           selectedMetric.available_aggregate_functions.includes(option.value)
         )
       : [];
@@ -111,10 +112,7 @@ export const Metric = (props: MetricCriteriaProps) => {
   return (
     <Box
       sx={(theme) => ({
-        backgroundColor:
-          theme.name === 'light'
-            ? theme.tokens.color.Neutrals[5]
-            : theme.tokens.color.Neutrals.Black,
+        ...getAlertBoxStyles(theme),
         borderRadius: 1,
         display: 'flex',
         flexDirection: 'column',
@@ -166,7 +164,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   noMarginTop
                   onBlur={field.onBlur}
                   options={metricOptions}
-                  placeholder="Select a Data field"
+                  placeholder="Select a Data Field"
                   size="medium"
                 />
               )}
@@ -199,7 +197,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   noMarginTop
                   onBlur={field.onBlur}
                   options={aggOptions}
-                  placeholder="Select an Aggregation type"
+                  placeholder="Select an Aggregation Type"
                   sx={{ paddingTop: { sm: 1, xs: 0 } }}
                 />
               )}
@@ -222,7 +220,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   }}
                   value={
                     field.value !== null
-                      ? MetricOperatorOptions.find(
+                      ? metricOperatorOptions.find(
                           (option) => option.value === field.value
                         )
                       : null
@@ -233,8 +231,8 @@ export const Metric = (props: MetricCriteriaProps) => {
                   label="Operator"
                   noMarginTop
                   onBlur={field.onBlur}
-                  options={MetricOperatorOptions}
-                  placeholder="Select an operator"
+                  options={metricOperatorOptions}
+                  placeholder="Select an Operator"
                   sx={{ paddingTop: { sm: 1, xs: 0 } }}
                 />
               )}
