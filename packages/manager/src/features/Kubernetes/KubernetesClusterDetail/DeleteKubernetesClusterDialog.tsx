@@ -55,6 +55,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
         subType: 'Cluster',
         type: 'Kubernetes',
       }}
+      expand
       label={'Cluster Name'}
       loading={isDeleting}
       onClick={onDelete}
