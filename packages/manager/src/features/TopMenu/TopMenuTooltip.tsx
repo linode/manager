@@ -23,6 +23,9 @@ export const TopMenuTooltip = React.memo(({ children, title }: Props) => {
 });
 
 export const topMenuIconButtonSx = (theme: Theme) => ({
+  '&:active': {
+    color: theme.tokens.header.Icon.Active,
+  },
   '&:hover, &:focus': {
     color: theme.tokens.header.Icon.Hover,
   },

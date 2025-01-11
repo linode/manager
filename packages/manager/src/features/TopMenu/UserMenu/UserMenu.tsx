@@ -179,10 +179,13 @@ export const UserMenu = React.memo(() => {
   };
 
   const getEndIcon = () => {
+    const iconStyles = {
+      color: open && theme.tokens.header.Text.Hover,
+    };
     return matchesSmDown ? undefined : open ? (
-      <KeyboardArrowUp style={{ color: theme.tokens.header.Icon.Default }} />
+      <KeyboardArrowUp style={iconStyles} />
     ) : (
-      <KeyboardArrowDown style={{ color: theme.tokens.header.Icon.Default }} />
+      <KeyboardArrowDown style={iconStyles} />
     );
   };
 
@@ -206,9 +209,25 @@ export const UserMenu = React.memo(() => {
       >
         <Button
           sx={{
-            alignItems: 'center',
-            height: '50px',
-            minWidth: 'unset',
+            '&:hover, &:focus, &:active': {
+              '.MuiButton-icon svg': {
+                color: theme.tokens.header.Text.Hover,
+              },
+              '.MuiStack-root .MuiTypography-root': {
+                color: theme.tokens.header.Text.Hover,
+              },
+            },
+            '.MuiButton-icon svg': {
+              color: theme.tokens.header.Text.Default,
+            },
+            '.MuiButton-startIcon': {
+              marginLeft: 0,
+            },
+            '.MuiStack-root .MuiTypography-root': {
+              color: open
+                ? theme.tokens.header.Text.Hover
+                : theme.tokens.header.Text.Default,
+            },
             padding: 0,
             textTransform: 'none',
             [theme.breakpoints.down('md')]: {
@@ -226,15 +245,10 @@ export const UserMenu = React.memo(() => {
           startIcon={isProxyUser ? <AvatarForProxy /> : <Avatar />}
         >
           <Hidden mdDown>
-            <Stack
-              sx={{
-                '& p': { color: theme.tokens.color.Neutrals[30] },
-              }}
-              alignItems={'flex-end'}
-            >
+            <Stack alignItems={'flex-end'}>
               <Typography
                 sx={{
-                  fontSize: companyNameOrEmail ? '0.775rem' : '0.875rem',
+                  font: theme.tokens.typography.Label.Semibold.Xs,
                 }}
               >
                 {userName}
@@ -242,8 +256,11 @@ export const UserMenu = React.memo(() => {
               {companyNameOrEmail && (
                 <Typography
                   sx={{
-                    font: `${theme.tokens.font.FontWeight.Bold} ${theme.tokens.font.FontSize.Xs} ${theme.tokens.font.FontFamily.Brand}, sans-serif`,
-                    textTransform: 'uppercase',
+                    font: theme.tokens.typography.Heading.Overline,
+                    letterSpacing:
+                      theme.tokens.typography.Heading.OverlineLetterSpacing,
+                    textTransform:
+                      theme.tokens.typography.Heading.OverlineTextCase,
                   }}
                 >
                   {truncateEnd(companyNameOrEmail, 24)}

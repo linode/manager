@@ -69,18 +69,21 @@ export const StyledSearchBarWrapperDiv = styled('div', {
     height: 20,
     width: 20,
   },
+  // '&:active': {
+  //   border: `1px solid ${theme.tokens.header.Search.Border.Active}`,
+  // },
   '&:hover': {
     ...theme.inputStyles.hover,
     '& svg': {
       color: theme.tokens.header.Icon.Default,
     },
     backgroundColor: theme.tokens.header.Search.Background,
-    border: 'none',
+    border: `1px solid ${theme.tokens.header.Search.Border.Hover}`,
   },
   ...theme.inputStyles.default,
   alignItems: 'center',
   backgroundColor: theme.tokens.header.Search.Background,
-  border: 'none',
+  border: `1px solid ${theme.tokens.header.Search.Border.Default}`,
   display: 'flex',
   flex: 1,
   height: 32,
