@@ -103,6 +103,10 @@ export const UserMenu = React.memo(() => {
     theme.breakpoints.down('sm')
   );
 
+  const matchesMdDown = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('md')
+  );
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -205,13 +209,19 @@ export const UserMenu = React.memo(() => {
             alignItems: 'center',
             height: '50px',
             minWidth: 'unset',
-            textTransform: 'none',
             padding: 0,
+            textTransform: 'none',
+            [theme.breakpoints.down('md')]: {
+              '.MuiButton-startIcon': {
+                margin: 0,
+              },
+              padding: theme.tokens.spacing[40],
+            },
           }}
           aria-describedby={id}
           data-testid="nav-group-profile"
           disableRipple
-          endIcon={getEndIcon()}
+          endIcon={!matchesMdDown && getEndIcon()}
           onClick={handleClick}
           startIcon={isProxyUser ? <AvatarForProxy /> : <Avatar />}
         >

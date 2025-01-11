@@ -8,8 +8,8 @@ export const StyledIconButton = styled(IconButton, {
     justifyContent: 'flex-end',
   },
   '& svg': {
-    height: 25,
-    width: 25,
+    height: 24,
+    width: 24,
   },
   '&:hover, &:focus': {
     color: theme.tokens.header.Search.Icon.Hover,
@@ -18,7 +18,7 @@ export const StyledIconButton = styled(IconButton, {
   border: 'none',
   color: theme.tokens.header.Search.Icon.Default,
   cursor: 'pointer',
-  padding: theme.spacing(0.75),
+  padding: theme.tokens.spacing[40],
   position: 'relative',
   [theme.breakpoints.up('md')]: {
     display: 'none',

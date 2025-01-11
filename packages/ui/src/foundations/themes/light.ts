@@ -29,6 +29,7 @@ import { latoWeb } from '../fonts';
 import type { ThemeOptions } from '@mui/material/styles';
 
 const inputMaxWidth = 416;
+const topMenuHeight = 56;
 
 export const bg = {
   app: Color.Neutrals[5],
@@ -336,6 +337,7 @@ export const lightTheme: ThemeOptions = {
         root: {
           backgroundColor: GlobalHeader.Background,
           color: GlobalHeader.Text.Default,
+          paddingRight: `0 !important`, // Avoid MUI from applying right padding causing this to jump
           position: 'relative',
         },
       },
@@ -1515,6 +1517,18 @@ export const lightTheme: ThemeOptions = {
         },
         scrollButtons: {
           flex: '0 0 40px',
+        },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          [breakpoints.down('md')]: {
+            padding: `0`,
+          },
+          height: topMenuHeight,
+          padding: `0 ${Spacing[60]}`,
+          width: '100%',
         },
       },
     },

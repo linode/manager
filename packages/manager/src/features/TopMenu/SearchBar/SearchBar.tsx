@@ -59,6 +59,7 @@ export const selectStyles = {
     backgroundColor: 'pink',
     border: 0,
     margin: 0,
+    transition: 'none',
     width: '100%',
   }),
   dropdownIndicator: () => ({ display: 'none' }),
@@ -316,6 +317,7 @@ const SearchBar = (props: SearchProps) => {
       <StyledIconButton
         aria-label="open menu"
         color="inherit"
+        disableRipple
         onClick={toggleSearch}
         size="large"
       >

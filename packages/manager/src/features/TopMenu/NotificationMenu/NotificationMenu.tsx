@@ -95,6 +95,7 @@ export const NotificationMenu = () => {
           aria-describedby={id}
           aria-haspopup="true"
           aria-label="Notifications"
+          disableRipple
           id={menuButtonId}
           onClick={handleNotificationMenuToggle}
           ref={anchorRef}
@@ -191,7 +192,7 @@ const StyledChip = styled(Chip, {
   left: 20,
   padding: 0,
   position: 'absolute',
-  top: 0,
+  top: '-3px',
   width: props.showPlus ? 22 : 18,
 }));
 

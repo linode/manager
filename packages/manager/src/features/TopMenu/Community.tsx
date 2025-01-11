@@ -11,6 +11,7 @@ export const Community = () => {
     <TopMenuTooltip title="Linode Cloud Community (opens in new tab)">
       <IconButton
         aria-label="Linode Cloud Community - link opens in a new tab"
+        disableRipple
         href={LINODE_COMMUNITY_URL}
         sx={topMenuIconButtonSx}
         target="_blank"

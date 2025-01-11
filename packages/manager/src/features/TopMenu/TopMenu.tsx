@@ -10,7 +10,6 @@ import { Toolbar } from 'src/components/Toolbar';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 
 import { Community } from './Community';
-import { TOPMENU_HEIGHT } from './constants';
 import { CreateMenu } from './CreateMenu/CreateMenu';
 import { Help } from './Help';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
@@ -53,43 +52,38 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           textAlign="center"
         >
           <Typography
+            sx={(theme) => ({
+              font: theme.tokens.typography.Body.Regular,
+            })}
             color={(theme) => theme.tokens.color.Neutrals.Black}
-            fontSize="1.2em"
           >
             You are logged in as customer: <strong>{username}</strong>
           </Typography>
         </Box>
       )}
-      <AppBar
-        sx={(theme) => ({
-          backgroundColor: theme.tokens.header.Background,
-          paddingRight: `0 !important`, // Avoid MUI from applying right padding causing this to jump
-        })}
-        data-qa-appbar
-      >
-        <Toolbar
-          sx={(theme) => ({
-            '&.MuiToolbar-root': {
-              height: TOPMENU_HEIGHT,
-              padding: `0 ${theme.tokens.spacing[60]}`,
-              width: '100%',
-            },
-          })}
-          variant="dense"
-        >
+      <AppBar data-qa-appbar>
+        <Toolbar variant="dense">
           {isNarrowViewport && (
             <TopMenuTooltip title={navHoverText}>
               <IconButton
+                sx={(theme) => ({
+                  padding: theme.tokens.spacing[60],
+                })}
                 aria-label="open menu"
                 color="inherit"
+                disableRipple
                 onClick={openSideMenu}
-                size="large"
               >
                 <MenuIcon />
               </IconButton>
             </TopMenuTooltip>
           )}
           <Box
+            sx={(theme) => ({
+              [theme.breakpoints.down('md')]: {
+                gap: theme.tokens.spacing[50],
+              },
+            })}
             alignItems="center"
             display="flex"
             flexGrow={1}
@@ -102,25 +96,42 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
               title="Akamai - Dashboard"
               to={`/dashboard`}
             >
-              <StyledAkamaiLogo width={83} />
+              <StyledAkamaiLogo
+                sx={(theme) => ({
+                  [theme.breakpoints.down('md')]: {
+                    width: 79,
+                  },
+                  width: 83,
+                })}
+              />
             </Link>
             <Box
+              sx={(theme) => ({
+                paddingRight: theme.tokens.spacing[60],
+                [theme.breakpoints.up('md')]: {
+                  paddingRight: theme.tokens.spacing[80],
+                },
+              })}
               flexGrow={1}
               flexShrink={0}
-              paddingRight={(theme) => theme.tokens.spacing[80]}
             >
               <SearchBar />
             </Box>
           </Box>
 
           <Stack
+            sx={(theme) => ({
+              gap: theme.tokens.spacing[70],
+              [theme.breakpoints.down('md')]: {
+                gap: 0,
+              },
+            })}
             alignItems="center"
             direction="row"
-            gap={(theme) => theme.tokens.spacing[80]}
             justifyContent="flex-end"
           >
             <CreateMenu />
-            <Box display="flex" gap={(theme) => theme.tokens.spacing[60]}>
+            <Box display="flex">
               <Help />
               <Community />
               <NotificationMenu />

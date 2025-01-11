@@ -27,14 +27,9 @@ export const StyledGrid = styled(Grid, {
 export const StyledAkamaiLogo = styled(AkamaiLogo, {
   label: 'StyledAkamaiLogo',
 })(({ theme }) => ({
-  '& .akamai-logo-name': {
-    transition: theme.transitions.create(['opacity']),
-  },
   'path, polygon': {
     fill: theme.tokens.color.Neutrals.White,
   },
-  // give the svg a transition so it smoothly resizes
-  transition: 'width .1s linear',
 }));
 
 export const StyledDivider = styled(Divider, {
