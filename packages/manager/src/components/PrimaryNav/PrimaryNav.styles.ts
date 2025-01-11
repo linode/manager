@@ -24,19 +24,6 @@ export const StyledGrid = styled(Grid, {
   width: '100%',
 }));
 
-export const StyledLogoBox = styled(Box, {
-  label: 'StyledLogoBox',
-})(() => ({
-  alignItems: 'center',
-  display: 'flex',
-  height: 50,
-  paddingBottom: 16,
-  paddingLeft: 12,
-  paddingRight: 24,
-  paddingTop: 16,
-  transition: 'padding-left .03s linear',
-}));
-
 export const StyledAkamaiLogo = styled(AkamaiLogo, {
   label: 'StyledAkamaiLogo',
 })(({ theme }) => ({

@@ -206,6 +206,7 @@ export const UserMenu = React.memo(() => {
             height: '50px',
             minWidth: 'unset',
             textTransform: 'none',
+            padding: 0,
           }}
           aria-describedby={id}
           data-testid="nav-group-profile"

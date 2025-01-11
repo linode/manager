@@ -5,10 +5,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { AppBar } from 'src/components/AppBar';
-import {
-  StyledAkamaiLogo,
-  StyledLogoBox,
-} from 'src/components/PrimaryNav/PrimaryNav.styles';
+import { StyledAkamaiLogo } from 'src/components/PrimaryNav/PrimaryNav.styles';
 import { Toolbar } from 'src/components/Toolbar';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 
@@ -66,8 +63,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
       <AppBar
         sx={(theme) => ({
           backgroundColor: theme.tokens.header.Background,
-          position: 'sticky',
-          zIndex: 1500,
+          paddingRight: `0 !important`, // Avoid MUI from applying right padding causing this to jump
         })}
         data-qa-appbar
       >
@@ -75,7 +71,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           sx={(theme) => ({
             '&.MuiToolbar-root': {
               height: TOPMENU_HEIGHT,
-              padding: theme.spacing(0),
+              padding: `0 ${theme.tokens.spacing[60]}`,
               width: '100%',
             },
           })}
@@ -93,7 +89,13 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
               </IconButton>
             </TopMenuTooltip>
           )}
-          <StyledLogoBox>
+          <Box
+            alignItems="center"
+            display="flex"
+            flexGrow={1}
+            flexShrink={0}
+            gap={(theme) => theme.tokens.spacing[80]}
+          >
             <Link
               aria-label="Akamai - Dashboard"
               style={{ lineHeight: 0 }}
@@ -102,26 +104,27 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             >
               <StyledAkamaiLogo width={83} />
             </Link>
-          </StyledLogoBox>
-          <SearchBar />
+            <Box
+              flexGrow={1}
+              flexShrink={0}
+              paddingRight={(theme) => theme.tokens.spacing[80]}
+            >
+              <SearchBar />
+            </Box>
+          </Box>
 
           <Stack
-            sx={{
-              alignItems: 'center',
-              margin: '0 0 0 auto',
-              paddingLeft: '8px',
-            }}
+            alignItems="center"
             direction="row"
+            gap={(theme) => theme.tokens.spacing[80]}
+            justifyContent="flex-end"
           >
-            <Box sx={{ paddingRight: '8px' }}>
-              <CreateMenu />
+            <CreateMenu />
+            <Box display="flex" gap={(theme) => theme.tokens.spacing[60]}>
+              <Help />
+              <Community />
+              <NotificationMenu />
             </Box>
-
-            <Help />
-            <Community />
-
-            <NotificationMenu />
-
             <UserMenu />
           </Stack>
         </Toolbar>

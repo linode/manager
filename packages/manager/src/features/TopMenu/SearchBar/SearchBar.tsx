@@ -346,7 +346,7 @@ const SearchBar = (props: SearchProps) => {
           openMenuOnClick={false}
           openMenuOnFocus={false}
           options={finalOptions}
-          placeholder="Search"
+          placeholder="Search Products, IP Addresses, Tags..."
           styles={selectStyles}
           value={value}
         />

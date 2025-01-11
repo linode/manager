@@ -84,8 +84,6 @@ export const StyledSearchBarWrapperDiv = styled('div', {
   display: 'flex',
   flex: 1,
   height: 32,
-  marginLeft: theme.spacing(1),
-  maxWidth: '420px',
   padding: theme.spacing(1),
   position: 'relative', // for search results
   [theme.breakpoints.down('md')]: {
