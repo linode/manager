@@ -2,7 +2,6 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { TanstackLink } from 'src/components/TanstackLinks';
 import {
   longviewClientFactory,
   longviewSubscriptionFactory,
@@ -26,9 +25,6 @@ afterEach(() => {
 
 vi.mock('../request');
 vi.mock('./LongviewClientRow');
-vi.mock('src/components/Link', () => ({
-  Link: TanstackLink,
-}));
 
 const clients = longviewClientFactory.buildList(5);
 

@@ -129,6 +129,12 @@ module.exports = {
                   'Please use the TanStackTabLinkList component for components being migrated to TanStack Router.',
                 name: 'src/components/Tabs/TabLinkList',
               },
+              {
+                importNames: ['OrderBy', 'default'],
+                message:
+                  'Please use useOrderV2 hook for components being migrated to TanStack Router.',
+                name: 'src/components/OrderBy',
+              },
             ],
           },
         ],
