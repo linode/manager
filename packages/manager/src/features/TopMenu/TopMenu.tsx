@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@linode/ui';
+import { Box, Stack } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton, useMediaQuery } from '@mui/material';
 import * as React from 'react';
@@ -12,6 +12,7 @@ import { useAuthentication } from 'src/hooks/useAuthentication';
 import { Community } from './Community';
 import { CreateMenu } from './CreateMenu/CreateMenu';
 import { Help } from './Help';
+import { InternalAdminBanner } from './InternalAdminBanner';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
 import SearchBar from './SearchBar/SearchBar';
 import { TopMenuTooltip } from './TopMenuTooltip';
@@ -20,9 +21,11 @@ import { UserMenu } from './UserMenu';
 import type { Theme } from '@mui/material';
 
 export interface TopMenuProps {
+  /** Callback to toggle the desktop menu */
   desktopMenuToggle: () => void;
-  isSideMenuOpen: boolean;
+  /** Callback to open the side menu */
   openSideMenu: () => void;
+  /** The username of the logged-in user */
   username: string;
 }
 
@@ -31,7 +34,7 @@ export interface TopMenuProps {
  * - The number of items should be limited. In the future, **Help & Support** could become a drop down with links to **Community**, **Guides**, and etc.
  */
 export const TopMenu = React.memo((props: TopMenuProps) => {
-  const { isSideMenuOpen, openSideMenu, username } = props;
+  const { openSideMenu, username } = props;
 
   const { loggedInAsCustomer } = useAuthentication();
 
@@ -39,32 +42,13 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
     theme.breakpoints.down(960)
   );
 
-  const navHoverText = isSideMenuOpen
-    ? 'Collapse side menu'
-    : 'Expand side menu';
-
   return (
-    <React.Fragment>
-      {loggedInAsCustomer && (
-        <Box
-          bgcolor={(theme) => theme.tokens.color.Pink[40]}
-          padding="1em"
-          textAlign="center"
-        >
-          <Typography
-            sx={(theme) => ({
-              font: theme.tokens.typography.Body.Regular,
-            })}
-            color={(theme) => theme.tokens.color.Neutrals.Black}
-          >
-            You are logged in as customer: <strong>{username}</strong>
-          </Typography>
-        </Box>
-      )}
+    <>
+      {loggedInAsCustomer && <InternalAdminBanner username={username} />}
       <AppBar data-qa-appbar>
         <Toolbar variant="dense">
           {isNarrowViewport && (
-            <TopMenuTooltip title={navHoverText}>
+            <TopMenuTooltip title="Expand side menu">
               <IconButton
                 sx={(theme) => ({
                   padding: theme.tokens.spacing[60],
@@ -79,16 +63,14 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             </TopMenuTooltip>
           )}
           <Box
-            sx={(theme) => ({
-              [theme.breakpoints.down('md')]: {
-                gap: theme.tokens.spacing[50],
-              },
+            gap={(theme) => ({
+              md: theme.tokens.spacing[80],
+              xs: theme.tokens.spacing[50],
             })}
             alignItems="center"
             display="flex"
             flexGrow={1}
             flexShrink={0}
-            gap={(theme) => theme.tokens.spacing[80]}
           >
             <Link
               aria-label="Akamai - Dashboard"
@@ -97,33 +79,32 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
               to={`/dashboard`}
             >
               <StyledAkamaiLogo
-                sx={(theme) => ({
-                  [theme.breakpoints.down('md')]: {
-                    width: 79,
+                sx={{
+                  width: {
+                    md: 83,
+                    xs: 79,
                   },
-                  width: 83,
-                })}
+                }}
               />
             </Link>
-            <Box
-              sx={(theme) => ({
-                paddingRight: theme.tokens.spacing[60],
-                [theme.breakpoints.up('md')]: {
-                  paddingRight: theme.tokens.spacing[80],
-                },
-              })}
-              flexGrow={1}
-              flexShrink={0}
-            >
+            <Box flexGrow={1} flexShrink={0}>
               <SearchBar />
             </Box>
           </Box>
 
           <Stack
             sx={(theme) => ({
-              gap: theme.tokens.spacing[70],
-              [theme.breakpoints.down('md')]: {
-                gap: 0,
+              gap: {
+                md: theme.tokens.spacing[70],
+                xs: 0,
+              },
+              paddingLeft: {
+                md: theme.tokens.spacing[80],
+                xs: theme.tokens.spacing[60],
+              },
+              paddingRight: {
+                md: 0,
+                xs: theme.tokens.spacing[40],
               },
             })}
             alignItems="center"
@@ -140,6 +121,6 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           </Stack>
         </Toolbar>
       </AppBar>
-    </React.Fragment>
+    </>
   );
 });

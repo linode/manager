@@ -93,7 +93,6 @@ export const Root = () => {
               <MainContentBanner />
               <TopMenu
                 desktopMenuToggle={desktopMenuToggle}
-                isSideMenuOpen={!desktopMenuIsOpen}
                 openSideMenu={() => toggleMenu(true)}
                 username={username}
               />

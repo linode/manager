@@ -1089,6 +1089,7 @@ export const lightTheme: ThemeOptions = {
           [breakpoints.up('lg')]: {
             minWidth: 250,
           },
+          marginTop: Spacing[20],
           minWidth: 200,
         },
       },
@@ -1408,7 +1409,7 @@ export const lightTheme: ThemeOptions = {
           '.MuiCollapse-root': {
             padding: Spacing[60],
           },
-          borderBottom: `1px solid ${Table.Row.Border}`,
+          borderBottom: `1px s1olid ${Table.Row.Border}`,
           fontSize: Font.FontSize.Xs,
           height: '40px',
           lineHeight: Font.LineHeight.Xs,
@@ -1526,8 +1527,10 @@ export const lightTheme: ThemeOptions = {
           [breakpoints.down('md')]: {
             padding: `0`,
           },
+          [breakpoints.up('md')]: {
+            padding: `0 ${Spacing[60]}`, // To override default MUI breakpoint padding
+          },
           height: topMenuHeight,
-          padding: `0 ${Spacing[60]}`,
           width: '100%',
         },
       },

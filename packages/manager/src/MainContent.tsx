@@ -312,7 +312,6 @@ export const MainContent = () => {
               <MainContentBanner />
               <TopMenu
                 desktopMenuToggle={desktopMenuToggle}
-                isSideMenuOpen={!desktopMenuIsOpen}
                 openSideMenu={() => toggleMenu(true)}
                 username={username}
               />

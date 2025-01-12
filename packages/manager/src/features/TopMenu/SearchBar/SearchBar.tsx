@@ -1,4 +1,3 @@
-import Close from '@mui/icons-material/Close';
 import { take } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -352,23 +351,6 @@ const SearchBar = (props: SearchProps) => {
           styles={selectStyles}
           value={value}
         />
-        <StyledIconButton
-          aria-label="close menu"
-          color="inherit"
-          onClick={toggleSearch}
-          size="large"
-        >
-          <Close
-            sx={(theme) => ({
-              '& > span': {
-                padding: 2,
-              },
-              '&:hover, &:focus': {
-                color: theme.palette.primary.main,
-              },
-            })}
-          />
-        </StyledIconButton>
       </StyledSearchBarWrapperDiv>
     </React.Fragment>
   );

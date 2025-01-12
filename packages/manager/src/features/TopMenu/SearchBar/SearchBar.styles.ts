@@ -71,6 +71,9 @@ export const StyledSearchBarWrapperDiv = styled('div', {
   },
   // '&:active': {
   //   border: `1px solid ${theme.tokens.header.Search.Border.Active}`,
+  '&.active': {
+    border: `1px solid ${theme.tokens.header.Search.Border.Active}`,
+  },
   // },
   '&:hover': {
     ...theme.inputStyles.hover,
@@ -95,13 +98,15 @@ export const StyledSearchBarWrapperDiv = styled('div', {
       visibility: 'visible',
       zIndex: 3,
     },
-    left: 0,
+    height: 40,
+    left: '50%',
     margin: 0,
     opacity: 0,
     position: 'absolute',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
     visibility: 'hidden',
-    width: 'calc(100% - 100px)',
-    zIndex: -1,
+    width: `calc(100% - ${theme.tokens.spacing[80]})`,
   },
   [theme.breakpoints.down('sm')]: {
     width: '100%',
