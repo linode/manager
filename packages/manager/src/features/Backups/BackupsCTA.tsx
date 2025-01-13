@@ -50,7 +50,7 @@ export const BackupsCTA = () => {
       flexDirection="row"
       justifyContent="space-between"
       spacingBottom={8}
-      variant="marketing"
+      variant="info"
     >
       <Typography sx={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
         <LinkButton onClick={() => setIsBackupsDrawerOpen(true)}>
