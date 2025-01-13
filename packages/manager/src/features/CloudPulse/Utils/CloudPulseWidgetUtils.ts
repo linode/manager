@@ -288,8 +288,13 @@ export const getCloudPulseMetricRequest = (
   props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
   const { duration, entityIds, resources, widget } = props;
+  const preset = duration.preset;
+
   return {
-    absolute_time_duration: widget.time_duration ? undefined : duration,
+    absolute_time_duration:
+      widget.time_duration || preset !== 'custom_range'
+        ? undefined
+        : { end: duration.end, start: duration.start },
     aggregate_function: widget.aggregate_function,
     entity_ids: resources
       ? entityIds.map((id) => parseInt(id, 10))
@@ -297,7 +302,9 @@ export const getCloudPulseMetricRequest = (
     filters: undefined,
     group_by: widget.group_by,
     metric: widget.metric,
-    relative_time_duration: duration ?? widget.time_duration,
+    relative_time_duration: duration ?? widget.time_duration
+      ? widget.time_duration
+      : getTimeDurationFromPreset(preset),
     time_granularity:
       widget.time_granularity.unit === 'Auto'
         ? undefined
@@ -375,3 +382,34 @@ export const getAutocompleteWidgetStyles = (theme: Theme) => ({
     width: '90px',
   },
 });
+
+/**
+ *
+ * @param preset preset for time duration to get the corresponding time duration object
+ * @returns time duration object for the label
+ */
+export const getTimeDurationFromPreset = (
+  preset?: string
+): TimeDuration | undefined => {
+  if (preset === '30minutes') {
+    return { unit: 'min', value: 30 };
+  }
+
+  if (preset === '24hours') {
+    return { unit: 'hr', value: 24 };
+  }
+
+  if (preset === '12hours') {
+    return { unit: 'hr', value: 12 };
+  }
+
+  if (preset === '7days') {
+    return { unit: 'days', value: 7 };
+  }
+
+  if (preset === '30days') {
+    return { unit: 'days', value: 30 };
+  }
+
+  return undefined;
+};

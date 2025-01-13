@@ -48,10 +48,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       if (savePref) {
         updatePreferences({ [TIME_DURATION]: timeDuration });
       }
-      handleTimeDurationChange({
-        end: timeDuration.end,
-        start: timeDuration.start,
-      });
+      handleTimeDurationChange(timeDuration);
     },
     []
   );
