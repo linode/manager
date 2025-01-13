@@ -18,9 +18,6 @@ export const useStyles = makeStyles()((theme) => ({
   info: {
     borderLeft: `5px solid ${theme.palette.info.dark}`,
   },
-  marketing: {
-    borderLeft: `5px solid ${theme.color.green}`,
-  },
   noticeText: {
     fontFamily: theme.font.bold,
     fontSize: '1rem',

@@ -12,12 +12,7 @@ import { useStyles } from './Notice.styles';
 import type { BoxProps } from '../Box';
 import type { TypographyProps } from '../Typography';
 
-export type NoticeVariant =
-  | 'error'
-  | 'info'
-  | 'marketing'
-  | 'success'
-  | 'warning';
+export type NoticeVariant = 'error' | 'info' | 'success' | 'warning';
 
 export interface NoticeProps extends BoxProps {
   /**
@@ -74,9 +69,9 @@ export interface NoticeProps extends BoxProps {
 
 ## Types of Notices:
 
-- Success/Marketing (green line)
+- Success (green line)
 - Info (blue line)
-- Error/critical (red line)
+- Error (red line)
 - Warning (yellow line)
  */
 export const Notice = (props: NoticeProps) => {
@@ -102,7 +97,6 @@ export const Notice = (props: NoticeProps) => {
   const variantMap = {
     error: variant === 'error',
     info: variant === 'info',
-    marketing: variant === 'marketing',
     success: variant === 'success',
     warning: variant === 'warning',
   };
@@ -129,7 +123,6 @@ export const Notice = (props: NoticeProps) => {
         {
           [classes.error]: variantMap.error,
           [classes.info]: variantMap.info,
-          [classes.marketing]: variantMap.marketing,
           [classes.success]: variantMap.success,
           [classes.warning]: variantMap.warning,
           // The order we apply styles matters, therefore we:
