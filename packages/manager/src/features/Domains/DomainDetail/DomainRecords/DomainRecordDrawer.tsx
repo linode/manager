@@ -3,7 +3,6 @@ import {
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
 import { Autocomplete, Notice, TextField } from '@linode/ui';
-import produce from 'immer';
 import { cond, defaultTo, equals, lensPath, path, pick, set } from 'ramda';
 import * as React from 'react';
 
@@ -13,7 +12,6 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
-import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import {
@@ -22,6 +20,14 @@ import {
   isValidCNAME,
   isValidDomainRecord,
 } from '../../domainUtils';
+import {
+  castFormValuesToNumeric,
+  modeMap,
+  resolve,
+  resolveAlias,
+  shouldResolve,
+  typeMap,
+} from './DomainRecordDrawerUtils';
 
 import type {
   Domain,
@@ -518,9 +524,9 @@ export class DomainRecordDrawer extends React.Component<
   };
 
   handleTransferUpdate = (transferIPs: ExtendedIP[]) => {
-    const axfr_ips =
+    const axfrIps =
       transferIPs.length > 0 ? transferIPs.map(extendedIPToString) : [''];
-    this.updateField('axfr_ips')(axfr_ips);
+    this.updateField('axfr_ips')(axfrIps);
   };
 
   onClose = () => {
@@ -848,67 +854,3 @@ export class DomainRecordDrawer extends React.Component<
     );
   }
 }
-
-const modeMap = {
-  create: 'Create',
-  edit: 'Edit',
-};
-
-const typeMap = {
-  A: 'A',
-  AAAA: 'A/AAAA',
-  CAA: 'CAA',
-  CNAME: 'CNAME',
-  MX: 'MX',
-  NS: 'NS',
-  PTR: 'PTR',
-  SRV: 'SRV',
-  TXT: 'TXT',
-  master: 'SOA',
-  slave: 'SOA',
-};
-
-export const shouldResolve = (type: string, field: string) => {
-  switch (type) {
-    case 'AAAA':
-      return field === 'name';
-    case 'SRV':
-      return field === 'target';
-    case 'CNAME':
-      return field === 'target';
-    case 'TXT':
-      return field === 'name';
-    default:
-      return false;
-  }
-};
-
-export const resolve = (value: string, domain: string) =>
-  value.replace(/\@/, domain);
-
-export const resolveAlias = (
-  data: Record<string, any>,
-  domain: string,
-  type: string
-) => {
-  // Replace a single @ with a reference to the Domain
-  const clone = { ...data };
-  for (const [key, value] of Object.entries(clone)) {
-    if (shouldResolve(type, key) && typeof value === 'string') {
-      clone[key] = resolve(value, domain);
-    }
-  }
-  return clone;
-};
-
-const numericFields = ['port', 'weight', 'priority'];
-export const castFormValuesToNumeric = (
-  data: Record<string, any>,
-  fieldNames: string[] = numericFields
-) => {
-  return produce(data, (draft) => {
-    fieldNames.forEach((thisField) => {
-      draft[thisField] = maybeCastToNumber(draft[thisField]);
-    });
-  });
-};
