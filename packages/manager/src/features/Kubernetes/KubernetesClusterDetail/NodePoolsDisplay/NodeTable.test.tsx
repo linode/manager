@@ -13,7 +13,9 @@ const mockLinodes = linodeFactory.buildList(3);
 const mockKubeNodes = kubeLinodeFactory.buildList(3);
 
 const props: Props = {
+  clusterCreated: '2025-01-13T02:58:58',
   clusterId: 1,
+  clusterTier: 'standard',
   encryptionStatus: 'enabled',
   nodes: mockKubeNodes,
   openRecycleNodeDialog: vi.fn(),

@@ -16,13 +16,16 @@ import { NodeTable } from './NodeTable';
 
 import type {
   AutoscaleSettings,
+  KubernetesTier,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
   autoscaler: AutoscaleSettings;
+  clusterCreated: string;
   clusterId: number;
+  clusterTier: KubernetesTier;
   encryptionStatus: EncryptionStatus | undefined;
   handleClickResize: (poolId: number) => void;
   isOnlyNodePool: boolean;
@@ -39,7 +42,9 @@ interface Props {
 export const NodePool = (props: Props) => {
   const {
     autoscaler,
+    clusterCreated,
     clusterId,
+    clusterTier,
     encryptionStatus,
     handleClickResize,
     isOnlyNodePool,
@@ -146,7 +151,9 @@ export const NodePool = (props: Props) => {
         </Hidden>
       </Paper>
       <NodeTable
+        clusterCreated={clusterCreated}
         clusterId={clusterId}
+        clusterTier={clusterTier}
         encryptionStatus={encryptionStatus}
         nodes={nodes}
         openRecycleNodeDialog={openRecycleNodeDialog}
