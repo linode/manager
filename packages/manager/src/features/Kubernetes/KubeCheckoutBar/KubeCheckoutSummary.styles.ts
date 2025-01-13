@@ -28,12 +28,12 @@ export const StyledNodePoolSummaryBox = styled(Box, {
 
 export const StyledIconButton = styled(IconButton, {
   label: 'StyledIconButton',
-})(() => ({
+})(({ theme }) => ({
   '&:hover': {
-    color: '#6e6e6e',
+    color: theme.tokens.color.Neutrals[70],
   },
   alignItems: 'flex-start',
-  color: '#979797',
+  color: theme.tokens.color.Neutrals[60],
   marginTop: -4,
   padding: 0,
 }));

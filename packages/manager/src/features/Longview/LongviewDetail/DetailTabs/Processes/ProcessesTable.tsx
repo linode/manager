@@ -1,6 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import OrderBy from 'src/components/OrderBy';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -15,7 +15,9 @@ import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { StyledDiv, StyledTable } from './ProcessesTable.styles';
-import { Process } from './types';
+
+import type { Process } from './types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface ProcessesTableProps {
   error?: string;
@@ -184,7 +186,9 @@ export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
       <TableCell data-testid={`name-${name}`}>
         <StyledDiv>{name}</StyledDiv>
       </TableCell>
-      <TableCell data-testid={`user-${user}`}>{user}</TableCell>
+      <TableCell data-testid={`user-${user}`}>
+        <MaskableText isToggleable text={user} />
+      </TableCell>
       <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
         {Math.round(maxCount)}
       </TableCell>
