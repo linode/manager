@@ -103,7 +103,7 @@ export const maybeAddPastData = (
   startTime: number
 ): StatWithDummyPoint[] => {
   const _data = clone(arrayOfStats) as StatWithDummyPoint[];
-  if (arrayOfStats[0]?.x ?? 0 - startTime > 60 * 5) {
+  if ((arrayOfStats[0]?.x ?? 0) - startTime > 60 * 5) {
     _data.unshift({ x: startTime, y: null });
   }
   return _data;
