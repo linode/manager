@@ -10,6 +10,7 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
+import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
@@ -18,14 +19,17 @@ import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect'
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
-import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
-import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
+import type {
+  CreateAlertDefinitionForm,
+  MetricCriteriaForm,
+  TriggerConditionForm,
+} from './types';
 import type { ObjectSchema } from 'yup';
 
-const triggerConditionInitialValues: TriggerCondition = {
+const triggerConditionInitialValues: TriggerConditionForm = {
   criteria_condition: 'ALL',
-  evaluation_period_seconds: 0,
-  polling_interval_seconds: 0,
+  evaluation_period_seconds: null,
+  polling_interval_seconds: null,
   trigger_occurrences: 0,
 };
 const criteriaInitialValues: MetricCriteriaForm = {
@@ -164,8 +168,10 @@ export const CreateAlertDefinition = () => {
             name="rule_criteria.rules"
             serviceType={serviceTypeWatcher!}
           />
-          {/* This is just being displayed to pass the typecheck-manager test. In the next PR maxScrapeInterval will be used by another component */}
-          {maxScrapeInterval}
+          <TriggerConditions
+            maxScrapingInterval={maxScrapeInterval}
+            name="trigger_conditions"
+          />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',

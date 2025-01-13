@@ -96,7 +96,7 @@ export const ImageUploader = React.memo((props: Props) => {
 });
 
 const Dropzone = styled('div')<{ active: boolean }>(({ active, theme }) => ({
-  borderColor: 'gray',
+  borderColor: theme.tokens.color.Neutrals[60],
   borderStyle: 'dashed',
   borderWidth: 1,
   display: 'flex',
