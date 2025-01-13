@@ -1,4 +1,4 @@
-import { TableBody, TableCell, TableHead } from '@mui/material';
+import { TableBody, TableCell, TableHead, Typography } from '@mui/material';
 import * as React from 'react';
 
 import { TableRow } from 'src/components/TableRow/TableRow';
@@ -27,14 +27,18 @@ export const LabelTable = (props: Props) => {
             return (
               <TableRow key={`label-row-${key}`}>
                 <TableCell>
-                  {key}: {label}
+                  <Typography>
+                    {key}: {label}
+                  </Typography>
                 </TableCell>
               </TableRow>
             );
           })
         ) : (
-          <TableRow key="label-row-0">
-            <TableCell>No labels</TableCell>
+          <TableRow key="label-row-empty">
+            <TableCell>
+              <Typography textAlign="center">No labels</Typography>
+            </TableCell>
           </TableRow>
         )}
       </TableBody>

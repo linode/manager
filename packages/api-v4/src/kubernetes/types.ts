@@ -2,9 +2,20 @@ import type { EncryptionStatus } from '../linodes';
 
 export type KubernetesTier = 'standard' | 'enterprise';
 
+export type KubernetesTaintEffect =
+  | 'NoSchedule'
+  | 'PreferNoSchedule'
+  | 'NoExecute';
+
 export type Label = {
   [key: string]: string;
 };
+
+export interface Taint {
+  effect: KubernetesTaintEffect;
+  key: string;
+  value: string;
+}
 
 export interface KubernetesCluster {
   created: string;
@@ -29,6 +40,7 @@ export interface KubeNodePoolResponse {
   labels: Label;
   nodes: PoolNodeResponse[];
   tags: string[];
+  taints: Taint[];
   type: string;
   autoscaler: AutoscaleSettings;
   disk_encryption?: EncryptionStatus; // @TODO LDE: remove optionality once LDE is fully rolled out

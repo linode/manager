@@ -34,6 +34,13 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   })),
   nodes: kubeLinodeFactory.buildList(3),
   tags: [],
+  taints: Factory.each((i) => [
+    {
+      effect: 'NoExecute',
+      key: `example.com/my-app-${i}`,
+      value: `taint-${i}`,
+    },
+  ]),
   type: 'g6-standard-1',
 });
 

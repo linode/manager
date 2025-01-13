@@ -6,6 +6,7 @@ import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
 import { LabelTable } from './LabelTable';
+import { TaintTable } from './TaintTable';
 
 import type { KubeNodePoolResponse } from '@linode/api-v4';
 
@@ -41,6 +42,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
       <Typography variant="h3"> Labels </Typography>
       <LabelTable labels={nodePool?.labels} />
       <Typography variant="h3"> Taints </Typography>
+      <TaintTable taints={nodePool?.taints} />
     </Drawer>
   );
 };
