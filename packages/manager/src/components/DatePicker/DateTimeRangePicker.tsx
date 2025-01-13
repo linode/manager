@@ -145,7 +145,6 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     startTimeZoneValue
   );
   const [startDateError, setStartDateError] = useState<null | string>(null);
-  const [endDateError, setEndDateError] = useState<null | string>(null);
   const [showPresets, setShowPresets] = useState(
     presetsDefaultValue
       ? presetsDefaultValue !== 'custom_range' && enablePresets
@@ -159,19 +158,12 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     end: DateTime | null,
     source: 'end' | 'start'
   ) => {
-    if (start && end) {
-      if (source === 'start' && start > end) {
-        setStartDateError(startDateErrorMessage);
-        return;
-      }
-      if (source === 'end' && end < start) {
-        setEndDateError(endDateErrorMessage);
-        return;
-      }
+    if (start && end && source === 'start' && start > end) {
+      setStartDateError(startDateErrorMessage);
+      return;
     }
     // Reset validation errors
     setStartDateError(null);
-    setEndDateError(null);
   };
 
   const handlePresetSelection = (value: DatePresetType) => {
@@ -305,7 +297,6 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
               value: startTimeZone,
             }}
             disabledTimeZone={disabledTimeZone}
-            errorText={endDateError ?? undefined}
             format={format}
             label={endLabel}
             minDate={startDateTime || undefined}
@@ -315,17 +306,12 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
             timeSelectProps={{ label: 'End Time' }}
             value={endDateTime}
           />
-          <Box
-            alignContent={
-              startDateError || endDateError ? 'center' : 'flex-end'
-            }
-          >
+          <Box alignContent={startDateError ? 'center' : 'flex-end'}>
             <StyledActionButton
               onClick={() => {
                 setShowPresets(true);
                 setPresetValue(undefined);
                 setStartDateError(null);
-                setEndDateError(null);
               }}
               variant="text"
             >
