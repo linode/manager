@@ -28,7 +28,6 @@ import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
 import type { Filter, Linode, PlacementGroup, Region } from '@linode/api-v4';
-import type { PlacementGroupsSearchParams } from 'src/routes/placementGroups';
 
 interface Props {
   isLinodeReadOnly: boolean;
@@ -36,14 +35,12 @@ interface Props {
   region: Region | undefined;
 }
 
-type PlacementGroupLinodesSearchParams = PlacementGroupsSearchParams;
-
 export const PlacementGroupsLinodes = (props: Props) => {
   const { isLinodeReadOnly, placementGroup, region } = props;
   const navigate = useNavigate();
   const params = useParams({ strict: false });
 
-  const search: PlacementGroupLinodesSearchParams = useSearch({
+  const search = useSearch({
     from: PLACEMENT_GROUPS_DETAILS_ROUTE,
   });
   const { query } = search;

@@ -26,6 +26,7 @@ export const placementGroupsRoute = createRoute({
   component: PlacementGroupsRoute,
   getParentRoute: () => rootRoute,
   path: 'placement-groups',
+  validateSearch: (search: PlacementGroupsSearchParams) => search,
 });
 
 const placementGroupsIndexRoute = createRoute({
@@ -86,13 +87,14 @@ const placementGroupsDetailRoute = createRoute({
     id: Number(params.id),
   }),
   path: '$id',
+  validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
   import('./placementGroupsLazyRoutes').then(
     (m) => m.placementGroupsDetailLazyRoute
   )
 );
 
-type PlacementGroupLinodesActionRouteParams<P = number | string> = {
+type PlacementGroupLinodesActionRouteParams = {
   action: PlacementGroupLinodesAction;
 };
 
@@ -107,12 +109,10 @@ const placementGroupLinodesActionBaseRoute = createRoute({
   },
   getParentRoute: () => placementGroupsDetailRoute,
   params: {
-    parse: ({ action }: PlacementGroupLinodesActionRouteParams<string>) => ({
+    parse: ({ action }: PlacementGroupLinodesActionRouteParams) => ({
       action,
     }),
-    stringify: ({
-      action,
-    }: PlacementGroupLinodesActionRouteParams<number>) => ({
+    stringify: ({ action }: PlacementGroupLinodesActionRouteParams) => ({
       action,
     }),
   },

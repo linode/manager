@@ -48,7 +48,6 @@ import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyS
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
 import type { Filter, PlacementGroup } from '@linode/api-v4';
-import type { PlacementGroupsSearchParams } from 'src/routes/placementGroups';
 
 export const PlacementGroupsLanding = React.memo(() => {
   const navigate = useNavigate();
@@ -62,7 +61,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     }),
   });
   const params = useParams({ strict: false });
-  const search: PlacementGroupsSearchParams = useSearch({
+  const search = useSearch({
     from: PLACEMENT_GROUPS_LANDING_ROUTE,
   });
   const { query } = search;
