@@ -1,10 +1,10 @@
 import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import withClientData from 'src/containers/longview.stats.container';
+import { pathOr } from 'src/utilities/pathOr';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import {

@@ -1,6 +1,5 @@
 import { Notice } from '@linode/ui';
 import Search from '@mui/icons-material/Search';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
@@ -107,7 +106,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       const link = getLinkTarget(inputValue);
       history.push(link);
     } else {
-      const href = pathOr('', ['data', 'href'], selected);
+      const href = selected?.data?.href ?? '';
       window.open(href, '_blank', 'noopener');
     }
   };

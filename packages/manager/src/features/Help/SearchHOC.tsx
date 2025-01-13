@@ -1,15 +1,18 @@
-import Algolia, { SearchClient } from 'algoliasearch';
-import { pathOr } from 'ramda';
+/* eslint-disable react-refresh/only-export-components */
+import Algolia from 'algoliasearch';
 import * as React from 'react';
 
-import { Item } from 'src/components/EnhancedSelect/Select';
 import {
   ALGOLIA_APPLICATION_ID,
   ALGOLIA_SEARCH_KEY,
   COMMUNITY_BASE_URL,
   DOCS_BASE_URL,
 } from 'src/constants';
+import { pathOr } from 'src/utilities/pathOr';
 import { truncate } from 'src/utilities/truncate';
+
+import type { SearchClient } from 'algoliasearch';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface SearchHit {
   _highlightResult?: any;
@@ -111,23 +114,7 @@ export default (options: SearchOptions) => (
 ) => {
   const { highlight, hitsPerPage } = options;
   class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {
-    componentDidMount() {
-      this.mounted = true;
-      this.initializeSearchIndices();
-    }
-    componentWillUnmount() {
-      this.mounted = false;
-    }
-
-    render() {
-      return React.createElement(Component, {
-        ...this.props,
-        ...this.state,
-      });
-    }
-
     client: SearchClient;
-
     initializeSearchIndices = () => {
       try {
         const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
@@ -219,6 +206,22 @@ export default (options: SearchOptions) => (
       searchError: undefined,
       searchResults: [[], []],
     };
+
+    componentDidMount() {
+      this.mounted = true;
+      this.initializeSearchIndices();
+    }
+
+    componentWillUnmount() {
+      this.mounted = false;
+    }
+
+    render() {
+      return React.createElement(Component, {
+        ...this.props,
+        ...this.state,
+      });
+    }
   }
 
   return WrappedComponent;

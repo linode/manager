@@ -1,6 +1,5 @@
 import { CircleProgress, Notice, Paper } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -327,7 +326,7 @@ export const LongviewDetail = (props: CombinedProps) => {
 const EnhancedLongviewDetail = compose<CombinedProps, {}>(
   React.memo,
   withClientStats<RouteComponentProps<{ id: string }>>((ownProps) => {
-    return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
+    return +(ownProps?.match?.params?.id ?? 0);
   }),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (
@@ -342,7 +341,7 @@ const EnhancedLongviewDetail = compose<CombinedProps, {}>(
       // This is explicitly typed, otherwise `client` would be typed as
       // `LongviewClient`, even though there's a chance it could be undefined.
       const client: LongviewClient | undefined =
-        longviewClientsData[pathOr<string>('', ['match', 'params', 'id'], own)];
+        longviewClientsData[own.match.params.id ?? ''];
 
       return {
         client,

@@ -1,10 +1,8 @@
-import { pathOr } from 'ramda';
-
-import { LVClientData } from 'src/containers/longview.stats.container';
+import { pathOr } from 'src/utilities/pathOr';
 import { pluralize } from 'src/utilities/pluralize';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-import {
+import type {
   CPU,
   Disk,
   InboundOutboundNetwork,
@@ -15,6 +13,7 @@ import {
   Stat,
   StatWithDummyPoint,
 } from '../request.types';
+import type { LVClientData } from 'src/containers/longview.stats.container';
 
 interface Storage {
   free: number;

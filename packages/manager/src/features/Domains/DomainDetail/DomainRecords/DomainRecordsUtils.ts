@@ -1,7 +1,11 @@
-import { compose, pathOr } from 'ramda';
+import { pathOr } from 'src/utilities/pathOr';
 
 import type { Props } from './DomainRecords';
-import type { DomainRecord, RecordType } from '@linode/api-v4/lib/domains';
+import type {
+  Domain,
+  DomainRecord,
+  RecordType,
+} from '@linode/api-v4/lib/domains';
 
 export const msToReadableTime = (v: number): null | string =>
   pathOr(null, [v], {
@@ -22,7 +26,8 @@ export const msToReadableTime = (v: number): null | string =>
     2419200: '4 weeks',
   });
 
-export const getTTL = compose(msToReadableTime, pathOr(0, ['ttl_sec']));
+export const getTTL = (domain: Domain) =>
+  msToReadableTime(domain?.ttl_sec ?? 0);
 
 export const typeEq = (type: RecordType) => (record: DomainRecord): boolean =>
   record.type === type;

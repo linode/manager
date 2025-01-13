@@ -1,5 +1,5 @@
 import { Autocomplete, Typography } from '@linode/ui';
-import { isEmpty, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import withLongviewClients from 'src/containers/longview.container';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { pathOr } from 'src/utilities/pathOr';
 
 import { LongviewPackageDrawer } from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
@@ -360,12 +361,12 @@ export const sortClientsBy = (
       });
     case 'swap':
       return clients.sort((a, b) => {
-        const aSwap = pathOr<number>(
+        const aSwap = pathOr(
           0,
           [a.id, 'data', 'Memory', 'swap', 'used', 0, 'y'],
           clientData
         );
-        const bSwap = pathOr<number>(
+        const bSwap = pathOr(
           0,
           [b.id, 'data', 'Memory', 'swap', 'used', 0, 'y'],
           clientData
@@ -374,16 +375,8 @@ export const sortClientsBy = (
       });
     case 'load':
       return clients.sort((a, b) => {
-        const aLoad = pathOr<number>(
-          0,
-          [a.id, 'data', 'Load', 0, 'y'],
-          clientData
-        );
-        const bLoad = pathOr<number>(
-          0,
-          [b.id, 'data', 'Load', 0, 'y'],
-          clientData
-        );
+        const aLoad = pathOr(0, [a.id, 'data', 'Load', 0, 'y'], clientData);
+        const bLoad = pathOr(0, [b.id, 'data', 'Load', 0, 'y'], clientData);
         return sortFunc(aLoad, bLoad);
       });
     case 'network':
@@ -432,7 +425,7 @@ export const filterLongviewClientsByQuery = (
     }
 
     // If the label didn't match, check the hostname
-    const hostname = pathOr<string>(
+    const hostname = pathOr(
       '',
       ['data', 'SysInfo', 'hostname'],
       clientData[thisClient.id]

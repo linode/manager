@@ -1,6 +1,5 @@
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
@@ -9,6 +8,7 @@ import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
 import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
 import { formatUptime } from 'src/utilities/formatUptime';
+import { pathOr } from 'src/utilities/pathOr';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import {
@@ -24,7 +24,6 @@ import {
   StyledPackageGrid,
 } from './IconSection.styles';
 
-import type { LongviewPackage } from '../../request.types';
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 interface Props {
@@ -60,11 +59,7 @@ export const IconSection = React.memo((props: Props) => {
     props.longviewClientData
   );
 
-  const uptime = pathOr<null | number>(
-    null,
-    ['Uptime'],
-    props.longviewClientData
-  );
+  const uptime = pathOr(null, ['Uptime'], props.longviewClientData);
 
   const formattedUptime =
     uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
@@ -77,11 +72,7 @@ export const IconSection = React.memo((props: Props) => {
 
   const coreCountDisplay = cpuCoreCount && cpuCoreCount > 1 ? `Cores` : `Core`;
 
-  const packages = pathOr<LongviewPackage[] | null>(
-    null,
-    ['Packages'],
-    props.longviewClientData
-  );
+  const packages = pathOr(null, ['Packages'], props.longviewClientData);
 
   const packagesToUpdate = getPackageNoticeText(packages);
 
@@ -96,12 +87,12 @@ export const IconSection = React.memo((props: Props) => {
     props.longviewClientData
   );
 
-  const freeSwap = pathOr<number>(
+  const freeSwap = pathOr(
     0,
     ['Memory', 'swap', 'free', 0, 'y'],
     props.longviewClientData
   );
-  const usedSwap = pathOr<number>(
+  const usedSwap = pathOr(
     0,
     ['Memory', 'swap', 'used', 0, 'y'],
     props.longviewClientData
