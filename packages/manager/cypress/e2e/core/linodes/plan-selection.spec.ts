@@ -131,7 +131,7 @@ const planSelectionTable = 'List of Linode Plans';
 
 const notices = {
   limitedAvailability: '[data-testid="limited-availability-banner"]',
-  unavailable: '[data-testid="notice-error"]',
+  unavailable: '[data-qa-error="true"]',
 };
 
 authenticate();

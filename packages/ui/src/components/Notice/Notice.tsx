@@ -1,23 +1,20 @@
-import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
-import * as React from 'react';
+import React from 'react';
 
-import { CheckIcon, AlertIcon as Error, WarningIcon } from '../../assets/icons';
-import { omittedProps } from '../../utilities';
+import {
+  CheckIcon,
+  AlertIcon as ErrorIcon,
+  WarningIcon,
+} from '../../assets/icons';
+import { Box } from '../Box';
 import { Typography } from '../Typography';
 import { useStyles } from './Notice.styles';
 
+import type { BoxProps } from '../Box';
 import type { TypographyProps } from '../Typography';
-import type { Grid2Props } from '@mui/material/Unstable_Grid2';
 
-export type NoticeVariant =
-  | 'error'
-  | 'info'
-  | 'marketing'
-  | 'success'
-  | 'warning';
+export type NoticeVariant = 'error' | 'info' | 'success' | 'warning';
 
-export interface NoticeProps extends Grid2Props {
+export interface NoticeProps extends BoxProps {
   /**
    * If true, the error will be treated as "static" and will not be included in the error group.
    * This will essentially disable the scroll to error behavior.
@@ -49,7 +46,7 @@ export interface NoticeProps extends Grid2Props {
    */
   spacingTop?: 0 | 4 | 8 | 12 | 16 | 24 | 32;
   /**
-   * The text to display in the error. If this is not provided, props.children will be used.
+   * The text to display in the notice. If this is not provided, props.children will be used.
    */
   text?: string;
   /**
@@ -57,7 +54,7 @@ export interface NoticeProps extends Grid2Props {
    */
   typeProps?: TypographyProps;
   /**
-   * The variant of the error. This will determine the color treatment of the error.
+   * The variant of the notice. This will determine the color treatment of the error.
    */
   variant?: NoticeVariant;
 }
@@ -72,9 +69,9 @@ export interface NoticeProps extends Grid2Props {
 
 ## Types of Notices:
 
-- Success/Marketing (green line)
+- Success (green line)
 - Info (blue line)
-- Error/critical (red line)
+- Error (red line)
 - Warning (yellow line)
  */
 export const Notice = (props: NoticeProps) => {
@@ -85,7 +82,6 @@ export const Notice = (props: NoticeProps) => {
     dataTestId,
     errorGroup,
     important,
-    onClick,
     spacingBottom,
     spacingLeft,
     spacingTop,
@@ -93,43 +89,17 @@ export const Notice = (props: NoticeProps) => {
     text,
     typeProps,
     variant,
+    ...rest
   } = props;
-  const { classes, cx } = useStyles();
 
-  const innerText = text ? (
-    <Typography
-      {...typeProps}
-      className={`${classes.noticeText} noticeText`}
-      onClick={onClick}
-    >
-      {text}
-    </Typography>
-  ) : null;
+  const { classes, cx } = useStyles();
 
   const variantMap = {
     error: variant === 'error',
     info: variant === 'info',
-    marketing: variant === 'marketing',
     success: variant === 'success',
     warning: variant === 'warning',
   };
-
-  /**
-   * There are some cases where the message
-   * can be either a string or JSX. In those
-   * cases we should use props.children, but
-   * we want to make sure the string is wrapped
-   * in Typography and formatted as it would be
-   * if it were passed as props.text.
-   */
-  const _children =
-    typeof children === 'string' ? (
-      <Typography className={`${classes.noticeText} noticeText`}>
-        {children}
-      </Typography>
-    ) : (
-      children
-    );
 
   const errorScrollClassName = bypassValidation
     ? ''
@@ -147,59 +117,59 @@ export const Notice = (props: NoticeProps) => {
       };
 
   return (
-    <StyledNoticeGrid
-      className={cx({
-        [classes.error]: variantMap.error,
-        [classes.errorList]: variantMap.error,
-        [classes.important]: important,
-        [classes.info]: variantMap.info,
-        [classes.infoList]: variantMap.info,
-        [classes.marketing]: variantMap.marketing,
-        [classes.root]: true,
-        [classes.success]: variantMap.success,
-        [classes.successList]: variantMap.success,
-        [classes.warning]: variantMap.warning,
-        [classes.warningList]: variantMap.warning,
-        [errorScrollClassName]: variantMap.error,
-        notice: true,
-        ...(className && { [className]: true }),
-      })}
-      data-testid={`notice${variant ? `-${variant}` : ''}${
-        important ? '-important' : ''
-      }`}
-      spacingBottom={spacingBottom}
-      spacingLeft={spacingLeft}
-      spacingTop={spacingTop}
-      sx={sx}
-      {...dataAttributes}
+    <Box
+      className={cx(
+        classes.root,
+        {
+          [classes.error]: variantMap.error,
+          [classes.info]: variantMap.info,
+          [classes.success]: variantMap.success,
+          [classes.warning]: variantMap.warning,
+          // The order we apply styles matters, therefore we:
+          // eslint-disable-next-line perfectionist/sort-objects
+          [classes.important]: important,
+          [errorScrollClassName]: variantMap.error,
+        },
+        'notice',
+        className
+      )}
+      data-testid={
+        dataTestId ??
+        `notice${variant ? `-${variant}` : ''}${important ? '-important' : ''}`
+      }
+      sx={[
+        (theme) => ({
+          marginBottom:
+            spacingBottom !== undefined
+              ? `${spacingBottom}px`
+              : theme.spacing(3),
+          marginLeft: spacingLeft !== undefined ? `${spacingLeft}px` : 0,
+          marginTop: spacingTop !== undefined ? `${spacingTop}px` : 0,
+        }),
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
       role="alert"
+      {...dataAttributes}
+      {...rest}
     >
-      {important &&
-        ((variantMap.success && (
-          <CheckIcon className={classes.icon} data-qa-success-img />
-        )) ||
-          ((variantMap.warning || variantMap.info) && (
-            <WarningIcon className={classes.icon} data-qa-warning-img />
-          )) ||
-          (variantMap.error && (
-            <Error className={classes.icon} data-qa-error-img />
-          )))}
-      <div className={classes.inner} data-testid={dataTestId}>
-        {innerText || _children}
-      </div>
-    </StyledNoticeGrid>
+      {important && variantMap.error && <ErrorIcon className={classes.icon} />}
+      {important && variantMap.info && <WarningIcon className={classes.icon} />}
+      {important && variantMap.success && (
+        <CheckIcon className={classes.icon} />
+      )}
+      {important && variantMap.warning && (
+        <WarningIcon className={cx(classes.icon, classes.warningIcon)} />
+      )}
+      {text || typeof children === 'string' ? (
+        <Typography
+          className={cx(classes.noticeText, 'noticeText')}
+          {...typeProps}
+        >
+          {text ?? children}
+        </Typography>
+      ) : (
+        children
+      )}
+    </Box>
   );
 };
-
-export const StyledNoticeGrid = styled(Grid, {
-  label: 'StyledNoticeGrid',
-  shouldForwardProp: omittedProps([
-    'spacingBottom',
-    'spacingLeft',
-    'spacingTop',
-  ]),
-})<NoticeProps>(({ theme, ...props }) => ({
-  marginBottom: props.spacingBottom ?? theme.spacing(3),
-  marginLeft: props.spacingLeft ?? 0,
-  marginTop: props.spacingTop ?? 0,
-}));
