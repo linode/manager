@@ -5,6 +5,8 @@ export interface Quota {
   description: string;
   quota_limit: number;
   used: number;
+  resource_metric: string;
+  unit: string;
   scope: string;
 }
 

@@ -12,7 +12,7 @@ import { Quota, QuotaType } from './types';
  * @param id { number } the quota ID to look up.
  */
 export const getQuota = (type: QuotaType, id: number) =>
-  Request<Quota>(setURL(`${API_ROOT}/${type}/${id}`), setMethod('GET'));
+  Request<Quota>(setURL(`${API_ROOT}/${type}/quotas/${id}`), setMethod('GET'));
 
 /**
  * getQuotas
@@ -29,7 +29,7 @@ export const getQuotas = (
   filter: Filter = {}
 ) =>
   Request<Page<Quota>>(
-    setURL(`${API_ROOT}/${type}`),
+    setURL(`${API_ROOT}/${type}/quotas`),
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
