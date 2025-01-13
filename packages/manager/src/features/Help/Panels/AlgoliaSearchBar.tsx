@@ -135,12 +135,11 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
               sx: (theme) => ({
                 '& .MuiAutocomplete-option': {
                   ':hover': {
-                    '& .MuiTypography-root': {
-                      color: 'white',
-                    },
-                    'svg ': {
-                      color: 'white',
-                    },
+                    backgroundColor:
+                      theme.name == 'light'
+                        ? `${theme.tokens.color.Brand[10]} !important`
+                        : `${theme.tokens.color.Neutrals[80]} !important`,
+                    color: theme.color.black,
                   },
                 },
                 [theme.breakpoints.up('md')]: {
