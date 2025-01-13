@@ -1,11 +1,10 @@
-import Close from '@mui/icons-material/Close';
-import Search from '@mui/icons-material/Search';
 import { take } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { components } from 'react-select';
 import { debounce } from 'throttle-debounce';
 
+import Search from 'src/assets/icons/search.svg';
 import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
@@ -59,6 +58,7 @@ export const selectStyles = {
     backgroundColor: 'pink',
     border: 0,
     margin: 0,
+    transition: 'none',
     width: '100%',
   }),
   dropdownIndicator: () => ({ display: 'none' }),
@@ -316,19 +316,14 @@ const SearchBar = (props: SearchProps) => {
       <StyledIconButton
         aria-label="open menu"
         color="inherit"
+        disableRipple
         onClick={toggleSearch}
         size="large"
       >
         <Search />
       </StyledIconButton>
       <StyledSearchBarWrapperDiv className={searchActive ? 'active' : ''}>
-        <Search
-          sx={(theme) => ({
-            color: theme.tokens.color.Neutrals[40],
-            fontSize: '2rem',
-          })}
-          data-qa-search-icon
-        />
+        <Search data-qa-search-icon />
         <label className="visually-hidden" htmlFor="main-search">
           Main search
         </label>
@@ -356,23 +351,6 @@ const SearchBar = (props: SearchProps) => {
           styles={selectStyles}
           value={value}
         />
-        <StyledIconButton
-          aria-label="close menu"
-          color="inherit"
-          onClick={toggleSearch}
-          size="large"
-        >
-          <Close
-            sx={(theme) => ({
-              '& > span': {
-                padding: 2,
-              },
-              '&:hover, &:focus': {
-                color: theme.palette.primary.main,
-              },
-            })}
-          />
-        </StyledIconButton>
       </StyledSearchBarWrapperDiv>
     </React.Fragment>
   );

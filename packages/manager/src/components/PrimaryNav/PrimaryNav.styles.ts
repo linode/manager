@@ -24,36 +24,12 @@ export const StyledGrid = styled(Grid, {
   width: '100%',
 }));
 
-export const StyledLogoBox = styled(Box, {
-  label: 'StyledLogoBox',
-})(({ theme }) => ({
-  alignItems: 'center',
-  display: 'flex',
-  height: 50,
-  paddingBottom: 16,
-  paddingLeft: 12,
-  paddingRight: 24,
-  paddingTop: 16,
-  [theme.breakpoints.down('md')]: {
-    borderRight: `1px solid ${theme.tokens.border.Normal}`,
-  },
-  transition: 'padding-left .03s linear',
-}));
-
 export const StyledAkamaiLogo = styled(AkamaiLogo, {
   label: 'StyledAkamaiLogo',
 })(({ theme }) => ({
-  '& .akamai-logo-name': {
-    transition: theme.transitions.create(['opacity']),
-  },
   'path, polygon': {
     fill: theme.tokens.color.Neutrals.White,
-    [theme.breakpoints.down('md')]: {
-      fill: theme.tokens.sideNavigation.Icon,
-    },
   },
-  // give the svg a transition so it smoothly resizes
-  transition: 'width .1s linear',
 }));
 
 export const StyledDivider = styled(Divider, {

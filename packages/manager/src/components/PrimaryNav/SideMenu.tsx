@@ -3,11 +3,8 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
-import {
-  SIDEBAR_COLLAPSED_WIDTH,
-  SIDEBAR_WIDTH,
-} from 'src/components/PrimaryNav/constants';
 
+import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from './constants';
 import PrimaryNav from './PrimaryNav';
 
 export interface SideMenuProps {

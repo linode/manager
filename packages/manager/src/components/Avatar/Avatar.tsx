@@ -61,7 +61,7 @@ export const Avatar = (props: AvatarProps) => {
 
   const savedAvatarColor =
     isAkamai || !avatarColorPreference
-      ? theme.palette.primary.dark
+      ? theme.tokens.color.Neutrals[30]
       : avatarColorPreference;
 
   const avatarLetter = _username[0]?.toUpperCase() ?? '';

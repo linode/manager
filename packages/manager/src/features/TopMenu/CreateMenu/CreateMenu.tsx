@@ -1,6 +1,4 @@
 import { Box, Button, Divider } from '@linode/ui';
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Popover, Stack, useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
@@ -11,7 +9,12 @@ import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
-import { StyledMenuList, StyledPaper, StyledStack } from './CreateMenu.styles';
+import {
+  StyledAddIcon,
+  StyledMenuList,
+  StyledPaper,
+  StyledStack,
+} from './CreateMenu.styles';
 import { ProductFamilyGroup } from './ProductFamilyGroup';
 
 import type { Theme } from '@mui/material';
@@ -40,9 +43,15 @@ export interface CreateMenuLink extends BaseNavLink {
 export const CreateMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
-  const isSmallScreen = useMediaQuery((theme: Theme) =>
+
+  const isMediumScreen = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('md')
   );
+
+  const isSmallScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
+
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
@@ -145,18 +154,24 @@ export const CreateMenu = () => {
   ];
 
   return (
-    <Box sx={{ flexGrow: isSmallScreen ? 1 : 0 }}>
+    <Box sx={{ flexGrow: isMediumScreen ? 1 : 0 }}>
       <Button
+        sx={(theme) => ({
+          [theme.breakpoints.down('md')]: {
+            marginRight: theme.tokens.spacing[40],
+          },
+        })}
         aria-controls={open ? 'basic-menu' : undefined}
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"
         buttonType="primary"
         data-qa-add-new-menu-button
-        endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+        disableRipple
         id="create-menu"
         onClick={handleClick}
+        startIcon={!isSmallScreen && <StyledAddIcon />}
       >
-        Create
+        {isSmallScreen ? <StyledAddIcon /> : 'Create'}
       </Button>
       <Popover
         anchorOrigin={{

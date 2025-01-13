@@ -2,6 +2,8 @@ import { Paper, omittedProps } from '@linode/ui';
 import { MenuItem, MenuList, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import Add from 'src/assets/icons/add.svg';
+
 export const StyledHeading = styled('h3', {
   label: 'StyledHeading',
   shouldForwardProp: omittedProps(['paddingTop']),
@@ -71,4 +73,11 @@ export const StyledLinkTypography = styled(Typography, {
   fontFamily: theme.font.bold,
   fontSize: '1rem',
   lineHeight: '1.4rem',
+}));
+
+export const StyledAddIcon = styled(Add, {
+  label: 'StyledAddIcon',
+})(() => ({
+  height: 16,
+  width: 16,
 }));

@@ -29,6 +29,7 @@ import { latoWeb } from '../fonts';
 import type { ThemeOptions } from '@mui/material/styles';
 
 const inputMaxWidth = 416;
+const topMenuHeight = 56;
 
 export const bg = {
   app: Color.Neutrals[5],
@@ -336,6 +337,7 @@ export const lightTheme: ThemeOptions = {
         root: {
           backgroundColor: GlobalHeader.Background,
           color: GlobalHeader.Text.Default,
+          paddingRight: `0 !important`, // Avoid MUI from applying right padding causing this to jump
           position: 'relative',
         },
       },
@@ -482,7 +484,7 @@ export const lightTheme: ThemeOptions = {
           },
           backgroundColor: Button.Primary.Default.Background,
           color: Button.Primary.Default.Text,
-          padding: '2px 20px',
+          padding: '8px 12px',
         },
         containedSecondary: {
           '&:active': {
@@ -532,7 +534,7 @@ export const lightTheme: ThemeOptions = {
           fontSize: '1rem',
           lineHeight: 1,
           minHeight: 34,
-          minWidth: 105,
+          minWidth: 'initial',
           textTransform: 'capitalize',
           transition: 'none',
         },
@@ -1099,6 +1101,7 @@ export const lightTheme: ThemeOptions = {
           [breakpoints.up('lg')]: {
             minWidth: 250,
           },
+          marginTop: Spacing[20],
           minWidth: 200,
         },
       },
@@ -1418,7 +1421,7 @@ export const lightTheme: ThemeOptions = {
           '.MuiCollapse-root': {
             padding: Spacing[60],
           },
-          borderBottom: `1px solid ${Table.Row.Border}`,
+          borderBottom: `1px s1olid ${Table.Row.Border}`,
           fontSize: Font.FontSize.Xs,
           height: '40px',
           lineHeight: Font.LineHeight.Xs,
@@ -1527,6 +1530,20 @@ export const lightTheme: ThemeOptions = {
         },
         scrollButtons: {
           flex: '0 0 40px',
+        },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          [breakpoints.down('md')]: {
+            padding: `0`,
+          },
+          [breakpoints.up('md')]: {
+            padding: `0 ${Spacing[60]}`, // To override default MUI breakpoint padding
+          },
+          height: topMenuHeight,
+          width: '100%',
         },
       },
     },

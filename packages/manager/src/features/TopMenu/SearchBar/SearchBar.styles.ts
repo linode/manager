@@ -8,29 +8,32 @@ export const StyledIconButton = styled(IconButton, {
     justifyContent: 'flex-end',
   },
   '& svg': {
-    height: 25,
-    width: 25,
+    height: 24,
+    width: 24,
   },
   '&:hover, &:focus': {
-    color: theme.tokens.color.Neutrals[40],
+    color: theme.tokens.header.Search.Icon.Hover,
   },
   backgroundColor: 'inherit',
   border: 'none',
-  color: theme.tokens.color.Neutrals[40],
+  color: theme.tokens.header.Search.Icon.Default,
   cursor: 'pointer',
-  padding: theme.spacing(),
+  padding: theme.tokens.spacing[40],
   position: 'relative',
   [theme.breakpoints.up('md')]: {
     display: 'none',
   },
-  top: 1,
 }));
 
 export const StyledSearchBarWrapperDiv = styled('div', {
   label: 'StyledSearchBarWrapperDiv',
 })(({ theme }) => ({
+  '& .react-select__single-value, & .react-select__input': {
+    color: theme.tokens.header.Search.Text.Filled,
+  },
   '& > div .react-select__control': {
     '&:hover': {
+      backgroundColor: 'transparent',
       borderColor: 'transparent',
     },
     backgroundColor: 'transparent',
@@ -62,24 +65,28 @@ export const StyledSearchBarWrapperDiv = styled('div', {
     overflow: 'hidden',
   },
   '& svg': {
+    color: theme.tokens.header.Icon.Default,
     height: 20,
     width: 20,
   },
   '&.active': {
-    ...theme.inputStyles.focused,
-    '&:hover': {
-      ...theme.inputStyles.focused,
-    },
+    border: `1px solid ${theme.tokens.header.Search.Border.Active}`,
   },
   '&:hover': {
     ...theme.inputStyles.hover,
+    '& svg': {
+      color: theme.tokens.header.Icon.Default,
+    },
+    backgroundColor: theme.tokens.header.Search.Background,
+    border: `1px solid ${theme.tokens.header.Search.Border.Hover}`,
   },
   ...theme.inputStyles.default,
   alignItems: 'center',
+  backgroundColor: theme.tokens.header.Search.Background,
+  border: `1px solid ${theme.tokens.header.Search.Border.Default}`,
   display: 'flex',
   flex: 1,
-  height: 34,
-  marginLeft: theme.spacing(1),
+  height: 32,
   padding: theme.spacing(1),
   position: 'relative', // for search results
   [theme.breakpoints.down('md')]: {
@@ -88,13 +95,15 @@ export const StyledSearchBarWrapperDiv = styled('div', {
       visibility: 'visible',
       zIndex: 3,
     },
-    left: 0,
+    height: 40,
+    left: '50%',
     margin: 0,
     opacity: 0,
     position: 'absolute',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
     visibility: 'hidden',
-    width: 'calc(100% - 100px)',
-    zIndex: -1,
+    width: `calc(100% - ${theme.tokens.spacing[80]})`,
   },
   [theme.breakpoints.down('sm')]: {
     width: '100%',

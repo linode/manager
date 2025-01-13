@@ -89,17 +89,18 @@ export const NotificationMenu = () => {
           sx={(theme) => ({
             ...topMenuIconButtonSx(theme),
             color: notificationContext.menuOpen
-              ? theme.tokens.color.Neutrals[70]
-              : theme.tokens.color.Neutrals[40],
+              ? theme.tokens.header.Icon.Active
+              : theme.tokens.header.Icon.Default,
           })}
           aria-describedby={id}
           aria-haspopup="true"
           aria-label="Notifications"
+          disableRipple
           id={menuButtonId}
           onClick={handleNotificationMenuToggle}
           ref={anchorRef}
         >
-          <Bell height="20px" width="20px" />
+          <Bell height="24px" width="24px" />
           {numNotifications > 0 && (
             <StyledChip
               color="primary"
@@ -191,7 +192,7 @@ const StyledChip = styled(Chip, {
   left: 20,
   padding: 0,
   position: 'absolute',
-  top: 0,
+  top: '-3px',
   width: props.showPlus ? 22 : 18,
 }));
 

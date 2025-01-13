@@ -282,7 +282,7 @@ export const darkTheme: ThemeOptions = {
           },
           backgroundColor: Button.Primary.Default.Background,
           color: Button.Primary.Default.Text,
-          padding: '2px 20px',
+          padding: '8px 12px',
         },
         containedSecondary: {
           '&:active': {
@@ -336,7 +336,6 @@ export const darkTheme: ThemeOptions = {
           fontSize: '1rem',
           lineHeight: 1,
           minHeight: 34,
-          minWidth: 105,
           textTransform: 'capitalize',
           transition: 'none',
         },

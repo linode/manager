@@ -1,4 +1,5 @@
 import { Box } from '@linode/ui';
+import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
@@ -9,7 +10,10 @@ import { makeStyles } from 'tss-react/mui';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
-import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
+import {
+  SIDEBAR_COLLAPSED_WIDTH,
+  SIDEBAR_WIDTH,
+} from 'src/components/PrimaryNav/constants';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
@@ -81,16 +85,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   content: {
     flex: 1,
-    [theme.breakpoints.up('md')]: {
-      marginLeft: SIDEBAR_WIDTH,
-    },
     transition: 'margin-left .1s linear',
   },
   fullWidthContent: {
     marginLeft: 0,
-    [theme.breakpoints.up('md')]: {
-      marginLeft: 52,
-    },
   },
   grid: {
     marginLeft: 0,
@@ -240,6 +238,10 @@ export const MainContent = () => {
 
   const { isIAMEnabled } = useIsIAMEnabled();
 
+  const isNarrowViewport = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down(960)
+  );
+
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -299,8 +301,9 @@ export const MainContent = () => {
         <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
+              <MainContentBanner />
               <TopMenu
-                isSideMenuOpen={!desktopMenuIsOpen}
+                desktopMenuToggle={desktopMenuToggle}
                 openSideMenu={() => toggleMenu(true)}
                 username={username}
               />
@@ -310,7 +313,7 @@ export const MainContent = () => {
                   height="100vh"
                   position="sticky"
                   top={0}
-                  zIndex={10000}
+                  zIndex={1400}
                 >
                   <SideMenu
                     closeMenu={() => toggleMenu(false)}
@@ -327,6 +330,19 @@ export const MainContent = () => {
                 >
                   <MainContentBanner />
                   <main
+                    /*
+                    - Narrow viewports (<960px) never have a left margin
+                    - If the user has unpinned the side menu, the left margin === the width of the collapsed side menu
+                    - Otherwise, the left margin === the width of the fully expanded side menu
+                    */
+                    style={{
+                      marginLeft: isNarrowViewport
+                        ? 0
+                        : desktopMenuIsOpen ||
+                          (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                        ? SIDEBAR_COLLAPSED_WIDTH
+                        : SIDEBAR_WIDTH,
+                    }}
                     className={classes.cmrWrapper}
                     id="main-content"
                     role="main"

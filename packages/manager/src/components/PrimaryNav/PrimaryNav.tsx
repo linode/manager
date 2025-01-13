@@ -1,8 +1,5 @@
-import { Hidden } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -25,10 +22,7 @@ import {
 import PrimaryLink from './PrimaryLink';
 import {
   StyledAccordion,
-  StyledAkamaiLogo,
-  StyledDivider,
   StyledGrid,
-  StyledLogoBox,
   StyledMenuGrid,
 } from './PrimaryNav.styles';
 import { PrimaryNavToggle } from './PrimaryNavToggle';
@@ -332,22 +326,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       spacing={0}
       wrap="nowrap"
     >
-      <Hidden mdUp>
-        <Grid sx={{ width: '100%' }}>
-          <StyledLogoBox>
-            <Link
-              aria-label="Akamai - Dashboard"
-              onClick={closeMenu}
-              style={{ lineHeight: 0 }}
-              title="Akamai - Dashboard"
-              to={`/dashboard`}
-            >
-              <StyledAkamaiLogo width={83} />
-            </Link>
-          </StyledLogoBox>
-          <StyledDivider />
-        </Grid>
-      </Hidden>
       <StyledMenuGrid direction="column">
         {productFamilyLinkGroups.map((productFamily, idx) => {
           const filteredLinks = productFamily.links.filter(
