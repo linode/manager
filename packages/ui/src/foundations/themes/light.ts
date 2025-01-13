@@ -1357,10 +1357,6 @@ export const lightTheme: ThemeOptions = {
           '&.MuiTable-zebra-nested': {
             '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
           },
-          // Collapsible Rows
-          '.MuiCollapse-root': {
-            borderBottom: `1px solid ${Border.Normal}`,
-          },
           // Nested Tables
           '.MuiTable-root': {
             '.MuiTableCell-head': {
@@ -1376,8 +1372,11 @@ export const lightTheme: ThemeOptions = {
             },
             border: 0,
           },
+          // Collapsible Rows
+          '.MuiTableRow-root:not(:last-of-type) .MuiCollapse-root': {
+            borderBottom: `1px solid ${Border.Normal}`,
+          },
           border: `1px solid ${Border.Normal}`,
-          borderBottom: 0,
           borderCollapse: 'initial',
         },
       },

@@ -1,6 +1,6 @@
+import { Global } from '@linode/design-language-system';
 import { Accordion, Box, Divider, omittedProps } from '@linode/ui';
-import { Chip } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Chip, styled } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'react-router-dom';
 
@@ -17,7 +17,8 @@ export const StyledGrid = styled(Grid, {
   [theme.breakpoints.up('md')]: {
     '&:hover': {
       '.primary-nav-toggle': {
-        left: SIDEBAR_WIDTH - 52,
+        justifyContent: 'flex-end',
+        width: SIDEBAR_WIDTH - 1,
       },
     },
   },
@@ -46,9 +47,9 @@ export const StyledActiveLink = styled(Link, {
   ...(!props.isActiveLink && {
     '&:hover': {
       '.primaryNavLink': {
-        color: theme.tokens.sideNavigation.HoverMenuItem.Text,
+        color: Global.Color.Neutrals['White'],
       },
-      backgroundColor: theme.tokens.sideNavigation.HoverMenuItem.Background,
+      backgroundColor: Global.Color.Neutrals[100],
     },
   }),
   '&:hover, &:focus': {
@@ -59,9 +60,10 @@ export const StyledActiveLink = styled(Link, {
   display: 'flex',
   minWidth: SIDEBAR_WIDTH,
   padding: '7px 16px',
+  paddingLeft: 50,
   position: 'relative',
   ...(props.isActiveLink && {
-    backgroundColor: theme.tokens.sideNavigation.SelectedMenuItem.Background,
+    backgroundColor: Global.Color.Neutrals[100],
   }),
 }));
 
@@ -71,8 +73,8 @@ export const StyledPrimaryLinkBox = styled(Box, {
 })<{ isActiveLink: boolean; isCollapsed: boolean }>(({ theme, ...props }) => ({
   alignItems: 'center',
   color: props.isActiveLink
-    ? theme.tokens.sideNavigation.SelectedMenuItem.Text
-    : theme.tokens.sideNavigation.DefaultMenuItem.Text,
+    ? Global.Color.Brand[60]
+    : Global.Color.Neutrals['White'],
   display: 'flex',
   // TODO: Enable token once we have imported Nunito
   // font: theme.tokens.typography.Label.Semibold.S,
@@ -105,9 +107,8 @@ export const StyledAccordion = styled(Accordion, {
   ({ theme, ...props }) => ({
     '& h3': {
       '& p': {
-        color: props.isActiveProductFamily
-          ? theme.tokens.sideNavigation.SelectedMenuItem.Text
-          : theme.tokens.sideNavigation.DefaultMenuItem.Text,
+        color: Global.Color.Neutrals['White'],
+        fontFamily: props.isActiveProductFamily ? 'LatoWebBold' : 'LatoWeb',
         transition: theme.transitions.create(['opacity']),
         ...(props.isCollapsed && {
           opacity: 0,
@@ -116,18 +117,17 @@ export const StyledAccordion = styled(Accordion, {
       // product family icon
       '& svg': {
         color: props.isActiveProductFamily
-          ? theme.tokens.sideNavigation.SelectedMenuItem.Icon
-          : theme.tokens.sideNavigation.DefaultMenuItem.Icon,
-        height: 20,
-        marginRight: 12,
+          ? Global.Color.Brand[60]
+          : Global.Color.Neutrals['White'],
+        height: 24,
+        marginRight: 11,
         transition: theme.transitions.create(['color']),
-        width: 20,
+        width: 24,
       },
       alignItems: 'center',
       display: 'flex',
       // TODO: Enable token once we have imported Nunito
       // font: theme.tokens.typography.Label.Bold.S,
-      fontFamily: 'LatoWebBold',
       padding: '0 10px',
     },
     '.MuiAccordionDetails-root': {
@@ -139,18 +139,16 @@ export const StyledAccordion = styled(Accordion, {
         maxHeight: '42px',
         minHeight: '42px',
       },
-      backgroundColor: props.isActiveProductFamily
-        ? theme.tokens.sideNavigation.SelectedMenuItem.Background
-        : theme.tokens.sideNavigation.DefaultMenuItem.Background,
+      backgroundColor: Global.Color.Neutrals[90],
       maxHeight: '42px',
       minHeight: '42px',
       paddingLeft: 4,
       svg: {
-        fill: theme.tokens.sideNavigation.Icon,
+        fill: Global.Color.Neutrals['White'],
         stroke: 'transparent',
       },
     },
-    backgroundColor: theme.tokens.sideNavigation.DefaultMenuItem.Background,
+    backgroundColor: Global.Color.Neutrals[90],
   })
 );
 

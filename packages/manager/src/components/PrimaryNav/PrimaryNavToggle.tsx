@@ -1,3 +1,4 @@
+import { Global } from '@linode/design-language-system';
 import { Box, IconButton, Tooltip } from '@linode/ui';
 import { Hidden, styled } from '@mui/material';
 import React from 'react';
@@ -5,7 +6,7 @@ import React from 'react';
 import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
 import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
 
-import { SIDEBAR_WIDTH } from './constants';
+import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from './constants';
 
 interface PrimaryNavToggleProps {
   desktopMenuToggle: () => void;
@@ -19,13 +20,17 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
     <Hidden mdDown>
       <Box
         sx={{
-          transition: 'left 100ms ease-in-out',
+          backgroundColor: Global.Color.Neutrals[90],
+          transition: 'width 100ms linear',
         }}
+        width={`${
+          isCollapsed ? SIDEBAR_COLLAPSED_WIDTH - 1 : SIDEBAR_WIDTH - 1
+        }px`}
         bottom={0}
         className="primary-nav-toggle"
         display="flex"
-        justifyContent="flex-end"
-        left={isCollapsed ? 0 : SIDEBAR_WIDTH - 52}
+        justifyContent={isCollapsed ? 'center' : 'flex-end'}
+        left={0}
         padding={1}
         position="fixed"
       >
@@ -41,9 +46,6 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
           title={isCollapsed ? 'pin side menu' : 'unpin side menu'}
         >
           <StyledIconButton
-            sx={{
-              left: 1,
-            }}
             aria-label="unpin menu"
             data-testid="unpin-nav-menu"
             onClick={desktopMenuToggle}
@@ -61,7 +63,7 @@ const StyledIconButton = styled(IconButton, {
   label: 'styledIconButton',
 })(({ theme }) => ({
   '& svg': {
-    color: theme.tokens.sideNavigation.Icon,
+    color: Global.Color.Neutrals['White'],
     transition: theme.transitions.create(['color']),
   },
 }));

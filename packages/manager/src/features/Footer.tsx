@@ -19,7 +19,7 @@ export const Footer = React.memo(() => {
         display="flex"
         height={FOOTER_HEIGHT}
         justifyContent="space-between"
-        paddingX={{ md: 4, xs: 2 }}
+        paddingX={{ md: 2, xs: 2 }}
         paddingY={1.5}
         spacing={{ xs: 1 }}
         textAlign="center"
@@ -27,6 +27,7 @@ export const Footer = React.memo(() => {
         <Hidden mdDown>
           <Stack direction="row" spacing={3}>
             <StyledLink
+              sx={{ paddingLeft: 0 }}
               to={`https://github.com/linode/manager/releases/tag/linode-manager@v${packageJson.version}`}
             >
               v{packageJson.version}
@@ -67,8 +68,10 @@ export const Footer = React.memo(() => {
 });
 
 const StyledFooter = styled('footer')(({ theme }) => ({
+  margin: `${theme.spacing(2)} auto`,
   marginBottom: theme.spacing(),
-  marginTop: theme.spacing(2),
+  maxWidth: `${theme.breakpoints.values.lg}px`,
+  width: '100%',
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({

@@ -1,3 +1,4 @@
+import { Global } from '@linode/design-language-system';
 import Drawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -76,7 +77,7 @@ const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== 'collapse',
 })<{ collapse?: boolean }>(({ theme, ...props }) => ({
   '& .MuiDrawer-paper': {
-    backgroundColor: theme.tokens.sideNavigation.Background.Default,
+    backgroundColor: Global.Color.Neutrals[90],
     boxShadow: 'none',
     left: 'inherit',
     overflow: 'hidden',
@@ -105,9 +106,6 @@ const StyledDrawer = styled(Drawer, {
           overflowY: 'hidden',
         },
         width: `${SIDEBAR_COLLAPSED_WIDTH}px`,
-      },
-      '& a[aria-current="true"]': {
-        background: theme.tokens.sideNavigation.SelectedMenuItem.Background,
       },
       '&.MuiDrawer-docked': {
         height: '100%',

@@ -29,6 +29,7 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
+import { useIsPageScrollable } from './components/PrimaryNav/utils';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
@@ -37,6 +38,7 @@ import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
+import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
 import { useProfile } from './queries/profile/profile';
@@ -69,8 +71,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     minHeight: '100vh',
   },
   cmrWrapper: {
+    flex: 1,
+    margin: '0 auto',
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
     padding: `${theme.spacing(3)} 0`,
+    paddingBottom: 12,
     paddingTop: 12,
     [theme.breakpoints.between('md', 'xl')]: {
       paddingLeft: theme.spacing(2),
@@ -84,7 +89,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     transition: theme.transitions.create('opacity'),
   },
   content: {
+    display: 'flex',
     flex: 1,
+    flexDirection: 'column',
     transition: 'margin-left .1s linear',
   },
   fullWidthContent: {
@@ -242,6 +249,8 @@ export const MainContent = () => {
     theme.breakpoints.down(960)
   );
 
+  const { isPageScrollable } = useIsPageScrollable(contentRef);
+
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -309,8 +318,11 @@ export const MainContent = () => {
               />
               <Box display="flex" flex={1} position="relative">
                 <Box
-                  alignSelf="flex-start"
-                  height="100vh"
+                  height={
+                    isPageScrollable
+                      ? '100vh'
+                      : `calc(100vh - ${TOPMENU_HEIGHT}px)`
+                  }
                   position="sticky"
                   top={0}
                   zIndex={1400}
@@ -326,22 +338,24 @@ export const MainContent = () => {
                   className={cx(classes.content, {
                     [classes.fullWidthContent]: desktopMenuIsOpen === true,
                   })}
+                  style={{
+                    marginLeft: isNarrowViewport
+                      ? 0
+                      : desktopMenuIsOpen ||
+                        (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                      ? SIDEBAR_COLLAPSED_WIDTH
+                      : SIDEBAR_WIDTH,
+                  }}
                   ref={contentRef}
                 >
                   <MainContentBanner />
                   <main
-                    /*
-                    - Narrow viewports (<960px) never have a left margin
-                    - If the user has unpinned the side menu, the left margin === the width of the collapsed side menu
-                    - Otherwise, the left margin === the width of the fully expanded side menu
-                    */
                     style={{
-                      marginLeft: isNarrowViewport
-                        ? 0
-                        : desktopMenuIsOpen ||
-                          (desktopMenuIsOpen && desktopMenuIsOpen === true)
-                        ? SIDEBAR_COLLAPSED_WIDTH
-                        : SIDEBAR_WIDTH,
+                      width: `calc(100vw - ${
+                        desktopMenuIsOpen === true
+                          ? SIDEBAR_COLLAPSED_WIDTH
+                          : SIDEBAR_WIDTH
+                      }px)`,
                     }}
                     className={classes.cmrWrapper}
                     id="main-content"
