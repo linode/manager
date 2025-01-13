@@ -1,7 +1,8 @@
 import type {
   AlertSeverityType,
-  DimensionFilterOperatorType,
   AlertStatusType,
+  ChannelTypes,
+  DimensionFilterOperatorType,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
@@ -116,7 +117,7 @@ export const PollingIntervalOptions = {
     { label: '10 min', value: 600 },
   ],
 };
- 
+
 export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',
   1: 'Medium',
@@ -128,3 +129,17 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',
 };
+
+export const channelTypes: Record<ChannelTypes, string> = {
+  email: 'Email',
+  pagerduty: 'Pagerduty',
+  slack: 'Slack',
+  webhook: 'Webhook',
+};
+
+export const channelTypeOptions: Item<string, ChannelTypes>[] = Object.entries(
+  channelTypes
+).map(([key, label]) => ({
+  label,
+  value: key as ChannelTypes,
+}));

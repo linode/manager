@@ -14,3 +14,8 @@ export const CreateAlertDefinitionFormSchema = createAlertDefinitionSchema.conca
     serviceType: string().required('Service is required.'),
   })
 );
+
+export const notificationChannelSchema = object({
+  channel_type: string().required('Channel Type is required.'),
+  label: string().required('Channel Label is required.'),
+});
