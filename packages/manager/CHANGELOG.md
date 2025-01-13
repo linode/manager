@@ -45,6 +45,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Object Storage `endpoint_type` sorting ([#11472](https://github.com/linode/manager/pull/11472))
 - Visibility of sensitive data in Managed and Longview with Mask Sensitive Data setting enabled ([#11476](https://github.com/linode/manager/pull/11476))
 - Display Kubernetes API endpoint for LKE-E cluster ([#11485](https://github.com/linode/manager/pull/11485))
+- Accuracy of "Add Node Pools" section on LKE Create page ([#11516](https://github.com/linode/manager/pull/11516))
 
 ### Removed:
 
