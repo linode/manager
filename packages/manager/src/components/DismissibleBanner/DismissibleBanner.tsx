@@ -1,11 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, IconButton, Notice } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
-
-import { StyledButton, StyledNotice } from './DismissibleBanner.styles';
 
 import type { NoticeProps } from '@linode/ui';
 import type { DismissibleNotificationOptions } from 'src/hooks/useDismissibleNotifications';
@@ -61,32 +58,30 @@ export const DismissibleBanner = (props: Props) => {
   }
 
   const dismissibleButton = (
-    <Grid>
-      <StyledButton
-        aria-label={`Dismiss ${preferenceKey} banner`}
-        data-testid="notice-dismiss"
-        onClick={handleDismiss}
-      >
-        <Close />
-      </StyledButton>
-    </Grid>
+    <IconButton
+      aria-label={`Dismiss ${preferenceKey} banner`}
+      data-testid="notice-dismiss"
+      onClick={handleDismiss}
+      sx={{ padding: 1 }}
+    >
+      <Close />
+    </IconButton>
   );
 
   return (
-    <StyledNotice className={className} {...rest}>
-      <Box
-        alignItems="center"
-        display="flex"
-        flexDirection="row"
-        justifyContent="space-between"
-      >
-        {children}
-        <Box alignItems="center" display="flex">
-          {actionButton}
-          {dismissibleButton}
-        </Box>
+    <Notice
+      bgcolor={(theme) => theme.palette.background.paper}
+      className={className}
+      display="flex"
+      justifyContent="space-between"
+      {...rest}
+    >
+      {children}
+      <Box alignItems="center" display="flex">
+        {actionButton}
+        {dismissibleButton}
       </Box>
-    </StyledNotice>
+    </Notice>
   );
 };
 

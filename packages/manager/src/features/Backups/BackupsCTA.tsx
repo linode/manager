@@ -52,7 +52,7 @@ export const BackupsCTA = () => {
       spacingBottom={8}
       variant="info"
     >
-      <Typography sx={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
+      <Typography fontSize="inherit">
         <LinkButton onClick={() => setIsBackupsDrawerOpen(true)}>
           Enable Linode Backups
         </LinkButton>{' '}
@@ -61,7 +61,7 @@ export const BackupsCTA = () => {
       <IconButton
         aria-label="Dismiss notice enabling Linode backups"
         onClick={handleDismiss}
-        sx={{ padding: 0.75 }}
+        sx={{ padding: 1 }}
       >
         <Close />
       </IconButton>
