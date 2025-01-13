@@ -17,8 +17,6 @@ export interface DateTimeRangePickerProps {
 
   /** Properties for the end date field */
   endDateProps?: {
-    /** Custom error message for invalid end date */
-    errorMessage?: string;
     /** Label for the end date field */
     label?: string;
     /** placeholder for the end date field */
@@ -101,7 +99,6 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     enablePresets = false,
 
     endDateProps: {
-      errorMessage: endDateErrorMessage = 'End date/time cannot be before the start date/time.',
       label: endLabel = 'End Date and Time',
       placeholder: endDatePlaceholder,
       showTimeZone: showEndTimeZone = false,
