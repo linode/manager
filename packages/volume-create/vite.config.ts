@@ -32,6 +32,7 @@ export default defineConfig({
           './Hello': './src/hello.tsx'
         },
         shared: [
+          'axios',
           'react',
           'react-dom',
           '@tanstack/react-query',

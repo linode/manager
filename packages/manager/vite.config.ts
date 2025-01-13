@@ -32,6 +32,7 @@ export default defineConfig({
         },
       },
       shared: [
+        'axios',
         'react',
         'react-dom',
         '@tanstack/react-query',
