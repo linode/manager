@@ -324,6 +324,8 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
               onClick={() => {
                 setShowPresets(true);
                 setPresetValue(undefined);
+                setStartDateError(null);
+                setEndDateError(null);
               }}
               variant="text"
             >
