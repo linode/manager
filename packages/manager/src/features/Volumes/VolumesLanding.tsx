@@ -3,7 +3,6 @@ import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
@@ -13,7 +12,6 @@ import {
   VOLUME_TABLE_DEFAULT_ORDER,
   VOLUME_TABLE_DEFAULT_ORDER_BY,
 } from 'src/routes/volumes/constants';
-import { sendGroupByTagEnabledEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { DeleteVolumeDialog } from './Dialogs/DeleteVolumeDialog';
@@ -112,28 +110,13 @@ export const VolumesLanding = () => {
     <>
       <VolumesHeader isFetching={isFetching} searchQueryKey={query} />
 
-      <PreferenceToggle
-        preferenceKey="volumes_group_by_tag"
-        preferenceOptions={[false, true]}
-        toggleCallbackFn={sendGroupByAnalytic}
-      >
-        {({
-          preference: volumesAreGrouped,
-          togglePreference: toggleGroupVolumes,
-        }) => {
-          return (
-            <VolumesTable
-              handleOrderChange={handleOrderChange}
-              order={order}
-              orderBy={orderBy}
-              pagination={pagination}
-              toggleGroupVolumes={toggleGroupVolumes}
-              volumes={volumes}
-              volumesAreGrouped={volumesAreGrouped}
-            />
-          );
-        }}
-      </PreferenceToggle>
+      <VolumesTable
+        handleOrderChange={handleOrderChange}
+        order={order}
+        orderBy={orderBy}
+        pagination={pagination}
+        volumes={volumes}
+      />
 
       <AttachVolumeDrawer
         isFetching={isFetchingVolume}
@@ -192,9 +175,3 @@ export const VolumesLanding = () => {
     </>
   );
 };
-
-const sendGroupByAnalytic = (value: boolean) => {
-  sendGroupByTagEnabledEvent('volumes landing', value);
-};
-
-export default VolumesLanding;

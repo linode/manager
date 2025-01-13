@@ -11,6 +11,11 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
+import { sendGroupByTagEnabledEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import {
   StyledTagHeader,
@@ -27,23 +32,34 @@ interface Props {
   order: 'asc' | 'desc';
   orderBy: string;
   pagination: PaginationProps;
-  toggleGroupVolumes: () => boolean;
   volumes: ResourcePage<Volume> | undefined;
-  volumesAreGrouped: boolean;
 }
 
-export function VolumesTable({
+export const VolumesTable = ({
   handleOrderChange,
   order,
   orderBy,
   pagination,
-  toggleGroupVolumes,
   volumes,
-  volumesAreGrouped,
-}: Props) {
+}: Props) => {
   const {
     isBlockStorageEncryptionFeatureEnabled,
   } = useIsBlockStorageEncryptionFeatureEnabled();
+
+  const { data: volumesAreGrouped } = usePreferences(
+    (preferences) => preferences?.volumes_group_by_tag
+  );
+
+  const { mutateAsync: updateUserPreferences } = useMutatePreferences();
+
+  const toggleGroupVolumes = () => {
+    const newValue = !volumesAreGrouped;
+    updateUserPreferences({
+      volumes_group_by_tag: newValue,
+    }).then(() => sendGroupByAnalytic(newValue));
+
+    return newValue;
+  };
 
   const navigate = useNavigate();
 
@@ -93,7 +109,7 @@ export function VolumesTable({
 
     return (
       <>
-        {volumesWithNoTags?.length && getTagHeaderRow('No Tags')}
+        {!!volumesWithNoTags?.length && getTagHeaderRow('No Tags')}
         {volumesWithNoTags?.map((volume) => getVolumeTableRow(volume))}
 
         {tags?.map((tag, index) => (
@@ -155,7 +171,7 @@ export function VolumesTable({
             )}
             <TableCell sx={{ padding: '0 !important', textAlign: 'right' }}>
               <GroupByTagToggle
-                isGroupedByTag={volumesAreGrouped}
+                isGroupedByTag={!!volumesAreGrouped}
                 toggleGroupByTag={toggleGroupVolumes}
               />
             </TableCell>
@@ -181,4 +197,8 @@ export function VolumesTable({
       />
     </>
   );
-}
+};
+
+const sendGroupByAnalytic = (value: boolean) => {
+  sendGroupByTagEnabledEvent('volumes landing', value);
+};

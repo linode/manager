@@ -19,7 +19,7 @@ interface Params {
   searchQueryKey?: string;
 }
 
-export function VolumesHeader({ isFetching, searchQueryKey }: Params) {
+export const VolumesHeader = ({ isFetching, searchQueryKey }: Params) => {
   const navigate = useNavigate();
 
   const isRestricted = useRestrictedGlobalGrantCheck({
@@ -96,4 +96,4 @@ export function VolumesHeader({ isFetching, searchQueryKey }: Params) {
       />
     </>
   );
-}
+};
