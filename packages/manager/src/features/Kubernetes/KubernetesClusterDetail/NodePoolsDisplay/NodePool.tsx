@@ -6,6 +6,7 @@ import {
   Tooltip,
   Typography,
 } from '@linode/ui';
+import Divider from '@mui/material/Divider';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
@@ -65,7 +66,14 @@ export const NodePool = (props: Props) => {
           py: 0,
         }}
       >
-        <Typography variant="h2">{typeLabel}</Typography>
+        <Box display="flex">
+          <Typography variant="h2">{typeLabel}</Typography>
+          <Divider
+            orientation="vertical"
+            sx={(theme) => ({ height: 16, margin: `4px ${theme.spacing(1)}` })}
+          />
+          <Typography variant="h2">{nodes.length} Nodes</Typography>
+        </Box>
         <Hidden smUp>
           <ActionMenu
             actionsList={[
