@@ -1,10 +1,9 @@
 import { Box, IconButton, Tooltip } from '@linode/ui';
-import { Hidden, styled, useScrollTrigger } from '@mui/material';
+import { Hidden, styled } from '@mui/material';
 import React from 'react';
 
 import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
 import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
-import { TOPMENU_HEIGHT } from 'src/features/TopMenu/TopMenu';
 
 import { SIDEBAR_WIDTH } from './constants';
 
@@ -15,23 +14,16 @@ interface PrimaryNavToggleProps {
 }
 
 export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
-  const { desktopMenuToggle, isCollapsed, isPageScrollable } = props;
-
-  const hasScrolledPastTopMenu = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: TOPMENU_HEIGHT,
-  });
+  const { desktopMenuToggle, isCollapsed } = props;
 
   return (
     <Hidden mdDown>
       <Box
-        position={
-          isPageScrollable && !hasScrolledPastTopMenu ? 'fixed' : 'relative'
-        }
         sx={{
           transition: 'left 100ms ease-in-out',
         }}
-        bottom={isPageScrollable && !hasScrolledPastTopMenu ? 0 : 'auto'}
+        position="fixed"
+        bottom={0}
         className="primary-nav-toggle"
         display="flex"
         justifyContent="flex-end"

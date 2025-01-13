@@ -11,16 +11,15 @@ import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
-import { useIsPageScrollable } from 'src/components/PrimaryNav/utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
-import { FOOTER_HEIGHT, Footer } from 'src/features/Footer';
+import { Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
   notificationCenterContext,
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationCenterContext';
-import { TOPMENU_HEIGHT, TopMenu } from 'src/features/TopMenu/TopMenu';
+import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import {
   useMutatePreferences,
   usePreferences,
@@ -241,8 +240,6 @@ export const MainContent = () => {
 
   const { isIAMEnabled } = useIsIAMEnabled();
 
-  const { isPageScrollable } = useIsPageScrollable(contentRef);
-
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -296,11 +293,6 @@ export const MainContent = () => {
     });
   };
 
-  const sideMenuContainerHeight =
-    isPageScrollable === true
-      ? '100vh'
-      : `calc(100vh - ${FOOTER_HEIGHT + TOPMENU_HEIGHT}px)`;
-
   return (
     <div className={classes.appFrame}>
       <SessionExpirationProvider value={sessionExpirationContextValue}>
@@ -315,7 +307,7 @@ export const MainContent = () => {
               <Box display="flex" flex={1} position="relative">
                 <Box
                   alignSelf="flex-start"
-                  height={sideMenuContainerHeight}
+                  height="100vh"
                   position="sticky"
                   top={0}
                   zIndex={10000}
@@ -324,7 +316,6 @@ export const MainContent = () => {
                     closeMenu={() => toggleMenu(false)}
                     collapse={desktopMenuIsOpen || false}
                     desktopMenuToggle={desktopMenuToggle}
-                    isPageScrollable={isPageScrollable}
                     open={menuIsOpen}
                   />
                 </Box>
@@ -404,10 +395,10 @@ export const MainContent = () => {
                       </Grid>
                     </Grid>
                   </main>
+                  <Footer />
                 </div>
               </Box>
             </NotificationProvider>
-            <Footer />
           </ComplianceUpdateProvider>
         </SwitchAccountSessionProvider>
       </SessionExpirationProvider>

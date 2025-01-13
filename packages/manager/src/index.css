@@ -16,6 +16,7 @@ body {
   margin: 0;
   padding: 0 !important;
   font-family: 'LatoWeb', sans-serif;
+  overscroll-behavior: none;
 
   strong, b {
     font-family: 'LatoWebBold', sans-serif;
