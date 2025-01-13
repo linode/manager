@@ -116,7 +116,7 @@ export const PollingIntervalOptions = {
     { label: '10 min', value: 600 },
   ],
 };
- 
+
 export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',
   1: 'Medium',
