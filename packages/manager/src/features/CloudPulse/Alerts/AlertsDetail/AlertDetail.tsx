@@ -49,12 +49,14 @@ export const AlertDetail = () => {
   }, [alertId, serviceType]);
 
   const theme = useTheme();
+  const nonSuccessBoxHeight = '600px';
+  const sectionMaxHeight = '785px';
 
   if (isFetching) {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height="600px">
+        <Box alignContent="center" height={nonSuccessBoxHeight}>
           <CircleProgress />
         </Box>
       </>
@@ -65,7 +67,7 @@ export const AlertDetail = () => {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height="600px">
+        <Box alignContent="center" height={nonSuccessBoxHeight}>
           <ErrorState errorText="An error occurred while loading the definitions. Please try again later." />
         </Box>
       </>
@@ -76,7 +78,7 @@ export const AlertDetail = () => {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height="600px">
+        <Box alignContent="center" height={nonSuccessBoxHeight}>
           <StyledPlaceholder
             icon={AlertsIcon}
             isEntity
@@ -94,7 +96,7 @@ export const AlertDetail = () => {
         <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
           <Box
             flexBasis="50%"
-            maxHeight="785px"
+            maxHeight={sectionMaxHeight}
             sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
           >
             <AlertDetailOverview alertDetails={alertDetails} />
@@ -105,7 +107,7 @@ export const AlertDetail = () => {
               overflow: 'auto',
             }}
             flexBasis="50%"
-            maxHeight="785px"
+            maxHeight={sectionMaxHeight}
           >
             <AlertDetailCriteria alertDetails={alertDetails} />
           </Box>

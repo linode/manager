@@ -56,7 +56,7 @@ export const getAlertBoxStyles = (theme: Theme) => ({
  */
 export const convertSecondsToMinutes = (seconds: number): string => {
   if (seconds <= 0) {
-    return '0 minute';
+    return '0 minutes';
   }
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
