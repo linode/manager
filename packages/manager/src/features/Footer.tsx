@@ -8,22 +8,12 @@ import { DEVELOPERS_LINK, FEEDBACK_LINK } from 'src/constants';
 
 import packageJson from '../../package.json';
 
-const StyledLink = styled(Link)(({ theme }) => ({
-  '&:hover': {
-    color: theme.tokens.footer.Text.Hover,
-  },
-  color: theme.tokens.footer.Text.Default,
-}));
-
 export const FOOTER_HEIGHT = 40;
 
 export const Footer = React.memo(() => {
   return (
-    <footer role="contentinfo">
+    <StyledFooter role="contentinfo">
       <Stack
-        sx={(theme) => ({
-          backgroundColor: theme.tokens.footer.Background,
-        })}
         alignItems="center"
         direction="row"
         display="flex"
@@ -72,6 +62,18 @@ export const Footer = React.memo(() => {
           </Stack>
         </Hidden>
       </Stack>
-    </footer>
+    </StyledFooter>
   );
 });
+
+const StyledFooter = styled('footer')(({ theme }) => ({
+  marginBottom: theme.spacing(),
+  marginTop: theme.spacing(2),
+}));
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  '&:hover': {
+    color: theme.tokens.footer.Text.Hover,
+  },
+  color: theme.tokens.footer.Text.Default,
+}));

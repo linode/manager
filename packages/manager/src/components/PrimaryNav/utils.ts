@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { isPathOneOf } from 'src/utilities/routing/isPathOneOf';
 
 export const linkIsActive = (
@@ -20,39 +18,4 @@ export const linkIsActive = (
   }
 
   return isPathOneOf([href, ...activeLinks], locationPathname);
-};
-
-/**
- * This hook is used to determine if the page is scrollable.
- * It is used to determine if the side menu should be sticky.
- */
-export const useIsPageScrollable = (
-  contentRef: React.RefObject<HTMLElement>
-): { isPageScrollable: boolean } => {
-  const [isPageScrollable, setIsPageScrollable] = React.useState(false);
-
-  React.useEffect(() => {
-    const observer = new MutationObserver(() => {
-      requestAnimationFrame(() => {
-        if (!contentRef.current) {
-          return;
-        }
-
-        const contentHeight = contentRef.current.scrollHeight;
-        const windowHeight = window.innerHeight;
-
-        setIsPageScrollable(contentHeight > windowHeight);
-      });
-    });
-
-    if (contentRef.current) {
-      observer.observe(contentRef.current, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-      });
-    }
-  }, [contentRef]);
-
-  return { isPageScrollable };
 };

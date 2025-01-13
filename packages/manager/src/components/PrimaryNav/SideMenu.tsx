@@ -21,10 +21,6 @@ export interface SideMenuProps {
    */
   desktopMenuToggle: () => void;
   /**
-   * Whether the page is scrollable.
-   */
-  isPageScrollable?: boolean;
-  /**
    * If true, the menu will be open. Has no effect unless the viewport is less than 960px.
    */
   open: boolean;
@@ -36,13 +32,7 @@ export interface SideMenuProps {
  * The Linodes landing page is considered the homepage unless the account is managed. Otherwise, clicking on the Linode logo will take the user to the Managed landing page.
  */
 export const SideMenu = (props: SideMenuProps) => {
-  const {
-    closeMenu,
-    collapse,
-    desktopMenuToggle,
-    isPageScrollable,
-    open,
-  } = props;
+  const { closeMenu, collapse, desktopMenuToggle, open } = props;
 
   return (
     <>
@@ -74,7 +64,6 @@ export const SideMenu = (props: SideMenuProps) => {
             closeMenu={closeMenu}
             desktopMenuToggle={desktopMenuToggle}
             isCollapsed={collapse}
-            isPageScrollable={isPageScrollable}
           />
         </StyledDrawer>
       </Hidden>
