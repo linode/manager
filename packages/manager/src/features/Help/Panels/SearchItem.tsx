@@ -1,9 +1,27 @@
 import { ListItem, Typography } from '@linode/ui';
 import * as React from 'react';
-import { useStyles } from 'tss-react/mui';
+import { makeStyles } from 'tss-react/mui';
 
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
+
+import type { Theme } from '@mui/material/styles';
+
+const useStyles = makeStyles()((theme: Theme) => ({
+  arrow: {
+    color: theme.palette.primary.main,
+    height: 12,
+    width: 12,
+  },
+  root: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  source: {
+    color: theme.color.headline,
+  },
+}));
 
 interface Props {
   data: {
@@ -14,7 +32,6 @@ interface Props {
   };
   isFocused?: boolean;
   searchText: string;
-  selectProps?: any;
 }
 
 export const SearchItem = (props: Props) => {
@@ -26,31 +43,25 @@ export const SearchItem = (props: Props) => {
     }
   };
 
-  const { cx } = useStyles();
+  const { classes } = useStyles();
 
-  const { data, isFocused, selectProps } = props;
+  const { data } = props;
   const source = data.data ? data.data.source : '';
   const isFinal = source === 'finalLink';
 
-  const classes = selectProps?.classes || {};
-
   return (
     <ListItem
-      className={cx({
-        [classes.algoliaRoot]: true,
-        [classes.selectedMenuItem]: isFocused,
-      })}
       aria-label={!isFinal ? `${getLabel()} - opens in a new tab` : undefined}
       value={data.label}
       {...props}
     >
       {isFinal ? (
-        <div className={classes.finalLink}>
-          <Typography>{getLabel()}</Typography>
+        <div className={classes.root}>
+          <Typography className={classes.source}>{getLabel()}</Typography>
         </div>
       ) : (
-        <>
-          <div className={classes.row}>
+        <div className={classes.root}>
+          <div>
             <div
               dangerouslySetInnerHTML={{
                 __html: sanitizeHTML({
@@ -58,12 +69,11 @@ export const SearchItem = (props: Props) => {
                   text: getLabel(),
                 }),
               }}
-              className={classes.label}
             />
-            <Arrow className={classes.icon} />
+            <Typography className={classes.source}>{source}</Typography>
           </div>
-          <Typography className={classes.source}>{source}</Typography>
-        </>
+          <Arrow className={classes.arrow} />
+        </div>
       )}
     </ListItem>
   );

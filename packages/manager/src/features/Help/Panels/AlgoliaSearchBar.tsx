@@ -96,28 +96,21 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       : '/support/search/';
   };
 
-  const handleSelect = (selected: number | string) => {
+  const handleSelect = (selected: any) => {
     if (!selected || !inputValue) {
       return;
     }
 
-    if (selected === 'search') {
-      const link = getLinkTarget(inputValue);
-      history.push(link);
+    const href = pathOr('', ['data', 'href'], selected);
+    if (href) {
+      // If an href exists for the selected option, redirect directly to that link.
+      window.open(href, '_blank', 'noopener');
     } else {
-      const href = pathOr('', ['data', 'href'], selected);
-      if (href) {
-        window.open(href, '_blank', 'noopener');
-      }
-    }
-  };
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' && inputValue) {
+      // If no href, we redirect to the search landing page.
       const link = getLinkTarget(inputValue);
       history.push(link);
     }
   };
-
   return (
     <React.Fragment>
       {searchError && (
@@ -137,17 +130,37 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
               />
             );
           }}
+          slotProps={{
+            paper: {
+              sx: (theme) => ({
+                '& .MuiAutocomplete-option': {
+                  ':hover': {
+                    '& .MuiTypography-root': {
+                      color: 'white',
+                    },
+                    'svg ': {
+                      color: 'white',
+                    },
+                  },
+                },
+                [theme.breakpoints.up('md')]: {
+                  transform: 'translateX(-9%)',
+                  width: 500,
+                },
+              }),
+            },
+          }}
           className={classes.enhancedSelectWrapper}
-          disableClearable
+          disableClearable={false}
           disabled={!searchEnabled}
           inputValue={inputValue}
           label="Search for answers"
           multiple={false}
-          onChange={(_, selected) => handleSelect(selected.value)}
+          onChange={(_, selected) => handleSelect(selected)}
           onInputChange={(_, value) => onInputValueChange(value)}
           options={options}
           placeholder="Search for answers..."
-          textFieldProps={{ hideLabel: true, onKeyDown: handleKeyDown }}
+          textFieldProps={{ hideLabel: true }}
         />
       </div>
     </React.Fragment>
