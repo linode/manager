@@ -12,7 +12,6 @@ export const Default: Story = {
   args: {
     enablePresets: true,
     endDateProps: {
-      errorMessage: '',
       label: 'End Date and Time',
       placeholder: '',
       showTimeZone: false,
@@ -69,7 +68,6 @@ export const WithCustomErrors: Story = {
   args: {
     enablePresets: true,
     endDateProps: {
-      errorMessage: 'End date must be after the start date.',
       label: 'Custom End Label',
       placeholder: '',
       showTimeZone: false,
