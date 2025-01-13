@@ -4,14 +4,12 @@ import React from 'react';
 
 import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
 import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
-import { TOPMENU_HEIGHT } from 'src/features/TopMenu/constants';
 
 import { SIDEBAR_WIDTH } from './constants';
 
 interface PrimaryNavToggleProps {
   desktopMenuToggle: () => void;
   isCollapsed: boolean;
-  isPageScrollable?: boolean;
 }
 
 export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
@@ -23,13 +21,13 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
         sx={{
           transition: 'left 100ms ease-in-out',
         }}
-        position="fixed"
         bottom={0}
         className="primary-nav-toggle"
         display="flex"
         justifyContent="flex-end"
         left={isCollapsed ? 0 : SIDEBAR_WIDTH - 52}
         padding={1}
+        position="fixed"
       >
         <Tooltip
           PopperProps={{

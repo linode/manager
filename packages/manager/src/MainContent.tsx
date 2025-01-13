@@ -37,7 +37,6 @@ import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
-import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
 import { useProfile } from './queries/profile/profile';
@@ -242,7 +241,6 @@ export const MainContent = () => {
   const isNarrowViewport = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down(960)
   );
-  const { isPageScrollable } = useIsPageScrollable(contentRef);
 
   /**
    * this is the case where the user has successfully completed signup
