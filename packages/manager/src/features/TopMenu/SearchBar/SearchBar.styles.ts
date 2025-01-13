@@ -69,12 +69,9 @@ export const StyledSearchBarWrapperDiv = styled('div', {
     height: 20,
     width: 20,
   },
-  // '&:active': {
-  //   border: `1px solid ${theme.tokens.header.Search.Border.Active}`,
   '&.active': {
     border: `1px solid ${theme.tokens.header.Search.Border.Active}`,
   },
-  // },
   '&:hover': {
     ...theme.inputStyles.hover,
     '& svg': {
