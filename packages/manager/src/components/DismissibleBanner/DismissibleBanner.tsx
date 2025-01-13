@@ -1,4 +1,4 @@
-import { Box, IconButton, Notice } from '@linode/ui';
+import { IconButton, Notice, Stack } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
@@ -39,14 +39,7 @@ interface Props extends NoticeProps {
  * - Call to action: Primary Button or text link allows a user to take action directly from the banner.
  */
 export const DismissibleBanner = (props: Props) => {
-  const {
-    actionButton,
-    children,
-    className,
-    options,
-    preferenceKey,
-    ...rest
-  } = props;
+  const { actionButton, children, options, preferenceKey, ...rest } = props;
 
   const { handleDismiss, hasDismissedBanner } = useDismissibleBanner(
     preferenceKey,
@@ -71,16 +64,16 @@ export const DismissibleBanner = (props: Props) => {
   return (
     <Notice
       bgcolor={(theme) => theme.palette.background.paper}
-      className={className}
       display="flex"
+      gap={1}
       justifyContent="space-between"
       {...rest}
     >
       {children}
-      <Box alignItems="center" display="flex">
+      <Stack alignItems="center" direction="row" spacing={1}>
         {actionButton}
         {dismissibleButton}
-      </Box>
+      </Stack>
     </Notice>
   );
 };
