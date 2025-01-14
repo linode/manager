@@ -58,7 +58,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
             >
               <Typography
                 sx={(theme) => ({
-                  fontFamily: theme.font.bold,
+                  font: theme.font.bold,
                   fontSize: '0.85rem',
                   opacity: isLinodeOffline ? 0.5 : 1,
                 })}

@@ -76,9 +76,7 @@ export const StyledPrimaryLinkBox = styled(Box, {
     ? Global.Color.Brand[60]
     : Global.Color.Neutrals['White'],
   display: 'flex',
-  // TODO: Enable token once we have imported Nunito
-  // font: theme.tokens.typography.Label.Semibold.S,
-  fontFamily: 'LatoWeb',
+  font: theme.tokens.typography.Label.Semibold.S,
   justifyContent: 'space-between',
   transition: theme.transitions.create(['color', 'opacity']),
   width: '100%',
@@ -108,7 +106,9 @@ export const StyledAccordion = styled(Accordion, {
     '& h3': {
       '& p': {
         color: Global.Color.Neutrals['White'],
-        fontFamily: props.isActiveProductFamily ? 'LatoWebBold' : 'LatoWeb',
+        font: props.isActiveProductFamily
+          ? theme.tokens.typography.Label.Bold.S
+          : theme.tokens.typography.Label.Semibold.S,
         transition: theme.transitions.create(['opacity']),
         ...(props.isCollapsed && {
           opacity: 0,
@@ -126,8 +126,7 @@ export const StyledAccordion = styled(Accordion, {
       },
       alignItems: 'center',
       display: 'flex',
-      // TODO: Enable token once we have imported Nunito
-      // font: theme.tokens.typography.Label.Bold.S,
+      font: theme.tokens.typography.Label.Bold.S,
       padding: '0 10px',
     },
     '.MuiAccordionDetails-root': {

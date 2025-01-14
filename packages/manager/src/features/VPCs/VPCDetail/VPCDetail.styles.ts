@@ -10,7 +10,7 @@ export const StyledActionButton = styled(Button, {
     color: theme.tokens.color.Neutrals.White,
   },
   color: theme.textColors.linkActiveLight,
-  fontFamily: theme.font.normal,
+  font: theme.font.normal,
   fontSize: '0.875rem',
   height: theme.spacing(5),
   minWidth: 'auto',

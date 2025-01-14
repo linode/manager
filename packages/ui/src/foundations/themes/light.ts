@@ -24,7 +24,6 @@ import {
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
-import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
@@ -198,8 +197,7 @@ const genericStatusPillStyle = {
   },
   backgroundColor: 'transparent',
   color: textColors.tableStatic,
-  fontFamily: latoWeb.bold,
-  fontSize: '1rem',
+  font: Typography.Body.Bold,
   padding: 0,
 };
 
@@ -363,7 +361,7 @@ export const lightTheme: ThemeOptions = {
           },
         },
         groupLabel: {
-          fontFamily: latoWeb.bold,
+          font: Typography.Body.Bold,
           fontSize: '1rem',
           lineHeight: 'unset',
           padding: '8px',
@@ -530,9 +528,7 @@ export const lightTheme: ThemeOptions = {
           border: 'none',
           borderRadius: 1,
           cursor: 'pointer',
-          fontFamily: latoWeb.bold,
-          fontSize: '1rem',
-          lineHeight: 1,
+          font: Typography.Body.Bold,
           minHeight: 34,
           minWidth: 'initial',
           textTransform: 'capitalize',
@@ -810,8 +806,7 @@ export const lightTheme: ThemeOptions = {
             color: Color.Neutrals[70],
           },
           color: Color.Neutrals[70],
-          fontFamily: latoWeb.bold,
-          fontSize: '.875rem',
+          font: Typography.Body.Bold,
           marginBottom: 8,
         },
       },
@@ -996,8 +991,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&.selectHeader': {
             color: primaryColors.text,
-            fontFamily: latoWeb.bold,
-            fontSize: '1rem',
+            font: Typography.Body.Bold,
             opacity: 1,
           },
           color: primaryColors.text,
@@ -1300,7 +1294,7 @@ export const lightTheme: ThemeOptions = {
         root: {
           '&$selected, &$selected:hover': {
             color: primaryColors.headline,
-            fontFamily: latoWeb.bold,
+            font: Typography.Body.Bold,
           },
           '&:hover': {
             color: primaryColors.main,
@@ -1596,8 +1590,7 @@ export const lightTheme: ThemeOptions = {
           },
           color: Color.Neutrals.White,
           cursor: 'pointer',
-          fontFamily: latoWeb.bold,
-          fontSize: '1rem',
+          font: Typography.Body.Bold,
           lineHeight: 1,
           maxHeight: 34,
           minHeight: `34px`,
@@ -1609,8 +1602,12 @@ export const lightTheme: ThemeOptions = {
     },
   },
   font: {
-    bold: latoWeb.bold,
-    normal: latoWeb.normal,
+    bold: Typography.Body.Bold,
+    extrabold: Typography.Body.Extrabold,
+    italic: Typography.Body.Italic,
+    list: Typography.Body.List,
+    normal: Typography.Body.Regular,
+    semibold: Typography.Body.Semibold,
   },
   graphs: {
     aborted: {
@@ -1800,42 +1797,34 @@ export const lightTheme: ThemeOptions = {
   typography: {
     body1: {
       color: primaryColors.text,
-      fontSize: '0.875rem',
-      lineHeight: '1.125rem',
+      font: Typography.Body.Regular,
     },
     caption: {
       color: primaryColors.text,
-      fontSize: '0.625rem',
-      lineHeight: '0.625rem',
+      font: Typography.Heading.Overline,
+      letterSpacing: Typography.Heading.OverlineLetterSpacing,
+      textTransform: Typography.Heading.OverlineTextCase,
     },
-    fontFamily: latoWeb.normal,
+    fontFamily: Font.FontFamily.Brand,
     fontSize: 16,
     h1: {
       [breakpoints.up('lg')]: {
-        fontSize: '1.5rem',
-        lineHeight: '1.875rem',
+        font: Typography.Heading.Xl,
       },
       color: primaryColors.headline,
-      fontFamily: latoWeb.bold,
-      fontSize: '1.25rem',
-      lineHeight: '1.75rem',
+      font: Typography.Heading.L,
     },
     h2: {
       color: primaryColors.headline,
-      fontFamily: latoWeb.bold,
-      fontSize: '1.125rem',
-      lineHeight: '1.5rem',
+      font: Typography.Heading.M,
     },
     h3: {
       color: primaryColors.headline,
-      fontFamily: latoWeb.bold,
-      fontSize: '1rem',
-      lineHeight: '1.4rem',
+      font: Typography.Heading.S,
     },
     subtitle1: {
       color: primaryColors.text,
-      fontSize: '1.075rem',
-      lineHeight: '1.5rem',
+      font: Typography.Heading.Xs,
     },
   },
   visually: {

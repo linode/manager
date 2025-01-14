@@ -130,7 +130,7 @@ export const LinodeEntityDetailHeader = (
     },
     background: 'transparent',
     color: theme.textColors.linkActiveLight,
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
     fontSize: '0.875rem',
     height: theme.spacing(5),
     minWidth: 'auto',
@@ -157,7 +157,7 @@ export const LinodeEntityDetailHeader = (
           sx={{ paddingX: 2 }}
         >
           <StatusIcon status={getLinodeIconStatus(linodeStatus)} />
-          <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             {formattedStatus}
           </Typography>
         </Stack>
@@ -176,7 +176,7 @@ export const LinodeEntityDetailHeader = (
           >
             <ProgressDisplay
               progress={progress ?? 0}
-              sx={{ color: 'primary.main', fontFamily: theme.font.bold }}
+              sx={{ color: 'primary.main', font: theme.font.bold }}
               text={formattedTransitionText}
             />
           </Button>

@@ -12,14 +12,14 @@ export const useStyles = makeStyles()((theme) => ({
   important: {
     backgroundColor: theme.palette.background.paper,
     borderLeftWidth: 32,
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
     padding: theme.spacing(1),
   },
   info: {
     borderLeft: `5px solid ${theme.palette.info.dark}`,
   },
   noticeText: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '1rem',
     lineHeight: '20px',
   },

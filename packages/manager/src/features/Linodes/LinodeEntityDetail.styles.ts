@@ -40,7 +40,7 @@ export const StyledColumnLabelGrid = styled(Grid, {
   label: 'StyledColumnLabelGrid',
 })(({ theme }) => ({
   color: theme.textColors.headlineStatic,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
 }));
 
 export const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
@@ -71,7 +71,7 @@ export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
 
 export const StyledLabelBox = styled(Box, { label: 'StyledLabelBox' })(
   ({ theme }) => ({
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     marginRight: '4px',
   })
 );
@@ -110,7 +110,7 @@ export const StyledIPv4Label = styled(Box, { label: 'StyledIPv4Label' })(
     alignContent: 'center',
     backgroundColor: theme.name === 'light' ? theme.color.grey10 : theme.bg.app,
     color: theme.textColors.textAccessTable,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     padding: `${theme.spacing(1)} ${theme.spacing(3)} ${theme.spacing(
       1
     )} ${theme.spacing(1.5)}`,
@@ -166,7 +166,7 @@ export const StyledTable = styled(Table, { label: 'StyledTable' })(
         theme.name === 'light' ? theme.color.grey10 : theme.bg.app,
       borderBottom: `1px solid ${theme.bg.bgPaper}`,
       color: theme.textColors.textAccessTable,
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
       fontSize: '0.875rem',
       lineHeight: 1,
       padding: theme.spacing(),

@@ -97,7 +97,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
             Currently, only specific{' '}
             <TextTooltip
               sxTypography={{
-                fontFamily: theme.font.bold,
+                font: theme.font.bold,
               }}
               tooltipText={
                 allRegionsWithPlacementGroupCapability?.length ? (
@@ -156,7 +156,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
               });
             }}
             sx={(theme) => ({
-              fontFamily: theme.font.normal,
+              font: theme.font.normal,
               fontSize: '0.875rem',
               mt: -0.75,
               p: 0,

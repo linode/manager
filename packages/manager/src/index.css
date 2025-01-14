@@ -15,12 +15,12 @@ body {
   height: 100%;
   margin: 0;
   padding: 0 !important;
-  font-family: 'LatoWeb', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   overscroll-behavior: none;
 
   strong, b {
-    font-family: 'LatoWebBold', sans-serif;
-    font-weight: normal;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 700;
   }
 }
 
@@ -326,7 +326,8 @@ button::-moz-focus-inner {
   background: #3683dc;
   color: white;
   font-size: 14px;
-  font-family: 'LatoWebBold', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
   padding: 8px;
   position: absolute;
   top: -40px;

@@ -446,7 +446,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 slotProps={{
                   typography: {
                     sx: (theme) => ({
-                      fontFamily: theme.font.bold,
+                      font: theme.font.bold,
                       fontSize: '16px',
                     }),
                   },

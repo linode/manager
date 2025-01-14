@@ -302,7 +302,7 @@ export const AreaChart = (props: AreaChartProps) => {
             }}
             itemStyle={{
               color: theme.tokens.color.Neutrals[70],
-              fontFamily: theme.font.bold,
+              font: theme.font.bold,
             }}
             content={<CustomTooltip />}
           />

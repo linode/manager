@@ -101,7 +101,7 @@ const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
   }`,
   color: theme.palette.text.primary,
   display: 'flex',
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '0.875rem',
   gridColumn: 'span 1',
   height: theme.spacing(4.75),

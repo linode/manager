@@ -90,7 +90,7 @@ export const PlacementGroupsSummary = (props: Props) => {
 export const StyledLabel = styled(Typography, {
   label: 'StyledLabel',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   marginRight: theme.spacing(8),
   width: theme.spacing(10),
 }));

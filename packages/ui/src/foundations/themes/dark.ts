@@ -20,7 +20,6 @@ import {
 } from '@linode/design-language-system/themes/dark';
 
 import { breakpoints } from '../breakpoints';
-import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
@@ -332,9 +331,7 @@ export const darkTheme: ThemeOptions = {
           border: 'none',
           borderRadius: 1,
           cursor: 'pointer',
-          fontFamily: latoWeb.bold,
-          fontSize: '1rem',
-          lineHeight: 1,
+          font: Typography.Body.Bold,
           minHeight: 34,
           textTransform: 'capitalize',
           transition: 'none',

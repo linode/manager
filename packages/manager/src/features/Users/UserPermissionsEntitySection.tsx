@@ -72,7 +72,7 @@ export const UserPermissionsEntitySection = React.memo(
             <TableRow
               sx={(theme) => ({
                 'span.MuiFormControlLabel-label': {
-                  fontFamily: theme.font.bold,
+                  font: theme.font.bold,
                 },
               })}
             >
