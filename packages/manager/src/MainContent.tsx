@@ -319,7 +319,9 @@ export const MainContent = () => {
               <Box display="flex" flex={1} position="relative">
                 <Box
                   height={
-                    isPageScrollable
+                    isNarrowViewport
+                      ? '100%'
+                      : isPageScrollable
                       ? '100vh'
                       : `calc(100vh - ${TOPMENU_HEIGHT}px)`
                   }
@@ -346,19 +348,21 @@ export const MainContent = () => {
                       ? SIDEBAR_COLLAPSED_WIDTH
                       : SIDEBAR_WIDTH,
                   }}
-                  ref={contentRef}
                 >
                   <MainContentBanner />
                   <main
                     style={{
-                      width: `calc(100vw - ${
-                        desktopMenuIsOpen === true
-                          ? SIDEBAR_COLLAPSED_WIDTH
-                          : SIDEBAR_WIDTH
-                      }px)`,
+                      width: isNarrowViewport
+                        ? '100%'
+                        : `calc(100vw - ${
+                            desktopMenuIsOpen === true
+                              ? SIDEBAR_COLLAPSED_WIDTH
+                              : SIDEBAR_WIDTH
+                          }px)`,
                     }}
                     className={classes.cmrWrapper}
                     id="main-content"
+                    ref={contentRef}
                     role="main"
                   >
                     <Grid className={classes.grid} container spacing={0}>

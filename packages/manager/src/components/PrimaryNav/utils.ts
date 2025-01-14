@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { TOPMENU_HEIGHT } from 'src/features/TopMenu/constants';
 import { isPathOneOf } from 'src/utilities/routing/isPathOneOf';
 
 export const linkIsActive = (
@@ -31,28 +32,41 @@ export const useIsPageScrollable = (
 ): { isPageScrollable: boolean } => {
   const [isPageScrollable, setIsPageScrollable] = React.useState(false);
 
+  const checkIfScrollable = React.useCallback(() => {
+    if (!contentRef.current) {
+      return;
+    }
+
+    const contentHeight = contentRef.current.scrollHeight;
+    const viewportHeight = document.documentElement.clientHeight;
+    setIsPageScrollable(contentHeight + TOPMENU_HEIGHT > viewportHeight);
+  }, [contentRef]);
+
   React.useEffect(() => {
-    const observer = new MutationObserver(() => {
-      requestAnimationFrame(() => {
-        if (!contentRef.current) {
-          return;
-        }
+    const mutationObserver = new MutationObserver(() => {
+      requestAnimationFrame(checkIfScrollable);
+    });
 
-        const contentHeight = contentRef.current.scrollHeight;
-        const windowHeight = window.innerHeight;
-
-        setIsPageScrollable(contentHeight > windowHeight);
-      });
+    const viewportObserver = new ResizeObserver(() => {
+      requestAnimationFrame(checkIfScrollable);
     });
 
     if (contentRef.current) {
-      observer.observe(contentRef.current, {
+      mutationObserver.observe(contentRef.current, {
         attributes: true,
         childList: true,
         subtree: true,
       });
+      viewportObserver.observe(document.documentElement);
     }
-  }, [contentRef]);
+
+    checkIfScrollable();
+
+    return () => {
+      mutationObserver.disconnect();
+      viewportObserver.disconnect();
+    };
+  }, [contentRef, checkIfScrollable]);
 
   return { isPageScrollable };
 };

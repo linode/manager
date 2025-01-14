@@ -6,7 +6,11 @@ import React from 'react';
 import PinFilledIcon from 'src/assets/icons/pin-filled.svg';
 import PinOutlineIcon from 'src/assets/icons/pin-outline.svg';
 
-import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from './constants';
+import {
+  PRIMARY_NAV_TOGGLE_HEIGHT,
+  SIDEBAR_COLLAPSED_WIDTH,
+  SIDEBAR_WIDTH,
+} from './constants';
 
 interface PrimaryNavToggleProps {
   desktopMenuToggle: () => void;
@@ -29,6 +33,7 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
         bottom={0}
         className="primary-nav-toggle"
         display="flex"
+        height={PRIMARY_NAV_TOGGLE_HEIGHT}
         justifyContent={isCollapsed ? 'center' : 'flex-end'}
         left={0}
         padding={1}

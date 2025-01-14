@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
-
+import { PRIMARY_NAV_TOGGLE_HEIGHT } from 'src/components/PrimaryNav/constants';
 import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from './constants';
 import PrimaryNav from './PrimaryNav';
 
@@ -79,6 +79,7 @@ const StyledDrawer = styled(Drawer, {
   '& .MuiDrawer-paper': {
     backgroundColor: Global.Color.Neutrals[90],
     boxShadow: 'none',
+    height: `calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`,
     left: 'inherit',
     overflow: 'hidden',
     position: 'absolute',
