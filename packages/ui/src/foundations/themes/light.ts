@@ -251,6 +251,14 @@ const MuiTableZebraStyles = {
   ...MuiTableZebraHoverStyles,
 };
 
+const typographyPropertiesReset = {
+  fontFamily: undefined,
+  fontSize: undefined,
+  fontWeight: undefined,
+  letterSpacing: undefined,
+  lineHeight: undefined,
+};
+
 export const lightTheme: ThemeOptions = {
   addCircleHoverEffect: {
     ...iconCircleHoverEffect,
@@ -1371,6 +1379,7 @@ export const lightTheme: ThemeOptions = {
             borderBottom: `1px solid ${Border.Normal}`,
           },
           border: `1px solid ${Border.Normal}`,
+          borderBottom: 0,
           borderCollapse: 'initial',
         },
       },
@@ -1414,7 +1423,7 @@ export const lightTheme: ThemeOptions = {
           '.MuiCollapse-root': {
             padding: Spacing[60],
           },
-          borderBottom: `1px s1olid ${Table.Row.Border}`,
+          borderBottom: `1px solid ${Table.Row.Border}`,
           fontSize: Font.FontSize.Xs,
           height: '40px',
           lineHeight: Font.LineHeight.Xs,
@@ -1560,6 +1569,17 @@ export const lightTheme: ThemeOptions = {
       },
     },
     MuiTypography: {
+      defaultProps: {
+        fontFamily: Font.FontFamily.Brand,
+        variantMapping: {
+          h1: 'h1',
+          h2: 'h2',
+          h3: 'h3',
+          h4: 'h4',
+          h5: 'h5',
+          h6: 'h6',
+        },
+      },
       styleOverrides: {
         button: {
           '&$colorSecondary': {
@@ -1796,18 +1816,21 @@ export const lightTheme: ThemeOptions = {
   },
   typography: {
     body1: {
+      ...typographyPropertiesReset,
       color: primaryColors.text,
       font: Typography.Body.Regular,
     },
     caption: {
+      ...typographyPropertiesReset,
       color: primaryColors.text,
       font: Typography.Heading.Overline,
       letterSpacing: Typography.Heading.OverlineLetterSpacing,
       textTransform: Typography.Heading.OverlineTextCase,
     },
     fontFamily: Font.FontFamily.Brand,
-    fontSize: 16,
+    fontSize: undefined,
     h1: {
+      ...typographyPropertiesReset,
       [breakpoints.up('lg')]: {
         font: Typography.Heading.Xl,
       },
@@ -1815,14 +1838,18 @@ export const lightTheme: ThemeOptions = {
       font: Typography.Heading.L,
     },
     h2: {
+      ...typographyPropertiesReset,
       color: primaryColors.headline,
       font: Typography.Heading.M,
     },
     h3: {
+      ...typographyPropertiesReset,
       color: primaryColors.headline,
       font: Typography.Heading.S,
     },
+    htmlFontSize: undefined,
     subtitle1: {
+      ...typographyPropertiesReset,
       color: primaryColors.text,
       font: Typography.Heading.Xs,
     },

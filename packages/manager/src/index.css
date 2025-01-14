@@ -9,6 +9,8 @@ html {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-stretch: normal;
+  font-optical-sizing: auto;
 }
 
 body {
@@ -19,7 +21,6 @@ body {
   overscroll-behavior: none;
 
   strong, b {
-    font-family: 'Nunito Sans', sans-serif;
     font-weight: 700;
   }
 }
