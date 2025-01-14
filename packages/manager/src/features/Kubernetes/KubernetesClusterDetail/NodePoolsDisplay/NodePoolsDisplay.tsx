@@ -113,7 +113,7 @@ export const NodePoolsDisplay = (props: Props) => {
       {poolsError && <ErrorState errorText={poolsError[0].reason} />}
       <Stack spacing={2}>
         {_pools?.map((thisPool) => {
-          const { disk_encryption, id, nodes, tags } = thisPool;
+          const { count, disk_encryption, id, nodes, tags } = thisPool;
 
           const thisPoolType = types?.find(
             (thisType) => thisType.id === thisPool.type
@@ -143,6 +143,7 @@ export const NodePoolsDisplay = (props: Props) => {
               clusterCreated={clusterCreated}
               clusterId={clusterID}
               clusterTier={clusterTier}
+              count={count}
               encryptionStatus={disk_encryption}
               handleClickResize={handleOpenResizeDrawer}
               isOnlyNodePool={pools?.length === 1}

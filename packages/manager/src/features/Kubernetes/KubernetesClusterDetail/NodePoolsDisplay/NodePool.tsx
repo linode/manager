@@ -26,6 +26,7 @@ interface Props {
   clusterCreated: string;
   clusterId: number;
   clusterTier: KubernetesTier;
+  count: number;
   encryptionStatus: EncryptionStatus | undefined;
   handleClickResize: (poolId: number) => void;
   isOnlyNodePool: boolean;
@@ -45,6 +46,7 @@ export const NodePool = (props: Props) => {
     clusterCreated,
     clusterId,
     clusterTier,
+    count,
     encryptionStatus,
     handleClickResize,
     isOnlyNodePool,
@@ -77,7 +79,7 @@ export const NodePool = (props: Props) => {
             orientation="vertical"
             sx={(theme) => ({ height: 16, margin: `4px ${theme.spacing(1)}` })}
           />
-          <Typography variant="h2">{nodes.length} Nodes</Typography>
+          <Typography variant="h2">{count} Nodes</Typography>
         </Box>
         <Hidden smUp>
           <ActionMenu
