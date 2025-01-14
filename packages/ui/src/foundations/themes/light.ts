@@ -374,7 +374,10 @@ export const lightTheme: ThemeOptions = {
           borderTop: 0,
         },
         option: {
-          '&.Mui-focused, :hover': {
+          '&.Mui-focused': {
+            backgroundColor: 'transparent',
+          },
+          '&:hover': {
             backgroundColor: `${primaryColors.main} !important`,
             color: primaryColors.white,
             transition: 'background-color 0.2s',

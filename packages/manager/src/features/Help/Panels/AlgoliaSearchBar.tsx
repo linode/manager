@@ -140,6 +140,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
                         ? `${theme.tokens.color.Brand[10]} !important`
                         : `${theme.tokens.color.Neutrals[80]} !important`,
                     color: theme.color.black,
+                    transition: 'background-color 0.2s',
                   },
                 },
                 [theme.breakpoints.up('md')]: {
