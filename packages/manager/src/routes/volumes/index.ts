@@ -12,6 +12,7 @@ const volumeAction = {
   detach: 'detach',
   details: 'details',
   edit: 'edit',
+  'manage-tags': 'manage-tags',
   resize: 'resize',
   upgrade: 'upgrade',
 } as const;
