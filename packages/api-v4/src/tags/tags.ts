@@ -21,7 +21,7 @@ export const createTag = (data: TagRequest) =>
   Request<Tag>(setURL(`${API_ROOT}/tags`), setMethod('POST'), setData(data));
 
 export const deleteTag = (label: string) =>
-  Request<Tag>(
+  Request<{}>(
     setURL(`${API_ROOT}/tags/${encodeURIComponent(label)}`),
     setMethod('DELETE')
   );

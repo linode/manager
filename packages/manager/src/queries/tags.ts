@@ -1,6 +1,16 @@
-import { getTaggedObjects, getTags } from '@linode/api-v4';
+import {
+  createTag,
+  deleteTag,
+  getTaggedObjects,
+  getTags,
+} from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useQuery } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -12,8 +22,10 @@ import type {
   Params,
   Tag,
   TaggedObject,
+  TagRequest,
 } from '@linode/api-v4';
-import type { QueryClient } from '@tanstack/react-query';
+import type { MutationOptions, QueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 
 const tagQueries = createQueryKeys('tags', {
   all: {
@@ -37,6 +49,54 @@ export const useTagObjectsQuery = (label: string) =>
   useQuery({
     ...tagQueries.tagObjects(label),
   });
+
+export const useCreateTagMutation = (
+  options?: MutationOptions<Tag, APIError[], TagRequest>
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Tag, APIError[], TagRequest>({
+    mutationFn: createTag,
+    ...options,
+    onSuccess(...params) {
+      const newTag = params[0];
+      queryClient.setQueryData<Tag[]>(tagQueries.all.queryKey, (tags) => {
+        if (!tags) {
+          return [newTag];
+        }
+        return [newTag, ...tags];
+      });
+      options?.onSuccess?.(...params);
+    },
+  });
+};
+
+export const useDeleteTagMutation = () => {
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const query = queryOptions(tagQueries.all);
+
+  return useMutation<{}, APIError[], string>({
+    mutationFn: deleteTag,
+    onError(errors) {
+      for (const error of errors) {
+        enqueueSnackbar(error.reason, {
+          variant: 'error',
+        });
+      }
+    },
+    onSuccess(_, tag) {
+      enqueueSnackbar(`Successfully deleted tag ${tag}`, {
+        variant: 'success',
+      });
+      queryClient.setQueryData(
+        query.queryKey,
+        (tags) => tags?.filter((t) => t.label !== tag) ?? []
+      );
+    },
+  });
+};
 
 const getAllTags = (passedParams: Params = {}, passedFilter: Filter = {}) =>
   getAll<Tag>((params, filter) =>

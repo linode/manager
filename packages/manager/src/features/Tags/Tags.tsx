@@ -1,8 +1,9 @@
 import { CircleProgress } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -12,10 +13,16 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { useAllTagsQuery } from 'src/queries/tags';
+import { useAllTagsQuery, useDeleteTagMutation } from 'src/queries/tags';
+
+import { CreateTagForm } from './CreateTagDrawer';
 
 const Tags = () => {
   const history = useHistory();
+
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const { mutate } = useDeleteTagMutation();
   const { data: tags, error, isPending } = useAllTagsQuery();
 
   if (isPending) {
@@ -28,7 +35,10 @@ const Tags = () => {
 
   return (
     <>
-      <LandingHeader createButtonText="Create Tag" onButtonClick={() => null} />
+      <LandingHeader
+        createButtonText="Create Tag"
+        onButtonClick={() => setIsCreateOpen(true)}
+      />
       <Table>
         <TableHead>
           <TableRow>
@@ -45,14 +55,24 @@ const Tags = () => {
               <TableCell actionCell>
                 <InlineMenuAction
                   actionText="View in Search"
-                  onClick={() => history.push(`/search?query=${tag.label}`)}
+                  onClick={() => history.push(`/search?query=tag:${tag.label}`)}
                 />
-                <InlineMenuAction actionText="Delete" />
+                <InlineMenuAction
+                  actionText="Delete"
+                  onClick={() => mutate(tag.label)}
+                />
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <Drawer
+        onClose={() => setIsCreateOpen(false)}
+        open={isCreateOpen}
+        title="Create Tag"
+      >
+        <CreateTagForm onClose={() => setIsCreateOpen(false)} />
+      </Drawer>
     </>
   );
 };
