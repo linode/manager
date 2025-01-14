@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
@@ -7,6 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { NodeTable, encryptionStatusTestId } from './NodeTable';
 
 import type { Props } from './NodeTable';
+import type { KubernetesTier } from '@linode/api-v4';
 
 const mockLinodes = linodeFactory.buildList(3);
 
@@ -85,5 +87,26 @@ describe('NodeTable', () => {
     expect(encryptionStatusFragment).toBeInTheDocument();
 
     mocks.useIsDiskEncryptionFeatureEnabled.mockRestore();
+  });
+
+  it('displays a provisioning message if the cluster was created within the first 10 mins and there are no nodes yet', async () => {
+    const clusterProps = {
+      ...props,
+      clusterCreated: DateTime.local().toISO(),
+      clusterTier: 'enterprise' as KubernetesTier,
+      nodes: [],
+    };
+
+    const { findByText } = renderWithTheme(<NodeTable {...clusterProps} />);
+
+    expect(
+      await findByText(
+        'Nodes will appear once cluster provisioning is complete.'
+      )
+    ).toBeVisible();
+
+    expect(
+      await findByText('Provisioning can take up to 10 minutes.')
+    ).toBeVisible();
   });
 });
