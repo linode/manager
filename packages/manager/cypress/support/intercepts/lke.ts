@@ -6,7 +6,11 @@ import {
   kubeEndpointFactory,
   kubernetesDashboardUrlFactory,
 } from '@src/factories';
-import { kubernetesVersions } from 'support/constants/lke';
+import {
+  kubernetesVersions,
+  latestEnterpriseTierKubernetesVersion,
+  latestStandardTierKubernetesVersion,
+} from 'support/constants/lke';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
@@ -18,7 +22,10 @@ import type {
   KubeNodePoolResponse,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
+  KubernetesTier,
+  KubernetesTieredVersion,
   KubernetesVersion,
+  PriceType,
 } from '@linode/api-v4';
 
 /**
@@ -38,6 +45,39 @@ export const mockGetKubernetesVersions = (versions?: string[] | undefined) => {
   return cy.intercept(
     'GET',
     apiMatcher('lke/versions*'),
+    paginateResponse(versionObjects)
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve tiered Kubernetes versions and mocks response.
+ *
+ * @param tier - Standard or enterprise Kubernetes tier.
+ * @param versions - Optional array of strings containing mocked tiered versions.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetTieredKubernetesVersions = (
+  tier: KubernetesTier,
+  versions?: KubernetesTieredVersion[]
+) => {
+  const defaultTieredVersions =
+    tier === 'enterprise'
+      ? [latestEnterpriseTierKubernetesVersion]
+      : [latestStandardTierKubernetesVersion];
+
+  const versionObjects = (versions ? versions : defaultTieredVersions).map(
+    (kubernetesTieredVersion): KubernetesTieredVersion => {
+      return {
+        id: kubernetesTieredVersion.id,
+        tier: kubernetesTieredVersion.tier,
+      };
+    }
+  );
+
+  return cy.intercept(
+    'GET',
+    apiMatcher(`lke/versions/${tier}*`),
     paginateResponse(versionObjects)
   );
 };
@@ -452,6 +492,40 @@ export const mockUpdateControlPlaneACLError = (
   return cy.intercept(
     'PUT',
     apiMatcher(`/lke/clusters/${clusterId}/control_plane_acl`),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
+ * Intercepts GET request for LKE cluster types and mocks the response
+ *
+ * @param types - LKE cluster types with which to mock response
+ *
+ * @returns Cypress chainable
+ */
+export const mockGetLKEClusterTypes = (
+  types: PriceType[]
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('lke/types*'), paginateResponse(types));
+};
+
+/**
+ * Intercepts PUT request to update an LKE cluster and mocks an error response.
+ *
+ * @param clusterId - ID of cluster for which to intercept PUT request.
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateClusterError = (
+  clusterId: number,
+  errorMessage: string = 'An unknown error occurred.',
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`lke/clusters/${clusterId}`),
     makeErrorResponse(errorMessage, statusCode)
   );
 };

@@ -16,7 +16,7 @@ export type Order = 'asc' | 'desc';
 
 /**
  * useOrder is a hook that allows you to handle ordering tables. It takes into account
- * the following items when determining inital order
+ * the following items when determining initial order
  *  1. Query Params (Ex. ?order=asc&orderBy=status)
  *  2. User Preference
  *  3. Initial Order passed as params
@@ -32,7 +32,9 @@ export const useOrder = (
   preferenceKey?: string,
   prefix?: string
 ) => {
-  const { data: preferences } = usePreferences();
+  const { data: sortPreferences } = usePreferences(
+    (preferences) => preferences?.sortKeys
+  );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
   const history = useHistory();
@@ -42,7 +44,7 @@ export const useOrder = (
 
   const initialOrder = getInitialValuesFromUserPreferences(
     preferenceKey || '',
-    preferences || {},
+    sortPreferences || {},
     params,
     initial?.orderBy,
     initial?.order,
@@ -57,7 +59,7 @@ export const useOrder = (
       if (preferenceKey) {
         updatePreferences({
           sortKeys: {
-            ...(preferences?.sortKeys ?? {}),
+            ...(sortPreferences ?? {}),
             [preferenceKey]: { order, orderBy },
           },
         });

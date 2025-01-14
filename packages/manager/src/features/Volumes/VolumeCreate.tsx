@@ -10,11 +10,10 @@ import {
 } from '@linode/ui';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -58,14 +57,13 @@ import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
-import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
-import { SizeField } from './VolumeDrawer/SizeField';
+import { SIZE_FIELD_WIDTH } from './constants';
+import { ConfigSelect } from './Drawers/VolumeDrawer/ConfigSelect';
+import { SizeField } from './Drawers/VolumeDrawer/SizeField';
 
 import type { VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Theme } from '@mui/material/styles';
-
-export const SIZE_FIELD_WIDTH = 160;
 
 const useStyles = makeStyles()((theme: Theme) => ({
   agreement: {
@@ -128,8 +126,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const VolumeCreate = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { classes } = useStyles();
-  const history = useHistory();
 
   const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
@@ -227,7 +225,13 @@ export const VolumeCreate = () => {
           enqueueSnackbar(`Volume scheduled for creation.`, {
             variant: 'success',
           });
-          history.push('/volumes', { volume });
+          navigate({
+            params: {
+              action: 'details',
+              volumeId: volume.id,
+            },
+            to: '/volumes/$volumeId/$action',
+          });
           // Analytics Event
           sendCreateVolumeEvent(`Size: ${size}GB`, origin);
         })
@@ -548,7 +552,3 @@ const initialValues: FormState = {
   region: '',
   size: 20,
 };
-
-export const volumeCreateLazyRoute = createLazyRoute('/volumes/create')({
-  component: VolumeCreate,
-});

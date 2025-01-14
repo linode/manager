@@ -50,7 +50,9 @@ export const Avatar = (props: AvatarProps) => {
 
   const theme = useTheme();
 
-  const { data: preferences } = usePreferences();
+  const { data: avatarColorPreference } = usePreferences(
+    (preferences) => preferences?.avatarColor
+  );
   const { data: profile } = useProfile();
 
   const _username = username ?? profile?.username ?? '';
@@ -58,9 +60,10 @@ export const Avatar = (props: AvatarProps) => {
     _username === 'Akamai' || _username.startsWith('lke-service-account');
 
   const savedAvatarColor =
-    isAkamai || !preferences?.avatarColor
+    isAkamai || !avatarColorPreference
       ? theme.palette.primary.dark
-      : preferences.avatarColor;
+      : avatarColorPreference;
+
   const avatarLetter = _username[0]?.toUpperCase() ?? '';
 
   return (

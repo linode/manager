@@ -1,10 +1,14 @@
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { notificationFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+import {
+  renderWithThemeAndRouter,
+  wrapWithTableBody,
+} from 'src/utilities/testHelpers';
 
 import { VolumeTableRow } from './VolumeTableRow';
 
@@ -28,13 +32,18 @@ const handlers: ActionHandlers = {
   handleDetach: vi.fn(),
   handleDetails: vi.fn(),
   handleEdit: vi.fn(),
+  handleManageTags: vi.fn(),
   handleResize: vi.fn(),
   handleUpgrade: vi.fn(),
 };
 
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", async () => {
-    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByTestId,
+      getByText,
+    } = await renderWithThemeAndRouter(
       wrapWithTableBody(
         <VolumeTableRow handlers={handlers} volume={attachedVolume} />
       )
@@ -53,7 +62,7 @@ describe('Volume table row', () => {
   });
 
   it('should show Unattached if the Volume is not attached to a Linode', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
       wrapWithTableBody(
         <VolumeTableRow handlers={handlers} volume={unattachedVolume} />
       )
@@ -79,7 +88,7 @@ describe('Volume table row', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(
+    const { findByText } = await renderWithThemeAndRouter(
       wrapWithTableBody(<VolumeTableRow handlers={handlers} volume={volume} />)
     );
 
@@ -99,7 +108,7 @@ describe('Volume table row', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(
+    const { findByText } = await renderWithThemeAndRouter(
       wrapWithTableBody(<VolumeTableRow handlers={handlers} volume={volume} />)
     );
 
@@ -110,7 +119,7 @@ describe('Volume table row', () => {
   it('should render the encryption status if isBlockStorageEncryptionFeatureEnabled is true', async () => {
     const volume = volumeFactory.build();
 
-    const { findByText } = renderWithTheme(
+    const { findByText } = await renderWithThemeAndRouter(
       wrapWithTableBody(
         <VolumeTableRow
           handlers={handlers}
@@ -126,7 +135,7 @@ describe('Volume table row', () => {
   it('should not render the encryption status if isBlockStorageEncryptionFeatureEnabled is false', async () => {
     const volume = volumeFactory.build();
 
-    const { queryByText } = renderWithTheme(
+    const { queryByText } = await renderWithThemeAndRouter(
       wrapWithTableBody(<VolumeTableRow handlers={handlers} volume={volume} />)
     );
 
@@ -141,7 +150,7 @@ describe('Volume table row - for linodes detail page', () => {
       getByText,
       queryByTestId,
       queryByText,
-    } = renderWithTheme(
+    } = await renderWithThemeAndRouter(
       wrapWithTableBody(
         <VolumeTableRow
           handlers={handlers}
@@ -166,5 +175,24 @@ describe('Volume table row - for linodes detail page', () => {
 
     // Make sure there is a detach button
     expect(getByText('Detach'));
+  });
+
+  it('should show a high performance icon tooltip if Linode has the capability', async () => {
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+      wrapWithTableBody(
+        <VolumeTableRow
+          handlers={handlers}
+          isDetailsPageRow
+          linodeCapabilities={['Block Storage Performance B1']}
+          volume={attachedVolume}
+        />
+      )
+    );
+
+    const highPerformanceIcon = getByLabelText('High Performance');
+
+    expect(highPerformanceIcon).toBeVisible();
+    await userEvent.click(highPerformanceIcon);
+    await waitFor(() => expect(getByText('High Performance')).toBeVisible());
   });
 });
