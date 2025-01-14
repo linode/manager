@@ -9,6 +9,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
+import { AlertResources } from '../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailOverview } from './AlertDetailOverview';
@@ -111,6 +112,17 @@ export const AlertDetail = () => {
           >
             <AlertDetailCriteria alertDetails={alertDetails} />
           </Box>
+        </Box>
+        <Box
+          sx={{
+            ...getAlertBoxStyles(theme),
+            overflow: 'auto',
+          }}
+        >
+          <AlertResources
+            resourceIds={alertDetails.entity_ids}
+            serviceType={serviceType}
+          />
         </Box>
       </Box>
     </>
