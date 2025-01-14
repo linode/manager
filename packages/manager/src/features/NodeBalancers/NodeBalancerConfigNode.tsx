@@ -170,9 +170,10 @@ export const NodeBalancerConfigNode = React.memo(
             {!hideModeSelect && (
               <Grid lg={2} sm={3} xs={6}>
                 <Autocomplete
-                  value={modeOptions.find(
-                    (option) => option.value === node.mode
-                  )}
+                  value={
+                    modeOptions.find((option) => option.value === node.mode) ??
+                    modeOptions.find((option) => option.value === 'accept')
+                  }
                   disableClearable
                   disabled={disabled}
                   errorText={nodesErrorMap.mode}
