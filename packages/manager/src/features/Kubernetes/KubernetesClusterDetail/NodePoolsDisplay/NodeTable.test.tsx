@@ -66,6 +66,27 @@ describe('NodeTable', () => {
     getByText('Pool ID 1');
   });
 
+  it('displays a provisioning message if the cluster was created within the first 10 mins and there are no nodes yet', async () => {
+    const clusterProps = {
+      ...props,
+      clusterCreated: DateTime.local().toISO(),
+      clusterTier: 'enterprise' as KubernetesTier,
+      nodes: [],
+    };
+
+    const { findByText } = renderWithTheme(<NodeTable {...clusterProps} />);
+
+    expect(
+      await findByText(
+        'Nodes will appear once cluster provisioning is complete.'
+      )
+    ).toBeVisible();
+
+    expect(
+      await findByText('Provisioning can take up to 10 minutes.')
+    ).toBeVisible();
+  });
+
   it('does not display the encryption status of the pool if the account lacks the capability or the feature flag is off', () => {
     // situation where isDiskEncryptionFeatureEnabled === false
     const { queryByTestId } = renderWithTheme(<NodeTable {...props} />);
@@ -87,26 +108,5 @@ describe('NodeTable', () => {
     expect(encryptionStatusFragment).toBeInTheDocument();
 
     mocks.useIsDiskEncryptionFeatureEnabled.mockRestore();
-  });
-
-  it('displays a provisioning message if the cluster was created within the first 10 mins and there are no nodes yet', async () => {
-    const clusterProps = {
-      ...props,
-      clusterCreated: DateTime.local().toISO(),
-      clusterTier: 'enterprise' as KubernetesTier,
-      nodes: [],
-    };
-
-    const { findByText } = renderWithTheme(<NodeTable {...clusterProps} />);
-
-    expect(
-      await findByText(
-        'Nodes will appear once cluster provisioning is complete.'
-      )
-    ).toBeVisible();
-
-    expect(
-      await findByText('Provisioning can take up to 10 minutes.')
-    ).toBeVisible();
   });
 });
