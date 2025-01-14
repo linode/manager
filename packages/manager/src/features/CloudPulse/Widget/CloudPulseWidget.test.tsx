@@ -26,8 +26,8 @@ const props: CloudPulseWidgetProperties = {
     unit: 'percent',
   },
   duration: { unit: 'min', value: 30 },
+  entityIds: ['1', '2'],
   isJweTokenFetching: false,
-  resourceIds: ['1', '2'],
   resources: [
     {
       id: '1',
