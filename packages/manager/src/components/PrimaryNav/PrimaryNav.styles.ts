@@ -1,3 +1,4 @@
+import { Typography as FontTypography } from '@linode/design-language-system';
 import { Global } from '@linode/design-language-system';
 import { Accordion, Box, Divider, omittedProps } from '@linode/ui';
 import { Chip, styled } from '@mui/material';
@@ -43,7 +44,7 @@ export const StyledDivider = styled(Divider, {
 export const StyledActiveLink = styled(Link, {
   label: 'StyledActiveLink',
   shouldForwardProp: omittedProps(['isActiveLink', 'isCollapsed']),
-})<{ isActiveLink: boolean; isCollapsed: boolean }>(({ theme, ...props }) => ({
+})<{ isActiveLink: boolean; isCollapsed: boolean }>(({ ...props }) => ({
   ...(!props.isActiveLink && {
     '&:hover': {
       '.primaryNavLink': {
@@ -58,6 +59,7 @@ export const StyledActiveLink = styled(Link, {
   alignItems: 'center',
   cursor: 'pointer',
   display: 'flex',
+  font: FontTypography.Body.Semibold,
   minWidth: SIDEBAR_WIDTH,
   padding: '7px 16px',
   paddingLeft: 50,
