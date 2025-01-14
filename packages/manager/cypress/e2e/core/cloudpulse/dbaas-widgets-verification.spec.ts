@@ -27,6 +27,7 @@ import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
+import { extendRegion } from 'support/util/regions';
 import { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
 import { Interception } from 'cypress/types/net-stubbing';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
@@ -48,29 +49,14 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 
-const flags: Partial<Flags> = {
-  aclp: { enabled: true, beta: true },
-  aclpResourceTypeMap: [
-    {
-      dimensionKey: 'LINODE_ID',
-      maxResourceSelections: 10,
-      serviceType: 'linode',
-      supportedRegionIds: '',
-    },
-    {
-      dimensionKey: 'cluster_id',
-      maxResourceSelections: 10,
-      serviceType: 'dbaas',
-      supportedRegionIds: 'us-ord',
-    },
-  ],
-};
+const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 
 const {
   metrics,
   id,
   serviceType,
   dashboardName,
+  region,
   engine,
   clusterName,
   nodeType,
@@ -89,13 +75,15 @@ const dashboard = dashboardFactory.build({
   }),
 });
 
-const metricDefinitions = metrics.map(({ title, name, unit }) =>
-  dashboardMetricFactory.build({
-    label: title,
-    metric: name,
-    unit,
-  })
-);
+const metricDefinitions = {
+  data: metrics.map(({ title, name, unit }) =>
+    dashboardMetricFactory.build({
+      label: title,
+      metric: name,
+      unit,
+    })
+  ),
+};
 
 const mockLinode = linodeFactory.build({
   label: clusterName,
@@ -103,18 +91,14 @@ const mockLinode = linodeFactory.build({
 });
 
 const mockAccount = accountFactory.build();
-
-const mockRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
-  id: 'us-ord',
-  label: 'Chicago, IL',
-});
-
-const extendedMockRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
-  id: 'us-east',
-  label: 'Newark,NL',
-});
+const mockRegion = extendRegion(
+  regionFactory.build({
+    capabilities: ['Linodes'],
+    id: 'us-ord',
+    label: 'Chicago, IL',
+    country: 'us',
+  })
+);
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
@@ -167,9 +151,9 @@ const getWidgetLegendRowValuesFromResponse = (
 };
 
 const databaseMock: Database = databaseFactory.build({
-  label: clusterName,
-  type: engine,
-  region: mockRegion.label,
+  label: widgetDetails.dbaas.clusterName,
+  type: widgetDetails.dbaas.engine,
+  region: widgetDetails.dbaas.region,
   version: '1',
   status: 'provisioning',
   cluster_size: 1,
@@ -193,7 +177,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
     );
-    mockGetRegions([mockRegion, extendedMockRegion]);
+    mockGetRegions([mockRegion]);
     mockGetUserPreferences({});
     mockGetDatabases([databaseMock]).as('getDatabases');
 
@@ -207,60 +191,35 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Dashboard')
       .should('be.visible')
-      .type(dashboardName);
-
-    ui.autocompletePopper
-      .findByTitle(dashboardName)
-      .should('be.visible')
-      .click();
+      .type(`${dashboardName}{enter}`)
+      .should('be.visible');
 
     // Select a time duration from the autocomplete input.
     ui.autocomplete
       .findByLabel('Time Range')
       .should('be.visible')
-      .type(timeDurationToSelect);
+      .type(`${timeDurationToSelect}{enter}`)
+      .should('be.visible');
 
-    ui.autocompletePopper
-      .findByTitle(timeDurationToSelect)
-      .should('be.visible')
-      .click();
-
-    //Select a Database Engine from the autocomplete input.
+    //Select a Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
-      .type(engine);
+      .type(`${engine}{enter}`)
+      .should('be.visible');
 
-    ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
+    // Select a region from the dropdown.
+    ui.regionSelect.find().click().type(`${region}{enter}`);
 
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-
-    ui.regionSelect.find().type(extendedMockRegion.label);
-
-    // Since DBaaS does not support this region, we expect it to not be in the dropdown.
-
-    ui.autocompletePopper.find().within(() => {
-      cy.findByText(
-        `${extendedMockRegion.label} (${extendedMockRegion.id})`
-      ).should('not.exist');
-    });
-
-    ui.regionSelect.find().click().clear();
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
-      .should('be.visible')
-      .click();
-
-    // Select a resource (Database Clusters) from the autocomplete input.
+    // Select a resource from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Clusters')
       .should('be.visible')
-      .type(clusterName);
+      .type(`${clusterName}{enter}`)
+      .click();
+    cy.findByText(clusterName).should('be.visible');
 
-    ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
-
-    // Select a Node from the autocomplete input.
+    //Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')

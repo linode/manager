@@ -84,9 +84,9 @@ export const RebuildFromStackScript = (props: Props) => {
   } = props;
 
   const {
-    data: typeToConfirmPreference,
+    data: preferences,
     isLoading: isLoadingPreferences,
-  } = usePreferences((preferences) => preferences?.type_to_confirm ?? true);
+  } = usePreferences();
 
   const { checkForNewEvents } = useEventsPollingActions();
 
@@ -107,7 +107,7 @@ export const RebuildFromStackScript = (props: Props) => {
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
   const submitButtonDisabled =
-    Boolean(typeToConfirmPreference) && confirmationText !== linodeLabel;
+    preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
 
   const [
     ss,
@@ -374,7 +374,7 @@ export const RebuildFromStackScript = (props: Props) => {
                   title="Confirm"
                   typographyStyle={{ marginBottom: 8 }}
                   value={confirmationText}
-                  visible={typeToConfirmPreference}
+                  visible={preferences?.type_to_confirm}
                 />
                 <ActionsPanel
                   primaryButtonProps={{

@@ -47,7 +47,7 @@ export const CloudPulseAlertSeveritySelect = (
                 )
               : null
           }
-          data-testid="severity"
+          data-testid={'severity'}
           errorText={fieldState.error?.message}
           label="Severity"
           onBlur={field.onBlur}

@@ -93,6 +93,23 @@ export const StackScriptForm = React.memo((props: Props) => {
             rows={1}
             value={description.value}
           />
+          <ImageSelect
+            textFieldProps={{
+              required: true,
+              tooltipText:
+                'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.',
+            }}
+            anyAllOption
+            data-qa-stackscript-target-select
+            disabled={disabled}
+            errorText={hasErrorFor('images')}
+            label="Target Images"
+            multiple
+            onChange={onSelectChange}
+            placeholder="Select image(s)"
+            value={selectedImages}
+            variant="public"
+          />
         </StyledGridWithTips>
         <StyledGridWithTips>
           <StyledNotice>
@@ -109,23 +126,6 @@ export const StackScriptForm = React.memo((props: Props) => {
           </StyledNotice>
         </StyledGridWithTips>
       </Grid>
-      <ImageSelect
-        textFieldProps={{
-          required: true,
-          tooltipText:
-            'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.',
-        }}
-        anyAllOption
-        data-qa-stackscript-target-select
-        disabled={disabled}
-        errorText={hasErrorFor('images')}
-        label="Target Images"
-        multiple
-        onChange={onSelectChange}
-        placeholder="Select image(s)"
-        value={selectedImages}
-        variant="public"
-      />
       <TextField
         InputProps={{ sx: { maxWidth: '100%' } }}
         data-qa-stackscript-script

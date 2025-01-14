@@ -5,8 +5,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NodeBalancerDeleteDialog } from './NodeBalancerDeleteDialog';
 
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
-
 const props = {
   id: 1,
   label: 'nb-1',
@@ -14,30 +12,8 @@ const props = {
   open: true,
 };
 
-const preference: ManagerPreferences['type_to_confirm'] = true;
-
-const queryMocks = vi.hoisted(() => ({
-  usePreferences: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/queries/profile/preferences', async () => {
-  const actual = await vi.importActual('src/queries/profile/preferences');
-  return {
-    ...actual,
-    usePreferences: queryMocks.usePreferences,
-  };
-});
-
-queryMocks.usePreferences.mockReturnValue({
-  data: preference,
-});
-
 describe('NodeBalancerDeleteDialog', () => {
   it('renders the NodeBalancerDeleteDialog', () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preference,
-    });
-
     const { getByText } = renderWithTheme(
       <NodeBalancerDeleteDialog {...props} />
     );

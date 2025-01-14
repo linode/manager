@@ -1,9 +1,13 @@
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 
 import type { AccountSettings } from '@linode/api-v4/lib/account';
-import type { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
+import type {
+  ACLType,
+  ObjectStorageObject,
+} from '@linode/api-v4/lib/object-storage';
 import type { ObjectStorageEndpoint } from '@linode/api-v4/lib/object-storage';
 import type { FormikProps } from 'formik';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export const generateObjectUrl = (hostname: string, objectName: string) => {
   return `https://${hostname}/${objectName}`;
@@ -38,11 +42,6 @@ export const basename = (
 
   return path.substr(idx + 1);
 };
-
-export interface ACLType {
-  label: string;
-  value: string;
-}
 
 export interface ExtendedObject extends ObjectStorageObject {
   _displayName: string;
@@ -154,18 +153,18 @@ export const confirmObjectStorage = async <T extends {}>(
   }
 };
 
-export const objectACLOptions: ACLType[] = [
+export const objectACLOptions: Item<ACLType>[] = [
   { label: 'Private', value: 'private' },
   { label: 'Authenticated Read', value: 'authenticated-read' },
   { label: 'Public Read', value: 'public-read' },
 ];
 
-export const bucketACLOptions: ACLType[] = [
+export const bucketACLOptions: Item<ACLType>[] = [
   ...objectACLOptions,
   { label: 'Public Read/Write', value: 'public-read-write' },
 ];
 
-export const objectACLHelperText: Record<string, string> = {
+export const objectACLHelperText: Record<ACLType, string> = {
   'authenticated-read': 'Authenticated Read ACL',
   custom: 'Custom ACL',
   private: 'Private ACL',

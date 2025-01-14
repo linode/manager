@@ -1,7 +1,6 @@
 import { createTestLinode } from 'support/util/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 
@@ -16,9 +15,7 @@ describe('update linode label', () => {
     cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
       const newLinodeLabel = randomLabel();
       cy.visitWithLogin(`/linodes/${linode.id}`);
-      cy.contains('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
-        'be.visible'
-      );
+      cy.contains('RUNNING').should('be.visible');
 
       cy.get(`[aria-label="Edit ${linode.label}"]`).click();
       cy.get(`[id="edit-${linode.label}-label"]`)
@@ -35,9 +32,7 @@ describe('update linode label', () => {
     cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
       const newLinodeLabel = randomLabel();
       cy.visitWithLogin(`/linodes/${linode.id}`);
-      cy.contains('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
-        'be.visible'
-      );
+      cy.contains('RUNNING').should('be.visible');
 
       cy.visitWithLogin(`/linodes/${linode.id}/settings`);
       cy.get('[id="label"]').click().clear().type(`${newLinodeLabel}{enter}`);

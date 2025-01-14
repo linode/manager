@@ -10,8 +10,6 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import {
   ACCESS_CONTROLS_DRAWER_TEXT,
   ACCESS_CONTROLS_DRAWER_TEXT_LEGACY,
-  ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,
-  ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
   LEARN_MORE_LINK,
   LEARN_MORE_LINK_LEGACY,
 } from 'src/features/Databases/constants';
@@ -125,9 +123,7 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
   const onValidate = ({ _allowList }: Values) => {
     const validatedIPs = validateIPs(_allowList, {
       allowEmptyAddress: false,
-      errorMessage: isDefaultDB
-        ? ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT
-        : ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
+      errorMessage: 'Must be a valid IPv4 address.',
     });
 
     setValues({ _allowList: validatedIPs });

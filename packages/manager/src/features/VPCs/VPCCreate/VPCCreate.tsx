@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
-import { FormProvider } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -18,20 +17,20 @@ import { VPCTopSectionContent } from './FormComponents/VPCTopSectionContent';
 
 const VPCCreate = () => {
   const {
-    form,
+    formik,
+    generalAPIError,
+    generalSubnetErrorsFromAPI,
     isLoadingCreateVPC,
+    onChangeField,
     onCreateVPC,
     regionsData,
     userCannotAddVPC,
   } = useCreateVPC({ pushToVPCPage: true });
 
-  const {
-    formState: { errors },
-    handleSubmit,
-  } = form;
+  const { errors, handleSubmit, setFieldValue, values } = formik;
 
   return (
-    <FormProvider {...form}>
+    <>
       <DocumentTitleSegment segment="Create VPC" />
       <LandingHeader
         breadcrumbProps={{
@@ -49,19 +48,27 @@ const VPCCreate = () => {
       />
       {userCannotAddVPC && CannotCreateVPCNotice}
       <Grid>
-        <form onSubmit={handleSubmit(onCreateVPC)}>
-          {errors.root?.message && (
-            <Notice text={errors.root.message} variant="error" />
-          )}
+        {generalAPIError ? (
+          <Notice text={generalAPIError} variant="error" />
+        ) : null}
+        <form onSubmit={handleSubmit}>
           <Paper>
             <StyledHeaderTypography variant="h2">VPC</StyledHeaderTypography>
             <VPCTopSectionContent
               disabled={userCannotAddVPC}
+              errors={errors}
+              onChangeField={onChangeField}
               regions={regionsData}
+              values={values}
             />
           </Paper>
           <Paper sx={(theme) => ({ marginTop: theme.spacing(2.5) })}>
-            <SubnetContent disabled={userCannotAddVPC} />
+            <SubnetContent
+              disabled={userCannotAddVPC}
+              onChangeField={setFieldValue}
+              subnetErrors={generalSubnetErrorsFromAPI}
+              subnets={values.subnets}
+            />
           </Paper>
           <StyledActionsPanel
             primaryButtonProps={{
@@ -69,13 +76,12 @@ const VPCCreate = () => {
               disabled: userCannotAddVPC,
               label: 'Create VPC',
               loading: isLoadingCreateVPC,
-              onClick: handleSubmit(onCreateVPC),
-              type: 'submit',
+              onClick: onCreateVPC,
             }}
           />
         </form>
       </Grid>
-    </FormProvider>
+    </>
   );
 };
 

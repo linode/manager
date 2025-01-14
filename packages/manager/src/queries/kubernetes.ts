@@ -14,7 +14,6 @@ import {
   getKubernetesClustersBeta,
   getKubernetesTieredVersionsBeta,
   getKubernetesTypes,
-  getKubernetesTypesBeta,
   getKubernetesVersions,
   getNodePools,
   recycleAllNodes,
@@ -125,12 +124,10 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
     queryFn: () => getAllKubernetesTieredVersionsBeta(tier),
     queryKey: [tier],
   }),
-  types: (useBetaEndpoint: boolean = false) => ({
-    queryFn: useBetaEndpoint
-      ? getAllKubernetesTypesBeta
-      : () => getAllKubernetesTypes(),
-    queryKey: [useBetaEndpoint ? 'v4beta' : 'v4'],
-  }),
+  types: {
+    queryFn: () => getAllKubernetesTypes(),
+    queryKey: null,
+  },
   versions: {
     queryFn: () => getAllKubernetesVersions(),
     queryKey: null,
@@ -384,14 +381,10 @@ export const useKubernetesVersionQuery = () =>
     ...queryPresets.oneTimeFetch,
   });
 
-export const useKubernetesTieredVersionsQuery = (
-  tier: string,
-  enabled = true
-) => {
-  return useQuery<KubernetesTieredVersion[], APIError[]>({
+export const useKubernetesTieredVersionQuery = (tier: string) => {
+  useQuery<KubernetesTieredVersion[], APIError[]>({
     ...kubernetesQueries.tieredVersions(tier),
     ...queryPresets.oneTimeFetch,
-    enabled,
   });
 };
 
@@ -472,13 +465,8 @@ const getAllKubernetesTypes = () =>
     (results) => results.data
   );
 
-const getAllKubernetesTypesBeta = () =>
-  getAll<PriceType>((params) => getKubernetesTypesBeta(params))().then(
-    (results) => results.data
-  );
-
-export const useKubernetesTypesQuery = (useBetaEndpoint?: boolean) =>
+export const useKubernetesTypesQuery = () =>
   useQuery<PriceType[], APIError[]>({
     ...queryPresets.oneTimeFetch,
-    ...kubernetesQueries.types(useBetaEndpoint),
+    ...kubernetesQueries.types,
   });

@@ -264,8 +264,8 @@ const StyledTitle = styled(Typography, {
 
 export const StyledBottomLegend = styled('div', {
   label: 'StyledBottomLegend',
-})(({ theme }) => ({
-  color: theme.tokens.color.Neutrals[70],
+})(() => ({
+  color: '#777',
   fontSize: 14,
 }));
 

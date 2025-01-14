@@ -1,12 +1,10 @@
 import { Button, H1Header, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import LightThemeAkamaiLogo from 'src/assets/logo/akamai-logo-color.svg';
-import DarkThemeAkamaiLogo from 'src/assets/logo/akamai-logo.svg';
+import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 
 import type { Theme } from '@mui/material/styles';
 
@@ -16,6 +14,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   root: {
     '& button': {
+      backgroundColor: '#00b159',
+      color: theme.tokens.color.Neutrals.White,
       marginTop: theme.spacing(8),
     },
     '& h1': {
@@ -39,25 +39,20 @@ const useStyles = makeStyles()((theme: Theme) => ({
 export const CancelLanding = React.memo(() => {
   const { classes } = useStyles();
   const location = useLocation();
-  const theme = useTheme();
 
-  const surveyLink = path<string>(['state', 'survey_link'], location);
+  const survey_link = path<string>(['state', 'survey_link'], location);
 
-  if (!surveyLink) {
+  if (!survey_link) {
     return <Redirect to="/" />;
   }
 
   const goToSurvey = () => {
-    window.location.assign(surveyLink);
+    window.location.assign(survey_link);
   };
 
   return (
     <div className={classes.root} data-testid="body">
-      {theme.name === 'light' ? (
-        <LightThemeAkamaiLogo className={classes.logo} />
-      ) : (
-        <DarkThemeAkamaiLogo className={classes.logo} />
-      )}
+      <AkamaiLogo className={classes.logo} />
       <H1Header title="It&rsquo;s been our pleasure to serve you." />
       <Typography>
         Your account is closed. We hope you&rsquo;ll consider us for your future
@@ -77,3 +72,5 @@ export const CancelLanding = React.memo(() => {
     </div>
   );
 });
+
+export default CancelLanding;

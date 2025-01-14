@@ -20,7 +20,7 @@ export interface Linode {
   id: number;
   alerts: LinodeAlerts;
   backups: LinodeBackups;
-  capabilities: LinodeCapabilities[];
+  capabilities?: LinodeCapabilities[]; // @TODO BSE: Remove optionality once BSE is fully rolled out
   created: string;
   disk_encryption?: EncryptionStatus; // @TODO LDE: Remove optionality once LDE is fully rolled out
   region: string;
@@ -55,10 +55,7 @@ export interface LinodeBackups {
   last_successful: string | null;
 }
 
-export type LinodeCapabilities =
-  | 'Block Storage Encryption'
-  | 'SMTP Enabled'
-  | 'Block Storage Performance B1';
+export type LinodeCapabilities = 'Block Storage Encryption' | 'SMTP Enabled';
 
 export type Window =
   | 'Scheduling'

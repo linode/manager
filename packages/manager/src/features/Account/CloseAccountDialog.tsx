@@ -3,20 +3,25 @@ import { Notice, TextField, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import {
-  CANCELLATION_DATA_LOSS_WARNING,
-  CANCELLATION_DIALOG_TITLE,
-} from 'src/features/Account/constants';
 import { useProfile } from 'src/queries/profile/profile';
 
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   closeDialog: () => void;
   open: boolean;
 }
+
+const useStyles = makeStyles()((theme: Theme) => ({
+  dontgo: {
+    marginTop: theme.spacing(2),
+    order: 1,
+  },
+}));
 
 const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
@@ -24,6 +29,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   );
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [comments, setComments] = React.useState<string>('');
+  const { classes } = useStyles();
   const history = useHistory();
   const { data: profile } = useProfile();
 
@@ -69,66 +75,49 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       });
   };
 
-  if (!profile?.email) {
+  if (!profile?.username) {
     return null;
   }
 
   return (
     <TypeToConfirmDialog
       entity={{
-        name: profile.email,
+        name: profile.username,
         primaryBtnText: 'Close Account',
         subType: 'CloseAccount',
         type: 'AccountSetting',
       }}
-      typographyStyleSx={(theme) => ({
-        borderTop: `1px solid ${theme.tokens.border.Normal}`,
-        marginBottom: theme.tokens.spacing[40],
-        marginTop: theme.tokens.spacing[60],
-        paddingTop: theme.tokens.spacing[60],
-        width: '100%',
-      })}
-      expand
       inputRef={inputRef}
-      label={`Enter your email address (${profile.email})`}
+      label={`Please enter your Username (${profile.username}) to confirm.`}
       loading={isClosingAccount}
       onClick={handleCancelAccount}
       onClose={closeDialog}
       open={open}
-      reversePrimaryButtonPosition
-      title={CANCELLATION_DIALOG_TITLE}
+      textFieldStyle={{ maxWidth: '415px' }}
+      title="Are you sure you want to close your cloud computing services account?"
     >
       {errors ? (
         <Notice text={errors ? errors[0].reason : ''} variant="error" />
       ) : null}
       <StyledNoticeWrapper>
-        <Notice
-          sx={(theme) => ({
-            border: `1px solid ${theme.tokens.action.Negative.Default}`,
-          })}
-          important
-          spacingBottom={12}
-          variant="error"
-        >
+        <Notice spacingBottom={12} variant="warning">
           <Typography sx={{ fontSize: '0.875rem' }}>
-            <strong>Warning:</strong> {CANCELLATION_DATA_LOSS_WARNING}
+            <strong>Warning:</strong> Please note this is an extremely
+            destructive action. Closing your account means that all services
+            Linodes, Volumes, DNS Records, etc will be lost and may not be able
+            be restored.
           </Typography>
         </Notice>
       </StyledNoticeWrapper>
-      <Typography
-        sx={(theme) => ({
-          marginTop: theme.tokens.spacing[60],
-          order: 1,
-        })}
-      >
-        Please let us know what we could be doing better in the comments section
-        below. After your account is closed, you&rsquo;ll be directed to a quick
-        survey that will help us understand your experience.
+      <Typography className={classes.dontgo}>
+        We&rsquo;d hate to see you go. Please let us know what we could be doing
+        better in the comments section below. After your account is closed,
+        you&rsquo;ll be directed to a quick survey so we can better gauge your
+        feedback.
       </Typography>
       <StyledCommentSectionWrapper>
         <TextField
           aria-label="Optional comments field"
-          expand
           label="Comments"
           multiline
           onChange={(e) => setComments(e.target.value)}

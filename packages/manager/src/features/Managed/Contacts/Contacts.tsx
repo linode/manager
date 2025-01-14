@@ -132,16 +132,16 @@ const Contacts = () => {
                             active={orderBy === 'name'}
                             direction={order}
                             handleClick={handleOrderChange}
-                            label="name"
+                            label={'name'}
                           >
                             Name
                           </TableSortCell>
-                          <Hidden mdDown>
+                          <Hidden smDown>
                             <TableSortCell
                               active={orderBy === 'group'}
                               direction={order}
                               handleClick={handleOrderChange}
-                              label="group"
+                              label={'group'}
                             >
                               Group
                             </TableSortCell>
@@ -150,7 +150,7 @@ const Contacts = () => {
                             active={orderBy === 'email'}
                             direction={order}
                             handleClick={handleOrderChange}
-                            label="email"
+                            label={'email'}
                           >
                             E-mail
                           </TableSortCell>
@@ -159,7 +159,7 @@ const Contacts = () => {
                               active={orderBy === 'phone:primary'}
                               direction={order}
                               handleClick={handleOrderChange}
-                              label="phone:primary"
+                              label={'phone:primary'}
                             >
                               Primary Phone
                             </TableSortCell>
@@ -167,7 +167,7 @@ const Contacts = () => {
                               active={orderBy === 'phone:secondary'}
                               direction={order}
                               handleClick={handleOrderChange}
-                              label="phone:secondary"
+                              label={'phone:secondary'}
                             >
                               Secondary Phone
                             </TableSortCell>

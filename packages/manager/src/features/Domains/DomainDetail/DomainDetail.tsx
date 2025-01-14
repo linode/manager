@@ -1,8 +1,8 @@
 import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -18,18 +18,14 @@ import { DeleteDomain } from '../DeleteDomain';
 import DomainRecords from '../DomainRecords';
 import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
 
-import type { DomainState } from 'src/routes/domains';
-
 export const DomainDetail = () => {
-  const navigate = useNavigate();
-  const params = useParams({ from: '/domains/$domainId' });
-  const domainId = params.domainId;
-  const location = useLocation();
-  const locationState = location.state as DomainState;
-  const { data: domain, error, isLoading } = useDomainQuery(
-    domainId,
-    !!domainId
-  );
+  const params = useParams<{ domainId: string }>();
+  const domainId = Number(params.domainId);
+
+  const history = useHistory();
+  const location = useLocation<{ recordError?: string }>();
+
+  const { data: domain, error, isLoading } = useDomainQuery(domainId);
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
   const {
     data: records,
@@ -114,8 +110,8 @@ export const DomainDetail = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         title="Domain Details"
       />
-      {locationState?.recordError && (
-        <StyledNotice text={locationState.recordError} variant="error" />
+      {location.state && location.state.recordError && (
+        <StyledNotice text={location.state.recordError} variant="error" />
       )}
       <StyledRootGrid container>
         <StyledMainGrid xs={12}>
@@ -142,7 +138,7 @@ export const DomainDetail = () => {
             <DeleteDomain
               domainId={domain.id}
               domainLabel={domain.domain}
-              onSuccess={() => navigate({ to: '/domains' })}
+              onSuccess={() => history.push('/domains')}
             />
           </StyledDiv>
         </StyledTagSectionGrid>

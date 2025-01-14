@@ -16,7 +16,7 @@ export const StyledCircleIcon = styled('div', {
     props.index === props.activeStep
       ? theme.palette.primary.main
       : props.index < props.activeStep
-      ? theme.tokens.color.Cyan[30] // TODO: need UX confirmation on color code
+      ? '#ADD8E6' // TODO: need UX confirmation on color code
       : theme.bg.bgPaper, // Adjust colors as needed
   border:
     props.index < props.activeStep || props.index === props.activeStep
@@ -45,7 +45,7 @@ export const StyledColorlibConnector = styled(StepConnector, {
   label: 'StyledColorlibConnector',
 })(({ theme }) => ({
   '& .MuiStepConnector-line': {
-    borderColor: theme.tokens.color.Ultramarine[10],
+    borderColor: '#eaeaf0',
     borderLeftWidth: '3px',
     minHeight: theme.spacing(2),
   },

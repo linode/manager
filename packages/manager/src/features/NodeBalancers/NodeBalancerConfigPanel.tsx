@@ -13,34 +13,26 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
-import { useFlags } from 'src/hooks/useFlags';
 
-import {
-  ALGORITHM_HELPER_TEXT,
-  SESSION_STICKINESS_DEFAULTS,
-} from './constants';
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
 import { PassiveCheck } from './NodeBalancerPassiveCheck';
-import {
-  getAlgorithmOptions,
-  getStickinessOptions,
-  setErrorMap,
-} from './utils';
+import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
-import type {
-  NodeBalancerConfigNodeMode,
-  NodeBalancerProxyProtocol,
-  Protocol,
-} from '@linode/api-v4';
+import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 
 const DATA_NODE = 'data-node-idx';
+export const ROUND_ROBIN_ALGORITHM_HELPER_TEXT =
+  'Round robin distributes connection requests to backend servers in weighted circular order.';
+export const LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT =
+  'Least connections assigns connections to the backend with the least connections.';
+export const SOURCE_ALGORITHM_HELPER_TEXT =
+  "Source uses the client's IPv4 address.";
 
 export const NodeBalancerConfigPanel = (
   props: NodeBalancerConfigPanelProps
 ) => {
-  const flags = useFlags();
   const {
     algorithm,
     configIdx,
@@ -67,33 +59,12 @@ export const NodeBalancerConfigPanel = (
 
   const onProtocolChange = (
     event: React.SyntheticEvent,
-    selected: { label: string; value: Protocol }
+    selected: { label: string; value: string }
   ) => {
     const { healthCheckType } = props;
     const { value: protocol } = selected;
 
     props.onProtocolChange(selected.value);
-
-    const newAlgorithmOptions = getAlgorithmOptions(selected.value);
-    const newStickinessOptions = getStickinessOptions(selected.value);
-
-    if (!newAlgorithmOptions.some((option) => option.value === algorithm)) {
-      // If the newly selected protocol does not support the currently selected algorithm,
-      // we reset the algorithm for the user.
-      // For example if UDP is selected with "Ring Hash" then the user selects TCP, the algorithm
-      // will change to "Round Robin" because TCP does not support Ring Hash.
-      props.onAlgorithmChange(newAlgorithmOptions[0].value);
-    }
-
-    if (
-      !newStickinessOptions.some((option) => option.value === sessionStickiness)
-    ) {
-      // If the newly selected protocol does not support the currently selected stickiness option,
-      // we reset the stickiness selection for the user.
-      // For example if UDP is selected with the "Session" stickiness option then the user selects TCP,
-      // the stickiness will change to "None" because TCP does not support the "Session" stickiness option.
-      props.onSessionStickinessChange(SESSION_STICKINESS_DEFAULTS[protocol]);
-    }
 
     if (
       protocol === 'tcp' &&
@@ -165,13 +136,9 @@ export const NodeBalancerConfigPanel = (
     { label: 'TCP', value: 'tcp' },
     { label: 'HTTP', value: 'http' },
     { label: 'HTTPS', value: 'https' },
-    ...(flags.udp ? [{ label: 'UDP', value: 'udp' }] : []),
   ];
 
-  const proxyProtocolOptions: {
-    label: string;
-    value: NodeBalancerProxyProtocol;
-  }[] = [
+  const proxyProtocolOptions = [
     { label: 'None', value: 'none' },
     { label: 'v1', value: 'v1' },
     { label: 'v2', value: 'v2' },
@@ -187,13 +154,27 @@ export const NodeBalancerConfigPanel = (
     }
   );
 
-  const algOptions = getAlgorithmOptions(protocol);
+  const algOptions = [
+    { label: 'Round Robin', value: 'roundrobin' },
+    { label: 'Least Connections', value: 'leastconn' },
+    { label: 'Source', value: 'source' },
+  ];
 
   const defaultAlg = algOptions.find((eachAlg) => {
     return eachAlg.value === algorithm;
   });
 
-  const sessionOptions = getStickinessOptions(protocol);
+  const algorithmHelperText = {
+    leastconn: LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
+    roundrobin: ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
+    source: SOURCE_ALGORITHM_HELPER_TEXT,
+  };
+
+  const sessionOptions = [
+    { label: 'None', value: 'none' },
+    { label: 'Table', value: 'table' },
+    { label: 'HTTP Cookie', value: 'http_cookie' },
+  ];
 
   const defaultSession = sessionOptions.find((eachSession) => {
     return eachSession.value === sessionStickiness;
@@ -293,8 +274,8 @@ export const NodeBalancerConfigPanel = (
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-proxy-protocol-select': true,
+                  errorGroup: forEdit ? `${configIdx}` : undefined,
                 },
-                errorGroup: forEdit ? `${configIdx}` : undefined,
               }}
               autoHighlight
               disableClearable
@@ -341,7 +322,7 @@ export const NodeBalancerConfigPanel = (
             size="small"
             value={defaultAlg || algOptions[0]}
           />
-          <FormHelperText>{ALGORITHM_HELPER_TEXT[algorithm]}</FormHelperText>
+          <FormHelperText>{algorithmHelperText[algorithm]}</FormHelperText>
         </Grid>
 
         <Grid md={3} xs={6}>
@@ -376,26 +357,21 @@ export const NodeBalancerConfigPanel = (
       </Grid>
       <Grid container spacing={2}>
         <ActiveCheck errorMap={errorMap} {...props} />
-        {protocol !== 'udp' && <PassiveCheck {...props} />}
+        <PassiveCheck {...props} />
         <Grid xs={12}>
           <Divider />
         </Grid>
       </Grid>
       <Grid container spacing={2}>
         <Grid xs={12}>
+          {nodeMessage && (
+            <Grid xs={12}>
+              <Notice text={nodeMessage} variant="info" />
+            </Grid>
+          )}
           <Typography data-qa-backend-ip-header variant="h2">
             Backend Nodes
           </Typography>
-          {nodeMessage && (
-            <Grid xs={12}>
-              <Notice
-                spacingBottom={0}
-                spacingTop={8}
-                text={nodeMessage}
-                variant="info"
-              />
-            </Grid>
-          )}
           {errorMap.nodes && (
             <FormHelperText error>{errorMap.nodes}</FormHelperText>
           )}
@@ -411,8 +387,7 @@ export const NodeBalancerConfigPanel = (
               <NodeBalancerConfigNode
                 configIdx={configIdx}
                 disabled={Boolean(disabled)}
-                disallowRemoval={!forEdit && nodeIdx === 0} // Prevent the user from removing the first node on the create flow.
-                hideModeSelect={protocol === 'udp'} // UDP does not support the "mode" option on nodes
+                forEdit={Boolean(forEdit)}
                 idx={nodeIdx}
                 key={`nb-node-${nodeIdx}`}
                 node={node}
@@ -425,7 +400,15 @@ export const NodeBalancerConfigPanel = (
                 removeNode={removeNode}
               />
             ))}
-            <Grid xs={12}>
+            <Grid
+              // is the Save/Delete ActionsPanel showing?
+              style={
+                forEdit || configIdx !== 0
+                  ? { marginBottom: -16, marginTop: 0 }
+                  : { marginTop: 16 }
+              }
+              xs={12}
+            >
               <Button
                 buttonType="outlined"
                 disabled={disabled}

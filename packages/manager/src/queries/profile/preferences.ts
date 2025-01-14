@@ -1,26 +1,27 @@
 import { updateUserPreferences } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+
+import { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 import { queryPresets } from '../base';
 import { profileQueries } from './profile';
 
 import type { APIError } from '@linode/api-v4';
-import type { QueryClient } from '@tanstack/react-query';
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
-// Reference for this pattern: https://tkdodo.eu/blog/react-query-data-transformations#3-using-the-select-option
-export const usePreferences = <TData = ManagerPreferences>(
-  select?: (data: ManagerPreferences | undefined) => TData,
-  enabled = true
-) =>
-  useQuery({
+export const usePreferences = (enabled = true) =>
+  useQuery<ManagerPreferences, APIError[]>({
     ...profileQueries.preferences,
     ...queryPresets.oneTimeFetch,
     enabled,
-    select,
   });
 
 export const useMutatePreferences = (replace = false) => {
+  const { data: preferences } = usePreferences(!replace);
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -28,15 +29,11 @@ export const useMutatePreferences = (replace = false) => {
     APIError[],
     Partial<ManagerPreferences>
   >({
-    async mutationFn(data) {
-      if (replace) {
-        return updateUserPreferences(data);
-      }
-      const existingPreferences = await queryClient.ensureQueryData<ManagerPreferences>(
-        profileQueries.preferences
-      );
-      return updateUserPreferences({ ...existingPreferences, ...data });
-    },
+    mutationFn: (data) =>
+      updateUserPreferences({
+        ...(!replace && preferences !== undefined ? preferences : {}),
+        ...data,
+      }),
     onMutate: (data) => updatePreferenceData(data, replace, queryClient),
   });
 };

@@ -2,13 +2,13 @@ import { deleteLinodeConfigInterface } from '@linode/api-v4';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { linodeQueries } from 'src/queries/linodes/linodes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
 
 import type {
   APIError,
   DeleteLinodeConfigInterfacePayload,
 } from '@linode/api-v4';
+import { linodeQueries } from 'src/queries/linodes/linodes';
 
 interface IdsForUnassignLinode extends DeleteLinodeConfigInterfacePayload {
   vpcId: number;
@@ -30,7 +30,7 @@ export const useUnassignLinode = () => {
     vpcId,
   }: InvalidateSubnetLinodeConfigQueryIds) => {
     const queryKeys = [
-      vpcQueries.all._def,
+      vpcQueries.all.queryKey,
       vpcQueries.paginated._def,
       vpcQueries.vpc(vpcId).queryKey,
       vpcQueries.vpc(vpcId)._ctx.subnets.queryKey,

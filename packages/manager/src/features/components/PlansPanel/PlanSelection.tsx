@@ -59,7 +59,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
-    planIsSmallerThanUsage,
     planIsTooSmall,
   } = plan;
 
@@ -84,7 +83,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const rowIsDisabled =
     (!isDatabaseFlow && isSamePlan) ||
     planIsTooSmall ||
-    planIsSmallerThanUsage ||
     planBelongsToDisabledClass ||
     planIsDisabled512Gb ||
     planHasLimitedAvailability ||
@@ -94,7 +92,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
-    planIsSmallerThanUsage,
     planIsTooSmall,
     wholePanelIsDisabled,
   });
@@ -109,8 +106,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     (planBelongsToDisabledClass ||
       planIsDisabled512Gb ||
       planHasLimitedAvailability ||
-      planIsTooSmall ||
-      planIsSmallerThanUsage);
+      planIsTooSmall);
 
   const isDistributedPlan =
     plan.id.includes('dedicated-edge') || plan.id.includes('nanode-edge');

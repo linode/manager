@@ -226,7 +226,6 @@ const defaultInterfaces: InterfacePayload[] = [
   {
     ipam_address: '',
     label: '',
-    primary: true,
     purpose: 'vpc',
   },
   {

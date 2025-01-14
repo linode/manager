@@ -33,6 +33,9 @@ const meta: Meta<typeof DeletionDialog> = {
     open: {
       description: 'Is the modal open?',
     },
+    typeToConfirm: {
+      description: `Whether or not a user is required to type the enity's label to delete.`,
+    },
   },
   args: {
     disableAutoFocus: true,
@@ -49,6 +52,7 @@ const meta: Meta<typeof DeletionDialog> = {
     onDelete: action('onDelete'),
     open: true,
     style: { position: 'unset' },
+    typeToConfirm: true,
   },
   component: DeletionDialog,
   title: 'Components/Dialog/DeletionDialog',

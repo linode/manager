@@ -13,10 +13,12 @@ import {
 } from '@linode/ui';
 import { createImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
-import React from 'react';
+import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/Encryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -75,6 +77,10 @@ export const CreateImageTab = () => {
   const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
+
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -150,6 +156,17 @@ export const CreateImageTab = () => {
   const linodeRegionSupportsImageStorage = selectedLinodeRegion?.capabilities.includes(
     'Object Storage'
   );
+
+  /*
+    We only want to display the notice about disk encryption if:
+    1. the Disk Encryption feature is enabled
+    2. a linode is selected
+    2. the selected linode is not in an Edge region
+  */
+  const showDiskEncryptionWarning =
+    isDiskEncryptionFeatureEnabled &&
+    selectedLinodeId !== null &&
+    !linodeIsInDistributedRegion;
 
   const linodeSelectHelperText = grants?.linode.some(
     (grant) => grant.permissions === 'read_only'
@@ -240,6 +257,13 @@ export const CreateImageTab = () => {
                 </Link>
                 . After it's stored, you can replicate it to other core compute
                 regions.
+              </Notice>
+            )}
+            {showDiskEncryptionWarning && (
+              <Notice variant="warning">
+                <Typography sx={(theme) => ({ fontFamily: theme.font.normal })}>
+                  {DISK_ENCRYPTION_IMAGES_CAVEAT_COPY}
+                </Typography>
               </Notice>
             )}
             <Controller

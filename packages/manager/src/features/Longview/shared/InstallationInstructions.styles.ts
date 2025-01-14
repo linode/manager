@@ -4,12 +4,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 export const StyledInstructionGrid = styled(Grid, {
   label: 'StyledInstructionGrid',
 })(({ theme }) => ({
-  boxSizing: 'border-box',
-  columnGap: 1,
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  margin: '0',
   [theme.breakpoints.up('sm')]: {
     '&:not(:first-of-type)': {
       '&:before': {
@@ -25,6 +19,8 @@ export const StyledInstructionGrid = styled(Grid, {
     width: 'auto',
   },
   width: '100%',
+  boxSizing: 'border-box',
+  margin: '0',
 }));
 
 export const StyledContainerGrid = styled(Grid, {

@@ -13,7 +13,6 @@ import {
   mockRebuildLinodeError,
 } from 'support/intercepts/linodes';
 import { createTestLinode } from 'support/util/linodes';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 /**
  * Creates a Linode and StackScript.
@@ -127,9 +126,7 @@ describe('rebuild linode', () => {
       interceptRebuildLinode(linode.id).as('linodeRebuild');
 
       cy.visitWithLogin(`/linodes/${linode.id}`);
-      cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
-        'be.visible'
-      );
+      cy.findByText('RUNNING').should('be.visible');
 
       openRebuildDialog(linode.label);
       findRebuildDialog(linode.label).within(() => {
@@ -185,9 +182,7 @@ describe('rebuild linode', () => {
       interceptRebuildLinode(linode.id).as('linodeRebuild');
       interceptGetStackScripts().as('getStackScripts');
       cy.visitWithLogin(`/linodes/${linode.id}`);
-      cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
-        'be.visible'
-      );
+      cy.findByText('RUNNING').should('be.visible');
 
       openRebuildDialog(linode.label);
       findRebuildDialog(linode.label).within(() => {
@@ -199,7 +194,6 @@ describe('rebuild linode', () => {
 
         cy.wait('@getStackScripts');
         cy.findByLabelText('Search by Label, Username, or Description')
-          .scrollIntoView()
           .should('be.visible')
           .type(`${stackScriptName}`);
 
@@ -261,9 +255,7 @@ describe('rebuild linode', () => {
     ).then(([stackScript, linode]) => {
       interceptRebuildLinode(linode.id).as('linodeRebuild');
       cy.visitWithLogin(`/linodes/${linode.id}`);
-      cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
-        'be.visible'
-      );
+      cy.findByText('RUNNING').should('be.visible');
 
       openRebuildDialog(linode.label);
       findRebuildDialog(linode.label).within(() => {
@@ -274,7 +266,6 @@ describe('rebuild linode', () => {
           .click();
 
         cy.findByLabelText('Search by Label, Username, or Description')
-          .scrollIntoView()
           .should('be.visible')
           .type(`${stackScript.label}`);
 

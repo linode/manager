@@ -33,7 +33,7 @@ describe('Delete a Domain', () => {
           .closest('tr')
           .within(() => {
             ui.actionMenu
-              .findByTitle(`Action menu for Domain ${domain.domain}`)
+              .findByTitle(`Action menu for Domain ${domain}`)
               .should('be.visible')
               .click();
           });
@@ -57,7 +57,7 @@ describe('Delete a Domain', () => {
           .closest('tr')
           .within(() => {
             ui.actionMenu
-              .findByTitle(`Action menu for Domain ${domain.domain}`)
+              .findByTitle(`Action menu for Domain ${domain}`)
               .should('be.visible')
               .click();
           });

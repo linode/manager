@@ -30,14 +30,12 @@ export const domain: PartialEventMap<'domain'> = {
     ),
   },
   domain_record_create: {
-    notification: (e) => {
-      return (
-        <>
-          <FormattedEventMessage fallback="A record" message={e.message} /> has
-          been <strong>added</strong> to <EventLink event={e} to="entity" />.
-        </>
-      );
-    },
+    notification: (e) => (
+      <>
+        <FormattedEventMessage message={e.message} /> has been{' '}
+        <strong>added</strong> to <EventLink event={e} to="entity" />.
+      </>
+    ),
   },
   domain_record_delete: {
     notification: (e) => (

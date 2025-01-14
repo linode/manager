@@ -8,21 +8,11 @@ import {
   mockEditSubnet,
   mockGetSubnets,
 } from 'support/intercepts/vpc';
-import { mockGetLinodeConfigs } from 'support/intercepts/configs';
-import { mockGetLinodeDetails } from 'support/intercepts/linodes';
-import {
-  linodeFactory,
-  linodeConfigFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
-  subnetFactory,
-  vpcFactory,
-} from '@src/factories';
+import { subnetFactory, vpcFactory } from '@src/factories';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
 import type { VPC } from '@linode/api-v4';
 import { getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
-import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
 
 describe('VPC details page', () => {
   /**
@@ -275,118 +265,5 @@ describe('VPC details page', () => {
     cy.findByText('Subnets (0)');
     cy.findByText('No Subnets are assigned.');
     cy.findByText(mockEditedSubnet.label).should('not.exist');
-  });
-
-  /**
-   * - Confirms UI for Linode with a recommended config (no notice displayed)
-   */
-  it('does not display an unrecommended config notice for a Linode', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['VPCs'] });
-
-    const mockInterfaceId = randomNumber();
-    const mockLinode = linodeFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: linodeRegion.id,
-    });
-
-    const mockSubnet = subnetFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      linodes: [
-        {
-          id: mockLinode.id,
-          interfaces: [{ id: mockInterfaceId, active: true }],
-        },
-      ],
-      ipv4: '10.0.0.0/24',
-    });
-
-    const mockVPC = vpcFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: linodeRegion.id,
-      subnets: [mockSubnet],
-    });
-
-    const mockInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-      vpc_id: mockVPC.id,
-      subnet_id: mockSubnet.id,
-      primary: true,
-      active: true,
-    });
-
-    const mockLinodeConfig = linodeConfigFactory.build({
-      interfaces: [mockInterface],
-    });
-
-    mockGetVPC(mockVPC).as('getVPC');
-    mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
-    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockGetLinodeConfigs(mockLinode.id, [mockLinodeConfig]).as(
-      'getLinodeConfigs'
-    );
-
-    cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.findByLabelText(`expand ${mockSubnet.label} row`).click();
-    cy.wait('@getLinodeConfigs');
-    cy.findByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG).should('not.exist');
-  });
-
-  /**
-   * - Confirms UI for Linode with an unrecommended config (notice displayed)
-   */
-  it('displays an unrecommended config notice for a Linode', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['VPCs'] });
-
-    const mockInterfaceId = randomNumber();
-    const mockLinode = linodeFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: linodeRegion.id,
-    });
-
-    const mockSubnet = subnetFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      linodes: [
-        {
-          id: mockLinode.id,
-          interfaces: [{ id: mockInterfaceId, active: true }],
-        },
-      ],
-      ipv4: '10.0.0.0/24',
-    });
-
-    const mockVPC = vpcFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: linodeRegion.id,
-      subnets: [mockSubnet],
-    });
-
-    const mockInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-      id: mockInterfaceId,
-      vpc_id: mockVPC.id,
-      subnet_id: mockSubnet.id,
-      primary: false,
-      active: true,
-    });
-
-    const mockLinodeConfig = linodeConfigFactory.build({
-      interfaces: [mockInterface],
-    });
-
-    mockGetVPC(mockVPC).as('getVPC');
-    mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
-    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockGetLinodeConfigs(mockLinode.id, [mockLinodeConfig]).as(
-      'getLinodeConfigs'
-    );
-
-    cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.findByLabelText(`expand ${mockSubnet.label} row`).click();
-    cy.wait('@getLinodeConfigs');
-    cy.findByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG).should('exist');
   });
 });

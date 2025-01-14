@@ -1,32 +1,45 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { formatDate } from 'src/utilities/formatDate';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import BetaDetails from './BetaDetails';
 
 describe('BetaDetails', () => {
+  beforeAll(() => {
+    vi.useFakeTimers({
+      shouldAdvanceTime: true,
+    });
+  });
+  afterAll(() => {
+    vi.useRealTimers();
+  });
+
   it('should be able to display all fields for an AccountBeta type', async () => {
+    const date = new Date(2024, 9, 1);
+
+    vi.useFakeTimers();
+    vi.setSystemTime(date);
+
     const dates = {
-      ended: '2024-10-28T09:44:08.593-04:00',
-      started: '2024-09-28T09:44:08.593-04:00',
+      ended: DateTime.now().minus({ days: 30 }),
+      started: DateTime.now().minus({ days: 60 }),
     };
     const beta = {
       description: 'A cool beta program',
-      ended: dates.ended,
+      ended: dates.ended.toISO(),
       id: 'beta',
       label: 'Beta',
       more_info: 'https://linode.com',
-      started: dates.started,
+      started: dates.started.toISO(),
     };
 
     const { getByText } = await renderWithThemeAndRouter(
       <BetaDetails beta={beta} dataQA="beta-details" />
     );
     getByText(RegExp(beta.label));
-    getByText(formatDate(dates.started, { format: 'yyyy-MM-dd' }));
-    getByText(formatDate(dates.ended, { format: 'yyyy-MM-dd' }));
+    getByText(RegExp(dates.started.toISODate()));
+    getByText(RegExp(dates.ended.toISODate()));
     getByText(RegExp(beta.description));
   });
 

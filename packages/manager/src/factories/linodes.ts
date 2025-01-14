@@ -287,7 +287,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   group: '',
   hypervisor: 'kvm',
   id: Factory.each((i) => i),
-  image: 'linode/debian12',
+  image: 'linode/debian10',
   ipv4: ['50.116.6.212', '192.168.203.1'],
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
   label: Factory.each((i) => `linode-${i}`),
@@ -309,7 +309,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
 export const createLinodeRequestFactory = Factory.Sync.makeFactory<CreateLinodeRequest>(
   {
     booted: true,
-    image: 'linode/debian12',
+    image: 'linode/debian10',
     label: Factory.each((i) => `linode-${i}`),
     region: 'us-southeast',
     root_pass: 'linode-root-password',

@@ -2,7 +2,9 @@ import { DateTime } from 'luxon';
 
 import { isPast } from 'src/utilities/isPast';
 
-import type { ExcludedScope } from './CreateAPITokenDrawer';
+import { ExcludedScope } from './CreateAPITokenDrawer';
+
+export type Permission = [keyof typeof basePermNameMap, number];
 
 export const basePerms = [
   'account',
@@ -43,10 +45,6 @@ export const basePermNameMap = {
   volumes: 'Volumes',
   vpc: 'VPCs',
 } as const;
-
-type PermissionKey = keyof typeof basePermNameMap;
-
-export type Permission = [PermissionKey, number];
 
 export const inverseLevelMap = ['none', 'read_only', 'read_write'];
 
@@ -179,7 +177,7 @@ export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
   }
   const joinedTups = scopeTups.reduce((acc, [key, value]) => {
     const level = inverseLevelMap[value];
-    if (level && level !== 'none') {
+    if (level !== 'none') {
       return [...acc, [key, level].join(':')];
     }
     return [...acc];
@@ -259,21 +257,17 @@ Omit<typeof basePermNameMap, T[number]['name']> => {
  * Determines whether a selection has been made for every scope, since by default, the scope permissions are set to null.
  *
  * @param scopeTuples - The array of scope tuples.
- * @param excludedPerms - The permission keys to be excluded from this check.
  * @returns {boolean} True if all scopes have permissions set to none/read_only/read_write, false otherwise.
  */
 export const hasAccessBeenSelectedForAllScopes = (
-  scopeTuples: Permission[],
-  excludedPerms?: PermissionKey[]
+  scopeTuples: Permission[]
 ): boolean => {
   const validAccessLevels = [
     levelMap['none'],
     levelMap['read_only'],
     levelMap['read_write'],
   ];
-  return scopeTuples.every(
-    (scopeTuple) =>
-      validAccessLevels.includes(scopeTuple[1]) ||
-      excludedPerms?.includes(scopeTuple[0])
+  return scopeTuples.every((scopeTuple) =>
+    validAccessLevels.includes(scopeTuple[1])
   );
 };

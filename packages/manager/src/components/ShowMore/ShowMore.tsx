@@ -69,7 +69,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   },
   '&:focus': {
     backgroundColor: theme.bg.lightBlue1,
-    outline: `1px dotted ${theme.tokens.color.Neutrals[50]}`,
+    outline: '1px dotted #999',
   },
   '&:hover': {
     backgroundColor: theme.palette.primary.main,

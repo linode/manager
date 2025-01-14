@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 export const StyledResultsWrapper = styled('div', {
   label: 'StyledResultsWrapper',
 })(({ theme }) => ({
-  borderTop: `1px solid ${theme.tokens.color.Neutrals[30]}`,
+  borderTop: '1px solid #D6D7D9',
   fontSize: '0.875rem',
   lineHeight: '1.125rem',
   marginLeft: theme.spacing(),
@@ -61,10 +61,7 @@ export const StyledImageGrid = styled(Grid, {
   label: 'StyledImageGrid',
 })(({ theme }) => ({
   '& svg': {
-    color:
-      theme.name === 'light'
-        ? theme.tokens.color.Neutrals[10]
-        : theme.tokens.color.Neutrals[60],
+    color: theme.name === 'light' ? '#ededf4' : '#83868c',
   },
   alignItems: 'center',
   display: 'flex',

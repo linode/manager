@@ -2,8 +2,7 @@ import { Duration } from 'luxon';
 
 import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
-import { parseAPIDate } from 'src/utilities/date';
-import { formatDuration } from 'src/utilities/formatDuration';
+import { getEventTimestamp } from 'src/utilities/eventUtils';
 
 import { ACTIONS_WITHOUT_USERNAMES } from './constants';
 import { eventMessages } from './factory';
@@ -113,8 +112,7 @@ const shouldShowEventProgress = (event: Event): boolean => {
 };
 
 interface ProgressEventDisplay {
-  progressEventDate: string;
-  progressEventDuration: string;
+  progressEventDisplay: null | string;
   showProgress: boolean;
 }
 
@@ -126,20 +124,16 @@ interface ProgressEventDisplay {
  */
 export const formatProgressEvent = (event: Event): ProgressEventDisplay => {
   const showProgress = shouldShowEventProgress(event);
-  const startDate = parseAPIDate(event.created).toRelative();
-  const progressEventDate = showProgress ? `Started ${startDate}` : startDate;
-
   const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
-  const eventDuration = event.duration
-    ? formatDuration(Duration.fromObject({ seconds: event.duration }))
-    : '-';
-  const progressEventDuration = parsedTimeRemaining
-    ? `~${parsedTimeRemaining}`
-    : eventDuration;
+
+  const progressEventDisplay = showProgress
+    ? parsedTimeRemaining
+      ? `~${parsedTimeRemaining}`
+      : `Started ${getEventTimestamp(event).toRelative()}`
+    : getEventTimestamp(event).toRelative();
 
   return {
-    progressEventDate,
-    progressEventDuration,
+    progressEventDisplay,
     showProgress,
   };
 };

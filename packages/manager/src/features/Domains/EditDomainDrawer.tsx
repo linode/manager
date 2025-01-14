@@ -25,13 +25,12 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface EditDomainDrawerProps {
   domain: Domain | undefined;
-  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
-  const { domain, isFetching, onClose, open } = props;
+  const { domain, onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -122,12 +121,7 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
   const disabled = !canEdit;
 
   return (
-    <Drawer
-      isFetching={isFetching}
-      onClose={onClose}
-      open={open}
-      title="Edit Domain"
-    >
+    <Drawer onClose={onClose} open={open} title="Edit Domain">
       {!canEdit && (
         <Notice variant="error">
           You do not have permission to modify this Domain.

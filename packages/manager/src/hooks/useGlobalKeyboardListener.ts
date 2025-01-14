@@ -8,9 +8,11 @@ import { getNextThemeValue } from 'src/utilities/theme';
 import { isOSMac } from 'src/utilities/userAgent';
 
 export const useGlobalKeyboardListener = () => {
-  const { data: theme } = usePreferences((preferences) => preferences?.theme);
+  const { data: preferences } = usePreferences();
   const { mutateAsync: updateUserPreferences } = useMutatePreferences();
   const [goToOpen, setGoToOpen] = React.useState(false);
+
+  const theme = preferences?.theme;
 
   const keyboardListener = React.useCallback(
     (event: KeyboardEvent) => {
@@ -20,7 +22,8 @@ export const useGlobalKeyboardListener = () => {
       if (event[modifierKey] && event.shiftKey) {
         switch (event.key) {
           case letterForThemeShortcut:
-            const newTheme = getNextThemeValue(theme);
+            const currentTheme = theme;
+            const newTheme = getNextThemeValue(currentTheme);
 
             updateUserPreferences({ theme: newTheme });
             break;

@@ -44,9 +44,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   } = props;
 
   const { data: events } = useInProgressEvents();
-  const { data: maskSensitiveDataPreference } = usePreferences(
-    (preferences) => preferences?.maskSensitiveData
-  );
+  const { data: preferences } = usePreferences();
 
   const recentEvent = events?.find(
     (event) =>
@@ -125,7 +123,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           >
             <CopyTooltip
               copyableText
-              masked={Boolean(maskSensitiveDataPreference)}
+              masked={Boolean(preferences?.maskSensitiveData)}
               maskedTextLength="ipv4"
               text={displayIP}
             />

@@ -9,8 +9,6 @@ import {
   sortData,
 } from './OrderBy';
 
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
-
 const a = {
   age: 43,
   hobbies: ['this', 'that', 'the other'],
@@ -63,13 +61,14 @@ describe('OrderBy', () => {
   });
 
   describe('getInitialValuesFromUserPreferences', () => {
-    const preferences: ManagerPreferences['sortKeys'] = {
-      ['listening-services']: {
-        order: 'desc',
-        orderBy: 'test-order',
+    const preferences = {
+      sortKeys: {
+        ['listening-services']: {
+          order: 'desc' as any,
+          orderBy: 'test-order',
+        },
       },
     };
-
     it('should return values from query params if available', () => {
       expect(
         getInitialValuesFromUserPreferences(

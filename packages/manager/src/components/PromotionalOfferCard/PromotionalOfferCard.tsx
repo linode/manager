@@ -17,10 +17,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   button: {
     '&:hover, &:focus': {
-      backgroundColor: theme.tokens.color.Green[70],
+      backgroundColor: '#3f8a4e',
       color: theme.tokens.color.Neutrals.White,
     },
-    backgroundColor: theme.tokens.color.Green[60],
+    backgroundColor: '#4FAD62',
     color: theme.tokens.color.Neutrals.White,
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
@@ -29,13 +29,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
   buttonSecondary: {
     '&:hover, &:focus': {
       backgroundColor: 'inherit',
-      borderColor: theme.tokens.color.Green[50],
-      color: theme.tokens.color.Green[50],
+      borderColor: '#72BD81',
+      color: '#72BD81',
     },
     backgroundColor: 'inherit',
     border: '1px solid transparent',
-    borderColor: theme.tokens.color.Green[60],
-    color: theme.tokens.color.Green[60],
+    borderColor: '#4FAD62',
+    color: '#4FAD62',
     transition: theme.transitions.create(['color', 'border-color']),
   },
   buttonSection: {

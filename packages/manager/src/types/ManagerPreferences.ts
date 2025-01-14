@@ -1,4 +1,4 @@
-import type { AclpConfig } from '@linode/api-v4';
+import type { UserPreferences } from '@linode/api-v4';
 import type { Order } from 'src/hooks/useOrder';
 import type { ThemeChoice } from 'src/utilities/theme';
 
@@ -7,10 +7,6 @@ export interface OrderSet {
   orderBy: string;
 }
 
-export type OrderSetWithPrefix<P extends string> = {
-  [K in `${P}-order` | `${P}-orderBy`]: K extends `${P}-order` ? Order : string;
-};
-
 export interface DismissedNotification {
   created: string;
   expiry?: string;
@@ -18,11 +14,9 @@ export interface DismissedNotification {
   label?: string;
 }
 
-export interface ManagerPreferences {
-  aclpPreference?: AclpConfig; // Why is this type in @linode/api-v4?
+export interface ManagerPreferences extends UserPreferences {
   avatarColor?: string;
   backups_cta_dismissed?: boolean;
-  collapsedSideNavProductFamilies?: number[];
   desktop_sidebar_open?: boolean;
   dismissed_notifications?: Record<string, DismissedNotification>;
   domains_group_by_tag?: boolean;

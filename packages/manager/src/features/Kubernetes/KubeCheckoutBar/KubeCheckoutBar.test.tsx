@@ -128,27 +128,4 @@ describe('KubeCheckoutBar', () => {
     await findByText(/\$183\.00/);
     getByText(/\$--.--\/month/);
   });
-
-  it('should display the total price of the cluster with LKE Enterprise', async () => {
-    const { findByText } = renderWithTheme(
-      <KubeCheckoutBar {...props} enterprisePrice={300} />
-    );
-
-    // 5 node pools * 3 linodes per pool * 10 per linode + 300 per month for enterprise (HA included)
-    await findByText(/\$450\.00/);
-  });
-
-  it('should ignore standard HA pricing for LKE Enterprise', async () => {
-    const { findByText } = renderWithTheme(
-      <KubeCheckoutBar
-        {...props}
-        enterprisePrice={300}
-        highAvailability
-        highAvailabilityPrice="60"
-      />
-    );
-
-    // 5 node pools * 3 linodes per pool * 10 per linode + 300 per month for enterprise (HA included)
-    await findByText(/\$450\.00/);
-  });
 });

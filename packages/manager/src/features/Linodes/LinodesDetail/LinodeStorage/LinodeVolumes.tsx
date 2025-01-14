@@ -14,14 +14,13 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { DeleteVolumeDialog } from 'src/features/Volumes/Dialogs/DeleteVolumeDialog';
-import { DetachVolumeDialog } from 'src/features/Volumes/Dialogs/DetachVolumeDialog';
-import { CloneVolumeDrawer } from 'src/features/Volumes/Drawers/CloneVolumeDrawer';
-import { EditVolumeDrawer } from 'src/features/Volumes/Drawers/EditVolumeDrawer';
-import { ManageTagsDrawer } from 'src/features/Volumes/Drawers/ManageTagsDrawer';
-import { ResizeVolumeDrawer } from 'src/features/Volumes/Drawers/ResizeVolumeDrawer';
-import { VolumeDetailsDrawer } from 'src/features/Volumes/Drawers/VolumeDetailsDrawer';
-import { LinodeVolumeAddDrawer } from 'src/features/Volumes/Drawers/VolumeDrawer/LinodeVolumeAddDrawer';
+import { CloneVolumeDrawer } from 'src/features/Volumes/CloneVolumeDrawer';
+import { DeleteVolumeDialog } from 'src/features/Volumes/DeleteVolumeDialog';
+import { DetachVolumeDialog } from 'src/features/Volumes/DetachVolumeDialog';
+import { EditVolumeDrawer } from 'src/features/Volumes/EditVolumeDrawer';
+import { ResizeVolumeDrawer } from 'src/features/Volumes/ResizeVolumeDrawer';
+import { VolumeDetailsDrawer } from 'src/features/Volumes/VolumeDetailsDrawer';
+import { LinodeVolumeAddDrawer } from 'src/features/Volumes/VolumeDrawer/LinodeVolumeAddDrawer';
 import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useOrder } from 'src/hooks/useOrder';
@@ -76,9 +75,6 @@ export const LinodeVolumes = () => {
     isBlockStorageEncryptionFeatureEnabled,
   } = useIsBlockStorageEncryptionFeatureEnabled();
 
-  const [isManageTagsDrawerOpen, setisManageTagsDrawerOpen] = React.useState(
-    false
-  );
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
@@ -108,11 +104,6 @@ export const LinodeVolumes = () => {
   const handleEdit = (volume: Volume) => {
     setSelectedVolumeId(volume.id);
     setIsEditDrawerOpen(true);
-  };
-
-  const handleManageTags = (volume: Volume) => {
-    setSelectedVolumeId(volume.id);
-    setisManageTagsDrawerOpen(true);
   };
 
   const handleResize = (volume: Volume) => {
@@ -165,7 +156,6 @@ export const LinodeVolumes = () => {
               handleDetach: () => handleDetach(volume),
               handleDetails: () => handleDetails(volume),
               handleEdit: () => handleEdit(volume),
-              handleManageTags: () => handleManageTags(volume),
               handleResize: () => handleResize(volume),
               handleUpgrade: () => null,
             }}
@@ -174,7 +164,6 @@ export const LinodeVolumes = () => {
             }
             isDetailsPageRow
             key={volume.id}
-            linodeCapabilities={linode?.capabilities}
             volume={volume}
           />
         );
@@ -267,11 +256,6 @@ export const LinodeVolumes = () => {
       <EditVolumeDrawer
         onClose={() => setIsEditDrawerOpen(false)}
         open={isEditDrawerOpen}
-        volume={selectedVolume}
-      />
-      <ManageTagsDrawer
-        onClose={() => setisManageTagsDrawerOpen(false)}
-        open={isManageTagsDrawerOpen}
         volume={selectedVolume}
       />
       <ResizeVolumeDrawer

@@ -1,6 +1,6 @@
 import { getRegion, getRegionAvailability } from '@linode/api-v4/lib/regions';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 
@@ -38,16 +38,9 @@ export const regionQueries = createQueryKeys('regions', {
 });
 
 export const useRegionQuery = (regionId: string) => {
-  const queryClient = useQueryClient();
   return useQuery<Region, APIError>({
     ...regionQueries.region(regionId),
     enabled: Boolean(regionId),
-    initialData() {
-      const regions = queryClient.getQueryData(
-        queryOptions(regionQueries.regions).queryKey
-      );
-      return regions?.find((r) => r.id === regionId);
-    },
     select: (region) => ({
       ...region,
       label: getNewRegionLabel(region),

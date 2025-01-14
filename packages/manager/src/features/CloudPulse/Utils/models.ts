@@ -1,18 +1,10 @@
-import type {
-  Capabilities,
-  DatabaseEngine,
-  DatabaseType,
-} from '@linode/api-v4';
+import type { DatabaseEngine, DatabaseType } from '@linode/api-v4';
 import type { QueryFunction, QueryKey } from '@tanstack/react-query';
 
 /**
  * The CloudPulseServiceTypeMap has list of filters to be built for different service types like dbaas, linode etc.,The properties here are readonly as it is only for reading and can't be modified in code
  */
 export interface CloudPulseServiceTypeFilterMap {
-  /**
-   * Current capability corresponding to a service type
-   */
-  readonly capability: Capabilities;
   /**
    * The list of filters for a service type
    */
@@ -119,12 +111,6 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    * If this is true, multiselect will be enabled for the filter, only applicable for static and dynamic, not for predefined ones
    */
   isMultiSelect?: boolean;
-
-  /**
-   * If this is true, we will pass filter as an optional filter
-   */
-  isOptional?: boolean;
-
   /**
    * If this is true, we will only allow users to select a certain threshold, only applicable for static and dynamic, not for predefined ones
    */

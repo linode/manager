@@ -4,21 +4,17 @@ import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
 import { linodeFactory } from 'src/factories/linodes';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NodeTable, encryptionStatusTestId } from './NodeTable';
-
-import type { Props } from './NodeTable';
+import { NodeTable, Props, encryptionStatusTestId } from './NodeTable';
 
 const mockLinodes = linodeFactory.buildList(3);
 
 const mockKubeNodes = kubeLinodeFactory.buildList(3);
 
 const props: Props = {
-  clusterId: 1,
   encryptionStatus: 'enabled',
   nodes: mockKubeNodes,
   openRecycleNodeDialog: vi.fn(),
   poolId: 1,
-  tags: [],
   typeLabel: 'Linode 2G',
 };
 

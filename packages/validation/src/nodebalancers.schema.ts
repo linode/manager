@@ -20,11 +20,6 @@ export const CHECK_INTERVAL = {
   MAX: 3600,
 };
 
-const CONNECTION_THROTTLE = {
-  MIN: 0,
-  MAX: 20,
-};
-
 export const nodeBalancerConfigNodeSchema = object({
   label: string()
     .matches(
@@ -51,15 +46,11 @@ export const nodeBalancerConfigNodeSchema = object({
     .min(1, `Weight must be between 1 and 255.`)
     .max(255, `Weight must be between 1 and 255.`),
 
-  mode: string().oneOf(['accept', 'reject', 'backup', 'drain']),
+  mode: mixed().oneOf(['accept', 'reject', 'backup', 'drain']),
 });
 
 export const createNodeBalancerConfigSchema = object({
-  algorithm: string().when('protocol', {
-    is: 'udp',
-    then: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'ring_hash']),
-    otherwise: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'source']),
-  }),
+  algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
   check_attempts: number()
     .min(
       CHECK_ATTEMPTS.MIN,
@@ -85,10 +76,7 @@ export const createNodeBalancerConfigSchema = object({
     )
     .typeError('Interval must be a number.')
     .integer(),
-  check_passive: boolean().when('protocol', {
-    is: 'udp',
-    then: (schema) => schema.isFalse(), // You can't enable check_passtive with UDP
-  }),
+  check_passive: boolean(),
   check_path: string()
     .matches(/\/.*/)
     .when('check', {
@@ -99,11 +87,7 @@ export const createNodeBalancerConfigSchema = object({
       is: 'http_body',
       then: (schema) => schema.required('An HTTP path is required.'),
     }),
-  proxy_protocol: string().when('protocol', {
-    is: 'udp',
-    then: (schema) => schema.oneOf(['none']), // UDP does not support proxy_protocol
-    otherwise: (schema) => schema.oneOf(['none', 'v1', 'v2']),
-  }),
+  proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
   check_timeout: number()
     .min(
       CHECK_TIMEOUT.MIN,
@@ -122,7 +106,7 @@ export const createNodeBalancerConfigSchema = object({
     .required('Port is required')
     .min(1, PORT_WARNING)
     .max(65535, PORT_WARNING),
-  protocol: string().oneOf(['http', 'https', 'tcp', 'udp']),
+  protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', {
     is: 'https',
     then: (schema) => schema.required('SSL key is required when using HTTPS.'),
@@ -132,12 +116,7 @@ export const createNodeBalancerConfigSchema = object({
     then: (schema) =>
       schema.required('SSL certificate is required when using HTTPS.'),
   }),
-  stickiness: string().when('protocol', {
-    is: 'udp',
-    then: (schema) => schema.oneOf(['none', 'source_ip', 'session']),
-    otherwise: (schema) => schema.oneOf(['none', 'table', 'http_cookie']),
-  }),
-  udp_check_port: number().min(1).max(65535),
+  stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
   nodes: array()
     .of(nodeBalancerConfigNodeSchema)
     .required()
@@ -145,11 +124,7 @@ export const createNodeBalancerConfigSchema = object({
 });
 
 export const UpdateNodeBalancerConfigSchema = object({
-  algorithm: string().when('protocol', {
-    is: 'udp',
-    then: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'ring_hash']),
-    otherwise: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'source']),
-  }),
+  algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
   check_attempts: number()
     .min(
       CHECK_ATTEMPTS.MIN,
@@ -175,10 +150,7 @@ export const UpdateNodeBalancerConfigSchema = object({
     )
     .typeError('Interval must be a number.')
     .integer(),
-  check_passive: boolean().when('protocol', {
-    is: 'udp',
-    then: (schema) => schema.isFalse(), // You can't enable check_passtive with UDP
-  }),
+  check_passive: boolean(),
   check_path: string()
     .matches(/\/.*/)
     .when('check', {
@@ -189,11 +161,7 @@ export const UpdateNodeBalancerConfigSchema = object({
       is: 'http_body',
       then: (schema) => schema.required('An HTTP path is required.'),
     }),
-  proxy_protocol: string().when('protocol', {
-    is: 'udp',
-    then: (schema) => schema.oneOf(['none']), // UDP does not support proxy_protocol
-    otherwise: (schema) => schema.oneOf(['none', 'v1', 'v2']),
-  }),
+  proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
   check_timeout: number()
     .min(
       CHECK_TIMEOUT.MIN,
@@ -212,7 +180,7 @@ export const UpdateNodeBalancerConfigSchema = object({
     .integer()
     .min(1, PORT_WARNING)
     .max(65535, PORT_WARNING),
-  protocol: string().oneOf(['http', 'https', 'tcp', 'udp']),
+  protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', {
     is: 'https',
     then: (schema) => schema.required(),
@@ -221,35 +189,9 @@ export const UpdateNodeBalancerConfigSchema = object({
     is: 'https',
     then: (schema) => schema.required(),
   }),
-  udp_check_port: number().min(1).max(65535),
-  stickiness: string().when('protocol', {
-    is: 'udp',
-    then: (schema) => schema.oneOf(['none', 'source_ip', 'session']),
-    otherwise: (schema) => schema.oneOf(['none', 'table', 'http_cookie']),
-  }),
+  stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
+  nodes: array().of(nodeBalancerConfigNodeSchema),
 });
-
-const client_conn_throttle = number()
-  .min(
-    CONNECTION_THROTTLE.MIN,
-    `Client Connection Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
-  )
-  .max(
-    CONNECTION_THROTTLE.MAX,
-    `Client Connection Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
-  )
-  .typeError('Client Connection Throttle must be a number.');
-
-const client_udp_sess_throttle = number()
-  .min(
-    CONNECTION_THROTTLE.MIN,
-    `UDP Session Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
-  )
-  .max(
-    CONNECTION_THROTTLE.MAX,
-    `UDP Session Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
-  )
-  .typeError('UDP Session Throttle must be a number.');
 
 export const NodeBalancerSchema = object({
   label: string()
@@ -261,11 +203,7 @@ export const NodeBalancerSchema = object({
       "Label can't contain special characters or spaces."
     ),
 
-  client_conn_throttle,
-
-  client_udp_sess_throttle,
-
-  tags: array(string()),
+  client_conn_throttle: number().typeError('Must be a number.'),
 
   region: string().required('Region is required.'),
 
@@ -311,7 +249,8 @@ export const UpdateNodeBalancerSchema = object({
       /^[a-zA-Z0-9-_]+$/,
       "Label can't contain special characters or spaces."
     ),
-  client_conn_throttle,
-  client_udp_sess_throttle,
-  tags: array(string()),
+
+  client_conn_throttle: number().typeError('Must be a number.'),
+
+  region: string(),
 });

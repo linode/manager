@@ -5,9 +5,9 @@ import {
   RadioGroup,
   TextField,
 } from '@linode/ui';
-import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -18,13 +18,12 @@ import type { Domain } from '@linode/api-v4';
 
 interface CloneDomainDrawerProps {
   domain: Domain | undefined;
-  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
-  const { domain, isFetching, onClose: _onClose, open } = props;
+  const { domain, onClose: _onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -33,17 +32,14 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
     domain?.id ?? 0
   );
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const formik = useFormik<{ domain: string }>({
     initialValues: { domain: '' },
     onSubmit: async (values) => {
       const newDomain = await cloneDomain(values);
+      history.push(`/domains/${newDomain.id}`);
       onClose();
-      navigate({
-        params: { domainId: newDomain.id },
-        to: '/domains/$domainId',
-      });
     },
   });
 
@@ -56,12 +52,7 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
   const noPermission = profile?.restricted && !grants?.global.add_domains;
 
   return (
-    <Drawer
-      isFetching={isFetching}
-      onClose={onClose}
-      open={open}
-      title="Clone Domain"
-    >
+    <Drawer onClose={onClose} open={open} title="Clone Domain">
       {noPermission && (
         <Notice variant="error">
           You do not have permission to create new Domains.

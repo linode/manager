@@ -38,14 +38,14 @@ export const CloudPulseMultiResourceSelect = (
     Boolean(region && serviceType),
     serviceType?.toString(),
     {},
-    serviceType === 'dbaas' ? { engine, region } : { region }
+    engine !== null ? { engine, region } : { region }
   );
 
   const getResourcesList = React.useMemo((): Item<string, string>[] => {
     return resources && resources.length > 0
       ? resources.map((resource) => ({
           label: resource.label,
-          value: resource.id.toString(),
+          value: resource.id,
         }))
       : [];
   }, [resources]);

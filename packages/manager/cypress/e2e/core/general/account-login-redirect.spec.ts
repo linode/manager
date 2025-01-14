@@ -1,5 +1,5 @@
 import { mockApiRequestWithError } from 'support/intercepts/general';
-import { loginBaseUrl } from 'support/constants/login';
+import { LOGIN_ROOT } from 'src/constants';
 
 describe('account login redirect', () => {
   /**
@@ -14,7 +14,7 @@ describe('account login redirect', () => {
 
     cy.visitWithLogin('/linodes/create');
 
-    cy.url().should('contain', `${loginBaseUrl}/login?`, { exact: false });
+    cy.url().should('contain', `${LOGIN_ROOT}/login?`, { exact: false });
     cy.findByText('Please log in to continue.').should('be.visible');
   });
 

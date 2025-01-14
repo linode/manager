@@ -1,4 +1,3 @@
-import { QueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -25,7 +24,6 @@ export const Router = () => {
       isACLPEnabled,
       isDatabasesEnabled,
       isPlacementGroupsEnabled,
-      queryClient: new QueryClient(),
     },
   });
 

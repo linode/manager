@@ -72,12 +72,7 @@ export const LinodeResize = (props: Props) => {
   );
 
   const { data: types } = useAllTypes(open);
-
-  const { data: typeToConfirmPreference } = usePreferences(
-    (preferences) => preferences?.type_to_confirm ?? true,
-    open
-  );
-
+  const { data: preferences } = usePreferences(open);
   const { enqueueSnackbar } = useSnackbar();
   const [confirmationText, setConfirmationText] = React.useState('');
   const [resizeError, setResizeError] = React.useState<string>('');
@@ -167,7 +162,8 @@ export const LinodeResize = (props: Props) => {
   const tableDisabled = hostMaintenance || isLinodesGrantReadOnly;
 
   const submitButtonDisabled =
-    Boolean(typeToConfirmPreference) && confirmationText !== linode?.label;
+    preferences?.type_to_confirm !== false &&
+    confirmationText !== linode?.label;
 
   const type = types?.find((t) => t.id === linode?.type);
 
@@ -327,7 +323,7 @@ export const LinodeResize = (props: Props) => {
               title="Confirm"
               typographyStyle={{ marginBottom: 8 }}
               value={confirmationText}
-              visible={typeToConfirmPreference}
+              visible={preferences?.type_to_confirm}
             />
           </Box>
           <Box display="flex" justifyContent="flex-end">

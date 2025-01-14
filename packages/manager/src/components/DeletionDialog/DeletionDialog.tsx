@@ -19,8 +19,15 @@ export interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   onClose: () => void;
   onDelete: () => void;
   open: boolean;
+  typeToConfirm?: boolean;
 }
 
+/**
+ * A Deletion Dialog is used for deleting entities such as Linodes, NodeBalancers, Volumes, or other entities.
+ *
+ * Require `typeToConfirm` when an action would have a significant negative impact if done in error, consider requiring the user to enter a unique identifier such as entity label before activating the action button.
+ * If a user has opted out of type-to-confirm this will be ignored
+ */
 export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   const theme = useTheme();
   const {
@@ -31,21 +38,18 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
     onClose,
     onDelete,
     open,
+    typeToConfirm,
     ...rest
   } = props;
-
-  const { data: typeToConfirmPreference } = usePreferences(
-    (preferences) => preferences?.type_to_confirm ?? true
-  );
-
+  const { data: preferences } = usePreferences();
   const [confirmationText, setConfirmationText] = React.useState('');
-
+  const typeToConfirmRequired =
+    typeToConfirm && preferences?.type_to_confirm !== false;
   const renderActions = () => (
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm',
-        disabled:
-          Boolean(typeToConfirmPreference) && confirmationText !== label,
+        disabled: typeToConfirmRequired && confirmationText !== label,
         label: ` Delete ${titlecase(entity)}`,
         loading,
         onClick: onDelete,
@@ -97,11 +101,10 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
         onChange={(input) => {
           setConfirmationText(input);
         }}
-        expand
         label={`${capitalize(entity)} Name:`}
         placeholder={label}
         value={confirmationText}
-        visible={Boolean(typeToConfirmPreference)}
+        visible={typeToConfirmRequired}
       />
     </ConfirmationDialog>
   );

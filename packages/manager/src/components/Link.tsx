@@ -46,7 +46,7 @@ export interface LinkProps extends Omit<_LinkProps, 'to'> {
    * @example "/profile/display"
    * @example "https://linode.com"
    */
-  to: Exclude<TanStackLinkProps['to'] | (string & {}), null | undefined>;
+  to: TanStackLinkProps['to'] | (string & {});
 }
 
 /**

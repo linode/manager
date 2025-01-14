@@ -78,9 +78,7 @@ export const IPAddress = (props: IPAddressProps) => {
     false
   );
 
-  const { data: maskSensitiveDataPreference } = usePreferences(
-    (preferences) => preferences?.maskSensitiveData
-  );
+  const { data: preferences } = usePreferences();
 
   React.useEffect(() => {
     return () => {
@@ -128,7 +126,7 @@ export const IPAddress = (props: IPAddressProps) => {
           copyableText
           data-qa-copy-ip-text
           disabled={disabled}
-          masked={Boolean(maskSensitiveDataPreference)}
+          masked={Boolean(preferences?.maskSensitiveData)}
           maskedTextLength="ipv4"
           text={ip}
         />

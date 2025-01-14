@@ -73,46 +73,10 @@ describe('Database Settings Maintenance', () => {
     expect(button).toBeDisabled();
   });
 
-  it('should disable upgrade version modal button when there are upgrades available, but there are still updates available', async () => {
+  it('should enable upgrade version modal button when there are upgrades available', async () => {
     const database = databaseFactory.build({
       engine: 'postgresql',
       version: '13',
-      updates: {
-        pending: [
-          {
-            deadline: null,
-            description: 'Log configuration options changes required',
-            planned_for: null,
-          },
-        ],
-      },
-    });
-
-    const onReviewUpdates = vi.fn();
-    const onUpgradeVersion = vi.fn();
-
-    const { findByRole } = renderWithTheme(
-      <DatabaseSettingsMaintenance
-        databaseEngine={database.engine}
-        databasePendingUpdates={database.updates.pending}
-        databaseVersion={database.version}
-        onReviewUpdates={onReviewUpdates}
-        onUpgradeVersion={onUpgradeVersion}
-      />
-    );
-
-    const button = await findByRole('button', { name: UPGRADE_VERSION });
-
-    expect(button).toBeDisabled();
-  });
-
-  it('should enable upgrade version modal button when there are upgrades available, and there are no pending updates', async () => {
-    const database = databaseFactory.build({
-      engine: 'postgresql',
-      version: '13',
-      updates: {
-        pending: [],
-      },
     });
 
     const onReviewUpdates = vi.fn();
@@ -133,23 +97,13 @@ describe('Database Settings Maintenance', () => {
     expect(button).toBeEnabled();
   });
 
-  it('should show review text and modal button when there are updates ', async () => {
-    const database = databaseFactory.build({
-      updates: {
-        pending: [
-          {
-            deadline: null,
-            description: 'Log configuration options changes required',
-            planned_for: null,
-          },
-        ],
-      },
-    });
+  it('should show review text and modal button when there are updates', async () => {
+    const database = databaseFactory.build();
 
     const onReviewUpdates = vi.fn();
     const onUpgradeVersion = vi.fn();
 
-    const { queryByRole } = renderWithTheme(
+    const { findByRole } = renderWithTheme(
       <DatabaseSettingsMaintenance
         databaseEngine={database.engine}
         databasePendingUpdates={database.updates.pending}
@@ -159,9 +113,9 @@ describe('Database Settings Maintenance', () => {
       />
     );
 
-    const button = queryByRole('button', { name: 'Click to review' });
+    const button = await findByRole('button', { name: UPGRADE_VERSION });
 
-    expect(button).toBeInTheDocument();
+    expect(button).toBeEnabled();
   });
 
   it('should not show review text and modal button when there are no updates', async () => {

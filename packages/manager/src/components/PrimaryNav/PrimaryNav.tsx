@@ -93,12 +93,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isIAMEnabled, isIAMBeta } = useIsIAMEnabled();
 
-  const { data: collapsedSideNavPreference } = usePreferences(
-    (preferences) => preferences?.collapsedSideNavProductFamilies
-  );
-
-  const collapsedAccordions = collapsedSideNavPreference ?? [];
-
+  const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const productFamilyLinkGroups: ProductFamilyLinkGroup<
@@ -258,6 +253,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     ]
   );
 
+  const [collapsedAccordions, setCollapsedAccordions] = React.useState<
+    number[]
+  >(preferences?.collapsedSideNavProductFamilies ?? []);
+
   const accordionClicked = (index: number) => {
     let updatedCollapsedAccordions;
     if (collapsedAccordions.includes(index)) {
@@ -267,11 +266,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       updatePreferences({
         collapsedSideNavProductFamilies: updatedCollapsedAccordions,
       });
+      setCollapsedAccordions(updatedCollapsedAccordions);
     } else {
       updatedCollapsedAccordions = [...collapsedAccordions, index];
       updatePreferences({
         collapsedSideNavProductFamilies: updatedCollapsedAccordions,
       });
+      setCollapsedAccordions(updatedCollapsedAccordions);
     }
   };
 

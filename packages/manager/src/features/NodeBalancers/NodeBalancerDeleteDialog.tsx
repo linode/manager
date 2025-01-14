@@ -36,7 +36,6 @@ export const NodeBalancerDeleteDialog = ({
         type: 'NodeBalancer',
       }}
       errors={error ?? undefined}
-      expand
       label={'NodeBalancer Label'}
       loading={isPending}
       onClick={onDelete}

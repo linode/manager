@@ -3,6 +3,7 @@ import {
   getAccountBeta,
   getAccountBetas,
   getAccountInfo,
+  getAccountInfoBeta,
   getAccountLogins,
   getAccountMaintenance,
   getAccountSettings,
@@ -30,6 +31,13 @@ import type { Filter, Params, RequestOptions } from '@linode/api-v4';
 export const accountQueries = createQueryKeys('account', {
   account: {
     queryFn: getAccountInfo,
+    queryKey: null,
+  },
+  /**
+   * @TODO LKE-E - M3-8838: Clean up after released to GA, if not otherwise in use
+   */
+  accountBeta: {
+    queryFn: getAccountInfoBeta,
     queryKey: null,
   },
   agreements: {

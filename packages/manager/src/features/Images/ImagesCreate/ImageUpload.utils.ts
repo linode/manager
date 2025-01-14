@@ -28,9 +28,7 @@ export interface ImageUploadFormData extends ImageUploadPayload {
  * form state at once.
  */
 export const ImageUploadSchema = uploadImageSchema.shape({
-  file: mixed((input): input is File => input instanceof File).required(
-    'Image is required.'
-  ),
+  file: mixed().required('Image is required.'),
 });
 
 /**

@@ -11,7 +11,6 @@ import {
 } from 'support/intercepts/linodes';
 import {
   mockCreateVolume,
-  mockGetVolume,
   mockGetVolumes,
   mockDetachVolume,
   mockGetVolumeTypesError,
@@ -86,7 +85,6 @@ describe('volumes', () => {
 
     mockGetVolumes([]).as('getVolumes');
     mockCreateVolume(mockVolume).as('createVolume');
-    mockGetVolume(mockVolume).as('getVolume');
     mockGetVolumeTypes(mockVolumeTypes).as('getVolumeTypes');
 
     cy.visitWithLogin('/volumes', {
@@ -116,7 +114,7 @@ describe('volumes', () => {
 
     mockGetVolumes([mockVolume]).as('getVolumes');
     ui.button.findByTitle('Create Volume').should('be.visible').click();
-    cy.wait(['@createVolume', '@getVolume', '@getVolumes']);
+    cy.wait(['@createVolume', '@getVolumes']);
     validateBasicVolume(mockVolume.label);
 
     ui.actionMenu
@@ -195,7 +193,6 @@ describe('volumes', () => {
 
     mockDetachVolume(mockAttachedVolume.id).as('detachVolume');
     mockGetVolumes([mockAttachedVolume]).as('getAttachedVolumes');
-    mockGetVolume(mockAttachedVolume).as('getVolume');
     cy.visitWithLogin('/volumes', {
       preferenceOverrides,
       localStorageOverrides,
@@ -211,8 +208,6 @@ describe('volumes', () => {
       .click();
 
     ui.actionMenuItem.findByTitle('Detach').click();
-
-    cy.wait('@getVolume');
 
     ui.dialog
       .findByTitle(`Detach Volume ${mockAttachedVolume.label}?`)

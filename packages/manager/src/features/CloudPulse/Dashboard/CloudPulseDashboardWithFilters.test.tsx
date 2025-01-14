@@ -1,16 +1,13 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { dashboardFactory, serviceTypesFactory } from 'src/factories';
-import * as utils from 'src/features/CloudPulse/Utils/utils';
+import { dashboardFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseDashboardWithFilters } from './CloudPulseDashboardWithFilters';
 
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardByIdQuery: vi.fn().mockReturnValue({}),
-  useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
-  useCloudPulseServiceTypes: vi.fn().mockReturnValue({}),
 }));
 
 const circleProgress = 'circle-progress';
@@ -21,47 +18,15 @@ vi.mock('src/queries/cloudpulse/dashboards', async () => {
   return {
     ...actual,
     useCloudPulseDashboardByIdQuery: queryMocks.useCloudPulseDashboardByIdQuery,
-    useCloudPulseDashboardsQuery: queryMocks.useCloudPulseDashboardsQuery,
-  };
-});
-
-vi.mock('src/queries/cloudpulse/services.ts', async () => {
-  const actual = await vi.importActual('src/queries/cloudpulse/services');
-
-  return {
-    ...actual,
-    useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
   };
 });
 const mockDashboard = dashboardFactory.build();
-const mockServiceTypesList = serviceTypesFactory.build();
+
 queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
   data: {
     data: mockDashboard,
   },
   error: false,
-  isLoading: false,
-});
-
-queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
-  data: {
-    data: [mockDashboard],
-  },
-  error: false,
-  isLoading: false,
-});
-
-queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-  data: {
-    data: [mockServiceTypesList],
-  },
-  error: false,
-  isLoading: false,
-});
-
-vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
-  data: [mockDashboard],
-  error: '',
   isLoading: false,
 });
 

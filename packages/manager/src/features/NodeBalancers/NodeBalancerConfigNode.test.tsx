@@ -15,8 +15,7 @@ const node = {
 const props: NodeBalancerConfigNodeProps = {
   configIdx: 1,
   disabled: false,
-  disallowRemoval: false,
-  hideModeSelect: false,
+  forEdit: true,
   idx: 1,
   node,
   onNodeAddressChange: vi.fn(),
@@ -50,17 +49,17 @@ describe('NodeBalancerConfigNode', () => {
     expect(getByText('DOWN')).toBeVisible();
   });
 
-  it('hides the "Mode" select if hideModeSelect is true', () => {
+  it('cannot change the mode if the node is not for edit', () => {
     const { queryByText } = renderWithTheme(
-      <NodeBalancerConfigNode {...props} hideModeSelect />
+      <NodeBalancerConfigNode {...props} forEdit={false} />
     );
 
     expect(queryByText('Mode')).not.toBeInTheDocument();
   });
 
-  it('cannot remove the node if the disallowRemoval is true', () => {
+  it('cannot remove the node if the node is not for edit or is the first node', () => {
     const { queryByText } = renderWithTheme(
-      <NodeBalancerConfigNode {...props} disallowRemoval />
+      <NodeBalancerConfigNode {...props} forEdit={false} idx={0} />
     );
 
     expect(queryByText('Remove')).not.toBeInTheDocument();

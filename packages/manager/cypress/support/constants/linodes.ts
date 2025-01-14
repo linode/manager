@@ -5,6 +5,6 @@
 /**
  * Length of time to wait for a Linode to be created.
  *
- * Equals 5 minutes.
+ * Equals 4 minutes.
  */
-export const LINODE_CREATE_TIMEOUT = 300_000;
+export const LINODE_CREATE_TIMEOUT = 240_000;

@@ -276,18 +276,6 @@ export const getKubernetesTypes = (params?: Params) =>
   );
 
 /**
- * getKubernetesTypesBeta
- *
- * Returns a paginated list of available Kubernetes types from beta API; used for dynamic pricing.
- */
-export const getKubernetesTypesBeta = (params?: Params) =>
-  Request<Page<PriceType>>(
-    setURL(`${BETA_API_ROOT}/lke/types`),
-    setMethod('GET'),
-    setParams(params)
-  );
-
-/**
  * getKubernetesClusterControlPlaneACL
  *
  * Return control plane access list about a single Kubernetes cluster

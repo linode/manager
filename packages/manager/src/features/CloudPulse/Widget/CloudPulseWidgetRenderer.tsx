@@ -18,10 +18,10 @@ import type {
 } from './CloudPulseWidget';
 import type {
   AclpConfig,
+  AvailableMetrics,
   Dashboard,
   JWEToken,
-  MetricDefinition,
-  ResourcePage,
+  MetricDefinitions,
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
@@ -33,7 +33,7 @@ interface WidgetProps {
   isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
   manualRefreshTimeStamp?: number;
-  metricDefinitions: ResourcePage<MetricDefinition> | undefined;
+  metricDefinitions: MetricDefinitions | undefined;
   preferences?: AclpConfig;
   resourceList: CloudPulseResources[] | undefined;
   resources: string[];
@@ -143,7 +143,7 @@ export const RenderWidgets = React.memo(
           if (widget) {
             // find the metric defintion of the widget label
             const availMetrics = metricDefinitions?.data.find(
-              (availMetrics: MetricDefinition) =>
+              (availMetrics: AvailableMetrics) =>
                 widget.label === availMetrics.label
             );
             const cloudPulseWidgetProperties = getCloudPulseGraphProperties({

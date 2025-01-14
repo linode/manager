@@ -13,22 +13,22 @@ interface Color {
 
 const useStyles = makeStyles()((theme: Theme) => ({
   alias: {
-    color: theme.tokens.color.Neutrals[90],
+    color: '#32363c',
     fontFamily: '"UbuntuMono", monospace, sans-serif',
     fontSize: '0.875rem',
   },
   color: {
-    color: theme.tokens.color.Neutrals[60],
+    color: '#888f91',
     fontFamily: '"UbuntuMono", monospace, sans-serif',
     fontSize: '0.875rem',
   },
   root: {
     '& h2': {
-      color: theme.tokens.color.Neutrals[90],
+      color: '#32363c',
     },
   },
   swatch: {
-    border: `1px solid ${theme.tokens.color.Neutrals[60]}`,
+    border: '1px solid #888f91',
     borderRadius: 3,
     height: theme.spacing(4.5),
     margin: '0px 16px',

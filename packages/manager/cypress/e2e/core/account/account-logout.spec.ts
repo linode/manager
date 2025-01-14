@@ -1,4 +1,4 @@
-import { loginBaseUrl } from 'support/constants/login';
+import { LOGIN_ROOT } from 'src/constants';
 import { interceptGetAccount } from 'support/intercepts/account';
 import { ui } from 'support/ui';
 
@@ -26,9 +26,9 @@ describe('Logout Test', () => {
         cy.findByText('Log Out').should('be.visible').click();
       });
     // Upon clicking "Log Out", the user is redirected to the login endpoint at <REACT_APP_LOGIN_ROOT>/login
-    cy.url().should('equal', `${loginBaseUrl}/login`);
+    cy.url().should('equal', `${LOGIN_ROOT}/login`);
     // Using cy.visit to navigate back to Cloud results in another redirect to the login page
     cy.visit('/');
-    cy.url().should('startWith', `${loginBaseUrl}/login`);
+    cy.url().should('startWith', `${LOGIN_ROOT}/login`);
   });
 });

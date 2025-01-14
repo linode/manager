@@ -9,7 +9,6 @@ import type {
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
-  KubernetesTieredVersion,
   KubernetesVersion,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes/types';
@@ -30,7 +29,6 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   disk_encryption: 'enabled',
   id: Factory.each((id) => id),
   nodes: kubeLinodeFactory.buildList(3),
-  tags: [],
   type: 'g6-standard-1',
 });
 
@@ -77,20 +75,6 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>
 export const kubernetesVersionFactory = Factory.Sync.makeFactory<KubernetesVersion>(
   {
     id: '1.24',
-  }
-);
-
-export const kubernetesStandardTierVersionFactory = Factory.Sync.makeFactory<KubernetesTieredVersion>(
-  {
-    id: Factory.each((id) => `'v1.3${id}'`),
-    tier: 'standard',
-  }
-);
-
-export const kubernetesEnterpriseTierVersionFactory = Factory.Sync.makeFactory<KubernetesTieredVersion>(
-  {
-    id: Factory.each((id) => `'v1.31.${id}+lke1'`),
-    tier: 'enterprise',
   }
 );
 

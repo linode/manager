@@ -7,7 +7,6 @@ import { GlobalFilters } from './GlobalFilters';
 const mockHandleAnyFilterChange = vi.fn();
 const mockHandleDashboardChange = vi.fn();
 const mockHandleTimeDurationChange = vi.fn();
-const mockHandleToggleAppliedFilter = vi.fn();
 const timeRangeSelectId = 'cloudpulse-time-duration';
 const setup = () => {
   return renderWithTheme(
@@ -15,7 +14,6 @@ const setup = () => {
       handleAnyFilterChange={mockHandleAnyFilterChange}
       handleDashboardChange={mockHandleDashboardChange}
       handleTimeDurationChange={mockHandleTimeDurationChange}
-      handleToggleAppliedFilter={mockHandleToggleAppliedFilter}
     />
   );
 };

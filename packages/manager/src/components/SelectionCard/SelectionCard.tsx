@@ -191,12 +191,12 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
 
 const StyledGrid = styled(Grid, {
   label: 'SelectionCardGrid',
-})<Partial<SelectionCardProps>>(({ theme, ...props }) => ({
+})<Partial<SelectionCardProps>>(({ ...props }) => ({
   '& [class^="fl-"]': {
     transition: 'color 225ms ease-in-out',
   },
   '&:focus': {
-    outline: `1px dotted ${theme.tokens.color.Neutrals[50]}`,
+    outline: '1px dotted #999',
   },
   ...(props.onClick &&
     !props.disabled && {

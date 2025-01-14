@@ -1,4 +1,3 @@
-import { QueryClient } from '@tanstack/react-query';
 import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
@@ -63,11 +62,8 @@ export const routeTree = rootRoute.addChildren([
 ]);
 
 export const router = createRouter({
-  context: {
-    queryClient: new QueryClient(),
-  },
+  context: {},
   defaultNotFoundComponent: () => <NotFound />,
-  defaultPreload: 'intent',
   routeTree,
 });
 
@@ -86,18 +82,12 @@ declare module '@tanstack/react-router' {
  */
 export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
-  domainsRouteTree,
-  volumesRouteTree,
 ]);
-export type MigrationRouteTree = typeof migrationRouteTree;
 export const migrationRouter = createRouter({
   Wrap: ({ children }) => {
     return <div data-testid="migration-router">{children}</div>;
   },
-  context: {
-    queryClient: new QueryClient(),
-  },
+  context: {},
   defaultNotFoundComponent: () => <NotFound />,
-  defaultPreload: 'intent',
   routeTree: migrationRouteTree,
 });

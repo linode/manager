@@ -1,4 +1,5 @@
 import { Chip } from '@linode/ui';
+import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -8,7 +9,10 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
+import {
+  useAllKubernetesNodePoolQuery,
+  useKubernetesVersionQuery,
+} from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -16,12 +20,8 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import {
   getNextVersion,
   getTotalClusterMemoryCPUAndStorage,
-  useLkeStandardOrEnterpriseVersions,
 } from '../kubeUtils';
 import { ClusterActionMenu } from './ClusterActionMenu';
-import { ClusterChips } from './ClusterChips';
-
-import type { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 
 const useStyles = makeStyles()(() => ({
   clusterRow: {
@@ -64,16 +64,13 @@ export const KubernetesClusterRow = (props: Props) => {
   const { cluster, openDeleteDialog, openUpgradeDialog } = props;
   const { classes } = useStyles();
 
+  const { data: versions } = useKubernetesVersionQuery();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
   const types = extendTypesQueryResult(typesQuery);
   const { data: regions } = useRegionsQuery();
 
   const region = regions?.find((r) => r.id === cluster.region);
-
-  const { versions } = useLkeStandardOrEnterpriseVersions(
-    cluster.tier ?? 'standard' // TODO LKE: remove fallback once LKE-E is in GA and tier is required
-  );
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
 
@@ -109,7 +106,17 @@ export const KubernetesClusterRow = (props: Props) => {
               </Link>
             </div>
           </Grid>
-          <ClusterChips cluster={cluster} sx={{ marginLeft: 1 }} />
+          {cluster.control_plane.high_availability && (
+            <Grid>
+              <Chip
+                data-testid="ha-chip"
+                label="HA"
+                size="small"
+                sx={(theme) => ({ borderColor: theme.color.green })}
+                variant="outlined"
+              />
+            </Grid>
+          )}
         </Grid>
       </TableCell>
       <Hidden mdDown>

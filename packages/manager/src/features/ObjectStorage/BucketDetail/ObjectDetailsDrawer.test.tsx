@@ -23,6 +23,8 @@ vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
   };
 });
 
+vi.mock('src/components/EnhancedSelect/Select');
+
 const props: ObjectDetailsDrawerProps = {
   bucketName: 'my-bucket',
   clusterId: 'cluster-id',

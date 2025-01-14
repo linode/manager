@@ -14,10 +14,7 @@ import {
 } from './Autocomplete.styles';
 
 import type { TextFieldProps } from '../TextField';
-import type {
-  AutocompleteProps,
-  AutocompleteRenderInputParams,
-} from '@mui/material/Autocomplete';
+import type { AutocompleteProps } from '@mui/material/Autocomplete';
 
 export interface EnhancedAutocompleteProps<
   T extends { label: string },
@@ -41,7 +38,6 @@ export interface EnhancedAutocompleteProps<
   /** Element to show when the Autocomplete search yields no results. */
   noOptionsText?: JSX.Element | string;
   placeholder?: string;
-  renderInput?: (_params: AutocompleteRenderInputParams) => React.ReactNode;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
   textFieldProps?: Partial<TextFieldProps>;
@@ -89,7 +85,6 @@ export const Autocomplete = <
     onChange,
     options,
     placeholder,
-    renderInput,
     renderOption,
     selectAllLabel = '',
     textFieldProps,
@@ -113,40 +108,36 @@ export const Autocomplete = <
           ? optionsWithSelectAll
           : options
       }
-      renderInput={
-        renderInput
-          ? renderInput
-          : (params) => (
-              <TextField
-                errorText={errorText}
-                helperText={helperText}
-                inputId={params.id}
-                label={label}
-                loading={loading}
-                noMarginTop={noMarginTop}
-                placeholder={placeholder ?? 'Select an option'}
-                required={textFieldProps?.InputProps?.required}
-                tooltipText={textFieldProps?.tooltipText}
-                {...params}
-                {...textFieldProps}
-                InputProps={{
-                  ...params.InputProps,
-                  ...textFieldProps?.InputProps,
-                  endAdornment: (
-                    <>
-                      {loading && (
-                        <InputAdornment position="end">
-                          <CircleProgress size="sm" />
-                        </InputAdornment>
-                      )}
-                      {textFieldProps?.InputProps?.endAdornment}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
-                }}
-              />
-            )
-      }
+      renderInput={(params) => (
+        <TextField
+          errorText={errorText}
+          helperText={helperText}
+          inputId={params.id}
+          label={label}
+          loading={loading}
+          noMarginTop={noMarginTop}
+          placeholder={placeholder ?? 'Select an option'}
+          required={textFieldProps?.InputProps?.required}
+          tooltipText={textFieldProps?.tooltipText}
+          {...params}
+          {...textFieldProps}
+          InputProps={{
+            ...params.InputProps,
+            ...textFieldProps?.InputProps,
+            endAdornment: (
+              <>
+                {loading && (
+                  <InputAdornment position="end">
+                    <CircleProgress size="sm" />
+                  </InputAdornment>
+                )}
+                {textFieldProps?.InputProps?.endAdornment}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
       renderOption={(props, option, state, ownerState) => {
         const isSelectAllOption = option === selectAllOption;
         const ListItem = isSelectAllOption ? StyledListItem : 'li';

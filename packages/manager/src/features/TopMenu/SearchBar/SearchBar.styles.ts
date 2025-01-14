@@ -12,7 +12,7 @@ export const StyledIconButton = styled(IconButton, {
     width: 25,
   },
   '&:hover, &:focus': {
-    color: theme.tokens.color.Neutrals[40],
+    color: '#c1c1c0',
   },
   backgroundColor: 'inherit',
   border: 'none',

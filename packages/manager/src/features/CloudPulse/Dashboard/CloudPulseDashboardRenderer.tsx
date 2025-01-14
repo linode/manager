@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
-import { REFRESH, REGION, RESOURCE_ID, TAGS } from '../Utils/constants';
+import { REFRESH, REGION, RESOURCE_ID } from '../Utils/constants';
 import {
   checkIfAllMandatoryFiltersAreSelected,
   getMetricsCallCustomFilters,
@@ -67,11 +67,6 @@ export const CloudPulseDashboardRenderer = React.memo(
         resources={
           filterValue[RESOURCE_ID] && Array.isArray(filterValue[RESOURCE_ID])
             ? (filterValue[RESOURCE_ID] as string[])
-            : []
-        }
-        tags={
-          filterValue[TAGS] && Array.isArray(filterValue[TAGS])
-            ? (filterValue[TAGS] as string[])
             : []
         }
         additionalFilters={getMetricsCall}

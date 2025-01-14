@@ -7,26 +7,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ObjectStorageSettings } from './ObjectStorageSettings';
 
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
-
-const preference: ManagerPreferences['type_to_confirm'] = true;
-
-const queryMocks = vi.hoisted(() => ({
-  usePreferences: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/queries/profile/preferences', async () => {
-  const actual = await vi.importActual('src/queries/profile/preferences');
-  return {
-    ...actual,
-    usePreferences: queryMocks.usePreferences,
-  };
-});
-
-queryMocks.usePreferences.mockReturnValue({
-  data: preference,
-});
-
 describe('ObjectStorageSettings', () => {
   it('Should display button to cancel object storage, if storage is enabled', async () => {
     server.use(
@@ -78,10 +58,6 @@ describe('ObjectStorageSettings', () => {
   });
 
   it('Should update the UI when the cancel request is successful', async () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preference,
-    });
-
     server.use(
       http.get('*/v4/account/settings', () => {
         return HttpResponse.json(

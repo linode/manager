@@ -96,9 +96,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     data: vpcs,
     error: vpcsError,
     isLoading: vpcsLoading,
-  } = useAllVPCsQuery({
-    enabled: entityType === 'vpc_id',
-  });
+  } = useAllVPCsQuery(entityType === 'vpc_id');
 
   const getEntityOptions = (): { label: string; value: number | string }[] => {
     const reactQueryEntityDataMap = {
@@ -134,12 +132,10 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     if (entityType === 'bucket') {
       return (
         reactQueryEntityDataMap['bucket']?.buckets?.map(
-          ({ cluster, label, region }) => {
-            return {
-              label,
-              value: region ?? cluster,
-            };
-          }
+          ({ label, region }) => ({
+            label,
+            value: region ?? '',
+          })
         ) || []
       );
     }
@@ -189,15 +185,8 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     : undefined;
 
   const selectedEntity =
-    entityType === 'bucket'
-      ? entityOptions.find(
-          (thisEntity) =>
-            String(thisEntity.value) === entityId &&
-            thisEntity.label === entityInputValue
-        ) || null
-      : entityOptions.find(
-          (thisEntity) => String(thisEntity.value) === entityId
-        ) || null;
+    entityOptions.find((thisEntity) => String(thisEntity.value) === entityId) ||
+    null;
 
   const renderEntityTypes = () => {
     return Object.keys(ENTITY_MAP).map((key: string) => {

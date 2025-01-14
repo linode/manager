@@ -1,7 +1,6 @@
 import type { APIError } from '@linode/api-v4';
 import type { AxiosError } from 'axios';
 import { timeout } from 'support/util/backoff';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 type LinodeApiV4Error = {
   errors: APIError[];
@@ -189,9 +188,9 @@ Cypress.Commands.add(
 
     const timeoutLength = (() => {
       if (typeof labelOrOptions !== 'string') {
-        return labelOrOptions?.timeout ?? LINODE_CREATE_TIMEOUT;
+        return labelOrOptions?.timeout;
       }
-      return LINODE_CREATE_TIMEOUT;
+      return undefined;
     })();
 
     const commandLog = Cypress.log({

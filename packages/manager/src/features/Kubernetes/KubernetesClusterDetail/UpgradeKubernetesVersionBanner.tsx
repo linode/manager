@@ -3,26 +3,20 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
+import { useKubernetesVersionQuery } from 'src/queries/kubernetes';
 
-import {
-  getNextVersion,
-  useLkeStandardOrEnterpriseVersions,
-} from '../kubeUtils';
+import { getNextVersion } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
-
-import type { KubernetesTier } from '@linode/api-v4';
 
 interface Props {
   clusterID: number;
   clusterLabel: string;
-  clusterTier: KubernetesTier;
   currentVersion: string;
 }
 
 export const UpgradeKubernetesVersionBanner = (props: Props) => {
-  const { clusterID, clusterLabel, clusterTier, currentVersion } = props;
-
-  const { versions } = useLkeStandardOrEnterpriseVersions(clusterTier);
+  const { clusterID, clusterLabel, currentVersion } = props;
+  const { data: versions } = useKubernetesVersionQuery();
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -57,7 +51,6 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
       <UpgradeVersionModal
         clusterID={clusterID}
         clusterLabel={clusterLabel}
-        clusterTier={clusterTier}
         currentVersion={currentVersion}
         isOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}

@@ -4,62 +4,22 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TypeToConfirm } from './TypeToConfirm';
 
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
-
 const props = { onClick: vi.fn() };
-
-const preference: ManagerPreferences['type_to_confirm'] = true;
-
-const queryMocks = vi.hoisted(() => ({
-  usePreferences: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/queries/profile/preferences', async () => {
-  const actual = await vi.importActual('src/queries/profile/preferences');
-  return {
-    ...actual,
-    usePreferences: queryMocks.usePreferences,
-  };
-});
-
-queryMocks.usePreferences.mockReturnValue({
-  data: preference,
-});
 
 describe('TypeToConfirm Component', () => {
   const labelText = 'Label';
 
-  it('Should not show label when visible prop not provided', () => {
-    const { queryByText } = renderWithTheme(
-      <TypeToConfirm label={labelText} onChange={vi.fn()} {...props} />
-    );
-    expect(queryByText(labelText)).not.toBeInTheDocument();
-  });
-
-  it('Should not show input when visible prop not provided', () => {
-    const { queryByLabelText } = renderWithTheme(
-      <TypeToConfirm label={labelText} onChange={vi.fn()} {...props} />
-    );
-    expect(queryByLabelText(labelText)).not.toBeInTheDocument();
-  });
-
-  it('Should display label when visible is true', () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preference,
-    });
+  it('Should have a label', () => {
     const { getByText } = renderWithTheme(
-      <TypeToConfirm label={labelText} onChange={vi.fn()} {...props} visible />
+      <TypeToConfirm label={labelText} onChange={vi.fn()} {...props} />
     );
     const label = getByText(labelText);
     expect(label).toHaveTextContent(labelText);
   });
 
-  it('Should display input when visible is true', () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preference,
-    });
+  it('Should have a text input field associated with label', () => {
     const { getByLabelText } = renderWithTheme(
-      <TypeToConfirm label={labelText} onChange={vi.fn()} {...props} visible />
+      <TypeToConfirm label={labelText} onChange={vi.fn()} {...props} />
     );
     const input = getByLabelText(labelText, { selector: 'input' });
     expect(input).toBeInTheDocument();

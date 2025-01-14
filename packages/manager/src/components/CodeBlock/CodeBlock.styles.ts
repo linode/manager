@@ -18,20 +18,20 @@ export const StyledHighlightedMarkdown = styled(HighlightedMarkdown, {
 })(({ theme }) => ({
   '& .hljs': {
     '& .hljs-literal, .hljs-built_in': {
-      color: theme.tokens.color.Yellow[5],
+      color: '#f8f8f2',
     },
     '& .hljs-string': {
-      color: theme.tokens.color.Yellow[50],
+      color: '#e6db74',
     },
     '& .hljs-symbol': {
-      color: theme.tokens.color.Yellow[5],
+      color: '#f8f8f2',
     },
 
     '& .hljs-variable': {
       color: 'teal',
     },
-    backgroundColor: theme.tokens.color.Neutrals[100],
-    color: theme.tokens.color.Yellow[5],
+    backgroundColor: '#32363b',
+    color: '#f8f8f2',
     padding: `${theme.spacing(4)} ${theme.spacing(2)}`,
   },
 }));
@@ -40,10 +40,10 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip',
 })(({ theme }) => ({
   '& svg': {
-    color: theme.tokens.color.Green[60],
+    color: '#17CF73',
   },
   '& svg:hover': {
-    color: theme.tokens.color.Green[70],
+    color: '#00B159',
   },
   position: 'absolute',
   right: `${theme.spacing(1.5)}`,

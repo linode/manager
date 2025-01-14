@@ -235,11 +235,12 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
 });
 
 export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
-  created: Factory.each(() => {
-    const now = new Date();
-    const tenDaysAgo = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000);
-    return randomDate(tenDaysAgo, now).toISOString();
-  }),
+  created: Factory.each(() =>
+    randomDate(
+      new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+      new Date()
+    ).toISOString()
+  ),
   id: Factory.each((i) => i),
   label: Factory.each(() => `backup-${v4()}`),
   type: pickRandom(['snapshot', 'auto']),

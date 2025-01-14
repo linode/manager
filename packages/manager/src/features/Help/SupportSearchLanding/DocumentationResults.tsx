@@ -12,12 +12,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginTop: theme.spacing(3),
   },
   icon: {
-    color: theme.tokens.color.Ultramarine[70],
+    color: '#3683DC',
     fontSize: '0.8rem',
     marginLeft: theme.spacing(1),
   },
   label: {
-    color: theme.tokens.color.Ultramarine[70],
+    color: '#3683DC',
   },
   link: {
     display: 'inline-block',

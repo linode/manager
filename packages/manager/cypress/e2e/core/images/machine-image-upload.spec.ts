@@ -320,11 +320,12 @@ describe('machine image', () => {
     const label = randomLabel();
     const status = 'failed';
     const message = 'Upload window expired';
+    const expiredDate = DateTime.local().minus({ days: 1 }).toISO();
     uploadImage(label);
     cy.wait('@imageUpload').then((xhr) => {
       const imageId = xhr.response?.body.image.id;
       assertProcessing(label, imageId);
-      eventIntercept(label, imageId, status, message);
+      eventIntercept(label, imageId, status, message, expiredDate);
       cy.wait('@getEvent');
       assertFailed(label, imageId, message);
     });

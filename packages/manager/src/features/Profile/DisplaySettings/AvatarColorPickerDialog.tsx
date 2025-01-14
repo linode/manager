@@ -24,9 +24,7 @@ export const AvatarColorPickerDialog = (
 
   const [avatarColor, setAvatarColor] = useState<string>();
 
-  const { data: avatarColorPreference } = usePreferences(
-    (preferences) => preferences?.avatarColor
-  );
+  const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   return (
@@ -36,7 +34,7 @@ export const AvatarColorPickerDialog = (
           Select a background color for your avatar:
         </Typography>
         <ColorPicker
-          defaultColor={avatarColorPreference}
+          defaultColor={preferences?.avatarColor}
           inputStyles={{ height: 30, width: 30 }}
           label="Avatar color picker"
           onChange={(color: string) => setAvatarColor(color)}
@@ -53,7 +51,7 @@ export const AvatarColorPickerDialog = (
 
       <ActionsPanel
         primaryButtonProps={{
-          disabled: !avatarColor || avatarColorPreference === avatarColor,
+          disabled: !avatarColor || preferences?.avatarColor === avatarColor,
           label: 'Save',
           onClick: () => {
             if (avatarColor) {

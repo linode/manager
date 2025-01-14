@@ -28,7 +28,6 @@ export interface CloudPulseResourcesSelectProps {
   region?: string;
   resourceType: string | undefined;
   savePreferences?: boolean;
-  tags?: string[];
   xFilter?: Filter;
 }
 
@@ -43,7 +42,6 @@ export const CloudPulseResourcesSelect = React.memo(
       region,
       resourceType,
       savePreferences,
-      tags,
       xFilter,
     } = props;
 
@@ -69,7 +67,6 @@ export const CloudPulseResourcesSelect = React.memo(
         : {
             ...(resourceFilterMap[resourceType ?? ''] ?? {}),
             region,
-            ...(tags ?? []),
           }
     );
 

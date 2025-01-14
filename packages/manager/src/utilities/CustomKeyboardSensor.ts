@@ -1,8 +1,5 @@
-// Customizing `KeyboardSensor` from `dnd-kit` to meet our requirements:
-// - Prevent scrolling while using keyboard keys (for both normal and smaller window sizes).
-//   * This resolves the issue of keystrokes not being recognized or having no effect on smaller screens.
-// - Add a focus style to the draggable element while it is being dragged.
-// - Clear the focus style when the draggable element is dropped.
+// Customizing KeyboardSensor from dnd-kit to meet our requirements.
+// - Prevent scrolling while using keyboard keys.
 
 import { KeyboardCode, defaultCoordinates } from '@dnd-kit/core';
 import {
@@ -149,7 +146,7 @@ export class CustomKeyboardSensor implements SensorInstance {
     this.windowListeners.add(EventName.Resize, this.handleCancel);
     this.windowListeners.add(EventName.VisibilityChange, this.handleCancel);
 
-    // Add a focus style to the draggable element while it is being dragged.
+    // Add focus style when draggable element is dragging.
     const activator = this.props.activeNode.node.current;
     if (activator) {
       activator.style.outline = '1px dashed grey';
@@ -164,7 +161,7 @@ export class CustomKeyboardSensor implements SensorInstance {
     this.listeners.removeAll();
     this.windowListeners.removeAll();
 
-    // Clear the focus style when the draggable element is dropped.
+    // Clear focus style when draggable element is dropped
     const dropTarget = this.props.activeNode.node.current;
     if (dropTarget) {
       dropTarget.style.outline = 'none';

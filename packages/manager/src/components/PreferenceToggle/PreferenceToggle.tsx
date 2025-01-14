@@ -3,30 +3,28 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+export interface PreferenceToggleProps<T> {
+  preference: T;
+  togglePreference: () => T;
+}
 
 interface RenderChildrenProps<T> {
-  preference: NonNullable<T>;
-  togglePreference: () => NonNullable<T>;
+  preference: T;
+  togglePreference: () => T;
 }
 
 type RenderChildren<T> = (props: RenderChildrenProps<T>) => JSX.Element;
 
-interface Props<Key extends keyof ManagerPreferences> {
-  children: RenderChildren<ManagerPreferences[Key]>;
-  initialSetCallbackFn?: (value: ManagerPreferences[Key]) => void;
-  preferenceKey: Key;
-  preferenceOptions: [ManagerPreferences[Key], ManagerPreferences[Key]];
-  toggleCallbackFn?: (value: ManagerPreferences[Key]) => void;
-  value?: ManagerPreferences[Key];
+interface Props<T> {
+  children: RenderChildren<T>;
+  initialSetCallbackFn?: (value: T) => void;
+  preferenceKey: string;
+  preferenceOptions: [T, T];
+  toggleCallbackFn?: (value: T) => void;
+  value?: T;
 }
 
-/**
- * @deprecated There are more simple ways to use preferences. Look into using `usePreferences` directly.
- */
-export const PreferenceToggle = <Key extends keyof ManagerPreferences>(
-  props: Props<Key>
-) => {
+export const PreferenceToggle = <T,>(props: Props<T>) => {
   const {
     children,
     preferenceKey,
@@ -35,19 +33,17 @@ export const PreferenceToggle = <Key extends keyof ManagerPreferences>(
     value,
   } = props;
 
-  const { data: preference } = usePreferences(
-    (preferences) => preferences?.[preferenceKey]
-  );
+  const { data: preferences } = usePreferences();
 
   const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
   const togglePreference = () => {
-    let newPreferenceToSet: ManagerPreferences[Key];
+    let newPreferenceToSet: T;
 
-    if (preference === undefined) {
+    if (preferences?.[preferenceKey] === undefined) {
       // Because we default to preferenceOptions[0], toggling with no preference should pick preferenceOptions[1]
       newPreferenceToSet = preferenceOptions[1];
-    } else if (preference === preferenceOptions[0]) {
+    } else if (preferences[preferenceKey] === preferenceOptions[0]) {
       newPreferenceToSet = preferenceOptions[1];
     } else {
       newPreferenceToSet = preferenceOptions[0];
@@ -62,11 +58,11 @@ export const PreferenceToggle = <Key extends keyof ManagerPreferences>(
       toggleCallbackFn(newPreferenceToSet);
     }
 
-    return newPreferenceToSet!;
+    return newPreferenceToSet;
   };
 
   return children({
-    preference: value ?? preference ?? preferenceOptions[0]!,
+    preference: value ?? preferences?.[preferenceKey] ?? preferenceOptions[0],
     togglePreference,
   });
 };

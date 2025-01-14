@@ -19,7 +19,6 @@ import {
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
-  useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -30,6 +29,7 @@ import {
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
+  useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
@@ -61,14 +61,13 @@ import type {
   KubeNodePoolResponse,
   KubernetesTier,
 } from '@linode/api-v4/lib/kubernetes';
-import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
-  const [selectedRegion, setSelectedRegion] = React.useState<
-    Region | undefined
+  const [selectedRegionId, setSelectedRegionId] = React.useState<
+    string | undefined
   >();
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
@@ -103,30 +102,17 @@ export const CreateCluster = () => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery(selectedTier === 'enterprise');
+  } = useKubernetesTypesQuery();
 
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
-    setSelectedTier(tier);
-
-    // HA is enabled by default for enterprise clusters
     if (tier === 'enterprise') {
-      setHighAvailability(true);
-
-      // When changing the tier to enterprise, we want to check if the pre-selected region has the capability
-      if (!selectedRegion?.capabilities.includes('Kubernetes Enterprise')) {
-        setSelectedRegion(undefined);
-      }
-    } else {
-      setHighAvailability(undefined);
+      setHighAvailability(false);
     }
+    setSelectedTier(tier);
   };
 
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
     (type) => type.id === 'lke-ha'
-  );
-
-  const lkeEnterpriseType = kubernetesHighAvailabilityTypesData?.find(
-    (type) => type.id === 'lke-e'
   );
 
   const {
@@ -147,15 +133,14 @@ export const CreateCluster = () => {
   } = useCreateKubernetesClusterBetaMutation();
 
   const {
+    data: versionData,
+    isError: versionLoadError,
+  } = useKubernetesVersionQuery();
+
+  const {
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
   } = useIsLkeEnterpriseEnabled();
-
-  const {
-    isLoadingVersions,
-    versions: versionData,
-    versionsError,
-  } = useLkeStandardOrEnterpriseVersions(selectedTier);
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -220,15 +205,11 @@ export const CreateCluster = () => {
       k8s_version: version,
       label,
       node_pools,
-      region: selectedRegion?.id,
+      region: selectedRegionId,
     };
 
     if (showAPL) {
       payload = { ...payload, apl_enabled };
-    }
-
-    if (isLkeEnterpriseLAFeatureEnabled) {
-      payload = { ...payload, tier: selectedTier };
     }
 
     const createClusterFn =
@@ -277,7 +258,7 @@ export const CreateCluster = () => {
   };
 
   const highAvailabilityPrice = getDCSpecificPriceByType({
-    regionId: selectedRegion?.id,
+    regionId: selectedRegionId,
     type: lkeHAType,
   });
 
@@ -301,10 +282,10 @@ export const CreateCluster = () => {
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
     regionsData,
-    selectedRegionID: selectedRegion?.id,
+    selectedRegionID: selectedRegionId,
   });
 
-  if (typesError || regionsError || versionsError) {
+  if (typesError || regionsError || versionLoadError) {
     // This information is necessary to create a Cluster. Otherwise, show an error state.
     return <ErrorState errorText="An unexpected error occurred." />;
   }
@@ -368,9 +349,9 @@ export const CreateCluster = () => {
                 }
                 disableClearable
                 errorText={errorMap.region}
-                onChange={(e, region) => setSelectedRegion(region)}
+                onChange={(e, region) => setSelectedRegionId(region.id)}
                 regions={regionsData}
-                value={selectedRegion?.id}
+                value={selectedRegionId}
               />
             </Stack>
             <StyledDocsLinkContainer
@@ -390,7 +371,6 @@ export const CreateCluster = () => {
             disableClearable={!!version}
             errorText={errorMap.k8s_version}
             label="Kubernetes Version"
-            loading={isLoadingVersions}
             options={versions}
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
@@ -420,7 +400,7 @@ export const CreateCluster = () => {
                 isAPLEnabled={apl_enabled}
                 isErrorKubernetesTypes={isErrorKubernetesTypes}
                 isLoadingKubernetesTypes={isLoadingKubernetesTypes}
-                selectedRegionId={selectedRegion?.id}
+                selectedRegionId={selectedRegionId}
                 setHighAvailability={setHighAvailability}
               />
             </Box>
@@ -460,7 +440,7 @@ export const CreateCluster = () => {
             isPlanPanelDisabled={isPlanPanelDisabled}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}
-            selectedRegionId={selectedRegion?.id}
+            selectedRegionId={selectedRegionId}
             types={typesData || []}
             typesLoading={typesLoading}
           />
@@ -479,7 +459,7 @@ export const CreateCluster = () => {
           updateFor={[
             hasAgreed,
             highAvailability,
-            selectedRegion?.id,
+            selectedRegionId,
             nodePools,
             submitting,
             typesData,
@@ -489,11 +469,10 @@ export const CreateCluster = () => {
             classes,
           ]}
           createCluster={createCluster}
-          enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
           pools={nodePools}
-          region={selectedRegion?.id}
+          region={selectedRegionId}
           regionsData={regionsData}
           removePool={removePool}
           showHighAvailability={showHighAvailability}

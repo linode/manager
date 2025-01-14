@@ -243,6 +243,10 @@ export const darkTheme: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         containedPrimary: {
+          // TODO: We can remove this after migration since we can define variants
+          '&.loading': {
+            backgroundColor: primaryColors.text,
+          },
           '&:active': {
             backgroundColor: Button.Primary.Pressed.Background,
           },
@@ -263,6 +267,10 @@ export const darkTheme: ThemeOptions = {
           padding: '2px 20px',
         },
         containedSecondary: {
+          // TODO: We can remove this after migration since we can define variants
+          '&.loading': {
+            color: primaryColors.text,
+          },
           '&:active': {
             backgroundColor: 'transparent',
             color: Button.Secondary.Pressed.Text,
@@ -319,26 +327,6 @@ export const darkTheme: ThemeOptions = {
           transition: 'none',
         },
       },
-      variants: [
-        {
-          props: { color: 'error' },
-          style: {
-            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus': {
-              backgroundColor: Background.Negativesubtle,
-              border: `1px solid ${Border.Negative}`,
-              color: Content.Text.Negative,
-            },
-            '&[aria-disabled="true"]': {
-              backgroundColor: 'transparent',
-              border: `1px solid ${Button.Secondary.Disabled.Border}`,
-              color: Button.Secondary.Disabled.Text,
-            },
-            backgroundColor: 'transparent',
-            border: `1px solid ${Border.Negative}`,
-            color: Content.Text.Negative,
-          },
-        },
-      ],
     },
     MuiButtonBase: {
       styleOverrides: {

@@ -17,11 +17,11 @@ export const Draggable = ({ children, draggable }: DraggableProps) => {
     x: 40,
     y: window.innerHeight - 400,
   });
-  const [size, setSize] = useState({ height: 400, width: 380 });
+  const [size, setSize] = useState({ height: 400, width: 600 });
   const [rel, setRel] = useState<{ x: number; y: number } | null>(null);
   const nodeRef = useRef<HTMLDivElement>(null);
-  const minWidth = 380;
-  const minHeight = 400;
+  const minWidth = 400;
+  const minHeight = 300;
 
   const onMouseDown = (e: React.MouseEvent) => {
     if (!draggable || e.button !== 0) {

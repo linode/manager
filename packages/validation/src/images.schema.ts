@@ -9,10 +9,10 @@ const labelSchema = string()
   );
 
 export const baseImageSchema = object({
-  label: labelSchema.optional(),
-  description: string().optional().min(1).max(65000),
-  cloud_init: boolean().optional(),
-  tags: array(string().min(3).max(50).required()).max(500).optional(),
+  label: labelSchema.notRequired(),
+  description: string().notRequired().min(1).max(65000),
+  cloud_init: boolean().notRequired(),
+  tags: array(string().min(3).max(50)).max(500).notRequired(),
 });
 
 export const createImageSchema = baseImageSchema.shape({
@@ -27,11 +27,11 @@ export const uploadImageSchema = baseImageSchema.shape({
 });
 
 export const updateImageSchema = object({
-  label: labelSchema.optional(),
+  label: labelSchema.notRequired(),
   description: string()
-    .optional()
+    .notRequired()
     .max(65000, 'Length must be 65000 characters or less.'),
-  tags: array(string().required()).optional(),
+  tags: array(string()).notRequired(),
 });
 
 export const updateImageRegionsSchema = object({

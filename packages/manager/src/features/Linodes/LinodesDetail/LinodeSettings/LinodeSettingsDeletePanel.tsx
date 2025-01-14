@@ -59,7 +59,6 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
           type: 'Linode',
         }}
         errors={error}
-        expand
         label={'Linode Label'}
         loading={isPending}
         onClick={onDelete}

@@ -13,9 +13,6 @@ import type { MockSeeder, MockState } from 'src/mocks/types';
  */
 export const removeSeeds = async (seederId: MockSeeder['id']) => {
   switch (seederId) {
-    case 'domains:crud':
-      await mswDB.deleteAll('domains', mockState, 'seedState');
-      break;
     case 'linodes:crud':
       await mswDB.deleteAll('linodes', mockState, 'seedState');
       await mswDB.deleteAll('linodeConfigs', mockState, 'seedState');

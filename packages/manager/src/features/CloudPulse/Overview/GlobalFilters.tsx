@@ -17,14 +17,9 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { AclpConfig, Dashboard, TimeDuration } from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
-  handleAnyFilterChange(
-    filterKey: string,
-    filterValue: FilterValueType,
-    labels: string[]
-  ): void;
+  handleAnyFilterChange(filterKey: string, filterValue: FilterValueType): void;
   handleDashboardChange(dashboard: Dashboard | undefined): void;
   handleTimeDurationChange(timeDuration: TimeDuration): void;
-  handleToggleAppliedFilter(isVisible: boolean): void;
 }
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
@@ -32,7 +27,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleAnyFilterChange,
     handleDashboardChange,
     handleTimeDurationChange,
-    handleToggleAppliedFilter,
   } = props;
 
   const {
@@ -74,20 +68,19 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     (
       filterKey: string,
       value: FilterValueType,
-      labels: string[],
       savePref: boolean = false,
       updatedPreferenceData: AclpConfig = {}
     ) => {
       if (savePref) {
         updatePreferences(updatedPreferenceData);
       }
-      handleAnyFilterChange(filterKey, value, labels);
+      handleAnyFilterChange(filterKey, value);
     },
     []
   );
 
   const handleGlobalRefresh = React.useCallback(() => {
-    handleAnyFilterChange(REFRESH, Date.now(), []);
+    handleAnyFilterChange(REFRESH, Date.now());
   }, []);
 
   const theme = useTheme();
@@ -113,6 +106,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             <CloudPulseTimeRangeSelect
               defaultValue={preferences?.timeDuration}
               handleStatsChange={handleTimeRangeChange}
+              hideLabel
               label="Time Range"
               savePreferences
             />
@@ -149,7 +143,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         <CloudPulseDashboardFilterBuilder
           dashboard={selectedDashboard}
           emitFilterChange={emitFilterChange}
-          handleToggleAppliedFilter={handleToggleAppliedFilter}
           isServiceAnalyticsIntegration={false}
           preferences={preferences}
         />

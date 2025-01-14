@@ -1,19 +1,3 @@
-## [2025-01-14] - v0.5.0
-
-### Added:
-
-- New Select component ([#11391](https://github.com/linode/manager/pull/11391))
-- New `color="warning"` button style and improved type-safety ([#11469](https://github.com/linode/manager/pull/11469))
-- New `MuiButton` variant `loading` along with `color="warning"` styles" ([#11469](https://github.com/linode/manager/pull/11469))
-
-### Changed:
-
-- Update `EditableText` to not use `react-router-dom` and accept a `LinkComponent` prop ([#11333](https://github.com/linode/manager/pull/11333))
-
-### Fixed:
-
-- `sx` prop now properly works being passed down to `Notice` component ([#11469](https://github.com/linode/manager/pull/11469))
-
 ## [2024-12-10] - v0.4.0
 
 ### Added:

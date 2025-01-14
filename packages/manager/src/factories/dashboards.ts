@@ -1,7 +1,7 @@
 import Factory from 'src/factories/factoryProxy';
 
 import type {
-  MetricDefinition,
+  AvailableMetrics,
   CloudPulseMetricsResponse,
   CloudPulseMetricsResponseData,
   Dashboard,
@@ -52,7 +52,7 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   y_label: Factory.each((i) => `y_label_${i}`),
 });
 
-export const dashboardMetricFactory = Factory.Sync.makeFactory<MetricDefinition>(
+export const dashboardMetricFactory = Factory.Sync.makeFactory<AvailableMetrics>(
   {
     available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
     dimensions: [],

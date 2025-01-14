@@ -72,11 +72,11 @@ export const BucketTable = (props: Props) => {
                 {isEndpointTypeAvailable && (
                   <Hidden lgDown>
                     <TableSortCell
-                      active={orderBy === 'endpoint_type'}
+                      active={orderBy === 'endpointType'}
                       data-qa-created
                       direction={order}
                       handleClick={handleOrderChange}
-                      label="endpoint_type"
+                      label="endpointType"
                     >
                       Endpoint Type
                     </TableSortCell>

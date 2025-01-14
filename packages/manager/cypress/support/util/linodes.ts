@@ -158,7 +158,15 @@ export const createTestLinode = async (
 
   // Wait for Linode status to be 'running' if `waitForBoot` is true.
   if (resolvedOptions.waitForBoot) {
-    await pollLinodeStatus(linode.id, 'running');
+    // Wait 15 seconds before initial check, then poll again every 5 seconds.
+    await pollLinodeStatus(
+      linode.id,
+      'running',
+      new SimpleBackoffMethod(5000, {
+        initialDelay: 15000,
+        maxAttempts: 25,
+      })
+    );
   }
 
   Cypress.log({

@@ -108,7 +108,7 @@ export const StyledAccordion = styled(Accordion, {
   ({ theme, ...props }) => ({
     '& h3': {
       '& p': {
-        color: theme.tokens.color.Neutrals[50],
+        color: '#B8B8B8',
         transition: theme.transitions.create(['opacity']),
         ...(props.isCollapsed && {
           opacity: 0,
@@ -116,9 +116,7 @@ export const StyledAccordion = styled(Accordion, {
       },
       // product family icon
       '& svg': {
-        color: props.isActiveProductFamily
-          ? theme.tokens.color.Green[70]
-          : theme.color.grey4,
+        color: props.isActiveProductFamily ? '#00B159' : theme.color.grey4,
         height: 20,
         marginRight: 14,
         transition: theme.transitions.create(['color']),

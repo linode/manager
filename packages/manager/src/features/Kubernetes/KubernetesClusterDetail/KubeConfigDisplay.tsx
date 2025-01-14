@@ -37,14 +37,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
     pointerEvents: 'none',
   },
   kubeconfigElement: {
-    '&:first-of-type': {
+    '&:first-child': {
       borderLeft: 'none',
     },
     '&:hover': {
       opacity: 0.7,
     },
     alignItems: 'center',
-    borderLeft: `1px solid ${theme.tokens.color.Neutrals[40]}`,
+    borderLeft: '1px solid #c4c4c4',
     cursor: 'pointer',
     display: 'flex',
   },
@@ -154,11 +154,9 @@ export const KubeConfigDisplay = (props: Props) => {
   };
 
   const getEndpointToDisplay = (endpoints: string[]) => {
-    // We are returning the endpoint with port 443 to be the most user-friendly, but if it doesn't exist, return the first endpoint available
-    return (
-      endpoints.find((thisResponse) =>
-        thisResponse.match(/linodelke\.net:443$/i)
-      ) ?? endpoints[0]
+    // Per discussions with the API team and UX, we should display only the endpoint with port 443, so we are matching on that.
+    return endpoints.find((thisResponse) =>
+      thisResponse.match(/linodelke\.net:443$/i)
     );
   };
 

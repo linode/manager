@@ -15,21 +15,17 @@ import {
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
   RESOURCES,
-  TAGS,
 } from '../Utils/constants';
 import {
   getCustomSelectProperties,
-  getFilters,
   getRegionProperties,
   getResourcesProperties,
-  getTagsProperties,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
-import type { CloudPulseTags } from './CloudPulseTagsFilter';
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseDashboardFilterBuilderProps {
@@ -45,12 +41,9 @@ export interface CloudPulseDashboardFilterBuilderProps {
   emitFilterChange: (
     filterKey: string,
     value: FilterValueType,
-    labels: string[],
     savePref?: boolean,
     updatePreferenceData?: {}
   ) => void;
-
-  handleToggleAppliedFilter: (isVisible: boolean) => void;
 
   /**
    * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
@@ -68,7 +61,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     const {
       dashboard,
       emitFilterChange,
-      handleToggleAppliedFilter,
       isServiceAnalyticsIntegration,
       preferences,
     } = props;
@@ -113,14 +105,12 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       (
         filterKey: string,
         filterValue: FilterValueType,
-        labels: string[],
         savePref: boolean = false,
         updatedPreferenceData: AclpConfig = {}
       ) => {
         emitFilterChange(
           filterKey,
           filterValue,
-          labels,
           savePref,
           updatedPreferenceData
         );
@@ -129,28 +119,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       [emitFilterChange, checkAndUpdateDependentFilters]
     );
 
-    const handleTagsChange = React.useCallback(
-      (tags: CloudPulseTags[], savePref: boolean = false) => {
-        const selectedTags = tags.map((tag) => tag.label);
-        emitFilterChangeByFilterKey(
-          TAGS,
-          selectedTags,
-          selectedTags,
-          savePref,
-          {
-            [TAGS]: selectedTags,
-          }
-        );
-      },
-      [emitFilterChangeByFilterKey]
-    );
-
     const handleResourceChange = React.useCallback(
       (resourceId: CloudPulseResources[], savePref: boolean = false) => {
         emitFilterChangeByFilterKey(
           RESOURCE_ID,
           resourceId.map((resource) => resource.id),
-          resourceId.map((resource) => resource.label),
           savePref,
           {
             [RESOURCES]: resourceId.map((resource: { id: string }) =>
@@ -163,11 +136,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const handleRegionChange = React.useCallback(
-      (
-        region: string | undefined,
-        labels: string[],
-        savePref: boolean = false
-      ) => {
+      (region: string | undefined, savePref: boolean = false) => {
         const updatedPreferenceData = {
           [REGION]: region,
           [RESOURCES]: undefined,
@@ -175,7 +144,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         emitFilterChangeByFilterKey(
           REGION,
           region,
-          labels,
           savePref,
           updatedPreferenceData
         );
@@ -187,14 +155,12 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       (
         filterKey: string,
         value: FilterValueType,
-        labels: string[],
         savePref: boolean = false,
         updatedPreferenceData: {} = {}
       ) => {
         emitFilterChangeByFilterKey(
           filterKey,
           value,
-          labels,
           savePref,
           updatedPreferenceData
         );
@@ -204,17 +170,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const getProps = React.useCallback(
       (config: CloudPulseServiceTypeFilters) => {
-        if (config.configuration.filterKey === TAGS) {
-          return getTagsProperties(
-            {
-              config,
-              dashboard,
-              isServiceAnalyticsIntegration,
-              preferences,
-            },
-            handleTagsChange
-          );
-        } else if (config.configuration.filterKey === REGION) {
+        if (config.configuration.filterKey === REGION) {
           return getRegionProperties(
             {
               config,
@@ -250,7 +206,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       },
       [
         dashboard,
-        handleTagsChange,
         handleRegionChange,
         handleResourceChange,
         handleCustomSelectChange,
@@ -260,12 +215,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const toggleShowFilter = () => {
-      handleToggleAppliedFilter(showFilter);
       setShowFilter((showFilterPrev) => !showFilterPrev);
     };
 
     const RenderFilters = React.useCallback(() => {
-      const filters = getFilters(dashboard, isServiceAnalyticsIntegration);
+      const filters = FILTER_CONFIG.get(dashboard.service_type)?.filters || [];
 
       if (!filters || filters.length === 0) {
         // if the filters are not defined , print an error state
@@ -274,7 +228,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             CustomIcon={InfoIcon}
             CustomIconStyles={{ height: '40px', width: '40px' }}
             errorText={'Please configure filters to continue'}
-          />
+          ></ErrorState>
         );
       }
 
@@ -327,9 +281,13 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           <Button
             startIcon={
               showFilter ? (
-                <KeyboardArrowDownIcon />
+                <KeyboardArrowDownIcon
+                  sx={{ color: 'grey', height: '30px', width: '30px' }}
+                />
               ) : (
-                <KeyboardArrowRightIcon />
+                <KeyboardArrowRightIcon
+                  sx={{ color: 'grey', height: '30px', width: '30px' }}
+                />
               )
             }
             sx={{
@@ -355,7 +313,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           item
           maxHeight={theme.spacing(23)}
           overflow={'auto'}
-          pr={{ sm: 0, xs: 2 }}
           rowGap={theme.spacing(2)}
           xs={12}
         >

@@ -1,7 +1,6 @@
 import { Button, Divider } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
@@ -10,63 +9,78 @@ import {
 
 import { SubnetNode } from './SubnetNode';
 
-import type { CreateVPCPayload } from '@linode/api-v4';
+import type { SubnetFieldState } from 'src/utilities/subnets';
 
 interface Props {
   disabled?: boolean;
   isDrawer?: boolean;
+  onChange: (subnets: SubnetFieldState[]) => void;
+  subnets: SubnetFieldState[];
 }
 
 export const MultipleSubnetInput = (props: Props) => {
-  const { disabled, isDrawer } = props;
-
-  const { control } = useFormContext<CreateVPCPayload>();
-
-  const { append, fields, remove } = useFieldArray({
-    control,
-    name: 'subnets',
-  });
+  const { disabled, isDrawer, onChange, subnets } = props;
 
   const [lastRecommendedIPv4, setLastRecommendedIPv4] = React.useState(
     DEFAULT_SUBNET_IPV4_VALUE
   );
 
-  const handleAddSubnet = () => {
+  const addSubnet = () => {
     const recommendedIPv4 = getRecommendedSubnetIPv4(
       lastRecommendedIPv4,
-      fields.map((subnet) => subnet.ipv4 ?? '')
+      subnets.map((subnet) => subnet.ip.ipv4 ?? '')
     );
     setLastRecommendedIPv4(recommendedIPv4);
-    append({
-      ipv4: recommendedIPv4,
-      label: '',
-    });
+    onChange([
+      ...subnets,
+      {
+        ip: { availIPv4s: 256, ipv4: recommendedIPv4, ipv4Error: '' },
+        label: '',
+        labelError: '',
+      },
+    ]);
+  };
+
+  const handleSubnetChange = (
+    subnet: SubnetFieldState,
+    subnetIdx: number,
+    removable: boolean
+  ) => {
+    const newSubnets = [...subnets];
+    if (removable) {
+      newSubnets.splice(subnetIdx, 1);
+    } else {
+      newSubnets[subnetIdx] = subnet;
+    }
+    onChange(newSubnets);
   };
 
   return (
     <Grid>
-      {fields.map((subnet, subnetIdx) => {
-        return (
-          <Grid data-qa-subnet-node={subnetIdx} key={subnet.id}>
-            {subnetIdx !== 0 && (
-              <Divider sx={(theme) => ({ marginTop: theme.spacing(2.5) })} />
-            )}
-            <SubnetNode
-              disabled={disabled}
-              idx={subnetIdx}
-              isCreateVPCDrawer={isDrawer}
-              remove={remove}
-            />
-          </Grid>
-        );
-      })}
+      {subnets.map((subnet, subnetIdx) => (
+        <Grid data-qa-subnet-node={subnetIdx} key={`subnet-${subnetIdx}`}>
+          {subnetIdx !== 0 && (
+            <Divider sx={(theme) => ({ marginTop: theme.spacing(2.5) })} />
+          )}
+          <SubnetNode
+            onChange={(subnet, subnetIdx, removable) =>
+              handleSubnetChange(subnet, subnetIdx ?? 0, !!removable)
+            }
+            disabled={disabled}
+            idx={subnetIdx}
+            isCreateVPCDrawer={isDrawer}
+            isRemovable={true}
+            subnet={subnet}
+          />
+        </Grid>
+      ))}
       <Button
         buttonType="outlined"
         disabled={disabled}
-        onClick={handleAddSubnet}
+        onClick={addSubnet}
         sx={(theme) => ({ marginTop: theme.spacing(3) })}
       >
-        Add {fields.length > 0 ? 'another' : 'a'} Subnet
+        Add {subnets.length > 0 ? 'another' : 'a'} Subnet
       </Button>
     </Grid>
   );

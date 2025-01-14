@@ -24,7 +24,7 @@ describe('Search Images', () => {
     cy.defer(
       () =>
         createTestLinode(
-          { image: 'linode/debian12', region: 'us-east' },
+          { image: 'linode/debian10', region: 'us-east' },
           { waitForDisks: true }
         ),
       'create linode'

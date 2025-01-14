@@ -1,4 +1,4 @@
-import { createVolume, VolumeRequestPayload } from '@linode/api-v4/lib/volumes';
+import { createVolume } from '@linode/api-v4/lib/volumes';
 import { Volume } from '@linode/api-v4';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
@@ -7,27 +7,12 @@ import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
-import { SimpleBackoffMethod } from 'support/util/backoff';
-import { pollVolumeStatus } from 'support/util/polling';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
 // @TODO Remove local storage override when stuck volumes are removed from test accounts.
 const pageSizeOverride = {
   PAGE_SIZE: 100,
-};
-
-/**
- * Creates a Volume and waits for it to become active.
- *
- * @param volumeRequest - Volume create request payload.
- *
- * @returns Promise that resolves to created Volume.
- */
-const createActiveVolume = async (volumeRequest: VolumeRequestPayload) => {
-  const volume = await createVolume(volumeRequest);
-  await pollVolumeStatus(volume.id, 'active', new SimpleBackoffMethod(10000));
-  return volume;
 };
 
 authenticate();
@@ -52,7 +37,7 @@ describe('volume delete flow', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(() => createActiveVolume(volumeRequest), 'creating volume').then(
+    cy.defer(() => createVolume(volumeRequest), 'creating volume').then(
       (volume: Volume) => {
         interceptDeleteVolume(volume.id).as('deleteVolume');
         cy.visitWithLogin('/volumes', {

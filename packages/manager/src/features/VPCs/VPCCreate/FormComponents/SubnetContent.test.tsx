@@ -1,22 +1,24 @@
 import * as React from 'react';
 
-import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetContent } from './SubnetContent';
 
+const props = {
+  disabled: false,
+  onChangeField: vi.fn(),
+  subnets: [
+    {
+      ip: { ipv4: '', ipv4Error: '' },
+      label: '',
+      labelError: '',
+    },
+  ],
+};
+
 describe('Subnet form content', () => {
   it('renders the subnet content correctly', () => {
-    const { getByText } = renderWithThemeAndHookFormContext({
-      component: <SubnetContent />,
-      useFormOptions: {
-        defaultValues: {
-          description: '',
-          label: '',
-          region: '',
-          subnets: [{ ipv4: '', label: '' }],
-        },
-      },
-    });
+    const { getByText } = renderWithTheme(<SubnetContent {...props} />);
 
     getByText('Subnets');
     getByText('Subnet Label');

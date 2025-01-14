@@ -108,7 +108,7 @@ export const makePaginatedResponse = <T extends JsonBodyType>({
               typeof item === 'object' &&
               item !== null &&
               key in item &&
-              String(item[key]).toLowerCase().includes(searchValue)
+              String(item).toLowerCase().includes(searchValue)
             );
           })
         )

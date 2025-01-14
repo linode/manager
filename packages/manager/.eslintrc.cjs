@@ -89,15 +89,10 @@ module.exports = {
     {
       files: [
         // for each new features added to the migration router, add its directory here
-        'src/features/Betas/**/*',
-        'src/features/Domains/**/*',
-        'src/features/Volumes/**/*',
+        'src/features/Betas/*',
       ],
       rules: {
         'no-restricted-imports': [
-          // This needs to remain an error however trying to link to a feature that is not yet migrated will break the router
-          // For those cases react-router-dom history.push is still needed
-          // using `eslint-disable-next-line no-restricted-imports` can help bypass those imports
           'error',
           {
             paths: [

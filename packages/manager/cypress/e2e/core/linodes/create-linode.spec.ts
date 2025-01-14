@@ -104,7 +104,7 @@ describe('Create Linode', () => {
 
           // Set Linode label, OS, plan type, password, etc.
           linodeCreatePage.setLabel(linodeLabel);
-          linodeCreatePage.selectImage('Debian 12');
+          linodeCreatePage.selectImage('Debian 11');
           linodeCreatePage.selectRegionById(linodeRegion.id);
           linodeCreatePage.selectPlan(
             planConfig.planType,
@@ -116,7 +116,7 @@ describe('Create Linode', () => {
           cy.get('[data-qa-linode-create-summary]')
             .scrollIntoView()
             .within(() => {
-              cy.findByText('Debian 12').should('be.visible');
+              cy.findByText('Debian 11').should('be.visible');
               cy.findByText(linodeRegion.label).should('be.visible');
               cy.findByText(planConfig.planLabel).should('be.visible');
             });
@@ -230,7 +230,7 @@ describe('Create Linode', () => {
 
     // Set Linode label, OS, plan type, password, etc.
     linodeCreatePage.setLabel(linodeLabel);
-    linodeCreatePage.selectImage('Debian 12');
+    linodeCreatePage.selectImage('Debian 11');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Accelerated', mockAcceleratedType[0].label);
     linodeCreatePage.setRootPassword(randomString(32));
@@ -239,7 +239,7 @@ describe('Create Linode', () => {
     cy.get('[data-qa-linode-create-summary]')
       .scrollIntoView()
       .within(() => {
-        cy.findByText('Debian 12').should('be.visible');
+        cy.findByText('Debian 11').should('be.visible');
         cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
         cy.findByText(mockAcceleratedType[0].label).should('be.visible');
       });
@@ -363,17 +363,13 @@ describe('Create Linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait('@getLinodeTypes');
+    cy.wait(['@getLinodeTypes', '@getVPCs']);
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
     // Check the 'Backups' add on
     cy.get('[data-testid="backups"]').should('be.visible').click();
     ui.regionSelect.find().click().type(`${region.label} {enter}`);
-
-    // Verify VPCs get fetched once a region is selected
-    cy.wait('@getVPCs');
-
     fbtClick('Shared CPU');
     getClick(`[id="${dcPricingMockLinodeTypes[0].id}"]`);
 
@@ -462,7 +458,7 @@ describe('Create Linode', () => {
 
     // Set Linode label, OS, plan type, password, etc.
     linodeCreatePage.setLabel(linodeLabel);
-    linodeCreatePage.selectImage('Debian 12');
+    linodeCreatePage.selectImage('Debian 11');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
@@ -490,26 +486,5 @@ describe('Create Linode', () => {
     ui.toast.assertMessage(`Your Linode ${linodeLabel} is being created.`);
     // Confirm the createLinodeErrorMessage disappears.
     cy.findByText(`${createLinodeErrorMessage}`).should('not.exist');
-  });
-
-  it('shows correct validation errors if no backup or plan is selected', () => {
-    cy.visitWithLogin('/linodes/create');
-
-    // Navigate to Linode Create page "Backups" tab
-    cy.get('[role="tablist"]')
-      .should('be.visible')
-      .findByText('Backups')
-      .click();
-
-    // Submit without selecting any options
-    ui.button
-      .findByTitle('Create Linode')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // Confirm the correct validation errors show up on the page.
-    cy.findByText('You must select a Backup.').should('be.visible');
-    cy.findByText('Plan is required.').should('be.visible');
   });
 });

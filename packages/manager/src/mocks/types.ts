@@ -1,7 +1,5 @@
 import type {
   Config,
-  Domain,
-  DomainRecord,
   Event,
   Firewall,
   Linode,
@@ -39,7 +37,7 @@ export type MockPresetBaselineId =
   | 'baseline:api-unstable'
   | 'baseline:crud'
   | 'baseline:legacy'
-  | 'baseline:static-mocking';
+  | 'baseline:preset-mocking';
 export interface MockPresetBaseline extends MockPresetBase {
   group: MockPresetBaselineGroup;
   id: MockPresetBaselineId;
@@ -49,24 +47,18 @@ export interface MockPresetBaseline extends MockPresetBase {
  * Mock Preset Extra
  */
 export type MockPresetExtraGroup = {
-  id:
-    | 'API'
-    | 'Account'
-    | 'Capabilities'
-    | 'Limits'
-    | 'Managed'
-    | 'Profile'
-    | 'Regions';
-  type: 'account' | 'checkbox' | 'profile' | 'select';
+  id: 'API' | 'Account' | 'Limits' | 'Managed' | 'Regions';
+  type: 'checkbox' | 'select';
 };
 export type MockPresetExtraId =
-  | 'account:custom'
+  | 'account:child-proxy'
+  | 'account:lke-enterprise-enabled'
   | 'account:managed-disabled'
   | 'account:managed-enabled'
+  | 'account:parent'
   | 'api:response-time'
   | 'limits:linode-limits'
   | 'limits:lke-limits'
-  | 'profile:custom'
   | 'regions:core-and-distributed'
   | 'regions:core-only'
   | 'regions:legacy';
@@ -81,15 +73,9 @@ export interface MockPresetExtra extends MockPresetBase {
  * Mock Preset Crud
  */
 export type MockPresetCrudGroup = {
-  id:
-    | 'Domains'
-    | 'Linodes'
-    | 'Placement Groups'
-    | 'Support Tickets'
-    | 'Volumes';
+  id: 'Linodes' | 'Placement Groups' | 'Support Tickets' | 'Volumes';
 };
 export type MockPresetCrudId =
-  | 'domains:crud'
   | 'linodes:crud'
   | 'placement-groups:crud'
   | 'support-tickets:crud'
@@ -106,8 +92,6 @@ export type MockHandler = (mockState: MockState) => HttpHandler[];
  * Stateful data shared among mocks.
  */
 export interface MockState {
-  domainRecords: DomainRecord[];
-  domains: Domain[];
   eventQueue: Event[];
   firewalls: Firewall[];
   linodeConfigs: [number, Config][];

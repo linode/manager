@@ -11,10 +11,11 @@ import {
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useNavigate } from '@tanstack/react-router';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -45,7 +46,6 @@ import type {
 } from '@linode/api-v4/lib/domains';
 import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { DomainState } from 'src/routes/domains';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface DefaultRecordsSetting {
@@ -65,7 +65,7 @@ export const CreateDomain = () => {
   // of the payload and must be handled separately.
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const defaultRecords: DefaultRecordsSetting[] = [
     {
@@ -127,24 +127,20 @@ export const CreateDomain = () => {
   const isCreatingPrimaryDomain = values.type === 'master';
   const isCreatingSecondaryDomain = values.type === 'slave';
 
-  const redirect = (id: null | number, state?: DomainState) => {
+  const redirect = (id: '' | number, state?: Record<string, string>) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
-    navigate({
-      params: { domainId: Number(id) },
-      state: (prev) => ({ ...prev, ...state }),
-      to: returnPath,
-    });
+    history.push(returnPath, state);
   };
 
   const redirectToLandingOrDetail = (
     type: 'master' | 'slave',
     domainID: number,
-    state: DomainState = {}
+    state: Record<string, string> = {}
   ) => {
     if (type === 'master' && domainID) {
       redirect(domainID, state);
     } else {
-      redirect(null, state);
+      redirect('', state);
     }
   };
 
@@ -452,6 +448,10 @@ export const CreateDomain = () => {
     </Grid>
   );
 };
+
+export const createDomainLazyRoute = createLazyRoute('/domains/create')({
+  component: CreateDomain,
+});
 
 const StyledGrid = styled(Grid, { label: 'StyledGrid' })({
   width: '100%',

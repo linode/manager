@@ -69,8 +69,7 @@ export const usePendo = () => {
   const accountId = hashUniquePendoId(account?.euuid);
   const visitorId = hashUniquePendoId(profile?.uid.toString());
 
-  // This URL uses a Pendo-configured CNAME (M3-8742).
-  const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;
+  const PENDO_URL = `https://cdn.pendo.io/agent/static/${PENDO_API_KEY}/pendo.js`;
 
   React.useEffect(() => {
     if (PENDO_API_KEY) {

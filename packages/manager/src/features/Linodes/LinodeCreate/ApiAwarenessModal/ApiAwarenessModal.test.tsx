@@ -2,11 +2,10 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ApiAwarenessModal } from './ApiAwarenessModal';
 
-import type { LinodeCreateFormValues } from '../utilities';
 import type { ApiAwarenessModalProps } from './ApiAwarenessModal';
 
 const defaultProps: ApiAwarenessModalProps = {
@@ -20,22 +19,19 @@ const renderComponent = (overrideProps?: Partial<ApiAwarenessModalProps>) => {
     ...defaultProps,
     ...overrideProps,
   };
-
-  return renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-    component: <ApiAwarenessModal {...props} />,
-  });
+  return renderWithTheme(<ApiAwarenessModal {...props} />);
 };
 
 describe('ApiAwarenessModal', () => {
-  it('Should not render ApiAwarenessModal component', () => {
+  it('Should not render ApiAwarenessModal componet', () => {
     renderComponent();
     expect(screen.queryByText('Create Linode')).not.toBeInTheDocument();
   });
-  it('Should render ApiAwarenessModal component when enabled', () => {
+  it('Should render ApiAwarenessModal componet when enabled', () => {
     renderComponent({ isOpen: true });
     screen.getByText('Create Linode');
   });
-  it('Should invoke onClose handler upon clicking close button', async () => {
+  it('Should invoke onClose handler upon cliking close button', async () => {
     renderComponent({ isOpen: true });
     await userEvent.click(screen.getByTestId('close-button'));
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1);

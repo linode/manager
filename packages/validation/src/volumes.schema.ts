@@ -45,8 +45,7 @@ export const ResizeVolumeSchema = (minSize: number = 10) =>
   });
 
 export const UpdateVolumeSchema = object({
-  label: string(),
-  tags: array().of(string()),
+  label: string().required(),
 });
 
 export const AttachVolumeSchema = object({

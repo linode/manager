@@ -18,7 +18,9 @@ describe('MaskableText', () => {
     text: plainText,
   };
 
-  const preference: ManagerPreferences['maskSensitiveData'] = true;
+  const preferences: ManagerPreferences = {
+    maskSensitiveData: true,
+  };
 
   const queryMocks = vi.hoisted(() => ({
     usePreferences: vi.fn().mockReturnValue({}),
@@ -33,12 +35,12 @@ describe('MaskableText', () => {
   });
 
   queryMocks.usePreferences.mockReturnValue({
-    data: preference,
+    data: preferences,
   });
 
   it('should render masked text if the maskSensitiveData preference is enabled', () => {
     queryMocks.usePreferences.mockReturnValue({
-      data: preference,
+      data: preferences,
     });
 
     const { getByText, queryByText } = renderWithTheme(
@@ -52,7 +54,9 @@ describe('MaskableText', () => {
 
   it('should not render masked text if the maskSensitiveData preference is disabled', () => {
     queryMocks.usePreferences.mockReturnValue({
-      data: false,
+      data: {
+        maskSensitiveData: false,
+      },
     });
 
     const { getByText, queryByText } = renderWithTheme(
@@ -66,7 +70,9 @@ describe('MaskableText', () => {
 
   it("should render MaskableText's children if the maskSensitiveData preference is disabled and children are provided", () => {
     queryMocks.usePreferences.mockReturnValue({
-      data: false,
+      data: {
+        maskSensitiveData: false,
+      },
     });
 
     const plainTextElement = <div>{plainText}</div>;
@@ -81,7 +87,7 @@ describe('MaskableText', () => {
 
   it('should render a toggleable VisibilityTooltip if isToggleable is provided', async () => {
     queryMocks.usePreferences.mockReturnValue({
-      data: preference,
+      data: preferences,
     });
 
     const { getByTestId, getByText } = renderWithTheme(

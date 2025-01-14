@@ -1,35 +1,3 @@
-## [2025-01-14] - v0.132.0
-
-### Added:
-
-- Types for UDP NodeBalancer support ([#11321](https://github.com/linode/manager/pull/11321))
-- Tags to `KubeNodePoolResponse` and `UpdateNodePoolData` ([#11368](https://github.com/linode/manager/pull/11368))
-
-### Changed:
-
-- Type of `AlertDefinitionType` to `'system'|'user'`   ([#11346](https://github.com/linode/manager/pull/11346))
-- Property names, and types of the CreateAlertDefinitionPayload and Alert interfaces ([#11392](https://github.com/linode/manager/pull/11392))
-- BaseDatabase total_disk_size_gb and used_disk_size_gb are always expected and used_disk_size_gb can be null ([#11426](https://github.com/linode/manager/pull/11426))
-- Renamed `AvailableMetrics` type to `MetricDefinition` ([#11433](https://github.com/linode/manager/pull/11433))
-- Changed MetricCritera, DimensionFilter and Alert Interfaces ([#11445](https://github.com/linode/manager/pull/11445))
-
-### Fixed:
-
-- Nullable AccountBeta ended & description properties ([#11347](https://github.com/linode/manager/pull/11347))
-- Incorrect return type of `updateObjectACL` ([#11369](https://github.com/linode/manager/pull/11369))
-
-### Removed:
-
-- getAccountInfoBeta endpoint ([#11413](https://github.com/linode/manager/pull/11413))
-- `MetricDefinitions` type ([#11433](https://github.com/linode/manager/pull/11433))
-
-### Upcoming Features:
-
-- Fix types for IAM API ([#11397](https://github.com/linode/manager/pull/11397))
-- Add new `getAlertDefinitionByServiceTypeAndId` endpoint to fetch Cloud Pulse alert details by id and service type ([#11399](https://github.com/linode/manager/pull/11399))
-- New `Block Storage Performance B1` linode capability ([#11400](https://github.com/linode/manager/pull/11400))
-- Add `getKubernetesTypesBeta` function ([#11419](https://github.com/linode/manager/pull/11419))
-
 ## [2024-12-10] - v0.131.0
 
 ### Added:

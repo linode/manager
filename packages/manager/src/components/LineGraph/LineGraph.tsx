@@ -271,9 +271,9 @@ export const LineGraph = (props: LineGraphProps) => {
         ],
       },
       tooltips: {
-        backgroundColor: theme.tokens.color.Neutrals[5],
-        bodyFontColor: theme.tokens.color.Neutrals[90],
-        borderColor: theme.tokens.color.Neutrals[50],
+        backgroundColor: '#fbfbfb',
+        bodyFontColor: '#32363C',
+        borderColor: '#999',
         borderWidth: 0.5,
         callbacks: {
           label: _formatTooltip(data, formatTooltip, _tooltipUnit),

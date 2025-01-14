@@ -4,7 +4,7 @@ import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { useAccount } from 'src/queries/account/account';
+import { useAccountBeta } from 'src/queries/account/account';
 
 import { StyledDocsLinkContainer } from './CreateCluster.styles';
 
@@ -19,7 +19,7 @@ interface Props {
 export const ClusterTypePanel = (props: Props) => {
   const { handleClusterTypeSelection, selectedTier } = props;
 
-  const { data: account } = useAccount();
+  const { data: account } = useAccountBeta();
 
   const mdDownBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('md')
@@ -36,7 +36,7 @@ export const ClusterTypePanel = (props: Props) => {
     <Stack>
       <Stack flexDirection={mdDownBreakpoint ? 'column' : 'row'}>
         <Stack>
-          <Typography variant="h3">Cluster Tier</Typography>
+          <Typography variant="h3">Cluster Type</Typography>
           <Typography sx={{ marginTop: 1, maxWidth: 700 }}>
             Choose from a managed solution for smaller deployments or enterprise
             grade clusters with enhanced ingress, networking, and security.

@@ -1,8 +1,9 @@
 import { Button, CircleProgress, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -16,12 +17,10 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useDialogData } from 'src/hooks/useDialogData';
-import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
 import {
   useDeleteDomainMutation,
-  useDomainQuery,
   useDomainsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
@@ -30,11 +29,6 @@ import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CloneDomainDrawer } from './CloneDomainDrawer';
-import {
-  DOMAINS_TABLE_DEFAULT_ORDER,
-  DOMAINS_TABLE_DEFAULT_ORDER_BY,
-  DOMAINS_TABLE_PREFERENCE_KEY,
-} from './constants';
 import { DisableDomainDialog } from './DisableDomainDialog';
 import { DomainBanner } from './DomainBanner';
 import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
@@ -44,7 +38,6 @@ import { EditDomainDrawer } from './EditDomainDrawer';
 
 import type { Handlers as DomainHandlers } from './DomainActionMenu';
 import type { Domain } from '@linode/api-v4';
-import type { DomainState } from 'src/routes/domains';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
@@ -54,30 +47,24 @@ interface DomainsLandingProps {
   domainForEditing?: Domain;
 }
 
+const PREFERENCE_KEY = 'domains';
+
 export const DomainsLanding = (props: DomainsLandingProps) => {
-  const navigate = useNavigate();
-  const params = useParams({ strict: false });
-  const location = useLocation();
-  const locationState = location.state as DomainState;
+  const history = useHistory();
+  const location = useLocation<{ recordError?: string }>();
 
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
 
-  const pagination = usePaginationV2({
-    currentRoute: '/domains',
-    preferenceKey: DOMAINS_TABLE_PREFERENCE_KEY,
-  });
+  const pagination = usePagination(1, PREFERENCE_KEY);
 
-  const { handleOrderChange, order, orderBy } = useOrderV2({
-    initialRoute: {
-      defaultOrder: {
-        order: DOMAINS_TABLE_DEFAULT_ORDER,
-        orderBy: DOMAINS_TABLE_DEFAULT_ORDER_BY,
-      },
-      from: '/domains',
+  const { handleOrderChange, order, orderBy } = useOrder(
+    {
+      order: 'asc',
+      orderBy: 'domain',
     },
-    preferenceKey: `${DOMAINS_TABLE_PREFERENCE_KEY}-order`,
-  });
+    `${PREFERENCE_KEY}-order`
+  );
 
   const filter = {
     ['+order']: order,
@@ -100,12 +87,15 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
 
   const { domainForEditing } = props;
 
-  const { data: selectedDomain, isFetching: isFetchingDomain } = useDialogData({
-    enabled: !!params.domainId,
-    paramKey: 'domainId',
-    queryHook: useDomainQuery,
-    redirectToOnNotFound: '/domains',
-  });
+  const [importDrawerOpen, setImportDrawerOpen] = React.useState(false);
+  const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
+  const [disableDialogOpen, setDisableDialogOpen] = React.useState(false);
+  const [cloneDialogOpen, setCloneDialogOpen] = React.useState(false);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+
+  const [selectedDomain, setSelectedDomain] = React.useState<
+    Domain | undefined
+  >();
 
   const {
     error: deleteError,
@@ -115,67 +105,51 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
 
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
 
-  const navigateToDomains = () => {
-    navigate({
-      search: (prev) => prev,
-      to: '/domains',
-    });
+  const onClone = (domain: Domain) => {
+    setSelectedDomain(domain);
+    setCloneDialogOpen(true);
   };
 
-  const handleClone = (domain: Domain) => {
-    navigate({
-      params: { action: 'clone', domainId: domain.id },
-      search: (prev) => prev,
-      to: `/domains/$domainId/$action`,
-    });
-  };
-
-  const handleEdit = (domain: Domain) => {
-    navigate({
-      params: { action: 'edit', domainId: domain.id },
-      search: (prev) => prev,
-      to: `/domains/$domainId/$action`,
-    });
+  const onEdit = (domain: Domain) => {
+    setSelectedDomain(domain);
+    setEditDialogOpen(true);
   };
 
   React.useEffect(() => {
     // Open the "Edit Domain" drawer if so specified by this component's props.
     if (domainForEditing) {
-      handleEdit(domainForEditing);
+      onEdit(domainForEditing);
     }
   }, [domainForEditing]);
 
   const navigateToCreate = () => {
-    navigate({
-      to: DOMAIN_CREATE_ROUTE,
-    });
+    history.push(DOMAIN_CREATE_ROUTE);
   };
 
-  const handleImport = () => {
-    navigate({
-      search: (prev) => prev,
-      to: `/domains/import`,
-    });
+  const openImportZoneDrawer = () => {
+    setImportDrawerOpen(true);
   };
 
-  const handleDelete = (domain: Domain) => {
-    navigate({
-      params: { action: 'delete', domainId: domain.id },
-      search: (prev) => prev,
-      to: `/domains/$domainId/$action`,
-    });
+  const closeImportZoneDrawer = () => {
+    setImportDrawerOpen(false);
+  };
+
+  const onRemove = (domain: Domain) => {
+    setSelectedDomain(domain);
+    setRemoveDialogOpen(true);
+  };
+
+  const closeRemoveDialog = () => {
+    setRemoveDialogOpen(false);
   };
 
   const removeDomain = () => {
     deleteDomain().then(() => {
-      navigateToDomains();
+      closeRemoveDialog();
     });
   };
 
-  const handleDisableOrEnable = (
-    action: 'disable' | 'enable',
-    domain: Domain
-  ) => {
+  const onDisableOrEnable = (action: 'disable' | 'enable', domain: Domain) => {
     if (action === 'enable') {
       updateDomain({
         id: domain.id,
@@ -190,19 +164,16 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         );
       });
     } else {
-      navigate({
-        params: { action: 'disable', domainId: domain.id },
-        search: (prev) => prev,
-        to: `/domains/$domainId/$action`,
-      });
+      setSelectedDomain(domain);
+      setDisableDialogOpen(true);
     }
   };
 
   const handlers: DomainHandlers = {
-    onClone: handleClone,
-    onDisableOrEnable: handleDisableOrEnable,
-    onEdit: handleEdit,
-    onRemove: handleDelete,
+    onClone,
+    onDisableOrEnable,
+    onEdit,
+    onRemove,
   };
 
   if (isLoading) {
@@ -218,14 +189,13 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
   if (domains?.results === 0) {
     return (
       <>
-        <DocumentTitleSegment segment="Domains" />
         <DomainsEmptyLandingState
           navigateToCreate={navigateToCreate}
-          openImportZoneDrawer={handleImport}
+          openImportZoneDrawer={openImportZoneDrawer}
         />
         <DomainZoneImportDrawer
-          onClose={navigateToDomains}
-          open={location.pathname === '/domains/import'}
+          onClose={closeImportZoneDrawer}
+          open={importDrawerOpen}
         />
       </>
     );
@@ -252,16 +222,12 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
     <>
       <DocumentTitleSegment segment="Domains" />
       <DomainBanner hidden={!shouldShowBanner} />
-      {locationState?.recordError && (
-        <Notice text={locationState.recordError} variant="error" />
+      {location.state?.recordError && (
+        <Notice text={location.state.recordError} variant="error" />
       )}
       <LandingHeader
-        breadcrumbProps={{
-          labelTitle: 'Domains',
-          pathname: '/domains',
-        }}
         extraActions={
-          <StyledButon buttonType="secondary" onClick={handleImport}>
+          <StyledButon buttonType="secondary" onClick={openImportZoneDrawer}>
             Import a Zone
           </StyledButon>
         }
@@ -307,7 +273,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
                 Last Modified
               </TableSortCell>
             </Hidden>
-            <TableCell />
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -325,26 +291,23 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         pageSize={pagination.pageSize}
       />
       <DomainZoneImportDrawer
-        onClose={navigateToDomains}
-        open={location.pathname === '/domains/import'}
+        onClose={closeImportZoneDrawer}
+        open={importDrawerOpen}
       />
       <DisableDomainDialog
         domain={selectedDomain}
-        isFetching={isFetchingDomain}
-        onClose={navigateToDomains}
-        open={params.action === 'disable'}
+        onClose={() => setDisableDialogOpen(false)}
+        open={disableDialogOpen}
       />
       <CloneDomainDrawer
         domain={selectedDomain}
-        isFetching={isFetchingDomain}
-        onClose={navigateToDomains}
-        open={params.action === 'clone'}
+        onClose={() => setCloneDialogOpen(false)}
+        open={cloneDialogOpen}
       />
       <EditDomainDrawer
         domain={selectedDomain}
-        isFetching={isFetchingDomain}
-        onClose={navigateToDomains}
-        open={params.action === 'edit'}
+        onClose={() => setEditDialogOpen(false)}
+        open={editDialogOpen}
       />
       <DeletionDialog
         error={
@@ -354,12 +317,12 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
             : undefined
         }
         entity="domain"
-        isFetching={isFetchingDomain}
         label={selectedDomain?.domain ?? 'Unknown'}
         loading={isDeleting}
-        onClose={navigateToDomains}
+        onClose={closeRemoveDialog}
         onDelete={removeDomain}
-        open={params.action === 'delete'}
+        open={removeDialogOpen}
+        typeToConfirm
       />
     </>
   );
@@ -369,3 +332,7 @@ const StyledButon = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
   marginLeft: `-${theme.spacing()}`,
   whiteSpace: 'nowrap',
 }));
+
+export const domainsLandingLazyRoute = createLazyRoute('/domains')({
+  component: DomainsLanding,
+});

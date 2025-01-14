@@ -17,9 +17,7 @@ export const BackupsCTA = () => {
   const { data: accountSettings } = useAccountSettings();
   const { data: profile } = useProfile();
 
-  const { data: isBackupsBannerDismissed } = usePreferences(
-    (preferences) => preferences?.backups_cta_dismissed
-  );
+  const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const [isBackupsDrawerOpen, setIsBackupsDrawerOpen] = React.useState(false);
@@ -38,7 +36,7 @@ export const BackupsCTA = () => {
     profile?.restricted ||
     accountSettings?.managed ||
     areAllLinodesBackedUp ||
-    isBackupsBannerDismissed
+    preferences?.backups_cta_dismissed
   ) {
     return null;
   }

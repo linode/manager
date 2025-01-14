@@ -8,7 +8,7 @@ export const StyledTypography = styled(Typography, {
     color: theme.textColors.linkActiveLight,
   },
   '& a:hover': {
-    color: theme.tokens.color.Ultramarine[70],
+    color: '#3683dc',
   },
   '& p': {
     fontFamily: '"LatoWebBold", sans-serif',

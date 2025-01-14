@@ -28,6 +28,11 @@ const BucketSSL = React.lazy(() =>
     default: module.BucketSSL,
   }))
 );
+const BucketProperties = React.lazy(() =>
+  import('./BucketProperties').then((module) => ({
+    default: module.BucketProperties,
+  }))
+);
 
 interface MatchProps {
   bucketName: string;
@@ -70,6 +75,14 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       routeName: `${props.match.url}/access`,
       title: 'Access',
     },
+    ...(isObjectStorageGen2Enabled
+      ? [
+          {
+            routeName: `${props.match.url}/properties`,
+            title: 'Properties',
+          },
+        ]
+      : []),
     ...(!isGen2Endpoint
       ? [
           {
@@ -123,6 +136,11 @@ export const BucketDetailLanding = React.memo((props: Props) => {
                 endpointType={endpoint_type}
               />
             </SafeTabPanel>
+            {isObjectStorageGen2Enabled && bucket && (
+              <SafeTabPanel index={2}>
+                <BucketProperties bucket={bucket} />
+              </SafeTabPanel>
+            )}
             <SafeTabPanel index={tabs.length - 1}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
             </SafeTabPanel>

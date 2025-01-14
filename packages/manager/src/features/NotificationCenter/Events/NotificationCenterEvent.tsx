@@ -43,7 +43,7 @@ export const NotificationCenterEvent = React.memo(
       return null;
     }
 
-    const { progressEventDate, showProgress } = formatProgressEvent(event);
+    const { progressEventDisplay, showProgress } = formatProgressEvent(event);
 
     return (
       <NotificationEventStyledBox
@@ -73,7 +73,7 @@ export const NotificationCenterEvent = React.memo(
             />
           )}
           <Typography sx={{ fontSize: '0.8rem' }}>
-            {progressEventDate} | {username}
+            {progressEventDisplay} | {username}
           </Typography>
         </Box>
       </NotificationEventStyledBox>

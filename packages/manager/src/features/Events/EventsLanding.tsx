@@ -102,10 +102,10 @@ export const EventsLanding = (props: Props) => {
                 User
               </TableCell>
             </Hidden>
-            <StyledTableCell sx={{ width: 175 }}>Start Date</StyledTableCell>
+            <StyledTableCell sx={{ width: 175 }}>Relative Date</StyledTableCell>
             <Hidden mdDown>
-              <StyledTableCell data-qa-events-time-header sx={{ width: 175 }}>
-                Duration
+              <StyledTableCell data-qa-events-time-header sx={{ width: 150 }}>
+                Absolute Date
               </StyledTableCell>
             </Hidden>
           </TableRow>

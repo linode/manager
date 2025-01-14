@@ -91,7 +91,7 @@ export const DomainActionMenu = React.memo((props: DomainActionMenuProps) => {
         })}
       <ActionMenu
         actionsList={menuActions}
-        ariaLabel={`Action menu for Domain ${domain.domain}`}
+        ariaLabel={`Action menu for Domain ${domain}`}
       />
     </>
   );

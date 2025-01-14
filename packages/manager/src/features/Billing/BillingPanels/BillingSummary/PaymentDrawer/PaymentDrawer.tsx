@@ -38,13 +38,13 @@ import type { SetSuccess } from './types';
 import type { PaymentMethod } from '@linode/api-v4';
 import type { APIWarning } from '@linode/api-v4/lib/types';
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = makeStyles()(() => ({
   button: {
     alignSelf: 'flex-end',
     marginLeft: 'auto',
   },
   credit: {
-    color: theme.tokens.color.Green[70],
+    color: '#02b159',
   },
   currentBalance: {
     fontSize: '1.1rem',

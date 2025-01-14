@@ -4,7 +4,6 @@ import * as React from 'react';
 import { SupportLink } from 'src/components/SupportLink';
 
 interface MessageLinkEntity {
-  fallback?: string;
   message: null | string;
 }
 
@@ -16,10 +15,10 @@ interface MessageLinkEntity {
  *  - render "contact support" strings as <Link>.
  */
 export const FormattedEventMessage = (props: MessageLinkEntity) => {
-  const { fallback, message } = props;
+  const { message } = props;
 
   if (!message) {
-    return fallback ? fallback : null;
+    return null;
   }
 
   return formatMessage(message);
@@ -35,14 +34,9 @@ const formatMessage = (message: string): JSX.Element => {
         let formattedPart: JSX.Element | string = part;
 
         if (part.startsWith('`') && part.endsWith('`')) {
-          const content = part.slice(1, -1);
-          if (content.length > 0) {
-            formattedPart = (
-              <StyledPre key={`${i}-${part}`}>{content}</StyledPre>
-            );
-          } else {
-            formattedPart = '';
-          }
+          formattedPart = (
+            <StyledPre key={`${i}-${part}`}>{part.slice(1, -1)}</StyledPre>
+          );
         }
 
         if (part.match(supportLinkMatch)) {

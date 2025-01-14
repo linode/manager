@@ -4,7 +4,6 @@ import React from 'react';
 import { StyledPlanSummarySpan } from '../DatabaseDetail/DatabaseResize/DatabaseResize.style';
 import { useIsDatabasesEnabled } from '../utilities';
 import { StyledSpan } from './DatabaseCreate.style';
-import { getSuffix } from './utilities';
 
 import type {
   ClusterSize,
@@ -66,16 +65,18 @@ export const DatabaseSummarySection = (props: Props) => {
       ) : (
         <span>{currentPlanPrice}</span>
       )}
-      <Typography component="span">
+      <Typography
+        component="span"
+        // sx={(theme) => ({ marginRight: theme.spacing(1) })}
+      >
         {currentClusterSize} Node
-        {getSuffix(isNewDatabase, currentClusterSize)}
+        {currentClusterSize > 1 ? 's - HA ' : ' '}
       </Typography>
       {currentNodePrice}
     </Box>
   ) : (
     'Please specify your cluster configuration'
   );
-
   const resizeSummary = (
     <Box
       sx={(theme: Theme) => ({
@@ -91,9 +92,17 @@ export const DatabaseSummarySection = (props: Props) => {
               : resizeData.plan}
           </StyledPlanSummarySpan>{' '}
           {isNewDatabase && <StyledSpan>{resizeData.basePrice}</StyledSpan>}
-          <Typography component="span">
+          <Typography
+            sx={
+              isNewDatabase
+                ? (theme) => ({ marginRight: theme.spacing(1) })
+                : null
+            }
+            component="span"
+          >
             {resizeData.numberOfNodes} Node
-            {getSuffix(isNewDatabase, resizeData.numberOfNodes)}
+            {resizeData.numberOfNodes > 1 ? 's' : ''}
+            {!isNewDatabase ? ': ' : ' - HA '}
           </Typography>
           {resizeData.price}
         </>

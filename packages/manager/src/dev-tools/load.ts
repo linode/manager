@@ -28,7 +28,7 @@ export async function loadDevTools(
   store: ApplicationStore,
   client: QueryClient
 ) {
-  const devTools = await import('./DevTools');
+  const devTools = await import('./dev-tools');
 
   if (isMSWEnabled) {
     const { worker: mswWorker } = await import('../mocks/mswWorkers');
@@ -87,7 +87,6 @@ export async function loadDevTools(
     // Merge the contexts
     const mergedContext: MockState = {
       ...initialContext,
-      domains: [...initialContext.domains, ...(seedContext?.domains || [])],
       eventQueue: [
         ...initialContext.eventQueue,
         ...(seedContext?.eventQueue || []),

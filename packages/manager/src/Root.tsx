@@ -31,9 +31,7 @@ import { useStyles } from './Root.styles';
 
 export const Root = () => {
   const { classes, cx } = useStyles();
-  const { data: isDesktopSidebarOpenPreference } = usePreferences(
-    (preferences) => preferences?.desktop_sidebar_open
-  );
+  const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const globalErrors = useGlobalErrors();
@@ -59,11 +57,11 @@ export const Root = () => {
   const { data: profile } = useProfile();
   const username = profile?.username || '';
 
-  const desktopMenuIsOpen = isDesktopSidebarOpenPreference ?? false;
+  const desktopMenuIsOpen = preferences?.desktop_sidebar_open ?? false;
 
   const desktopMenuToggle = () => {
     updatePreferences({
-      desktop_sidebar_open: !isDesktopSidebarOpenPreference,
+      desktop_sidebar_open: !preferences?.desktop_sidebar_open,
     });
   };
 

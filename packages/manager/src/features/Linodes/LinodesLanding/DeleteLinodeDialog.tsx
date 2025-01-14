@@ -47,7 +47,7 @@ export const DeleteLinodeDialog = (props: Props) => {
     // See PR #9814 for more details
     if (vpcIds.length > 0) {
       queryClient.invalidateQueries({
-        queryKey: vpcQueries.all._def,
+        queryKey: vpcQueries.all.queryKey,
       });
       queryClient.invalidateQueries({
         queryKey: vpcQueries.paginated._def,
@@ -76,7 +76,6 @@ export const DeleteLinodeDialog = (props: Props) => {
         type: 'Linode',
       }}
       errors={error}
-      expand
       label="Linode Label"
       loading={isPending}
       onClick={onDelete}

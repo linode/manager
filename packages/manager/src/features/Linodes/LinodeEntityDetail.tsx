@@ -117,7 +117,6 @@ export const LinodeEntityDetail = (props: Props) => {
             ipv6={trimmedIPv6}
             isLKELinode={Boolean(linode.lke_cluster_id)}
             isVPCOnlyLinode={isVPCOnlyLinode}
-            linodeCapabilities={linode.capabilities}
             linodeId={linode.id}
             linodeIsInDistributedRegion={linodeIsInDistributedRegion}
             linodeLabel={linode.label}

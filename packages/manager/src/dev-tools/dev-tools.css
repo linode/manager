@@ -141,7 +141,6 @@
     padding: 2px 8px 4px 8px;
     border-width: 1px;
     font-size: 12px;
-    margin: 0
   }
 
   &.right-align {
@@ -324,57 +323,12 @@
   background-color: var(--background-color-opened);
 }
 
-.dev-tools__body input[type="number"],
-.dev-tools__body input[type="text"],
-.dev-tools__body textarea {
+.dev-tools__body input[type="number"] {
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   font-family: inherit;
   font-size: 10.5pt;
   float: right;
-}
-
-.dev-tools__body textarea {
-  width: 100%;
-}
-
-.dev-tools__body input[type="checkbox"] {
-  margin-right: 8px;
-  position: relative;
-  top: 1px;
-}
-
-.dev-tools__modal-form {
-  max-height: 600px;
-  overflow-y: auto;
-  padding-right: 24px;
-
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-family: 'LatoWebBold', sans-serif;
-  }
-
-  .dev-tools__modal-form__field {
-    margin-bottom: 12px;
-  }
-
-  .dev-tools__modal-form__field__radio-group {
-    display: flex;
-    gap: 8px;
-  }
-
-  input, select {
-    padding: 4px;
-  }
-
-  textarea,
-  select:is([multiple]) {
-    min-height: 200px;
-    font-family: monospace;
-    white-space: pre;
-  }
 }
 
 /*
@@ -384,7 +338,6 @@
   height: 0;
   padding: 0;
 }
-
 .dev-tools.dev-tools--open .dev-tools__body {
   height: var(--open-height-mobile);
 }
@@ -463,6 +416,7 @@
 .dev-tools__list-box ul {
   padding-left: none;
   padding: 4px 8px;
+  /*padding-left: 0;*/
   margin: 0;
   height: 100%;
 }
@@ -484,16 +438,6 @@
   padding-right: 4px;
 }
 
-.dev-tools__msw__presets__toggle {
-  &.enabled {
-    color: #17cf73;
-  }
-
-  &.disabled {
-    color: #ff9800;
-  }
-}
-
 .dev-tools .dev-tools__list-box .dev-tools__list-box__separator {
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
   margin-left: -8px;
@@ -502,18 +446,9 @@
   padding-right: 8px;
   padding-bottom: 9px;
   margin-bottom: 6px;
+  font-weight: bold;
   background-color: transparent;
   border-radius: 0;
-
-  &.has-button {
-    min-height: 36px;
-  }
-
-  &.no-separator:not(:last-child) {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
 }
 
 .dev-tools__msw {

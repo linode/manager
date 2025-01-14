@@ -15,7 +15,7 @@ interface ExtraPresetOptionCheckboxProps
 export const ExtraPresetOptionSelect = (
   props: ExtraPresetOptionCheckboxProps
 ) => {
-  const { group, handlers, onSelectChange } = props;
+  const { disabled, group, handlers, onSelectChange } = props;
 
   return (
     <div>
@@ -28,6 +28,7 @@ export const ExtraPresetOptionSelect = (
           ) || ''
         }
         className="dev-tools__select thin"
+        disabled={disabled}
         onChange={(e) => onSelectChange(e, group)}
         style={{ width: 125 }}
       >

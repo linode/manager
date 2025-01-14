@@ -63,7 +63,10 @@ export const SelectFirewallPanel = (props: Props) => {
       : null;
 
   return (
-    <Paper data-testid="select-firewall-panel">
+    <Paper
+      data-testid="select-firewall-panel"
+      sx={(theme) => ({ marginTop: theme.spacing(3) })}
+    >
       <Typography
         sx={(theme) => ({ marginBottom: theme.spacing(2) })}
         variant="h2"

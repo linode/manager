@@ -122,6 +122,6 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
       )}
     </>
   ) : (
-    <Box sx={{ height: 40 }} />
+    <Box sx={{ height: 40 }}></Box>
   );
 };

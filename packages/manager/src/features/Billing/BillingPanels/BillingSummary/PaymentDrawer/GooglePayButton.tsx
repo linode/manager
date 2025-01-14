@@ -24,9 +24,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '& svg': {
       color:
-        theme.name === 'light'
-          ? theme.tokens.color.Neutrals.White
-          : theme.tokens.color.Neutrals[70],
+        theme.name === 'light' ? theme.tokens.color.Neutrals.White : '#616161',
       height: 16,
     },
     '&:hover': {

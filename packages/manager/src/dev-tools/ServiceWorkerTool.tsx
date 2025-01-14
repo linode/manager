@@ -1,3 +1,4 @@
+import { Tooltip } from '@linode/ui';
 import * as React from 'react';
 
 import { mswDB } from 'src/mocks/indexedDB';
@@ -11,16 +12,12 @@ import { ExtraPresetOptions } from './components/ExtraPresetOptions';
 import { SeedOptions } from './components/SeedOptions';
 import {
   getBaselinePreset,
-  getCustomAccountData,
-  getCustomProfileData,
   getExtraPresets,
   getExtraPresetsMap,
   getSeeders,
   getSeedsCountMap,
   isMSWEnabled,
   saveBaselinePreset,
-  saveCustomAccountData,
-  saveCustomProfileData,
   saveExtraPresets,
   saveExtraPresetsMap,
   saveMSWEnabled,
@@ -28,7 +25,6 @@ import {
   saveSeedsCountMap,
 } from './utils';
 
-import type { Account, Profile } from '@linode/api-v4';
 import type {
   MockPresetBaselineId,
   MockPresetCrudId,
@@ -59,12 +55,6 @@ export const ServiceWorkerTool = () => {
   const [extraPresets, setExtraPresets] = React.useState<string[]>(
     loadedExtraPresets
   );
-  const [customAccountData, setCustomAccountData] = React.useState<
-    Account | null | undefined
-  >(getCustomAccountData());
-  const [customProfileData, setCustomProfileData] = React.useState<
-    Profile | null | undefined
-  >(getCustomProfileData());
   const [presetsCountMap, setPresetsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedPresetsMap);
@@ -72,7 +62,6 @@ export const ServiceWorkerTool = () => {
   const [seedsCountMap, setSeedsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedSeedsCountMap);
-  const [mswEnabled, setMswEnabled] = React.useState(isMSWEnabled);
   const isCrudPreset =
     loadedBaselinePreset === 'baseline:crud' ||
     baselinePreset === 'baseline:crud';
@@ -83,22 +72,6 @@ export const ServiceWorkerTool = () => {
     mocksCleared: false,
   });
 
-  React.useEffect(() => {
-    const currentAccountData = getCustomAccountData();
-    const currentProfileData = getCustomProfileData();
-    const hasCustomAccountChanges =
-      JSON.stringify(currentAccountData) !== JSON.stringify(customAccountData);
-    const hasCustomProfileChanges =
-      JSON.stringify(currentProfileData) !== JSON.stringify(customProfileData);
-
-    if (hasCustomAccountChanges || hasCustomProfileChanges) {
-      setSaveState((prev) => ({
-        ...prev,
-        hasUnsavedChanges: true,
-      }));
-    }
-  }, [customAccountData, customProfileData]);
-
   const globalHandlers = {
     applyChanges: () => {
       // Save base preset, extra presets, and content seeders to local storage.
@@ -107,14 +80,6 @@ export const ServiceWorkerTool = () => {
       saveSeeders(seeders);
       saveSeedsCountMap(seedsCountMap);
       saveExtraPresetsMap(presetsCountMap);
-
-      if (extraPresets.includes('account:custom') && customAccountData) {
-        saveCustomAccountData(customAccountData);
-      }
-
-      if (extraPresets.includes('profile:custom') && customProfileData) {
-        saveCustomProfileData(customProfileData);
-      }
 
       const promises = seeders.map((seederId) => {
         const seeder = dbSeeders.find((dbSeeder) => dbSeeder.id === seederId);
@@ -130,7 +95,11 @@ export const ServiceWorkerTool = () => {
         }));
       });
 
-      window.location.reload();
+      // We only have to reload the window if MSW is already enabled. Otherwise,
+      // the changes will automatically be picked up next time MSW is enabled.
+      if (isMSWEnabled) {
+        window.location.reload();
+      }
     },
 
     discardChanges: () => {
@@ -139,8 +108,6 @@ export const ServiceWorkerTool = () => {
       setSeeders(getSeeders(dbSeeders));
       setSeedsCountMap(getSeedsCountMap());
       setPresetsCountMap(getExtraPresetsMap());
-      setCustomAccountData(getCustomAccountData());
-      setCustomProfileData(getCustomProfileData());
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: false,
@@ -151,18 +118,15 @@ export const ServiceWorkerTool = () => {
       mswDB.clear('mockState');
       mswDB.clear('seedState');
       seederHandlers.removeAll();
-      setBaselinePreset('baseline:static-mocking');
+      setBaselinePreset('baseline:preset-mocking');
       setExtraPresets([]);
       setPresetsCountMap({});
-      setCustomAccountData(null);
-      setCustomProfileData(null);
-      saveBaselinePreset('baseline:static-mocking');
+      saveBaselinePreset('baseline:preset-mocking');
       saveExtraPresets([]);
       saveSeeders([]);
       saveSeedsCountMap({});
       saveExtraPresetsMap({});
-      saveCustomAccountData(null);
-      saveCustomProfileData(null);
+
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,
@@ -172,11 +136,7 @@ export const ServiceWorkerTool = () => {
 
     toggleMSW: (e: React.ChangeEvent<HTMLInputElement>) => {
       saveMSWEnabled(e.target.checked);
-      setMswEnabled(e.target.checked);
-      setSaveState({
-        hasSaved: false,
-        hasUnsavedChanges: true,
-      });
+      window.location.reload();
     },
   };
 
@@ -310,83 +270,88 @@ export const ServiceWorkerTool = () => {
       <div className="dev-tools__tool__header">
         <span title="Configure API mocking rules">API Mocks</span>
       </div>
-
-      <div className="dev-tools__tool__body dev-tools__msw">
-        <div className="dev-tools__msw__presets">
-          <div>
-            <label title="Enable MSW">
+      <Tooltip
+        placement="top"
+        title={!isMSWEnabled ? '⚠️ Enable MSW to select a preset' : ''}
+      >
+        <div className="dev-tools__tool__body dev-tools__msw">
+          <div className="dev-tools__msw__presets">
+            <div>
               <input
-                checked={mswEnabled}
+                checked={isMSWEnabled}
                 onChange={(e) => globalHandlers.toggleMSW(e)}
+                style={{ margin: 0 }}
                 type="checkbox"
               />
+              <span style={{ marginLeft: 8 }}>
+                <span>Enable MSW</span>
+              </span>
+            </div>
+            <div>
               <span
-                className={`dev-tools__msw__presets__toggle ${
-                  mswEnabled ? 'enabled' : 'disabled'
+                style={{ marginRight: 8, opacity: !isMSWEnabled ? 0.5 : 1 }}
+              >
+                Base Preset
+              </span>
+              <DevToolSelect
+                disabled={!isMSWEnabled}
+                onChange={(e) => presetHandlers.changeBase(e)}
+                value={baselinePreset}
+              >
+                <BaselinePresetOptions />
+              </DevToolSelect>
+            </div>
+          </div>
+          <div
+            className={`dev-tools__msw__extras ${
+              !isMSWEnabled ? 'disabled' : ''
+            }`}
+          >
+            <div className="dev-tools__msw__column">
+              <div
+                className={`dev-tools__msw__column__heading ${
+                  !isCrudPreset ? 'disabled' : ''
                 }`}
               >
-                Enable MSW
-              </span>
-            </label>
-          </div>
-          <div>
-            <span style={{ marginRight: 8 }}>Base Preset</span>
-            <DevToolSelect
-              onChange={(e) => presetHandlers.changeBase(e)}
-              value={baselinePreset}
-            >
-              <BaselinePresetOptions />
-            </DevToolSelect>
-          </div>
-        </div>
-        <div className="dev-tools__msw__extras">
-          <div className="dev-tools__msw__column">
-            <div
-              className={`dev-tools__msw__column__heading ${
-                !isCrudPreset ? 'disabled' : ''
-              }`}
-            >
-              Seeds <span style={{ fontSize: 12 }}>(CRUD preset only)</span>
-              <button
-                className="small right-align"
-                disabled={!isCrudPreset}
-                onClick={() => seederHandlers.removeAll()}
-              >
-                Remove all seeds
-              </button>
-            </div>
-            <div className="dev-tools__msw__column__body">
-              <div className="dev-tools__list-box">
-                <SeedOptions
-                  disabled={!isCrudPreset}
-                  onCountChange={seederHandlers.changeCount}
-                  onToggleSeeder={seederHandlers.toggle}
-                  seeders={seeders}
-                  seedsCountMap={seedsCountMap}
-                />
+                Seeds <span style={{ fontSize: 12 }}>(CRUD preset only)</span>
+                <button
+                  className="small right-align"
+                  disabled={!isMSWEnabled || !isCrudPreset}
+                  onClick={() => seederHandlers.removeAll()}
+                >
+                  Remove all seeds
+                </button>
+              </div>
+              <div className="dev-tools__msw__column__body">
+                <div className="dev-tools__list-box">
+                  <SeedOptions
+                    disabled={!isMSWEnabled || !isCrudPreset}
+                    onCountChange={seederHandlers.changeCount}
+                    onToggleSeeder={seederHandlers.toggle}
+                    seeders={seeders}
+                    seedsCountMap={seedsCountMap}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div className="dev-tools__msw__column">
-            <div className="dev-tools__msw__column__heading">Presets</div>
-            <div className="dev-tools__msw__column__body">
-              <div className="dev-tools__list-box">
-                <ExtraPresetOptions
-                  customAccountData={customAccountData}
-                  customProfileData={customProfileData}
-                  handlers={extraPresets}
-                  onCustomAccountChange={setCustomAccountData}
-                  onCustomProfileChange={setCustomProfileData}
-                  onPresetCountChange={presetHandlers.changeCount}
-                  onSelectChange={presetHandlers.changeSelect}
-                  onTogglePreset={presetHandlers.toggle}
-                  presetsCountMap={presetsCountMap}
-                />
+            <div className="dev-tools__msw__column">
+              <div className="dev-tools__msw__column__heading">Presets</div>
+              <div className="dev-tools__msw__column__body">
+                <div className="dev-tools__list-box">
+                  <ExtraPresetOptions
+                    disabled={!isMSWEnabled}
+                    handlers={extraPresets}
+                    onPresetCountChange={presetHandlers.changeCount}
+                    onSelectChange={presetHandlers.changeSelect}
+                    onTogglePreset={presetHandlers.toggle}
+                    presetsCountMap={presetsCountMap}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </Tooltip>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
           <button

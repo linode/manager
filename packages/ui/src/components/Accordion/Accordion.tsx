@@ -18,7 +18,7 @@ import type { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 const useStyles = makeStyles()((theme: Theme) => ({
   itemCount: {
     alignItems: 'center',
-    backgroundColor: theme.tokens.color.Ultramarine[70],
+    backgroundColor: '#2575d0',
     borderRadius: '50%',
     color: theme.tokens.color.Neutrals.White,
     display: 'flex',
@@ -146,7 +146,7 @@ export const Accordion = (props: AccordionProps) => {
                 {...(success && { variant: 'success' })}
                 {...(warning && { variant: 'warning' })}
                 {...(error && { variant: 'error' })}
-                spacingBottom={8}
+                spacingBottom={0}
               />
             </Grid>
           ) : null}

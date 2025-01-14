@@ -267,10 +267,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
  * @param unit base unit of the values
  * @returns maximum possible rolled up unit based on the unit
  */
-export const generateMaxUnit = (
-  legendRowsData: MetricsDisplayRow[],
-  unit: string
-) => {
+const generateMaxUnit = (legendRowsData: MetricsDisplayRow[], unit: string) => {
   const maxValue = Math.max(
     0,
     ...legendRowsData?.map((row) => row?.data.max ?? 0)
@@ -310,7 +307,7 @@ export const getCloudPulseMetricRequest = (
  *
  * @returns generated label name for graph dimension
  */
-export const getLabelName = (props: LabelNameOptionsProps): string => {
+const getLabelName = (props: LabelNameOptionsProps): string => {
   const { flags, label, metric, resources, serviceType, unit } = props;
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {

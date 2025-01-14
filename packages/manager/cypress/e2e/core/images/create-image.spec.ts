@@ -1,9 +1,46 @@
-import type { Linode } from '@linode/api-v4';
+import type { Linode, Region } from '@linode/api-v4';
+import { accountFactory, linodeFactory, regionFactory } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomPhrase } from 'support/util/random';
+import { mockGetRegions } from 'support/intercepts/regions';
+import {
+  mockGetLinodeDetails,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
+
+const mockRegions: Region[] = [
+  regionFactory.build({
+    capabilities: ['Linodes', 'Disk Encryption'],
+    id: 'us-east',
+    label: 'Newark, NJ',
+    site_type: 'core',
+  }),
+  regionFactory.build({
+    capabilities: ['Linodes', 'Disk Encryption'],
+    id: 'us-den-1',
+    label: 'Distributed - Denver, CO',
+    site_type: 'distributed',
+  }),
+];
+
+const mockLinodes: Linode[] = [
+  linodeFactory.build({
+    label: 'core-region-linode',
+    region: mockRegions[0].id,
+  }),
+  linodeFactory.build({
+    label: 'distributed-region-linode',
+    region: mockRegions[1].id,
+  }),
+];
+
+const DISK_ENCRYPTION_IMAGES_CAVEAT_COPY =
+  'Virtual Machine Images are not encrypted.';
 
 authenticate();
 describe('create image (e2e)', () => {
@@ -16,9 +53,9 @@ describe('create image (e2e)', () => {
     const label = randomLabel();
     const description = randomPhrase();
 
-    // When Alpine 3.20 becomes deprecated, we will have to update these values for the test to pass.
-    const image = 'linode/alpine3.20';
-    const disk = 'Alpine 3.20 Disk';
+    // When Alpine 3.19 becomes deprecated, we will have to update these values for the test to pass.
+    const image = 'linode/alpine3.19';
+    const disk = 'Alpine 3.19 Disk';
 
     cy.defer(
       () => createTestLinode({ image }, { waitForDisks: true }),
@@ -85,5 +122,117 @@ describe('create image (e2e)', () => {
           cy.findByText('Creating', { exact: false }).should('be.visible');
         });
     });
+  });
+
+  it('displays notice informing user that Images are not encrypted, provided the LDE feature is enabled and the selected linode is not in a distributed region', () => {
+    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
+    mockAppendFeatureFlags({
+      linodeDiskEncryption: true,
+    }).as('getFeatureFlags');
+
+    // Mock responses
+    const mockAccount = accountFactory.build({
+      capabilities: ['Linodes', 'Disk Encryption'],
+    });
+
+    mockGetAccount(mockAccount).as('getAccount');
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodes(mockLinodes).as('getLinodes');
+
+    // intercept request
+    cy.visitWithLogin('/images/create');
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getLinodes', '@getRegions']);
+
+    // Find the Linode select and open it
+    cy.findByLabelText('Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .should('have.attr', 'placeholder', 'Select a Linode')
+      .click();
+
+    // Select the Linode
+    ui.autocompletePopper
+      .findByTitle(mockLinodes[0].label)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Check if notice is visible
+    cy.findByText(DISK_ENCRYPTION_IMAGES_CAVEAT_COPY).should('be.visible');
+  });
+
+  it('does not display a notice informing user that Images are not encrypted if the LDE feature is disabled', () => {
+    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
+    mockAppendFeatureFlags({
+      linodeDiskEncryption: false,
+    }).as('getFeatureFlags');
+
+    // Mock responses
+    const mockAccount = accountFactory.build({
+      capabilities: ['Linodes', 'Disk Encryption'],
+    });
+
+    mockGetAccount(mockAccount).as('getAccount');
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodes(mockLinodes).as('getLinodes');
+
+    // intercept request
+    cy.visitWithLogin('/images/create');
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getLinodes', '@getRegions']);
+
+    // Find the Linode select and open it
+    cy.findByLabelText('Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .should('have.attr', 'placeholder', 'Select a Linode')
+      .click();
+
+    // Select the Linode
+    ui.autocompletePopper
+      .findByTitle(mockLinodes[0].label)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Check if notice is visible
+    cy.findByText(DISK_ENCRYPTION_IMAGES_CAVEAT_COPY).should('not.exist');
+  });
+
+  it('does not display a notice informing user that Images are not encrypted if the selected linode is in a distributed region', () => {
+    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
+    mockAppendFeatureFlags({
+      linodeDiskEncryption: true,
+    }).as('getFeatureFlags');
+
+    // Mock responses
+    const mockAccount = accountFactory.build({
+      capabilities: ['Linodes', 'Disk Encryption'],
+    });
+
+    mockGetAccount(mockAccount).as('getAccount');
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodes(mockLinodes).as('getLinodes');
+    mockGetLinodeDetails(mockLinodes[1].id, mockLinodes[1]);
+
+    // intercept request
+    cy.visitWithLogin('/images/create');
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getRegions', '@getLinodes']);
+
+    // Find the Linode select and open it
+    cy.findByLabelText('Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .should('have.attr', 'placeholder', 'Select a Linode')
+      .click();
+
+    // Select the Linode
+    ui.autocompletePopper
+      .findByTitle(mockLinodes[1].label)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Check if notice is visible
+    cy.findByText(DISK_ENCRYPTION_IMAGES_CAVEAT_COPY).should('not.exist');
   });
 });

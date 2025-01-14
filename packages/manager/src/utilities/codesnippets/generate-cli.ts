@@ -1,8 +1,9 @@
-import type { PlacementGroup } from '@linode/api-v4';
-import type {
+import {
   ConfigInterfaceIPv4,
   UserData,
 } from '@linode/api-v4/lib/linodes/types';
+
+import type { PlacementGroup } from '@linode/api-v4';
 
 // Credit: https://github.com/xxorax/node-shell-escape
 function escapeStringForCLI(s: string): string {
@@ -110,18 +111,7 @@ const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
   return acc;
 };
 
-export const generateCLICommand = (
-  data: {},
-  sourceLinodeID?: number,
-  linodeCLIAction?: string
-) => {
+export const generateCLICommand = (data: {}) => {
   const dataForCLI = Object.entries(data).reduce(dataEntriesReduce, []);
-
-  if (linodeCLIAction === 'Clone Linode') {
-    return `linode-cli linodes clone ${sourceLinodeID} \\\n${dataForCLI.join(
-      ' \\\n'
-    )}`;
-  }
-
   return `linode-cli linodes create \\\n${dataForCLI.join(' \\\n')}`;
 };

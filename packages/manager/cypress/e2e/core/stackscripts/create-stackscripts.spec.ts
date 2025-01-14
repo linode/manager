@@ -128,9 +128,9 @@ const fillOutLinodeForm = (label: string, regionName: string) => {
  * @returns Promise that resolves to the new Image.
  */
 const createLinodeAndImage = async () => {
-  // 2GB
-  // Shout out to Debian for fitting on a 2GB disk.
-  const resizedDiskSize = 2048;
+  // 1.5GB
+  // Shout out to Debian for fitting on a 1.5GB disk.
+  const resizedDiskSize = 1536;
   const linode = await createTestLinode(
     createLinodeRequestFactory.build({
       label: randomLabel(),

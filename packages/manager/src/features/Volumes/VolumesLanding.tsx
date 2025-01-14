@@ -5,8 +5,9 @@ import {
   TextField,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -22,71 +23,51 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useDialogData } from 'src/hooks/useDialogData';
-import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useVolumeQuery, useVolumesQuery } from 'src/queries/volumes/volumes';
-import {
-  VOLUME_TABLE_DEFAULT_ORDER,
-  VOLUME_TABLE_DEFAULT_ORDER_BY,
-} from 'src/routes/volumes/constants';
-import { VOLUME_TABLE_PREFERENCE_KEY } from 'src/routes/volumes/constants';
+import { useVolumesQuery } from 'src/queries/volumes/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { DeleteVolumeDialog } from './Dialogs/DeleteVolumeDialog';
-import { DetachVolumeDialog } from './Dialogs/DetachVolumeDialog';
-import { UpgradeVolumeDialog } from './Dialogs/UpgradeVolumeDialog';
-import { AttachVolumeDrawer } from './Drawers/AttachVolumeDrawer';
-import { CloneVolumeDrawer } from './Drawers/CloneVolumeDrawer';
-import { EditVolumeDrawer } from './Drawers/EditVolumeDrawer';
-import { ManageTagsDrawer } from './Drawers/ManageTagsDrawer';
-import { ResizeVolumeDrawer } from './Drawers/ResizeVolumeDrawer';
-import { VolumeDetailsDrawer } from './Drawers/VolumeDetailsDrawer';
+import { AttachVolumeDrawer } from './AttachVolumeDrawer';
+import { CloneVolumeDrawer } from './CloneVolumeDrawer';
+import { DeleteVolumeDialog } from './DeleteVolumeDialog';
+import { DetachVolumeDialog } from './DetachVolumeDialog';
+import { EditVolumeDrawer } from './EditVolumeDrawer';
+import { ResizeVolumeDrawer } from './ResizeVolumeDrawer';
+import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
+import { VolumeDetailsDrawer } from './VolumeDetailsDrawer';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
 import { VolumeTableRow } from './VolumeTableRow';
 
 import type { Filter, Volume } from '@linode/api-v4';
-import type {
-  VolumeAction,
-  VolumesSearchParams,
-} from 'src/routes/volumes/index';
+
+const preferenceKey = 'volumes';
+const searchQueryKey = 'query';
 
 export const VolumesLanding = () => {
-  const navigate = useNavigate();
-  const params = useParams({ strict: false });
-  const search: VolumesSearchParams = useSearch({
-    from: '/volumes',
-  });
-  const pagination = usePaginationV2({
-    currentRoute: '/volumes',
-    preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
-    searchParams: (prev) => ({
-      ...prev,
-      query: search.query,
-    }),
-  });
+  const history = useHistory();
+  const location = useLocation<{ volume: Volume | undefined }>();
+  const pagination = usePagination(1, preferenceKey);
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_volumes',
   });
-  const { query } = search;
+  const queryParams = new URLSearchParams(location.search);
+  const volumeLabelFromParam = queryParams.get(searchQueryKey) ?? '';
 
-  const { handleOrderChange, order, orderBy } = useOrderV2({
-    initialRoute: {
-      defaultOrder: {
-        order: VOLUME_TABLE_DEFAULT_ORDER,
-        orderBy: VOLUME_TABLE_DEFAULT_ORDER_BY,
-      },
-      from: '/volumes',
+  const { handleOrderChange, order, orderBy } = useOrder(
+    {
+      order: 'desc',
+      orderBy: 'label',
     },
-    preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
-  });
+    `${preferenceKey}-order`
+  );
 
   const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
-    ...(query && {
-      label: { '+contains': query },
+    ...(volumeLabelFromParam && {
+      label: { '+contains': volumeLabelFromParam },
     }),
   };
 
@@ -102,47 +83,69 @@ export const VolumesLanding = () => {
     isBlockStorageEncryptionFeatureEnabled,
   } = useIsBlockStorageEncryptionFeatureEnabled();
 
-  const { data: selectedVolume, isFetching: isFetchingVolume } = useDialogData({
-    enabled: !!params.volumeId,
-    paramKey: 'volumeId',
-    queryHook: useVolumeQuery,
-    redirectToOnNotFound: '/volumes',
-  });
+  const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
+  const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(
+    Boolean(location.state?.volume)
+  );
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
+  const [isResizeDrawerOpen, setIsResizeDrawerOpen] = React.useState(false);
+  const [isCloneDrawerOpen, setIsCloneDrawerOpen] = React.useState(false);
+  const [isAttachDrawerOpen, setIsAttachDrawerOpen] = React.useState(false);
+  const [isDetachDialogOpen, setIsDetachDialogOpen] = React.useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = React.useState(false);
 
-  const handleVolumeAction = (action: VolumeAction, volume: Volume) => {
-    navigate({
-      params: { action, volumeId: volume.id },
-      search: (prev) => prev,
-      to: `/volumes/$volumeId/$action`,
-    });
+  const selectedVolume = volumes?.data.find((v) => v.id === selectedVolumeId);
+
+  const handleDetach = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsDetachDialogOpen(true);
+  };
+
+  const handleDelete = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDetails = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsDetailsDrawerOpen(true);
+  };
+
+  const handleEdit = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsEditDrawerOpen(true);
+  };
+
+  const handleResize = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsResizeDrawerOpen(true);
+  };
+
+  const handleClone = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsCloneDrawerOpen(true);
+  };
+
+  const handleAttach = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsAttachDrawerOpen(true);
+  };
+
+  const handleUpgrade = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setIsUpgradeDialogOpen(true);
   };
 
   const resetSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        query: undefined,
-      }),
-      to: '/volumes',
-    });
+    queryParams.delete(searchQueryKey);
+    history.push({ search: queryParams.toString() });
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        page: undefined,
-        query: e.target.value || undefined,
-      }),
-      to: '/volumes',
-    });
-  };
-
-  const navigateToVolumes = () => {
-    navigate({
-      search: (prev) => prev,
-      to: '/volumes',
-    });
+    queryParams.delete('page');
+    queryParams.set(searchQueryKey, e.target.value);
+    history.push({ search: queryParams.toString() });
   };
 
   if (isLoading) {
@@ -159,7 +162,7 @@ export const VolumesLanding = () => {
     );
   }
 
-  if (volumes?.results === 0 && !query) {
+  if (volumes?.results === 0 && !volumeLabelFromParam) {
     return <VolumesLandingEmptyState />;
   }
 
@@ -168,7 +171,7 @@ export const VolumesLanding = () => {
       <DocumentTitleSegment segment="Volumes" />
       <LandingHeader
         breadcrumbProps={{
-          pathname: 'Volumes',
+          pathname: location.pathname,
           removeCrumbX: 1,
         }}
         buttonDataAttrs={{
@@ -181,12 +184,12 @@ export const VolumesLanding = () => {
         disabledCreateButton={isRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
-        onButtonClick={() => navigate({ to: '/volumes/create' })}
+        onButtonClick={() => history.push('/volumes/create')}
         title="Volumes"
       />
       <TextField
         InputProps={{
-          endAdornment: query && (
+          endAdornment: volumeLabelFromParam && (
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
 
@@ -200,7 +203,6 @@ export const VolumesLanding = () => {
               </IconButton>
             </InputAdornment>
           ),
-          sx: { mb: 2 },
         }}
         onChange={debounce(400, (e) => {
           onSearch(e);
@@ -208,7 +210,8 @@ export const VolumesLanding = () => {
         hideLabel
         label="Search"
         placeholder="Search Volumes"
-        value={query ?? ''}
+        sx={{ mb: 2 }}
+        value={volumeLabelFromParam}
       />
       <Table>
         <TableHead>
@@ -252,16 +255,14 @@ export const VolumesLanding = () => {
           {volumes?.data.map((volume) => (
             <VolumeTableRow
               handlers={{
-                handleAttach: () => handleVolumeAction('attach', volume),
-                handleClone: () => handleVolumeAction('clone', volume),
-                handleDelete: () => handleVolumeAction('delete', volume),
-                handleDetach: () => handleVolumeAction('detach', volume),
-                handleDetails: () => handleVolumeAction('details', volume),
-                handleEdit: () => handleVolumeAction('edit', volume),
-                handleManageTags: () =>
-                  handleVolumeAction('manage-tags', volume),
-                handleResize: () => handleVolumeAction('resize', volume),
-                handleUpgrade: () => handleVolumeAction('upgrade', volume),
+                handleAttach: () => handleAttach(volume),
+                handleClone: () => handleClone(volume),
+                handleDelete: () => handleDelete(volume),
+                handleDetach: () => handleDetach(volume),
+                handleDetails: () => handleDetails(volume),
+                handleEdit: () => handleEdit(volume),
+                handleResize: () => handleResize(volume),
+                handleUpgrade: () => handleUpgrade(volume),
               }}
               isBlockStorageEncryptionFeatureEnabled={
                 isBlockStorageEncryptionFeatureEnabled
@@ -281,59 +282,56 @@ export const VolumesLanding = () => {
         pageSize={pagination.pageSize}
       />
       <AttachVolumeDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'attach'}
+        onClose={() => setIsAttachDrawerOpen(false)}
+        open={isAttachDrawerOpen}
         volume={selectedVolume}
       />
       <VolumeDetailsDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'details'}
-        volume={selectedVolume}
-      />
-      <ManageTagsDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'manage-tags'}
-        volume={selectedVolume}
+        onClose={() => {
+          setIsDetailsDrawerOpen(false);
+          if (location.state?.volume) {
+            window.history.replaceState(null, '');
+          }
+        }}
+        open={isDetailsDrawerOpen}
+        volume={selectedVolume ?? location.state?.volume}
       />
       <EditVolumeDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'edit'}
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
         volume={selectedVolume}
       />
       <ResizeVolumeDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'resize'}
+        onClose={() => setIsResizeDrawerOpen(false)}
+        open={isResizeDrawerOpen}
         volume={selectedVolume}
       />
       <CloneVolumeDrawer
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'clone'}
+        onClose={() => setIsCloneDrawerOpen(false)}
+        open={isCloneDrawerOpen}
         volume={selectedVolume}
       />
       <DetachVolumeDialog
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'detach'}
+        onClose={() => setIsDetachDialogOpen(false)}
+        open={isDetachDialogOpen}
         volume={selectedVolume}
       />
       <UpgradeVolumeDialog
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'upgrade'}
+        onClose={() => setIsUpgradeDialogOpen(false)}
+        open={isUpgradeDialogOpen}
         volume={selectedVolume}
       />
       <DeleteVolumeDialog
-        isFetching={isFetchingVolume}
-        onClose={navigateToVolumes}
-        open={params.action === 'delete'}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
         volume={selectedVolume}
       />
     </>
   );
 };
+
+export default VolumesLanding;
+
+export const volumesLandingLazyRoute = createLazyRoute('/')({
+  component: VolumesLanding,
+});

@@ -81,22 +81,3 @@ export const getEngineOptions = (engines: DatabaseEngine[]) => {
     };
   });
 };
-
-/**
- * Determines the suffix string for a node based on whether
- * the database is new and the number of nodes in the configuration.
- *
- * @param {boolean} isNewDatabase - Indicates if the database is a new instance.
- * @param {number} numberOfNodes - The number of nodes.
- * @returns {string} The suffix string to be appended to the node:
- *  - If there are multiple nodes, appends 's - HA ' for new databases or 's: ' otherwise.
- *  - If there is only one node, appends a space for new databases or ': ' otherwise.
- *
- */
-export const getSuffix = (isNewDatabase: boolean, numberOfNodes: number) => {
-  if (numberOfNodes > 1) {
-    return isNewDatabase ? 's - HA ' : 's: ';
-  } else {
-    return isNewDatabase ? ' ' : ': ';
-  }
-};

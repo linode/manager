@@ -51,10 +51,6 @@ import type { APIError } from '@linode/api-v4/lib/types';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 import type { DatabaseCreateValues } from 'src/features/Databases/DatabaseCreate/DatabaseClusterData';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import {
-  ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,
-  ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
-} from '../constants';
 
 const DatabaseCreate = () => {
   const history = useHistory();
@@ -101,9 +97,7 @@ const DatabaseCreate = () => {
   const handleIPValidation = () => {
     const validatedIps = validateIPs(values.allow_list, {
       allowEmptyAddress: true,
-      errorMessage: isDatabasesV2GA
-        ? ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT
-        : ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
+      errorMessage: 'Must be a valid IPv4 address',
     });
 
     if (validatedIps.some((ip) => ip.error)) {

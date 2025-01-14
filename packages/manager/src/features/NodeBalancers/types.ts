@@ -1,49 +1,70 @@
 import type {
-  APIError,
-  Algorithm,
-  NodeBalancerConfigNode,
+  NodeBalancerConfigNodeMode,
   NodeBalancerProxyProtocol,
-  Protocol,
-  Stickiness,
-  UpdateNodeBalancerConfig,
-} from '@linode/api-v4';
+} from '@linode/api-v4/lib/nodebalancers/types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface NodeBalancerConfigFieldsWithStatus
   extends NodeBalancerConfigFields {
-  /**
-   * Exists for the sake of local operations
-   */
   modifyStatus?: 'new';
 }
-
-export interface NodeBalancerConfigFields extends UpdateNodeBalancerConfig {
-  id?: number;
-  nodes: NodeBalancerConfigNodeFields[];
+export interface ExtendedNodeBalancerConfigNode {
+  address: string;
+  config_id?: number;
+  errors?: APIError[];
+  id: number;
+  label: string;
+  mode?: NodeBalancerConfigNodeMode;
+  modifyStatus?: 'delete' | 'new' | 'update';
+  nodebalancer_id: number;
+  port?: number;
+  status: 'DOWN' | 'UP' | 'unknown';
+  weight?: number;
 }
 
-export interface NodeBalancerConfigNodeFields
-  extends Partial<NodeBalancerConfigNode> {
+export interface NodeBalancerConfigFields {
+  algorithm?: 'leastconn' | 'roundrobin' | 'source';
+  check?: 'connection' | 'http' | 'http_body' | 'none';
+  check_attempts?: number /** 1..30 */;
+  check_body?: string;
+  check_interval?: number;
+  check_passive?: boolean;
+  check_path?: string;
+  check_timeout?: number /** 1..30 */;
+  cipher_suite?: 'legacy' | 'recommended';
+  id?: number;
+  nodes: NodeBalancerConfigNodeFields[];
+  port?: number /** 1..65535 */;
+  protocol?: 'http' | 'https' | 'tcp';
+  proxy_protocol?: NodeBalancerProxyProtocol;
+  ssl_cert?: string;
+  ssl_key?: string;
+  stickiness?: 'http_cookie' | 'none' | 'table';
+}
+
+export interface NodeBalancerConfigNodeFields {
   address: string;
+  config_id?: number;
   errors?: APIError[];
+  id?: number;
   label: string;
-  /**
-   * Exists for the sake of local operations
-   */
+  mode?: NodeBalancerConfigNodeMode;
+  /* for the sake of local operations */
   modifyStatus?: 'delete' | 'new' | 'update';
-  /**
-   * @note `port` is an "extended" field. The API includes it in the `address`
-   */
+  nodebalancer_id?: number;
   port?: number;
+  status?: 'DOWN' | 'UP' | 'unknown';
+  weight?: number;
 }
 
 export interface NodeBalancerConfigPanelProps {
   addNode: (nodeIdx?: number) => void;
-  algorithm: Algorithm;
+  algorithm: 'leastconn' | 'roundrobin' | 'source';
   checkBody: string;
   checkPassive: boolean;
 
   checkPath: string;
-  configIdx: number;
+  configIdx?: number;
   disabled?: boolean;
   errors?: APIError[];
 
@@ -83,19 +104,19 @@ export interface NodeBalancerConfigPanelProps {
   onPortChange: (v: number | string) => void;
   onPrivateKeyChange: (v: string) => void;
 
-  onProtocolChange: (v: Protocol) => void;
-  onProxyProtocolChange: (v: NodeBalancerProxyProtocol) => void;
+  onProtocolChange: (v: string) => void;
+  onProxyProtocolChange: (v: string) => void;
 
   onSave?: () => void;
-  onSessionStickinessChange: (v: Stickiness) => void;
+  onSessionStickinessChange: (v: string) => void;
 
   onSslCertificateChange: (v: string) => void;
   port: number;
   privateKey: string;
-  protocol: Protocol;
+  protocol: 'http' | 'https' | 'tcp';
   proxyProtocol: NodeBalancerProxyProtocol;
   removeNode: (nodeIdx: number) => void;
-  sessionStickiness: Stickiness;
+  sessionStickiness: 'http_cookie' | 'none' | 'table';
   sslCertificate: string;
   submitting?: boolean;
 }

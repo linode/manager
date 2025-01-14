@@ -1,4 +1,4 @@
-import { StyledLinkButton, TooltipIcon, Typography } from '@linode/ui';
+import { StyledLinkButton, Typography } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 import * as React from 'react';
 
@@ -40,26 +40,11 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
         <StyledTypography>{engineVersion}</StyledTypography>
         <StyledLinkButton
           data-testid="upgrade"
-          disabled={!versions?.length || hasUpdates}
+          disabled={!versions?.length}
           onClick={onUpgradeVersion}
         >
           Upgrade Version
         </StyledLinkButton>
-        {hasUpdates && (
-          <TooltipIcon
-            sxTooltipIcon={{
-              padding: '0px 8px',
-            }}
-            text={
-              <Typography>
-                Upgrades are disabled due to pending maintenance updates. To
-                enable the upgrade, apply available updates now or wait until
-                the next maintenance window.
-              </Typography>
-            }
-            status="help"
-          />
-        )}
       </Grid>
       {/*
         TODO Uncomment and provide value when the EOL is returned by the API.

@@ -3,7 +3,6 @@ import {
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
   RESOURCES,
-  TAGS,
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseSelectTypes } from './models';
@@ -15,10 +14,6 @@ import type {
   CloudPulseResources,
   CloudPulseResourcesSelectProps,
 } from '../shared/CloudPulseResourcesSelect';
-import type {
-  CloudPulseTags,
-  CloudPulseTagsSelectProps,
-} from '../shared/CloudPulseTagsFilter';
 import type { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { CloudPulseServiceTypeFilters } from './models';
@@ -47,31 +42,6 @@ interface CloudPulseMandatoryFilterCheckProps {
   };
   timeDuration: TimeDuration | undefined;
 }
-/**
- * This function helps in building the properties needed for tags selection component
- *
- * @param config - accepts a CloudPulseServiceTypeFilters of tag key
- * @param handleTagsChange - the callback when we select new tag
- * @param dashboard - the selected dashboard's service type
- * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
- * @returns CloudPulseTagSelectProps
- */
-export const getTagsProperties = (
-  props: CloudPulseFilterProperties,
-  handleTagsChange: (tags: CloudPulseTags[], savePref?: boolean) => void
-): CloudPulseTagsSelectProps => {
-  const { name: label, placeholder } = props.config.configuration;
-  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
-  return {
-    defaultValue: preferences?.[TAGS],
-    handleTagsChange,
-    optional: props.config.configuration.isOptional,
-    label,
-    placeholder,
-    resourceType: dashboard.service_type,
-    savePreferences: !isServiceAnalyticsIntegration,
-  };
-};
 
 /**
  * This function helps in building the properties needed for region selection component
@@ -84,11 +54,7 @@ export const getTagsProperties = (
  */
 export const getRegionProperties = (
   props: CloudPulseFilterProperties,
-  handleRegionChange: (
-    region: string | undefined,
-    labels: [],
-    savePref?: boolean
-  ) => void
+  handleRegionChange: (region: string | undefined, savePref?: boolean) => void
 ): CloudPulseRegionSelectProps => {
   const { name: label, placeholder } = props.config.configuration;
   const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
@@ -153,7 +119,6 @@ export const getCustomSelectProperties = (
   handleCustomSelectChange: (
     filterKey: string,
     value: FilterValueType,
-    labels: string[],
     savePref?: boolean,
     updatedPreferenceData?: {}
   ) => void
@@ -249,7 +214,6 @@ export const buildXFilter = (
   }
 ): Filter => {
   const filters: Filter[] = [];
-  let orCondition: Filter[] = [];
 
   const { dependency } = config.configuration;
   if (dependency) {
@@ -257,7 +221,8 @@ export const buildXFilter = (
       const value = dependentFilters[key];
       if (value !== undefined) {
         if (Array.isArray(value)) {
-          orCondition = value.map((val) => ({ [key]: val }));
+          const orCondition = value.map((val) => ({ [key]: val }));
+          filters.push({ '+or': orCondition });
         } else {
           filters.push({ [key]: value });
         }
@@ -265,7 +230,7 @@ export const buildXFilter = (
     });
   }
 
-  return { '+and': filters, '+or': orCondition };
+  return { '+and': filters };
 };
 
 /**
@@ -293,20 +258,12 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
         filter.configuration.dependency
     );
 
-    const optionalFilters = new Set(
-      filters
-        .filter((filter) => filter.configuration.isOptional)
-        .map((filter) => filter.configuration.filterKey)
-    );
-
     if (filter) {
       return filter.configuration.dependency?.some((dependent) => {
         const dependentFilter = dependentFilters[dependent];
-
         return (
-          !optionalFilters.has(dependent) &&
-          (!dependentFilter ||
-            (Array.isArray(dependentFilter) && dependentFilter.length === 0))
+          !dependentFilter ||
+          (Array.isArray(dependentFilter) && dependentFilter.length === 0)
         );
       });
     }
@@ -332,10 +289,6 @@ export const checkIfAllMandatoryFiltersAreSelected = (
   }
 
   return serviceTypeConfig.filters.every((filter) => {
-    if (filter.configuration.isOptional) {
-      return true;
-    }
-
     const filterKey = filter.configuration.filterKey;
 
     if (filterKey === RELATIVE_TIME_DURATION) {
@@ -490,21 +443,4 @@ const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
   }
 
   return true;
-};
-
-/**
- *
- * @param dashboard dashboard for which filters to render
- * @param isServiceAnalyticsIntegration boolean value to check if implementation is service analytics integration or not
- * @returns list of CloudPulseServiceTypeFilters filtered by passed parameters
- */
-export const getFilters = (
-  dashboard: Dashboard,
-  isServiceAnalyticsIntegration: boolean
-): CloudPulseServiceTypeFilters[] | undefined => {
-  return FILTER_CONFIG.get(dashboard.service_type)?.filters.filter((config) =>
-    isServiceAnalyticsIntegration
-      ? config.configuration.neededInServicePage
-      : config.configuration.filterKey !== RELATIVE_TIME_DURATION
-  );
 };

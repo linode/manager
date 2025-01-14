@@ -1,10 +1,4 @@
-import {
-  Autocomplete,
-  InputAdornment,
-  Notice,
-  Select,
-  TextField,
-} from '@linode/ui';
+import { InputAdornment, Notice, TextField } from '@linode/ui';
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
@@ -13,6 +7,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import Select from 'src/components/EnhancedSelect/Select';
 
 import type {
   ManagedCredential,
@@ -83,7 +78,7 @@ const helperText = {
 };
 
 const getValueFromItem = (value: string, options: Item<any>[]) => {
-  return options.find((thisOption) => thisOption.value === value) || null;
+  return options.find((thisOption) => thisOption.value === value);
 };
 
 const getMultiValuesFromItems = (values: number[], options: Item<any>[]) => {
@@ -162,7 +157,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
               />
 
               <Select
-                onChange={(_, item: Item<ServiceType>) =>
+                onChange={(item: Item<ServiceType>) =>
                   setFieldValue(
                     'consultation_group',
                     item === null ? '' : item.value
@@ -175,20 +170,20 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                   values.consultation_group || '',
                   groupOptions
                 )}
-                clearable
                 data-qa-add-consultation-group
                 errorText={errors.consultation_group}
+                isClearable
                 label="Contact Group"
+                name="consultation_group"
                 onBlur={handleBlur}
                 options={groupOptions}
                 placeholder="Select a group..."
-                searchable
               />
 
               <Grid container spacing={2}>
                 <Grid sm={6} xs={12}>
                   <Select
-                    onChange={(_, item: Item<ServiceType>) =>
+                    onChange={(item: Item<ServiceType>) =>
                       setFieldValue('service_type', item.value)
                     }
                     textFieldProps={{
@@ -196,7 +191,9 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                     }}
                     data-qa-add-service-type
                     errorText={errors.service_type}
+                    isClearable={false}
                     label="Monitor Type"
+                    name="service_type"
                     onBlur={handleBlur}
                     options={typeOptions}
                     value={getValueFromItem(values.service_type, typeOptions)}
@@ -257,16 +254,13 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 onChange={handleChange}
                 value={values.notes}
               />
-              <Autocomplete
-                onChange={(_, items: Item<number>[] | null) => {
+              <Select
+                onChange={(items: Item<number>[]) => {
                   setFieldValue(
                     'credentials',
-                    items?.map((thisItem) => thisItem.value) || []
+                    items.map((thisItem) => thisItem.value)
                   );
                 }}
-                placeholder={
-                  values?.credentials?.length === 0 ? 'None Required' : ''
-                }
                 textFieldProps={{
                   tooltipText: helperText.credentials,
                 }}
@@ -276,10 +270,13 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 )}
                 data-qa-add-credentials
                 errorText={errors.credentials}
+                isClearable={false}
+                isMulti
                 label="Credentials"
-                multiple
+                name="credentials"
                 onBlur={handleBlur}
                 options={credentialOptions}
+                placeholder="None Required"
               />
               <ActionsPanel
                 primaryButtonProps={{

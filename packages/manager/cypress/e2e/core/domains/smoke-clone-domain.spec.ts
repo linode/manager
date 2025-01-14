@@ -60,7 +60,7 @@ describe('Clone a Domain', () => {
           .closest('tr')
           .within(() => {
             ui.actionMenu
-              .findByTitle(`Action menu for Domain ${domain.domain}`)
+              .findByTitle(`Action menu for Domain ${domain}`)
               .should('be.visible')
               .click();
           });
@@ -84,7 +84,7 @@ describe('Clone a Domain', () => {
           .closest('tr')
           .within(() => {
             ui.actionMenu
-              .findByTitle(`Action menu for Domain ${domain.domain}`)
+              .findByTitle(`Action menu for Domain ${domain}`)
               .should('be.visible')
               .click();
           });
@@ -118,7 +118,7 @@ describe('Clone a Domain', () => {
               .click();
           });
         // After cloning a Domain, the user is redirected to the new Domain's details page
-        cy.url().should('match', /\/domains\/\d+$/);
+        cy.url().should('endWith', 'domains');
 
         // Confirm that domain is cloned and cloned domains contain the same records as the original Domain.
         cy.visitWithLogin('/domains');

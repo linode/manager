@@ -18,9 +18,7 @@ export const linodesSeeder: MockSeeder = {
     const count = seedsCountMap[linodesSeeder.id] ?? 0;
     const linodeSeeds = seedWithUniqueIds<'linodes'>({
       dbEntities: await mswDB.getAll('linodes'),
-      seedEntities: linodeFactory.buildList(count, {
-        capabilities: ['Block Storage Performance B1'],
-      }),
+      seedEntities: linodeFactory.buildList(count),
     });
 
     const configs: [number, Config][] = linodeSeeds.map((linodeSeed) => {

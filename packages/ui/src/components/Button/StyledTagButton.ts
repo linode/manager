@@ -37,7 +37,7 @@ export const StyledPlusIcon = styled(PlusSignIcon, {
 })(({ theme, ...props }) => ({
   color: props.disabled
     ? theme.name === 'dark'
-      ? theme.tokens.color.Neutrals[70]
+      ? '#5c6470'
       : theme.color.disabledText
     : theme.color.tagIcon,
   height: '10px',

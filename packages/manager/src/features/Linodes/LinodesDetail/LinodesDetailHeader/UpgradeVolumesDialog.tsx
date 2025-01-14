@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { VolumeUpgradeCopy } from 'src/features/Volumes/Dialogs/UpgradeVolumeDialog';
+import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import {

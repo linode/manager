@@ -29,14 +29,14 @@ const styledLinodeUsage = (backgroundColor: string) => ({
 
 export const StyledLinodeUsage = styled(Typography, {
   label: 'StyledLinodeUsage ',
-})(({ theme }) => ({
-  ...styledLinodeUsage(theme.tokens.color.Green[70]),
-}));
+})({
+  ...styledLinodeUsage('#1CB35C'),
+});
 
 export const StyledPoolUsage = styled(Typography, {
   label: 'StyledPoolUsage',
-})(({ theme }) => ({
-  ...styledLinodeUsage(theme.tokens.color.Green[60]),
+})(() => ({
+  ...styledLinodeUsage('#5ad865'),
 }));
 
 export const StyledRemainingPoolUsage = styled(Typography, {

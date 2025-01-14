@@ -1,26 +1,19 @@
 import * as React from 'react';
 
-import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCTopSectionContent } from './VPCTopSectionContent';
 
 const props = {
+  errors: {},
+  onChangeField: vi.fn(),
   regions: [],
+  values: { description: '', label: '', region: '', subnets: [] },
 };
 
 describe('VPC Top Section form content', () => {
   it('renders the vpc top section form content correctly', () => {
-    const { getByText } = renderWithThemeAndHookFormContext({
-      component: <VPCTopSectionContent {...props} />,
-      useFormOptions: {
-        defaultValues: {
-          description: '',
-          label: '',
-          region: '',
-          subnets: [],
-        },
-      },
-    });
+    const { getByText } = renderWithTheme(<VPCTopSectionContent {...props} />);
 
     getByText('Region');
     getByText('VPC Label');

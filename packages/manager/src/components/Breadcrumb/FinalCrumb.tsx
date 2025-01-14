@@ -1,13 +1,11 @@
 import * as React from 'react';
 
-import { Link } from '../Link';
 import {
   StyledDiv,
   StyledEditableText,
   StyledH1Header,
 } from './FinalCrumb.styles';
-
-import type { EditableProps, LabelProps } from './types';
+import { EditableProps, LabelProps } from './types';
 
 interface Props {
   crumb: string;
@@ -24,13 +22,6 @@ export const FinalCrumb = React.memo((props: Props) => {
     onEditHandlers,
   } = props;
 
-  const linkProps = labelOptions?.linkTo
-    ? {
-        LinkComponent: Link,
-        labelLink: labelOptions.linkTo,
-      }
-    : {};
-
   if (onEditHandlers) {
     return (
       <StyledEditableText
@@ -38,10 +29,10 @@ export const FinalCrumb = React.memo((props: Props) => {
         disabledBreadcrumbEditButton={disabledBreadcrumbEditButton}
         errorText={onEditHandlers.errorText}
         handleAnalyticsEvent={onEditHandlers.handleAnalyticsEvent}
+        labelLink={labelOptions && labelOptions.linkTo}
         onCancel={onEditHandlers.onCancel}
         onEdit={onEditHandlers.onEdit}
         text={onEditHandlers.editableTextTitle}
-        {...linkProps}
       />
     );
   }

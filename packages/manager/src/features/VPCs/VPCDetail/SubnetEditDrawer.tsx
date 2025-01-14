@@ -1,13 +1,12 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Notice, TextField } from '@linode/ui';
-import { modifySubnetSchema } from '@linode/validation';
+import { useFormik } from 'formik';
 import * as React from 'react';
-import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useUpdateSubnetMutation } from 'src/queries/vpcs/vpcs';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
@@ -25,41 +24,29 @@ export const SubnetEditDrawer = (props: Props) => {
   const { onClose, open, subnet, vpcId } = props;
 
   const {
+    error,
     isPending,
     mutateAsync: updateSubnet,
-    reset: resetMutation,
+    reset,
   } = useUpdateSubnetMutation(vpcId, subnet?.id ?? -1);
 
-  const {
-    control,
-    formState: { errors, isDirty, isSubmitting },
-    handleSubmit,
-    reset: resetForm,
-    setError,
-  } = useForm<ModifySubnetPayload>({
-    mode: 'onBlur',
-    resolver: yupResolver(modifySubnetSchema),
-    values: {
+  const form = useFormik<ModifySubnetPayload>({
+    enableReinitialize: true,
+    initialValues: {
       label: subnet?.label ?? '',
+    },
+    async onSubmit(values) {
+      await updateSubnet(values);
+      onClose();
     },
   });
 
-  const handleDrawerClose = () => {
-    onClose();
-    resetForm();
-    resetMutation();
-  };
-
-  const onSubmit = async (values: ModifySubnetPayload) => {
-    try {
-      await updateSubnet(values);
-      handleDrawerClose();
-    } catch (errors) {
-      for (const error of errors) {
-        setError(error?.field ?? 'root', { message: error.reason });
-      }
+  React.useEffect(() => {
+    if (open) {
+      form.resetForm();
+      reset();
     }
-  };
+  }, [open]);
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -72,11 +59,11 @@ export const SubnetEditDrawer = (props: Props) => {
     Boolean(profile?.restricted) &&
     (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
+  const errorMap = getErrorMap(['label'], error);
+
   return (
-    <Drawer onClose={handleDrawerClose} open={open} title="Edit Subnet">
-      {errors.root?.message && (
-        <Notice text={errors.root.message} variant="error" />
-      )}
+    <Drawer onClose={onClose} open={open} title="Edit Subnet">
+      {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       {readOnly && (
         <Notice
           important
@@ -84,21 +71,14 @@ export const SubnetEditDrawer = (props: Props) => {
           variant="error"
         />
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          render={({ field, fieldState }) => (
-            <TextField
-              disabled={readOnly}
-              errorText={fieldState.error?.message}
-              label="Label"
-              name="label"
-              onBlur={field.onBlur}
-              onChange={field.onChange}
-              value={field.value}
-            />
-          )}
-          control={control}
+      <form onSubmit={form.handleSubmit}>
+        <TextField
+          disabled={readOnly}
+          errorText={errorMap.label}
+          label="Label"
           name="label"
+          onChange={form.handleChange}
+          value={form.values.label}
         />
         <TextField
           disabled
@@ -109,12 +89,12 @@ export const SubnetEditDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'save-button',
-            disabled: !isDirty || readOnly,
+            disabled: !form.dirty,
             label: 'Save',
-            loading: isPending || isSubmitting,
+            loading: isPending,
             type: 'submit',
           }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: handleDrawerClose }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
         />
       </form>
     </Drawer>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { matchPath, useHistory, useLocation } from 'react-router-dom';
+import { matchPath } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -9,8 +9,11 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
+import type { RouteComponentProps } from 'react-router-dom';
+type Props = RouteComponentProps<{}>;
+
 const Users = React.lazy(() =>
-  import('./Users/UsersTable/Users').then((module) => ({
+  import('./Users/Users').then((module) => ({
     default: module.UsersLanding,
   }))
 );
@@ -21,31 +24,28 @@ const Roles = React.lazy(() =>
   }))
 );
 
-export const IdentityAccessLanding = React.memo(() => {
-  const history = useHistory();
-  const location = useLocation();
-
+export const IdentityAccessManagementLanding = React.memo((props: Props) => {
   const tabs = [
     {
-      routeName: `/iam/users`,
+      routeName: `${props.match.url}/users`,
       title: 'Users',
     },
     {
-      routeName: `/iam/roles`,
+      routeName: `${props.match.url}/roles`,
       title: 'Roles',
     },
   ];
 
   const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
+    props.history.push(tabs[index].routeName);
   };
 
   const getDefaultTabIndex = () => {
-    return (
-      tabs.findIndex((tab) =>
-        Boolean(matchPath(tab.routeName, { path: location.pathname }))
-      ) || 0
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
     );
+
+    return tabChoice;
   };
 
   const landingHeaderProps = {

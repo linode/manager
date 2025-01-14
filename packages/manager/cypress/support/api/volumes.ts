@@ -1,17 +1,8 @@
-import {
-  createVolume,
-  deleteVolume,
-  detachVolume,
-  getVolumes,
-} from '@linode/api-v4';
+import { Volume, deleteVolume, detachVolume, getVolumes } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
-import { SimpleBackoffMethod, attemptWithBackoff } from 'support/util/backoff';
 import { depaginate } from 'support/util/paginate';
-import { pollVolumeStatus } from 'support/util/polling';
-
 import { isTestLabel } from './common';
-
-import type { Volume, VolumeRequestPayload } from '@linode/api-v4';
+import { attemptWithBackoff, SimpleBackoffMethod } from 'support/util/backoff';
 
 /**
  * Delete all Volumes whose labels are prefixed "cy-test-".
@@ -53,19 +44,4 @@ export const deleteAllTestVolumes = async (): Promise<void> => {
     });
 
   await Promise.all(detachDeletePromises);
-};
-
-/**
- * Creates a Volume and waits for it to become active.
- *
- * @param volumeRequest - Volume create request payload.
- *
- * @returns Promise that resolves to created Volume.
- */
-export const createActiveVolume = async (
-  volumeRequest: VolumeRequestPayload
-) => {
-  const volume = await createVolume(volumeRequest);
-  await pollVolumeStatus(volume.id, 'active', new SimpleBackoffMethod(10000));
-  return volume;
 };

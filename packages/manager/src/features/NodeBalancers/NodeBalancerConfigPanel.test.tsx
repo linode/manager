@@ -3,8 +3,12 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ALGORITHM_HELPER_TEXT } from './constants';
-import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
+import {
+  LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
+  NodeBalancerConfigPanel,
+  ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
+  SOURCE_ALGORITHM_HELPER_TEXT,
+} from './NodeBalancerConfigPanel';
 
 import type {
   NodeBalancerConfigNodeFields,
@@ -218,33 +222,28 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('renders the relevant helper text for the Round Robin algorithm', () => {
     const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        algorithm="roundrobin"
-      />
+      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
-    expect(getByText(ALGORITHM_HELPER_TEXT.roundrobin)).toBeVisible();
-
-    expect(queryByText(ALGORITHM_HELPER_TEXT.source)).not.toBeInTheDocument();
+    expect(getByText(ROUND_ROBIN_ALGORITHM_HELPER_TEXT)).toBeVisible();
     expect(
-      queryByText(ALGORITHM_HELPER_TEXT.leastconn)
+      queryByText(LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT)
     ).not.toBeInTheDocument();
+    expect(queryByText(SOURCE_ALGORITHM_HELPER_TEXT)).not.toBeInTheDocument();
   });
 
   it('renders the relevant helper text for the Least Connections algorithm', () => {
     const { getByText, queryByText } = renderWithTheme(
       <NodeBalancerConfigPanel
         {...nbConfigPanelMockPropsForTest}
-        algorithm="leastconn"
+        algorithm={'leastconn'}
       />
     );
 
-    expect(getByText(ALGORITHM_HELPER_TEXT.leastconn)).toBeVisible();
-
-    expect(queryByText(ALGORITHM_HELPER_TEXT.source)).not.toBeInTheDocument();
+    expect(getByText(LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT)).toBeVisible();
+    expect(queryByText(SOURCE_ALGORITHM_HELPER_TEXT)).not.toBeInTheDocument();
     expect(
-      queryByText(ALGORITHM_HELPER_TEXT.roundrobin)
+      queryByText(ROUND_ROBIN_ALGORITHM_HELPER_TEXT)
     ).not.toBeInTheDocument();
   });
 
@@ -252,17 +251,16 @@ describe('NodeBalancerConfigPanel', () => {
     const { getByText, queryByText } = renderWithTheme(
       <NodeBalancerConfigPanel
         {...nbConfigPanelMockPropsForTest}
-        algorithm="source"
+        algorithm={'source'}
       />
     );
 
-    expect(getByText(ALGORITHM_HELPER_TEXT.source)).toBeVisible();
-
+    expect(getByText(SOURCE_ALGORITHM_HELPER_TEXT)).toBeVisible();
     expect(
-      queryByText(ALGORITHM_HELPER_TEXT.leastconn)
+      queryByText(ROUND_ROBIN_ALGORITHM_HELPER_TEXT)
     ).not.toBeInTheDocument();
     expect(
-      queryByText(ALGORITHM_HELPER_TEXT.roundrobin)
+      queryByText(LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT)
     ).not.toBeInTheDocument();
   });
 
@@ -318,54 +316,5 @@ describe('NodeBalancerConfigPanel', () => {
     const editConfigButton = getByText('Save');
     await userEvent.click(editConfigButton);
     expect(nbConfigPanelMockPropsForTest.onSave).toHaveBeenCalled();
-  });
-
-  it('does not show the passive checks option for the UDP protocol', () => {
-    const { queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        protocol="udp"
-      />
-    );
-
-    expect(queryByText('Passive Checks')).not.toBeInTheDocument();
-  });
-
-  it('shows correct algorithm options for the UDP protocol', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        protocol="udp"
-      />
-    );
-
-    const algorithmField = getByLabelText('Algorithm');
-
-    expect(algorithmField).toBeVisible();
-
-    await userEvent.click(algorithmField);
-
-    for (const algorithm of ['Round Robin', 'Least Connections', 'Ring Hash']) {
-      expect(getByText(algorithm)).toBeVisible();
-    }
-  });
-
-  it('shows correct session stickiness options for the UDP protocol', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        protocol="udp"
-      />
-    );
-
-    const sessionStickinessField = getByLabelText('Session Stickiness');
-
-    expect(sessionStickinessField).toBeVisible();
-
-    await userEvent.click(sessionStickinessField);
-
-    for (const algorithm of ['None', 'Session', 'Source IP']) {
-      expect(getByText(algorithm)).toBeVisible();
-    }
   });
 });

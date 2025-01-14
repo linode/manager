@@ -47,17 +47,8 @@ export const CreateBucketSchema = object()
       }),
       endpoint_type: string()
         .oneOf([...ENDPOINT_TYPES])
-        .optional(),
-      cors_enabled: boolean().optional(),
-      acl: string()
-        .oneOf([
-          'private',
-          'public-read',
-          'authenticated-read',
-          'public-read-write',
-        ])
-        .optional(),
-      s3_endpoint: string().optional(),
+        .notRequired(),
+      cors_enabled: boolean().notRequired(),
     },
     [['cluster', 'region']]
   )

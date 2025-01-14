@@ -45,12 +45,10 @@ export const DatabaseEngineVersion = (props: Props) => {
       {isDefaultGA && hasUpdates && (
         <StyledLink
           data-testid="maintenance-link"
-          sx={{ verticalAlign: 'bottom' }}
           to={`/databases/${engine}/${databaseID}/settings`}
         >
           <StatusIcon
             ariaLabel="Maintenance update"
-            component="span"
             pulse={false}
             status="other"
           />

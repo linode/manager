@@ -5,8 +5,6 @@ import * as React from 'react';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { createMaskedText } from 'src/utilities/createMaskedText';
 
-import type { SxProps, Theme } from '@mui/material';
-
 export type MaskableTextLength = 'ipv4' | 'ipv6' | 'plaintext';
 
 export interface MaskableTextProps {
@@ -15,13 +13,7 @@ export interface MaskableTextProps {
    */
   children?: JSX.Element | JSX.Element[];
   /**
-   * Optionally specifies the position of the VisibilityTooltip icon either before or after the text.
-   * @default end
-   */
-  iconPosition?: 'end' | 'start';
-  /**
    * If true, displays a VisibilityTooltip icon to toggle the masked and unmasked text.
-   * @default false
    */
   isToggleable?: boolean;
   /**
@@ -29,41 +21,20 @@ export interface MaskableTextProps {
    */
   length?: MaskableTextLength;
   /**
-   * Optional styling for the masked and unmasked Typography
-   */
-  sxTypography?: SxProps<Theme>;
-  /**
-   * Optional styling for VisibilityTooltip icon
-   */
-  sxVisibilityTooltip?: SxProps<Theme>;
-  /**
    * The original, maskable text; if the text is not masked, render this text or the styled text via children.
    */
   text: string | undefined;
 }
 
 export const MaskableText = (props: MaskableTextProps) => {
-  const {
-    children,
-    iconPosition = 'end',
-    isToggleable = false,
-    length,
-    sxTypography,
-    sxVisibilityTooltip,
-    text,
-  } = props;
+  const { children, isToggleable = false, text, length } = props;
 
-  const { data: maskedPreferenceSetting } = usePreferences(
-    (preferences) => preferences?.maskSensitiveData
-  );
+  const { data: preferences } = usePreferences();
+  const maskedPreferenceSetting = preferences?.maskSensitiveData;
 
   const [isMasked, setIsMasked] = React.useState(maskedPreferenceSetting);
 
-  const unmaskedText = children ? (
-    children
-  ) : (
-    <Typography sx={sxTypography}>{text}</Typography>
-  );
+  const unmaskedText = children ? children : <Typography>{text}</Typography>;
 
   // Return early based on the preference setting and the original text.
 
@@ -82,25 +53,14 @@ export const MaskableText = (props: MaskableTextProps) => {
       flexDirection="row"
       justifyContent="flex-start"
     >
-      {iconPosition === 'start' && isToggleable && (
-        <VisibilityTooltip
-          sx={{
-            marginLeft: 0,
-            marginRight: '8px',
-            ...sxVisibilityTooltip,
-          }}
-          handleClick={() => setIsMasked(!isMasked)}
-          isVisible={!isMasked}
-        />
-      )}
       {isMasked ? (
-        <Typography sx={{ overflowWrap: 'anywhere', ...sxTypography }}>
+        <Typography sx={{ overflowWrap: 'anywhere' }}>
           {createMaskedText(text, length)}
         </Typography>
       ) : (
         unmaskedText
       )}
-      {iconPosition === 'end' && isToggleable && (
+      {isToggleable && (
         <VisibilityTooltip
           handleClick={() => setIsMasked(!isMasked)}
           isVisible={!isMasked}

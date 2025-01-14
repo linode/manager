@@ -43,7 +43,7 @@ export const StyledToggleButton = styled(IconButton, {
   },
   '&:focus': {
     // Browser default until we get styling direction for focus states
-    outline: `1px dotted ${theme.tokens.color.Neutrals[50]}`,
+    outline: '1px dotted #999',
   },
   '&:hover': {
     backgroundColor: theme.palette.grey[300],

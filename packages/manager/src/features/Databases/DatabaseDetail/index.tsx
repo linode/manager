@@ -165,11 +165,7 @@ export const DatabaseDetail = () => {
 
   return (
     <>
-      <DocumentTitleSegment
-        segment={`${database?.label} - ${
-          tabs[getTabIndex()]?.title ?? 'Detail View'
-        }`}
-      />
+      <DocumentTitleSegment segment={database.label} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

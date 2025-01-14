@@ -3,27 +3,9 @@ import { CloudPulseSelectTypes } from './models';
 import type { CloudPulseServiceTypeFilterMap } from './models';
 
 const TIME_DURATION = 'Time Range';
-export const DBAAS_CAPABILITY = 'Managed Databases';
-export const LINODE_CAPABILITY = 'Linodes';
 
 export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
-  capability: LINODE_CAPABILITY,
   filters: [
-    {
-      configuration: {
-        filterKey: 'tags',
-        filterType: 'string',
-        isFilterable: false,
-        isMetricsFilter: false,
-        isMultiSelect: true,
-        isOptional: true,
-        name: 'Tags',
-        neededInServicePage: false,
-        placeholder: 'Select Tags',
-        priority: 4,
-      },
-      name: 'Tags',
-    },
     {
       configuration: {
         filterKey: 'region',
@@ -38,7 +20,7 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        dependency: ['region', 'tags'],
+        dependency: ['region'],
         filterKey: 'resource_id',
         filterType: 'string',
         isFilterable: true,
@@ -70,7 +52,6 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
 };
 
 export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
-  capability: DBAAS_CAPABILITY,
   filters: [
     {
       configuration: {
