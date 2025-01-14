@@ -28,7 +28,7 @@ import { NetworkGraphs } from './NetworkGraphs';
 import { StatsPanel } from './StatsPanel';
 
 import type { ChartProps } from './NetworkGraphs';
-import type { AutocompleteOption } from '@linode/ui';
+import type { SelectOption } from '@linode/ui';
 import type {
   CPUTimeData,
   DiskIOTimeData,
@@ -83,7 +83,7 @@ const LinodeSummary = (props: Props) => {
       statsErrorString
     );
 
-  const handleChartRangeChange = (e: AutocompleteOption<string>) => {
+  const handleChartRangeChange = (e: SelectOption<string>) => {
     setRangeSelection(e.value);
   };
 

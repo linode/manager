@@ -7,12 +7,22 @@ import { ListItem } from '../ListItem';
 import { TextField } from '../TextField';
 
 import type { EnhancedAutocompleteProps } from '../Autocomplete';
+import type { AutocompleteValue, SxProps } from '@mui/material';
+import type { Theme } from '@mui/material/styles';
 
-export type SelectOptionType = {
+type Option<T = number | string> = {
   label: string;
-  value: number | string;
+  value: T;
 };
-interface InternalOptionType extends SelectOptionType {
+
+export type SelectOption<
+  T = number | string,
+  Nullable extends boolean = false
+> = Nullable extends true
+  ? AutocompleteValue<Option<T>, false, false, false>
+  : Option<T>;
+
+interface InternalOptionType extends SelectOption {
   /**
    * Whether the option is a "create" option.
    *
@@ -26,9 +36,10 @@ interface InternalOptionType extends SelectOptionType {
    */
   noOptions?: boolean;
 }
-export interface SelectProps
+
+export interface SelectProps<T extends { label: string }>
   extends Pick<
-    EnhancedAutocompleteProps<SelectOptionType>,
+    EnhancedAutocompleteProps<T>,
     | 'disabled'
     | 'errorText'
     | 'helperText'
@@ -69,10 +80,7 @@ export interface SelectProps
   /**
    * The callback function that is invoked when the value changes.
    */
-  onChange?: (
-    _event: React.SyntheticEvent,
-    _value: SelectProps['value']
-  ) => void;
+  onChange?: (_event: React.SyntheticEvent, _value: T) => void;
   /**
    * Whether the select is required.
    *
@@ -85,6 +93,10 @@ export interface SelectProps
    * @default false
    */
   searchable?: boolean;
+  /**
+   * The style overrides for the select.
+   */
+  sx?: SxProps<Theme>;
 }
 
 /**
@@ -95,7 +107,9 @@ export interface SelectProps
  *
  * For any other use-cases, use the Autocomplete component directly.
  */
-export const Select = (props: SelectProps) => {
+export const Select = <T extends SelectOption = SelectOption>(
+  props: SelectProps<T>
+) => {
   const {
     clearable = false,
     creatable = false,
@@ -114,21 +128,21 @@ export const Select = (props: SelectProps) => {
 
   const handleChange = (
     event: React.SyntheticEvent,
-    value: SelectOptionType | null | string
+    value: SelectOption | null | string
   ) => {
     if (creatable && typeof value === 'string') {
       onChange?.(event, {
         label: value,
         value,
-      });
+      } as T);
     } else if (value && typeof value === 'object' && 'label' in value) {
       const { label, value: optionValue } = value;
       onChange?.(event, {
         label,
         value: optionValue,
-      });
+      } as T);
     } else {
-      onChange?.(event, null);
+      onChange?.(event, (null as unknown) as T);
     }
   };
 
@@ -138,7 +152,7 @@ export const Select = (props: SelectProps) => {
   );
 
   return (
-    <Autocomplete<SelectOptionType, false, boolean, boolean>
+    <Autocomplete<SelectOption, false, boolean, boolean>
       {...rest}
       isOptionEqualToValue={(option, value) => {
         if (!option || !value) {
@@ -179,6 +193,7 @@ export const Select = (props: SelectProps) => {
           label={label}
           placeholder={props.placeholder}
           required={props.required}
+          sx={sx}
         />
       )}
       renderOption={(props, option: InternalOptionType) => {
@@ -220,7 +235,7 @@ export const Select = (props: SelectProps) => {
       disableClearable={!clearable}
       forcePopupIcon
       freeSolo={creatable}
-      getOptionDisabled={(option: SelectOptionType) => option.value === ''}
+      getOptionDisabled={(option: SelectOption) => option.value === ''}
       label={label}
       noOptionsText={noOptionsText}
       onChange={handleChange}
@@ -235,7 +250,7 @@ interface GetOptionsProps {
   /**
    * Whether the select can create a new option.
    */
-  creatable: SelectProps['creatable'];
+  creatable: boolean;
   /**
    * The input value.
    */
