@@ -3,6 +3,8 @@ import * as React from 'react';
 
 import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
 import { linodeFactory } from 'src/factories/linodes';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NodeTable, encryptionStatusTestId } from './NodeTable';
@@ -10,9 +12,19 @@ import { NodeTable, encryptionStatusTestId } from './NodeTable';
 import type { Props } from './NodeTable';
 import type { KubernetesTier } from '@linode/api-v4';
 
-const mockLinodes = linodeFactory.buildList(3);
+const mockLinodes = new Array(3)
+  .fill(null)
+  .map((_element: null, index: number) => {
+    return linodeFactory.build({
+      ipv4: [`50.116.6.${index}`],
+    });
+  });
 
-const mockKubeNodes = kubeLinodeFactory.buildList(3);
+const mockKubeNodes = mockLinodes.map((mockLinode) =>
+  kubeLinodeFactory.build({
+    instance_id: mockLinode.id,
+  })
+);
 
 const props: Props = {
   clusterCreated: '2025-01-13T02:58:58',
@@ -52,13 +64,25 @@ describe('NodeTable', () => {
     };
   });
 
-  it('includes label, status, and IP columns', () => {
-    const { findByText } = renderWithTheme(<NodeTable {...props} />);
-    mockLinodes.forEach(async (thisLinode) => {
-      await findByText(thisLinode.label);
-      await findByText(thisLinode.ipv4[0]);
-      await findByText('Ready');
-    });
+  it('includes label, status, and IP columns', async () => {
+    server.use(
+      http.get('*/linode/instances*', () => {
+        return HttpResponse.json(makeResourcePage(mockLinodes));
+      })
+    );
+
+    const { findAllByText, findByText } = renderWithTheme(
+      <NodeTable {...props} />
+    );
+
+    expect(await findAllByText('Running')).toHaveLength(3);
+
+    await Promise.all(
+      mockLinodes.map(async (mockLinode) => {
+        await findByText(mockLinode.label);
+        await findByText(mockLinode.ipv4[0]);
+      })
+    );
   });
 
   it('includes the Pool ID', () => {
