@@ -107,7 +107,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
           },
         }}
         alignItems="flex-start"
-        lg={10}
+        lg="auto"
         xs={12}
       >
         <StyledBox>
@@ -165,7 +165,8 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
             justifyContent: 'flex-start',
           },
         }}
-        lg={2}
+        lg={3.5}
+        marginLeft="auto"
         xs={12}
       >
         <TagCell
