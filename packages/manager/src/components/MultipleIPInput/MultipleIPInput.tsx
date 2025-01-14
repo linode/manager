@@ -61,21 +61,89 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export interface MultipeIPInputProps {
+  /**
+   * Text displayed on the button.
+   */
   buttonText?: string;
+
+  /**
+   * Custom CSS class for additional styling.
+   */
   className?: string;
+
+  /**
+   * Disables the component (non-interactive).
+   * @default false
+   */
   disabled?: boolean;
+
+  /**
+   * Error message for invalid input.
+   */
   error?: string;
+
+  /**
+   * Indicates if the input relates to database access controls.
+   * @default false
+   */
   forDatabaseAccessControls?: boolean;
+
+  /**
+   * Indicates if the input is for VPC IPv4 ranges.
+   * @default false
+   */
   forVPCIPv4Ranges?: boolean;
+
+  /**
+   * Helper text for additional guidance.
+   */
   helperText?: string;
+
+  /**
+   * Custom input properties passed to the underlying input component.
+   */
   inputProps?: InputBaseProps;
+
+  /**
+   * Array of `ExtendedIP` objects representing managed IPs.
+   */
   ips: ExtendedIP[];
+
+  /**
+   * Styles the button as a link.
+   * @default false
+   */
   isLinkStyled?: boolean;
+
+  /**
+   * Callback triggered when the input loses focus, passing updated `ips`.
+   */
   onBlur?: (ips: ExtendedIP[]) => void;
+
+  /**
+   * Callback triggered when IPs change, passing updated `ips`.
+   */
   onChange: (ips: ExtendedIP[]) => void;
+
+  /**
+   * Placeholder text for an empty input field.
+   */
   placeholder?: string;
+
+  /**
+   * Indicates if the input is required for form submission.
+   * @default false
+   */
   required?: boolean;
+
+  /**
+   * Title or label for the input field.
+   */
   title: string;
+
+  /**
+   * Tooltip text for extra info on hover.
+   */
   tooltip?: string;
 }
 

@@ -165,16 +165,8 @@ interface BaseDatabase extends DatabaseInstance {
   port: number;
   /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
   ssl_connection: boolean;
-  /**
-   * total_disk_size_gb is feature flagged by the API.
-   * It may not be defined.
-   */
-  total_disk_size_gb?: number;
-  /**
-   * used_disk_size_gb is feature flagged by the API.
-   * It may not be defined.
-   */
-  used_disk_size_gb?: number;
+  total_disk_size_gb: number;
+  used_disk_size_gb: number | null;
 }
 
 /** @deprecated TODO (UIE-8214) remove POST GA */

@@ -212,6 +212,7 @@ export const OMC_BucketLanding = () => {
           type: 'Bucket',
         }}
         errors={error}
+        expand
         label={'Bucket Name'}
         loading={isLoading}
         onClick={removeBucket}

@@ -104,7 +104,7 @@ export const NodePoolsDisplay = (props: Props) => {
       {poolsError && <ErrorState errorText={poolsError[0].reason} />}
       <Stack spacing={2}>
         {_pools?.map((thisPool) => {
-          const { disk_encryption, id, nodes } = thisPool;
+          const { disk_encryption, id, nodes, tags } = thisPool;
 
           const thisPoolType = types?.find(
             (thisType) => thisType.id === thisPool.type
@@ -131,12 +131,14 @@ export const NodePoolsDisplay = (props: Props) => {
                 setIsRecycleNodeOpen(true);
               }}
               autoscaler={thisPool.autoscaler}
+              clusterId={clusterID}
               encryptionStatus={disk_encryption}
               handleClickResize={handleOpenResizeDrawer}
               isOnlyNodePool={pools?.length === 1}
               key={id}
               nodes={nodes ?? []}
               poolId={thisPool.id}
+              tags={tags}
               typeLabel={typeLabel}
             />
           );

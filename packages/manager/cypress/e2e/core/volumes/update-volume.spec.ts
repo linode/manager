@@ -1,10 +1,12 @@
-import { createVolume } from '@linode/api-v4/lib/volumes';
 import { Volume } from '@linode/api-v4';
+
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
+import { ui } from 'support/ui';
+import { createActiveVolume } from 'support/api/volumes';
 
 authenticate();
 describe('volume update flow', () => {
@@ -16,18 +18,17 @@ describe('volume update flow', () => {
   });
 
   /*
-   * - Confirms that volume label and tags can be changed from the Volumes landing page.
+   * - Confirms that volume label can be changed from the Volumes landing page.
    */
-  it("updates a volume's label and tags", () => {
+  it("updates a volume's label", () => {
     const volumeRequest = volumeRequestPayloadFactory.build({
       label: randomLabel(),
       region: chooseRegion().id,
     });
 
     const newLabel = randomLabel();
-    const newTags = [randomLabel(5), randomLabel(5), randomLabel(5)];
 
-    cy.defer(() => createVolume(volumeRequest), 'creating volume').then(
+    cy.defer(() => createActiveVolume(volumeRequest), 'creating volume').then(
       (volume: Volume) => {
         cy.visitWithLogin('/volumes', {
           // Temporarily force volume table to show up to 100 results per page.
@@ -43,16 +44,82 @@ describe('volume update flow', () => {
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            cy.findByText('Edit').click();
+            cy.findByText('active').should('be.visible');
           });
+        ui.actionMenu
+          .findByTitle(`Action menu for Volume ${volume.label}`)
+          .should('be.visible')
+          .click();
+        cy.get('[data-testid="Edit"]').click();
 
-        // Enter new label and add tags, click "Save Changes".
+        // Enter new label, click "Save Changes".
         cy.get('[data-qa-drawer="true"]').within(() => {
           cy.findByText('Edit Volume').should('be.visible');
           cy.findByDisplayValue(volume.label)
             .should('be.visible')
             .click()
             .type(`{selectall}{backspace}${newLabel}`);
+
+          cy.findByText('Save Changes').should('be.visible').click();
+        });
+
+        // Confirm new label is applied, click "Edit" to re-open drawer.
+        cy.findByText(newLabel).should('be.visible');
+        ui.actionMenu
+          .findByTitle(`Action menu for Volume ${newLabel}`)
+          .should('be.visible')
+          .click();
+        cy.get('[data-testid="Edit"]').click();
+
+        // Confirm new label is shown.
+        cy.get('[data-qa-drawer="true"]').within(() => {
+          cy.findByText('Edit Volume').should('be.visible');
+          cy.findByDisplayValue(newLabel).should('be.visible');
+        });
+      }
+    );
+  });
+
+  /*
+   * - Confirms that volume tags can be changed from the Volumes landing page.
+   */
+  it("updates volume's tags", () => {
+    const volumeRequest = volumeRequestPayloadFactory.build({
+      label: randomLabel(),
+      region: chooseRegion().id,
+    });
+
+    const newTags = [randomLabel(5), randomLabel(5), randomLabel(5)];
+
+    cy.defer(() => createActiveVolume(volumeRequest), 'creating volume').then(
+      (volume: Volume) => {
+        cy.visitWithLogin('/volumes', {
+          // Temporarily force volume table to show up to 100 results per page.
+          // This is a workaround while we wait to get stuck volumes removed.
+          // @TODO Remove local storage override when stuck volumes are removed from test accounts.
+          localStorageOverrides: {
+            PAGE_SIZE: 100,
+          },
+        });
+
+        // Confirm that volume is listed on landing page, click "Edit" to open drawer.
+        cy.findByText(volume.label)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            cy.findByText('active').should('be.visible');
+          });
+
+        ui.actionMenu
+          .findByTitle(`Action menu for Volume ${volume.label}`)
+          .should('be.visible')
+          .click();
+
+        cy.get('[data-testid="Manage Tags"]').click();
+
+        // Add tags, click "Save Changes".
+        cy.get('[data-qa-drawer="true"]').within(() => {
+          cy.findByText('Manage Volume Tags').should('be.visible');
 
           cy.findByPlaceholderText('Type to choose or create a tag.')
             .should('be.visible')
@@ -62,18 +129,18 @@ describe('volume update flow', () => {
           cy.findByText('Save Changes').should('be.visible').click();
         });
 
-        // Confirm new label is applied, click "Edit" to re-open drawer.
-        cy.findByText(newLabel)
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            cy.findByText('Edit').click();
-          });
+        // Confirm new tags are shown, click "Manage Volume Tags" to re-open drawer.
+        cy.findByText(volumeRequest.label).should('be.visible');
 
-        // Confirm new label and tags are shown.
+        ui.actionMenu
+          .findByTitle(`Action menu for Volume ${volume.label}`)
+          .should('be.visible')
+          .click();
+
+        cy.get('[data-testid="Manage Tags"]').click();
+
         cy.get('[data-qa-drawer="true"]').within(() => {
-          cy.findByText('Edit Volume').should('be.visible');
-          cy.findByDisplayValue(newLabel).should('be.visible');
+          cy.findByText('Manage Volume Tags').should('be.visible');
 
           // Click the tags input field to see all the selected tags
           cy.findByRole('combobox').should('be.visible').click();
@@ -84,5 +151,9 @@ describe('volume update flow', () => {
         });
       }
     );
+  });
+
+  after(() => {
+    cleanUp(['tags', 'volumes']);
   });
 });

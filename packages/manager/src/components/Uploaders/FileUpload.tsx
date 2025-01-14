@@ -13,7 +13,7 @@ import {
   StyledLeftWrapper,
   StyledRightWrapper,
   StyledRootContainer,
-  StyledUploadPending,
+  StyledUploadPendingIcon,
   useStyles,
 } from './FileUpload.styles';
 
@@ -113,7 +113,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
               width={22}
             />
           ) : (
-            <StyledUploadPending
+            <StyledUploadPendingIcon
               data-qa-file-upload-pending
               height={22}
               width={22}

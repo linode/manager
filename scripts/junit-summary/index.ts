@@ -48,7 +48,7 @@ const isTestSuites = (data: TestSuite | TestSuites): data is TestSuites => {
 
 const main = async (junitPath: string) => {
   try {
-    const reportPath = path.resolve(junitPath);
+    const reportPath = path.resolve(import.meta.dirname, '..', '..', junitPath);
     const summaryFormat = program.opts().format;
     const metadata: Metadata = {
       pipelineTitle: program.opts()['meta:title'],

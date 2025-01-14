@@ -3,7 +3,6 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import path from "path";
 import { deleteChangesets } from "./utils/deleteChangesets.mjs";
-import { incrementSemver } from "./utils/incrementSemver.mjs";
 import { initiateChangelogEntry } from "./utils/initiateChangelogEntry.mjs";
 import { logger } from "./utils/logger.mjs";
 import { populateChangelogEntry } from "./utils/populateChangelogEntry.mjs";

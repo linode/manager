@@ -2,14 +2,20 @@ import { filter, isNil } from 'ramda';
 
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import { SESSION_STICKINESS_DEFAULTS } from './constants';
+
 import type {
-  ExtendedNodeBalancerConfigNode,
   NodeBalancerConfigFields,
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from './types';
-import type { APIError } from '@linode/api-v4';
-import type { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
+import type {
+  APIError,
+  Algorithm,
+  NodeBalancerConfigNode,
+  Protocol,
+  Stickiness,
+} from '@linode/api-v4';
 
 export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
   address: '',
@@ -39,7 +45,7 @@ export const createNewNodeBalancerConfig = (
   proxy_protocol: 'none',
   ssl_cert: undefined,
   ssl_key: undefined,
-  stickiness: 'table',
+  stickiness: SESSION_STICKINESS_DEFAULTS['http'],
 });
 
 export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
@@ -51,7 +57,7 @@ export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
   weight: +node.weight!,
 });
 
-export const formatAddress = (node: ExtendedNodeBalancerConfigNode) => ({
+export const formatAddress = (node: NodeBalancerConfigNodeFields) => ({
   ...node,
   address: `${node.address}:${node.port}`,
 });
@@ -78,7 +84,7 @@ export const transformConfigsForRequest = (
   configs: NodeBalancerConfigFields[]
 ): NodeBalancerConfigFields[] => {
   return configs.map((config: NodeBalancerConfigFields) => {
-    return filter(
+    return (filter(
       /* remove the (key: value) pairs that we set to undefined */
       (el) => el !== undefined,
       {
@@ -93,7 +99,9 @@ export const transformConfigsForRequest = (
         check_interval: !isNil(config.check_interval)
           ? +config.check_interval
           : undefined,
-        check_passive: config.check_passive /* will be boolean or undefined */,
+        check_passive: shouldIncludePassiveCheck(config)
+          ? config.check_passive
+          : undefined,
         check_path: shouldIncludeCheckPath(config)
           ? config.check_path
           : undefined,
@@ -131,18 +139,8 @@ export const transformConfigsForRequest = (
             : config.ssl_key || undefined,
         stickiness: config.stickiness || undefined,
       }
-    ) as any;
-  }) as NodeBalancerConfigFields[];
-};
-
-/* Transform the Node fields in an array of Nodes into valid request data
-   Does not modify in-place, returns a deep clone of the Nodes */
-export const transformConfigNodesForRequest = (
-  nodes: NodeBalancerConfigNode[]
-): NodeBalancerConfigNodeFields[] => {
-  return nodes.map((node: NodeBalancerConfigNodeFields) =>
-    nodeForRequest(node)
-  );
+    ) as unknown) as NodeBalancerConfigFields;
+  });
 };
 
 export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
@@ -150,6 +148,11 @@ export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
     (config.check === 'http' || config.check === 'http_body') &&
     config.check_path
   );
+};
+
+const shouldIncludePassiveCheck = (config: NodeBalancerConfigFields) => {
+  // UDP does not support passive checks
+  return config.protocol !== 'udp';
 };
 
 export const shouldIncludeCheckBody = (config: NodeBalancerConfigFields) => {
@@ -186,3 +189,45 @@ export const setErrorMap = (errors: APIError[]) =>
     ],
     filteredErrors(errors)
   );
+
+interface AlgorithmOption {
+  label: string;
+  value: Algorithm;
+}
+
+export const getAlgorithmOptions = (protocol: Protocol): AlgorithmOption[] => {
+  if (protocol === 'udp') {
+    return [
+      { label: 'Round Robin', value: 'roundrobin' },
+      { label: 'Least Connections', value: 'leastconn' },
+      { label: 'Ring Hash', value: 'ring_hash' },
+    ];
+  }
+  return [
+    { label: 'Round Robin', value: 'roundrobin' },
+    { label: 'Least Connections', value: 'leastconn' },
+    { label: 'Source', value: 'source' },
+  ];
+};
+
+interface StickinessOption {
+  label: string;
+  value: Stickiness;
+}
+
+export const getStickinessOptions = (
+  protocol: Protocol
+): StickinessOption[] => {
+  if (protocol === 'udp') {
+    return [
+      { label: 'None', value: 'none' },
+      { label: 'Session', value: 'session' },
+      { label: 'Source IP', value: 'source_ip' },
+    ];
+  }
+  return [
+    { label: 'None', value: 'none' },
+    { label: 'Table', value: 'table' },
+    { label: 'HTTP Cookie', value: 'http_cookie' },
+  ];
+};

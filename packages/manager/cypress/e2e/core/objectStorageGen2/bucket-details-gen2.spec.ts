@@ -5,8 +5,6 @@ import {
   mockGetObjectStorageEndpoints,
   mockGetBucketAccess,
 } from 'support/intercepts/object-storage';
-import { checkRateLimitsTable } from 'support/util/object-storage-gen2';
-import { ui } from 'support/ui';
 import {
   accountFactory,
   objectStorageBucketFactoryGen2,
@@ -140,98 +138,6 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
 
         // confirms the SSL/TLS tab is not present
         cy.findByText('SSL/TLS').should('not.exist');
-      });
-    });
-  });
-
-  describe('Properties tab', () => {
-    ['E0', 'E1'].forEach((endpoint: ObjectStorageEndpointTypes) => {
-      /**
-       * Parameterized test for buckets with endpoint types of E0 and E1
-       * - Confirms the Properties tab is visible
-       * - Confirms there is no bucket rate limits table
-       */
-      it(`confirms the Properties tab does not have a rate limits table for buckets with endpoint type ${endpoint}`, () => {
-        const { mockBucket, mockEndpoint } = createMocksBasedOnEndpointType(
-          endpoint
-        );
-        const { cluster, label } = mockBucket;
-
-        mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
-          'getBucketsForRegion'
-        );
-        mockGetObjectStorageEndpoints([mockEndpoint]).as(
-          'getObjectStorageEndpoints'
-        );
-
-        cy.visitWithLogin(
-          `/object-storage/buckets/${cluster}/${label}/properties`
-        );
-        cy.wait([
-          '@getFeatureFlags',
-          '@getAccount',
-          '@getObjectStorageEndpoints',
-          '@getBucketsForRegion',
-        ]);
-
-        cy.findByText('Bucket Rate Limits').should('be.visible');
-        // confirms helper text
-        cy.contains(
-          'This endpoint type supports up to 750 Requests Per Second (RPS). Understand bucket rate limits'
-        ).should('be.visible');
-
-        // confirm bucket rate limit table should not exist
-        cy.get('[data-testid="bucket-rate-limit-table"]').should('not.exist');
-
-        // confirm 'Save' button is disabled (for now)
-        ui.button
-          .findByAttribute('label', 'Save')
-          .should('be.visible')
-          .should('be.disabled');
-      });
-    });
-
-    ['E2', 'E3'].forEach((endpoint: ObjectStorageEndpointTypes) => {
-      /**
-       * Parameterized test for buckets with endpoint types of E2 and E3
-       * - Confirms the Properties tab is visible
-       * - Confirms bucket rates limit table exists
-       */
-      it(`confirms the Properties tab and rate limits table for buckets with endpoint type ${endpoint}`, () => {
-        const { mockBucket, mockEndpoint } = createMocksBasedOnEndpointType(
-          endpoint
-        );
-        const { cluster, label } = mockBucket;
-
-        mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
-          'getBucketsForRegion'
-        );
-        mockGetObjectStorageEndpoints([mockEndpoint]).as(
-          'getObjectStorageEndpoints'
-        );
-
-        cy.visitWithLogin(
-          `/object-storage/buckets/${cluster}/${label}/properties`
-        );
-        cy.wait([
-          '@getFeatureFlags',
-          '@getAccount',
-          '@getObjectStorageEndpoints',
-          '@getBucketsForRegion',
-        ]);
-
-        cy.findByText('Bucket Rate Limits');
-        cy.contains(
-          'Specifies the maximum Requests Per Second (RPS) for a bucket. To increase it to High, open a support ticket. Understand bucket rate limits.'
-        ).should('be.visible');
-        // Confirm bucket rate limits table exists with correct values
-        checkRateLimitsTable(endpoint);
-
-        // confirm 'Save' button is disabled (for now)
-        ui.button
-          .findByAttribute('label', 'Save')
-          .should('be.visible')
-          .should('be.disabled');
       });
     });
   });

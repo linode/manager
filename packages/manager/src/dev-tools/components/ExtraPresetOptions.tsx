@@ -3,12 +3,19 @@ import * as React from 'react';
 import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import { extraMockPresets } from 'src/mocks/presets';
 
+import { ExtraPresetAccount } from './ExtraPresetAccount';
 import { ExtraPresetOptionCheckbox } from './ExtraPresetOptionCheckbox';
 import { ExtraPresetOptionSelect } from './ExtraPresetOptionSelect';
+import { ExtraPresetProfile } from './ExtraPresetProfile';
+
+import type { Account, Profile } from '@linode/api-v4';
 
 export interface ExtraPresetOptionsProps {
-  disabled: boolean;
+  customAccountData?: Account | null;
+  customProfileData?: Profile | null;
   handlers: string[];
+  onCustomAccountChange?: (data: Account | null | undefined) => void;
+  onCustomProfileChange?: (data: Profile | null | undefined) => void;
   onPresetCountChange: (e: React.ChangeEvent, presetId: string) => void;
   onSelectChange: (e: React.ChangeEvent, presetId: string) => void;
   onTogglePreset: (e: React.ChangeEvent, presetId: string) => void;
@@ -19,8 +26,11 @@ export interface ExtraPresetOptionsProps {
  * Renders a list of extra presets with an optional count.
  */
 export const ExtraPresetOptions = ({
-  disabled,
+  customAccountData,
+  customProfileData,
   handlers,
+  onCustomAccountChange,
+  onCustomProfileChange,
   onPresetCountChange,
   onSelectChange,
   onTogglePreset,
@@ -46,7 +56,6 @@ export const ExtraPresetOptions = ({
               <strong>{group}</strong>{' '}
               {currentGroupType === 'select' && (
                 <ExtraPresetOptionSelect
-                  disabled={disabled}
                   group={group}
                   handlers={handlers}
                   onSelectChange={onSelectChange}
@@ -56,12 +65,27 @@ export const ExtraPresetOptions = ({
             </li>
             {currentGroupType === 'checkbox' && (
               <ExtraPresetOptionCheckbox
-                disabled={disabled}
                 group={group}
                 handlers={handlers}
                 onPresetCountChange={onPresetCountChange}
                 onTogglePreset={onTogglePreset}
                 presetsCountMap={presetsCountMap}
+              />
+            )}
+            {currentGroupType === 'account' && (
+              <ExtraPresetAccount
+                customAccountData={customAccountData}
+                handlers={handlers}
+                onFormChange={onCustomAccountChange}
+                onTogglePreset={onTogglePreset}
+              />
+            )}
+            {currentGroupType === 'profile' && (
+              <ExtraPresetProfile
+                customProfileData={customProfileData}
+                handlers={handlers}
+                onFormChange={onCustomProfileChange}
+                onTogglePreset={onTogglePreset}
               />
             )}
           </div>

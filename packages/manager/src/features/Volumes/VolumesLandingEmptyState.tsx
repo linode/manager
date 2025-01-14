@@ -1,5 +1,5 @@
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
@@ -16,7 +16,7 @@ import {
 } from './VolumesLandingEmptyStateData';
 
 export const VolumesLandingEmptyState = () => {
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_volumes',
@@ -36,7 +36,7 @@ export const VolumesLandingEmptyState = () => {
                 category: linkAnalyticsEvent.category,
                 label: 'Create Volume',
               });
-              push('/volumes/create');
+              navigate({ to: '/volumes/create' });
             },
             tooltipText: getRestrictedResourceText({
               action: 'create',

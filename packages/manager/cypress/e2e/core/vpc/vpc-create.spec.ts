@@ -71,7 +71,8 @@ describe('VPC create flow', () => {
       subnets: mockSubnets,
     });
 
-    const ipValidationErrorMessage = 'The IPv4 range must be in CIDR format';
+    const ipValidationErrorMessage1 = 'A subnet must have an IPv4 range.';
+    const ipValidationErrorMessage2 = 'The IPv4 range must be in CIDR format.';
     const vpcCreationErrorMessage = 'An unknown error has occurred.';
     const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets(mockSubnets);
 
@@ -111,7 +112,7 @@ describe('VPC create flow', () => {
       .should('be.enabled')
       .click();
 
-    cy.findByText(ipValidationErrorMessage).should('be.visible');
+    cy.findByText(ipValidationErrorMessage1).should('be.visible');
 
     // Enter a random non-IP address string to further test client side validation.
     cy.findByText('Subnet IP Address Range')
@@ -126,7 +127,7 @@ describe('VPC create flow', () => {
       .should('be.enabled')
       .click();
 
-    cy.findByText(ipValidationErrorMessage).should('be.visible');
+    cy.findByText(ipValidationErrorMessage2).should('be.visible');
 
     // Enter a valid IP address with an invalid network prefix to further test client side validation.
     cy.findByText('Subnet IP Address Range')
@@ -141,7 +142,7 @@ describe('VPC create flow', () => {
       .should('be.enabled')
       .click();
 
-    cy.findByText(ipValidationErrorMessage).should('be.visible');
+    cy.findByText(ipValidationErrorMessage2).should('be.visible');
 
     // Replace invalid IP address range with valid range.
     cy.findByText('Subnet IP Address Range')
@@ -180,10 +181,12 @@ describe('VPC create flow', () => {
     getSubnetNodeSection(1)
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label is required').should('be.visible');
+        cy.findByText('Label must be between 1 and 64 characters.').should(
+          'be.visible'
+        );
 
         // Delete subnet.
-        cy.findByLabelText('Remove Subnet')
+        cy.findByLabelText('Remove Subnet 1')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -300,7 +303,7 @@ describe('VPC create flow', () => {
     getSubnetNodeSection(0)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Remove Subnet')
+        cy.findByLabelText('Remove Subnet 0')
           .should('be.visible')
           .should('be.enabled')
           .click();

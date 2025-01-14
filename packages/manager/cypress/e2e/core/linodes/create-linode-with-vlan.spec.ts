@@ -42,7 +42,7 @@ describe('Create Linode with VLANs', () => {
 
     // Fill out necessary Linode create fields.
     linodeCreatePage.selectRegionById(mockLinodeRegion.id);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.setLabel(mockLinode.label);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
@@ -130,7 +130,7 @@ describe('Create Linode with VLANs', () => {
 
     // Fill out necessary Linode create fields.
     linodeCreatePage.selectRegionById(mockLinodeRegion.id);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.setLabel(mockLinode.label);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));

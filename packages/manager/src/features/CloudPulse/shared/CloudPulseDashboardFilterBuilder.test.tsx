@@ -13,10 +13,11 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
           service_type: 'linode',
         })}
         emitFilterChange={vi.fn()}
+        handleToggleAppliedFilter={vi.fn()}
         isServiceAnalyticsIntegration={false}
       />
     );
-
+    expect(getByTestId('tags-select')).toBeDefined();
     expect(getByTestId('resource-select')).toBeDefined();
     expect(getByTestId('region-select')).toBeDefined();
   });
@@ -28,6 +29,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
           service_type: 'dbaas',
         })}
         emitFilterChange={vi.fn()}
+        handleToggleAppliedFilter={vi.fn()}
         isServiceAnalyticsIntegration={false}
       />
     );

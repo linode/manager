@@ -6,6 +6,7 @@ import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { StackScript as _StackScript } from 'src/components/StackScript/StackScript';
@@ -114,6 +115,7 @@ export const StackScriptsDetail = () => {
 
   return (
     <>
+      <DocumentTitleSegment segment={`${stackScript.label} | StackScripts`} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

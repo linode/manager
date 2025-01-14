@@ -1,9 +1,11 @@
-import { Box, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 import {
   StyledContainerGrid,
@@ -17,6 +19,7 @@ interface Props {
 
 export const InstallationInstructions = React.memo((props: Props) => {
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
+  const theme = useTheme();
 
   return (
     <Grid container spacing={2}>
@@ -41,9 +44,22 @@ export const InstallationInstructions = React.memo((props: Props) => {
               paddingTop: 0,
             }}
           >
-            <pre>
-              <code>{command}</code>
-            </pre>
+            <MaskableText
+              sxVisibilityTooltip={{
+                '& svg': {
+                  height: 'auto',
+                  width: '20px',
+                },
+                marginRight: '24px',
+              }}
+              iconPosition="start"
+              isToggleable
+              text={command}
+            >
+              <pre>
+                <code>{command}</code>
+              </pre>
+            </MaskableText>
           </Grid>
         </StyledContainerGrid>
       </Grid>
@@ -71,15 +87,16 @@ export const InstallationInstructions = React.memo((props: Props) => {
             </Typography>
           </StyledInstructionGrid>
           <StyledInstructionGrid>
-            <Typography data-testid="api-key">
-              API Key:{' '}
-              <Box
-                component="span"
-                sx={(theme) => ({ color: theme.color.grey1 })}
-              >
-                {props.APIKey}
-              </Box>
+            <Typography data-testid="api-key" sx={{ marginRight: 0.5 }}>
+              API Key:
             </Typography>
+            <MaskableText
+              iconPosition="start"
+              isToggleable
+              sxTypography={{ color: theme.color.grey1 }}
+              sxVisibilityTooltip={{ marginLeft: 1 }}
+              text={props.APIKey}
+            />
           </StyledInstructionGrid>
         </Grid>
       </Grid>

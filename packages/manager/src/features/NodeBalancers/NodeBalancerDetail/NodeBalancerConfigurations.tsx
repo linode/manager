@@ -7,7 +7,7 @@ import {
   getNodeBalancerConfigs,
   updateNodeBalancerConfig,
   updateNodeBalancerConfigNode,
-} from '@linode/api-v4/lib/nodebalancers';
+} from '@linode/api-v4';
 import { Accordion, Box, Button, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import {
@@ -49,12 +49,13 @@ import type {
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from '../types';
-import type { Grants } from '@linode/api-v4';
 import type {
+  APIError,
+  Grants,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
-} from '@linode/api-v4/lib/nodebalancers';
-import type { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+  ResourcePage,
+} from '@linode/api-v4';
 import type { Lens } from 'ramda';
 import type { RouteComponentProps } from 'react-router-dom';
 import type { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';

@@ -33,6 +33,7 @@ describe('LinodeRow', () => {
         }}
         alerts={linode.alerts}
         backups={linode.backups}
+        capabilities={linode.capabilities}
         created={linode.created}
         group={linode.group}
         hypervisor={linode.hypervisor}

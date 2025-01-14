@@ -188,11 +188,9 @@ describe('formatProgressEvent', () => {
       seconds: 1,
     });
     vi.setSystemTime(currentDateMock.toJSDate());
-    const { progressEventDisplay, showProgress } = formatProgressEvent(
-      mockEvent1
-    );
+    const { progressEventDate, showProgress } = formatProgressEvent(mockEvent1);
 
-    expect(progressEventDisplay).toBe('1 second ago');
+    expect(progressEventDate).toBe('1 second ago');
     expect(showProgress).toBe(false);
   });
 
@@ -201,21 +199,19 @@ describe('formatProgressEvent', () => {
       seconds: 1,
     });
     vi.setSystemTime(currentDateMock.toJSDate());
-    const { progressEventDisplay, showProgress } = formatProgressEvent(
-      mockEvent2
-    );
+    const { progressEventDate, showProgress } = formatProgressEvent(mockEvent2);
 
-    expect(progressEventDisplay).toBe('Started 1 second ago');
+    expect(progressEventDate).toBe('Started 1 second ago');
     expect(showProgress).toBe(true);
   });
 
   it('returns the correct format for a "started" event with time remaining', () => {
-    const { progressEventDisplay, showProgress } = formatProgressEvent({
+    const { progressEventDuration, showProgress } = formatProgressEvent({
       ...mockEvent2,
 
       time_remaining: '0:50:00',
     });
-    expect(progressEventDisplay).toBe('~50 minutes remaining');
+    expect(progressEventDuration).toBe('~50 minutes remaining');
     expect(showProgress).toBe(true);
   });
 });

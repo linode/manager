@@ -13,7 +13,6 @@ export const ExtraPresetOptionCheckbox = (
   props: ExtraPresetOptionCheckboxProps
 ) => {
   const {
-    disabled,
     group,
     handlers,
     onPresetCountChange,
@@ -32,18 +31,14 @@ export const ExtraPresetOptionCheckbox = (
             style={{ display: 'flex', justifyContent: 'space-between' }}
           >
             <div>
-              <input
-                style={{
-                  marginRight: 12,
-                }}
-                checked={handlers.includes(extraMockPreset.id)}
-                disabled={disabled}
-                onChange={(e) => onTogglePreset(e, extraMockPreset.id)}
-                type="checkbox"
-              />
-              <span title={extraMockPreset.desc || extraMockPreset.label}>
+              <label title={extraMockPreset.desc || extraMockPreset.label}>
+                <input
+                  checked={handlers.includes(extraMockPreset.id)}
+                  onChange={(e) => onTogglePreset(e, extraMockPreset.id)}
+                  type="checkbox"
+                />
                 {extraMockPreset.label}
-              </span>
+              </label>
             </div>
             {extraMockPreset.canUpdateCount && (
               <div
@@ -89,7 +84,7 @@ export const ExtraPresetOptionCheckbox = (
                     (presetsCountMap[extraMockPreset.id] || '0')
                   }
                   aria-label={`Value for ${extraMockPreset.label}`}
-                  disabled={disabled || !handlers.includes(extraMockPreset.id)}
+                  disabled={!handlers.includes(extraMockPreset.id)}
                   min={0}
                   style={{ paddingLeft: '20px', width: '100%' }}
                   type="number"

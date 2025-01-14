@@ -23,6 +23,7 @@ export interface KubeNodePoolResponse {
   count: number;
   id: number;
   nodes: PoolNodeResponse[];
+  tags: string[];
   type: string;
   autoscaler: AutoscaleSettings;
   disk_encryption?: EncryptionStatus; // @TODO LDE: remove optionality once LDE is fully rolled out
@@ -42,6 +43,7 @@ export interface CreateNodePoolData {
 export interface UpdateNodePoolData {
   autoscaler: AutoscaleSettings;
   count: number;
+  tags: string[];
 }
 
 export interface AutoscaleSettings {

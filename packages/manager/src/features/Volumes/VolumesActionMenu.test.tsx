@@ -2,9 +2,11 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { volumeFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
-import { Props, VolumesActionMenu } from './VolumesActionMenu';
+import { VolumesActionMenu } from './VolumesActionMenu';
+
+import type { Props } from './VolumesActionMenu';
 
 const volume = volumeFactory.build({ linode_id: null, linode_label: null });
 
@@ -16,6 +18,7 @@ const props: Props = {
     handleDetach: vi.fn(),
     handleDetails: vi.fn(),
     handleEdit: vi.fn(),
+    handleManageTags: vi.fn(),
     handleResize: vi.fn(),
     handleUpgrade: vi.fn(),
   },
@@ -25,7 +28,7 @@ const props: Props = {
 
 describe('Volume action menu', () => {
   it('should include basic Volume actions', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
       <VolumesActionMenu {...props} />
     );
 
@@ -41,7 +44,11 @@ describe('Volume action menu', () => {
   });
 
   it('should include Attach if the Volume is not attached', async () => {
-    const { getByLabelText, getByText, queryByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByText,
+      queryByText,
+    } = await renderWithThemeAndRouter(
       <VolumesActionMenu {...props} isVolumesLanding={true} />
     );
 
@@ -61,7 +68,11 @@ describe('Volume action menu', () => {
       linode_label: 'linode-2',
     });
 
-    const { getByLabelText, getByText, queryByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByText,
+      queryByText,
+    } = await renderWithThemeAndRouter(
       <VolumesActionMenu {...props} volume={attachedVolune} />
     );
 
@@ -76,7 +87,7 @@ describe('Volume action menu', () => {
   });
 
   it('should include Delete', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
       <VolumesActionMenu {...props} />
     );
 

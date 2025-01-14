@@ -40,6 +40,7 @@ export interface PlansPanelProps {
   handleTabChange?: (index: number) => void;
   header?: string;
   isCreate?: boolean;
+  isLegacyDatabase?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   regionsData?: Region[];
@@ -72,6 +73,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     handleTabChange,
     header,
     isCreate,
+    isLegacyDatabase,
     linodeID,
     onSelect,
     regionsData,
@@ -150,6 +152,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
         disableLargestGbPlansFlag: flags.disableLargestGbPlans,
         disabledClasses,
         disabledSmallerPlans,
+        isLegacyDatabase,
         plans: plansMap,
         regionAvailabilities,
         selectedRegionId: selectedRegionID,

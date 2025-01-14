@@ -26,7 +26,8 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     },
     {
       text: 'Create and Manage Block Storage Volumes',
-      to: 'https://techdocs.akamai.com/cloud-computing/docs/block-storage',
+      to:
+        'https://techdocs.akamai.com/cloud-computing/docs/manage-block-storage-volumes',
     },
     {
       text: 'Configure a Volume on a Compute Instance',

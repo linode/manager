@@ -29,16 +29,15 @@ export const SeedOptions = ({
             .filter((dbSeeder) => dbSeeder.group.id === group)
             .map((dbSeeder) => (
               <li key={dbSeeder.id}>
-                <input
-                  checked={seeders.includes(dbSeeder.id)}
-                  disabled={disabled}
-                  onChange={(e) => onToggleSeeder(e, dbSeeder.id)}
-                  style={{ marginRight: 12 }}
-                  type="checkbox"
-                />
-                <span title={dbSeeder.desc || dbSeeder.label}>
+                <label title={dbSeeder.desc || dbSeeder.label}>
+                  <input
+                    checked={seeders.includes(dbSeeder.id)}
+                    disabled={disabled}
+                    onChange={(e) => onToggleSeeder(e, dbSeeder.id)}
+                    type="checkbox"
+                  />
                   {dbSeeder.label}
-                </span>
+                </label>
                 {dbSeeder.canUpdateCount && (
                   <input
                     onBlur={(e) => {
