@@ -14,25 +14,9 @@ componentTests('PasswordInput', (mount) => {
   describe('PasswordInput interactions', () => {
     /**
      * - Confirms password text starts hidden
-     * - Confirms password text can be shown after clicking eye button
+     * - Confirms password text can be revealed or hidden when toggling visibility icon
      */
-    it('can show password text', () => {
-      mount(<PasswordInput {...props} />);
-
-      // Password textfield starts off as 'password' type
-      cy.get('[type="password"]').should('be.visible');
-      cy.findByTestId('VisibilityIcon').should('be.visible').click();
-      cy.findByTestId('VisibilityIcon').should('not.exist');
-
-      // After clicking the visibility icon, textfield becomes a normal textfield
-      cy.get('[type="password"]').should('not.exist');
-      cy.get('[type="text"]').should('be.visible');
-    });
-
-    /**
-     * - Confirms password text can be hidden again after being revealed
-     */
-    it('can hide password text', () => {
+    it('can show and hide password text', () => {
       mount(<PasswordInput {...props} />);
 
       // Password textfield starts off as 'password' type
@@ -77,7 +61,8 @@ componentTests('PasswordInput', (mount) => {
     });
 
     /**
-     * - Confirms password input displays when a fair password is entered
+     * - Confirm password indicator can update when a password is entered
+     * - Confirms password input can display indicator for a fair password
      */
     it('displays an indicator for a fair password', () => {
       const TestMediumStrength = () => {
@@ -93,17 +78,21 @@ componentTests('PasswordInput', (mount) => {
 
       mount(<TestMediumStrength />);
 
-      // Starts off as 'Weak' if no password entered
+      // Starts off as 'Weak' when no password entered
       cy.findByText('Weak').should('be.visible');
 
       cy.findByTestId('textfield-input')
         .should('be.visible')
         .type('fair-pass1');
+
+      // After typing in a fair password, the strength indicator updates
       cy.findByText('Fair').should('be.visible');
+      cy.findByText('Weak').should('not.exist');
     });
 
     /**
-     * - Confirms password input displays when a good password is entered
+     * - Confirm password indicator can update when a password is entered
+     * - Confirms password input can display indicator for a good password
      */
     it('displays an indicator for a "good" password', () => {
       const TestGoodStrength = () => {
@@ -119,13 +108,16 @@ componentTests('PasswordInput', (mount) => {
 
       mount(<TestGoodStrength />);
 
-      // Starts off as 'Weak' if no password entered
+      // Starts off as 'Weak' when no password entered
       cy.findByText('Weak').should('be.visible');
 
       cy.findByTestId('textfield-input')
         .should('be.visible')
-        .type('st0ng!!-password1!!');
+        .type('str0ng!!-password1!!');
+
+      // After typing in a strong password, the strength indicator updates
       cy.findByText('Good').should('be.visible');
+      cy.findByText('Weak').should('not.exist');
     });
   });
 
