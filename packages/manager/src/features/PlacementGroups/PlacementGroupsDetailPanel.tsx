@@ -81,7 +81,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
           spacingTop={16}
           variant="warning"
         >
-          <Typography fontFamily={theme.font.bold}>
+          <Typography sx={{ font: theme.font.bold }}>
             Select a Region for your Linode to see existing placement groups.
           </Typography>
         </Notice>
@@ -93,7 +93,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
           spacingTop={16}
           variant="warning"
         >
-          <Typography fontFamily={theme.font.bold}>
+          <Typography sx={{ font: theme.font.bold }}>
             Currently, only specific{' '}
             <TextTooltip
               sxTypography={{

@@ -76,7 +76,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
                     Learn more.
                   </Link>
                   {isLinodeOffline && (
-                    <Typography fontFamily={theme.font.bold} sx={{ mt: 1 }}>
+                    <Typography sx={{ font: theme.font.bold, mt: 1 }}>
                       Your Linode must be powered on to select a warm resize.
                     </Typography>
                   )}
