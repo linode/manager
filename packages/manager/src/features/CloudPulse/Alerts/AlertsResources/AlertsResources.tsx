@@ -104,8 +104,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               debounceTime={300}
               hideLabel
               isSearching={false}
-              label="Search for a Resource"
-              placeholder="Search for a Resource"
+              label="Search for a Region or Resource"
+              placeholder="Search for a Region or Resource"
               value={searchText ?? ''}
             />
           </Grid>
