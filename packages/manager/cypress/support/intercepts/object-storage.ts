@@ -67,10 +67,32 @@ export const mockGetBucketsForRegion = (
   regionId: string,
   buckets: ObjectStorageBucket[]
 ): Cypress.Chainable<null> => {
+  console.log('mockGetBucketsForRegion', regionId);
   return cy.intercept(
     'GET',
     apiMatcher(`object-storage/buckets/${regionId}*`),
     paginateResponse(buckets)
+  );
+};
+
+/**
+ * Intercepts POST request to create a bucket and mocks an error response.
+ *
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetBucketsForRegionError = (
+  regionId: string,
+  errorMessage: string = 'An unknown error occurred.',
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  console.log('mockGetBucketsForRegionError', regionId);
+  return cy.intercept(
+    'GET',
+    apiMatcher(`object-storage/buckets/${regionId}*`),
+    makeErrorResponse(errorMessage, statusCode)
   );
 };
 
