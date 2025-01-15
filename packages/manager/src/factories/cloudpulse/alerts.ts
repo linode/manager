@@ -1,6 +1,31 @@
 import Factory from 'src/factories/factoryProxy';
 
+import type {
+  AlertDefinitionDimensionFilter,
+  AlertDefinitionMetricCriteria,
+} from '@linode/api-v4';
 import type { Alert } from '@linode/api-v4';
+
+export const alertDimensionsFactory = Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>(
+  {
+    dimension_label: 'operating_system',
+    label: 'Operating System',
+    operator: 'eq',
+    value: 'Linux',
+  }
+);
+
+export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>(
+  {
+    aggregation_type: 'avg',
+    dimension_filters: alertDimensionsFactory.buildList(1),
+    label: 'CPU Usage',
+    metric: 'cpu_usage',
+    operator: 'eq',
+    threshold: 60,
+    unit: 'Bytes',
+  }
+);
 
 export const alertFactory = Factory.Sync.makeFactory<Alert>({
   channels: [],

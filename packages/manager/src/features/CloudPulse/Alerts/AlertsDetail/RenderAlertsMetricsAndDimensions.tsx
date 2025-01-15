@@ -1,10 +1,15 @@
-import { Divider, Grid } from '@mui/material';
+import { Divider } from '@linode/ui';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
-import { aggregationTypes, operators } from '../constants';
-import { DisplayAlertChips } from './AlertDetailChips';
+import {
+  aggregationTypeMap,
+  dimensionOperatorTypeMap,
+  metricOperatorTypeMap,
+} from '../constants';
+import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 
 import type { AlertDefinitionMetricCriteria } from '@linode/api-v4';
 
@@ -21,7 +26,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
   (props: AlertMetricAndDimensionsProp) => {
     const { ruleCriteria } = props;
 
-    if (!Boolean(ruleCriteria.rules?.length)) {
+    if (!ruleCriteria.rules?.length) {
       return <NullComponent />;
     }
 
@@ -35,34 +40,39 @@ export const RenderAlertMetricsAndDimensions = React.memo(
           threshold,
           unit,
         },
-        idx
+        index
       ) => (
-        <React.Fragment key={idx}>
+        <React.Fragment key={`${label}_${index}`}>
           <Grid item xs={12}>
-            <DisplayAlertChips
+            <DisplayAlertDetailChips // build the metric threshold chip like aggregation|label|metric_operator|threshold|unit
               values={[
-                aggregationType
-                  ? aggregationTypes[aggregationType]
-                  : aggregationType,
+                aggregationTypeMap[aggregationType],
                 label,
-                operator ? operators[operator] : operator,
+                metricOperatorTypeMap[operator],
                 String(threshold),
                 unit,
               ]}
-              isJoin
               label="Metric Threshold"
+              mergeChips
             />
           </Grid>
-          {dimensionFilters !== undefined && dimensionFilters.length > 0 && (
+
+          {dimensionFilters && dimensionFilters.length > 0 && (
             <Grid item xs={12}>
-              <DisplayAlertChips
-                values={dimensionFilters.map(({ label, operator, value }) => [
-                  label,
-                  operator,
-                  value,
-                ])}
-                isJoin
+              <DisplayAlertDetailChips // build the dimensions associated with metric threshold like label|dimension_operator|value
+                values={dimensionFilters.map(
+                  ({
+                    label: dimensionLabel,
+                    operator: dimensionOperator,
+                    value,
+                  }) => [
+                    dimensionLabel,
+                    dimensionOperatorTypeMap[dimensionOperator],
+                    value,
+                  ]
+                )}
                 label="Dimension Filter"
+                mergeChips
               />
             </Grid>
           )}
