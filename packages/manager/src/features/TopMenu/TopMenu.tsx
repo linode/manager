@@ -42,6 +42,10 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
     theme.breakpoints.down(960)
   );
 
+  const isMobileViewport = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up(430)
+  );
+
   return (
     <>
       {loggedInAsCustomer && <InternalAdminBanner username={username} />}
@@ -72,21 +76,23 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             flexGrow={1}
             flexShrink={0}
           >
-            <Link
-              aria-label="Akamai - Dashboard"
-              style={{ lineHeight: 0 }}
-              title="Akamai - Dashboard"
-              to={`/dashboard`}
-            >
-              <StyledAkamaiLogo
-                sx={{
-                  width: {
-                    md: 83,
-                    xs: 79,
-                  },
-                }}
-              />
-            </Link>
+            {isMobileViewport && (
+              <Link
+                aria-label="Akamai - Dashboard"
+                style={{ lineHeight: 0 }}
+                title="Akamai - Dashboard"
+                to={`/dashboard`}
+              >
+                <StyledAkamaiLogo
+                  sx={{
+                    width: {
+                      md: 83,
+                      xs: 79,
+                    },
+                  }}
+                />
+              </Link>
+            )}
             <Box flexGrow={1} flexShrink={0}>
               <SearchBar />
             </Box>

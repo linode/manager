@@ -19,6 +19,8 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@fontsource/fira-code": "^5.1.1",
+    "@fontsource/nunito-sans": "^5.1.1",
     "@hookform/resolvers": "3.9.1",
     "@linode/api-v4": "*",
     "@linode/design-language-system": "^2.11.1",
@@ -118,6 +120,7 @@
     ]
   },
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "^2.2.5",
     "@linode/eslint-plugin-cloud-manager": "^0.0.5",
     "@storybook/addon-a11y": "^8.3.0",
     "@storybook/addon-actions": "^8.3.0",
@@ -169,7 +172,6 @@
     "@types/zxcvbn": "^4.4.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "@4tw/cypress-drag-drop": "^2.2.5",
     "@vitejs/plugin-react-swc": "^3.7.0",
     "@vitest/coverage-v8": "^2.1.1",
     "@vitest/ui": "^2.1.1",
