@@ -53,7 +53,7 @@ const StyledBetaChip = styled(Chip, {
   '& .MuiChip-label': {
     padding: 0,
   },
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '0.625rem',
   height: 16,
   letterSpacing: '.25px',

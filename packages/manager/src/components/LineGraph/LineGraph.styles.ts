@@ -37,7 +37,7 @@ export const StyledButton = styled(Button, {
     color: theme.color.headline,
   },
   color: theme.color.headline,
-  fontFamily: theme.font.normal,
+  font: theme.font.normal,
   fontSize: '0.75rem',
   justifyContent: 'flex-start',
   margin: 0,

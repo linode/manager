@@ -1,3 +1,4 @@
+import { Typography as FontTypography } from '@linode/design-language-system';
 import { Global } from '@linode/design-language-system';
 import { Accordion, Box, Divider, omittedProps } from '@linode/ui';
 import { Chip, styled } from '@mui/material';
@@ -43,7 +44,7 @@ export const StyledDivider = styled(Divider, {
 export const StyledActiveLink = styled(Link, {
   label: 'StyledActiveLink',
   shouldForwardProp: omittedProps(['isActiveLink', 'isCollapsed']),
-})<{ isActiveLink: boolean; isCollapsed: boolean }>(({ theme, ...props }) => ({
+})<{ isActiveLink: boolean; isCollapsed: boolean }>(({ ...props }) => ({
   ...(!props.isActiveLink && {
     '&:hover': {
       '.primaryNavLink': {
@@ -58,12 +59,14 @@ export const StyledActiveLink = styled(Link, {
   alignItems: 'center',
   cursor: 'pointer',
   display: 'flex',
+  font: FontTypography.Body.Semibold,
   minWidth: SIDEBAR_WIDTH,
   padding: '7px 16px',
   paddingLeft: 50,
   position: 'relative',
   ...(props.isActiveLink && {
     backgroundColor: Global.Color.Neutrals[100],
+    font: FontTypography.Body.Bold,
   }),
 }));
 
@@ -76,9 +79,7 @@ export const StyledPrimaryLinkBox = styled(Box, {
     ? Global.Color.Brand[60]
     : Global.Color.Neutrals['White'],
   display: 'flex',
-  // TODO: Enable token once we have imported Nunito
-  // font: theme.tokens.typography.Label.Semibold.S,
-  fontFamily: 'LatoWeb',
+  font: theme.tokens.typography.Label.Semibold.S,
   justifyContent: 'space-between',
   transition: theme.transitions.create(['color', 'opacity']),
   width: '100%',
@@ -108,7 +109,9 @@ export const StyledAccordion = styled(Accordion, {
     '& h3': {
       '& p': {
         color: Global.Color.Neutrals['White'],
-        fontFamily: props.isActiveProductFamily ? 'LatoWebBold' : 'LatoWeb',
+        font: props.isActiveProductFamily
+          ? theme.tokens.typography.Label.Bold.S
+          : theme.tokens.typography.Label.Semibold.S,
         transition: theme.transitions.create(['opacity']),
         ...(props.isCollapsed && {
           opacity: 0,
@@ -126,8 +129,7 @@ export const StyledAccordion = styled(Accordion, {
       },
       alignItems: 'center',
       display: 'flex',
-      // TODO: Enable token once we have imported Nunito
-      // font: theme.tokens.typography.Label.Bold.S,
+      font: theme.tokens.typography.Label.Bold.S,
       padding: '0 10px',
     },
     '.MuiAccordionDetails-root': {

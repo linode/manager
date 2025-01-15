@@ -16,7 +16,7 @@ export const StyledHeading = styled('h3', {
   alignItems: 'center',
   color: theme.name === 'dark' ? theme.tokens.color.Neutrals[50] : 'inherit',
   display: 'flex',
-  fontFamily: 'LatoWebBold',
+  font: theme.font.bold,
   fontSize: '0.7rem',
   letterSpacing: '1px',
   margin: 0,
@@ -70,7 +70,7 @@ export const StyledLinkTypography = styled(Typography, {
   label: 'StyledLinkTypography',
 })(({ theme }) => ({
   color: theme.color.offBlack,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '1rem',
   lineHeight: '1.4rem',
 }));

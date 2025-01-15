@@ -183,7 +183,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
               with "username:", "label:", or "description:".
             </Typography>
             <Box>
-              <Typography fontFamily={(theme) => theme.font.bold}>
+              <Typography sx={(theme) => ({ font: theme.font.bold })}>
                 Examples
               </Typography>
               <Typography fontSize="0.8rem">

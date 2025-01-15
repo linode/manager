@@ -13,6 +13,13 @@ export const EnableTableStriping = () => {
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
+  React.useEffect(() => {
+    // Setting the default value to true
+    if (isTableStripingEnabled === undefined) {
+      updatePreferences({ isTableStripingEnabled: true });
+    }
+  }, [isTableStripingEnabled, updatePreferences]);
+
   return (
     <Paper>
       <Typography marginBottom={1} variant="h2">

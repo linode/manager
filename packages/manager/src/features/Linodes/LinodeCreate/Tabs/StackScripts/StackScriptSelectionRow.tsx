@@ -43,7 +43,7 @@ export const StackScriptSelectionRow = (props: Props) => {
               {stackscript.username} /{' '}
               <Typography
                 component="span"
-                fontFamily={(theme) => theme.font.bold}
+                sx={(theme) => ({ font: theme.font.bold })}
               >
                 {stackscript.label}
               </Typography>

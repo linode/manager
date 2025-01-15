@@ -185,7 +185,7 @@ const StyledChip = styled(Chip, {
     paddingRight: 2,
   },
   borderRadius: props.showPlus ? 12 : '50%',
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '0.72rem',
   height: 18,
   justifyContent: 'center',

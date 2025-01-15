@@ -223,10 +223,10 @@ export const AreaChart = (props: AreaChartProps) => {
               justifyContent="space-between"
               key={item.dataKey}
             >
-              <Typography fontFamily={theme.font.bold}>
+              <Typography sx={{ font: theme.font.bold }}>
                 {item.dataKey}
               </Typography>
-              <Typography fontFamily={theme.font.bold} marginLeft={2}>
+              <Typography sx={{ font: theme.font.bold }} marginLeft={2}>
                 {tooltipValueFormatter(item.value, unit)}
               </Typography>
             </Box>
@@ -302,7 +302,7 @@ export const AreaChart = (props: AreaChartProps) => {
             }}
             itemStyle={{
               color: theme.tokens.color.Neutrals[70],
-              fontFamily: theme.font.bold,
+              font: theme.font.bold,
             }}
             content={<CustomTooltip />}
           />
