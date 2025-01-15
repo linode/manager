@@ -1,5 +1,7 @@
 // This component was built assuming an unmodified MUI <Table />
 import { Box, Typography } from '@linode/ui';
+import { Typography as FontTypography } from '@linode/design-language-system';
+
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -122,7 +124,7 @@ export const StyledIPv4Item = styled(Box, { label: 'StyledIPv4Item' })(
     alignItems: 'center',
     backgroundColor: theme.tokens.interaction.Background.Secondary,
     display: 'flex',
-    fontFamily: '"UbuntuMono", monospace, sans-serif',
+    font: FontTypography.Code,
     padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
   })
 );
@@ -200,7 +202,7 @@ export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
     backgroundColor: theme.tokens.interaction.Background.Secondary,
     color: theme.textColors.tableStatic,
     display: 'flex',
-    fontFamily: '"UbuntuMono", monospace, sans-serif',
+    font: FontTypography.Code,
     justifyContent: 'space-between',
     padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
     position: 'relative',
