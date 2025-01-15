@@ -23,8 +23,6 @@ export type MetricUnitType =
 export type NotificationStatus = 'Enabled' | 'Disabled';
 export type ChannelTypes = 'email' | 'slack' | 'pagerduty' | 'webhook';
 export type AlertNotificationType = 'default' | 'custom';
-export type AlertDefinitionEntity = 'alerts-definitions';
-
 type AlertNotificationEmail = 'email';
 type AlertNotificationSlack = 'slack';
 type AlertNotificationPagerDuty = 'pagerduty';
@@ -237,7 +235,7 @@ interface NotificationChannelAlerts {
   id: number;
   label: string;
   url: string;
-  type: AlertDefinitionEntity;
+  type: 'alerts-definitions';
 }
 interface NotificationChannelBase {
   id: number;
