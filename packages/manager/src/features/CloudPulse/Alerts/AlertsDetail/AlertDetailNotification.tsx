@@ -1,4 +1,4 @@
-import { CircleProgress, Typography } from '@linode/ui';
+import { CircleProgress, Stack, Typography } from '@linode/ui';
 import { Divider, Grid } from '@mui/material';
 import React from 'react';
 
@@ -14,7 +14,7 @@ interface NotificationProps {
   /*
    * The list of channel ids associated with the alert for which we need to display the notification channels
    */
-  channelIds: number[];
+  channelIds: string[];
 }
 export const AlertDetailNotification = (props: NotificationProps) => {
   const { channelIds } = props;
@@ -30,10 +30,8 @@ export const AlertDetailNotification = (props: NotificationProps) => {
   }
 
   return (
-    <>
-      <Typography marginBottom={2} variant="h2">
-        Notification Channels
-      </Typography>
+    <Stack gap={2}>
+      <Typography variant="h2">Notification Channels</Typography>
       {isError && (
         <ErrorState errorText="Failed to load notification channels." />
       )}
@@ -73,6 +71,6 @@ export const AlertDetailNotification = (props: NotificationProps) => {
             })}
         </Grid>
       )}
-    </>
+    </Stack>
   );
 };

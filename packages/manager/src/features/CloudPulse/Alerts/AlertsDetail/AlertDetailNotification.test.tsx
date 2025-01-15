@@ -54,7 +54,7 @@ describe('AlertDetailNotification component tests', () => {
       isFetching: false,
     });
     const { getByText } = renderWithTheme(
-      <AlertDetailNotification channelIds={[1, 2, 3]} />
+      <AlertDetailNotification channelIds={['1', '2', '3']} />
     );
 
     expect(getByText('Notification Channels')).toBeInTheDocument();

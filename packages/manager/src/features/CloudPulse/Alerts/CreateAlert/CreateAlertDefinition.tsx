@@ -158,11 +158,9 @@ export const CreateAlertDefinition = () => {
 
   const selectedNotifications = React.useMemo(() => {
     return (
-      notificationChannelWatcher
-        .map((id) =>
-          notificationData?.find((notification) => notification.id === id)
-        )
-        .filter((notification) => notification !== undefined) ?? []
+      notificationData?.filter((notification) =>
+        notificationChannelWatcher.includes(notification.id)
+      ) ?? []
     );
   }, [notificationChannelWatcher, notificationData]);
 

@@ -135,9 +135,7 @@ export const AlertDetail = () => {
           }}
         >
           <AlertDetailNotification
-            channelIds={alertDetails.channels.map((channel) =>
-              Number(channel.id)
-            )}
+            channelIds={alertDetails.channels.map(({ id }) => id)}
           />
         </Box>
       </Box>
