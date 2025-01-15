@@ -1,6 +1,10 @@
 import { regionFactory } from 'src/factories';
 
-import { getRegionOptions, getRegionsIdLabelMap } from './AlertResourceUtils';
+import {
+  getFilteredResources,
+  getRegionOptions,
+  getRegionsIdLabelMap,
+} from './AlertResourceUtils';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 
@@ -53,4 +57,96 @@ it('test getRegionOptions method', () => {
     resourceIds: [],
   });
   expect(result.length).toBe(0);
+});
+
+it('test getFilteredResources method', () => {
+  const regions = regionFactory.buildList(10);
+  const regionsIdToLabelMap = getRegionsIdLabelMap(regions);
+  const data: CloudPulseResources[] = [
+    { id: '1', label: 'Test', region: regions[0].id },
+    { id: '2', label: 'Test2', region: regions[1].id },
+    { id: '3', label: 'Test3', region: regions[2].id },
+  ];
+
+  let result = getFilteredResources({
+    data,
+    filteredRegions: getRegionOptions({
+      data,
+      regionsIdToLabelMap,
+      resourceIds: ['1', '2'],
+    }).map((region) => region.id),
+    regionsIdToLabelMap,
+    resourceIds: ['1', '2'],
+  });
+
+  expect(result).toBeDefined();
+  expect(result?.length).toBe(2);
+
+  // Case with searchText
+  result = getFilteredResources({
+    data,
+    filteredRegions: getRegionOptions({
+      data,
+      regionsIdToLabelMap,
+      resourceIds: ['1', '2'],
+    }).map((region) => region.id),
+    regionsIdToLabelMap,
+    resourceIds: ['1', '2'],
+    searchText: data[1].label,
+  });
+
+  expect(result).toBeDefined();
+  expect(result?.length).toBe(1);
+
+  // Case with mismatched filters
+  result = getFilteredResources({
+    data,
+    filteredRegions: getRegionOptions({
+      data,
+      regionsIdToLabelMap,
+      resourceIds: ['1'], // region not associated with the resources
+    }).map((region) => region.id),
+    regionsIdToLabelMap,
+    resourceIds: ['1', '2'],
+    searchText: data[1].label,
+  });
+
+  expect(result).toBeDefined();
+  expect(result?.length).toBe(0);
+
+  // Case with different region as search text
+  result = getFilteredResources({
+    data,
+    filteredRegions: getRegionOptions({
+      data,
+      regionsIdToLabelMap,
+      resourceIds: ['1', '2'],
+    }).map((region) => region.id),
+    regionsIdToLabelMap,
+    resourceIds: ['1', '2'],
+    searchText: regionsIdToLabelMap.get(data[2].region ?? '')?.label, // different region
+  });
+
+  expect(result).toBeDefined();
+  expect(result?.length).toBe(0);
+
+  // Edge case: Empty data array
+  result = getFilteredResources({
+    data: [],
+    filteredRegions: [],
+    regionsIdToLabelMap,
+    resourceIds: ['1', '2'],
+  });
+
+  expect(result).toBeDefined();
+  expect(result?.length).toBe(0);
+
+  // if data is undefined , result should be undefined
+  result = getFilteredResources({
+    data: undefined,
+    filteredRegions: [],
+    regionsIdToLabelMap,
+    resourceIds: ['1', '2'],
+  });
+  expect(result).toBeUndefined();
 });
