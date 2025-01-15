@@ -79,46 +79,45 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     return <CircleProgress />;
   }
 
-  if (isResourcesError || isRegionsError) {
-    return (
-      <ErrorState errorText="An error occurred while loading the resources associated with the alert. Please try again later." />
-    );
-  }
-
   return (
     <>
       <Typography marginBottom={2} ref={titleRef} variant="h2">
         {alertLabel ?? 'Resources'}
       </Typography>
-      <Grid container spacing={3}>
-        <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
-          <Grid item md={3} xs={12}>
-            <DebouncedSearchTextField
-              onSearch={(value) => {
-                setSearchText(value);
-              }}
-              sx={{
-                maxHeight: theme.spacing(4.25),
-              }}
-              clearable
-              debounceTime={300}
-              hideLabel
-              isSearching={false}
-              label="Search for a Region or Resource"
-              placeholder="Search for a Region or Resource"
-              value={searchText ?? ''}
-            />
-          </Grid>
-          <Grid item md={4} xs={12}>
-            <AlertsRegionFilter
-              handleSelectionChange={(value) => {
-                setFilteredRegions(value);
-              }}
-              regionOptions={regionOptions ?? []}
-            />
+      {(isResourcesError || isRegionsError) && (
+        <ErrorState errorText="An error occurred while loading the resources associated with the alert. Please try again later." />
+      )}
+      {!(isResourcesError || isRegionsError) && (
+        <Grid container spacing={3}>
+          <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
+            <Grid item md={3} xs={12}>
+              <DebouncedSearchTextField
+                onSearch={(value) => {
+                  setSearchText(value);
+                }}
+                sx={{
+                  maxHeight: theme.spacing(4.25),
+                }}
+                clearable
+                debounceTime={300}
+                hideLabel
+                isSearching={false}
+                label="Search for a Region or Resource"
+                placeholder="Search for a Region or Resource"
+                value={searchText ?? ''}
+              />
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <AlertsRegionFilter
+                handleSelectionChange={(value) => {
+                  setFilteredRegions(value);
+                }}
+                regionOptions={regionOptions ?? []}
+              />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      )}
     </>
   );
 });
