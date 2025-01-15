@@ -7,8 +7,8 @@ import { useAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 import { getChipLabels } from '../Utils/utils';
-import { DisplayAlertChips } from './AlertDetailChips';
 import { AlertDetailRow } from './AlertDetailRow';
+import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 
 interface NotificationProps {
   /*
@@ -57,10 +57,10 @@ export const AlertDetailNotification = (props: NotificationProps) => {
                   valueGridColumns={10}
                 />
                 <Grid item xs={12}>
-                  <DisplayAlertChips
+                  <DisplayAlertDetailChips
                     {...getChipLabels(value)}
-                    labelWidth={2}
-                    valueWidth={10}
+                    labelGridColumns={2}
+                    valueGridColumns={10}
                   />
                 </Grid>
                 {channels.length > 1 && index !== channels.length - 1 && (
