@@ -2,11 +2,14 @@ import { CircleProgress, Typography } from '@linode/ui';
 import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
+import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
+import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
+  getFilteredResources,
   getRegionOptions,
   getRegionsIdLabelMap,
 } from '../Utils/AlertResourceUtils';
@@ -20,6 +23,10 @@ export interface AlertResourcesProp {
    * The label of the alert to be displayed
    */
   alertLabel?: string;
+  /**
+   * Callback for publishing the selected resources
+   */
+  handleResourcesSelection?: (resources: string[]) => void;
 
   /**
    * The set of resource ids associated with the alerts, that needs to be displayed
@@ -33,10 +40,16 @@ export interface AlertResourcesProp {
 }
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
-  const { alertLabel, resourceIds, serviceType } = props;
+  const {
+    alertLabel,
+    handleResourcesSelection,
+    resourceIds,
+    serviceType,
+  } = props;
+
   const [searchText, setSearchText] = React.useState<string>();
 
-  const [, setFilteredRegions] = React.useState<string[]>();
+  const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
 
   const theme = useTheme();
 
@@ -73,7 +86,36 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     });
   }, [resources, resourceIds, regionsIdToLabelMap]);
 
+  /**
+   * Holds the resources that are
+   * filtered based on the passed resourceIds, typed searchText and filtered regions
+   */
+  const filteredResources = React.useMemo(() => {
+    return getFilteredResources({
+      data: resources,
+      filteredRegions,
+      regionsIdToLabelMap,
+      resourceIds,
+      searchText,
+    });
+  }, [
+    resources,
+    resourceIds,
+    searchText,
+    filteredRegions,
+    regionsIdToLabelMap,
+  ]);
+
   const titleRef = React.useRef<HTMLDivElement>(null); // when the page size, page number of table changes lets scroll until the title of this component
+
+  const scrollToTitle = () => {
+    if (titleRef.current) {
+      window.scrollTo({
+        behavior: 'smooth',
+        top: titleRef.current.getBoundingClientRect().top + window.scrollY - 40, // Adjust offset if needed
+      });
+    }
+  };
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
@@ -84,6 +126,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       <Typography marginBottom={2} ref={titleRef} variant="h2">
         {alertLabel ?? 'Resources'}
       </Typography>
+
+      {!isResourcesError && !isRegionsError && resourceIds.length === 0 && (
+        <StyledPlaceholder
+          title={
+            'No resources are currently assigned to this alert definition.'
+          }
+          icon={EntityIcon}
+          subtitle="You can assign alerts during the resource creation process."
+        />
+      )}
 
       <Grid container spacing={3}>
         <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
@@ -120,7 +172,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                 ? 'Table data is unavailable. Please try again later.'
                 : undefined
             }
+            filteredResources={filteredResources}
             isDataLoadingError={isRegionsError || isResourcesError}
+            pageSize={25}
+            scrollToTitle={scrollToTitle}
           />
         </Grid>
       </Grid>
