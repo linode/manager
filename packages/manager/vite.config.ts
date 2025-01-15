@@ -17,7 +17,7 @@ export default defineConfig({
     react(),
     svgr({ exportAsDefault: true }),
     federation({
-      name: 'manager',
+      name: '~manager',
       // remotes: {
       //   volume_create: 'http://localhost:3001/assets/remoteEntry.js',
       // },
@@ -38,6 +38,7 @@ export default defineConfig({
         '@tanstack/react-query',
         '@mui/material',
         '@emotion/react',
+        '@linode/api-v4',
       ],
     }),
   ],

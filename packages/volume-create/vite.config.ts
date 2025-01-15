@@ -37,7 +37,8 @@ export default defineConfig({
           'react-dom',
           '@tanstack/react-query',
           '@mui/material',
-          '@emotion/react'
+          '@emotion/react',
+          '@linode/api-v4'
         ],
       })
   ],
