@@ -7,9 +7,7 @@ export const quotaFactory = Factory.Sync.makeFactory<Quota>({
   quota_id: Factory.each((id) => id),
   quota_limit: 50,
   quota_name: 'Linode Dedicated vCPUs',
-  resource_metric: 'CPUs',
-  scope: 'us-east',
-  service_name: 'Linode Dedicated',
-  unit: 'vCPUs',
+  region_applied: 'us-east',
+  resource_metric: 'CPU',
   used: 25,
 });
