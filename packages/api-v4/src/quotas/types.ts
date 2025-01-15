@@ -1,4 +1,5 @@
 import { ObjectStorageEndpointTypes } from 'src/object-storage';
+import { Region } from 'src/regions';
 
 /**
  * A Quota is a service used limit that is rated based on service metrics such
@@ -49,7 +50,7 @@ export interface Quota {
   /**
    * The region slug to which this limit applies.
    */
-  region_applied: string;
+  region_applied: Region['id'] | 'global';
 
   /**
    * The OBJ endpoint type to which this limit applies.
