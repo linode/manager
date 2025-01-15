@@ -20,10 +20,7 @@ describe('Placement Groups navigation', () => {
   it('can navigate to Placement Groups landing page', () => {
     cy.visitWithLogin('/linodes');
 
-    ui.nav
-      .findItemByTitle('Placement Groups', 'Compute')
-      .should('be.visible')
-      .click();
+    ui.nav.findItemByTitle('Placement Groups').should('be.visible').click();
     cy.url().should('endWith', '/placement-groups');
   });
 

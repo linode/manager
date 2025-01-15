@@ -18,7 +18,7 @@ describe('VPC navigation', () => {
 
     cy.visitWithLogin('/linodes');
 
-    ui.nav.findItemByTitle('VPC', 'Networking').should('be.visible').click();
+    ui.nav.findItemByTitle('VPC').should('be.visible').click();
     cy.url().should('endWith', '/vpcs');
   });
 });

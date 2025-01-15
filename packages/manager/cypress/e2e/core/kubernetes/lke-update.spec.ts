@@ -1678,7 +1678,6 @@ describe('LKE ACL updates', () => {
           // Confirm submit button is disabled if form has not been changed
           ui.button
             .findByTitle('Update')
-            .scrollIntoView()
             .should('be.visible')
             .should('not.be.enabled');
 
@@ -1693,7 +1692,6 @@ describe('LKE ACL updates', () => {
           // confirm submit button is now enabled
           ui.button
             .findByTitle('Update')
-            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled');
 
@@ -1714,7 +1712,6 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
-            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -1727,7 +1724,6 @@ describe('LKE ACL updates', () => {
       cy.findByText('Enable').should('not.exist');
       ui.button
         .findByTitle('Enabled (1 IP Address)')
-        .scrollIntoView()
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -1763,7 +1759,6 @@ describe('LKE ACL updates', () => {
           // Confirm submit button is disabled if form has not been changed
           ui.button
             .findByTitle('Update')
-            .scrollIntoView()
             .should('be.visible')
             .should('not.be.enabled');
 
@@ -1797,7 +1792,6 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
-            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -1882,7 +1876,6 @@ describe('LKE ACL updates', () => {
           // Confirm submit button is disabled if form has not been changed
           ui.button
             .findByTitle('Update')
-            .scrollIntoView()
             .should('be.visible')
             .should('not.be.enabled');
 
@@ -1897,7 +1890,6 @@ describe('LKE ACL updates', () => {
           // confirm submit button is now enabled
           ui.button
             .findByTitle('Update')
-            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled');
 
@@ -1929,7 +1921,6 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
-            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -1942,7 +1933,6 @@ describe('LKE ACL updates', () => {
       cy.findByText('Enabled (O IP Addresses)').should('not.exist');
       ui.button
         .findByTitle('Enable')
-        .scrollIntoView()
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -2004,7 +1994,6 @@ describe('LKE ACL updates', () => {
 
       ui.button
         .findByTitle('Enable')
-        .scrollIntoView()
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -2048,7 +2037,6 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
-            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();

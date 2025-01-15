@@ -48,7 +48,6 @@ describe('CloudPulse  navigation', () => {
     cy.wait('@getFeatureFlags');
 
     ui.nav.find().within(() => {
-      cy.findByText('Monitor').closest('[role="button"]').click();
       cy.get('[data-testid="menu-item-Monitor"]').should('not.exist');
     });
   });
