@@ -1,5 +1,5 @@
 import { Box, Button, Stack, TooltipIcon } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
