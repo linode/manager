@@ -27,21 +27,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'center',
     minHeight: '100vh',
   },
-  cmrWrapper: {
-    maxWidth: `${theme.breakpoints.values.lg}px !important`,
-    padding: `${theme.spacing(3)} 0`,
-    paddingTop: 12,
-    [theme.breakpoints.between('md', 'xl')]: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: 0,
-      paddingRight: 0,
-      paddingTop: theme.spacing(2),
-    },
-    transition: theme.transitions.create('opacity'),
-  },
   content: {
     flex: 1,
     [theme.breakpoints.up('md')]: {

@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -12,6 +11,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -40,90 +40,98 @@ export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
     setSelectedProcess,
   } = props;
 
+  const {
+    handleOrderChange,
+    order,
+    orderBy,
+    sortedData,
+  } = useOrderV2<ExtendedProcess>({
+    data: processesData,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'name',
+      },
+      from: '/longview/clients/$id/processes',
+    },
+    preferenceKey: 'lv-detail-processes',
+  });
+
   return (
-    <OrderBy
-      data={processesData}
-      order={'asc'}
-      orderBy={'name'}
-      preferenceKey="lv-detail-processes"
+    <Table
+      // This prop is necessary to show the "ActiveCaret", and we only
+      // want it on large viewports.
+      noOverflow={width >= 1280}
+      spacingTop={16}
     >
-      {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-        <Table
-          // This prop is necessary to show the "ActiveCaret", and we only
-          // want it on large viewports.
-          noOverflow={width >= 1280}
-          spacingTop={16}
-        >
-          <TableHead>
-            <TableRow>
-              <TableSortCell
-                active={orderBy === 'name'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="name"
-                style={{ width: '20%' }}
-              >
-                Process
-              </TableSortCell>
-              <TableSortCell
-                active={orderBy === 'user'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="user"
-                style={{ width: '20%' }}
-              >
-                User
-              </TableSortCell>
-              <TableSortCell
-                active={orderBy === 'maxCount'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="maxCount"
-                style={{ width: '15%' }}
-              >
-                Max Count
-              </TableSortCell>
-              <TableSortCell
-                active={orderBy === 'averageIO'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="averageIO"
-                style={{ width: '15%' }}
-              >
-                Avg IO
-              </TableSortCell>
-              <TableSortCell
-                active={orderBy === 'averageCPU'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="averageCPU"
-                style={{ width: '15%' }}
-              >
-                Avg CPU
-              </TableSortCell>
-              <TableSortCell
-                active={orderBy === 'averageMem'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="averageMem"
-                style={{ width: '15%' }}
-              >
-                Avg Mem
-              </TableSortCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {renderLoadingErrorData(
-              processesLoading,
-              orderedData,
-              selectedProcess,
-              setSelectedProcess,
-              error
-            )}
-          </TableBody>
-        </Table>
-      )}
-    </OrderBy>
+      <TableHead>
+        <TableRow>
+          <TableSortCell
+            active={orderBy === 'name'}
+            direction={order}
+            handleClick={handleOrderChange}
+            label="name"
+            style={{ width: '20%' }}
+          >
+            Process
+          </TableSortCell>
+          <TableSortCell
+            active={orderBy === 'user'}
+            direction={order}
+            handleClick={handleOrderChange}
+            label="user"
+            style={{ width: '20%' }}
+          >
+            User
+          </TableSortCell>
+          <TableSortCell
+            active={orderBy === 'maxCount'}
+            direction={order}
+            handleClick={handleOrderChange}
+            label="maxCount"
+            style={{ width: '15%' }}
+          >
+            Max Count
+          </TableSortCell>
+          <TableSortCell
+            active={orderBy === 'averageIO'}
+            direction={order}
+            handleClick={handleOrderChange}
+            label="averageIO"
+            style={{ width: '15%' }}
+          >
+            Avg IO
+          </TableSortCell>
+          <TableSortCell
+            active={orderBy === 'averageCPU'}
+            direction={order}
+            handleClick={handleOrderChange}
+            label="averageCPU"
+            style={{ width: '15%' }}
+          >
+            Avg CPU
+          </TableSortCell>
+          <TableSortCell
+            active={orderBy === 'averageMem'}
+            direction={order}
+            handleClick={handleOrderChange}
+            label="averageMem"
+            style={{ width: '15%' }}
+          >
+            Avg Mem
+          </TableSortCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {renderLoadingErrorData(
+          processesLoading,
+          sortedData ?? [],
+          selectedProcess,
+          setSelectedProcess,
+          error
+        )}
+      </TableBody>
+    </Table>
   );
 });
 

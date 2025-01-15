@@ -103,8 +103,23 @@ export const Root = () => {
                   desktopMenuToggle={desktopMenuToggle}
                   open={menuIsOpen}
                 />
-                <main
-                  className={classes.cmrWrapper}
+                <Box
+                  sx={(theme) => ({
+                    maxWidth: `${theme.breakpoints.values.lg}px !important`,
+                    padding: `${theme.spacing(3)} 0`,
+                    paddingTop: 12,
+                    [theme.breakpoints.between('md', 'xl')]: {
+                      paddingLeft: theme.spacing(2),
+                      paddingRight: theme.spacing(2),
+                    },
+                    [theme.breakpoints.down('md')]: {
+                      paddingLeft: 0,
+                      paddingRight: 0,
+                      paddingTop: theme.spacing(2),
+                    },
+                    transition: theme.transitions.create('opacity'),
+                  })}
+                  component="main"
                   id="main-content"
                   role="main"
                 >
@@ -116,7 +131,7 @@ export const Root = () => {
                       </React.Suspense>
                     </Grid>
                   </Grid>
-                </main>
+                </Box>
               </div>
             </NotificationProvider>
             <Footer />

@@ -70,24 +70,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'center',
     minHeight: '100vh',
   },
-  cmrWrapper: {
-    flex: 1,
-    margin: '0 auto',
-    maxWidth: `${theme.breakpoints.values.lg}px !important`,
-    padding: `${theme.spacing(3)} 0`,
-    paddingBottom: 12,
-    paddingTop: 12,
-    [theme.breakpoints.between('md', 'xl')]: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: 0,
-      paddingRight: 0,
-      paddingTop: theme.spacing(2),
-    },
-    transition: theme.transitions.create('opacity'),
-  },
   content: {
     display: 'flex',
     flex: 1,
@@ -164,7 +146,6 @@ const SupportTicketDetail = React.lazy(() =>
     })
   )
 );
-const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
 const Help = React.lazy(() =>
   import('./features/Help/index').then((module) => ({
@@ -350,17 +331,30 @@ export const MainContent = () => {
                   }}
                 >
                   <MainContentBanner />
-                  <main
-                    style={{
+                  <Box
+                    sx={(theme) => ({
+                      flex: 1,
+                      margin: '0 auto',
+                      maxWidth: `${theme.breakpoints.values.lg}px !important`,
+                      pt: {
+                        md: 1.5,
+                        xs: theme.spacing(2),
+                      },
+                      px: {
+                        md: theme.spacing(2),
+                        xs: 0,
+                      },
+                      py: 1.5,
+                      transition: theme.transitions.create('opacity'),
                       width: isNarrowViewport
                         ? '100%'
                         : `calc(100vw - ${
-                            desktopMenuIsOpen === true
+                            desktopMenuIsOpen
                               ? SIDEBAR_COLLAPSED_WIDTH
                               : SIDEBAR_WIDTH
                           }px)`,
-                    }}
-                    className={classes.cmrWrapper}
+                    })}
+                    component="main"
                     id="main-content"
                     ref={contentRef}
                     role="main"
@@ -382,7 +376,6 @@ export const MainContent = () => {
                               path="/nodebalancers"
                             />
                             <Route component={Managed} path="/managed" />
-                            <Route component={Longview} path="/longview" />
                             <Route component={Images} path="/images" />
                             <Route
                               component={StackScripts}
@@ -428,7 +421,7 @@ export const MainContent = () => {
                         </React.Suspense>
                       </Grid>
                     </Grid>
-                  </main>
+                  </Box>
                   <Footer />
                 </div>
               </Box>

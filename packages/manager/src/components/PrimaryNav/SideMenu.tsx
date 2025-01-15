@@ -79,7 +79,7 @@ const StyledDrawer = styled(Drawer, {
   '& .MuiDrawer-paper': {
     backgroundColor: Global.Color.Neutrals[90],
     boxShadow: 'none',
-    height: `calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`,
+    height: `calc(100vh - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`,
     left: 'inherit',
     overflow: 'hidden',
     position: 'absolute',
