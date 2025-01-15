@@ -162,6 +162,9 @@ export type LinodeStatus =
   | 'restoring'
   | 'stopped';
 
+// ---------------------------------------------------------------------
+// Types relating to legacy interfaces (Configuration profile Interfaces)
+// ----------------------------------------------------------------------
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
 export interface ConfigInterfaceIPv4 {
@@ -173,6 +176,7 @@ export interface ConfigInterfaceIPv6 {
   vpc?: string | null;
 }
 
+// The legacy interface type - for Configuration Profile Interfaces
 export interface Interface {
   id: number;
   label: string | null;
@@ -214,6 +218,126 @@ export interface Config {
   initrd: string | null;
   interfaces: Interface[];
 }
+
+// ----------------------------------------------------------
+// Types relating to new interfaces - Linode Interfaces
+// ----------------------------------------------------------
+
+export interface DefaultRoute {
+  ipv4?: boolean;
+  ipv6?: boolean;
+}
+
+// POST related types
+export interface BaseIPv4InterfaceAddressPayload {
+  address: string;
+  primary?: boolean;
+}
+
+export interface VPCIpv4InterfaceAddress
+  extends BaseIPv4InterfaceAddressPayload {
+  nat_1_1_address?: string | null;
+}
+
+export interface VPCInterfacePayload {
+  subnet_id: number;
+  ipv4?: {
+    addresses?: VPCIpv4InterfaceAddress[];
+    ranges?: {
+      range: string;
+    }[];
+  } | null;
+}
+
+export interface PublicInterfacePayload {
+  ipv4?: {
+    addresses?: BaseIPv4InterfaceAddressPayload[];
+  };
+  ipv6?: {
+    ranges?: { range: string | null }[];
+  };
+}
+
+// POST object
+export interface CreateLinodeInterfacePayload {
+  firewall_id?: number;
+  default_route?: DefaultRoute | null;
+  vpc?: VPCInterfacePayload | null;
+  public?: PublicInterfacePayload | null;
+  vlan?: {
+    vlan_label: string;
+    ipam_address?: string;
+  } | null;
+}
+
+// GET related types
+export interface VPCInterfaceData {
+  vpc_id: number;
+  subnet_id: number;
+  ipv4: {
+    addresses: {
+      address: string;
+      primary: boolean;
+      nat_1_1_address?: string;
+    }[];
+    ranges: {
+      range: string;
+    }[];
+  };
+}
+
+export interface PublicInterfaceData {
+  ipv4: {
+    addresses: {
+      address: string;
+      primary: boolean;
+    }[];
+  };
+  ipv6: {
+    addresses: {
+      address: string;
+      prefix: string;
+    }[];
+    ranges: {
+      range: string;
+      route_target: string;
+    }[];
+  };
+}
+
+// the GET object
+export interface LinodeInterfaceData {
+  id: number;
+  mac_address: string;
+  default_route: DefaultRoute;
+  version: number;
+  created: string;
+  updated: string;
+  vpc: VPCInterfaceData | null;
+  public: PublicInterfaceData | null;
+  vlan: {
+    vlan_label: string;
+    ipam_address: string;
+  } | null;
+}
+
+export interface LinodeInterfaces {
+  interfaces: LinodeInterfaceData[];
+}
+
+export type LinodeInterfaceStatus = 'active' | 'inactive' | 'deleted';
+
+export interface InterfaceHistory {
+  interface_history_id: number;
+  interface_id: number;
+  linode_id: number;
+  event_id: number;
+  version: number;
+  interface_data: string; // must parse? (? ask clarification)
+  status: LinodeInterfaceStatus;
+  created: string;
+}
+// ----------------------------------------------------------
 
 export interface DiskDevice {
   disk_id: null | number;
