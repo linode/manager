@@ -2,7 +2,11 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
 export type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
 export type AlertServiceType = 'linode' | 'dbaas';
-type DimensionFilterOperatorType = 'eq' | 'neq' | 'startswith' | 'endswith';
+export type DimensionFilterOperatorType =
+  | 'eq'
+  | 'neq'
+  | 'startswith'
+  | 'endswith';
 export type AlertDefinitionType = 'system' | 'user';
 export type AlertStatusType = 'enabled' | 'disabled';
 export type CriteriaConditionType = 'ALL';
@@ -51,7 +55,7 @@ export interface Widgets {
   filters: Filters[];
   serviceType: string;
   service_type: string;
-  resource_id: string[];
+  entity_ids: string[];
   time_granularity: TimeGranularity;
   time_duration: TimeDuration;
   unit: string;
@@ -102,7 +106,7 @@ export interface Dimension {
 }
 
 export interface JWETokenPayLoad {
-  resource_ids: number[];
+  entity_ids: number[];
 }
 
 export interface JWEToken {
@@ -116,7 +120,7 @@ export interface CloudPulseMetricsRequest {
   group_by: string;
   relative_time_duration: TimeDuration;
   time_granularity: TimeGranularity | undefined;
-  resource_ids: number[];
+  entity_ids: number[];
 }
 
 export interface CloudPulseMetricsResponse {
@@ -164,20 +168,24 @@ export interface MetricCriteria {
   aggregation_type: MetricAggregationType;
   operator: MetricOperatorType;
   threshold: number;
-  dimension_filters: DimensionFilter[];
+  dimension_filters?: DimensionFilter[];
 }
 
-export interface AlertDefinitionMetricCriteria extends MetricCriteria {
+export interface AlertDefinitionMetricCriteria
+  extends Omit<MetricCriteria, 'dimension_filters'> {
   unit: string;
   label: string;
+  dimension_filters?: AlertDefinitionDimensionFilter[];
 }
 export interface DimensionFilter {
-  label: string;
   dimension_label: string;
   operator: DimensionFilterOperatorType;
   value: string;
 }
 
+export interface AlertDefinitionDimensionFilter extends DimensionFilter {
+  label: string;
+}
 export interface TriggerCondition {
   polling_interval_seconds: number;
   evaluation_period_seconds: number;
