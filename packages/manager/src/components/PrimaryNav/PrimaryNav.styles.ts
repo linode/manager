@@ -1,5 +1,3 @@
-import { Typography as FontTypography } from '@linode/design-language-system';
-import { Global } from '@linode/design-language-system';
 import { Accordion, Box, Divider, omittedProps } from '@linode/ui';
 import { Chip, styled } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -44,13 +42,13 @@ export const StyledDivider = styled(Divider, {
 export const StyledActiveLink = styled(Link, {
   label: 'StyledActiveLink',
   shouldForwardProp: omittedProps(['isActiveLink', 'isCollapsed']),
-})<{ isActiveLink: boolean; isCollapsed: boolean }>(({ ...props }) => ({
+})<{ isActiveLink: boolean; isCollapsed: boolean }>(({ theme, ...props }) => ({
   ...(!props.isActiveLink && {
     '&:hover': {
       '.primaryNavLink': {
-        color: Global.Color.Neutrals['White'],
+        color: theme.tokens.color.Neutrals['White'],
       },
-      backgroundColor: Global.Color.Neutrals[100],
+      backgroundColor: theme.tokens.color.Neutrals[100],
     },
   }),
   '&:hover, &:focus': {
@@ -59,13 +57,13 @@ export const StyledActiveLink = styled(Link, {
   alignItems: 'center',
   cursor: 'pointer',
   display: 'flex',
-  font: FontTypography.Body.Semibold,
+  font: theme.tokens.typography.Body.Semibold,
   minWidth: SIDEBAR_WIDTH,
   padding: '7px 16px',
   paddingLeft: 50,
   position: 'relative',
   ...(props.isActiveLink && {
-    backgroundColor: Global.Color.Neutrals[100],
+    backgroundColor: theme.tokens.color.Neutrals[100],
   }),
 }));
 
@@ -75,15 +73,15 @@ export const StyledPrimaryLinkBox = styled(Box, {
 })<{ isActiveLink: boolean; isCollapsed: boolean }>(({ theme, ...props }) => ({
   alignItems: 'center',
   color: props.isActiveLink
-    ? Global.Color.Brand[60]
-    : Global.Color.Neutrals['White'],
+    ? theme.tokens.color.Brand[60]
+    : theme.tokens.color.Neutrals['White'],
   display: 'flex',
   font: theme.tokens.typography.Label.Semibold.S,
   justifyContent: 'space-between',
   transition: theme.transitions.create(['color', 'opacity']),
   width: '100%',
   ...(props.isActiveLink && {
-    font: FontTypography.Body.Bold,
+    font: theme.tokens.typography.Body.Bold,
   }),
   ...(props.isCollapsed && {
     opacity: 0,
@@ -107,7 +105,7 @@ export const StyledAccordion = styled(Accordion, {
   ({ theme, ...props }) => ({
     '& h3': {
       '& p': {
-        color: Global.Color.Neutrals['White'],
+        color: theme.tokens.color.Neutrals['White'],
         font: props.isActiveProductFamily
           ? theme.tokens.typography.Label.Bold.S
           : theme.tokens.typography.Label.Semibold.S,
@@ -119,8 +117,8 @@ export const StyledAccordion = styled(Accordion, {
       // product family icon
       '& svg': {
         color: props.isActiveProductFamily
-          ? Global.Color.Brand[60]
-          : Global.Color.Neutrals['White'],
+          ? theme.tokens.color.Brand[60]
+          : theme.tokens.color.Neutrals['White'],
         height: 24,
         marginRight: 11,
         transition: theme.transitions.create(['color']),
@@ -136,23 +134,23 @@ export const StyledAccordion = styled(Accordion, {
     },
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
       '&:hover': {
-        backgroundColor: Global.Color.Neutrals[100],
+        backgroundColor: theme.tokens.color.Neutrals[100],
       },
       '.Mui-expanded': {
         alignItems: 'center',
         maxHeight: '42px',
         minHeight: '42px',
       },
-      backgroundColor: Global.Color.Neutrals[90],
+      backgroundColor: theme.tokens.color.Neutrals[90],
       maxHeight: '42px',
       minHeight: '42px',
       paddingLeft: 4,
       svg: {
-        fill: Global.Color.Neutrals['White'],
+        fill: theme.tokens.color.Neutrals['White'],
         stroke: 'transparent',
       },
     },
-    backgroundColor: Global.Color.Neutrals[90],
+    backgroundColor: theme.tokens.color.Neutrals[90],
   })
 );
 
