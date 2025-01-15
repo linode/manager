@@ -3,7 +3,6 @@ import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -12,6 +11,7 @@ import {
   getRegionsIdLabelMap,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { Region } from '@linode/api-v4';
 
@@ -84,40 +84,46 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       <Typography marginBottom={2} ref={titleRef} variant="h2">
         {alertLabel ?? 'Resources'}
       </Typography>
-      {(isResourcesError || isRegionsError) && (
-        <ErrorState errorText="An error occurred while loading the resources associated with the alert. Please try again later." />
-      )}
-      {!(isResourcesError || isRegionsError) && (
-        <Grid container spacing={3}>
-          <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
-            <Grid item md={3} xs={12}>
-              <DebouncedSearchTextField
-                onSearch={(value) => {
-                  setSearchText(value);
-                }}
-                sx={{
-                  maxHeight: theme.spacing(4.25),
-                }}
-                clearable
-                debounceTime={300}
-                hideLabel
-                isSearching={false}
-                label="Search for a Region or Resource"
-                placeholder="Search for a Region or Resource"
-                value={searchText ?? ''}
-              />
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <AlertsRegionFilter
-                handleSelectionChange={(value) => {
-                  setFilteredRegions(value);
-                }}
-                regionOptions={regionOptions ?? []}
-              />
-            </Grid>
+
+      <Grid container spacing={3}>
+        <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
+          <Grid item md={3} xs={12}>
+            <DebouncedSearchTextField
+              onSearch={(value) => {
+                setSearchText(value);
+              }}
+              sx={{
+                maxHeight: theme.spacing(4.25),
+              }}
+              clearable
+              debounceTime={300}
+              hideLabel
+              isSearching={false}
+              label="Search for a Region or Resource"
+              placeholder="Search for a Region or Resource"
+              value={searchText ?? ''}
+            />
+          </Grid>
+          <Grid item md={4} xs={12}>
+            <AlertsRegionFilter
+              handleSelectionChange={(value) => {
+                setFilteredRegions(value);
+              }}
+              regionOptions={regionOptions ?? []}
+            />
           </Grid>
         </Grid>
-      )}
+        <Grid item xs={12}>
+          <DisplayAlertResources
+            errorText={
+              isRegionsError || isResourcesError
+                ? 'Table data is unavailable. Please try again later.'
+                : undefined
+            }
+            isDataLoadingError={isRegionsError || isResourcesError}
+          />
+        </Grid>
+      </Grid>
     </>
   );
 });

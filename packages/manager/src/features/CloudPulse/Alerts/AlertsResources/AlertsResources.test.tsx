@@ -1,5 +1,3 @@
-import { waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { linodeFactory, regionFactory } from 'src/factories';
@@ -75,16 +73,12 @@ describe('AlertResources component tests', () => {
       isError: true,
       isFetching: false,
     });
-    const { getByText, queryByText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
     );
 
     expect(
-      getByText(
-        'An error occurred while loading the resources associated with the alert. Please try again later.'
-      )
+      getByText('Table data is unavailable. Please try again later.')
     ).toBeInTheDocument();
-    expect(queryByText(searchPlaceholder)).not.toBeInTheDocument();
-    expect(queryByText(regionPlaceholder)).not.toBeInTheDocument();
   });
 });
