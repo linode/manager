@@ -1,10 +1,12 @@
-import { linodeFactory } from 'src/factories';
+import { Region } from '@linode/api-v4';
+import { linodeFactory, regionFactory } from 'src/factories';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateLinode } from 'support/intercepts/linodes';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomString } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
+import { extendRegion } from 'support/util/regions';
 
 describe('Create Linode in Distributed Region', () => {
   /*
@@ -13,10 +15,14 @@ describe('Create Linode in Distributed Region', () => {
    */
   it('should be able to select a distributed region', () => {
     // create mocks
-    const linodeRegion = chooseRegion({ capabilities: ['Distributed Plans'] });
+    const regionOptions: Partial<Region> = {
+      capabilities: ['Linodes', 'Distributed Plans'],
+      site_type: 'distributed',
+    };
+    const region = extendRegion(regionFactory.build(regionOptions));
     const mockLinode = linodeFactory.build({
       label: randomLabel(),
-      region: linodeRegion.id,
+      region: region.id,
     });
     const rootPass = randomString(32);
 
@@ -26,15 +32,16 @@ describe('Create Linode in Distributed Region', () => {
         la: true,
       },
     }).as('getFeatureFlags');
+    mockGetRegions([region]).as('getRegions');
     mockCreateLinode(mockLinode).as('createLinode');
 
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags']);
+    cy.wait(['@getFeatureFlags', '@getRegions']);
 
     // Pick a region from the distributed region list
     cy.get('[data-testid="region"]').within(() => {
       ui.tabList.findTabByTitle('Distributed').should('be.visible').click();
-      linodeCreatePage.selectRegionById(mockLinode.region);
+      linodeCreatePage.selectRegionById(region.id);
     });
 
     linodeCreatePage.setLabel(mockLinode.label);
