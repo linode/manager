@@ -38,7 +38,9 @@ export default defineConfig({
           '@tanstack/react-query',
           '@mui/material',
           '@emotion/react',
-          '@linode/api-v4'
+          '@linode/api-v4',
+          'react-router-dom',
+          '@tanstack/react-router'
         ],
       })
   ],

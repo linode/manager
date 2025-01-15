@@ -39,6 +39,8 @@ export default defineConfig({
         '@mui/material',
         '@emotion/react',
         '@linode/api-v4',
+        'react-router-dom',
+        '@tanstack/react-router',
       ],
     }),
   ],
