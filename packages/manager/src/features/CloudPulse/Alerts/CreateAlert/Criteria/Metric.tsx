@@ -150,7 +150,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   }}
                   textFieldProps={{
                     labelTooltipText:
-                      'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way.',
+                      'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.',
                   }}
                   value={
                     metricOptions.find(
