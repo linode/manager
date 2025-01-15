@@ -53,8 +53,10 @@ export const Creatable: Story = {
               setValue({
                 label: newValue?.label ?? '',
                 value:
-                  newValue?.value.toString().replace(' ', '-').toLowerCase() ??
-                  '',
+                  newValue?.value
+                    .toString()
+                    .replaceAll(' ', '-')
+                    .toLowerCase() ?? '',
               })
             }
             textFieldProps={{
