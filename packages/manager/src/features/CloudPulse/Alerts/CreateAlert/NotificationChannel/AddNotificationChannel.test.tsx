@@ -113,6 +113,7 @@ describe('AddNotificationChannel component', () => {
       />
     );
     await user.click(getByRole('button', { name: 'Add channel' }));
+    expect(getAllByText('This field is required.').length).toBe(2);
     getAllByText('This field is required.').forEach((element) => {
       expect(element).toBeVisible();
     });

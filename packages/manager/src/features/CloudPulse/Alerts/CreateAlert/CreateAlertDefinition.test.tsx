@@ -43,21 +43,18 @@ describe('AlertDefinition Create', () => {
     const user = userEvent.setup();
     const container = renderWithTheme(<CreateAlertDefinition />);
     const input = container.getByLabelText('Threshold');
+    await user.click(
+      container.getByRole('button', { name: 'Add dimension filter' })
+    );
     const submitButton = container.getByText('Submit').closest('button');
-
-    await userEvent.click(submitButton!);
+    await user.click(submitButton!);
+    expect(container.getAllByText('This field is required.').length).toBe(11);
     container.getAllByText(errorMessage).forEach((element) => {
       expect(element).toBeVisible();
     });
-    // expect(container.getByText('Severity is required.')).toBeVisible();
-    // expect(container.getByText('Service is required.')).toBeVisible();
-    // expect(container.getByText('Region is required.')).toBeVisible();
     expect(
       container.getByText('At least one resource is required.')
     ).toBeVisible();
-    // expect(container.getByText('Metric Data Field is required.')).toBeVisible();
-    // expect(container.getByText('Aggregation type is required.')).toBeVisible();
-    // expect(container.getByText('Criteria Operator is required.')).toBeVisible();
 
     await user.clear(input);
     await user.type(input, '-3');

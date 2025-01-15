@@ -53,8 +53,7 @@ describe('Trigger Conditions', () => {
     const evaluationPeriodToolTip = within(evaluationPeriodContainer).getByRole(
       'button',
       {
-        name:
-          'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
+        name: 'Choose how often you intend to evaluate the alert condition.',
       }
     );
     const pollingIntervalContainer = container.getByTestId(
@@ -63,7 +62,8 @@ describe('Trigger Conditions', () => {
     const pollingIntervalToolTip = within(pollingIntervalContainer).getByRole(
       'button',
       {
-        name: 'Choose how often you intend to evaulate the alert condition.',
+        name:
+          'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
       }
     );
     expect(evaluationPeriodToolTip).toBeInTheDocument();
