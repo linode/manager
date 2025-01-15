@@ -24,10 +24,12 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
     queryMocks.useAlertNotificationChannelsQuery,
 }));
 
-queryMocks.useAlertNotificationChannelsQuery.mockReturnValue({
-  data: notificationChannels,
-  isError: false,
-  isFetching: false,
+beforeEach(() => {
+  queryMocks.useAlertNotificationChannelsQuery.mockReturnValue({
+    data: notificationChannels,
+    isError: false,
+    isFetching: false,
+  });
 });
 
 describe('AlertDetailNotification component tests', () => {

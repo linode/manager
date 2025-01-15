@@ -30,7 +30,7 @@ export const AlertDetailNotification = (props: NotificationProps) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Typography marginBottom={2} variant="h2">
         Notification Channels
       </Typography>
@@ -72,6 +72,6 @@ export const AlertDetailNotification = (props: NotificationProps) => {
             ))}
         </Grid>
       )}
-    </React.Fragment>
+    </>
   );
 };

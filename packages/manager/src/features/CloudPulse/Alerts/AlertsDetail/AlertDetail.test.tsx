@@ -26,9 +26,9 @@ const notificationChannels = notificationChannelFactory.buildList(3, {
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
   useAlertNotificationChannelsQuery: vi.fn(),
+  useCloudPulseServiceTypes: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
-  useCloudPulseServiceTypes: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({

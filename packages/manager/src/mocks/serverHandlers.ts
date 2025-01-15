@@ -2454,7 +2454,7 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(alerts));
   }),
   http.get('*/monitor/alert-channels', () => {
-    const notificationChannels = notificationChannelFactory.buildList(2);
+    const notificationChannels = notificationChannelFactory.buildList(3);
     return HttpResponse.json(makeResourcePage(notificationChannels));
   }),
   http.get(
@@ -2479,11 +2479,6 @@ export const handlers = [
       return HttpResponse.json({}, { status: 404 });
     }
   ),
-  http.get('*/monitor/alert-channels', () => {
-    return HttpResponse.json(
-      makeResourcePage(notificationChannelFactory.buildList(3))
-    );
-  }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [
