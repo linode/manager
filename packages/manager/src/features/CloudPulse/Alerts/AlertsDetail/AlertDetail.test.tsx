@@ -5,6 +5,7 @@ import {
   linodeFactory,
   notificationChannelFactory,
   regionFactory,
+  serviceTypesFactory,
 } from 'src/factories/';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -18,7 +19,7 @@ const regions = regionFactory.buildList(1).map((region, index) => ({
   id: index < 3 ? linodes[index].region : region.id,
 }));
 const notificationChannels = notificationChannelFactory.buildList(3, {
-  content: { channel_type: { email_addresses: ['1@test.com', '2@test.com'] } },
+  content: { email: { email_addresses: ['1@test.com', '2@test.com'] } },
 });
 
 // Mock Queries
@@ -27,6 +28,7 @@ const queryMocks = vi.hoisted(() => ({
   useAlertNotificationChannelsQuery: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
+  useCloudPulseServiceTypes: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
@@ -45,6 +47,13 @@ vi.mock('src/queries/regions/regions', () => ({
   ...vi.importActual('src/queries/regions/regions'),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
+
+vi.mock('src/queries/cloudpulse/services', () => {
+  return {
+    ...vi.importActual('src/queries/cloudpulse/services'),
+    useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
+  };
+});
 
 // Shared Setup
 beforeEach(() => {
@@ -66,6 +75,10 @@ beforeEach(() => {
   queryMocks.useAlertNotificationChannelsQuery.mockReturnValue({
     data: notificationChannels,
     isError: false,
+    isFetching: false,
+  });
+  queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+    data: { data: serviceTypesFactory.buildList(1) },
     isFetching: false,
   });
 });

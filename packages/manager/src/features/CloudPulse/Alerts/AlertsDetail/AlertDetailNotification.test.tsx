@@ -8,7 +8,7 @@ import { AlertDetailNotification } from './AlertDetailNotification';
 
 const notificationChannels = notificationChannelFactory.buildList(3, {
   content: {
-    channel_type: {
+    email: {
       email_addresses: ['1@test.com', '2@test.com'],
     },
   },

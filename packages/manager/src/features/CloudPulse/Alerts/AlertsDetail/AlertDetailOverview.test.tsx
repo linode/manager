@@ -12,6 +12,11 @@ const serviceTypes = serviceTypesFactory.buildList(1, {
   label: 'Databases',
   service_type: 'dbaas',
 });
+const alertDetails = alertFactory.build({
+  description: 'This is test description',
+  label: 'Test alert',
+  severity: 3,
+});
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseServiceTypes: vi.fn(),
@@ -22,24 +27,22 @@ vi.mock('src/queries/cloudpulse/services', () => ({
   useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
 }));
 
-queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-  data: { data: serviceTypes },
-  isError: false,
-  isFetching: false,
+// Shared Setup
+beforeEach(() => {
+  queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+    data: { data: serviceTypes },
+    isError: false,
+    isFetching: false,
+  });
 });
 
 describe('AlertDetailOverview component tests', () => {
   it('should render alert detail overview with required props', () => {
-    const alert = alertFactory.build({
-      description: 'This is test description',
-      label: 'Test alert',
-      severity: 3,
-    });
     const { getByText } = renderWithTheme(
-      <AlertDetailOverview alert={alert} />
+      <AlertDetailOverview alertDetails={alertDetails} />
     );
 
-    const { description, label, severity, type } = alert;
+    const { description, label, severity, type } = alertDetails;
 
     expect(getByText(description)).toBeInTheDocument();
     expect(getByText(String(severityMap[severity]))).toBeInTheDocument();
@@ -47,5 +50,18 @@ describe('AlertDetailOverview component tests', () => {
     expect(
       getByText(convertStringToCamelCasesWithSpaces(type))
     ).toBeInTheDocument();
+  });
+  it('should render circle progress if the service types call is fetching', () => {
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: { data: serviceTypes },
+      isError: false,
+      isFetching: true,
+    });
+    const { getByTestId, queryByText } = renderWithTheme(
+      <AlertDetailOverview alertDetails={alertDetails} />
+    );
+
+    expect(getByTestId('circle-progress')).toBeInTheDocument();
+    expect(queryByText('Overview')).not.toBeInTheDocument();
   });
 });

@@ -127,7 +127,7 @@ export const DisplayAlertResources = React.memo(
           pageSize,
         }) => (
           <React.Fragment>
-            <Table>
+            <Table data-qa-alert-table>
               <TableHead>
                 <TableRow>
                   <TableSortCell
@@ -135,7 +135,7 @@ export const DisplayAlertResources = React.memo(
                       handleSort(orderBy, order, handlePageChange);
                     }}
                     active={sorting.orderBy === 'label'}
-                    data-qa-sortid="resource"
+                    data-qa-header="resource"
                     data-testid="resource"
                     direction={sorting.order}
                     label="label"
@@ -147,7 +147,7 @@ export const DisplayAlertResources = React.memo(
                       handleSort(orderBy, order, handlePageChange);
                     }}
                     active={sorting.orderBy === 'region'}
-                    data-qa-sortid="region"
+                    data-qa-header="region"
                     data-testid="region"
                     direction={sorting.order}
                     label="region"
@@ -156,12 +156,16 @@ export const DisplayAlertResources = React.memo(
                   </TableSortCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody data-qa-alert-table-body>
                 {!isDataLoadingError &&
                   paginatedData.map(({ id, label, region }) => (
-                    <TableRow key={id}>
-                      <TableCell>{label}</TableCell>
-                      <TableCell>{region}</TableCell>
+                    <TableRow data-qa-alert-row={id} key={id}>
+                      <TableCell data-qa-alert-cell={`${id}_resource`}>
+                        {label}
+                      </TableCell>
+                      <TableCell data-qa-alert-cell={`${id}_region`}>
+                        {region}
+                      </TableCell>
                     </TableRow>
                   ))}
                 {isDataLoadingError && (

@@ -32,7 +32,7 @@ export const AlertListing = () => {
   const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
     history.push(
       `${location.pathname}/detail/${serviceType}/${
-        serviceType === 'linode' ? '1001' : '20000' // only these two ids are available, so using this
+        _id
       }`
     );
   };
@@ -72,7 +72,7 @@ export const AlertListing = () => {
           {isError && (
             <TableRowError
               colSpan={7}
-              message={'Error in fetching the alerts.'}
+              message="Error in fetching the alerts."
             />
           )}
           {isLoading && <TableRowLoading columns={7} />}

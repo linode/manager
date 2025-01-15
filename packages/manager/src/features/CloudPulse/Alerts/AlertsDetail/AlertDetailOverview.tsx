@@ -1,24 +1,25 @@
-import { CircleProgress } from '@linode/ui';
-import { Grid, Typography, useTheme } from '@mui/material';
+import { CircleProgress, Typography } from '@linode/ui';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
+import { formatDate } from 'src/utilities/formatDate';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
-import { severityMap } from '../constants';
-import { formatTimestamp, getServiceTypeLabel } from '../Utils/utils';
+import { alertStatusToIconStatusMap, severityMap } from '../constants';
+import { getServiceTypeLabel } from '../Utils/utils';
 import { AlertDetailRow } from './AlertDetailRow';
 
 import type { Alert } from '@linode/api-v4';
 
 interface OverviewProps {
   /*
-   * The alert for which the criteria is displayed
+   * The alert object containing all the details (e.g., description, severity, status) for which the overview needs to be displayed.
    */
-  alert: Alert;
+  alertDetails: Alert;
 }
-export const AlertDetailOverview = (props: OverviewProps) => {
-  const { alert } = props;
+export const AlertDetailOverview = React.memo((props: OverviewProps) => {
+  const { alertDetails } = props;
 
   const {
     created_by: createdBy,
@@ -29,31 +30,17 @@ export const AlertDetailOverview = (props: OverviewProps) => {
     status,
     type,
     updated,
-  } = alert;
+  } = alertDetails;
 
-  const { data: serviceTypes, isFetching } = useCloudPulseServiceTypes(true);
-
-  const theme = useTheme();
-
-  const statusColorMap: Record<string, string> = {
-    disabled: theme.color.grey8,
-    enabled: theme.palette.success.dark,
-    failed: theme.palette.error.dark,
-    provisioning: theme.palette.warning.dark,
-  };
+  const { data: serviceTypeList, isFetching } = useCloudPulseServiceTypes(true);
 
   if (isFetching) {
     return <CircleProgress />;
   }
 
   return (
-    <React.Fragment>
-      <Typography
-        fontSize={theme.spacing(2.25)}
-        gutterBottom
-        marginBottom={2}
-        variant="h2"
-      >
+    <>
+      <Typography marginBottom={2} variant="h2">
         Overview
       </Typography>
       <Grid alignItems="center" container spacing={2}>
@@ -61,16 +48,13 @@ export const AlertDetailOverview = (props: OverviewProps) => {
         <AlertDetailRow label="Description" value={description} />
         <AlertDetailRow
           label="Status"
-          statusColor={statusColorMap[status]}
+          status={alertStatusToIconStatusMap[status]}
           value={convertStringToCamelCasesWithSpaces(status)}
         />
-        <AlertDetailRow
-          label="Severity"
-          value={severity !== undefined ? severityMap[severity] : severity}
-        />
+        <AlertDetailRow label="Severity" value={severityMap[severity]} />
         <AlertDetailRow
           label="Service"
-          value={getServiceTypeLabel(serviceType, serviceTypes)}
+          value={getServiceTypeLabel(serviceType, serviceTypeList)}
         />
         <AlertDetailRow
           label="Type"
@@ -78,10 +62,12 @@ export const AlertDetailOverview = (props: OverviewProps) => {
         />
         <AlertDetailRow label="Created By" value={createdBy} />
         <AlertDetailRow
+          value={formatDate(updated, {
+            format: 'MMM dd, yyyy, h:mm a',
+          })}
           label="Last Modified"
-          value={formatTimestamp(updated)}
         />
       </Grid>
-    </React.Fragment>
+    </>
   );
-};
+});

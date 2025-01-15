@@ -122,7 +122,7 @@ const LinodeSummary = (props: Props) => {
           {
             data: metrics,
             format: formatPercentage,
-            legendColor: 'blue',
+            legendColor: theme.graphs.blue,
             legendTitle: 'CPU %',
           },
         ]}
@@ -170,13 +170,13 @@ const LinodeSummary = (props: Props) => {
           {
             data: getMetrics(data.io),
             format: formatNumber,
-            legendColor: 'yellow',
+            legendColor: theme.graphs.yellow,
             legendTitle: 'I/O Rate',
           },
           {
             data: getMetrics(data.swap),
             format: formatNumber,
-            legendColor: 'red',
+            legendColor: theme.graphs.red,
             legendTitle: 'Swap Rate',
           },
         ]}

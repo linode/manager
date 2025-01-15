@@ -47,14 +47,14 @@ export const AlertDetailNotification = (props: NotificationProps) => {
                     value.channel_type
                   )}
                   label="Type"
-                  labelWidth={2}
-                  valueWidth={10}
+                  labelGridColumns={2}
+                  valueGridColumns={10}
                 />
                 <AlertDetailRow
                   label="Channel"
-                  labelWidth={2}
+                  labelGridColumns={2}
                   value={value.label}
-                  valueWidth={10}
+                  valueGridColumns={10}
                 />
                 <Grid item xs={12}>
                   <DisplayAlertChips

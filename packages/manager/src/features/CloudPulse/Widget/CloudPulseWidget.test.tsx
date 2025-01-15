@@ -26,8 +26,8 @@ const props: CloudPulseWidgetProperties = {
     unit: 'percent',
   },
   duration: { unit: 'min', value: 30 },
+  entityIds: ['1', '2'],
   isJweTokenFetching: false,
-  resourceIds: ['1', '2'],
   resources: [
     {
       id: '1',
@@ -188,7 +188,7 @@ describe('Cloud pulse widgets', () => {
     expect(queryMocks.useCloudPulseMetricsQuery).toHaveBeenCalledWith(
       'linode',
       expect.objectContaining({
-        time_granularity: { unit: 'min', value: 5 }
+        time_granularity: { unit: 'min', value: 5 },
       }),
       expect.any(Object)
     );
