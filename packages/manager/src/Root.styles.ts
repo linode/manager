@@ -33,6 +33,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       marginLeft: SIDEBAR_WIDTH,
     },
     transition: 'margin-left .1s linear',
+    width: '100%',
   },
   fullWidthContent: {
     marginLeft: 0,

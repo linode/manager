@@ -75,6 +75,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     flex: 1,
     flexDirection: 'column',
     transition: 'margin-left .1s linear',
+    width: '100%',
   },
   fullWidthContent: {
     marginLeft: 0,

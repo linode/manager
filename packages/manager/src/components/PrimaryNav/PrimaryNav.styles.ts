@@ -94,9 +94,6 @@ export const StyledMenuGrid = styled(Grid, {
   overflowX: 'hidden',
   overflowY: 'auto',
   scrollbarColor: `${theme.color.grey4} transparent `,
-  [theme.breakpoints.down('md')]: {
-    borderRight: `1px solid ${theme.tokens.border.Normal}`,
-  },
   width: '100%',
 }));
 
@@ -134,6 +131,9 @@ export const StyledAccordion = styled(Accordion, {
       padding: 0,
     },
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
+      '&:hover': {
+        backgroundColor: Global.Color.Neutrals[100],
+      },
       '.Mui-expanded': {
         alignItems: 'center',
         maxHeight: '42px',
