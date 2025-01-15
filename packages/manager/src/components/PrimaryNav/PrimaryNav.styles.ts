@@ -66,7 +66,6 @@ export const StyledActiveLink = styled(Link, {
   position: 'relative',
   ...(props.isActiveLink && {
     backgroundColor: Global.Color.Neutrals[100],
-    font: FontTypography.Body.Bold,
   }),
 }));
 
@@ -83,6 +82,9 @@ export const StyledPrimaryLinkBox = styled(Box, {
   justifyContent: 'space-between',
   transition: theme.transitions.create(['color', 'opacity']),
   width: '100%',
+  ...(props.isActiveLink && {
+    font: FontTypography.Body.Bold,
+  }),
   ...(props.isCollapsed && {
     opacity: 0,
   }),
