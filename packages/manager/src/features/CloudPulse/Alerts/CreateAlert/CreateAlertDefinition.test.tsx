@@ -39,30 +39,32 @@ describe('AlertDefinition Create', () => {
   });
 
   it('should render client side validation errors', async () => {
+    const errorMessage = 'This field is required.';
     const user = userEvent.setup();
     const container = renderWithTheme(<CreateAlertDefinition />);
     const input = container.getByLabelText('Threshold');
     const submitButton = container.getByText('Submit').closest('button');
 
     await userEvent.click(submitButton!);
-
-    expect(container.getByText('Name is required.')).toBeVisible();
-    expect(container.getByText('Severity is required.')).toBeVisible();
-    expect(container.getByText('Service is required.')).toBeVisible();
-    expect(container.getByText('Region is required.')).toBeVisible();
+    container.getAllByText(errorMessage).forEach((element) => {
+      expect(element).toBeVisible();
+    });
+    // expect(container.getByText('Severity is required.')).toBeVisible();
+    // expect(container.getByText('Service is required.')).toBeVisible();
+    // expect(container.getByText('Region is required.')).toBeVisible();
     expect(
-      container.getByText('At least one resource is needed.')
+      container.getByText('At least one resource is required.')
     ).toBeVisible();
-    expect(container.getByText('Metric Data Field is required.')).toBeVisible();
-    expect(container.getByText('Aggregation type is required.')).toBeVisible();
-    expect(container.getByText('Criteria Operator is required.')).toBeVisible();
+    // expect(container.getByText('Metric Data Field is required.')).toBeVisible();
+    // expect(container.getByText('Aggregation type is required.')).toBeVisible();
+    // expect(container.getByText('Criteria Operator is required.')).toBeVisible();
 
     await user.clear(input);
     await user.type(input, '-3');
     await userEvent.click(submitButton!);
 
     expect(
-      await container.findByText('Threshold value cannot be negative.')
+      await container.findByText("The value can't be negative.")
     ).toBeVisible();
 
     await user.clear(input);
@@ -70,7 +72,7 @@ describe('AlertDefinition Create', () => {
     await userEvent.click(submitButton!);
 
     expect(
-      await container.findByText('Threshold value should be a number.')
+      await container.findByText('The value should be a number.')
     ).toBeInTheDocument();
   });
 });

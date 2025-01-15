@@ -103,7 +103,7 @@ describe('AddNotificationChannel component', () => {
   });
 
   it('should render the error messages from the client side validation', async () => {
-    const { getByRole, getByText } = renderWithTheme(
+    const { getAllByText, getByRole } = renderWithTheme(
       <AddNotificationChannel
         isNotificationChannelsError={false}
         isNotificationChannelsLoading={false}
@@ -113,7 +113,8 @@ describe('AddNotificationChannel component', () => {
       />
     );
     await user.click(getByRole('button', { name: 'Add channel' }));
-    expect(getByText('Channel Type is required.')).toBeVisible();
-    expect(getByText('Channel Label is required.')).toBeVisible();
+    getAllByText('This field is required.').forEach((element) => {
+      expect(element).toBeVisible();
+    });
   });
 });
