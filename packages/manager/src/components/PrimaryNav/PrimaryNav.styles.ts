@@ -58,6 +58,7 @@ export const StyledActiveLink = styled(Link, {
   cursor: 'pointer',
   display: 'flex',
   font: theme.tokens.typography.Body.Semibold,
+  minHeight: 34,
   minWidth: SIDEBAR_WIDTH,
   padding: '7px 16px',
   paddingLeft: 50,
