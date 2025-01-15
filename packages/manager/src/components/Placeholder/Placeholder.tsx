@@ -304,8 +304,8 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
       : `${theme.spacing(2)} 0`,
     [theme.breakpoints.up('md')]: {
       padding: props.showTransferDisplay
-        ? `${theme.spacing(10)} 0 ${theme.spacing(4)}`
-        : `${theme.spacing(10)} 0`,
+        ? `${theme.spacing(8)} 0 ${theme.spacing(4)}`
+        : `${theme.spacing(8)} 0`,
     },
   })
 );

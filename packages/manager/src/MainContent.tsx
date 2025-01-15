@@ -357,10 +357,14 @@ export const MainContent = () => {
                     })}
                     component="main"
                     id="main-content"
-                    ref={contentRef}
                     role="main"
                   >
-                    <Grid className={classes.grid} container spacing={0}>
+                    <Grid
+                      className={classes.grid}
+                      container
+                      ref={contentRef}
+                      spacing={0}
+                    >
                       <Grid className={cx(classes.switchWrapper, 'p0')}>
                         <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>

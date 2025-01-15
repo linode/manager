@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
-import { PRIMARY_NAV_TOGGLE_HEIGHT } from 'src/components/PrimaryNav/constants';
 
 import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from './constants';
 import PrimaryNav from './PrimaryNav';
@@ -80,13 +79,12 @@ const StyledDrawer = styled(Drawer, {
   '& .MuiDrawer-paper': {
     backgroundColor: Global.Color.Neutrals[90],
     boxShadow: 'none',
-    height: `100vh`,
+    height: '100%',
     left: 'inherit',
     overflow: 'hidden',
     position: 'absolute',
     [theme.breakpoints.up('md')]: {
       borderRight: `1px solid ${theme.tokens.sideNavigation.Border}`,
-      height: `calc(100vh - ${PRIMARY_NAV_TOGGLE_HEIGHT}px - 10px)`, // TODO: We need to figure this out... scrollbar appears without this.
     },
     transform: 'none',
     transition: 'width linear 100ms, height linear 250ms',
