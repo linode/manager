@@ -1,4 +1,4 @@
-import { Autocomplete, Notice } from '@linode/ui';
+import { Autocomplete, InputAdornment, Notice } from '@linode/ui';
 import Search from '@mui/icons-material/Search';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -43,15 +43,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   root: {
     display: 'flex',
-    flexDirection: 'row',
     gap: 12,
   },
   searchIcon: {
     alignSelf: 'center',
     color: theme.color.grey1,
-    left: 4,
-    top: 40,
-    zIndex: 3,
   },
 }));
 
@@ -119,7 +115,6 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
         </Notice>
       )}
       <div className={classes.root}>
-        <Search className={classes.searchIcon} data-qa-search-icon />
         <Autocomplete
           renderOption={(props, option) => {
             return (
@@ -143,12 +138,51 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
                     transition: 'background-color 0.2s',
                   },
                 },
-                [theme.breakpoints.up('md')]: {
-                  transform: 'translateX(-9%)',
-                  width: 500,
+                '& .MuiInputBase-root': {
+                  '&:hover': {
+                    border: `1px solid ${theme.tokens.color.Brand[90]}`,
+                  },
+                },
+                boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
+                marginTop: 0.5,
+              }),
+            },
+            popper: {
+              sx: {
+                '& .MuiAutocomplete-listbox': {
+                  '&::-webkit-scrollbar': {
+                    display: 'none',
+                  },
+                  border: 'none !important',
+                  msOverflowStyle: 'none',
+                  scrollbarWidth: 'none',
+                },
+              },
+            },
+          }}
+          textFieldProps={{
+            InputProps: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search
+                    sx={(theme) => ({
+                      color: `${theme.color.grey1}`,
+                    })}
+                    data-qa-search-icon
+                  />
+                </InputAdornment>
+              ),
+              sx: (theme) => ({
+                '&.Mui-focused': {
+                  borderColor: `${theme.tokens.color.Brand[70]} !important`,
+                  boxShadow: 'none',
+                },
+                svg: {
+                  color: `${theme.tokens.color.Neutrals[70]} !important`,
                 },
               }),
             },
+            hideLabel: true,
           }}
           className={classes.enhancedSelectWrapper}
           disableClearable={false}
@@ -159,8 +193,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
           onChange={(_, selected) => handleSelect(selected)}
           onInputChange={(_, value) => onInputValueChange(value)}
           options={options}
-          placeholder="Search for answers..."
-          textFieldProps={{ hideLabel: true }}
+          placeholder="Search"
         />
       </div>
     </React.Fragment>

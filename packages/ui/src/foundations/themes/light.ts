@@ -325,16 +325,15 @@ export const lightTheme: ThemeOptions = {
           },
           '.MuiAutocomplete-popupIndicator': {
             svg: {
-              ':hover': {
-                opacity: 1,
-              },
               fontSize: '28px',
-              opacity: 0.5,
             },
           },
           paddingRight: 4,
           svg: {
-            color: Color.Neutrals[40],
+            ':hover': {
+              color: `${Color.Brand[70]} !important`,
+            },
+            color: `${Color.Neutrals[40]} !important`,
           },
         },
         groupLabel: {
