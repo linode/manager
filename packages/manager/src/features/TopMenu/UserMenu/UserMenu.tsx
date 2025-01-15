@@ -105,7 +105,7 @@ export const UserMenu = React.memo(() => {
           >
             <Typography
               sx={{
-                font: theme.tokens.typography.Label.Semibold.Xs,
+                font: theme.tokens.typography.Label.Semibold.S,
               }}
             >
               {userName}
