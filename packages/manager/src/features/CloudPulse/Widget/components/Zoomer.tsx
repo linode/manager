@@ -29,11 +29,11 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
               fontSize: 'x-large',
               padding: '0',
             }}
-            aria-label="Zoom In"
-            data-testid="zoom-in"
+            aria-label="Zoom Out"
+            data-testid="zoom-out"
             onClick={() => handleClick(false)}
           >
-            <ZoomInMap />
+            <ZoomOutMap />
           </IconButton>
         </CloudPulseTooltip>
       );
@@ -47,11 +47,11 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
             fontSize: 'x-large',
             padding: 0,
           }}
-          aria-label="Zoom Out"
-          data-testid="zoom-out"
+          aria-label="Zoom In"
+          data-testid="zoom-in"
           onClick={() => handleClick(true)}
         >
-          <ZoomOutMap />
+          <ZoomInMap />
         </IconButton>
       </CloudPulseTooltip>
     );
