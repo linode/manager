@@ -143,3 +143,28 @@ export const channelTypeOptions: Item<string, ChannelType>[] = Object.entries(
   label,
   value: key as ChannelType,
 }));
+
+export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
+  eq: '=',
+  gt: '>',
+  gte: '>=',
+  lt: '<',
+  lte: '<=',
+};
+export const aggregationTypeMap: Record<MetricAggregationType, string> = {
+  avg: 'Average',
+  count: 'Count',
+  max: 'Maximum',
+  min: 'Minimum',
+  sum: 'Sum',
+};
+export const dimensionOperatorTypeMap: Record<
+  DimensionFilterOperatorType,
+  string
+> = {
+  endswith: 'ends with',
+  eq: 'equals',
+  neq: 'not equals',
+  startswith: 'starts with',
+};
+

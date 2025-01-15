@@ -19,7 +19,9 @@ import {
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
+  alertDimensionsFactory,
   alertFactory,
+  alertRulesFactory,
   appTokenFactory,
   betaFactory,
   contactFactory,
@@ -1780,12 +1782,15 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/longview/plan', () => {
-    const plan = longviewActivePlanFactory.build();
+    const plan = longviewActivePlanFactory.build({});
     return HttpResponse.json(plan);
   }),
   http.get('*/longview/subscriptions', () => {
     const subscriptions = longviewSubscriptionFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(subscriptions));
+  }),
+  http.post('https://longview.linode.com/fetch', () => {
+    return HttpResponse.json({});
   }),
   http.get('*/longview/clients', () => {
     const clients = longviewClientFactory.buildList(10);
@@ -2454,6 +2459,14 @@ export const handlers = [
         return HttpResponse.json(
           alertFactory.build({
             id: Number(params.id),
+            rule_criteria: {
+              rules: [
+                ...alertRulesFactory.buildList(2, {
+                  dimension_filters: alertDimensionsFactory.buildList(2),
+                }),
+                ...alertRulesFactory.buildList(1, { dimension_filters: [] }),
+              ],
+            },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
           })
         );
