@@ -43,6 +43,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
     }
     if (open) {
       setValue('labels', nodePool?.labels);
+      setValue('taints', nodePool?.taints);
     }
   }, [nodePool, open]);
 
@@ -87,7 +88,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
         <Typography marginTop={(theme) => theme.spacing(2)} variant="h3">
           Taints
         </Typography>
-        <TaintTable taints={nodePool?.taints} />
+        <TaintTable />
         <Button
           buttonType="secondary"
           onClick={() => {
