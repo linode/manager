@@ -247,6 +247,12 @@ module.exports = {
       '@mui/core',
       '@mui/system',
       '@mui/icons-material',
+      {
+        importNames: ['Typography'],
+        message:
+          'Please use Typography component from @linode/ui instead of @mui/material',
+        name: '@mui/material',
+      },
     ],
     'no-throw-literal': 'warn',
     'no-trailing-spaces': 'warn',

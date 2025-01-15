@@ -107,7 +107,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
     '& .react-select__group-heading': {
       color: theme.color.headline,
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
       fontSize: '1rem',
       paddingLeft: 10,
       paddingRight: 10,
@@ -312,7 +312,7 @@ export const reactSelectStyles = (theme: Theme) => ({
   groupHeading: (base: any) => ({
     ...base,
     color: theme.color.headline,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '1rem',
     paddingLeft: 10,
     paddingRight: 10,

@@ -42,7 +42,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   notice: {
     '& p': {
       color: theme.color.white,
-      fontFamily: 'LatoWeb',
+      font: theme.font.normal,
     },
   },
   root: {

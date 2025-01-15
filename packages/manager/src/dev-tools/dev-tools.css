@@ -355,7 +355,8 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-family: 'LatoWebBold', sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 700;
   }
 
   .dev-tools__modal-form__field {

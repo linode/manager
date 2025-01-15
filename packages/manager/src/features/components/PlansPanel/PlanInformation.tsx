@@ -62,10 +62,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
 
   const transferBanner = (
     <Notice spacingBottom={8} variant="warning">
-      <Typography
-        fontFamily={(theme: Theme) => theme.font.bold}
-        fontSize="1rem"
-      >
+      <Typography fontSize="1rem" sx={(theme) => ({ font: theme.font.bold })}>
         Some plans do not include bundled network transfer. If the transfer
         allotment is 0, all outbound network transfer is subject to charges.
         <br />
@@ -81,8 +78,8 @@ export const PlanInformation = (props: PlanInformationProps) => {
           {showGPUEgressBanner && (
             <Notice spacingBottom={8} variant="info">
               <Typography
-                fontFamily={(theme: Theme) => theme.font.bold}
                 fontSize="1rem"
+                sx={(theme) => ({ font: theme.font.bold })}
               >
                 New GPU instances are now generally available. Deploy an RTX
                 4000 Ada GPU instance in select core compute regions in North

@@ -24,7 +24,6 @@ import {
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
-import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
@@ -198,8 +197,7 @@ const genericStatusPillStyle = {
   },
   backgroundColor: 'transparent',
   color: textColors.tableStatic,
-  fontFamily: latoWeb.bold,
-  fontSize: '1rem',
+  font: Typography.Body.Bold,
   padding: 0,
 };
 
@@ -251,6 +249,14 @@ const MuiTableZebraHoverStyles = {
 const MuiTableZebraStyles = {
   background: Table.Row.Background.Zebra,
   ...MuiTableZebraHoverStyles,
+};
+
+const typographyPropertiesReset = {
+  fontFamily: undefined,
+  fontSize: undefined,
+  fontWeight: undefined,
+  letterSpacing: undefined,
+  lineHeight: undefined,
 };
 
 export const lightTheme: ThemeOptions = {
@@ -363,7 +369,7 @@ export const lightTheme: ThemeOptions = {
           },
         },
         groupLabel: {
-          fontFamily: latoWeb.bold,
+          font: Typography.Body.Bold,
           fontSize: '1rem',
           lineHeight: 'unset',
           padding: '8px',
@@ -530,9 +536,7 @@ export const lightTheme: ThemeOptions = {
           border: 'none',
           borderRadius: 1,
           cursor: 'pointer',
-          fontFamily: latoWeb.bold,
-          fontSize: '1rem',
-          lineHeight: 1,
+          font: Typography.Body.Semibold,
           minHeight: 34,
           minWidth: 'initial',
           textTransform: 'capitalize',
@@ -790,9 +794,10 @@ export const lightTheme: ThemeOptions = {
           '&$error': {
             color: Select.Error.HintText,
           },
-          fontSize: '0.875rem',
-          lineHeight: 1.25,
+          fontWeight: 400,
+          letterSpacing: 'inherit',
           maxWidth: 416,
+          textTransform: 'none',
         },
       },
     },
@@ -810,8 +815,7 @@ export const lightTheme: ThemeOptions = {
             color: Color.Neutrals[70],
           },
           color: Color.Neutrals[70],
-          fontFamily: latoWeb.bold,
-          fontSize: '.875rem',
+          font: Typography.Body.Bold,
           marginBottom: 8,
         },
       },
@@ -996,8 +1000,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&.selectHeader': {
             color: primaryColors.text,
-            fontFamily: latoWeb.bold,
-            fontSize: '1rem',
+            font: Typography.Body.Bold,
             opacity: 1,
           },
           color: primaryColors.text,
@@ -1300,7 +1303,7 @@ export const lightTheme: ThemeOptions = {
         root: {
           '&$selected, &$selected:hover': {
             color: primaryColors.headline,
-            fontFamily: latoWeb.bold,
+            font: Typography.Body.Bold,
           },
           '&:hover': {
             color: primaryColors.main,
@@ -1377,6 +1380,7 @@ export const lightTheme: ThemeOptions = {
             borderBottom: `1px solid ${Border.Normal}`,
           },
           border: `1px solid ${Border.Normal}`,
+          borderBottom: 0,
           borderCollapse: 'initial',
         },
       },
@@ -1420,7 +1424,7 @@ export const lightTheme: ThemeOptions = {
           '.MuiCollapse-root': {
             padding: Spacing[60],
           },
-          borderBottom: `1px s1olid ${Table.Row.Border}`,
+          borderBottom: `1px solid ${Table.Row.Border}`,
           fontSize: Font.FontSize.Xs,
           height: '40px',
           lineHeight: Font.LineHeight.Xs,
@@ -1566,6 +1570,17 @@ export const lightTheme: ThemeOptions = {
       },
     },
     MuiTypography: {
+      defaultProps: {
+        fontFamily: Font.FontFamily.Brand,
+        variantMapping: {
+          h1: 'h1',
+          h2: 'h2',
+          h3: 'h3',
+          h4: 'h4',
+          h5: 'h5',
+          h6: 'h6',
+        },
+      },
       styleOverrides: {
         button: {
           '&$colorSecondary': {
@@ -1596,8 +1611,7 @@ export const lightTheme: ThemeOptions = {
           },
           color: Color.Neutrals.White,
           cursor: 'pointer',
-          fontFamily: latoWeb.bold,
-          fontSize: '1rem',
+          font: Typography.Body.Bold,
           lineHeight: 1,
           maxHeight: 34,
           minHeight: `34px`,
@@ -1609,8 +1623,12 @@ export const lightTheme: ThemeOptions = {
     },
   },
   font: {
-    bold: latoWeb.bold,
-    normal: latoWeb.normal,
+    bold: Typography.Body.Bold,
+    extrabold: Typography.Body.Extrabold,
+    italic: Typography.Body.Italic,
+    list: Typography.Body.List,
+    normal: Typography.Body.Regular,
+    semibold: Typography.Body.Semibold,
   },
   graphs: {
     aborted: {
@@ -1799,43 +1817,42 @@ export const lightTheme: ThemeOptions = {
   },
   typography: {
     body1: {
+      ...typographyPropertiesReset,
       color: primaryColors.text,
-      fontSize: '0.875rem',
-      lineHeight: '1.125rem',
+      font: Typography.Body.Regular,
     },
     caption: {
+      ...typographyPropertiesReset,
       color: primaryColors.text,
-      fontSize: '0.625rem',
-      lineHeight: '0.625rem',
+      font: Typography.Heading.Overline,
+      letterSpacing: Typography.Heading.OverlineLetterSpacing,
+      textTransform: Typography.Heading.OverlineTextCase,
     },
-    fontFamily: latoWeb.normal,
-    fontSize: 16,
+    fontFamily: Font.FontFamily.Brand,
+    fontSize: undefined,
     h1: {
+      ...typographyPropertiesReset,
       [breakpoints.up('lg')]: {
-        fontSize: '1.5rem',
-        lineHeight: '1.875rem',
+        font: Typography.Heading.Xl,
       },
       color: primaryColors.headline,
-      fontFamily: latoWeb.bold,
-      fontSize: '1.25rem',
-      lineHeight: '1.75rem',
+      font: Typography.Heading.L,
     },
     h2: {
+      ...typographyPropertiesReset,
       color: primaryColors.headline,
-      fontFamily: latoWeb.bold,
-      fontSize: '1.125rem',
-      lineHeight: '1.5rem',
+      font: Typography.Heading.M,
     },
     h3: {
+      ...typographyPropertiesReset,
       color: primaryColors.headline,
-      fontFamily: latoWeb.bold,
-      fontSize: '1rem',
-      lineHeight: '1.4rem',
+      font: Typography.Heading.S,
     },
+    htmlFontSize: undefined,
     subtitle1: {
+      ...typographyPropertiesReset,
       color: primaryColors.text,
-      fontSize: '1.075rem',
-      lineHeight: '1.5rem',
+      font: Typography.Heading.Xs,
     },
   },
   visually: {

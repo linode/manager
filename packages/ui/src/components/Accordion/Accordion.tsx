@@ -22,7 +22,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     borderRadius: '50%',
     color: theme.tokens.color.Neutrals.White,
     display: 'flex',
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '0.875rem',
     height: 30,
     justifyContent: 'center',
