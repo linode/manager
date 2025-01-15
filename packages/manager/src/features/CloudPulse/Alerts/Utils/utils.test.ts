@@ -13,7 +13,6 @@ it('test getServiceTypeLabel method', () => {
   expect(getServiceTypeLabel('test', { data: services })).toBe('test');
   expect(getServiceTypeLabel('', { data: services })).toBe('');
 });
-
 it('test convertSecondsToMinutes method', () => {
   expect(convertSecondsToMinutes(0)).toBe('0 minutes');
   expect(convertSecondsToMinutes(60)).toBe('1 minute');

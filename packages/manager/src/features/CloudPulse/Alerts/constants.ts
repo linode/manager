@@ -129,24 +129,24 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',
 };
-
-export const operators = {
+export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   eq: '=',
   gt: '>',
   gte: '>=',
   lt: '<',
   lte: '<=',
 };
-
-export const aggregationTypes = {
+export const aggregationTypeMap: Record<MetricAggregationType, string> = {
   avg: 'Average',
   count: 'Count',
   max: 'Maximum',
   min: 'Minimum',
   sum: 'Sum',
 };
-
-export const operatorLabel = {
+export const dimensionOperatorTypeMap: Record<
+  DimensionFilterOperatorType,
+  string
+> = {
   endswith: 'ends with',
   eq: 'equals',
   neq: 'not equals',

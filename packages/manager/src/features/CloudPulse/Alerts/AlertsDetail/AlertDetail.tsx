@@ -1,4 +1,4 @@
-import { Box, Chip, CircleProgress } from '@linode/ui';
+import { Box, Chip, CircleProgress, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -50,12 +50,14 @@ export const AlertDetail = () => {
   }, [alertId, serviceType]);
 
   const theme = useTheme();
+  const nonSuccessBoxHeight = '600px';
+  const sectionMaxHeight = '785px';
 
   if (isFetching) {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
+        <Box alignContent="center" height={nonSuccessBoxHeight}>
           <CircleProgress />
         </Box>
       </>
@@ -66,7 +68,7 @@ export const AlertDetail = () => {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
+        <Box alignContent="center" height={nonSuccessBoxHeight}>
           <ErrorState errorText="An error occurred while loading the definitions. Please try again later." />
         </Box>
       </>
@@ -77,7 +79,7 @@ export const AlertDetail = () => {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
+        <Box alignContent="center" height={nonSuccessBoxHeight}>
           <StyledPlaceholder
             icon={AlertsIcon}
             isEntity
@@ -96,7 +98,7 @@ export const AlertDetail = () => {
           <Box
             data-qa-section="Overview"
             flexBasis="50%"
-            maxHeight={theme.spacing(98.125)}
+            maxHeight={sectionMaxHeight}
             sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
           >
             <AlertDetailOverview alertDetails={alertDetails} />
@@ -108,7 +110,7 @@ export const AlertDetail = () => {
             }}
             data-qa-section="Criteria"
             flexBasis="50%"
-            maxHeight={theme.spacing(98.125)}
+            maxHeight={sectionMaxHeight}
           >
             <AlertDetailCriteria alert={alertDetails} />
           </Box>
@@ -148,11 +150,17 @@ export const StyledAlertChip = styled(Chip, {
   borderRadius?: string;
 }>(({ borderRadius, theme }) => ({
   '& .MuiChip-label': {
-    color: theme.tokens.color.Neutrals.Black,
-    marginRight: theme.spacing(1), // Add padding inside the label
+    color: theme.tokens.content.Text.Primary.Default,
+    marginRight: theme.spacing(1),
   },
-  backgroundColor: theme.tokens.color.Neutrals.White,
+  backgroundColor: theme.tokens.background.Normal,
   borderRadius: borderRadius || 0,
   height: theme.spacing(3),
-  lineHeight: '1.5rem',
+}));
+
+export const StyledAlertTypography = styled(Typography, {
+  label: 'StyledAlertTypography',
+})(({ theme }) => ({
+  color: theme.tokens.content.Text.Primary.Default,
+  fontSize: theme.typography.body1.fontSize,
 }));
