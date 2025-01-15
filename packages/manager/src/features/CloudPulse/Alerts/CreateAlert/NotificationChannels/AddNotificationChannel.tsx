@@ -11,7 +11,7 @@ import { getAlertBoxStyles } from '../../Utils/utils';
 import { notificationChannelSchema } from '../schemas';
 
 import type { NotificationChannelForm } from '../types';
-import type { ChannelTypes, NotificationChannel } from '@linode/api-v4';
+import type { ChannelType, NotificationChannel } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
 interface AddNotificationChannelProps {
@@ -112,7 +112,7 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
                 }
                 onChange={(
                   _,
-                  newValue: { label: string; value: ChannelTypes },
+                  newValue: { label: string; value: ChannelType },
                   reason
                 ) => {
                   field.onChange(

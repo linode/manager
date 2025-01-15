@@ -1,7 +1,7 @@
 import type {
   AlertSeverityType,
   AlertStatusType,
-  ChannelTypes,
+  ChannelType,
   DimensionFilterOperatorType,
   MetricAggregationType,
   MetricOperatorType,
@@ -130,16 +130,16 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   enabled: 'active',
 };
 
-export const channelTypes: Record<ChannelTypes, string> = {
+export const channelTypes: Record<ChannelType, string> = {
   email: 'Email',
   pagerduty: 'Pagerduty',
   slack: 'Slack',
   webhook: 'Webhook',
 };
 
-export const channelTypeOptions: Item<string, ChannelTypes>[] = Object.entries(
+export const channelTypeOptions: Item<string, ChannelType>[] = Object.entries(
   channelTypes
 ).map(([key, label]) => ({
   label,
-  value: key as ChannelTypes,
+  value: key as ChannelType,
 }));
