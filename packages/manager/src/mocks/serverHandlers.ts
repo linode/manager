@@ -132,7 +132,6 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { accountResourcesFactory } from 'src/factories/accountResources';
 
 export const makeResourcePage = <T>(

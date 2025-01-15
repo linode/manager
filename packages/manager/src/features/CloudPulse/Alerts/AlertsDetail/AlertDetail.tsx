@@ -112,7 +112,7 @@ export const AlertDetail = () => {
             flexBasis="50%"
             maxHeight={sectionMaxHeight}
           >
-            <AlertDetailCriteria alert={alertDetails} />
+            <AlertDetailCriteria alertDetails={alertDetails} />
           </Box>
         </Box>
         <Box
