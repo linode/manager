@@ -8,6 +8,7 @@ import {
   regionFactory,
 } from 'src/factories';
 import { chooseRegion } from 'support/util/regions';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ObjectStorageEndpoint } from '@linode/api-v4';
 import { randomItem, randomLabel } from 'support/util/random';
 import {
@@ -16,6 +17,7 @@ import {
   mockGetBucketObjectFilename,
   mockGetBucketObjects,
   mockGetBucketsForRegion,
+  mockGetBucketsForRegionError,
   mockGetObjectStorageEndpoints,
   mockUploadBucketObject,
   mockUploadBucketObjectS3,
@@ -363,5 +365,40 @@ describe('Object Storage Gen2 bucket object tests', () => {
     ui.drawer.findByTitle(bucketFilename).should('be.visible');
 
     checkBucketObjectDetailsDrawer(bucketFilename, endpointTypeE3);
+  });
+
+  it('UI should display buckets for region1, warning message for one region', () => {
+    const mockRegions = regionFactory.buildList(2, {
+      capabilities: ['Object Storage'],
+    });
+    mockGetRegions(mockRegions).as('getRegions');
+    const mockEndpoints = mockRegions.map((mockRegion) => {
+      return objectStorageEndpointsFactory.build({
+        endpoint_type: 'E2',
+        region: mockRegion.id,
+        s3_endpoint: `${mockRegion.id}.linodeobjects.com`,
+      });
+    });
+
+    mockGetObjectStorageEndpoints(mockEndpoints).as('getEndpoints');
+    const mockBucket1 = objectStorageBucketFactoryGen2.build({
+      label: randomLabel(),
+      region: mockRegions[0].id,
+    });
+    // this bucket should display
+    mockGetBucketsForRegion(mockRegions[0].id, [mockBucket1]).as(
+      'getBucketsForRegion'
+    );
+    mockGetBucketsForRegionError(mockRegions[1].id).as(
+      'getBucketsForRegionError'
+    );
+
+    cy.visitWithLogin('/object-storage/buckets');
+    cy.wait([
+      '@getRegions',
+      '@getEndpoints',
+      '@getBucketsForRegion',
+      '@getBucketsForRegionError',
+    ]);
   });
 });
