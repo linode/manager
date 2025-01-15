@@ -72,6 +72,7 @@ import {
   nodeBalancerFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
+  notificationChannelFactory,
   notificationFactory,
   objectStorageBucketFactoryGen2,
   objectStorageClusterFactory,
@@ -109,7 +110,6 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
-import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { pickRandom } from 'src/utilities/random';
 
@@ -2454,7 +2454,7 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(alerts));
   }),
   http.get('*/monitor/alert-channels', () => {
-    const notificationChannels = notificationChannelFactory.buildList(2);
+    const notificationChannels = notificationChannelFactory.buildList(3);
     return HttpResponse.json(makeResourcePage(notificationChannels));
   }),
   http.get(

@@ -59,8 +59,11 @@ export const getAlertDefinitionByServiceTypeAndId = (
       Authorization: 'Bearer vagrant',
     })
   );
-export const getNotificationChannels = () =>
+
+export const getNotificationChannels = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<NotificationChannel>>(
     setURL(`${API_ROOT}/monitor/alert-channels`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
   );

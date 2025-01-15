@@ -9,8 +9,8 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { Drawer } from 'src/components/Drawer';
 import {
+  useAlertNotificationChannelsQuery,
   useCreateAlertDefinition,
-  useNotificationChannels,
 } from 'src/queries/cloudpulse/alerts';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
@@ -128,7 +128,7 @@ export const CreateAlertDefinition = () => {
     data: notificationData,
     isError: notificationChannelsError,
     isLoading: notificationChannelsLoading,
-  } = useNotificationChannels();
+  } = useAlertNotificationChannelsQuery();
   const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
 
   const onChangeNotifications = (notifications: NotificationChannel[]) => {
@@ -150,7 +150,7 @@ export const CreateAlertDefinition = () => {
 
   const notifications = React.useMemo(() => {
     return (
-      notificationData?.data.filter(
+      notificationData?.filter(
         (notification) => !notificationChannelWatcher.includes(notification.id)
       ) ?? []
     );
@@ -158,11 +158,9 @@ export const CreateAlertDefinition = () => {
 
   const selectedNotifications = React.useMemo(() => {
     return (
-      notificationChannelWatcher
-        .map((id) =>
-          notificationData?.data.find((notification) => notification.id === id)
-        )
-        .filter((notification) => notification !== undefined) ?? []
+      notificationData?.filter((notification) =>
+        notificationChannelWatcher.includes(notification.id)
+      ) ?? []
     );
   }, [notificationChannelWatcher, notificationData]);
 
