@@ -18,8 +18,19 @@ export const nav = {
    *
    * @returns Cypress chainable.
    */
-  findItemByTitle: (title: string): Cypress.Chainable => {
-    return cy.get('#main-navigation').findByText(title).closest('a');
+  findItemByTitle: (title: string, category?: string): Cypress.Chainable => {
+    if (!category) {
+      return cy.get('#main-navigation').findByText(title).closest('a');
+    }
+
+    // Click the category to expand the navigation menu
+    cy.get('#main-navigation')
+      .get(`p:contains("${category}")`)
+      .closest('[role="button"]')
+      .click();
+
+    // Find the item by its title
+    return cy.get('#main-navigation').findByTestId(`menu-item-${title}`);
   },
 
   /**

@@ -77,56 +77,75 @@ describe('linode landing checks', () => {
   });
 
   it('checks the landing page side menu items', () => {
-    cy.get('[title="Akamai - Dashboard"][href="/dashboard"]').should(
-      'be.visible'
-    );
-    cy.get('[data-testid="menu-item-Linodes"][href="/linodes"]').should(
-      'be.visible'
-    );
-    cy.get('[data-testid="menu-item-Volumes"][href="/volumes"]').should(
-      'be.visible'
-    );
-    cy.get(
-      '[data-testid="menu-item-NodeBalancers"][href="/nodebalancers"]'
-    ).should('be.visible');
-    cy.get('[data-testid="menu-item-Firewalls"][href="/firewalls"]').should(
-      'be.visible'
-    );
-    cy.get(
-      '[data-testid="menu-item-StackScripts"][href="/stackscripts"]'
-    ).should('be.visible');
-    cy.get('[data-testid="menu-item-Images"][href="/images"]').should(
-      'be.visible'
-    );
-    cy.get('[data-testid="menu-item-Domains"][href="/domains"]').should(
-      'be.visible'
-    );
-    cy.get(
-      '[data-testid="menu-item-Kubernetes"][href="/kubernetes/clusters"]'
-    ).should('be.visible');
-    cy.get(
-      '[data-testid="menu-item-Object Storage"][href="/object-storage/buckets"]'
-    ).should('be.visible');
-    cy.get('[data-testid="menu-item-Longview"][href="/longview"]').should(
-      'be.visible'
-    );
-    cy.get(
-      '[data-testid="menu-item-Marketplace"][href="/linodes/create?type=One-Click"]'
-    ).should('be.visible');
-    cy.get('[data-testid="menu-item-Account"][href="/account"]').should(
-      'be.visible'
-    );
-    cy.get('[data-testid="menu-item-Help & Support"][href="/support"]').should(
-      'be.visible'
-    );
+    // cy.get('[title="Akamai - Dashboard"][href="/dashboard"]').should(
+    //   'be.visible'
+    // );
+    // cy.get('[data-testid="menu-item-Linodes"][href="/linodes"]').should(
+    //   'be.visible'
+    // );
+    // cy.get('[data-testid="menu-item-Volumes"][href="/volumes"]').should(
+    //   'be.visible'
+    // );
+    // cy.get(
+    //   '[data-testid="menu-item-NodeBalancers"][href="/nodebalancers"]'
+    // ).should('be.visible');
+    // cy.get('[data-testid="menu-item-Firewalls"][href="/firewalls"]').should(
+    //   'be.visible'
+    // );
+    // cy.get(
+    //   '[data-testid="menu-item-StackScripts"][href="/stackscripts"]'
+    // ).should('be.visible');
+    // cy.get('[data-testid="menu-item-Images"][href="/images"]').should(
+    //   'be.visible'
+    // );
+    // cy.get('[data-testid="menu-item-Domains"][href="/domains"]').should(
+    //   'be.visible'
+    // );
+    // cy.get(
+    //   '[data-testid="menu-item-Kubernetes"][href="/kubernetes/clusters"]'
+    // ).should('be.visible');
+    // cy.get(
+    //   '[data-testid="menu-item-Object Storage"][href="/object-storage/buckets"]'
+    // ).should('be.visible');
+    // cy.get('[data-testid="menu-item-Longview"][href="/longview"]').should(
+    //   'be.visible'
+    // );
+    // cy.get(
+    //   '[data-testid="menu-item-Marketplace"][href="/linodes/create?type=One-Click"]'
+    // ).should('be.visible');
+    // cy.get('[data-testid="menu-item-Account"][href="/account"]').should(
+    //   'be.visible'
+    // );
+    // cy.get('[data-testid="menu-item-Help & Support"][href="/support"]').should(
+    //   'be.visible'
+    // );
+    ui.nav.findItemByTitle('Linodes', 'Compute').should('be.visible');
+    ui.nav.findItemByTitle('Images', 'Compute').should('be.visible');
+    ui.nav.findItemByTitle('Kubernetes', 'Compute').should('be.visible');
+    ui.nav.findItemByTitle('StackScripts', 'Compute').should('be.visible');
+    ui.nav.findItemByTitle('Placement Groups', 'Compute').should('be.visible');
+    ui.nav.findItemByTitle('Marketplace', 'Compute').should('be.visible');
+
+    ui.nav.findItemByTitle('Object Storage', 'Storage').should('be.visible');
+    ui.nav.findItemByTitle('Volumes', 'Storage').should('be.visible');
+
+    ui.nav.findItemByTitle('VPC', 'Networking').should('be.visible');
+    ui.nav.findItemByTitle('Firewalls', 'Networking').should('be.visible');
+    ui.nav.findItemByTitle('NodeBalancers', 'Networking').should('be.visible');
+    ui.nav.findItemByTitle('Domains', 'Networking').should('be.visible');
+
+    ui.nav.findItemByTitle('Databases', 'Databases').should('be.visible');
+
+    ui.nav.findItemByTitle('Longview', 'Monitor').should('be.visible');
+
+    ui.nav.findItemByTitle('Betas', 'More').should('be.visible');
+    ui.nav.findItemByTitle('Account', 'More').should('be.visible');
+    ui.nav.findItemByTitle('Help & Support', 'More').should('be.visible');
   });
 
   it('checks the landing top menu items', () => {
     cy.wait('@getProfile').then((xhr) => {
       const username = xhr.response?.body.username;
-      cy.get('[aria-label="open menu"]')
-        .should('be.visible')
-        .should('be.visible');
       cy.get('[data-qa-add-new-menu-button="true"]')
         .should('be.visible')
         .should('be.visible');

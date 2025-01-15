@@ -29,7 +29,7 @@ describe('Betas landing page', () => {
     cy.visitWithLogin('/linodes');
     cy.wait('@getFeatureFlags');
 
-    ui.nav.findItemByTitle('Betas').should('be.visible').click();
+    ui.nav.findItemByTitle('Betas', 'More').should('be.visible').click();
 
     cy.url().should('endWith', '/betas');
 

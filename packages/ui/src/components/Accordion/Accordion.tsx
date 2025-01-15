@@ -127,7 +127,6 @@ export const Accordion = (props: AccordionProps) => {
         }
         onClick={handleClick}
         {...summaryProps}
-        data-qa-panel-summary={heading}
       >
         <Typography {...headingProps} data-qa-panel-subheading variant="h3">
           {heading}
