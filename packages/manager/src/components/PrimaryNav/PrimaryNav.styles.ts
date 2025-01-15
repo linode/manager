@@ -66,6 +66,7 @@ export const StyledActiveLink = styled(Link, {
   position: 'relative',
   ...(props.isActiveLink && {
     backgroundColor: Global.Color.Neutrals[100],
+    font: FontTypography.Body.Bold,
   }),
 }));
 
