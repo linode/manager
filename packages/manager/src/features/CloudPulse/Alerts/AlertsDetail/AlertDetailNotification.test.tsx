@@ -35,7 +35,7 @@ beforeEach(() => {
 describe('AlertDetailNotification component tests', () => {
   it('should render the alert detail notification channels successfully', () => {
     const { getAllByText, getByText } = renderWithTheme(
-      <AlertDetailNotification channelIds={[1, 2, 3]} />
+      <AlertDetailNotification channelIds={['1', '2', '3']} />
     );
 
     expect(getByText('Notification Channels')).toBeInTheDocument();
