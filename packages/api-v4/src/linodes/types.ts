@@ -238,7 +238,7 @@ export interface CreateLinodeInterfacePayload {
   public?: CreatePublicInterfacePayload | null;
   vlan?: {
     vlan_label: string;
-    ipam_address?: string;
+    ipam_address?: string | null;
   } | null;
 }
 
@@ -385,7 +385,7 @@ export interface LinodeInterfaceHistory {
   created: string;
 }
 
-export interface LinodeInterfaceSetting {
+export interface LinodeInterfaceSettings {
   network_helper: boolean;
   default_route: {
     ipv4_interface_id?: number | null;
@@ -395,7 +395,7 @@ export interface LinodeInterfaceSetting {
   };
 }
 
-export interface LinodeInterfaceSettingPayload {
+export interface LinodeInterfaceSettingsPayload {
   network_helper?: boolean | null;
   default_route: {
     ipv4_interface_id?: number | null;

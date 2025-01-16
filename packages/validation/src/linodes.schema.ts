@@ -603,7 +603,7 @@ export const CreateLinodeInterfaceSchema = object({
     .nullable(),
   vlan: object({
     vlan_label: string(),
-    ipam_address: string().notRequired(),
+    ipam_address: string().notRequired().nullable(),
   })
     .notRequired()
     .nullable(),
