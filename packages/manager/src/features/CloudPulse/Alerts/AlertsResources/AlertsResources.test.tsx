@@ -44,14 +44,14 @@ beforeEach(() => {
 });
 
 describe('AlertResources component tests', () => {
-  it('should render search input, region filter', async () => {
+  it('should render search input, region filter', () => {
     const { getByText } = renderWithTheme(
       <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
     expect(getByText(searchPlaceholder)).toBeInTheDocument();
     expect(getByText(regionPlaceholder)).toBeInTheDocument();
   });
-  it('should render circle progress if api calls are in fetching state', async () => {
+  it('should render circle progress if api calls are in fetching state', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodes,
       isError: false,
@@ -65,7 +65,7 @@ describe('AlertResources component tests', () => {
     expect(queryByText(regionPlaceholder)).not.toBeInTheDocument();
   });
 
-  it('should render error state if api call fails', async () => {
+  it('should render error state if api call fails', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodes,
       isError: true,
