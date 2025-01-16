@@ -1110,6 +1110,7 @@ describe('LKE cluster updates', () => {
    * - Confirms Labels and Taints drawer displays the expected Labels and Taints.
    * - Confirms Labels and Taints can be deleted from a node pool.
    * - TODO - Part 2: Confirms that Labels and Taints can be added to a node pool.
+   * - TODO - Part 2: Confirms validation and errors are handled gracefully.
    */
   it('can view and delete node pool labels and taints', () => {
     // Mock the LKE-E feature flag. TODO: remove in Part 2.
