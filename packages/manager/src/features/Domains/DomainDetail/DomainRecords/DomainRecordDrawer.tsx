@@ -383,14 +383,13 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
     placeholder,
     trimmed,
   }: AdjustedTextFieldProps) => (
-    // NOTE: Need to check this why onChange is causing problem here.....
     <_TextField
       onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         updateField(field)(e.target.value)
       }
-      // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-      //   updateField(field)(e.target.value)
-      // }
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        updateField(field)(e.target.value)
+      }
       value={defaultTo(
         defaultFieldsState(props)[field] as number | string,
         (state.fields as EditableDomainFields & EditableRecordFields)[field] as
@@ -547,6 +546,8 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
   const updateField = (
     key: keyof EditableDomainFields | keyof EditableRecordFields
   ) => (value: any) => {
+    // NOTE: Issue is somewhere here...
+    // (@TODO - Purvesh: Need to refactor this setState properly)
     setState((prevState) => ({
       ...prevState,
       fields: {
