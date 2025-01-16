@@ -10,9 +10,10 @@ describe('AlertsRegionFilter component tests', () => {
   const mockRegions = regionFactory.buildList(3);
 
   it('should render the AlertsRegionFilter with required options', async () => {
+    const mockHandleSelectionChange = vi.fn();
     const { getByRole, getByTestId, queryByTestId } = renderWithTheme(
       <AlertsRegionFilter
-        handleSelectionChange={vi.fn()}
+        handleSelectionChange={mockHandleSelectionChange}
         regionOptions={mockRegions}
       />
     );
@@ -22,6 +23,7 @@ describe('AlertsRegionFilter component tests', () => {
     await userEvent.click(getByTestId(mockRegions[0].id));
 
     await userEvent.click(getByRole('button', { name: 'Close' }));
+    expect(mockHandleSelectionChange).toHaveBeenCalledWith([mockRegions[0].id]);
 
     // validate the option is selected
     expect(queryByTestId(mockRegions[0].id)).toBeInTheDocument();
@@ -40,6 +42,10 @@ describe('AlertsRegionFilter component tests', () => {
     // validate both the options are selected
     expect(queryByTestId(mockRegions[0].id)).toBeInTheDocument();
     expect(queryByTestId(mockRegions[1].id)).toBeInTheDocument();
+    expect(mockHandleSelectionChange).toHaveBeenCalledWith([
+      mockRegions[0].id,
+      mockRegions[1].id,
+    ]);
   });
 
   it('should render the AlertsRegionFilter with empty options', async () => {
