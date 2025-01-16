@@ -311,7 +311,7 @@ export interface ModifyPublicInterfacePayload {
     addresses?: BaseInterfaceIPv4Address[] | null;
   } | null;
   ipv6?: {
-    ranges: PublicInterfaceRange[] | null;
+    ranges?: PublicInterfaceRange[] | null;
   } | null;
 }
 
