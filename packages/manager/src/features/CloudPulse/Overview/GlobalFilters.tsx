@@ -8,7 +8,10 @@ import Reload from 'src/assets/icons/refresh.svg';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
-import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
+import {
+  CloudPulseDateTimeRangePicker,
+  convertToGmt,
+} from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
@@ -48,7 +51,11 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       if (savePref) {
         updatePreferences({ [TIME_DURATION]: timeDuration });
       }
-      handleTimeDurationChange(timeDuration);
+      handleTimeDurationChange({
+        ...timeDuration,
+        end: convertToGmt(timeDuration.end),
+        start: convertToGmt(timeDuration.start),
+      });
     },
     []
   );

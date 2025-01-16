@@ -10,6 +10,7 @@ import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardF
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import {
   CloudPulseDateTimeRangePicker,
+  convertToGmt,
   defaultTimeDuration,
 } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
@@ -79,7 +80,11 @@ export const CloudPulseDashboardWithFilters = React.memo(
 
     const handleTimeRangeChange = React.useCallback(
       (timeDuration: TimeDurationDate) => {
-        setTimeDuration(timeDuration);
+        setTimeDuration({
+          ...timeDuration,
+          end: convertToGmt(timeDuration.end),
+          start: convertToGmt(timeDuration.start),
+        });
       },
       []
     );
