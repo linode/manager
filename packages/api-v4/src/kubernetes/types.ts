@@ -61,6 +61,8 @@ export interface UpdateNodePoolData {
   autoscaler: AutoscaleSettings;
   count: number;
   tags: string[];
+  labels: Label;
+  taints: Taint[];
 }
 
 export interface AutoscaleSettings {

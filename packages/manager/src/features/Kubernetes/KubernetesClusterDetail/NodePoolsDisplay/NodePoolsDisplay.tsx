@@ -169,6 +169,7 @@ export const NodePoolsDisplay = (props: Props) => {
         regionsData={regionsData}
       />
       <LabelAndTaintDrawer
+        clusterId={clusterID}
         nodePool={selectedPool}
         onClose={() => setIsLabelsAndTaintsDrawerOpen(false)}
         open={isLabelsAndTaintsDrawerOpen}
