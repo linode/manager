@@ -74,7 +74,7 @@ export const CloudPulseDateTimeRangePicker = React.memo(
         sx={{
           minWidth: '226px',
         }}
-        disabledTimeZone
+        disableTimeZone
         enablePresets
         onChange={handleDateChange}
       />
