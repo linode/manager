@@ -3,7 +3,10 @@ import { cond, equals, pick } from 'ramda';
 
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 
+import { getInitialIPs } from '../../domainUtils';
+
 import type {
+  DomainRecordDrawerProps,
   EditableDomainFields,
   EditableRecordFields,
 } from './DomainRecordDrawer';
@@ -134,3 +137,29 @@ export const filterDataByType = (
     ],
     [() => equals('TXT', t), () => pick(['name', 'target', 'ttl_sec'], fields)],
   ])();
+
+/**
+ * the defaultFieldState is used to pre-populate the drawer with either
+ * editable data or defaults.
+ */
+export const defaultFieldsState = (
+  props: Partial<DomainRecordDrawerProps>
+) => ({
+  axfr_ips: getInitialIPs(props.axfr_ips),
+  description: '',
+  domain: props.domain,
+  expire_sec: props.expire_sec ?? 0,
+  id: props.id,
+  name: props.name ?? '',
+  port: props.port ?? '80',
+  priority: props.priority ?? '10',
+  protocol: props.protocol ?? 'tcp',
+  refresh_sec: props.refresh_sec ?? 0,
+  retry_sec: props.retry_sec ?? 0,
+  service: props.service ?? '',
+  soa_email: props.soa_email ?? '',
+  tag: props.tag ?? 'issue',
+  target: props.target ?? '',
+  ttl_sec: props.ttl_sec ?? 0,
+  weight: props.weight ?? '5',
+});
