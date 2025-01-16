@@ -1,6 +1,6 @@
 import { Divider } from '@linode/ui';
-import { Grid } from '@mui/material';
 import { IconButton, useTheme } from '@mui/material';
+import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -8,11 +8,9 @@ import Reload from 'src/assets/icons/refresh.svg';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
-import {
-  CloudPulseDateTimeRangePicker,
-  convertToGmt,
-} from '../shared/CloudPulseDateTimeRangePicker';
+import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
+import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
 import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
