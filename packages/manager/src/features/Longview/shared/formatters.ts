@@ -87,7 +87,7 @@ export const pathMaybeAddDataInThePast = <T extends {}>(
   let _data = clone(data);
 
   pathsToAddDataPointTo.forEach((eachPath) => {
-    const arrayOfStats = pathOr([], eachPath, data);
+    const arrayOfStats = pathOr<StatWithDummyPoint[], T>([], eachPath, data);
     const updatedData = maybeAddPastData(
       arrayOfStats,
       selectedStartTimeInSeconds

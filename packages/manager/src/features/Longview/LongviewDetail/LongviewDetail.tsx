@@ -326,7 +326,7 @@ export const LongviewDetail = (props: CombinedProps) => {
 const EnhancedLongviewDetail = compose<CombinedProps, {}>(
   React.memo,
   withClientStats<RouteComponentProps<{ id: string }>>((ownProps) => {
-    return +(ownProps?.match?.params?.id ?? 0);
+    return +(ownProps?.match?.params?.id ?? '');
   }),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (

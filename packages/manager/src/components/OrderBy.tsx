@@ -139,8 +139,16 @@ export const sortData = <T,>(orderBy: string, order: Order) => {
     }
 
     /** basically, if orderByProp exists, do a pathOr with that instead */
-    const aValue = pathOr('', !!orderByProp ? orderByProp : [orderBy], a);
-    const bValue = pathOr('', !!orderByProp ? orderByProp : [orderBy], b);
+    const aValue = pathOr<any, T>(
+      '',
+      !!orderByProp ? orderByProp : [orderBy],
+      a
+    );
+    const bValue = pathOr<any, T>(
+      '',
+      !!orderByProp ? orderByProp : [orderBy],
+      b
+    );
 
     if (Array.isArray(aValue) && Array.isArray(bValue)) {
       return sortByArrayLength(aValue, bValue, order);

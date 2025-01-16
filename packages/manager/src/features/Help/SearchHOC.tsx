@@ -8,7 +8,6 @@ import {
   COMMUNITY_BASE_URL,
   DOCS_BASE_URL,
 } from 'src/constants';
-import { pathOr } from 'src/utilities/pathOr';
 import { truncate } from 'src/utilities/truncate';
 
 import type { SearchClient } from 'algoliasearch';
@@ -190,8 +189,14 @@ export default (options: SearchOptions) => (
       }
 
       /* If err is undefined, the shape of content is guaranteed, but better to be safe: */
-      const docs = pathOr([], ['results', 0, 'hits'], content);
-      const community = pathOr([], ['results', 1, 'hits'], content);
+      const docs: SearchHit[] =
+        (Array.isArray(content.results) &&
+          (content.results?.[0] as { hits: SearchHit[] })?.hits) ||
+        [];
+      const community: SearchHit[] =
+        (Array.isArray(content.results) &&
+          (content.results?.[1] as { hits: SearchHit[] })?.hits) ||
+        [];
       const docsResults = convertDocsToItems(highlight, docs);
       const commResults = convertCommunityToItems(highlight, community);
       this.setState({

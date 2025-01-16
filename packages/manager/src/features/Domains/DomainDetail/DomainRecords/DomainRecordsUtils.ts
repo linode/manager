@@ -8,7 +8,7 @@ import type {
 } from '@linode/api-v4/lib/domains';
 
 export const msToReadableTime = (v: number): null | string =>
-  pathOr(null, [v], {
+  pathOr<null | string, Record<number, string>>(null, [v], {
     0: 'Default',
     30: '30 seconds',
     120: '2 minutes',

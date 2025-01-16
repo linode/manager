@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import withClientData from 'src/containers/longview.stats.container';
-import { pathOr } from 'src/utilities/pathOr';
 
 import { baseGaugeProps } from './common';
 
@@ -24,12 +23,8 @@ export const LoadGauge = withClientData<Props>((ownProps) => ownProps.clientID)(
 
     const theme = useTheme();
 
-    const load = pathOr(0, ['Load', 0, 'y'], longviewClientData);
-    const numberOfCores = pathOr(
-      0,
-      ['SysInfo', 'cpu', 'cores'],
-      longviewClientData
-    );
+    const load = longviewClientData?.Load?.[0]?.y ?? 0;
+    const numberOfCores = longviewClientData?.SysInfo?.cpu?.cores ?? 0;
 
     const generateCopy = (): {
       innerText: string;
