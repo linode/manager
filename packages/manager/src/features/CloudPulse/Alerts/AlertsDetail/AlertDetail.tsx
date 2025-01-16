@@ -107,6 +107,7 @@ export const AlertDetail = () => {
               ...getAlertBoxStyles(theme),
               overflow: 'auto',
             }}
+            data-qa-section="Criteria"
             flexBasis="50%"
             maxHeight={sectionMaxHeight}
           >

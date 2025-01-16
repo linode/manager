@@ -78,6 +78,7 @@ export const DisplayAlertDetailChips = React.memo(
                         length: value.length,
                         mergeChips,
                       })}
+                      data-qa-chip={label}
                       label={label}
                       variant="outlined"
                     />
