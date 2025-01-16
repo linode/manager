@@ -541,3 +541,16 @@ export const CreateLinodeDiskFromImageSchema = CreateLinodeDiskSchema.clone().sh
       .typeError('An image is required.'),
   }
 );
+
+export const UpgradeToLinodeInterfaceSchema = object({
+  config_id: number().notRequired().nullable(),
+  dry_run: boolean().notRequired(),
+});
+
+export const UpdateLinodeInterfaceSettingsSchema = object({
+  network_helper: boolean().notRequired().nullable(),
+  default_route: object({
+    ipv4_interface_id: number().notRequired().nullable(),
+    ipv6_interface_id: number().notRequired().nullable(),
+  }),
+});

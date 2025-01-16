@@ -1,3 +1,7 @@
+import {
+  UpdateLinodeInterfaceSettingsSchema,
+  UpgradeToLinodeInterfaceSchema,
+} from '@linode/validation';
 import type { Firewall } from 'src/firewalls/types';
 import { API_ROOT } from '../constants';
 import Request, {
@@ -114,7 +118,7 @@ export const updateLinodeInterfacesSettings = (
       )}/interfaces/settings`
     ),
     setMethod('PUT'),
-    setData(data) // TODO CONNIE ANOTHER SCHEMA HERE
+    setData(data, UpdateLinodeInterfaceSettingsSchema)
   );
 
 /**
@@ -215,5 +219,5 @@ export const upgradeToLinodeInterface = (
       `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/interfaces`
     ),
     setMethod('POST'),
-    setData(data) // TODO CONNIE PUT A VALIDATION SCHEMA HERE
+    setData(data, UpgradeToLinodeInterfaceSchema)
   );

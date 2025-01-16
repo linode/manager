@@ -402,7 +402,7 @@ export interface LinodeInterfaceSettingPayload {
   };
 }
 
-export interface UpgradeInterfacePayload { 
+export interface UpgradeInterfacePayload {
   config_id?: number | null;
   dry_run?: boolean;
 }
