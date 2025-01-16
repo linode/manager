@@ -389,25 +389,18 @@ export const getAutocompleteWidgetStyles = (theme: Theme) => ({
 export const getTimeDurationFromPreset = (
   preset?: string
 ): TimeDuration | undefined => {
-  if (preset === '30minutes') {
-    return { unit: 'min', value: 30 };
+  switch (preset) {
+    case '30minutes':
+      return { unit: 'min', value: 30 };
+    case '24hours':
+      return { unit: 'hr', value: 24 };
+    case '12hours':
+      return { unit: 'hr', value: 12 };
+    case '7days':
+      return { unit: 'days', value: 7 };
+    case '30days':
+      return { unit: 'days', value: 30 };
+    default:
+      return undefined;
   }
-
-  if (preset === '24hours') {
-    return { unit: 'hr', value: 24 };
-  }
-
-  if (preset === '12hours') {
-    return { unit: 'hr', value: 12 };
-  }
-
-  if (preset === '7days') {
-    return { unit: 'days', value: 7 };
-  }
-
-  if (preset === '30days') {
-    return { unit: 'days', value: 30 };
-  }
-
-  return undefined;
 };
