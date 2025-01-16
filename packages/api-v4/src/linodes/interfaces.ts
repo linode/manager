@@ -10,9 +10,9 @@ import Request, {
 import { Filter, ResourcePage as Page, Params } from '../types';
 import type {
   CreateLinodeInterfacePayload,
-  InterfaceHistory,
-  InterfaceSetting,
-  InterfaceSettingPayload,
+  LinodeInterfaceHistory,
+  LinodeInterfaceSetting,
+  LinodeInterfaceSettingPayload,
   LinodeInterface,
   LinodeInterfaces,
   ModifyLinodeInterfacePayload,
@@ -67,7 +67,7 @@ export const getLinodeInterfacesHistory = (
   params?: Params,
   filters?: Filter
 ) =>
-  Request<Page<InterfaceHistory>>(
+  Request<Page<LinodeInterfaceHistory>>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
         linodeId
@@ -86,7 +86,7 @@ export const getLinodeInterfacesHistory = (
  * @param linodeId { number } The id of a Linode to get the interface history for.
  */
 export const getLinodeInterfacesSettings = (linodeId: number) =>
-  Request<InterfaceSetting>(
+  Request<LinodeInterfaceSetting>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
         linodeId
@@ -101,13 +101,13 @@ export const getLinodeInterfacesSettings = (linodeId: number) =>
  * Update the interface settings related to the specified Linode.
  *
  * @param linodeId { number } The id of a Linode to update the interface settings for.
- * @param data { InterfaceSettingPayload } The payload to update the interface settings with.
+ * @param data { LinodeInterfaceSettingPayload } The payload to update the interface settings with.
  */
 export const updateLinodeInterfacesSettings = (
   linodeId: number,
-  data: InterfaceSettingPayload
+  data: LinodeInterfaceSettingPayload
 ) =>
-  Request<InterfaceSetting>(
+  Request<LinodeInterfaceSetting>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
         linodeId
@@ -142,14 +142,14 @@ export const getLinodeInterface = (linodeId: number, interfaceId: number) =>
  *
  * @param linodeId { number } The id of a Linode to update the interface history for.
  * @param interfaceId { number } The id of the Interface to update.
- * @param data { LinodeInterfacePayload } The payload to update the interface with.
+ * @param data { ModifyLinodeInterfacePayload } The payload to update the interface with.
  */
 export const updateLinodeInterface = (
   linodeId: number,
   interfaceId: number,
   data: ModifyLinodeInterfacePayload
 ) =>
-  Request<InterfaceSetting>(
+  Request<LinodeInterfaceSetting>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
         linodeId
