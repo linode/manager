@@ -1,5 +1,5 @@
-import { CircleProgress, Typography } from '@linode/ui';
-import { Grid, useTheme } from '@mui/material';
+import { CircleProgress, Stack, Typography } from '@linode/ui';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -38,8 +38,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const [, setFilteredRegions] = React.useState<string[]>();
 
-  const theme = useTheme();
-
   const {
     data: regions,
     isError: isRegionsError,
@@ -63,7 +61,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   }, [regions]);
 
   /**
-   * Holds the regions associated with the resources from list of regions
+   * Holds the regions associated with the resources and it is derived from the list of regions returned
    */
   const regionOptions: Region[] = React.useMemo(() => {
     return getRegionOptions({
@@ -73,16 +71,19 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     });
   }, [resources, resourceIds, regionsIdToLabelMap]);
 
-  const titleRef = React.useRef<HTMLDivElement>(null); // when the page size, page number of table changes lets scroll until the title of this component
+  const titleRef = React.useRef<HTMLDivElement>(null); // Its useful, when the page size, page number of table changes lets scroll until the title of this component instead of moving to top of page
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
   }
 
+  const isDataLoadingError = isRegionsError || isResourcesError;
+
   return (
-    <>
-      <Typography marginBottom={2} ref={titleRef} variant="h2">
-        {alertLabel ?? 'Resources'}
+    <Stack gap={2}>
+      <Typography ref={titleRef} variant="h2">
+        {alertLabel || 'Resources'}
+        {/* It can be either the passed alert label or just Resources */}
       </Typography>
 
       <Grid container spacing={3}>
@@ -93,15 +94,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                 setSearchText(value);
               }}
               sx={{
-                maxHeight: theme.spacing(4.25),
+                maxHeight: '34px',
               }}
               clearable
-              debounceTime={300}
               hideLabel
               isSearching={false}
               label="Search for a Region or Resource"
               placeholder="Search for a Region or Resource"
-              value={searchText ?? ''}
+              value={searchText || ''}
             />
           </Grid>
           <Grid item md={4} xs={12}>
@@ -109,7 +109,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               handleSelectionChange={(value) => {
                 setFilteredRegions(value);
               }}
-              regionOptions={regionOptions ?? []}
+              regionOptions={regionOptions}
             />
           </Grid>
         </Grid>
@@ -120,10 +120,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                 ? 'Table data is unavailable. Please try again later.'
                 : undefined
             }
-            isDataLoadingError={isRegionsError || isResourcesError}
+            isDataLoadingError={isDataLoadingError}
           />
         </Grid>
       </Grid>
-    </>
+    </Stack>
   );
 });
