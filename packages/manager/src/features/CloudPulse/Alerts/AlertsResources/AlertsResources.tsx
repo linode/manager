@@ -112,14 +112,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <DisplayAlertResources
-            errorText={
-              isRegionsError || isResourcesError
-                ? 'Table data is unavailable. Please try again later.'
-                : undefined
-            }
-            isDataLoadingError={isDataLoadingError}
-          />
+          <DisplayAlertResources isDataLoadingError={isDataLoadingError} />
         </Grid>
       </Grid>
     </Stack>

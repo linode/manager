@@ -10,10 +10,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 
 export interface DisplayAlertResourceProp {
   /**
-   * The custom error text that needs to be displayed inside the table
-   */
-  errorText?: string;
-  /**
    * A flag indicating if there was an error loading the data. If true, the error message
    * (specified by `errorText`) will be displayed in the table.
    */
@@ -22,10 +18,7 @@ export interface DisplayAlertResourceProp {
 
 export const DisplayAlertResources = React.memo(
   (props: DisplayAlertResourceProp) => {
-    const {
-      errorText = 'Table data is unavailable.',
-      isDataLoadingError,
-    } = props;
+    const { isDataLoadingError } = props;
     return (
       <Table>
         <TableHead>
@@ -54,7 +47,10 @@ export const DisplayAlertResources = React.memo(
         </TableHead>
         <TableBody>
           {isDataLoadingError && (
-            <TableRowError colSpan={2} message={errorText} />
+            <TableRowError
+              colSpan={2}
+              message="Table data is unavailable. Please try again later."
+            />
           )}
           {!isDataLoadingError && (
             // Placeholder cell to maintain table structure before body content is implemented.
