@@ -6,6 +6,7 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   accountFactory,
   alertFactory,
+  alertRulesFactory,
   databaseFactory,
   linodeFactory,
   regionFactory,
@@ -36,6 +37,7 @@ const mockDBaaSAlertDetails = alertFactory.build({
   type: 'system',
   updated_by: 'user1',
   entity_ids: ['1', '2'],
+  rule_criteria:{rules:alertRulesFactory.buildList(2)}
 });
 const mockLinodeAlertDetails = alertFactory.build({
   id: 1002,
@@ -46,7 +48,8 @@ const mockLinodeAlertDetails = alertFactory.build({
   type: 'system',
   updated_by: 'user1',
   entity_ids: ['3'],
-});
+  rule_criteria:{rules:alertRulesFactory.buildList(2)}
+ });
 
 const mockDBaaSRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
@@ -117,6 +120,7 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       mockDBaaSAlertDetails.id,
       mockDBaaSAlertDetails
     ).as('getDBaaSAlertDefinitions');
+
     mockGetAlertDefinitions(
       mockLinodeAlertDetails.service_type,
       mockLinodeAlertDetails.id,
@@ -141,7 +145,7 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       .should('be.visible')
       .click();
 
-    cy.wait(['@getDBaaSAlertDefinitions', '@getMockedDbaasDatabases']);
+    cy.wait(['@getDBaaSAlertDefinitions']);
   });
 
   it('should correctly display the details of the DBaaS alert in the alert details view', () => {
