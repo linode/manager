@@ -69,6 +69,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     });
   }, [resources, alertResourceIds, regionsIdToRegionMap]);
 
+  const handleSearchTextChange = (searchText: string) => {
+    setSearchText(searchText);
+  };
+
+  const handleFilteredRegionsChange = (selectedRegions: string[]) => {
+    setFilteredRegions(selectedRegions);
+  };
+
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
 
   if (isResourcesFetching || isRegionsFetching) {
@@ -88,25 +96,20 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
           <Grid item md={3} xs={12}>
             <DebouncedSearchTextField
-              onSearch={(value) => {
-                setSearchText(value);
-              }}
               sx={{
                 maxHeight: '34px',
               }}
               clearable
               hideLabel
-              isSearching={false}
               label="Search for a Region or Resource"
+              onSearch={handleSearchTextChange}
               placeholder="Search for a Region or Resource"
               value={searchText || ''}
             />
           </Grid>
           <Grid item md={4} xs={12}>
             <AlertsRegionFilter
-              handleSelectionChange={(value) => {
-                setFilteredRegions(value);
-              }}
+              handleSelectionChange={handleFilteredRegionsChange}
               regionOptions={regionOptions}
             />
           </Grid>
