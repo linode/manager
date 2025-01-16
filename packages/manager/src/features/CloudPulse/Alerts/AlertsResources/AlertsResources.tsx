@@ -55,14 +55,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     serviceType === 'dbaas' ? { platform: 'rdbms-default' } : {}
   );
 
-  // The map holds the id of the region to the entire region object that needs to be displayed in table
+  // A map linking region IDs to their corresponding region objects, used for quick lookup when displaying data in the table.
   const regionsIdToLabelMap: Map<string, Region> = React.useMemo(() => {
     return getRegionsIdLabelMap(regions);
   }, [regions]);
 
-  /**
-   * Holds the regions associated with the resources and it is derived from the list of regions returned
-   */
+  // Derived list of regions associated with the provided resource IDs, filtered based on available data.
   const regionOptions: Region[] = React.useMemo(() => {
     return getRegionOptions({
       data: resources,
@@ -71,7 +69,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     });
   }, [resources, resourceIds, regionsIdToLabelMap]);
 
-  const titleRef = React.useRef<HTMLDivElement>(null); // Its useful, when the page size, page number of table changes lets scroll until the title of this component instead of moving to top of page
+  const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;

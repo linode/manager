@@ -15,7 +15,8 @@ export interface DisplayAlertResourceProp {
   errorText?: string;
 
   /**
-   * When a api call fails or any error occurs while loading the data, this property can be passes true
+   * A flag indicating if there was an error loading the data. If true, the error message
+   * (specified by `errorText`) will be displayed in the table.
    */
   isDataLoadingError?: boolean;
 }
@@ -35,7 +36,7 @@ export const DisplayAlertResources = React.memo(
               data-qa-sortid="resource"
               data-testid="resource"
               direction="asc"
-              handleClick={() => {}} // TODO: Add sorting functionality
+              handleClick={() => {}} // TODO: Implement sorting logic for this column.
               label="label"
             >
               Resource
@@ -45,7 +46,7 @@ export const DisplayAlertResources = React.memo(
               data-qa-sortid="region"
               data-testid="region"
               direction="asc"
-              handleClick={() => {}} // TODO: Add sorting functionality
+              handleClick={() => {}} // TODO: Implement sorting logic for this column.
               label="region"
             >
               Region
@@ -57,10 +58,10 @@ export const DisplayAlertResources = React.memo(
             <TableRowError colSpan={2} message={errorText} />
           )}
           {!isDataLoadingError && (
-            // Placeholder row for table content
+            // Placeholder cell to maintain table structure before body content is implemented.
             <TableRow>
               <TableCell colSpan={2} />
-              {/* TODO Add body of the table , sorting and pagination in upcoming PR's */}
+              {/* TODO: Populate the table body with resource data and implement sorting and pagination in future PRs. */}
             </TableRow>
           )}
         </TableBody>

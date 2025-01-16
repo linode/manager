@@ -6,7 +6,7 @@ import type { Region } from '@linode/api-v4';
 
 export interface AlertsRegionProps {
   /**
-   * Callback for publishing the ids of the selected regions
+   * Callback for publishing the IDs of the selected regions.
    */
   handleSelectionChange: (regions: string[]) => void;
   /**
@@ -23,10 +23,10 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
   const handleRegionChange = React.useCallback(
     (regionIds: string[]) => {
       handleSelectionChange(
-        regionIds.length ? regionIds : regionOptions.map(({ id }) => id) // if the selected regionIds are empty, means all regions are selected here
+        regionIds.length ? regionIds : regionOptions.map(({ id }) => id) // If no regions are selected, include all region IDs
       );
       setSelectedRegion(
-        regionOptions.filter((region) => regionIds.includes(region.id)) // Update selected regions based on current selections
+        regionOptions.filter((region) => regionIds.includes(region.id)) // Update the state with the regions matching the selected IDs
       );
     },
     [handleSelectionChange, regionOptions]
@@ -41,7 +41,7 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
       textFieldProps={{
         hideLabel: true,
       }}
-      currentCapability={undefined} // this is a required property
+      currentCapability={undefined} // this is a required property, no specific capability required here
       disableSelectAll
       isClearable
       label="Select Regions"
