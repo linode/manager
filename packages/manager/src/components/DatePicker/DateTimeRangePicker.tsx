@@ -17,8 +17,6 @@ export interface DateTimeRangePickerProps {
 
   /** Properties for the end date field */
   endDateProps?: {
-    /** Custom error message for invalid end date */
-    errorMessage?: string;
     /** Label for the end date field */
     label?: string;
     /** placeholder for the end date field */
@@ -99,13 +97,11 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     enablePresets = false,
 
     endDateProps: {
-      errorMessage: endDateErrorMessage = 'End date/time cannot be before the start date/time.',
       label: endLabel = 'End Date and Time',
       placeholder: endDatePlaceholder,
       showTimeZone: showEndTimeZone = false,
       value: endDateTimeValue = null,
     } = {},
-
     format = 'yyyy-MM-dd HH:mm',
     onChange,
     presetsProps: {
@@ -144,11 +140,11 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     startTimeZoneValue
   );
   const [startDateError, setStartDateError] = useState<null | string>(null);
-  const [endDateError, setEndDateError] = useState<null | string>(null);
   const [showPresets, setShowPresets] = useState(
-    presetsDefaultValue ? presetsDefaultValue !== 'custom_range' : enablePresets
+    presetsDefaultValue
+      ? presetsDefaultValue !== 'custom_range' && enablePresets
+      : enablePresets
   );
-
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -157,25 +153,19 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     end: DateTime | null,
     source: 'end' | 'start'
   ) => {
-    if (start && end) {
-      if (source === 'start' && start > end) {
-        setStartDateError(startDateErrorMessage);
-        return;
-      }
-      if (source === 'end' && end < start) {
-        setEndDateError(endDateErrorMessage);
-        return;
-      }
+    if (start && end && source === 'start' && start > end) {
+      setStartDateError(startDateErrorMessage);
+      return;
     }
     // Reset validation errors
     setStartDateError(null);
-    setEndDateError(null);
   };
 
   const handlePresetSelection = (value: DatePresetType) => {
     const now = DateTime.now();
     let newStartDateTime: DateTime | null = null;
     let newEndDateTime: DateTime | null = now;
+
     switch (value) {
       case '30minutes':
         newStartDateTime = now.minus({ minutes: 30 });
@@ -191,6 +181,15 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
         break;
       case '30days':
         newStartDateTime = now.minus({ days: 30 });
+        break;
+      case 'this_month':
+        newStartDateTime = now.startOf('month');
+        newEndDateTime = now.endOf('month');
+        break;
+      case 'last_month':
+        const lastMonth = now.minus({ months: 1 });
+        newStartDateTime = lastMonth.startOf('month');
+        newEndDateTime = lastMonth.endOf('month');
         break;
       case 'custom_range':
         newStartDateTime = null;
@@ -293,7 +292,6 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
               value: startTimeZone,
             }}
             disabledTimeZone={disabledTimeZone}
-            errorText={endDateError ?? undefined}
             format={format}
             label={endLabel}
             minDate={startDateTime || undefined}
@@ -303,15 +301,12 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
             timeSelectProps={{ label: 'End Time' }}
             value={endDateTime}
           />
-          <Box
-            alignContent={
-              startDateError || endDateError ? 'center' : 'flex-end'
-            }
-          >
+          <Box alignContent={startDateError ? 'center' : 'flex-end'}>
             <StyledActionButton
               onClick={() => {
                 setShowPresets(true);
                 setPresetValue(undefined);
+                setStartDateError(null);
               }}
               variant="text"
             >

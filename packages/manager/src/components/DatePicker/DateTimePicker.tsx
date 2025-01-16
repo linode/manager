@@ -198,6 +198,7 @@ export const DateTimePicker = ({
       >
         <Box padding={2}>
           <DateCalendar
+            minDate={minDate}
             onChange={handleDateChange}
             value={selectedDateTime || null}
             {...dateCalendarProps}
