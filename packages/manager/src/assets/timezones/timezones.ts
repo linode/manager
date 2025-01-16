@@ -1291,6 +1291,11 @@ export const timezones = [
     offset: 5.5,
   },
   {
+    label: 'India Standard Time - Calcutta',
+    name: 'Asia/Calcutta',
+    offset: 5.5,
+  },
+  {
     label: 'Nepal Time',
     name: 'Asia/Kathmandu',
     offset: 5.75,
