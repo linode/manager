@@ -3,12 +3,6 @@ import { Linode } from '@linode/api-v4';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-import {
-  containsVisible,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from 'support/helpers';
 import { ui } from 'support/ui';
 import { routes } from 'support/ui/constants';
 import { apiMatcher } from 'support/util/intercepts';
@@ -83,37 +77,65 @@ describe('linode landing checks', () => {
   });
 
   it('checks the landing page side menu items', () => {
-    getVisible('[title="Akamai - Dashboard"][href="/dashboard"]');
-    getVisible('[data-testid="menu-item-Linodes"][href="/linodes"]');
-    getVisible('[data-testid="menu-item-Volumes"][href="/volumes"]');
-    getVisible(
+    cy.get('[title="Akamai - Dashboard"][href="/dashboard"]').should(
+      'be.visible'
+    );
+    cy.get('[data-testid="menu-item-Linodes"][href="/linodes"]').should(
+      'be.visible'
+    );
+    cy.get('[data-testid="menu-item-Volumes"][href="/volumes"]').should(
+      'be.visible'
+    );
+    cy.get(
       '[data-testid="menu-item-NodeBalancers"][href="/nodebalancers"]'
+    ).should('be.visible');
+    cy.get('[data-testid="menu-item-Firewalls"][href="/firewalls"]').should(
+      'be.visible'
     );
-    getVisible('[data-testid="menu-item-Firewalls"][href="/firewalls"]');
-    getVisible('[data-testid="menu-item-StackScripts"][href="/stackscripts"]');
-    getVisible('[data-testid="menu-item-Images"][href="/images"]');
-    getVisible('[data-testid="menu-item-Domains"][href="/domains"]');
-    getVisible(
+    cy.get(
+      '[data-testid="menu-item-StackScripts"][href="/stackscripts"]'
+    ).should('be.visible');
+    cy.get('[data-testid="menu-item-Images"][href="/images"]').should(
+      'be.visible'
+    );
+    cy.get('[data-testid="menu-item-Domains"][href="/domains"]').should(
+      'be.visible'
+    );
+    cy.get(
       '[data-testid="menu-item-Kubernetes"][href="/kubernetes/clusters"]'
-    );
-    getVisible(
+    ).should('be.visible');
+    cy.get(
       '[data-testid="menu-item-Object Storage"][href="/object-storage/buckets"]'
+    ).should('be.visible');
+    cy.get('[data-testid="menu-item-Longview"][href="/longview"]').should(
+      'be.visible'
     );
-    getVisible('[data-testid="menu-item-Longview"][href="/longview"]');
-    getVisible(
+    cy.get(
       '[data-testid="menu-item-Marketplace"][href="/linodes/create?type=One-Click"]'
+    ).should('be.visible');
+    cy.get('[data-testid="menu-item-Account"][href="/account"]').should(
+      'be.visible'
     );
-    getVisible('[data-testid="menu-item-Account"][href="/account"]');
-    getVisible('[data-testid="menu-item-Help & Support"][href="/support"]');
+    cy.get('[data-testid="menu-item-Help & Support"][href="/support"]').should(
+      'be.visible'
+    );
   });
 
   it('checks the landing top menu items', () => {
     cy.wait('@getProfile').then((xhr) => {
       const username = xhr.response?.body.username;
-      getVisible('[aria-label="open menu"]');
-      getVisible('[data-qa-add-new-menu-button="true"]');
-      getVisible('[data-qa-search-icon="true"]');
-      fbtVisible('Search Products, IP Addresses, Tags...');
+      cy.get('[aria-label="open menu"]')
+        .should('be.visible')
+        .should('be.visible');
+      cy.get('[data-qa-add-new-menu-button="true"]')
+        .should('be.visible')
+        .should('be.visible');
+      cy.get('[data-qa-search-icon="true"]')
+        .should('be.visible')
+        .should('be.visible');
+      cy.findByText('Search Products, IP Addresses, Tags...').should(
+        'be.visible'
+      );
 
       cy.findByLabelText('Help & Support')
         .should('be.visible')
@@ -130,17 +152,21 @@ describe('linode landing checks', () => {
         .should('be.visible')
         .should('be.enabled');
 
-      getVisible('[aria-label="Notifications"]');
-      getVisible('[data-testid="nav-group-profile"]').within(() => {
-        fbtVisible(username);
-      });
+      cy.get('[aria-label="Notifications"]').should('be.visible');
+      cy.get('[data-testid="nav-group-profile"]')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(username).should('be.visible');
+        });
     });
   });
 
   it('checks the landing labels and buttons', () => {
-    getVisible('h1[data-qa-header="Linodes"]');
-    getVisible('a[aria-label="Docs - link opens in a new tab"]');
-    fbtVisible('Create Linode');
+    cy.get('h1[data-qa-header="Linodes"]').should('be.visible');
+    cy.get('a[aria-label="Docs - link opens in a new tab"]').should(
+      'be.visible'
+    );
+    cy.findByText('Create Linode').should('be.visible');
   });
 
   it('checks label and region sorting behavior for linode table', () => {
@@ -157,113 +183,161 @@ describe('linode landing checks', () => {
     ).label;
 
     const checkFirstRow = (label: string) => {
-      getVisible('tr[data-qa-loading="true"]')
+      cy.get('tr[data-qa-loading="true"]')
+        .should('be.visible')
         .first()
         .within(() => {
-          containsVisible(label);
+          cy.contains(label).should('be.visible');
         });
     };
     const checkLastRow = (label: string) => {
-      getVisible('tr[data-qa-loading="true"]')
+      cy.get('tr[data-qa-loading="true"]')
+        .should('be.visible')
         .last()
         .within(() => {
-          containsVisible(label);
+          cy.contains(label).should('be.visible');
         });
     };
 
     checkFirstRow(firstLinodeLabel);
     checkLastRow(lastLinodeLabel);
-    getClick('[aria-label="Sort by label"]');
+    cy.get('[aria-label="Sort by label"]').click();
     checkFirstRow(lastLinodeLabel);
     checkLastRow(firstLinodeLabel);
 
-    getClick('[aria-label="Sort by region"]');
+    cy.get('[aria-label="Sort by region"]').click();
     checkFirstRow(firstRegionLabel);
     checkLastRow(lastRegionLabel);
-    getClick('[aria-label="Sort by region"]');
+    cy.get('[aria-label="Sort by region"]').click();
     checkFirstRow(lastRegionLabel);
     checkLastRow(firstRegionLabel);
   });
 
   it('checks the create menu dropdown items', () => {
-    getClick('[data-qa-add-new-menu-button="true"]');
+    cy.get('[data-qa-add-new-menu-button="true"]').click();
 
-    getVisible('[aria-labelledby="create-menu"]').within(() => {
-      getVisible('[href="/linodes/create"]').within(() => {
-        fbtVisible('Linode');
-        fbtVisible('High performance SSD Linux servers');
-      });
+    cy.get('[aria-labelledby="create-menu"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get('[href="/linodes/create"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Linode').should('be.visible');
+            cy.findByText('High performance SSD Linux servers').should(
+              'be.visible'
+            );
+          });
 
-      getVisible('[href="/volumes/create"]').within(() => {
-        fbtVisible('Volume');
-        fbtVisible('Attach additional storage to your Linode');
-      });
+        cy.get('[href="/volumes/create"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Volume').should('be.visible');
+            cy.findByText('Attach additional storage to your Linode').should(
+              'be.visible'
+            );
+          });
 
-      getVisible('[href="/nodebalancers/create"]').within(() => {
-        fbtVisible('NodeBalancer');
-        fbtVisible('Ensure your services are highly available');
-      });
+        cy.get('[href="/nodebalancers/create"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('NodeBalancer').should('be.visible');
+            cy.findByText('Ensure your services are highly available').should(
+              'be.visible'
+            );
+          });
 
-      getVisible('[href="/firewalls/create"]').within(() => {
-        fbtVisible('Firewall');
-        fbtVisible('Control network access to your Linodes');
-      });
+        cy.get('[href="/firewalls/create"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Firewall').should('be.visible');
+            cy.findByText('Control network access to your Linodes').should(
+              'be.visible'
+            );
+          });
 
-      getVisible('[href="/firewalls/create"]').within(() => {
-        fbtVisible('Firewall');
-        fbtVisible('Control network access to your Linodes');
-      });
+        cy.get('[href="/firewalls/create"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Firewall').should('be.visible');
+            cy.findByText('Control network access to your Linodes').should(
+              'be.visible'
+            );
+          });
 
-      getVisible('[href="/domains/create"]').within(() => {
-        fbtVisible('Domain');
-        fbtVisible('Manage your DNS records');
-      });
+        cy.get('[href="/domains/create"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Domain').should('be.visible');
+            cy.findByText('Manage your DNS records').should('be.visible');
+          });
 
-      getVisible('[href="/kubernetes/create"]').within(() => {
-        fbtVisible('Kubernetes');
-        fbtVisible('Highly available container workloads');
-      });
+        cy.get('[href="/kubernetes/create"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Kubernetes').should('be.visible');
+            cy.findByText('Highly available container workloads').should(
+              'be.visible'
+            );
+          });
 
-      getVisible('[href="/object-storage/buckets/create"]').within(() => {
-        fbtVisible('Bucket');
-        fbtVisible('S3-compatible object storage');
-      });
+        cy.get('[href="/object-storage/buckets/create"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Bucket').should('be.visible');
+            cy.findByText('S3-compatible object storage').should('be.visible');
+          });
 
-      getVisible('[href="/linodes/create?type=One-Click"]').within(() => {
-        fbtVisible('Marketplace');
-        fbtVisible('Deploy applications with ease');
+        cy.get('[href="/linodes/create?type=One-Click"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findByText('Marketplace').should('be.visible');
+            cy.findByText('Deploy applications with ease').should('be.visible');
+          });
       });
-    });
   });
 
   it('checks the table and action menu buttons/labels', () => {
     const label = linodeLabel(1);
     const ip = mockLinodes[0].ipv4[0];
 
-    getVisible('[aria-label="Sort by label"]').within(() => {
-      fbtVisible('Label');
-    });
+    cy.get('[aria-label="Sort by label"]')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Label').should('be.visible');
+      });
 
-    getVisible('[aria-label="Sort by _statusPriority"]').within(() => {
-      fbtVisible('Status');
-    });
-    getVisible('[aria-label="Sort by type"]').within(() => {
-      fbtVisible('Plan');
-    });
-    getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
-      fbtVisible('Public IP Address');
-    });
+    cy.get('[aria-label="Sort by _statusPriority"]')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Status').should('be.visible');
+      });
+    cy.get('[aria-label="Sort by type"]')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Plan').should('be.visible');
+      });
+    cy.get('[aria-label="Sort by ipv4[0]"]')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Public IP Address').should('be.visible');
+      });
 
-    getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
-      ui.button
-        .findByTitle(ip)
-        .should('be.visible')
-        .realHover()
-        .then(() => {
-          getVisible(`[aria-label="Copy ${ip} to clipboard"]`);
-        });
-      getVisible(`[aria-label="Action menu for Linode ${label}"]`);
-    });
+    cy.get(`tr[data-qa-linode="${label}"]`)
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle(ip)
+          .should('be.visible')
+          .realHover()
+          .then(() => {
+            cy.get(`[aria-label="Copy ${ip} to clipboard"]`).should(
+              'be.visible'
+            );
+          });
+        cy.get(`[aria-label="Action menu for Linode ${label}"]`).should(
+          'be.visible'
+        );
+      });
   });
 
   it('checks the action menu items', () => {
@@ -296,10 +370,11 @@ describe('linode landing checks', () => {
     cy.wait('@getLinodes');
 
     // Check 'Group by Tag' button works as expected that can be visible, enabled and clickable
-    getVisible('[aria-label="Toggle group by tag"]')
+    cy.get('[aria-label="Toggle group by tag"]')
+      .should('be.visible')
       .should('be.enabled')
       .click();
-    getVisible('[data-qa-tag-header="even"]');
+    cy.get('[data-qa-tag-header="even"]').should('be.visible');
     cy.get('[data-qa-tag-header="even"]').within(() => {
       mockLinodes.forEach((linode) => {
         if (linode.tags.includes('even')) {
@@ -310,7 +385,7 @@ describe('linode landing checks', () => {
       });
     });
 
-    getVisible('[data-qa-tag-header="odd"]');
+    cy.get('[data-qa-tag-header="odd"]').should('be.visible');
     cy.get('[data-qa-tag-header="odd"]').within(() => {
       mockLinodes.forEach((linode) => {
         if (linode.tags.includes('odd')) {
@@ -321,7 +396,7 @@ describe('linode landing checks', () => {
       });
     });
 
-    getVisible('[data-qa-tag-header="nums"]');
+    cy.get('[data-qa-tag-header="nums"]').should('be.visible');
     cy.get('[data-qa-tag-header="nums"]').within(() => {
       mockLinodes.forEach((linode) => {
         cy.findByText(linode.label).should('be.visible');
@@ -329,7 +404,8 @@ describe('linode landing checks', () => {
     });
 
     // The linode landing table will resume when ungroup the tag.
-    getVisible('[aria-label="Toggle group by tag"]')
+    cy.get('[aria-label="Toggle group by tag"]')
+      .should('be.visible')
       .should('be.enabled')
       .click();
     cy.get('[data-qa-tag-header="even"]').should('not.exist');
@@ -358,7 +434,10 @@ describe('linode landing checks', () => {
     cy.wait(['@getLinodes', '@getUserPreferences']);
 
     // Check 'Summary View' button works as expected that can be visiable, enabled and clickable
-    getVisible('[aria-label="Toggle display"]').should('be.enabled').click();
+    cy.get('[aria-label="Toggle display"]')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
     cy.wait('@updateUserPreferences');
 
     mockLinodes.forEach((linode) => {
@@ -378,7 +457,10 @@ describe('linode landing checks', () => {
     });
 
     // Toggle the 'List View' button to check the display of table items are back to the original view.
-    getVisible('[aria-label="Toggle display"]').should('be.enabled').click();
+    cy.get('[aria-label="Toggle display"]')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
 
     cy.findByText('Summary').should('not.exist');
     cy.findByText('Public IP Addresses').should('not.exist');

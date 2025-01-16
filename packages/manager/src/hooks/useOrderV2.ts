@@ -1,5 +1,7 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
+import React from 'react';
 
+import { sortData } from 'src/components/OrderBy';
 import {
   useMutatePreferences,
   usePreferences,
@@ -11,7 +13,16 @@ import type { OrderSetWithPrefix } from 'src/types/ManagerPreferences';
 
 export type Order = 'asc' | 'desc';
 
-export interface UseOrderV2Props {
+export interface UseOrderV2Props<T> {
+  /**
+   * data to sort
+   * This is an optional prop to sort client side data,
+   * when useOrderV2 isn't used to just provide a sort order for our queries.
+   *
+   * We usually would rather add to sorting as a param to the query,
+   * but in some cases the endpoint won't allow it, or we can't get around inheriting the data from a parent component.
+   */
+  data?: T[];
   /**
    * initial order to use when no query params are present
    * Includes the from and search params
@@ -43,16 +54,17 @@ export interface UseOrderV2Props {
  * When a user changes order using the handleOrderChange function, the query params are
  * updated and the user preferences are also updated.
  */
-export const useOrderV2 = ({
+export const useOrderV2 = <T>({
+  data,
   initialRoute,
   preferenceKey,
   prefix,
-}: UseOrderV2Props) => {
+}: UseOrderV2Props<T>) => {
   const { data: orderPreferences } = usePreferences(
     (preferences) => preferences?.sortKeys
   );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
-  const searchParams = useSearch({ from: initialRoute.from });
+  const searchParams = useSearch({ strict: false });
   const navigate = useNavigate();
 
   const getOrderValues = () => {
@@ -118,5 +130,10 @@ export const useOrderV2 = ({
     });
   };
 
-  return { handleOrderChange, order, orderBy };
+  const sortedData = React.useMemo(
+    () => (data ? sortData<T>(orderBy, order)(data) : null),
+    [data, orderBy, order]
+  );
+
+  return { handleOrderChange, order, orderBy, sortedData };
 };
