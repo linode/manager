@@ -15,7 +15,7 @@ import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { AclpConfig, Dashboard, TimeDurationDate } from '@linode/api-v4';
+import type { AclpConfig, Dashboard, DateTimeWithPreset } from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(
@@ -24,7 +24,7 @@ export interface GlobalFilterProperties {
     labels: string[]
   ): void;
   handleDashboardChange(dashboard: Dashboard | undefined): void;
-  handleTimeDurationChange(timeDuration: TimeDurationDate): void;
+  handleTimeDurationChange(timeDuration: DateTimeWithPreset): void;
   handleToggleAppliedFilter(isVisible: boolean): void;
 }
 
@@ -45,7 +45,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   >();
 
   const handleTimeRangeChange = React.useCallback(
-    (timeDuration: TimeDurationDate, savePref: boolean = false) => {
+    (timeDuration: DateTimeWithPreset, savePref: boolean = false) => {
       if (savePref) {
         updatePreferences({ [TIME_DURATION]: timeDuration });
       }
@@ -114,7 +114,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             display="flex"
             gap={1}
             item
-            justifyContent={'end'}
+            justifyContent="end"
             md={8}
             sm={5}
             xs={12}

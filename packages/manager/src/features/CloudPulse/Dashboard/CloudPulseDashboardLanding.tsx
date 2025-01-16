@@ -4,10 +4,10 @@ import * as React from 'react';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
-import { defaultTimeDuration } from '../shared/CloudPulseDateTimeRangePicker';
+import { defaultTimeDuration } from '../Utils/CloudPulseDateTimePickerUtils';
 import { CloudPulseDashboardRenderer } from './CloudPulseDashboardRenderer';
 
-import type { Dashboard, TimeDurationDate } from '@linode/api-v4';
+import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
 
 export type FilterValueType = number | number[] | string | string[] | undefined;
 
@@ -20,7 +20,7 @@ export interface DashboardProp {
   filterValue: {
     [key: string]: FilterValueType;
   };
-  timeDuration?: TimeDurationDate;
+  timeDuration?: DateTimeWithPreset;
 }
 
 export const CloudPulseDashboardLanding = () => {
@@ -29,7 +29,7 @@ export const CloudPulseDashboardLanding = () => {
     label: {},
   });
 
-  const [timeDuration, setTimeDuration] = React.useState<TimeDurationDate>(
+  const [timeDuration, setTimeDuration] = React.useState<DateTimeWithPreset>(
     defaultTimeDuration()
   );
 
@@ -69,7 +69,7 @@ export const CloudPulseDashboardLanding = () => {
     }); // clear the filter values on dashboard change
   }, []);
   const onTimeDurationChange = React.useCallback(
-    (timeDurationObj: TimeDurationDate) => {
+    (timeDurationObj: DateTimeWithPreset) => {
       setTimeDuration(timeDurationObj);
     },
     []

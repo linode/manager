@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 
-import type { TimeDurationDate } from '@linode/api-v4';
+import type { DateTimeWithPreset } from '@linode/api-v4';
 
-export const defaultTimeDuration = (): TimeDurationDate => {
+export const defaultTimeDuration = (): DateTimeWithPreset => {
   const date = DateTime.now().setZone('GMT');
 
   const start = convertToGmt(date.minus({ minutes: 30 }).toISO() ?? '');

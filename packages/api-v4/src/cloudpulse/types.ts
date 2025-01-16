@@ -48,7 +48,7 @@ export interface TimeDuration {
   value: number;
 }
 
-export interface TimeDurationDate {
+export interface DateTimeWithPreset {
   end: string;
   start: string;
   preset?: string;
@@ -86,7 +86,7 @@ export type FilterValue =
   | string[]
   | number[]
   | WidgetFilterValue
-  | TimeDurationDate
+  | DateTimeWithPreset
   | undefined;
 
 type WidgetFilterValue = { [key: string]: AclpWidget };
@@ -133,7 +133,7 @@ export interface CloudPulseMetricsRequest {
   aggregate_function: string;
   group_by: string;
   relative_time_duration: TimeDuration | undefined;
-  absolute_time_duration: TimeDurationDate | undefined;
+  absolute_time_duration: DateTimeWithPreset | undefined;
   time_granularity: TimeGranularity | undefined;
   entity_ids: number[];
 }
