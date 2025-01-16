@@ -1,28 +1,9 @@
 import { Accordion, Box, Divider, omittedProps } from '@linode/ui';
 import { Chip, styled } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'react-router-dom';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/constants';
-
-export const StyledGrid = styled(Grid, {
-  label: 'StyledGrid',
-})(({ theme }) => ({
-  height: '100%',
-  margin: 0,
-  minHeight: 64,
-  padding: 0,
-  [theme.breakpoints.up('md')]: {
-    '&:hover': {
-      '.primary-nav-toggle': {
-        justifyContent: 'flex-end',
-        width: SIDEBAR_WIDTH - 1,
-      },
-    },
-  },
-  width: '100%',
-}));
 
 export const StyledAkamaiLogo = styled(AkamaiLogo, {
   label: 'StyledAkamaiLogo',
@@ -58,7 +39,7 @@ export const StyledActiveLink = styled(Link, {
   cursor: 'pointer',
   display: 'flex',
   font: theme.tokens.typography.Body.Semibold,
-  minHeight: 34,
+  minHeight: 32,
   minWidth: SIDEBAR_WIDTH,
   padding: '7px 16px',
   paddingLeft: 50,
@@ -89,16 +70,6 @@ export const StyledPrimaryLinkBox = styled(Box, {
   }),
 }));
 
-export const StyledMenuGrid = styled(Grid, {
-  label: 'StyledMenuGrid',
-})(({ theme }) => ({
-  flexGrow: 1,
-  overflowX: 'hidden',
-  overflowY: 'auto',
-  scrollbarColor: `${theme.color.grey4} transparent `,
-  width: '100%',
-}));
-
 export const StyledAccordion = styled(Accordion, {
   label: 'StyledAccordion',
   shouldForwardProp: omittedProps(['isCollapsed', 'isActiveProductFamily']),
@@ -110,6 +81,8 @@ export const StyledAccordion = styled(Accordion, {
         font: props.isActiveProductFamily
           ? theme.tokens.typography.Label.Bold.S
           : theme.tokens.typography.Label.Semibold.S,
+        paddingLeft: theme.tokens.spacing[50],
+        paddingRight: theme.tokens.spacing[50],
         transition: theme.transitions.create(['opacity']),
         ...(props.isCollapsed && {
           opacity: 0,
@@ -121,17 +94,18 @@ export const StyledAccordion = styled(Accordion, {
           ? theme.tokens.color.Brand[60]
           : theme.tokens.color.Neutrals['White'],
         height: 24,
-        marginRight: 11,
         transition: theme.transitions.create(['color']),
         width: 24,
       },
       alignItems: 'center',
       display: 'flex',
       font: theme.tokens.typography.Label.Bold.S,
-      padding: '0 10px',
     },
     '.MuiAccordionDetails-root': {
       padding: 0,
+    },
+    '.MuiAccordionSummary-content': {
+      margin: 0,
     },
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
       '&:hover': {
@@ -139,17 +113,22 @@ export const StyledAccordion = styled(Accordion, {
       },
       '.Mui-expanded': {
         alignItems: 'center',
-        maxHeight: '42px',
-        minHeight: '42px',
+        maxHeight: '48px',
+        minHeight: '48px',
       },
       backgroundColor: theme.tokens.color.Neutrals[90],
-      maxHeight: '42px',
-      minHeight: '42px',
-      paddingLeft: 4,
+      maxHeight: '48px',
+      minHeight: '48px',
+      paddingLeft: theme.tokens.spacing[50],
+      paddingRight: theme.tokens.spacing[40],
       svg: {
         fill: theme.tokens.color.Neutrals['White'],
         stroke: 'transparent',
       },
+    },
+    // Spacing between the accordion and the next accordion
+    '.MuiCollapse-entered': {
+      marginBottom: theme.tokens.spacing[40],
     },
     backgroundColor: theme.tokens.color.Neutrals[90],
   })

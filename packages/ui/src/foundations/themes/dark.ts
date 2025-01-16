@@ -230,6 +230,7 @@ export const darkTheme: ThemeOptions = {
         root: {
           backgroundColor: GlobalHeader.Background,
           color: GlobalHeader.Text.Default,
+          zIndex: 1500, // To be above primary nav
         },
       },
     },
@@ -280,8 +281,8 @@ export const darkTheme: ThemeOptions = {
             color: Button.Primary.Disabled.Text,
           },
           backgroundColor: Button.Primary.Default.Background,
+          border: `1px solid transparent`,
           color: Button.Primary.Default.Text,
-          padding: '8px 12px',
         },
         containedSecondary: {
           '&:active': {
@@ -325,16 +326,7 @@ export const darkTheme: ThemeOptions = {
           minHeight: 34,
         },
         root: {
-          '&[aria-disabled="true"]': {
-            cursor: 'not-allowed',
-          },
-          border: 'none',
-          borderRadius: 1,
-          cursor: 'pointer',
-          font: Typography.Body.Bold,
-          minHeight: 34,
-          textTransform: 'capitalize',
-          transition: 'none',
+          font: Typography.Label.Semibold.S,
         },
       },
       variants: [

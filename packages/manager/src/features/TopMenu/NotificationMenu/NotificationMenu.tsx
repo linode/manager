@@ -103,7 +103,12 @@ export const NotificationMenu = () => {
           <Bell height="24px" width="24px" />
           {numNotifications > 0 && (
             <StyledChip
-              color="primary"
+              sx={(theme) => ({
+                // TODO: This override should completely go away once we have CDS guidance on badges in Light/Dark mode.
+                backgroundColor: theme.tokens.color.Red[80],
+                color: theme.tokens.color.Neutrals.White,
+              })}
+              color="error"
               data-testid="events-count-notification"
               label={numNotifications > 9 ? '9+' : numNotifications}
               showPlus={numNotifications > 9}
@@ -199,7 +204,7 @@ const StyledChip = styled(Chip, {
 export const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
   bottom: 4,
-  color: theme.palette.primary.main,
+  color: theme.tokens.color.Brand[60],
   fontSize: 18,
   position: 'absolute',
   right: 2,

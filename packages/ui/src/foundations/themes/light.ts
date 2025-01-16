@@ -489,8 +489,8 @@ export const lightTheme: ThemeOptions = {
             color: Button.Primary.Disabled.Text,
           },
           backgroundColor: Button.Primary.Default.Background,
+          border: `1px solid transparent`,
           color: Button.Primary.Default.Text,
-          padding: '8px 12px',
         },
         containedSecondary: {
           '&:active': {
@@ -527,18 +527,21 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: 'transparent',
           border: `1px solid ${primaryColors.main}`,
           color: textColors.linkActiveLight,
-          minHeight: 34,
         },
         root: {
           '&[aria-disabled="true"]': {
             cursor: 'not-allowed',
           },
+          '.MuiButton-startIcon': {
+            marginLeft: 0,
+            marginRight: Spacing[20],
+          },
           border: 'none',
           borderRadius: 1,
           cursor: 'pointer',
-          font: Typography.Body.Semibold,
-          minHeight: 34,
+          font: Typography.Label.Semibold.S,
           minWidth: 'initial',
+          padding: '8px 12px',
           textTransform: 'capitalize',
           transition: 'none',
         },
@@ -607,8 +610,8 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: Color.Brand[10], // TODO: This was the closest color according to our palette
         },
         colorError: {
-          background: Color.Red[70],
-          color: color.white,
+          backgroundColor: Color.Red[80],
+          color: Color.Neutrals.White,
         },
         colorPrimary: {
           color: color.white,

@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -8,6 +9,10 @@ import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
 import Networking from 'src/assets/icons/entityIcons/networking.svg';
 import More from 'src/assets/icons/more.svg';
+import {
+  PRIMARY_NAV_TOGGLE_HEIGHT,
+  SIDEBAR_WIDTH,
+} from 'src/components/PrimaryNav/constants';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
@@ -20,11 +25,7 @@ import {
 } from 'src/queries/profile/preferences';
 
 import PrimaryLink from './PrimaryLink';
-import {
-  StyledAccordion,
-  StyledGrid,
-  StyledMenuGrid,
-} from './PrimaryNav.styles';
+import { StyledAccordion } from './PrimaryNav.styles';
 import { PrimaryNavToggle } from './PrimaryNavToggle';
 import { linkIsActive } from './utils';
 
@@ -39,7 +40,7 @@ export type NavEntity =
   | 'Domains'
   | 'Firewalls'
   | 'Help & Support'
-  | 'Identity and Access'
+  | 'Identity & Access'
   | 'Images'
   | 'Kubernetes'
   | 'Linodes'
@@ -234,7 +235,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/betas',
           },
           {
-            display: 'Identity and Access',
+            display: 'Identity & Access',
             hide: !isIAMEnabled,
             href: '/iam',
             icon: <IAM />,
@@ -316,17 +317,35 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   let activeProductFamily = '';
 
   return (
-    <StyledGrid
+    <Box
+      sx={{
+        '&:hover': {
+          '.primary-nav-toggle': {
+            justifyContent: 'flex-end',
+            width: SIDEBAR_WIDTH - 1,
+          },
+        },
+      }}
       alignItems="flex-start"
-      container
-      direction="column"
+      display="flex"
+      flexDirection="column"
+      gap={0}
+      height={`calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`}
       id="main-navigation"
       justifyContent="flex-start"
       role="navigation"
-      spacing={0}
-      wrap="nowrap"
     >
-      <StyledMenuGrid direction="column">
+      <Box
+        sx={(theme) => ({
+          flexGrow: 1,
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          scrollbarColor: `${theme.color.grey4} transparent `,
+        })}
+        display="flex"
+        flexDirection="column"
+        width="100%"
+      >
         {productFamilyLinkGroups.map((productFamily, idx) => {
           const filteredLinks = productFamily.links.filter(
             (link) => !link.hide
@@ -381,12 +400,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             </div>
           );
         })}
-      </StyledMenuGrid>
+      </Box>
       <PrimaryNavToggle
         desktopMenuToggle={desktopMenuToggle}
         isCollapsed={isCollapsed}
       />
-    </StyledGrid>
+    </Box>
   );
 };
 

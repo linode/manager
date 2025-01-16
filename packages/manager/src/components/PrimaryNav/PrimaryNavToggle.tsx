@@ -23,21 +23,19 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
   return (
     <Hidden mdDown>
       <Box
-        sx={{
+        sx={(theme) => ({
           backgroundColor: Global.Color.Neutrals[90],
+          borderRight: `1px solid ${theme.tokens.sideNavigation.Border}`,
           transition: 'width 100ms linear',
-        }}
-        width={`${
-          isCollapsed ? SIDEBAR_COLLAPSED_WIDTH - 1 : SIDEBAR_WIDTH - 1
-        }px`}
+        })}
         bottom={0}
         className="primary-nav-toggle"
         display="flex"
         height={PRIMARY_NAV_TOGGLE_HEIGHT}
         justifyContent={isCollapsed ? 'center' : 'flex-end'}
         left={0}
-        padding={1}
         position="fixed"
+        width={`${isCollapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_WIDTH}px`}
       >
         <Tooltip
           PopperProps={{
@@ -69,6 +67,9 @@ const StyledIconButton = styled(IconButton, {
 })(({ theme }) => ({
   '& svg': {
     color: Global.Color.Neutrals['White'],
+    height: '16px',
     transition: theme.transitions.create(['color']),
+    width: '16px',
   },
+  padding: theme.tokens.spacing[60],
 }));
