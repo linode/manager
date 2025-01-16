@@ -22,7 +22,9 @@ export const RegionOption = ({
     >
       <Stack alignItems="center" direction="row" gap={1} width="100%">
         <Flag country={item.country} />
+        {item.label}
         <Box flexGrow={1} />
+        {item.id}
       </Stack>
     </ListItemOption>
   );
