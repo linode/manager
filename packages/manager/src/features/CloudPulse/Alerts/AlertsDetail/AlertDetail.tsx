@@ -119,7 +119,10 @@ export const AlertDetail = () => {
             overflow: 'auto',
           }}
         >
-          <AlertResources alertResourceIds={entity_ids} serviceType={serviceType} />
+          <AlertResources
+            alertResourceIds={entity_ids}
+            serviceType={serviceType}
+          />
         </Box>
       </Box>
     </>
