@@ -22,10 +22,7 @@ const queryMocks = vi.hoisted(() => ({
 
 const regions = regionFactory.buildList(3);
 
-const linodes = linodeFactory.buildList(3).map((linode, index) => ({
-  ...linode,
-  region: index < 3 ? regions[index].id : linode.region,
-}));
+const linodes = linodeFactory.buildList(3);
 
 const searchPlaceholder = 'Search for a Region or Resource';
 const regionPlaceholder = 'Select Regions';

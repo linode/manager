@@ -14,10 +14,7 @@ import { AlertDetail } from './AlertDetail';
 const alertDetails = alertFactory.build({ service_type: 'linode' });
 
 const linodes = linodeFactory.buildList(3);
-const regions = regionFactory.buildList(1).map((region, index) => ({
-  ...region,
-  id: index < 3 ? linodes[index].region : region.id,
-}));
+const regions = regionFactory.buildList(3);
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
