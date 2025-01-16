@@ -89,7 +89,7 @@ export const AlertDetail = () => {
       </>
     );
   }
-  // TODO: The criteria, resources details for alerts will be added by consuming the results of useAlertDefinitionQuery call in the coming PR's
+  const { entity_ids } = alertDetails;
   return (
     <>
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
@@ -119,10 +119,7 @@ export const AlertDetail = () => {
             overflow: 'auto',
           }}
         >
-          <AlertResources
-            resourceIds={alertDetails.entity_ids}
-            serviceType={serviceType}
-          />
+          <AlertResources resourceIds={entity_ids} serviceType={serviceType} />
         </Box>
       </Box>
     </>
