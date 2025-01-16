@@ -260,7 +260,7 @@ export interface CreateVPCInterfacePayload {
   ipv4?: {
     addresses?: VPCInterfaceIpv4Address[];
     ranges?: VPCInterfaceIPv4Range[];
-  } | null;
+  };
 }
 
 export interface PublicInterfaceRange {
@@ -356,12 +356,14 @@ export interface PublicInterfaceData {
       address: string;
       primary: boolean;
     }[];
+    // shared: string[];
   };
   ipv6: {
     addresses: {
       address: string;
       prefix: string;
     }[];
+    // shared: string[];
     ranges: {
       range: string;
       route_target: string;

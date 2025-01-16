@@ -26,11 +26,13 @@ import type {
   UpgradeInterfacePayload,
 } from './types';
 
+// These endpoints refer to the new Linode Interfaces endpoints.
+// For old Configuration Profile interfaces, see config.ts
+
 /**
  * createLinodeInterface
  *
  * Adds a new Linode Interface to a Linode.
- * This endpoint is part of the new Linode Interfaces endpoints being introduced.
  *
  * @param linodeId { number } The id of a Linode to receive the new interface.
  */
@@ -193,15 +195,19 @@ export const deleteLinodeInterface = (linodeId: number, interfaceId: number) =>
  */
 export const getLinodeInterfaceFirewalls = (
   linodeId: number,
-  interfaceId: number
+  interfaceId: number,
+  params?: Params,
+  filters?: Filter
 ) =>
-  Request<Firewall>(
+  Request<Page<Firewall>>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
         linodeId
       )}/interfaces/${encodeURIComponent(interfaceId)}/firewalls`
     ),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
   );
 
 /**
@@ -218,7 +224,9 @@ export const upgradeToLinodeInterface = (
 ) =>
   Request<UpgradeInterfaceData>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/interfaces`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/upgrade-interfaces`
     ),
     setMethod('POST'),
     setData(data, UpgradeToLinodeInterfaceSchema)

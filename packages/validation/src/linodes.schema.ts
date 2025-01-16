@@ -585,9 +585,7 @@ export const CreateLinodeInterfaceSchema = object({
     ipv4: object({
       addresses: array().of(CreateVPCInterfaceIpv4AddressSchema).notRequired(),
       ranges: array().of(VPCInterfaceIPv4RangeSchema).notRequired(),
-    })
-      .notRequired()
-      .nullable(),
+    }).notRequired(),
   })
     .notRequired()
     .nullable(),
@@ -646,7 +644,7 @@ export const ModifyLinodeInterfaceSchema = object({
       .notRequired()
       .nullable(),
     ipv6: object({
-      ranges: array().of(PublicInterfaceRangeSchema).nullable(),
+      ranges: array().of(PublicInterfaceRangeSchema).notRequired().nullable(),
     })
       .notRequired()
       .nullable(),
