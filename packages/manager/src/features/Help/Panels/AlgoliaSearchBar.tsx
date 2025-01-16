@@ -10,8 +10,15 @@ import withSearch from '../SearchHOC';
 import { SearchItem } from './SearchItem';
 
 import type { AlgoliaState as AlgoliaProps } from '../SearchHOC';
+import type { ConvertedItems } from '../SearchHOC';
 import type { Theme } from '@mui/material/styles';
 import type { RouteComponentProps } from 'react-router-dom';
+
+interface SelectedItem {
+  data: { source: string };
+  label: string;
+  value: string;
+}
 
 const useStyles = makeStyles()((theme: Theme) => ({
   enhancedSelectWrapper: {
@@ -92,7 +99,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       : '/support/search/';
   };
 
-  const handleSelect = (selected: any) => {
+  const handleSelect = (selected: ConvertedItems | SelectedItem | null) => {
     if (!selected || !inputValue) {
       return;
     }
@@ -122,6 +129,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
                 data={option}
                 searchText={option.data.source}
                 {...props}
+                key={`${props.key}-${option.value}`}
               />
             );
           }}
@@ -185,11 +193,9 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
             hideLabel: true,
           }}
           className={classes.enhancedSelectWrapper}
-          disableClearable={false}
           disabled={!searchEnabled}
           inputValue={inputValue}
           label="Search for answers"
-          multiple={false}
           onChange={(_, selected) => handleSelect(selected)}
           onInputChange={(_, value) => onInputValueChange(value)}
           options={options}

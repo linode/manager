@@ -37,9 +37,9 @@ interface AlgoliaContent {
   results: unknown;
 }
 
-interface ConvertedItems {
+export interface ConvertedItems {
   data: { href: string; source: string };
-  label: any;
+  label: string;
   value: number;
 }
 
