@@ -1,12 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Notice, Paper, Stack } from '@linode/ui';
+import { Button, CircleProgress, Notice, Paper, Stack } from '@linode/ui';
 import { stackScriptSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { NotFound } from 'src/components/NotFound';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import {
   useStackScriptQuery,
@@ -20,12 +22,11 @@ import type { StackScriptPayload } from '@linode/api-v4';
 export const StackScriptEdit = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { stackScriptID } = useParams<{ stackScriptID: string }>();
-  const history = useHistory();
   const id = Number(stackScriptID);
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const { data: stackscript } = useStackScriptQuery(id);
+  const { data: stackscript, error, isLoading } = useStackScriptQuery(id);
   const { mutateAsync: updateStackScript } = useUpdateStackScriptMutation(id);
 
   const values = {
@@ -62,6 +63,18 @@ export const StackScriptEdit = () => {
       }
     }
   };
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error[0].reason} />;
+  }
+
+  if (!stackscript) {
+    return <NotFound />;
+  }
 
   return (
     <FormProvider {...form}>

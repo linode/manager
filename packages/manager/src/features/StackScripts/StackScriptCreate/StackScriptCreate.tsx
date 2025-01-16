@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Notice, Paper, Stack } from '@linode/ui';
+import { Button, Notice, Paper, Stack } from '@linode/ui';
 import { stackScriptSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -67,7 +67,14 @@ export const StackScriptCreate = () => {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Stack spacing={2}>
             <StackScriptForm disabled={disabled} username={username} />
-            <Box display="flex" justifyContent="flex-end">
+            <Stack direction="row" justifyContent="flex-end" spacing={1}>
+              <Button
+                data-testid="cancel"
+                disabled={disabled || !form.formState.isDirty}
+                onClick={() => form.reset()}
+              >
+                Reset
+              </Button>
               <Button
                 buttonType="primary"
                 data-testid="save"
@@ -77,7 +84,7 @@ export const StackScriptCreate = () => {
               >
                 Create StackScript
               </Button>
-            </Box>
+            </Stack>
           </Stack>
         </form>
       </Paper>

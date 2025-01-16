@@ -20,10 +20,10 @@ describe('StackScriptCreate', () => {
 
     const createButton = getByText('Create StackScript').closest('button');
     expect(createButton).toBeVisible();
-    expect(createButton).toBeDisabled();
+    expect(createButton).toBeEnabled();
 
     const resetButton = getByText('Reset').closest('button');
     expect(resetButton).toBeVisible();
-    expect(resetButton).toBeEnabled();
+    expect(resetButton).toBeDisabled();
   });
 });

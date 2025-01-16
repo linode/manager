@@ -29,7 +29,7 @@ export const StackScriptForm = (props: Props) => {
             data-qa-stackscript-label
             disabled={disabled}
             errorText={fieldState.error?.message}
-            label="Label"
+            label="StackScript Label"
             noMarginTop
             onChange={field.onChange}
             placeholder="Enter a label"
