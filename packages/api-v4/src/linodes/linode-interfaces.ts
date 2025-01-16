@@ -1,4 +1,6 @@
 import {
+  CreateLinodeInterfaceSchema,
+  ModifyLinodeInterfaceSchema,
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
@@ -41,7 +43,7 @@ export const createLinodeInterface = (
       `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/interfaces`
     ),
     setMethod('POST'),
-    setData(data) // TODO CONNIE PUT A VALIDATION SCHEMA HERE
+    setData(data, CreateLinodeInterfaceSchema)
   );
 
 /**
@@ -160,7 +162,7 @@ export const updateLinodeInterface = (
       )}/interfaces/${encodeURIComponent(interfaceId)}`
     ),
     setMethod('PUT'),
-    setData(data) // TODO CONNIE ANOTHER SCHEMA HERE
+    setData(data, ModifyLinodeInterfaceSchema)
   );
 
 /**

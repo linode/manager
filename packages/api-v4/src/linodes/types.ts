@@ -232,7 +232,7 @@ export interface DefaultRoute {
 
 // POST object
 export interface CreateLinodeInterfacePayload {
-  firewall_id?: number | null;
+  firewall_id?: number | null; // has diff behavior for undefined vs null
   default_route?: DefaultRoute | null;
   vpc?: CreateVPCInterfacePayload | null;
   public?: CreatePublicInterfacePayload | null;
@@ -242,13 +242,12 @@ export interface CreateLinodeInterfacePayload {
   } | null;
 }
 
-export interface BaseIPv4InterfaceAddressPayload {
+export interface BaseInterfaceIPv4Address {
   address: string;
   primary?: boolean;
 }
 
-export interface VPCIpv4InterfaceAddress
-  extends BaseIPv4InterfaceAddressPayload {
+export interface VPCInterfaceIpv4Address extends BaseInterfaceIPv4Address {
   nat_1_1_address?: string | null;
 }
 
@@ -259,7 +258,7 @@ export interface VPCInterfaceIPv4Range {
 export interface CreateVPCInterfacePayload {
   subnet_id: number;
   ipv4?: {
-    addresses?: VPCIpv4InterfaceAddress[];
+    addresses?: VPCInterfaceIpv4Address[];
     ranges?: VPCInterfaceIPv4Range[];
   } | null;
 }
@@ -270,7 +269,7 @@ export interface PublicInterfaceRange {
 
 export interface CreatePublicInterfacePayload {
   ipv4?: {
-    addresses?: BaseIPv4InterfaceAddressPayload[];
+    addresses?: BaseInterfaceIPv4Address[];
   };
   ipv6?: {
     ranges?: PublicInterfaceRange[];
@@ -281,7 +280,10 @@ export interface CreatePublicInterfacePayload {
 
 // PUT object - very similar to POST object, but many more values can also be null
 export interface ModifyLinodeInterfacePayload {
-  default_route?: ModifyDefaultRoute | null;
+  default_route?: {
+    ipv4?: boolean | null;
+    ipv6?: boolean | null;
+  } | null;
   vpc?: ModifyVPCInterfacePayload | null;
   public?: ModifyPublicInterfacePayload | null;
   vlan?: {
@@ -290,26 +292,23 @@ export interface ModifyLinodeInterfacePayload {
   } | null;
 }
 
-export interface ModifyDefaultRoute {
-  ipv4?: boolean | null;
-  ipv6?: boolean | null;
-}
-
 export interface ModifyVPCInterfacePayload {
   subnet_id: number;
   ipv4?: {
-    addresses?: {
-      address?: string;
-      primary?: boolean | null;
-      nat_1_1_address?: string | null;
-    } | null;
+    addresses?:
+      | {
+          address?: string;
+          primary?: boolean | null;
+          nat_1_1_address?: string | null;
+        }[]
+      | null;
     ranges?: VPCInterfaceIPv4Range[] | null;
   } | null;
 }
 
 export interface ModifyPublicInterfacePayload {
   ipv4?: {
-    addresses?: BaseIPv4InterfaceAddressPayload[] | null;
+    addresses?: BaseInterfaceIPv4Address[] | null;
   } | null;
   ipv6?: {
     ranges: PublicInterfaceRange[] | null;

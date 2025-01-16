@@ -130,7 +130,7 @@ const ipv6ConfigInterface = object().when('purpose', {
     }),
 });
 
-export const LinodeInterfaceSchema = object().shape({
+export const ConfigProfileInterfaceSchema = object().shape({
   purpose: mixed().oneOf(
     ['public', 'vlan', 'vpc'],
     'Purpose must be public, vlan, or vpc.'
@@ -242,8 +242,8 @@ export const LinodeInterfaceSchema = object().shape({
     }),
 });
 
-export const LinodeInterfacesSchema = array()
-  .of(LinodeInterfaceSchema)
+export const ConfigProfileInterfacesSchema = array()
+  .of(ConfigProfileInterfaceSchema)
   .test(
     'unique-public-interface',
     'Only one public interface per config is allowed.',
@@ -339,7 +339,7 @@ export const CreateLinodeSchema = object({
     // .concat(rootPasswordValidation),
     otherwise: (schema) => schema.notRequired(),
   }),
-  interfaces: LinodeInterfacesSchema,
+  interfaces: ConfigProfileInterfacesSchema,
   metadata: MetadataSchema,
   firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema,
@@ -482,7 +482,7 @@ export const CreateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: LinodeInterfacesSchema,
+  interfaces: ConfigProfileInterfacesSchema,
 });
 
 export const UpdateLinodeConfigSchema = object({
@@ -497,7 +497,7 @@ export const UpdateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: LinodeInterfacesSchema,
+  interfaces: ConfigProfileInterfacesSchema,
 });
 
 export const CreateLinodeDiskSchema = object({
@@ -553,4 +553,110 @@ export const UpdateLinodeInterfaceSettingsSchema = object({
     ipv4_interface_id: number().notRequired().nullable(),
     ipv6_interface_id: number().notRequired().nullable(),
   }),
+});
+
+const BaseInterfaceIPv4AddressSchema = object({
+  address: string(),
+  primary: boolean().notRequired(),
+});
+
+const VPCInterfaceIPv4RangeSchema = object({
+  range: string(),
+});
+
+const PublicInterfaceRangeSchema = object({
+  range: string().nullable(),
+});
+
+const CreateVPCInterfaceIpv4AddressSchema = object({
+  address: string(),
+  primary: boolean().notRequired(),
+  nat_1_1_address: string().notRequired().nullable(),
+});
+
+export const CreateLinodeInterfaceSchema = object({
+  firewall_id: number().notRequired().nullable(),
+  default_route: object({
+    ipv4: boolean().notRequired(),
+    ipv6: boolean().notRequired(),
+  }).notRequired(),
+  vpc: object({
+    subnet_id: number(),
+    ipv4: object({
+      addresses: array().of(CreateVPCInterfaceIpv4AddressSchema).notRequired(),
+      ranges: array().of(VPCInterfaceIPv4RangeSchema).notRequired(),
+    })
+      .notRequired()
+      .nullable(),
+  })
+    .notRequired()
+    .nullable(),
+  public: object({
+    ipv4: object({
+      addresses: array().of(BaseInterfaceIPv4AddressSchema).notRequired(),
+    }).notRequired(),
+    ipv6: object({
+      ranges: array().of(PublicInterfaceRangeSchema).notRequired(),
+    }).notRequired(),
+  })
+    .notRequired()
+    .nullable(),
+  vlan: object({
+    vlan_label: string(),
+    ipam_address: string().notRequired(),
+  })
+    .notRequired()
+    .nullable(),
+});
+
+const ModifyVPCInterfaceIpv4AddressSchema = object({
+  address: string().notRequired(),
+  primary: boolean().notRequired().nullable(),
+  nat_1_1_address: string().notRequired().nullable(),
+});
+
+export const ModifyLinodeInterfaceSchema = object({
+  default_route: object({
+    ipv4: boolean().notRequired().nullable(),
+    ipv6: boolean().notRequired().nullable(),
+  })
+    .notRequired()
+    .nullable(),
+  vpc: object({
+    subnet_id: number(),
+    ipv4: object({
+      addresses: array()
+        .of(ModifyVPCInterfaceIpv4AddressSchema)
+        .notRequired()
+        .nullable(),
+      ranges: array().of(VPCInterfaceIPv4RangeSchema).notRequired().nullable(),
+    })
+      .notRequired()
+      .nullable(),
+  })
+    .notRequired()
+    .nullable(),
+  public: object({
+    ipv4: object({
+      addresses: array()
+        .of(BaseInterfaceIPv4AddressSchema)
+        .notRequired()
+        .nullable(),
+    })
+      .notRequired()
+      .nullable(),
+    ipv6: object({
+      ranges: array().of(PublicInterfaceRangeSchema).nullable(),
+    })
+      .notRequired()
+      .nullable(),
+  })
+    .notRequired()
+    .nullable(),
+  vlan: object({
+    vlan_label: string().nullable(),
+    ipam_address: string().notRequired().nullable(),
+  })
+    .notRequired()
+    .nullable(),
 });
