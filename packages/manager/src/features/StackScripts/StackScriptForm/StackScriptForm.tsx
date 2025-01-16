@@ -1,168 +1,169 @@
-import { InputAdornment, Paper, TextField, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import {
+  Button,
+  InputAdornment,
+  Notice,
+  Stack,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+import { useProfile } from 'src/queries/profile/profile';
 
-import {
-  StyledActionsPanel,
-  StyledGridWithTips,
-  StyledNotice,
-  StyledTextField,
-} from './StackScriptForm.styles';
+import type { StackScriptPayload } from '@linode/api-v4';
 
-import type { Image } from '@linode/api-v4/lib/images';
-import type { APIError } from '@linode/api-v4/lib/types';
-
-interface TextFieldHandler {
-  handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
-}
-
-interface Props {
-  currentUser: string;
-  description: TextFieldHandler;
-  disableSubmit: boolean;
-  disabled?: boolean;
-  errors?: APIError[];
-  isSubmitting: boolean;
-  label: TextFieldHandler;
-  mode: 'create' | 'edit';
-  onCancel: () => void;
-  onSelectChange: (image: Image[]) => void;
-  onSubmit: () => void;
-  revision: TextFieldHandler;
-  script: TextFieldHandler;
-  selectedImages: string[];
-}
-
-const errorResources = {
-  images: 'Images',
-  label: 'A label',
-  script: 'A script',
-};
-
-export const StackScriptForm = React.memo((props: Props) => {
+export const StackScriptForm = () => {
   const {
-    currentUser,
-    description,
-    disableSubmit,
-    disabled,
-    errors,
-    isSubmitting,
-    label,
-    mode,
-    onCancel,
-    onSelectChange,
-    onSubmit,
-    revision,
-    script,
-    selectedImages,
-  } = props;
+    control,
+    formState: { isSubmitting },
+    reset,
+  } = useForm<StackScriptPayload>();
 
-  const hasErrorFor = getAPIErrorFor(errorResources, errors);
+  const { data: profile } = useProfile();
+  const username = profile?.username ?? '';
+  const disabled = false; // @todo impliment permissions
 
   return (
-    <Paper sx={(theme) => ({ padding: theme.spacing(2) })}>
-      <Grid container spacing={2}>
-        <StyledGridWithTips>
-          <StyledTextField
+    <Stack spacing={2}>
+      <Controller
+        render={({ field, fieldState }) => (
+          <TextField
             InputProps={{
               startAdornment: (
-                <InputAdornment position="end">{currentUser} /</InputAdornment>
+                <InputAdornment position="end">{username} /</InputAdornment>
               ),
             }}
+            noMarginTop
             data-qa-stackscript-label
             disabled={disabled}
-            errorText={hasErrorFor('label')}
+            errorText={fieldState.error?.message}
             label="StackScript Label"
-            onChange={label.handler}
+            onChange={field.onChange}
             placeholder="Enter a label"
             required
             tooltipText="StackScript labels must be between 3 and 128 characters."
-            value={label.value}
+            value={field.value}
           />
+        )}
+        control={control}
+        name="label"
+      />
+      <Controller
+        render={({ field, fieldState }) => (
           <TextField
+          noMarginTop
             data-qa-stackscript-description
             disabled={disabled}
+            errorText={fieldState.error?.message}
             label="Description"
             multiline
-            onChange={description.handler}
+            onChange={field.onChange}
             placeholder="Enter a description"
             rows={1}
-            value={description.value}
+            value={field.value}
           />
-        </StyledGridWithTips>
-        <StyledGridWithTips>
-          <StyledNotice>
-            <Typography variant="h2">Tips</Typography>
-            <Typography>
-              There are four default environment variables provided to you:
-            </Typography>
-            <ul>
-              <li>LINODE_ID</li>
-              <li>LINODE_LISHUSERNAME</li>
-              <li>LINODE_RAM</li>
-              <li>LINODE_DATACENTERID</li>
-            </ul>
-          </StyledNotice>
-        </StyledGridWithTips>
-      </Grid>
-      <ImageSelect
-        textFieldProps={{
-          required: true,
-          tooltipText:
-            'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.',
-        }}
-        anyAllOption
-        data-qa-stackscript-target-select
-        disabled={disabled}
-        errorText={hasErrorFor('images')}
-        label="Target Images"
-        multiple
-        onChange={onSelectChange}
-        placeholder="Select image(s)"
-        value={selectedImages}
-        variant="public"
+        )}
+        control={control}
+        name="description"
       />
-      <TextField
-        InputProps={{ sx: { maxWidth: '100%' } }}
-        data-qa-stackscript-script
-        disabled={disabled}
-        errorText={hasErrorFor('script')}
-        label="Script"
-        multiline
-        onChange={script.handler}
-        placeholder={`#!/bin/bash \n\n# Your script goes here`}
-        required
-        rows={3}
-        value={script.value}
+
+      <Controller
+        render={({ field, fieldState }) => (
+          <ImageSelect
+            textFieldProps={{
+              required: true,
+              tooltipText:
+                'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.',
+            }}
+            anyAllOption
+            data-qa-stackscript-target-select
+            disabled={disabled}
+            errorText={fieldState.error?.message}
+            label="Target Images"
+            multiple
+            onChange={(images) => field.onChange(images.map((i) => i.id))}
+            placeholder="Select image(s)"
+            value={field.value}
+            variant="public"
+            noMarginTop
+          />
+        )}
+        control={control}
+        name="images"
       />
-      <TextField
-        InputProps={{ sx: { maxWidth: '100%' } }}
-        data-qa-stackscript-revision
-        disabled={disabled}
-        label="Revision Note"
-        onChange={revision.handler}
-        placeholder="Enter a revision note"
-        value={revision.value}
+
+      <Controller
+        render={({ field, fieldState }) => (
+          <TextField
+            labelTooltipText={
+              <Stack>
+                <Typography>
+                  There are four default environment variables provided to you:
+                </Typography>
+                <ul>
+                  <li>LINODE_ID</li>
+                  <li>LINODE_LISHUSERNAME</li>
+                  <li>LINODE_RAM</li>
+                  <li>LINODE_DATACENTERID</li>
+                </ul>
+              </Stack>
+            }
+            noMarginTop
+            InputProps={{ sx: { maxWidth: '100%' } }}
+            data-qa-stackscript-script
+            disabled={disabled}
+            errorText={fieldState.error?.message}
+            label="Script"
+            multiline
+            onChange={field.onChange}
+            placeholder={`#!/bin/bash \n\n# Your script goes here`}
+            required
+            rows={3}
+            tooltipWidth={300}
+            value={field.value}
+          />
+        )}
+        control={control}
+        name="script"
       />
-      <StyledActionsPanel
-        primaryButtonProps={{
-          'data-testid': 'save',
-          disabled: disabled || disableSubmit,
-          label: mode === 'edit' ? 'Save Changes' : 'Create StackScript',
-          loading: isSubmitting,
-          onClick: onSubmit,
-        }}
-        secondaryButtonProps={{
-          'data-testid': 'cancel',
-          disabled,
-          label: 'Reset',
-          onClick: onCancel,
-        }}
+
+      <Controller
+        render={({ field, fieldState }) => (
+          <TextField
+          noMarginTop
+            InputProps={{ sx: { maxWidth: '100%' } }}
+            data-qa-stackscript-revision
+            disabled={disabled}
+            errorText={fieldState.error?.message}
+            label="Revision Note"
+            onChange={field.onChange}
+            placeholder="Enter a revision note"
+            value={field.value}
+          />
+        )}
+        control={control}
+        name="rev_note"
       />
-    </Paper>
+      <Stack direction="row" justifyContent="flex-end">
+        <Button
+          data-testid="cancel"
+          disabled={disabled}
+          onClick={() => reset()}
+        >
+          Reset
+        </Button>
+        <Button
+          buttonType="primary"
+          data-testid="save"
+          disabled={disabled}
+          loading={isSubmitting}
+          type="submit"
+        >
+          Create StackScript
+        </Button>
+      </Stack>
+    </Stack>
   );
-});
+};
