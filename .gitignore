@@ -138,3 +138,6 @@ packages/manager/bundle_analyzer_report.html
 
 # vitepress
 docs/.vitepress/cache
+
+# module federation
+**/.__mf__temp/
