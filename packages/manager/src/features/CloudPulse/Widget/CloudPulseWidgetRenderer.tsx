@@ -23,14 +23,14 @@ import type {
   MetricDefinition,
   ResourcePage,
   TimeDuration,
-  TimeDurationDate,
+  DateTimeWithPreset,
   Widgets,
 } from '@linode/api-v4';
 
 interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
   dashboard?: Dashboard | undefined;
-  duration: TimeDurationDate;
+  duration: DateTimeWithPreset;
   isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
   manualRefreshTimeStamp?: number;

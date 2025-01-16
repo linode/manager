@@ -19,7 +19,7 @@ import type {
   CloudPulseMetricsRequest,
   CloudPulseMetricsResponse,
   TimeDuration,
-  TimeDurationDate,
+  DateTimeWithPreset,
   Widgets,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
@@ -101,7 +101,7 @@ interface MetricRequestProps {
   /**
    * time duration for the metrics data
    */
-  duration: TimeDurationDate;
+  duration: DateTimeWithPreset;
 
   /**
    * entity ids selected by user

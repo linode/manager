@@ -6,13 +6,13 @@ import { useProfile } from 'src/queries/profile/profile';
 
 import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
 
-import type { FilterValue, TimeDurationDate } from '@linode/api-v4';
+import type { DateTimeWithPreset, FilterValue } from '@linode/api-v4';
 
 interface CloudPulseDateTimeRangePickerProps {
   defaultValue?: Partial<FilterValue>;
 
   handleStatsChange: (
-    timeDuration: TimeDurationDate,
+    timeDuration: DateTimeWithPreset,
     savePref?: boolean
   ) => void;
   savePreferences?: boolean;
@@ -23,7 +23,7 @@ export const CloudPulseDateTimeRangePicker = React.memo(
     const { defaultValue, handleStatsChange, savePreferences } = props;
     const { data: profile } = useProfile();
     const timezone = profile?.timezone ?? DateTime.local().zoneName;
-    const defaultSelected = defaultValue as TimeDurationDate;
+    const defaultSelected = defaultValue as DateTimeWithPreset;
     React.useEffect(() => {
       if (defaultSelected) {
         handleStatsChange(defaultSelected);

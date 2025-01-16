@@ -23,7 +23,7 @@ import {
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
 import type { FilterData, FilterValueType } from './CloudPulseDashboardLanding';
-import type { TimeDurationDate } from '@linode/api-v4';
+import type { DateTimeWithPreset } from '@linode/api-v4';
 
 export interface CloudPulseDashboardWithFiltersProp {
   /**
@@ -48,7 +48,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
       label: {},
     });
 
-    const [timeDuration, setTimeDuration] = React.useState<TimeDurationDate>(
+    const [timeDuration, setTimeDuration] = React.useState<DateTimeWithPreset>(
       defaultTimeDuration()
     );
 
@@ -79,7 +79,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
     );
 
     const handleTimeRangeChange = React.useCallback(
-      (timeDuration: TimeDurationDate) => {
+      (timeDuration: DateTimeWithPreset) => {
         setTimeDuration({
           ...timeDuration,
           end: convertToGmt(timeDuration.end),
