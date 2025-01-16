@@ -130,6 +130,8 @@ const ipv6ConfigInterface = object().when('purpose', {
     }),
 });
 
+// This is the validation schema for legacy interfaces attached to configuration profiles
+// For new interfaces, denoted as Linode Interfaces, see CreateLinodeInterfaceSchema or ModifyLinodeInterfaceSchema
 export const ConfigProfileInterfaceSchema = object().shape({
   purpose: mixed().oneOf(
     ['public', 'vlan', 'vpc'],
