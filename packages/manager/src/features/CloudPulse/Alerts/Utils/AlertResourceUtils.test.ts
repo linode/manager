@@ -6,7 +6,6 @@ import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect
 
 it('test getRegionsIdLabelMap method', () => {
   let result = getRegionsIdRegionMap(undefined);
-
   // if regions passed undefined, it should return an empty map
   expect(Array.from(result.keys()).length).toBe(0);
 
@@ -16,7 +15,6 @@ it('test getRegionsIdLabelMap method', () => {
 
   // check for a key
   expect(result.has(regions[0].id)).toBe(true);
-
   // check for value to match the region object
   expect(result.get(regions[0].id)).toBe(regions[0]);
 });
@@ -35,17 +33,14 @@ it('test getRegionOptions method', () => {
     regionsIdToRegionMap: regionsIdToLabelMap,
     resourceIds: ['1', '2'],
   });
-
   // Valid case
   expect(result.length).toBe(2);
-
   // Case with no data
   result = getRegionOptions({
     regionsIdToRegionMap: regionsIdToLabelMap,
     resourceIds: ['1', '2'],
   });
   expect(result.length).toBe(0);
-
   // Edge case with no matching resourceIds
   result = getRegionOptions({
     data,

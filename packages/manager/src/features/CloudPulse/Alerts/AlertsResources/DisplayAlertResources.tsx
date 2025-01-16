@@ -13,7 +13,6 @@ export interface DisplayAlertResourceProp {
    * The error text that needs to be displayed inside the table
    */
   errorText?: string;
-
   /**
    * A flag indicating if there was an error loading the data. If true, the error message
    * (specified by `errorText`) will be displayed in the table.

@@ -24,10 +24,8 @@ describe('AlertsRegionFilter component tests', () => {
 
     await userEvent.click(getByRole('button', { name: 'Close' }));
     expect(mockHandleSelectionChange).toHaveBeenCalledWith([mockRegions[0].id]);
-
     // validate the option is selected
     expect(queryByTestId(mockRegions[0].id)).toBeInTheDocument();
-
     // validate other options are not selected
     expect(queryByTestId(mockRegions[1].id)).not.toBeInTheDocument();
 
@@ -38,7 +36,6 @@ describe('AlertsRegionFilter component tests', () => {
     await userEvent.click(getByTestId(mockRegions[1].id));
 
     await userEvent.click(getByRole('button', { name: 'Close' }));
-
     // validate both the options are selected
     expect(queryByTestId(mockRegions[0].id)).toBeInTheDocument();
     expect(queryByTestId(mockRegions[1].id)).toBeInTheDocument();
@@ -53,7 +50,6 @@ describe('AlertsRegionFilter component tests', () => {
       <AlertsRegionFilter handleSelectionChange={vi.fn()} regionOptions={[]} />
     );
     await userEvent.click(getByRole('button', { name: 'Open' })); // indicates there is a drop down
-
     expect(getByText('No results')).toBeInTheDocument();
   });
 });

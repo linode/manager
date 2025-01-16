@@ -36,7 +36,6 @@ beforeEach(() => {
     isError: false,
     isFetching: false,
   });
-
   queryMocks.useRegionsQuery.mockReturnValue({
     data: regions,
     isError: false,
@@ -49,7 +48,6 @@ describe('AlertResources component tests', () => {
     const { getByText } = renderWithTheme(
       <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
     );
-
     expect(getByText(searchPlaceholder)).toBeInTheDocument();
     expect(getByText(regionPlaceholder)).toBeInTheDocument();
   });
@@ -76,7 +74,6 @@ describe('AlertResources component tests', () => {
     const { getByText } = renderWithTheme(
       <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
     );
-
     expect(
       getByText('Table data is unavailable. Please try again later.')
     ).toBeInTheDocument();

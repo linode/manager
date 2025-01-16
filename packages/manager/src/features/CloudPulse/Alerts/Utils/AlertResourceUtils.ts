@@ -26,7 +26,6 @@ export const getRegionsIdRegionMap = (
   if (!regions) {
     return new Map();
   }
-
   return new Map(regions.map((region) => [region.id, region]));
 };
 
@@ -52,6 +51,5 @@ export const getRegionOptions = (
       }
     }
   });
-
   return Array.from(uniqueRegions);
 };
