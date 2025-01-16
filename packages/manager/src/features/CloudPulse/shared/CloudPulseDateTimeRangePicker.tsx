@@ -21,7 +21,6 @@ export const CloudPulseDateTimeRangePicker = React.memo(
     const { defaultValue, handleStatsChange, savePreferences } = props;
     const { data: profile } = useProfile();
     const timezone = profile?.timezone ?? DateTime.local().zoneName;
-
     const defaultSelected = defaultValue as TimeDurationDate;
     React.useEffect(() => {
       if (defaultSelected) {
