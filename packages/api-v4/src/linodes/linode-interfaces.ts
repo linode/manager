@@ -17,8 +17,8 @@ import { Filter, ResourcePage as Page, Params } from '../types';
 import type {
   CreateLinodeInterfacePayload,
   LinodeInterfaceHistory,
-  LinodeInterfaceSetting,
-  LinodeInterfaceSettingPayload,
+  LinodeInterfaceSettings,
+  LinodeInterfaceSettingsPayload,
   LinodeInterface,
   LinodeInterfaces,
   ModifyLinodeInterfacePayload,
@@ -94,7 +94,7 @@ export const getLinodeInterfacesHistory = (
  * @param linodeId { number } The id of a Linode to get the interface history for.
  */
 export const getLinodeInterfacesSettings = (linodeId: number) =>
-  Request<LinodeInterfaceSetting>(
+  Request<LinodeInterfaceSettings>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
         linodeId
@@ -113,9 +113,9 @@ export const getLinodeInterfacesSettings = (linodeId: number) =>
  */
 export const updateLinodeInterfacesSettings = (
   linodeId: number,
-  data: LinodeInterfaceSettingPayload
+  data: LinodeInterfaceSettingsPayload
 ) =>
-  Request<LinodeInterfaceSetting>(
+  Request<LinodeInterfaceSettings>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
         linodeId
@@ -157,7 +157,7 @@ export const updateLinodeInterface = (
   interfaceId: number,
   data: ModifyLinodeInterfacePayload
 ) =>
-  Request<LinodeInterfaceSetting>(
+  Request<LinodeInterface>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
         linodeId
