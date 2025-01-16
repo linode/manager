@@ -14,6 +14,7 @@ import {
   defaultTimeDuration,
 } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
+import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
   checkIfFilterBuilderNeeded,
@@ -23,7 +24,7 @@ import {
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
 import type { FilterData, FilterValueType } from './CloudPulseDashboardLanding';
-import type { TimeDurationDate } from '@linode/api-v4';
+import type { TimeDuration, TimeDurationDate } from '@linode/api-v4';
 
 export interface CloudPulseDashboardWithFiltersProp {
   /**
@@ -132,34 +133,44 @@ export const CloudPulseDashboardWithFilters = React.memo(
             padding: 0,
           }}
         >
-          <Grid
-            justifyContent={{
-              sm: 'flex-end',
-              xs: 'center',
-            }}
-            columnSpacing={2}
-            container
-            display={'flex'}
-            item
-            maxHeight={'120px'}
-            mb={1}
-            overflow={'auto'}
-            px={2}
-            py={1}
-            rowGap={2}
-            xs={12}
-          >
-            <Grid
-              display="flex"
-              item
-              justifyContent={'end'}
-              md={8}
-              sm={6}
-              xs={12}
-            >
-              <CloudPulseDateTimeRangePicker
-                handleStatsChange={handleTimeRangeChange}
-                savePreferences={true}
+          <Grid container>
+            <Grid container item m={3} rowGap={1} xs={12}>
+              <Grid
+                columnSpacing={2}
+                container
+                item
+                justifyContent="space-between"
+                rowSpacing={2}
+              >
+                <Grid display={'flex'} item md={4} sm={5} xs={12}>
+                  <CloudPulseDashboardSelect
+                    defaultValue={dashboardId}
+                    isServiceIntegration
+                  />
+                </Grid>
+                <Grid
+                  display="flex"
+                  gap={1}
+                  item
+                  justifyContent="end"
+                  md={8}
+                  sm={6}
+                  xs={12}
+                >
+                  <CloudPulseDateTimeRangePicker
+                    handleStatsChange={handleTimeRangeChange}
+                    savePreferences
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider
+                sx={(theme) => ({
+                  borderColor: theme.color.grey5,
+                  margin: 0,
+                })}
               />
             </Grid>
 

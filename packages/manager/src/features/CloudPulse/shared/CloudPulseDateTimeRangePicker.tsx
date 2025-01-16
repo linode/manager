@@ -28,8 +28,29 @@ export const CloudPulseDateTimeRangePicker = React.memo(
       }
     }, []);
 
+    const handleDateChange = (params: {
+      end: null | string;
+      preset?: string | undefined;
+      start: null | string;
+      timezone?: null | string | undefined;
+    }) => {
+      const { end, preset, start } = params;
+      if (!end || !start || !preset) {
+        return;
+      }
+      handleStatsChange(
+        {
+          end: convertToGmt(end),
+          preset,
+          start: convertToGmt(start),
+        },
+        savePreferences
+      );
+    };
+
     const end = DateTime.fromISO(defaultSelected?.end, { zone: timezone });
     const start = DateTime.fromISO(defaultSelected?.start, { zone: timezone });
+
     return (
       <DateTimeRangePicker
         endDateProps={{
@@ -37,19 +58,6 @@ export const CloudPulseDateTimeRangePicker = React.memo(
           placeholder: 'Select End Date',
           showTimeZone: true,
           value: end,
-        }}
-        onChange={({ end, preset, start }) => {
-          if (!end || !start || !preset) {
-            return;
-          }
-          handleStatsChange(
-            {
-              end: convertToGmt(end),
-              preset,
-              start: convertToGmt(start),
-            },
-            savePreferences
-          );
         }}
         presetsProps={{
           defaultValue: defaultSelected?.preset,
@@ -66,6 +74,7 @@ export const CloudPulseDateTimeRangePicker = React.memo(
         }}
         disabledTimeZone
         enablePresets
+        onChange={handleDateChange}
       />
     );
   }
@@ -79,6 +88,7 @@ export const defaultTimeDuration = (): TimeDurationDate => {
 
   return {
     end,
+    preset: '30minutes',
     start,
   };
 };
