@@ -1,7 +1,7 @@
-import { TableBody } from '@mui/material';
 import React from 'react';
 
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
