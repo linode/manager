@@ -17,7 +17,7 @@ export default defineConfig({
     react(),
     svgr({ exportAsDefault: true }),
     federation({
-      name: '~manager',
+      name: 'manager',
       // remotes: {
       //   volume_create: 'http://localhost:3001/assets/remoteEntry.js',
       // },
@@ -31,8 +31,8 @@ export default defineConfig({
           type: 'module',
         },
       },
+      shareStrategy: 'loaded-first',
       shared: [
-        'axios',
         'react',
         'react-dom',
         '@tanstack/react-query',
@@ -41,6 +41,7 @@ export default defineConfig({
         '@linode/api-v4',
         'react-router-dom',
         '@tanstack/react-router',
+        'flag-icons/css/flag-icons.min.css',
       ],
     }),
   ],

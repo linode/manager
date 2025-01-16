@@ -60,7 +60,7 @@ export const LandingHeader = ({
   const renderActions = Boolean(onButtonClick || extraActions);
   const labelTitle = title?.toString();
 
-  const xsDown = useMediaQuery((theme: Theme) => {console.log("Got media query theme", theme); return theme.breakpoints.down("sm")});
+  const xsDown = useMediaQuery((theme: Theme) =>  theme.breakpoints.down("sm"));
   const customXsDownBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down(636),
   );

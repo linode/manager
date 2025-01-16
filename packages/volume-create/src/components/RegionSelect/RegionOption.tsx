@@ -24,7 +24,7 @@ export const RegionOption = ({
         <Flag country={item.country} />
         {item.label}
         <Box flexGrow={1} />
-        {item.id}
+        ({item.id})
       </Stack>
     </ListItemOption>
   );

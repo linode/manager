@@ -1,5 +1,4 @@
 import { createRoute, redirect } from '@tanstack/react-router';
-import Hello from 'volume_create/Hello';
 import VolumeCreate from 'volume_create/VolumeCreate';
 
 import { rootRoute } from '../root';
@@ -44,12 +43,6 @@ const volumesCreateRoute = createRoute({
   component: VolumeCreate,
   getParentRoute: () => volumesRoute,
   path: 'create',
-});
-
-const volumesHelloRoute = createRoute({
-  component: Hello,
-  getParentRoute: () => volumesRoute,
-  path: 'hello',
 });
 
 type VolumeActionRouteParams<P = number | string> = {
@@ -99,6 +92,5 @@ const volumesCatchAllRoute = createRoute({
 export const volumesRouteTree = volumesRoute.addChildren([
   volumesIndexRoute.addChildren([volumeActionRoute]),
   volumesCreateRoute,
-  volumesHelloRoute,
   volumesCatchAllRoute,
 ]);

@@ -29,10 +29,9 @@ export default defineConfig({
         filename: "remoteEntry.js",
         exposes: {
           './VolumeCreate': './src/index.tsx',
-          './Hello': './src/hello.tsx'
         },
+        shareStrategy: 'loaded-first',
         shared: [
-          'axios',
           'react',
           'react-dom',
           '@tanstack/react-query',
@@ -40,7 +39,8 @@ export default defineConfig({
           '@emotion/react',
           '@linode/api-v4',
           'react-router-dom',
-          '@tanstack/react-router'
+          '@tanstack/react-router',
+          'flag-icons/css/flag-icons.min.css'
         ],
       })
   ],
