@@ -2,8 +2,8 @@ import {
   createDomainRecord,
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
-import { Autocomplete, Notice, TextField } from '@linode/ui';
-import { cond, defaultTo, equals, lensPath, path, pick, set } from 'ramda';
+import { TextField as _TextField, Autocomplete, Notice } from '@linode/ui';
+import { defaultTo, path, pathOr } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -22,6 +22,7 @@ import {
 } from '../../domainUtils';
 import {
   castFormValuesToNumeric,
+  filterDataByType,
   modeMap,
   resolve,
   resolveAlias,
@@ -65,7 +66,7 @@ interface DomainRecordDrawerProps
 interface EditableSharedFields {
   ttl_sec?: number;
 }
-interface EditableRecordFields extends EditableSharedFields {
+export interface EditableRecordFields extends EditableSharedFields {
   name?: string;
   port?: string;
   priority?: string;
@@ -76,7 +77,7 @@ interface EditableRecordFields extends EditableSharedFields {
   weight?: string;
 }
 
-interface EditableDomainFields extends EditableSharedFields {
+export interface EditableDomainFields extends EditableSharedFields {
   axfr_ips?: string[];
   description?: string;
   domain?: string;
@@ -108,15 +109,12 @@ interface NumberFieldProps extends AdjustedTextFieldProps {
   defaultValue?: number;
 }
 
-export class DomainRecordDrawer extends React.Component<
-  DomainRecordDrawerProps,
-  State
-> {
+export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
   /**
    * the defaultFieldState is used to pre-populate the drawer with either
    * editable data or defaults.
    */
-  static defaultFieldsState = (props: Partial<DomainRecordDrawerProps>) => ({
+  const defaultFieldsState = (props: Partial<DomainRecordDrawerProps>) => ({
     axfr_ips: getInitialIPs(props.axfr_ips),
     description: '',
     domain: props.domain,
@@ -136,7 +134,7 @@ export class DomainRecordDrawer extends React.Component<
     weight: props.weight ?? '5',
   });
 
-  static errorFields = {
+  const errorFields = {
     axfr_ips: 'domain transfers',
     domain: 'domain',
     expire_sec: 'expire rate',
@@ -155,28 +153,26 @@ export class DomainRecordDrawer extends React.Component<
     weight: 'weight',
   };
 
-  DefaultTTLField = () => (
-    <this.MSSelect field="ttl_sec" fn={this.setTTLSec} label="Default TTL" />
+  const DefaultTTLField = () => (
+    <MSSelect field="ttl_sec" fn={setTTLSec} label="Default TTL" />
   );
 
-  DomainTransferField = () => {
+  const DomainTransferField = () => {
     const finalIPs = (
-      (this.state.fields as EditableDomainFields).axfr_ips ?? ['']
+      (state.fields as EditableDomainFields).axfr_ips ?? ['']
     ).map(stringToExtendedIP);
     return (
       <MultipleIPInput
-        error={getAPIErrorFor(
-          DomainRecordDrawer.errorFields,
-          this.state.errors
-        )('axfr_ips')}
+        error={getAPIErrorFor(errorFields, state.errors)('axfr_ips')}
         helperText={helperText}
         ips={finalIPs}
-        onChange={this.handleTransferUpdate}
+        onChange={handleTransferUpdate}
         title="Domain Transfer IPs"
       />
     );
   };
-  ExpireField = () => {
+
+  const ExpireField = () => {
     const rateOptions = [
       { label: 'Default', value: 0 },
       { label: '1 week', value: 604800 },
@@ -188,8 +184,8 @@ export class DomainRecordDrawer extends React.Component<
       return (
         eachRate.value ===
         defaultTo(
-          DomainRecordDrawer.defaultFieldsState(this.props).expire_sec,
-          (this.state.fields as EditableDomainFields).expire_sec
+          defaultFieldsState(props).expire_sec,
+          (state.fields as EditableDomainFields).expire_sec
         )
       );
     });
@@ -203,13 +199,14 @@ export class DomainRecordDrawer extends React.Component<
         }}
         disableClearable
         label="Expire Rate"
-        onChange={(_, selected) => this.setExpireSec(selected?.value)}
+        onChange={(_, selected) => setExpireSec(selected?.value)}
         options={rateOptions}
         value={defaultRate}
       />
     );
   };
-  MSSelect = ({
+
+  const MSSelect = ({
     field,
     fn,
     label,
@@ -240,10 +237,8 @@ export class DomainRecordDrawer extends React.Component<
       return (
         eachOption.value ===
         defaultTo(
-          DomainRecordDrawer.defaultFieldsState(this.props)[field],
-          (this.state.fields as EditableDomainFields & EditableRecordFields)[
-            field
-          ]
+          defaultFieldsState(props)[field],
+          (state.fields as EditableDomainFields & EditableRecordFields)[field]
         )
       );
     });
@@ -263,7 +258,8 @@ export class DomainRecordDrawer extends React.Component<
       />
     );
   };
-  NameOrTargetField = ({
+
+  const NameOrTargetField = ({
     field,
     label,
     multiline,
@@ -272,13 +268,14 @@ export class DomainRecordDrawer extends React.Component<
     label: string;
     multiline?: boolean;
   }) => {
-    const { domain, type } = this.props;
-    const value = (this.state.fields as EditableDomainFields &
-      EditableRecordFields)[field];
+    const { domain, type } = props;
+    const value = (state.fields as EditableDomainFields & EditableRecordFields)[
+      field
+    ];
     const hasAliasToResolve =
       value && value.indexOf('@') >= 0 && shouldResolve(type, field);
     return (
-      <this.TextField
+      <TextField
         placeholder={
           shouldResolve(type, field) ? 'hostname or @ for root' : undefined
         }
@@ -289,38 +286,39 @@ export class DomainRecordDrawer extends React.Component<
       />
     );
   };
-  NumberField = ({ field, label, ...rest }: NumberFieldProps) => {
+
+  const NumberField = ({ field, label, ...rest }: NumberFieldProps) => {
     return (
-      <TextField
-        errorText={getAPIErrorFor(
-          DomainRecordDrawer.errorFields,
-          this.state.errors
-        )(field)}
+      <_TextField
         onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-          this.updateField(field)(e.target.value)
+          updateField(field)(e.target.value)
         }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          this.updateField(field)(e.target.value)
+          updateField(field)(e.target.value)
         }
         value={
-          (this.state.fields as EditableDomainFields & EditableRecordFields)[
+          (state.fields as EditableDomainFields & EditableRecordFields)[
             field
           ] as number
         }
         data-qa-target={label}
+        errorText={getAPIErrorFor(errorFields, state.errors)(field)}
         label={label}
         type="number"
         {...rest}
       />
     );
   };
-  PortField = () => <this.NumberField field="port" label="Port" />;
 
-  PriorityField = (props: { label: string; max: number; min: number }) => (
-    <this.NumberField field="priority" {...props} />
-  );
+  const PortField = () => <NumberField field="port" label="Port" />;
 
-  ProtocolField = () => {
+  const PriorityField = (props: {
+    label: string;
+    max: number;
+    min: number;
+  }) => <NumberField field="priority" {...props} />;
+
+  const ProtocolField = () => {
     const protocolOptions = [
       { label: 'tcp', value: 'tcp' },
       { label: 'udp', value: 'udp' },
@@ -333,8 +331,8 @@ export class DomainRecordDrawer extends React.Component<
       return (
         eachProtocol.value ===
         defaultTo(
-          DomainRecordDrawer.defaultFieldsState(this.props).protocol,
-          (this.state.fields as EditableRecordFields).protocol
+          defaultFieldsState(props).protocol,
+          (state.fields as EditableRecordFields).protocol
         )
       );
     });
@@ -348,32 +346,28 @@ export class DomainRecordDrawer extends React.Component<
         }}
         disableClearable
         label="Protocol"
-        onChange={(_, selected) => this.setProtocol(selected.value)}
+        onChange={(_, selected) => setProtocol(selected.value)}
         options={protocolOptions}
         value={defaultProtocol}
       />
     );
   };
 
-  RefreshRateField = () => (
-    <this.MSSelect
-      field="refresh_sec"
-      fn={this.setRefreshSec}
-      label="Refresh Rate"
-    />
+  const RefreshRateField = () => (
+    <MSSelect field="refresh_sec" fn={setRefreshSec} label="Refresh Rate" />
   );
 
-  RetryRateField = () => (
-    <this.MSSelect field="retry_sec" fn={this.setRetrySec} label="Retry Rate" />
+  const RetryRateField = () => (
+    <MSSelect field="retry_sec" fn={setRetrySec} label="Retry Rate" />
   );
 
-  ServiceField = () => <this.TextField field="service" label="Service" />;
+  const ServiceField = () => <TextField field="service" label="Service" />;
 
-  TTLField = () => (
-    <this.MSSelect field="ttl_sec" fn={this.setTTLSec} label="TTL" />
+  const TTLField = () => (
+    <MSSelect field="ttl_sec" fn={setTTLSec} label="TTL" />
   );
 
-  TagField = () => {
+  const TagField = () => {
     const tagOptions = [
       { label: 'issue', value: 'issue' },
       { label: 'issuewild', value: 'issuewild' },
@@ -384,8 +378,8 @@ export class DomainRecordDrawer extends React.Component<
       return (
         eachTag.value ===
         defaultTo(
-          DomainRecordDrawer.defaultFieldsState(this.props).tag,
-          (this.state.fields as EditableRecordFields).tag
+          defaultFieldsState(props).tag,
+          (state.fields as EditableRecordFields).tag
         )
       );
     });
@@ -398,14 +392,14 @@ export class DomainRecordDrawer extends React.Component<
         }}
         disableClearable
         label="Tag"
-        onChange={(_, selected) => this.setTag(selected.value)}
+        onChange={(_, selected) => setTag(selected.value)}
         options={tagOptions}
         value={defaultTag}
       />
     );
   };
 
-  TextField = ({
+  const TextField = ({
     field,
     helperText,
     label,
@@ -413,26 +407,22 @@ export class DomainRecordDrawer extends React.Component<
     placeholder,
     trimmed,
   }: AdjustedTextFieldProps) => (
-    <TextField
-      errorText={getAPIErrorFor(
-        DomainRecordDrawer.errorFields,
-        this.state.errors
-      )(field)}
+    // NOTE: Need to check this why onChange is causing problem here.....
+    <_TextField
       onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-        this.updateField(field)(e.target.value)
+        updateField(field)(e.target.value)
       }
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-        this.updateField(field)(e.target.value)
-      }
+      // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+      //   updateField(field)(e.target.value)
+      // }
       value={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props)[field] as
+        defaultFieldsState(props)[field] as number | string,
+        (state.fields as EditableDomainFields & EditableRecordFields)[field] as
           | number
-          | string,
-        (this.state.fields as EditableDomainFields & EditableRecordFields)[
-          field
-        ] as number | string
+          | string
       )}
       data-qa-target={label}
+      errorText={getAPIErrorFor(errorFields, state.errors)(field)}
       helperText={helperText}
       label={label}
       multiline={multiline}
@@ -441,109 +431,47 @@ export class DomainRecordDrawer extends React.Component<
     />
   );
 
-  WeightField = () => <this.NumberField field="weight" label="Weight" />;
+  const WeightField = () => <NumberField field="weight" label="Weight" />;
 
-  filterDataByType = (
-    fields: EditableDomainFields | EditableRecordFields,
-    t: DomainType | RecordType
-  ): Partial<EditableDomainFields | EditableRecordFields> =>
-    cond([
-      [
-        () => equals('master', t),
-        () =>
-          pick(
-            [
-              'domain',
-              'soa_email',
-              'refresh_sec',
-              'retry_sec',
-              'expire_sec',
-              'ttl_sec',
-              'axfr_ips',
-            ],
-            fields
-          ),
-      ],
-      // [
-      //   () => equals('slave', t),
-      //   () => pick([], fields),
-      // ],
-      [() => equals('A', t), () => pick(['name', 'target', 'ttl_sec'], fields)],
-      [
-        () => equals('AAAA', t),
-        () => pick(['name', 'target', 'ttl_sec'], fields),
-      ],
-      [
-        () => equals('CAA', t),
-        () => pick(['name', 'tag', 'target', 'ttl_sec'], fields),
-      ],
-      [
-        () => equals('CNAME', t),
-        () => pick(['name', 'target', 'ttl_sec'], fields),
-      ],
-      [
-        () => equals('MX', t),
-        () => pick(['target', 'priority', 'ttl_sec', 'name'], fields),
-      ],
-      [
-        () => equals('NS', t),
-        () => pick(['target', 'name', 'ttl_sec'], fields),
-      ],
-      [
-        () => equals('SRV', t),
-        () =>
-          pick(
-            [
-              'service',
-              'protocol',
-              'priority',
-              'port',
-              'weight',
-              'target',
-              'ttl_sec',
-            ],
-            fields
-          ),
-      ],
-      [
-        () => equals('TXT', t),
-        () => pick(['name', 'target', 'ttl_sec'], fields),
-      ],
-    ])();
-
-  handleRecordSubmissionSuccess = () => {
-    this.props.updateRecords();
-    this.onClose();
+  const handleRecordSubmissionSuccess = () => {
+    props.updateRecords();
+    onClose();
   };
 
-  handleSubmissionErrors = (errorResponse: any) => {
+  const handleSubmissionErrors = (errorResponse: APIError[]) => {
     const errors = getAPIErrorOrDefault(errorResponse);
-    this.setState({ errors, submitting: false }, () => {
+    setState((prevState) => {
+      const newState = { ...prevState, errors, submitting: false };
       scrollErrorIntoView();
+      return newState;
     });
   };
 
-  handleTransferUpdate = (transferIPs: ExtendedIP[]) => {
+  const handleTransferUpdate = (transferIPs: ExtendedIP[]) => {
     const axfrIps =
       transferIPs.length > 0 ? transferIPs.map(extendedIPToString) : [''];
-    this.updateField('axfr_ips')(axfrIps);
+    updateField('axfr_ips')(axfrIps);
   };
 
-  onClose = () => {
-    this.setState({
+  const onClose = () => {
+    setState({
       errors: undefined,
-      fields: DomainRecordDrawer.defaultFieldsState({}),
+      fields: defaultFieldsState({}),
       submitting: false,
     });
-    this.props.onClose();
+    props.onClose();
   };
 
-  onDomainEdit = () => {
-    const { domainId, type, updateDomain } = this.props;
-    this.setState({ errors: undefined, submitting: true });
+  const onDomainEdit = () => {
+    const { domainId, type, updateDomain } = props;
+    setState((prevState) => ({
+      ...prevState,
+      errors: undefined,
+      submitting: true,
+    }));
 
     const data = {
-      ...this.filterDataByType(this.state.fields, type),
+      ...filterDataByType(state.fields, type),
     } as Partial<EditableDomainFields>;
 
     if (data.axfr_ips) {
@@ -559,23 +487,28 @@ export class DomainRecordDrawer extends React.Component<
 
     updateDomain({ id: domainId, ...data, status: 'active' })
       .then(() => {
-        this.onClose();
+        onClose();
       })
-      .catch(this.handleSubmissionErrors);
+      .catch(handleSubmissionErrors);
   };
 
-  onRecordCreate = () => {
-    const { domain, records, type } = this.props;
+  const onRecordCreate = () => {
+    const { domain, records, type } = props;
 
     /** Appease TS ensuring we won't use it during Record create. */
     if (type === 'master' || type === 'slave') {
       return;
     }
 
-    this.setState({ errors: undefined, submitting: true });
+    setState((prevState) => ({
+      ...prevState,
+      errors: undefined,
+      submitting: true,
+    }));
+
     const _data = {
       type,
-      ...this.filterDataByType(this.state.fields, type),
+      ...filterDataByType(state.fields, type),
     };
 
     // Expand @ to the Domain in appropriate fields
@@ -598,28 +531,32 @@ export class DomainRecordDrawer extends React.Component<
         field: 'name',
         reason: 'Record conflict - CNAMES must be unique',
       };
-      this.handleSubmissionErrors([error]);
+      handleSubmissionErrors([error]);
       return;
     }
 
-    createDomainRecord(this.props.domainId, data)
-      .then(this.handleRecordSubmissionSuccess)
-      .catch(this.handleSubmissionErrors);
+    createDomainRecord(props.domainId, data)
+      .then(handleRecordSubmissionSuccess)
+      .catch(handleSubmissionErrors);
   };
 
-  onRecordEdit = () => {
-    const { domain, domainId, id, type } = this.props;
-    const fields = this.state.fields as EditableRecordFields;
+  const onRecordEdit = () => {
+    const { domain, domainId, id, type } = props;
+    const fields = state.fields as EditableRecordFields;
 
     /** Appease TS ensuring we won't use it during Record create. */
     if (type === 'master' || type === 'slave' || !id) {
       return;
     }
 
-    this.setState({ errors: undefined, submitting: true });
+    setState((prevState) => ({
+      ...prevState,
+      errors: undefined,
+      submitting: true,
+    }));
 
     const _data = {
-      ...this.filterDataByType(fields, type),
+      ...filterDataByType(fields, type),
     };
 
     // Expand @ to the Domain in appropriate fields
@@ -627,112 +564,113 @@ export class DomainRecordDrawer extends React.Component<
     // Convert string values to numeric, replacing '' with undefined
     data = castFormValuesToNumeric(data);
     updateDomainRecord(domainId, id, data)
-      .then(this.handleRecordSubmissionSuccess)
-      .catch(this.handleSubmissionErrors);
+      .then(handleRecordSubmissionSuccess)
+      .catch(handleSubmissionErrors);
   };
 
-  updateField = (
+  const updateField = (
     key: keyof EditableDomainFields | keyof EditableRecordFields
-  ) => (value: any) => this.setState(set(lensPath(['fields', key]), value));
-
-  componentDidUpdate(prevProps: DomainRecordDrawerProps) {
-    if (this.props.open && !prevProps.open) {
-      // Drawer is opening, set the fields according to props
-      this.setState({
-        fields: DomainRecordDrawer.defaultFieldsState(this.props),
-      });
-    }
-  }
+  ) => (value: any) => {
+    setState((prevState) => ({
+      ...prevState,
+      fields: {
+        ...prevState.fields,
+        [key]: value,
+      },
+    }));
+  };
 
   // eslint-disable-next-line perfectionist/sort-classes
-  setExpireSec = this.updateField('expire_sec');
+  const setExpireSec = updateField('expire_sec');
 
-  setProtocol = this.updateField('protocol');
+  const setProtocol = updateField('protocol');
 
-  setRefreshSec = this.updateField('refresh_sec');
+  const setRefreshSec = updateField('refresh_sec');
 
-  setRetrySec = this.updateField('retry_sec');
+  const setRetrySec = updateField('retry_sec');
 
-  setTTLSec = this.updateField('ttl_sec');
+  const setTTLSec = updateField('ttl_sec');
 
-  setTag = this.updateField('tag');
+  const setTag = updateField('tag');
 
-  state: State = {
-    fields: DomainRecordDrawer.defaultFieldsState(this.props),
+  const [state, setState] = React.useState<State>({
+    fields: defaultFieldsState(props),
     submitting: false,
-  };
+  });
 
-  types = {
+  React.useEffect(() => {
+    if (props.open) {
+      setState((prevState) => ({
+        ...prevState,
+        fields: defaultFieldsState(props),
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.open]);
+
+  const types = {
     A: {
       fields: [],
     },
     AAAA: {
       fields: [
         (idx: number) => (
-          <this.NameOrTargetField field="name" key={idx} label="Hostname" />
+          <NameOrTargetField field="name" key={idx} label="Hostname" />
         ),
         (idx: number) => (
-          <this.NameOrTargetField field="target" key={idx} label="IP Address" />
+          <NameOrTargetField field="target" key={idx} label="IP Address" />
         ),
-        (idx: number) => <this.TTLField key={idx} />,
+        (idx: number) => <TTLField key={idx} />,
       ],
     },
     CAA: {
       fields: [
         (idx: number) => (
-          <this.NameOrTargetField field="name" key={idx} label="Name" />
+          <NameOrTargetField field="name" key={idx} label="Name" />
         ),
-        (idx: number) => <this.TagField key={idx} />,
+        (idx: number) => <TagField key={idx} />,
         (idx: number) => (
-          <this.NameOrTargetField field="target" key={idx} label="Value" />
+          <NameOrTargetField field="target" key={idx} label="Value" />
         ),
-        (idx: number) => <this.TTLField key={idx} />,
+        (idx: number) => <TTLField key={idx} />,
       ],
     },
     CNAME: {
       fields: [
         (idx: number) => (
-          <this.NameOrTargetField field="name" key={idx} label="Hostname" />
+          <NameOrTargetField field="name" key={idx} label="Hostname" />
         ),
         (idx: number) => (
-          <this.NameOrTargetField field="target" key={idx} label="Alias to" />
+          <NameOrTargetField field="target" key={idx} label="Alias to" />
         ),
-        (idx: number) => <this.TTLField key={idx} />,
+        (idx: number) => <TTLField key={idx} />,
         ,
       ],
     },
     MX: {
       fields: [
         (idx: number) => (
-          <this.NameOrTargetField
-            field="target"
-            key={idx}
-            label="Mail Server"
-          />
+          <NameOrTargetField field="target" key={idx} label="Mail Server" />
         ),
         ,
         (idx: number) => (
-          <this.PriorityField key={idx} label="Preference" max={255} min={0} />
+          <PriorityField key={idx} label="Preference" max={255} min={0} />
         ),
-        (idx: number) => <this.TTLField key={idx} />,
+        (idx: number) => <TTLField key={idx} />,
         (idx: number) => (
-          <this.NameOrTargetField field="name" key={idx} label="Subdomain" />
+          <NameOrTargetField field="name" key={idx} label="Subdomain" />
         ),
       ],
     },
     NS: {
       fields: [
         (idx: number) => (
-          <this.NameOrTargetField
-            field="target"
-            key={idx}
-            label="Name Server"
-          />
+          <NameOrTargetField field="target" key={idx} label="Name Server" />
         ),
         (idx: number) => (
-          <this.NameOrTargetField field="name" key={idx} label="Subdomain" />
+          <NameOrTargetField field="name" key={idx} label="Subdomain" />
         ),
-        (idx: number) => <this.TTLField key={idx} />,
+        (idx: number) => <TTLField key={idx} />,
       ],
     },
     PTR: {
@@ -740,53 +678,41 @@ export class DomainRecordDrawer extends React.Component<
     },
     SRV: {
       fields: [
-        (idx: number) => <this.ServiceField key={idx} />,
-        (idx: number) => <this.ProtocolField key={idx} />,
+        (idx: number) => <ServiceField key={idx} />,
+        (idx: number) => <ProtocolField key={idx} />,
         (idx: number) => (
-          <this.PriorityField key={idx} label="Priority" max={255} min={0} />
+          <PriorityField key={idx} label="Priority" max={255} min={0} />
         ),
-        (idx: number) => <this.WeightField key={idx} />,
-        (idx: number) => <this.PortField key={idx} />,
+        (idx: number) => <WeightField key={idx} />,
+        (idx: number) => <PortField key={idx} />,
         (idx: number) => (
-          <this.NameOrTargetField field="target" key={idx} label="Target" />
+          <NameOrTargetField field="target" key={idx} label="Target" />
         ),
-        (idx: number) => <this.TTLField key={idx} />,
+        (idx: number) => <TTLField key={idx} />,
       ],
     },
     TXT: {
       fields: [
         (idx: number) => (
-          <this.NameOrTargetField field="name" key={idx} label="Hostname" />
+          <NameOrTargetField field="name" key={idx} label="Hostname" />
         ),
         (idx: number) => (
-          <this.NameOrTargetField
-            field="target"
-            key={idx}
-            label="Value"
-            multiline
-          />
+          <NameOrTargetField field="target" key={idx} label="Value" multiline />
         ),
-        (idx: number) => <this.TTLField key={idx} />,
+        (idx: number) => <TTLField key={idx} />,
       ],
     },
     master: {
       fields: [
+        (idx: number) => <TextField field="domain" key={idx} label="Domain" />,
         (idx: number) => (
-          <this.TextField field="domain" key={idx} label="Domain" />
+          <TextField field="soa_email" key={idx} label="SOA Email" trimmed />
         ),
-        (idx: number) => (
-          <this.TextField
-            field="soa_email"
-            key={idx}
-            label="SOA Email"
-            trimmed
-          />
-        ),
-        (idx: number) => <this.DomainTransferField key={idx} />,
-        (idx: number) => <this.DefaultTTLField key={idx} />,
-        (idx: number) => <this.RefreshRateField key={idx} />,
-        (idx: number) => <this.RetryRateField key={idx} />,
-        (idx: number) => <this.ExpireField key={idx} />,
+        (idx: number) => <DomainTransferField key={idx} />,
+        (idx: number) => <DefaultTTLField key={idx} />,
+        (idx: number) => <RefreshRateField key={idx} />,
+        (idx: number) => <RetryRateField key={idx} />,
+        (idx: number) => <ExpireField key={idx} />,
       ],
     },
     slave: {
@@ -794,63 +720,59 @@ export class DomainRecordDrawer extends React.Component<
     },
   };
 
-  render() {
-    const { submitting } = this.state;
-    const { mode, open, records, type } = this.props;
-    const { fields } = this.types[type];
-    const isCreating = mode === 'create';
-    const isDomain = type === 'master' || type === 'slave';
+  const { mode, open, records, type } = props;
+  const { fields } = types[type];
+  const isCreating = mode === 'create';
+  const isDomain = type === 'master' || type === 'slave';
 
-    const hasARecords = records.find((thisRecord) =>
-      ['A', 'AAAA'].includes(thisRecord.type)
-    ); // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+  // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+  const hasARecords = records.find((thisRecord) =>
+    ['A', 'AAAA'].includes(thisRecord.type)
+  );
 
-    const noARecordsNoticeText =
-      'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
+  const noARecordsNoticeText =
+    'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
-    const otherErrors = [
-      getAPIErrorFor({}, this.state.errors)('_unknown'),
-      getAPIErrorFor({}, this.state.errors)('none'),
-    ].filter(Boolean);
+  const otherErrors = [
+    getAPIErrorFor({}, state.errors)('_unknown'),
+    getAPIErrorFor({}, state.errors)('none'),
+  ].filter(Boolean);
 
-    return (
-      <Drawer
-        onClose={this.onClose}
-        open={open}
-        title={`${path([mode], modeMap)} ${path([type], typeMap)} Record`}
-      >
-        {otherErrors.length > 0 &&
-          otherErrors.map((err, index) => {
-            return <Notice key={index} text={err} variant="error" />;
-          })}
-        {!hasARecords && type === 'NS' && (
-          <Notice
-            spacingTop={8}
-            text={noARecordsNoticeText}
-            variant="warning"
-          />
-        )}
-        {fields.map((field: any, idx: number) => field(idx))}
+  return (
+    <Drawer
+      onClose={onClose}
+      open={open}
+      title={`${path([mode], modeMap)} ${path([type], typeMap)} Record`}
+    >
+      {otherErrors.length > 0 &&
+        otherErrors.map((err, index) => {
+          return <Notice key={index} text={err} variant="error" />;
+        })}
+      {!hasARecords && type === 'NS' && (
+        <Notice spacingTop={8} text={noARecordsNoticeText} variant="warning" />
+      )}
+      {fields.map((field, idx) =>
+        field && typeof field === 'function' ? field(idx) : null
+      )}
 
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'save',
-            disabled: submitting,
-            label: 'Save',
-            loading: submitting,
-            onClick: isDomain
-              ? this.onDomainEdit
-              : isCreating
-              ? this.onRecordCreate
-              : this.onRecordEdit,
-          }}
-          secondaryButtonProps={{
-            'data-testid': 'cancel',
-            label: 'Cancel',
-            onClick: this.onClose,
-          }}
-        />
-      </Drawer>
-    );
-  }
-}
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'save',
+          disabled: state.submitting,
+          label: 'Save',
+          loading: state.submitting,
+          onClick: isDomain
+            ? onDomainEdit
+            : isCreating
+            ? onRecordCreate
+            : onRecordEdit,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel',
+          label: 'Cancel',
+          onClick: onClose,
+        }}
+      />
+    </Drawer>
+  );
+};
