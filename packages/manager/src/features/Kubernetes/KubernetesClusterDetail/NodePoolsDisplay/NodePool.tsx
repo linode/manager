@@ -11,6 +11,7 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
+import { pluralize } from 'src/utilities/pluralize';
 
 import { NodeTable } from './NodeTable';
 
@@ -79,7 +80,9 @@ export const NodePool = (props: Props) => {
             orientation="vertical"
             sx={(theme) => ({ height: 16, margin: `4px ${theme.spacing(1)}` })}
           />
-          <Typography variant="h2">{pluralize('Node', 'Nodes', count)}</Typography>
+          <Typography variant="h2">
+            {pluralize('Node', 'Nodes', count)}
+          </Typography>
         </Box>
         <Hidden smUp>
           <ActionMenu

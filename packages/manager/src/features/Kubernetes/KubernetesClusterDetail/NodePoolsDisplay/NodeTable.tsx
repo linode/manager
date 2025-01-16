@@ -100,7 +100,7 @@ export const NodeTable = React.memo((props: Props) => {
 
   // It takes ~5 minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
   // since nodes are not returned right away unlike standard LKE
-  const lkeEClusterCreatedWithinFirst10Mins = () => {
+  const isEnterpriseClusterWithin10MinsOfCreation = () => {
     if (clusterTier !== 'enterprise') {
       return false;
     }
@@ -112,11 +112,11 @@ export const NodeTable = React.memo((props: Props) => {
       createdTime.plus({ minutes: 10 })
     );
 
-    const dateTimeToCheck = DateTime.fromISO(DateTime.now().toISO(), {
+    const currentTime = DateTime.fromISO(DateTime.now().toISO(), {
       zone: profile?.timezone,
     });
 
-    return interval.contains(dateTimeToCheck);
+    return interval.contains(currentTime);
   };
 
   return (
@@ -175,7 +175,7 @@ export const NodeTable = React.memo((props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {count === 0 && lkeEClusterCreatedWithinFirst10Mins() && (
+                  {count === 0 && isEnterpriseClusterWithin10MinsOfCreation() && (
                     <TableRow>
                       <TableCell colSpan={4}>
                         <ErrorState
@@ -200,7 +200,8 @@ export const NodeTable = React.memo((props: Props) => {
                       </TableCell>
                     </TableRow>
                   )}
-                  {(count > 0 || !lkeEClusterCreatedWithinFirst10Mins()) && (
+                  {(count > 0 ||
+                    !isEnterpriseClusterWithin10MinsOfCreation()) && (
                     <TableContentWrapper
                       length={paginatedAndOrderedData.length}
                       loading={isLoading}
