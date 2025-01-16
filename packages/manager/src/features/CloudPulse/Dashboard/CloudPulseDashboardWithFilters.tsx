@@ -8,13 +8,12 @@ import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboar
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
+import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
+import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import {
-  CloudPulseDateTimeRangePicker,
   convertToGmt,
   defaultTimeDuration,
-} from '../shared/CloudPulseDateTimeRangePicker';
-import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
-import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+} from '../Utils/CloudPulseDateTimePickerUtils';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
   checkIfFilterBuilderNeeded,
@@ -24,7 +23,7 @@ import {
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
 import type { FilterData, FilterValueType } from './CloudPulseDashboardLanding';
-import type { TimeDuration, TimeDurationDate } from '@linode/api-v4';
+import type { TimeDurationDate } from '@linode/api-v4';
 
 export interface CloudPulseDashboardWithFiltersProp {
   /**

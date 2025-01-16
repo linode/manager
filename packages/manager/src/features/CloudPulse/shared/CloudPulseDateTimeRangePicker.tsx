@@ -4,6 +4,8 @@ import React from 'react';
 import { DateTimeRangePicker } from 'src/components/DatePicker/DateTimeRangePicker';
 import { useProfile } from 'src/queries/profile/profile';
 
+import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
+
 import type { FilterValue, TimeDurationDate } from '@linode/api-v4';
 
 interface CloudPulseDateTimeRangePickerProps {
@@ -79,22 +81,3 @@ export const CloudPulseDateTimeRangePicker = React.memo(
     );
   }
 );
-
-export const defaultTimeDuration = (): TimeDurationDate => {
-  const date = DateTime.now().setZone('GMT');
-
-  const start = convertToGmt(date.minus({ minutes: 30 }).toISO() ?? '');
-  const end = convertToGmt(date.toISO() ?? '');
-
-  return {
-    end,
-    preset: '30minutes',
-    start,
-  };
-};
-
-export const convertToGmt = (date: string): string => {
-  const dateObject = DateTime.fromISO(date);
-  const updatedDate = dateObject.setZone('GMT');
-  return updatedDate.toISO()?.split('.')[0] + 'Z';
-};
