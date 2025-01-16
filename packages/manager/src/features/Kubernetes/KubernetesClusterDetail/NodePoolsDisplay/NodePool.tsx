@@ -79,7 +79,7 @@ export const NodePool = (props: Props) => {
             orientation="vertical"
             sx={(theme) => ({ height: 16, margin: `4px ${theme.spacing(1)}` })}
           />
-          <Typography variant="h2">{count} Nodes</Typography>
+          <Typography variant="h2">{pluralize('Node', 'Nodes', count)}</Typography>
         </Box>
         <Hidden smUp>
           <ActionMenu
