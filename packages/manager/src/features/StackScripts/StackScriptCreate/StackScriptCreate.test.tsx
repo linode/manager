@@ -1,35 +1,13 @@
-import * as React from 'react';
+import React from 'react';
 
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { profileFactory } from 'src/factories';
-import { queryClientFactory } from 'src/queries/base';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StackScriptCreate } from './StackScriptCreate';
 
-import type { Grants, Profile } from '@linode/api-v4/lib';
-import type { APIError } from '@linode/api-v4/lib/types';
-import type { UseQueryResult } from '@tanstack/react-query';
-
-const queryClient = queryClientFactory();
-
 describe('StackScriptCreate', () => {
   it('should render header, inputs, and buttons', () => {
     const { getByLabelText, getByText } = renderWithThemeAndHookFormContext({
-      component: (
-        <StackScriptCreate
-          {...reactRouterProps}
-          profile={
-            { data: profileFactory.build() } as UseQueryResult<
-              Profile,
-              APIError[]
-            >
-          }
-          grants={{ data: {} } as UseQueryResult<Grants, APIError[]>}
-          mode="create"
-          queryClient={queryClient}
-        />
-      ),
+      component: <StackScriptCreate />,
     });
 
     expect(getByText('Create')).toBeVisible();

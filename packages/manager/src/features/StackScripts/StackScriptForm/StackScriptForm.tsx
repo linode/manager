@@ -1,32 +1,23 @@
-import {
-  Button,
-  InputAdornment,
-  Notice,
-  Stack,
-  TextField,
-  Typography,
-} from '@linode/ui';
-import * as React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { InputAdornment, Stack, TextField, Typography } from '@linode/ui';
+import React from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { useProfile } from 'src/queries/profile/profile';
 
 import type { StackScriptPayload } from '@linode/api-v4';
 
-export const StackScriptForm = () => {
-  const {
-    control,
-    formState: { isSubmitting },
-    reset,
-  } = useForm<StackScriptPayload>();
+interface Props {
+  disabled: boolean;
+  username: string;
+}
 
-  const { data: profile } = useProfile();
-  const username = profile?.username ?? '';
-  const disabled = false; // @todo impliment permissions
+export const StackScriptForm = (props: Props) => {
+  const { disabled, username } = props;
+
+  const { control } = useFormContext<StackScriptPayload>();
 
   return (
-    <Stack spacing={2}>
+    <>
       <Controller
         render={({ field, fieldState }) => (
           <TextField
@@ -35,11 +26,11 @@ export const StackScriptForm = () => {
                 <InputAdornment position="end">{username} /</InputAdornment>
               ),
             }}
-            noMarginTop
             data-qa-stackscript-label
             disabled={disabled}
             errorText={fieldState.error?.message}
-            label="StackScript Label"
+            label="Label"
+            noMarginTop
             onChange={field.onChange}
             placeholder="Enter a label"
             required
@@ -50,15 +41,16 @@ export const StackScriptForm = () => {
         control={control}
         name="label"
       />
+
       <Controller
         render={({ field, fieldState }) => (
           <TextField
-          noMarginTop
             data-qa-stackscript-description
             disabled={disabled}
             errorText={fieldState.error?.message}
             label="Description"
             multiline
+            noMarginTop
             onChange={field.onChange}
             placeholder="Enter a description"
             rows={1}
@@ -83,11 +75,11 @@ export const StackScriptForm = () => {
             errorText={fieldState.error?.message}
             label="Target Images"
             multiple
+            noMarginTop
             onChange={(images) => field.onChange(images.map((i) => i.id))}
             placeholder="Select image(s)"
             value={field.value}
             variant="public"
-            noMarginTop
           />
         )}
         control={control}
@@ -110,13 +102,13 @@ export const StackScriptForm = () => {
                 </ul>
               </Stack>
             }
-            noMarginTop
-            InputProps={{ sx: { maxWidth: '100%' } }}
             data-qa-stackscript-script
             disabled={disabled}
             errorText={fieldState.error?.message}
+            expand
             label="Script"
             multiline
+            noMarginTop
             onChange={field.onChange}
             placeholder={`#!/bin/bash \n\n# Your script goes here`}
             required
@@ -132,12 +124,12 @@ export const StackScriptForm = () => {
       <Controller
         render={({ field, fieldState }) => (
           <TextField
-          noMarginTop
-            InputProps={{ sx: { maxWidth: '100%' } }}
             data-qa-stackscript-revision
             disabled={disabled}
             errorText={fieldState.error?.message}
+            expand
             label="Revision Note"
+            noMarginTop
             onChange={field.onChange}
             placeholder="Enter a revision note"
             value={field.value}
@@ -146,24 +138,6 @@ export const StackScriptForm = () => {
         control={control}
         name="rev_note"
       />
-      <Stack direction="row" justifyContent="flex-end">
-        <Button
-          data-testid="cancel"
-          disabled={disabled}
-          onClick={() => reset()}
-        >
-          Reset
-        </Button>
-        <Button
-          buttonType="primary"
-          data-testid="save"
-          disabled={disabled}
-          loading={isSubmitting}
-          type="submit"
-        >
-          Create StackScript
-        </Button>
-      </Stack>
-    </Stack>
+    </>
   );
 };
