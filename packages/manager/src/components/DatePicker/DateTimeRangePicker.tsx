@@ -8,9 +8,14 @@ import { DateTimePicker } from './DateTimePicker';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 
+interface PresetType {
+  label: string;
+  value: string;
+}
+
 export interface DateTimeRangePickerProps {
   /** If true, disable the timezone drop down */
-  disabledTimeZone?: boolean;
+  disableTimeZone?: boolean;
 
   /** If true, shows the date presets field instead of the date pickers */
   enablePresets?: boolean;
@@ -92,7 +97,7 @@ const presetsOptions: { label: string; value: DatePresetType }[] = [
 
 export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   const {
-    disabledTimeZone = false,
+    disableTimeZone = false,
 
     enablePresets = false,
 
@@ -126,13 +131,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   const [endDateTime, setEndDateTime] = useState<DateTime | null>(
     endDateTimeValue
   );
-  const [presetValue, setPresetValue] = useState<
-    | {
-        label: string;
-        value: string;
-      }
-    | undefined
-  >(
+  const [presetValue, setPresetValue] = useState<PresetType | undefined>(
     presetsOptions.find((option) => option.value === presetsDefaultValue) ??
       presetsOptions[0]
   );
@@ -277,7 +276,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
               onChange: (value) => setStartTimeZone(value),
               value: startTimeZone,
             }}
-            disabledTimeZone={disabledTimeZone}
+            disableTimeZone={disableTimeZone}
             errorText={startDateError ?? undefined}
             format={format}
             label={startLabel}
@@ -291,7 +290,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
             timeZoneSelectProps={{
               value: startTimeZone,
             }}
-            disabledTimeZone={disabledTimeZone}
+            disableTimeZone={disableTimeZone}
             format={format}
             label={endLabel}
             minDate={startDateTime || undefined}

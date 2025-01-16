@@ -7,7 +7,7 @@ import { timezones } from 'src/assets/timezones/timezones';
 type Timezone = typeof timezones[number];
 
 interface TimeZoneSelectProps {
-  disabled?: boolean;
+  disable?: boolean;
   errorText?: string;
   label?: string;
   noMarginTop?: boolean;
@@ -39,7 +39,7 @@ const getTimezoneOptions = () => {
 const timezoneOptions = getTimezoneOptions();
 
 export const TimeZoneSelect = ({
-  disabled = false,
+  disable: disabled = false,
   errorText,
   label = 'Timezone',
   noMarginTop = false,
