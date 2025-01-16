@@ -39,7 +39,7 @@ import { lensFrom } from '../NodeBalancerCreate';
 import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  nodeForRequest,
+  getNodeForRequest,
   parseAddress,
   parseAddresses,
   transformConfigsForRequest,
@@ -281,7 +281,7 @@ class NodeBalancerConfigurations extends React.Component<
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
-    const nodeData = nodeForRequest(node);
+    const nodeData = getNodeForRequest(node, config);
 
     if (!nodeBalancerId) {
       return;
@@ -1031,7 +1031,7 @@ class NodeBalancerConfigurations extends React.Component<
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
-    const nodeData = nodeForRequest(node);
+    const nodeData = getNodeForRequest(node, config);
 
     if (!nodeBalancerId) {
       return;
