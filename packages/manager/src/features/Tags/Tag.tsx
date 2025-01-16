@@ -1,4 +1,4 @@
-import { Box, CircleProgress, Typography } from '@linode/ui';
+import { Box, Button, CircleProgress, Divider, Stack, Typography } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
 
@@ -19,15 +19,29 @@ const Tag = () => {
   }
 
   return (
-    <Box>
-      <LandingHeader createButtonText="Delete" onButtonClick={() => null} />
+    <Stack spacing={1}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        maxHeight="32px"
+        spacing={1}
+      >
+        <LandingHeader />
+        <Button buttonType="outlined">View in Search</Button>
+        <Button buttonType="outlined">Delete</Button>
+      </Stack>
       {objects.length === 0 && (
-        <Typography>No entities with this tag.</Typography>
+        <Stack alignItems="center" gap={4} justifyContent="center" pt={4}>
+          <Typography fontSize="48px">🚫</Typography>
+          <Typography>No entities with this tag</Typography>
+        </Stack>
       )}
+      <Stack divider={<Divider />} spacing={1}>
       {objects.map((object) => (
         <pre key={object.data.id}>{JSON.stringify(object, null, 2)}</pre>
       ))}
-    </Box>
+      </Stack>
+    </Stack>
   );
 };
 
