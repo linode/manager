@@ -24,7 +24,7 @@ export interface AlertResourcesProp {
   /**
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
-  resourceIds: string[];
+  alertResourceIds: string[];
 
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
@@ -33,7 +33,7 @@ export interface AlertResourcesProp {
 }
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
-  const { alertLabel, resourceIds, serviceType } = props;
+  const { alertLabel, alertResourceIds, serviceType } = props;
   const [searchText, setSearchText] = React.useState<string>();
 
   const [, setFilteredRegions] = React.useState<string[]>();
@@ -64,10 +64,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const regionOptions: Region[] = React.useMemo(() => {
     return getRegionOptions({
       data: resources,
-      regionsIdToRegionMap: regionsIdToRegionMap,
-      resourceIds,
+      regionsIdToRegionMap,
+      resourceIds: alertResourceIds,
     });
-  }, [resources, resourceIds, regionsIdToRegionMap]);
+  }, [resources, alertResourceIds, regionsIdToRegionMap]);
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
 

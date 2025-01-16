@@ -10,7 +10,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 
 export interface DisplayAlertResourceProp {
   /**
-   * The error text that needs to be displayed inside the table
+   * The custom error text that needs to be displayed inside the table
    */
   errorText?: string;
   /**

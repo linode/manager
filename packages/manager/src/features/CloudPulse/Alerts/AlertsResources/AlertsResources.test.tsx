@@ -46,7 +46,7 @@ beforeEach(() => {
 describe('AlertResources component tests', () => {
   it('should render search input, region filter', async () => {
     const { getByText } = renderWithTheme(
-      <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
     expect(getByText(searchPlaceholder)).toBeInTheDocument();
     expect(getByText(regionPlaceholder)).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('AlertResources component tests', () => {
       isFetching: true,
     });
     const { getByTestId, queryByText } = renderWithTheme(
-      <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
     expect(getByTestId('circle-progress')).toBeInTheDocument();
     expect(queryByText(searchPlaceholder)).not.toBeInTheDocument();
@@ -72,7 +72,7 @@ describe('AlertResources component tests', () => {
       isFetching: false,
     });
     const { getByText } = renderWithTheme(
-      <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
     expect(
       getByText('Table data is unavailable. Please try again later.')
