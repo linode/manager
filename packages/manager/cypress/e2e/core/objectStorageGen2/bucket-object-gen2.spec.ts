@@ -367,7 +367,7 @@ describe('Object Storage Gen2 bucket object tests', () => {
     checkBucketObjectDetailsDrawer(bucketFilename, endpointTypeE3);
   });
 
-  it('UI should display buckets for region1, warning message for one region', () => {
+  it('UI should display buckets for one region, warning message for one region', () => {
     const mockRegions = regionFactory.buildList(2, {
       capabilities: ['Object Storage'],
     });
@@ -400,5 +400,76 @@ describe('Object Storage Gen2 bucket object tests', () => {
       '@getBucketsForRegion',
       '@getBucketsForRegionError',
     ]);
+    // table with retrieved bucket
+    cy.get('table tbody tr').should('have.length', 1);
+    // warning message
+    const strRegion = `${mockRegions[1].country.toUpperCase()}, ${
+      mockRegions[1].label
+    }`;
+    cy.findByTestId('notice-warning-important').within(() => {
+      cy.contains(`There was an error loading buckets in ${strRegion}`);
+    });
+    cy.contains(
+      `If you have buckets in ${strRegion}, you may not see them listed below.`
+    );
+  });
+
+  it('UI should display buckets for one region, warning message for > 1 region', () => {
+    const mockRegions = regionFactory.buildList(3, {
+      capabilities: ['Object Storage'],
+    });
+    mockGetRegions(mockRegions).as('getRegions');
+    const mockEndpoints = mockRegions.map((mockRegion) => {
+      return objectStorageEndpointsFactory.build({
+        endpoint_type: 'E2',
+        region: mockRegion.id,
+        s3_endpoint: `${mockRegion.id}.linodeobjects.com`,
+      });
+    });
+
+    mockGetObjectStorageEndpoints(mockEndpoints).as('getEndpoints');
+    const mockBucket1 = objectStorageBucketFactoryGen2.build({
+      label: randomLabel(),
+      region: mockRegions[0].id,
+    });
+    // this bucket should display
+    mockGetBucketsForRegion(mockRegions[0].id, [mockBucket1]).as(
+      'getBucketsForRegion'
+    );
+    // force errors for 2 regions' buckets
+    mockGetBucketsForRegionError(mockRegions[1].id).as(
+      'getBucketsForRegionError0'
+    );
+    mockGetBucketsForRegionError(mockRegions[2].id).as(
+      'getBucketsForRegionError1'
+    );
+    cy.visitWithLogin('/object-storage/buckets');
+    cy.wait([
+      '@getRegions',
+      '@getEndpoints',
+      '@getBucketsForRegion',
+      '@getBucketsForRegionError0',
+      '@getBucketsForRegionError1',
+    ]);
+    // table with retrieved bucket
+    cy.get('table tbody tr').should('have.length', 1);
+    // warning message
+    cy.findByTestId('notice-warning-important').within(() => {
+      cy.contains(
+        'There was an error loading buckets in the following regions:'
+      );
+      const strError1 = `${mockRegions[1].country.toUpperCase()}, ${
+        mockRegions[1].label
+      }`;
+      const strError2 = `${mockRegions[2].country.toUpperCase()}, ${
+        mockRegions[2].label
+      }`;
+      cy.get('ul>li').eq(0).contains(strError1);
+      cy.get('ul>li').eq(1).contains(strError2);
+      // bottom of warning message
+      cy.contains(
+        'If you have buckets in these regions, you may not see them listed below.'
+      );
+    });
   });
 });
