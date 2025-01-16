@@ -249,12 +249,16 @@ export interface VPCInterfacePayload {
   } | null;
 }
 
+export interface PublicInterfaceRanges {
+  range: string | null;
+}
+
 export interface PublicInterfacePayload {
   ipv4?: {
     addresses?: BaseIPv4InterfaceAddressPayload[];
   };
   ipv6?: {
-    ranges?: { range: string | null }[];
+    ranges?: PublicInterfaceRanges[];
   };
 }
 
@@ -267,6 +271,48 @@ export interface CreateLinodeInterfacePayload {
   vlan?: {
     vlan_label: string;
     ipam_address?: string;
+  } | null;
+}
+
+// PUT object -- TODO many extra null options? see if we can just align it more with the create payload (or vice versa)
+// note - commenting the extra nulls here vs the create payload...extra null defaults prevent me from easily
+// using the types I defined above (little overlap)
+// they're allowing us to both omit or set to null. maybe we just define it without the nulls
+// on our end, and purposely omit when we set these values in later forms?
+export interface ModifyLinodeInterfacePayload {
+  default_route?: {
+    ipv4?: boolean | null; // extra null
+    ipv6?: boolean | null; // extra null
+  };
+  vpc?: {
+    subnet_id: number;
+    ipv4?: {
+      addresses?:
+        | {
+            address?: string;
+            primary?: boolean | null; // extra null
+            nat_1_1_address?: string | null;
+          }[]
+        | null; // extra null
+      ranges?: { range: string }[] | null; // extra null
+    } | null;
+  } | null;
+  public?: {
+    ipv4?: {
+      addresses?:
+        | {
+            address: string;
+            primary?: boolean;
+          }[]
+        | null; // extra null
+    } | null; // extra null
+    ipv6?: {
+      ranges: PublicInterfaceRanges[] | null; // extra null
+    } | null; // extra null
+  } | null;
+  vlan?: {
+    vlan_label: string;
+    ipam_address?: string | null; // extra null
   } | null;
 }
 
@@ -305,8 +351,8 @@ export interface PublicInterfaceData {
   };
 }
 
-// the GET object
-export interface LinodeInterfaceData {
+// data returned from GET
+export interface LinodeInterface {
   id: number;
   mac_address: string;
   default_route: DefaultRoute;
@@ -322,7 +368,7 @@ export interface LinodeInterfaceData {
 }
 
 export interface LinodeInterfaces {
-  interfaces: LinodeInterfaceData[];
+  interfaces: LinodeInterface[];
 }
 
 export type LinodeInterfaceStatus = 'active' | 'inactive' | 'deleted';
@@ -336,6 +382,24 @@ export interface InterfaceHistory {
   interface_data: string; // must parse? (? ask clarification)
   status: LinodeInterfaceStatus;
   created: string;
+}
+
+export interface InterfaceSetting {
+  network_helper: boolean;
+  default_route: {
+    ipv4_interface_id?: number | null;
+    ipv4_eligible_interface_ids: number[];
+    ipv6_interface_id?: number | null;
+    ipv6_eligible_interface_ids: number[];
+  };
+}
+
+export interface InterfaceSettingPayload {
+  network_helper?: boolean | null;
+  default_route: {
+    ipv4_interface_id?: number | null;
+    ipv6_interface_id?: number | null;
+  };
 }
 // ----------------------------------------------------------
 
