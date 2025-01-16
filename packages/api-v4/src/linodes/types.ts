@@ -229,6 +229,19 @@ export interface DefaultRoute {
 }
 
 // POST related types
+
+// POST object
+export interface CreateLinodeInterfacePayload {
+  firewall_id?: number | null;
+  default_route?: DefaultRoute | null;
+  vpc?: CreateVPCInterfacePayload | null;
+  public?: CreatePublicInterfacePayload | null;
+  vlan?: {
+    vlan_label: string;
+    ipam_address?: string;
+  } | null;
+}
+
 export interface BaseIPv4InterfaceAddressPayload {
   address: string;
   primary?: boolean;
@@ -239,13 +252,15 @@ export interface VPCIpv4InterfaceAddress
   nat_1_1_address?: string | null;
 }
 
-export interface VPCInterfacePayload {
+export interface VPCInterfaceIPv4Range {
+  range: string;
+}
+
+export interface CreateVPCInterfacePayload {
   subnet_id: number;
   ipv4?: {
     addresses?: VPCIpv4InterfaceAddress[];
-    ranges?: {
-      range: string;
-    }[];
+    ranges?: VPCInterfaceIPv4Range[];
   } | null;
 }
 
@@ -253,7 +268,7 @@ export interface PublicInterfaceRange {
   range: string | null;
 }
 
-export interface PublicInterfacePayload {
+export interface CreatePublicInterfacePayload {
   ipv4?: {
     addresses?: BaseIPv4InterfaceAddressPayload[];
   };
@@ -262,61 +277,67 @@ export interface PublicInterfacePayload {
   };
 }
 
-// POST object
-export interface CreateLinodeInterfacePayload {
-  firewall_id?: number | null;
-  default_route?: DefaultRoute | null;
-  vpc?: VPCInterfacePayload | null;
-  public?: PublicInterfacePayload | null;
+// PUT related types
+
+// PUT object - very similar to POST object, but many more values can also be null
+export interface ModifyLinodeInterfacePayload {
+  default_route?: ModifyDefaultRoute | null;
+  vpc?: ModifyVPCInterfacePayload | null;
+  public?: ModifyPublicInterfacePayload | null;
   vlan?: {
-    vlan_label: string;
-    ipam_address?: string;
+    vlan_label: string | null;
+    ipam_address?: string | null;
   } | null;
 }
 
-// PUT object -- TODO many extra null options? see if we can just align it more with the create payload (or vice versa)
-// note - commenting the extra nulls here vs the create payload...extra null defaults prevent me from easily
-// using the types I defined above (little overlap)
-// they're allowing us to both omit or set to null. maybe we just define it without the nulls
-// on our end, and purposely omit when we set these values in later forms?
-export interface ModifyLinodeInterfacePayload {
-  default_route?: {
-    ipv4?: boolean | null; // extra null
-    ipv6?: boolean | null; // extra null
-  } | null; // extra null, same behavior as omitting
-  vpc?: {
-    subnet_id: number;
-    ipv4?: {
-      addresses?:
-        | {
-            address?: string;
-            primary?: boolean | null; // extra null, not specified
-            nat_1_1_address?: string | null;
-          }[]
-        | null; // extra null, same behavior as omitting
-      ranges?: { range: string }[] | null; // extra null, same behavior as omitting
+export interface ModifyDefaultRoute {
+  ipv4?: boolean | null;
+  ipv6?: boolean | null;
+}
+
+export interface ModifyVPCInterfacePayload {
+  subnet_id: number;
+  ipv4?: {
+    addresses?: {
+      address?: string;
+      primary?: boolean | null;
+      nat_1_1_address?: string | null;
     } | null;
+    ranges?: VPCInterfaceIPv4Range[] | null;
   } | null;
-  public?: {
-    ipv4?: {
-      addresses?:
-        | {
-            address: string;
-            primary?: boolean;
-          }[]
-        | null; // extra null, same behavior as omitting
-    } | null; // extra null, same behavior as omitting
-    ipv6?: {
-      ranges: PublicInterfaceRange[] | null; // extra null
-    } | null; // extra null
+}
+
+export interface ModifyPublicInterfacePayload {
+  ipv4?: {
+    addresses?: BaseIPv4InterfaceAddressPayload[] | null;
   } | null;
-  vlan?: {
-    vlan_label: string;
-    ipam_address?: string | null; // extra null
+  ipv6?: {
+    ranges: PublicInterfaceRange[] | null;
   } | null;
 }
 
 // GET related types
+
+// GET object
+export interface LinodeInterface {
+  id: number;
+  mac_address: string;
+  default_route: DefaultRoute;
+  version: number;
+  created: string;
+  updated: string;
+  vpc: VPCInterfaceData | null;
+  public: PublicInterfaceData | null;
+  vlan: {
+    vlan_label: string;
+    ipam_address: string;
+  } | null;
+}
+
+export interface LinodeInterfaces {
+  interfaces: LinodeInterface[];
+}
+
 export interface VPCInterfaceData {
   vpc_id: number;
   subnet_id: number;
@@ -326,9 +347,7 @@ export interface VPCInterfaceData {
       primary: boolean;
       nat_1_1_address?: string;
     }[];
-    ranges: {
-      range: string;
-    }[];
+    ranges: VPCInterfaceIPv4Range[];
   };
 }
 
@@ -351,26 +370,7 @@ export interface PublicInterfaceData {
   };
 }
 
-// data returned from GET
-export interface LinodeInterface {
-  id: number;
-  mac_address: string;
-  default_route: DefaultRoute;
-  version: number;
-  created: string;
-  updated: string;
-  vpc: VPCInterfaceData | null;
-  public: PublicInterfaceData | null;
-  vlan: {
-    vlan_label: string;
-    ipam_address: string;
-  } | null;
-}
-
-export interface LinodeInterfaces {
-  interfaces: LinodeInterface[];
-}
-
+// Other Linode Interface types
 export type LinodeInterfaceStatus = 'active' | 'inactive' | 'deleted';
 
 export interface LinodeInterfaceHistory {
@@ -379,7 +379,7 @@ export interface LinodeInterfaceHistory {
   linode_id: number;
   event_id: number;
   version: number;
-  interface_data: string; // must parse? (? ask clarification)
+  interface_data: string; // will come in as JSON string object that we'll need to parse
   status: LinodeInterfaceStatus;
   created: string;
 }
