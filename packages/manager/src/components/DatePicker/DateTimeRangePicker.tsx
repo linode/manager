@@ -75,8 +75,10 @@ export interface DateTimeRangePickerProps {
 
 type DatePresetType =
   | '7days'
+  | '12hours'
   | '24hours'
   | '30days'
+  | '30minutes'
   | 'custom_range'
   | 'last_month'
   | 'this_month';
