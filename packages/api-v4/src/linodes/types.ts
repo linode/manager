@@ -249,7 +249,7 @@ export interface VPCInterfacePayload {
   } | null;
 }
 
-export interface PublicInterfaceRanges {
+export interface PublicInterfaceRange {
   range: string | null;
 }
 
@@ -258,7 +258,7 @@ export interface PublicInterfacePayload {
     addresses?: BaseIPv4InterfaceAddressPayload[];
   };
   ipv6?: {
-    ranges?: PublicInterfaceRanges[];
+    ranges?: PublicInterfaceRange[];
   };
 }
 
@@ -283,18 +283,18 @@ export interface ModifyLinodeInterfacePayload {
   default_route?: {
     ipv4?: boolean | null; // extra null
     ipv6?: boolean | null; // extra null
-  };
+  } | null; // extra null, same behavior as omitting
   vpc?: {
     subnet_id: number;
     ipv4?: {
       addresses?:
         | {
             address?: string;
-            primary?: boolean | null; // extra null
+            primary?: boolean | null; // extra null, not specified
             nat_1_1_address?: string | null;
           }[]
-        | null; // extra null
-      ranges?: { range: string }[] | null; // extra null
+        | null; // extra null, same behavior as omitting
+      ranges?: { range: string }[] | null; // extra null, same behavior as omitting
     } | null;
   } | null;
   public?: {
@@ -304,10 +304,10 @@ export interface ModifyLinodeInterfacePayload {
             address: string;
             primary?: boolean;
           }[]
-        | null; // extra null
-    } | null; // extra null
+        | null; // extra null, same behavior as omitting
+    } | null; // extra null, same behavior as omitting
     ipv6?: {
-      ranges: PublicInterfaceRanges[] | null; // extra null
+      ranges: PublicInterfaceRange[] | null; // extra null
     } | null; // extra null
   } | null;
   vlan?: {
