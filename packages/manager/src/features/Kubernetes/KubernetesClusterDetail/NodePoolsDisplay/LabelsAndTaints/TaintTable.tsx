@@ -18,7 +18,8 @@ export const TaintTable = () => {
   const handleRemoveTaint = (key: string) => {
     setValue(
       'taints',
-      taints.filter((taint) => taint.key !== key)
+      taints.filter((taint) => taint.key !== key),
+      { shouldDirty: true }
     );
   };
 
@@ -36,11 +37,7 @@ export const TaintTable = () => {
           taints.map((taint) => {
             return (
               <TableRow
-                // sx={{
-                //   alignItems: 'center',
-                //   display: 'flex',
-                //   flexDirection: 'row',
-                // }}
+                data-qa-taint-row={taint.key}
                 key={`taint-row-${taint.key}`}
               >
                 <TableCell>
@@ -49,7 +46,7 @@ export const TaintTable = () => {
                 <TableCell>{taint.effect}</TableCell>
                 <TableCell sx={{ paddingX: 0 }}>
                   <IconButton
-                    aria-label={`remove ${taint.key}: ${taint.value}`}
+                    aria-label={`Remove ${taint.key}: ${taint.value}`}
                     disableRipple
                     onClick={() => handleRemoveTaint(taint.key)}
                     size="medium"

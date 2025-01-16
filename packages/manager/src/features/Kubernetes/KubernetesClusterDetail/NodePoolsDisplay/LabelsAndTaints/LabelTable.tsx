@@ -21,7 +21,7 @@ export const LabelTable = () => {
     const newLabels = Object.fromEntries(
       Object.entries(labels).filter(([key]) => key !== labelKey)
     );
-    setValue('labels', newLabels);
+    setValue('labels', newLabels, { shouldDirty: true });
   };
 
   return (
@@ -35,14 +35,14 @@ export const LabelTable = () => {
         {labels && Object.entries(labels).length > 0 ? (
           Object.entries(labels).map(([key, value]) => {
             return (
-              <TableRow key={`label-row-${key}`}>
+              <TableRow data-qa-label-row={key} key={`label-row-${key}`}>
                 <TableCell>
                   <Stack alignItems="center" direction="row">
                     <Typography>
                       {key}: {value}
                     </Typography>
                     <IconButton
-                      aria-label={`remove ${key}: ${value}`}
+                      aria-label={`Remove ${key}: ${value}`}
                       disableRipple
                       onClick={() => handleRemoveLabel(key)}
                       size="medium"

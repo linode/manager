@@ -29,10 +29,15 @@ export const LabelAndTaintDrawer = (props: Props) => {
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
 
-  const { control, setValue, ...form } = useForm<LabelsAndTaintsFormFields>({
+  const {
+    control,
+    formState,
+    setValue,
+    ...form
+  } = useForm<LabelsAndTaintsFormFields>({
     defaultValues: {
-      labels: {},
-      taints: [],
+      labels: undefined,
+      taints: undefined,
     },
   });
 
@@ -45,6 +50,10 @@ export const LabelAndTaintDrawer = (props: Props) => {
       setValue('taints', nodePool?.taints);
     }
   }, [nodePool, open]);
+
+  const handleSubmit = () => {
+    handleClose();
+  };
 
   const handleClose = () => {
     onClose();
@@ -61,7 +70,12 @@ export const LabelAndTaintDrawer = (props: Props) => {
       open={open}
       title={`Labels and Taints: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
     >
-      <FormProvider control={control} setValue={setValue} {...form}>
+      <FormProvider
+        control={control}
+        formState={formState}
+        setValue={setValue}
+        {...form}
+      >
         <Typography
           marginBottom={(theme) => theme.spacing(4)}
           marginTop={(theme) => theme.spacing()}
@@ -102,8 +116,9 @@ export const LabelAndTaintDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
+            disabled: !formState.isDirty,
             label: 'Save Changes',
-            // onClick: handleSubmit,
+            onClick: handleSubmit,
           }}
           secondaryButtonProps={{
             'data-testid': 'cancel',

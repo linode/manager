@@ -37,7 +37,7 @@ import {
   mockGetLinodeTypes,
   mockGetLinodes,
 } from 'support/intercepts/linodes';
-import type { PoolNodeResponse, Linode } from '@linode/api-v4';
+import type { PoolNodeResponse, Linode, Taint } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { randomIp, randomLabel } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
@@ -1103,6 +1103,133 @@ describe('LKE cluster updates', () => {
     cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`).should(
       'not.exist'
     );
+  });
+
+  it.only('can view and update node pool labels and taints', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+
+    const mockType = linodeTypeFactory.build();
+
+    const mockNodePoolInstances = buildArray(1, () =>
+      linodeFactory.build({ label: randomLabel() })
+    );
+
+    const mockNodes = mockNodePoolInstances.map((linode, i) =>
+      kubeLinodeFactory.build({
+        id: `id-${i * 5000}`,
+        instance_id: linode.id,
+        status: 'ready',
+      })
+    );
+
+    const mockNodePool = nodePoolFactory.build({
+      id: 1,
+      type: mockType.id,
+      nodes: mockNodes,
+    });
+
+    const mockDrawerTitle = /Labels and Taints: Linode \d+ GB Plan/;
+
+    mockGetLinodes(mockNodePoolInstances);
+    mockGetLinodeType(linodeTypeFactory.build({ id: mockType.id })).as(
+      'getType'
+    );
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockNodePool]).as(
+      'getNodePoolsNoTags'
+    );
+    mockGetKubernetesVersions().as('getVersions');
+    mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
+      'getControlPlaneAcl'
+    );
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait([
+      '@getCluster',
+      '@getNodePoolsNoTags',
+      '@getVersions',
+      '@getType',
+      '@getControlPlaneAcl',
+    ]);
+
+    // Click "Labels and Taints" button and confirm drawer opens with the correct CTAs.
+    ui.button
+      .findByTitle('Labels and Taints')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.drawer.find().contains(mockDrawerTitle).should('be.visible');
+
+    ui.button
+      .findByTitle('Save Changes')
+      .should('be.visible')
+      .should('be.disabled');
+
+    ui.button.findByTitle('Cancel').should('be.visible').should('be.enabled');
+
+    // Confirm that the Labels table exists and is populated with the correct details.
+    Object.entries(mockNodePool.labels).forEach(([key, value]) => {
+      cy.get(`tr[data-qa-label-row="${key}"]`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(`${key}: ${value}`).should('be.visible');
+
+          // Confirm delete button exists, then click it.
+          ui.button
+            .findByAttribute('aria-label', `Remove ${key}: ${value}`)
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm the label is no longer visible.
+          cy.findByText(`${key}: ${value}`).should('not.exist');
+        });
+    });
+
+    // Confirm that the Taints table exists and is populated with the correct details.
+    mockNodePool.taints.forEach((taint: Taint) => {
+      cy.get(`tr[data-qa-taint-row="${taint.key}"]`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(`${taint.key}: ${taint.value}`).should('be.visible');
+          cy.findByText(taint.effect).should('be.visible');
+
+          // Confirm delete button exists, then click it.
+          ui.button
+            .findByAttribute(
+              'aria-label',
+              `Remove ${taint.key}: ${taint.value}`
+            )
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm the taint is no longer visible.
+          cy.findByText(`${taint.key}: ${taint.value}`).should('not.exist');
+        });
+    });
+
+    // Confirm empty state text displays for both empty tables.
+    cy.findByText('No labels').should('be.visible');
+    cy.findByText('No taints').should('be.visible');
+
+    // Confirm form can be submitted.
+    ui.button
+      .findByTitle('Save Changes')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Confirm request has the correct data.
+    // TODO
+
+    // Confirm drawer closes.
+    ui.drawer.find().contains(mockDrawerTitle).should('not.be.visible');
   });
 
   describe('LKE cluster updates for DC-specific prices', () => {
