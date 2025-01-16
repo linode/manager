@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "husky": "^9.1.6",
-    "typescript": "^5.5.4",
+    "typescript": "^5.7.3",
     "vitest": "^2.1.1"
   },
   "scripts": {
