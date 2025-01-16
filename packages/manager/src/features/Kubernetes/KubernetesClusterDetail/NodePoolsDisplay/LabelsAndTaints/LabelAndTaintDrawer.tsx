@@ -1,6 +1,5 @@
 import { Button, Typography } from '@linode/ui';
 import * as React from 'react';
-
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -75,12 +74,12 @@ export const LabelAndTaintDrawer = (props: Props) => {
         <Typography variant="h3"> Labels </Typography>
         <LabelTable />
         <Button
-          buttonType="secondary"
           onClick={() => {
             {
               /* TODO */
             }
           }}
+          buttonType="secondary"
         >
           Add Label
         </Button>
@@ -90,12 +89,12 @@ export const LabelAndTaintDrawer = (props: Props) => {
         </Typography>
         <TaintTable />
         <Button
-          buttonType="secondary"
           onClick={() => {
             {
               /* TODO */
             }
           }}
+          buttonType="secondary"
         >
           Add Taint
         </Button>

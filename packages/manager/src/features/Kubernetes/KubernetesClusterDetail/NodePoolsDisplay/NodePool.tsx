@@ -72,6 +72,10 @@ export const NodePool = (props: Props) => {
           <ActionMenu
             actionsList={[
               {
+                onClick: () => handleClickLabelsAndTaints(poolId),
+                title: 'Labels and Taints',
+              },
+              {
                 onClick: () => openAutoscalePoolDialog(poolId),
                 title: 'Autoscale Pool',
               },
