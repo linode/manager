@@ -21,6 +21,7 @@ export const CloudPulseDateTimeRangePicker = React.memo(
     const { defaultValue, handleStatsChange, savePreferences } = props;
     const { data: profile } = useProfile();
     const timezone = profile?.timezone ?? DateTime.local().zoneName;
+
     const defaultSelected = defaultValue as TimeDurationDate;
     React.useEffect(() => {
       if (defaultSelected) {
@@ -28,9 +29,8 @@ export const CloudPulseDateTimeRangePicker = React.memo(
       }
     }, []);
 
-    const end = DateTime.fromISO(defaultSelected?.end, { zone: 'GMT' });
-    const start = DateTime.fromISO(defaultSelected?.start, { zone: 'GMT' });
-
+    const end = DateTime.fromISO(defaultSelected?.end, { zone: timezone });
+    const start = DateTime.fromISO(defaultSelected?.start, { zone: timezone });
     return (
       <DateTimeRangePicker
         endDateProps={{
@@ -84,7 +84,7 @@ export const defaultTimeDuration = (): TimeDurationDate => {
   };
 };
 
-const convertToGmt = (date: string): string => {
+export const convertToGmt = (date: string): string => {
   const dateObject = DateTime.fromISO(date);
   const updatedDate = dateObject.setZone('GMT');
   return updatedDate.toISO()?.split('.')[0] + 'Z';
