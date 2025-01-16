@@ -264,7 +264,7 @@ export interface PublicInterfacePayload {
 
 // POST object
 export interface CreateLinodeInterfacePayload {
-  firewall_id?: number;
+  firewall_id?: number | null;
   default_route?: DefaultRoute | null;
   vpc?: VPCInterfacePayload | null;
   public?: PublicInterfacePayload | null;
@@ -373,7 +373,7 @@ export interface LinodeInterfaces {
 
 export type LinodeInterfaceStatus = 'active' | 'inactive' | 'deleted';
 
-export interface InterfaceHistory {
+export interface LinodeInterfaceHistory {
   interface_history_id: number;
   interface_id: number;
   linode_id: number;
@@ -384,7 +384,7 @@ export interface InterfaceHistory {
   created: string;
 }
 
-export interface InterfaceSetting {
+export interface LinodeInterfaceSetting {
   network_helper: boolean;
   default_route: {
     ipv4_interface_id?: number | null;
@@ -394,12 +394,23 @@ export interface InterfaceSetting {
   };
 }
 
-export interface InterfaceSettingPayload {
+export interface LinodeInterfaceSettingPayload {
   network_helper?: boolean | null;
   default_route: {
     ipv4_interface_id?: number | null;
     ipv6_interface_id?: number | null;
   };
+}
+
+export interface UpgradeInterfacePayload { 
+  config_id?: number | null;
+  dry_run?: boolean;
+}
+
+export interface UpgradeInterfaceData {
+  config_id: number;
+  dry_run: boolean;
+  interfaces: LinodeInterface[];
 }
 // ----------------------------------------------------------
 
