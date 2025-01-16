@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Paper, Stack } from '@linode/ui';
+import { Box, Button, Notice, Paper, Stack } from '@linode/ui';
 import { stackScriptSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -7,7 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { useProfile } from 'src/queries/profile/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useCreateStackScriptMutation } from 'src/queries/stackscripts';
 
 import { StackScriptForm } from '../StackScriptForm/StackScriptForm';
@@ -31,16 +31,21 @@ export const StackScriptCreate = () => {
   });
 
   const { data: profile } = useProfile();
-  const username = profile?.username ?? '';
+  const { data: grants } = useGrants();
 
-  const disabled = false;
+  const username = profile?.username ?? '';
+  const disabled = Boolean(
+    profile?.restricted && !grants?.global.add_stackscripts
+  );
 
   const onSubmit = async (values: StackScriptPayload) => {
     try {
       const stackscript = await createStackScript(values);
+
       enqueueSnackbar(`Successfully created StackScript ${stackscript.label}`, {
         variant: 'success',
       });
+
       history.push(`/stackscripts/${stackscript.id}`);
     } catch (errors) {
       for (const error of errors) {
@@ -52,6 +57,12 @@ export const StackScriptCreate = () => {
   return (
     <FormProvider {...form}>
       <Breadcrumb pathname="/StackScripts/Create" />
+      {disabled && (
+        <Notice
+          text="You don't have permission to create StackScripts. Please contact an account administrator for details."
+          variant="error"
+        />
+      )}
       <Paper>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Stack spacing={2}>

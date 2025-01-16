@@ -64,6 +64,14 @@ export const StackScriptForm = (props: Props) => {
       <Controller
         render={({ field, fieldState }) => (
           <ImageSelect
+            onChange={(images) => {
+              const imageIds = images.map((i) => i.id);
+              if (imageIds.includes('any/all')) {
+                field.onChange(['any/all']);
+              } else {
+                field.onChange(imageIds);
+              }
+            }}
             textFieldProps={{
               required: true,
               tooltipText:
@@ -76,7 +84,6 @@ export const StackScriptForm = (props: Props) => {
             label="Target Images"
             multiple
             noMarginTop
-            onChange={(images) => field.onChange(images.map((i) => i.id))}
             placeholder="Select image(s)"
             value={field.value}
             variant="public"
