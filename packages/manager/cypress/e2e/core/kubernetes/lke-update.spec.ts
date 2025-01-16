@@ -37,7 +37,7 @@ import {
   mockGetLinodeTypes,
   mockGetLinodes,
 } from 'support/intercepts/linodes';
-import type { PoolNodeResponse, Linode, Taint } from '@linode/api-v4';
+import type { PoolNodeResponse, Linode, Taint, Label } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { randomIp, randomLabel } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
@@ -1105,7 +1105,22 @@ describe('LKE cluster updates', () => {
     );
   });
 
-  it.only('can view and update node pool labels and taints', () => {
+  /*
+   * - Confirms Labels and Taints button exists for a node pool.
+   * - Confirms Labels and Taints drawer displays the expected Labels and Taints.
+   * - Confirms Labels and Taints can be deleted from a node pool.
+   * - TODO - Part 2: Confirms that Labels and Taints can be added to a node pool.
+   */
+  it('can view and delete node pool labels and taints', () => {
+    // Mock the LKE-E feature flag. TODO: remove in Part 2.
+    mockAppendFeatureFlags({
+      lkeEnterprise: {
+        enabled: true,
+        la: true,
+        ga: false,
+      },
+    });
+
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
     });
@@ -1124,10 +1139,26 @@ describe('LKE cluster updates', () => {
       })
     );
 
-    const mockNodePool = nodePoolFactory.build({
+    const mockNodePoolInitial = nodePoolFactory.build({
       id: 1,
       type: mockType.id,
       nodes: mockNodes,
+      labels: {
+        ['example.com/my-app']: 'teams',
+      },
+      taints: [
+        {
+          effect: 'NoSchedule',
+          key: 'example.com/my-app',
+          value: 'teamA',
+        },
+      ],
+    });
+
+    const mockNodePoolUpdated = nodePoolFactory.build({
+      ...mockNodePoolInitial,
+      labels: {},
+      taints: [],
     });
 
     const mockDrawerTitle = /Labels and Taints: Linode \d+ GB Plan/;
@@ -1137,7 +1168,7 @@ describe('LKE cluster updates', () => {
       'getType'
     );
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePool]).as(
+    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
       'getNodePoolsNoTags'
     );
     mockGetKubernetesVersions().as('getVersions');
@@ -1156,6 +1187,13 @@ describe('LKE cluster updates', () => {
       '@getControlPlaneAcl',
     ]);
 
+    mockUpdateNodePool(mockCluster.id, mockNodePoolUpdated).as(
+      'updateNodePool'
+    );
+    mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]).as(
+      'getNodePools'
+    );
+
     // Click "Labels and Taints" button and confirm drawer opens with the correct CTAs.
     ui.button
       .findByTitle('Labels and Taints')
@@ -1173,7 +1211,7 @@ describe('LKE cluster updates', () => {
     ui.button.findByTitle('Cancel').should('be.visible').should('be.enabled');
 
     // Confirm that the Labels table exists and is populated with the correct details.
-    Object.entries(mockNodePool.labels).forEach(([key, value]) => {
+    Object.entries(mockNodePoolInitial.labels).forEach(([key, value]) => {
       cy.get(`tr[data-qa-label-row="${key}"]`)
         .should('be.visible')
         .within(() => {
@@ -1192,7 +1230,7 @@ describe('LKE cluster updates', () => {
     });
 
     // Confirm that the Taints table exists and is populated with the correct details.
-    mockNodePool.taints.forEach((taint: Taint) => {
+    mockNodePoolInitial.taints.forEach((taint: Taint) => {
       cy.get(`tr[data-qa-taint-row="${taint.key}"]`)
         .should('be.visible')
         .within(() => {
@@ -1226,10 +1264,19 @@ describe('LKE cluster updates', () => {
       .click();
 
     // Confirm request has the correct data.
-    // TODO
+    cy.wait('@updateNodePool').then((xhr) => {
+      const data = xhr.response?.body;
+      if (data) {
+        const actualLabels: Label = data.labels;
+        const actualTaints: Taint[] = data.taints;
+
+        expect(actualLabels).to.deep.equal(mockNodePoolUpdated.labels);
+        expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
+      }
+    });
 
     // Confirm drawer closes.
-    ui.drawer.find().contains(mockDrawerTitle).should('not.be.visible');
+    cy.findByText(mockDrawerTitle).should('not.exist');
   });
 
   describe('LKE cluster updates for DC-specific prices', () => {

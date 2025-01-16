@@ -29,18 +29,18 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   count: 3,
   disk_encryption: 'enabled',
   id: Factory.each((id) => id),
-  labels: Factory.each((i) => ({
-    [`example.com/my-app-${i}`]: `label-${i}`,
-  })),
+  labels: {
+    ['example.com/my-app']: 'my-label',
+  },
   nodes: kubeLinodeFactory.buildList(3),
   tags: [],
-  taints: Factory.each((i) => [
+  taints: [
     {
       effect: 'NoExecute',
-      key: `example.com/my-app-${i}`,
-      value: `taint-${i}`,
+      key: 'example.com/my-app',
+      value: 'my-taint',
     },
-  ]),
+  ],
   type: 'g6-standard-1',
 });
 
