@@ -1,18 +1,18 @@
 import { regionFactory } from 'src/factories';
 
-import { getRegionOptions, getRegionsIdLabelMap } from './AlertResourceUtils';
+import { getRegionOptions, getRegionsIdRegionMap } from './AlertResourceUtils';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 
 it('test getRegionsIdLabelMap method', () => {
-  let result = getRegionsIdLabelMap(undefined);
+  let result = getRegionsIdRegionMap(undefined);
 
   // if regions passed undefined, it should return an empty map
   expect(Array.from(result.keys()).length).toBe(0);
 
   const regions = regionFactory.buildList(10);
 
-  result = getRegionsIdLabelMap(regions);
+  result = getRegionsIdRegionMap(regions);
 
   // check for a key
   expect(result.has(regions[0].id)).toBe(true);
@@ -23,7 +23,7 @@ it('test getRegionsIdLabelMap method', () => {
 
 it('test getRegionOptions method', () => {
   const regions = regionFactory.buildList(10);
-  const regionsIdToLabelMap = getRegionsIdLabelMap(regions);
+  const regionsIdToLabelMap = getRegionsIdRegionMap(regions);
   const data: CloudPulseResources[] = [
     { id: '1', label: 'Test', region: regions[0].id },
     { id: '2', label: 'Test2', region: regions[1].id },
@@ -32,7 +32,7 @@ it('test getRegionOptions method', () => {
 
   let result = getRegionOptions({
     data,
-    regionsIdToLabelMap,
+    regionsIdToRegionMap: regionsIdToLabelMap,
     resourceIds: ['1', '2'],
   });
 
@@ -41,7 +41,7 @@ it('test getRegionOptions method', () => {
 
   // Case with no data
   result = getRegionOptions({
-    regionsIdToLabelMap,
+    regionsIdToRegionMap: regionsIdToLabelMap,
     resourceIds: ['1', '2'],
   });
   expect(result.length).toBe(0);
@@ -49,7 +49,7 @@ it('test getRegionOptions method', () => {
   // Edge case with no matching resourceIds
   result = getRegionOptions({
     data,
-    regionsIdToLabelMap,
+    regionsIdToRegionMap: regionsIdToLabelMap,
     resourceIds: [],
   });
   expect(result.length).toBe(0);

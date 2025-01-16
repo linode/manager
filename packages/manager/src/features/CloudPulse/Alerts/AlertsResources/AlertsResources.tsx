@@ -8,7 +8,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import {
   getRegionOptions,
-  getRegionsIdLabelMap,
+  getRegionsIdRegionMap,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { DisplayAlertResources } from './DisplayAlertResources';
@@ -56,18 +56,18 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
 
   // A map linking region IDs to their corresponding region objects, used for quick lookup when displaying data in the table.
-  const regionsIdToLabelMap: Map<string, Region> = React.useMemo(() => {
-    return getRegionsIdLabelMap(regions);
+  const regionsIdToRegionMap: Map<string, Region> = React.useMemo(() => {
+    return getRegionsIdRegionMap(regions);
   }, [regions]);
 
   // Derived list of regions associated with the provided resource IDs, filtered based on available data.
   const regionOptions: Region[] = React.useMemo(() => {
     return getRegionOptions({
       data: resources,
-      regionsIdToLabelMap,
+      regionsIdToRegionMap: regionsIdToRegionMap,
       resourceIds,
     });
-  }, [resources, resourceIds, regionsIdToLabelMap]);
+  }, [resources, resourceIds, regionsIdToRegionMap]);
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
 
