@@ -10,6 +10,7 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { NodeTable } from './NodeTable';
 
@@ -54,6 +55,8 @@ export const NodePool = (props: Props) => {
     typeLabel,
   } = props;
 
+  const flags = useFlags();
+
   return (
     <Box data-qa-node-pool-id={poolId} data-qa-node-pool-section>
       <Paper
@@ -72,6 +75,7 @@ export const NodePool = (props: Props) => {
           <ActionMenu
             actionsList={[
               {
+                disabled: !flags.lkeEnterprise?.enabled,
                 onClick: () => handleClickLabelsAndTaints(poolId),
                 title: 'Labels and Taints',
               },
@@ -101,12 +105,14 @@ export const NodePool = (props: Props) => {
         </Hidden>
         <Hidden smDown>
           <Stack alignItems="center" direction="row">
-            <StyledActionButton
-              compactY
-              onClick={() => handleClickLabelsAndTaints(poolId)}
-            >
-              Labels and Taints
-            </StyledActionButton>
+            {flags.lkeEnterprise?.enabled && (
+              <StyledActionButton
+                compactY
+                onClick={() => handleClickLabelsAndTaints(poolId)}
+              >
+                Labels and Taints
+              </StyledActionButton>
+            )}
             <StyledActionButton
               compactY
               onClick={() => openAutoscalePoolDialog(poolId)}
