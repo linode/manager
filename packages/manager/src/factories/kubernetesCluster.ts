@@ -29,9 +29,7 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   count: 3,
   disk_encryption: 'enabled',
   id: Factory.each((id) => id),
-  labels: {
-    ['example.com/my-app']: 'my-label',
-  },
+  labels: {},
   nodes: kubeLinodeFactory.buildList(3),
   tags: [],
   taints: [

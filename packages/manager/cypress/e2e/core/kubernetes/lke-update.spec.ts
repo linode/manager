@@ -1140,10 +1140,15 @@ describe('LKE cluster updates', () => {
       })
     );
 
-    const mockNodePoolInitial = nodePoolFactory.build({
+    const mockNodePoolUpdated = nodePoolFactory.build({
       id: 1,
       type: mockType.id,
       nodes: mockNodes,
+      taints: [],
+    });
+
+    const mockNodePoolInitial = nodePoolFactory.build({
+      ...mockNodePoolUpdated,
       labels: {
         ['example.com/my-app']: 'teams',
       },
@@ -1156,19 +1161,13 @@ describe('LKE cluster updates', () => {
       ],
     });
 
-    const mockNodePoolUpdated = nodePoolFactory.build({
-      ...mockNodePoolInitial,
-      labels: {},
-      taints: [],
-    });
-
     const mockDrawerTitle = 'Labels and Taints: Linode 2 GB Plan';
 
     mockGetLinodes(mockNodePoolInstances);
     mockGetLinodeType(mockType).as('getType');
     mockGetCluster(mockCluster).as('getCluster');
     mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
-      'getNodePoolsNoTags'
+      'getNodePools'
     );
     mockGetKubernetesVersions().as('getVersions');
     mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
@@ -1180,7 +1179,7 @@ describe('LKE cluster updates', () => {
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait([
       '@getCluster',
-      '@getNodePoolsNoTags',
+      '@getNodePools',
       '@getVersions',
       '@getType',
       '@getControlPlaneAcl',
@@ -1190,7 +1189,7 @@ describe('LKE cluster updates', () => {
       'updateNodePool'
     );
     mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]).as(
-      'getNodePools'
+      'getNodePoolsUpdated'
     );
 
     // Click "Labels and Taints" button and confirm drawer contents.
@@ -1282,6 +1281,8 @@ describe('LKE cluster updates', () => {
         expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
       }
     });
+
+    cy.wait('@getNodePoolsUpdated');
 
     // Confirm drawer closes.
     cy.findByText(mockDrawerTitle).should('not.exist');
