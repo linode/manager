@@ -188,7 +188,6 @@ describe('Create stackscripts', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
     const stackscriptImage = 'Alpine 3.19';
-    const stackscriptImageTag = 'alpine3.19';
 
     const linodeLabel = randomLabel();
     const linodeRegion = chooseRegion({ capabilities: ['Vlans'] });

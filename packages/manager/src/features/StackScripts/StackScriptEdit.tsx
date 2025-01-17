@@ -156,7 +156,7 @@ export const StackScriptEdit = () => {
         open={isResetConfirmationOpen}
         title="Reset StackScript From?"
       >
-        You have made changes to the{' '}
+        You made changes to the{' '}
         {arrayToList(Object.keys(form.formState.dirtyFields))}. Are you sure you
         want to reset the form and discard your current changes?
       </ConfirmationDialog>
