@@ -38,8 +38,10 @@ export const StackScriptForm = (props: Props) => {
             data-qa-stackscript-label
             disabled={disabled}
             errorText={fieldState.error?.message}
+            inputRef={field.ref}
             label="StackScript Label"
             noMarginTop
+            onBlur={field.onBlur}
             onChange={field.onChange}
             placeholder="Enter a label"
             required
@@ -57,9 +59,11 @@ export const StackScriptForm = (props: Props) => {
             data-qa-stackscript-description
             disabled={disabled}
             errorText={fieldState.error?.message}
+            inputRef={field.ref}
             label="Description"
             multiline
             noMarginTop
+            onBlur={field.onBlur}
             onChange={field.onChange}
             placeholder="Enter a description"
             rows={1}
@@ -126,9 +130,11 @@ export const StackScriptForm = (props: Props) => {
             disabled={disabled}
             errorText={fieldState.error?.message}
             expand
+            inputRef={field.ref}
             label="Script"
             multiline
             noMarginTop
+            onBlur={field.onBlur}
             onChange={field.onChange}
             placeholder={`#!/bin/bash \n\n# Your script goes here`}
             required
@@ -148,8 +154,10 @@ export const StackScriptForm = (props: Props) => {
             disabled={disabled}
             errorText={fieldState.error?.message}
             expand
+            inputRef={field.ref}
             label="Revision Note"
             noMarginTop
+            onBlur={field.onBlur}
             onChange={field.onChange}
             placeholder="Enter a revision note"
             value={field.value}
