@@ -168,7 +168,7 @@ export const Notice = (props: NoticeProps) => {
           {text ?? children}
         </Typography>
       ) : (
-        <Box width="100%">{children}</Box>
+        children
       )}
     </Box>
   );
