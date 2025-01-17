@@ -19,6 +19,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -33,6 +34,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -79,6 +81,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -98,6 +101,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -121,6 +125,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -161,6 +166,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -183,6 +189,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -197,6 +204,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -212,6 +220,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -227,6 +236,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -251,6 +261,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -311,6 +322,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
