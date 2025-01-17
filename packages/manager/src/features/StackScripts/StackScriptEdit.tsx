@@ -17,6 +17,7 @@ import {
 } from 'src/queries/stackscripts';
 import { arrayToList } from 'src/utilities/arrayToList';
 
+import { getRestrictedResourceText } from '../Account/utils';
 import { StackScriptForm } from './StackScriptForm/StackScriptForm';
 
 import type { StackScriptPayload } from '@linode/api-v4';
@@ -93,15 +94,26 @@ export const StackScriptEdit = () => {
           pathname: location.pathname,
         }}
       />
-      {!hasPermissionToEdit && (
-        <Notice
-          text="You don't have permission to edit this StackScript. Please contact an account administrator for details."
-          variant="error"
-        />
-      )}
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Paper>
+            {!hasPermissionToEdit && (
+              <Notice
+                text={getRestrictedResourceText({
+                  action: 'edit',
+                  isSingular: true,
+                  resourceType: 'StackScripts',
+                })}
+                spacingBottom={12}
+                variant="error"
+              />
+            )}
+            {form.formState.errors.root && (
+              <Notice
+                text={form.formState.errors.root?.message}
+                variant="error"
+              />
+            )}
             <StackScriptForm
               disabled={disabled}
               username={stackscript?.username ?? ''}

@@ -7,6 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useCreateStackScriptMutation } from 'src/queries/stackscripts';
 
@@ -34,7 +35,8 @@ export const StackScriptCreate = () => {
   const { data: grants } = useGrants();
 
   const username = profile?.username ?? '';
-  const disabled = Boolean(
+
+  const isStackScriptCreationRestricted = Boolean(
     profile?.restricted && !grants?.global.add_stackscripts
   );
 
@@ -62,22 +64,36 @@ export const StackScriptCreate = () => {
         }}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/create-a-stackscript"
       />
-      {disabled && (
-        <Notice
-          text="You don't have permission to create StackScripts. Please contact an account administrator for details."
-          variant="error"
-        />
-      )}
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Paper>
-            <StackScriptForm disabled={disabled} username={username} />
+            {isStackScriptCreationRestricted && (
+              <Notice
+                text={getRestrictedResourceText({
+                  action: 'create',
+                  isSingular: false,
+                  resourceType: 'StackScripts',
+                })}
+                spacingBottom={12}
+                variant="error"
+              />
+            )}
+            {form.formState.errors.root && (
+              <Notice
+                text={form.formState.errors.root?.message}
+                variant="error"
+              />
+            )}
+            <StackScriptForm
+              disabled={isStackScriptCreationRestricted}
+              username={username}
+            />
           </Paper>
           <Box data-qa-buttons display="flex" justifyContent="flex-end">
             <Button
               buttonType="primary"
               data-testid="save"
-              disabled={disabled}
+              disabled={isStackScriptCreationRestricted}
               loading={form.formState.isSubmitting}
               type="submit"
             >
