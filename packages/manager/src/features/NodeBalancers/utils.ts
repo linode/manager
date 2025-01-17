@@ -146,6 +146,7 @@ export const transformConfigsForRequest = (
             ? undefined
             : config.ssl_key || undefined,
         stickiness: config.stickiness || undefined,
+        udp_check_port: config.udp_check_port,
       }
     ) as unknown) as NodeBalancerConfigFields;
   });
@@ -198,6 +199,7 @@ export const setErrorMap = (errors: APIError[]) =>
       'ssl_key',
       'stickiness',
       'nodes',
+      'udp_check_port',
     ],
     filteredErrors(errors)
   );

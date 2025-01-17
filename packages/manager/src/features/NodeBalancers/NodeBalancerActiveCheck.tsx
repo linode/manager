@@ -13,6 +13,8 @@ import {
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
@@ -32,6 +34,7 @@ const displayProtocolText = (p: string) => {
 };
 
 export const ActiveCheck = (props: ActiveCheckProps) => {
+  const flags = useFlags();
   const {
     checkBody,
     checkPath,
@@ -44,6 +47,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
     healthCheckTimeout,
     healthCheckType,
     protocol,
+    udpCheckPort,
   } = props;
 
   const errorMap = setErrorMap(errors || []);
@@ -196,6 +200,19 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 Number of failed probes before taking a node out of rotation.
                 1-30
               </FormHelperText>
+              {flags.udp && (
+                <TextField
+                  disabled={disabled}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
+                  errorText={errorMap.udp_check_port}
+                  label="Health Check Port"
+                  max={65535}
+                  min={1}
+                  onChange={(e) => props.onUdpCheckPortChange(+e.target.value)}
+                  type="number"
+                  value={udpCheckPort}
+                />
+              )}
             </Grid>
             {['http', 'http_body'].includes(healthCheckType) && (
               <Grid lg={6} xs={12}>
