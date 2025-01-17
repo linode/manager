@@ -6,23 +6,29 @@ import {
   Tooltip,
   Typography,
 } from '@linode/ui';
+import Divider from '@mui/material/Divider';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { useFlags } from 'src/hooks/useFlags';
+import { pluralize } from 'src/utilities/pluralize';
 
 import { NodeTable } from './NodeTable';
 
 import type {
   AutoscaleSettings,
+  KubernetesTier,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
   autoscaler: AutoscaleSettings;
+  clusterCreated: string;
   clusterId: number;
+  clusterTier: KubernetesTier;
+  count: number;
   encryptionStatus: EncryptionStatus | undefined;
   handleClickLabelsAndTaints: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
@@ -40,7 +46,10 @@ interface Props {
 export const NodePool = (props: Props) => {
   const {
     autoscaler,
+    clusterCreated,
     clusterId,
+    clusterTier,
+    count,
     encryptionStatus,
     handleClickLabelsAndTaints,
     handleClickResize,
@@ -70,7 +79,16 @@ export const NodePool = (props: Props) => {
           py: 0,
         }}
       >
-        <Typography variant="h2">{typeLabel}</Typography>
+        <Box display="flex">
+          <Typography variant="h2">{typeLabel}</Typography>
+          <Divider
+            orientation="vertical"
+            sx={(theme) => ({ height: 16, margin: `4px ${theme.spacing(1)}` })}
+          />
+          <Typography variant="h2">
+            {pluralize('Node', 'Nodes', count)}
+          </Typography>
+        </Box>
         <Hidden smUp>
           <ActionMenu
             actionsList={[
@@ -156,7 +174,9 @@ export const NodePool = (props: Props) => {
         </Hidden>
       </Paper>
       <NodeTable
+        clusterCreated={clusterCreated}
         clusterId={clusterId}
+        clusterTier={clusterTier}
         encryptionStatus={encryptionStatus}
         nodes={nodes}
         openRecycleNodeDialog={openRecycleNodeDialog}

@@ -18,17 +18,26 @@ import { NodePool } from './NodePool';
 import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
-import type { Region } from '@linode/api-v4';
+import type { KubernetesTier, Region } from '@linode/api-v4';
 
 export interface Props {
+  clusterCreated: string;
   clusterID: number;
   clusterLabel: string;
   clusterRegionId: string;
+  clusterTier: KubernetesTier;
   regionsData: Region[];
 }
 
 export const NodePoolsDisplay = (props: Props) => {
-  const { clusterID, clusterLabel, clusterRegionId, regionsData } = props;
+  const {
+    clusterCreated,
+    clusterID,
+    clusterLabel,
+    clusterRegionId,
+    clusterTier,
+    regionsData,
+  } = props;
 
   const flags = useFlags();
 
@@ -117,7 +126,7 @@ export const NodePoolsDisplay = (props: Props) => {
       {poolsError && <ErrorState errorText={poolsError[0].reason} />}
       <Stack spacing={2}>
         {_pools?.map((thisPool) => {
-          const { disk_encryption, id, nodes, tags } = thisPool;
+          const { count, disk_encryption, id, nodes, tags } = thisPool;
 
           const thisPoolType = types?.find(
             (thisType) => thisType.id === thisPool.type
@@ -144,7 +153,10 @@ export const NodePoolsDisplay = (props: Props) => {
                 setIsRecycleNodeOpen(true);
               }}
               autoscaler={thisPool.autoscaler}
+              clusterCreated={clusterCreated}
               clusterId={clusterID}
+              clusterTier={clusterTier}
+              count={count}
               encryptionStatus={disk_encryption}
               handleClickLabelsAndTaints={handleOpenLabelsAndTaintsDrawer}
               handleClickResize={handleOpenResizeDrawer}
