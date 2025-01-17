@@ -187,22 +187,15 @@ export const PowerActionsDialog = (props: Props) => {
       )}
       {props.action === 'Power Off' && (
         <span>
-          <Notice
-            sx={{
-              '& .noticeText': {
-                fontSize: '0.875rem !important',
-              },
-            }}
-            variant="warning"
-          >
-            <strong>Note: </strong>
-            Powered down Linodes will still accrue charges.
-            <br />
-            See the&nbsp;
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works#will-i-be-billed-for-powered-off-or-unused-services">
-              Billing and Payments documentation
-            </Link>
-            &nbsp;for more information.
+          <Notice variant="warning">
+            <Typography>
+              <strong>Note: </strong>Powered down Linodes will still accrue
+              charges. See the&nbsp;
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works#will-i-be-billed-for-powered-off-or-unused-services">
+                Billing and Payments documentation
+              </Link>
+              &nbsp;for more information.
+            </Typography>
           </Notice>
         </span>
       )}
