@@ -95,7 +95,7 @@ export const StackScriptForm = React.memo((props: Props) => {
           />
         </StyledGridWithTips>
         <StyledGridWithTips>
-          <StyledNotice display="block">
+          <StyledNotice>
             <Typography variant="h2">Tips</Typography>
             <Typography>
               There are four default environment variables provided to you:
