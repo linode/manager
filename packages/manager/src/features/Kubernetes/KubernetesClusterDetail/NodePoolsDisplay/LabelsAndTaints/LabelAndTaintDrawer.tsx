@@ -100,7 +100,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
             marginTop={(theme) => theme.spacing()}
           >
             Labels and Taints will be applied to Nodes in this Node Pool. They
-            can be further defined using the Kubernetes API, although edits with
+            can be further defined using the Kubernetes API, although edits will
             be overwritten when Nodes or Pools are recycled.
           </Typography>
 
