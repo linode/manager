@@ -103,20 +103,17 @@ export const NotificationMenu = () => {
           <Bell height="24px" width="24px" />
           {numNotifications > 0 && (
             <StyledChip
-              sx={(theme) => ({
-                // TODO: This override should completely go away once we have CDS guidance on badges in Light/Dark mode.
-                backgroundColor: theme.tokens.color.Red[80],
-                color: theme.tokens.color.Neutrals.White,
-              })}
+              icon={
+                Boolean(showInProgressEventIcon) ? (
+                  <StyledAutorenewIcon data-testid="in-progress-event-icon" />
+                ) : undefined
+              }
               color="error"
               data-testid="events-count-notification"
               label={numNotifications > 9 ? '9+' : numNotifications}
               showPlus={numNotifications > 9}
               size="small"
             />
-          )}
-          {showInProgressEventIcon && (
-            <StyledAutorenewIcon data-testid="in-progress-event-icon" />
           )}
         </IconButton>
       </TopMenuTooltip>
@@ -185,27 +182,28 @@ const StyledChip = styled(Chip, {
   label: 'StyledEventNotificationChip',
   shouldForwardProp: (prop) => prop !== 'showPlus',
 })<{ showPlus: boolean }>(({ theme, ...props }) => ({
-  '& .MuiChip-label': {
-    paddingLeft: 2,
-    paddingRight: 2,
+  '& .MuiChip-icon': {
+    margin: 0,
   },
-  borderRadius: props.showPlus ? 12 : '50%',
-  font: theme.font.bold,
-  fontSize: '0.72rem',
-  height: 18,
+  '& .MuiChip-label': {
+    padding: 0,
+  },
+  backgroundColor: theme.tokens.header.Badge.Background,
+  borderRadius: props.showPlus ? theme.tokens.spacing[50] : '50%',
+  color: theme.tokens.header.Badge.Text,
+  flexDirection: 'row-reverse',
+  font: theme.tokens.typography.Label.Bold.Xs,
   justifyContent: 'center',
   left: 20,
-  padding: 0,
+  padding: theme.tokens.spacing[20],
   position: 'absolute',
   top: '-3px',
-  width: props.showPlus ? 22 : 18,
 }));
 
 export const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
-  bottom: 4,
   color: theme.tokens.color.Brand[60],
-  fontSize: 18,
-  position: 'absolute',
-  right: 2,
+  height: '12px',
+  margin: 0,
+  width: '12px',
 }));

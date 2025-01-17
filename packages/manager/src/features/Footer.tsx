@@ -66,7 +66,7 @@ export const Footer = React.memo(() => {
 
 const StyledLink = styled(Link)(({ theme }) => ({
   '&:hover': {
-    color: theme.tokens.content.Text.Link.Hover,
+    color: theme.tokens.footer.Link.Hover,
   },
-  color: theme.tokens.content.Text.Link.Default,
+  color: theme.tokens.footer.Link.Default,
 }));
