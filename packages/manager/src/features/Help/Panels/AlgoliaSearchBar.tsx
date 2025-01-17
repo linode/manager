@@ -4,14 +4,12 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
-import { makeStyles } from 'tss-react/mui';
 
 import withSearch from '../SearchHOC';
 import { SearchItem } from './SearchItem';
 
 import type { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import type { ConvertedItems } from '../SearchHOC';
-import type { Theme } from '@mui/material/styles';
 import type { RouteComponentProps } from 'react-router-dom';
 
 interface SelectedItem {
@@ -19,41 +17,9 @@ interface SelectedItem {
   label: string;
   value: string;
 }
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  enhancedSelectWrapper: {
-    '& .input': {
-      '& > div': {
-        marginRight: 0,
-      },
-      '& p': {
-        color: theme.color.grey1,
-        paddingLeft: theme.spacing(3),
-      },
-      maxWidth: '100%',
-    },
-    '& .react-select__value-container': {
-      paddingLeft: theme.spacing(4),
-    },
-    margin: '0 auto',
-    maxHeight: 500,
-    [theme.breakpoints.up('md')]: {
-      width: 500,
-    },
-    width: 300,
-  },
-  notice: {
-    '& p': {
-      color: theme.color.white,
-      fontFamily: 'LatoWeb',
-    },
-  },
-}));
-
 interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
 
 const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
-  const { classes } = useStyles();
   const [inputValue, setInputValue] = React.useState('');
   const {
     history,
@@ -109,7 +75,16 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
   return (
     <React.Fragment>
       {searchError && (
-        <Notice className={classes.notice} spacingTop={8} variant="error">
+        <Notice
+          sx={(theme) => ({
+            '& p': {
+              color: theme.color.white,
+              fontFamily: 'LatoWeb',
+            },
+          })}
+          spacingTop={8}
+          variant="error"
+        >
           {searchError}
         </Notice>
       )}
@@ -151,6 +126,13 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
               }),
             },
           }}
+          sx={(theme) => ({
+            maxHeight: 500,
+            [theme.breakpoints.up('md')]: {
+              width: 500,
+            },
+            width: 300,
+          })}
           textFieldProps={{
             InputProps: {
               startAdornment: (
@@ -175,7 +157,6 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
             },
             hideLabel: true,
           }}
-          className={classes.enhancedSelectWrapper}
           disabled={!searchEnabled}
           inputValue={inputValue}
           label="Search for answers"

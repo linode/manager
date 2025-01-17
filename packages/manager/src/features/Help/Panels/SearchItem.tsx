@@ -18,9 +18,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'space-between',
     width: '100%',
   },
-  source: {
-    color: theme.color.headline,
-  },
 }));
 
 interface Props {
@@ -57,7 +54,13 @@ export const SearchItem = (props: Props) => {
     >
       {isFinal ? (
         <div className={classes.root}>
-          <Typography className={classes.source}>{getLabel()}</Typography>
+          <Typography
+            sx={(theme) => ({
+              color: theme.color.headline,
+            })}
+          >
+            {getLabel()}
+          </Typography>
         </div>
       ) : (
         <div className={classes.root}>
@@ -70,7 +73,13 @@ export const SearchItem = (props: Props) => {
                 }),
               }}
             />
-            <Typography className={classes.source}>{source}</Typography>
+            <Typography
+              sx={(theme) => ({
+                color: theme.color.headline,
+              })}
+            >
+              {source}
+            </Typography>
           </div>
           <Arrow className={classes.arrow} />
         </div>
