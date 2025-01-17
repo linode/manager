@@ -112,7 +112,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
                 /* TODO: Part 2 */
               }
             }}
-            buttonType="secondary"
+            buttonType="outlined"
           >
             Add Label
           </Button>
@@ -127,7 +127,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
                 /* TODO: Part 2 */
               }
             }}
-            buttonType="secondary"
+            buttonType="outlined"
           >
             Add Taint
           </Button>
