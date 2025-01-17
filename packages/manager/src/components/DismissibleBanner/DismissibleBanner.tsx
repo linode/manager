@@ -1,4 +1,4 @@
-import { IconButton, Notice, Stack } from '@linode/ui';
+import { Box, IconButton, Notice, Stack } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
@@ -62,18 +62,14 @@ export const DismissibleBanner = (props: Props) => {
   );
 
   return (
-    <Notice
-      bgcolor={(theme) => theme.palette.background.paper}
-      display="flex"
-      gap={1}
-      justifyContent="space-between"
-      {...rest}
-    >
-      {children}
-      <Stack alignItems="center" direction="row" spacing={1}>
-        {actionButton}
-        {dismissibleButton}
-      </Stack>
+    <Notice {...rest}>
+      <Box alignItems="center" display="flex" justifyContent="space-between">
+        {children}
+        <Stack alignItems="center" direction="row" spacing={1}>
+          {actionButton}
+          {dismissibleButton}
+        </Stack>
+      </Box>
     </Notice>
   );
 };
