@@ -38,11 +38,7 @@ import { SizeField } from "./features/Volumes/VolumeDrawer/SizeField";
 import type { Linode } from "@linode/api-v4/lib/linodes/types";
 import type { Theme } from "@mui/material/styles";
 
-const useStyles = makeStyles()((theme: Theme) => {
-  
-  console.log("Got theme", theme)
-
-  return {
+const useStyles = makeStyles()((theme: Theme) => ({
   agreement: {
     maxWidth: "70%",
     [theme.breakpoints.down("sm")]: {
@@ -99,7 +95,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       minWidth: 320,
     },
   },
-}});
+}));
 
 export const VolumeCreate = () => {
   const theme = useTheme();

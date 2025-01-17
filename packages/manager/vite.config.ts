@@ -41,7 +41,6 @@ export default defineConfig({
         '@linode/api-v4',
         'react-router-dom',
         '@tanstack/react-router',
-        'flag-icons/css/flag-icons.min.css',
       ],
     }),
   ],
