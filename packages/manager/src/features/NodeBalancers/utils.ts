@@ -239,6 +239,12 @@ export const getStickinessOptions = (
       { label: 'Source IP', value: 'source_ip' },
     ];
   }
+  if (protocol === 'tcp') {
+    return [
+      { label: 'None', value: 'none' },
+      { label: 'Table', value: 'table' },
+    ];
+  }
   return [
     { label: 'None', value: 'none' },
     { label: 'Table', value: 'table' },
