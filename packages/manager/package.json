@@ -1,5 +1,5 @@
 {
-  "name": "@linode/manager",
+  "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
   "version": "1.134.0",

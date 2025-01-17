@@ -12,7 +12,7 @@ jobs:
   lint:
     strategy:
       matrix:
-        package: ["@linode/manager", "@linode/api-v4", "@linode/validation", "@linode/ui"]
+        package: ["linode-manager", "@linode/api-v4", "@linode/validation", "@linode/ui"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -174,7 +174,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run --filter @linode/manager test
+      - run: pnpm run --filter linode-manager test
 
   test-search:
     runs-on: ubuntu-latest
@@ -240,7 +240,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run --filter @linode/manager typecheck
+      - run: pnpm run --filter linode-manager typecheck
 
   build-manager:
     runs-on: ubuntu-latest
@@ -264,7 +264,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run --filter @linode/manager run build
+      - run: pnpm run --filter linode-manager run build
       - uses: actions/upload-artifact@v4
         with:
           name: packages-manager-build
@@ -324,7 +324,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run --filter @linode/manager build-storybook
+      - run: pnpm run --filter linode-manager build-storybook
       - uses: actions/upload-artifact@v4
         with:
           name: storybook-build
