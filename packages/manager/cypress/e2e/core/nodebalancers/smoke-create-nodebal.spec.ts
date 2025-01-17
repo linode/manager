@@ -21,7 +21,6 @@ import { linodeFactory, nodeBalancerFactory, regionFactory } from 'src/factories
 import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetLinodes } from 'support/intercepts/linodes';
-import { c } from 'vite/dist/node/types.d-aGj9QkWt';
 
 const createNodeBalancerWithUI = (
   nodeBal: NodeBalancer,
