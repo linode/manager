@@ -549,21 +549,21 @@ const LABEL_CHARACTER_TYPES =
   'Must include only ASCII letters, numbers, and dashes';
 
 export const UpgradeToLinodeInterfaceSchema = object({
-  config_id: number().notRequired().nullable(),
-  dry_run: boolean().notRequired(),
+  config_id: number().nullable(),
+  dry_run: boolean(),
 });
 
 export const UpdateLinodeInterfaceSettingsSchema = object({
-  network_helper: boolean().notRequired().nullable(),
+  network_helper: boolean().nullable(),
   default_route: object({
-    ipv4_interface_id: number().notRequired().nullable(),
-    ipv6_interface_id: number().notRequired().nullable(),
+    ipv4_interface_id: number().nullable(),
+    ipv6_interface_id: number().nullable(),
   }),
 });
 
 const BaseInterfaceIPv4AddressSchema = object({
   address: string().required(),
-  primary: boolean().notRequired(),
+  primary: boolean(),
 });
 
 const VPCInterfaceIPv4RangeSchema = object({
@@ -575,42 +575,43 @@ const PublicInterfaceRangeSchema = object({
 });
 
 const CreateVPCInterfaceIpv4AddressSchema = object({
-  address: string(),
-  primary: boolean().notRequired(),
-  nat_1_1_address: string().notRequired().nullable(),
+  address: string().required(),
+  primary: boolean(),
+  nat_1_1_address: string().nullable(),
 });
 
 const CreateVlanInterfaceSchema = object({
   vlan_label: string()
+    .required()
     .min(1, LABEL_LENGTH_MESSAGE)
     .max(64, LABEL_LENGTH_MESSAGE)
     .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
-  ipam_address: string().notRequired().nullable(),
+  ipam_address: string().nullable(),
 })
   .notRequired()
   .nullable();
 
 export const CreateLinodeInterfaceSchema = object({
-  firewall_id: number().notRequired().nullable(),
+  firewall_id: number().nullable(),
   default_route: object({
-    ipv4: boolean().notRequired(),
-    ipv6: boolean().notRequired(),
+    ipv4: boolean(),
+    ipv6: boolean(),
   }).notRequired(),
   vpc: object({
     subnet_id: number().required(),
     ipv4: object({
-      addresses: array().of(CreateVPCInterfaceIpv4AddressSchema).notRequired(),
-      ranges: array().of(VPCInterfaceIPv4RangeSchema).notRequired(),
+      addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
+      ranges: array().of(VPCInterfaceIPv4RangeSchema),
     }).notRequired(),
   })
     .notRequired()
     .nullable(),
   public: object({
     ipv4: object({
-      addresses: array().of(BaseInterfaceIPv4AddressSchema).notRequired(),
+      addresses: array().of(BaseInterfaceIPv4AddressSchema),
     }).notRequired(),
     ipv6: object({
-      ranges: array().of(PublicInterfaceRangeSchema).notRequired(),
+      ranges: array().of(PublicInterfaceRangeSchema),
     }).notRequired(),
   })
     .notRequired()
@@ -619,37 +620,38 @@ export const CreateLinodeInterfaceSchema = object({
 });
 
 const ModifyVPCInterfaceIpv4AddressSchema = object({
-  address: string().notRequired(),
-  primary: boolean().notRequired().nullable(),
-  nat_1_1_address: string().notRequired().nullable(),
+  address: string(),
+  primary: boolean().nullable(),
+  nat_1_1_address: string().nullable(),
 });
 
 const ModifyVlanInterfaceSchema = object({
   vlan_label: string()
+    .required()
     .nullable()
     .min(1, LABEL_LENGTH_MESSAGE)
     .max(64, LABEL_LENGTH_MESSAGE)
     .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
-  ipam_address: string().notRequired().nullable(),
+  ipam_address: string().nullable(),
 })
   .notRequired()
   .nullable();
 
 export const ModifyLinodeInterfaceSchema = object({
   default_route: object({
-    ipv4: boolean().notRequired().nullable(),
-    ipv6: boolean().notRequired().nullable(),
+    ipv4: boolean().nullable(),
+    ipv6: boolean().nullable(),
   })
     .notRequired()
     .nullable(),
   vpc: object({
-    subnet_id: number(),
+    subnet_id: number().required(),
     ipv4: object({
       addresses: array()
         .of(ModifyVPCInterfaceIpv4AddressSchema)
         .notRequired()
         .nullable(),
-      ranges: array().of(VPCInterfaceIPv4RangeSchema).notRequired().nullable(),
+      ranges: array().of(VPCInterfaceIPv4RangeSchema).nullable(),
     })
       .notRequired()
       .nullable(),
@@ -658,15 +660,12 @@ export const ModifyLinodeInterfaceSchema = object({
     .nullable(),
   public: object({
     ipv4: object({
-      addresses: array()
-        .of(BaseInterfaceIPv4AddressSchema)
-        .notRequired()
-        .nullable(),
+      addresses: array().of(BaseInterfaceIPv4AddressSchema).nullable(),
     })
       .notRequired()
       .nullable(),
     ipv6: object({
-      ranges: array().of(PublicInterfaceRangeSchema).notRequired().nullable(),
+      ranges: array().of(PublicInterfaceRangeSchema).nullable(),
     })
       .notRequired()
       .nullable(),

@@ -2,6 +2,13 @@ import type { Region, RegionSite } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { SSHKey } from '../profile/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
+import { InferType } from 'yup';
+import {
+  CreateLinodeInterfaceSchema,
+  ModifyLinodeInterfaceSchema,
+  UpdateLinodeInterfaceSettingsSchema,
+  UpgradeToLinodeInterfaceSchema,
+} from '@linode/validation';
 
 export type Hypervisor = 'kvm' | 'zen';
 
@@ -222,98 +229,18 @@ export interface Config {
 // ----------------------------------------------------------
 // Types relating to new interfaces - Linode Interfaces
 // ----------------------------------------------------------
-
 export interface DefaultRoute {
   ipv4?: boolean;
   ipv6?: boolean;
 }
 
-// POST related types
+export type CreateLinodeInterfacePayload = InferType<
+  typeof CreateLinodeInterfaceSchema
+>;
 
-// POST object
-export interface CreateLinodeInterfacePayload {
-  firewall_id?: number | null; // has diff behavior for undefined vs null
-  default_route?: DefaultRoute | null;
-  vpc?: CreateVPCInterfacePayload | null;
-  public?: CreatePublicInterfacePayload | null;
-  vlan?: {
-    vlan_label: string;
-    ipam_address?: string | null;
-  } | null;
-}
-
-export interface BaseInterfaceIPv4Address {
-  address: string;
-  primary?: boolean;
-}
-
-export interface VPCInterfaceIpv4Address extends BaseInterfaceIPv4Address {
-  nat_1_1_address?: string | null;
-}
-
-export interface VPCInterfaceIPv4Range {
-  range: string;
-}
-
-export interface CreateVPCInterfacePayload {
-  subnet_id: number;
-  ipv4?: {
-    addresses?: VPCInterfaceIpv4Address[];
-    ranges?: VPCInterfaceIPv4Range[];
-  };
-}
-
-export interface PublicInterfaceRange {
-  range: string | null;
-}
-
-export interface CreatePublicInterfacePayload {
-  ipv4?: {
-    addresses?: BaseInterfaceIPv4Address[];
-  };
-  ipv6?: {
-    ranges?: PublicInterfaceRange[];
-  };
-}
-
-// PUT related types
-
-// PUT object - very similar to POST object, but many more values can also be null
-export interface ModifyLinodeInterfacePayload {
-  default_route?: {
-    ipv4?: boolean | null;
-    ipv6?: boolean | null;
-  } | null;
-  vpc?: ModifyVPCInterfacePayload | null;
-  public?: ModifyPublicInterfacePayload | null;
-  vlan?: {
-    vlan_label: string | null;
-    ipam_address?: string | null;
-  } | null;
-}
-
-export interface ModifyVPCInterfacePayload {
-  subnet_id: number;
-  ipv4?: {
-    addresses?:
-      | {
-          address?: string;
-          primary?: boolean | null;
-          nat_1_1_address?: string | null;
-        }[]
-      | null;
-    ranges?: VPCInterfaceIPv4Range[] | null;
-  } | null;
-}
-
-export interface ModifyPublicInterfacePayload {
-  ipv4?: {
-    addresses?: BaseInterfaceIPv4Address[] | null;
-  } | null;
-  ipv6?: {
-    ranges?: PublicInterfaceRange[] | null;
-  } | null;
-}
+export type ModifyLinodeInterfacePayload = InferType<
+  typeof ModifyLinodeInterfaceSchema
+>;
 
 // GET related types
 
@@ -346,7 +273,7 @@ export interface VPCInterfaceData {
       primary: boolean;
       nat_1_1_address?: string;
     }[];
-    ranges: VPCInterfaceIPv4Range[];
+    ranges: { range: string }[];
   };
 }
 
@@ -395,18 +322,13 @@ export interface LinodeInterfaceSettings {
   };
 }
 
-export interface LinodeInterfaceSettingsPayload {
-  network_helper?: boolean | null;
-  default_route: {
-    ipv4_interface_id?: number | null;
-    ipv6_interface_id?: number | null;
-  };
-}
+export type LinodeInterfaceSettingsPayload = InferType<
+  typeof UpdateLinodeInterfaceSettingsSchema
+>;
 
-export interface UpgradeInterfacePayload {
-  config_id?: number | null;
-  dry_run?: boolean;
-}
+export type UpgradeInterfacePayload = InferType<
+  typeof UpgradeToLinodeInterfaceSchema
+>;
 
 export interface UpgradeInterfaceData {
   config_id: number;
