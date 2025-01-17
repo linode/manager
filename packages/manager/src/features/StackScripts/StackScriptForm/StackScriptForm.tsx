@@ -1,8 +1,17 @@
-import { InputAdornment, Stack, TextField, Typography } from '@linode/ui';
+import {
+  InputAdornment,
+  List,
+  ListItem,
+  Stack,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { Code } from 'src/components/Code/Code';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
+import { Link } from 'src/components/Link';
 
 import type { StackScriptPayload } from '@linode/api-v4';
 
@@ -17,7 +26,7 @@ export const StackScriptForm = (props: Props) => {
   const { control } = useFormContext<StackScriptPayload>();
 
   return (
-    <>
+    <Stack spacing={2}>
       <Controller
         render={({ field, fieldState }) => (
           <TextField
@@ -97,16 +106,20 @@ export const StackScriptForm = (props: Props) => {
         render={({ field, fieldState }) => (
           <TextField
             labelTooltipText={
-              <Stack>
+              <Stack spacing={1}>
                 <Typography>
-                  There are four default environment variables provided to you:
+                  There are four default environment variables provided to you.{' '}
+                  <Link to="https://techdocs.akamai.com/cloud-computing/docs/write-a-custom-script-for-use-with-stackscripts#default-environment-variables">
+                    Learn more.
+                  </Link>
                 </Typography>
-                <ul>
-                  <li>LINODE_ID</li>
-                  <li>LINODE_LISHUSERNAME</li>
-                  <li>LINODE_RAM</li>
-                  <li>LINODE_DATACENTERID</li>
-                </ul>
+                <List dense>
+                  {STACKSCRIPT_ENV_VARS.map((envVar) => (
+                    <ListItem key={envVar} sx={{ px: 0, py: 0.25 }}>
+                      <Code>{envVar}</Code>
+                    </ListItem>
+                  ))}
+                </List>
               </Stack>
             }
             data-qa-stackscript-script
@@ -145,6 +158,13 @@ export const StackScriptForm = (props: Props) => {
         control={control}
         name="rev_note"
       />
-    </>
+    </Stack>
   );
 };
+
+const STACKSCRIPT_ENV_VARS = [
+  'LINODE_ID',
+  'LINODE_LISHUSERNAME',
+  'LINODE_RAM',
+  'LINODE_DATACENTERID',
+];

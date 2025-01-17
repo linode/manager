@@ -243,21 +243,11 @@ describe('Create stackscripts', () => {
       .should('be.enabled')
       .click();
 
-    // Confirm the user is redirected to landing page and StackScript is shown.
-    cy.wait('@createStackScript');
-    cy.url().should('endWith', '/stackscripts/account');
-    cy.wait('@getStackScripts');
-
-    cy.findByText(stackscriptLabel)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        cy.findByText(stackscriptDesc).should('be.visible');
-        cy.findByText(stackscriptImageTag).should('be.visible');
-      });
-
-    // Navigate to StackScript details page and click deploy Linode button.
-    cy.findByText(stackscriptLabel).should('be.visible').click();
+    // Confirm the user is redirected to the StackScript details page
+    cy.wait('@createStackScript').then((intercept) => {
+      console.log(intercept)
+      cy.url().should('endWith', `/stackscripts/${intercept.response?.body.id}`);
+    });
 
     ui.button
       .findByTitle('Deploy New Linode')
@@ -336,8 +326,11 @@ describe('Create stackscripts', () => {
         .should('be.enabled')
         .click();
 
-      cy.wait('@createStackScript');
-      cy.url().should('endWith', '/stackscripts/account');
+      // Confirm the user is redirected to the StackScript details page
+      cy.wait('@createStackScript').then((intercept) => {
+        console.log(intercept)
+        cy.url().should('endWith', `/stackscripts/${intercept.response?.body.id}`);
+      });
 
       cy.wait('@getAllImages').then((res) => {
         // Fetch Images from response data and filter out Kubernetes images.
@@ -346,18 +339,6 @@ describe('Create stackscripts', () => {
           imageData,
           'public'
         );
-
-        cy.wait('@getStackScripts');
-        cy.findByText(stackscriptLabel)
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            cy.findByText(stackscriptDesc).should('be.visible');
-            cy.findByText(stackscriptImage).should('be.visible');
-          });
-
-        // Navigate to StackScript details page and click deploy Linode button.
-        cy.findByText(stackscriptLabel).should('be.visible').click();
 
         ui.button
           .findByTitle('Deploy New Linode')

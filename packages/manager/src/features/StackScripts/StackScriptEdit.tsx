@@ -2,10 +2,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, CircleProgress, Notice, Paper, Stack } from '@linode/ui';
 import { stackScriptSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
-import React from 'react';
+import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
@@ -14,6 +15,7 @@ import {
   useStackScriptQuery,
   useUpdateStackScriptMutation,
 } from 'src/queries/stackscripts';
+import { arrayToList } from 'src/utilities/arrayToList';
 
 import { StackScriptForm } from './StackScriptForm/StackScriptForm';
 
@@ -22,12 +24,15 @@ import type { StackScriptPayload } from '@linode/api-v4';
 export const StackScriptEdit = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { stackScriptID } = useParams<{ stackScriptID: string }>();
+  const history = useHistory();
   const id = Number(stackScriptID);
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: stackscript, error, isLoading } = useStackScriptQuery(id);
   const { mutateAsync: updateStackScript } = useUpdateStackScriptMutation(id);
+
+  const [isResetConfirmationOpen, setIsResetConfirmationOpen] = useState(false);
 
   const values = {
     description: stackscript?.description ?? '',
@@ -57,6 +62,7 @@ export const StackScriptEdit = () => {
       enqueueSnackbar(`Successfully updated StackScript ${stackscript.label}`, {
         variant: 'success',
       });
+      history.push(`/stackscripts/${stackscript.id}`);
     } catch (errors) {
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });
@@ -93,34 +99,67 @@ export const StackScriptEdit = () => {
           variant="error"
         />
       )}
-      <Paper>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Stack spacing={2}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Stack spacing={2}>
+          <Paper>
             <StackScriptForm
               disabled={disabled}
               username={stackscript?.username ?? ''}
             />
-            <Stack direction="row" justifyContent="flex-end" spacing={1}>
-              <Button
-                data-testid="cancel"
-                disabled={disabled || !form.formState.isDirty}
-                onClick={() => form.reset()}
-              >
-                Reset
-              </Button>
-              <Button
-                buttonType="primary"
-                data-testid="save"
-                disabled={disabled || !form.formState.isDirty}
-                loading={form.formState.isSubmitting}
-                type="submit"
-              >
-                Save
-              </Button>
-            </Stack>
+          </Paper>
+          <Stack
+            data-qa-buttons
+            direction="row"
+            justifyContent="flex-end"
+            spacing={1}
+          >
+            <Button
+              data-testid="cancel"
+              disabled={disabled || !form.formState.isDirty}
+              onClick={() => setIsResetConfirmationOpen(true)}
+            >
+              Reset
+            </Button>
+            <Button
+              buttonType="primary"
+              data-testid="save"
+              disabled={disabled || !form.formState.isDirty}
+              loading={form.formState.isSubmitting}
+              type="submit"
+            >
+              Save Changes
+            </Button>
           </Stack>
-        </form>
-      </Paper>
+        </Stack>
+      </form>
+      <ConfirmationDialog
+        actions={
+          <Stack direction="row" spacing={1}>
+            <Button
+              buttonType="secondary"
+              onClick={() => setIsResetConfirmationOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                form.reset();
+                setIsResetConfirmationOpen(false);
+              }}
+              buttonType="primary"
+            >
+              Reset
+            </Button>
+          </Stack>
+        }
+        onClose={() => setIsResetConfirmationOpen(false)}
+        open={isResetConfirmationOpen}
+        title="Reset StackScript From?"
+      >
+        You have made changes to the{' '}
+        {arrayToList(Object.keys(form.formState.dirtyFields))}. Are you sure you
+        want to reset the form and discard your current changes?
+      </ConfirmationDialog>
     </FormProvider>
   );
 };

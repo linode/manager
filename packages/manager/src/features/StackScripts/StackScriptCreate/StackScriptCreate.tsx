@@ -1,12 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Notice, Paper, Stack } from '@linode/ui';
+import { Box, Button, Notice, Paper, Stack } from '@linode/ui';
 import { stackScriptSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useCreateStackScriptMutation } from 'src/queries/stackscripts';
 
@@ -56,38 +56,36 @@ export const StackScriptCreate = () => {
 
   return (
     <FormProvider {...form}>
-      <Breadcrumb pathname="/StackScripts/Create" />
+      <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [{ label: 'StackScripts', position: 1 }],
+        }}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/create-a-stackscript"
+      />
       {disabled && (
         <Notice
           text="You don't have permission to create StackScripts. Please contact an account administrator for details."
           variant="error"
         />
       )}
-      <Paper>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Stack spacing={2}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Stack spacing={2}>
+          <Paper>
             <StackScriptForm disabled={disabled} username={username} />
-            <Stack direction="row" justifyContent="flex-end" spacing={1}>
-              <Button
-                data-testid="cancel"
-                disabled={disabled || !form.formState.isDirty}
-                onClick={() => form.reset()}
-              >
-                Reset
-              </Button>
-              <Button
-                buttonType="primary"
-                data-testid="save"
-                disabled={disabled}
-                loading={form.formState.isSubmitting}
-                type="submit"
-              >
-                Create StackScript
-              </Button>
-            </Stack>
-          </Stack>
-        </form>
-      </Paper>
+          </Paper>
+          <Box data-qa-buttons display="flex" justifyContent="flex-end">
+            <Button
+              buttonType="primary"
+              data-testid="save"
+              disabled={disabled}
+              loading={form.formState.isSubmitting}
+              type="submit"
+            >
+              Create StackScript
+            </Button>
+          </Box>
+        </Stack>
+      </form>
     </FormProvider>
   );
 };
