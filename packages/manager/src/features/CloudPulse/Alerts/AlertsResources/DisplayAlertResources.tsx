@@ -1,3 +1,4 @@
+import { Checkbox } from '@linode/ui';
 import { TableBody, TableHead, useTheme } from '@mui/material';
 import React from 'react';
 
@@ -14,6 +15,10 @@ import type { Order } from 'src/hooks/useOrder';
 
 export interface AlertInstance {
   /**
+   * Indicates if the instance is selected or not
+   */
+  checked?: boolean;
+  /**
    * The id of the alert
    */
   id: string;
@@ -21,6 +26,7 @@ export interface AlertInstance {
    * The label of the alert
    */
   label: string;
+
   /**
    * The region associated with the alert
    */
@@ -39,9 +45,19 @@ export interface DisplayAlertResourceProp {
   filteredResources: AlertInstance[] | undefined;
 
   /**
+   * Callback for clicking on check box
+   */
+  handleSelection?: (id: number[], isSelectAction: boolean) => void;
+
+  /**
    * Indicates, there is an error in loading the data, if it is passed true, error message will be displayed
    */
   isDataLoadingError: boolean;
+
+  /**
+   * This controls whether to show the selection check box or not
+   */
+  isSelectionsNeeded?: boolean;
 
   /**
    * This is passed if there is no resources associated with the alerts
@@ -64,7 +80,9 @@ export const DisplayAlertResources = React.memo(
     const {
       errorText,
       filteredResources,
+      handleSelection,
       isDataLoadingError,
+      isSelectionsNeeded,
       noDataText,
       pageSize,
       scrollToTitle,
@@ -116,6 +134,29 @@ export const DisplayAlertResources = React.memo(
       [scrollToTitle]
     );
 
+    const handleSelectionChange = React.useCallback(
+      (id: number[], isSelectionAction: boolean) => {
+        if (handleSelection) {
+          handleSelection(id, isSelectionAction);
+        }
+      },
+      [handleSelection]
+    );
+
+    const isAllPageSelected = (paginatedData: AlertInstance[]): boolean => {
+      return (
+        Boolean(paginatedData?.length) &&
+        paginatedData.every((resource) => resource.checked)
+      );
+    };
+
+    const isSomeSelected = (paginatedData: AlertInstance[]): boolean => {
+      return (
+        Boolean(paginatedData?.length) &&
+        paginatedData.some((resource) => resource.checked)
+      );
+    };
+
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -130,6 +171,29 @@ export const DisplayAlertResources = React.memo(
             <Table data-qa-alert-table>
               <TableHead>
                 <TableRow>
+                  {isSelectionsNeeded && (
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        indeterminate={
+                          isSomeSelected(paginatedData) &&
+                          !isAllPageSelected(paginatedData)
+                        }
+                        onClick={() =>
+                          handleSelectionChange(
+                            paginatedData.map((resource) =>
+                              Number(resource.id)
+                            ),
+                            !isAllPageSelected(paginatedData)
+                          )
+                        }
+                        sx={{
+                          padding: 0,
+                        }}
+                        checked={isAllPageSelected(paginatedData)}
+                        data-testid={`select_all_in_page_${page}`}
+                      />
+                    </TableCell>
+                  )}
                   <TableSortCell
                     handleClick={(orderBy, order) => {
                       handleSort(orderBy, order, handlePageChange);
@@ -158,8 +222,22 @@ export const DisplayAlertResources = React.memo(
               </TableHead>
               <TableBody data-qa-alert-table-body>
                 {!isDataLoadingError &&
-                  paginatedData.map(({ id, label, region }) => (
+                  paginatedData.map(({ checked, id, label, region }) => (
                     <TableRow data-qa-alert-row={id} key={id}>
+                      {isSelectionsNeeded && (
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            onClick={() => {
+                              handleSelectionChange([Number(id)], !checked);
+                            }}
+                            sx={{
+                              padding: 0,
+                            }}
+                            checked={checked}
+                            data-testid={`select_item_${id}`}
+                          />
+                        </TableCell>
+                      )}
                       <TableCell data-qa-alert-cell={`${id}_resource`}>
                         {label}
                       </TableCell>
