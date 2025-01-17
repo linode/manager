@@ -379,6 +379,7 @@ describe('NodeBalancerConfigPanel', () => {
         {...nbConfigPanelMockPropsForTest}
         healthCheckType="connection"
         onUdpCheckPortChange={onChange}
+        protocol='udp'
       />,
       { flags: { udp: true } }
     );
