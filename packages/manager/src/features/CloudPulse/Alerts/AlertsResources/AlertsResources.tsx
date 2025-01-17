@@ -233,8 +233,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                     !(Boolean(selectedResources.length) || selectedOnly)
                   }
                   sx={{
-                    maxHeight: theme.spacing(4.25),
-                    pt: theme.spacing(1),
+                    maxHeight: '34px',
+                    pt: theme.spacing(1.2),
                     svg: {
                       backgroundColor: theme.color.white,
                     },
