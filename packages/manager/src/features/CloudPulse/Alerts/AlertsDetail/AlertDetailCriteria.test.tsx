@@ -1,30 +1,45 @@
 import React from 'react';
 
-import { alertFactory } from 'src/factories';
+import {
+  alertDimensionsFactory,
+  alertFactory,
+  alertRulesFactory,
+} from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { operators } from '../constants';
+import { metricOperatorTypeMap } from '../constants';
 import { convertSecondsToMinutes } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
 
 describe('AlertDetailCriteria component tests', () => {
   it('should render the alert detail criteria successfully on correct inputs', () => {
-    const alert = alertFactory.build();
+    const alertDetails = alertFactory.build({
+      rule_criteria: {
+        rules: alertRulesFactory.buildList(2, {
+          aggregation_type: 'avg',
+          dimension_filters: alertDimensionsFactory.buildList(2),
+          label: 'CPU Usage',
+          metric: 'cpu_usage',
+          operator: 'gt',
+          unit: 'bytes',
+        }),
+      },
+    });
     const { getAllByText, getByText } = renderWithTheme(
-      <AlertDetailCriteria alert={alert} />
+      <AlertDetailCriteria alertDetails={alertDetails} />
     );
-    const { rules } = alert.rule_criteria;
+    const { rules } = alertDetails.rule_criteria;
     expect(getAllByText('Metric Threshold:').length).toBe(rules.length);
     expect(getAllByText('Dimension Filter:').length).toBe(rules.length);
     expect(getByText('Criteria')).toBeInTheDocument();
     expect(getAllByText('Average').length).toBe(2);
     expect(getAllByText('CPU Usage').length).toBe(2);
-    expect(getAllByText(operators['gt']).length).toBe(2);
-
+    expect(getAllByText('bytes').length).toBe(2);
+    expect(getAllByText(metricOperatorTypeMap['gt']).length).toBe(2);
     const {
       evaluation_period_seconds,
       polling_interval_seconds,
-    } = alert.trigger_conditions;
+    } = alertDetails.trigger_conditions;
     expect(
       getByText(convertSecondsToMinutes(polling_interval_seconds))
     ).toBeInTheDocument();
@@ -39,9 +54,11 @@ describe('AlertDetailCriteria component tests', () => {
         rules: [],
       },
     });
-    const { getByText } = renderWithTheme(
-      <AlertDetailCriteria alert={alert} />
+    const { getByText, queryByText } = renderWithTheme(
+      <AlertDetailCriteria alertDetails={alert} />
     );
     expect(getByText('Criteria')).toBeInTheDocument(); // empty criteria should be there
+    expect(queryByText('Metric Threshold:')).not.toBeInTheDocument();
+    expect(queryByText('Dimension Filter:')).not.toBeInTheDocument();
   });
 });

@@ -17,6 +17,7 @@ import type {
   AlertServiceType,
   CreateAlertDefinitionPayload,
   EditAlertResourcesPayload,
+  NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
@@ -65,5 +66,14 @@ export const useEditAlertDefinitionResources = (
         queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId)
       );
     },
+  });
+};
+
+export const useAlertNotificationChannelsQuery = (
+  params?: Params,
+  filter?: Filter
+) => {
+  return useQuery<NotificationChannel[], APIError[]>({
+    ...queryFactory.notificationChannels._ctx.all(params, filter),
   });
 };

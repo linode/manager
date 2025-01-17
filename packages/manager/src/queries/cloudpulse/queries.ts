@@ -12,7 +12,7 @@ import { databaseQueries } from '../databases/databases';
 import { getAllLinodesRequest } from '../linodes/requests';
 import { volumeQueries } from '../volumes/volumes';
 import { fetchCloudPulseMetrics } from './metrics';
-import { getAllAlertsRequest } from './requests';
+import { getAllAlertsRequest, getAllNotificationChannels } from './requests';
 
 import type {
   CloudPulseMetricsRequest,
@@ -75,6 +75,15 @@ export const queryFactory = createQueryKeys(key, {
     queryFn: () => getMetricDefinitionsByServiceType(serviceType!),
     queryKey: [serviceType],
   }),
+  notificationChannels: {
+    contextQueries: {
+      all: (params?: Params, filter?: Filter) => ({
+        queryFn: () => getAllNotificationChannels(params, filter),
+        queryKey: [params, filter, 'alert-channel'],
+      }),
+    },
+    queryKey: null,
+  },
 
   resources: (
     resourceType: string | undefined,
@@ -100,6 +109,6 @@ export const queryFactory = createQueryKeys(key, {
 
   token: (serviceType: string | undefined, request: JWETokenPayLoad) => ({
     queryFn: () => getJWEToken(request, serviceType!),
-    queryKey: [serviceType, { resource_ids: request.resource_ids.sort() }],
+    queryKey: [serviceType, { resource_ids: request.entity_ids.sort() }],
   }),
 });

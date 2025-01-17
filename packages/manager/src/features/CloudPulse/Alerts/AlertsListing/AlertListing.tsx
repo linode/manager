@@ -30,11 +30,7 @@ export const AlertListing = () => {
   const history = useHistory();
 
   const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
-    history.push(
-      `${location.pathname}/detail/${serviceType}/${
-        serviceType === 'linode' ? '1001' : '20000' // only these two ids are available, so using this
-      }`
-    );
+    history.push(`${location.pathname}/detail/${serviceType}/${_id}`);
   };
 
   const handleEdit = ({ id: _id, service_type: serviceType }: Alert) => {
@@ -80,7 +76,7 @@ export const AlertListing = () => {
           {isError && (
             <TableRowError
               colSpan={7}
-              message={'Error in fetching the alerts.'}
+              message="Error in fetching the alerts."
             />
           )}
           {isLoading && <TableRowLoading columns={7} />}

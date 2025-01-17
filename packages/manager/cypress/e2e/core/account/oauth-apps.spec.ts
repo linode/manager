@@ -1,4 +1,3 @@
-import { fbltClick } from 'support/helpers';
 import { oauthClientFactory } from '@src/factories';
 import {
   mockCreateOAuthApp,
@@ -31,8 +30,11 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
     .findByTitle('Create OAuth App')
     .should('be.visible')
     .within(() => {
-      fbltClick('Label').clear().type(oauthApp.label);
-      fbltClick('Callback URL').clear().type(oauthApp.redirect_uri);
+      cy.findByLabelText('Label').click().clear().type(oauthApp.label);
+      cy.findByLabelText('Callback URL')
+        .click()
+        .clear()
+        .type(oauthApp.redirect_uri);
       ui.buttonGroup
         .findButtonByTitle('Cancel')
         .should('be.visible')
@@ -54,8 +56,11 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
     .findByTitle('Create OAuth App')
     .should('be.visible')
     .within(() => {
-      fbltClick('Label').clear().type(oauthApp.label);
-      fbltClick('Callback URL').clear().type(oauthApp.redirect_uri);
+      cy.findByLabelText('Label').click().clear().type(oauthApp.label);
+      cy.findByLabelText('Callback URL')
+        .click()
+        .clear()
+        .type(oauthApp.redirect_uri);
     });
   ui.drawerCloseButton.find().click();
 
@@ -75,8 +80,8 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
     .should('be.visible')
     .within(() => {
       // An error message appears when attempting to create an OAuth App without a label
-      fbltClick('Label').clear();
-      fbltClick('Callback URL').clear();
+      cy.findByLabelText('Label').click().clear();
+      cy.findByLabelText('Callback URL').click().clear();
       ui.button
         .findByTitle('Create')
         .should('be.visible')
@@ -86,8 +91,11 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
       cy.findByText('Redirect URI is required.');
 
       // Fill out and submit OAuth App create form.
-      fbltClick('Label').clear().type(oauthApp.label);
-      fbltClick('Callback URL').clear().type(oauthApp.redirect_uri);
+      cy.findByLabelText('Label').click().clear().type(oauthApp.label);
+      cy.findByLabelText('Callback URL')
+        .click()
+        .clear()
+        .type(oauthApp.redirect_uri);
       // Check the 'public' checkbox
       if (oauthApp.public) {
         cy.get('[data-qa-checked]').should('be.visible').click();
@@ -312,8 +320,11 @@ describe('OAuth Apps', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        fbltClick('Label').clear().type(updatedApps[0].label);
-        fbltClick('Callback URL').clear().type(updatedApps[0].label);
+        cy.findByLabelText('Label').click().clear().type(updatedApps[0].label);
+        cy.findByLabelText('Callback URL')
+          .click()
+          .clear()
+          .type(updatedApps[0].label);
 
         ui.buttonGroup
           .findButtonByTitle('Save Changes')

@@ -92,7 +92,8 @@ const metricDefinitions = metrics.map(({ title, name, unit }) =>
   })
 );
 
-const mockLinode = linodeFactory.build({ tags: ['tag-2', 'tag-3'],
+const mockLinode = linodeFactory.build({
+  tags: ['tag-2', 'tag-3'],
   label: resource,
   id: kubeLinodeFactory.build().instance_id ?? undefined,
 });
@@ -205,18 +206,12 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .should('be.visible')
       .click();
 
-      ui.autocomplete
-      .findByLabel('Tags')
-      .should('be.visible')
-      .type("tag-2");
+    ui.autocomplete.findByLabel('Tags').should('be.visible').type('tag-2');
 
-    ui.autocompletePopper
-      .findByTitle("tag-2")
-      .should('be.visible')
-      .click();
+    ui.autocompletePopper.findByTitle('tag-2').should('be.visible').click();
 
     //  Select a region from the dropdown.
-  ui.regionSelect.find().type(extendedMockRegion.label);
+    ui.regionSelect.find().type(extendedMockRegion.label);
 
     // Since Linode does not support this region, we expect it to not be in the dropdown.
 
@@ -249,7 +244,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
           .should('be.visible')
           .should('have.text', 'US, Chicago, IL');
 
-          cy.get('[data-qa-value="Tags tag-2"]')
+        cy.get('[data-qa-value="Tags tag-2"]')
           .should('be.visible')
           .should('have.text', 'tag-2');
 
@@ -430,7 +425,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
         .should('be.visible')
         .within(() => {
           ui.button
-            .findByAttribute('aria-label', 'Zoom In')
+            .findByAttribute('aria-label', 'Zoom Out')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -461,7 +456,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
           // click zoom out and validate the same
           ui.button
-            .findByAttribute('aria-label', 'Zoom Out')
+            .findByAttribute('aria-label', 'Zoom In')
             .should('be.visible')
             .should('be.enabled')
             .scrollIntoView()

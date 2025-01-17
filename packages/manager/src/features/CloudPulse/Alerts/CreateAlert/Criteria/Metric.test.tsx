@@ -7,7 +7,6 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { Metric } from './Metric';
 
 import type { CreateAlertDefinitionForm } from '../types';
-
 import type { MetricDefinition } from '@linode/api-v4';
 const mockData: MetricDefinition[] = [
   {
@@ -96,7 +95,7 @@ describe('Metric component tests', () => {
     expect(
       within(dataFieldContainer).getByRole('button', {
         name:
-          'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way.',
+          'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.',
       })
     );
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {

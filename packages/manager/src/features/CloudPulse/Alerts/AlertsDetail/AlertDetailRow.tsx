@@ -1,67 +1,66 @@
-import { Grid, Typography, useTheme } from '@mui/material';
+import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 
+import { StyledAlertTypography } from './AlertDetail';
+
+import type { Status } from 'src/components/StatusIcon/StatusIcon';
+
 interface AlertDetailRowProps {
-  /*
-   * The typography label under which the value will be displayed
+  /**
+   * The label or title of the row
    */
   label: string;
-  /*
-   * Controls the size of the typography label from medium to larger screens
+  /**
+   * Number of grid columns for the label on small and larger screens.
+   * Defaults to 4. This controls the width of the label in the grid layout.
    */
-  labelWidth?: number;
-  /*
-   * The color of the status icon that needs to be displayed
+  labelGridColumns?: number;
+  /**
+   * The status icon to be displayed in the row. It can represent states like "active", "inactive", etc.
+   * Pass a valid status (e.g., 'active', 'inactive') to display the appropriate status icon.
    */
-  statusColor?: string;
-  /*
-   * The typography value to be displayed
+  status?: Status;
+  /**
+   * The value of the row
    */
   value: null | string;
-  /*
-   * Controls the size of the typography value from medium to larger screens
+  /**
+   * Number of grid columns for the value on medium and larger screens.
+   * Defaults to 8. This controls the width of the value in the grid layout.
    */
-  valueWidth?: number;
+  valueGridColumns?: number;
 }
 
 export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
-  const { label, labelWidth = 4, statusColor, value, valueWidth = 8 } = props;
+  const {
+    label,
+    labelGridColumns = 4,
+    status,
+    value,
+    valueGridColumns = 8,
+  } = props;
 
   const theme = useTheme();
 
   return (
-    <Grid item xs={12}>
-      <Grid container>
-        <Grid item sm={labelWidth} xs={12}>
-          <Typography fontSize={theme.spacing(1.75)} variant="h2">
-            {label}:
-          </Typography>
-        </Grid>
-        <Grid display="flex" item sm={valueWidth} xs={12}>
-          {statusColor && ( // if the status color is passed, we will display a status icon with color needed
-            <StatusIcon
-              sx={{
-                backgroundColor: statusColor, // here the background color is controlled by alerting component since there can be more statuses than active, inactive and other
-              }}
-              marginTop={theme.spacing(0.7)}
-              maxHeight={theme.spacing(1)}
-              maxWidth={theme.spacing(1)}
-              pulse={false}
-              status="other"
-            />
-          )}
-          <Typography
-            sx={{
-              color: theme.color.offBlack,
-            }}
-            fontSize={theme.spacing(1.75)}
-            variant="body2"
-          >
-            {value}
-          </Typography>
-        </Grid>
+    <Grid container data-qa-item={label} item xs={12}>
+      <Grid item sm={labelGridColumns} xs={12}>
+        <StyledAlertTypography fontFamily={theme.font.bold}>
+          {label}:
+        </StyledAlertTypography>
+      </Grid>
+      <Grid container item sm={valueGridColumns} xs={12}>
+        {status && (
+          <StatusIcon
+            marginTop={theme.spacing(0.7)}
+            maxHeight={theme.spacing(1)}
+            maxWidth={theme.spacing(1)}
+            status={status}
+          />
+        )}
+        <StyledAlertTypography>{value}</StyledAlertTypography>
       </Grid>
     </Grid>
   );
