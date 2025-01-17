@@ -260,7 +260,7 @@ export const darkTheme: ThemeOptions = {
           },
           backgroundColor: Button.Primary.Default.Background,
           color: Button.Primary.Default.Text,
-          padding: '2px 10px',
+          padding: '2px 20px',
         },
         containedSecondary: {
           '&:active': {
