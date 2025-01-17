@@ -455,6 +455,9 @@ importers:
       '@vitest/ui':
         specifier: ^2.1.1
         version: 2.1.5(vitest@2.1.5)
+      axe-core:
+        specifier: ^4.10.2
+        version: 4.10.2
       chai-string:
         specifier: ^1.5.0
         version: 1.5.0(chai@5.1.2)
