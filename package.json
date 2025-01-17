@@ -57,5 +57,11 @@
   "volta": {
     "node": "20.17.0"
   },
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "scripts"
+    ]
+  },
   "dependencies": {}
 }
