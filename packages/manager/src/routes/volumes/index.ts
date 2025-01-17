@@ -1,5 +1,4 @@
 import { createRoute, redirect } from '@tanstack/react-router';
-import VolumeCreate from 'volume_create/VolumeCreate';
 
 import { rootRoute } from '../root';
 import { VolumesRoot } from './VolumesRoot';
@@ -40,10 +39,11 @@ const volumesIndexRoute = createRoute({
 );
 
 const volumesCreateRoute = createRoute({
-  component: VolumeCreate,
   getParentRoute: () => volumesRoute,
   path: 'create',
-});
+}).lazy(() =>
+  import('./volumesLazyRoutes').then((m) => m.volumeCreateLazyRoute)
+);
 
 type VolumeActionRouteParams<P = number | string> = {
   action: VolumeAction;
