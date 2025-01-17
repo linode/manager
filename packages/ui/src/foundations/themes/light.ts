@@ -14,6 +14,7 @@ import {
   Interaction,
   NotificationToast,
   Radius,
+  Search,
   Select,
   Spacing,
   Typography,
@@ -333,7 +334,7 @@ export const lightTheme: ThemeOptions = {
             ':hover': {
               color: `${Color.Brand[70]} !important`,
             },
-            color: `${Color.Neutrals[40]} !important`,
+            color: `${Search.Default.Icon} !important`,
           },
         },
         groupLabel: {
@@ -1676,6 +1677,7 @@ export const lightTheme: ThemeOptions = {
     font: Font,
     interaction: Interaction,
     radius: Radius,
+    search: Search,
     spacing: Spacing,
     typography: Typography,
   },

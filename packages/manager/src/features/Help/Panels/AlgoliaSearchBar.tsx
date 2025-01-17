@@ -48,14 +48,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       fontFamily: 'LatoWeb',
     },
   },
-  root: {
-    display: 'flex',
-    gap: 12,
-  },
-  searchIcon: {
-    alignSelf: 'center',
-    color: theme.color.grey1,
-  },
 }));
 
 interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
@@ -121,7 +113,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
           {searchError}
         </Notice>
       )}
-      <div className={classes.root}>
+      <div>
         <Autocomplete
           renderOption={(props, option) => {
             return (
@@ -136,6 +128,14 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
           slotProps={{
             paper: {
               sx: (theme) => ({
+                '& .MuiAutocomplete-listbox': {
+                  '&::-webkit-scrollbar': {
+                    display: 'none',
+                  },
+                  border: 'none !important',
+                  msOverflowStyle: 'none',
+                  scrollbarWidth: 'none',
+                },
                 '& .MuiAutocomplete-option': {
                   ':hover': {
                     backgroundColor:
@@ -146,26 +146,9 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
                     transition: 'background-color 0.2s',
                   },
                 },
-                '& .MuiInputBase-root': {
-                  '&:hover': {
-                    border: `1px solid ${theme.tokens.color.Brand[90]}`,
-                  },
-                },
                 boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
                 marginTop: 0.5,
               }),
-            },
-            popper: {
-              sx: {
-                '& .MuiAutocomplete-listbox': {
-                  '&::-webkit-scrollbar': {
-                    display: 'none',
-                  },
-                  border: 'none !important',
-                  msOverflowStyle: 'none',
-                  scrollbarWidth: 'none',
-                },
-              },
             },
           }}
           textFieldProps={{
@@ -174,7 +157,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
                 <InputAdornment position="start">
                   <Search
                     sx={(theme) => ({
-                      color: `${theme.color.grey1}`,
+                      color: `${theme.tokens.search.Default.SearchIcon} !important`,
                     })}
                     data-qa-search-icon
                   />
@@ -185,8 +168,8 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
                   borderColor: `${theme.tokens.color.Brand[70]} !important`,
                   boxShadow: 'none',
                 },
-                svg: {
-                  color: `${theme.tokens.color.Neutrals[70]} !important`,
+                ':hover': {
+                  borderColor: theme.tokens.search.Hover.Border,
                 },
               }),
             },
