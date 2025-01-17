@@ -124,7 +124,7 @@ describe('Cloud pulse widgets', () => {
     expect(getByTestId('Aggregation function')).toBeInTheDocument();
 
     // Verify zoom icon
-    expect(getByTestId('zoom-in')).toBeInTheDocument();
+    expect(getByTestId('zoom-out')).toBeInTheDocument();
 
     // Verify graph component
     expect(
@@ -146,7 +146,7 @@ describe('Cloud pulse widgets', () => {
 
   it('should update preferences for zoom toggle', async () => {
     const { getByTestId } = renderWithTheme(<CloudPulseWidget {...props} />);
-    const zoomButton = getByTestId('zoom-in');
+    const zoomButton = getByTestId('zoom-out');
     await userEvent.click(zoomButton);
     expect(mockUpdatePreferences).toHaveBeenCalledWith('CPU Utilization', {
       size: 6,
