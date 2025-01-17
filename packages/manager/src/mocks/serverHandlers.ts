@@ -132,6 +132,7 @@ import type {
 } from '@linode/api-v4';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { accountResourcesFactory } from 'src/factories/accountResources';
+import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -396,6 +397,9 @@ const vpc = [
 ];
 
 const iam = [
+  http.get('*/iam/role-permissions', () => {
+    return HttpResponse.json(accountPermissionsFactory.build());
+  }),
   http.get('*/iam/role-permissions/users/:username', () => {
     return HttpResponse.json(userPermissionsFactory.build());
   }),
