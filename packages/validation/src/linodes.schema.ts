@@ -544,6 +544,10 @@ export const CreateLinodeDiskFromImageSchema = CreateLinodeDiskSchema.clone().sh
   }
 );
 
+const LABEL_LENGTH_MESSAGE = 'Label must be between 1 and 64 characters.';
+const LABEL_CHARACTER_TYPES =
+  'Must include only ASCII letters, numbers, and dashes';
+
 export const UpgradeToLinodeInterfaceSchema = object({
   config_id: number().notRequired().nullable(),
   dry_run: boolean().notRequired(),
@@ -558,16 +562,16 @@ export const UpdateLinodeInterfaceSettingsSchema = object({
 });
 
 const BaseInterfaceIPv4AddressSchema = object({
-  address: string(),
+  address: string().required(),
   primary: boolean().notRequired(),
 });
 
 const VPCInterfaceIPv4RangeSchema = object({
-  range: string(),
+  range: string().required(),
 });
 
 const PublicInterfaceRangeSchema = object({
-  range: string().nullable(),
+  range: string().required().nullable(),
 });
 
 const CreateVPCInterfaceIpv4AddressSchema = object({
@@ -576,6 +580,16 @@ const CreateVPCInterfaceIpv4AddressSchema = object({
   nat_1_1_address: string().notRequired().nullable(),
 });
 
+const CreateVlanInterfaceSchema = object({
+  vlan_label: string()
+    .min(1, LABEL_LENGTH_MESSAGE)
+    .max(64, LABEL_LENGTH_MESSAGE)
+    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
+  ipam_address: string().notRequired().nullable(),
+})
+  .notRequired()
+  .nullable();
+
 export const CreateLinodeInterfaceSchema = object({
   firewall_id: number().notRequired().nullable(),
   default_route: object({
@@ -583,7 +597,7 @@ export const CreateLinodeInterfaceSchema = object({
     ipv6: boolean().notRequired(),
   }).notRequired(),
   vpc: object({
-    subnet_id: number(),
+    subnet_id: number().required(),
     ipv4: object({
       addresses: array().of(CreateVPCInterfaceIpv4AddressSchema).notRequired(),
       ranges: array().of(VPCInterfaceIPv4RangeSchema).notRequired(),
@@ -601,12 +615,7 @@ export const CreateLinodeInterfaceSchema = object({
   })
     .notRequired()
     .nullable(),
-  vlan: object({
-    vlan_label: string(),
-    ipam_address: string().notRequired().nullable(),
-  })
-    .notRequired()
-    .nullable(),
+  vlan: CreateVlanInterfaceSchema,
 });
 
 const ModifyVPCInterfaceIpv4AddressSchema = object({
@@ -614,6 +623,17 @@ const ModifyVPCInterfaceIpv4AddressSchema = object({
   primary: boolean().notRequired().nullable(),
   nat_1_1_address: string().notRequired().nullable(),
 });
+
+const ModifyVlanInterfaceSchema = object({
+  vlan_label: string()
+    .nullable()
+    .min(1, LABEL_LENGTH_MESSAGE)
+    .max(64, LABEL_LENGTH_MESSAGE)
+    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
+  ipam_address: string().notRequired().nullable(),
+})
+  .notRequired()
+  .nullable();
 
 export const ModifyLinodeInterfaceSchema = object({
   default_route: object({
@@ -653,10 +673,5 @@ export const ModifyLinodeInterfaceSchema = object({
   })
     .notRequired()
     .nullable(),
-  vlan: object({
-    vlan_label: string().nullable(),
-    ipam_address: string().notRequired().nullable(),
-  })
-    .notRequired()
-    .nullable(),
+  vlan: ModifyVlanInterfaceSchema,
 });
