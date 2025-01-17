@@ -63,7 +63,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
         labels: values.labels,
         taints: values.taints,
       });
-      onClose();
+      handleClose();
     } catch (errResponse) {
       for (const error of errResponse) {
         if (error.field) {
@@ -75,13 +75,18 @@ export const LabelAndTaintDrawer = (props: Props) => {
     }
   };
 
+  const handleClose = () => {
+    onClose();
+    form.reset();
+  };
+
   const planType = typesQuery[0]?.data
     ? extendType(typesQuery[0].data)
     : undefined;
 
   return (
     <Drawer
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title={`Labels and Taints: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
     >
@@ -143,7 +148,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
             secondaryButtonProps={{
               'data-testid': 'cancel',
               label: 'Cancel',
-              onClick: onClose,
+              onClick: handleClose,
             }}
           />
         </form>
