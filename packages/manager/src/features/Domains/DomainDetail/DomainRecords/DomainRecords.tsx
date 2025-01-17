@@ -1,7 +1,6 @@
 import { deleteDomainRecord as _deleteDomainRecord } from '@linode/api-v4/lib/domains';
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { lensPath, over } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -196,7 +195,10 @@ export const DomainRecords = (props: Props) => {
     fn: (confirmDialog: ConfirmationState) => ConfirmationState
   ) => {
     setState((prevState) => {
-      const newState = over(lensPath(['confirmDialog']), fn, prevState);
+      const newState = {
+        ...prevState,
+        confirmDialog: fn(prevState.confirmDialog),
+      };
       scrollErrorIntoViewV2(confirmDialogRef);
 
       return newState;
@@ -205,7 +207,10 @@ export const DomainRecords = (props: Props) => {
 
   const updateDrawer = (fn: (drawer: DrawerState) => DrawerState) => {
     setState((prevState) => {
-      return over(lensPath(['drawer']), fn, prevState);
+      return {
+        ...prevState,
+        drawer: fn(prevState.drawer),
+      };
     });
   };
 

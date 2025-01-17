@@ -1,10 +1,19 @@
-import { compose, pathOr } from 'ramda';
-
 import type { Props } from './DomainRecords';
-import type { DomainRecord, RecordType } from '@linode/api-v4/lib/domains';
+import type {
+  Domain,
+  DomainRecord,
+  RecordType,
+} from '@linode/api-v4/lib/domains';
 
-export const msToReadableTime = (v: number): null | string =>
-  pathOr(null, [v], {
+type DomainTimeFields = Pick<
+  Domain,
+  'expire_sec' | 'refresh_sec' | 'retry_sec' | 'ttl_sec'
+>;
+
+type DomainRecordTimeFields = Pick<DomainRecord, 'ttl_sec'>;
+
+export const msToReadableTime = (v: number): null | string => {
+  const msToReadableTimeMap: { [key: number]: string } = {
     0: 'Default',
     30: '30 seconds',
     120: '2 minutes',
@@ -20,9 +29,27 @@ export const msToReadableTime = (v: number): null | string =>
     604800: '1 week',
     1209600: '2 weeks',
     2419200: '4 weeks',
-  });
+  };
 
-export const getTTL = compose(msToReadableTime, pathOr(0, ['ttl_sec']));
+  return v in msToReadableTimeMap ? msToReadableTimeMap[v] : null;
+};
+
+export function getTimeColumn(
+  record: Domain,
+  keyPath: keyof DomainTimeFields
+): null | string;
+
+export function getTimeColumn(
+  record: DomainRecord,
+  keyPath: keyof DomainRecordTimeFields
+): null | string;
+
+export function getTimeColumn(
+  record: Domain | DomainRecord,
+  keyPath: keyof (DomainRecordTimeFields | DomainTimeFields)
+) {
+  return msToReadableTime(record[keyPath] ?? 0);
+}
 
 export const typeEq = (type: RecordType) => (record: DomainRecord): boolean =>
   record.type === type;
