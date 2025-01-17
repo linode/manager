@@ -170,6 +170,9 @@ export interface CreateAlertDefinitionPayload {
   trigger_conditions: TriggerCondition;
   channel_ids: number[];
 }
+export interface EditAlertResourcesPayload {
+  resource_ids?: string[];
+}
 export interface MetricCriteria {
   metric: string;
   aggregation_type: MetricAggregationType;
