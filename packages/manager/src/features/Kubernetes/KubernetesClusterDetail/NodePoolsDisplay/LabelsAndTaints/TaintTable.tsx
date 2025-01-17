@@ -1,4 +1,4 @@
-import { IconButton } from '@linode/ui';
+import { IconButton, Stack } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { TableBody, TableCell, TableHead, Typography } from '@mui/material';
 import * as React from 'react';
@@ -29,7 +29,6 @@ export const TaintTable = () => {
         <TableRow>
           <TableCell>Node Taint</TableCell>
           <TableCell>Effect</TableCell>
-          <TableCell />
         </TableRow>
       </TableHead>
       <TableBody>
@@ -43,23 +42,26 @@ export const TaintTable = () => {
                 <TableCell>
                   {taint.key}: {taint.value}
                 </TableCell>
-                <TableCell>{taint.effect}</TableCell>
-                <TableCell sx={{ paddingX: 0 }}>
-                  <IconButton
-                    aria-label={`Remove ${taint.key}: ${taint.value}`}
-                    disableRipple
-                    onClick={() => handleRemoveTaint(taint.key)}
-                    size="medium"
-                  >
-                    <Close />
-                  </IconButton>
+                <TableCell sx={{ paddingRight: 0 }}>
+                  <Stack alignItems="center" direction="row">
+                    {taint.effect}
+                    <IconButton
+                      aria-label={`Remove ${taint.key}: ${taint.value}`}
+                      disableRipple
+                      onClick={() => handleRemoveTaint(taint.key)}
+                      size="medium"
+                      sx={{ marginLeft: 'auto' }}
+                    >
+                      <Close />
+                    </IconButton>
+                  </Stack>
                 </TableCell>
               </TableRow>
             );
           })
         ) : (
           <TableRow key="taint-row-empty">
-            <TableCell colSpan={3}>
+            <TableCell colSpan={2}>
               <Typography textAlign="center">No taints</Typography>
             </TableCell>
           </TableRow>

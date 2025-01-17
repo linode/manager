@@ -117,7 +117,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
             Add Label
           </Button>
 
-          <Typography marginTop={(theme) => theme.spacing(2)} variant="h3">
+          <Typography marginTop={(theme) => theme.spacing(4)} variant="h3">
             Taints
           </Typography>
           <TaintTable />
