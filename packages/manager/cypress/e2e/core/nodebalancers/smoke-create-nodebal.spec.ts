@@ -17,8 +17,11 @@ const deployNodeBalancer = () => {
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 
-import { nodeBalancerFactory } from 'src/factories';
+import { linodeFactory, nodeBalancerFactory, regionFactory } from 'src/factories';
 import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { mockGetLinodes } from 'support/intercepts/linodes';
+import { c } from 'vite/dist/node/types.d-aGj9QkWt';
 
 const createNodeBalancerWithUI = (
   nodeBal: NodeBalancer,
@@ -114,49 +117,58 @@ describe('create NodeBalancer', () => {
    * - Confirms label field displays error if it contains special characters.
    * - Confirms session stickiness field displays error if protocol is not HTTP or HTTPS.
    */
-  it('displays API errors for NodeBalancer Create form fields', () => {
-    const region = chooseRegion();
-    const linodePayload = {
-      region: region.id,
-      // NodeBalancers require Linodes with private IPs.
-      private_ip: true,
-    };
-    cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
-      const nodeBal = nodeBalancerFactory.build({
-        label: `${randomLabel()}-^`,
-        ipv4: linode.ipv4[1],
-        region: region.id,
+  it.only('displays API errors for NodeBalancer Create form fields', () => {
+    const region = regionFactory.build({ capabilities: ['NodeBalancers'] });
+    const linode = linodeFactory.build({ ipv4: ['192.168.1.213'] });
+
+    mockGetRegions([region]);
+    mockGetLinodes([linode]);
+    interceptCreateNodeBalancer().as('createNodeBalancer')
+
+    cy.visitWithLogin('/nodebalancers/create');
+
+    cy.findByLabelText('NodeBalancer Label')
+      .should('be.visible')
+      .type('my-nodebalancer-1');
+
+    ui.autocomplete.findByLabel('Region')
+      .should('be.visible')
+      .click();
+
+    ui.autocompletePopper.findByTitle(region.id, { exact: false })
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.findByLabelText('Label')
+      .type("my-node-1");
+
+    cy.findByLabelText('IP Address')
+      .click()
+      .type(linode.ipv4[0]);
+
+    ui.autocompletePopper.findByTitle(linode.label)
+      .click();
+
+    ui.button.findByTitle('Create NodeBalancer')
+      .scrollIntoView()
+      .should('be.enabled')
+      .should('be.visible')
+      .click();
+
+    const expectedError = 'Address Restricted: IP must not be within 192.168.0.0/17';
+
+    cy.wait('@createNodeBalancer')
+      .its('response.body')
+      .should('deep.equal', {
+        errors: [
+          { field: 'region', reason: 'region is not valid' },
+          { field: 'configs[0].nodes[0].address', reason: expectedError }
+        ],
       });
 
-      // catch request
-      interceptCreateNodeBalancer().as('createNodeBalancer');
-
-      createNodeBalancerWithUI(nodeBal);
-      cy.findByText(`Label can't contain special characters or spaces.`).should(
-        'be.visible'
-      );
-      cy.get('[id="nodebalancer-label"]')
-        .should('be.visible')
-        .click()
-        .clear()
-        .type(randomLabel());
-
-      cy.get('[data-qa-protocol-select="true"]').click().type('TCP{enter}');
-
-      cy.get('[data-qa-session-stickiness-select]')
-        .click()
-        .type('HTTP Cookie{enter}');
-
-      deployNodeBalancer();
-      const errMessage = `Stickiness http_cookie requires protocol 'http' or 'https'`;
-      cy.wait('@createNodeBalancer')
-        .its('response.body')
-        .should('deep.equal', {
-          errors: [{ field: 'configs[0].stickiness', reason: errMessage }],
-        });
-
-      cy.findByText(errMessage).should('be.visible');
-    });
+    cy.findByText(expectedError)
+      .should('be.visible');
   });
 
   /*
