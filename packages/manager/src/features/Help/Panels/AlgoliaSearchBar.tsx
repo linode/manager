@@ -1,11 +1,14 @@
 import { Notice } from '@linode/ui';
-import Search from '@mui/icons-material/Search';
+import { Box } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
+import { components } from 'react-select';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
+import Search from 'src/assets/icons/search.svg';
 import EnhancedSelect from 'src/components/EnhancedSelect';
 
 import withSearch from '../SearchHOC';
@@ -15,32 +18,6 @@ import type { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import type { Theme } from '@mui/material/styles';
 import type { RouteComponentProps } from 'react-router-dom';
 import type { Item } from 'src/components/EnhancedSelect';
-
-// TODO: Just use <Autocomplete /> instead of <EnhancedSelect />
-const selectStyles = {
-  control: (base: any) => ({
-    ...base,
-    backgroundColor: 'pink',
-    border: 0,
-    margin: 0,
-    transition: 'none',
-    width: '100%',
-  }),
-  dropdownIndicator: () => ({ display: 'none' }),
-  input: (base: any) => ({ ...base, border: 0, margin: 0, width: '100%' }),
-  menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
-  placeholder: (base: any) => ({
-    ...base,
-    color: base?.palette?.text?.primary,
-    fontSize: '0.875rem',
-  }),
-  selectContainer: (base: any) => ({
-    ...base,
-    border: 0,
-    margin: 0,
-    width: '100%',
-  }),
-};
 
 const useStyles = makeStyles()((theme: Theme) => ({
   enhancedSelectWrapper: {
@@ -82,6 +59,15 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
+const Control = (props: any) => (
+  <components.Control {...props}>
+    <Box display="flex" paddingRight={(theme) => theme.tokens.spacing[40]}>
+      <Search data-qa-search-icon />
+    </Box>
+    {props.children}
+  </components.Control>
+);
+
 interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
 
 const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
@@ -94,6 +80,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
     searchError,
     searchResults,
   } = props;
+  const theme = useTheme();
 
   const options = React.useMemo(() => {
     const [docs, community] = searchResults;
@@ -137,6 +124,103 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
     }
   };
 
+  // TODO: Just use <Autocomplete /> instead of <EnhancedSelect />
+  const selectStyles = {
+    control: (base: any) => ({
+      ...base,
+      '&.react-select__control--is-focused, &.react-select__control--is-focused:hover': {
+        border: `1px solid ${theme.tokens.search.Focus.Border}`,
+        boxShadow: 'none',
+      },
+      '&:focus': {
+        border: `1px solid ${theme.tokens.search.FocusEmpty.Border}`,
+      },
+      '&:hover': {
+        border: `1px solid ${theme.tokens.search.Hover.Border}`,
+      },
+      backgroundColor: theme.tokens.search.Default.Background,
+      border: `1px solid ${theme.tokens.search.Default.Border}`,
+      borderRadius: theme.tokens.borderRadius.None,
+      minHeight: 'inherit',
+      padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
+    }),
+    indicatorsContainer: (base: any) => ({
+      ...base,
+      '.react-select__indicator': {
+        color: theme.tokens.content.Icon.Primary.Default,
+        padding: 0,
+      },
+      '.react-select__indicator-separator': {
+        display: 'none',
+      },
+    }),
+    input: (base: any) => ({
+      ...base,
+      color: theme.tokens.search.Default.Text,
+    }),
+    menu: (base: any) => ({
+      ...base,
+      background: theme.tokens.dropdown.Background.Default,
+      border: 0,
+      borderRadius: theme.tokens.borderRadius.None,
+      boxShadow: theme.tokens.elevation.S,
+      margin: `${theme.tokens.spacing[20]} 0 0 0`,
+      maxWidth: '100%',
+    }),
+    menuList: (base: any) => ({
+      ...base,
+      // No Options Message
+      '> div > p': {
+        backgroundColor: theme.tokens.dropdown.Background.Default,
+        color: theme.tokens.dropdown.Text.Default,
+        padding: `${theme.tokens.spacing[40]} ${theme.tokens.spacing[50]}`,
+      },
+      padding: 0,
+    }),
+    option: (base: any) => ({
+      ...base,
+      '&:hover': {
+        backgroundColor: theme.tokens.dropdown.Background.Hover,
+      },
+      '> .MuiTypography-root': {
+        color: theme.tokens.content.Text.Secondary.Default,
+        font: theme.tokens.typography.Body.Regular,
+      },
+      '> div': {
+        '> .MuiTypography-root': {
+          color: theme.tokens.dropdown.Text.Default,
+          font: theme.tokens.typography.Body.Regular,
+        },
+        '> div': {
+          font: theme.tokens.typography.Label.Semibold.S,
+        },
+        display: 'flex',
+        justifyContent: 'space-between',
+      },
+      backgroundColor: theme.tokens.dropdown.Background.Default,
+      color: theme.tokens.dropdown.Text.Default,
+    }),
+    singleValue: (base: any) => ({
+      ...base,
+      color: theme.tokens.search.Filled.Text,
+      overflow: 'hidden',
+    }),
+    valueContainer: (base: any) => ({
+      ...base,
+      '&&': {
+        padding: 0,
+      },
+      '.select-placeholder': {
+        color: theme.tokens.search.Default.Text,
+        left: 0,
+      },
+      '> div': {
+        margin: 0,
+        padding: 0,
+      },
+    }),
+  };
+
   return (
     <React.Fragment>
       {searchError && (
@@ -145,10 +229,13 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
         </Notice>
       )}
       <div className={classes.root}>
-        <Search className={classes.searchIcon} data-qa-search-icon />
         <EnhancedSelect
           components={
-            { DropdownIndicator: () => null, Option: SearchItem } as any
+            {
+              Control,
+              DropdownIndicator: () => null,
+              Option: SearchItem,
+            } as any
           }
           className={classes.enhancedSelectWrapper}
           disabled={!searchEnabled}

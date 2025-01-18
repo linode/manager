@@ -330,7 +330,7 @@ const SearchBar = (props: SearchProps) => {
       border: 0,
       borderRadius: theme.tokens.borderRadius.None,
       boxShadow: theme.tokens.elevation.S,
-      margin: 0,
+      margin: `${theme.tokens.spacing[20]} 0 0 0`,
       maxWidth: '100%',
     }),
     menuList: (base: any) => ({

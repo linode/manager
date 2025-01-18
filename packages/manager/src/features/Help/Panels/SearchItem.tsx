@@ -2,7 +2,7 @@ import { Typography } from '@linode/ui';
 import * as React from 'react';
 import { useStyles } from 'tss-react/mui';
 
-import Arrow from 'src/assets/icons/diagonalArrow.svg';
+import ExternalLink from 'src/assets/icons/external-link.svg';
 import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
@@ -62,7 +62,7 @@ export const SearchItem = (props: Props) => {
               }}
               className={classes.label}
             />
-            <Arrow className={classes.icon} />
+            <ExternalLink className={classes.icon} />
           </div>
           <Typography className={classes.source}>{source}</Typography>
         </>

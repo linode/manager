@@ -33,6 +33,7 @@ import type {
   GlobalHeaderTypes,
   InteractionTypes as InteractionTypesLight,
   RadiusTypes,
+  SearchTypes as SearchTypesLight,
   SideNavigationTypes as SideNavigationTypesLight,
   SpacingTypes,
   TableTypes as TableTypesLight,
@@ -47,12 +48,14 @@ import type {
   DropdownTypes as DropdownTypesDark,
   ElevationTypes as ElevationTypesDark,
   InteractionTypes as InteractionTypesDark,
+  SearchTypes as SearchTypesDark,
   SideNavigationTypes as SideNavigationTypesDark,
   TableTypes as TableTypesDark,
 } from '@linode/design-language-system/themes/dark';
 
 export type ThemeName = 'dark' | 'light';
 
+type SearchTypes = MergeTypes<SearchTypesLight, SearchTypesDark>;
 type AccentTypes = MergeTypes<AccentTypesLight, AccentTypesDark>;
 type ActionTypes = MergeTypes<ActionTypesLight, ActionTypesDark>;
 type BackgroundTypes = MergeTypes<BackgroundTypesLight, BackgroundTypesDark>;
@@ -145,6 +148,7 @@ declare module '@mui/material/styles/createTheme' {
       header: GlobalHeaderTypes;
       interaction: InteractionTypes;
       radius: RadiusTypes;
+      search: SearchTypes;
       sideNavigation: SideNavigationTypes;
       spacing: SpacingTypes;
       table: TableTypes;
@@ -187,6 +191,7 @@ declare module '@mui/material/styles/createTheme' {
       header?: GlobalHeaderTypes;
       interaction?: InteractionTypes;
       radius?: RadiusTypes;
+      search?: SearchTypes;
       sideNavigation?: SideNavigationTypes;
       spacing?: SpacingTypes;
       table?: TableTypes;
