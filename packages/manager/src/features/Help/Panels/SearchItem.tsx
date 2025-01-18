@@ -28,7 +28,7 @@ interface Props {
     label: string;
   };
   isFocused?: boolean;
-  searchText: string;
+  searchtext: string;
 }
 
 export const SearchItem = (props: Props) => {

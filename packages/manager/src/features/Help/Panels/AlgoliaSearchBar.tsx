@@ -88,84 +88,82 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
           {searchError}
         </Notice>
       )}
-      <div>
-        <Autocomplete
-          renderOption={(props, option) => {
-            return (
-              <SearchItem
-                data={option}
-                searchText={option.data.source}
-                {...props}
-                key={`${props.key}-${option.value}`}
-              />
-            );
-          }}
-          slotProps={{
-            paper: {
-              sx: (theme) => ({
-                '& .MuiAutocomplete-listbox': {
-                  '&::-webkit-scrollbar': {
-                    display: 'none',
-                  },
-                  border: 'none !important',
-                  msOverflowStyle: 'none',
-                  scrollbarWidth: 'none',
+      <Autocomplete
+        renderOption={(props, option) => {
+          return (
+            <SearchItem
+              data={option}
+              searchtext={option.data.source}
+              {...props}
+              key={`${props.key}-${option.value}`}
+            />
+          );
+        }}
+        slotProps={{
+          paper: {
+            sx: (theme) => ({
+              '& .MuiAutocomplete-listbox': {
+                '&::-webkit-scrollbar': {
+                  display: 'none',
                 },
-                '& .MuiAutocomplete-option': {
-                  ':hover': {
-                    backgroundColor:
-                      theme.name == 'light'
-                        ? `${theme.tokens.color.Brand[10]} !important`
-                        : `${theme.tokens.color.Neutrals[80]} !important`,
-                    color: theme.color.black,
-                    transition: 'background-color 0.2s',
-                  },
-                },
-                boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
-                marginTop: 0.5,
-              }),
-            },
-          }}
-          sx={(theme) => ({
-            maxHeight: 500,
-            [theme.breakpoints.up('md')]: {
-              width: 500,
-            },
-            width: 300,
-          })}
-          textFieldProps={{
-            InputProps: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search
-                    sx={(theme) => ({
-                      color: `${theme.tokens.search.Default.SearchIcon} !important`,
-                    })}
-                    data-qa-search-icon
-                  />
-                </InputAdornment>
-              ),
-              sx: (theme) => ({
-                '&.Mui-focused': {
-                  borderColor: `${theme.tokens.color.Brand[70]} !important`,
-                  boxShadow: 'none',
-                },
+                border: 'none !important',
+                msOverflowStyle: 'none',
+                scrollbarWidth: 'none',
+              },
+              '& .MuiAutocomplete-option': {
                 ':hover': {
-                  borderColor: theme.tokens.search.Hover.Border,
+                  backgroundColor:
+                    theme.name == 'light'
+                      ? `${theme.tokens.color.Brand[10]} !important`
+                      : `${theme.tokens.color.Neutrals[80]} !important`,
+                  color: theme.color.black,
+                  transition: 'background-color 0.2s',
                 },
-              }),
-            },
-            hideLabel: true,
-          }}
-          disabled={!searchEnabled}
-          inputValue={inputValue}
-          label="Search for answers"
-          onChange={(_, selected) => handleSelect(selected)}
-          onInputChange={(_, value) => onInputValueChange(value)}
-          options={options}
-          placeholder="Search"
-        />
-      </div>
+              },
+              boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
+              marginTop: 0.5,
+            }),
+          },
+        }}
+        sx={(theme) => ({
+          maxHeight: 500,
+          [theme.breakpoints.up('md')]: {
+            width: 500,
+          },
+          width: 300,
+        })}
+        textFieldProps={{
+          InputProps: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search
+                  sx={(theme) => ({
+                    color: `${theme.tokens.search.Default.SearchIcon} !important`,
+                  })}
+                  data-qa-search-icon
+                />
+              </InputAdornment>
+            ),
+            sx: (theme) => ({
+              '&.Mui-focused': {
+                borderColor: `${theme.tokens.color.Brand[70]} !important`,
+                boxShadow: 'none',
+              },
+              ':hover': {
+                borderColor: theme.tokens.search.Hover.Border,
+              },
+            }),
+          },
+          hideLabel: true,
+        }}
+        disabled={!searchEnabled}
+        inputValue={inputValue}
+        label="Search for answers"
+        onChange={(_, selected) => handleSelect(selected)}
+        onInputChange={(_, value) => onInputValueChange(value)}
+        options={options}
+        placeholder="Search"
+      />
     </React.Fragment>
   );
 };
