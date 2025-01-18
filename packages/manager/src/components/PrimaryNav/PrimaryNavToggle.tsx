@@ -25,9 +25,13 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
       <Box
         sx={(theme) => ({
           backgroundColor: Global.Color.Neutrals[90],
-          borderRight: `1px solid ${theme.tokens.sideNavigation.Border}`,
           transition: 'width 100ms linear',
         })}
+        width={`${
+          isCollapsed
+            ? SIDEBAR_COLLAPSED_WIDTH
+            : `calc(${SIDEBAR_WIDTH}px - 1px)`
+        }`}
         bottom={0}
         className="primary-nav-toggle"
         display="flex"
@@ -35,7 +39,6 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
         justifyContent={isCollapsed ? 'center' : 'flex-end'}
         left={0}
         position="fixed"
-        width={`${isCollapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_WIDTH}px`}
       >
         <Tooltip
           PopperProps={{
