@@ -1,4 +1,4 @@
-import { Autocomplete, FormHelperText, Notice, Typography } from '@linode/ui';
+import { Autocomplete, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
