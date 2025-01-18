@@ -1,9 +1,10 @@
+import { Chip } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import { Tag } from 'src/components/Tag/Tag';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 
 import {
@@ -38,10 +39,10 @@ export interface SearchSuggestionProps extends OptionProps<any, any> {
 }
 
 export const SearchSuggestion = (props: SearchSuggestionProps) => {
-  const { data, innerProps, innerRef, label, selectProps } = props;
+  const { data, innerProps, innerRef, label } = props;
   const { description, icon, searchText, status, tags } = data.data;
   const searchResultIcon = pathOr<string>('default', [], icon);
-
+  const history = useHistory();
   const handleClick = () => {
     const suggestion = data;
     props.selectOption(suggestion);
@@ -69,18 +70,25 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
     );
   };
 
-  const renderTags = (tags: string[], selected: boolean) => {
+  const handleTagQuery = (
+    e: React.MouseEvent<HTMLDivElement>,
+    label: string
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    history.push(`/search/?query=tag:${label}`);
+  };
+
+  const renderTags = (tags: string[]) => {
     if (tags.length === 0) {
       return;
     }
     return tags.map((tag: string) => (
-      <Tag
+      <Chip
         className="tag"
-        closeMenu={selectProps.onMenuClose}
-        colorVariant={selected ? 'blue' : 'lightBlue'}
-        component={'button' as 'div'}
         key={`tag-${tag}`}
         label={tag}
+        onClick={(e) => handleTagQuery(e, tag)}
       />
     ));
   };
@@ -107,7 +115,7 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
             variant={searchResultIcon}
           />
         </StyledSuggestionIcon>
-        <Box sx={(theme) => ({ padding: theme.spacing(1) })}>
+        <Box sx={(theme) => ({ padding: theme.tokens.spacing[40] })}>
           <StyledSuggestionTitle data-qa-suggestion-title>
             {maybeStyleSegment(label, searchText)}
           </StyledSuggestionTitle>
@@ -116,9 +124,7 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
           </StyledSuggestionDescription>
         </Box>
       </Box>
-      <StyledTagContainer>
-        {tags && renderTags(tags, Boolean(props.isFocused))}
-      </StyledTagContainer>
+      <StyledTagContainer>{tags && renderTags(tags)}</StyledTagContainer>
     </StyledWrapperDiv>
   );
 };

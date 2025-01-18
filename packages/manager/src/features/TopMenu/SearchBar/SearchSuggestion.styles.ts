@@ -11,24 +11,14 @@ export const StyledWrapperDiv = styled('div', {
     borderBottom: 0,
   },
   alignItems: 'space-between',
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  background: theme.tokens.dropdown.Background.Default,
   cursor: 'pointer',
   justifyContent: 'space-between',
   [theme.breakpoints.up('md')]: {
     display: 'flex',
   },
-  width: 'calc(100% + 2px)',
-
   ...(isFocused && {
-    '& .tag': {
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.tokens.color.Neutrals.White,
-      },
-      backgroundColor: theme.bg.lightBlue1,
-      color: theme.palette.text.primary,
-    },
-    backgroundColor: `${theme.bg.main}`,
+    backgroundColor: theme.tokens.dropdown.Background.Hover,
   }),
 }));
 
@@ -40,28 +30,30 @@ export const StyledSuggestionIcon = styled('div', {
   justifyContent: 'center',
   marginLeft: theme.spacing(1.5),
   padding: theme.spacing(),
+  svg: {
+    color: theme.tokens.dropdown.Text.Default,
+  },
 }));
 
 export const StyledSuggestionTitle = styled('div', {
   label: 'StyledSuggestionTitle',
 })(({ theme }) => ({
-  color: theme.palette.text.primary,
-  font: theme.font.bold,
-  fontSize: '1rem',
+  color: theme.tokens.dropdown.Text.Default,
+  font: theme.tokens.typography.Label.Bold.S,
   wordBreak: 'break-all',
 }));
 
 export const StyledSegment = styled('span', {
   label: 'StyledSegment',
 })(({ theme }) => ({
-  color: theme.palette.primary.main,
+  color: theme.tokens.dropdown.Text.Default,
 }));
 
 export const StyledSuggestionDescription = styled('div', {
   label: 'StyledSuggestionDescription',
 })(({ theme }) => ({
-  color: theme.color.headline,
-  fontSize: '.75rem',
+  color: theme.tokens.dropdown.Text.Default,
+  font: theme.tokens.typography.Label.Regular.Xs,
   marginTop: 2,
 }));
 

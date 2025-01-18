@@ -383,8 +383,26 @@ export const darkTheme: ThemeOptions = {
         color: 'primary',
       },
       styleOverrides: {
+        // TODO: This will need CDS guidance in future
         clickable: {
-          color: Color.Brand[100],
+          '&:active': {
+            backgroundColor: Button.Primary.Pressed.Background,
+          },
+          '&:disabled': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
+          },
+          '&:hover, &:focus': {
+            backgroundColor: Button.Primary.Hover.Background,
+            color: Button.Primary.Default.Text,
+          },
+          '&[aria-disabled="true"]': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
+          },
+          backgroundColor: Button.Primary.Default.Background,
+          border: `1px solid transparent`,
+          color: Button.Primary.Default.Text,
         },
         colorError: {
           backgroundColor: Badge.Negative.Background,
@@ -953,6 +971,7 @@ export const darkTheme: ThemeOptions = {
     background: Background,
     border: Border,
     content: Content,
+    dropdown: Dropdown,
     elevation: Elevation,
     interaction: Interaction,
     sideNavigation: SideNavigation,

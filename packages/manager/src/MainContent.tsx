@@ -298,7 +298,7 @@ export const MainContent = () => {
                 openSideMenu={() => toggleMenu(true)}
                 username={username}
               />
-              <Box display="flex" flex={1} position="relative">
+              <Box display="flex" flex={1} position="relative" zIndex={1}>
                 <Box
                   height={
                     isNarrowViewport

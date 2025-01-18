@@ -7,7 +7,6 @@ import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
 import EnhancedSelect from 'src/components/EnhancedSelect';
-import { selectStyles } from 'src/features/TopMenu/SearchBar/SearchBar';
 
 import withSearch from '../SearchHOC';
 import { SearchItem } from './SearchItem';
@@ -16,6 +15,32 @@ import type { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import type { Theme } from '@mui/material/styles';
 import type { RouteComponentProps } from 'react-router-dom';
 import type { Item } from 'src/components/EnhancedSelect';
+
+// TODO: Just use <Autocomplete /> instead of <EnhancedSelect />
+const selectStyles = {
+  control: (base: any) => ({
+    ...base,
+    backgroundColor: 'pink',
+    border: 0,
+    margin: 0,
+    transition: 'none',
+    width: '100%',
+  }),
+  dropdownIndicator: () => ({ display: 'none' }),
+  input: (base: any) => ({ ...base, border: 0, margin: 0, width: '100%' }),
+  menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
+  placeholder: (base: any) => ({
+    ...base,
+    color: base?.palette?.text?.primary,
+    fontSize: '0.875rem',
+  }),
+  selectContainer: (base: any) => ({
+    ...base,
+    border: 0,
+    margin: 0,
+    width: '100%',
+  }),
+};
 
 const useStyles = makeStyles()((theme: Theme) => ({
   enhancedSelectWrapper: {

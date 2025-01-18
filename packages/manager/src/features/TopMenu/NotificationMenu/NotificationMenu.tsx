@@ -202,7 +202,7 @@ const StyledChip = styled(Chip, {
 
 export const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
-  color: theme.tokens.color.Brand[60],
+  fill: theme.tokens.header.Badge.Icon,
   height: '12px',
   margin: 0,
   width: '12px',

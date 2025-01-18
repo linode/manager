@@ -1,3 +1,5 @@
+import { Box } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import { take } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -29,16 +31,20 @@ import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import {
-  StyledIconButton,
-  StyledSearchBarWrapperDiv,
-} from './SearchBar.styles';
+import { StyledIconButton } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
 
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { SearchProps } from 'src/features/Search/withStoreSearch';
 
-const Control = (props: any) => <components.Control {...props} />;
+const Control = (props: any) => (
+  <components.Control {...props}>
+    <Box display="flex" paddingRight={(theme) => theme.tokens.spacing[40]}>
+      <Search data-qa-search-icon />
+    </Box>
+    {props.children}
+  </components.Control>
+);
 
 /* The final option in the list will be the "go to search results page" link.
  * This doesn't share the same shape as the rest of the results, so should use
@@ -49,32 +55,6 @@ const Option = (props: any) => {
   ) : (
     <SearchSuggestion {...props} />
   );
-};
-
-// Style overrides for React Select
-export const selectStyles = {
-  control: (base: any) => ({
-    ...base,
-    backgroundColor: 'pink',
-    border: 0,
-    margin: 0,
-    transition: 'none',
-    width: '100%',
-  }),
-  dropdownIndicator: () => ({ display: 'none' }),
-  input: (base: any) => ({ ...base, border: 0, margin: 0, width: '100%' }),
-  menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
-  placeholder: (base: any) => ({
-    ...base,
-    color: base?.palette?.text?.primary,
-    fontSize: '0.875rem',
-  }),
-  selectContainer: (base: any) => ({
-    ...base,
-    border: 0,
-    margin: 0,
-    width: '100%',
-  }),
 };
 
 const SearchBar = (props: SearchProps) => {
@@ -89,7 +69,7 @@ const SearchBar = (props: SearchProps) => {
   const history = useHistory();
   const isLargeAccount = useIsLargeAccount(searchActive);
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
-
+  const theme = useTheme();
   // Only request things if the search bar is open/active and we
   // know if the account is large or not
   const shouldMakeRequests =
@@ -311,6 +291,84 @@ const SearchBar = (props: SearchProps) => {
     Boolean(apiError) && apiError !== 'Unauthorized'
   );
 
+  // TODO: Make this whole file use <Autocomplete />
+  const selectStyles = {
+    control: (base: any) => ({
+      ...base,
+      '&.react-select__control--is-focused, &.react-select__control--is-focused:hover': {
+        border: `1px solid ${theme.tokens.header.Search.Border.Active}`,
+        boxShadow: 'none',
+      },
+      '&:focus': {
+        border: `1px solid ${theme.tokens.header.Search.Border.Active}`,
+      },
+      '&:hover': {
+        border: `1px solid ${theme.tokens.header.Search.Border.Hover}`,
+      },
+      backgroundColor: theme.tokens.header.Search.Background,
+      border: `1px solid ${theme.tokens.header.Search.Border.Default}`,
+      borderRadius: theme.tokens.borderRadius.None,
+      minHeight: 'inherit',
+      padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
+    }),
+    indicatorsContainer: () => ({ display: 'none' }),
+    input: (base: any) => ({
+      ...base,
+      color: theme.tokens.header.Search.Text.Filled,
+    }),
+    menu: (base: any) => ({
+      ...base,
+      // This is the tag operator container
+      '> div': {
+        '.MuiTypography-root': {
+          color: theme.tokens.dropdown.Text.Default,
+        },
+        background: theme.tokens.background.Neutralsubtle,
+        borderTop: `1px solid ${theme.tokens.border.Normal}`,
+      },
+      background: theme.tokens.dropdown.Background.Default,
+      border: 0,
+      borderRadius: theme.tokens.borderRadius.None,
+      boxShadow: theme.tokens.elevation.S,
+      margin: 0,
+      maxWidth: '100%',
+    }),
+    menuList: (base: any) => ({
+      ...base,
+      // No Options Message
+      '> div > p': {
+        backgroundColor: theme.tokens.dropdown.Background.Default,
+        color: theme.tokens.dropdown.Text.Default,
+        padding: `${theme.tokens.spacing[40]} ${theme.tokens.spacing[50]}`,
+      },
+      padding: 0,
+    }),
+    option: (base: any) => ({
+      ...base,
+      backgroundColor: theme.tokens.dropdown.Background.Default,
+      color: theme.tokens.dropdown.Text.Default,
+    }),
+    singleValue: (base: any) => ({
+      ...base,
+      color: theme.tokens.header.Search.Text.Filled,
+      overflow: 'hidden',
+    }),
+    valueContainer: (base: any) => ({
+      ...base,
+      '&&': {
+        padding: 0,
+      },
+      '.select-placeholder': {
+        color: theme.tokens.header.Search.Text.Placeholder,
+        left: 0,
+      },
+      '> div': {
+        margin: 0,
+        padding: 0,
+      },
+    }),
+  };
+
   return (
     <React.Fragment>
       <StyledIconButton
@@ -322,8 +380,7 @@ const SearchBar = (props: SearchProps) => {
       >
         <Search />
       </StyledIconButton>
-      <StyledSearchBarWrapperDiv className={searchActive ? 'active' : ''}>
-        <Search data-qa-search-icon />
+      <Box>
         <label className="visually-hidden" htmlFor="main-search">
           Main search
         </label>
@@ -351,7 +408,7 @@ const SearchBar = (props: SearchProps) => {
           styles={selectStyles}
           value={value}
         />
-      </StyledSearchBarWrapperDiv>
+      </Box>
     </React.Fragment>
   );
 };

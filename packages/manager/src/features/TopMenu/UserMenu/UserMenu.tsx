@@ -4,8 +4,8 @@ import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import KeyboardArrowDown from 'src/assets/icons/keyboardarrowdown.svg';
-import KeyboardArrowUp from 'src/assets/icons/keyboardarrowup.svg';
+import ChevronDown from 'src/assets/icons/chevron-down.svg';
+import ChevronUp from 'src/assets/icons/chevron-up.svg';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
@@ -76,9 +76,9 @@ export const UserMenu = React.memo(() => {
       return undefined;
     }
     return open ? (
-      <KeyboardArrowUp color={theme.tokens.header.Text.Hover} />
+      <ChevronUp color={theme.tokens.header.Text.Hover} />
     ) : (
-      <KeyboardArrowDown color={theme.tokens.header.Text.Default} />
+      <ChevronDown color={theme.tokens.header.Text.Default} />
     );
   };
 
@@ -154,7 +154,11 @@ const StyledUserMenuButton = styled(Button, {
     color: theme.tokens.header.Text.Default,
   },
   '.MuiButton-startIcon': {
+    '.MuiAvatar-root, .MuiTypography-root': {
+      font: theme.tokens.typography.Label.Bold.S,
+    },
     marginLeft: 0,
+    marginRight: theme.tokens.spacing[40],
   },
   '.MuiStack-root .MuiTypography-root': {
     color: open

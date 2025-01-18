@@ -106,6 +106,12 @@ export const StyledAccordion = styled(Accordion, {
     },
     '.MuiAccordionSummary-content': {
       margin: 0,
+      padding: 0,
+    },
+    '.MuiAccordionSummary-expandIconWrapper svg': {
+      color: theme.tokens.color.Neutrals['White'],
+      height: 16,
+      width: 16,
     },
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
       '&:hover': {

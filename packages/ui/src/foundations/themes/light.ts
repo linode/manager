@@ -600,14 +600,26 @@ export const lightTheme: ThemeOptions = {
     },
     MuiChip: {
       styleOverrides: {
+        // TODO: This will need CDS guidance in future
         clickable: {
-          '&:focus': {
-            backgroundColor: Color.Brand[30], // TODO: This was the closest color according to our palette
+          '&:active': {
+            backgroundColor: Button.Primary.Pressed.Background,
           },
-          '&:hover': {
-            backgroundColor: Color.Brand[30], // TODO: This was the closest color according to our palette
+          '&:disabled': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
           },
-          backgroundColor: Color.Brand[10], // TODO: This was the closest color according to our palette
+          '&:hover, &:focus': {
+            backgroundColor: Button.Primary.Hover.Background,
+            color: Button.Primary.Default.Text,
+          },
+          '&[aria-disabled="true"]': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
+          },
+          backgroundColor: Button.Primary.Default.Background,
+          border: `1px solid transparent`,
+          color: Button.Primary.Default.Text,
         },
         colorError: {
           backgroundColor: Color.Red[80],
@@ -1805,6 +1817,7 @@ export const lightTheme: ThemeOptions = {
     border: Border,
     borderRadius: BorderRadius,
     chart: Chart,
+    dropdown: Dropdown,
     color: Color,
     content: Content,
     elevation: Elevation,

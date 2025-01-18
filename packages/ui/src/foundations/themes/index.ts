@@ -26,6 +26,7 @@ import type {
   ChartTypes,
   ColorTypes,
   ContentTypes as ContentTypesLight,
+  DropdownTypes as DropdownTypesLight,
   ElevationTypes as ElevationTypesLight,
   FontTypes,
   GlobalFooterTypes,
@@ -43,6 +44,7 @@ import type {
   BackgroundTypes as BackgroundTypesDark,
   BorderTypes as BorderTypesDark,
   ContentTypes as ContentTypesDark,
+  DropdownTypes as DropdownTypesDark,
   ElevationTypes as ElevationTypesDark,
   InteractionTypes as InteractionTypesDark,
   SideNavigationTypes as SideNavigationTypesDark,
@@ -62,7 +64,7 @@ type SideNavigationTypes = MergeTypes<
   SideNavigationTypesLight,
   SideNavigationTypesDark
 >;
-
+type DropdownTypes = MergeTypes<DropdownTypesLight, DropdownTypesDark>;
 type TableTypes = MergeTypes<TableTypesLight, TableTypesDark>;
 
 type Fonts = {
@@ -136,6 +138,7 @@ declare module '@mui/material/styles/createTheme' {
       chart: ChartTypes;
       color: ColorTypes;
       content: ContentTypes;
+      dropdown: DropdownTypes;
       elevation: ElevationTypes;
       font: FontTypes;
       footer: GlobalFooterTypes;
@@ -177,6 +180,7 @@ declare module '@mui/material/styles/createTheme' {
       chart?: ChartTypes;
       color?: ColorTypes;
       content?: ContentTypes;
+      dropdown?: DropdownTypes;
       elevation?: ElevationTypes;
       font?: FontTypes;
       footer?: GlobalFooterTypes;
