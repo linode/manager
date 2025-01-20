@@ -43,6 +43,13 @@ export const EditAlertResources = () => {
 
   const [, setSelectedResources] = React.useState<number[]>([]);
 
+  const handleResourcesSelection = React.useCallback(
+    (resourceIds: string[]) => {
+      setSelectedResources(resourceIds.map((id) => Number(id))); // here we just keep track of it, on save we will update it
+    },
+    []
+  );
+
   if (isFetching) {
     return (
       <>
@@ -79,10 +86,6 @@ export const EditAlertResources = () => {
       </>
     );
   }
-
-  const handleResourcesSelection = (resourceIds: string[]) => {
-    setSelectedResources(resourceIds.map((id) => Number(id))); // here we just keep track of it, on save we will update it
-  };
 
   return (
     <>
