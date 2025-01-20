@@ -5,28 +5,30 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import { transferHelperText as helperText } from '../../domainUtils';
+import { resolve, shouldResolve } from './DomainRecordDrawerUtils';
 
 import type {
+  DomainRecordDrawerProps,
   EditableDomainFields,
-  EditableRecordFields,
 } from './DomainRecordDrawer';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export interface AdjustedTextFieldProps {
   errorText?: string;
-  field: keyof EditableDomainFields | keyof EditableRecordFields; // @todo: [purvesh] - Need to remove this prop
   helperText?: string;
   label: string;
   max?: number;
   min?: number;
   multiline?: boolean;
-  onBlur?: (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   trimmed?: boolean;
-  value?: null | number | string;
+  value: null | number | string;
+}
+
+interface NumberFieldProps extends AdjustedTextFieldProps {
+  defaultValue?: number;
 }
 
 export const TextField = ({
@@ -53,6 +55,52 @@ export const TextField = ({
     value={value}
   />
 );
+
+export const NameOrTargetField = ({
+  domain,
+  errorText,
+  field,
+  label,
+  multiline,
+  onBlur,
+  onChange,
+  type,
+  value,
+}: {
+  domain: DomainRecordDrawerProps['domain'];
+  errorText?: string;
+  field: 'name' | 'target';
+  label: string;
+  multiline?: boolean;
+  onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type: DomainRecordDrawerProps['type'];
+  value: string;
+}) => {
+  const hasAliasToResolve =
+    value && value.indexOf('@') >= 0 && shouldResolve(type, field);
+
+  return (
+    <TextField
+      placeholder={
+        shouldResolve(type, field) ? 'hostname or @ for root' : undefined
+      }
+      errorText={errorText}
+      helperText={hasAliasToResolve ? resolve(value, domain) : undefined}
+      label={label}
+      multiline={multiline}
+      onBlur={onBlur}
+      onChange={onChange}
+      value={value}
+    />
+  );
+};
+
+export const ServiceField = (props: {
+  onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: string;
+}) => <TextField label="Service" {...props} />;
 
 export const DomainTransferField = ({
   errorText,
@@ -82,13 +130,11 @@ export const DomainTransferField = ({
   );
 };
 
-export const MSSelect = ({
-  // field,
+const MSSelect = ({
   fn,
   label,
   value,
 }: {
-  // field: keyof EditableDomainFields | keyof EditableRecordFields;
   fn: (value: number) => void;
   label: string;
   value: number;
@@ -153,6 +199,14 @@ export const RetryRateField = ({
   value: number;
 }) => <MSSelect fn={onChange} label="Retry Rate" value={value} />;
 
+export const DefaultTTLField = ({
+  onChange,
+  value,
+}: {
+  onChange: (value: number) => void;
+  value: number;
+}) => <MSSelect fn={onChange} label="Default TTL" value={value} />;
+
 export const TTLField = ({
   onChange,
   value,
@@ -160,3 +214,148 @@ export const TTLField = ({
   onChange: (value: number) => void;
   value: number;
 }) => <MSSelect fn={onChange} label="TTL" value={value} />;
+
+export const ExpireField = ({
+  onChange,
+  value,
+}: {
+  onChange: (value: number) => void;
+  value: number;
+}) => {
+  const rateOptions = [
+    { label: 'Default', value: 0 },
+    { label: '1 week', value: 604800 },
+    { label: '2 weeks', value: 1209600 },
+    { label: '4 weeks', value: 2419200 },
+  ];
+
+  const defaultRate = rateOptions.find((eachRate) => {
+    return eachRate.value === value;
+  });
+
+  return (
+    <Autocomplete
+      textFieldProps={{
+        dataAttrs: {
+          'data-qa-domain-select': 'Expire Rate',
+        },
+      }}
+      disableClearable
+      label="Expire Rate"
+      onChange={(_, selected) => onChange(selected.value)}
+      options={rateOptions}
+      value={defaultRate}
+    />
+  );
+};
+
+export const ProtocolField = ({
+  onChange,
+  value,
+}: {
+  onChange: (value: string) => void;
+  value: string;
+}) => {
+  const protocolOptions = [
+    { label: 'tcp', value: 'tcp' },
+    { label: 'udp', value: 'udp' },
+    { label: 'xmpp', value: 'xmpp' },
+    { label: 'tls', value: 'tls' },
+    { label: 'smtp', value: 'smtp' },
+  ];
+
+  const defaultProtocol = protocolOptions.find((eachProtocol) => {
+    return eachProtocol.value === value;
+  });
+
+  return (
+    <Autocomplete
+      textFieldProps={{
+        dataAttrs: {
+          'data-qa-domain-select': 'Protocol',
+        },
+      }}
+      disableClearable
+      label="Protocol"
+      onChange={(_, selected) => onChange(selected.value)}
+      options={protocolOptions}
+      value={defaultProtocol}
+    />
+  );
+};
+
+export const TagField = ({
+  onChange,
+  value,
+}: {
+  onChange: (value: string) => void;
+  value: string;
+}) => {
+  const tagOptions = [
+    { label: 'issue', value: 'issue' },
+    { label: 'issuewild', value: 'issuewild' },
+    { label: 'iodef', value: 'iodef' },
+  ];
+
+  const defaultTag = tagOptions.find((eachTag) => {
+    return eachTag.value === value;
+  });
+  return (
+    <Autocomplete
+      textFieldProps={{
+        dataAttrs: {
+          'data-qa-domain-select': 'caa tag',
+        },
+      }}
+      disableClearable
+      label="Tag"
+      onChange={(_, selected) => onChange(selected.value)}
+      options={tagOptions}
+      value={defaultTag}
+    />
+  );
+};
+
+const NumberField = ({
+  errorText,
+  label,
+  onBlur,
+  onChange,
+  value,
+  ...rest
+}: NumberFieldProps) => {
+  return (
+    <_TextField
+      data-qa-target={label}
+      errorText={errorText}
+      label={label}
+      onBlur={onBlur}
+      onChange={onChange}
+      type="number"
+      value={value}
+      {...rest}
+    />
+  );
+};
+
+export const PortField = (props: {
+  onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: number | string;
+}) => <NumberField label="Port" {...props} />;
+
+export const PriorityField = (props: {
+  errorText?: string;
+  label: string;
+  max: number;
+  min: number;
+  onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: number | string;
+}) => <NumberField {...props} />;
+
+export const WeightField = (props: {
+  onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: number | string;
+}) => <NumberField label="Weight" {...props} />;
