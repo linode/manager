@@ -42,7 +42,7 @@ export const AddChannelListing = React.memo((props: ChannelListProps) => {
   return (
     <>
       <Typography marginBottom={1} marginTop={3} variant="h2">
-        3. Notification Channels
+        4. Notification Channels
       </Typography>
       <Stack spacing={1}>
         {notifications.length > 0 &&

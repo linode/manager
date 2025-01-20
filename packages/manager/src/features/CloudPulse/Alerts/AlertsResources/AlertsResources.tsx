@@ -194,20 +194,24 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         marginBottom={2}
         ref={titleRef}
         variant="h2"
+        visibility={'hidden'}
       >
         {alertLabel ?? 'Resources'}
       </Typography>
-      {!isResourcesError && !isRegionsError && resourceIds.length === 0 && (
-        <StyledPlaceholder
-          title={
-            'No resources are currently assigned to this alert definition.'
-          }
-          icon={EntityIcon}
-          subtitle="You can assign alerts during the resource creation process."
-        />
-      )}
+      {!isResourcesError &&
+        !isRegionsError &&
+        !isSelectionsNeeded &&
+        resourceIds.length === 0 && (
+          <StyledPlaceholder
+            title={
+              'No resources are currently assigned to this alert definition.'
+            }
+            icon={EntityIcon}
+            subtitle="You can assign alerts during the resource creation process."
+          />
+        )}
 
-      {resourceIds.length > 0 && (
+      {(isSelectionsNeeded || resourceIds.length > 0) && (
         <Grid container spacing={3}>
           <Box
             sx={{
@@ -219,7 +223,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             display="flex"
             gap={3}
             ml={3}
-            mt={3}
+            // mt={3}
           >
             <Box
               sx={{

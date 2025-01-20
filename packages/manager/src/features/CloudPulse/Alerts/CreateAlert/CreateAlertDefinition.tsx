@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Paper, TextField, Typography } from '@linode/ui';
+import { Box, Paper, TextField, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -13,6 +14,8 @@ import {
   useCreateAlertDefinition,
 } from 'src/queries/cloudpulse/alerts';
 
+import { AlertResources } from '../AlertsResources/AlertsResources';
+import { getAlertBoxStyles } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -97,6 +100,8 @@ export const CreateAlertDefinition = () => {
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
     getValues('serviceType')!
   );
+
+  const theme = useTheme();
 
   /**
    * The maxScrapeInterval variable will be required for the Trigger Conditions part of the Critieria section.
@@ -222,6 +227,23 @@ export const CreateAlertDefinition = () => {
             serviceType={serviceTypeWatcher}
           />
           <CloudPulseAlertSeveritySelect name="severity" />
+          <Box mt={3}>
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+              sx={{ marginBottom: 1 }}
+            >
+              <Typography variant="h2">2. Resources</Typography>
+            </Box>
+            <Box sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}>
+              <AlertResources
+                isSelectionsNeeded
+                resourceIds={[]}
+                serviceType={serviceTypeWatcher!}
+              />
+            </Box>
+          </Box>
           <MetricCriteriaField
             setMaxInterval={(interval: number) =>
               setMaxScrapeInterval(interval)
