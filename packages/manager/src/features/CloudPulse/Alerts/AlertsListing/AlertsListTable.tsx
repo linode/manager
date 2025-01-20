@@ -1,5 +1,6 @@
 import { Grid, TableBody, TableHead } from '@mui/material';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -29,7 +30,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error in fetching the alerts')
     : undefined;
+  const history = useHistory();
 
+  const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
+    history.push(`${location.pathname}/detail/${serviceType}/${_id}`);
+  };
   return (
     <OrderBy data={alerts} order="asc" orderBy={'service'}>
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
@@ -71,6 +76,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                     {paginatedAndOrderedAlerts?.map((alert) => (
                       <AlertTableRow
                         alert={alert}
+                        handlers={{ handleDetails: () => handleDetails(alert) }}
                         key={alert.id}
                         services={services}
                       />

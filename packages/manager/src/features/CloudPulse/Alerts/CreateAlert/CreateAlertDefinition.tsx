@@ -2,35 +2,49 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import { Drawer } from 'src/components/Drawer';
+import {
+  useAlertNotificationChannelsQuery,
+  useCreateAlertDefinition,
+} from 'src/queries/cloudpulse/alerts';
 
+import { MetricCriteriaField } from './Criteria/MetricCriteria';
+import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
 import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
+import { AddChannelListing } from './NotificationChannel/AddChannelListing';
+import { AddNotificationChannel } from './NotificationChannel/AddNotificationChannel';
 import { CreateAlertDefinitionFormSchema } from './schemas';
-import { filterFormValues, filterMetricCriteriaFormValues } from './utilities';
+import { filterFormValues } from './utilities';
 
-import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
-import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
+import type {
+  CreateAlertDefinitionForm,
+  MetricCriteriaForm,
+  TriggerConditionForm,
+} from './types';
+import type { NotificationChannel } from '@linode/api-v4/lib/cloudpulse/types';
 import type { ObjectSchema } from 'yup';
 
-const triggerConditionInitialValues: TriggerCondition = {
-  evaluation_period_seconds: 0,
-  polling_interval_seconds: 0,
+const triggerConditionInitialValues: TriggerConditionForm = {
+  criteria_condition: 'ALL',
+  evaluation_period_seconds: null,
+  polling_interval_seconds: null,
   trigger_occurrences: 0,
 };
 const criteriaInitialValues: MetricCriteriaForm = {
   aggregation_type: null,
   dimension_filters: [],
-  metric: '',
+  metric: null,
   operator: null,
+  threshold: 0,
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
@@ -39,11 +53,12 @@ const initialValues: CreateAlertDefinitionForm = {
   label: '',
   region: '',
   rule_criteria: {
-    rules: filterMetricCriteriaFormValues(criteriaInitialValues),
+    rules: [criteriaInitialValues],
   },
   serviceType: null,
   severity: null,
-  trigger_condition: triggerConditionInitialValues,
+  tags: [''],
+  trigger_conditions: triggerConditionInitialValues,
 };
 
 const overrides = [
@@ -76,14 +91,19 @@ export const CreateAlertDefinition = () => {
     getValues,
     handleSubmit,
     setError,
-    watch,
+    setValue,
   } = formMethods;
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
     getValues('serviceType')!
   );
 
-  const serviceTypeWatcher = watch('serviceType');
+  /**
+   * The maxScrapeInterval variable will be required for the Trigger Conditions part of the Critieria section.
+   */
+  const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
+
+  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
@@ -96,11 +116,61 @@ export const CreateAlertDefinition = () => {
         if (error.field) {
           setError(error.field, { message: error.reason });
         } else {
+          enqueueSnackbar(`Alert failed: ${error.reason}`, {
+            variant: 'error',
+          });
           setError('root', { message: error.reason });
         }
       }
     }
   });
+  const {
+    data: notificationData,
+    isError: notificationChannelsError,
+    isLoading: notificationChannelsLoading,
+  } = useAlertNotificationChannelsQuery();
+  const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
+
+  const onChangeNotifications = (notifications: NotificationChannel[]) => {
+    const notificationTemplateList = notifications.map(
+      (notification) => notification.id
+    );
+    setValue('channel_ids', notificationTemplateList);
+  };
+  const [openAddNotification, setOpenAddNotification] = React.useState(false);
+
+  const onSubmitAddNotification = (notificationId: number) => {
+    setValue('channel_ids', [...notificationChannelWatcher, notificationId], {
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: false,
+    });
+    setOpenAddNotification(false);
+  };
+
+  const notifications = React.useMemo(() => {
+    return (
+      notificationData?.filter(
+        (notification) => !notificationChannelWatcher.includes(notification.id)
+      ) ?? []
+    );
+  }, [notificationChannelWatcher, notificationData]);
+
+  const selectedNotifications = React.useMemo(() => {
+    return (
+      notificationData?.filter((notification) =>
+        notificationChannelWatcher.includes(notification.id)
+      ) ?? []
+    );
+  }, [notificationChannelWatcher, notificationData]);
+
+  const onExitNotifications = () => {
+    setOpenAddNotification(false);
+  };
+
+  const onAddNotifications = () => {
+    setOpenAddNotification(true);
+  };
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
@@ -146,12 +216,28 @@ export const CreateAlertDefinition = () => {
           {serviceTypeWatcher === 'dbaas' && <EngineOption name="engineType" />}
           <CloudPulseRegionSelect name="region" />
           <CloudPulseMultiResourceSelect
-            engine={watch('engineType')}
+            engine={useWatch({ control, name: 'engineType' })}
             name="entity_ids"
-            region={watch('region')}
+            region={useWatch({ control, name: 'region' })}
             serviceType={serviceTypeWatcher}
           />
           <CloudPulseAlertSeveritySelect name="severity" />
+          <MetricCriteriaField
+            setMaxInterval={(interval: number) =>
+              setMaxScrapeInterval(interval)
+            }
+            name="rule_criteria.rules"
+            serviceType={serviceTypeWatcher!}
+          />
+          <TriggerConditions
+            maxScrapingInterval={maxScrapeInterval}
+            name="trigger_conditions"
+          />
+          <AddChannelListing
+            notifications={selectedNotifications}
+            onChangeNotifications={onChangeNotifications}
+            onClickAddNotification={onAddNotifications}
+          />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
@@ -164,6 +250,21 @@ export const CreateAlertDefinition = () => {
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />
+          {openAddNotification && (
+            <Drawer
+              onClose={onExitNotifications}
+              open={openAddNotification}
+              title="Add Notification Channel"
+            >
+              <AddNotificationChannel
+                isNotificationChannelsError={notificationChannelsError}
+                isNotificationChannelsLoading={notificationChannelsLoading}
+                onCancel={onExitNotifications}
+                onSubmitAddNotification={onSubmitAddNotification}
+                templateData={notifications}
+              />
+            </Drawer>
+          )}
         </form>
       </FormProvider>
     </Paper>

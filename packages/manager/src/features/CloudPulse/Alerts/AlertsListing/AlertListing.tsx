@@ -1,6 +1,7 @@
-import { Autocomplete, Paper, Stack } from '@linode/ui';
+import { Autocomplete, Button, Paper, Stack } from '@linode/ui';
 import { Grid } from '@mui/material';
 import * as React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
@@ -14,6 +15,8 @@ import type { Item } from '../constants';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
 
 export const AlertListing = () => {
+  const { url } = useRouteMatch();
+  const history = useHistory();
   const { data: alerts, error, isLoading } = useAllAlertDefinitionsQuery();
   const {
     data: serviceOptions,
@@ -117,8 +120,6 @@ export const AlertListing = () => {
     return filteredAlerts;
   };
 
-  // eslint-disable-next-line no-console
-  console.log(serviceFilters);
   return (
     <Stack spacing={2}>
       <Grid container display="flex" gap={2} overflow="auto">
@@ -140,6 +141,7 @@ export const AlertListing = () => {
             onChange={(_, selected) => {
               setServiceFilters(selected);
             }}
+            data-testid="alert-service-filter"
             label={''}
             loading={serviceTypesLoading}
             multiple
@@ -154,6 +156,7 @@ export const AlertListing = () => {
             onChange={(_, selected) => {
               setStatusFilters(selected);
             }}
+            data-testid="alert-status-filter"
             label={''}
             multiple
             noMarginTop
@@ -161,6 +164,30 @@ export const AlertListing = () => {
             placeholder={statusFilters.length > 0 ? '' : 'Select a Status'}
             value={statusFilters}
           />
+        </Grid>
+        <Grid
+          sx={{
+            alignContent: 'center',
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}
+          container
+          item
+          md={2}
+          sm={5}
+          xs={10}
+        >
+          <Button
+            onClick={() => {
+              history.push(`${url}/create`);
+            }}
+            buttonType="primary"
+            data-qa-button="create-alert"
+            sx={{ height: { md: '34px' }, width: { md: '140px' } }}
+            variant="contained"
+          >
+            Create Alert
+          </Button>
         </Grid>
       </Grid>
       <AlertsListTable

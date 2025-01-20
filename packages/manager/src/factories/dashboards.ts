@@ -1,7 +1,7 @@
 import Factory from 'src/factories/factoryProxy';
 
 import type {
-  AvailableMetrics,
+  MetricDefinition,
   CloudPulseMetricsResponse,
   CloudPulseMetricsResponseData,
   Dashboard,
@@ -30,13 +30,13 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   aggregate_function: 'avg',
   chart_type: Factory.each((i) => chart_type[i % chart_type.length]),
   color: Factory.each((i) => color[i % color.length]),
+  entity_ids: Factory.each((i) => [`resource-${i}`]),
   filters: [],
   group_by: 'region',
   label: Factory.each((i) => `widget_label_${i}`),
   metric: Factory.each((i) => `widget_metric_${i}`),
   namespace_id: Factory.each((i) => i % 10),
   region_id: Factory.each((i) => i % 5),
-  resource_id: Factory.each((i) => [`resource-${i}`]),
   service_type: 'default',
   serviceType: 'default',
   size: 12,
@@ -52,7 +52,7 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   y_label: Factory.each((i) => `y_label_${i}`),
 });
 
-export const dashboardMetricFactory = Factory.Sync.makeFactory<AvailableMetrics>(
+export const dashboardMetricFactory = Factory.Sync.makeFactory<MetricDefinition>(
   {
     available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
     dimensions: [],

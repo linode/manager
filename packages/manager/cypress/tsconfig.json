@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "moduleResolution": "node",
     "baseUrl": "..",
     "paths": {
       "src/*": ["./src/*"],
@@ -12,7 +13,8 @@
       "cypress-file-upload",
       "@testing-library/cypress",
       "cypress-real-events",
-      "vite/client"
+      "vite/client",
+      "@4tw/cypress-drag-drop"
     ]
   },
   "include": [

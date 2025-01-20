@@ -1,6 +1,5 @@
 import { Domain } from '@linode/api-v4';
 import { domainFactory } from '@src/factories';
-import { containsClick } from 'support/helpers';
 import { authenticate } from 'support/api/authentication';
 import { randomDomainName } from 'support/util/random';
 import { createDomain } from '@linode/api-v4/lib/domains';
@@ -33,7 +32,7 @@ describe('Delete a Domain', () => {
           .closest('tr')
           .within(() => {
             ui.actionMenu
-              .findByTitle(`Action menu for Domain ${domain}`)
+              .findByTitle(`Action menu for Domain ${domain.domain}`)
               .should('be.visible')
               .click();
           });
@@ -57,7 +56,7 @@ describe('Delete a Domain', () => {
           .closest('tr')
           .within(() => {
             ui.actionMenu
-              .findByTitle(`Action menu for Domain ${domain}`)
+              .findByTitle(`Action menu for Domain ${domain.domain}`)
               .should('be.visible')
               .click();
           });
@@ -73,8 +72,8 @@ describe('Delete a Domain', () => {
               .findButtonByTitle('Delete Domain')
               .should('be.visible')
               .should('be.disabled');
+            cy.contains('Domain Name').click().type(domain.domain);
 
-            containsClick('Domain Name').type(domain.domain);
             ui.buttonGroup
               .findButtonByTitle('Delete Domain')
               .should('be.visible')

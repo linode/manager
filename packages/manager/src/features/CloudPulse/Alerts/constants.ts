@@ -1,4 +1,12 @@
-import type { AlertSeverityType, AlertStatusType } from '@linode/api-v4';
+import type {
+  AlertSeverityType,
+  AlertStatusType,
+  ChannelTypes,
+  DimensionFilterOperatorType,
+  MetricAggregationType,
+  MetricOperatorType,
+} from '@linode/api-v4';
+import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 export interface Item<L extends string, T> {
   label: L;
@@ -21,6 +29,143 @@ export const engineTypeOptions: Item<string, string>[] = [
     value: 'postgresql',
   },
 ];
+
+export const metricOperatorOptions: Item<string, MetricOperatorType>[] = [
+  {
+    label: '>',
+    value: 'gt',
+  },
+  {
+    label: '<',
+    value: 'lt',
+  },
+  {
+    label: '>=',
+    value: 'gte',
+  },
+  {
+    label: '<=',
+    value: 'lte',
+  },
+  {
+    label: '==',
+    value: 'eq',
+  },
+];
+
+export const metricAggregationOptions: Item<string, MetricAggregationType>[] = [
+  {
+    label: 'Average',
+    value: 'avg',
+  },
+  {
+    label: 'Minimum',
+    value: 'min',
+  },
+  {
+    label: 'Maximum',
+    value: 'max',
+  },
+  {
+    label: 'Count',
+    value: 'count',
+  },
+  {
+    label: 'Sum',
+    value: 'sum',
+  },
+];
+
+export const dimensionOperatorOptions: Item<
+  string,
+  DimensionFilterOperatorType
+>[] = [
+  {
+    label: 'Equal',
+    value: 'eq',
+  },
+  {
+    label: 'Ends with',
+    value: 'endswith',
+  },
+  {
+    label: 'Not Equal',
+    value: 'neq',
+  },
+  {
+    label: 'Starts with',
+    value: 'startswith',
+  },
+];
+
+export const evaluationPeriodOptions = {
+  dbaas: [{ label: '5 min', value: 300 }],
+  linode: [
+    { label: '1 min', value: 60 },
+    { label: '5 min', value: 300 },
+    { label: '15 min', value: 900 },
+    { label: '30 min', value: 1800 },
+    { label: '1 hr', value: 3600 },
+  ],
+};
+
+export const pollingIntervalOptions = {
+  dbaas: [{ label: '5 min', value: 300 }],
+  linode: [
+    { label: '1 min', value: 60 },
+    { label: '5 min', value: 300 },
+    { label: '10 min', value: 600 },
+  ],
+};
+
+export const severityMap: Record<AlertSeverityType, string> = {
+  0: 'Severe',
+  1: 'Medium',
+  2: 'Low',
+  3: 'Info',
+};
+
+export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
+  disabled: 'inactive',
+  enabled: 'active',
+};
+export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
+  eq: '=',
+  gt: '>',
+  gte: '>=',
+  lt: '<',
+  lte: '<=',
+};
+export const aggregationTypeMap: Record<MetricAggregationType, string> = {
+  avg: 'Average',
+  count: 'Count',
+  max: 'Maximum',
+  min: 'Minimum',
+  sum: 'Sum',
+};
+export const dimensionOperatorTypeMap: Record<
+  DimensionFilterOperatorType,
+  string
+> = {
+  endswith: 'ends with',
+  eq: 'equals',
+  neq: 'not equals',
+  startswith: 'starts with',
+};
+
+export const channelTypes: Record<ChannelTypes, string> = {
+  email: 'Email',
+  pagerduty: 'Pagerduty',
+  slack: 'Slack',
+  webhook: 'Webhook',
+};
+
+export const channelTypeOptions: Item<string, ChannelTypes>[] = Object.entries(
+  channelTypes
+).map(([key, label]) => ({
+  label,
+  value: key as ChannelTypes,
+}));
 
 export const alertStatusOptions: Item<string, AlertStatusType>[] = [
   { label: 'Enabled', value: 'enabled' },
