@@ -125,6 +125,7 @@ export const AlertListing = () => {
       <Grid container display="flex" gap={2} overflow="auto">
         <Grid item md={3} sm={5} sx={{ paddingLeft: 0 }} xs={10}>
           <DebouncedSearchTextField
+            data-testid="alert-search"
             debounceTime={250}
             label=""
             noMarginTop
@@ -141,6 +142,7 @@ export const AlertListing = () => {
             onChange={(_, selected) => {
               setServiceFilters(selected);
             }}
+            data-qa-filter="alert-service-filter"
             data-testid="alert-service-filter"
             label={''}
             loading={serviceTypesLoading}
@@ -156,6 +158,7 @@ export const AlertListing = () => {
             onChange={(_, selected) => {
               setStatusFilters(selected);
             }}
+            data-qa-filter="alert-status-filter"
             data-testid="alert-status-filter"
             label={''}
             multiple
@@ -183,6 +186,7 @@ export const AlertListing = () => {
             }}
             buttonType="primary"
             data-qa-button="create-alert"
+            data-qa-buttons="true"
             sx={{ height: { md: '34px' }, width: { md: '140px' } }}
             variant="contained"
           >

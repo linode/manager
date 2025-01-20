@@ -49,12 +49,14 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
           }) => (
             <>
               <Grid marginTop={2}>
-                <Table colCount={7} size="small">
+                <Table colCount={7} data-qa="alert-table" size="small">
                   <TableHead>
                     <TableRow>
                       {AlertListingTableLabelMap.map((value) => (
                         <TableSortCell
                           active={orderBy === value.label}
+                          data-qa-header={value.label}
+                          data-qa-sorting={value.label}
                           direction={order}
                           handleClick={handleOrderChange}
                           key={value.label}

@@ -58,7 +58,7 @@ describe('Alert Row', () => {
 
   it('alert labels should have hyperlinks to the details page', () => {
     const alert = alertFactory.build({ status: 'enabled' });
-    const link = `/monitor/cloudpulse/alerts/definitions/${alert.id}`;
+    const link = `/monitor/alerts/definitions/detail/${alert.service_type}/${alert.id}`;
     const renderedAlert = (
       <AlertTableRow
         alert={alert}

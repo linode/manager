@@ -44,7 +44,9 @@ export const AlertTableRow = (props: Props) => {
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>
-        <Link to={`/monitor/cloudpulse/alerts/definitions/${id}`}>{label}</Link>
+        <Link to={`${location.pathname}/detail/${service_type}/${id}`}>
+          {label}
+        </Link>
       </TableCell>
       <TableCell>
         <Box alignItems="center" display="flex">
@@ -59,7 +61,6 @@ export const AlertTableRow = (props: Props) => {
       <TableCell>
         <DateTimeDisplay value={new Date(updated).toISOString()} />
       </TableCell>
-      <TableCell>{created_by}</TableCell>
       <TableCell actionCell data-qa-alert-action-cell={`alert_${id}`}>
         <AlertActionMenu alertType={type} handlers={handlers} />
       </TableCell>
