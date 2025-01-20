@@ -12,7 +12,7 @@ interface FilterResourceProps {
    */
   filteredRegions?: string[];
   /**
-   * Property to integrate in edit the resources associated with resources
+   * Property to integrate and edit the resources associated with alerts
    */
   isAdditionOrDeletionNeeded?: boolean;
   /**
