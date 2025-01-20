@@ -219,21 +219,19 @@ export const CreateAlertDefinition = () => {
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />
-          {openAddNotification && (
-            <Drawer
-              onClose={onExitNotifications}
-              open={openAddNotification}
-              title="Add Notification Channel"
-            >
-              <AddNotificationChannel
-                isNotificationChannelsError={false}
-                isNotificationChannelsLoading={false}
-                onCancel={onExitNotifications}
-                onSubmitAddNotification={onSubmitAddNotification}
-                templateData={notificationChannelFactory.buildList(2)}
-              />
-            </Drawer>
-          )}
+          <Drawer
+            onClose={onExitNotifications}
+            open={openAddNotification}
+            title="Add Notification Channel"
+          >
+            <AddNotificationChannel
+              isNotificationChannelsError={false}
+              isNotificationChannelsLoading={false}
+              onCancel={onExitNotifications}
+              onSubmitAddNotification={onSubmitAddNotification}
+              templateData={notificationChannelFactory.buildList(2)}
+            />
+          </Drawer>
         </form>
       </FormProvider>
     </Paper>
