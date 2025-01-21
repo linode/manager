@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Autocomplete, Box, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -165,15 +164,6 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
               name="label"
             />
           </Box>
-          {selectedTemplate && selectedTemplate.channel_type === 'email' && (
-            <Box paddingTop={2}>
-              <Grid container>
-                <Grid item md={1} sm={1} xs={2}>
-                  <Typography variant="h3">To:</Typography>
-                </Grid>
-              </Grid>
-            </Box>
-          )}
         </Box>
         <ActionsPanel
           primaryButtonProps={{
