@@ -19,9 +19,9 @@ import { getAlertBoxStyles } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
-import { EngineOption } from './GeneralInformation/EngineOption';
-import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
-import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
+// import { EngineOption } from './GeneralInformation/EngineOption';
+// import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
+// import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannel/AddChannelListing';
 import { AddNotificationChannel } from './NotificationChannel/AddNotificationChannel';
@@ -134,6 +134,11 @@ export const CreateAlertDefinition = () => {
     isError: notificationChannelsError,
     isLoading: notificationChannelsLoading,
   } = useAlertNotificationChannelsQuery();
+  React.useEffect(() => {
+    if (!serviceTypeWatcher) {
+      setValue('entity_ids', [], { shouldValidate: true });
+    }
+  }, [serviceTypeWatcher, setValue]);
   const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
 
   const onChangeNotifications = (notifications: NotificationChannel[]) => {
@@ -151,6 +156,10 @@ export const CreateAlertDefinition = () => {
       shouldValidate: false,
     });
     setOpenAddNotification(false);
+  };
+
+  const handleResourcesSelection = (resourceIds: string[]) => {
+    setValue('entity_ids', resourceIds, { shouldValidate: true });
   };
 
   const notifications = React.useMemo(() => {
@@ -218,6 +227,7 @@ export const CreateAlertDefinition = () => {
             name="description"
           />
           <CloudPulseServiceSelect name="serviceType" />
+          {/* <CloudPulseServiceSelect name="serviceType" />
           {serviceTypeWatcher === 'dbaas' && <EngineOption name="engineType" />}
           <CloudPulseRegionSelect name="region" />
           <CloudPulseMultiResourceSelect
@@ -225,25 +235,37 @@ export const CreateAlertDefinition = () => {
             name="entity_ids"
             region={useWatch({ control, name: 'region' })}
             serviceType={serviceTypeWatcher}
-          />
+          /> */}
           <CloudPulseAlertSeveritySelect name="severity" />
-          <Box mt={3}>
-            <Box
-              alignItems="center"
-              display="flex"
-              justifyContent="space-between"
-              sx={{ marginBottom: 1 }}
-            >
-              <Typography variant="h2">2. Resources</Typography>
-            </Box>
-            <Box sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}>
-              <AlertResources
-                isSelectionsNeeded
-                resourceIds={[]}
-                serviceType={serviceTypeWatcher!}
-              />
-            </Box>
-          </Box>
+          <Controller
+            render={({ field, fieldState }) => (
+              <Box mt={3}>
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  gap={2}
+                  sx={{ marginBottom: 1 }}
+                >
+                  <Typography variant="h2">2. Resources</Typography>
+                  {formState.isSubmitted && fieldState.error && (
+                    <Typography color="#d63c42" variant="body2">
+                      ({fieldState.error.message})
+                    </Typography>
+                  )}
+                </Box>
+                <Box sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}>
+                  <AlertResources
+                    handleResourcesSelection={handleResourcesSelection}
+                    isSelectionsNeeded
+                    resourceIds={field.value} // Controlled field
+                    serviceType={serviceTypeWatcher!}
+                  />
+                </Box>
+              </Box>
+            )}
+            control={control}
+            name="entity_ids"
+          />
           <MetricCriteriaField
             setMaxInterval={(interval: number) =>
               setMaxScrapeInterval(interval)
