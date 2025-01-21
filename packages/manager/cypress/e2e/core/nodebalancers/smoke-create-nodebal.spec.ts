@@ -116,7 +116,7 @@ describe('create NodeBalancer', () => {
    * - Confirms label field displays error if it contains special characters.
    * - Confirms session stickiness field displays error if protocol is not HTTP or HTTPS.
    */
-  it.only('displays API errors for NodeBalancer Create form fields', () => {
+  it('displays API errors for NodeBalancer Create form fields', () => {
     const region = regionFactory.build({ capabilities: ['NodeBalancers'] });
     const linode = linodeFactory.build({ ipv4: ['192.168.1.213'] });
 
