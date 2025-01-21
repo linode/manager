@@ -2,12 +2,8 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  Encryption,
-  checkboxTestId,
-  descriptionTestId,
-  headerTestId,
-} from './Encryption';
+import { checkboxTestId, descriptionTestId, headerTestId } from './constants';
+import { Encryption } from './Encryption';
 
 describe('DiskEncryption', () => {
   it('should render a header', () => {

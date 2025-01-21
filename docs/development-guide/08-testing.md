@@ -223,6 +223,7 @@ Environment variables related to Cypress logging and reporting, as well as repor
 | `CY_TEST_DISABLE_RETRIES`       | Disable test retries on failure in CI              | `1`              | Unset; disabled by default |
 | `CY_TEST_FAIL_ON_MANAGED`       | Fail affected tests when Managed is enabled        | `1`              | Unset; disabled by default |
 | `CY_TEST_GENWEIGHTS`            | Generate and output test weights to the given path | `./weights.json` | Unset; disabled by default |
+| `CY_TEST_RESET_PREFERENCES`     | Reset user preferences when test run begins        | `1`              | Unset; disabled by default |
 
 ###### Performance
 
