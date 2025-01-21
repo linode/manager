@@ -106,6 +106,7 @@ export const KubernetesPlansPanel = (props: Props) => {
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                   plan
                 )}
+                flow="kubernetes"
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 hasSelectedRegion={hasSelectedRegion}
                 isAPLEnabled={isAPLEnabled}

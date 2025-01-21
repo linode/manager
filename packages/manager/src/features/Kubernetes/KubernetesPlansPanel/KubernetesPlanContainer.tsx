@@ -198,12 +198,16 @@ export const KubernetesPlanContainer = (
                         return [
                           filteredPlans.length > 0 && (
                             <Grid key={table.header} xs={12}>
-                              <Typography variant="h3">
+                              <Typography
+                                data-qa={`${table.header} table-header`}
+                                variant="h3"
+                              >
                                 {table.header}
                               </Typography>
                             </Grid>
                           ),
                           renderPlanSelection({
+                            header: table.header,
                             planFilter: table.planFilter,
                           }),
                         ];
