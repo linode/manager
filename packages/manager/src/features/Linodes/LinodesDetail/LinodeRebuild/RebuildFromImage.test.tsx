@@ -7,7 +7,6 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { RebuildFromImage } from './RebuildFromImage';
 
 vi.mock('src/utilities/scrollErrorIntoView');
-vi.mock('src/components/EnhancedSelect/Select');
 
 const props = {
   disabled: false,
