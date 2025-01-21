@@ -1,5 +1,5 @@
 /**
- * @file Integration Tests for the CloudPulse DBaaS Alerts Detail Page.
+ * @file Integration Tests for the CloudPulse DBaaS Alerts Show Detail Page.
  *
  */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -7,8 +7,6 @@ import {
   accountFactory,
   alertFactory,
   alertRulesFactory,
-  databaseFactory,
-  linodeFactory,
   regionFactory,
 } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -19,9 +17,6 @@ import {
   mockGetAllAlertDefinitions,
 } from 'support/intercepts/cloudpulse';
 import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetDatabases } from 'support/intercepts/databases';
-import { Database } from '@linode/api-v4';
-import { mockGetLinodes } from 'support/intercepts/linodes';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   metricOperatorTypeMap,
@@ -39,49 +34,18 @@ const mockDBaaSAlertDetails = alertFactory.build({
   entity_ids: ['1', '2'],
   rule_criteria: { rules: alertRulesFactory.buildList(2) },
 });
-const mockLinodeAlertDetails = alertFactory.build({
-  service_type: 'linode',
-  severity: 1,
-  status: 'disabled',
-  type: 'system',
-  entity_ids: ['3'],
-  rule_criteria: { rules: alertRulesFactory.buildList(1) },
-});
-
-const mockDBaaSRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
-  id: 'us-ord',
-  label: 'Chicago, IL',
-});
-const mockExtendedDBaaSRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
-  id: 'us-east',
-  label: 'US, Newark',
-});
-
-const mockLinodeRegion = regionFactory.build({
-  capabilities: ['Linodes'],
-  id: 'us-east',
-  label: 'US, Newark',
-});
-
-const databaseMock: Database = databaseFactory.build({
-  label: 'alert-resource-1',
-  type: 'MySQL',
-  region: mockDBaaSRegion.id,
-  engine: 'mysql',
-});
-const extendedDatabaseMock: Database = databaseFactory.build({
-  label: 'alert-resource-2',
-  type: 'MySQL',
-  region: mockExtendedDBaaSRegion.id,
-  engine: 'mysql',
-});
-const mockLinode = linodeFactory.build({
-  tags: ['tag-2', 'tag-3'],
-  label: 'alert-resource-3',
-  id: 3,
-});
+const mockDBaaSRegions = [
+  regionFactory.build({
+    capabilities: ['Managed Databases'],
+    id: 'us-ord',
+    label: 'Chicago, IL',
+  }),
+  regionFactory.build({
+    capabilities: ['Managed Databases'],
+    id: 'us-east',
+    label: 'US, Newark',
+  }),
+];
 
 /**
  * Integration tests for the CloudPulse DBaaS Alerts Detail Page, ensuring that the alert details, criteria, and resource information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
@@ -91,31 +55,16 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
-    mockGetRegions([
-      mockDBaaSRegion,
-      mockExtendedDBaaSRegion,
-      mockLinodeRegion,
-    ]);
-    mockGetAllAlertDefinitions([
-      mockDBaaSAlertDetails,
-      mockLinodeAlertDetails,
-    ]).as('getAlertDefinitionsList');
-    mockGetDatabases([databaseMock, extendedDatabaseMock])
-    .as('getMockedDbaasDatabases');
-
-    mockGetLinodes([mockLinode]).as('getLiodeDatabase');
-
+    mockGetRegions(mockDBaaSRegions);
+    mockGetAllAlertDefinitions([mockDBaaSAlertDetails]).as(
+      'getAlertDefinitionsList'
+    );
     mockGetAlertDefinitions(
       mockDBaaSAlertDetails.service_type,
       mockDBaaSAlertDetails.id,
       mockDBaaSAlertDetails
     ).as('getDBaaSAlertDefinitions');
 
-    mockGetAlertDefinitions(
-      mockLinodeAlertDetails.service_type,
-      mockLinodeAlertDetails.id,
-      mockLinodeAlertDetails
-    ).as('getLinodeAlertDefinitions');
     cy.visitWithLogin('/monitor/alerts/definitions');
 
     cy.wait('@getAlertDefinitionsList');
@@ -155,8 +104,9 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       // Validate Status field
       cy.get('[data-qa-item="Status"]').within(() => {
         cy.findByText('Status:').should('be.visible');
-        cy.findByText(mockDBaaSAlertDetails.status.replace('enabled', 'Enabled'))
-          .should('be.visible');
+        cy.findByText(
+          mockDBaaSAlertDetails.status.replace('enabled', 'Enabled')
+        ).should('be.visible');
       });
 
       cy.get('[data-qa-item="Severity"]').within(() => {
@@ -168,16 +118,17 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       // Validate Service field
       cy.get('[data-qa-item="Service"]').within(() => {
         cy.findByText('Service:').should('be.visible');
-        cy.findByText(mockDBaaSAlertDetails.service_type.replace('dbaas', 'Databases'))
-          .should('be.visible');
+        cy.findByText(
+          mockDBaaSAlertDetails.service_type.replace('dbaas', 'Databases')
+        ).should('be.visible');
       });
 
       // Validate Type field
       cy.get('[data-qa-item="Type"]').within(() => {
         cy.findByText('Type:').should('be.visible');
         cy.findByText(
-          mockDBaaSAlertDetails.type.replace('system', 'System'))
-          .should('be.visible');
+          mockDBaaSAlertDetails.type.replace('system', 'System')
+        ).should('be.visible');
       });
 
       // Validate Created By field
@@ -189,9 +140,11 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       // Validate Last Modified field
       cy.get('[data-qa-item="Last Modified"]').within(() => {
         cy.findByText('Last Modified:').should('be.visible');
-        cy.findByText(formatDate(mockDBaaSAlertDetails.updated, {
-            format: 'MMM dd, yyyy, h:mm a'}))
-            .should('be.visible');
+        cy.findByText(
+          formatDate(mockDBaaSAlertDetails.updated, {
+            format: 'MMM dd, yyyy, h:mm a',
+          })
+        ).should('be.visible');
       });
     });
 
@@ -201,9 +154,14 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
         cy.get('[data-qa-item="Metric Threshold"]')
           .eq(index)
           .within(() => {
-            cy.get( `[data-qa-chip="${rule.aggregation_type.replace('avg', 'Average')}"]`)
+            cy.get(
+              `[data-qa-chip="${rule.aggregation_type.replace('avg', 'Average')}"]`
+            )
               .should('be.visible')
-              .should('have.text', rule.aggregation_type.replace('avg', 'Average') );
+              .should(
+                'have.text',
+                rule.aggregation_type.replace('avg', 'Average')
+              );
 
             cy.get(`[data-qa-chip="${rule.label}"]`)
               .should('be.visible')
@@ -234,7 +192,9 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
                   expect($chip).to.have.text(filter.label);
                 });
               // Validate the filter operator
-              cy.get( `[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`)
+              cy.get(
+                `[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`
+              )
                 .should('be.visible')
                 .each(($chip) => {
                   expect($chip).to.have.text(
@@ -255,30 +215,51 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       cy.get('[data-qa-item="Polling Interval"]')
         .find('[data-qa-chip]')
         .should('be.visible')
-        .should( 'have.text',
-          String(mockDBaaSAlertDetails.trigger_conditions.polling_interval_seconds)
-        .replace('120', '2 minutes')
+        .should(
+          'have.text',
+          String(
+            mockDBaaSAlertDetails.trigger_conditions.polling_interval_seconds
+          ).replace('120', '2 minutes')
         );
 
       // Validating contents of Evaluation Periods
       cy.get('[data-qa-item="Evaluation Period"]')
         .find('[data-qa-chip]')
         .should('be.visible')
-        .should( 'have.text',
-          String(mockDBaaSAlertDetails.trigger_conditions.evaluation_period_seconds)
-          .replace('240', '4 minutes'));
+        .should(
+          'have.text',
+          String(
+            mockDBaaSAlertDetails.trigger_conditions.evaluation_period_seconds
+          ).replace('240', '4 minutes')
+        );
 
-      cy.get( `[data-qa-chip="${mockDBaaSAlertDetails.trigger_conditions.criteria_condition
-        .replace( 'ALL','All' )}"]`)
+      cy.get(
+        `[data-qa-chip="${mockDBaaSAlertDetails.trigger_conditions.criteria_condition.replace(
+          'ALL',
+          'All'
+        )}"]`
+      )
         .should('be.visible')
-        .should('have.text',mockDBaaSAlertDetails.trigger_conditions.criteria_condition
-        .replace('ALL', 'All'));
+        .should(
+          'have.text',
+          mockDBaaSAlertDetails.trigger_conditions.criteria_condition.replace(
+            'ALL',
+            'All'
+          )
+        );
 
-      cy.get( `[data-qa-chip="${String( mockDBaaSAlertDetails.trigger_conditions.evaluation_period_seconds)
-        .replace('240', '4 minutes')}"]` )
+      cy.get(
+        `[data-qa-chip="${String(
+          mockDBaaSAlertDetails.trigger_conditions.evaluation_period_seconds
+        ).replace('240', '4 minutes')}"]`
+      )
         .should('be.visible')
-        .should('have.text',String(mockDBaaSAlertDetails.trigger_conditions.evaluation_period_seconds)
-        .replace('240', '4 minutes'));
+        .should(
+          'have.text',
+          String(
+            mockDBaaSAlertDetails.trigger_conditions.evaluation_period_seconds
+          ).replace('240', '4 minutes')
+        );
 
       cy.get('[data-qa-item="criteria are met for"]')
         .should('be.visible')
