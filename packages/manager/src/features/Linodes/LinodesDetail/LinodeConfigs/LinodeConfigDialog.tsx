@@ -646,7 +646,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const primaryInterfaceIndex = getPrimaryInterfaceIndex();
 
-  console.log('Primary Interface Index', primaryInterfaceIndex);
+  console.log('Primary Interface Index', primaryInterfaceIndex, "Values", values);
 
   /**
    * Form change handlers
@@ -1017,10 +1017,7 @@ export const LinodeConfigDialog = (props: Props) => {
                     for (let i = 0; i < updatedInterfaces.length; i++) {
                       if (selected && selected.value === i) {
                         updatedInterfaces[i].primary = true;
-                      }
-                      if (selected === null) {
-                        // If the user cleared the primary interface field, set every interfaces
-                        // primary to false
+                      } else {
                         updatedInterfaces[i].primary = false;
                       }
                     }
