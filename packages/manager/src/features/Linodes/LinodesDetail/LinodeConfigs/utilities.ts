@@ -29,13 +29,13 @@ export const getPrimaryInterfaceIndex = (interfaces: Interface[]) => {
 
   // If a config has interfaces but none of them are marked as primary,
   // then the first interface in the list that’s not a VLAN will be the primary interface.
-  const inheritIndexOfPrimaryInterface = interfaces.findIndex(
+  const inherentIndexOfPrimaryInterface = interfaces.findIndex(
     (i) => i.purpose !== 'vlan'
   );
 
-  if (inheritIndexOfPrimaryInterface !== -1) {
-    // If we're able to find the inherit primary interface, just return it.
-    return inheritIndexOfPrimaryInterface;
+  if (inherentIndexOfPrimaryInterface !== -1) {
+    // If we're able to find the inherent primary interface, just return it.
+    return inherentIndexOfPrimaryInterface;
   }
 
   // If we haven't been able to find the primary interface by this point, the Linode doesn't have one.

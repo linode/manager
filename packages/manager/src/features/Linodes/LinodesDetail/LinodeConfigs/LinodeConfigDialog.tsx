@@ -593,19 +593,15 @@ export const LinodeConfigDialog = (props: Props) => {
     value: null,
   });
 
-  const getPrimaryInterfaceOptions = (interfaces: Interface[]) => {
-    return interfaces.map((networkInterface, idx) => ({
-      label: `eth${idx}`,
-      value: idx,
-    }));
-  };
-
   const interfacesWithoutPlaceholderInterfaces = values.interfaces.filter(
     (i) => i.purpose !== 'none'
   ) as Interface[];
 
-  const primaryInterfaceOptions = getPrimaryInterfaceOptions(
-    interfacesWithoutPlaceholderInterfaces
+  const primaryInterfaceOptions = interfacesWithoutPlaceholderInterfaces.map(
+    (networkInterface, idx) => ({
+      label: `eth${idx}`,
+      value: idx,
+    })
   );
 
   const primaryInterfaceIndex = getPrimaryInterfaceIndex(
