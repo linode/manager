@@ -66,6 +66,7 @@ import {
   StyledFormGroup,
   StyledRadioGroup,
 } from './LinodeConfigDialog.styles';
+import { getPrimaryInterfaceIndex } from './utilities';
 
 import type { ExtendedInterface } from '../LinodeSettings/InterfaceSelect';
 import type {
@@ -76,7 +77,6 @@ import type {
 } from '@linode/api-v4';
 import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { getPrimaryInterfaceIndex } from './utilities';
 
 interface Helpers {
   devtmpfs_automount: boolean;
