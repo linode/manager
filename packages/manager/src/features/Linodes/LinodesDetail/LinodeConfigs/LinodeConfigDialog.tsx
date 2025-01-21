@@ -76,6 +76,7 @@ import type {
 } from '@linode/api-v4';
 import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { getPrimaryInterfaceIndex } from './utilities';
 
 interface Helpers {
   devtmpfs_automount: boolean;
@@ -592,61 +593,24 @@ export const LinodeConfigDialog = (props: Props) => {
     value: null,
   });
 
-  const getPrimaryInterfaceOptions = (interfaces: ExtendedInterface[]) => {
-    return interfaces.reduce<{ label: string; value: number }[]>(
-      (acc, networkInterface, idx) => {
-        if (networkInterface.purpose !== 'none') {
-          acc.push({
-            label: `eth${idx}`,
-            value: idx,
-          });
-        }
-        return acc;
-      },
-      []
-    );
+  const getPrimaryInterfaceOptions = (interfaces: Interface[]) => {
+    return interfaces.map((networkInterface, idx) => ({
+      label: `eth${idx}`,
+      value: idx,
+    }));
   };
 
-  const primaryInterfaceOptions = getPrimaryInterfaceOptions(values.interfaces);
+  const interfacesWithoutPlaceholderInterfaces = values.interfaces.filter(
+    (i) => i.purpose !== 'none'
+  ) as Interface[];
 
-  const getPrimaryInterfaceIndex = () => {
-    // Get the actual interfaces (exclude the "none" interfaces just to be safe)
-    const interfaces = values.interfaces.filter((i) => i.purpose !== 'none');
+  const primaryInterfaceOptions = getPrimaryInterfaceOptions(
+    interfacesWithoutPlaceholderInterfaces
+  );
 
-    const indexOfPrimaryInterface = interfaces.findIndex((i) => i.primary);
-
-    // If an interface has `primary: true` we know thats the primary so just return it.
-    if (indexOfPrimaryInterface !== -1) {
-      return indexOfPrimaryInterface;
-    }
-
-    // If the API response returns an empty array "interfaces": [] the Linode will by default have a public interface,
-    // and it will be eth0 on the Linode. This interface will be primary.
-    // This case isn't really nessesary because this form is built so that the interfaces state will be
-    // populated even if the API returns an empty interfaces array, but I'm including it for completeness.
-    if (isEmpty(interfaces)) {
-      return null;
-    }
-
-    // If a config has interfaces but none of them are marked as primary,
-    // then the first interface in the list that’s not a VLAN will be the primary interface.
-    const inheritIndexOfPrimaryInterface = interfaces.findIndex(
-      (i) => i.purpose !== 'vlan'
-    );
-
-    if (inheritIndexOfPrimaryInterface !== -1) {
-      // If we're able to find the inherit primary interface, just return it.
-      return inheritIndexOfPrimaryInterface;
-    }
-
-    // If we haven't been able to find the primary interface by this point, the Linode doesn't have one.
-    // As an example, this is the case when a Linode only has a VLAN interface.
-    return null;
-  };
-
-  const primaryInterfaceIndex = getPrimaryInterfaceIndex();
-
-  console.log('Primary Interface Index', primaryInterfaceIndex, "Values", values);
+  const primaryInterfaceIndex = getPrimaryInterfaceIndex(
+    interfacesWithoutPlaceholderInterfaces
+  );
 
   /**
    * Form change handlers
@@ -1011,6 +975,9 @@ export const LinodeConfigDialog = (props: Props) => {
               )}
               <>
                 <Autocomplete
+                  disableClearable={interfacesWithoutPlaceholderInterfaces.some(
+                    (i) => i.purpose === 'public' || i.purpose === 'vpc'
+                  )}
                   onChange={(_, selected) => {
                     const updatedInterfaces = [...values.interfaces];
 
