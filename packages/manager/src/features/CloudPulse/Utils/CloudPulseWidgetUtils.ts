@@ -292,7 +292,9 @@ export const getCloudPulseMetricRequest = (
 
   return {
     absolute_time_duration:
-      preset !== 'custom_range'
+      preset !== 'custom_range' &&
+      preset !== 'this_month' &&
+      preset !== 'last_month'
         ? undefined
         : { end: duration.end, start: duration.start },
     aggregate_function: widget.aggregate_function,
