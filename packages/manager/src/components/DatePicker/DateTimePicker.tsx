@@ -21,7 +21,7 @@ import type { DateTime } from 'luxon';
 export interface DateTimePickerProps {
   /** Additional props for the DateCalendar */
   dateCalendarProps?: Partial<DateCalendarProps<DateTime>>;
-  disableTimeZone?: boolean;
+  disabledTimeZone?: boolean;
   /** Error text for the date picker field */
   errorText?: string;
   /** Format for displaying the date-time */
@@ -64,7 +64,7 @@ export interface DateTimePickerProps {
 
 export const DateTimePicker = ({
   dateCalendarProps = {},
-  disableTimeZone = false,
+  disabledTimeZone = false,
   errorText = '',
   format = 'yyyy-MM-dd HH:mm',
   label = 'Select Date and Time',
@@ -277,7 +277,7 @@ export const DateTimePicker = ({
             {showTimeZone && (
               <Grid item xs={7}>
                 <TimeZoneSelect
-                  disable={disableTimeZone}
+                  disabled={disabledTimeZone}
                   label={timeZoneSelectProps?.label || 'Timezone'}
                   noMarginTop
                   onChange={handleTimeZoneChange}
