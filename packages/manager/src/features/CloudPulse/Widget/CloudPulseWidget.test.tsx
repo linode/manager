@@ -1,4 +1,5 @@
 import userEvent from '@testing-library/user-event';
+import { DateTime } from 'luxon';
 import React from 'react';
 
 import {
@@ -25,7 +26,11 @@ const props: CloudPulseWidgetProperties = {
     scrape_interval: '2m',
     unit: 'percent',
   },
-  duration: { unit: 'min', value: 30 },
+  duration: {
+    end: DateTime.now().toISO(),
+    preset: '30minutes',
+    start: DateTime.now().minus({ minutes: 30 }).toISO(),
+  },
   entityIds: ['1', '2'],
   isJweTokenFetching: false,
   resources: [
