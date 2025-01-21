@@ -16,10 +16,11 @@ export const LabelTable = () => {
   const { setValue, watch } = useFormContext();
 
   const labels: Label = watch('labels');
+  const labelsArray = Object.entries(labels);
 
   const handleRemoveLabel = (labelKey: string) => {
     const newLabels = Object.fromEntries(
-      Object.entries(labels).filter(([key]) => key !== labelKey)
+      labelsArray.filter(([key]) => key !== labelKey)
     );
     setValue('labels', newLabels, { shouldDirty: true });
   };
@@ -32,8 +33,8 @@ export const LabelTable = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {labels && Object.entries(labels).length > 0 ? (
-          Object.entries(labels).map(([key, value]) => {
+        {labels && labelsArray.length > 0 ? (
+          labelsArray.map(([key, value]) => {
             return (
               <TableRow data-qa-label-row={key} key={`label-row-${key}`}>
                 <TableCell>
