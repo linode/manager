@@ -72,6 +72,7 @@ export interface DateTimeRangePickerProps {
 }
 
 type DatePresetType =
+  | '1hour'
   | '7days'
   | '12hours'
   | '24hours'
@@ -83,6 +84,7 @@ type DatePresetType =
 
 const presetsOptions: { label: string; value: DatePresetType }[] = [
   { label: 'Last 30 Minutes', value: '30minutes' },
+  { label: 'Last 1 Hour', value: '1hour' },
   { label: 'Last 12 Hours', value: '12hours' },
   { label: 'Last 24 Hours', value: '24hours' },
   { label: 'Last 7 Days', value: '7days' },
@@ -172,6 +174,8 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
       case '30minutes':
         newStartDateTime = now.minus({ minutes: 30 });
         break;
+      case '1hour':
+        newStartDateTime = now.minus({ hours: 1 });
       case '12hours':
         newStartDateTime = now.minus({ hours: 12 });
         break;
@@ -193,6 +197,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
         newStartDateTime = lastMonth.startOf('month');
         newEndDateTime = lastMonth.endOf('month');
         break;
+
       case 'custom_range':
         newStartDateTime = startDateTime;
         newEndDateTime = endDateTime;
