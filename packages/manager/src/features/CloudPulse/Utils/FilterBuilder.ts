@@ -25,10 +25,10 @@ import type { CloudPulseServiceTypeFilters } from './models';
 import type {
   AclpConfig,
   Dashboard,
+  DateTimeWithPreset,
   Filter,
   Filters,
   TimeDuration,
-  DateTimeWithPreset,
 } from '@linode/api-v4';
 
 interface CloudPulseFilterProperties {
@@ -66,8 +66,8 @@ export const getTagsProperties = (
   return {
     defaultValue: preferences?.[TAGS],
     handleTagsChange,
-    optional: props.config.configuration.isOptional,
     label,
+    optional: props.config.configuration.isOptional,
     placeholder,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,

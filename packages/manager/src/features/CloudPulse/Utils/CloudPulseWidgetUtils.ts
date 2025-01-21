@@ -18,8 +18,8 @@ import type {
   CloudPulseMetricsList,
   CloudPulseMetricsRequest,
   CloudPulseMetricsResponse,
-  TimeDuration,
   DateTimeWithPreset,
+  TimeDuration,
   Widgets,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';

@@ -24,11 +24,7 @@ import { ZoomIcon } from './components/Zoomer';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { DateTimeWithPreset, Widgets } from '@linode/api-v4';
-import type {
-  MetricDefinition,
-  TimeDuration,
-  TimeGranularity,
-} from '@linode/api-v4';
+import type { MetricDefinition, TimeGranularity } from '@linode/api-v4';
 import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type {
   AreaProps,

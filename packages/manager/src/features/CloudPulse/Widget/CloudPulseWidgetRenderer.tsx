@@ -19,11 +19,10 @@ import type {
 import type {
   AclpConfig,
   Dashboard,
+  DateTimeWithPreset,
   JWEToken,
   MetricDefinition,
   ResourcePage,
-  TimeDuration,
-  DateTimeWithPreset,
   Widgets,
 } from '@linode/api-v4';
 
