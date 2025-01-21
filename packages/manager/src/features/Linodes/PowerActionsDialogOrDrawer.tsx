@@ -1,4 +1,4 @@
-import { Autocomplete, FormHelperText, Notice, Typography } from '@linode/ui';
+import { Autocomplete, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -139,18 +139,15 @@ export const PowerActionsDialog = (props: Props) => {
           secondaryButtonProps={{ label: 'Cancel', onClick: props.onClose }}
         />
       }
-      sx={{
-        '& .dialog-content': {
-          paddingBottom: 0,
-          paddingTop: 0,
-        },
-      }}
       error={error?.[0].reason}
       onClose={handleOnClose}
       open={isOpen}
       title={`${action} Linode ${linodeLabel ?? ''}?`}
     >
-      {isPowerOnAction ? (
+      {isRebootAction && (
+        <Typography>Are you sure you want to reboot this Linode?</Typography>
+      )}
+      {isPowerOnAction && (
         <Typography
           sx={{
             alignItems: 'center',
@@ -165,46 +162,33 @@ export const PowerActionsDialog = (props: Props) => {
           </Link>
           &nbsp;for more information.
         </Typography>
-      ) : null}
+      )}
       {showConfigSelect && (
-        <>
-          <Autocomplete
-            value={configOptions.find(
-              (option) => option.value === selectedConfigID
-            )}
-            autoHighlight
-            disablePortal={false}
-            errorText={configsError?.[0].reason}
-            label="Config"
-            loading={configsLoading}
-            onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
-            options={configOptions}
-          />
-          <FormHelperText>
-            If no value is selected, the last booted config will be used.
-          </FormHelperText>
-        </>
+        <Autocomplete
+          value={configOptions.find(
+            (option) => option.value === selectedConfigID
+          )}
+          autoHighlight
+          disablePortal={false}
+          errorText={configsError?.[0].reason}
+          label="Config"
+          loading={configsLoading}
+          onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
+          options={configOptions}
+          helperText="If no value is selected, the last booted config will be used."
+        />
       )}
       {props.action === 'Power Off' && (
-        <span>
-          <Notice
-            sx={{
-              '& .noticeText': {
-                fontSize: '0.875rem !important',
-              },
-            }}
-            variant="warning"
-          >
-            <strong>Note: </strong>
-            Powered down Linodes will still accrue charges.
-            <br />
-            See the&nbsp;
+        <Notice variant="warning" spacingBottom={0}>
+          <Typography>
+            <strong>Note: </strong>Powered down Linodes will still accrue
+            charges. See the&nbsp;
             <Link to="https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works#will-i-be-billed-for-powered-off-or-unused-services">
               Billing and Payments documentation
             </Link>
             &nbsp;for more information.
-          </Notice>
-        </span>
+          </Typography>
+        </Notice>
       )}
     </ConfirmationDialog>
   );
