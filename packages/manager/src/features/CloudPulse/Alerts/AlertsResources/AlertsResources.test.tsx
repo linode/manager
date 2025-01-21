@@ -24,10 +24,7 @@ const queryMocks = vi.hoisted(() => ({
 
 const regions = regionFactory.buildList(3);
 
-const linodes = linodeFactory.buildList(3).map((linode, index) => ({
-  ...linode,
-  region: index < 3 ? regions[index].id : linode.region,
-}));
+const linodes = linodeFactory.buildList(3);
 
 const searchPlaceholder = 'Search for a Region or Resource';
 const regionPlaceholder = 'Select Regions';
@@ -38,7 +35,6 @@ beforeEach(() => {
     isError: false,
     isFetching: false,
   });
-
   queryMocks.useRegionsQuery.mockReturnValue({
     data: regions,
     isError: false,
@@ -47,38 +43,36 @@ beforeEach(() => {
 });
 
 describe('AlertResources component tests', () => {
-  it('should render search input, region filter', async () => {
+  it('should render search input, region filter', () => {
     const { getByText } = renderWithTheme(
-      <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
-
     expect(getByText(searchPlaceholder)).toBeInTheDocument();
     expect(getByText(regionPlaceholder)).toBeInTheDocument();
   });
-  it('should render circle progress if api calls are in fetching state', async () => {
+  it('should render circle progress if api calls are in fetching state', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodes,
       isError: false,
       isFetching: true,
     });
     const { getByTestId, queryByText } = renderWithTheme(
-      <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
     expect(getByTestId('circle-progress')).toBeInTheDocument();
     expect(queryByText(searchPlaceholder)).not.toBeInTheDocument();
     expect(queryByText(regionPlaceholder)).not.toBeInTheDocument();
   });
 
-  it('should render error state if api call fails', async () => {
+  it('should render error state if api call fails', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodes,
       isError: true,
       isFetching: false,
     });
     const { getByText } = renderWithTheme(
-      <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
-
     expect(
       getByText('Table data is unavailable. Please try again later.')
     ).toBeInTheDocument();
@@ -91,7 +85,7 @@ describe('AlertResources component tests', () => {
       getByText,
       queryByText,
     } = renderWithTheme(
-      <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
 
     // Search Input
@@ -131,9 +125,9 @@ describe('AlertResources component tests', () => {
     });
   });
 
-  it.only('should handle sorting correctly', async () => {
+  it('should handle sorting correctly', async () => {
     const { getByTestId } = renderWithTheme(
-      <AlertResources resourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
     const resourceColumn = getByTestId('resource');
 

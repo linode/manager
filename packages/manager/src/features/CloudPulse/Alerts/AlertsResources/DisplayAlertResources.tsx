@@ -1,10 +1,11 @@
-import { TableBody, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
@@ -30,17 +31,13 @@ export interface AlertInstance {
 
 export interface DisplayAlertResourceProp {
   /**
-   * When passed, this error text will be displayed in the table
-   */
-  errorText?: string;
-
-  /**
    * The resources that needs to be displayed
    */
   filteredResources: AlertInstance[] | undefined;
 
   /**
-   * Indicates, there is an error in loading the data, if it is passed true, error message will be displayed
+   * A flag indicating if there was an error loading the data. If true, the error message
+   * (specified by `errorText`) will be displayed in the table.
    */
   isDataLoadingError: boolean;
 
@@ -63,7 +60,6 @@ export interface DisplayAlertResourceProp {
 export const DisplayAlertResources = React.memo(
   (props: DisplayAlertResourceProp) => {
     const {
-      errorText,
       filteredResources,
       isDataLoadingError,
       noDataText,
@@ -171,8 +167,10 @@ export const DisplayAlertResources = React.memo(
                   ))}
                 {isDataLoadingError && (
                   <TableRowError
+                    message={
+                      'Table data is unavailable. Please try again later.'
+                    }
                     colSpan={3}
-                    message={errorText ?? 'Table data is unavailable.'}
                   />
                 )}
                 {paginatedData.length === 0 && (

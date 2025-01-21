@@ -1,4 +1,4 @@
-import { CircleProgress, Typography } from '@linode/ui';
+import { CircleProgress, Stack, Typography } from '@linode/ui';
 import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
@@ -11,7 +11,7 @@ import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
   getFilteredResources,
   getRegionOptions,
-  getRegionsIdLabelMap,
+  getRegionsIdRegionMap,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { DisplayAlertResources } from './DisplayAlertResources';
@@ -24,14 +24,9 @@ export interface AlertResourcesProp {
    */
   alertLabel?: string;
   /**
-   * Callback for publishing the selected resources
-   */
-  handleResourcesSelection?: (resources: string[]) => void;
-
-  /**
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
-  resourceIds: string[];
+  alertResourceIds: string[];
 
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
@@ -40,17 +35,9 @@ export interface AlertResourcesProp {
 }
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
-  const {
-    alertLabel,
-    handleResourcesSelection,
-    resourceIds,
-    serviceType,
-  } = props;
-
+  const { alertLabel, alertResourceIds, serviceType } = props;
   const [searchText, setSearchText] = React.useState<string>();
-
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
-
   const theme = useTheme();
 
   const {
@@ -70,21 +57,27 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     serviceType === 'dbaas' ? { platform: 'rdbms-default' } : {}
   );
 
-  // The map holds the id of the region to the entire region object that needs to be displayed in table
-  const regionsIdToLabelMap: Map<string, Region> = React.useMemo(() => {
-    return getRegionsIdLabelMap(regions);
+  // A map linking region IDs to their corresponding region objects, used for quick lookup when displaying data in the table.
+  const regionsIdToRegionMap: Map<string, Region> = React.useMemo(() => {
+    return getRegionsIdRegionMap(regions);
   }, [regions]);
 
-  /**
-   * Holds the regions associated with the resources from list of regions
-   */
+  // Derived list of regions associated with the provided resource IDs, filtered based on available data.
   const regionOptions: Region[] = React.useMemo(() => {
     return getRegionOptions({
       data: resources,
-      regionsIdToLabelMap,
-      resourceIds,
+      regionsIdToRegionMap,
+      resourceIds: alertResourceIds,
     });
-  }, [resources, resourceIds, regionsIdToLabelMap]);
+  }, [resources, alertResourceIds, regionsIdToRegionMap]);
+
+  const handleSearchTextChange = (searchText: string) => {
+    setSearchText(searchText);
+  };
+
+  const handleFilteredRegionsChange = (selectedRegions: string[]) => {
+    setFilteredRegions(selectedRegions);
+  };
 
   /**
    * Holds the resources that are
@@ -94,19 +87,19 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     return getFilteredResources({
       data: resources,
       filteredRegions,
-      regionsIdToLabelMap,
-      resourceIds,
+      regionsIdToRegionMap,
+      resourceIds: alertResourceIds,
       searchText,
     });
   }, [
     resources,
-    resourceIds,
+    alertResourceIds,
     searchText,
     filteredRegions,
-    regionsIdToLabelMap,
+    regionsIdToRegionMap,
   ]);
 
-  const titleRef = React.useRef<HTMLDivElement>(null); // when the page size, page number of table changes lets scroll until the title of this component
+  const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
 
   const scrollToTitle = () => {
     if (titleRef.current) {
@@ -121,64 +114,57 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     return <CircleProgress />;
   }
 
-  return (
-    <>
-      <Typography marginBottom={2} ref={titleRef} variant="h2">
-        {alertLabel ?? 'Resources'}
-      </Typography>
+  const isDataLoadingError = isRegionsError || isResourcesError;
 
-      {!isResourcesError && !isRegionsError && resourceIds.length === 0 && (
-        <StyledPlaceholder
-          title={
-            'No resources are currently assigned to this alert definition.'
-          }
-          icon={EntityIcon}
-          subtitle="You can assign alerts during the resource creation process."
-        />
-      )}
+  return (
+    <Stack gap={2}>
+      <Typography ref={titleRef} variant="h2">
+        {alertLabel || 'Resources'}
+        {/* It can be either the passed alert label or just Resources */}
+      </Typography>
+      {!isResourcesError &&
+        !isRegionsError &&
+        alertResourceIds.length === 0 && (
+          <StyledPlaceholder
+            title={
+              'No resources are currently assigned to this alert definition.'
+            }
+            icon={EntityIcon}
+            subtitle="You can assign alerts during the resource creation process."
+          />
+        )}
 
       <Grid container spacing={3}>
         <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
           <Grid item md={3} xs={12}>
             <DebouncedSearchTextField
-              onSearch={(value) => {
-                setSearchText(value);
-              }}
               sx={{
-                maxHeight: theme.spacing(4.25),
+                maxHeight: '34px',
               }}
               clearable
-              debounceTime={300}
               hideLabel
-              isSearching={false}
               label="Search for a Region or Resource"
+              onSearch={handleSearchTextChange}
               placeholder="Search for a Region or Resource"
-              value={searchText ?? ''}
+              value={searchText || ''}
             />
           </Grid>
           <Grid item md={4} xs={12}>
             <AlertsRegionFilter
-              handleSelectionChange={(value) => {
-                setFilteredRegions(value);
-              }}
-              regionOptions={regionOptions ?? []}
+              handleSelectionChange={handleFilteredRegionsChange}
+              regionOptions={regionOptions}
             />
           </Grid>
         </Grid>
         <Grid item xs={12}>
           <DisplayAlertResources
-            errorText={
-              isRegionsError || isResourcesError
-                ? 'Table data is unavailable. Please try again later.'
-                : undefined
-            }
             filteredResources={filteredResources}
-            isDataLoadingError={isRegionsError || isResourcesError}
+            isDataLoadingError={isDataLoadingError}
             pageSize={25}
             scrollToTitle={scrollToTitle}
           />
         </Grid>
       </Grid>
-    </>
+    </Stack>
   );
 });

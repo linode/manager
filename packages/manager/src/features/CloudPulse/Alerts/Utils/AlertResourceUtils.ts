@@ -1,6 +1,6 @@
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type { Region } from '@linode/api-v4';
-import { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 
 interface FilterResourceProps {
   /**
@@ -14,7 +14,7 @@ interface FilterResourceProps {
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
-  regionsIdToLabelMap: Map<string, Region>;
+  regionsIdToRegionMap: Map<string, Region>;
   /**
    * The resources associated with the alerts
    */
@@ -28,15 +28,14 @@ interface FilterResourceProps {
 
 /**
  * @param regions The list of regions
- * @returns A map of region id to Region object
+ * @returns A Map of region ID to Region object. Returns an empty Map if regions is undefined.
  */
-export const getRegionsIdLabelMap = (
+export const getRegionsIdRegionMap = (
   regions: Region[] | undefined
 ): Map<string, Region> => {
   if (!regions) {
     return new Map();
   }
-
   return new Map(regions.map((region) => [region.id, region]));
 };
 
@@ -47,17 +46,22 @@ export const getRegionsIdLabelMap = (
 export const getRegionOptions = (
   filterProps: FilterResourceProps
 ): Region[] => {
-  const { data, regionsIdToLabelMap, resourceIds } = filterProps;
-  return Array.from(
-    new Set(
-      data
-        ?.filter((resource) => resourceIds.includes(String(resource.id)))
-        ?.map((resource) => {
-          const regionId = resource.region;
-          return regionId ? regionsIdToLabelMap.get(regionId) : null;
-        })
-    )
-  ).filter((region) => region !== null && region !== undefined); // filter out undefined and null regions
+  const { data, regionsIdToRegionMap, resourceIds } = filterProps;
+  if (!data || !resourceIds.length || !regionsIdToRegionMap.size) {
+    return [];
+  }
+  const uniqueRegions = new Set<Region>();
+  data.forEach(({ id, region }) => {
+    if (resourceIds.includes(String(id))) {
+      const regionObject = region
+        ? regionsIdToRegionMap.get(region)
+        : undefined;
+      if (regionObject) {
+        uniqueRegions.add(regionObject);
+      }
+    }
+  });
+  return Array.from(uniqueRegions);
 };
 
 /**
@@ -70,7 +74,7 @@ export const getFilteredResources = (
   const {
     data,
     filteredRegions,
-    regionsIdToLabelMap,
+    regionsIdToRegionMap,
     resourceIds,
     searchText,
   } = filterProps;
@@ -88,8 +92,8 @@ export const getFilteredResources = (
       return {
         ...resource,
         region: resource.region // here replace region id with region label for regionsIdToLabelMap, formatted to Chicago, US(us-west)
-          ? regionsIdToLabelMap.get(resource.region)
-            ? `${regionsIdToLabelMap.get(resource.region)?.label}
+          ? regionsIdToRegionMap.get(resource.region)
+            ? `${regionsIdToRegionMap.get(resource.region)?.label}
                (${resource.region})`
             : resource.region
           : resource.region,
