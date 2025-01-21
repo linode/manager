@@ -260,8 +260,6 @@ describe('clone linode', () => {
       .click();
 
     ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
-    const url = getLinodeCloneUrl(mockLinode);
-    console.log(`linode clone url: ${url}`);
     cy.url().should('endWith', getLinodeCloneUrl(mockLinode));
 
     // Select clone region and Linode type.
@@ -287,7 +285,6 @@ describe('clone linode', () => {
     cy.wait('@cloneLinode').then((xhr) => {
       const newLinodeId = xhr.response?.body?.id;
       assert.equal(xhr.response?.statusCode, 200);
-      console.log(`cy.url(): ${cy.url()}`);
       cy.url().should('endWith', `linodes/${newLinodeId}`);
     });
 
