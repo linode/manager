@@ -194,8 +194,8 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
         newEndDateTime = lastMonth.endOf('month');
         break;
       case 'custom_range':
-        newStartDateTime = null;
-        newEndDateTime = null;
+        newStartDateTime = startDateTime;
+        newEndDateTime = endDateTime;
         break;
       default:
         return;
