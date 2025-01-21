@@ -23,15 +23,14 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
   return (
     <Hidden mdDown>
       <Box
-        sx={(theme) => ({
+        sx={() => ({
           backgroundColor: Global.Color.Neutrals[90],
+          borderRight: `1px solid ${Global.Color.Neutrals[80]}`,
           transition: 'width 100ms linear',
+          width: isCollapsed
+            ? `${SIDEBAR_COLLAPSED_WIDTH}px`
+            : `${SIDEBAR_WIDTH}px`,
         })}
-        width={`${
-          isCollapsed
-            ? SIDEBAR_COLLAPSED_WIDTH
-            : `calc(${SIDEBAR_WIDTH}px - 1px)`
-        }`}
         bottom={0}
         className="primary-nav-toggle"
         display="flex"
