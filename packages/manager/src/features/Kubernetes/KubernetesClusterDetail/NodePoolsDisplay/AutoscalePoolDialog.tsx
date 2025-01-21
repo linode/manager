@@ -33,9 +33,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   disabled: {
     opacity: 0.5,
   },
-  errorText: {
-    color: theme.color.red,
-  },
   input: {
     '& input': {
       width: 70,
@@ -219,16 +216,16 @@ export const AutoscalePoolDialog = (props: Props) => {
             />
           </Grid>
           <Grid style={{ padding: '0 8px' }} xs={12}>
-            {errors.min ? (
-              <Typography className={classes.errorText}>
+            {errors.min && (
+              <Typography color={(theme) => theme.palette.error.dark}>
                 {errors.min}
               </Typography>
-            ) : null}
-            {errors.max ? (
-              <Typography className={classes.errorText}>
+            )}
+            {errors.max && (
+              <Typography color={(theme) => theme.palette.error.dark}>
                 {errors.max}
               </Typography>
-            ) : null}
+            )}
           </Grid>
         </Grid>
       </form>
