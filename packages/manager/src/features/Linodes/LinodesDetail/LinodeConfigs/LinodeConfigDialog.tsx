@@ -1,3 +1,4 @@
+import { isEmpty } from '@linode/api-v4';
 import {
   Autocomplete,
   Box,
@@ -67,13 +68,12 @@ import {
 } from './LinodeConfigDialog.styles';
 
 import type { ExtendedInterface } from '../LinodeSettings/InterfaceSelect';
-import {
-  isEmpty,
-  type Config,
-  type Interface,
-  type LinodeConfigCreationData,
-} from '@linode/api-v4/lib/linodes';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type {
+  APIError,
+  Config,
+  Interface,
+  LinodeConfigCreationData,
+} from '@linode/api-v4';
 import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
@@ -593,28 +593,31 @@ export const LinodeConfigDialog = (props: Props) => {
   });
 
   const getPrimaryInterfaceOptions = (interfaces: ExtendedInterface[]) => {
-    return interfaces.reduce<{ label: string, value: number }[]>((acc, networkInterface, idx) => {
-      if (networkInterface.purpose !== 'none') {
-        acc.push({
-          label: `eth${idx}`,
-          value: idx,
-        });
-      }
-      return acc;
-    }, []);
+    return interfaces.reduce<{ label: string; value: number }[]>(
+      (acc, networkInterface, idx) => {
+        if (networkInterface.purpose !== 'none') {
+          acc.push({
+            label: `eth${idx}`,
+            value: idx,
+          });
+        }
+        return acc;
+      },
+      []
+    );
   };
 
   const primaryInterfaceOptions = getPrimaryInterfaceOptions(values.interfaces);
 
   const getPrimaryInterfaceIndex = () => {
     // Get the actual interfaces (exclude the "none" interfaces just to be safe)
-    const interfaces = values.interfaces.filter(i => i.purpose !== 'none');
+    const interfaces = values.interfaces.filter((i) => i.purpose !== 'none');
 
     const indexOfPrimaryInterface = interfaces.findIndex((i) => i.primary);
 
     // If an interface has `primary: true` we know thats the primary so just return it.
     if (indexOfPrimaryInterface !== -1) {
-      return indexOfPrimaryInterface
+      return indexOfPrimaryInterface;
     }
 
     // If the API response returns an empty array "interfaces": [] the Linode will by default have a public interface,
@@ -627,19 +630,23 @@ export const LinodeConfigDialog = (props: Props) => {
 
     // If a config has interfaces but none of them are marked as primary,
     // then the first interface in the list that’s not a VLAN will be the primary interface.
-    const inheritIndexOfPrimaryInterface = interfaces.findIndex(i => i.purpose !== 'vlan');
+    const inheritIndexOfPrimaryInterface = interfaces.findIndex(
+      (i) => i.purpose !== 'vlan'
+    );
 
     if (inheritIndexOfPrimaryInterface !== -1) {
       // If we're able to find the inherit primary interface, just return it.
       return inheritIndexOfPrimaryInterface;
     }
 
+    // If we haven't been able to find the primary interface by this point, the Linode doesn't have one.
+    // As an example, this is the case when a Linode only has a VLAN interface.
     return null;
   };
 
   const primaryInterfaceIndex = getPrimaryInterfaceIndex();
 
-  console.log("Primary Interface Index", primaryInterfaceIndex)
+  console.log('Primary Interface Index', primaryInterfaceIndex);
 
   /**
    * Form change handlers
@@ -1033,7 +1040,7 @@ export const LinodeConfigDialog = (props: Props) => {
                   disabled={isReadOnly}
                   label="Primary Interface (Default Route)"
                   options={primaryInterfaceOptions}
-                  placeholder='None'
+                  placeholder="None"
                 />
                 <Divider
                   sx={{
@@ -1284,7 +1291,8 @@ export const unrecommendedConfigNoticeSelector = ({
 
   // Edge case: users w/ ability to have multiple VPC interfaces. Scenario 1 & 2 notices not helpful if that's done
   const primaryInterfaceIsVPC =
-    primaryInterfaceIndex !== null && values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
+    primaryInterfaceIndex !== null &&
+    values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
 
   /*
    Scenario 1:
