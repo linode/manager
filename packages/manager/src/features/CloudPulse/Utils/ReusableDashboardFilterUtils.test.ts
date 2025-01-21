@@ -35,7 +35,6 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
     resource: 0,
   });
   expect(result).toBe(false);
-  const now = DateTime.now();
   result = checkMandatoryFiltersSelected({
     dashboardObj: mockDashboard,
     filterValue: { region: 'us-east' },
