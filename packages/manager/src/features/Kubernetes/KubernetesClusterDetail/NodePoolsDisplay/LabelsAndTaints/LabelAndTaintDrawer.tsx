@@ -8,6 +8,7 @@ import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
+import { LabelInput } from './LabelInput';
 import { LabelTable } from './LabelTable';
 import { TaintTable } from './TaintTable';
 
@@ -27,6 +28,8 @@ interface LabelsAndTaintsFormFields {
 
 export const LabelAndTaintDrawer = (props: Props) => {
   const { clusterId, nodePool, onClose, open } = props;
+
+  const [shouldAddLabel, setShouldAddLabel] = React.useState(false);
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
 
@@ -114,13 +117,16 @@ export const LabelAndTaintDrawer = (props: Props) => {
           <Button
             onClick={() => {
               {
-                /* TODO: Part 2 */
+                setShouldAddLabel(true);
               }
             }}
             buttonType="outlined"
           >
             Add Label
           </Button>
+          {shouldAddLabel && (
+            <LabelInput handleSave={() => setShouldAddLabel(!shouldAddLabel)} />
+          )}
 
           <Typography marginTop={(theme) => theme.spacing(4)} variant="h3">
             Taints
