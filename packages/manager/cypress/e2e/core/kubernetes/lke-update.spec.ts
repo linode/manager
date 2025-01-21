@@ -1013,7 +1013,6 @@ describe('LKE cluster updates', () => {
 
     const mockNodes = mockNodePoolInstances.map((linode, i) =>
       kubeLinodeFactory.build({
-        id: `id-${i * 5000}`,
         instance_id: linode.id,
         status: 'ready',
       })
@@ -1134,7 +1133,6 @@ describe('LKE cluster updates', () => {
 
     const mockNodes = mockNodePoolInstances.map((linode, i) =>
       kubeLinodeFactory.build({
-        id: `id-${i * 5000}`,
         instance_id: linode.id,
         status: 'ready',
       })
