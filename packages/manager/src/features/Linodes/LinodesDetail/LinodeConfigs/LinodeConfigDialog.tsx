@@ -593,34 +593,48 @@ export const LinodeConfigDialog = (props: Props) => {
   });
 
   const getPrimaryInterfaceOptions = (interfaces: ExtendedInterface[]) => {
-    return interfaces.map((_interface, idx) => {
-      return {
-        label: `eth${idx}`,
-        value: idx,
-      };
-    });
+    return interfaces.reduce<{ label: string, value: number }[]>((acc, networkInterface, idx) => {
+      if (networkInterface.purpose !== 'none') {
+        acc.push({
+          label: `eth${idx}`,
+          value: idx,
+        });
+      }
+      return acc;
+    }, []);
   };
 
   const primaryInterfaceOptions = getPrimaryInterfaceOptions(values.interfaces);
 
   const getPrimaryInterfaceIndex = () => {
-    const indexOfPrimaryInterface = values.interfaces.findIndex((i) => i.primary);
+    // Get the actual interfaces (exclude the "none" interfaces just to be safe)
+    const interfaces = values.interfaces.filter(i => i.purpose !== 'none');
 
-    // If an interface has `primary: true` we know thats the primary
+    const indexOfPrimaryInterface = interfaces.findIndex((i) => i.primary);
+
+    // If an interface has `primary: true` we know thats the primary so just return it.
     if (indexOfPrimaryInterface !== -1) {
       return indexOfPrimaryInterface
     }
 
     // If the API response returns an empty array "interfaces": [] the Linode will by default have a public interface,
     // and it will be eth0 on the Linode. This interface will be primary.
-    if (isEmpty(values.interfaces)) {
+    // This case isn't really nessesary because this form is built so that the interfaces state will be
+    // populated even if the API returns an empty interfaces array, but I'm including it for completeness.
+    if (isEmpty(interfaces)) {
       return null;
     }
 
-
     // If a config has interfaces but none of them are marked as primary,
     // then the first interface in the list that’s not a VLAN will be the primary interface.
-    return values.interfaces.findIndex(i => i.purpose !== 'vlan');
+    const inheritIndexOfPrimaryInterface = interfaces.findIndex(i => i.purpose !== 'vlan');
+
+    if (inheritIndexOfPrimaryInterface !== -1) {
+      // If we're able to find the inherit primary interface, just return it.
+      return inheritIndexOfPrimaryInterface;
+    }
+
+    return null;
   };
 
   const primaryInterfaceIndex = getPrimaryInterfaceIndex();
@@ -994,8 +1008,13 @@ export const LinodeConfigDialog = (props: Props) => {
                     const updatedInterfaces = [...values.interfaces];
 
                     for (let i = 0; i < updatedInterfaces.length; i++) {
-                      if (selected.value === i) {
+                      if (selected && selected.value === i) {
                         updatedInterfaces[i].primary = true;
+                      }
+                      if (selected === null) {
+                        // If the user cleared the primary interface field, set every interfaces
+                        // primary to false
+                        updatedInterfaces[i].primary = false;
                       }
                     }
 
@@ -1011,10 +1030,10 @@ export const LinodeConfigDialog = (props: Props) => {
                   }
                   autoHighlight
                   data-testid="primary-interface-dropdown"
-                  disableClearable
                   disabled={isReadOnly}
                   label="Primary Interface (Default Route)"
                   options={primaryInterfaceOptions}
+                  placeholder='None'
                 />
                 <Divider
                   sx={{
@@ -1252,7 +1271,7 @@ export const unrecommendedConfigNoticeSelector = ({
   values,
 }: {
   _interface: ExtendedInterface;
-  primaryInterfaceIndex: number;
+  primaryInterfaceIndex: number | null;
   thisIndex: number;
   values: EditableFields;
 }): JSX.Element | null => {
@@ -1265,7 +1284,7 @@ export const unrecommendedConfigNoticeSelector = ({
 
   // Edge case: users w/ ability to have multiple VPC interfaces. Scenario 1 & 2 notices not helpful if that's done
   const primaryInterfaceIsVPC =
-    values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
+    primaryInterfaceIndex !== null && values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
 
   /*
    Scenario 1:
