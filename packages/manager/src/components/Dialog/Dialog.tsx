@@ -137,7 +137,9 @@ export const Dialog = React.forwardRef(
               </Box>
             ) : (
               <>
-                {error && <Notice text={error} variant="error" />}
+                {error && (
+                  <Notice spacingBottom={0} text={error} variant="error" />
+                )}
                 {lastChildrenRef.current}
               </>
             )}
