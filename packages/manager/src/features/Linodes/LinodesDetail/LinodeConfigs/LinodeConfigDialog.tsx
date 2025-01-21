@@ -67,10 +67,11 @@ import {
 } from './LinodeConfigDialog.styles';
 
 import type { ExtendedInterface } from '../LinodeSettings/InterfaceSelect';
-import type {
-  Config,
-  Interface,
-  LinodeConfigCreationData,
+import {
+  isEmpty,
+  type Config,
+  type Interface,
+  type LinodeConfigCreationData,
 } from '@linode/api-v4/lib/linodes';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
@@ -204,10 +205,7 @@ const interfacesToState = (interfaces?: Interface[]) => {
   return padInterfaceList(interfacesPayload);
 };
 
-const interfacesToPayload = (
-  interfaces?: ExtendedInterface[],
-  primaryInterfaceIndex?: number
-) => {
+const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
   if (!interfaces || interfaces.length === 0) {
     return [];
   }
@@ -228,12 +226,6 @@ const interfacesToPayload = (
     // and no other interfaces are specified, the API prefers
     // to receive an empty array.
     return [];
-  }
-
-  if (primaryInterfaceIndex !== undefined) {
-    interfaces.forEach(
-      (iface, i) => (iface.primary = i === primaryInterfaceIndex)
-    );
   }
 
   return filteredInterfaces as Interface[];
@@ -287,11 +279,6 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 
-  const [
-    primaryInterfaceIndex,
-    setPrimaryInterfaceIndex,
-  ] = React.useState<number>(0);
-
   const regionHasVLANS = regions.some(
     (thisRegion) =>
       thisRegion.id === linode?.region &&
@@ -337,7 +324,7 @@ export const LinodeConfigDialog = (props: Props) => {
       devices: createDevicesFromStrings(devices),
       helpers,
       initrd: initrd !== '' ? initrd : null,
-      interfaces: interfacesToPayload(interfaces, primaryInterfaceIndex),
+      interfaces: interfacesToPayload(interfaces),
       kernel,
       label,
       /** if the user did not toggle the limit radio button, send a value of 0 */
@@ -502,14 +489,6 @@ export const LinodeConfigDialog = (props: Props) => {
           )
         );
 
-        const indexOfExistingPrimaryInterface = config.interfaces.findIndex(
-          (_interface) => _interface.primary === true
-        );
-
-        if (indexOfExistingPrimaryInterface !== -1) {
-          setPrimaryInterfaceIndex(indexOfExistingPrimaryInterface);
-        }
-
         resetForm({
           values: {
             comments: config.comments,
@@ -533,7 +512,6 @@ export const LinodeConfigDialog = (props: Props) => {
         resetForm({ values: defaultFieldsValues });
         setUseCustomRoot(false);
         setDeviceCounter(deviceCounterDefault);
-        setPrimaryInterfaceIndex(0);
       }
     }
   }, [open, config, initrdFromConfig, resetForm, queryClient]);
@@ -625,9 +603,29 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const primaryInterfaceOptions = getPrimaryInterfaceOptions(values.interfaces);
 
-  const handlePrimaryInterfaceChange = (selectedValue: number) => {
-    setPrimaryInterfaceIndex(selectedValue);
+  const getPrimaryInterfaceIndex = () => {
+    const indexOfPrimaryInterface = values.interfaces.findIndex((i) => i.primary);
+
+    // If an interface has `primary: true` we know thats the primary
+    if (indexOfPrimaryInterface !== -1) {
+      return indexOfPrimaryInterface
+    }
+
+    // If the API response returns an empty array "interfaces": [] the Linode will by default have a public interface,
+    // and it will be eth0 on the Linode. This interface will be primary.
+    if (isEmpty(values.interfaces)) {
+      return null;
+    }
+
+
+    // If a config has interfaces but none of them are marked as primary,
+    // then the first interface in the list that’s not a VLAN will be the primary interface.
+    return values.interfaces.findIndex(i => i.purpose !== 'vlan');
   };
+
+  const primaryInterfaceIndex = getPrimaryInterfaceIndex();
+
+  console.log("Primary Interface Index", primaryInterfaceIndex)
 
   /**
    * Form change handlers
@@ -992,19 +990,31 @@ export const LinodeConfigDialog = (props: Props) => {
               )}
               <>
                 <Autocomplete
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value.value
-                  }
-                  onChange={(_, selected) =>
-                    handlePrimaryInterfaceChange(selected?.value)
+                  onChange={(_, selected) => {
+                    const updatedInterfaces = [...values.interfaces];
+
+                    for (let i = 0; i < updatedInterfaces.length; i++) {
+                      if (selected.value === i) {
+                        updatedInterfaces[i].primary = true;
+                      }
+                    }
+
+                    formik.setValues({
+                      ...values,
+                      interfaces: updatedInterfaces,
+                    });
+                  }}
+                  value={
+                    primaryInterfaceIndex !== null
+                      ? primaryInterfaceOptions[primaryInterfaceIndex]
+                      : null
                   }
                   autoHighlight
                   data-testid="primary-interface-dropdown"
                   disableClearable
                   disabled={isReadOnly}
                   label="Primary Interface (Default Route)"
-                  options={getPrimaryInterfaceOptions(values.interfaces)}
-                  value={primaryInterfaceOptions[primaryInterfaceIndex]}
+                  options={primaryInterfaceOptions}
                 />
                 <Divider
                   sx={{
