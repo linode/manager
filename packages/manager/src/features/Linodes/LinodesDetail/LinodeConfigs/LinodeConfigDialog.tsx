@@ -1,4 +1,3 @@
-import { isEmpty } from '@linode/api-v4';
 import {
   Autocomplete,
   Box,
