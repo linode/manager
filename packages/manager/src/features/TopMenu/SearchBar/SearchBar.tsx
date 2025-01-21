@@ -1,3 +1,5 @@
+// import EnhancedSelect from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Search from '@mui/icons-material/Search';
 import { take } from 'ramda';
@@ -6,7 +8,6 @@ import { useHistory } from 'react-router-dom';
 import { components } from 'react-select';
 import { debounce } from 'throttle-debounce';
 
-import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
@@ -332,28 +333,36 @@ const SearchBar = (props: SearchProps) => {
         <label className="visually-hidden" htmlFor="main-search">
           Main search
         </label>
-        <EnhancedSelect
-          blurInputOnSelect
-          components={{ Control, Option }}
-          filterOption={filterResults}
-          guidance={guidanceText()}
-          hideLabel
-          isClearable={false}
-          isLoading={entitiesLoading}
-          isMulti={false}
+        <Autocomplete
+          // components={{ Control, Option }}
+          onChange={(_, value) => {
+            if (value) {
+              onSelect(value);
+            }
+          }}
+          sx={{
+            width: '100%',
+          }}
+          // guidance={guidanceText()}
+          textFieldProps={{
+            hideLabel: true,
+            onChange: (e) => {
+              handleSearchChange(e.target.value);
+            },
+          }}
+          filterOptions={(options) => options}
           label="Main search"
-          menuIsOpen={menuOpen}
-          onChange={onSelect}
+          loading={entitiesLoading}
+          multiple={false}
+          onBlur={onClose}
+          onClose={onClose}
           onFocus={onFocus}
-          onInputChange={handleSearchChange}
           onKeyDown={onKeyDown}
-          onMenuClose={onClose}
-          onMenuOpen={onOpen}
-          openMenuOnClick={false}
-          openMenuOnFocus={false}
+          onOpen={onOpen}
+          open={menuOpen && searchText !== ''}
           options={finalOptions}
           placeholder="Search Products, IP Addresses, Tags..."
-          styles={selectStyles}
+          // styles={selectStyles}
           value={value}
         />
         <StyledIconButton
