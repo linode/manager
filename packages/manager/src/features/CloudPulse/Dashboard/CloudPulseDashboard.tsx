@@ -14,11 +14,7 @@ import { useAclpPreference } from '../Utils/UserPreference';
 import { RenderWidgets } from '../Widget/CloudPulseWidgetRenderer';
 
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
-import type {
-  DateTimeWithPreset,
-  JWETokenPayLoad,
-  TimeDuration,
-} from '@linode/api-v4';
+import type { DateTimeWithPreset, JWETokenPayLoad } from '@linode/api-v4';
 
 export interface DashboardProperties {
   /**
