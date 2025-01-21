@@ -1,5 +1,5 @@
 import { CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid, useTheme } from '@mui/material';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
@@ -38,7 +38,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const { alertLabel, alertResourceIds, serviceType } = props;
   const [searchText, setSearchText] = React.useState<string>();
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
-  const theme = useTheme();
 
   const {
     data: regions,

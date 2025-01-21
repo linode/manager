@@ -8,23 +8,6 @@ import {
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 
-it('test getRegionsIdLabelMap method', () => {
-  let result = getRegionsIdLabelMap(undefined);
-
-  // if regions passed undefined, it should return an empty map
-  expect(Array.from(result.keys()).length).toBe(0);
-
-  const regions = regionFactory.buildList(10);
-
-  result = getRegionsIdLabelMap(regions);
-
-  // check for a key
-  expect(result.has(regions[0].id)).toBe(true);
-
-  // check for value to match the region object
-  expect(result.get(regions[0].id)).toBe(regions[0]);
-});
-
 describe('getRegionsIdLabelMap', () => {
   it('should return a proper map for given regions', () => {
     const regions = regionFactory.buildList(10);
@@ -90,7 +73,7 @@ describe('getRegionOptions', () => {
 
 it('test getFilteredResources method', () => {
   const regions = regionFactory.buildList(10);
-  const regionsIdToLabelMap = getRegionsIdLabelMap(regions);
+  const regionsIdToRegionMap = getRegionsIdRegionMap(regions);
   const data: CloudPulseResources[] = [
     { id: '1', label: 'Test', region: regions[0].id },
     { id: '2', label: 'Test2', region: regions[1].id },
@@ -101,10 +84,10 @@ it('test getFilteredResources method', () => {
     data,
     filteredRegions: getRegionOptions({
       data,
-      regionsIdToLabelMap,
+      regionsIdToRegionMap,
       resourceIds: ['1', '2'],
     }).map((region) => region.id),
-    regionsIdToLabelMap,
+    regionsIdToRegionMap,
     resourceIds: ['1', '2'],
   });
 
@@ -116,10 +99,10 @@ it('test getFilteredResources method', () => {
     data,
     filteredRegions: getRegionOptions({
       data,
-      regionsIdToLabelMap,
+      regionsIdToRegionMap,
       resourceIds: ['1', '2'],
     }).map((region) => region.id),
-    regionsIdToLabelMap,
+    regionsIdToRegionMap,
     resourceIds: ['1', '2'],
     searchText: data[1].label,
   });
@@ -132,10 +115,10 @@ it('test getFilteredResources method', () => {
     data,
     filteredRegions: getRegionOptions({
       data,
-      regionsIdToLabelMap,
+      regionsIdToRegionMap,
       resourceIds: ['1'], // region not associated with the resources
     }).map((region) => region.id),
-    regionsIdToLabelMap,
+    regionsIdToRegionMap,
     resourceIds: ['1', '2'],
     searchText: data[1].label,
   });
@@ -148,12 +131,12 @@ it('test getFilteredResources method', () => {
     data,
     filteredRegions: getRegionOptions({
       data,
-      regionsIdToLabelMap,
+      regionsIdToRegionMap,
       resourceIds: ['1', '2'],
     }).map((region) => region.id),
-    regionsIdToLabelMap,
+    regionsIdToRegionMap,
     resourceIds: ['1', '2'],
-    searchText: regionsIdToLabelMap.get(data[2].region ?? '')?.label, // different region
+    searchText: regionsIdToRegionMap.get(data[2].region ?? '')?.label, // different region
   });
 
   expect(result).toBeDefined();
@@ -163,7 +146,7 @@ it('test getFilteredResources method', () => {
   result = getFilteredResources({
     data: [],
     filteredRegions: [],
-    regionsIdToLabelMap,
+    regionsIdToRegionMap,
     resourceIds: ['1', '2'],
   });
 
@@ -174,7 +157,7 @@ it('test getFilteredResources method', () => {
   result = getFilteredResources({
     data: undefined,
     filteredRegions: [],
-    regionsIdToLabelMap,
+    regionsIdToRegionMap,
     resourceIds: ['1', '2'],
   });
   expect(result).toBeUndefined();
