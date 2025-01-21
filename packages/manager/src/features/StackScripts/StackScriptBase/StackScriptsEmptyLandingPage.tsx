@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
@@ -35,7 +35,7 @@ export const StackScriptsEmptyLandingState = (props: Props) => {
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={LinodeIcon}
+      icon={ComputeIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />

@@ -2,12 +2,12 @@ import { Box } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import Storage from 'src/assets/icons/entityIcons/bucket.svg';
+import Compute from 'src/assets/icons/entityIcons/compute.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
 import IAM from 'src/assets/icons/entityIcons/iam.svg';
-import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
 import Networking from 'src/assets/icons/entityIcons/networking.svg';
+import Storage from 'src/assets/icons/entityIcons/storage.svg';
 import More from 'src/assets/icons/more.svg';
 import { PRIMARY_NAV_TOGGLE_HEIGHT } from 'src/components/PrimaryNav/constants';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
@@ -104,7 +104,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         links: [],
       },
       {
-        icon: <Linode />,
+        icon: <Compute />,
         links: [
           {
             activeLinks: [

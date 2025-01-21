@@ -1,30 +1,30 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import StorageIcon from 'src/assets/icons/entityIcons/bucket.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
-import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import ManagedIcon from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
 import MarketplaceIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
+import StorageIcon from 'src/assets/icons/entityIcons/storage.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import LongviewIcon from 'src/assets/icons/longview.svg';
 
 export type EntityVariants =
+  | 'compute'
   | 'database'
   | 'domain'
   | 'firewall'
   | 'folder'
   | 'image'
   | 'kubernetes'
-  | 'linode'
   | 'longview'
   | 'managed'
   | 'marketplace'
@@ -46,13 +46,13 @@ interface EntityIconProps {
 }
 
 const iconMap = {
+  compute: ComputeIcon,
   database: DatabaseIcon,
   domain: DomainIcon,
   firewall: FirewallIcon,
   folder: FolderIcon,
   image: ImageIcon,
   kubernetes: KubernetesIcon,
-  linode: LinodeIcon,
   longview: LongviewIcon,
   managed: ManagedIcon,
   marketplace: MarketplaceIcon,
@@ -64,7 +64,7 @@ const iconMap = {
 };
 
 const getIcon = (variant: EntityVariants) => {
-  return iconMap[variant] ?? LinodeIcon;
+  return iconMap[variant] ?? ComputeIcon;
 };
 
 export const EntityIcon = (props: EntityIconProps) => {

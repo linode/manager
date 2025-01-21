@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 
 const meta: Meta<typeof EntityIcon> = {
-  args: { variant: 'linode' },
+  args: { variant: 'compute' },
   component: EntityIcon,
   title: 'Icons/EntityIcon',
 };

@@ -2,7 +2,7 @@ import { Button, H1Header, Typography, fadeIn } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 
 import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
 
@@ -74,7 +74,7 @@ export const Placeholder = (props: PlaceholderProps) => {
     buttonProps,
     dataQAPlaceholder,
     descriptionMaxWidth,
-    icon: Icon = LinodeIcon,
+    icon: Icon = ComputeIcon,
     isEntity,
     linksSection,
     renderAsSecondary,
