@@ -19,6 +19,10 @@ interface SelectedItem {
 }
 interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
 
+/**
+ * For Algolia search to work locally, ensure you have valid values set for
+ * REACT_APP_ALGOLIA_APPLICATION_ID and REACT_APP_ALGOLIA_SEARCH_KEY in your .env file.
+ */
 const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
   const [inputValue, setInputValue] = React.useState('');
   const {
