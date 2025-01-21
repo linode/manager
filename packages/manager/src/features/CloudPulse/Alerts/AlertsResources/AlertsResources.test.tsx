@@ -24,7 +24,12 @@ const queryMocks = vi.hoisted(() => ({
 
 const regions = regionFactory.buildList(3);
 
-const linodes = linodeFactory.buildList(3);
+const linodes = linodeFactory.buildList(3).map((value, index) => {
+  return {
+    ...value,
+    region: regions[index].id, // lets assign the regions from region factory to linode instances here
+  };
+});
 
 const searchPlaceholder = 'Search for a Region or Resource';
 const regionPlaceholder = 'Select Regions';
@@ -89,7 +94,7 @@ describe('AlertResources component tests', () => {
     );
 
     // Search Input
-    const searchInput = getByPlaceholderText('Search for a Resource');
+    const searchInput = getByPlaceholderText(searchPlaceholder);
     await userEvent.type(searchInput, linodes[1].label);
 
     // Wait for search results to update

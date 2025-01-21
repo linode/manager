@@ -71,7 +71,7 @@ describe('getRegionOptions', () => {
   });
 });
 
-it('test getFilteredResources method', () => {
+describe('getFilteredResources', () => {
   const regions = regionFactory.buildList(10);
   const regionsIdToRegionMap = getRegionsIdRegionMap(regions);
   const data: CloudPulseResources[] = [
@@ -79,86 +79,75 @@ it('test getFilteredResources method', () => {
     { id: '2', label: 'Test2', region: regions[1].id },
     { id: '3', label: 'Test3', region: regions[2].id },
   ];
-
-  let result = getFilteredResources({
-    data,
-    filteredRegions: getRegionOptions({
+  it('should return correct filtered instances on only filtered regions', () => {
+    const result = getFilteredResources({
       data,
+      filteredRegions: getRegionOptions({
+        data,
+        regionsIdToRegionMap,
+        resourceIds: ['1', '2'],
+      }).map((region) => region.id),
       regionsIdToRegionMap,
       resourceIds: ['1', '2'],
-    }).map((region) => region.id),
-    regionsIdToRegionMap,
-    resourceIds: ['1', '2'],
+    });
+
+    expect(result).toBeDefined();
+    expect(result?.length).toBe(2);
+  });
+  it('should return correct filtered instances on filtered regions and search text', () => {
+    const // Case with searchText
+      result = getFilteredResources({
+        data,
+        filteredRegions: getRegionOptions({
+          data,
+          regionsIdToRegionMap,
+          resourceIds: ['1', '2'],
+        }).map((region) => region.id),
+        regionsIdToRegionMap,
+        resourceIds: ['1', '2'],
+        searchText: data[1].label,
+      });
+
+    expect(result).toBeDefined();
+    expect(result?.length).toBe(1);
   });
 
-  expect(result).toBeDefined();
-  expect(result?.length).toBe(2);
-
-  // Case with searchText
-  result = getFilteredResources({
-    data,
-    filteredRegions: getRegionOptions({
+  it('should return empty result on mismatched filters', () => {
+    const result = getFilteredResources({
       data,
+      filteredRegions: getRegionOptions({
+        data,
+        regionsIdToRegionMap,
+        resourceIds: ['1'], // region not associated with the resources
+      }).map((region) => region.id),
       regionsIdToRegionMap,
       resourceIds: ['1', '2'],
-    }).map((region) => region.id),
-    regionsIdToRegionMap,
-    resourceIds: ['1', '2'],
-    searchText: data[1].label,
+      searchText: data[1].label,
+    });
+
+    expect(result).toBeDefined();
+    expect(result?.length).toBe(0);
   });
 
-  expect(result).toBeDefined();
-  expect(result?.length).toBe(1);
-
-  // Case with mismatched filters
-  result = getFilteredResources({
-    data,
-    filteredRegions: getRegionOptions({
-      data,
-      regionsIdToRegionMap,
-      resourceIds: ['1'], // region not associated with the resources
-    }).map((region) => region.id),
-    regionsIdToRegionMap,
-    resourceIds: ['1', '2'],
-    searchText: data[1].label,
-  });
-
-  expect(result).toBeDefined();
-  expect(result?.length).toBe(0);
-
-  // Case with different region as search text
-  result = getFilteredResources({
-    data,
-    filteredRegions: getRegionOptions({
-      data,
+  it('should return empty result on empty data', () => {
+    const result = getFilteredResources({
+      data: [],
+      filteredRegions: [],
       regionsIdToRegionMap,
       resourceIds: ['1', '2'],
-    }).map((region) => region.id),
-    regionsIdToRegionMap,
-    resourceIds: ['1', '2'],
-    searchText: regionsIdToRegionMap.get(data[2].region ?? '')?.label, // different region
+    });
+
+    expect(result).toBeDefined();
+    expect(result?.length).toBe(0);
   });
 
-  expect(result).toBeDefined();
-  expect(result?.length).toBe(0);
-
-  // Edge case: Empty data array
-  result = getFilteredResources({
-    data: [],
-    filteredRegions: [],
-    regionsIdToRegionMap,
-    resourceIds: ['1', '2'],
+  it('should return undefined if data is undefine', () => {
+    const result = getFilteredResources({
+      data: undefined,
+      filteredRegions: [],
+      regionsIdToRegionMap,
+      resourceIds: ['1', '2'],
+    });
+    expect(result).toBeUndefined();
   });
-
-  expect(result).toBeDefined();
-  expect(result?.length).toBe(0);
-
-  // if data is undefined , result should be undefined
-  result = getFilteredResources({
-    data: undefined,
-    filteredRegions: [],
-    regionsIdToRegionMap,
-    resourceIds: ['1', '2'],
-  });
-  expect(result).toBeUndefined();
 });
