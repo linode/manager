@@ -93,12 +93,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     }
   }, [resources, isSelectionsNeeded, resourceIds]);
 
-  React.useEffect(() => {
-    if (handleResourcesSelection) {
-      handleResourcesSelection(selectedResources.map((id) => String(id)));
-    }
-  }, [selectedResources, handleResourcesSelection]);
-
   const handleSelection = React.useCallback(
     (ids: number[], isSelectionAction: boolean) => {
       const onlySelected = isSelectionAction
@@ -108,8 +102,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       const newlySelected = ids.filter((id) => !selectedResources.includes(id));
 
       setSelectedResources([...onlySelected, ...newlySelected]);
+
+      if (handleResourcesSelection) {
+        handleResourcesSelection(ids.map((id) => String(id)));
+      }
     },
-    [selectedResources]
+    [handleResourcesSelection, selectedResources]
   );
 
   // The map holds the id of the region to the entire region object that needs to be displayed in table
@@ -191,7 +189,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
       {resourceIds.length > 0 && (
         <Grid container spacing={3}>
-          {/* <Grid container spacing={3}> */}
           <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
             <Grid item md={3} xs={12}>
               <DebouncedSearchTextField
