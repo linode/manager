@@ -81,7 +81,7 @@ export interface EditableDomainFields extends EditableSharedFields {
 }
 
 export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
-  const formContainerRef = React.useRef<HTMLFormElement>(null);
+  const { mode, open, records, type } = props;
 
   // const errorFields = {
   //   axfr_ips: 'domain transfers',
@@ -101,6 +101,42 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
   //   type: 'type',
   //   weight: 'weight',
   // };
+
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
+
+  const defaultValues = defaultFieldsState(props);
+
+  const {
+    control,
+    formState: { isSubmitting },
+    handleSubmit,
+    reset,
+    setError,
+  } = useForm<Partial<EditableDomainFields | EditableRecordFields>>({
+    defaultValues,
+    mode: 'onBlur',
+    values: defaultValues,
+  });
+
+  const types = getDomainRecordDrawerTypes(props, control);
+
+  const { fields } = types[type];
+  const isCreating = mode === 'create';
+  const isDomain = type === 'master' || type === 'slave';
+
+  // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+  const hasARecords = records.find((thisRecord) =>
+    ['A', 'AAAA'].includes(thisRecord.type)
+  );
+
+  const noARecordsNoticeText =
+    'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
+
+  // @todo: [Purvesh] - Need to handle other errors
+  // const otherErrors = [
+  //   getAPIErrorFor({}, state.errors)('_unknown'),
+  //   getAPIErrorFor({}, state.errors)('none'),
+  // ].filter(Boolean);
 
   const handleRecordSubmissionSuccess = () => {
     props.updateRecords();
@@ -126,11 +162,6 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
 
       scrollErrorIntoViewV2(formContainerRef);
     }
-  };
-
-  const handleClose = () => {
-    reset();
-    props.onClose();
   };
 
   const onDomainEdit = async (formData: EditableDomainFields) => {
@@ -222,40 +253,10 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
       .catch(handleSubmissionErrors);
   };
 
-  const defaultValues = defaultFieldsState(props);
-
-  const {
-    control,
-    formState: { isSubmitting },
-    handleSubmit,
-    reset,
-    setError,
-  } = useForm<Partial<EditableDomainFields | EditableRecordFields>>({
-    defaultValues,
-    mode: 'onBlur',
-    values: defaultValues,
-  });
-
-  const types = getDomainRecordDrawerTypes(props, control);
-
-  const { mode, open, records, type } = props;
-  const { fields } = types[type];
-  const isCreating = mode === 'create';
-  const isDomain = type === 'master' || type === 'slave';
-
-  // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
-  const hasARecords = records.find((thisRecord) =>
-    ['A', 'AAAA'].includes(thisRecord.type)
-  );
-
-  const noARecordsNoticeText =
-    'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
-
-  // @todo: [Purvesh] - Need to handle other errors
-  // const otherErrors = [
-  //   getAPIErrorFor({}, state.errors)('_unknown'),
-  //   getAPIErrorFor({}, state.errors)('none'),
-  // ].filter(Boolean);
+  const handleClose = () => {
+    reset();
+    props.onClose();
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     if (isDomain) {
