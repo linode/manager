@@ -2,7 +2,7 @@ import { within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
+import { notificationChannelFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { channelTypeOptions } from '../../constants';

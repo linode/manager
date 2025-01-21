@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { Drawer } from 'src/components/Drawer';
-import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
+import { notificationChannelFactory } from 'src/factories';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';

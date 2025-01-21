@@ -167,4 +167,3 @@ export const dimensionOperatorTypeMap: Record<
   neq: 'not equals',
   startswith: 'starts with',
 };
-
