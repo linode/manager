@@ -30,11 +30,11 @@ export const AlertListing = () => {
   const history = useHistory();
 
   const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
-    history.push(
-      `${location.pathname}/detail/${serviceType}/${
-        _id
-      }`
-    );
+    history.push(`${location.pathname}/detail/${serviceType}/${_id}`);
+  };
+
+  const handleEdit = ({ id: _id, service_type: serviceType }: Alert) => {
+    history.push(`${location.pathname}/edit/${serviceType}/${_id}`);
   };
 
   if (alerts?.length === 0) {
@@ -80,6 +80,7 @@ export const AlertListing = () => {
             <AlertTableRow
               handlers={{
                 handleDetails: () => handleDetails(alert),
+                handleEdit: () => handleEdit(alert),
               }}
               alert={alert}
               key={alert.id}
