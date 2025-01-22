@@ -80,6 +80,13 @@ export interface EditableDomainFields extends EditableSharedFields {
   ttl_sec?: number;
 }
 
+type ErrorFields =
+  | '_unknown'
+  | 'none'
+  | keyof EditableDomainFields
+  | keyof EditableRecordFields
+  | undefined;
+
 export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
   const { mode, open, records, type } = props;
 
@@ -108,11 +115,11 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
 
   const {
     control,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
     handleSubmit,
     reset,
     setError,
-  } = useForm<Partial<EditableDomainFields | EditableRecordFields>>({
+  } = useForm<EditableDomainFields | EditableRecordFields>({
     defaultValues,
     mode: 'onBlur',
     values: defaultValues,
@@ -146,23 +153,25 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
 
   const handleSubmissionErrors = (errorResponse: APIError[]) => {
     const errors = getAPIErrorOrDefault(errorResponse);
-
     for (const error of errors) {
-      const errorField = error.field as
-        | keyof EditableDomainFields
-        | keyof EditableRecordFields
-        | undefined;
+      const errorField = error.field as ErrorFields;
 
-      if (errorField) {
+      if (errorField === '_unknown' || errorField === 'none') {
+        setError(`root.${errorField}`, {
+          message: error.reason,
+        });
+      } else if (errorField) {
         setError(errorField, {
           message: error.reason,
         });
       } else {
-        setError('root', { message: error.reason });
+        setError('root', {
+          message: error.reason,
+        });
       }
-
-      scrollErrorIntoViewV2(formContainerRef);
     }
+
+    scrollErrorIntoViewV2(formContainerRef);
   };
 
   const onDomainEdit = async (formData: EditableDomainFields) => {
@@ -276,10 +285,15 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
       title={`${path([mode], modeMap)} ${path([type], typeMap)} Record`}
     >
       <form onSubmit={onSubmit} ref={formContainerRef}>
-        {/* {otherErrors.length > 0 &&
-          otherErrors.map((err, index) => {
-            return <Notice key={index} text={err} variant="error" />;
-          })} */}
+        {errors?.root?._unknown && (
+          <Notice text={errors.root._unknown.message} variant="error" />
+        )}
+        {errors?.root?.none && (
+          <Notice text={errors.root.none.message} variant="error" />
+        )}
+        {errors?.root && !errors?.root._unknown && !errors?.root.none && (
+          <Notice text={errors.root.message} variant="error" />
+        )}
         {!hasARecords && type === 'NS' && (
           <Notice
             spacingTop={8}

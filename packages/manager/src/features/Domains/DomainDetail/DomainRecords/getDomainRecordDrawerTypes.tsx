@@ -28,7 +28,7 @@ import type { Control } from 'react-hook-form';
 
 export const getDomainRecordDrawerTypes = (
   props: Pick<DomainRecordDrawerProps, 'domain' | 'type'>,
-  control: Control<Partial<EditableDomainFields | EditableRecordFields>>
+  control: Control<EditableDomainFields | EditableRecordFields>
 ) => {
   return {
     A: {
