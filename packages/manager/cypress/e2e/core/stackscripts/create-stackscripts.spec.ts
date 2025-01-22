@@ -242,10 +242,12 @@ describe('Create stackscripts', () => {
       .should('be.enabled')
       .click();
 
-    // Confirm the user is redirected to the StackScript details page
     cy.wait('@createStackScript').then((intercept) => {
-      console.log(intercept)
+      // Confirm the user is redirected to the StackScript details page
       cy.url().should('endWith', `/stackscripts/${intercept.response?.body.id}`);
+
+      // Confirm a success toast shows
+      ui.toast.assertMessage(`Successfully created StackScript ${intercept.response?.body.label}`);
     });
 
     ui.button
