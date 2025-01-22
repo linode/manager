@@ -163,8 +163,6 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
 
       scrollErrorIntoViewV2(formContainerRef);
     }
-
-    //console.log('-->', errors);
   };
 
   const onDomainEdit = async (formData: EditableDomainFields) => {
