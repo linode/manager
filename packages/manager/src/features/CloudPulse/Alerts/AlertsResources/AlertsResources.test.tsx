@@ -160,8 +160,8 @@ describe('AlertResources component tests', () => {
         )
     ).toBe(true);
 
-    await userEvent.click(regionColumn);
-    rows = Array.from(tableBody.querySelectorAll('tr')); // reverse the sorting
+    await userEvent.click(regionColumn); // reverse the sorting
+    rows = Array.from(tableBody.querySelectorAll('tr'));
     expect(
       rows
         .map((row) => row.textContent)

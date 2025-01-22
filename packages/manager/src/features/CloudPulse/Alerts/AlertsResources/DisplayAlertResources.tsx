@@ -49,6 +49,9 @@ export interface DisplayAlertResourceProp {
 export const DisplayAlertResources = React.memo(
   (props: DisplayAlertResourceProp) => {
     const { filteredResources, isDataLoadingError, scrollToElement } = props;
+    const [currentPageNumber, setCurrentPageNumber] = React.useState<
+      number | undefined
+    >(undefined);
     const pageSize = 25;
 
     const [sorting, setSorting] = React.useState<{
@@ -81,18 +84,24 @@ export const DisplayAlertResources = React.memo(
           orderBy,
         });
         handlePageChange(1); // Moves to the first page when the sort order or column changes
-        scrollToElement(); // scroll to title
+        setCurrentPageNumber(1);
       },
-      [scrollToElement]
+      []
     );
 
     const handlePageNumberChange = React.useCallback(
       (handlePageChange: (page: number) => void, pageNumber: number) => {
         handlePageChange(pageNumber); // Moves to the requested page number
-        scrollToElement(); // scroll to title
+        setCurrentPageNumber(pageNumber);
       },
-      [scrollToElement]
+      []
     );
+
+    React.useEffect(() => {
+      if (currentPageNumber) {
+        scrollToElement();
+      }
+    }, [currentPageNumber, scrollToElement]); // on change of pages, we can scroll to the element given, possibly to the title of the element
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({

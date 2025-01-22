@@ -100,7 +100,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         (region) =>
           regionsIdToRegionMap.get(region)
             ? `${regionsIdToRegionMap.get(region)?.label} (${region})`
-            : region // Stores filtered regions in the format `region.label (region.id)`
+            : region // Stores filtered regions in the format `region.label (region.id)` that is displayed and filtered in the table
       )
     );
   };
