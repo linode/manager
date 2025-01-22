@@ -16,7 +16,7 @@ export const LabelTable = () => {
   const { setValue, watch } = useFormContext();
 
   const labels: Label = watch('labels');
-  const labelsArray = Object.entries(labels);
+  const labelsArray = labels ? Object.entries(labels) : [];
 
   const handleRemoveLabel = (labelKey: string) => {
     const newLabels = Object.fromEntries(
