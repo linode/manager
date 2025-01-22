@@ -1,5 +1,6 @@
 import { Box } from '@linode/ui';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
@@ -40,6 +41,7 @@ const getStatus = (status: AlertStatusType) => {
 
 export const AlertTableRow = (props: Props) => {
   const { alert, handlers, services } = props;
+  const location = useLocation();
   const { created_by, id, label, service_type, status, type, updated } = alert;
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>

@@ -1,8 +1,8 @@
-import { Autocomplete, Button, Paper, Stack } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { Autocomplete, Box, Button, Stack } from '@linode/ui';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
+import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
@@ -36,9 +36,6 @@ export const AlertListing = () => {
       : [];
   }, [serviceOptions]);
 
-  React.useEffect(() => {
-    setServiceFilters(getServicesList);
-  }, [getServicesList]);
   const [searchText, setSearchText] = React.useState<string>('');
 
   const [serviceFilters, setServiceFilters] = React.useState<
@@ -46,7 +43,7 @@ export const AlertListing = () => {
   >([]);
   const [statusFilters, setStatusFilters] = React.useState<
     Item<string, AlertStatusType>[]
-  >(alertStatusOptions);
+  >([]);
 
   const serviceFilteredAlerts = React.useMemo(() => {
     if (serviceFilters && serviceFilters.length !== 0 && alerts) {
@@ -71,16 +68,21 @@ export const AlertListing = () => {
     return alerts;
   }, [statusFilters, alerts]);
 
-  if (alerts?.length === 0) {
+  if (alerts && alerts.length == 0) {
     return (
-      <Grid item xs={12}>
-        <Paper>
-          <StyledPlaceholder
-            subtitle="Start Monitoring your resources."
-            title=""
-          />
-        </Paper>
-      </Grid>
+      <StyledPlaceholder
+        buttonProps={[
+          {
+            children: 'Create Alerts',
+            onClick: () => {
+              history.push(`${url}/create`);
+            },
+          },
+        ]}
+        icon={AlertsIcon}
+        subtitle="Start monitoring your resources."
+        title=""
+      />
     );
   }
 
@@ -122,19 +124,34 @@ export const AlertListing = () => {
 
   return (
     <Stack spacing={2}>
-      <Grid container display="flex" gap={2} overflow="auto">
-        <Grid item md={3} sm={5} sx={{ paddingLeft: 0 }} xs={10}>
+      <Box
+        alignItems={{ lg: 'flex-end', md: 'flex-start' }}
+        display="flex"
+        flexDirection={{ lg: 'row', md: 'column', sm: 'column', xs: 'column' }}
+        gap={3}
+        justifyContent="space-between"
+      >
+        <Box
+          flexDirection={{
+            lg: 'row',
+            md: 'column',
+            sm: 'column',
+            xs: 'column',
+          }}
+          display="flex"
+          gap={2}
+        >
           <DebouncedSearchTextField
-            data-testid="alert-search"
-            debounceTime={250}
+            sx={{
+              width: { md: '300px', sm: '500px', xs: '300px' },
+            }}
+            data-qa-filter="alert-search"
             label=""
             noMarginTop
             onSearch={setSearchText}
             placeholder="Search for Alerts"
             value={searchText}
           />
-        </Grid>
-        <Grid item md={3} sm={5} xs={10}>
           <Autocomplete
             errorText={
               serviceTypesError ? 'An error in fetching the services.' : ''
@@ -142,9 +159,14 @@ export const AlertListing = () => {
             onChange={(_, selected) => {
               setServiceFilters(selected);
             }}
+            sx={{
+              width: { md: '300px', sm: '500px', xs: '300px' },
+            }}
+            autoHighlight
             data-qa-filter="alert-service-filter"
             data-testid="alert-service-filter"
             label={''}
+            limitTags={2}
             loading={serviceTypesLoading}
             multiple
             noMarginTop
@@ -152,12 +174,14 @@ export const AlertListing = () => {
             placeholder={serviceFilters.length > 0 ? '' : 'Select a Service'}
             value={serviceFilters}
           />
-        </Grid>
-        <Grid item md={3} sm={5} xs={10}>
           <Autocomplete
             onChange={(_, selected) => {
               setStatusFilters(selected);
             }}
+            sx={{
+              width: { md: '300px', sm: '500px', xs: '300px' },
+            }}
+            autoHighlight
             data-qa-filter="alert-status-filter"
             data-testid="alert-status-filter"
             label={''}
@@ -167,33 +191,24 @@ export const AlertListing = () => {
             placeholder={statusFilters.length > 0 ? '' : 'Select a Status'}
             value={statusFilters}
           />
-        </Grid>
-        <Grid
-          sx={{
-            alignContent: 'center',
-            display: 'flex',
-            justifyContent: 'flex-end',
+        </Box>
+        <Button
+          onClick={() => {
+            history.push(`${url}/create`);
           }}
-          container
-          item
-          md={2}
-          sm={5}
-          xs={10}
+          sx={{
+            height: '34px',
+            paddingBottom: 0,
+            paddingTop: 0,
+          }}
+          buttonType="primary"
+          data-qa-button="create-alert"
+          data-qa-buttons="true"
+          variant="contained"
         >
-          <Button
-            onClick={() => {
-              history.push(`${url}/create`);
-            }}
-            buttonType="primary"
-            data-qa-button="create-alert"
-            data-qa-buttons="true"
-            sx={{ height: { md: '34px' }, width: { md: '140px' } }}
-            variant="contained"
-          >
-            Create Alert
-          </Button>
-        </Grid>
-      </Grid>
+          Create Alert
+        </Button>
+      </Box>
       <AlertsListTable
         alerts={getAlertsList()}
         error={error ?? undefined}

@@ -1,4 +1,7 @@
+import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
 import * as React from 'react';
+import { Router } from 'react-router-dom';
 
 import { alertFactory } from 'src/factories/cloudpulse/alerts';
 import { capitalize } from 'src/utilities/capitalize';
@@ -33,10 +36,6 @@ describe('Alert Row', () => {
     expect(getByText(alert.label)).toBeVisible();
   });
 
-  /**
-   * As of now the styling for the status 'enabled' is decided, in the future if they decide on the
-  other styles possible status values, will update them and test them accordingly.
-   */
   it('should render the status field in green color if status is enabled', () => {
     const alert = alertFactory.build({ status: 'enabled' });
     const renderedAlert = (
@@ -58,18 +57,35 @@ describe('Alert Row', () => {
 
   it('alert labels should have hyperlinks to the details page', () => {
     const alert = alertFactory.build({ status: 'enabled' });
+    const history = createMemoryHistory();
+    history.push('/monitor/alerts/definitions');
     const link = `/monitor/alerts/definitions/detail/${alert.service_type}/${alert.id}`;
     const renderedAlert = (
+      <Router history={history}>
+        <AlertTableRow
+          alert={alert}
+          handlers={{ handleDetails: () => vi.fn() }}
+          services={mockServices}
+        />
+      </Router>
+    );
+    const { getByText } = renderWithTheme(wrapWithTableBody(renderedAlert));
+
+    const labelElement = getByText(alert.label);
+    expect(labelElement.closest('a')).toHaveAttribute('href', link);
+  });
+
+  it('should have the show details action item present inside action menu', async () => {
+    const alert = alertFactory.build({ status: 'enabled' });
+    const { getAllByLabelText, getByTestId } = renderWithTheme(
       <AlertTableRow
         alert={alert}
         handlers={{ handleDetails: () => vi.fn() }}
         services={mockServices}
       />
     );
-    const { getByLabelText } = renderWithTheme(
-      wrapWithTableBody(renderedAlert)
-    );
-    const labelElement = getByLabelText(alert.label);
-    expect(labelElement).toHaveAttribute('href', link);
+    const firstActionMenu = getAllByLabelText('Action menu for Alert')[0];
+    await userEvent.click(firstActionMenu);
+    expect(getByTestId('Show Details')).toBeInTheDocument();
   });
 });
