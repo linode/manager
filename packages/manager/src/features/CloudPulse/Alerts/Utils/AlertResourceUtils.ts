@@ -79,9 +79,7 @@ export const getFilteredResources = (
     searchText,
   } = filterProps;
   return data // here we always use the base data from API for filtering as source of truth
-    ?.filter(
-      (resource) => resourceIds.includes(String(resource.id)) // if we can edit like add or delete no need to filter on resources associated with alerts
-    )
+    ?.filter((resource) => resourceIds.includes(String(resource.id)))
     .map((resource) => {
       return {
         ...resource,

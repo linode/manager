@@ -74,7 +74,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const isDataLoadingError = isRegionsError || isResourcesError;
 
-  // Memoized no resource message
+  // Memoized message to be displayed when no resources are found for the alert.
   const renderNoResourcesMessage = React.useMemo(() => {
     if (!isDataLoadingError && alertResourceIds.length === 0) {
       return (
@@ -97,14 +97,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const handleFilteredRegionsChange = (selectedRegions: string[]) => {
     setFilteredRegions(
       selectedRegions.map(
-        (region) => `${regionsIdToRegionMap.get(region)?.label} (${region})` // store filtered regions in format `region.label (region.id)`
+        (region) => `${regionsIdToRegionMap.get(region)?.label} (${region})` // Stores filtered regions in the format `region.label (region.id)`
       )
     );
   };
 
   /**
-   * Holds the resources that are
-   * filtered based on the passed resourceIds, typed searchText and filtered regions
+   * Filters resources based on the provided resource IDs, search text, and filtered regions.
    */
   const filteredResources = React.useMemo(() => {
     return getFilteredResources({

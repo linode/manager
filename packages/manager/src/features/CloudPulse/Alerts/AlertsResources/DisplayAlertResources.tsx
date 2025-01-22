@@ -15,15 +15,15 @@ import type { Order } from 'src/hooks/useOrder';
 
 export interface AlertInstance {
   /**
-   * The id of the alert
+   * The id of the instance
    */
   id: string;
   /**
-   * The label of the alert
+   * The label of the instance
    */
   label: string;
   /**
-   * The region associated with the alert
+   * The region associated with the instance
    */
   region?: string;
 }
@@ -67,7 +67,7 @@ export const DisplayAlertResources = React.memo(
       order: 'asc',
       orderBy: 'label', // default order to be asc and orderBy will be label
     });
-    // The sorted data based on the selection in the table
+    // Holds the sorted data based on the selected sort order and column
     const sortedData = React.useMemo(() => {
       return sortData(
         sorting.orderBy,
@@ -89,7 +89,7 @@ export const DisplayAlertResources = React.memo(
           order,
           orderBy,
         });
-        handlePageChange(1); // move to first page on sort change
+        handlePageChange(1); // Moves to the first page when the sort order or column changes
         scrollToTitle(); // scroll to title
       },
       [scrollToTitle]
@@ -97,7 +97,7 @@ export const DisplayAlertResources = React.memo(
 
     const handlePageNumberChange = React.useCallback(
       (handlePageChange: (page: number) => void, pageNumber: number) => {
-        handlePageChange(pageNumber); // move to requested page number
+        handlePageChange(pageNumber); // Moves to the requested page number
         scrollToTitle(); // scroll to title
       },
       [scrollToTitle]
@@ -181,7 +181,7 @@ export const DisplayAlertResources = React.memo(
                 }}
                 handleSizeChange={(pageSize) => {
                   handlePageSizeChange(pageSize);
-                  handlePageNumberChange(handlePageChange, 1); // move to first page
+                  handlePageNumberChange(handlePageChange, 1); // Moves to the first page after page size change
                 }}
                 count={count}
                 eventCategory="alerts_resources"
