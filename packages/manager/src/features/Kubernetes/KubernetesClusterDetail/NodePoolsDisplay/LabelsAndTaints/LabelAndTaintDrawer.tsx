@@ -1,4 +1,4 @@
-import { Button, Notice, Typography } from '@linode/ui';
+import { Button, Divider, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -132,9 +132,9 @@ export const LabelAndTaintDrawer = (props: Props) => {
             />
           )}
 
-          <Typography marginTop={(theme) => theme.spacing(4)} variant="h3">
-            Taints
-          </Typography>
+          <Divider spacingBottom={32} spacingTop={32} />
+
+          <Typography variant="h3">Taints</Typography>
           <TaintTable />
           <Button
             onClick={() => {

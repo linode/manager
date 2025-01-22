@@ -39,7 +39,9 @@ export const TaintInput = (props: Props) => {
     setValue('taints', [
       ..._taints,
       { effect: taintEffect, key: taintKey, value: taintValue },
+      { shouldDirty: true },
     ]);
+
     handleSave();
   };
 
@@ -60,7 +62,7 @@ export const TaintInput = (props: Props) => {
           );
         }}
         control={control}
-        name="labels"
+        name="taints"
       />
       <Controller
         render={({}) => (

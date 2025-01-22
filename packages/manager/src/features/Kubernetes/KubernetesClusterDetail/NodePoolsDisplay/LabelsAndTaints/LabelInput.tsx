@@ -29,7 +29,12 @@ export const LabelInput = (props: Props) => {
     // Validation?
 
     // Add the new key-value pair to the existing labels object.
-    setValue('labels', { ..._labels, [labelKey]: labelValue });
+    setValue(
+      'labels',
+      { ..._labels, [labelKey]: labelValue },
+      { shouldDirty: true }
+    );
+
     handleSave();
   };
 
@@ -46,7 +51,7 @@ export const LabelInput = (props: Props) => {
                 label="Label"
                 onChange={(e) => handleChangeLabel(e.target.value)}
                 placeholder="myapp.io/app: production"
-                sx={{ width: 360 }}
+                sx={{ width: 385 }}
                 value={combinedLabel}
               />
               <IconButton
@@ -70,7 +75,7 @@ export const LabelInput = (props: Props) => {
         onClick={handleAddLabel}
         sx={{ marginTop: 2 }}
       >
-        Save
+        Add
       </Button>
     </>
   );
