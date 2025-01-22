@@ -235,8 +235,7 @@ export const DateTimePicker = ({
               <Grid item xs={4}>
                 <TimePicker
                   minTime={
-                    minDate &&
-                    minDate.toISODate() === selectedDateTime?.toISODate()
+                    minDate?.toISODate() === selectedDateTime?.toISODate()
                       ? minDate
                       : undefined
                   }
