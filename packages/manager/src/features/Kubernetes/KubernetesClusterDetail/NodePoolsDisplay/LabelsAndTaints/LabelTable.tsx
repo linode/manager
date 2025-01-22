@@ -34,9 +34,9 @@ export const LabelTable = () => {
       </TableHead>
       <TableBody>
         {labels && labelsArray.length > 0 ? (
-          labelsArray.map(([key, value]) => {
+          labelsArray.map(([key, value], i) => {
             return (
-              <TableRow data-qa-label-row={key} key={`label-row-${key}`}>
+              <TableRow data-qa-label-row={key} key={`label-row-${i}-${key}`}>
                 <TableCell>
                   <Stack alignItems="center" direction="row">
                     <Typography>

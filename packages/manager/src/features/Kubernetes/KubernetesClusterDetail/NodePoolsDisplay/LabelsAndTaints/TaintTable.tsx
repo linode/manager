@@ -33,11 +33,11 @@ export const TaintTable = () => {
       </TableHead>
       <TableBody>
         {taints && taints.length > 0 ? (
-          taints.map((taint) => {
+          taints.map((taint, i) => {
             return (
               <TableRow
                 data-qa-taint-row={taint.key}
-                key={`taint-row-${taint.key}`}
+                key={`taint-row-${i}-${taint.key}`}
               >
                 <TableCell>
                   {taint.key}: {taint.value}
