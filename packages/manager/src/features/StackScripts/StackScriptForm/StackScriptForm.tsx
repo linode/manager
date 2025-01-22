@@ -11,7 +11,6 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { Code } from 'src/components/Code/Code';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { Link } from 'src/components/Link';
 
 import type { StackScriptPayload } from '@linode/api-v4';
 
