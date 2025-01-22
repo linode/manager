@@ -184,6 +184,7 @@ const StyledChip = styled(Chip, {
 })<{ showPlus: boolean }>(({ theme, ...props }) => ({
   '& .MuiChip-icon': {
     margin: 0,
+    marginLeft: theme.tokens.spacing[10],
   },
   '& .MuiChip-label': {
     padding: 0,
@@ -195,7 +196,7 @@ const StyledChip = styled(Chip, {
   font: theme.tokens.typography.Label.Bold.Xs,
   justifyContent: 'center',
   left: 20,
-  padding: theme.tokens.spacing[20],
+  padding: `${theme.tokens.spacing[20]} ${theme.tokens.spacing[30]}`,
   position: 'absolute',
   top: '-3px',
 }));
@@ -204,6 +205,5 @@ export const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
   fill: theme.tokens.header.Badge.Icon,
   height: '12px',
-  margin: 0,
   width: '12px',
 }));

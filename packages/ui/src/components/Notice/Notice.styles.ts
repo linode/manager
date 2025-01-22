@@ -6,14 +6,16 @@ export const useStyles = makeStyles()((theme) => ({
   },
   icon: {
     color: theme.tokens.color.Neutrals.White,
-    left: -25, // This value must be static regardless of theme selection
+    left: -25,
     position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
   },
   important: {
     backgroundColor: theme.palette.background.paper,
     borderLeftWidth: 32,
     font: theme.font.normal,
-    padding: theme.spacing(1),
+    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
   },
   info: {
     borderLeft: `5px solid ${theme.palette.info.dark}`,
@@ -29,7 +31,6 @@ export const useStyles = makeStyles()((theme) => ({
     },
     alignItems: 'center',
     borderRadius: 1,
-    display: 'flex',
     fontSize: '1rem',
     maxWidth: '100%',
     padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,

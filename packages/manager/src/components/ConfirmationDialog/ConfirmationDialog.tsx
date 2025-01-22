@@ -34,7 +34,7 @@ export const ConfirmationDialog = React.forwardRef<
         direction="row"
         justifyContent="flex-end"
         spacing={2}
-        sx={{ mt: 4 }}
+        sx={{ mt: 2 }}
       >
         {actions && typeof actions === 'function'
           ? actions(dialogProps)

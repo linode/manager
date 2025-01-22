@@ -132,10 +132,6 @@ export const StyledAccordion = styled(Accordion, {
         stroke: 'transparent',
       },
     },
-    // Spacing between the accordion and the next accordion
-    '.MuiCollapse-entered': {
-      marginBottom: theme.tokens.spacing[40],
-    },
     backgroundColor: theme.tokens.color.Neutrals[90],
   })
 );

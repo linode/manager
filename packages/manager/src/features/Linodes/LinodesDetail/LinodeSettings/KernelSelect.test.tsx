@@ -28,8 +28,6 @@ const kernels = [
   kernelFactory.build({ id: 'linode/direct-disk', label: 'Direct Disk' }),
 ];
 
-vi.mock('src/components/EnhancedSelect/Select');
-
 describe('Kernel Select component', () => {
   it('should render a select with the correct number of options', async () => {
     const props: KernelSelectProps = {
