@@ -20,6 +20,7 @@ import { arrayToList } from 'src/utilities/arrayToList';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { StackScriptForm } from './StackScriptForm/StackScriptForm';
+import { stackscriptFieldNameOverrides } from './stackScriptUtils';
 
 import type { StackScriptPayload } from '@linode/api-v4';
 
@@ -40,7 +41,7 @@ export const StackScriptEdit = () => {
     description: stackscript?.description ?? '',
     images: stackscript?.images ?? [],
     label: stackscript?.label ?? '',
-    rev_note: '',
+    rev_note: stackscript?.rev_note ?? '',
     script: stackscript?.script ?? '',
   };
 
@@ -173,8 +174,14 @@ export const StackScriptEdit = () => {
         title="Reset StackScript From?"
       >
         You made changes to the{' '}
-        {arrayToList(Object.keys(form.formState.dirtyFields))}. Are you sure you
-        want to reset the form and discard your current changes?
+        {arrayToList(
+          Object.keys(form.formState.dirtyFields).map(
+            (field: keyof StackScriptPayload) =>
+              stackscriptFieldNameOverrides[field] ?? field
+          )
+        )}
+        . Are you sure you want to reset the form and discard your current
+        changes?
       </ConfirmationDialog>
     </FormProvider>
   );
