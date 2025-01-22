@@ -337,7 +337,7 @@ describe('VPC details page', () => {
   /**
    * - Confirms UI for Linode with a config with an implicit primary VPC interface (no notice)
    */
-  it('does not display an unrecommended config notice for a Linode with in implicit primary VPC', () => {
+  it('does not display an unrecommended config notice for a Linode with an implicit primary VPC', () => {
     const linodeRegion = chooseRegion({ capabilities: ['VPCs'] });
 
     const mockInterfaceId = randomNumber();
