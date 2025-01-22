@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Autocomplete, Box, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -8,6 +9,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { channelTypeOptions } from '../../constants';
 import { getAlertBoxStyles } from '../../Utils/utils';
 import { notificationChannelSchema } from '../schemas';
+import { RenderChannelDetails } from './RenderChannelDetails';
 
 import type { NotificationChannelForm } from '../types';
 import type { ChannelType, NotificationChannel } from '@linode/api-v4';
@@ -164,6 +166,25 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
               name="label"
             />
           </Box>
+          {selectedTemplate && selectedTemplate.channel_type === 'email' && (
+            <Box paddingTop={2}>
+              <Grid container>
+                <Grid item md={1} sm={1} xs={2}>
+                  <Typography variant="h3">To:</Typography>
+                </Grid>
+                <Grid
+                  item
+                  md="auto"
+                  overflow="auto"
+                  paddingRight={1}
+                  sm="auto"
+                  xs="auto"
+                >
+                  <RenderChannelDetails template={selectedTemplate} />
+                </Grid>
+              </Grid>
+            </Box>
+          )}
         </Box>
         <ActionsPanel
           primaryButtonProps={{
