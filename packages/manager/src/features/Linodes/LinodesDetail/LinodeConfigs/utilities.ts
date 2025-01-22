@@ -11,10 +11,10 @@ import type { Interface } from '@linode/api-v4';
  *
  * This is the general logic we follow in this function:
  * - If an interface is primary we know that's the primary
- * - If the API response returns an empty array "interfaces": [], under the hood, a public interface eth0 is inherently configured on the Linode. This interface will be primary.
+ * - If the API response returns an empty array "interfaces": [], under the hood, a public interface eth0 is implicit. This interface will be primary.
  * - If a config has interfaces, but none of them are marked primary: true, then the first interface in the list that’s not a VLAN will be the primary interface
  *
- * @returns the index of the primary Linode config or `null` if there is not a primary interface
+ * @returns the index of the primary interface or `null` if there is not a primary interface
  */
 export const getPrimaryInterfaceIndex = (interfaces: Interface[]) => {
   const indexOfPrimaryInterface = interfaces.findIndex((i) => i.primary);
@@ -33,7 +33,7 @@ export const getPrimaryInterfaceIndex = (interfaces: Interface[]) => {
   }
 
   // If a config has interfaces but none of them are marked as primary,
-  // then the first interface in the list that’s not a VLAN will be the primary interface.
+  // then the first interface in the list that’s not a VLAN will shown as the primary interface.
   const inherentIndexOfPrimaryInterface = interfaces.findIndex(
     (i) => i.purpose !== 'vlan'
   );
