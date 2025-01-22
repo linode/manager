@@ -97,6 +97,7 @@ export const NameOrTargetField = ({
 };
 
 export const ServiceField = (props: {
+  errorText?: string;
   onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
@@ -339,6 +340,7 @@ const NumberField = ({
 };
 
 export const PortField = (props: {
+  errorText?: string;
   onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: number | string;
@@ -355,6 +357,7 @@ export const PriorityField = (props: {
 }) => <NumberField {...props} />;
 
 export const WeightField = (props: {
+  errorText?: string;
   onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: number | string;

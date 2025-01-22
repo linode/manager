@@ -124,7 +124,8 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
   const isCreating = mode === 'create';
   const isDomain = type === 'master' || type === 'slave';
 
-  // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+  // If there are no A/AAAA records and a user tries to add an NS record,
+  // they'll see a warning message asking them to add an A/AAAA record.
   const hasARecords = records.find((thisRecord) =>
     ['A', 'AAAA'].includes(thisRecord.type)
   );
@@ -162,6 +163,8 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
 
       scrollErrorIntoViewV2(formContainerRef);
     }
+
+    //console.log('-->', errors);
   };
 
   const onDomainEdit = async (formData: EditableDomainFields) => {

@@ -372,8 +372,9 @@ export const getDomainRecordDrawerTypes = (
         (idx: number) => (
           // <ServiceField key={idx} />
           <Controller
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <ServiceField
+                errorText={fieldState.error?.message}
                 onBlur={field.onBlur}
                 onChange={field.onChange}
                 value={field.value ?? defaultFieldsState(props)['service']}
@@ -420,8 +421,9 @@ export const getDomainRecordDrawerTypes = (
         (idx: number) => (
           // <WeightField key={idx} />
           <Controller
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <WeightField
+                errorText={fieldState.error?.message}
                 onBlur={field.onBlur}
                 onChange={field.onChange}
                 value={field.value ?? defaultFieldsState(props)['weight']}
@@ -435,8 +437,9 @@ export const getDomainRecordDrawerTypes = (
         (idx: number) => (
           // <PortField key={idx} />
           <Controller
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <PortField
+                errorText={fieldState.error?.message}
                 onBlur={field.onBlur}
                 onChange={field.onChange}
                 value={field.value ?? defaultFieldsState(props)['port']}
@@ -627,7 +630,7 @@ export const getDomainRecordDrawerTypes = (
               />
             )}
             control={control}
-            key={idx}
+            key={`refresh-sec-${idx}`}
             name="refresh_sec"
           />
         ),
@@ -641,7 +644,7 @@ export const getDomainRecordDrawerTypes = (
               />
             )}
             control={control}
-            key={idx}
+            key={`retry-sec-${idx}`}
             name="retry_sec"
           />
         ),
@@ -655,7 +658,7 @@ export const getDomainRecordDrawerTypes = (
               />
             )}
             control={control}
-            key={idx}
+            key={`expire-sec-${idx}`}
             name="expire_sec"
           />
         ),
