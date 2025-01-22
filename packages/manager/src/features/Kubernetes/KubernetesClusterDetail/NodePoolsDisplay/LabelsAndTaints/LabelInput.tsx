@@ -3,6 +3,8 @@ import Close from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import type { Label } from '@linode/api-v4';
+
 interface Props {
   handleSave: () => void;
 }
@@ -12,9 +14,9 @@ export const LabelInput = (props: Props) => {
 
   const { control, setValue, watch } = useFormContext();
 
-  const _labels = watch('labels');
-
   const [combinedLabel, setCombinedLabel] = useState('');
+
+  const _labels: Label = watch('labels');
 
   const handleChangeLabel = (combinedValue: string) => {
     setCombinedLabel(combinedValue);
@@ -55,7 +57,7 @@ export const LabelInput = (props: Props) => {
                 value={combinedLabel}
               />
               <IconButton
-                aria-label={`Close Add Label form`}
+                aria-label="Close Add Label form"
                 disableRipple
                 onClick={handleSave}
                 size="medium"

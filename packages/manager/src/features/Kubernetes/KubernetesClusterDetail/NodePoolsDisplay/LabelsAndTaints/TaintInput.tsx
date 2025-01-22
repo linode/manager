@@ -36,11 +36,11 @@ export const TaintInput = (props: Props) => {
 
     // Validation?
 
-    setValue('taints', [
-      ..._taints,
-      { effect: taintEffect, key: taintKey, value: taintValue },
-      { shouldDirty: true },
-    ]);
+    setValue(
+      'taints',
+      [..._taints, { effect: taintEffect, key: taintKey, value: taintValue }],
+      { shouldDirty: true }
+    );
 
     handleSave();
   };
@@ -54,7 +54,7 @@ export const TaintInput = (props: Props) => {
               {...field}
               error={!!fieldState.error}
               helperText={fieldState.error?.message}
-              label="Label"
+              label="Taint"
               onChange={(e) => handleChangeTaint(e.target.value)}
               placeholder="myapp.io/app: production"
               value={combinedTaint}
@@ -79,7 +79,7 @@ export const TaintInput = (props: Props) => {
           />
         )}
         control={control}
-        name="entityType"
+        name="taints.effect"
       />
 
       <Button
