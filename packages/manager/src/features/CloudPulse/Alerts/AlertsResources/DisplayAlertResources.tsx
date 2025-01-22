@@ -51,7 +51,7 @@ export const DisplayAlertResources = React.memo(
     const { filteredResources, isDataLoadingError, scrollToElement } = props;
     const [currentPageNumber, setCurrentPageNumber] = React.useState<
       number | undefined
-    >(undefined);
+    >(undefined); // state variable to track the page number and updates
     const pageSize = 25;
 
     const [sorting, setSorting] = React.useState<{
