@@ -104,19 +104,15 @@ export const CreateUserDrawer = (props: Props) => {
         <Controller
           render={({ field }) => (
             <FormControlLabel
-              control={
-                <Toggle
-                  onChange={(e) => {
-                    field.onChange(!e.target.checked);
-                  }}
-                  checked={!field.value}
-                  data-qa-create-restricted
-                />
-              }
               label={`This user will have ${
                 field.value ? 'limited' : 'full'
               } access to account features.
                     This can be changed later.`}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                field.onChange(!e.target.checked);
+              }}
+              checked={!field.value}
+              control={<Toggle data-qa-create-restricted />}
               sx={{ marginTop: 1 }}
             />
           )}
