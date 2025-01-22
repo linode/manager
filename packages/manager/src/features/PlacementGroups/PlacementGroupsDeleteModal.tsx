@@ -95,15 +95,11 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   const assignedLinodesCount = assignedLinodes?.length ?? 0;
   const isDisabled = !selectedPlacementGroup || assignedLinodesCount > 0;
 
-  if (!selectedPlacementGroup) {
-    return null;
-  }
-
   return (
     <TypeToConfirmDialog
       entity={{
         action: 'deletion',
-        name: selectedPlacementGroup.label,
+        name: selectedPlacementGroup?.label,
         primaryBtnText: 'Delete',
         type: 'Placement Group',
       }}
@@ -116,11 +112,11 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       onClick={onDelete}
       onClose={handleClose}
       open={open}
-      title={`Delete Placement Group ${selectedPlacementGroup.label}`}
+      title={`Delete Placement Group ${selectedPlacementGroup?.label}`}
     >
       {error && (
         <Notice
-          key={selectedPlacementGroup.id}
+          key={selectedPlacementGroup?.id}
           text={error?.[0]?.reason}
           variant="error"
         />
@@ -170,7 +166,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             )}
             disableItemsOnRemove
             hasEncounteredMutationError={Boolean(unassignLinodeError)}
-            headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup.label}`}
+            headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup?.label}`}
             id="assigned-linodes"
             maxWidth={540}
             noDataText="No Linodes assigned to this Placement Group."
