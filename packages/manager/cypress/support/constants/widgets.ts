@@ -1,13 +1,3 @@
-import type {
-  DimensionFilterOperatorType,
-  MetricOperatorType,
-} from '@linode/api-v4';
-
-export interface Item<L extends string, T> {
-  label: L;
-  value: T;
-}
-
 /**
  * Provides configuration details for dashboards, including service types (DBaaS, Linode),
  * related metrics (such as CPU utilization, memory usage, disk I/O), and their properties like
@@ -108,22 +98,4 @@ export const widgetDetails = {
     resource: 'linode-resource',
     serviceType: 'linode',
   },
-};
-
-export const dimensionOperatorTypeMap: Record<
-  DimensionFilterOperatorType,
-  string
-> = {
-  endswith: 'ends with',
-  eq: 'equals',
-  neq: 'not equals',
-  startswith: 'starts with',
-};
-
-export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
-  eq: '=',
-  gt: '>',
-  gte: '>=',
-  lt: '<',
-  lte: '<=',
 };

@@ -21,12 +21,13 @@ import { formatDate } from 'src/utilities/formatDate';
 import {
   metricOperatorTypeMap,
   dimensionOperatorTypeMap,
-} from 'support/constants/widgets';
+  severityMap,
+  aggregationTypeMap,
+} from 'support/constants/alert';
 
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
-
 const mockAccount = accountFactory.build();
-const mockDBaaSAlertDetails = alertFactory.build({
+const alertDetails = alertFactory.build({
   service_type: 'dbaas',
   severity: 1,
   status: 'enabled',
@@ -34,7 +35,19 @@ const mockDBaaSAlertDetails = alertFactory.build({
   entity_ids: ['1', '2'],
   rule_criteria: { rules: alertRulesFactory.buildList(2) },
 });
-const mockDBaaSRegions = [
+const {
+  service_type,
+  severity,
+  status,
+  rule_criteria,
+  id,
+  label,
+  description,
+  created_by,
+  updated,
+} = alertDetails;
+const { rules } = rule_criteria;
+const regions = [
   regionFactory.build({
     capabilities: ['Managed Databases'],
     id: 'us-ord',
@@ -55,26 +68,22 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
-    mockGetRegions(mockDBaaSRegions);
-    mockGetAllAlertDefinitions([mockDBaaSAlertDetails]).as(
-      'getAlertDefinitionsList'
+    mockGetRegions(regions);
+    mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
+    mockGetAlertDefinitions(service_type, id, alertDetails).as(
+      'getDBaaSAlertDefinitions'
     );
-    mockGetAlertDefinitions(
-      mockDBaaSAlertDetails.service_type,
-      mockDBaaSAlertDetails.id,
-      mockDBaaSAlertDetails
-    ).as('getDBaaSAlertDefinitions');
 
     cy.visitWithLogin('/monitor/alerts/definitions');
 
     cy.wait('@getAlertDefinitionsList');
 
-    cy.get(`[data-qa-alert-cell="${mockDBaaSAlertDetails.id}"]`).within(() => {
+    cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
       // Ensure the alert label is visible
-      cy.findByText(mockDBaaSAlertDetails.label).should('be.visible');
+      cy.findByText(label).should('be.visible');
 
       // Action button within the alert cell should be visible and clickable
-      cy.get(`[data-qa-alert-action-cell="alert_${mockDBaaSAlertDetails.id}"]`)
+      cy.get(`[data-qa-alert-action-cell="alert_${id}"]`)
         .find('button')
         .should('be.visible')
         .click();
@@ -93,55 +102,49 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       // Validate Name field
       cy.get('[data-qa-item="Name"]').within(() => {
         cy.findByText('Name:').should('be.visible');
-        cy.findByText(mockDBaaSAlertDetails.label).should('be.visible');
+        cy.findByText(label).should('be.visible');
       });
       // Validate Description field
       cy.get('[data-qa-item="Description"]').within(() => {
         cy.findByText('Description:').should('be.visible');
-        cy.findByText(mockDBaaSAlertDetails.description).should('be.visible');
+        cy.findByText(description).should('be.visible');
       });
 
       // Validate Status field
       cy.get('[data-qa-item="Status"]').within(() => {
         cy.findByText('Status:').should('be.visible');
-        cy.findByText(
-          mockDBaaSAlertDetails.status.replace('enabled', 'Enabled')
-        ).should('be.visible');
+        cy.findByText(status.replace('enabled', 'Enabled')).should(
+          'be.visible'
+        );
       });
 
       cy.get('[data-qa-item="Severity"]').within(() => {
         cy.findByText('Severity:').should('be.visible');
-        cy.findByText(
-          String(mockDBaaSAlertDetails.severity).replace('1', 'Medium')
-        ).should('be.visible');
+        cy.findByText(severityMap[severity]).should('be.visible');
       });
       // Validate Service field
       cy.get('[data-qa-item="Service"]').within(() => {
         cy.findByText('Service:').should('be.visible');
-        cy.findByText(
-          mockDBaaSAlertDetails.service_type.replace('dbaas', 'Databases')
-        ).should('be.visible');
+        cy.findByText('Databases').should('be.visible');
       });
 
       // Validate Type field
       cy.get('[data-qa-item="Type"]').within(() => {
         cy.findByText('Type:').should('be.visible');
-        cy.findByText(
-          mockDBaaSAlertDetails.type.replace('system', 'System')
-        ).should('be.visible');
+        cy.findByText('System').should('be.visible');
       });
 
       // Validate Created By field
       cy.get('[data-qa-item="Created By"]').within(() => {
         cy.findByText('Created By:').should('be.visible');
-        cy.findByText(mockDBaaSAlertDetails.created_by).should('be.visible');
+        cy.findByText(created_by).should('be.visible');
       });
 
       // Validate Last Modified field
       cy.get('[data-qa-item="Last Modified"]').within(() => {
         cy.findByText('Last Modified:').should('be.visible');
         cy.findByText(
-          formatDate(mockDBaaSAlertDetails.updated, {
+          formatDate(updated, {
             format: 'MMM dd, yyyy, h:mm a',
           })
         ).should('be.visible');
@@ -150,18 +153,13 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
 
     // Validating contents of Criteria Section
     cy.get('[data-qa-section="Criteria"]').within(() => {
-      mockDBaaSAlertDetails.rule_criteria.rules.forEach((rule, index) => {
+      rules.forEach((rule, index) => {
         cy.get('[data-qa-item="Metric Threshold"]')
           .eq(index)
           .within(() => {
-            cy.get(
-              `[data-qa-chip="${rule.aggregation_type.replace('avg', 'Average')}"]`
-            )
+            cy.get( `[data-qa-chip="${aggregationTypeMap[rule.aggregation_type]}"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                rule.aggregation_type.replace('avg', 'Average')
-              );
+              .should('have.text',aggregationTypeMap[rule.aggregation_type]);
 
             cy.get(`[data-qa-chip="${rule.label}"]`)
               .should('be.visible')
@@ -192,9 +190,7 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
                   expect($chip).to.have.text(filter.label);
                 });
               // Validate the filter operator
-              cy.get(
-                `[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`
-              )
+              cy.get(`[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`)
                 .should('be.visible')
                 .each(($chip) => {
                   expect($chip).to.have.text(
@@ -215,51 +211,22 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       cy.get('[data-qa-item="Polling Interval"]')
         .find('[data-qa-chip]')
         .should('be.visible')
-        .should(
-          'have.text',
-          String(
-            mockDBaaSAlertDetails.trigger_conditions.polling_interval_seconds
-          ).replace('120', '2 minutes')
-        );
+        .should('have.text', '2 minutes');
 
       // Validating contents of Evaluation Periods
       cy.get('[data-qa-item="Evaluation Period"]')
         .find('[data-qa-chip]')
         .should('be.visible')
-        .should(
-          'have.text',
-          String(
-            mockDBaaSAlertDetails.trigger_conditions.evaluation_period_seconds
-          ).replace('240', '4 minutes')
-        );
+        .should('have.text', '4 minutes');
 
-      cy.get(
-        `[data-qa-chip="${mockDBaaSAlertDetails.trigger_conditions.criteria_condition.replace(
-          'ALL',
-          'All'
-        )}"]`
-      )
+      // Validating contents of Trigger Alert When
+      cy.get(`[data-qa-chip="All"]`)
         .should('be.visible')
-        .should(
-          'have.text',
-          mockDBaaSAlertDetails.trigger_conditions.criteria_condition.replace(
-            'ALL',
-            'All'
-          )
-        );
+        .should('have.text', 'All');
 
-      cy.get(
-        `[data-qa-chip="${String(
-          mockDBaaSAlertDetails.trigger_conditions.evaluation_period_seconds
-        ).replace('240', '4 minutes')}"]`
-      )
+      cy.get('[data-qa-chip="4 minutes"]')
         .should('be.visible')
-        .should(
-          'have.text',
-          String(
-            mockDBaaSAlertDetails.trigger_conditions.evaluation_period_seconds
-          ).replace('240', '4 minutes')
-        );
+        .should('have.text', '4 minutes');
 
       cy.get('[data-qa-item="criteria are met for"]')
         .should('be.visible')
