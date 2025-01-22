@@ -59,7 +59,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
 
   const [selectedResources, setSelectedResources] = React.useState<number[]>(
-    []
+    resourceIds.map((id) => Number(id))
   );
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
@@ -105,7 +105,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       setSelectedResources([...onlySelected, ...newlySelected]);
 
       if (handleResourcesSelection) {
-        handleResourcesSelection(ids.map((id) => String(id)));
+        handleResourcesSelection(
+          [...onlySelected, ...newlySelected].map((id) => String(id))
+        );
       }
     },
     [handleResourcesSelection, selectedResources]

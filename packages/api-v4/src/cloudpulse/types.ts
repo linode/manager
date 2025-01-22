@@ -166,10 +166,6 @@ export interface ServiceTypesList {
   data: ServiceTypes[];
 }
 
-export interface EditAlertResourcesPayload {
-  resource_ids?: string[];
-}
-
 export interface CreateAlertDefinitionPayload {
   label: string;
   tags?: string[];
@@ -183,7 +179,7 @@ export interface CreateAlertDefinitionPayload {
   channel_ids: number[];
 }
 export interface EditAlertResourcesPayload {
-  resource_ids?: string[];
+  resource_ids: string[];
 }
 export interface MetricCriteria {
   metric: string;

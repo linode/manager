@@ -43,6 +43,12 @@ export const EditAlertResources = () => {
     reset: resetEditAlert,
   } = useEditAlertDefinitionResources(serviceType, Number(alertId));
 
+  React.useEffect(() => {
+    setSelectedResources(
+      alertDetails ? alertDetails.entity_ids.map((id) => Number(id)) : []
+    );
+  }, [alertDetails]);
+
   const { newPathname, overrides } = React.useMemo(() => {
     const overrides = [
       {

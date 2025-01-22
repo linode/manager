@@ -31,21 +31,6 @@ export const createAlertDefinition = (
     setData(data, createAlertDefinitionSchema)
   );
 
-export const editAlertDefinitionResources = (
-  data: EditAlertResourcesPayload,
-  serviceType: string,
-  alertId: number
-) =>
-  Request<Alert>(
-    setURL(
-      `${API_ROOT}/monitor/services/${encodeURIComponent(
-        serviceType
-      )}/alert-definitions/${encodeURIComponent(alertId)}`
-    ),
-    setMethod('PUT'),
-    setData(data)
-  );
-
 export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<Alert>>(
     setURL(
@@ -82,4 +67,19 @@ export const getNotificationChannels = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
+  );
+
+export const editAlertDefinitionResources = (
+  data: EditAlertResourcesPayload,
+  serviceType: string,
+  alertId: number
+) =>
+  Request<Alert>(
+    setURL(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/alert-definitions/${encodeURIComponent(alertId)}`
+    ),
+    setMethod('PUT'),
+    setData(data)
   );
