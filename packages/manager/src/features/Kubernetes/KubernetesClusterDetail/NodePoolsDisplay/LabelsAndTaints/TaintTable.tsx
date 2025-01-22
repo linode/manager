@@ -15,10 +15,13 @@ export const TaintTable = () => {
 
   const taints: Taint[] = watch('taints');
 
-  const handleRemoveTaint = (key: string) => {
+  const handleRemoveTaint = (removedTaint: Taint) => {
     setValue(
       'taints',
-      taints.filter((taint) => taint.key !== key),
+      taints.filter(
+        (taint) =>
+          taint.key !== removedTaint.key || taint.value !== removedTaint.value
+      ),
       { shouldDirty: true }
     );
   };
@@ -48,7 +51,7 @@ export const TaintTable = () => {
                     <IconButton
                       aria-label={`Remove ${taint.key}: ${taint.value}`}
                       disableRipple
-                      onClick={() => handleRemoveTaint(taint.key)}
+                      onClick={() => handleRemoveTaint(taint)}
                       size="medium"
                       sx={{ marginLeft: 'auto' }}
                     >
