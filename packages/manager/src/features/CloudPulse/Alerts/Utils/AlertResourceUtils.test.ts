@@ -90,9 +90,7 @@ describe('getFilteredResources', () => {
       regionsIdToRegionMap,
       resourceIds: ['1', '2'],
     });
-
-    expect(result).toBeDefined();
-    expect(result?.length).toBe(2);
+    expect(result.length).toBe(2);
   });
   it('should return correct filtered instances on filtered regions and search text', () => {
     const // Case with searchText
@@ -107,9 +105,7 @@ describe('getFilteredResources', () => {
         resourceIds: ['1', '2'],
         searchText: data[1].label,
       });
-
-    expect(result).toBeDefined();
-    expect(result?.length).toBe(1);
+    expect(result.length).toBe(1);
   });
   it('should return empty result on mismatched filters', () => {
     const result = getFilteredResources({
@@ -123,9 +119,7 @@ describe('getFilteredResources', () => {
       resourceIds: ['1', '2'],
       searchText: data[1].label,
     });
-
-    expect(result).toBeDefined();
-    expect(result?.length).toBe(0);
+    expect(result.length).toBe(0);
   });
   it('should return empty result on empty data', () => {
     const result = getFilteredResources({
@@ -134,17 +128,15 @@ describe('getFilteredResources', () => {
       regionsIdToRegionMap,
       resourceIds: ['1', '2'],
     });
-
-    expect(result).toBeDefined();
-    expect(result?.length).toBe(0);
+    expect(result.length).toBe(0);
   });
-  it('should return undefined if data is undefine', () => {
+  it('should return empty result if data is undefined', () => {
     const result = getFilteredResources({
       data: undefined,
       filteredRegions: [],
       regionsIdToRegionMap,
       resourceIds: ['1', '2'],
     });
-    expect(result).toBeUndefined();
+    expect(result.length).toBe(0);
   });
 });

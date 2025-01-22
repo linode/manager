@@ -25,7 +25,7 @@ export interface AlertInstance {
   /**
    * The region associated with the instance
    */
-  region?: string;
+  region: string;
 }
 
 export interface DisplayAlertResourceProp {
@@ -41,24 +41,15 @@ export interface DisplayAlertResourceProp {
   isDataLoadingError?: boolean;
 
   /**
-   * The size of the page needed in the table
+   * Callback to scroll till the element required on page change change or sorting change
    */
-  pageSize: number;
-
-  /**
-   * Callback to scroll till to the top of the Resources title section
-   */
-  scrollToTitle: () => void;
+  scrollToElement: () => void;
 }
 
 export const DisplayAlertResources = React.memo(
   (props: DisplayAlertResourceProp) => {
-    const {
-      filteredResources,
-      isDataLoadingError,
-      pageSize,
-      scrollToTitle,
-    } = props;
+    const { filteredResources, isDataLoadingError, scrollToElement } = props;
+    const pageSize = 25;
 
     const [sorting, setSorting] = React.useState<{
       order: Order;
@@ -90,17 +81,17 @@ export const DisplayAlertResources = React.memo(
           orderBy,
         });
         handlePageChange(1); // Moves to the first page when the sort order or column changes
-        scrollToTitle(); // scroll to title
+        scrollToElement(); // scroll to title
       },
-      [scrollToTitle]
+      [scrollToElement]
     );
 
     const handlePageNumberChange = React.useCallback(
       (handlePageChange: (page: number) => void, pageNumber: number) => {
         handlePageChange(pageNumber); // Moves to the requested page number
-        scrollToTitle(); // scroll to title
+        scrollToElement(); // scroll to title
       },
-      [scrollToTitle]
+      [scrollToElement]
     );
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>

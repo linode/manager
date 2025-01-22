@@ -13,10 +13,10 @@ import {
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
-  scrollToTitle,
+  scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
-import { DisplayAlertResources } from './DisplayAlertResources';
+import { AlertInstance, DisplayAlertResources } from './DisplayAlertResources';
 
 import type { Region } from '@linode/api-v4';
 
@@ -97,7 +97,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const handleFilteredRegionsChange = (selectedRegions: string[]) => {
     setFilteredRegions(
       selectedRegions.map(
-        (region) => `${regionsIdToRegionMap.get(region)?.label} (${region})` // Stores filtered regions in the format `region.label (region.id)`
+        (region) =>
+          regionsIdToRegionMap.get(region)
+            ? `${regionsIdToRegionMap.get(region)?.label} (${region})`
+            : region // Stores filtered regions in the format `region.label (region.id)`
       )
     );
   };
@@ -105,7 +108,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   /**
    * Filters resources based on the provided resource IDs, search text, and filtered regions.
    */
-  const filteredResources = React.useMemo(() => {
+  const filteredResources: AlertInstance[] = React.useMemo(() => {
     return getFilteredResources({
       data: resources,
       filteredRegions,
@@ -162,8 +165,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             <DisplayAlertResources
               filteredResources={filteredResources}
               isDataLoadingError={isDataLoadingError}
-              pageSize={25}
-              scrollToTitle={() => scrollToTitle(titleRef.current)}
+              scrollToElement={() => scrollToElement(titleRef.current)}
             />
           </Grid>
         </Grid>

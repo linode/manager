@@ -70,7 +70,7 @@ export const getRegionOptions = (
  */
 export const getFilteredResources = (
   filterProps: FilterResourceProps
-): AlertInstance[] | undefined => {
+): AlertInstance[] => {
   const {
     data,
     filteredRegions,
@@ -78,8 +78,11 @@ export const getFilteredResources = (
     resourceIds,
     searchText,
   } = filterProps;
+  if (!data || resourceIds.length === 0) {
+    return [];
+  }
   return data // here we always use the base data from API for filtering as source of truth
-    ?.filter((resource) => resourceIds.includes(String(resource.id)))
+    .filter((resource) => resourceIds.includes(String(resource.id)))
     .map((resource) => {
       return {
         ...resource,
@@ -89,7 +92,7 @@ export const getFilteredResources = (
                 regionsIdToRegionMap.get(resource.region)?.id
               })`
             : resource.region
-          : resource.region,
+          : '',
       };
     })
     .filter((resource) => {
@@ -105,7 +108,7 @@ export const getFilteredResources = (
     .filter((resource) => {
       return (
         !filteredRegions?.length ||
-        filteredRegions.includes(resource.region || '')
+        (resource.region.length && filteredRegions.includes(resource.region))
       );
     });
 };
@@ -114,7 +117,7 @@ export const getFilteredResources = (
  * This methods scrolls to the given HTML Element
  * @param scrollToElement The HTML Element to which we need to scroll
  */
-export const scrollToTitle = (scrollToElement: HTMLDivElement | null) => {
+export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
   if (scrollToElement) {
     window.scrollTo({
       behavior: 'smooth',
