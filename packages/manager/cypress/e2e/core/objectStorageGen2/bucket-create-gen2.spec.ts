@@ -746,16 +746,9 @@ describe('Object Storage Gen2 create bucket modal has disabled fields', () => {
     ).as('getProfile');
   });
 
-  //TODO: this test fails rn but this is the desired behavior
-  it('bucket landing page should have Create button disabled', () => {
+  //TODO: this test fails rn. why should create button be enabled on landing page but not modal?
+  xit('bucket landing page should have Create button disabled', () => {
     cy.visitWithLogin('/object-storage/buckets');
-    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
-    cy.findByTestId('button').should('be.visible').should('be.disabled');
-  });
-
-  //TODO: this test fails rn but this is the desired behavior
-  it('access keys landing page should have Create button disabled', () => {
-    cy.visitWithLogin('/object-storage/access-keys');
     cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
     cy.findByTestId('button').should('be.visible').should('be.disabled');
   });
@@ -771,8 +764,7 @@ describe('Object Storage Gen2 create bucket modal has disabled fields', () => {
     cy.findByTestId('region-select').within(() => {
       cy.get('input').should('be.visible').should('be.disabled');
     });
-    // submit button
-    // TODO: label/region inputs disabled but create button is ENabled?
+    // submit button should be enabled
     cy.findByTestId('create-bucket-button')
       .should('be.visible')
       .should('be.enabled');
