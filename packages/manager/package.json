@@ -205,7 +205,7 @@
     "redux-mock-store": "^1.5.3",
     "storybook": "^8.4.7",
     "storybook-dark-mode": "4.0.1",
-    "vite": "^5.4.6",
+    "vite": "^5.4.12",
     "vite-plugin-svgr": "^3.2.0"
   },
   "browserslist": [
