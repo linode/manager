@@ -13,14 +13,14 @@ interface FilterResourceProps {
   filteredRegions?: string[];
 
   /**
-   * Property to integrate in edit the resources associated with resources
+   * Property to integrate and edit the resources associated with alerts
    */
   isAdditionOrDeletionNeeded?: boolean;
-
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
   regionsIdToLabelMap: Map<string, Region>;
+
   /**
    * The resources associated with the alerts
    */
@@ -32,12 +32,12 @@ interface FilterResourceProps {
   searchText?: string;
 
   /**
-   * If it set to true,  only show selected resources
+   * Property to filter out only selected resources
    */
   selectedOnly?: boolean;
 
   /*
-   * This property helps to be track the list of selected resources
+   * This property helps to track the list of selected resources
    */
   selectedResources?: number[];
 }
@@ -76,7 +76,7 @@ export const getFilteredResources = (
   return data
     ?.filter(
       (resource) =>
-        isAdditionOrDeletionNeeded || resourceIds.includes(String(resource.id)) // if we can edit like add or delete no need to filter on resources associated with alerts
+        isAdditionOrDeletionNeeded || resourceIds.includes(String(resource.id)) // if it is an edit page, selections will be true, no need to filter out resources not associated with alert
     )
     .filter((resource) => {
       if (filteredRegions) {

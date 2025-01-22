@@ -1,4 +1,4 @@
-import { Box, Checkbox, CircleProgress, Typography } from '@linode/ui';
+import { Checkbox, CircleProgress, Typography } from '@linode/ui';
 import { Grid, styled, useTheme } from '@mui/material';
 import React from 'react';
 
@@ -100,6 +100,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isFetching: isRegionsFetching,
   } = useRegionsQuery();
 
+  React.useEffect(() => {
+    if (resources && isSelectionsNeeded) {
+      setSelectedResources(
+        resources
+          .filter((resource) => resourceIds.includes(String(resource.id)))
+          .map((resource) => Number(resource.id))
+      );
+    }
+  }, [resources, isSelectionsNeeded, resourceIds]);
+
   const handleSelection = React.useCallback(
     (ids: number[], isSelectionAction: boolean) => {
       const onlySelected = isSelectionAction
@@ -109,8 +119,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       const newlySelected = ids.filter((id) => !selectedResources.includes(id));
 
       setSelectedResources([...onlySelected, ...newlySelected]);
+
+      if (handleResourcesSelection) {
+        handleResourcesSelection(ids.map((id) => String(id)));
+      }
     },
-    [selectedResources]
+    [handleResourcesSelection, selectedResources]
   );
 
   // The map holds the id of the region to the entire region object that needs to be displayed in table
@@ -135,13 +149,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     });
   }, [
     resources,
+    filteredRegions,
+    isSelectionsNeeded,
+    regionsIdToLabelMap,
     resourceIds,
     searchText,
-    filteredRegions,
-    regionsIdToLabelMap,
     selectedOnly,
     selectedResources,
-    isSelectionsNeeded,
   ]);
 
   const handleAllSelection = React.useCallback(() => {
@@ -209,71 +223,62 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
       {resourceIds.length > 0 && (
         <Grid container spacing={3}>
-          <Box
-            sx={{
-              flexDirection: {
-                md: 'row',
-                xs: 'column',
-              },
-            }}
-            display="flex"
-            gap={3}
-            ml={3}
-            mt={3}
-          >
-            <Box
-              sx={{
-                flexDirection: {
-                  md: 'row',
-                  xs: 'column',
-                },
-              }}
-              display={'flex'}
-              gap={1}
-            >
+          <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
+            <Grid item md={3} xs={12}>
               <DebouncedSearchTextField
                 onSearch={(value) => {
                   setSearchText(value);
                 }}
                 sx={{
-                  maxHeight: theme.spacing(4.25),
-                  p: 0,
-                  width: theme.spacing(37.5),
+                  maxHeight: '34px',
                 }}
                 clearable
-                debounceTime={300}
                 hideLabel
-                isSearching={false}
-                label="Search for resource"
-                placeholder="Search for a Resource or a Region"
-                value={searchText ?? ''}
+                label="Search for a Region or Resource"
+                placeholder="Search for a Region or Resource"
+                value={searchText || ''}
               />
+            </Grid>
+            <Grid item md={4} xs={12}>
               <AlertsRegionFilter
                 handleSelectionChange={(value) => {
                   setFilteredRegions(value);
                 }}
-                regionOptions={regionOptions ?? []}
+                regionOptions={regionOptions}
               />
-            </Box>
+            </Grid>
             {isSelectionsNeeded && (
-              <Checkbox
+              <Grid
                 sx={{
-                  maxHeight: theme.spacing(4.25),
-                  pt: theme.spacing(1),
-                  svg: {
-                    backgroundColor: theme.color.white,
+                  ml: {
+                    md: 2,
+                    xs: 0,
                   },
                 }}
-                checked={selectedOnly}
-                data-testid="show_selected_only"
-                disabled={!(Boolean(selectedResources.length) || selectedOnly)}
-                onClick={() => setSelectedOnly(!selectedOnly)}
-                text={'Show Selected Only'}
-                value={'Show Selected'}
-              />
+                item
+                md={4}
+                xs={12}
+              >
+                <Checkbox
+                  disabled={
+                    !(Boolean(selectedResources.length) || selectedOnly)
+                  }
+                  sx={{
+                    maxHeight: '34px',
+                    pt: theme.spacing(1.2),
+                    svg: {
+                      backgroundColor: theme.color.white,
+                    },
+                  }}
+                  checked={selectedOnly}
+                  data-testid="show_selected_only"
+                  onClick={() => setSelectedOnly(!selectedOnly)}
+                  text={'Show Selected Only'}
+                  value={'Show Selected'}
+                />
+              </Grid>
             )}
-          </Box>
-
+          </Grid>
           {isSelectionsNeeded && !(isResourcesError || isRegionsError) && (
             <Grid item xs={12}>
               <AlertsResourcesNotice
@@ -283,28 +288,22 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               />
             </Grid>
           )}
-
-          <Grid container item rowGap={3} xs={12}>
-            {/* Pass filtered data */}
-            <Grid item xs={12}>
-              <DisplayAlertResources
-                handleSelection={
-                  isSelectionsNeeded ? handleSelection : undefined
-                }
-                noDataText={
-                  !(isResourcesError || isRegionsError) &&
-                  !Boolean(filteredResources?.length)
-                    ? 'No data to display.'
-                    : undefined
-                }
-                errorText={'Table data is unavailable. Please try again later.'}
-                filteredResources={filteredResources}
-                isDataLoadingError={isResourcesError || isRegionsError}
-                isSelectionsNeeded={isSelectionsNeeded}
-                pageSize={pageSize}
-                scrollToTitle={scrollToTitle}
-              />
-            </Grid>
+          <Grid item xs={12}>
+            <DisplayAlertResources
+              noDataText={
+                !(isResourcesError || isRegionsError) &&
+                !Boolean(filteredResources?.length)
+                  ? 'No data to display.'
+                  : undefined
+              }
+              errorText={'Table data is unavailable. Please try again later.'}
+              filteredResources={filteredResources}
+              handleSelection={isSelectionsNeeded ? handleSelection : undefined}
+              isDataLoadingError={isResourcesError || isRegionsError}
+              isSelectionsNeeded={isSelectionsNeeded}
+              pageSize={pageSize}
+              scrollToTitle={scrollToTitle}
+            />
           </Grid>
         </Grid>
       )}

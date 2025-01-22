@@ -34,11 +34,7 @@ export const AlertListing = () => {
   };
 
   const handleEdit = ({ id: _id, service_type: serviceType }: Alert) => {
-    history.push(
-      `${location.pathname}/edit/${serviceType}/${
-        serviceType === 'linode' ? '1001' : '20000' // only these two ids are available, so using this
-      }`
-    );
+    history.push(`${location.pathname}/edit/${serviceType}/${_id}`);
   };
 
   if (alerts?.length === 0) {

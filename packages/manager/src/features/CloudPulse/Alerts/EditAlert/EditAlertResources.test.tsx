@@ -11,9 +11,9 @@ import { EditAlertResources } from './EditAlertResources';
 // Mock Data
 const alertDetails = alertFactory.build({ service_type: 'linode' });
 const linodes = linodeFactory.buildList(3);
-const regions = regionFactory.buildList(1).map((region, index) => ({
+const regions = regionFactory.buildList(3).map((region, index) => ({
   ...region,
-  id: index < 3 ? linodes[index].region : region.id,
+  id: linodes[index].region,
 }));
 
 // Mock Queries
@@ -70,7 +70,57 @@ beforeEach(() => {
 });
 
 describe('EditAlertResources component tests', () => {
-  it('Edit alert resources happy path', async () => {
+  it('Edit alert resources happy path', () => {
+    const { getByPlaceholderText, getByTestId } = renderWithTheme(
+      <EditAlertResources />
+    );
+
+    expect(
+      getByPlaceholderText('Search for a Region or Resource')
+    ).toBeInTheDocument();
+    expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
+    expect(getByTestId('show_selected_only')).toBeInTheDocument();
+  });
+
+  it('Edit alert resources alert details error and loading path', () => {
+    queryMocks.useAlertDefinitionQuery.mockReturnValue({
+      data: undefined,
+      isError: true, // simulate error
+      isFetching: false,
+    });
+
+    const { getByText } = renderWithTheme(<EditAlertResources />);
+
+    expect(
+      getByText(
+        'An error occurred while loading the alerts definitions and resources. Please try again later.'
+      )
+    ).toBeInTheDocument();
+
+    queryMocks.useAlertDefinitionQuery.mockReturnValue({
+      data: undefined,
+      isError: false,
+      isFetching: true, // simulate loading
+    });
+
+    const { getByTestId } = renderWithTheme(<EditAlertResources />);
+
+    expect(getByTestId('circle-progress')).toBeInTheDocument();
+  });
+
+  it('Edit alert resources alert details empty path', () => {
+    queryMocks.useAlertDefinitionQuery.mockReturnValue({
+      data: undefined, // simulate empty
+      isError: false,
+      isFetching: false,
+    });
+
+    const { getByText } = renderWithTheme(<EditAlertResources />);
+
+    expect(getByText('No Data to display.')).toBeInTheDocument();
+  });
+
+  it('Edit alert resources successful edit', async () => {
     const mutateAsyncSpy = queryMocks.useEditAlertDefinitionResources()
       .mutateAsync;
 
@@ -113,43 +163,5 @@ describe('EditAlertResources component tests', () => {
       // after cancel click history updates to list page
       '/monitor/cloudpulse/alerts/definitions'
     );
-  });
-
-  it('Edit alert resources alert details error and loading path', () => {
-    queryMocks.useAlertDefinitionQuery.mockReturnValue({
-      data: undefined,
-      isError: true, // simulate error
-      isFetching: false,
-    });
-
-    const { getByText } = renderWithTheme(<EditAlertResources />);
-
-    expect(
-      getByText(
-        'An error occurred while loading the alerts definitions and resources. Please try again later.'
-      )
-    ).toBeInTheDocument();
-
-    queryMocks.useAlertDefinitionQuery.mockReturnValue({
-      data: undefined,
-      isError: false,
-      isFetching: true, // simulate loading
-    });
-
-    const { getByTestId } = renderWithTheme(<EditAlertResources />);
-
-    expect(getByTestId('circle-progress')).toBeInTheDocument();
-  });
-
-  it('Edit alert resources alert details empty path', () => {
-    queryMocks.useAlertDefinitionQuery.mockReturnValue({
-      data: undefined, // simulate empty
-      isError: false,
-      isFetching: false,
-    });
-
-    const { getByText } = renderWithTheme(<EditAlertResources />);
-
-    expect(getByText('No Data to display.')).toBeInTheDocument();
   });
 });

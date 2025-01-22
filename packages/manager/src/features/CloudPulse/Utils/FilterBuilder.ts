@@ -25,6 +25,7 @@ import type { CloudPulseServiceTypeFilters } from './models';
 import type {
   AclpConfig,
   Dashboard,
+  DateTimeWithPreset,
   Filter,
   Filters,
   TimeDuration,
@@ -45,7 +46,7 @@ interface CloudPulseMandatoryFilterCheckProps {
   filterValue: {
     [key: string]: FilterValueType;
   };
-  timeDuration: TimeDuration | undefined;
+  timeDuration: DateTimeWithPreset | undefined;
 }
 /**
  * This function helps in building the properties needed for tags selection component
@@ -65,8 +66,8 @@ export const getTagsProperties = (
   return {
     defaultValue: preferences?.[TAGS],
     handleTagsChange,
-    optional: props.config.configuration.isOptional,
     label,
+    optional: props.config.configuration.isOptional,
     placeholder,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,

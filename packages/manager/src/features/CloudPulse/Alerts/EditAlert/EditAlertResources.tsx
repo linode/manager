@@ -187,7 +187,7 @@ export const EditAlertResources = () => {
             serviceType={alertDetails.service_type}
           />
         </Box>
-        <Box alignSelf={'flex-end'} m={3} mb={0}>
+        <Box alignSelf="flex-end" m={3} mb={0}>
           <Button
             onClick={() => {
               history.push('/monitor/alerts/definitions');

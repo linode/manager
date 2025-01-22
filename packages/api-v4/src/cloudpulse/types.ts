@@ -48,6 +48,12 @@ export interface TimeDuration {
   value: number;
 }
 
+export interface DateTimeWithPreset {
+  end: string;
+  start: string;
+  preset?: string;
+}
+
 export interface Widgets {
   label: string;
   metric: string;
@@ -80,6 +86,7 @@ export type FilterValue =
   | string[]
   | number[]
   | WidgetFilterValue
+  | DateTimeWithPreset
   | undefined;
 
 type WidgetFilterValue = { [key: string]: AclpWidget };
@@ -125,7 +132,8 @@ export interface CloudPulseMetricsRequest {
   filters?: Filters[];
   aggregate_function: string;
   group_by: string;
-  relative_time_duration: TimeDuration;
+  relative_time_duration: TimeDuration | undefined;
+  absolute_time_duration: DateTimeWithPreset | undefined;
   time_granularity: TimeGranularity | undefined;
   entity_ids: number[];
 }
@@ -173,6 +181,9 @@ export interface CreateAlertDefinitionPayload {
   };
   trigger_conditions: TriggerCondition;
   channel_ids: number[];
+}
+export interface EditAlertResourcesPayload {
+  resource_ids: string[];
 }
 export interface MetricCriteria {
   metric: string;
