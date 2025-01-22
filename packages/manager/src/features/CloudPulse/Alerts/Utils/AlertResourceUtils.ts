@@ -121,11 +121,20 @@ export const getFilteredResources = (
 export const getRegionOptions = (
   filterProps: FilterResourceProps
 ): Region[] => {
-  const { data, regionsIdToLabelMap, resourceIds } = filterProps;
+  const {
+    data,
+    isAdditionOrDeletionNeeded,
+    regionsIdToLabelMap,
+    resourceIds,
+  } = filterProps;
   return Array.from(
     new Set(
       data
-        ?.filter((resource) => resourceIds.includes(String(resource.id)))
+        ?.filter(
+          (resource) =>
+            isAdditionOrDeletionNeeded ||
+            resourceIds.includes(String(resource.id))
+        )
         ?.map((resource) => {
           const regionId = resource.region;
           return regionId ? regionsIdToLabelMap.get(regionId) : null;

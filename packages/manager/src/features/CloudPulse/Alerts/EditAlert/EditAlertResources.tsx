@@ -30,6 +30,8 @@ export const EditAlertResources = () => {
 
   const theme = useTheme();
 
+  const definitionLanding = '/monitor/alerts/definitions';
+
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
     Number(alertId),
     serviceType
@@ -45,12 +47,12 @@ export const EditAlertResources = () => {
     const overrides = [
       {
         label: 'Definitions',
-        linkTo: '/monitor/cloudpulse/alerts/definitions',
+        linkTo: definitionLanding,
         position: 1,
       },
       {
         label: 'Edit',
-        linkTo: `/monitor/cloudpulse/alerts/definitions/edit/${serviceType}/${alertId}`,
+        linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
         position: 2,
       },
     ];
@@ -126,7 +128,7 @@ export const EditAlertResources = () => {
       resource_ids: selectedResources.map((id) => String(id)),
     }).then(() => {
       // on success land on the alert definition list page and show a success snackbar
-      history.push('/monitor/alerts/definitions');
+      history.push(definitionLanding);
       enqueueSnackbar('Alert resources successfully updated.', {
         anchorOrigin: {
           horizontal: 'right',

@@ -77,19 +77,3 @@ export const useAlertNotificationChannelsQuery = (
     ...queryFactory.notificationChannels._ctx.all(params, filter),
   });
 };
-
-export const useEditAlertDefinitionResources = (
-  serviceType: string,
-  alertId: number
-) => {
-  const queryClient = useQueryClient();
-  return useMutation<Alert, APIError[], EditAlertResourcesPayload>({
-    mutationFn: (data) =>
-      editAlertDefinitionResources(data, serviceType, alertId),
-    onSuccess() {
-      queryClient.invalidateQueries(
-        queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId)
-      );
-    },
-  });
-};

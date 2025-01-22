@@ -88,27 +88,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     }
   }, [resources, isSelectionsNeeded, resourceIds]);
 
-  React.useEffect(() => {
-    if (handleResourcesSelection) {
-      handleResourcesSelection(selectedResources.map((id) => String(id)));
-    }
-  }, [selectedResources, handleResourcesSelection]);
-
   const {
     data: regions,
     isError: isRegionsError,
     isFetching: isRegionsFetching,
   } = useRegionsQuery();
-
-  React.useEffect(() => {
-    if (resources && isSelectionsNeeded) {
-      setSelectedResources(
-        resources
-          .filter((resource) => resourceIds.includes(String(resource.id)))
-          .map((resource) => Number(resource.id))
-      );
-    }
-  }, [resources, isSelectionsNeeded, resourceIds]);
 
   const handleSelection = React.useCallback(
     (ids: number[], isSelectionAction: boolean) => {
@@ -181,10 +165,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const regionOptions: Region[] = React.useMemo(() => {
     return getRegionOptions({
       data: resources,
+      isAdditionOrDeletionNeeded: isSelectionsNeeded,
       regionsIdToLabelMap,
       resourceIds,
     });
-  }, [resources, resourceIds, regionsIdToLabelMap]);
+  }, [resources, isSelectionsNeeded, regionsIdToLabelMap, resourceIds]);
 
   const titleRef = React.useRef<HTMLDivElement>(null); // when the page size, page number of table changes lets scroll until the title of this component
 

@@ -183,7 +183,7 @@ export interface CreateAlertDefinitionPayload {
   channel_ids: number[];
 }
 export interface EditAlertResourcesPayload {
-  resource_ids: string[];
+  resource_ids?: string[];
 }
 export interface MetricCriteria {
   metric: string;
