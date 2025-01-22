@@ -6,6 +6,7 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
@@ -58,6 +59,7 @@ export const StackScriptCreate = () => {
 
   return (
     <FormProvider {...form}>
+      <DocumentTitleSegment segment="Create StackScript" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [{ label: 'StackScripts', position: 1 }],

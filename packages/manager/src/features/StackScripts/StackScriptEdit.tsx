@@ -7,6 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
@@ -85,6 +86,9 @@ export const StackScriptEdit = () => {
 
   return (
     <FormProvider {...form}>
+      <DocumentTitleSegment
+        segment={`${stackscript.label} | Edit StackScript`}
+      />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
