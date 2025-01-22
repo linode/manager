@@ -106,7 +106,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     [] as number[]
   );
 
-  const { data: linodes, isFetching: isFetchingLinodes } = useAllLinodesQuery(
+  const { data: linodes } = useAllLinodesQuery(
     {},
     {
       '+or': allLinodeIDsAssigned?.map((linodeId) => ({ id: linodeId })),
@@ -116,6 +116,7 @@ export const PlacementGroupsLanding = React.memo(() => {
   const {
     data: selectedPlacementGroup,
     isFetching: isFetchingPlacementGroup,
+    isLoading: isLoadingPlacementGroup,
   } = useDialogData({
     enabled: !!params.id,
     paramKey: 'id',
@@ -322,7 +323,7 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
-        isFetching={isFetchingPlacementGroup || isFetchingLinodes}
+        isFetching={isLoadingPlacementGroup}
         linodes={linodes}
         onClose={onClosePlacementGroupDrawer}
         open={params.action === 'delete'}
