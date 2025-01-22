@@ -126,6 +126,7 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
 
   const handleSubmissionErrors = (errorResponse: APIError[]) => {
     const errors = getAPIErrorOrDefault(errorResponse);
+
     for (const error of errors) {
       const errorField = error.field as ErrorFields;
 

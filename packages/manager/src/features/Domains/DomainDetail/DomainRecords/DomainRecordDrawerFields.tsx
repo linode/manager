@@ -159,13 +159,7 @@ const MSSelect = ({
   ];
 
   const defaultOption = MSSelectOptions.find((eachOption) => {
-    return (
-      eachOption.value === value
-      // defaultTo(
-      //   defaultFieldsState(props)[field],
-      //   (state.fields as EditableDomainFields & EditableRecordFields)[field]
-      // )
-    );
+    return eachOption.value === value;
   });
 
   return (
@@ -301,6 +295,7 @@ export const TagField = ({
   const defaultTag = tagOptions.find((eachTag) => {
     return eachTag.value === value;
   });
+
   return (
     <Autocomplete
       textFieldProps={{
