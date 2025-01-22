@@ -37,6 +37,7 @@ import {
 } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
 
+import type { SearchSuggestionProps } from './SearchSuggestion';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { SearchProps } from 'src/features/Search/withStoreSearch';
 
@@ -339,6 +340,28 @@ const SearchBar = (props: SearchProps) => {
             if (value) {
               onSelect(value);
             }
+          }}
+          renderOption={(props, option) => {
+            // Skip rendering for special options like 'redirect', 'error', 'info'
+            if (['error', 'info', 'redirect'].includes(String(option.value))) {
+              return <li {...props}>{option.label}</li>;
+            }
+
+            // console.log({ props, option });
+
+            return (
+              <SearchSuggestion
+                {...((props as unknown) as SearchSuggestionProps)}
+                data={{
+                  data: option.data,
+                  label: option.label,
+                }}
+                isFocused={false}
+                searchText={searchText}
+                selectOption={() => onSelect(option)}
+                selectProps={{ onMenuClose: onClose }}
+              />
+            );
           }}
           sx={{
             width: '100%',
