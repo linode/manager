@@ -23,7 +23,7 @@ import { profileFactory } from 'src/factories/profile';
 import { chooseRegion } from 'support/util/regions';
 import type { ACLType, ObjectStorageEndpoint } from '@linode/api-v4';
 
-xdescribe('Object Storage Gen2 create bucket tests', () => {
+describe('Object Storage Gen2 create bucket tests', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       objMultiCluster: true,
