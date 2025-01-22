@@ -14,7 +14,7 @@ describe('Placeholder', () => {
     const title = getByText('This is a title');
     const icon = getByTestId('placeholder-icon');
     expect(title).toHaveClass('MuiTypography-h1');
-    expect(container.querySelector('[height="50"]')).toEqual(icon);
+    expect(container.querySelector('[height="20"]')).toEqual(icon);
   });
 
   it('displays the given icon and changes the heading style', () => {
@@ -23,7 +23,7 @@ describe('Placeholder', () => {
     );
 
     const icon = getByTestId('placeholder-icon');
-    const iconQueriedDifferently = container.querySelector('[height="21"]');
+    const iconQueriedDifferently = container.querySelector('[height="20"]');
     expect(icon).toEqual(iconQueriedDifferently);
   });
 
