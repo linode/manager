@@ -96,16 +96,6 @@ export const getFilteredResources = (
       };
     })
     .filter((resource) => {
-      if (searchText) {
-        const query = searchText.toLocaleLowerCase();
-        return (
-          resource.region.toLocaleLowerCase().includes(query) ||
-          resource.label.toLocaleLowerCase().includes(query)
-        );
-      }
-      return true;
-    })
-    .filter((resource) => {
       const matchesSearchText =
         !searchText ||
         resource.region
