@@ -168,7 +168,7 @@ export const DisplayAlertResources = React.memo(
                 {paginatedData.length === 0 && (
                   <TableRow>
                     <TableCell align="center" colSpan={3} height="40px">
-                      No results found.
+                      No data to display.
                     </TableCell>
                   </TableRow>
                 )}

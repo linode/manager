@@ -99,17 +99,27 @@ export const getFilteredResources = (
       if (searchText) {
         const query = searchText.toLocaleLowerCase();
         return (
-          resource.region?.toLocaleLowerCase().includes(query) ||
+          resource.region.toLocaleLowerCase().includes(query) ||
           resource.label.toLocaleLowerCase().includes(query)
         );
       }
       return true;
     })
     .filter((resource) => {
-      return (
+      const matchesSearchText =
+        !searchText ||
+        resource.region
+          .toLocaleLowerCase()
+          .includes(searchText.toLocaleLowerCase()) ||
+        resource.label
+          .toLocaleLowerCase()
+          .includes(searchText.toLocaleLowerCase()); // check with search text
+
+      const matchesFilteredRegions =
         !filteredRegions?.length ||
-        (resource.region.length && filteredRegions.includes(resource.region))
-      );
+        (resource.region.length && filteredRegions.includes(resource.region)); // check with filtered region
+
+      return matchesSearchText && matchesFilteredRegions; // match the search text and match the region selected
     });
 };
 
@@ -121,7 +131,7 @@ export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
   if (scrollToElement) {
     window.scrollTo({
       behavior: 'smooth',
-      top: scrollToElement.getBoundingClientRect().top + window.scrollY - 40, // Adjust offset if needed
+      top: scrollToElement.getBoundingClientRect().top + window.scrollY - 40,
     });
   }
 };
