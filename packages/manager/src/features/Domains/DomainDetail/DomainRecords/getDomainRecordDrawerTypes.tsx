@@ -37,7 +37,6 @@ export const getDomainRecordDrawerTypes = (
     AAAA: {
       fields: [
         (idx: number) => (
-          // <NameOrTargetField field="name" key={idx} label="Hostname" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -57,7 +56,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <NameOrTargetField field="target" key={idx} label="IP Address" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -77,7 +75,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <TTLField key={idx} />
           <Controller
             render={({ field }) => (
               <TTLField
@@ -96,7 +93,6 @@ export const getDomainRecordDrawerTypes = (
     CAA: {
       fields: [
         (idx: number) => (
-          // <NameOrTargetField field="name" key={idx} label="Name" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -116,7 +112,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <TagField key={idx} />
           <Controller
             render={({ field }) => (
               <TagField
@@ -130,7 +125,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <NameOrTargetField field="target" key={idx} label="Value" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -150,7 +144,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <TTLField key={idx} />
           <Controller
             render={({ field }) => (
               <TTLField
@@ -169,7 +162,6 @@ export const getDomainRecordDrawerTypes = (
     CNAME: {
       fields: [
         (idx: number) => (
-          // <NameOrTargetField field="name" key={idx} label="Hostname" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -189,7 +181,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <NameOrTargetField field="target" key={idx} label="Alias to" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -209,7 +200,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <TTLField key={idx} />
           <Controller
             render={({ field }) => (
               <TTLField
@@ -229,7 +219,6 @@ export const getDomainRecordDrawerTypes = (
     MX: {
       fields: [
         (idx: number) => (
-          // <NameOrTargetField field="target" key={idx} label="Mail Server" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -250,7 +239,6 @@ export const getDomainRecordDrawerTypes = (
         ),
         ,
         (idx: number) => (
-          // <PriorityField key={idx} label="Preference" max={255} min={0} />
           <Controller
             render={({ field, fieldState }) => (
               <PriorityField
@@ -269,7 +257,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <TTLField key={idx} />
           <Controller
             render={({ field }) => (
               <TTLField
@@ -284,7 +271,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <NameOrTargetField field="name" key={idx} label="Subdomain" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -308,7 +294,6 @@ export const getDomainRecordDrawerTypes = (
     NS: {
       fields: [
         (idx: number) => (
-          // <NameOrTargetField field="target" key={idx} label="Name Server" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -328,7 +313,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <NameOrTargetField field="name" key={idx} label="Subdomain" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -348,7 +332,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <TTLField key={idx} />
           <Controller
             render={({ field }) => (
               <TTLField
@@ -370,7 +353,6 @@ export const getDomainRecordDrawerTypes = (
     SRV: {
       fields: [
         (idx: number) => (
-          // <ServiceField key={idx} />
           <Controller
             render={({ field, fieldState }) => (
               <ServiceField
@@ -386,7 +368,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <ProtocolField key={idx} />
           <Controller
             render={({ field }) => (
               <ProtocolField
@@ -400,7 +381,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <PriorityField key={idx} label="Priority" max={255} min={0} />
           <Controller
             render={({ field, fieldState }) => (
               <PriorityField
@@ -419,7 +399,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <WeightField key={idx} />
           <Controller
             render={({ field, fieldState }) => (
               <WeightField
@@ -435,7 +414,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <PortField key={idx} />
           <Controller
             render={({ field, fieldState }) => (
               <PortField
@@ -451,7 +429,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <NameOrTargetField field="target" key={idx} label="Target" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -471,7 +448,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <TTLField key={idx} />
           <Controller
             render={({ field }) => (
               <TTLField
@@ -490,7 +466,6 @@ export const getDomainRecordDrawerTypes = (
     TXT: {
       fields: [
         (idx: number) => (
-          // <NameOrTargetField field="name" key={idx} label="Hostname" />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -510,7 +485,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <NameOrTargetField field="target" key={idx} label="Value" multiline />
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
@@ -531,7 +505,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <TTLField key={idx} />
           <Controller
             render={({ field }) => (
               <TTLField
@@ -549,7 +522,6 @@ export const getDomainRecordDrawerTypes = (
     },
     master: {
       fields: [
-        // (idx: number) => <TextField field="domain" key={idx} label="Domain" />,
         (idx: number) => (
           <Controller
             render={({ field, fieldState }) => (
@@ -570,7 +542,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <TextField field="soa_email" key={idx} label="SOA Email" trimmed />
           <Controller
             render={({ field, fieldState }) => (
               <TextField
@@ -591,7 +562,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <DomainTransferField key={idx} />
           <Controller
             render={({ field, fieldState }) => (
               <DomainTransferField
@@ -606,7 +576,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <DefaultTTLField key={idx} />
           <Controller
             render={({ field }) => (
               <DefaultTTLField
@@ -621,7 +590,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <RefreshRateField key={idx} />
           <Controller
             render={({ field }) => (
               <RefreshRateField
@@ -635,7 +603,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <RetryRateField key={idx} />
           <Controller
             render={({ field }) => (
               <RetryRateField
@@ -649,7 +616,6 @@ export const getDomainRecordDrawerTypes = (
           />
         ),
         (idx: number) => (
-          // <ExpireField key={idx} />
           <Controller
             render={({ field }) => (
               <ExpireField
