@@ -92,35 +92,29 @@ describe('AlertResources component tests', () => {
     } = renderWithTheme(
       <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
-
     // Get the search input box
     const searchInput = getByPlaceholderText(searchPlaceholder);
     await userEvent.type(searchInput, linodes[1].label);
-
     // Wait for search results to update
     await waitFor(() => {
       expect(queryByText(linodes[0].label)).not.toBeInTheDocument();
       expect(getByText(linodes[1].label)).toBeInTheDocument();
     });
-
     // clear the search input
     await userEvent.clear(searchInput);
     await waitFor(() => {
       expect(getByText(linodes[0].label)).toBeInTheDocument();
       expect(getByText(linodes[1].label)).toBeInTheDocument();
     });
-
     // search with invalid text and a region
     await userEvent.type(searchInput, 'dummy');
     await userEvent.click(getByRole('button', { name: 'Open' }));
     await userEvent.click(getByTestId(regions[0].id));
     await userEvent.click(getByRole('button', { name: 'Close' }));
-
     await waitFor(() => {
       expect(queryByText(linodes[0].label)).not.toBeInTheDocument();
       expect(queryByText(linodes[1].label)).not.toBeInTheDocument();
     });
-
     // now clear the search input and the region filter will be applied
     await userEvent.clear(searchInput);
     await waitFor(() => {
@@ -134,13 +128,10 @@ describe('AlertResources component tests', () => {
       <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
     const resourceColumn = getByTestId('resource'); // get the resource header column
-
     await userEvent.click(resourceColumn);
 
     const tableBody = getByTestId('alert_resources_content');
-
     let rows = Array.from(tableBody.querySelectorAll('tr'));
-
     expect(
       rows
         .map((row) => row.textContent)
@@ -150,9 +141,7 @@ describe('AlertResources component tests', () => {
     ).toBe(true);
 
     await userEvent.click(resourceColumn); // again reverse the sorting
-
     rows = Array.from(tableBody.querySelectorAll('tr'));
-
     expect(
       rows
         .map((row) => row.textContent)
@@ -162,9 +151,7 @@ describe('AlertResources component tests', () => {
     const regionColumn = getByTestId('region'); // get the region header column
 
     await userEvent.click(regionColumn); // sort ascending for region
-
     rows = Array.from(tableBody.querySelectorAll('tr')); // refetch
-
     expect(
       rows
         .map((row) => row.textContent)
@@ -174,9 +161,7 @@ describe('AlertResources component tests', () => {
     ).toBe(true);
 
     await userEvent.click(regionColumn);
-
     rows = Array.from(tableBody.querySelectorAll('tr')); // reverse the sorting
-
     expect(
       rows
         .map((row) => row.textContent)
