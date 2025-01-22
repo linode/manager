@@ -38,7 +38,6 @@ const alertDetails = alertFactory.build({
 const {
   service_type,
   severity,
-  status,
   rule_criteria,
   id,
   label,
@@ -113,8 +112,7 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       // Validate Status field
       cy.get('[data-qa-item="Status"]').within(() => {
         cy.findByText('Status:').should('be.visible');
-        cy.findByText( 'Enabled')
-        .should('be.visible');
+        cy.findByText('Enabled').should('be.visible');
       });
 
       cy.get('[data-qa-item="Severity"]').within(() => {
@@ -156,9 +154,11 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
         cy.get('[data-qa-item="Metric Threshold"]')
           .eq(index)
           .within(() => {
-            cy.get( `[data-qa-chip="${aggregationTypeMap[rule.aggregation_type]}"]`)
+            cy.get(
+              `[data-qa-chip="${aggregationTypeMap[rule.aggregation_type]}"]`
+            )
               .should('be.visible')
-              .should('have.text',aggregationTypeMap[rule.aggregation_type]);
+              .should('have.text', aggregationTypeMap[rule.aggregation_type]);
 
             cy.get(`[data-qa-chip="${rule.label}"]`)
               .should('be.visible')
@@ -189,7 +189,9 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
                   expect($chip).to.have.text(filter.label);
                 });
               // Validate the filter operator
-              cy.get(`[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`)
+              cy.get(
+                `[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`
+              )
                 .should('be.visible')
                 .each(($chip) => {
                   expect($chip).to.have.text(
