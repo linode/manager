@@ -10,6 +10,7 @@ import { extendType } from 'src/utilities/extendType';
 
 import { LabelInput } from './LabelInput';
 import { LabelTable } from './LabelTable';
+import { TaintInput } from './TaintInput';
 import { TaintTable } from './TaintTable';
 
 import type { KubeNodePoolResponse, Label, Taint } from '@linode/api-v4';
@@ -29,7 +30,8 @@ interface LabelsAndTaintsFormFields {
 export const LabelAndTaintDrawer = (props: Props) => {
   const { clusterId, nodePool, onClose, open } = props;
 
-  const [shouldAddLabel, setShouldAddLabel] = React.useState(false);
+  const [shouldShowLabelForm, setShouldShowLabelForm] = React.useState(false);
+  const [shouldShowTaintForm, setShouldShowTaintForm] = React.useState(false);
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
 
@@ -117,15 +119,17 @@ export const LabelAndTaintDrawer = (props: Props) => {
           <Button
             onClick={() => {
               {
-                setShouldAddLabel(true);
+                setShouldShowLabelForm(true);
               }
             }}
             buttonType="outlined"
           >
             Add Label
           </Button>
-          {shouldAddLabel && (
-            <LabelInput handleSave={() => setShouldAddLabel(!shouldAddLabel)} />
+          {shouldShowLabelForm && (
+            <LabelInput
+              handleSave={() => setShouldShowLabelForm(!shouldShowLabelForm)}
+            />
           )}
 
           <Typography marginTop={(theme) => theme.spacing(4)} variant="h3">
@@ -135,13 +139,18 @@ export const LabelAndTaintDrawer = (props: Props) => {
           <Button
             onClick={() => {
               {
-                /* TODO: Part 2 */
+                setShouldShowTaintForm(true);
               }
             }}
             buttonType="outlined"
           >
             Add Taint
           </Button>
+          {shouldShowTaintForm && (
+            <TaintInput
+              handleSave={() => setShouldShowTaintForm(!shouldShowTaintForm)}
+            />
+          )}
 
           <ActionsPanel
             primaryButtonProps={{
