@@ -1,7 +1,8 @@
 // import EnhancedSelect from 'src/components/EnhancedSelect/Select';
-import { Autocomplete } from '@linode/ui';
+import { Autocomplete, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Search from '@mui/icons-material/Search';
+import { Box, Paper, Popper } from '@mui/material';
 import { take } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -38,6 +39,8 @@ import {
 import { SearchSuggestion } from './SearchSuggestion';
 
 import type { SearchSuggestionProps } from './SearchSuggestion';
+import type { PaperProps } from '@mui/material';
+import type { PopperProps } from '@mui/material/Popper';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { SearchProps } from 'src/features/Search/withStoreSearch';
 
@@ -238,6 +241,7 @@ const SearchBar = (props: SearchProps) => {
 
   const onOpen = () => {
     document.body.classList.add('searchOverlay');
+    setSearchText('');
     setSearchActive(true);
     setMenuOpen(true);
   };
@@ -282,27 +286,6 @@ const SearchBar = (props: SearchProps) => {
     }
   };
 
-  const guidanceText = () => {
-    if (isLargeAccount) {
-      // This fancy stuff won't work if we're using API
-      // based search; don't confuse users by displaying this.
-      return undefined;
-    }
-    return (
-      <>
-        <b>By field:</b> “tag:my-app” “label:my-linode” &nbsp;&nbsp;
-        <b>With operators</b>: “tag:my-app AND is:domain”
-      </>
-    );
-  };
-
-  /* Need to override the default RS filtering; otherwise entities whose label
-   * doesn't match the search term will be automatically filtered, meaning that
-   * searching by tag won't work. */
-  const filterResults = () => {
-    return true;
-  };
-
   const finalOptions = createFinalOptions(
     isLargeAccount ? apiResults : combinedResults,
     searchText,
@@ -335,11 +318,44 @@ const SearchBar = (props: SearchProps) => {
           Main search
         </label>
         <Autocomplete
-          // components={{ Control, Option }}
+          // styles={selectStyles}
+          PaperComponent={(props) => (
+            <CustomPaper {...props} isLargeAccount={isLargeAccount} />
+          )}
+          filterOptions={(options) => {
+            /* Need to override the default RS filtering; otherwise entities whose label
+             * doesn't match the search term will be automatically filtered, meaning that
+             * searching by tag won't work. */
+            return options;
+          }}
           onChange={(_, value) => {
             if (value) {
               onSelect(value);
             }
+          }}
+          renderInput={(params) => {
+            return (
+              <TextField
+                {...params}
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: null,
+                }}
+                onChange={(e) => {
+                  handleSearchChange(e.target.value);
+                }}
+                sx={{
+                  '& .MuiInputBase-root': {
+                    border: 'none',
+                    boxShadow: 'none !important',
+                    minHeight: 30,
+                  },
+                }}
+                hideLabel
+                label="Main search"
+                placeholder="Search Products, IP Addresses, Tags..."
+              />
+            );
           }}
           renderOption={(props, option) => {
             // Skip rendering for special options like 'redirect', 'error', 'info'
@@ -347,16 +363,15 @@ const SearchBar = (props: SearchProps) => {
               return <li {...props}>{option.label}</li>;
             }
 
-            // console.log({ props, option });
-
             return (
               <SearchSuggestion
-                {...((props as unknown) as SearchSuggestionProps)}
+                // {...((props as unknown) as SearchSuggestionProps)}
                 data={{
                   data: option.data,
                   label: option.label,
                 }}
                 isFocused={false}
+                key={props.key}
                 searchText={searchText}
                 selectOption={() => onSelect(option)}
                 selectProps={{ onMenuClose: onClose }}
@@ -366,14 +381,6 @@ const SearchBar = (props: SearchProps) => {
           sx={{
             width: '100%',
           }}
-          // guidance={guidanceText()}
-          textFieldProps={{
-            hideLabel: true,
-            onChange: (e) => {
-              handleSearchChange(e.target.value);
-            },
-          }}
-          filterOptions={(options) => options}
           label="Main search"
           loading={entitiesLoading}
           multiple={false}
@@ -385,7 +392,6 @@ const SearchBar = (props: SearchProps) => {
           open={menuOpen && searchText !== ''}
           options={finalOptions}
           placeholder="Search Products, IP Addresses, Tags..."
-          // styles={selectStyles}
           value={value}
         />
         <StyledIconButton
@@ -467,3 +473,45 @@ export const createFinalOptions = (
 };
 
 export default withStoreSearch()(SearchBar);
+
+const guidanceText = (isLargeAccount: boolean | undefined) => {
+  if (isLargeAccount) {
+    // This fancy stuff won't work if we're using API
+    // based search; don't confuse users by displaying this.
+    return undefined;
+  }
+  return (
+    <>
+      <b>By field:</b> “tag:my-app” “label:my-linode” &nbsp;&nbsp;
+      <b>With operators</b>: “tag:my-app AND is:domain”
+    </>
+  );
+};
+
+interface CustomPaperProps extends PaperProps {
+  isLargeAccount?: boolean;
+}
+
+const CustomPaper = (props: CustomPaperProps) => {
+  const { children, isLargeAccount, ...rest } = props;
+
+  return (
+    <Paper {...rest}>
+      <div>
+        {children}
+        {!isLargeAccount && (
+          <Box
+            sx={(theme) => ({
+              borderTop: `1px solid ${theme.palette.divider}`,
+              fontSize: '0.875rem',
+              padding: theme.spacing(1),
+            })}
+          >
+            <b>By field:</b> "tag:my-app" "label:my-linode" &nbsp;&nbsp;
+            <b>With operators</b>: "tag:my-app AND is:domain"
+          </Box>
+        )}
+      </div>
+    </Paper>
+  );
+};
