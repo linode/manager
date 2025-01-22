@@ -123,12 +123,11 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     } = {},
     sx,
   } = props;
-
   const [startDateTime, setStartDateTime] = useState<DateTime | null>(
-    startDateTimeValue
+    startDateTimeValue ?? DateTime.now().minus({ minutes: 30 })
   );
   const [endDateTime, setEndDateTime] = useState<DateTime | null>(
-    endDateTimeValue
+    endDateTimeValue ?? DateTime.now()
   );
   const [presetValue, setPresetValue] = useState<
     | {
@@ -253,7 +252,6 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
       });
     }
   };
-
   return (
     <Box display="flex" flexDirection="column" gap={2} sx={sx}>
       {showPresets ? (

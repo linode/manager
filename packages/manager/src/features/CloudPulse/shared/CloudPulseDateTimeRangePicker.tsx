@@ -50,8 +50,12 @@ export const CloudPulseDateTimeRangePicker = React.memo(
       );
     };
 
-    const end = DateTime.fromISO(defaultSelected?.end, { zone: timezone });
-    const start = DateTime.fromISO(defaultSelected?.start, { zone: timezone });
+    const end = defaultSelected?.start
+      ? DateTime.fromISO(defaultSelected?.end, { zone: timezone })
+      : undefined;
+    const start = defaultSelected?.end
+      ? DateTime.fromISO(defaultSelected?.start, { zone: timezone })
+      : end;
 
     return (
       <DateTimeRangePicker
