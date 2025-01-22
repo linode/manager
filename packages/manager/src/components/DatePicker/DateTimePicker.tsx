@@ -271,6 +271,7 @@ export const DateTimePicker = ({
                     },
                     textField: TimePickerFieldProps,
                   }}
+                  data-qa-time="time-picker"
                   onChange={handleTimeChange}
                   slots={{ textField: TextField }}
                   value={selectedDateTime || null}
