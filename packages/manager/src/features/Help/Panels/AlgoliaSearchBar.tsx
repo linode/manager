@@ -97,7 +97,6 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
           return (
             <SearchItem
               data={option}
-              searchtext={option.data.source}
               {...props}
               key={`${props.key}-${option.value}`}
             />

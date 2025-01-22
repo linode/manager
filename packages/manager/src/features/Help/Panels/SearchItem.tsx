@@ -27,22 +27,20 @@ interface Props {
     };
     label: string;
   };
-  isFocused?: boolean;
-  searchtext: string;
 }
 
 export const SearchItem = (props: Props) => {
+  const { data } = props;
   const getLabel = () => {
     if (isFinal) {
-      return props.data.label ? `Search for "${props.data.label}"` : 'Search';
+      return data.label ? `Search for "${data.label}"` : 'Search';
     } else {
-      return props.data.label;
+      return data.label;
     }
   };
 
   const { classes } = useStyles();
 
-  const { data } = props;
   const source = data.data ? data.data.source : '';
   const isFinal = source === 'finalLink';
 
