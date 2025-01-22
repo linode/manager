@@ -176,6 +176,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
         break;
       case '1hour':
         newStartDateTime = now.minus({ hours: 1 });
+        break;
       case '12hours':
         newStartDateTime = now.minus({ hours: 12 });
         break;

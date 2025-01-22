@@ -394,6 +394,8 @@ export const getTimeDurationFromPreset = (
   switch (preset) {
     case '30minutes':
       return { unit: 'min', value: 30 };
+    case '1hour':
+      return { unit: 'hr', value: 1 };
     case '24hours':
       return { unit: 'hr', value: 24 };
     case '12hours':
