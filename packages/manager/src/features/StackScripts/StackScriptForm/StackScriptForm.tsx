@@ -112,10 +112,7 @@ export const StackScriptForm = (props: Props) => {
             labelTooltipText={
               <Stack spacing={1}>
                 <Typography>
-                  There are four default environment variables provided to you.{' '}
-                  <Link to="https://techdocs.akamai.com/cloud-computing/docs/write-a-custom-script-for-use-with-stackscripts#default-environment-variables">
-                    Learn more.
-                  </Link>
+                  There are four default environment variables provided to you.
                 </Typography>
                 <List dense>
                   {STACKSCRIPT_ENV_VARS.map((envVar) => (
