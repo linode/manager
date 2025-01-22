@@ -10,6 +10,7 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
@@ -45,6 +46,7 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
   component: React.ComponentType<RenderLinodesProps>;
   data: LinodeWithMaintenance[];
   display: 'grid' | 'list';
+  filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
@@ -66,6 +68,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
     component: Component,
     data,
     display,
+    filteredLinodesLoading,
     handleOrderChange,
     handleRegionFilter,
     linodeViewPreference,
@@ -155,7 +158,11 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                   toggleLinodeView={toggleLinodeView}
                 >
                   <TableBody>
-                    <Component showHead {...componentProps} />
+                    {filteredLinodesLoading ? (
+                      <TableRowLoading columns={7} />
+                    ) : (
+                      <Component showHead {...componentProps} />
+                    )}
                   </TableBody>
                 </TableWrapper>
               </>
