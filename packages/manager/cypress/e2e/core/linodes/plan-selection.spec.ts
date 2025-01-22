@@ -409,7 +409,7 @@ describe('displays specific linode plans for GPU', () => {
   });
 });
 
-describe.only('displays specific kubernetes plans for GPU', () => {
+describe('displays specific kubernetes plans for GPU', () => {
   beforeEach(() => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
