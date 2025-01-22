@@ -18,6 +18,7 @@ import {
   defaultFieldsState,
   filterDataByType,
   modeMap,
+  noARecordsNoticeText,
   resolveAlias,
   typeMap,
 } from './DomainRecordDrawerUtils';
@@ -90,25 +91,6 @@ type ErrorFields =
 export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
   const { mode, open, records, type } = props;
 
-  // const errorFields = {
-  //   axfr_ips: 'domain transfers',
-  //   domain: 'domain',
-  //   expire_sec: 'expire rate',
-  //   name: 'name',
-  //   port: 'port',
-  //   priority: 'priority',
-  //   protocol: 'protocol',
-  //   refresh_sec: 'refresh rate',
-  //   retry_sec: 'retry rate',
-  //   service: 'service',
-  //   soa_email: 'SOA email address',
-  //   tag: 'tag',
-  //   target: 'target',
-  //   ttl_sec: 'ttl_sec',
-  //   type: 'type',
-  //   weight: 'weight',
-  // };
-
   const formContainerRef = React.useRef<HTMLFormElement>(null);
 
   const defaultValues = defaultFieldsState(props);
@@ -136,15 +118,6 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
   const hasARecords = records.find((thisRecord) =>
     ['A', 'AAAA'].includes(thisRecord.type)
   );
-
-  const noARecordsNoticeText =
-    'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
-
-  // @todo: [Purvesh] - Need to handle other errors
-  // const otherErrors = [
-  //   getAPIErrorFor({}, state.errors)('_unknown'),
-  //   getAPIErrorFor({}, state.errors)('none'),
-  // ].filter(Boolean);
 
   const handleRecordSubmissionSuccess = () => {
     props.updateRecords();

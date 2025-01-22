@@ -12,6 +12,9 @@ import type {
 } from './DomainRecordDrawer';
 import type { DomainType, RecordType } from '@linode/api-v4/lib/domains';
 
+export const noARecordsNoticeText =
+  'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
+
 export const modeMap = {
   create: 'Create',
   edit: 'Edit',
