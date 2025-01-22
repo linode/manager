@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Placeholder } from './Placeholder';
@@ -19,7 +19,7 @@ describe('Placeholder', () => {
 
   it('displays the given icon and changes the heading style', () => {
     const { container, getByTestId } = renderWithTheme(
-      <Placeholder icon={StackScriptIcon} title="title" />
+      <Placeholder icon={ComputeIcon} title="title" />
     );
 
     const icon = getByTestId('placeholder-icon');

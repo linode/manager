@@ -2,8 +2,8 @@ import { Box, StyledLinkButton, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import ObjectIcon from 'src/assets/icons/objectStorage/object.svg';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -36,7 +36,7 @@ export const ObjectTableRow = (props: Props) => {
       <TableCell>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <Grid className="py0">
-            <EntityIcon size={20} variant="object" {...props} />
+            <ObjectIcon size={20} />
           </Grid>
           <Grid>
             <Box alignItems="center" display="flex">

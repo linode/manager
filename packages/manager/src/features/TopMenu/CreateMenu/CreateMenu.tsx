@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
-import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import StorageIcon from 'src/assets/icons/entityIcons/storage.svg';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
@@ -98,7 +98,7 @@ export const CreateMenu = () => {
       name: 'Compute',
     },
     {
-      icon: <NodebalancerIcon />,
+      icon: <NetworkIcon />,
       links: [
         {
           description: 'Create a private and isolated network',

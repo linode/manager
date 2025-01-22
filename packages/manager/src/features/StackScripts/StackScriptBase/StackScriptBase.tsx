@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 
-import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Table } from 'src/components/Table';
 import { withProfile } from 'src/containers/profile.container';
@@ -492,7 +492,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             <StyledEmptyStateDiv data-qa-stackscript-empty-msg>
               {userCannotCreateStackScripts ? (
                 <StyledPlaceholder
-                  icon={StackScriptsIcon}
+                  icon={ComputeIcon}
                   isEntity
                   renderAsSecondary
                   title="StackScripts"
