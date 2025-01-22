@@ -4,6 +4,7 @@ import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import NullComponent from 'src/components/NullComponent';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -12,6 +13,7 @@ import {
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
+  scrollToTitle,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { DisplayAlertResources } from './DisplayAlertResources';
@@ -70,12 +72,34 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     });
   }, [resources, alertResourceIds, regionsIdToRegionMap]);
 
+  const isDataLoadingError = isRegionsError || isResourcesError;
+
+  // Memoized no resource message
+  const renderNoResourcesMessage = React.useMemo(() => {
+    if (!isDataLoadingError && alertResourceIds.length === 0) {
+      return (
+        <StyledPlaceholder
+          title={
+            'No resources are currently assigned to this alert definition.'
+          }
+          icon={EntityIcon}
+          subtitle="You can assign alerts during the resource creation process."
+        />
+      );
+    }
+    return <NullComponent />;
+  }, [alertResourceIds, isDataLoadingError]);
+
   const handleSearchTextChange = (searchText: string) => {
     setSearchText(searchText);
   };
 
   const handleFilteredRegionsChange = (selectedRegions: string[]) => {
-    setFilteredRegions(selectedRegions);
+    setFilteredRegions(
+      selectedRegions.map(
+        (region) => `${regionsIdToRegionMap.get(region)?.label} (${region})` // store filtered regions in format `region.label (region.id)`
+      )
+    );
   };
 
   /**
@@ -100,20 +124,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
 
-  const scrollToTitle = () => {
-    if (titleRef.current) {
-      window.scrollTo({
-        behavior: 'smooth',
-        top: titleRef.current.getBoundingClientRect().top + window.scrollY - 40, // Adjust offset if needed
-      });
-    }
-  };
-
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
   }
-
-  const isDataLoadingError = isRegionsError || isResourcesError;
 
   return (
     <Stack gap={2}>
@@ -121,49 +134,41 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {alertLabel || 'Resources'}
         {/* It can be either the passed alert label or just Resources */}
       </Typography>
-      {!isResourcesError &&
-        !isRegionsError &&
-        alertResourceIds.length === 0 && (
-          <StyledPlaceholder
-            title={
-              'No resources are currently assigned to this alert definition.'
-            }
-            icon={EntityIcon}
-            subtitle="You can assign alerts during the resource creation process."
-          />
-        )}
-
-      <Grid container spacing={3}>
-        <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
-          <Grid item md={3} xs={12}>
-            <DebouncedSearchTextField
-              sx={{
-                maxHeight: '34px',
-              }}
-              clearable
-              hideLabel
-              label="Search for a Region or Resource"
-              onSearch={handleSearchTextChange}
-              placeholder="Search for a Region or Resource"
-              value={searchText || ''}
-            />
+      {/** Render the no resource state if alert has zero resources associated*/}
+      {renderNoResourcesMessage}
+      {(isDataLoadingError || alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
+        <Grid container spacing={3}>
+          <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
+            <Grid item md={3} xs={12}>
+              <DebouncedSearchTextField
+                sx={{
+                  maxHeight: '34px',
+                }}
+                clearable
+                hideLabel
+                label="Search for a Region or Resource"
+                onSearch={handleSearchTextChange}
+                placeholder="Search for a Region or Resource"
+                value={searchText || ''}
+              />
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <AlertsRegionFilter
+                handleSelectionChange={handleFilteredRegionsChange}
+                regionOptions={regionOptions}
+              />
+            </Grid>
           </Grid>
-          <Grid item md={4} xs={12}>
-            <AlertsRegionFilter
-              handleSelectionChange={handleFilteredRegionsChange}
-              regionOptions={regionOptions}
+          <Grid item xs={12}>
+            <DisplayAlertResources
+              filteredResources={filteredResources}
+              isDataLoadingError={isDataLoadingError}
+              pageSize={25}
+              scrollToTitle={() => scrollToTitle(titleRef.current)}
             />
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <DisplayAlertResources
-            filteredResources={filteredResources}
-            isDataLoadingError={isDataLoadingError}
-            pageSize={25}
-            scrollToTitle={scrollToTitle}
-          />
-        </Grid>
-      </Grid>
+      )}
     </Stack>
   );
 });

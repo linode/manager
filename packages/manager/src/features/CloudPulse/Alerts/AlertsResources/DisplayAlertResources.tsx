@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
@@ -39,12 +38,7 @@ export interface DisplayAlertResourceProp {
    * A flag indicating if there was an error loading the data. If true, the error message
    * (specified by `errorText`) will be displayed in the table.
    */
-  isDataLoadingError: boolean;
-
-  /**
-   * This is passed if there is no resources associated with the alerts
-   */
-  noDataText?: string;
+  isDataLoadingError?: boolean;
 
   /**
    * The size of the page needed in the table
@@ -62,11 +56,9 @@ export const DisplayAlertResources = React.memo(
     const {
       filteredResources,
       isDataLoadingError,
-      noDataText,
       pageSize,
       scrollToTitle,
     } = props;
-    const theme = useTheme();
 
     const [sorting, setSorting] = React.useState<{
       order: Order;
@@ -120,7 +112,7 @@ export const DisplayAlertResources = React.memo(
           page,
           pageSize,
         }) => (
-          <React.Fragment>
+          <>
             <Table data-qa-alert-table data-testid="alert_resources_region">
               <TableHead>
                 <TableRow>
@@ -175,18 +167,14 @@ export const DisplayAlertResources = React.memo(
                 )}
                 {paginatedData.length === 0 && (
                   <TableRow>
-                    <TableCell
-                      align="center"
-                      colSpan={3}
-                      height={theme.spacing(6)}
-                    >
-                      {noDataText ?? 'No results found.'}
+                    <TableCell align="center" colSpan={3} height="40px">
+                      No results found.
                     </TableCell>
                   </TableRow>
                 )}
               </TableBody>
             </Table>
-            {!isDataLoadingError && !noDataText && (
+            {!isDataLoadingError && paginatedData.length !== 0 && (
               <PaginationFooter
                 handlePageChange={(page) => {
                   handlePageNumberChange(handlePageChange, page);
@@ -201,7 +189,7 @@ export const DisplayAlertResources = React.memo(
                 pageSize={pageSize}
               />
             )}
-          </React.Fragment>
+          </>
         )}
       </Paginate>
     );

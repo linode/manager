@@ -8,7 +8,7 @@ interface FilterResourceProps {
    */
   data?: CloudPulseResources[];
   /**
-   * The selected regions on which the data needs to be filtered
+   * The selected regions on which the data needs to be filtered and it is in format US, Newark, NJ (us-east)
    */
   filteredRegions?: string[];
   /**
@@ -78,38 +78,49 @@ export const getFilteredResources = (
     resourceIds,
     searchText,
   } = filterProps;
-  return data
+  return data // here we always use the base data from API for filtering as source of truth
     ?.filter(
       (resource) => resourceIds.includes(String(resource.id)) // if we can edit like add or delete no need to filter on resources associated with alerts
     )
-    .filter((resource) => {
-      if (filteredRegions) {
-        return filteredRegions.includes(resource.region ?? '');
-      }
-      return true;
-    })
     .map((resource) => {
       return {
         ...resource,
-        region: resource.region // here replace region id with region label for regionsIdToLabelMap, formatted to Chicago, US(us-west)
+        region: resource.region // here replace region id with region label for regionsIdToLabelMap, formatted to Chicago, US(us-west) compatible to display in table
           ? regionsIdToRegionMap.get(resource.region)
-            ? `${regionsIdToRegionMap.get(resource.region)?.label}
-               (${resource.region})`
+            ? `${regionsIdToRegionMap.get(resource.region)?.label} (${
+                regionsIdToRegionMap.get(resource.region)?.id
+              })`
             : resource.region
           : resource.region,
       };
     })
     .filter((resource) => {
       if (searchText) {
+        const query = searchText.toLocaleLowerCase();
         return (
-          resource.region
-            ?.toLocaleLowerCase()
-            .includes(searchText.toLocaleLowerCase()) ||
-          resource.label
-            .toLocaleLowerCase()
-            .includes(searchText.toLocaleLowerCase())
+          resource.region?.toLocaleLowerCase().includes(query) ||
+          resource.label.toLocaleLowerCase().includes(query)
         );
       }
       return true;
+    })
+    .filter((resource) => {
+      return (
+        !filteredRegions?.length ||
+        filteredRegions.includes(resource.region || '')
+      );
     });
+};
+
+/**
+ * This methods scrolls to the given HTML Element
+ * @param scrollToElement The HTML Element to which we need to scroll
+ */
+export const scrollToTitle = (scrollToElement: HTMLDivElement | null) => {
+  if (scrollToElement) {
+    window.scrollTo({
+      behavior: 'smooth',
+      top: scrollToElement.getBoundingClientRect().top + window.scrollY - 40, // Adjust offset if needed
+    });
+  }
 };

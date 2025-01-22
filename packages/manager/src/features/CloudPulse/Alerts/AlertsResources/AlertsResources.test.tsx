@@ -82,7 +82,7 @@ describe('AlertResources component tests', () => {
       getByText('Table data is unavailable. Please try again later.')
     ).toBeInTheDocument();
   });
-  it('should handle search input, region filter functionality', async () => {
+  it('should handle search, region filter functionality', async () => {
     const {
       getByPlaceholderText,
       getByRole,
@@ -93,7 +93,7 @@ describe('AlertResources component tests', () => {
       <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
 
-    // Search Input
+    // Get the search input box
     const searchInput = getByPlaceholderText(searchPlaceholder);
     await userEvent.type(searchInput, linodes[1].label);
 
@@ -103,30 +103,29 @@ describe('AlertResources component tests', () => {
       expect(getByText(linodes[1].label)).toBeInTheDocument();
     });
 
-    // Clear Search Input**
+    // clear the search input
     await userEvent.clear(searchInput);
     await waitFor(() => {
       expect(getByText(linodes[0].label)).toBeInTheDocument();
       expect(getByText(linodes[1].label)).toBeInTheDocument();
     });
 
-    // Search with Invalid Text**
+    // search with invalid text and a region
     await userEvent.type(searchInput, 'dummy');
     await userEvent.click(getByRole('button', { name: 'Open' }));
     await userEvent.click(getByTestId(regions[0].id));
     await userEvent.click(getByRole('button', { name: 'Close' }));
 
-    // Validate no items are visible due to mismatched search text
     await waitFor(() => {
       expect(queryByText(linodes[0].label)).not.toBeInTheDocument();
       expect(queryByText(linodes[1].label)).not.toBeInTheDocument();
     });
 
-    // Clear Search Input**
+    // now clear the search input and the region filter will be applied
     await userEvent.clear(searchInput);
     await waitFor(() => {
       expect(getByText(linodes[0].label)).toBeInTheDocument();
-      expect(queryByText(linodes[1].label)).not.toBeInTheDocument(); // here region filter is afraid
+      expect(queryByText(linodes[1].label)).not.toBeInTheDocument();
     });
   });
 
@@ -134,7 +133,7 @@ describe('AlertResources component tests', () => {
     const { getByTestId } = renderWithTheme(
       <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
     );
-    const resourceColumn = getByTestId('resource');
+    const resourceColumn = getByTestId('resource'); // get the resource header column
 
     await userEvent.click(resourceColumn);
 
@@ -160,7 +159,7 @@ describe('AlertResources component tests', () => {
         .every((text, index) => text?.includes(linodes[index].label))
     ).toBe(true);
 
-    const regionColumn = getByTestId('region');
+    const regionColumn = getByTestId('region'); // get the region header column
 
     await userEvent.click(regionColumn); // sort ascending for region
 
