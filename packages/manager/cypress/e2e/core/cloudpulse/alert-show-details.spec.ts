@@ -113,9 +113,8 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       // Validate Status field
       cy.get('[data-qa-item="Status"]').within(() => {
         cy.findByText('Status:').should('be.visible');
-        cy.findByText(status.replace('enabled', 'Enabled')).should(
-          'be.visible'
-        );
+        cy.findByText( 'Enabled')
+        .should('be.visible');
       });
 
       cy.get('[data-qa-item="Severity"]').within(() => {
@@ -219,7 +218,7 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
         .should('be.visible')
         .should('have.text', '4 minutes');
 
-      // Validating contents of Trigger Alert When
+      // Validating contents of Trigger Alert
       cy.get(`[data-qa-chip="All"]`)
         .should('be.visible')
         .should('have.text', 'All');
