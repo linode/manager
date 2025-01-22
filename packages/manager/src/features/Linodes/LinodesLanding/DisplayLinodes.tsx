@@ -1,4 +1,4 @@
-import { Box, Paper, Tooltip } from '@linode/ui';
+import { Box, CircleProgress, Paper, Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -220,7 +220,11 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                     </Box>
                   </StyledControlHeader>
                 </Grid>
-                <Component showHead {...componentProps} />
+                {filteredLinodesLoading ? (
+                  <CircleProgress />
+                ) : (
+                  <Component showHead {...componentProps} />
+                )}
               </>
             )}
             <Grid xs={12}>
