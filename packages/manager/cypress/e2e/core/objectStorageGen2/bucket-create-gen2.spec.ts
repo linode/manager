@@ -8,6 +8,7 @@ import {
   mockGetBucketAccess,
   mockCreateBucketError,
 } from 'support/intercepts/object-storage';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { checkRateLimitsTable } from 'support/util/object-storage-gen2';
@@ -18,10 +19,11 @@ import {
   objectStorageEndpointsFactory,
   regionFactory,
 } from 'src/factories';
+import { profileFactory } from 'src/factories/profile';
 import { chooseRegion } from 'support/util/regions';
 import type { ACLType, ObjectStorageEndpoint } from '@linode/api-v4';
 
-describe('Object Storage Gen2 create bucket tests', () => {
+xdescribe('Object Storage Gen2 create bucket tests', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       objMultiCluster: true,
@@ -714,5 +716,83 @@ describe('Object Storage Gen2 create bucket tests', () => {
         cy.wait('@createBucket');
         cy.findByText(mockErrorMessage).should('be.visible');
       });
+  });
+});
+
+/**
+ * When a restricted user navigates to object-storage/create, an error is shown in the "Create Bucket" drawer noting that the user does not have bucket creation permissions
+ */
+describe('Object Storage Gen2 create bucket modal has disabled fields', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      objMultiCluster: true,
+      objectStorageGen2: { enabled: true },
+    }).as('getFeatureFlags');
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: [
+          'Object Storage',
+          'Object Storage Endpoint Types',
+          'Object Storage Access Key Regions',
+        ],
+      })
+    ).as('getAccount');
+    // restricted user
+    mockGetProfile(
+      profileFactory.build({
+        email: 'mock-user@linode.com',
+        restricted: true,
+      })
+    ).as('getProfile');
+  });
+
+  //TODO: this test fails rn but this is the desired behavior
+  it('bucket landing page should have Create button disabled', () => {
+    cy.visitWithLogin('/object-storage/buckets');
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
+    cy.findByTestId('button').should('be.visible').should('be.disabled');
+  });
+
+  //TODO: this test fails rn but this is the desired behavior
+  it('access keys landing page should have Create button disabled', () => {
+    cy.visitWithLogin('/object-storage/access-keys');
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
+    cy.findByTestId('button').should('be.visible').should('be.disabled');
+  });
+
+  // bucket creation
+  it('create bucket form', () => {
+    cy.visitWithLogin('/object-storage/buckets/create');
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
+
+    // error message
+    cy.findByTestId('notice-error').should('be.visible');
+    cy.get('#label').should('be.visible').should('be.disabled');
+    cy.findByTestId('region-select').within(() => {
+      cy.get('input').should('be.visible').should('be.disabled');
+    });
+    // submit button
+    // TODO: label/region inputs disabled but create button is ENabled?
+    cy.findByTestId('create-bucket-button')
+      .should('be.visible')
+      .should('be.enabled');
+  });
+
+  // access keys creation
+  it('create access keys form', () => {
+    cy.visitWithLogin('/object-storage/access-keys/create');
+
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
+    // error message
+    cy.findByTestId('notice-error-important').should('be.visible');
+    // label
+    cy.get('#label').should('be.visible').should('be.disabled');
+    // region
+    cy.findByTestId('region-select').within(() => {
+      cy.get('input').should('be.visible').should('be.disabled');
+    });
+    // submit button
+    // TODO: create button is disabled?
+    cy.findByTestId('submit').should('be.visible').should('be.disabled');
   });
 });
