@@ -38,21 +38,28 @@ export const mockGetCloudPulseMetricDefinitions = (
 };
 
 /**
- * Intercepts  GET requests for metric definitions.
- *
- * This function mocks the API response for requests to the endpoint
- * `dashboardMetricsData`.
- *
- * @returns {Cypress.Chainable<null>} The chainable Cypress object.
+ * Mocks the API response for the '/monitor/services' endpoint with the provided service types.
+ * This function intercepts the GET request for the specified API and returns a mocked response
+ * with service types, either a single service type or multiple service types.
+ * 
+ * @param {string | string[]} serviceTypes - A single service type (e.g., 'linode') or an array of service types
+ *                                         (e.g., ['linode', 'dbaas']) to mock. If a single string is passed, 
+ *                                         it will be treated as an array with one element.
+ * @returns {Cypress.Chainable<null>} - Returns a Cypress chainable object to continue the test.
  */
 
 export const mockGetCloudPulseServices = (
-  serviceType: string
+  ...serviceTypes: string[]
 ): Cypress.Chainable<null> => {
+  const services = serviceTypes.map((serviceType) => ({
+    label: serviceType === 'linode' ? 'linode' : 'dbaas',
+    service_type: serviceType,
+  }));
+
   return cy.intercept(
     'GET',
     apiMatcher('/monitor/services'),
-    paginateResponse([{ service_type: serviceType }])
+    paginateResponse(services)
   );
 };
 
