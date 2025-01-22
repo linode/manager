@@ -159,64 +159,104 @@ export const KubernetesPlanContainer = (
       </Hidden>
       <Hidden mdDown>
         <Grid lg={12} xs={12}>
-          <Table aria-label="List of Linode Plans" spacingBottom={16}>
-            <TableHead>
-              <TableRow>
-                {tableCells.map(({ cellName, center, noWrap, testId }) => {
-                  const attributeValue = `${testId}-header`;
-                  return (
-                    <TableCell
-                      center={center}
-                      data-qa={attributeValue}
-                      key={testId}
-                      noWrap={noWrap}
+          {planSelectionDividers.map((planSelectionDivider) =>
+            planType === planSelectionDivider.planType &&
+            planSelectionDivider.flag ? (
+              planSelectionDivider.tables.map((table) => {
+                const filteredPlans = table.planFilter
+                  ? plans.filter(table.planFilter)
+                  : plans;
+                return (
+                  filteredPlans.length > 0 && (
+                    <Table
+                      aria-label={`List of ${table.header} Plans`}
+                      key={table.header}
+                      spacingBottom={16}
                     >
-                      {cellName === 'Quantity' ? (
-                        <p className="visually-hidden">{cellName}</p>
-                      ) : (
-                        cellName
-                      )}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            </TableHead>
-            <TableBody role="grid">
-              {shouldDisplayNoRegionSelectedMessage ? (
-                <TableRowEmpty
-                  colSpan={9}
-                  message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
-                />
-              ) : (
-                planSelectionDividers.map((planSelectionDivider) =>
-                  planType === planSelectionDivider.planType &&
-                  planSelectionDivider.flag
-                    ? planSelectionDivider.tables.map((table) => {
-                        const filteredPlans = table.planFilter
-                          ? plans.filter(table.planFilter)
-                          : plans;
-                        return [
-                          filteredPlans.length > 0 && (
-                            <Grid key={table.header} xs={12}>
-                              <Typography
-                                data-qa={`${table.header} table-header`}
-                                variant="h3"
-                              >
-                                {table.header}
-                              </Typography>
-                            </Grid>
-                          ),
+                      <TableHead>
+                        <TableRow>
+                          {tableCells.map(
+                            ({ cellName, center, noWrap, testId }) => {
+                              const attributeValue = `${testId}-header`;
+                              return (
+                                <TableCell
+                                  center={center}
+                                  data-qa={attributeValue}
+                                  key={testId}
+                                  noWrap={noWrap}
+                                >
+                                  {cellName === 'Quantity' ? (
+                                    <p className="visually-hidden">
+                                      {cellName}
+                                    </p>
+                                  ) : cellName === 'Plan' ? (
+                                    table.header
+                                  ) : (
+                                    cellName
+                                  )}
+                                </TableCell>
+                              );
+                            }
+                          )}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody role="grid">
+                        {shouldDisplayNoRegionSelectedMessage ? (
+                          <TableRowEmpty
+                            colSpan={9}
+                            message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+                          />
+                        ) : (
                           renderPlanSelection({
                             header: table.header,
                             planFilter: table.planFilter,
-                          }),
-                        ];
-                      })
-                    : renderPlanSelection()
-                )
-              )}
-            </TableBody>
-          </Table>
+                          })
+                        )}
+                      </TableBody>
+                    </Table>
+                  )
+                );
+              })
+            ) : (
+              <Table
+                aria-label="List of Linode Plans"
+                key={planType}
+                spacingBottom={16}
+              >
+                <TableHead>
+                  <TableRow>
+                    {tableCells.map(({ cellName, center, noWrap, testId }) => {
+                      const attributeValue = `${testId}-header`;
+                      return (
+                        <TableCell
+                          center={center}
+                          data-qa={attributeValue}
+                          key={testId}
+                          noWrap={noWrap}
+                        >
+                          {cellName === 'Quantity' ? (
+                            <p className="visually-hidden">{cellName}</p>
+                          ) : (
+                            cellName
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                </TableHead>
+                <TableBody role="grid">
+                  {shouldDisplayNoRegionSelectedMessage ? (
+                    <TableRowEmpty
+                      colSpan={9}
+                      message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+                    />
+                  ) : (
+                    renderPlanSelection()
+                  )}
+                </TableBody>
+              </Table>
+            )
+          )}
         </Grid>
       </Hidden>
     </Grid>

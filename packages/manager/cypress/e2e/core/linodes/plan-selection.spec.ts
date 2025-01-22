@@ -437,21 +437,25 @@ describe.only('displays specific kubernetes plans for GPU', () => {
     cy.get(k8PlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.unavailable).should('be.visible');
-      cy.findAllByRole('row').should('have.length', 3);
-      cy.get('[data-qa-plan-row="gpu-2 Ada"]').should('have.attr', 'disabled');
-      cy.get('[data-qa-plan-row="gpu-1"]').should('have.attr', 'disabled');
 
-      cy.get('[data-qa="NVIDIA RTX 4000 Ada table-header"]')
-        .parent()
-        .within(() => {
-          cy.findByText('NVIDIA RTX 4000 Ada').should('be.visible');
-        });
+      cy.findByRole('table', {
+        name: 'List of NVIDIA RTX 4000 Ada Plans',
+      }).within(() => {
+        cy.findByText('NVIDIA RTX 4000 Ada').should('be.visible');
+        cy.findAllByRole('row').should('have.length', 2);
+        cy.get('[data-qa-plan-row="gpu-2 Ada"]').should(
+          'have.attr',
+          'disabled'
+        );
+      });
 
-      cy.get('[data-qa="NVIDIA Quadro RTX 6000 table-header"]')
-        .parent()
-        .within(() => {
-          cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
-        });
+      cy.findByRole('table', {
+        name: 'List of NVIDIA Quadro RTX 6000 Plans',
+      }).within(() => {
+        cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
+        cy.findAllByRole('row').should('have.length', 2);
+        cy.get('[data-qa-plan-row="gpu-1"]').should('have.attr', 'disabled');
+      });
     });
   });
 });
