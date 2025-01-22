@@ -248,6 +248,9 @@ export const DateTimePicker = ({
                         padding: 0,
                       }),
                     },
+                    field: {
+                      readOnly: true,
+                    },
                     layout: {
                       sx: (theme: Theme) => ({
                         '& .MuiPickersLayout-contentWrapper': {
