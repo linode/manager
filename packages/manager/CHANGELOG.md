@@ -8,23 +8,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added:
 
-- `useCreateUserMutation` for adding new users ([#11402](https://github.com/linode/manager/pull/11402))
-- `AddNotificationChannel` component with Unit tests with necessary changes for constants, `CreateAlertDefinition` and other components. ([#11511](https://github.com/linode/manager/pull/11511))
+- `useCreateUserMutation` for adding new users ([#11402](https://github.com/linode/manager/pull/11402)
 - GPU plans in LKE create flow ([#11544](https://github.com/linode/manager/pull/11544))
 
 ### Changed:
 
-- Improved backups banner styles ([#11480](https://github.com/linode/manager/pull/11480))
-- Database Resize: Disable plans when the usable storage equals the used storage of the database cluster ([#11481](https://github.com/linode/manager/pull/11481))
-- add `Asia/Calcutta` zonename in `timezones.ts`, add `disabledTimeZone` property in `DateTimeRangePicker`, add `minDate` property to `DateTimePicker` ([#11495](https://github.com/linode/manager/pull/11495))
-- Tech doc link for Bucket rate limits change ([#11513](https://github.com/linode/manager/pull/11513))
+- Improve backups banner styles ([#11480](https://github.com/linode/manager/pull/11480))
+- Disable resizable plans when the usable storage equals the used storage of the database cluster ([#11481](https://github.com/linode/manager/pull/11481))
+([#11495](https://github.com/linode/manager/pull/11495))
+- Tech doc link for Bucket rate limits ([#11513](https://github.com/linode/manager/pull/11513))
 - Search v2 `not equal` syntax ([#11521](https://github.com/linode/manager/pull/11521))
 - Revise Disk Encryption description copy in Linode Create flow ([#11536](https://github.com/linode/manager/pull/11536))
 
 ### Fixed:
 
 - Spacing for LKE cluster tags at desktop screen sizes ([#11507](https://github.com/linode/manager/pull/11507))
-- Zoom-in icon hover effect fix in CloudPulse ([#11526](https://github.com/linode/manager/pull/11526))
+- Zoom-in icon hover effect in CloudPulse ([#11526](https://github.com/linode/manager/pull/11526))
 - Linode Config Dialog misrepresenting primary interface ([#11542](https://github.com/linode/manager/pull/11542))
 
 ### Tech Stories:
@@ -39,6 +38,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Remove `ramda` from `DomainRecords` part 1 ([#11514](https://github.com/linode/manager/pull/11514))
 - Remove `ramda` from `CreateDomain.tsx` ([#11505](https://github.com/linode/manager/pull/11505))
 - Refactor and convert DomainRecords to functional component ([#11447](https://github.com/linode/manager/pull/11447))
+- Add `Asia/Calcutta` zonename in `timezones.ts`, `disabledTimeZone` property in `DateTimeRangePicker`, and `minDate` property to `DateTimePicker` ([#11495](https://github.com/linode/manager/pull/11495))
 
 
 ### Tests:
@@ -52,18 +52,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Upcoming Features:
 
-- Proxy users table, removing users, adding users ([#11402](https://github.com/linode/manager/pull/11402))
-- Add new entities component for iam ([#11429](https://github.com/linode/manager/pull/11429))
-- Add Alert Details Criteria section in Cloud Pulse Alert Details page ([#11477](https://github.com/linode/manager/pull/11477))
-- Update Metrics api request and JWE Token api request in CloudPulse ([#11506](https://github.com/linode/manager/pull/11506))
-- Improve UDP NodeBalancer support ([#11515](https://github.com/linode/manager/pull/11515))
+- Add Proxy users table, removing users, adding users to IAM ([#11402](https://github.com/linode/manager/pull/11402))
+- Add new entities component for IAM ([#11429](https://github.com/linode/manager/pull/11429))
 - Display cluster provisioning after an LKE-E cluster is created ([#11518](https://github.com/linode/manager/pull/11518))
-- Add scaffolding for Resources section in Cloud Pulse Alert details page ([#11524](https://github.com/linode/manager/pull/11524))
-- Fix redirects from /account to /iam ([#11539](https://github.com/linode/manager/pull/11539))
-
-### Upcoming:
-
-- Quotas feature flag, queries, and MSW CRUD preset support ([#11493](https://github.com/linode/manager/pull/11493))
+- Add Alert Details Criteria section in CloudPulse Alert Details page ([#11477](https://github.com/linode/manager/pull/11477))
+- Update Metrics API request and JWE Token API request in CloudPulse ([#11506](https://github.com/linode/manager/pull/11506))
+- Improve UDP NodeBalancer support ([#11515](https://github.com/linode/manager/pull/11515))
+- Add scaffolding for Resources section in CloudPulse Alert details page ([#11524](https://github.com/linode/manager/pull/11524))
+- Fix redirects from /account to /iam ([#11539](https://github.com/linode/manager/pull/11539)))
+- Add `AddNotificationChannel` component with unit tests with necessary changes for constants, `CreateAlertDefinition` and other components. ([#11511](https://github.com/linode/manager/pull/11511))
+- Add Quotas feature flag, queries, and MSW CRUD preset support ([#11493](https://github.com/linode/manager/pull/11493))
 
 
 ## [2025-01-14] - v1.134.0
