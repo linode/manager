@@ -18,9 +18,11 @@ import {
   FirewallDevice,
   FirewallDevicePayload,
   FirewallRules,
+  FirewallSettings,
   FirewallTemplate,
   FirewallTemplateSlug,
   UpdateFirewallPayload,
+  UpdateFirewallSettings,
 } from './types';
 
 /**
@@ -244,6 +246,29 @@ export const deleteFirewallDevice = (firewallID: number, deviceID: number) =>
         firewallID
       )}/devices/${encodeURIComponent(deviceID)}`
     )
+  );
+
+/**
+ * getFirewallSettings
+ *
+ * Returns current interface default firewall settings (alongside linode and nodebalancer defaults)
+ */
+export const getFirewallSettings = () =>
+  Request<FirewallSettings>(
+    setMethod('GET'),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/settings`)
+  );
+
+/**
+ * getTemplate
+ *
+ * Update which firewalls should be the interface default firewalls
+ */
+export const updateFirewallSettings = (data: UpdateFirewallSettings) =>
+  Request<FirewallSettings>(
+    setMethod('PUT'),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/settings`),
+    setData(data) // TODO CONNIE ADD SCHEMA HERE
   );
 
 // #region Templates
