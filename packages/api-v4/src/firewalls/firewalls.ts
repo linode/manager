@@ -11,6 +11,7 @@ import {
   CreateFirewallSchema,
   FirewallDeviceSchema,
   UpdateFirewallSchema,
+  UpdateFirewallSettingsSchema,
 } from '@linode/validation/lib/firewalls.schema';
 import {
   CreateFirewallPayload,
@@ -268,7 +269,7 @@ export const updateFirewallSettings = (data: UpdateFirewallSettings) =>
   Request<FirewallSettings>(
     setMethod('PUT'),
     setURL(`${BETA_API_ROOT}/networking/firewalls/settings`),
-    setData(data) // TODO CONNIE ADD SCHEMA HERE
+    setData(data, UpdateFirewallSettingsSchema)
   );
 
 // #region Templates

@@ -7,7 +7,7 @@ export interface IPAddress {
   public: boolean;
   rdns: string | null;
   linode_id: number;
-  interface_id: number;
+  interface_id: number | null;
   region: string;
   vpc_nat_1_1?: {
     address: string;
