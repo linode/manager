@@ -66,6 +66,12 @@ export const DisplayAlertResources = React.memo(
       )(filteredResources ?? []) as AlertInstance[];
     }, [filteredResources, sorting]);
 
+    const scrollToGivenElement = React.useCallback(() => {
+      requestAnimationFrame(() => {
+        scrollToElement();
+      });
+    }, [scrollToElement]);
+
     const handleSort = React.useCallback(
       (
         orderBy: string,
@@ -81,22 +87,17 @@ export const DisplayAlertResources = React.memo(
           orderBy,
         });
         handlePageChange(1); // Moves to the first page when the sort order or column changes
-        requestAnimationFrame(() => {
-          scrollToElement();
-        });
+        scrollToGivenElement();
       },
-      [scrollToElement]
+      [scrollToGivenElement]
     );
 
     const handlePageNumberChange = React.useCallback(
       (handlePageChange: (page: number) => void, pageNumber: number) => {
         handlePageChange(pageNumber); // Moves to the requested page number
-        // setCurrentPageNumber(pageNumber);
-        requestAnimationFrame(() => {
-          scrollToElement();
-        });
+        scrollToGivenElement();
       },
-      [scrollToElement]
+      [scrollToGivenElement]
     );
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
@@ -178,9 +179,7 @@ export const DisplayAlertResources = React.memo(
                 handleSizeChange={(pageSize) => {
                   handlePageSizeChange(pageSize);
                   handlePageNumberChange(handlePageChange, 1); // Moves to the first page after page size change
-                  requestAnimationFrame(() => {
-                    scrollToElement();
-                  });
+                  scrollToGivenElement();
                 }}
                 count={count}
                 eventCategory="alerts_resources"
