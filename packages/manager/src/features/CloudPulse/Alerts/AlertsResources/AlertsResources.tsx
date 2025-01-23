@@ -4,7 +4,6 @@ import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import NullComponent from 'src/components/NullComponent';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -75,22 +74,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const isDataLoadingError = isRegionsError || isResourcesError;
 
-  // Memoized message to be displayed when no resources are found for the alert.
-  const renderNoResourcesMessage = React.useMemo(() => {
-    if (!isDataLoadingError && alertResourceIds.length === 0) {
-      return (
-        <StyledPlaceholder
-          title={
-            'No resources are currently assigned to this alert definition.'
-          }
-          icon={EntityIcon}
-          subtitle="You can assign alerts during the resource creation process."
-        />
-      );
-    }
-    return <NullComponent />;
-  }, [alertResourceIds, isDataLoadingError]);
-
   const handleSearchTextChange = (searchText: string) => {
     setSearchText(searchText);
   };
@@ -131,14 +114,30 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     return <CircleProgress />;
   }
 
+  if (!isDataLoadingError && alertResourceIds.length === 0) {
+    return (
+      <Stack gap={2}>
+        <Typography ref={titleRef} variant="h2">
+          {alertLabel || 'Resources'}
+          {/* It can be either the passed alert label or just Resources */}
+        </Typography>
+        <StyledPlaceholder
+          title={
+            'No resources are currently assigned to this alert definition.'
+          }
+          icon={EntityIcon}
+          subtitle="You can assign alerts during the resource creation process."
+        />
+      </Stack>
+    );
+  }
+
   return (
     <Stack gap={2}>
       <Typography ref={titleRef} variant="h2">
         {alertLabel || 'Resources'}
         {/* It can be either the passed alert label or just Resources */}
       </Typography>
-      {/** Render the no resource state if alert has zero resources associated*/}
-      {renderNoResourcesMessage}
       {(isDataLoadingError || alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
         <Grid container spacing={3}>
           <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
