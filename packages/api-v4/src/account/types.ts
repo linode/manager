@@ -254,6 +254,7 @@ export type AgreementType = 'eu_model' | 'privacy_policy';
 export interface Agreements {
   eu_model: boolean;
   privacy_policy: boolean;
+  billing_agreement: boolean;
 }
 
 export type NotificationType =
