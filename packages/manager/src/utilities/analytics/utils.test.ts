@@ -1,10 +1,84 @@
 import { generateTimeOfDay } from './customEventAnalytics';
 import {
+  ONE_TRUST_COOKIE_CATEGORIES,
+  checkOptanonConsent,
+  getCookie,
   getFormattedStringFromFormEventOptions,
   waitForAdobeAnalyticsToBeLoaded,
 } from './utils';
 
 import type { FormEventOptions } from './types';
+
+describe('getCookie', () => {
+  beforeAll(() => {
+    const cookies =
+      'mycookie=my-cookie-value; OptanonConsent=cookie-consent-here; mythirdcookie=my-third-cookie;';
+    vi.spyOn(document, 'cookie', 'get').mockReturnValue(cookies);
+  });
+
+  it('should return the value of a cookie from document.cookie given its name, given cookie in middle position', () => {
+    expect(getCookie('OptanonConsent')).toEqual('cookie-consent-here');
+  });
+
+  it('should return the value of a cookie from document.cookie given its name, given cookie in first position', () => {
+    expect(getCookie('mycookie')).toEqual('my-cookie-value');
+  });
+
+  it('should return the value of a cookie from document.cookie given its name, given cookie in last position', () => {
+    expect(getCookie('mythirdcookie')).toEqual('my-third-cookie');
+  });
+
+  it('should return undefined if the cookie does not exist in document.cookie', () => {
+    expect(getCookie('mysecondcookie')).toEqual(undefined);
+  });
+});
+
+describe('checkOptanonConsent', () => {
+  it('should return true if consent is enabled for the given Optanon cookie category', () => {
+    const mockFunctionalCookieConsentEnabled =
+      'somestuffhere&groups=C0001%3A1%2CC0002%3A1%2CC0003%3A1%2CC0004%3A1%2CC0005%3A1&intType=6';
+
+    expect(
+      checkOptanonConsent(
+        mockFunctionalCookieConsentEnabled,
+        ONE_TRUST_COOKIE_CATEGORIES['Functional Cookies']
+      )
+    ).toEqual(true);
+  });
+
+  it('should return false if consent is disabled for the given Optanon cookie category', () => {
+    const mockFunctionalCookieConsentDisabled =
+      'somestuffhere&groups=C0001%3A1%2CC0002%3A1%2CC0003%3A0%2CC0004%3A1%2CC0005%3A1&intType=6';
+
+    expect(
+      checkOptanonConsent(
+        mockFunctionalCookieConsentDisabled,
+        ONE_TRUST_COOKIE_CATEGORIES['Functional Cookies']
+      )
+    ).toEqual(false);
+  });
+
+  it('should return false if the consent category does not exist in the cookie', () => {
+    const mockNoFunctionalCookieCategory =
+      'somestuffhere&groups=C0001%3A1%2CC0002%3A1%2CC0004%3A1%2CC0005%3A1&intType=6';
+
+    expect(
+      checkOptanonConsent(
+        mockNoFunctionalCookieCategory,
+        ONE_TRUST_COOKIE_CATEGORIES['Functional Cookies']
+      )
+    ).toEqual(false);
+  });
+
+  it('should return false if the cookie is undefined', () => {
+    expect(
+      checkOptanonConsent(
+        undefined,
+        ONE_TRUST_COOKIE_CATEGORIES['Functional Cookies']
+      )
+    ).toEqual(false);
+  });
+});
 
 describe('generateTimeOfDay', () => {
   it('should generate human-readable time of day', () => {

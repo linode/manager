@@ -4,13 +4,13 @@ import React from 'react';
 import { APP_ROOT, PENDO_API_KEY } from 'src/constants';
 import { useAccount } from 'src/queries/account/account.js';
 import { useProfile } from 'src/queries/profile/profile';
-
-import { loadScript } from './useScript';
 import {
+  ONE_TRUST_COOKIE_CATEGORIES,
   checkOptanonConsent,
   getCookie,
-  ONE_TRUST_COOKIE_CATEGORIES,
 } from 'src/utilities/analytics/utils';
+
+import { loadScript } from './useScript';
 
 declare global {
   interface Window {
@@ -165,5 +165,5 @@ export const usePendo = () => {
         });
       });
     }
-  }, [PENDO_URL, accountId, visitorId]);
+  }, [PENDO_URL, accountId, hasFunctionalCookieConsent, visitorId]);
 };

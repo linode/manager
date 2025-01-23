@@ -32,8 +32,9 @@ export const getCookie = (name: string): string | undefined => {
   let selectedCookie: string | undefined = undefined;
 
   cookies.forEach((cookie) => {
-    if (cookie.trim().startsWith(name + '=')) {
-      selectedCookie = cookie.substring(name.length + 1);
+    const trimmedCookie = cookie.trim(); // Remove whitespace so position in cookie string doesn't matter
+    if (trimmedCookie.startsWith(name + '=')) {
+      selectedCookie = trimmedCookie.substring(name.length + 1);
     }
   });
   return selectedCookie;
