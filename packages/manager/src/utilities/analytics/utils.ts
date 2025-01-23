@@ -12,6 +12,62 @@ import type {
 } from './types';
 
 /**
+ * Based on Login's OneTrust cookie list
+ */
+export const ONE_TRUST_COOKIE_CATEGORIES = {
+  'Functional Cookies': 'C0003',
+  'Performance Cookies': 'C0002',
+  'Social Media Cookies': 'C0004',
+  'Strictly Necessary Cookies': 'C0001',
+  'Targeting Cookies': 'C0005',
+} as const;
+
+/**
+ * Given the name of a cookie, parses the document.cookie string and returns the cookie's value.
+ * @param name cookie's name
+ * @returns value of cookie if it exists in the document; else, undefined
+ */
+export const getCookie = (name: string): string | undefined => {
+  const cookies = document.cookie.split(';');
+  let selectedCookie: string | undefined = undefined;
+
+  cookies.forEach((cookie) => {
+    if (cookie.trim().startsWith(name + '=')) {
+      selectedCookie = cookie.substring(name.length + 1);
+    }
+  });
+  return selectedCookie;
+};
+
+/**
+ * This function parses the categories in the OptanonConsent cookie to check if consent is provided.
+ * @param cookie the OptanonConsent cookie from OneTrust
+ * @param category the category code based on cookie type
+ * @returns true if the user has consented to cookie enablement for the category; else, false
+ */
+export const checkOptanonConsent = (
+  cookie: string | undefined,
+  selectedCategory: typeof ONE_TRUST_COOKIE_CATEGORIES[keyof typeof ONE_TRUST_COOKIE_CATEGORIES]
+): boolean => {
+  const optanonGroups = cookie?.match(/groups=([^&]*)/);
+  let hasConsented = false;
+
+  if (!cookie || !optanonGroups) {
+    return false;
+  }
+
+  const consentCategories = decodeURIComponent(optanonGroups[1]).split(',');
+
+  consentCategories.forEach((consentCategory) => {
+    if (consentCategory.includes(selectedCategory)) {
+      hasConsented = Number(consentCategory.split(':')[1]) === 1; // Cookie enabled
+    }
+  });
+
+  return hasConsented;
+};
+
+/**
  * Sends a direct call rule events to Adobe for a Component Click (and optionally, with `data`, Component Details).
  * This should be used for all custom events other than form events, which should use sendFormEvent.
  * @param eventPayload - Custom event payload

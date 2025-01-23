@@ -6,59 +6,17 @@ import { useAccount } from 'src/queries/account/account.js';
 import { useProfile } from 'src/queries/profile/profile';
 
 import { loadScript } from './useScript';
+import {
+  checkOptanonConsent,
+  getCookie,
+  ONE_TRUST_COOKIE_CATEGORIES,
+} from 'src/utilities/analytics/utils';
 
 declare global {
   interface Window {
     pendo: any;
   }
 }
-
-/**
- * Given the name of a cookie, parses the document.cookie string and returns the cookie's value.
- * @param name cookie's name
- * @returns value of cookie if it exists in the document; else, undefined
- */
-const getCookie = (name: string): string | undefined => {
-  const cookies = document.cookie.split(';');
-  let selectedCookie: string | undefined = undefined;
-
-  cookies.forEach((cookie) => {
-    if (cookie.trim().startsWith(name + '=')) {
-      selectedCookie = cookie.substring(name.length + 1);
-    }
-  });
-  return selectedCookie;
-};
-
-/**
- *
- * @param cookie
- * @param category
- * @returns
- */
-const getOptanonConsentCategory = (
-  cookie: string | undefined,
-  category: string
-): boolean => {
-  const optanonGroups = cookie?.match(/groups=([^&]*)/);
-  let hasConsented = false;
-
-  if (!cookie || !optanonGroups) {
-    return false;
-  }
-
-  const consentCategories = decodeURIComponent(optanonGroups[1]).split(',');
-  // console.log({ consentCategories });
-
-  consentCategories.forEach((consentCategory) => {
-    // console.log({ category });
-    if (consentCategory.includes(category)) {
-      hasConsented = Number(consentCategory.split(':')[1]) === 0;
-    }
-  });
-
-  return hasConsented;
-};
 
 /**
  * This function prevents address ID collisions leading to muddled data between environments. Account and visitor IDs must be unique per API-key.
@@ -107,7 +65,7 @@ export const transformUrl = (url: string) => {
 };
 
 /**
- * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists.
+ * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists and OneTrust consent is present.
  */
 export const usePendo = () => {
   const { data: account } = useAccount();
@@ -117,13 +75,11 @@ export const usePendo = () => {
   const visitorId = hashUniquePendoId(profile?.uid.toString());
 
   const optanonCookie = getCookie('OptanonConsent');
-  // console.log({ optanonCookie });
 
-  const hasFunctionalCookieConsent = getOptanonConsentCategory(
+  const hasFunctionalCookieConsent = checkOptanonConsent(
     optanonCookie,
-    'C0002'
+    ONE_TRUST_COOKIE_CATEGORIES['Functional Cookies']
   );
-  // console.log({ hasFunctionalCookieConsent });
 
   // This URL uses a Pendo-configured CNAME (M3-8742).
   const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;
