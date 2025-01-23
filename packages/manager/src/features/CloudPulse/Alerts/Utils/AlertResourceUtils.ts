@@ -118,10 +118,12 @@ export const getFilteredResources = (
  * @param scrollToElement The HTML Element to which we need to scroll
  */
 export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
-  if (scrollToElement) {
-    window.scrollTo({
-      behavior: 'smooth',
-      top: scrollToElement.getBoundingClientRect().top + window.scrollY - 40,
-    });
+  if (!scrollToElement) {
+    return;
   }
+  scrollToElement.scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest',
+    inline: 'nearest',
+  });
 };
