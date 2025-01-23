@@ -11,6 +11,7 @@ import { chooseRegion } from 'support/util/regions';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ObjectStorageEndpoint } from '@linode/api-v4';
 import { randomItem, randomLabel } from 'support/util/random';
+import { extendRegion } from 'support/util/regions';
 import {
   mockCreateBucket,
   mockGetBucket,
@@ -367,10 +368,12 @@ describe('Object Storage Gen2 bucket object tests', () => {
     checkBucketObjectDetailsDrawer(bucketFilename, endpointTypeE3);
   });
 
-  it('UI should display buckets for one region, warning message for one region', () => {
-    const mockRegions = regionFactory.buildList(2, {
-      capabilities: ['Object Storage'],
-    });
+  it('displays successfully fetched buckets, warning message for single failed fetch', () => {
+    const mockRegions = regionFactory
+      .buildList(2, {
+        capabilities: ['Object Storage'],
+      })
+      .map((region) => extendRegion(region));
     mockGetRegions(mockRegions).as('getRegions');
     const mockEndpoints = mockRegions.map((mockRegion) => {
       return objectStorageEndpointsFactory.build({
@@ -401,20 +404,24 @@ describe('Object Storage Gen2 bucket object tests', () => {
       '@getBucketsForRegionError',
     ]);
     // table with retrieved bucket
-    cy.get('table tbody tr').should('have.length', 1);
+    cy.findByText(mockBucket1.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText(mockRegions[0].label).should('be.visible');
+      });
     // warning message
-    const strRegion = `${mockRegions[1].country.toUpperCase()}, ${
-      mockRegions[1].label
-    }`;
     cy.findByTestId('notice-warning-important').within(() => {
-      cy.contains(`There was an error loading buckets in ${strRegion}`);
+      cy.contains(
+        `There was an error loading buckets in ${mockRegions[1].label}`
+      );
     });
     cy.contains(
-      `If you have buckets in ${strRegion}, you may not see them listed below.`
+      `If you have buckets in ${mockRegions[1].label}, you may not see them listed below.`
     );
   });
 
-  it('UI should display buckets for one region, warning message for > 1 region', () => {
+  it('displays successfully fetched buckets, warning message for multiple failed fetches', () => {
     const mockRegions = regionFactory.buildList(3, {
       capabilities: ['Object Storage'],
     });
