@@ -187,7 +187,7 @@ const DatabaseLandingTable = ({
                   ? 'You don’t have any Aiven Database Clusters created yet. Click Create Database Cluster to create one.'
                   : ''
               }
-              colSpan={7}
+              colSpan={8}
             />
           )}
         </TableBody>
