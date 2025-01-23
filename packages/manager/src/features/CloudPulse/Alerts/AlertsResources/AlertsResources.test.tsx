@@ -36,6 +36,7 @@ const regionPlaceholder = 'Select Regions';
 
 beforeAll(() => {
   Element.prototype.scrollIntoView = vi.fn(); // mock for scrollIntoView
+  window.scroll = vi.fn(); // mock for scroll
 });
 
 beforeEach(() => {
