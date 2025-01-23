@@ -1,6 +1,6 @@
 import { createFinalOptions } from './utils';
 
-import type { Option } from './SearchBar';
+import type { SearchResultItem } from './SearchBar';
 
 const createMockItems = (numberOfItemsToCreate: number) => {
   const mockItems = [];
@@ -11,7 +11,7 @@ const createMockItems = (numberOfItemsToCreate: number) => {
       },
       label: `test-label-${i}`,
       value: `test-value-${i}`,
-    } as Option);
+    } as SearchResultItem);
   }
   return mockItems;
 };

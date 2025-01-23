@@ -1,8 +1,6 @@
-// import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { Autocomplete, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Search from '@mui/icons-material/Search';
-import { Box, Paper } from '@mui/material';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
@@ -35,65 +33,60 @@ import {
   StyledSearchBarWrapperDiv,
 } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
+import { SearchSuggestionContainer } from './SearchSuggestionContainer';
 import { createFinalOptions } from './utils';
 
-import type { SearchSuggestionT } from './SearchSuggestion';
-import type { PaperProps } from '@mui/material';
+import type { SearchableItem } from 'src/features/Search/search.interfaces';
 import type { SearchProps } from 'src/features/Search/withStoreSearch';
 
-interface SearchOption {
-  data: SearchSuggestionT;
-  label: string;
-  value: number | string;
-}
-
-// Special option type for redirect/info/error cases
-interface SpecialOption {
-  data: {
-    searchText: string;
-  };
-  label: string;
+export interface ExtendedSearchableItem
+  extends Omit<SearchableItem, 'entityType'> {
   value: 'error' | 'info' | 'redirect';
 }
 
-export type Option = SearchOption | SpecialOption;
+export type SearchResultItem = ExtendedSearchableItem | SearchableItem;
 
-const isSpecialOption = (option: Option): option is SpecialOption => {
-  return ['redirect', 'error', 'info'].includes(String(option.value));
+/**
+ * Check if the option needs to be rendered without the SearchSuggestion component (redirect, error, info)
+ */
+const isSpecialOption = (
+  option: SearchResultItem
+): option is ExtendedSearchableItem => {
+  return ['error', 'info', 'redirect'].includes(String(option.value));
 };
 
 // Style overrides for React Select
-export const selectStyles = {
-  control: (base: any) => ({
-    ...base,
-    backgroundColor: 'pink',
-    border: 0,
-    margin: 0,
-    width: '100%',
-  }),
-  dropdownIndicator: () => ({ display: 'none' }),
-  input: (base: any) => ({ ...base, border: 0, margin: 0, width: '100%' }),
-  menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
-  placeholder: (base: any) => ({
-    ...base,
-    color: base?.palette?.text?.primary,
-    fontSize: '0.875rem',
-  }),
-  selectContainer: (base: any) => ({
-    ...base,
-    border: 0,
-    margin: 0,
-    width: '100%',
-  }),
-};
+// export const selectStyles = {
+//   control: (base: any) => ({
+//     ...base,
+//     backgroundColor: 'pink',
+//     border: 0,
+//     margin: 0,
+//     width: '100%',
+//   }),
+//   dropdownIndicator: () => ({ display: 'none' }),
+//   input: (base: any) => ({ ...base, border: 0, margin: 0, width: '100%' }),
+//   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
+//   placeholder: (base: any) => ({
+//     ...base,
+//     color: base?.palette?.text?.primary,
+//     fontSize: '0.875rem',
+//   }),
+//   selectContainer: (base: any) => ({
+//     ...base,
+//     border: 0,
+//     margin: 0,
+//     width: '100%',
+//   }),
+// };
 
 const SearchBarComponent = (props: SearchProps) => {
   const { combinedResults, entitiesLoading, search } = props;
   const [searchText, setSearchText] = React.useState<string>('');
-  const [value, setValue] = React.useState<Option | null>(null);
+  const [value, setValue] = React.useState<SearchResultItem | null>(null);
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-  const [apiResults, setAPIResults] = React.useState<any[]>([]);
+  const [apiResults, setAPIResults] = React.useState<SearchableItem[]>([]);
   const [apiError, setAPIError] = React.useState<null | string>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
   const history = useHistory();
@@ -193,9 +186,10 @@ const SearchBarComponent = (props: SearchProps) => {
         data: {
           searchText: q,
         },
+        entityType: null,
         label: q,
         value: 'redirect',
-      } as SpecialOption);
+      });
     }
   }, [history.location]);
 
@@ -219,6 +213,7 @@ const SearchBarComponent = (props: SearchProps) => {
         databases ?? []
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     imagesLoading,
     search,
@@ -262,7 +257,7 @@ const SearchBarComponent = (props: SearchProps) => {
     setValue(null);
   };
 
-  const onSelect = (item: Option) => {
+  const onSelect = (item: SearchResultItem) => {
     if (!item || item.label === '') {
       return;
     }
@@ -285,7 +280,7 @@ const SearchBarComponent = (props: SearchProps) => {
     history.push(item.data.path);
   };
 
-  const onKeyDown = (e: any) => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (
       e.key === 'Enter' &&
       searchText !== '' &&
@@ -330,10 +325,12 @@ const SearchBarComponent = (props: SearchProps) => {
         <label className="visually-hidden" htmlFor="main-search">
           Main search
         </label>
-        <Autocomplete
-          // styles={selectStyles}
+        <Autocomplete<SearchResultItem, false, boolean, false>
           PaperComponent={(props) => (
-            <CustomPaper {...props} isLargeAccount={isLargeAccount} />
+            <SearchSuggestionContainer
+              {...props}
+              isLargeAccount={isLargeAccount}
+            />
           )}
           filterOptions={(options) => {
             /* Need to override the default RS filtering; otherwise entities whose label
@@ -343,7 +340,7 @@ const SearchBarComponent = (props: SearchProps) => {
           }}
           onChange={(_, value) => {
             if (value) {
-              onSelect(value as Option);
+              onSelect(value);
             }
           }}
           renderInput={(params) => {
@@ -374,8 +371,7 @@ const SearchBarComponent = (props: SearchProps) => {
             const { key, ...rest } = props;
             const value = String(option.value);
 
-            // Skip rendering for special options like 'redirect', 'error', 'info'
-            if (['error', 'info', 'redirect'].includes(value)) {
+            if (isSpecialOption(option)) {
               return (
                 <li {...rest} key={`${key}-${value}`}>
                   {option.label}
@@ -386,13 +382,13 @@ const SearchBarComponent = (props: SearchProps) => {
             return (
               <SearchSuggestion
                 data={{
-                  data: option.data as SearchSuggestionT,
+                  data: option.data,
                   label: option.label,
                 }}
                 isFocused={selected}
                 key={`${key}-${value}`}
                 searchText={searchText}
-                selectOption={() => onSelect(option as Option)}
+                selectOption={() => onSelect(option)}
                 selectProps={{ onMenuClose: onClose }}
               />
             );
@@ -409,7 +405,7 @@ const SearchBarComponent = (props: SearchProps) => {
           onKeyDown={onKeyDown}
           onOpen={onOpen}
           open={menuOpen && searchText !== ''}
-          options={finalOptions as Option[]}
+          options={finalOptions}
           placeholder="Search Products, IP Addresses, Tags..."
           value={value}
         />
@@ -436,31 +432,3 @@ const SearchBarComponent = (props: SearchProps) => {
 };
 
 export const SearchBar = withStoreSearch()(SearchBarComponent);
-
-interface CustomPaperProps extends PaperProps {
-  isLargeAccount?: boolean;
-}
-
-const CustomPaper = (props: CustomPaperProps) => {
-  const { children, isLargeAccount, ...rest } = props;
-
-  return (
-    <Paper {...rest}>
-      <div>
-        {children}
-        {!isLargeAccount && (
-          <Box
-            sx={(theme) => ({
-              borderTop: `1px solid ${theme.palette.divider}`,
-              fontSize: '0.875rem',
-              padding: theme.spacing(1),
-            })}
-          >
-            <b>By field:</b> "tag:my-app" "label:my-linode" &nbsp;&nbsp;
-            <b>With operators</b>: "tag:my-app AND is:domain"
-          </Box>
-        )}
-      </div>
-    </Paper>
-  );
-};

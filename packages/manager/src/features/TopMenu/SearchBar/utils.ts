@@ -1,12 +1,12 @@
-import type { Option } from './SearchBar';
+import type { SearchResultItem, ExtendedSearchableItem } from './SearchBar';
 
 export const createFinalOptions = (
-  results: Option[],
+  results: SearchResultItem[],
   searchText: string = '',
   loading: boolean = false,
   error: boolean = false
-) => {
-  const redirectOption = {
+): SearchResultItem[] => {
+  const redirectOption: ExtendedSearchableItem = {
     data: {
       searchText,
     },
@@ -14,12 +14,12 @@ export const createFinalOptions = (
     value: 'redirect',
   };
 
-  const loadingResults = {
+  const loadingResults: ExtendedSearchableItem = {
     label: 'Loading results...',
     value: 'info',
   };
 
-  const searchError = {
+  const searchError: ExtendedSearchableItem = {
     label: 'Error retrieving search results',
     value: 'error',
   };
@@ -44,7 +44,7 @@ export const createFinalOptions = (
   }
 
   // MORE THAN 20 RESULTS:
-  const lastOption = {
+  const lastOption: ExtendedSearchableItem = {
     data: {
       searchText,
     },
