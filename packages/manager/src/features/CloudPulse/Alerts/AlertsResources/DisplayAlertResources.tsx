@@ -147,8 +147,8 @@ export const DisplayAlertResources = React.memo(
                 data-testid="alert_resources_content"
               >
                 {!isDataLoadingError &&
-                  paginatedData.map(({ id, label, region }) => (
-                    <TableRow data-qa-alert-row={id} key={id}>
+                  paginatedData.map(({ id, label, region }, index) => (
+                    <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
                       <TableCell data-qa-alert-cell={`${id}_resource`}>
                         {label}
                       </TableCell>
