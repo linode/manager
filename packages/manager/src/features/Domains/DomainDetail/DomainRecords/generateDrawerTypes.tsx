@@ -26,7 +26,7 @@ import type {
 } from './DomainRecordDrawer';
 import type { Control } from 'react-hook-form';
 
-export const getDomainRecordDrawerTypes = (
+export const generateDrawerTypes = (
   props: Pick<DomainRecordDrawerProps, 'domain' | 'type'>,
   control: Control<EditableDomainFields | EditableRecordFields>
 ) => {
@@ -165,6 +165,7 @@ export const getDomainRecordDrawerTypes = (
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
+                data-testid="cname-name"
                 domain={props.domain}
                 errorText={fieldState.error?.message}
                 field="name"
@@ -316,6 +317,7 @@ export const getDomainRecordDrawerTypes = (
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
+                data-testid="ns-name"
                 domain={props.domain}
                 errorText={fieldState.error?.message}
                 field="name"
@@ -469,6 +471,7 @@ export const getDomainRecordDrawerTypes = (
           <Controller
             render={({ field, fieldState }) => (
               <NameOrTargetField
+                data-testid="txt-name"
                 domain={props.domain}
                 errorText={fieldState.error?.message}
                 field="name"

@@ -31,29 +31,8 @@ interface NumberFieldProps extends AdjustedTextFieldProps {
   defaultValue?: number;
 }
 
-export const TextField = ({
-  errorText,
-  helperText,
-  label,
-  multiline,
-  onBlur,
-  onChange,
-  placeholder,
-  trimmed,
-  value,
-}: AdjustedTextFieldProps) => (
-  <_TextField
-    data-qa-target={label}
-    errorText={errorText}
-    helperText={helperText}
-    label={label}
-    multiline={multiline}
-    onBlur={onBlur}
-    onChange={onChange}
-    placeholder={placeholder}
-    trimmed={trimmed}
-    value={value}
-  />
+export const TextField = ({ label, ...rest }: AdjustedTextFieldProps) => (
+  <_TextField data-qa-target={label} label={label} {...rest} />
 );
 
 export const NameOrTargetField = ({
@@ -109,13 +88,13 @@ export const DomainTransferField = ({
   value,
 }: {
   errorText?: string;
-  onChange: (ips: ExtendedIP[]) => void;
+  onChange: (ips: string[]) => void;
   value: EditableDomainFields['axfr_ips'];
 }) => {
   const finalIPs = (value ?? ['']).map(stringToExtendedIP);
 
   const handleTransferUpdate = (transferIPs: ExtendedIP[]) => {
-    const axfrIps: any =
+    const axfrIps =
       transferIPs.length > 0 ? transferIPs.map(extendedIPToString) : [''];
     onChange(axfrIps);
   };
@@ -132,12 +111,12 @@ export const DomainTransferField = ({
 };
 
 const MSSelect = ({
-  fn,
   label,
+  onChange,
   value,
 }: {
-  fn: (value: number) => void;
   label: string;
+  onChange: (value: number) => void;
   value: number;
 }) => {
   const MSSelectOptions = [
@@ -171,44 +150,32 @@ const MSSelect = ({
       }}
       disableClearable
       label={label}
-      onChange={(_, selected) => fn(selected.value)}
+      onChange={(_, selected) => onChange(selected.value)}
       options={MSSelectOptions}
       value={defaultOption}
     />
   );
 };
 
-export const RefreshRateField = ({
-  onChange,
-  value,
-}: {
+export const RefreshRateField = (props: {
   onChange: (value: number) => void;
   value: number;
-}) => <MSSelect fn={onChange} label="Refresh Rate" value={value} />;
+}) => <MSSelect label="Refresh Rate" {...props} />;
 
-export const RetryRateField = ({
-  onChange,
-  value,
-}: {
+export const RetryRateField = (props: {
   onChange: (value: number) => void;
   value: number;
-}) => <MSSelect fn={onChange} label="Retry Rate" value={value} />;
+}) => <MSSelect label="Retry Rate" {...props} />;
 
-export const DefaultTTLField = ({
-  onChange,
-  value,
-}: {
+export const DefaultTTLField = (props: {
   onChange: (value: number) => void;
   value: number;
-}) => <MSSelect fn={onChange} label="Default TTL" value={value} />;
+}) => <MSSelect label="Default TTL" {...props} />;
 
-export const TTLField = ({
-  onChange,
-  value,
-}: {
+export const TTLField = (props: {
   onChange: (value: number) => void;
   value: number;
-}) => <MSSelect fn={onChange} label="TTL" value={value} />;
+}) => <MSSelect label="TTL" {...props} />;
 
 export const ExpireField = ({
   onChange,

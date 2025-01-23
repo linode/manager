@@ -22,7 +22,7 @@ import {
   resolveAlias,
   typeMap,
 } from './DomainRecordDrawerUtils';
-import { getDomainRecordDrawerTypes } from './getDomainRecordDrawerTypes';
+import { generateDrawerTypes } from './generateDrawerTypes';
 
 import type {
   Domain,
@@ -107,7 +107,7 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
     values: defaultValues,
   });
 
-  const types = getDomainRecordDrawerTypes(props, control);
+  const types = generateDrawerTypes(props, control);
 
   const { fields } = types[type];
   const isCreating = mode === 'create';

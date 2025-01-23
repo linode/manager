@@ -12,6 +12,10 @@ import type {
 } from './DomainRecordDrawer';
 import type { DomainType, RecordType } from '@linode/api-v4/lib/domains';
 
+type ValuesOfEditableData = Partial<
+  EditableDomainFields & EditableRecordFields
+>[keyof Partial<EditableDomainFields & EditableRecordFields>];
+
 export const noARecordsNoticeText =
   'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
@@ -53,7 +57,7 @@ export const resolve = (value: string, domain: string) =>
   value.replace(/\@/, domain);
 
 export const resolveAlias = (
-  data: Record<string, any>,
+  data: Record<string, ValuesOfEditableData>,
   domain: string,
   type: string
 ) => {
@@ -69,12 +73,12 @@ export const resolveAlias = (
 
 const numericFields = ['port', 'weight', 'priority'];
 export const castFormValuesToNumeric = (
-  data: Record<string, any>,
+  data: Record<string, ValuesOfEditableData>,
   fieldNames: string[] = numericFields
 ) => {
   return produce(data, (draft) => {
     fieldNames.forEach((thisField) => {
-      draft[thisField] = maybeCastToNumber(draft[thisField]);
+      draft[thisField] = maybeCastToNumber(draft[thisField] as number | string);
     });
   });
 };
