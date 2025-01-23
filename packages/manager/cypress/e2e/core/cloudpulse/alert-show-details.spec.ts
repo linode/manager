@@ -221,7 +221,7 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
         .should('have.text', '4 minutes');
 
       // Validating contents of Trigger Alert
-      cy.get(`[data-qa-chip="All"]`)
+      cy.get('[data-qa-chip="All"]')
         .should('be.visible')
         .should('have.text', 'All');
 
