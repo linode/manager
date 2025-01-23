@@ -3,6 +3,7 @@
  * This file contains integration tests to verify the functionality and UI elements
  * on the CloudPulse  Alerts Listing Page.
  */
+
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { accountFactory, alertFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -25,27 +26,28 @@ const expectedHeaders = [
   'Last Modified',
   'Created By',
 ];
-const alertDetails = [
+
+const mockAlerts = [
   alertFactory.build({
     service_type: 'dbaas',
     severity: 1,
     status: 'enabled',
     type: 'system',
     created_by: 'user1',
-    updated: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    updated: new Date(now.getTime() - 1 * 86400).toISOString(),
   }),
   alertFactory.build({
     service_type: 'dbaas',
     severity: 0,
     status: 'disabled',
-    updated: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    updated: new Date(now.getTime() - 10 * 86400).toISOString(),
     created_by: 'user4',
   }),
   alertFactory.build({
     service_type: 'linode',
     severity: 2,
     status: 'enabled',
-    updated: new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+    updated: new Date(now.getTime() - 6 * 86400).toISOString(),
     created_by: 'user2',
   }),
   alertFactory.build({
@@ -53,12 +55,13 @@ const alertDetails = [
     severity: 3,
     status: 'disabled',
     type: 'user',
-    updated: new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+    updated: new Date(now.getTime() - 4 * 86400).toISOString(),
     created_by: 'user3',
   }),
 ];
 /**
  * Verifies the sorting functionality of a table column.
+ *
  * This function:
  * - Clicks the specified column header to trigger sorting.
  * - Validates that the `aria-sort` attribute of the column header matches the given sort order.
@@ -69,32 +72,34 @@ const alertDetails = [
  * @param {number[]} expectedValues - An array of expected values to validate against the sorted column.
  */
 
- function verifyTableSorting(
+const verifyTableSorting = (
   columnDataQa: string,
   sortOrder: 'ascending' | 'descending',
   expectedValues: number[]
-) {
+) => {
   cy.get(`[data-qa-header="${columnDataQa}"]`)
     .should('have.attr', 'aria-sort', sortOrder)
     .click();
 
   cy.get('[data-qa="alert-table"]').within(() => {
     cy.get('[data-qa-alert-cell]').should(($cells) => {
-      const actualOrder = $cells.map((_, cell) =>
-        parseInt(cell.getAttribute('data-qa-alert-cell')!, 10)
-      ).get();
+      const actualOrder = $cells
+        .map((_, cell) =>
+          parseInt(cell.getAttribute('data-qa-alert-cell')!, 10)
+        )
+        .get();
 
-     expect(actualOrder).to.deep.equal(expectedValues);
+      expect(actualOrder).to.deep.equal(expectedValues);
     });
   });
-}
+};
 
 describe('Integration Tests for Dbaas Alert Listing Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
     mockGetCloudPulseServices('linode', 'dbaas');
-    mockGetAllAlertDefinitions(alertDetails).as('getAlertDefinitionsList');
+    mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
     cy.visitWithLogin('/monitor/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
   });
@@ -103,33 +108,38 @@ describe('Integration Tests for Dbaas Alert Listing Page', () => {
    * Function to check the details of an alert.
    * @param {Alert} alert - The alert object to check.
    */
-  const validateAlertDetails = ({ id, service_type, status, label, updated, created_by }: Alert) => {
-    cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
-      cy.findByText(service_type)
+  const checkAlertDetails = (alert: Alert) => {
+    cy.get(`[data-qa-alert-cell="${alert.id}"]`).within(() => {
+      cy.findByText(alert.service_type)
         .should('be.visible')
-        .should('have.text',service_type);
+        .should('have.text', alert.service_type);
 
-      cy.findByText(new RegExp(status, 'i'))
-        .should('be.visible')
-        .should('have.text',status === 'enabled' ? 'Enabled' : 'Disabled');
-
-      cy.findByText(label)
-        .should('be.visible')
-        .should('have.text', label)
-        .should('have.attr', 'href',
-          `/monitor/alerts/definitions/detail/${service_type}/${id}`);
-
-      cy.findByText(formatDate(updated, { format: 'yyyy-MM-dd HH:mm' }))
+      cy.findByText(new RegExp(alert.status, 'i'))
         .should('be.visible')
         .should(
           'have.text',
-          formatDate(updated, { format: 'yyyy-MM-dd HH:mm' })
+          alert.status === 'enabled' ? 'Enabled' : 'Disabled'
         );
-      cy.findByText(created_by)
+      cy.findByText(alert.label)
         .should('be.visible')
-        .should('have.text', created_by);
+        .should('have.text', alert.label)
+        .should(
+          'have.attr',
+          'href',
+          `/monitor/alerts/definitions/detail/${alert.service_type}/${alert.id}`
+        );
 
-      cy.get(`[data-qa-alert-action-cell="alert_${id}"]`)
+      cy.findByText(formatDate(alert.updated, { format: 'yyyy-MM-dd HH:mm' }))
+        .should('be.visible')
+        .should(
+          'have.text',
+          formatDate(alert.updated, { format: 'yyyy-MM-dd HH:mm' })
+        );
+      cy.findByText(alert.created_by)
+        .should('be.visible')
+        .should('have.text', alert.created_by);
+
+      cy.get(`[data-qa-alert-action-cell="alert_${alert.id}"]`)
         .find('button')
         .should('be.visible')
         .should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
@@ -137,7 +147,7 @@ describe('Integration Tests for Dbaas Alert Listing Page', () => {
     });
     cy.get('[data-qa-action-menu-item="Show Details"]').should('be.visible');
 
-    cy.get('body').click(); 
+    cy.get('body').click();
   };
 
   it('should verify sorting for multiple columns in ascending and descending order', () => {
@@ -165,11 +175,11 @@ describe('Integration Tests for Dbaas Alert Listing Page', () => {
     // Verify sorting for 'created_by' column in descending order
     verifyTableSorting('created_by', 'descending', [1, 3, 4, 2]);
 
-     // Verify sorting for 'created_by' column in ascending order
-     verifyTableSorting('updated', 'ascending', [1, 4, 3, 2]);
+    // Verify sorting for 'created_by' column in ascending order
+    verifyTableSorting('updated', 'ascending', [1, 4, 3, 2]);
 
-     // Verify sorting for 'created_by' column in descending order
-     verifyTableSorting('updated', 'descending', [2, 3, 4, 1]);
+    // Verify sorting for 'created_by' column in descending order
+    verifyTableSorting('updated', 'descending', [2, 3, 4, 1]);
   });
 
   it('should validate the UI elements, headers, alert details, and search functionality', () => {
@@ -210,8 +220,8 @@ describe('Integration Tests for Dbaas Alert Listing Page', () => {
       });
     });
     // Check each alert's details
-    alertDetails.forEach((alert) => {
-        validateAlertDetails(alert);
+    mockAlerts.forEach((alert) => {
+      checkAlertDetails(alert);
     });
   });
 
@@ -220,15 +230,15 @@ describe('Integration Tests for Dbaas Alert Listing Page', () => {
     cy.findByPlaceholderText('Search for Alerts')
       .should('be.visible')
       .should('not.be.disabled')
-      .type(alertDetails[0].label);
+      .type(mockAlerts[0].label);
 
     cy.get('[data-qa="alert-table"]')
       .should('have.length', 1)
-      .find(`[data-qa-alert-cell="${alertDetails[0].id}"]`)
+      .find(`[data-qa-alert-cell="${mockAlerts[0].id}"]`)
       .within(() => {
-        cy.findByText(alertDetails[0].label).should(
+        cy.findByText(mockAlerts[0].label).should(
           'have.text',
-          alertDetails[0].label
+          mockAlerts[0].label
         );
       });
 
@@ -250,17 +260,17 @@ describe('Integration Tests for Dbaas Alert Listing Page', () => {
 
     cy.findByPlaceholderText('Select a Service')
       .should('be.visible')
-      .type(`${alertDetails[0].service_type}{enter}`);
+      .type(`${mockAlerts[0].service_type}{enter}`);
 
     // Clicks the currently focused element
-      cy.focused().click();
+    cy.focused().click();
 
     cy.get('[data-qa="alert-table"]')
       .find('[data-qa-alert-cell]')
       .should('have.length', 2);
 
-    cy.get(`[data-qa-alert-cell="${alertDetails[0].id}"]`).should('be.visible');
-    cy.get(`[data-qa-alert-cell="${alertDetails[1].id}"]`).should('be.visible');
+    cy.get(`[data-qa-alert-cell="${mockAlerts[0].id}"]`).should('be.visible');
+    cy.get(`[data-qa-alert-cell="${mockAlerts[1].id}"]`).should('be.visible');
 
     //  Clear search by alert status filter and search by alert status
     cy.get('[data-qa-filter="alert-status-filter"]')
@@ -285,6 +295,6 @@ describe('Integration Tests for Dbaas Alert Listing Page', () => {
     // Clicks the currently focused element
     cy.focused().click();
 
-    cy.get(`[data-qa-alert-cell="${alertDetails[0].id}"]`).should('be.visible');
+    cy.get(`[data-qa-alert-cell="${mockAlerts[0].id}"]`).should('be.visible');
   });
 });

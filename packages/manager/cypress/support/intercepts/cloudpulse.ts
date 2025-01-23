@@ -41,10 +41,7 @@ export const mockGetCloudPulseMetricDefinitions = (
  * Mocks the API response for the '/monitor/services' endpoint with the provided service types.
  * This function intercepts the GET request for the specified API and returns a mocked response
  * with service types, either a single service type or multiple service types.
- * 
  * @param {string | string[]} serviceTypes - A single service type (e.g., 'linode') or an array of service types
- *                                         (e.g., ['linode', 'dbaas']) to mock. If a single string is passed, 
- *                                         it will be treated as an array with one element.
  * @returns {Cypress.Chainable<null>} - Returns a Cypress chainable object to continue the test.
  */
 
