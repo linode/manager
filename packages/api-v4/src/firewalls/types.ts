@@ -52,10 +52,7 @@ export interface FirewallDevice {
   entity: FirewallDeviceEntity;
 }
 
-export type FirewallTemplateSlug =
-  | 'akamai-non-prod'
-  | 'vpc_basic'
-  | 'public_basic';
+export type FirewallTemplateSlug = 'akamai-non-prod' | 'vpc' | 'public';
 
 export interface FirewallTemplate {
   slug: FirewallTemplateSlug;

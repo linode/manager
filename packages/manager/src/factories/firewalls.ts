@@ -61,8 +61,8 @@ export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
 
 const firewallTemplateSlugs: FirewallTemplateSlug[] = [
   'akamai-non-prod',
-  'vpc_basic',
-  'public_basic',
+  'vpc',
+  'public',
 ];
 
 export const firewallTemplateFactory = Factory.Sync.makeFactory<FirewallTemplate>(

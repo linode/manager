@@ -252,7 +252,7 @@ export const deleteFirewallDevice = (firewallID: number, deviceID: number) =>
 /**
  * getFirewallSettings
  *
- * Returns current interface default firewall settings (alongside linode and nodebalancer defaults)
+ * Returns current interface default firewall settings
  */
 export const getFirewallSettings = () =>
   Request<FirewallSettings>(
