@@ -1,3 +1,23 @@
+## [2025-01-28] - v0.133.0
+
+
+### Added:
+
+- Types for Quotas endpoints ([#11493](https://github.com/linode/manager/pull/11493))
+- Notification Channel related types to cloudpulse/alerts.ts ([#11511](https://github.com/linode/manager/pull/11511))
+
+### Changed:
+
+- Allow `cipher_suite` to be `none` in `NodeBalancerConfig` and `CreateNodeBalancerConfig` ([#11515](https://github.com/linode/manager/pull/11515))
+
+### Tech Stories:
+
+- Update `tsconfig.json` to use `bundler` moduleResolution ([#11487](https://github.com/linode/manager/pull/11487))
+
+### Upcoming Features:
+
+- update types for IAM and resources api ([#11429](https://github.com/linode/manager/pull/11429))
+
 ## [2025-01-14] - v0.132.0
 
 ### Added:
