@@ -197,7 +197,7 @@ describe('Account cancellation', () => {
         // Check both boxes but verify submit remains disabled without email
         cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
         cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
-
+        
         ui.button
           .findByTitle('Close Account')
           .should('be.visible')
@@ -382,7 +382,7 @@ describe('Parent/Child account cancellation', () => {
         // Check both boxes but verify submit remains disabled without email
         cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
         cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
-
+        
         ui.button
           .findByTitle('Close Account')
           .should('be.visible')

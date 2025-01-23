@@ -3,6 +3,7 @@ import { firewallFactory } from 'src/factories/firewalls';
 import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
+import { fbtVisible, fbtClick } from 'support/helpers';
 import { cleanUp } from 'support/util/cleanup';
 
 authenticate();
@@ -34,8 +35,8 @@ describe('delete firewall', () => {
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            cy.findByText('Delete').should('be.visible');
-            cy.findByText('Delete').click();
+            fbtVisible('Delete');
+            fbtClick('Delete');
           });
 
         // Cancel deletion when prompted to confirm.
@@ -55,8 +56,8 @@ describe('delete firewall', () => {
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            cy.findByText('Delete').should('be.visible');
-            cy.findByText('Delete').click();
+            fbtVisible('Delete');
+            fbtClick('Delete');
           });
 
         // Confirm deletion.

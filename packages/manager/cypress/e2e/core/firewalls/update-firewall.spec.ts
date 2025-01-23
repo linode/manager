@@ -14,11 +14,13 @@ import {
   firewallRulesFactory,
 } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
+import { containsClick } from 'support/helpers';
 import {
   interceptUpdateFirewallLinodes,
   interceptUpdateFirewallRules,
 } from 'support/intercepts/firewalls';
 import { randomItem, randomString, randomLabel } from 'support/util/random';
+import { fbtVisible, fbtClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
@@ -82,13 +84,11 @@ const addFirewallRules = (rule: FirewallRuleType, direction: string) => {
       const description = rule.description
         ? rule.description
         : 'test-description';
-      cy.contains('Label')
-        .click()
-        .type('{selectall}{backspace}' + label);
-      cy.contains('Description').click().type(description);
+      containsClick('Label').type('{selectall}{backspace}' + label);
+      containsClick('Description').type(description);
 
       const action = rule.action ? getRuleActionLabel(rule.action) : 'Accept';
-      cy.contains(action).click();
+      containsClick(action).click();
 
       ui.button
         .findByTitle('Add Rule')
@@ -346,8 +346,8 @@ describe('update firewall', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText('Disable').should('be.visible');
-          cy.findByText('Disable').click();
+          fbtVisible('Disable');
+          fbtClick('Disable');
         });
 
       ui.dialog
@@ -375,8 +375,8 @@ describe('update firewall', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText('Enable').should('be.visible');
-          cy.findByText('Enable').click();
+          fbtVisible('Enable');
+          fbtClick('Enable');
         });
 
       ui.dialog

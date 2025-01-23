@@ -23,15 +23,11 @@ import { useCreateIPv6RangeMutation } from 'src/queries/networking/networking';
 import { ExplainerCopy } from './ExplainerCopy';
 
 import type { IPv6Prefix } from '@linode/api-v4/lib/networking';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export type IPType = 'v4Private' | 'v4Public';
 
-type IPOption = {
-  label: string;
-  value: IPType;
-};
-
-const ipOptions: IPOption[] = [
+const ipOptions: Item<IPType>[] = [
   { label: 'Public', value: 'v4Public' },
   { label: 'Private', value: 'v4Private' },
 ];

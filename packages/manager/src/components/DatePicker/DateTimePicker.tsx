@@ -21,15 +21,12 @@ import type { DateTime } from 'luxon';
 export interface DateTimePickerProps {
   /** Additional props for the DateCalendar */
   dateCalendarProps?: Partial<DateCalendarProps<DateTime>>;
-  disabledTimeZone?: boolean;
   /** Error text for the date picker field */
   errorText?: string;
   /** Format for displaying the date-time */
   format?: string;
   /** Label for the input field */
   label?: string;
-  /** Minimum date-time before which all date-time will be disabled */
-  minDate?: DateTime;
   /** Callback when the "Apply" button is clicked */
   onApply?: () => void;
   /** Callback when the "Cancel" button is clicked */
@@ -64,11 +61,9 @@ export interface DateTimePickerProps {
 
 export const DateTimePicker = ({
   dateCalendarProps = {},
-  disabledTimeZone = false,
   errorText = '',
   format = 'yyyy-MM-dd HH:mm',
   label = 'Select Date and Time',
-  minDate,
   onApply,
   onCancel,
   onChange,
@@ -198,7 +193,6 @@ export const DateTimePicker = ({
       >
         <Box padding={2}>
           <DateCalendar
-            minDate={minDate}
             onChange={handleDateChange}
             value={selectedDateTime || null}
             {...dateCalendarProps}
@@ -234,12 +228,6 @@ export const DateTimePicker = ({
             {showTime && (
               <Grid item xs={4}>
                 <TimePicker
-                  minTime={
-                    minDate &&
-                    minDate.toISODate() === selectedDateTime?.toISODate()
-                      ? minDate
-                      : undefined
-                  }
                   slotProps={{
                     actionBar: {
                       sx: (theme: Theme) => ({
@@ -278,7 +266,6 @@ export const DateTimePicker = ({
             {showTimeZone && (
               <Grid item xs={7}>
                 <TimeZoneSelect
-                  disabled={disabledTimeZone}
                   label={timeZoneSelectProps?.label || 'Timezone'}
                   noMarginTop
                   onChange={handleTimeZoneChange}

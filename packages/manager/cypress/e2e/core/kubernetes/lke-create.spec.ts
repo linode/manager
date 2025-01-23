@@ -58,7 +58,6 @@ import {
   latestKubernetesVersion,
 } from 'support/constants/lke';
 import { lkeEnterpriseTypeFactory } from 'src/factories';
-import { pluralize } from 'src/utilities/pluralize';
 
 const dedicatedNodeCount = 4;
 const nanodeNodeCount = 3;
@@ -318,11 +317,6 @@ describe('LKE Cluster Creation', () => {
         .should('have.length', similarNodePoolCount)
         .first()
         .should('be.visible');
-
-      // Confirm total number of nodes are shown for each pool
-      cy.findAllByText(
-        pluralize('Node', 'Nodes', clusterPlan.nodeCount)
-      ).should('be.visible');
     });
 
     ui.breadcrumb
@@ -1079,7 +1073,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
      * - Confirms an LKE-E supported k8 version can be selected
      * - Confirms the checkout bar displays the correct LKE-E info
      * - Confirms an enterprise cluster can be created with the correct chip, version, and price
-     * - Confirms that the total node count for each pool is displayed
      */
     it('creates an LKE-E cluster with the account capability', () => {
       const clusterLabel = randomLabel();
@@ -1275,13 +1268,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
         `Version ${latestEnterpriseTierKubernetesVersion.id}`
       ).should('be.visible');
       cy.findByText('$459.00/month').should('be.visible');
-
-      clusterPlans.forEach((clusterPlan) => {
-        // Confirm total number of nodes are shown for each pool
-        cy.findAllByText(
-          pluralize('Node', 'Nodes', clusterPlan.nodeCount)
-        ).should('be.visible');
-      });
     });
 
     it('disables the Cluster Type selection without the LKE-E account capability', () => {

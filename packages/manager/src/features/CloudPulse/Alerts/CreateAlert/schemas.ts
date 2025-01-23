@@ -1,8 +1,6 @@
 import { createAlertDefinitionSchema } from '@linode/validation';
 import { object, string } from 'yup';
 
-const fieldErrorMessage = 'This field is required.';
-
 const engineOptionValidation = string().when('service_type', {
   is: 'dbaas',
   otherwise: (schema) => schema.notRequired().nullable(),
@@ -16,8 +14,3 @@ export const CreateAlertDefinitionFormSchema = createAlertDefinitionSchema.conca
     serviceType: string().required('Service is required.'),
   })
 );
-
-export const notificationChannelSchema = object({
-  channel_type: string().required(fieldErrorMessage),
-  label: string().required(fieldErrorMessage),
-});

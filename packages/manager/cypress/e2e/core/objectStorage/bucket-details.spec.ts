@@ -7,10 +7,8 @@ import {
   regionFactory,
 } from 'src/factories';
 import { randomLabel } from 'support/util/random';
-import { mockGetBucket } from 'support/intercepts/object-storage';
-import { mockGetRegions } from 'support/intercepts/regions';
 
-describe('Object Storage Multicluster Bucket Details Tabs', () => {
+describe('Object Storage Gen 1 Bucket Details Tabs', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       objMultiCluster: true,
@@ -33,17 +31,11 @@ describe('Object Storage Multicluster Bucket Details Tabs', () => {
   });
 
   describe('Properties tab without required capabilities', () => {
-    /*
-     * - Confirms that Gen 2-specific "Properties" tab is absent when OBJ Multicluster is enabled.
-     */
     it(`confirms the Properties tab does not exist for users without 'Object Storage Endpoint Types' capability`, () => {
-      const { label } = mockBucket;
-
-      mockGetBucket(label, mockRegion.id);
-      mockGetRegions([mockRegion]);
+      const { region, label } = mockBucket;
 
       cy.visitWithLogin(
-        `/object-storage/buckets/${mockRegion.id}/${label}/properties`
+        `/object-storage/buckets/${region}/${label}/properties`
       );
 
       cy.wait(['@getFeatureFlags', '@getAccount']);
@@ -55,6 +47,8 @@ describe('Object Storage Multicluster Bucket Details Tabs', () => {
 
       // Confirm that "Properties" tab is absent.
       cy.findByText('Properties').should('not.exist');
+
+      // TODO Confirm "Not Found" notice is present.
     });
   });
 });

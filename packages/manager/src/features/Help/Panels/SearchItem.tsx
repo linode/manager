@@ -1,68 +1,58 @@
-import { ListItem, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+import { useStyles } from 'tss-react/mui';
 
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
+import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import type { Theme } from '@mui/material/styles';
+import type { OptionProps } from 'react-select';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  arrow: {
-    color: theme.palette.primary.main,
-    height: 12,
-    width: 12,
-  },
-  root: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-}));
-
-interface Props {
+interface Props extends OptionProps<any, any> {
   data: {
-    data: {
-      source: string;
-    };
+    data: any;
     label: string;
   };
+  searchText: string;
 }
 
 export const SearchItem = (props: Props) => {
-  const { data } = props;
   const getLabel = () => {
     if (isFinal) {
-      return data.label ? `Search for "${data.label}"` : 'Search';
+      return props.label ? `Search for "${props.label}"` : 'Search';
     } else {
-      return data.label;
+      return props.label;
     }
   };
 
-  const { classes } = useStyles();
+  const { cx } = useStyles();
 
+  const {
+    data,
+    isFocused,
+    selectProps: { classes },
+  } = props;
   const source = data.data ? data.data.source : '';
   const isFinal = source === 'finalLink';
 
   return (
-    <ListItem
+    <Option
+      className={cx({
+        [classes.algoliaRoot]: true,
+        [classes.selectedMenuItem]: isFocused,
+      })}
       aria-label={!isFinal ? `${getLabel()} - opens in a new tab` : undefined}
+      attrs={{ ['data-qa-search-result']: source }}
       value={data.label}
       {...props}
     >
       {isFinal ? (
-        <div className={classes.root}>
-          <Typography
-            sx={(theme) => ({
-              color: theme.color.headline,
-            })}
-          >
-            {getLabel()}
-          </Typography>
+        <div className={classes.finalLink}>
+          <Typography>{getLabel()}</Typography>
         </div>
       ) : (
-        <div className={classes.root}>
-          <div>
+        <>
+          <div className={classes.row}>
             <div
               dangerouslySetInnerHTML={{
                 __html: sanitizeHTML({
@@ -70,18 +60,13 @@ export const SearchItem = (props: Props) => {
                   text: getLabel(),
                 }),
               }}
+              className={classes.label}
             />
-            <Typography
-              sx={(theme) => ({
-                color: theme.color.headline,
-              })}
-            >
-              {source}
-            </Typography>
+            <Arrow className={classes.icon} />
           </div>
-          <Arrow className={classes.arrow} />
-        </div>
+          <Typography className={classes.source}>{source}</Typography>
+        </>
       )}
-    </ListItem>
+    </Option>
   );
 };

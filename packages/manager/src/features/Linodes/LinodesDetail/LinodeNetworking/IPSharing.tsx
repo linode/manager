@@ -3,17 +3,17 @@ import {
   CircleProgress,
   Divider,
   Notice,
-  Select,
   TextField,
   Typography,
 } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
+import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -32,7 +32,7 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { IPRangeInformation } from '@linode/api-v4/lib/networking';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { SelectOption } from '@linode/ui';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface Props {
   linodeId: number;
@@ -165,7 +165,7 @@ const IPSharingPanel = (props: Props) => {
     }
   }, [ips, ranges]);
 
-  const onIPSelect = (ipIdx: number, e: SelectOption<string>) => {
+  const onIPSelect = (ipIdx: number, e: Item<string>) => {
     setIpsToShare((currentIps) => {
       return ipIdx >= currentIps.length
         ? [...currentIps, e.value]
@@ -470,7 +470,7 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
 interface SharingRowProps extends RowProps {
   getRemainingChoices: (ip: string | undefined) => string[];
   handleDelete?: (idx: number) => void;
-  handleSelect: (idx: number, selected: SelectOption<string>) => void;
+  handleSelect: (idx: number, selected: Item<string>) => void;
   idx: number;
   labels: Record<string, string>;
   readOnly: boolean;
@@ -505,7 +505,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
         <Divider spacingBottom={0} />
       </Grid>
       <Grid sm={10} xs={12}>
-        <Select
+        <StyledSelect
           textFieldProps={{
             dataAttrs: {
               'data-qa-share-ip': true,
@@ -513,11 +513,13 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
           }}
           disabled={readOnly}
           hideLabel
+          inputId={`ip-select-${idx}`}
+          isClearable={false}
           label="Select an IP"
-          onChange={(_, selected) => handleSelect(idx, selected)}
+          onChange={(selected: Item<string>) => handleSelect(idx, selected)}
           options={ipList}
+          overflowPortal
           placeholder="Select an IP"
-          sx={{ marginTop: 0, width: '100%' }}
           value={selectedIP}
         />
       </Grid>
@@ -547,6 +549,11 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       ) : null}
     </Grid>
   );
+});
+
+const StyledSelect = styled(Select, { label: 'StyledSelect' })({
+  marginTop: 0,
+  width: '100%',
 });
 
 export default IPSharingPanel;

@@ -85,7 +85,6 @@ export type MockPresetCrudGroup = {
     | 'Domains'
     | 'Linodes'
     | 'Placement Groups'
-    | 'Quotas'
     | 'Support Tickets'
     | 'Volumes';
 };
@@ -93,7 +92,6 @@ export type MockPresetCrudId =
   | 'domains:crud'
   | 'linodes:crud'
   | 'placement-groups:crud'
-  | 'quotas:crud'
   | 'support-tickets:crud'
   | 'volumes:crud';
 export interface MockPresetCrud extends MockPresetBase {

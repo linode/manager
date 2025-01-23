@@ -11,7 +11,6 @@ import {
 import type { PlanInformationProps } from './PlanInformation';
 
 const mockProps: PlanInformationProps = {
-  flow: 'linode',
   hasMajorityOfPlansDisabled: false,
   hasSelectedRegion: true,
   isAPLEnabled: true,

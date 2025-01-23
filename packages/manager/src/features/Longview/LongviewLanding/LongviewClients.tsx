@@ -1,13 +1,12 @@
 import { Autocomplete, Typography } from '@linode/ui';
-import { useLocation, useNavigate } from '@tanstack/react-router';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Link } from 'src/components/Link';
 import withLongviewClients from 'src/containers/longview.container';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
@@ -32,8 +31,8 @@ import type {
   LongviewClient,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
+import type { RouteComponentProps } from 'react-router-dom';
 import type { Props as LongviewProps } from 'src/containers/longview.container';
-import type { LongviewState } from 'src/routes/longview';
 import type { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import type { MapState } from 'src/store/types';
 
@@ -48,15 +47,16 @@ interface SortOption {
   value: SortKey;
 }
 
-export type LongviewClientsCombinedProps = Props & LongviewProps & StateProps;
+export type LongviewClientsCombinedProps = Props &
+  RouteComponentProps &
+  LongviewProps &
+  StateProps;
 
 type SortKey = 'cpu' | 'load' | 'name' | 'network' | 'ram' | 'storage' | 'swap';
 
 export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const { getLongviewClients } = props;
-  const navigate = useNavigate();
-  const location = useLocation();
-  const locationState = location.state as LongviewState;
+
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: accountSettings } = useAccountSettings();
@@ -130,16 +130,21 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   }, []);
 
   const handleSubmit = () => {
+    const {
+      history: { push },
+    } = props;
+
     if (isManaged) {
-      navigate({
-        state: (prev) => ({ ...prev, ...locationState }),
-        to: '/support/tickets',
+      push({
+        pathname: '/support/tickets',
+        state: {
+          open: true,
+          title: 'Request for additional Longview clients',
+        },
       });
       return;
     }
-    navigate({
-      to: '/longview/plan-details',
-    });
+    props.history.push('/longview/plan-details');
   };
 
   /**
@@ -294,7 +299,9 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-export default compose<LongviewClientsCombinedProps, Props>(
+interface ComposeProps extends Props, RouteComponentProps {}
+
+export default compose<LongviewClientsCombinedProps, ComposeProps>(
   React.memo,
   connected,
   withLongviewClients()

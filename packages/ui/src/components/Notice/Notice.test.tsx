@@ -46,18 +46,13 @@ describe('Notice Component', () => {
     expect(container.firstChild).toHaveClass('custom-class');
   });
 
-  it('applies a default test-id based on the variant', () => {
-    const { getByTestId } = renderWithTheme(<Notice variant="success" />);
-
-    expect(getByTestId('notice-success')).toBeInTheDocument();
-  });
-
-  it('applies the dataTestId prop', () => {
+  it('applies dataTestId props', () => {
     const { getByTestId } = renderWithTheme(
-      <Notice dataTestId="my-custom-test-id" variant="success" />
+      <Notice dataTestId="test-id" variant="success" />
     );
 
-    expect(getByTestId('my-custom-test-id')).toBeInTheDocument();
+    expect(getByTestId('notice-success')).toBeInTheDocument();
+    expect(getByTestId('test-id')).toBeInTheDocument();
   });
 
   it('applies variant prop', () => {

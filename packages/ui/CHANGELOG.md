@@ -1,14 +1,3 @@
-## [2025-01-28] - v0.6.0
-
-
-### Changed:
-
-- Refactor and clean up `Notice` ([#11480](https://github.com/linode/manager/pull/11480))
-
-### Removed:
-
-- `marketing` variant on `Notice` component ([#11480](https://github.com/linode/manager/pull/11480))
-
 ## [2025-01-14] - v0.5.0
 
 ### Added:

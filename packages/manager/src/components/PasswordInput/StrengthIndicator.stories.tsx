@@ -1,8 +1,7 @@
+import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { StrengthIndicator } from './StrengthIndicator';
-
-import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof StrengthIndicator> = {
   component: StrengthIndicator,
