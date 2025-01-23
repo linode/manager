@@ -58,8 +58,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
 
-  const [selectedResources, setSelectedResources] = React.useState<number[]>(
-    resourceIds.map((id) => Number(id))
+  const [selectedResources, setSelectedResources] = React.useState<string[]>(
+    resourceIds
   );
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
@@ -82,8 +82,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     if (resources && isSelectionsNeeded) {
       setSelectedResources(
         resources
-          .filter((resource) => resourceIds.includes(String(resource.id)))
-          .map((resource) => Number(resource.id))
+          .filter((resource) => resourceIds.includes(resource.id))
+          .map((resource) => resource.id)
       );
     }
   }, [resources, isSelectionsNeeded, resourceIds]);
@@ -95,7 +95,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   } = useRegionsQuery();
 
   const handleSelection = React.useCallback(
-    (ids: number[], isSelectionAction: boolean) => {
+    (ids: string[], isSelectionAction: boolean) => {
       const onlySelected = isSelectionAction
         ? selectedResources
         : selectedResources.filter((resource) => !ids.includes(resource));
@@ -105,9 +105,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       setSelectedResources([...onlySelected, ...newlySelected]);
 
       if (handleResourcesSelection) {
-        handleResourcesSelection(
-          [...onlySelected, ...newlySelected].map((id) => String(id))
-        );
+        handleResourcesSelection([...onlySelected, ...newlySelected]);
       }
     },
     [handleResourcesSelection, selectedResources]
@@ -155,9 +153,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       setSelectedResources([]);
     } else {
       // Select all
-      setSelectedResources([
-        ...resources.map((resource) => Number(resource.id)),
-      ]);
+      setSelectedResources(resources.map((resource) => resource.id));
     }
   }, [resources, selectedResources]);
 

@@ -39,7 +39,7 @@ interface FilterResourceProps {
   /*
    * This property helps to track the list of selected resources
    */
-  selectedResources?: number[];
+  selectedResources?: string[];
 }
 
 /**
@@ -88,7 +88,7 @@ export const getFilteredResources = (
       return {
         ...resource,
         checked: selectedResources
-          ? selectedResources.includes(Number(resource.id))
+          ? selectedResources.includes(resource.id)
           : false, // check for selections and drive the resources
         region: resource.region
           ? regionsIdToLabelMap.get(resource.region)
