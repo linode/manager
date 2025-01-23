@@ -418,7 +418,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     });
   });
 
-  it.only('select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
+  it('select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
     ui.autocomplete
       .findByLabel('Time Range')
       .scrollIntoView()
