@@ -35,8 +35,8 @@ const searchPlaceholder = 'Search for a Region or Resource';
 const regionPlaceholder = 'Select Regions';
 
 beforeAll(() => {
-  Element.prototype.scrollIntoView = vi.fn(); // mock for scrollIntoView
-  window.scroll = vi.fn(); // mock for scroll
+  window.scrollTo = vi.fn(); // mock for scrollTo and scroll
+  window.scroll = vi.fn();
 });
 
 beforeEach(() => {
@@ -139,7 +139,7 @@ describe('AlertResources component tests', () => {
     let rows = Array.from(tableBody.querySelectorAll('tr'));
     expect(
       rows
-        .map((row) => row.textContent)
+        .map(({ textContent }) => textContent)
         .every((text, index) => {
           return text?.includes(linodes[linodes.length - 1 - index].label);
         })
@@ -149,7 +149,7 @@ describe('AlertResources component tests', () => {
     rows = Array.from(tableBody.querySelectorAll('tr'));
     expect(
       rows
-        .map((row) => row.textContent)
+        .map(({ textContent }) => textContent)
         .every((text, index) => text?.includes(linodes[index].label))
     ).toBe(true);
 
@@ -159,7 +159,7 @@ describe('AlertResources component tests', () => {
     rows = Array.from(tableBody.querySelectorAll('tr')); // refetch
     expect(
       rows
-        .map((row) => row.textContent)
+        .map(({ textContent }) => textContent)
         .every((text, index) =>
           text?.includes(linodes[linodes.length - 1 - index].region)
         )
@@ -169,7 +169,7 @@ describe('AlertResources component tests', () => {
     rows = Array.from(tableBody.querySelectorAll('tr'));
     expect(
       rows
-        .map((row) => row.textContent)
+        .map(({ textContent }) => textContent)
         .every((text, index) => text?.includes(linodes[index].region)) // validation
     ).toBe(true);
   });

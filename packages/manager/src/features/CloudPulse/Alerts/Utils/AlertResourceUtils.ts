@@ -116,10 +116,9 @@ export const getFilteredResources = (
  */
 export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
   if (scrollToElement) {
-    scrollToElement.scrollIntoView({
+    window.scrollTo({
       behavior: 'smooth',
-      block: 'nearest',
-      inline: 'nearest',
+      top: scrollToElement.getBoundingClientRect().top + window.scrollY - 40,
     });
   }
 };

@@ -32,7 +32,6 @@ describe('getRegionOptions', () => {
     { id: '2', label: 'Test2', region: regions[1].id },
     { id: '3', label: 'Test3', region: regions[2].id },
   ];
-
   it('should return correct region objects for given resourceIds', () => {
     const result = getRegionOptions({
       data,

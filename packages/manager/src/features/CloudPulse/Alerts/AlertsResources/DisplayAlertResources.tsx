@@ -60,10 +60,10 @@ export const DisplayAlertResources = React.memo(
     });
     // Holds the sorted data based on the selected sort order and column
     const sortedData = React.useMemo(() => {
-      return sortData(
+      return sortData<AlertInstance>(
         sorting.orderBy,
         sorting.order
-      )(filteredResources ?? []) as AlertInstance[];
+      )(filteredResources ?? []);
     }, [filteredResources, sorting]);
 
     const scrollToGivenElement = React.useCallback(() => {
@@ -156,15 +156,13 @@ export const DisplayAlertResources = React.memo(
                   ))}
                 {isDataLoadingError && (
                   <TableRowError
-                    message={
-                      'Table data is unavailable. Please try again later.'
-                    }
-                    colSpan={3}
+                    colSpan={2}
+                    message="Table data is unavailable. Please try again later."
                   />
                 )}
                 {paginatedData.length === 0 && (
                   <TableRow>
-                    <TableCell align="center" colSpan={3} height="40px">
+                    <TableCell align="center" colSpan={2} height="40px">
                       No data to display.
                     </TableCell>
                   </TableRow>
