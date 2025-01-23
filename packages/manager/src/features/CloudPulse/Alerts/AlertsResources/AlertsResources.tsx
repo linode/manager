@@ -16,8 +16,9 @@ import {
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
-import { AlertInstance, DisplayAlertResources } from './DisplayAlertResources';
+import { DisplayAlertResources } from './DisplayAlertResources';
 
+import type { AlertInstance } from './DisplayAlertResources';
 import type { Region } from '@linode/api-v4';
 
 export interface AlertResourcesProp {

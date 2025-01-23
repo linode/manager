@@ -49,9 +49,9 @@ export interface DisplayAlertResourceProp {
 export const DisplayAlertResources = React.memo(
   (props: DisplayAlertResourceProp) => {
     const { filteredResources, isDataLoadingError, scrollToElement } = props;
-    const [currentPageNumber, setCurrentPageNumber] = React.useState<
-      number | undefined
-    >(undefined); // state variable to track the page number and updates
+    // const [currentPageNumber, setCurrentPageNumber] = React.useState<
+    //   number | undefined
+    // >(undefined); // state variable to track the page number and updates
     const pageSize = 25;
 
     const [sorting, setSorting] = React.useState<{
@@ -84,24 +84,23 @@ export const DisplayAlertResources = React.memo(
           orderBy,
         });
         handlePageChange(1); // Moves to the first page when the sort order or column changes
-        setCurrentPageNumber(1);
+        requestAnimationFrame(() => {
+          scrollToElement();
+        });
       },
-      []
+      [scrollToElement]
     );
 
     const handlePageNumberChange = React.useCallback(
       (handlePageChange: (page: number) => void, pageNumber: number) => {
         handlePageChange(pageNumber); // Moves to the requested page number
-        setCurrentPageNumber(pageNumber);
+        // setCurrentPageNumber(pageNumber);
+        requestAnimationFrame(() => {
+          scrollToElement();
+        });
       },
-      []
+      [scrollToElement]
     );
-
-    React.useEffect(() => {
-      if (currentPageNumber) {
-        scrollToElement();
-      }
-    }, [currentPageNumber, scrollToElement]); // on change of pages, we can scroll to the element given, possibly to the title of the element
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -182,6 +181,9 @@ export const DisplayAlertResources = React.memo(
                 handleSizeChange={(pageSize) => {
                   handlePageSizeChange(pageSize);
                   handlePageNumberChange(handlePageChange, 1); // Moves to the first page after page size change
+                  requestAnimationFrame(() => {
+                    scrollToElement();
+                  });
                 }}
                 count={count}
                 eventCategory="alerts_resources"
