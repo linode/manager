@@ -1,6 +1,7 @@
 import type {
   AlertServiceType,
   AlertSeverityType,
+  ChannelType,
   CreateAlertDefinitionPayload,
   DimensionFilter,
   DimensionFilterOperatorType,
@@ -51,4 +52,9 @@ export interface TriggerConditionForm
   > {
   evaluation_period_seconds: null | number;
   polling_interval_seconds: null | number;
+}
+
+export interface NotificationChannelForm {
+  channel_type: ChannelType | null;
+  label: null | string;
 }
