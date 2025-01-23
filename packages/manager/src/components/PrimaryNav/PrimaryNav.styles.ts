@@ -59,7 +59,6 @@ export const StyledPrimaryLinkBox = styled(Box, {
     : theme.tokens.color.Neutrals['White'],
   display: 'flex',
   font: theme.tokens.typography.Label.Semibold.S,
-  justifyContent: 'space-between',
   transition: theme.transitions.create(['color', 'opacity']),
   width: '100%',
   ...(props.isActiveLink && {
