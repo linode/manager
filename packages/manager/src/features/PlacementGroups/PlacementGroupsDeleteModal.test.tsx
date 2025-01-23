@@ -45,7 +45,7 @@ const props = {
 };
 
 describe('PlacementGroupsDeleteModal', () => {
-  it('should render the right form elements', async () => {
+  it('should render the right form elements', () => {
     queryMocks.usePreferences.mockReturnValue({
       data: preference,
     });
@@ -73,6 +73,7 @@ describe('PlacementGroupsDeleteModal', () => {
           region: 'us-east',
         })}
         disableUnassignButton={false}
+        isFetching={false}
       />
     );
 
@@ -115,6 +116,7 @@ describe('PlacementGroupsDeleteModal', () => {
           placement_group_type: 'anti_affinity:local',
         })}
         disableUnassignButton={false}
+        isFetching={false}
       />
     );
 
