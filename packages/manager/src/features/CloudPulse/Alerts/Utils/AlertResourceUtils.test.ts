@@ -91,6 +91,8 @@ describe('getFilteredResources', () => {
       resourceIds: ['1', '2'],
     });
     expect(result.length).toBe(2);
+    expect(result[0].label).toBe(data[0].label);
+    expect(result[1].label).toBe(data[1].label);
   });
   it('should return correct filtered instances on filtered regions and search text', () => {
     const // Case with searchText
@@ -106,6 +108,7 @@ describe('getFilteredResources', () => {
         searchText: data[1].label,
       });
     expect(result.length).toBe(1);
+    expect(result[0].label).toBe(data[1].label);
   });
   it('should return empty result on mismatched filters', () => {
     const result = getFilteredResources({

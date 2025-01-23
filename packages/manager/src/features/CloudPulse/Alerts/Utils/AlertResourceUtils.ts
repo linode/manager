@@ -82,7 +82,7 @@ export const getFilteredResources = (
     return [];
   }
   return data // here we always use the base data from API for filtering as source of truth
-    .filter((resource) => resourceIds.includes(String(resource.id)))
+    .filter(({ id }) => resourceIds.includes(String(id)))
     .map((resource) => {
       return {
         ...resource,
@@ -95,19 +95,15 @@ export const getFilteredResources = (
           : '',
       };
     })
-    .filter((resource) => {
+    .filter(({ label, region }) => {
       const matchesSearchText =
         !searchText ||
-        resource.region
-          .toLocaleLowerCase()
-          .includes(searchText.toLocaleLowerCase()) ||
-        resource.label
-          .toLocaleLowerCase()
-          .includes(searchText.toLocaleLowerCase()); // check with search text
+        region.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()) ||
+        label.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()); // check with search text
 
       const matchesFilteredRegions =
         !filteredRegions?.length ||
-        (resource.region.length && filteredRegions.includes(resource.region)); // check with filtered region
+        (region.length && filteredRegions.includes(region)); // check with filtered region
 
       return matchesSearchText && matchesFilteredRegions; // match the search text and match the region selected
     });
