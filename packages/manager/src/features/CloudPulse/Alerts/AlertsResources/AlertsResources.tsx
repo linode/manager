@@ -122,11 +122,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           {/* It can be either the passed alert label or just Resources */}
         </Typography>
         <StyledPlaceholder
-          title={
-            'No resources are currently assigned to this alert definition.'
-          }
           icon={EntityIcon}
           subtitle="You can assign alerts during the resource creation process."
+          title="No resources are currently assigned to this alert definition."
         />
       </Stack>
     );
