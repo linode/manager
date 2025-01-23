@@ -7,7 +7,7 @@
 
     /* Modules */
     "baseUrl": ".",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "paths": {
       "src/*": ["src/*"]
     },

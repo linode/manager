@@ -1,24 +1,49 @@
 import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles()((theme) => ({
+import type { Theme } from '@mui/material/styles';
+
+export const useStyles = makeStyles<
+  void,
+  'error' | 'icon' | 'important' | 'noticeText'
+>()((theme: Theme, _params, classes) => ({
   error: {
+    [`&.${classes.important}`]: {
+      borderLeftWidth: 32,
+    },
+    borderLeft: `5px solid ${theme.palette.error.dark}`,
+  },
+  errorList: {
     borderLeft: `5px solid ${theme.palette.error.dark}`,
   },
   icon: {
     color: theme.tokens.color.Neutrals.White,
+    left: -25, // This value must be static regardless of theme selection
     position: 'absolute',
-    left: -25,
-    transform: "translateY(-50%)",
-    top: '50%',
   },
   important: {
-    backgroundColor: theme.palette.background.paper,
-    borderLeftWidth: 32,
-    fontFamily: theme.font.normal,
-    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+    '&.MuiGrid2-root': {
+      padding: theme.spacing(1),
+      paddingRight: 18,
+    },
+    [`& .${classes.noticeText}`]: {
+      fontFamily: theme.font.normal,
+    },
+    backgroundColor: theme.bg.bgPaper,
   },
   info: {
+    [`&.${classes.important}`]: {
+      borderLeftWidth: 32,
+    },
     borderLeft: `5px solid ${theme.palette.info.dark}`,
+  },
+  infoList: {
+    borderLeft: `5px solid ${theme.palette.info.dark}`,
+  },
+  inner: {
+    width: '100%',
+  },
+  marketing: {
+    borderLeft: `5px solid ${theme.color.green}`,
   },
   noticeText: {
     fontFamily: theme.font.bold,
@@ -29,20 +54,37 @@ export const useStyles = makeStyles()((theme) => ({
     '& + .notice': {
       marginTop: `${theme.spacing()} !important`,
     },
+    [`& .${classes.error}`]: {
+      borderLeftColor: theme.color.red,
+    },
     alignItems: 'center',
     borderRadius: 1,
+    display: 'flex',
     fontSize: '1rem',
     maxWidth: '100%',
-    padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+    padding: '4px 16px',
+    paddingRight: 18,
     position: 'relative',
   },
   success: {
+    [`&.${classes.important}`]: {
+      borderLeftWidth: 32,
+    },
+    borderLeft: `5px solid ${theme.palette.success.dark}`,
+  },
+  successList: {
     borderLeft: `5px solid ${theme.palette.success.dark}`,
   },
   warning: {
+    [`& .${classes.icon}`]: {
+      color: theme.tokens.color.Neutrals[80],
+    },
+    [`&.${classes.important}`]: {
+      borderLeftWidth: 32,
+    },
     borderLeft: `5px solid ${theme.palette.warning.dark}`,
   },
-  warningIcon: {
-    color: theme.tokens.color.Neutrals[80],
+  warningList: {
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
   },
 }));

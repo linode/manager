@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "types": ["vitest/globals"],
+    "module": "umd",
     "emitDeclarationOnly": true,
     "declaration": true,
     "outDir": "./lib",
     "esModuleInterop": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "skipLibCheck": true,
     "strict": true,
     "baseUrl": ".",
@@ -16,5 +17,9 @@
   },
   "include": [
     "src"
+  ],
+  "exclude": [
+    "node_modules/**/*",
+    "**/__tests__/*"
   ]
 }

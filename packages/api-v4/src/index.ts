@@ -32,8 +32,6 @@ export * from './placement-groups';
 
 export * from './profile';
 
-export * from './quotas';
-
 export * from './regions';
 
 export * from './stackscripts';

@@ -1,6 +1,7 @@
 import { Box, Typography } from '@linode/ui';
 import * as React from 'react';
 
+import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -10,7 +11,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';
@@ -40,24 +40,6 @@ export const TopProcesses = React.memo((props: Props) => {
     topProcessesLoading,
   } = props;
 
-  const {
-    handleOrderChange,
-    order,
-    orderBy,
-    sortedData,
-  } = useOrderV2<ExtendedTopProcessStat>({
-    data: extendTopProcesses(topProcessesData),
-    initialRoute: {
-      defaultOrder: {
-        order: 'desc',
-        orderBy: 'cpu',
-      },
-      from: '/longview/clients/$id/overview',
-    },
-    preferenceKey: 'top-processes',
-    prefix: 'top-processes',
-  });
-
   const errorMessage = Boolean(topProcessesError || lastUpdatedError)
     ? 'There was an error getting Top Processes.'
     : undefined;
@@ -70,49 +52,58 @@ export const TopProcesses = React.memo((props: Props) => {
           View Details
         </StyledLink>
       </Box>
-      <Table aria-label="List of Top Processes" spacingTop={16}>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'name'}
-              data-qa-table-header="Process"
-              direction={order}
-              handleClick={handleOrderChange}
-              label="name"
-              style={{ width: '40%' }}
-            >
-              Process
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'cpu'}
-              data-qa-table-header="CPU"
-              direction={order}
-              handleClick={handleOrderChange}
-              label="cpu"
-              style={{ width: '25%' }}
-            >
-              CPU
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'mem'}
-              data-qa-table-header="Memory"
-              direction={order}
-              handleClick={handleOrderChange}
-              label="mem"
-              style={{ width: '15%' }}
-            >
-              Memory
-            </TableSortCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {renderLoadingErrorData(
-            sortedData ?? [],
-            topProcessesLoading,
-            errorMessage
-          )}
-        </TableBody>
-      </Table>
+      <OrderBy
+        data={extendTopProcesses(topProcessesData)}
+        order={'desc'}
+        orderBy={'cpu'}
+        preferenceKey="top-processes"
+      >
+        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+          <Table aria-label="List of Top Processes" spacingTop={16}>
+            <TableHead>
+              <TableRow>
+                <TableSortCell
+                  active={orderBy === 'name'}
+                  data-qa-table-header="Process"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="name"
+                  style={{ width: '40%' }}
+                >
+                  Process
+                </TableSortCell>
+                <TableSortCell
+                  active={orderBy === 'cpu'}
+                  data-qa-table-header="CPU"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="cpu"
+                  style={{ width: '25%' }}
+                >
+                  CPU
+                </TableSortCell>
+                <TableSortCell
+                  active={orderBy === 'mem'}
+                  data-qa-table-header="Memory"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="mem"
+                  style={{ width: '15%' }}
+                >
+                  Memory
+                </TableSortCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {renderLoadingErrorData(
+                orderedData,
+                topProcessesLoading,
+                errorMessage
+              )}
+            </TableBody>
+          </Table>
+        )}
+      </OrderBy>
     </StyledItemGrid>
   );
 });

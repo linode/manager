@@ -1,8 +1,7 @@
-import { IconButton, Notice, Typography } from '@linode/ui';
+import { Box, StyledLinkButton, Typography } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import React from 'react';
+import * as React from 'react';
 
-import { LinkButton } from 'src/components/LinkButton';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
@@ -12,6 +11,7 @@ import {
 import { useProfile } from 'src/queries/profile/profile';
 
 import { BackupDrawer } from './BackupDrawer';
+import { StyledPaper } from './BackupsCTA.styles';
 
 export const BackupsCTA = () => {
   const { data: accountSettings } = useAccountSettings();
@@ -20,7 +20,7 @@ export const BackupsCTA = () => {
   const { data: isBackupsBannerDismissed } = usePreferences(
     (preferences) => preferences?.backups_cta_dismissed
   );
-  const { mutate: updatePreferences } = useMutatePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const [isBackupsDrawerOpen, setIsBackupsDrawerOpen] = React.useState(false);
 
@@ -44,31 +44,26 @@ export const BackupsCTA = () => {
   }
 
   return (
-    <Notice
-      bgcolor={(theme) => theme.palette.background.paper}
-      display="flex"
-      flexDirection="row"
-      justifyContent="space-between"
-      spacingBottom={8}
-      variant="info"
-    >
-      <Typography fontSize="inherit">
-        <LinkButton onClick={() => setIsBackupsDrawerOpen(true)}>
+    <StyledPaper>
+      <Typography sx={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
+        <StyledLinkButton onClick={() => setIsBackupsDrawerOpen(true)}>
           Enable Linode Backups
-        </LinkButton>{' '}
+        </StyledLinkButton>{' '}
         to protect your data and recover quickly in an emergency.
       </Typography>
-      <IconButton
-        aria-label="Dismiss notice enabling Linode backups"
-        onClick={handleDismiss}
-        sx={{ padding: 1 }}
-      >
-        <Close />
-      </IconButton>
+      <Box component="span" display="flex">
+        <StyledLinkButton
+          aria-label="Dismiss notice enabling Linode backups"
+          onClick={handleDismiss}
+          sx={{ lineHeight: '0.5rem', marginLeft: 12 }}
+        >
+          <Close />
+        </StyledLinkButton>
+      </Box>
       <BackupDrawer
         onClose={() => setIsBackupsDrawerOpen(false)}
         open={isBackupsDrawerOpen}
       />
-    </Notice>
+    </StyledPaper>
   );
 };

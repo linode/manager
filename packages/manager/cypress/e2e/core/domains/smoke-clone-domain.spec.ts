@@ -1,5 +1,6 @@
 import { Domain } from '@linode/api-v4';
 import { domainFactory } from '@src/factories';
+import { getClick, fbtClick, fbltClick } from 'support/helpers';
 import { authenticate } from 'support/api/authentication';
 import { randomDomainName } from 'support/util/random';
 import { createDomain } from '@linode/api-v4/lib/domains';
@@ -43,11 +44,11 @@ describe('Clone a Domain', () => {
 
         domainRecords.forEach((rec) => {
           interceptCreateDomainRecord().as('apiCreateRecord');
-          cy.findByText(rec.name).click();
+          fbtClick(rec.name);
           rec.fields.forEach((f) => {
-            cy.get(f.name).click().type(f.value);
+            getClick(f.name).type(f.value);
           });
-          cy.findByText('Save').click();
+          fbtClick('Save');
           cy.wait('@apiCreateRecord');
         });
 
@@ -101,7 +102,7 @@ describe('Clone a Domain', () => {
               .should('be.disabled');
 
             // Confirm that an error is displayed when entering an invalid domain name
-            cy.findByLabelText('New Domain').click().type(invalidDomainName);
+            fbltClick('New Domain').type(invalidDomainName);
             ui.buttonGroup
               .findButtonByTitle('Create Domain')
               .should('be.visible')
@@ -109,10 +110,7 @@ describe('Clone a Domain', () => {
               .click();
             cy.findByText('Domain is not valid.').should('be.visible');
 
-            cy.findByLabelText('New Domain')
-              .click()
-              .clear()
-              .type(clonedDomainName);
+            fbltClick('New Domain').clear().type(clonedDomainName);
             ui.buttonGroup
               .findButtonByTitle('Create Domain')
               .should('be.visible')

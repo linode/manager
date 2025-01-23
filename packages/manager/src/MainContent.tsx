@@ -159,6 +159,7 @@ const SupportTicketDetail = React.lazy(() =>
     })
   )
 );
+const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
 const Help = React.lazy(() =>
   import('./features/Help/index').then((module) => ({
@@ -338,6 +339,7 @@ export const MainContent = () => {
                             path="/nodebalancers"
                           />
                           <Route component={Managed} path="/managed" />
+                          <Route component={Longview} path="/longview" />
                           <Route component={Images} path="/images" />
                           <Route
                             component={StackScripts}

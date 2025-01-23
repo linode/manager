@@ -1,4 +1,4 @@
-import { Box, Chip, CircleProgress, Typography } from '@linode/ui';
+import { Box, CircleProgress } from '@linode/ui';
 import { styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -9,9 +9,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
-import { AlertResources } from '../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../Utils/utils';
-import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailOverview } from './AlertDetailOverview';
 
 interface RouteParams {
@@ -50,14 +48,12 @@ export const AlertDetail = () => {
   }, [alertId, serviceType]);
 
   const theme = useTheme();
-  const nonSuccessBoxHeight = '600px';
-  const sectionMaxHeight = '785px';
 
   if (isFetching) {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height={nonSuccessBoxHeight}>
+        <Box alignContent="center" height={theme.spacing(75)}>
           <CircleProgress />
         </Box>
       </>
@@ -68,7 +64,7 @@ export const AlertDetail = () => {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height={nonSuccessBoxHeight}>
+        <Box alignContent="center" height={theme.spacing(75)}>
           <ErrorState errorText="An error occurred while loading the definitions. Please try again later." />
         </Box>
       </>
@@ -79,7 +75,7 @@ export const AlertDetail = () => {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-        <Box alignContent="center" height={nonSuccessBoxHeight}>
+        <Box alignContent="center" height={theme.spacing(75)}>
           <StyledPlaceholder
             icon={AlertsIcon}
             isEntity
@@ -89,7 +85,7 @@ export const AlertDetail = () => {
       </>
     );
   }
-  const { entity_ids: entityIds } = alertDetails;
+  // TODO: The criteria, resources details for alerts will be added by consuming the results of useAlertDefinitionQuery call in the coming PR's
   return (
     <>
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
@@ -97,32 +93,11 @@ export const AlertDetail = () => {
         <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
           <Box
             flexBasis="50%"
-            maxHeight={sectionMaxHeight}
+            maxHeight={theme.spacing(98.125)}
             sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
           >
             <AlertDetailOverview alertDetails={alertDetails} />
           </Box>
-          <Box
-            sx={{
-              ...getAlertBoxStyles(theme),
-              overflow: 'auto',
-            }}
-            flexBasis="50%"
-            maxHeight={sectionMaxHeight}
-          >
-            <AlertDetailCriteria alertDetails={alertDetails} />
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            ...getAlertBoxStyles(theme),
-            overflow: 'auto',
-          }}
-        >
-          <AlertResources
-            alertResourceIds={entityIds}
-            serviceType={serviceType}
-          />
         </Box>
       </Box>
     </>
@@ -138,26 +113,4 @@ export const StyledPlaceholder = styled(Placeholder, {
   svg: {
     maxHeight: theme.spacing(10),
   },
-}));
-
-export const StyledAlertChip = styled(Chip, {
-  label: 'StyledAlertChip',
-  shouldForwardProp: (prop) => prop !== 'borderRadius',
-})<{
-  borderRadius?: string;
-}>(({ borderRadius, theme }) => ({
-  '& .MuiChip-label': {
-    color: theme.tokens.content.Text.Primary.Default,
-    marginRight: theme.spacing(1),
-  },
-  backgroundColor: theme.tokens.background.Normal,
-  borderRadius: borderRadius || 0,
-  height: theme.spacing(3),
-}));
-
-export const StyledAlertTypography = styled(Typography, {
-  label: 'StyledAlertTypography',
-})(({ theme }) => ({
-  color: theme.tokens.content.Text.Primary.Default,
-  fontSize: theme.typography.body1.fontSize,
 }));

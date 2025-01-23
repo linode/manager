@@ -91,7 +91,6 @@ module.exports = {
         // for each new features added to the migration router, add its directory here
         'src/features/Betas/**/*',
         'src/features/Domains/**/*',
-        'src/features/Longview/**/*',
         'src/features/Volumes/**/*',
       ],
       rules: {
@@ -120,20 +119,14 @@ module.exports = {
                   'withRouter',
                 ],
                 message:
-                  'Please use routing utilities intended for @tanstack/react-router.',
+                  'Please use routing utilities from @tanstack/react-router.',
                 name: 'react-router-dom',
               },
               {
-                importNames: ['TabLinkList'],
+                importNames: ['renderWithTheme'],
                 message:
-                  'Please use the TanStackTabLinkList component for components being migrated to TanStack Router.',
-                name: 'src/components/Tabs/TabLinkList',
-              },
-              {
-                importNames: ['OrderBy', 'default'],
-                message:
-                  'Please use useOrderV2 hook for components being migrated to TanStack Router.',
-                name: 'src/components/OrderBy',
+                  'Please use the wrapWithThemeAndRouter helper function for testing components being migrated to TanStack Router.',
+                name: 'src/utilities/testHelpers',
               },
             ],
           },

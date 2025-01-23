@@ -1,4 +1,4 @@
-import { createUser, deleteUser, updateUser } from '@linode/api-v4';
+import { deleteUser, updateUser } from '@linode/api-v4';
 import {
   keepPreviousData,
   useMutation,
@@ -119,21 +119,3 @@ function getIsBlocklistedUser(username: string) {
   }
   return false;
 }
-
-export const useCreateUserMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation<User, APIError[], Partial<User>>({
-    mutationFn: (data) => createUser(data),
-    onSuccess: (user) => {
-      queryClient.invalidateQueries({
-        queryKey: accountQueries.users._ctx.paginated._def,
-      });
-
-      queryClient.setQueryData(
-        accountQueries.users._ctx.user(user.username).queryKey,
-        user
-      );
-    },
-  });
-};

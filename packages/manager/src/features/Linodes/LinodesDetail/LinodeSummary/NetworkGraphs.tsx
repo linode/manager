@@ -214,25 +214,25 @@ const Graph = (props: GraphProps) => {
         {
           data: metrics.publicIn,
           format,
-          legendColor: theme.graphs.darkGreen,
+          legendColor: 'darkGreen',
           legendTitle: 'Public In',
         },
         {
           data: metrics.publicOut,
           format,
-          legendColor: theme.graphs.lightGreen,
+          legendColor: 'lightGreen',
           legendTitle: 'Public Out',
         },
         {
           data: metrics.privateIn,
           format,
-          legendColor: theme.graphs.purple,
+          legendColor: 'purple',
           legendTitle: 'Private In',
         },
         {
           data: metrics.privateOut,
           format,
-          legendColor: theme.graphs.yellow,
+          legendColor: 'yellow',
           legendTitle: 'Private Out',
         },
       ]}

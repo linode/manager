@@ -47,7 +47,7 @@ export const DeleteUserPanel = ({ user }: Props) => {
         </Typography>
         <UserDeleteConfirmation
           onClose={() => setIsDeleteDialogOpen(false)}
-          onSuccess={() => history.push(`/iam/users`)}
+          onSuccess={() => history.push(`/account/users`)}
           open={isDeleteDialogOpen}
           username={user.username}
         />

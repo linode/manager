@@ -107,7 +107,7 @@ export const TablesPanel = () => {
             {
               data: metrics,
               format: formatNumber,
-              legendColor: theme.graphs.purple,
+              legendColor: 'purple',
               legendTitle: 'Connections',
             },
           ]}
@@ -195,13 +195,13 @@ export const TablesPanel = () => {
             {
               data: getMetrics(trafficIn),
               format: formatBitsPerSecond,
-              legendColor: theme.graphs.darkGreen,
+              legendColor: 'darkGreen',
               legendTitle: 'Traffic In',
             },
             {
               data: getMetrics(trafficOut),
               format: formatBitsPerSecond,
-              legendColor: theme.graphs.lightGreen,
+              legendColor: 'lightGreen',
               legendTitle: 'Traffic Out',
             },
           ]}

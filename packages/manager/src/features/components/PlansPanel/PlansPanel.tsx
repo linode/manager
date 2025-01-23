@@ -175,7 +175,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
                   plan
                 )}
                 disabledClasses={disabledClasses}
-                flow="linode"
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 hasSelectedRegion={hasSelectedRegion}
                 planType={plan}

@@ -1,13 +1,13 @@
 import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { splitAt } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { sendEvent } from 'src/utilities/analytics/utils';
-import { splitAt } from 'src/utilities/splitAt';
 
 import type { Disk, Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';

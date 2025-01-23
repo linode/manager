@@ -180,6 +180,10 @@ export const AddNodePoolDrawer = (props: Props) => {
               setSelectedTypeInfo({ count: 1, planId: newType });
             }
           }}
+          // No nanodes or GPUs in clusters
+          types={extendedTypes.filter(
+            (t) => t.class !== 'nanode' && t.class !== 'gpu'
+          )}
           addPool={handleAdd}
           getTypeCount={getTypeCount}
           hasSelectedRegion={hasSelectedRegion}
@@ -190,8 +194,6 @@ export const AddNodePoolDrawer = (props: Props) => {
           resetValues={resetDrawer}
           selectedId={selectedTypeInfo?.planId}
           selectedRegionId={clusterRegionId}
-          // No nanodes in clusters
-          types={extendedTypes.filter((t) => t.class !== 'nanode')}
           updatePlanCount={updatePlanCount}
         />
         {selectedTypeInfo &&

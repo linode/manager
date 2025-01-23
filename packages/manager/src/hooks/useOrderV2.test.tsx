@@ -21,7 +21,7 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 const queryClient = queryClientFactory();
-const defaultProps: UseOrderV2Props<unknown> = {
+const defaultProps: UseOrderV2Props = {
   initialRoute: {
     defaultOrder: {
       order: 'asc',

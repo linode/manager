@@ -13,6 +13,7 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
+import { path } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -200,8 +201,8 @@ export const CreateDomain = () => {
             return generateDefaultDomainRecords(
               domainData.domain,
               domainData.id,
-              selectedDefaultLinode?.ipv4?.[0],
-              selectedDefaultLinode?.ipv6
+              path(['ipv4', 0], selectedDefaultLinode),
+              path(['ipv6'], selectedDefaultLinode)
             )
               .then(() => {
                 return redirectToLandingOrDetail(type, domainData.id);
@@ -211,8 +212,8 @@ export const CreateDomain = () => {
                   `Default DNS Records couldn't be created from Linode: ${e[0].reason}`,
                   {
                     domainID: domainData.id,
-                    ipv4: selectedDefaultLinode?.ipv4?.[0],
-                    ipv6: selectedDefaultLinode?.ipv6,
+                    ipv4: path(['ipv4', 0], selectedDefaultLinode),
+                    ipv6: path(['ipv6'], selectedDefaultLinode),
                     selectedLinode: selectedDefaultLinode!.id,
                   }
                 );
@@ -227,8 +228,8 @@ export const CreateDomain = () => {
             return generateDefaultDomainRecords(
               domainData.domain,
               domainData.id,
-              selectedDefaultNodeBalancer?.ipv4,
-              selectedDefaultNodeBalancer?.ipv6
+              path(['ipv4'], selectedDefaultNodeBalancer),
+              path(['ipv6'], selectedDefaultNodeBalancer)
             )
               .then(() => {
                 return redirectToLandingOrDetail(type, domainData.id);
@@ -238,8 +239,8 @@ export const CreateDomain = () => {
                   `Default DNS Records couldn't be created from NodeBalancer: ${e[0].reason}`,
                   {
                     domainID: domainData.id,
-                    ipv4: selectedDefaultNodeBalancer?.ipv4,
-                    ipv6: selectedDefaultNodeBalancer?.ipv6,
+                    ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
+                    ipv6: path(['ipv6'], selectedDefaultNodeBalancer),
                     selectedNodeBalancer: selectedDefaultNodeBalancer!.id,
                   }
                 );
@@ -278,9 +279,10 @@ export const CreateDomain = () => {
   };
 
   const updatePrimaryIPAddress = (newIPs: ExtendedIP[]) => {
-    const masterIps = newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
+    const master_ips =
+      newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (mounted) {
-      formik.setFieldValue('master_ips', masterIps);
+      formik.setFieldValue('master_ips', master_ips);
     }
   };
 

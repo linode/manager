@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { equals, pathOr, sort } from 'ramda';
+import { equals, pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
@@ -16,7 +16,6 @@ import {
   sortByString,
   sortByUTFDate,
 } from 'src/utilities/sort-by';
-import { splitAt } from 'src/utilities/splitAt';
 
 import type { Order } from 'src/hooks/useOrder';
 import type { ManagerPreferences } from 'src/types/ManagerPreferences';

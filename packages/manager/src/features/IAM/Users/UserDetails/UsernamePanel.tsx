@@ -36,7 +36,7 @@ export const UsernamePanel = ({ user }: Props) => {
       const user = await mutateAsync(values);
 
       // Because the username changed, we need to update the username in the URL
-      history.replace(`/iam/users/${user.username}/details`);
+      history.replace(`/account/users/${user.username}`);
 
       enqueueSnackbar('Username updated successfully', { variant: 'success' });
     } catch (error) {

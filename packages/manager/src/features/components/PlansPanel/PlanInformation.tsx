@@ -29,7 +29,6 @@ interface ExtendedPlanType {
 
 export interface PlanInformationProps extends ExtendedPlanType {
   disabledClasses?: LinodeTypeClass[];
-  flow: 'kubernetes' | 'linode';
   hasMajorityOfPlansDisabled: boolean;
   hasSelectedRegion: boolean;
   hideLimitedAvailabilityBanner?: boolean;
@@ -41,7 +40,6 @@ export interface PlanInformationProps extends ExtendedPlanType {
 export const PlanInformation = (props: PlanInformationProps) => {
   const {
     disabledClasses,
-    flow,
     hasMajorityOfPlansDisabled,
     hasSelectedRegion,
     hideLimitedAvailabilityBanner,
@@ -98,7 +96,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
               </Typography>
             </Notice>
           )}
-          {showTransferBanner && flow === 'linode' && transferBanner}
+          {showTransferBanner && transferBanner}
           <PlansAvailabilityNotice
             hasSelectedRegion={hasSelectedRegion}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}

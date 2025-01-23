@@ -4,7 +4,6 @@ import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
-import { LINODE_CLONE_TIMEOUT } from 'support/constants/linodes';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import {
@@ -226,8 +225,7 @@ describe('Linode Config management', () => {
           .its('response.statusCode')
           .should('eq', 200);
         ui.toast.assertMessage(
-          `Configuration ${config.label} successfully updated`,
-          { timeout: LINODE_CLONE_TIMEOUT }
+          `Configuration ${config.label} successfully updated`
         );
 
         // Confirm that updated IPAM is automatically listed in config table.

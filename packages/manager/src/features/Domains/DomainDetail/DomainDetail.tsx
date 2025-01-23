@@ -15,8 +15,8 @@ import {
 } from 'src/queries/domains';
 
 import { DeleteDomain } from '../DeleteDomain';
+import DomainRecords from '../DomainRecords';
 import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
-import { DomainRecords } from './DomainRecords/DomainRecords';
 
 import type { DomainState } from 'src/routes/domains';
 

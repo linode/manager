@@ -181,17 +181,7 @@ export const LinodeInterfaceSchema = object().shape({
           }),
       }),
   }),
-  primary: boolean()
-    .test(
-      'cant-use-with-vlan',
-      "VLAN interfaces can't be the primary interface",
-      (value, context) => {
-        const isVLANandIsSetToPrimary =
-          value && context.parent.purpose === 'vlan';
-        return !isVLANandIsSetToPrimary;
-      }
-    )
-    .notRequired(),
+  primary: boolean().notRequired(),
   subnet_id: number().when('purpose', {
     is: 'vpc',
     then: (schema) =>

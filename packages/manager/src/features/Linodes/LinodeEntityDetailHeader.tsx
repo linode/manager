@@ -134,7 +134,6 @@ export const LinodeEntityDetailHeader = (
     fontSize: '0.875rem',
     height: theme.spacing(5),
     minWidth: 'auto',
-    padding: '2px 10px',
   };
 
   const sxBoxFlex = {

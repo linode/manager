@@ -19,7 +19,7 @@ import type {
   InterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4/lib/linodes/types';
-import type { SelectOption } from '@linode/ui';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface InterfaceErrors extends VPCInterfaceErrors, OtherInterfaceErrors {}
@@ -93,7 +93,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
 
   const [newVlan, setNewVlan] = React.useState('');
 
-  const purposeOptions: SelectOption<ExtendedPurpose>[] = [
+  const purposeOptions: Item<ExtendedPurpose>[] = [
     {
       label: 'Public Internet',
       value: 'public',

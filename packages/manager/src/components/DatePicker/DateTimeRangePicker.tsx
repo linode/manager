@@ -9,14 +9,10 @@ import { DateTimePicker } from './DateTimePicker';
 import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface DateTimeRangePickerProps {
-  /** If true, disable the timezone drop down */
-  disabledTimeZone?: boolean;
-
-  /** If true, shows the date presets field instead of the date pickers */
-  enablePresets?: boolean;
-
   /** Properties for the end date field */
   endDateProps?: {
+    /** Custom error message for invalid end date */
+    errorMessage?: string;
     /** Label for the end date field */
     label?: string;
     /** placeholder for the end date field */
@@ -44,7 +40,9 @@ export interface DateTimeRangePickerProps {
   /** Additional settings for the presets dropdown */
   presetsProps?: {
     /** Default value for the presets field */
-    defaultValue?: string;
+    defaultValue?: { label: string; value: string };
+    /** If true, shows the date presets field instead of the date pickers */
+    enablePresets?: boolean;
     /** Label for the presets field */
     label?: string;
     /** placeholder for the presets field */
@@ -73,17 +71,13 @@ export interface DateTimeRangePickerProps {
 
 type DatePresetType =
   | '7days'
-  | '12hours'
   | '24hours'
   | '30days'
-  | '30minutes'
   | 'custom_range'
   | 'last_month'
   | 'this_month';
 
 const presetsOptions: { label: string; value: DatePresetType }[] = [
-  { label: 'Last 30 Minutes', value: '30minutes' },
-  { label: 'Last 12 Hours', value: '12hours' },
   { label: 'Last 24 Hours', value: '24hours' },
   { label: 'Last 7 Days', value: '7days' },
   { label: 'Last 30 Days', value: '30days' },
@@ -94,20 +88,21 @@ const presetsOptions: { label: string; value: DatePresetType }[] = [
 
 export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   const {
-    disabledTimeZone = false,
-
-    enablePresets = false,
-
     endDateProps: {
+      errorMessage: endDateErrorMessage = 'End date/time cannot be before the start date/time.',
       label: endLabel = 'End Date and Time',
       placeholder: endDatePlaceholder,
       showTimeZone: showEndTimeZone = false,
       value: endDateTimeValue = null,
     } = {},
+
     format = 'yyyy-MM-dd HH:mm',
+
     onChange,
+
     presetsProps: {
-      defaultValue: presetsDefaultValue = presetsOptions[0].value,
+      defaultValue: presetsDefaultValue = { label: '', value: '' },
+      enablePresets = false,
       label: presetsLabel = 'Time Range',
       placeholder: presetsPlaceholder = 'Select a preset',
     } = {},
@@ -128,25 +123,17 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   const [endDateTime, setEndDateTime] = useState<DateTime | null>(
     endDateTimeValue
   );
-  const [presetValue, setPresetValue] = useState<
-    | {
-        label: string;
-        value: string;
-      }
-    | undefined
-  >(
-    presetsOptions.find((option) => option.value === presetsDefaultValue) ??
-      presetsOptions[0]
-  );
+  const [presetValue, setPresetValue] = useState<{
+    label: string;
+    value: string;
+  }>(presetsDefaultValue);
   const [startTimeZone, setStartTimeZone] = useState<null | string>(
     startTimeZoneValue
   );
   const [startDateError, setStartDateError] = useState<null | string>(null);
-  const [showPresets, setShowPresets] = useState(
-    presetsDefaultValue
-      ? presetsDefaultValue !== 'custom_range' && enablePresets
-      : enablePresets
-  );
+  const [endDateError, setEndDateError] = useState<null | string>(null);
+  const [showPresets, setShowPresets] = useState(enablePresets);
+
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -155,34 +142,38 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     end: DateTime | null,
     source: 'end' | 'start'
   ) => {
-    if (start && end && source === 'start' && start > end) {
-      setStartDateError(startDateErrorMessage);
-      return;
+    if (start && end) {
+      if (source === 'start' && start > end) {
+        setStartDateError(startDateErrorMessage);
+        return;
+      }
+      if (source === 'end' && end < start) {
+        setEndDateError(endDateErrorMessage);
+        return;
+      }
     }
     // Reset validation errors
     setStartDateError(null);
+    setEndDateError(null);
   };
 
   const handlePresetSelection = (value: DatePresetType) => {
     const now = DateTime.now();
     let newStartDateTime: DateTime | null = null;
-    let newEndDateTime: DateTime | null = now;
+    let newEndDateTime: DateTime | null = null;
 
     switch (value) {
-      case '30minutes':
-        newStartDateTime = now.minus({ minutes: 30 });
-        break;
-      case '12hours':
-        newStartDateTime = now.minus({ hours: 12 });
-        break;
       case '24hours':
         newStartDateTime = now.minus({ hours: 24 });
+        newEndDateTime = now;
         break;
       case '7days':
         newStartDateTime = now.minus({ days: 7 });
+        newEndDateTime = now;
         break;
       case '30days':
         newStartDateTime = now.minus({ days: 30 });
+        newEndDateTime = now;
         break;
       case 'this_month':
         newStartDateTime = now.startOf('month');
@@ -205,7 +196,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     setEndDateTime(newEndDateTime);
     setPresetValue(
       presetsOptions.find((option) => option.value === value) ??
-        presetsOptions[0]
+        presetsDefaultValue
     );
 
     if (onChange) {
@@ -257,8 +248,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
               handlePresetSelection(selection.value as DatePresetType);
             }
           }}
-          data-qa-preset="preset-select"
-          data-testid="preset-select"
+          defaultValue={presetsDefaultValue}
           disableClearable
           fullWidth
           label={presetsLabel}
@@ -279,7 +269,6 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
               onChange: (value) => setStartTimeZone(value),
               value: startTimeZone,
             }}
-            disabledTimeZone={disabledTimeZone}
             errorText={startDateError ?? undefined}
             format={format}
             label={startLabel}
@@ -293,22 +282,24 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
             timeZoneSelectProps={{
               value: startTimeZone,
             }}
-            disabledTimeZone={disabledTimeZone}
+            errorText={endDateError ?? undefined}
             format={format}
             label={endLabel}
-            minDate={startDateTime || undefined}
             onChange={handleEndDateTimeChange}
             placeholder={endDatePlaceholder}
             showTimeZone={showEndTimeZone}
             timeSelectProps={{ label: 'End Time' }}
             value={endDateTime}
           />
-          <Box alignContent={startDateError ? 'center' : 'flex-end'}>
+          <Box
+            alignContent={
+              startDateError || endDateError ? 'center' : 'flex-end'
+            }
+          >
             <StyledActionButton
               onClick={() => {
                 setShowPresets(true);
-                setPresetValue(undefined);
-                setStartDateError(null);
+                setPresetValue(presetsDefaultValue);
               }}
               variant="text"
             >

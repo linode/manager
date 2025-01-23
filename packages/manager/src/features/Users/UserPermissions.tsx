@@ -55,7 +55,7 @@ import type {
   User,
 } from '@linode/api-v4/lib/account';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { SelectOption } from '@linode/ui';
+import type { SelectOptionType } from '@linode/ui';
 import type { QueryClient } from '@tanstack/react-query';
 import type { WithFeatureFlagProps } from 'src/containers/flags.container';
 import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
@@ -788,7 +788,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       });
   };
 
-  setAllEntitiesTo = (e: SelectOption | null | undefined) => {
+  setAllEntitiesTo = (e: SelectOptionType | null | undefined) => {
     const value = e?.value === 'null' ? null : e?.value;
     this.entityPerms.map((entity: GrantType) =>
       this.entitySetAllTo(entity, value as GrantLevel)()
