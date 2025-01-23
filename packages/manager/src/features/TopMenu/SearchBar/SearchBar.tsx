@@ -2,11 +2,9 @@
 import { Autocomplete, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Search from '@mui/icons-material/Search';
-import { Box, Paper, Popper } from '@mui/material';
-import { take } from 'ramda';
+import { Box, Paper } from '@mui/material';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { components } from 'react-select';
 import { debounce } from 'throttle-debounce';
 
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
@@ -37,24 +35,31 @@ import {
   StyledSearchBarWrapperDiv,
 } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
+import { createFinalOptions } from './utils';
 
-import type { SearchSuggestionProps } from './SearchSuggestion';
+import type { SearchSuggestionT } from './SearchSuggestion';
 import type { PaperProps } from '@mui/material';
-import type { PopperProps } from '@mui/material/Popper';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { SearchProps } from 'src/features/Search/withStoreSearch';
 
-const Control = (props: any) => <components.Control {...props} />;
+interface SearchOption {
+  data: SearchSuggestionT;
+  label: string;
+  value: number | string;
+}
 
-/* The final option in the list will be the "go to search results page" link.
- * This doesn't share the same shape as the rest of the results, so should use
- * the default styling. */
-const Option = (props: any) => {
-  return ['error', 'info', 'redirect'].includes(props.value) ? (
-    <components.Option {...props} />
-  ) : (
-    <SearchSuggestion {...props} />
-  );
+// Special option type for redirect/info/error cases
+interface SpecialOption {
+  data: {
+    searchText: string;
+  };
+  label: string;
+  value: 'error' | 'info' | 'redirect';
+}
+
+export type Option = SearchOption | SpecialOption;
+
+const isSpecialOption = (option: Option): option is SpecialOption => {
+  return ['redirect', 'error', 'info'].includes(String(option.value));
 };
 
 // Style overrides for React Select
@@ -82,10 +87,10 @@ export const selectStyles = {
   }),
 };
 
-const SearchBar = (props: SearchProps) => {
+const SearchBarComponent = (props: SearchProps) => {
   const { combinedResults, entitiesLoading, search } = props;
   const [searchText, setSearchText] = React.useState<string>('');
-  const [value, setValue] = React.useState<Item | null>(null);
+  const [value, setValue] = React.useState<Option | null>(null);
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
@@ -184,7 +189,13 @@ const SearchBar = (props: SearchProps) => {
         return;
       }
 
-      setValue({ label: q, value: q });
+      setValue({
+        data: {
+          searchText: q,
+        },
+        label: q,
+        value: 'redirect',
+      } as SpecialOption);
     }
   }, [history.location]);
 
@@ -251,7 +262,7 @@ const SearchBar = (props: SearchProps) => {
     setValue(null);
   };
 
-  const onSelect = (item: Item) => {
+  const onSelect = (item: Option) => {
     if (!item || item.label === '') {
       return;
     }
@@ -260,15 +271,17 @@ const SearchBar = (props: SearchProps) => {
       return;
     }
 
-    const text = item?.data?.searchText ?? '';
-
-    if (item.value === 'redirect') {
-      history.push({
-        pathname: `/search`,
-        search: `?query=${encodeURIComponent(text)}`,
-      });
+    if (isSpecialOption(item)) {
+      const text = item.data.searchText;
+      if (item.value === 'redirect') {
+        history.push({
+          pathname: `/search`,
+          search: `?query=${encodeURIComponent(text)}`,
+        });
+      }
       return;
     }
+
     history.push(item.data.path);
   };
 
@@ -330,7 +343,7 @@ const SearchBar = (props: SearchProps) => {
           }}
           onChange={(_, value) => {
             if (value) {
-              onSelect(value);
+              onSelect(value as Option);
             }
           }}
           renderInput={(params) => {
@@ -357,23 +370,29 @@ const SearchBar = (props: SearchProps) => {
               />
             );
           }}
-          renderOption={(props, option) => {
+          renderOption={(props, option, { selected }) => {
+            const { key, ...rest } = props;
+            const value = String(option.value);
+
             // Skip rendering for special options like 'redirect', 'error', 'info'
-            if (['error', 'info', 'redirect'].includes(String(option.value))) {
-              return <li {...props}>{option.label}</li>;
+            if (['error', 'info', 'redirect'].includes(value)) {
+              return (
+                <li {...rest} key={`${key}-${value}`}>
+                  {option.label}
+                </li>
+              );
             }
 
             return (
               <SearchSuggestion
-                // {...((props as unknown) as SearchSuggestionProps)}
                 data={{
-                  data: option.data,
+                  data: option.data as SearchSuggestionT,
                   label: option.label,
                 }}
-                isFocused={false}
-                key={props.key}
+                isFocused={selected}
+                key={`${key}-${value}`}
                 searchText={searchText}
-                selectOption={() => onSelect(option)}
+                selectOption={() => onSelect(option as Option)}
                 selectProps={{ onMenuClose: onClose }}
               />
             );
@@ -390,7 +409,7 @@ const SearchBar = (props: SearchProps) => {
           onKeyDown={onKeyDown}
           onOpen={onOpen}
           open={menuOpen && searchText !== ''}
-          options={finalOptions}
+          options={finalOptions as Option[]}
           placeholder="Search Products, IP Addresses, Tags..."
           value={value}
         />
@@ -416,77 +435,7 @@ const SearchBar = (props: SearchProps) => {
   );
 };
 
-export const createFinalOptions = (
-  results: Item[],
-  searchText: string = '',
-  loading: boolean = false,
-  error: boolean = false
-) => {
-  const redirectOption = {
-    data: {
-      searchText,
-    },
-    label: `View search results page for "${searchText}"`,
-    value: 'redirect',
-  };
-
-  const loadingResults = {
-    label: 'Loading results...',
-    value: 'info',
-  };
-
-  const searchError = {
-    label: 'Error retrieving search results',
-    value: 'error',
-  };
-
-  // Results aren't final as we're loading data
-  if (loading) {
-    return [redirectOption, loadingResults];
-  }
-
-  if (error) {
-    return [searchError];
-  }
-
-  // NO RESULTS:
-  if (!results || results.length === 0) {
-    return [];
-  }
-
-  // LESS THAN 20 RESULTS:
-  if (results.length <= 20) {
-    return [redirectOption, ...results];
-  }
-
-  // MORE THAN 20 RESULTS:
-  const lastOption = {
-    data: {
-      searchText,
-    },
-    label: `View all ${results.length} results for "${searchText}"`,
-    value: 'redirect',
-  };
-
-  const first20Results = take(20, results);
-  return [redirectOption, ...first20Results, lastOption];
-};
-
-export default withStoreSearch()(SearchBar);
-
-const guidanceText = (isLargeAccount: boolean | undefined) => {
-  if (isLargeAccount) {
-    // This fancy stuff won't work if we're using API
-    // based search; don't confuse users by displaying this.
-    return undefined;
-  }
-  return (
-    <>
-      <b>By field:</b> “tag:my-app” “label:my-linode” &nbsp;&nbsp;
-      <b>With operators</b>: “tag:my-app AND is:domain”
-    </>
-  );
-};
+export const SearchBar = withStoreSearch()(SearchBarComponent);
 
 interface CustomPaperProps extends PaperProps {
   isLargeAccount?: boolean;
