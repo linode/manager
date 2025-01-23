@@ -2,6 +2,13 @@ import type { Region, RegionSite } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { SSHKey } from '../profile/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
+import { InferType } from 'yup';
+import {
+  CreateLinodeInterfaceSchema,
+  ModifyLinodeInterfaceSchema,
+  UpdateLinodeInterfaceSettingsSchema,
+  UpgradeToLinodeInterfaceSchema,
+} from '@linode/validation';
 
 export type Hypervisor = 'kvm' | 'zen';
 
@@ -162,6 +169,9 @@ export type LinodeStatus =
   | 'restoring'
   | 'stopped';
 
+// ---------------------------------------------------------------------
+// Types relating to legacy interfaces (Configuration profile Interfaces)
+// ----------------------------------------------------------------------
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
 export interface ConfigInterfaceIPv4 {
@@ -173,6 +183,7 @@ export interface ConfigInterfaceIPv6 {
   vpc?: string | null;
 }
 
+// The legacy interface type - for Configuration Profile Interfaces
 export interface Interface {
   id: number;
   label: string | null;
@@ -214,6 +225,117 @@ export interface Config {
   initrd: string | null;
   interfaces: Interface[];
 }
+
+// ----------------------------------------------------------
+// Types relating to new interfaces - Linode Interfaces
+// ----------------------------------------------------------
+export interface DefaultRoute {
+  ipv4?: boolean;
+  ipv6?: boolean;
+}
+
+export type CreateLinodeInterfacePayload = InferType<
+  typeof CreateLinodeInterfaceSchema
+>;
+
+export type ModifyLinodeInterfacePayload = InferType<
+  typeof ModifyLinodeInterfaceSchema
+>;
+
+// GET related types
+
+// GET object
+export interface LinodeInterface {
+  id: number;
+  mac_address: string;
+  default_route: DefaultRoute;
+  version: number;
+  created: string;
+  updated: string;
+  vpc: VPCInterfaceData | null;
+  public: PublicInterfaceData | null;
+  vlan: {
+    vlan_label: string;
+    ipam_address: string;
+  } | null;
+}
+
+export interface LinodeInterfaces {
+  interfaces: LinodeInterface[];
+}
+
+export interface VPCInterfaceData {
+  vpc_id: number;
+  subnet_id: number;
+  ipv4: {
+    addresses: {
+      address: string;
+      primary: boolean;
+      nat_1_1_address?: string;
+    }[];
+    ranges: { range: string }[];
+  };
+}
+
+export interface PublicInterfaceData {
+  ipv4: {
+    addresses: {
+      address: string;
+      primary: boolean;
+    }[];
+    // shared: string[];
+  };
+  ipv6: {
+    addresses: {
+      address: string;
+      prefix: string;
+    }[];
+    // shared: string[];
+    ranges: {
+      range: string;
+      route_target: string;
+    }[];
+  };
+}
+
+// Other Linode Interface types
+export type LinodeInterfaceStatus = 'active' | 'inactive' | 'deleted';
+
+export interface LinodeInterfaceHistory {
+  interface_history_id: number;
+  interface_id: number;
+  linode_id: number;
+  event_id: number;
+  version: number;
+  interface_data: string; // will come in as JSON string object that we'll need to parse
+  status: LinodeInterfaceStatus;
+  created: string;
+}
+
+export interface LinodeInterfaceSettings {
+  network_helper: boolean;
+  default_route: {
+    ipv4_interface_id?: number | null;
+    ipv4_eligible_interface_ids: number[];
+    ipv6_interface_id?: number | null;
+    ipv6_eligible_interface_ids: number[];
+  };
+}
+
+export type LinodeInterfaceSettingsPayload = InferType<
+  typeof UpdateLinodeInterfaceSettingsSchema
+>;
+
+export type UpgradeInterfacePayload = InferType<
+  typeof UpgradeToLinodeInterfaceSchema
+>;
+
+export interface UpgradeInterfaceData {
+  config_id: number;
+  dry_run: boolean;
+  interfaces: LinodeInterface[];
+}
+// ----------------------------------------------------------
 
 export interface DiskDevice {
   disk_id: null | number;
