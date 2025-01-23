@@ -172,15 +172,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     const startDate = getDateRangeInIST(0, 12, 15); // set start date to  
     const endDate = getDateRangeInIST(25, 12, 15); // set end date to today
 
-    cy.log('DAY*************',startDate.day)
-    cy.log('HOUR',startDate.hour)
-    cy.log('minute',startDate.minute)
-
-    cy.log(' endDate DAY',endDate.day)
-    cy.log('HOUR',endDate.hour)
-    cy.log('minute',endDate.minute)
-
-
     ui.autocomplete
       .findByLabel('Time Range')
       .scrollIntoView()
