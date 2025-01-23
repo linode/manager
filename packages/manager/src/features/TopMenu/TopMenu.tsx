@@ -1,6 +1,6 @@
 import { Box, Stack } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
-import { IconButton, useMediaQuery } from '@mui/material';
+import { IconButton, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -42,9 +42,8 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
     theme.breakpoints.down(960)
   );
 
-  const isMobileViewport = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.up(430)
-  );
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>
@@ -76,7 +75,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             flexGrow={1}
             flexShrink={0}
           >
-            {isMobileViewport && (
+            {!isNarrowViewport && (
               <Link
                 aria-label="Akamai - Dashboard"
                 style={{ lineHeight: 0 }}
@@ -119,8 +118,8 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           >
             <CreateMenu />
             <Box display="flex">
-              <Help />
-              <Community />
+              {!isSmallScreen && <Help />}
+              {!isSmallScreen && <Community />}
               <NotificationMenu />
             </Box>
             <UserMenu />

@@ -48,10 +48,6 @@ export const CreateMenu = () => {
     theme.breakpoints.down('md')
   );
 
-  const isSmallScreen = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down('sm')
-  );
-
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
@@ -169,9 +165,9 @@ export const CreateMenu = () => {
         disableRipple
         id="create-menu"
         onClick={handleClick}
-        startIcon={!isSmallScreen && <StyledAddIcon />}
+        startIcon={<StyledAddIcon />}
       >
-        {isSmallScreen ? <StyledAddIcon /> : 'Create'}
+        Create
       </Button>
       <Popover
         anchorOrigin={{

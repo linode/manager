@@ -31,7 +31,6 @@ import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { StyledIconButton } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
 
 import type { Item } from 'src/components/EnhancedSelect/Select';
@@ -66,10 +65,12 @@ const SearchBar = (props: SearchProps) => {
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
   const [apiError, setAPIError] = React.useState<null | string>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
+
   const history = useHistory();
   const isLargeAccount = useIsLargeAccount(searchActive);
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const theme = useTheme();
+
   // Only request things if the search bar is open/active and we
   // know if the account is large or not
   const shouldMakeRequests =
@@ -201,11 +202,6 @@ const SearchBar = (props: SearchProps) => {
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
-  };
-
-  const toggleSearch = () => {
-    setSearchActive(!searchActive);
-    setMenuOpen(!menuOpen);
   };
 
   const onClose = () => {
@@ -370,46 +366,35 @@ const SearchBar = (props: SearchProps) => {
   };
 
   return (
-    <React.Fragment>
-      <StyledIconButton
-        aria-label="open menu"
-        color="inherit"
-        disableRipple
-        onClick={toggleSearch}
-        size="large"
-      >
-        <Search />
-      </StyledIconButton>
-      <Box>
-        <label className="visually-hidden" htmlFor="main-search">
-          Main search
-        </label>
-        <EnhancedSelect
-          blurInputOnSelect
-          components={{ Control, Option }}
-          filterOption={filterResults}
-          guidance={guidanceText()}
-          hideLabel
-          isClearable={false}
-          isLoading={entitiesLoading}
-          isMulti={false}
-          label="Main search"
-          menuIsOpen={menuOpen}
-          onChange={onSelect}
-          onFocus={onFocus}
-          onInputChange={handleSearchChange}
-          onKeyDown={onKeyDown}
-          onMenuClose={onClose}
-          onMenuOpen={onOpen}
-          openMenuOnClick={false}
-          openMenuOnFocus={false}
-          options={finalOptions}
-          placeholder="Search Products, IP Addresses, Tags..."
-          styles={selectStyles}
-          value={value}
-        />
-      </Box>
-    </React.Fragment>
+    <Box>
+      <label className="visually-hidden" htmlFor="main-search">
+        Main search
+      </label>
+      <EnhancedSelect
+        blurInputOnSelect
+        components={{ Control, Option }}
+        filterOption={filterResults}
+        guidance={guidanceText()}
+        hideLabel
+        isClearable={false}
+        isLoading={entitiesLoading}
+        isMulti={false}
+        label="Main search"
+        menuIsOpen={menuOpen}
+        onChange={onSelect}
+        onFocus={onFocus}
+        onInputChange={handleSearchChange}
+        onKeyDown={onKeyDown}
+        onMenuClose={onClose}
+        onMenuOpen={onOpen}
+        openMenuOnClick={false}
+        openMenuOnFocus={false}
+        options={finalOptions}
+        placeholder="Search Products, IP Addresses, Tags..."
+        styles={selectStyles}
+        value={value}
+      />
+    </Box>
   );
 };
 
