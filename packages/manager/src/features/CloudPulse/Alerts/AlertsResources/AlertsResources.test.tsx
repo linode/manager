@@ -34,6 +34,10 @@ const linodes = linodeFactory.buildList(3).map((value, index) => {
 const searchPlaceholder = 'Search for a Region or Resource';
 const regionPlaceholder = 'Select Regions';
 
+beforeAll(() => {
+  Element.prototype.scrollIntoView = vi.fn(); // mock for scrollIntoView
+});
+
 beforeEach(() => {
   queryMocks.useResourcesQuery.mockReturnValue({
     data: linodes,
