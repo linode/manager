@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { alertFactory, serviceTypesFactory } from 'src/factories/';
+import {
+  alertFactory,
+  linodeFactory,
+  regionFactory,
+  serviceTypesFactory,
+} from 'src/factories/';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertDetail } from './AlertDetail';
@@ -8,10 +13,15 @@ import { AlertDetail } from './AlertDetail';
 // Mock Data
 const alertDetails = alertFactory.build({ service_type: 'linode' });
 
+const linodes = linodeFactory.buildList(3);
+const regions = regionFactory.buildList(3);
+
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
   useCloudPulseServiceTypes: vi.fn(),
+  useRegionsQuery: vi.fn(),
+  useResourcesQuery: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
@@ -26,6 +36,16 @@ vi.mock('src/queries/cloudpulse/services', () => {
   };
 });
 
+vi.mock('src/queries/cloudpulse/resources', () => ({
+  ...vi.importActual('src/queries/cloudpulse/resources'),
+  useResourcesQuery: queryMocks.useResourcesQuery,
+}));
+
+vi.mock('src/queries/regions/regions', () => ({
+  ...vi.importActual('src/queries/regions/regions'),
+  useRegionsQuery: queryMocks.useRegionsQuery,
+}));
+
 // Shared Setup
 beforeEach(() => {
   queryMocks.useAlertDefinitionQuery.mockReturnValue({
@@ -35,6 +55,16 @@ beforeEach(() => {
   });
   queryMocks.useCloudPulseServiceTypes.mockReturnValue({
     data: { data: serviceTypesFactory.buildList(1) },
+    isFetching: false,
+  });
+  queryMocks.useResourcesQuery.mockReturnValue({
+    data: linodes,
+    isError: false,
+    isFetching: false,
+  });
+  queryMocks.useRegionsQuery.mockReturnValue({
+    data: regions,
+    isError: false,
     isFetching: false,
   });
 });
@@ -81,6 +111,8 @@ describe('AlertDetail component tests', () => {
     const { getByText } = renderWithTheme(<AlertDetail />);
     // validate overview is present with its couple of properties (values will be validated in its own components test)
     expect(getByText('Overview')).toBeInTheDocument();
+    expect(getByText('Criteria')).toBeInTheDocument(); // validate if criteria is present
+    expect(getByText('Resources')).toBeInTheDocument(); // validate if resources is present
     expect(getByText('Name:')).toBeInTheDocument();
     expect(getByText('Description:')).toBeInTheDocument();
   });
