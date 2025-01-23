@@ -99,53 +99,40 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
     // Validating contents of Overview Section
     cy.get('[data-qa-section="Overview"]').within(() => {
       // Validate Name field
-      cy.get('[data-qa-item="Name"]').within(() => {
-        cy.findByText('Name:').should('be.visible');
-        cy.findByText(label).should('be.visible');
-      });
+      cy.findByText('Name:').should('be.visible');
+      cy.findByText(label).should('be.visible');
+
       // Validate Description field
-      cy.get('[data-qa-item="Description"]').within(() => {
-        cy.findByText('Description:').should('be.visible');
-        cy.findByText(description).should('be.visible');
-      });
+      cy.findByText('Description:').should('be.visible');
+      cy.findByText(description).should('be.visible');
 
       // Validate Status field
-      cy.get('[data-qa-item="Status"]').within(() => {
-        cy.findByText('Status:').should('be.visible');
-        cy.findByText('Enabled').should('be.visible');
-      });
+      cy.findByText('Status:').should('be.visible');
+      cy.findByText('Enabled').should('be.visible');
 
       cy.get('[data-qa-item="Severity"]').within(() => {
         cy.findByText('Severity:').should('be.visible');
         cy.findByText(severityMap[severity]).should('be.visible');
       });
       // Validate Service field
-      cy.get('[data-qa-item="Service"]').within(() => {
-        cy.findByText('Service:').should('be.visible');
-        cy.findByText('Databases').should('be.visible');
-      });
+      cy.findByText('Service:').should('be.visible');
+      cy.findByText('Databases').should('be.visible');
 
       // Validate Type field
-      cy.get('[data-qa-item="Type"]').within(() => {
-        cy.findByText('Type:').should('be.visible');
-        cy.findByText('System').should('be.visible');
-      });
+      cy.findByText('Type:').should('be.visible');
+      cy.findByText('System').should('be.visible');
 
       // Validate Created By field
-      cy.get('[data-qa-item="Created By"]').within(() => {
-        cy.findByText('Created By:').should('be.visible');
-        cy.findByText(created_by).should('be.visible');
-      });
+      cy.findByText('Created By:').should('be.visible');
+      cy.findByText(created_by).should('be.visible');
 
       // Validate Last Modified field
-      cy.get('[data-qa-item="Last Modified"]').within(() => {
-        cy.findByText('Last Modified:').should('be.visible');
-        cy.findByText(
-          formatDate(updated, {
-            format: 'MMM dd, yyyy, h:mm a',
-          })
-        ).should('be.visible');
-      });
+      cy.findByText('Last Modified:').should('be.visible');
+      cy.findByText(
+        formatDate(updated, {
+          format: 'MMM dd, yyyy, h:mm a',
+        })
+      ).should('be.visible');
     });
 
     // Validating contents of Criteria Section
