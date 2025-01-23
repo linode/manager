@@ -130,7 +130,9 @@ const ipv6ConfigInterface = object().when('purpose', {
     }),
 });
 
-export const LinodeInterfaceSchema = object().shape({
+// This is the validation schema for legacy interfaces attached to configuration profiles
+// For new interfaces, denoted as Linode Interfaces, see CreateLinodeInterfaceSchema or ModifyLinodeInterfaceSchema
+export const ConfigProfileInterfaceSchema = object().shape({
   purpose: mixed().oneOf(
     ['public', 'vlan', 'vpc'],
     'Purpose must be public, vlan, or vpc.'
@@ -252,8 +254,8 @@ export const LinodeInterfaceSchema = object().shape({
     }),
 });
 
-export const LinodeInterfacesSchema = array()
-  .of(LinodeInterfaceSchema)
+export const ConfigProfileInterfacesSchema = array()
+  .of(ConfigProfileInterfaceSchema)
   .test(
     'unique-public-interface',
     'Only one public interface per config is allowed.',
@@ -349,7 +351,7 @@ export const CreateLinodeSchema = object({
     // .concat(rootPasswordValidation),
     otherwise: (schema) => schema.notRequired(),
   }),
-  interfaces: LinodeInterfacesSchema,
+  interfaces: ConfigProfileInterfacesSchema,
   metadata: MetadataSchema,
   firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema,
@@ -492,7 +494,7 @@ export const CreateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: LinodeInterfacesSchema,
+  interfaces: ConfigProfileInterfacesSchema,
 });
 
 export const UpdateLinodeConfigSchema = object({
@@ -507,7 +509,7 @@ export const UpdateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: LinodeInterfacesSchema,
+  interfaces: ConfigProfileInterfacesSchema,
 });
 
 export const CreateLinodeDiskSchema = object({
@@ -551,3 +553,134 @@ export const CreateLinodeDiskFromImageSchema = CreateLinodeDiskSchema.clone().sh
       .typeError('An image is required.'),
   }
 );
+
+const LABEL_LENGTH_MESSAGE = 'Label must be between 1 and 64 characters.';
+const LABEL_CHARACTER_TYPES =
+  'Must include only ASCII letters, numbers, and dashes';
+
+export const UpgradeToLinodeInterfaceSchema = object({
+  config_id: number().nullable(),
+  dry_run: boolean(),
+});
+
+export const UpdateLinodeInterfaceSettingsSchema = object({
+  network_helper: boolean().nullable(),
+  default_route: object({
+    ipv4_interface_id: number().nullable(),
+    ipv6_interface_id: number().nullable(),
+  }),
+});
+
+const BaseInterfaceIPv4AddressSchema = object({
+  address: string().required(),
+  primary: boolean(),
+});
+
+const VPCInterfaceIPv4RangeSchema = object({
+  range: string().required(),
+});
+
+const PublicInterfaceRangeSchema = object({
+  range: string().required().nullable(),
+});
+
+const CreateVPCInterfaceIpv4AddressSchema = object({
+  address: string().required(),
+  primary: boolean(),
+  nat_1_1_address: string().nullable(),
+});
+
+const CreateVlanInterfaceSchema = object({
+  vlan_label: string()
+    .required()
+    .min(1, LABEL_LENGTH_MESSAGE)
+    .max(64, LABEL_LENGTH_MESSAGE)
+    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
+  ipam_address: string().nullable(),
+})
+  .notRequired()
+  .nullable();
+
+export const CreateLinodeInterfaceSchema = object({
+  firewall_id: number().nullable(),
+  default_route: object({
+    ipv4: boolean(),
+    ipv6: boolean(),
+  }).notRequired(),
+  vpc: object({
+    subnet_id: number().required(),
+    ipv4: object({
+      addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
+      ranges: array().of(VPCInterfaceIPv4RangeSchema),
+    }).notRequired(),
+  })
+    .notRequired()
+    .nullable(),
+  public: object({
+    ipv4: object({
+      addresses: array().of(BaseInterfaceIPv4AddressSchema),
+    }).notRequired(),
+    ipv6: object({
+      ranges: array().of(PublicInterfaceRangeSchema),
+    }).notRequired(),
+  })
+    .notRequired()
+    .nullable(),
+  vlan: CreateVlanInterfaceSchema,
+});
+
+const ModifyVPCInterfaceIpv4AddressSchema = object({
+  address: string(),
+  primary: boolean().nullable(),
+  nat_1_1_address: string().nullable(),
+});
+
+const ModifyVlanInterfaceSchema = object({
+  vlan_label: string()
+    .required()
+    .nullable()
+    .min(1, LABEL_LENGTH_MESSAGE)
+    .max(64, LABEL_LENGTH_MESSAGE)
+    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
+  ipam_address: string().nullable(),
+})
+  .notRequired()
+  .nullable();
+
+export const ModifyLinodeInterfaceSchema = object({
+  default_route: object({
+    ipv4: boolean().nullable(),
+    ipv6: boolean().nullable(),
+  })
+    .notRequired()
+    .nullable(),
+  vpc: object({
+    subnet_id: number().required(),
+    ipv4: object({
+      addresses: array()
+        .of(ModifyVPCInterfaceIpv4AddressSchema)
+        .notRequired()
+        .nullable(),
+      ranges: array().of(VPCInterfaceIPv4RangeSchema).nullable(),
+    })
+      .notRequired()
+      .nullable(),
+  })
+    .notRequired()
+    .nullable(),
+  public: object({
+    ipv4: object({
+      addresses: array().of(BaseInterfaceIPv4AddressSchema).nullable(),
+    })
+      .notRequired()
+      .nullable(),
+    ipv6: object({
+      ranges: array().of(PublicInterfaceRangeSchema).nullable(),
+    })
+      .notRequired()
+      .nullable(),
+  })
+    .notRequired()
+    .nullable(),
+  vlan: ModifyVlanInterfaceSchema,
+});
