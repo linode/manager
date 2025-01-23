@@ -14,6 +14,53 @@ declare global {
 }
 
 /**
+ * Given the name of a cookie, parses the document.cookie string and returns the cookie's value.
+ * @param name cookie's name
+ * @returns value of cookie if it exists in the document; else, undefined
+ */
+const getCookie = (name: string): string | undefined => {
+  const cookies = document.cookie.split(';');
+  let selectedCookie: string | undefined = undefined;
+
+  cookies.forEach((cookie) => {
+    if (cookie.trim().startsWith(name + '=')) {
+      selectedCookie = cookie.substring(name.length + 1);
+    }
+  });
+  return selectedCookie;
+};
+
+/**
+ *
+ * @param cookie
+ * @param category
+ * @returns
+ */
+const getOptanonConsentCategory = (
+  cookie: string | undefined,
+  category: string
+): boolean => {
+  const optanonGroups = cookie?.match(/groups=([^&]*)/);
+  let hasConsented = false;
+
+  if (!cookie || !optanonGroups) {
+    return false;
+  }
+
+  const consentCategories = decodeURIComponent(optanonGroups[1]).split(',');
+  // console.log({ consentCategories });
+
+  consentCategories.forEach((consentCategory) => {
+    // console.log({ category });
+    if (consentCategory.includes(category)) {
+      hasConsented = Number(consentCategory.split(':')[1]) === 0;
+    }
+  });
+
+  return hasConsented;
+};
+
+/**
  * This function prevents address ID collisions leading to muddled data between environments. Account and visitor IDs must be unique per API-key.
  * See: https://support.pendo.io/hc/en-us/articles/360031862352-Pendo-in-multiple-environments-for-development-and-testing
  * @returns Unique SHA256 hash of ID and the environment; else, undefined if missing values to hash.
@@ -69,11 +116,20 @@ export const usePendo = () => {
   const accountId = hashUniquePendoId(account?.euuid);
   const visitorId = hashUniquePendoId(profile?.uid.toString());
 
+  const optanonCookie = getCookie('OptanonConsent');
+  // console.log({ optanonCookie });
+
+  const hasFunctionalCookieConsent = getOptanonConsentCategory(
+    optanonCookie,
+    'C0002'
+  );
+  // console.log({ hasFunctionalCookieConsent });
+
   // This URL uses a Pendo-configured CNAME (M3-8742).
   const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;
 
   React.useEffect(() => {
-    if (PENDO_API_KEY) {
+    if (PENDO_API_KEY && hasFunctionalCookieConsent) {
       // Adapted Pendo install script for readability
       // Refer to: https://support.pendo.io/hc/en-us/articles/21362607464987-Components-of-the-install-script#01H6S2EXET8C9FGSHP08XZAE4F
 
