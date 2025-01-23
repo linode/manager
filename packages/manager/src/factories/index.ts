@@ -54,6 +54,7 @@ export * from './vpcs';
 export * from './dashboards';
 export * from './cloudpulse/services';
 export * from './cloudpulse/alerts';
+export * from './cloudpulse/channels';
 
 // Convert factory output to our itemsById pattern
 export const normalizeEntities = (entities: any[]) => {

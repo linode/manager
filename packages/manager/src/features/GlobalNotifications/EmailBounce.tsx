@@ -128,8 +128,8 @@ const EmailBounceNotification = React.memo((props: Props) => {
   }
 
   return (
-    <Notice important spacing={2} variant="warning">
-      <Grid alignItems="center" container>
+    <Notice important variant="warning">
+      <Grid alignItems="center" container spacing={2}>
         <Grid lg={8} md={6} xs={12}>
           {text}
         </Grid>

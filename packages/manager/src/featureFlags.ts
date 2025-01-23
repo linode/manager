@@ -121,6 +121,7 @@ export interface Flags {
   imageServiceGen2: boolean;
   imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
+  limitsEvolution: BaseFeatureFlag;
   linodeDiskEncryption: boolean;
   lkeEnterprise: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;

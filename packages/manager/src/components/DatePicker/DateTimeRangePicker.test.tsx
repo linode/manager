@@ -12,12 +12,12 @@ import type { DateTimeRangePickerProps } from './DateTimeRangePicker';
 const onChangeMock = vi.fn();
 
 const Props: DateTimeRangePickerProps = {
+  enablePresets: true,
   endDateProps: {
     label: 'End Date and Time',
   },
   onChange: onChangeMock,
   presetsProps: {
-    enablePresets: true,
     label: 'Date Presets',
   },
 
@@ -74,7 +74,7 @@ describe('DateTimeRangePicker Component', () => {
     });
   });
 
-  it('should show error when end date-time is before start date-time', async () => {
+  it('should disable the end date-time which is before the selected start date-time', async () => {
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
 
     // Set start date-time to the 15th
@@ -87,20 +87,14 @@ describe('DateTimeRangePicker Component', () => {
     const endDateField = screen.getByLabelText('End Date and Time');
     await userEvent.click(endDateField);
 
-    // Set start date-time to the 10th
-    await userEvent.click(screen.getByRole('gridcell', { name: '10' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-
-    // Confirm error message is displayed
-    expect(
-      screen.getByText('End date/time cannot be before the start date/time.')
-    ).toBeInTheDocument();
+    expect(screen.getByRole('gridcell', { name: '10' })).toBeDisabled();
   });
 
   it('should show error when start date-time is after end date-time', async () => {
     const updateProps = {
       ...Props,
-      presetsProps: { ...Props.presetsProps, enablePresets: false },
+      enablePresets: false,
+      presetsProps: { ...Props.presetsProps },
     };
     renderWithTheme(<DateTimeRangePicker {...updateProps} />);
 
@@ -125,6 +119,7 @@ describe('DateTimeRangePicker Component', () => {
   it('should display custom error messages when start date-time is after end date-time', async () => {
     const updatedProps = {
       ...Props,
+      enablePresets: false,
       endDateProps: {
         ...Props.endDateProps,
         errorMessage: 'Custom end date error',
@@ -323,23 +318,8 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(endDateField);
 
     // Set start date-time to the 12th
-    await userEvent.click(screen.getByRole('gridcell', { name: '12' }));
+    await userEvent.click(screen.getByRole('gridcell', { name: '17' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-
-    // Confirm error message is  shown since the click was blocked
-    expect(
-      screen.getByText('End date/time cannot be before the start date/time.')
-    ).toBeInTheDocument();
-
-    // Set start date-time to the 11th
-    await userEvent.click(startDateField);
-    await userEvent.click(screen.getByRole('gridcell', { name: '11' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-
-    // Confirm error message is not displayed
-    expect(
-      screen.queryByText('End date/time cannot be before the start date/time.')
-    ).not.toBeInTheDocument();
 
     // Set start date-time to the 20th
     await userEvent.click(startDateField);

@@ -2,6 +2,8 @@ import { Box, Checkbox, Notice, Typography } from '@linode/ui';
 import { List, ListItem } from '@mui/material';
 import * as React from 'react';
 
+import { checkboxTestId, descriptionTestId, headerTestId } from './constants';
+
 export interface EncryptionProps {
   descriptionCopy: JSX.Element | string;
   disabled?: boolean;
@@ -12,10 +14,6 @@ export interface EncryptionProps {
   notices?: string[];
   onChange: (checked: boolean) => void;
 }
-
-export const headerTestId = 'encryption-header';
-export const descriptionTestId = 'encryption-description';
-export const checkboxTestId = 'encrypt-entity-checkbox';
 
 export const Encryption = (props: EncryptionProps) => {
   const {

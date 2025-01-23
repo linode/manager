@@ -6,8 +6,8 @@ export const DropdownIndicator = () => {
   return <StyledKeyboardArrowDown />;
 };
 
-const StyledKeyboardArrowDown = styled(KeyboardArrowDown)(() => ({
-  color: '#aaa !important',
+const StyledKeyboardArrowDown = styled(KeyboardArrowDown)(({ theme }) => ({
+  color: `${theme.tokens.color.Neutrals[50]} !important`,
   height: 28,
   marginRight: '4px',
   marginTop: 0,

@@ -4,6 +4,66 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-01-28] - v1.135.0
+
+### Added:
+
+- `useCreateUserMutation` for adding new users ([#11402](https://github.com/linode/manager/pull/11402)
+- GPU plans in LKE create flow ([#11544](https://github.com/linode/manager/pull/11544))
+
+### Changed:
+
+- Improve backups banner styles ([#11480](https://github.com/linode/manager/pull/11480))
+- Disable resizable plans when the usable storage equals the used storage of the database cluster ([#11481](https://github.com/linode/manager/pull/11481))
+([#11495](https://github.com/linode/manager/pull/11495))
+- Tech doc link for Bucket rate limits ([#11513](https://github.com/linode/manager/pull/11513))
+- Search v2 `not equal` syntax ([#11521](https://github.com/linode/manager/pull/11521))
+- Revise Disk Encryption description copy in Linode Create flow ([#11536](https://github.com/linode/manager/pull/11536))
+
+### Fixed:
+
+- Spacing for LKE cluster tags at desktop screen sizes ([#11507](https://github.com/linode/manager/pull/11507))
+- Zoom-in icon hover effect in CloudPulse ([#11526](https://github.com/linode/manager/pull/11526))
+- Linode Config Dialog misrepresenting primary interface ([#11542](https://github.com/linode/manager/pull/11542))
+
+### Tech Stories:
+
+- Update to TypeScript v5.7 ([#11531](https://github.com/linode/manager/pull/11531))
+- Replace EnhancedSelect with Autocomplete component in the Help feature ([#11470](https://github.com/linode/manager/pull/11470))
+- Replace ramda's `splitAt` with custom utility ([#11483](https://github.com/linode/manager/pull/11483))
+- Update `tsconfig.json` to use `bundler` moduleResolution ([#11487](https://github.com/linode/manager/pull/11487))
+- Replace one-off hardcoded color values with color tokens (part 5) ([#11488](https://github.com/linode/manager/pull/11488))
+- Replace remaining react-select instances & types in Linodes Feature ([#11509](https://github.com/linode/manager/pull/11509))
+- Dependabot security fixes ([#11510](https://github.com/linode/manager/pull/11510))
+- Remove `ramda` from `DomainRecords` part 1 ([#11514](https://github.com/linode/manager/pull/11514))
+- Remove `ramda` from `CreateDomain.tsx` ([#11505](https://github.com/linode/manager/pull/11505))
+- Refactor and convert DomainRecords to functional component ([#11447](https://github.com/linode/manager/pull/11447))
+- Add `Asia/Calcutta` zonename in `timezones.ts`, `disabledTimeZone` property in `DateTimeRangePicker`, and `minDate` property to `DateTimePicker` ([#11495](https://github.com/linode/manager/pull/11495))
+
+
+### Tests:
+
+- Improve organization of Object Storage and Object Storage Multicluster tests ([#11484](https://github.com/linode/manager/pull/11484))
+- Fix test notification formatting and output issues ([#11489](https://github.com/linode/manager/pull/11489))
+- Remove cypress deprecated helper.ts functions ([#11501](https://github.com/linode/manager/pull/11501))
+- Add component tests for PasswordInput ([#11508](https://github.com/linode/manager/pull/11508))
+- Add `CY_TEST_RESET_PREFERENCES` env var to reset user preferences at test run start ([#11522](https://github.com/linode/manager/pull/11522))
+- Increase timeouts when performing Linode clone operations ([#11529](https://github.com/linode/manager/pull/11529))
+
+### Upcoming Features:
+
+- Add Proxy users table, removing users, adding users to IAM ([#11402](https://github.com/linode/manager/pull/11402))
+- Add new entities component for IAM ([#11429](https://github.com/linode/manager/pull/11429))
+- Display cluster provisioning after an LKE-E cluster is created ([#11518](https://github.com/linode/manager/pull/11518))
+- Add Alert Details Criteria section in CloudPulse Alert Details page ([#11477](https://github.com/linode/manager/pull/11477))
+- Update Metrics API request and JWE Token API request in CloudPulse ([#11506](https://github.com/linode/manager/pull/11506))
+- Improve UDP NodeBalancer support ([#11515](https://github.com/linode/manager/pull/11515))
+- Add scaffolding for Resources section in CloudPulse Alert details page ([#11524](https://github.com/linode/manager/pull/11524))
+- Fix redirects from /account to /iam ([#11539](https://github.com/linode/manager/pull/11539)))
+- Add `AddNotificationChannel` component with unit tests with necessary changes for constants, `CreateAlertDefinition` and other components. ([#11511](https://github.com/linode/manager/pull/11511))
+- Add Quotas feature flag, queries, and MSW CRUD preset support ([#11493](https://github.com/linode/manager/pull/11493))
+
+
 ## [2025-01-14] - v1.134.0
 
 ### Added:
