@@ -322,7 +322,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         '&:hover': {
           '.primary-nav-toggle': {
             justifyContent: 'flex-end',
-            width: `calc(${SIDEBAR_WIDTH}px)`,
+            width: SIDEBAR_WIDTH,
           },
         },
       }}

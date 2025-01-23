@@ -25,7 +25,6 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
       <Box
         sx={() => ({
           backgroundColor: Global.Color.Neutrals[90],
-          borderRight: `1px solid ${Global.Color.Neutrals[80]}`,
           transition: 'width 100ms linear',
           width: isCollapsed
             ? `${SIDEBAR_COLLAPSED_WIDTH}px`
@@ -36,7 +35,7 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
         display="flex"
         height={PRIMARY_NAV_TOGGLE_HEIGHT}
         justifyContent={isCollapsed ? 'center' : 'flex-end'}
-        left={0}
+        left={-1}
         position="fixed"
       >
         <Tooltip
