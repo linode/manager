@@ -112,9 +112,7 @@ describe('PlacementGroupsDetailPanel', () => {
     );
 
     expect(getByRole('combobox')).toBeDisabled();
-    expect(
-      getByTestId('placement-groups-no-capability-notice')
-    ).toHaveTextContent(
+    expect(getByTestId('notice-warning')).toHaveTextContent(
       'Currently, only specific regions support placement groups.'
     );
     expect(

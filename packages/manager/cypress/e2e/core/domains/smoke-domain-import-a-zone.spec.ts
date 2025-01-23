@@ -1,6 +1,7 @@
 import { ImportZonePayload } from '@linode/api-v4';
 import { domainFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
+import { fbltClick } from 'support/helpers';
 import { randomDomainName, randomIp } from 'support/util/random';
 import { mockGetDomains, mockImportDomain } from 'support/intercepts/domains';
 import { ui } from 'support/ui';
@@ -45,7 +46,7 @@ describe('Import a Zone', () => {
           .should('be.disabled');
 
         // Verify only filling out Domain cannot import
-        cy.findByLabelText('Domain').click().clear().type(zone.domain);
+        fbltClick('Domain').clear().type(zone.domain);
         ui.buttonGroup
           .findButtonByTitle('Import')
           .should('be.visible')
@@ -54,11 +55,8 @@ describe('Import a Zone', () => {
         cy.findByText('Remote nameserver is required.');
 
         // Verify invalid domain cannot import
-        cy.findByLabelText('Domain').click().clear().type('1');
-        cy.findByLabelText('Remote Nameserver')
-          .click()
-          .clear()
-          .type(zone.remote_nameserver);
+        fbltClick('Domain').clear().type('1');
+        fbltClick('Remote Nameserver').clear().type(zone.remote_nameserver);
         ui.buttonGroup
           .findButtonByTitle('Import')
           .should('be.visible')
@@ -67,11 +65,8 @@ describe('Import a Zone', () => {
         cy.findByText('Domain is not valid.');
 
         // Verify only filling out RemoteNameserver cannot import
-        cy.findByLabelText('Domain').click().clear();
-        cy.findByLabelText('Remote Nameserver')
-          .click()
-          .clear()
-          .type(zone.remote_nameserver);
+        fbltClick('Domain').clear();
+        fbltClick('Remote Nameserver').clear().type(zone.remote_nameserver);
         ui.buttonGroup
           .findButtonByTitle('Import')
           .should('be.visible')
@@ -80,8 +75,8 @@ describe('Import a Zone', () => {
         cy.findByText('Domain is required.');
 
         // Verify invalid remote nameserver cannot import
-        cy.findByLabelText('Domain').click().clear().type(zone.domain);
-        cy.findByLabelText('Remote Nameserver').click().clear().type('1');
+        fbltClick('Domain').clear().type(zone.domain);
+        fbltClick('Remote Nameserver').clear().type('1');
         ui.buttonGroup
           .findButtonByTitle('Import')
           .should('be.visible')
@@ -92,11 +87,8 @@ describe('Import a Zone', () => {
         // Fill out and import the zone.
         mockImportDomain(mockDomain).as('importDomain');
         mockGetDomains([mockDomain]).as('getDomains');
-        cy.findByLabelText('Domain').click().clear().type(zone.domain);
-        cy.findByLabelText('Remote Nameserver')
-          .click()
-          .clear()
-          .type(zone.remote_nameserver);
+        fbltClick('Domain').clear().type(zone.domain);
+        fbltClick('Remote Nameserver').clear().type(zone.remote_nameserver);
         ui.buttonGroup
           .findButtonByTitle('Import')
           .should('be.visible')

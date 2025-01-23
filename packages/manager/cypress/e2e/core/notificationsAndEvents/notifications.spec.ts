@@ -1,5 +1,6 @@
 import { Notification } from '@linode/api-v4';
 import { notificationFactory } from '@src/factories/notification';
+import { getClick } from 'support/helpers';
 import { mockGetNotifications } from 'support/intercepts/events';
 
 const notifications: Notification[] = [
@@ -22,8 +23,8 @@ describe('verify notification types and icons', () => {
     mockGetNotifications(notifications).as('mockNotifications');
     cy.visitWithLogin('/linodes');
     cy.wait('@mockNotifications');
-    cy.get('button[aria-label="Notifications"]').click();
-    cy.get('[data-test-id="showMoreButton"').click();
+    getClick('button[aria-label="Notifications"]');
+    getClick('[data-test-id="showMoreButton"');
     notifications.forEach((notification) => {
       cy.get(`[data-test-id="${notification.type}"]`).within(() => {
         if (notification.severity != 'minor') {

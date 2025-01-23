@@ -1,20 +1,20 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "module": "umd",
     "emitDeclarationOnly": true,
     "declaration": true,
     "outDir": "./lib",
     "esModuleInterop": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "skipLibCheck": true,
     "strict": true,
     "baseUrl": ".",
     "noUnusedLocals": true,
+    "forceConsistentCasingInFileNames": true,
     "declarationMap": true,
     "incremental": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules/**/*", "**/__tests__/*"]
 }

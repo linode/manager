@@ -18,10 +18,6 @@ import { randomLabel } from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
-import {
-  LINODE_CLONE_TIMEOUT,
-  LINODE_CREATE_TIMEOUT,
-} from 'support/constants/linodes';
 import type { Linode } from '@linode/api-v4';
 
 /**
@@ -36,6 +32,9 @@ const getLinodeCloneUrl = (linode: Linode): string => {
   const typeQuery = `&typeID=${linode.type}`;
   return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone+Linode${typeQuery}`;
 };
+
+/* Timeout after 4 minutes while waiting for clone. */
+const CLONE_TIMEOUT = 240_000;
 
 authenticate();
 describe('clone linode', () => {
@@ -70,9 +69,7 @@ describe('clone linode', () => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
 
       // Wait for Linode to boot, then initiate clone flow.
-      cy.findByText('OFFLINE', { timeout: LINODE_CREATE_TIMEOUT }).should(
-        'be.visible'
-      );
+      cy.findByText('OFFLINE').should('be.visible');
 
       ui.actionMenu
         .findByTitle(`Action menu for Linode ${linode.label}`)
@@ -111,7 +108,7 @@ describe('clone linode', () => {
       ui.toast.assertMessage(`Your Linode ${newLinodeLabel} is being created.`);
       ui.toast.assertMessage(
         `Linode ${linode.label} has been cloned to ${newLinodeLabel}.`,
-        { timeout: LINODE_CLONE_TIMEOUT }
+        { timeout: CLONE_TIMEOUT }
       );
     });
   });

@@ -10,18 +10,18 @@ type Story = StoryObj<typeof DateTimeRangePicker>;
 
 export const Default: Story = {
   args: {
-    enablePresets: true,
     endDateProps: {
+      errorMessage: '',
       label: 'End Date and Time',
       placeholder: '',
       showTimeZone: false,
       value: null,
     },
-
     format: 'yyyy-MM-dd HH:mm',
     onChange: action('DateTime range changed'),
     presetsProps: {
-      defaultValue: '',
+      defaultValue: { label: '', value: '' },
+      enablePresets: true,
       label: '',
       placeholder: '',
     },
@@ -40,17 +40,16 @@ export const Default: Story = {
 
 export const WithInitialValues: Story = {
   args: {
-    enablePresets: true,
     endDateProps: {
       label: 'End Date and Time',
       showTimeZone: true,
       value: DateTime.now(),
     },
-
     format: 'yyyy-MM-dd HH:mm',
     onChange: action('DateTime range changed'),
     presetsProps: {
-      defaultValue: '7days',
+      defaultValue: { label: 'Last 7 Days', value: '7days' },
+      enablePresets: true,
       label: 'Time Range',
       placeholder: 'Select Range',
     },
@@ -66,8 +65,8 @@ export const WithInitialValues: Story = {
 
 export const WithCustomErrors: Story = {
   args: {
-    enablePresets: true,
     endDateProps: {
+      errorMessage: 'End date must be after the start date.',
       label: 'Custom End Label',
       placeholder: '',
       showTimeZone: false,
@@ -76,8 +75,8 @@ export const WithCustomErrors: Story = {
     format: 'yyyy-MM-dd HH:mm',
     onChange: action('DateTime range changed'),
     presetsProps: {
-      defaultValue: '',
-
+      defaultValue: { label: '', value: '' },
+      enablePresets: true,
       label: '',
       placeholder: '',
     },

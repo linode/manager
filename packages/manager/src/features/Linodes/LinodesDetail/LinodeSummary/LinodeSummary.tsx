@@ -28,12 +28,12 @@ import { NetworkGraphs } from './NetworkGraphs';
 import { StatsPanel } from './StatsPanel';
 
 import type { ChartProps } from './NetworkGraphs';
-import type { SelectOption } from '@linode/ui';
 import type {
   CPUTimeData,
   DiskIOTimeData,
   Point,
 } from 'src/components/AreaChart/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 setUpCharts();
 
@@ -83,7 +83,7 @@ const LinodeSummary = (props: Props) => {
       statsErrorString
     );
 
-  const handleChartRangeChange = (e: SelectOption<string>) => {
+  const handleChartRangeChange = (e: Item<string>) => {
     setRangeSelection(e.value);
   };
 
@@ -122,7 +122,7 @@ const LinodeSummary = (props: Props) => {
           {
             data: metrics,
             format: formatPercentage,
-            legendColor: theme.graphs.blue,
+            legendColor: 'blue',
             legendTitle: 'CPU %',
           },
         ]}
@@ -170,13 +170,13 @@ const LinodeSummary = (props: Props) => {
           {
             data: getMetrics(data.io),
             format: formatNumber,
-            legendColor: theme.graphs.yellow,
+            legendColor: 'yellow',
             legendTitle: 'I/O Rate',
           },
           {
             data: getMetrics(data.swap),
             format: formatNumber,
-            legendColor: theme.graphs.red,
+            legendColor: 'red',
             legendTitle: 'Swap Rate',
           },
         ]}
@@ -237,21 +237,21 @@ const LinodeSummary = (props: Props) => {
     <Grid container spacing={2}>
       <Grid sx={{ display: 'flex', justifyContent: 'flex-end' }} xs={12}>
         <Autocomplete
+          defaultValue={options[0]}
+          disableClearable
+          noMarginTop
+          sx={{ width: 150, mt: 1 }}
+          id="chartRange"
           textFieldProps={{
             hideLabel: true,
           }}
-          defaultValue={options[0]}
-          disableClearable
-          id="chartRange"
           label="Select Time Range"
-          noMarginTop
           onChange={(e, value) => handleChartRangeChange(value)}
           options={options}
-          sx={{ mt: 1, width: 150 }}
         />
       </Grid>
       <Grid md={6} xs={12}>
-        <Paper sx={{ height: 370 }} variant="outlined">
+        <Paper variant="outlined" sx={{ height: 370 }}>
           <StatsPanel
             renderBody={renderCPUChart}
             title="CPU (%)"
@@ -260,7 +260,7 @@ const LinodeSummary = (props: Props) => {
         </Paper>
       </Grid>
       <Grid md={6} xs={12}>
-        <Paper sx={{ height: 370 }} variant="outlined">
+        <Paper variant="outlined" sx={{ height: 370 }}>
           <StatsPanel
             renderBody={renderDiskIOChart}
             title="Disk I/O (blocks/s)"

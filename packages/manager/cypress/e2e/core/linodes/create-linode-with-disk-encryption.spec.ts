@@ -7,7 +7,7 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   checkboxTestId,
   headerTestId,
-} from 'src/components/Encryption/constants';
+} from 'src/components/Encryption/Encryption';
 
 describe('Create Linode with Disk Encryption', () => {
   it('should not have a "Disk Encryption" section visible if the feature flag is off and user does not have capability', () => {

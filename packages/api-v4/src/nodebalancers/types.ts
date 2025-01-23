@@ -94,10 +94,7 @@ export interface NodeBalancerConfig {
   stickiness: Stickiness;
   algorithm: Algorithm;
   ssl_fingerprint: string;
-  /**
-   * Is `none` when protocol is UDP
-   */
-  cipher_suite: 'recommended' | 'legacy' | 'none';
+  cipher_suite: 'recommended' | 'legacy';
   nodes: NodeBalancerConfigNode[];
 }
 
@@ -163,7 +160,7 @@ export interface CreateNodeBalancerConfig {
    * @default 80
    */
   udp_check_port?: number;
-  cipher_suite?: 'recommended' | 'legacy' | 'none';
+  cipher_suite?: 'recommended' | 'legacy';
   ssl_cert?: string;
   ssl_key?: string;
 }

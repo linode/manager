@@ -121,8 +121,8 @@ const Panel = (props: NodePoolPanelProps) => {
               return false;
             }
 
-            // No Nanodes in Kubernetes clusters
-            return t.class !== 'nanode';
+            // No Nanodes or GPUs in Kubernetes clusters
+            return t.class !== 'nanode' && t.class !== 'gpu';
           })}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}

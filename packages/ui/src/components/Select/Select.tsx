@@ -7,22 +7,12 @@ import { ListItem } from '../ListItem';
 import { TextField } from '../TextField';
 
 import type { EnhancedAutocompleteProps } from '../Autocomplete';
-import type { AutocompleteValue, SxProps } from '@mui/material';
-import type { Theme } from '@mui/material/styles';
 
-type Option<T = number | string> = {
+export type SelectOptionType = {
   label: string;
-  value: T;
+  value: string;
 };
-
-export type SelectOption<
-  T = number | string,
-  Nullable extends boolean = false
-> = Nullable extends true
-  ? AutocompleteValue<Option<T>, false, false, false>
-  : Option<T>;
-
-interface InternalOptionType extends SelectOption {
+interface InternalOptionType extends SelectOptionType {
   /**
    * Whether the option is a "create" option.
    *
@@ -36,11 +26,9 @@ interface InternalOptionType extends SelectOption {
    */
   noOptions?: boolean;
 }
-
-export interface SelectProps<T extends { label: string }>
+export interface SelectProps
   extends Pick<
-    EnhancedAutocompleteProps<T>,
-    | 'disabled'
+    EnhancedAutocompleteProps<SelectOptionType>,
     | 'errorText'
     | 'helperText'
     | 'id'
@@ -80,7 +68,10 @@ export interface SelectProps<T extends { label: string }>
   /**
    * The callback function that is invoked when the value changes.
    */
-  onChange?: (_event: React.SyntheticEvent, _value: T) => void;
+  onChange?: (
+    _event: React.SyntheticEvent,
+    _value: SelectProps['value']
+  ) => void;
   /**
    * Whether the select is required.
    *
@@ -93,10 +84,6 @@ export interface SelectProps<T extends { label: string }>
    * @default false
    */
   searchable?: boolean;
-  /**
-   * The style overrides for the select.
-   */
-  sx?: SxProps<Theme>;
 }
 
 /**
@@ -107,9 +94,7 @@ export interface SelectProps<T extends { label: string }>
  *
  * For any other use-cases, use the Autocomplete component directly.
  */
-export const Select = <T extends SelectOption = SelectOption>(
-  props: SelectProps<T>
-) => {
+export const Select = (props: SelectProps) => {
   const {
     clearable = false,
     creatable = false,
@@ -128,21 +113,21 @@ export const Select = <T extends SelectOption = SelectOption>(
 
   const handleChange = (
     event: React.SyntheticEvent,
-    value: SelectOption | null | string
+    value: SelectOptionType | null | string
   ) => {
     if (creatable && typeof value === 'string') {
       onChange?.(event, {
         label: value,
         value,
-      } as T);
+      });
     } else if (value && typeof value === 'object' && 'label' in value) {
       const { label, value: optionValue } = value;
       onChange?.(event, {
         label,
         value: optionValue,
-      } as T);
+      });
     } else {
-      onChange?.(event, (null as unknown) as T);
+      onChange?.(event, null);
     }
   };
 
@@ -152,7 +137,7 @@ export const Select = <T extends SelectOption = SelectOption>(
   );
 
   return (
-    <Autocomplete<SelectOption, false, boolean, boolean>
+    <Autocomplete<SelectOptionType, false, boolean, boolean>
       {...rest}
       isOptionEqualToValue={(option, value) => {
         if (!option || !value) {
@@ -193,7 +178,6 @@ export const Select = <T extends SelectOption = SelectOption>(
           label={label}
           placeholder={props.placeholder}
           required={props.required}
-          sx={sx}
         />
       )}
       renderOption={(props, option: InternalOptionType) => {
@@ -235,7 +219,7 @@ export const Select = <T extends SelectOption = SelectOption>(
       disableClearable={!clearable}
       forcePopupIcon
       freeSolo={creatable}
-      getOptionDisabled={(option: SelectOption) => option.value === ''}
+      getOptionDisabled={(option: SelectOptionType) => option.value === ''}
       label={label}
       noOptionsText={noOptionsText}
       onChange={handleChange}
@@ -250,7 +234,7 @@ interface GetOptionsProps {
   /**
    * Whether the select can create a new option.
    */
-  creatable: boolean;
+  creatable: SelectProps['creatable'];
   /**
    * The input value.
    */
@@ -281,13 +265,13 @@ const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
     const matchingOptions = options.filter(
       (opt) =>
         opt.label.toLowerCase().includes(inputValue.toLowerCase()) ||
-        opt.value.toString().toLowerCase().includes(inputValue.toLowerCase())
+        opt.value.toLowerCase().includes(inputValue.toLowerCase())
     );
 
     const exactMatch = matchingOptions.some(
       (opt) =>
         opt.label.toLowerCase() === inputValue.toLowerCase() ||
-        opt.value.toString().toLowerCase() === inputValue.toLowerCase()
+        opt.value.toLowerCase() === inputValue.toLowerCase()
     );
 
     // If there's an exact match, don't show is as a create option

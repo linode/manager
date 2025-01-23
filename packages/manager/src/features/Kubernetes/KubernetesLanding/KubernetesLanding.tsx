@@ -174,10 +174,10 @@ export const KubernetesLanding = () => {
       {isDiskEncryptionFeatureEnabled && (
         <DismissibleBanner
           preferenceKey={DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_BANNER_KEY}
-          spacingBottom={8}
+          sx={{ margin: '1rem 0 1rem 0' }}
           variant="info"
         >
-          <Typography fontSize="inherit">
+          <Typography>
             {DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY}
           </Typography>
         </DismissibleBanner>

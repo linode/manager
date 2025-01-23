@@ -106,7 +106,6 @@ export const KubernetesPlansPanel = (props: Props) => {
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                   plan
                 )}
-                flow="kubernetes"
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 hasSelectedRegion={hasSelectedRegion}
                 isAPLEnabled={isAPLEnabled}
@@ -122,7 +121,6 @@ export const KubernetesPlansPanel = (props: Props) => {
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
                 onSelect={onSelect}
-                planType={plan}
                 plans={plansForThisLinodeTypeClass}
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionId}

@@ -15,7 +15,7 @@ import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Provider } from 'react-redux';
-import { BrowserRouter, MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -206,9 +206,7 @@ export const wrapWithThemeAndRouter = (
             options={{ bootstrap: options.flags }}
           >
             <SnackbarProvider>
-              <BrowserRouter>
-                <RouterProvider router={router} />
-              </BrowserRouter>
+              <RouterProvider router={router} />
             </SnackbarProvider>
           </LDProvider>
         </LinodeThemeWrapper>

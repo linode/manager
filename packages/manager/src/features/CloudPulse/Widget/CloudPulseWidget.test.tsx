@@ -26,8 +26,8 @@ const props: CloudPulseWidgetProperties = {
     unit: 'percent',
   },
   duration: { unit: 'min', value: 30 },
-  entityIds: ['1', '2'],
   isJweTokenFetching: false,
+  resourceIds: ['1', '2'],
   resources: [
     {
       id: '1',
@@ -124,7 +124,7 @@ describe('Cloud pulse widgets', () => {
     expect(getByTestId('Aggregation function')).toBeInTheDocument();
 
     // Verify zoom icon
-    expect(getByTestId('zoom-out')).toBeInTheDocument();
+    expect(getByTestId('zoom-in')).toBeInTheDocument();
 
     // Verify graph component
     expect(
@@ -146,7 +146,7 @@ describe('Cloud pulse widgets', () => {
 
   it('should update preferences for zoom toggle', async () => {
     const { getByTestId } = renderWithTheme(<CloudPulseWidget {...props} />);
-    const zoomButton = getByTestId('zoom-out');
+    const zoomButton = getByTestId('zoom-in');
     await userEvent.click(zoomButton);
     expect(mockUpdatePreferences).toHaveBeenCalledWith('CPU Utilization', {
       size: 6,

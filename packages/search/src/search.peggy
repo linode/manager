@@ -49,7 +49,7 @@ TagQuery
   = "tag" ws* Contains ws* value:String { return { "tags": { "+contains": value } }; }
 
 NotEqualQuery
-  = key:FilterableField ws* NotEqual ws* value:SearchValue { return { [key]: { "+neq": value } }; }
+  = Not key:FilterableField ws* Equal ws* value:String { return { [key]: { "+neq": value } }; }
 
 LessThanQuery
   = key:FilterableField ws* Less ws* value:Number { return { [key]: { "+lt": value } }; }
@@ -74,8 +74,9 @@ And
   / ws* '&' ws*
   / ws
 
-NotEqual
-  = '!='
+Not
+  = '!'
+  / '-'
 
 Less
   = '<'

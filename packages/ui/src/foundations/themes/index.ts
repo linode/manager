@@ -18,7 +18,6 @@ import type {
   FontTypes,
   InteractionTypes as InteractionTypesLight,
   RadiusTypes,
-  SearchTypes as SearchTypesLight,
   SpacingTypes,
   TypographyTypes,
 } from '@linode/design-language-system';
@@ -30,7 +29,6 @@ import type {
   ContentTypes as ContentTypesDark,
   ElevationTypes as ElevationTypesDark,
   InteractionTypes as InteractionTypesDark,
-  SearchTypes as SearchTypesDark,
 } from '@linode/design-language-system/themes/dark';
 import type { latoWeb } from '../fonts';
 // Types & Interfaces
@@ -55,7 +53,6 @@ type BorderTypes = MergeTypes<BorderTypesLight, BorderTypesDark>;
 type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
 type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
 type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
-type SearchTypes = MergeTypes<SearchTypesLight, SearchTypesDark>;
 
 type Fonts = typeof latoWeb;
 
@@ -94,7 +91,7 @@ type NotificationToast = MergeTypes<
  * Avoid doing this unless you have a good reason.
  */
 declare module '@mui/material/styles/createTheme' {
-  export interface Theme {
+  interface Theme {
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;
     applyLinkStyles?: any;
@@ -115,7 +112,6 @@ declare module '@mui/material/styles/createTheme' {
       borderRadius: BorderRadiusTypes;
       color: ColorTypes;
       font: FontTypes;
-      search: SearchTypes;
       spacing: SpacingTypes;
       // ----------------------------------------
       accent: AccentTypes;
@@ -132,7 +128,7 @@ declare module '@mui/material/styles/createTheme' {
     visually: any;
   }
 
-  export interface ThemeOptions {
+  interface ThemeOptions {
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;
     applyLinkStyles?: any;
@@ -153,7 +149,6 @@ declare module '@mui/material/styles/createTheme' {
       borderRadius?: BorderRadiusTypes;
       color?: ColorTypes;
       font?: FontTypes;
-      search: SearchTypes;
       spacing?: SpacingTypes;
       // ----------------------------------------
       accent?: AccentTypes;
