@@ -265,9 +265,7 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
         {errors?.root?.none && (
           <Notice text={errors.root.none.message} variant="error" />
         )}
-        {errors?.root && !errors?.root._unknown && !errors?.root.none && (
-          <Notice text={errors.root.message} variant="error" />
-        )}
+        {errors?.root && <Notice text={errors.root.message} variant="error" />}
         {!hasARecords && type === 'NS' && (
           <Notice
             spacingTop={8}
