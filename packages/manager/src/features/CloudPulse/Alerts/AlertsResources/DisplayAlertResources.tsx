@@ -49,9 +49,6 @@ export interface DisplayAlertResourceProp {
 export const DisplayAlertResources = React.memo(
   (props: DisplayAlertResourceProp) => {
     const { filteredResources, isDataLoadingError, scrollToElement } = props;
-    // const [currentPageNumber, setCurrentPageNumber] = React.useState<
-    //   number | undefined
-    // >(undefined); // state variable to track the page number and updates
     const pageSize = 25;
 
     const [sorting, setSorting] = React.useState<{
