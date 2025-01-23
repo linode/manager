@@ -378,6 +378,7 @@ describe('Placement Groups Linode assignment', () => {
 
     mockGetRegions(mockRegions);
     mockGetLinodes(mockLinodes);
+    mockGetLinodeDetails(mockLinodeUnassigned.id, mockLinodeUnassigned);
     mockGetPlacementGroups([mockPlacementGroup]);
     mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
