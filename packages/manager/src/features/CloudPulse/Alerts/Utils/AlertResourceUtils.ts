@@ -84,13 +84,14 @@ export const getFilteredResources = (
   return data // here we always use the base data from API for filtering as source of truth
     .filter(({ id }) => resourceIds.includes(String(id)))
     .map((resource) => {
+      const regionObj = resource.region
+        ? regionsIdToRegionMap.get(resource.region)
+        : undefined;
       return {
         ...resource,
-        region: resource.region // here replace region id with region label for regionsIdToLabelMap, formatted to Chicago, US(us-west) compatible to display in table
-          ? regionsIdToRegionMap.get(resource.region)
-            ? `${regionsIdToRegionMap.get(resource.region)?.label} (${
-                regionsIdToRegionMap.get(resource.region)?.id
-              })`
+        region: resource.region // here replace region id, formatted to Chicago, US(us-west) compatible to display in table
+          ? regionObj
+            ? `${regionObj.label} (${regionObj.id})`
             : resource.region
           : '',
       };
