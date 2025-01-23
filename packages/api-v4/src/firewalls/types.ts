@@ -23,10 +23,12 @@ export interface Firewall {
 }
 
 export interface FirewallRules {
+  fingerprint?: string;
   inbound?: FirewallRuleType[] | null;
   outbound?: FirewallRuleType[] | null;
   inbound_policy: FirewallPolicyType;
   outbound_policy: FirewallPolicyType;
+  version?: number;
 }
 
 export interface FirewallRuleType {
@@ -55,8 +57,13 @@ export interface FirewallDevice {
   entity: FirewallDeviceEntity;
 }
 
+export type FirewallTemplateSlug =
+  | 'akamai-non-prod'
+  | 'vpc_basic'
+  | 'public_basic';
+
 export interface FirewallTemplate {
-  slug: string;
+  slug: FirewallTemplateSlug;
   rules: FirewallRules;
 }
 

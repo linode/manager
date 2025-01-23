@@ -34,6 +34,7 @@ import type {
   FirewallDevicePayload,
   FirewallRules,
   FirewallTemplate,
+  FirewallTemplateSlug,
   Params,
   ResourcePage,
 } from '@linode/api-v4';
@@ -84,7 +85,7 @@ export const firewallQueries = createQueryKeys('firewalls', {
     },
     queryKey: null,
   },
-  template: (slug: string) => ({
+  template: (slug: FirewallTemplateSlug) => ({
     queryFn: () => getTemplate(slug),
     queryKey: [slug],
   }),

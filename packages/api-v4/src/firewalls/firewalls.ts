@@ -19,6 +19,7 @@ import {
   FirewallDevicePayload,
   FirewallRules,
   FirewallTemplate,
+  FirewallTemplateSlug,
   UpdateFirewallPayload,
 } from './types';
 
@@ -262,9 +263,8 @@ export const getTemplates = () =>
  * getTemplate
  *
  * Get a specific firewall template by its slug.
- *
  */
-export const getTemplate = (templateSlug: string) =>
+export const getTemplate = (templateSlug: FirewallTemplateSlug) =>
   Request<FirewallTemplate>(
     setMethod('GET'),
     setURL(
