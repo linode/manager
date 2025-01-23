@@ -223,6 +223,7 @@ Environment variables related to Cypress logging and reporting, as well as repor
 | `CY_TEST_DISABLE_RETRIES`       | Disable test retries on failure in CI              | `1`              | Unset; disabled by default |
 | `CY_TEST_FAIL_ON_MANAGED`       | Fail affected tests when Managed is enabled        | `1`              | Unset; disabled by default |
 | `CY_TEST_GENWEIGHTS`            | Generate and output test weights to the given path | `./weights.json` | Unset; disabled by default |
+| `CY_TEST_RESET_PREFERENCES`     | Reset user preferences when test run begins        | `1`              | Unset; disabled by default |
 
 ###### Performance
 
@@ -281,17 +282,15 @@ Environment variables that can be used to improve test performance in some scena
             cy.wait('@getProfilePreferences');
             cy.wait('@getAccountSettings');
 
-             /* `getVisible` defined in /cypress/support/helpers.ts 
-             plus a few other commonly used commands shortened as methods */
-             getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
+             cy.get(`tr[data-qa-linode="${label}"]`).should('be.visible').within(() => {
             // use `within` to search inside/use data from/assert on a specific page element
                 cy.get(`[data-qa-ip-main]`)
                    // `realHover` and more real event methods from cypress real events plugin
                     .realHover()
                     .then(() => { 
-                        getVisible(`[aria-label="Copy ${ip} to clipboard"]`);
+                        cy.get(`[aria-label="Copy ${ip} to clipboard"]`).should('be.visible');
                     });
-                getVisible(`[aria-label="Action menu for Linode ${label}"]`);
+                cy.get(`[aria-label="Action menu for Linode ${label}"]`).should('be.visible');
              });
           // `findByText` and others from cypress testing library plugin
             cy.findByText('Oh Snap!', { timeout: 1000 }).should('not.exist');

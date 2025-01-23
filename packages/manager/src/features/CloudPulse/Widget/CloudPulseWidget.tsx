@@ -64,6 +64,11 @@ export interface CloudPulseWidgetProperties {
   duration: TimeDuration;
 
   /**
+   * entity ids selected by user to show metrics for
+   */
+  entityIds: string[];
+
+  /**
    * Any error to be shown in this widget
    */
   errorLabel?: string;
@@ -72,11 +77,6 @@ export interface CloudPulseWidgetProperties {
    * Jwe token fetching status check
    */
   isJweTokenFetching: boolean;
-
-  /**
-   * resources ids selected by user to show metrics for
-   */
-  resourceIds: string[];
 
   /**
    * List of resources available of selected service type
@@ -141,8 +141,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     authToken,
     availableMetrics,
     duration,
+    entityIds,
     isJweTokenFetching,
-    resourceIds,
     resources,
     savePref,
     serviceType,
@@ -230,7 +230,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     {
       ...getCloudPulseMetricRequest({
         duration,
-        resourceIds,
+        entityIds,
         resources,
         widget,
       }),

@@ -43,9 +43,11 @@ import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
-import type { CreateKubeClusterPayload } from '@linode/api-v4';
-import type { TicketSeverity } from '@linode/api-v4/lib/support';
-import type { CreateLinodeRequest } from '@linode/api-v4/src/linodes/types';
+import type {
+  CreateKubeClusterPayload,
+  CreateLinodeRequest,
+  TicketSeverity,
+} from '@linode/api-v4';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 
 interface Accumulator {

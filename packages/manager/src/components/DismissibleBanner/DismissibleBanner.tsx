@@ -1,11 +1,8 @@
-import { Box } from '@linode/ui';
+import { IconButton, Notice, Stack } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
-
-import { StyledButton, StyledNotice } from './DismissibleBanner.styles';
 
 import type { NoticeProps } from '@linode/ui';
 import type { DismissibleNotificationOptions } from 'src/hooks/useDismissibleNotifications';
@@ -42,14 +39,7 @@ interface Props extends NoticeProps {
  * - Call to action: Primary Button or text link allows a user to take action directly from the banner.
  */
 export const DismissibleBanner = (props: Props) => {
-  const {
-    actionButton,
-    children,
-    className,
-    options,
-    preferenceKey,
-    ...rest
-  } = props;
+  const { actionButton, children, options, preferenceKey, ...rest } = props;
 
   const { handleDismiss, hasDismissedBanner } = useDismissibleBanner(
     preferenceKey,
@@ -61,32 +51,30 @@ export const DismissibleBanner = (props: Props) => {
   }
 
   const dismissibleButton = (
-    <Grid>
-      <StyledButton
-        aria-label={`Dismiss ${preferenceKey} banner`}
-        data-testid="notice-dismiss"
-        onClick={handleDismiss}
-      >
-        <Close />
-      </StyledButton>
-    </Grid>
+    <IconButton
+      aria-label={`Dismiss ${preferenceKey} banner`}
+      data-testid="notice-dismiss"
+      onClick={handleDismiss}
+      sx={{ padding: 1 }}
+    >
+      <Close />
+    </IconButton>
   );
 
   return (
-    <StyledNotice className={className} {...rest}>
-      <Box
-        alignItems="center"
-        display="flex"
-        flexDirection="row"
-        justifyContent="space-between"
-      >
-        {children}
-        <Box alignItems="center" display="flex">
-          {actionButton}
-          {dismissibleButton}
-        </Box>
-      </Box>
-    </StyledNotice>
+    <Notice
+      bgcolor={(theme) => theme.palette.background.paper}
+      display="flex"
+      gap={1}
+      justifyContent="space-between"
+      {...rest}
+    >
+      {children}
+      <Stack alignItems="center" direction="row" spacing={1}>
+        {actionButton}
+        {dismissibleButton}
+      </Stack>
+    </Notice>
   );
 };
 

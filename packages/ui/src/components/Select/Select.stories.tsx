@@ -4,18 +4,18 @@ import { Box } from '../Box';
 import { Typography } from '../Typography';
 import { Select } from './Select';
 
-import type { SelectProps } from './Select';
+import type { SelectOption, SelectProps } from './Select';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<SelectProps> = {
+const meta: Meta<SelectProps<SelectOption>> = {
   component: Select,
   decorators: [(Story) => <Box sx={{ height: 300 }}>{Story()}</Box>],
   title: 'Components/Selects/Select',
 };
 
-type Story = StoryObj<SelectProps>;
+type Story = StoryObj<SelectProps<SelectOption>>;
 
-const defaultArgs: SelectProps = {
+const defaultArgs: SelectProps<SelectOption> = {
   clearable: false,
   creatable: false,
   hideLabel: false,
@@ -52,7 +52,11 @@ export const Creatable: Story = {
             onChange={(_, newValue) =>
               setValue({
                 label: newValue?.label ?? '',
-                value: newValue?.value.replace(' ', '-').toLowerCase() ?? '',
+                value:
+                  newValue?.value
+                    .toString()
+                    .replaceAll(' ', '-')
+                    .toLowerCase() ?? '',
               })
             }
             textFieldProps={{

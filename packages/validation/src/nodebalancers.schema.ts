@@ -116,7 +116,7 @@ export const createNodeBalancerConfigSchema = object({
     .typeError('Timeout must be a number.')
     .integer(),
   check: mixed().oneOf(['none', 'connection', 'http', 'http_body']),
-  cipher_suite: mixed().oneOf(['recommended', 'legacy']),
+  cipher_suite: string().oneOf(['recommended', 'legacy', 'none']),
   port: number()
     .integer()
     .required('Port is required')
@@ -206,7 +206,7 @@ export const UpdateNodeBalancerConfigSchema = object({
     .typeError('Timeout must be a number.')
     .integer(),
   check: mixed().oneOf(['none', 'connection', 'http', 'http_body']),
-  cipher_suite: mixed().oneOf(['recommended', 'legacy']),
+  cipher_suite: string().oneOf(['recommended', 'legacy', 'none']),
   port: number()
     .typeError('Port must be a number.')
     .integer()
