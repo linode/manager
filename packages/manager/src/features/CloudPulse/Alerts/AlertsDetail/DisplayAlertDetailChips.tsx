@@ -52,14 +52,14 @@ export const DisplayAlertDetailChips = React.memo(
       <Grid container item spacing={1}>
         {chipValues.map((value, index) => (
           <React.Fragment key={`${label}_${index}`}>
-            <Grid item md={labelGridColumns} xs={12}>
+            <Grid item sm={labelGridColumns} xs={12}>
               {index === 0 && (
                 <StyledAlertTypography fontFamily={theme.font.bold}>
                   {label}:
                 </StyledAlertTypography>
               )}
             </Grid>
-            <Grid item md={valueGridColumns} xs={12}>
+            <Grid item sm={valueGridColumns} xs={12}>
               <Grid
                 container
                 flexWrap={mergeChips ? 'nowrap' : 'wrap'}

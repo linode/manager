@@ -72,6 +72,7 @@ import {
   nodeBalancerFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
+  notificationChannelFactory,
   notificationFactory,
   objectStorageBucketFactoryGen2,
   objectStorageClusterFactory,
@@ -2474,6 +2475,10 @@ export const handlers = [
       return HttpResponse.json({}, { status: 404 });
     }
   ),
+  http.get('*/monitor/alert-channels', () => {
+    const notificationChannels = notificationChannelFactory.buildList(3);
+    return HttpResponse.json(makeResourcePage(notificationChannels));
+  }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [

@@ -3,6 +3,7 @@ import React from 'react';
 import {
   alertFactory,
   linodeFactory,
+  notificationChannelFactory,
   regionFactory,
   serviceTypesFactory,
 } from 'src/factories/';
@@ -12,6 +13,7 @@ import { AlertDetail } from './AlertDetail';
 
 // Mock Data
 const alertDetails = alertFactory.build({ service_type: 'linode' });
+const notificationChannels = notificationChannelFactory.buildList(3);
 
 const linodes = linodeFactory.buildList(3);
 const regions = regionFactory.buildList(3);
@@ -19,6 +21,7 @@ const regions = regionFactory.buildList(3);
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
+  useAllAlertNotificationChannelsQuery: vi.fn(),
   useCloudPulseServiceTypes: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
@@ -27,6 +30,8 @@ const queryMocks = vi.hoisted(() => ({
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
+  useAllAlertNotificationChannelsQuery:
+    queryMocks.useAllAlertNotificationChannelsQuery,
 }));
 
 vi.mock('src/queries/cloudpulse/services', () => {
@@ -64,6 +69,11 @@ beforeEach(() => {
   });
   queryMocks.useRegionsQuery.mockReturnValue({
     data: regions,
+    isError: false,
+    isFetching: false,
+  });
+  queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue({
+    data: notificationChannels,
     isError: false,
     isFetching: false,
   });
@@ -113,6 +123,7 @@ describe('AlertDetail component tests', () => {
     expect(getByText('Overview')).toBeInTheDocument();
     expect(getByText('Criteria')).toBeInTheDocument(); // validate if criteria is present
     expect(getByText('Resources')).toBeInTheDocument(); // validate if resources is present
+    expect(getByText('Notification Channels')).toBeInTheDocument(); // validate if notification channels is present
     expect(getByText('Name:')).toBeInTheDocument();
     expect(getByText('Description:')).toBeInTheDocument();
   });
