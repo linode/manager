@@ -12,7 +12,10 @@ import {
   getRestrictedResourceText,
   useIsTaxIdEnabled,
 } from 'src/features/Account/utils';
-import { TAX_ID_HELPER_TEXT } from 'src/features/Billing/constants';
+import {
+  TAX_ID_AGREEMENT_TEXT,
+  TAX_ID_HELPER_TEXT,
+} from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount, useMutateAccount } from 'src/queries/account/account';
 import { useMutateAccountAgreements } from 'src/queries/account/agreements';
@@ -422,13 +425,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
                 padding: 0,
               })}
               checked={billingAgreementChecked}
+              data-testid="tax-id-checkbox"
               id="taxIdAgreementCheckbox"
             />
             <Typography component="label" htmlFor="taxIdAgreementCheckbox">
-              I have reviewed and confirm the accuracy of the above
-              information. I understand that the submission of inaccurate
-              information will lead to billing errors and may result in our
-              assessment of additional fees to your account.
+              {TAX_ID_AGREEMENT_TEXT}
             </Typography>
           </Grid>
         )}

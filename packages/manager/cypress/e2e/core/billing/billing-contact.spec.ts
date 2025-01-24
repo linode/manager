@@ -1,10 +1,18 @@
-import { mockGetAccount, mockUpdateAccount } from 'support/intercepts/account';
+import {
+  mockGetAccount,
+  mockUpdateAccount,
+  mockUpdateAccountAgreements,
+} from 'support/intercepts/account';
 import { accountFactory } from 'src/factories/account';
 import type { Account } from '@linode/api-v4';
 import { ui } from 'support/ui';
-import { TAX_ID_HELPER_TEXT } from 'src/features/Billing/constants';
+import {
+  TAX_ID_AGREEMENT_TEXT,
+  TAX_ID_HELPER_TEXT,
+} from 'src/features/Billing/constants';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { accountAgreementsFactory } from 'src/factories';
 
 /* eslint-disable sonarjs/no-duplicate-string */
 const accountData = accountFactory.build({
@@ -47,6 +55,10 @@ const newAccountData = accountFactory.build({
   state: 'Pennsylvania',
   tax_id: '9234567890',
   zip: '19108',
+});
+
+const newAccountAgreement = accountAgreementsFactory.build({
+  billing_agreement: true,
 });
 
 const checkAccountContactDisplay = (accountInfo: Account) => {
@@ -158,11 +170,6 @@ describe('Billing Contact', () => {
           .click()
           .clear()
           .type(newAccountData['phone']);
-        cy.get('[data-qa-contact-country]').click().type('Afghanistan{enter}');
-        cy.findByText(TAX_ID_HELPER_TEXT).should('be.visible');
-        cy.get('[data-qa-contact-country]')
-          .click()
-          .type('United States{enter}');
         cy.get('[data-qa-contact-state-province]')
           .should('be.visible')
           .click()
@@ -178,6 +185,104 @@ describe('Billing Contact', () => {
           .then(() => {
             cy.wait('@updateAccount').then((xhr) => {
               expect(xhr.response?.body).to.eql(newAccountData);
+            });
+          });
+      });
+
+    // check the page updates to reflect the edits
+    cy.get('[data-qa-contact-summary]').within(() => {
+      checkAccountContactDisplay(newAccountData);
+    });
+  });
+
+  it('Edit Contact Info: Tax ID Agreement', () => {
+    mockGetUserPreferences({ maskSensitiveData: false }).as(
+      'getUserPreferences'
+    );
+    // mock the user's account data and confirm that it is displayed correctly upon page load
+    mockGetAccount(accountData).as('getAccount');
+    cy.visitWithLogin('/account/billing');
+
+    // edit the billing contact information
+    mockUpdateAccount(newAccountData).as('updateAccount');
+    mockUpdateAccountAgreements(newAccountAgreement).as(
+      'updateAccountAgreements'
+    );
+    cy.get('[data-qa-contact-summary]').within((_contact) => {
+      checkAccountContactDisplay(accountData);
+      cy.findByText('Edit').should('be.visible').click();
+    });
+
+    ui.drawer
+      .findByTitle('Edit Billing Contact Info')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('First Name')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['first_name']);
+        cy.findByLabelText('Last Name')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['last_name']);
+        cy.findByLabelText('Company Name')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['company']);
+        cy.findByLabelText('Address')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['address_1']);
+        cy.findByLabelText('Address 2')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['address_2']);
+        cy.findByLabelText('Email (required)')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['email']);
+        cy.findByLabelText('City')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['city']);
+        cy.findByLabelText('Postal Code')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['zip']);
+        cy.findByLabelText('Phone')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['phone']);
+        cy.get('[data-qa-contact-country]').click().type('Afghanistan{enter}');
+        cy.findByLabelText('Tax ID')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['tax_id']);
+        cy.findByText(TAX_ID_HELPER_TEXT).should('be.visible');
+        cy.findByText(TAX_ID_AGREEMENT_TEXT)
+          .scrollIntoView()
+          .should('be.visible');
+        cy.get('[data-qa-save-contact-info="true"]').should('be.disabled');
+        cy.get('[data-testid="tax-id-checkbox"]').click();
+        cy.get('[data-qa-save-contact-info="true"]').should('be.enabled');
+        cy.get('[data-qa-save-contact-info="true"]')
+          .click()
+          .then(() => {
+            cy.wait('@updateAccount').then((xhr) => {
+              expect(xhr.response?.body).to.eql(newAccountData);
+            });
+            cy.wait('@updateAccountAgreements').then((xhr) => {
+              expect(xhr.response?.body).to.eql(newAccountAgreement);
             });
           });
       });
