@@ -227,15 +227,6 @@ export const CreateAlertDefinition = () => {
             name="description"
           />
           <CloudPulseServiceSelect name="serviceType" />
-          {/* <CloudPulseServiceSelect name="serviceType" />
-          {serviceTypeWatcher === 'dbaas' && <EngineOption name="engineType" />}
-          <CloudPulseRegionSelect name="region" />
-          <CloudPulseMultiResourceSelect
-            engine={useWatch({ control, name: 'engineType' })}
-            name="entity_ids"
-            region={useWatch({ control, name: 'region' })}
-            serviceType={serviceTypeWatcher}
-          /> */}
           <CloudPulseAlertSeveritySelect name="severity" />
           <Controller
             render={({ field, fieldState }) => (

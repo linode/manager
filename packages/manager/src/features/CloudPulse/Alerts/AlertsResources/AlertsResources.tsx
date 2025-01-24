@@ -43,6 +43,11 @@ export interface AlertResourcesProp {
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
   serviceType: string;
+
+  /**
+   * Property to control the visibility of the title
+   */
+  showTitle?: boolean;
 }
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
@@ -52,6 +57,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isSelectionsNeeded,
     resourceIds,
     serviceType,
+    showTitle,
   } = props;
 
   const [searchText, setSearchText] = React.useState<string>();
@@ -189,15 +195,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   return (
     <React.Fragment>
-      <Typography
-        fontSize={theme.spacing(2.25)}
-        marginBottom={2}
-        ref={titleRef}
-        variant="h2"
-        visibility={'hidden'}
-      >
-        {alertLabel ?? 'Resources'}
-      </Typography>
+      {showTitle && (
+        <Typography
+          fontSize={theme.spacing(2.25)}
+          marginBottom={4}
+          ref={titleRef}
+          variant="h2"
+        >
+          {alertLabel ?? 'Resources'}
+        </Typography>
+      )}
       {!isResourcesError &&
         !isRegionsError &&
         !isSelectionsNeeded &&
