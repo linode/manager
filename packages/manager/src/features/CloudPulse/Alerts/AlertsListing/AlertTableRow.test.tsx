@@ -69,11 +69,11 @@ describe('Alert Row', () => {
     const renderedAlert = (
       <Router history={history}>
         <AlertTableRow
+          handlers={{
+            handleDetails: vi.fn(),
+            handleEdit: vi.fn(),
+          }}
           alert={alert}
-        handlers={{
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-        }}
           services={mockServices}
         />
       </Router>
@@ -88,11 +88,11 @@ describe('Alert Row', () => {
     const alert = alertFactory.build({ status: 'enabled' });
     const { getAllByLabelText, getByTestId } = renderWithTheme(
       <AlertTableRow
-        alert={alert}
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
         }}
+        alert={alert}
         services={mockServices}
       />
     );

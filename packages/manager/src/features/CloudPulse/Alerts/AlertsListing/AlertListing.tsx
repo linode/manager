@@ -58,7 +58,7 @@ export const AlertListing = () => {
   }, [serviceFilters, alerts]);
 
   const statusFilteredAlerts = React.useMemo(() => {
-    if (statusFilters && statusFilters?.length !== 0 && alerts) {
+    if (statusFilters && statusFilters.length !== 0 && alerts) {
       return alerts.filter((alert: Alert) => {
         return statusFilters.some(
           (statusFilter) => statusFilter.value === alert.status
@@ -68,25 +68,7 @@ export const AlertListing = () => {
     return alerts;
   }, [statusFilters, alerts]);
 
-  if (alerts && alerts.length == 0) {
-    return (
-      <StyledPlaceholder
-        buttonProps={[
-          {
-            children: 'Create Alerts',
-            onClick: () => {
-              history.push(`${url}/create`);
-            },
-          },
-        ]}
-        icon={AlertsIcon}
-        subtitle="Start monitoring your resources."
-        title=""
-      />
-    );
-  }
-
-  const getAlertsList = () => {
+  const getAlertsList = React.useMemo(() => {
     if (!alerts) {
       return [];
     }
@@ -120,7 +102,31 @@ export const AlertListing = () => {
     }
 
     return filteredAlerts;
-  };
+  }, [
+    alerts,
+    searchText,
+    serviceFilteredAlerts,
+    serviceFilters,
+    statusFilteredAlerts,
+    statusFilters,
+  ]);
+  if (alerts && alerts.length == 0) {
+    return (
+      <StyledPlaceholder
+        buttonProps={[
+          {
+            children: 'Create Alerts',
+            onClick: () => {
+              history.push(`${url}/create`);
+            },
+          },
+        ]}
+        icon={AlertsIcon}
+        subtitle="Start monitoring your resources."
+        title=""
+      />
+    );
+  }
 
   return (
     <Stack spacing={2}>
@@ -210,7 +216,7 @@ export const AlertListing = () => {
         </Button>
       </Box>
       <AlertsListTable
-        alerts={getAlertsList()}
+        alerts={getAlertsList}
         error={error ?? undefined}
         isLoading={isLoading}
         services={getServicesList}

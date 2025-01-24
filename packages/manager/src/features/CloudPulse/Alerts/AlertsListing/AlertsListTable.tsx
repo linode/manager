@@ -35,6 +35,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/detail/${serviceType}/${_id}`);
   };
+
+  const handleEdit = ({ id: _id, service_type: serviceType }: Alert) => {
+    history.push(`${location.pathname}/edit/${serviceType}/${_id}`);
+  };
+
   return (
     <OrderBy data={alerts} order="asc" orderBy={'service'}>
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
@@ -77,8 +82,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                     />
                     {paginatedAndOrderedAlerts?.map((alert) => (
                       <AlertTableRow
+                        handlers={{
+                          handleDetails: () => handleDetails(alert),
+                          handleEdit: () => handleEdit(alert),
+                        }}
                         alert={alert}
-                        handlers={{ handleDetails: () => handleDetails(alert) }}
                         key={alert.id}
                         services={services}
                       />

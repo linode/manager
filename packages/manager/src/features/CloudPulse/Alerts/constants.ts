@@ -167,7 +167,15 @@ export const channelTypeOptions: Item<string, ChannelTypes>[] = Object.entries(
   value: key as ChannelTypes,
 }));
 
-export const alertStatusOptions: Item<string, AlertStatusType>[] = [
-  { label: 'Enabled', value: 'enabled' },
-  { label: 'Disabled', value: 'disabled' },
-];
+export const alertStatuses: Record<AlertStatusType, string> = {
+  disabled: 'Disabled',
+  enabled: 'Enabled',
+};
+
+export const alertStatusOptions: Item<
+  string,
+  AlertStatusType
+>[] = Object.entries(alertStatuses).map(([key, label]) => ({
+  label,
+  value: key as AlertStatusType,
+}));
