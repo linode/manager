@@ -2,10 +2,10 @@ import { Box, Button, Divider } from '@linode/ui';
 import { Popover, Stack, useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
-import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
-import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
-import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
+import StorageIcon from 'src/assets/icons/entityIcons/storage.svg';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
@@ -61,7 +61,7 @@ export const CreateMenu = () => {
 
   const productFamilyLinkGroup: ProductFamilyLinkGroup<CreateMenuLink[]>[] = [
     {
-      icon: <LinodeIcon />,
+      icon: <ComputeIcon />,
       links: [
         {
           description: 'High performance SSD Linux servers',
@@ -94,7 +94,7 @@ export const CreateMenu = () => {
       name: 'Compute',
     },
     {
-      icon: <NodebalancerIcon />,
+      icon: <NetworkIcon />,
       links: [
         {
           description: 'Create a private and isolated network',
@@ -120,7 +120,7 @@ export const CreateMenu = () => {
       name: 'Networking',
     },
     {
-      icon: <BucketIcon />,
+      icon: <StorageIcon />,
       links: [
         {
           description: 'S3-compatible object storage',

@@ -3,7 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
+import FolderIcon from 'src/assets/icons/objectStorage/folder.svg';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -31,7 +31,7 @@ export const FolderTableRow = (props: FolderTableRowProps) => {
       <TableCell>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <StyledIconWrapper>
-            <EntityIcon size={22} variant="folder" />
+            <FolderIcon size={22} />
           </StyledIconWrapper>
           <Grid>
             <Link

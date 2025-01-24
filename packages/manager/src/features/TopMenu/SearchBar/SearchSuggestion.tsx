@@ -41,7 +41,16 @@ export interface SearchSuggestionProps extends OptionProps<any, any> {
 export const SearchSuggestion = (props: SearchSuggestionProps) => {
   const { data, innerProps, innerRef, label } = props;
   const { description, icon, searchText, status, tags } = data.data;
-  const searchResultIcon = pathOr<string>('default', [], icon);
+  let searchResultIcon = pathOr<string>('default', [], icon);
+  if (searchResultIcon === 'volume') {
+    searchResultIcon = 'storage';
+  } else if (
+    searchResultIcon === 'firewall' ||
+    searchResultIcon === 'nodebalancer' ||
+    searchResultIcon === 'domain'
+  ) {
+    searchResultIcon = 'network';
+  }
   const history = useHistory();
   const handleClick = () => {
     const suggestion = data;
