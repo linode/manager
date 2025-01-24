@@ -190,7 +190,6 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
         break;
       case 'this_month':
         newStartDateTime = now.startOf('month');
-        newEndDateTime = now.endOf('month');
         break;
       case 'last_month':
         const lastMonth = now.minus({ months: 1 });
