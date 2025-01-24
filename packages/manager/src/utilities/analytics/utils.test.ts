@@ -41,31 +41,31 @@ describe('checkOptanonConsent', () => {
     expect(
       checkOptanonConsent(
         mockFunctionalCookieConsentEnabled,
-        ONE_TRUST_COOKIE_CATEGORIES['Functional Cookies']
+        ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
       )
     ).toEqual(true);
   });
 
   it('should return false if consent is disabled for the given Optanon cookie category', () => {
     const mockFunctionalCookieConsentDisabled =
-      'somestuffhere&groups=C0001%3A1%2CC0002%3A1%2CC0003%3A0%2CC0004%3A1%2CC0005%3A1&intType=6';
+      'somestuffhere&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A1%2CC0005%3A1&intType=6';
 
     expect(
       checkOptanonConsent(
         mockFunctionalCookieConsentDisabled,
-        ONE_TRUST_COOKIE_CATEGORIES['Functional Cookies']
+        ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
       )
     ).toEqual(false);
   });
 
   it('should return false if the consent category does not exist in the cookie', () => {
-    const mockNoFunctionalCookieCategory =
-      'somestuffhere&groups=C0001%3A1%2CC0002%3A1%2CC0004%3A1%2CC0005%3A1&intType=6';
+    const mockNoPerformanceCookieCategory =
+      'somestuffhere&groups=C0001%3A1%2CC0003%3A1%2CC0004%3A1%2CC0005%3A1&intType=6';
 
     expect(
       checkOptanonConsent(
-        mockNoFunctionalCookieCategory,
-        ONE_TRUST_COOKIE_CATEGORIES['Functional Cookies']
+        mockNoPerformanceCookieCategory,
+        ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
       )
     ).toEqual(false);
   });
@@ -74,7 +74,7 @@ describe('checkOptanonConsent', () => {
     expect(
       checkOptanonConsent(
         undefined,
-        ONE_TRUST_COOKIE_CATEGORIES['Functional Cookies']
+        ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
       )
     ).toEqual(false);
   });
