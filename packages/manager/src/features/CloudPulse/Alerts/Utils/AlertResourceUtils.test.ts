@@ -1,6 +1,10 @@
 import { regionFactory } from 'src/factories';
 
-import { getRegionOptions, getRegionsIdRegionMap } from './AlertResourceUtils';
+import {
+  getFilteredResources,
+  getRegionOptions,
+  getRegionsIdRegionMap,
+} from './AlertResourceUtils';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 
@@ -63,5 +67,78 @@ describe('getRegionOptions', () => {
       resourceIds: ['1', '1', '2', '2'], // Duplicate IDs
     });
     expect(result.length).toBe(2); // Should still return unique regions
+  });
+});
+
+describe('getFilteredResources', () => {
+  const regions = regionFactory.buildList(10);
+  const regionsIdToRegionMap = getRegionsIdRegionMap(regions);
+  const data: CloudPulseResources[] = [
+    { id: '1', label: 'Test', region: regions[0].id },
+    { id: '2', label: 'Test2', region: regions[1].id },
+    { id: '3', label: 'Test3', region: regions[2].id },
+  ];
+  it('should return correct filtered instances on only filtered regions', () => {
+    const result = getFilteredResources({
+      data,
+      filteredRegions: getRegionOptions({
+        data,
+        regionsIdToRegionMap,
+        resourceIds: ['1', '2'],
+      }).map(({ id, label }) => `${label} (${id})`),
+      regionsIdToRegionMap,
+      resourceIds: ['1', '2'],
+    });
+    expect(result.length).toBe(2);
+    expect(result[0].label).toBe(data[0].label);
+    expect(result[1].label).toBe(data[1].label);
+  });
+  it('should return correct filtered instances on filtered regions and search text', () => {
+    const // Case with searchText
+      result = getFilteredResources({
+        data,
+        filteredRegions: getRegionOptions({
+          data,
+          regionsIdToRegionMap,
+          resourceIds: ['1', '2'],
+        }).map(({ id, label }) => `${label} (${id})`),
+        regionsIdToRegionMap,
+        resourceIds: ['1', '2'],
+        searchText: data[1].label,
+      });
+    expect(result.length).toBe(1);
+    expect(result[0].label).toBe(data[1].label);
+  });
+  it('should return empty result on mismatched filters', () => {
+    const result = getFilteredResources({
+      data,
+      filteredRegions: getRegionOptions({
+        data,
+        regionsIdToRegionMap,
+        resourceIds: ['1'], // region not associated with the resources
+      }).map(({ id, label }) => `${label} (${id})`),
+      regionsIdToRegionMap,
+      resourceIds: ['1', '2'],
+      searchText: data[1].label,
+    });
+    expect(result.length).toBe(0);
+  });
+  it('should return empty result on empty data', () => {
+    const result = getFilteredResources({
+      data: [],
+      filteredRegions: [],
+      regionsIdToRegionMap,
+      resourceIds: ['1', '2'],
+    });
+    expect(result.length).toBe(0);
+  });
+  it('should return empty result if data is undefined', () => {
+    const result = getFilteredResources({
+      data: undefined,
+      filteredRegions: [],
+      regionsIdToRegionMap,
+      resourceIds: ['1', '2'],
+    });
+    expect(result.length).toBe(0);
   });
 });
