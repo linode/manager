@@ -304,12 +304,12 @@ describe('VPC assign/unassign flows', () => {
         mockDeleteLinodeConfigInterface(
           mockLinode.id,
           mockLinodeConfig.id,
-          mockLinodeConfig.interfaces[0].id
+          mockLinodeConfig.interfaces![0].id
         ).as('deleteLinodeConfigInterface1');
         mockDeleteLinodeConfigInterface(
           mockSecondLinode.id,
           mockLinodeConfig.id,
-          mockLinodeConfig.interfaces[0].id
+          mockLinodeConfig.interfaces![0].id
         ).as('deleteLinodeConfigInterface2');
         ui.button
           .findByTitle('Unassign Linodes')

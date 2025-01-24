@@ -95,7 +95,7 @@ export const LinodeEntityDetailHeader = (
   const isRebootNeeded =
     isRunning &&
     configs?.some((config) =>
-      config.interfaces.some(
+      config.interfaces?.some(
         (linodeInterface) =>
           linodeInterface.purpose === 'vpc' && !linodeInterface.active
       )

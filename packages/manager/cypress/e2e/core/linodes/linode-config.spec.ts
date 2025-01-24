@@ -596,7 +596,7 @@ describe('Linode Config management', () => {
       const mockConfigWithVpc: Config = {
         ...mockConfig,
         interfaces: [
-          ...mockConfig.interfaces,
+          ...mockConfig.interfaces!,
           LinodeConfigInterfaceFactoryWithVPC.build({
             label: undefined,
             vpc_id: mockVPC.id,

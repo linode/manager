@@ -226,7 +226,7 @@ export interface Config {
   created: string;
   updated: string;
   initrd: string | null;
-  interfaces: Interface[];
+  interfaces?: Interface[];
 }
 
 // ----------------------------------------------------------
