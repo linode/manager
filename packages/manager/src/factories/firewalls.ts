@@ -7,7 +7,6 @@ import type {
   FirewallRuleType,
   FirewallRules,
   FirewallTemplate,
-  FirewallTemplateSlug,
 } from '@linode/api-v4/lib/firewalls/types';
 
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
@@ -58,12 +57,6 @@ export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
   id: Factory.each((i) => i),
   updated: '2020-01-01',
 });
-
-const firewallTemplateSlugs: FirewallTemplateSlug[] = [
-  'akamai-non-prod',
-  'vpc',
-  'public',
-];
 
 export const firewallTemplateFactory = Factory.Sync.makeFactory<FirewallTemplate>(
   {

@@ -17,6 +17,7 @@ export interface Firewall {
   entities: FirewallDeviceEntity[];
 }
 
+// @TODO Linode Interfaces - follow up on a separate type for firewall template's rules
 export interface FirewallRules {
   fingerprint?: string;
   inbound?: FirewallRuleType[] | null;
