@@ -1,4 +1,7 @@
-import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type {
+  CreateLinodeRequest,
+  InterfacePayload,
+} from '@linode/api-v4/lib/linodes';
 
 /**
  * Escapes special characters in a string for use in Python strings.
@@ -56,7 +59,7 @@ export function generatePythonLinodeSnippet(
   // Handling interfaces
   if (config.interfaces && config.interfaces.length > 0) {
     snippet += '    interfaces=[\n';
-    config.interfaces.forEach((iface) => {
+    config.interfaces.forEach((iface: InterfacePayload) => {
       snippet += `        {\n`;
       if (iface.label) {
         snippet += `            "label": "${escapePythonString(

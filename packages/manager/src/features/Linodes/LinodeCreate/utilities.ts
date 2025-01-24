@@ -166,7 +166,7 @@ export const getLinodeCreatePayload = (
   }
 
   values.interfaces = getInterfacesPayload(
-    values.interfaces,
+    values.interfaces as InterfacePayload[],
     Boolean(values.private_ip)
   );
 

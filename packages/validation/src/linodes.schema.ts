@@ -680,12 +680,13 @@ export const CreateLinodeSchema = object({
     // .concat(rootPasswordValidation),
     otherwise: (schema) => schema.notRequired(),
   }),
-  interfaces: object().oneOf([
+  interfaces: mixed().oneOf([
     ConfigProfileInterfacesSchema,
     CreateLinodeInterfacesSchemas,
   ]),
   interface_generation: string(),
   network_helper: boolean(),
+  ipv4: array().of(string()),
   metadata: MetadataSchema,
   firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema,

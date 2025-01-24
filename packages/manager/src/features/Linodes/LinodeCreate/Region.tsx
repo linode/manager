@@ -35,7 +35,7 @@ import {
 } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
-import type { Region as RegionType } from '@linode/api-v4';
+import type { InterfacePayload, Region as RegionType } from '@linode/api-v4';
 
 export const Region = React.memo(() => {
   const {
@@ -96,13 +96,13 @@ export const Region = React.memo(() => {
       setValue('hasSignedEUAgreement', false);
     }
 
-    if (values.interfaces?.[0].vpc_id) {
+    if ((values.interfaces as InterfacePayload[])?.[0].vpc_id) {
       // If a VPC is selected, clear it because VPCs are region specific
       setValue('interfaces.0.vpc_id', null);
       setValue('interfaces.0.subnet_id', null);
     }
 
-    if (values.interfaces?.[1].label) {
+    if ((values.interfaces as InterfacePayload[])?.[1].label) {
       // If a VLAN is selected, clear it because VLANs are region specific
       setValue('interfaces.1.label', null);
       setValue('interfaces.1.ipam_address', null);

@@ -37,7 +37,10 @@ interface Props extends LinodeWithMaintenance {
   handlers: LinodeHandlers;
 }
 
-export const LinodeRow = (props: Props) => {
+// @TODO Linode Interfaces - determine if this type is still needed
+type PropsWithoutInterfaceGeneration = Omit<Props, 'interface_generation'>;
+
+export const LinodeRow = (props: PropsWithoutInterfaceGeneration) => {
   const {
     backups,
     handlers,

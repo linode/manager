@@ -1,4 +1,7 @@
-import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type {
+  CreateLinodeRequest,
+  InterfacePayload,
+} from '@linode/api-v4/lib/linodes';
 
 /**
  * Escapes special characters in a string for use in YAML and shell commands.
@@ -77,7 +80,7 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
   }
   if (config.interfaces && config.interfaces.length > 0) {
     configStr += `    interfaces:\n`;
-    config.interfaces.forEach((iface) => {
+    config.interfaces.forEach((iface: InterfacePayload) => {
       configStr += `      - purpose: "${escapeYAMLString(iface.purpose)}"\n`;
       if (iface.subnet_id) {
         configStr += `        subnet_id: ${iface.subnet_id}\n`;

@@ -56,6 +56,7 @@ import type {
   DeepPartial,
   Devices,
   Filter,
+  InterfacePayload,
   Kernel,
   Linode,
   LinodeCloneData,
@@ -283,14 +284,19 @@ export const useCreateLinodeMutation = () => {
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries(profileQueries.grants);
 
-      if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
+      if (
+        (variables.interfaces as InterfacePayload[])?.some(
+          (i) => i.purpose === 'vlan'
+        )
+      ) {
         // If a Linode is created with a VLAN, invalidate vlans because
         // they are derived from Linode configs.
         queryClient.invalidateQueries({ queryKey: vlanQueries._def });
       }
 
-      const vpcId = variables.interfaces?.find((i) => i.purpose === 'vpc')
-        ?.vpc_id;
+      const vpcId = (variables.interfaces as InterfacePayload[])?.find(
+        (i) => i.purpose === 'vpc'
+      )?.vpc_id;
 
       if (vpcId) {
         // If a Linode is created with a VPC, invalidate the related VPC queries.

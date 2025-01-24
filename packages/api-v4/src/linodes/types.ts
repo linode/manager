@@ -14,6 +14,8 @@ export type Hypervisor = 'kvm' | 'zen';
 
 export type EncryptionStatus = 'enabled' | 'disabled';
 
+export type InterfaceGenerationType = 'legacy_config' | 'linode';
+
 export interface LinodeSpecs {
   disk: number;
   memory: number;
@@ -33,6 +35,7 @@ export interface Linode {
   region: string;
   image: string | null;
   group: string;
+  interface_generation: InterfaceGenerationType;
   ipv4: string[];
   ipv6: string | null;
   label: string;
@@ -545,7 +548,9 @@ export interface CreateLinodeRequest {
   stackscript_data?: any;
   /**
    * If it is deployed from an Image or a Backup and you wish it to remain offline after deployment, set this to false.
+   *
    * @default true if the Linode is created with an Image or from a Backup.
+   * @default false if using new Linode Interfaces and no interfaces are defined
    */
   booted?: boolean;
   /**
@@ -577,13 +582,25 @@ export interface CreateLinodeRequest {
   /**
    * When present, used by the API to determine what type of interface objects (legacy
    * configinterfaces or new Linode Interfaces) are in the above interfaces field.
+   * Can either be 'legacy_config' or 'linode'.
+   *
+   * If 'legacy_config', interfaces field must be InterfacePayload[]
+   * If 'linode', interfaces field must be CreateLinodeInterfacePayload[] and Linode
+   * Must be created in a region that supports the new interfaces.
+   *
+   * Default value on interfaces_for_new_linodes field in AccountSettings object.
    */
-  interface_generation?: 'legacy_config' | 'linode';
+  interface_generation?: InterfaceGenerationType;
   /**
    * Default value mirrors network_helper in AccountSettings object. Should only be
    * present when using Linode Interfaces.
    */
   network_helper?: boolean;
+  /**
+   * An array of IPv4 addresses for this Linode
+   * Must be empty if Linode is configured to use new Linode Interfaces.
+   */
+  ipv4?: string[];
   /**
    * An object containing user-defined data relevant to the creation of Linodes.
    */

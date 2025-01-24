@@ -1,6 +1,9 @@
 import { escapeStringForCLI } from '../escapeStringForCLI';
 
-import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type {
+  CreateLinodeRequest,
+  InterfacePayload,
+} from '@linode/api-v4/lib/linodes';
 
 /**
  * Generates a Terraform config to setup a Linode instance.
@@ -35,7 +38,7 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
   }
 
   if (config.interfaces && config.interfaces.length > 0) {
-    config.interfaces.forEach((interfaceConfig) => {
+    config.interfaces.forEach((interfaceConfig: InterfacePayload) => {
       terraformConfig += `  interface {\n    purpose = "${interfaceConfig.purpose}"\n`;
       if (interfaceConfig.subnet_id) {
         terraformConfig += `    subnet_id = ${interfaceConfig.subnet_id}\n`;
