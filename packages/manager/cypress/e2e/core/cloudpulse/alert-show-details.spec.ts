@@ -1,6 +1,8 @@
 /**
  * @file Integration Tests for the CloudPulse DBaaS Alerts Show Detail Page.
- *
+ * 
+ * This file contains Cypress tests that validate the display and content of the DBaaS Alerts Show Detail Page in the CloudPulse application.
+ * It ensures that all alert details, criteria, and resource information are displayed correctly.
  */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
