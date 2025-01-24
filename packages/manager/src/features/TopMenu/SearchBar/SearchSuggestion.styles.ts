@@ -1,36 +1,4 @@
-import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import type { SearchSuggestionProps } from './SearchSuggestion';
-
-export const StyledWrapperDiv = styled('div', {
-  label: 'StyledWrapperDiv',
-  shouldForwardProp: omittedProps(['isFocused']),
-})<Partial<SearchSuggestionProps>>(({ isFocused, theme }) => ({
-  '&:last-child': {
-    borderBottom: 0,
-  },
-  alignItems: 'space-between',
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  cursor: 'pointer',
-  justifyContent: 'space-between',
-  [theme.breakpoints.up('md')]: {
-    display: 'flex',
-  },
-  width: 'calc(100% + 2px)',
-
-  ...(isFocused && {
-    '& .tag': {
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.tokens.color.Neutrals.White,
-      },
-      backgroundColor: theme.bg.lightBlue1,
-      color: theme.palette.text.primary,
-    },
-    backgroundColor: `${theme.bg.main}`,
-  }),
-}));
 
 export const StyledSuggestionIcon = styled('div', {
   label: 'StyledSuggestionIcon',

@@ -1,4 +1,5 @@
 import { Box, Paper } from '@linode/ui';
+import { styled } from '@mui/material';
 import * as React from 'react';
 
 import type { PaperProps, Theme } from '@mui/material';
@@ -11,7 +12,7 @@ export const SearchSuggestionContainer = (props: CustomPaperProps) => {
   const { children, isLargeAccount, ...rest } = props;
 
   return (
-    <Paper {...rest}>
+    <StyledSearchSuggestionContainer {...rest}>
       <div>
         {children}
         {!isLargeAccount && (
@@ -27,6 +28,12 @@ export const SearchSuggestionContainer = (props: CustomPaperProps) => {
           </Box>
         )}
       </div>
-    </Paper>
+    </StyledSearchSuggestionContainer>
   );
 };
+
+const StyledSearchSuggestionContainer = styled(Paper)({
+  '& .MuiAutocomplete-listbox': {},
+  padding: 0,
+  width: '100%',
+});

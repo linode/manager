@@ -1,4 +1,4 @@
-import type { SearchResultItem, ExtendedSearchableItem } from './SearchBar';
+import type { ExtendedSearchableItem, SearchResultItem } from './SearchBar';
 
 export const createFinalOptions = (
   results: SearchResultItem[],

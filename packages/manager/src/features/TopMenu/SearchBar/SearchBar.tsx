@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
+import { MenuItem } from 'src/components/MenuItem';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
@@ -54,31 +55,6 @@ const isSpecialOption = (
 ): option is ExtendedSearchableItem => {
   return ['error', 'info', 'redirect'].includes(String(option.value));
 };
-
-// Style overrides for React Select
-// export const selectStyles = {
-//   control: (base: any) => ({
-//     ...base,
-//     backgroundColor: 'pink',
-//     border: 0,
-//     margin: 0,
-//     width: '100%',
-//   }),
-//   dropdownIndicator: () => ({ display: 'none' }),
-//   input: (base: any) => ({ ...base, border: 0, margin: 0, width: '100%' }),
-//   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
-//   placeholder: (base: any) => ({
-//     ...base,
-//     color: base?.palette?.text?.primary,
-//     fontSize: '0.875rem',
-//   }),
-//   selectContainer: (base: any) => ({
-//     ...base,
-//     border: 0,
-//     margin: 0,
-//     width: '100%',
-//   }),
-// };
 
 const SearchBarComponent = (props: SearchProps) => {
   const { combinedResults, entitiesLoading, search } = props;
@@ -247,13 +223,16 @@ const SearchBarComponent = (props: SearchProps) => {
 
   const onOpen = () => {
     document.body.classList.add('searchOverlay');
-    setSearchText('');
     setSearchActive(true);
     setMenuOpen(true);
   };
 
   const onFocus = () => {
     setSearchActive(true);
+  };
+
+  const onClear = () => {
+    setSearchText('');
     setValue(null);
   };
 
@@ -343,14 +322,15 @@ const SearchBarComponent = (props: SearchProps) => {
               onSelect(value);
             }
           }}
+          onInputChange={(_event, _newValue, reason) => {
+            if (reason === 'clear') {
+              onClear();
+            }
+          }}
           renderInput={(params) => {
             return (
               <TextField
                 {...params}
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: null,
-                }}
                 onChange={(e) => {
                   handleSearchChange(e.target.value);
                 }}
@@ -367,25 +347,25 @@ const SearchBarComponent = (props: SearchProps) => {
               />
             );
           }}
-          renderOption={(props, option, { selected }) => {
+          renderOption={(props, option) => {
             const { key, ...rest } = props;
             const value = String(option.value);
 
             if (isSpecialOption(option)) {
               return (
-                <li {...rest} key={`${key}-${value}`}>
+                <MenuItem {...rest} key={`${key}-${value}`}>
                   {option.label}
-                </li>
+                </MenuItem>
               );
             }
 
             return (
               <SearchSuggestion
+                {...rest}
                 data={{
                   data: option.data,
                   label: option.label,
                 }}
-                isFocused={selected}
                 key={`${key}-${value}`}
                 searchText={searchText}
                 selectOption={() => onSelect(option)}
@@ -407,6 +387,7 @@ const SearchBarComponent = (props: SearchProps) => {
           open={menuOpen && searchText !== ''}
           options={finalOptions}
           placeholder="Search Products, IP Addresses, Tags..."
+          popupIcon={null}
           value={value}
         />
         <StyledIconButton
