@@ -11,6 +11,7 @@ interface FilterResourceProps {
    * The selected regions on which the data needs to be filtered
    */
   filteredRegions?: string[];
+
   /**
    * Property to integrate and edit the resources associated with alerts
    */
@@ -38,7 +39,7 @@ interface FilterResourceProps {
   /*
    * This property helps to track the list of selected resources
    */
-  selectedResources?: number[];
+  selectedResources?: string[];
 }
 
 /**
@@ -87,7 +88,7 @@ export const getFilteredResources = (
       return {
         ...resource,
         checked: selectedResources
-          ? selectedResources.includes(Number(resource.id))
+          ? selectedResources.includes(resource.id)
           : false, // check for selections and drive the resources
         region: resource.region
           ? regionsIdToLabelMap.get(resource.region)
@@ -120,11 +121,18 @@ export const getFilteredResources = (
 export const getRegionOptions = (
   filterProps: FilterResourceProps
 ): Region[] => {
-  const { data, regionsIdToLabelMap, resourceIds } = filterProps;
+  const {
+    data,
+    isAdditionOrDeletionNeeded,
+    regionsIdToLabelMap,
+    resourceIds,
+  } = filterProps;
   return Array.from(
     new Set(
       data
-        ?.filter((resource) => resourceIds.includes(String(resource.id)))
+        ?.filter(
+          ({ id }) => isAdditionOrDeletionNeeded || resourceIds.includes(id)
+        )
         ?.map((resource) => {
           const regionId = resource.region;
           return regionId ? regionsIdToLabelMap.get(regionId) : null;
