@@ -319,45 +319,6 @@ const DiskEncryptionSchema = string()
   .notRequired()
   .nullable();
 
-export const CreateLinodeSchema = object({
-  type: string().ensure().required('Plan is required.'),
-  region: string().ensure().required('Region is required.'),
-  stackscript_id: number().nullable().notRequired(),
-  backup_id: number().nullable().notRequired(),
-  swap_size: number().notRequired(),
-  image: string().when('stackscript_id', {
-    is: (value?: number) => value !== undefined,
-    then: (schema) => schema.ensure().required('Image is required.'),
-    otherwise: (schema) => schema.nullable().notRequired(),
-  }),
-  authorized_keys: array().of(string()).notRequired(),
-  backups_enabled: boolean().notRequired(),
-  stackscript_data,
-  booted: boolean().notRequired(),
-  label: string()
-    .transform((v) => (v === '' ? undefined : v))
-    .notRequired()
-    .min(3, LINODE_LABEL_CHAR_REQUIREMENT)
-    .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
-  tags: array().of(string()).notRequired(),
-  private_ip: boolean().notRequired(),
-  authorized_users: array().of(string()).notRequired(),
-  root_pass: string().when('image', {
-    is: (value: any) => Boolean(value),
-    then: (schema) =>
-      schema.required(
-        'You must provide a root password when deploying from an image.'
-      ),
-    // .concat(rootPasswordValidation),
-    otherwise: (schema) => schema.notRequired(),
-  }),
-  interfaces: ConfigProfileInterfacesSchema,
-  metadata: MetadataSchema,
-  firewall_id: number().nullable().notRequired(),
-  placement_group: PlacementGroupPayloadSchema,
-  disk_encryption: DiskEncryptionSchema,
-});
-
 const alerts = object({
   cpu: number()
     .typeError('CPU Usage must be a number')
@@ -683,4 +644,50 @@ export const ModifyLinodeInterfaceSchema = object({
     .notRequired()
     .nullable(),
   vlan: ModifyVlanInterfaceSchema,
+});
+
+const CreateLinodeInterfacesSchemas = array().of(CreateLinodeInterfaceSchema);
+
+export const CreateLinodeSchema = object({
+  type: string().ensure().required('Plan is required.'),
+  region: string().ensure().required('Region is required.'),
+  stackscript_id: number().nullable().notRequired(),
+  backup_id: number().nullable().notRequired(),
+  swap_size: number().notRequired(),
+  image: string().when('stackscript_id', {
+    is: (value?: number) => value !== undefined,
+    then: (schema) => schema.ensure().required('Image is required.'),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
+  authorized_keys: array().of(string()).notRequired(),
+  backups_enabled: boolean().notRequired(),
+  stackscript_data,
+  booted: boolean().notRequired(),
+  label: string()
+    .transform((v) => (v === '' ? undefined : v))
+    .notRequired()
+    .min(3, LINODE_LABEL_CHAR_REQUIREMENT)
+    .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
+  tags: array().of(string()).notRequired(),
+  private_ip: boolean().notRequired(),
+  authorized_users: array().of(string()).notRequired(),
+  root_pass: string().when('image', {
+    is: (value: any) => Boolean(value),
+    then: (schema) =>
+      schema.required(
+        'You must provide a root password when deploying from an image.'
+      ),
+    // .concat(rootPasswordValidation),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  interfaces: object().oneOf([
+    ConfigProfileInterfacesSchema,
+    CreateLinodeInterfacesSchemas,
+  ]),
+  interface_generation: string(),
+  network_helper: boolean(),
+  metadata: MetadataSchema,
+  firewall_id: number().nullable().notRequired(),
+  placement_group: PlacementGroupPayloadSchema,
+  disk_encryption: DiskEncryptionSchema,
 });

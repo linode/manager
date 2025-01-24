@@ -573,7 +573,17 @@ export interface CreateLinodeRequest {
   /**
    * An array of Network Interfaces to add to this Linode’s Configuration Profile.
    */
-  interfaces?: InterfacePayload[];
+  interfaces?: InterfacePayload[] | CreateLinodeInterfacePayload[];
+  /**
+   * When present, used by the API to determine what type of interface objects (legacy
+   * configinterfaces or new Linode Interfaces) are in the above interfaces field.
+   */
+  interface_generation?: 'legacy_config' | 'linode';
+  /**
+   * Default value mirrors network_helper in AccountSettings object. Should only be
+   * present when using Linode Interfaces.
+   */
+  network_helper?: boolean;
   /**
    * An object containing user-defined data relevant to the creation of Linodes.
    */
