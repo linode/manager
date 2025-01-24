@@ -1,5 +1,5 @@
 import { Button, Notice } from '@linode/ui';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 interface AlertResourceNoticeProps {
@@ -12,11 +12,10 @@ export const AlertsResourcesNotice = React.memo(
   (props: AlertResourceNoticeProps) => {
     const { handleSelectionChange, selectedResources, totalResources } = props;
 
-    const theme = useTheme();
     return (
       <StyledNotice
         sx={{
-          height: theme.spacing(6.75),
+          height: '54px',
         }}
         variant="info"
       >
@@ -56,7 +55,7 @@ const StyledNotice = styled(Notice, { label: 'StyledNotice' })(({ theme }) => ({
   background: theme.bg.bgPaper,
   borderRadius: 1,
   display: 'flex',
-  flexFlow: 'row nowrap',
+  flexWrap: 'nowrap',
   justifyContent: 'space-between',
   marginBottom: theme.spacing(0),
   padding: theme.spacing(2),
