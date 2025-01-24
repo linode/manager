@@ -153,9 +153,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       setSelectedResources([]);
     } else {
       // Select all
-      setSelectedResources(resources.map((resource) => resource.id));
+      const allResources = resources.map((resource) => resource.id);
+      setSelectedResources(allResources);
+      if (handleResourcesSelection) {
+        handleResourcesSelection(allResources);
+      }
     }
-  }, [resources, selectedResources]);
+  }, [handleResourcesSelection, resources, selectedResources]);
 
   /**
    * Holds the regions associated with the resources from list of regions

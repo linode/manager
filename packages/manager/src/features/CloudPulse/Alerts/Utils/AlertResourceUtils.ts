@@ -131,9 +131,7 @@ export const getRegionOptions = (
     new Set(
       data
         ?.filter(
-          (resource) =>
-            isAdditionOrDeletionNeeded ||
-            resourceIds.includes(String(resource.id))
+          ({ id }) => isAdditionOrDeletionNeeded || resourceIds.includes(id)
         )
         ?.map((resource) => {
           const regionId = resource.region;
