@@ -343,7 +343,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         >
           <StyledListItem sx={{ borderRight: 'unset' }}>
             <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
-            <Link to={`/kubernetes/clusters/${linodeLkeClusterId}`}>
+            <Link
+              data-testid="assigned-lke-cluster-label"
+              to={`/kubernetes/clusters/${linodeLkeClusterId}`}
+            >
               {cluster?.label ?? linodeLkeClusterId}
             </Link>
             &nbsp;
