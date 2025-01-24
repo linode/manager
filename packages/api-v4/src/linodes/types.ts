@@ -226,6 +226,7 @@ export interface Config {
   created: string;
   updated: string;
   initrd: string | null;
+  // If a Linode is using the new Linode Interfaces, this field will no longer be present.
   interfaces?: Interface[];
 }
 
