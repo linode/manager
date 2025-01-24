@@ -68,11 +68,6 @@ const firewallTemplateSlugs: FirewallTemplateSlug[] = [
 export const firewallTemplateFactory = Factory.Sync.makeFactory<FirewallTemplate>(
   {
     rules: firewallRulesFactory.build(),
-    slug: Factory.each((_) => {
-      const randomIndex = Math.floor(
-        Math.random() * firewallTemplateSlugs.length
-      );
-      return firewallTemplateSlugs[randomIndex];
-    }),
+    slug: 'akamai-non-prod',
   }
 );
