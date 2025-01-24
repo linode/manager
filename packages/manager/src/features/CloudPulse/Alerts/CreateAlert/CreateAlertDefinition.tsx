@@ -159,7 +159,10 @@ export const CreateAlertDefinition = () => {
   };
 
   const handleResourcesSelection = (resourceIds: string[]) => {
-    setValue('entity_ids', resourceIds, { shouldValidate: true });
+    setValue('entity_ids', resourceIds, {
+      shouldTouch: true,
+      shouldValidate: true,
+    });
   };
 
   const notifications = React.useMemo(() => {
@@ -238,18 +241,22 @@ export const CreateAlertDefinition = () => {
                   sx={{ marginBottom: 1 }}
                 >
                   <Typography variant="h2">2. Resources</Typography>
-                  {formState.isSubmitted && fieldState.error && (
-                    <Typography color="#d63c42" variant="body2">
-                      ({fieldState.error.message})
-                    </Typography>
-                  )}
+                  {(formState.isSubmitted || fieldState.isTouched) &&
+                    fieldState.error && (
+                      <Typography
+                        color={theme.tokens.content.Text.Negative}
+                        variant="body2"
+                      >
+                        ({fieldState.error.message})
+                      </Typography>
+                    )}
                 </Box>
                 <Box sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}>
                   <AlertResources
                     handleResourcesSelection={handleResourcesSelection}
                     isSelectionsNeeded
                     resourceIds={field.value} // Controlled field
-                    serviceType={serviceTypeWatcher!}
+                    serviceType={serviceTypeWatcher || undefined}
                   />
                 </Box>
               </Box>

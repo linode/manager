@@ -42,7 +42,7 @@ export interface AlertResourcesProp {
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
-  serviceType: string;
+  serviceType?: string;
 
   /**
    * Property to control the visibility of the title
@@ -94,11 +94,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     }
   }, [resources, isSelectionsNeeded, resourceIds]);
 
-  React.useEffect(() => {
-    if (handleResourcesSelection) {
-      handleResourcesSelection(selectedResources.map((id) => String(id)));
-    }
-  }, [selectedResources, handleResourcesSelection]);
+  // React.useEffect(() => {
+  //   if (handleResourcesSelection) {
+  //     handleResourcesSelection(selectedResources.map((id) => String(id)));
+  //   }
+  // }, [selectedResources, handleResourcesSelection]);
 
   const {
     data: regions,
@@ -115,6 +115,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       const newlySelected = ids.filter((id) => !selectedResources.includes(id));
 
       setSelectedResources([...onlySelected, ...newlySelected]);
+
+      if (handleResourcesSelection) {
+        handleResourcesSelection(
+          [...onlySelected, ...newlySelected].map((id) => String(id))
+        );
+      }
     },
     [selectedResources]
   );
@@ -164,8 +170,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       setSelectedResources([
         ...resources.map((resource) => Number(resource.id)),
       ]);
+
+      if (handleResourcesSelection) {
+        handleResourcesSelection(
+          resources.map((resource) => String(resource.id))
+        );
+      }
     }
-  }, [resources, selectedResources]);
+  }, [handleResourcesSelection, resources, selectedResources]);
 
   /**
    * Holds the regions associated with the resources from list of regions
