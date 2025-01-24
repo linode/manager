@@ -1,4 +1,4 @@
-import { CreateTransferSchema } from '@linode/validation/lib/transfers.schema';
+import { CreateTransferSchema } from '@linode/validation';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
