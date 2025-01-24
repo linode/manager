@@ -49,8 +49,10 @@ export interface Quota {
 
   /**
    * The region slug to which this limit applies.
+   *
+   * OBJ limits are applied by endpoint, not region.
    */
-  region_applied: Region['id'] | 'global';
+  region_applied?: Region['id'] | 'global';
 
   /**
    * The OBJ endpoint type to which this limit applies.
