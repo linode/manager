@@ -185,10 +185,12 @@ export const getVPCsIPs = (params?: Params, filter?: Filter) =>
 /**
  * getVPCIPs
  *
- * Get the VPC IP addresses for the specified VPC
+ * Get a paginated list of VPC IP addresses for the specified VPC
  */
-export const getVPCIPs = (vpcID: number) =>
-  Request<VPCIP>(
+export const getVPCIPs = (vpcID: number, params?: Params, filter?: Filter) =>
+  Request<Page<VPCIP>>(
     setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}/ips`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
   );
