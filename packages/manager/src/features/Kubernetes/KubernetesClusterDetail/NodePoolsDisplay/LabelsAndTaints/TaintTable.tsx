@@ -1,9 +1,11 @@
-import { IconButton, Stack } from '@linode/ui';
+import { IconButton, Stack, Typography } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import { TableBody, TableCell, TableHead, Typography } from '@mui/material';
 import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 
 import { StyledLabelTable } from './LabelTable.styles';
