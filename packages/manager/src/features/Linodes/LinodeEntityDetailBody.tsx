@@ -46,6 +46,7 @@ import type {
 } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
 import type { TypographyProps } from '@linode/ui';
+import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -72,6 +73,7 @@ export interface BodyProps {
   linodeId: number;
   linodeIsInDistributedRegion: boolean;
   linodeLabel: string;
+  linodeLkeClusterId: null | number;
   numCPUs: number;
   numVolumes: number;
   region: string;
@@ -92,6 +94,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     linodeId,
     linodeIsInDistributedRegion,
     linodeLabel,
+    linodeLkeClusterId,
     numCPUs,
     numVolumes,
     region,
@@ -127,6 +130,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   // the second IPv4 address if it exists.
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
+
+  const { data: cluster } = useKubernetesClusterQuery(linodeLkeClusterId ?? -1);
 
   return (
     <>
@@ -321,6 +326,29 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               </StyledIPv4Box>
             )}
           </Grid>
+        </Grid>
+      )}
+      {linodeLkeClusterId && (
+        <Grid
+          sx={{
+            borderTop: `1px solid ${theme.borderColors.borderTable}`,
+            padding: `${theme.spacing(2)} ${theme.spacing(2)}`,
+            [theme.breakpoints.down('md')]: {
+              paddingLeft: 3,
+            },
+          }}
+          container
+          direction="column"
+          spacing={2}
+        >
+          <StyledListItem sx={{ borderRight: 'unset' }}>
+            <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
+            <Link to={`/kubernetes/clusters/${linodeLkeClusterId}`}>
+              {cluster?.label ?? linodeLkeClusterId}
+            </Link>
+            &nbsp;
+            {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
+          </StyledListItem>
         </Grid>
       )}
     </>
