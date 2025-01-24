@@ -73,28 +73,22 @@ const SearchBarComponent = (props: SearchProps) => {
   // know if the account is large or not
   const shouldMakeRequests =
     searchActive && isLargeAccount !== undefined && !isLargeAccount;
-
   const shouldMakeDBRequests =
     shouldMakeRequests && Boolean(isDatabasesEnabled);
-
   const { data: regions } = useRegionsQuery();
-
   const { data: objectStorageBuckets } = useObjectStorageBuckets(
     shouldMakeRequests
   );
-
   const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
   const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
   const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
   const { data: firewalls } = useAllFirewallsQuery(shouldMakeRequests);
-
   /*
   @TODO DBaaS: Change the passed argument to 'shouldMakeRequests' and
   remove 'isDatabasesEnabled' once DBaaS V2 is fully rolled out.
   */
   const { data: databases } = useAllDatabasesQuery(shouldMakeDBRequests);
-
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
     { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
@@ -110,19 +104,15 @@ const SearchBarComponent = (props: SearchProps) => {
     {},
     shouldMakeRequests
   );
-
   const typesQuery = useSpecificTypes(
     (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined),
     shouldMakeRequests
   );
-
   const extendedTypes = extendTypesQueryResult(typesQuery);
-
   const searchableLinodes = (linodes ?? []).map((linode) => {
     const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
     return formatLinode(linode, extendedTypes, imageLabel);
   });
-
   const { searchAPI } = useAPISearch(!isNilOrEmpty(searchText));
 
   const _searchAPI = React.useRef(
@@ -218,6 +208,7 @@ const SearchBarComponent = (props: SearchProps) => {
   const onClose = () => {
     document.body.classList.remove('searchOverlay');
     setSearchActive(false);
+    setSearchText('');
     setMenuOpen(false);
   };
 
@@ -229,11 +220,7 @@ const SearchBarComponent = (props: SearchProps) => {
 
   const onFocus = () => {
     setSearchActive(true);
-  };
-
-  const onClear = () => {
     setSearchText('');
-    setValue(null);
   };
 
   const onSelect = (item: SearchResultItem) => {
@@ -257,6 +244,7 @@ const SearchBarComponent = (props: SearchProps) => {
     }
 
     history.push(item.data.path);
+    onClose();
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -273,7 +261,7 @@ const SearchBarComponent = (props: SearchProps) => {
     }
   };
 
-  const finalOptions = createFinalOptions(
+  const options = createFinalOptions(
     isLargeAccount ? apiResults : combinedResults,
     searchText,
     isLargeAccount ? apiSearchLoading : linodesLoading || imagesLoading,
@@ -282,6 +270,13 @@ const SearchBarComponent = (props: SearchProps) => {
     // We still want these users to be able to use the search feature.
     Boolean(apiError) && apiError !== 'Unauthorized'
   );
+
+  const finalOptions = React.useMemo(() => {
+    if (value && value.value === 'redirect') {
+      return [...options, value];
+    }
+    return options;
+  }, [options, value]);
 
   return (
     <React.Fragment>
@@ -317,14 +312,24 @@ const SearchBarComponent = (props: SearchProps) => {
              * searching by tag won't work. */
             return options;
           }}
+          isOptionEqualToValue={(option, value) => {
+            if (value.value === 'redirect') {
+              return (
+                option.value === 'redirect' && option.label === value.label
+              );
+            }
+            return option.value === value.value;
+          }}
           onChange={(_, value) => {
             if (value) {
               onSelect(value);
             }
           }}
-          onInputChange={(_event, _newValue, reason) => {
+          onInputChange={(_event, newInputValue, reason) => {
             if (reason === 'clear') {
-              onClear();
+              onClose();
+            } else {
+              handleSearchChange(newInputValue);
             }
           }}
           renderInput={(params) => {
@@ -338,6 +343,7 @@ const SearchBarComponent = (props: SearchProps) => {
                   '& .MuiInputBase-root': {
                     border: 'none',
                     boxShadow: 'none !important',
+                    maxWidth: '100%',
                     minHeight: 30,
                   },
                 }}
@@ -374,11 +380,15 @@ const SearchBarComponent = (props: SearchProps) => {
             );
           }}
           sx={{
+            maxWidth: '100%',
             width: '100%',
           }}
+          disableClearable
+          inputValue={searchText}
           label="Main search"
           loading={entitiesLoading}
           multiple={false}
+          noOptionsText="No results"
           onBlur={onClose}
           onClose={onClose}
           onFocus={onFocus}

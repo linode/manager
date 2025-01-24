@@ -1,4 +1,4 @@
-import { IconButton } from '@linode/ui';
+import { Box, IconButton, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 export const StyledIconButton = styled(IconButton, {
@@ -29,38 +29,6 @@ export const StyledIconButton = styled(IconButton, {
 export const StyledSearchBarWrapperDiv = styled('div', {
   label: 'StyledSearchBarWrapperDiv',
 })(({ theme }) => ({
-  '& > div .react-select__control': {
-    '&:hover': {
-      borderColor: 'transparent',
-    },
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-  },
-  '& > div .react-select__control--is-focused:hover': {
-    borderColor: 'transparent',
-  },
-  '& > div .react-select__indicators': {
-    display: 'none',
-  },
-  '& > div .react-select__menu': {
-    border: 0,
-    borderRadius: 4,
-    boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-    marginTop: 12,
-    maxHeight: 350,
-    overflowY: 'auto',
-  },
-  '& > div .react-select__menu-list': {
-    overflowX: 'hidden',
-    padding: 0,
-  },
-  '& > div .react-select__value-container': {
-    '& p': {
-      fontSize: '0.875rem',
-      overflow: 'visible',
-    },
-    overflow: 'hidden',
-  },
   '& svg': {
     height: 20,
     width: 20,
@@ -100,4 +68,30 @@ export const StyledSearchBarWrapperDiv = styled('div', {
     width: '100%',
   },
   transition: theme.transitions.create(['opacity']),
+}));
+
+export const StyledSearchSuggestionContainer = styled(Paper, {
+  label: 'StyledSearchSuggestionContainer',
+})(({ theme }) => ({
+  '& .MuiAutocomplete-listbox': {
+    border: 'none',
+    padding: 0,
+  },
+  '& .MuiAutocomplete-noOptions': {
+    border: 'none',
+  },
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: `0 0 10px ${theme.color.boxShadow}`,
+  marginTop: theme.spacing(2),
+  padding: 0,
+  width: '100%',
+}));
+
+export const StyledHelpContainer = styled(Box, {
+  label: 'StyledHelpContainer',
+})(({ theme }) => ({
+  borderTop: `1px solid ${theme.palette.divider}`,
+  fontSize: '0.875rem',
+  padding: theme.spacing(2),
+  paddingTop: theme.spacing(2),
 }));
