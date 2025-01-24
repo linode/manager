@@ -27,8 +27,11 @@ describe('Alert Row', () => {
     const alert = alertFactory.build();
     const renderedAlert = (
       <AlertTableRow
+        handlers={{
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+        }}
         alert={alert}
-        handlers={{ handleDetails: () => vi.fn() }}
         services={mockServices}
       />
     );
@@ -40,8 +43,11 @@ describe('Alert Row', () => {
     const alert = alertFactory.build({ status: 'enabled' });
     const renderedAlert = (
       <AlertTableRow
+        handlers={{
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+        }}
         alert={alert}
-        handlers={{ handleDetails: () => vi.fn() }}
         services={mockServices}
       />
     );
@@ -64,7 +70,10 @@ describe('Alert Row', () => {
       <Router history={history}>
         <AlertTableRow
           alert={alert}
-          handlers={{ handleDetails: () => vi.fn() }}
+        handlers={{
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+        }}
           services={mockServices}
         />
       </Router>
@@ -80,7 +89,10 @@ describe('Alert Row', () => {
     const { getAllByLabelText, getByTestId } = renderWithTheme(
       <AlertTableRow
         alert={alert}
-        handlers={{ handleDetails: () => vi.fn() }}
+        handlers={{
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+        }}
         services={mockServices}
       />
     );

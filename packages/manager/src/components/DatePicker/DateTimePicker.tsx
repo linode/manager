@@ -235,8 +235,7 @@ export const DateTimePicker = ({
               <Grid item xs={4}>
                 <TimePicker
                   minTime={
-                    minDate &&
-                    minDate.toISODate() === selectedDateTime?.toISODate()
+                    minDate?.toISODate() === selectedDateTime?.toISODate()
                       ? minDate
                       : undefined
                   }
@@ -248,6 +247,9 @@ export const DateTimePicker = ({
                         marginTop: theme.spacing(1 / 2),
                         padding: 0,
                       }),
+                    },
+                    field: {
+                      readOnly: true,
                     },
                     layout: {
                       sx: (theme: Theme) => ({
@@ -269,6 +271,7 @@ export const DateTimePicker = ({
                     },
                     textField: TimePickerFieldProps,
                   }}
+                  data-qa-time="time-picker"
                   onChange={handleTimeChange}
                   slots={{ textField: TextField }}
                   value={selectedDateTime || null}

@@ -8,13 +8,14 @@ import Reload from 'src/assets/icons/refresh.svg';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
-import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
+import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
 import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { AclpConfig, Dashboard, TimeDuration } from '@linode/api-v4';
+import type { AclpConfig, Dashboard, DateTimeWithPreset } from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(
@@ -23,7 +24,7 @@ export interface GlobalFilterProperties {
     labels: string[]
   ): void;
   handleDashboardChange(dashboard: Dashboard | undefined): void;
-  handleTimeDurationChange(timeDuration: TimeDuration): void;
+  handleTimeDurationChange(timeDuration: DateTimeWithPreset): void;
   handleToggleAppliedFilter(isVisible: boolean): void;
 }
 
@@ -44,15 +45,15 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   >();
 
   const handleTimeRangeChange = React.useCallback(
-    (
-      timerDuration: TimeDuration,
-      timeDurationValue: string = 'Auto',
-      savePref: boolean = false
-    ) => {
+    (timeDuration: DateTimeWithPreset, savePref: boolean = false) => {
       if (savePref) {
-        updatePreferences({ [TIME_DURATION]: timeDurationValue });
+        updatePreferences({ [TIME_DURATION]: timeDuration });
       }
-      handleTimeDurationChange(timerDuration);
+      handleTimeDurationChange({
+        ...timeDuration,
+        end: convertToGmt(timeDuration.end),
+        start: convertToGmt(timeDuration.start),
+      });
     },
     []
   );
@@ -109,11 +110,18 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               savePreferences
             />
           </Grid>
-          <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
-            <CloudPulseTimeRangeSelect
+          <Grid
+            display="flex"
+            gap={1}
+            item
+            justifyContent="end"
+            md={8}
+            sm={5}
+            xs={12}
+          >
+            <CloudPulseDateTimeRangePicker
               defaultValue={preferences?.timeDuration}
               handleStatsChange={handleTimeRangeChange}
-              label="Time Range"
               savePreferences
             />
             <CloudPulseTooltip placement="bottom-end" title="Refresh">
