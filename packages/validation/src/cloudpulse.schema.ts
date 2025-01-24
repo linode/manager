@@ -1,44 +1,44 @@
 import { array, number, object, string } from 'yup';
 
+const fieldErrorMessage = 'This field is required.';
+
 const dimensionFilters = object({
-  dimension_label: string().required('Data Field is required for the filter.'),
-  operator: string().required('Operator is required.'),
-  value: string().required('Value is required.'),
+  dimension_label: string().required('Label for the filter is required.'),
+  operator: string().required(fieldErrorMessage),
+  value: string().required(fieldErrorMessage),
 });
 
 const metricCriteria = object({
-  metric: string().required('Metric Data Field is required.'),
-  aggregation_type: string().required('Aggregation type is required.'),
-  operator: string().required('Criteria Operator is required.'),
+  metric: string().required(fieldErrorMessage),
+  aggregation_type: string().required(fieldErrorMessage),
+  operator: string().required(fieldErrorMessage),
   threshold: number()
-    .required('Threshold value is required.')
-    .min(0, 'Threshold value cannot be negative.')
-    .typeError('Threshold value should be a number.'),
+    .required(fieldErrorMessage)
+    .min(0, "The value can't be negative.")
+    .typeError('The value should be a number.'),
   dimension_filters: array().of(dimensionFilters).notRequired(),
 });
 
 const triggerConditionValidation = object({
-  polling_interval_seconds: number().required('Polling Interval is required.'),
-  evaluation_period_seconds: number().required(
-    'Evaluation Period is required.'
-  ),
+  polling_interval_seconds: number().required(fieldErrorMessage),
+  evaluation_period_seconds: number().required(fieldErrorMessage),
   trigger_occurrences: number()
-    .required('Trigger Occurrences is required.')
-    .positive('Value must be greater than zero.')
-    .typeError('Trigger Occurrences is required.'),
+    .required(fieldErrorMessage)
+    .positive("The value can't be 0.")
+    .typeError(fieldErrorMessage),
 });
 
 export const createAlertDefinitionSchema = object({
-  label: string().required('Name is required.'),
+  label: string().required(fieldErrorMessage),
   description: string().optional(),
-  severity: number().oneOf([0, 1, 2, 3]).required('Severity is required.'),
+  severity: number().oneOf([0, 1, 2, 3]).required(fieldErrorMessage),
   entity_ids: array()
     .of(string().required())
-    .min(1, 'At least one resource is needed.'),
+    .min(1, 'At least one resource is required.'),
   rule_criteria: object({
     rules: array()
       .of(metricCriteria)
-      .min(1, 'At least one metric criteria is needed.'),
+      .min(1, 'At least one metric criteria is required.'),
   }),
   trigger_conditions: triggerConditionValidation,
   channel_ids: array(number()),
