@@ -185,6 +185,7 @@ export const EditAlertResources = () => {
             isSelectionsNeeded
             resourceIds={alertDetails.entity_ids}
             serviceType={alertDetails.service_type}
+            showTitle
           />
         </Box>
         <Box alignSelf={'flex-end'} m={3} mb={0}>

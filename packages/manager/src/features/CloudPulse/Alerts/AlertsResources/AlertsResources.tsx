@@ -210,7 +210,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       {showTitle && (
         <Typography
           fontSize={theme.spacing(2.25)}
-          marginBottom={4}
+          marginBottom={2}
           ref={titleRef}
           variant="h2"
         >
@@ -231,7 +231,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         )}
 
       {(isSelectionsNeeded || resourceIds.length > 0) && (
-        <Grid container spacing={3}>
+        <Grid container mt={!showTitle ? 2 : 0} spacing={3}>
           <Box
             sx={{
               flexDirection: {
