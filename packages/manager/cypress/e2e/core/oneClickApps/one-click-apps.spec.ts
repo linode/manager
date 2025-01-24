@@ -61,10 +61,7 @@ describe('OneClick Apps (OCA)', () => {
 
     cy.wait('@getStackScripts').then((xhr) => {
       const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
-
-      // For the sake of this test, use the first marketplace app defined in Cloud Manager
-      const candidateStackScriptId = +Object.keys(oneClickApps)[0];
-
+      const candidateStackScriptId = getRandomApp();
       const candidateApp = oneClickApps[candidateStackScriptId];
 
       if (!candidateApp) {
@@ -119,10 +116,8 @@ describe('OneClick Apps (OCA)', () => {
         label: 'Debian 11',
       }),
     ];
-
-    // For the sake of this test, use the first marketplace app defined in Cloud Manager
-    const candidateStackScriptId = +Object.keys(oneClickApps)[0];
-
+    // get a randomly selected app
+    const candidateStackScriptId = getRandomApp();
     const stackscript = stackScriptFactory.build({
       id: candidateStackScriptId,
       username: 'linode',
@@ -257,3 +252,16 @@ describe('OneClick Apps (OCA)', () => {
     ui.toast.assertMessage(`Your Linode ${linode.label} is being created.`);
   });
 });
+
+/**
+ * Returns the id of a randomly selected oneClickApp
+ * @returns number
+ */
+function getRandomApp(): number {
+  // pick a random app
+  const appKeys = Object.keys(oneClickApps);
+  const index = Math.floor(Math.random() * appKeys.length);
+  // id should be number, so "+" useful to coerce from string
+  const id = +appKeys[index];
+  return id;
+}
