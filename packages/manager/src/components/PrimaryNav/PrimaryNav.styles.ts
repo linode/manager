@@ -42,7 +42,7 @@ export const StyledActiveLink = styled(Link, {
   minHeight: 32,
   minWidth: SIDEBAR_WIDTH,
   padding: 0,
-  paddingLeft: 50,
+  paddingLeft: 48,
   position: 'relative',
   ...(props.isActiveLink && {
     backgroundColor: theme.tokens.color.Neutrals[100],
@@ -92,9 +92,9 @@ export const StyledAccordion = styled(Accordion, {
         color: props.isActiveProductFamily
           ? theme.tokens.color.Brand[60]
           : theme.tokens.color.Neutrals['White'],
-        height: 24,
+        height: 22,
         transition: theme.transitions.create(['color']),
-        width: 24,
+        width: 22,
       },
       alignItems: 'center',
       display: 'flex',
