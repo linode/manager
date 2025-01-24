@@ -16,7 +16,7 @@ import type {
  */
 export const ONE_TRUST_COOKIE_CATEGORIES = {
   'Functional Cookies': 'C0003',
-  'Performance Cookies': 'C0002',
+  'Performance Cookies': 'C0002', // Analytics cookies fall into this category
   'Social Media Cookies': 'C0004',
   'Strictly Necessary Cookies': 'C0001',
   'Targeting Cookies': 'C0005',
@@ -27,45 +27,44 @@ export const ONE_TRUST_COOKIE_CATEGORIES = {
  * @param name cookie's name
  * @returns value of cookie if it exists in the document; else, undefined
  */
-export const getCookie = (name: string): string | undefined => {
+export const getCookie = (name: string) => {
   const cookies = document.cookie.split(';');
-  let selectedCookie: string | undefined = undefined;
 
-  cookies.forEach((cookie) => {
-    const trimmedCookie = cookie.trim(); // Remove whitespace so position in cookie string doesn't matter
-    if (trimmedCookie.startsWith(name + '=')) {
-      selectedCookie = trimmedCookie.substring(name.length + 1);
-    }
-  });
-  return selectedCookie;
+  const selectedCookie = cookies.find(
+    (cookie) => cookie.trim().startsWith(name + '=') // Trim whitespace so position in cookie string doesn't matter
+  );
+
+  return selectedCookie
+    ? selectedCookie.trim().substring(name.length + 1)
+    : undefined;
 };
 
 /**
  * This function parses the categories in the OptanonConsent cookie to check if consent is provided.
- * @param cookie the OptanonConsent cookie from OneTrust
- * @param category the category code based on cookie type
+ * @param optanonCookie the OptanonConsent cookie from OneTrust
+ * @param selectedCategory the category code based on cookie type
  * @returns true if the user has consented to cookie enablement for the category; else, false
  */
 export const checkOptanonConsent = (
-  cookie: string | undefined,
+  optanonCookie: string | undefined,
   selectedCategory: typeof ONE_TRUST_COOKIE_CATEGORIES[keyof typeof ONE_TRUST_COOKIE_CATEGORIES]
 ): boolean => {
-  const optanonGroups = cookie?.match(/groups=([^&]*)/);
-  let hasConsented = false;
+  const optanonGroups = optanonCookie?.match(/groups=([^&]*)/);
 
-  if (!cookie || !optanonGroups) {
+  if (!optanonCookie || !optanonGroups) {
     return false;
   }
 
-  const consentCategories = decodeURIComponent(optanonGroups[1]).split(',');
-
-  consentCategories.forEach((consentCategory) => {
-    if (consentCategory.includes(selectedCategory)) {
-      hasConsented = Number(consentCategory.split(':')[1]) === 1; // Cookie enabled
+  // Optanon consent groups will be of the form: "C000[N]:[0/1]".
+  const unencodedOptanonGroups = decodeURIComponent(optanonGroups[1]).split(
+    ','
+  );
+  return unencodedOptanonGroups.some((consentGroup) => {
+    if (consentGroup.includes(selectedCategory)) {
+      return Number(consentGroup.split(':')[1]) === 1; // Cookie enabled
     }
+    return false;
   });
-
-  return hasConsented;
 };
 
 /**
