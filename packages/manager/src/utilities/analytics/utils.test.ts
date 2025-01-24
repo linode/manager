@@ -11,9 +11,9 @@ import type { FormEventOptions } from './types';
 
 describe('getCookie', () => {
   beforeAll(() => {
-    const cookies =
+    const mockCookies =
       'mycookie=my-cookie-value; OptanonConsent=cookie-consent-here; mythirdcookie=my-third-cookie;';
-    vi.spyOn(document, 'cookie', 'get').mockReturnValue(cookies);
+    vi.spyOn(document, 'cookie', 'get').mockReturnValue(mockCookies);
   });
 
   it('should return the value of a cookie from document.cookie given its name, given cookie in middle position', () => {
@@ -35,24 +35,24 @@ describe('getCookie', () => {
 
 describe('checkOptanonConsent', () => {
   it('should return true if consent is enabled for the given Optanon cookie category', () => {
-    const mockFunctionalCookieConsentEnabled =
+    const mockPerformanceCookieConsentEnabled =
       'somestuffhere&groups=C0001%3A1%2CC0002%3A1%2CC0003%3A1%2CC0004%3A1%2CC0005%3A1&intType=6';
 
     expect(
       checkOptanonConsent(
-        mockFunctionalCookieConsentEnabled,
+        mockPerformanceCookieConsentEnabled,
         ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
       )
     ).toEqual(true);
   });
 
   it('should return false if consent is disabled for the given Optanon cookie category', () => {
-    const mockFunctionalCookieConsentDisabled =
+    const mockPerformanceCookieConsentDisabled =
       'somestuffhere&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A1%2CC0005%3A1&intType=6';
 
     expect(
       checkOptanonConsent(
-        mockFunctionalCookieConsentDisabled,
+        mockPerformanceCookieConsentDisabled,
         ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
       )
     ).toEqual(false);
