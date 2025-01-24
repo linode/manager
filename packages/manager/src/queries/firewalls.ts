@@ -99,11 +99,17 @@ export const useAllFirewallDevicesQuery = (id: number) =>
     firewallQueries.firewall(id)._ctx.devices
   );
 
-export const useAddFirewallDeviceMutation = (id: number) => {
+export const useAddFirewallDeviceMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<FirewallDevice, APIError[], FirewallDevicePayload>({
-    mutationFn: (data) => addFirewallDevice(id, data),
-    onSuccess(firewallDevice) {
+  return useMutation<
+    FirewallDevice,
+    APIError[],
+    FirewallDevicePayload & { firewallId: number }
+  >({
+    mutationFn: ({ firewallId, ...data }) =>
+      addFirewallDevice(firewallId, data),
+    onSuccess(firewallDevice, vars) {
+      const id = vars.firewallId;
       // Append the new entity to the Firewall object in the paginated store
       queryClient.setQueriesData<ResourcePage<Firewall>>(
         { queryKey: firewallQueries.firewalls._ctx.paginated._def },

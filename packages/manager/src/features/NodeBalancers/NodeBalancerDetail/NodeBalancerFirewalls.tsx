@@ -1,8 +1,7 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import { Box, Stack, Typography } from '@linode/ui';
-import * as React from 'react';
+import { Box, Button, Stack, Typography } from '@linode/ui';
+import React from 'react';
 
-import { Link } from 'src/components/Link';
+import { Drawer } from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -11,8 +10,8 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { CREATE_FIREWALL_LINK } from 'src/constants';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
+import { AddFirewallForm } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeFirewalls/AddFirewallForm';
 import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 
 import { NodeBalancerFirewallsRow } from './NodeBalancerFirewallsRow';
@@ -20,12 +19,11 @@ import { NodeBalancerFirewallsRow } from './NodeBalancerFirewallsRow';
 import type { Firewall, FirewallDevice } from '@linode/api-v4';
 
 interface Props {
-  displayFirewallInfoText: boolean;
   nodeBalancerId: number;
 }
 
 export const NodeBalancerFirewalls = (props: Props) => {
-  const { displayFirewallInfoText, nodeBalancerId } = props;
+  const { nodeBalancerId } = props;
 
   const {
     data: attachedFirewallData,
@@ -45,6 +43,11 @@ export const NodeBalancerFirewalls = (props: Props) => {
   const [
     isRemoveDeviceDialogOpen,
     setIsRemoveDeviceDialogOpen,
+  ] = React.useState<boolean>(false);
+
+  const [
+    isAddFirewallDrawerOpen,
+    setIsAddFirewalDrawerOpen,
   ] = React.useState<boolean>(false);
 
   const handleClickUnassign = (device: FirewallDevice, firewall: Firewall) => {
@@ -76,27 +79,21 @@ export const NodeBalancerFirewalls = (props: Props) => {
     ));
   };
 
-  const learnMoreLink = (
-    <Link to={CREATE_FIREWALL_LINK}>Learn more about creating Firewalls.</Link>
-  );
-  const firewallLink = <Link to="/firewalls/">Firewalls</Link>;
-
   return (
-    <Stack sx={{ marginTop: '0px' }}>
-      <Box display="flex">
-        {displayFirewallInfoText ? (
-          <Typography
-            sx={(theme) => ({
-              marginBottom: theme.spacing(),
-            })}
-            data-testid="nodebalancer-firewalls-table-header"
-          >
-            If you want to assign a new Firewall to this NodeBalancer, go to{' '}
-            {firewallLink}.
-            <br />
-            {learnMoreLink}
-          </Typography>
-        ) : null}
+    <Stack spacing={1}>
+      <Box alignItems="center" display="flex" justifyContent="space-between">
+        <Typography>
+          Cloud Firewall inbound and outbound rules are applied to Compute
+          Instances, but only inbound rules are applied to NodeBalancers.
+        </Typography>
+        <Button
+          buttonType="primary"
+          disabled={attachedFirewallData && attachedFirewallData.results >= 1}
+          onClick={() => setIsAddFirewalDrawerOpen(true)}
+          tooltipText="NodeBalanacers can only have 1 Firewall assigned."
+        >
+          Add Firewall
+        </Button>
       </Box>
       <Table>
         <TableHead>
@@ -104,7 +101,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
             <TableCell>Firewall</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Rules</TableCell>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>{renderTableContent()}</TableBody>
@@ -117,6 +114,17 @@ export const NodeBalancerFirewalls = (props: Props) => {
         onService
         open={isRemoveDeviceDialogOpen}
       />
+      <Drawer
+        onClose={() => setIsAddFirewalDrawerOpen(false)}
+        open={isAddFirewallDrawerOpen}
+        title="Add Firewall"
+      >
+        <AddFirewallForm
+          entityId={nodeBalancerId}
+          entityType="nodebalancer"
+          onCancel={() => setIsAddFirewalDrawerOpen(false)}
+        />
+      </Drawer>
     </Stack>
   );
 };

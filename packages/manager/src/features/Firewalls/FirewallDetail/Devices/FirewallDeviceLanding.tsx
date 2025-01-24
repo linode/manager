@@ -22,7 +22,7 @@ export interface FirewallDeviceLandingProps {
   type: FirewallDeviceEntityType;
 }
 
-export const formattedTypes = {
+export const formattedTypes: Record<FirewallDeviceEntityType, string> = {
   linode: 'Linode',
   nodebalancer: 'NodeBalancer',
 };

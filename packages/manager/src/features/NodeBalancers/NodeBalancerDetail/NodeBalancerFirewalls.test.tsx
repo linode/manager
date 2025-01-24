@@ -50,14 +50,6 @@ describe('NodeBalancerFirewalls', () => {
     expect(getByText('Unassign')).toBeVisible();
   });
 
-  it('displays the FirewallInfo text', () => {
-    const { getByText } = renderWithTheme(
-      <NodeBalancerFirewalls {...props} displayFirewallInfoText={true} />
-    );
-
-    expect(getByText('Learn more about creating Firewalls.')).toBeVisible();
-  });
-
   it('displays a loading placeholder', () => {
     queryMocks.useNodeBalancersFirewallsQuery.mockReturnValue({
       data: { data: [firewall] },
