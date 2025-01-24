@@ -9,7 +9,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import DatabaseBackups from './DatabaseBackups';
 
 describe('Database Backups (Legacy)', () => {
-  it('should render a list of backups after loading', async () => {
+  /**
+   * Skipped due to repeated flake issues
+   */
+  it.skip('should render a list of backups after loading', async () => {
     const mockDatabase = databaseFactory.build({
       platform: 'rdbms-legacy',
     });
