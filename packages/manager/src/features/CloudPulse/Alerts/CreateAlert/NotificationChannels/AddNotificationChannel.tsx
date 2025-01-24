@@ -172,14 +172,7 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
                 <Grid item md={1} sm={1} xs={2}>
                   <Typography variant="h3">To:</Typography>
                 </Grid>
-                <Grid
-                  item
-                  md="auto"
-                  overflow="auto"
-                  paddingRight={1}
-                  sm="auto"
-                  xs="auto"
-                >
+                <Grid item md="auto" overflow="auto" paddingRight={1} xs={12}>
                   <RenderChannelDetails template={selectedTemplate} />
                 </Grid>
               </Grid>

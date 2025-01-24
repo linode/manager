@@ -149,7 +149,7 @@ export const CreateAlertDefinition = () => {
   const notifications = React.useMemo(() => {
     return (
       notificationData?.filter(
-        (notification) => !notificationChannelWatcher.includes(notification.id)
+        ({ id }) => !notificationChannelWatcher.includes(id)
       ) ?? []
     );
   }, [notificationChannelWatcher, notificationData]);
@@ -157,8 +157,8 @@ export const CreateAlertDefinition = () => {
   const selectedNotifications = React.useMemo(() => {
     return (
       notificationChannelWatcher
-        .map((id) =>
-          notificationData?.find((notification) => notification.id === id)
+        .map((notificationId) =>
+          notificationData?.find(({ id }) => id === notificationId)
         )
         .filter((notification) => notification !== undefined) ?? []
     );

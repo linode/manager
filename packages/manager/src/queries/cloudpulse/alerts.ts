@@ -48,6 +48,7 @@ export const useAlertDefinitionQuery = (
     ...queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId),
   });
 };
+
 export const useAlertNotificationChannelsQuery = (
   params?: Params,
   filter?: Filter
