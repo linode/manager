@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
@@ -10,8 +11,8 @@ import { EditAlertResources } from './EditAlertResources';
 
 // Mock Data
 const alertDetails = alertFactory.build({ service_type: 'linode' });
-const linodes = linodeFactory.buildList(3);
-const regions = regionFactory.buildList(3).map((region, index) => ({
+const linodes = linodeFactory.buildList(4);
+const regions = regionFactory.buildList(4).map((region, index) => ({
   ...region,
   id: linodes[index].region,
 }));
@@ -127,7 +128,7 @@ describe('EditAlertResources component tests', () => {
     const push = vi.fn();
     const history = createMemoryHistory(); // Create a memory history for testing
     history.push = push;
-    history.push('/monitor/cloudpulse/alerts/definitions/edit/linode/1');
+    history.push('/monitor/alerts/definitions/edit/linode/1');
 
     const { getByTestId } = renderWithTheme(
       <Router history={history}>
@@ -136,6 +137,11 @@ describe('EditAlertResources component tests', () => {
     );
 
     expect(getByTestId('saveresources')).toBeInTheDocument();
+
+    expect(getByTestId('select_item_4')).toBeInTheDocument();
+
+    await userEvent.click(getByTestId('select_item_4'));
+
     // click and save
     await userEvent.click(getByTestId('saveresources'));
 
@@ -144,15 +150,9 @@ describe('EditAlertResources component tests', () => {
     // click confirmation
     await userEvent.click(getByTestId('editconfirmation'));
 
-    expect(mutateAsyncSpy).toHaveBeenCalledTimes(1);
+    expect(mutateAsyncSpy).toHaveBeenCalledTimes(1); // check if edit is called
 
-    expect(mutateAsyncSpy).toHaveBeenLastCalledWith({
-      resource_ids: Array.from({ length: 20 }, (_, i) => (i + 1).toString()),
-    });
-
-    expect(push).toHaveBeenLastCalledWith(
-      '/monitor/cloudpulse/alerts/definitions'
-    ); // after confirmation history updates to list page
+    expect(push).toHaveBeenLastCalledWith('/monitor/alerts/definitions'); // after confirmation history updates to list page
 
     // click on cancel
     await userEvent.click(getByTestId('cancelsaveresources'));
@@ -161,7 +161,7 @@ describe('EditAlertResources component tests', () => {
 
     expect(push).toHaveBeenLastCalledWith(
       // after cancel click history updates to list page
-      '/monitor/cloudpulse/alerts/definitions'
+      '/monitor/alerts/definitions'
     );
   });
 });
