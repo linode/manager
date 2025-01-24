@@ -13,6 +13,7 @@ export const subnetAssignedLinodeDataFactory = Factory.Sync.makeFactory<SubnetAs
     id: Factory.each((i) => i),
     interfaces: Array.from({ length: 5 }, () => ({
       active: false,
+      config_id: Math.floor(Math.random() * 100),
       id: Math.floor(Math.random() * 100),
     })),
   }

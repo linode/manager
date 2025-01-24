@@ -20,6 +20,7 @@ import {
   Subnet,
   UpdateVPCPayload,
   VPC,
+  VPCIP,
 } from './types';
 
 // VPC methods
@@ -166,4 +167,28 @@ export const deleteSubnet = (vpcID: number, subnetID: number) =>
       )}/subnets/${encodeURIComponent(subnetID)}`
     ),
     setMethod('DELETE')
+  );
+
+/**
+ * getVPCsIPs
+ *
+ * Get a paginated list of all VPC IP addresses and address ranges
+ */
+export const getVPCsIPs = (params?: Params, filter?: Filter) =>
+  Request<Page<VPCIP>>(
+    setURL(`${API_ROOT}/vpcs/ips`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
+  );
+
+/**
+ * getVPCIPs
+ *
+ * Get the VPC IP addresses for the specified VPC
+ */
+export const getVPCIPs = (vpcID: number) =>
+  Request<VPCIP>(
+    setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}/ips`),
+    setMethod('GET')
   );
