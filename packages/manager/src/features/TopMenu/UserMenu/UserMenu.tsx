@@ -131,6 +131,10 @@ export const UserMenu = React.memo(() => {
         hide: isRestrictedUser,
         href: '/account/users',
       },
+      {
+        display: 'Quotas',
+        href: '/account/quotas',
+      },
       // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Service Transfers',
