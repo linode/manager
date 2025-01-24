@@ -36,6 +36,8 @@ export * from './quotas';
 
 export * from './regions';
 
+export * from './service-transfers';
+
 export * from './stackscripts';
 
 export * from './support';

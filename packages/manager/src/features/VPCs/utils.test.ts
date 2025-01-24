@@ -50,7 +50,8 @@ describe('getUniqueLinodesFromSubnets', () => {
     expect(getUniqueLinodesFromSubnets(subnets0)).toBe(0);
     expect(getUniqueLinodesFromSubnets(subnets1)).toBe(4);
     expect(getUniqueLinodesFromSubnets(subnets2)).toBe(2);
-    expect(getUniqueLinodesFromSubnets(subnets3)).toBe(6);
+    // updated factory for generating linode ids, so unique linodes will be different
+    expect(getUniqueLinodesFromSubnets(subnets3)).toBe(8);
   });
 });
 
