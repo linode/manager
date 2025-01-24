@@ -33,8 +33,7 @@ import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
 import type { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
-// (values.interfaces as InterfacePayload[])
-
+// @TODO Linode Interfaces - clean this up/fix/address casting :/
 type InterfaceFieldErrors = Merge<
   FieldError,
   FieldErrorsImpl<InterfacePayload[]>

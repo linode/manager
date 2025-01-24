@@ -285,6 +285,7 @@ export const useCreateLinodeMutation = () => {
       queryClient.invalidateQueries(profileQueries.grants);
 
       if (
+        // @TODO Linode Interfaces - fix/address casting
         (variables.interfaces as InterfacePayload[])?.some(
           (i) => i.purpose === 'vlan'
         )
@@ -294,6 +295,7 @@ export const useCreateLinodeMutation = () => {
         queryClient.invalidateQueries({ queryKey: vlanQueries._def });
       }
 
+      // @TODO Linode Interfaces - fix/address casting
       const vpcId = (variables.interfaces as InterfacePayload[])?.find(
         (i) => i.purpose === 'vpc'
       )?.vpc_id;

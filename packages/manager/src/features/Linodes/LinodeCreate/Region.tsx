@@ -96,12 +96,14 @@ export const Region = React.memo(() => {
       setValue('hasSignedEUAgreement', false);
     }
 
+    // @TODO Linode Interfaces - fix/address casting
     if ((values.interfaces as InterfacePayload[])?.[0].vpc_id) {
       // If a VPC is selected, clear it because VPCs are region specific
       setValue('interfaces.0.vpc_id', null);
       setValue('interfaces.0.subnet_id', null);
     }
 
+    // @TODO Linode Interfaces - fix/address casting
     if ((values.interfaces as InterfacePayload[])?.[1].label) {
       // If a VLAN is selected, clear it because VLANs are region specific
       setValue('interfaces.1.label', null);

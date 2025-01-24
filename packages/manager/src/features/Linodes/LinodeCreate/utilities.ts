@@ -166,6 +166,7 @@ export const getLinodeCreatePayload = (
   }
 
   values.interfaces = getInterfacesPayload(
+    // @TODO Linode Interfaces - fix/address casting
     values.interfaces as InterfacePayload[],
     Boolean(values.private_ip)
   );

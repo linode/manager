@@ -5,6 +5,8 @@ import type {
   InterfacePayload,
 } from '@linode/api-v4/lib/linodes';
 
+// @TODO Linode Interfaces - fix/address casting
+
 /**
  * Generates a Terraform config to setup a Linode instance.
  * @param {Object} config - The configuration object for the Linode instance.
