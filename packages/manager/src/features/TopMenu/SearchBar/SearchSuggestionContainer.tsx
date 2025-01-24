@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
 
@@ -21,11 +22,11 @@ export const SearchSuggestionContainer = (props: CustomPaperProps) => {
         {children}
         {!isLargeAccount && (
           <StyledHelpContainer>
-            <HelpOutline
-              sx={{ marginRight: 1, position: 'relative', top: 5 }}
-            />
-            <b>By field:</b> "tag:my-app" "label:my-linode" &nbsp;&nbsp;
-            <b>With operators</b>: "tag:my-app AND is:domain"
+            <HelpOutline sx={{ marginRight: 1 }} />
+            <Typography sx={{ fontSize: '0.8rem' }}>
+              <b>By field:</b> "tag:my-app" "label:my-linode" &nbsp;&nbsp;
+              <b>With operators</b>: "tag:my-app AND is:domain"
+            </Typography>
           </StyledHelpContainer>
         )}
       </div>

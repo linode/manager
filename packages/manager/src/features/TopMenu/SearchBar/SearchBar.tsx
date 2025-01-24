@@ -1,4 +1,4 @@
-import { Autocomplete, TextField } from '@linode/ui';
+import { Autocomplete, Box, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Search from '@mui/icons-material/Search';
 import * as React from 'react';
@@ -42,6 +42,7 @@ import type { SearchProps } from 'src/features/Search/withStoreSearch';
 
 export interface ExtendedSearchableItem
   extends Omit<SearchableItem, 'entityType'> {
+  icon?: React.ReactNode;
   value: 'error' | 'info' | 'redirect';
 }
 
@@ -142,20 +143,14 @@ const SearchBarComponent = (props: SearchProps) => {
 
     if (pathname !== '/search') {
       setValue(null);
+      setSearchText('');
     } else if (pathname === '/search' && Object.keys(query).length > 0) {
       const q = query.query;
       if (!q) {
         return;
       }
 
-      setValue({
-        data: {
-          searchText: q,
-        },
-        entityType: null,
-        label: q,
-        value: 'redirect',
-      });
+      setSearchText(q);
     }
   }, [history.location]);
 
@@ -205,22 +200,28 @@ const SearchBarComponent = (props: SearchProps) => {
     setMenuOpen(!menuOpen);
   };
 
-  const onClose = () => {
+  const handleClose = () => {
     document.body.classList.remove('searchOverlay');
     setSearchActive(false);
     setSearchText('');
     setMenuOpen(false);
   };
 
-  const onOpen = () => {
+  const handleOpen = () => {
     document.body.classList.add('searchOverlay');
     setSearchActive(true);
     setMenuOpen(true);
   };
 
-  const onFocus = () => {
+  const handleFocus = () => {
     setSearchActive(true);
     setSearchText('');
+  };
+
+  const handleBlur = () => {
+    if (searchText === '') {
+      handleClose();
+    }
   };
 
   const onSelect = (item: SearchResultItem) => {
@@ -244,21 +245,7 @@ const SearchBarComponent = (props: SearchProps) => {
     }
 
     history.push(item.data.path);
-    onClose();
-  };
-
-  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (
-      e.key === 'Enter' &&
-      searchText !== '' &&
-      (!combinedResults || combinedResults.length < 1)
-    ) {
-      history.push({
-        pathname: `/search`,
-        search: `?query=${encodeURIComponent(searchText)}`,
-      });
-      onClose();
-    }
+    handleClose();
   };
 
   const options = createFinalOptions(
@@ -270,13 +257,6 @@ const SearchBarComponent = (props: SearchProps) => {
     // We still want these users to be able to use the search feature.
     Boolean(apiError) && apiError !== 'Unauthorized'
   );
-
-  const finalOptions = React.useMemo(() => {
-    if (value && value.value === 'redirect') {
-      return [...options, value];
-    }
-    return options;
-  }, [options, value]);
 
   return (
     <React.Fragment>
@@ -312,24 +292,9 @@ const SearchBarComponent = (props: SearchProps) => {
              * searching by tag won't work. */
             return options;
           }}
-          isOptionEqualToValue={(option, value) => {
-            if (value.value === 'redirect') {
-              return (
-                option.value === 'redirect' && option.label === value.label
-              );
-            }
-            return option.value === value.value;
-          }}
           onChange={(_, value) => {
             if (value) {
               onSelect(value);
-            }
-          }}
-          onInputChange={(_event, newInputValue, reason) => {
-            if (reason === 'clear') {
-              onClose();
-            } else {
-              handleSearchChange(newInputValue);
             }
           }}
           renderInput={(params) => {
@@ -359,7 +324,29 @@ const SearchBarComponent = (props: SearchProps) => {
 
             if (isSpecialOption(option)) {
               return (
-                <MenuItem {...rest} key={`${key}-${value}`}>
+                <MenuItem
+                  {...rest}
+                  sx={(theme) => ({
+                    '&:hover svg': {
+                      color: `${theme.color.white} !important`,
+                    },
+                    fontFamily: theme.font.bold,
+                  })}
+                  key={`${key}-${value}`}
+                >
+                  {option.icon && (
+                    <Box
+                      sx={{
+                        '& svg': {
+                          height: 24,
+                          width: 24,
+                        },
+                        mx: 1.4,
+                      }}
+                    >
+                      {option.icon}
+                    </Box>
+                  )}
                   {option.label}
                 </MenuItem>
               );
@@ -375,7 +362,7 @@ const SearchBarComponent = (props: SearchProps) => {
                 key={`${key}-${value}`}
                 searchText={searchText}
                 selectOption={() => onSelect(option)}
-                selectProps={{ onMenuClose: onClose }}
+                selectProps={{ onMenuClose: handleClose }}
               />
             );
           }}
@@ -389,13 +376,12 @@ const SearchBarComponent = (props: SearchProps) => {
           loading={entitiesLoading}
           multiple={false}
           noOptionsText="No results"
-          onBlur={onClose}
-          onClose={onClose}
-          onFocus={onFocus}
-          onKeyDown={onKeyDown}
-          onOpen={onOpen}
+          onBlur={handleBlur}
+          onClose={handleClose}
+          onFocus={handleFocus}
+          onOpen={handleOpen}
           open={menuOpen && searchText !== ''}
-          options={finalOptions}
+          options={options}
           placeholder="Search Products, IP Addresses, Tags..."
           popupIcon={null}
           value={value}

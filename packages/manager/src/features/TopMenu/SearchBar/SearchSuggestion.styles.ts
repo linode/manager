@@ -7,7 +7,6 @@ export const StyledSearchSuggestion = styled(MenuItem, {
 })(({ theme }) => ({
   '&.MuiButtonBase-root': {
     '&:hover': {
-      // everything inside the button except the tag
       '& *:not(.tag-container *)': {
         color: theme.color.white,
       },
@@ -33,13 +32,8 @@ export const StyledSuggestionTitle = styled('div', {
   color: theme.palette.text.primary,
   fontFamily: theme.font.bold,
   fontSize: '1rem',
+  lineHeight: 1,
   wordBreak: 'break-all',
-}));
-
-export const StyledSegment = styled('span', {
-  label: 'StyledSegment',
-})(({ theme }) => ({
-  color: theme.palette.primary.main,
 }));
 
 export const StyledSuggestionDescription = styled('div', {
@@ -50,23 +44,30 @@ export const StyledSuggestionDescription = styled('div', {
   marginTop: 2,
 }));
 
+export const StyledSegment = styled('span', {
+  label: 'StyledSegment',
+})(({ theme }) => ({
+  color: theme.palette.primary.main,
+}));
+
 export const StyledTagContainer = styled('div', {
   label: 'StyledTagContainer',
 })(({ theme }) => ({
+  '& .MuiButtonBase-root': {
+    height: 24,
+  },
   '& .MuiChip-label': {
     '&:hover': {
       border: `1px solid ${theme.color.white}`,
     },
     border: `1px solid transparent`,
-    paddingTop: 5,
+    padding: '1px 6px 2px !important',
   },
-  '& > div': {
-    margin: '2px',
-  },
-  alignItems: 'center',
 
+  alignItems: 'center',
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'flex-end',
-  paddingRight: 8,
+  paddingRight: theme.spacing(2),
+  width: '100%',
 }));

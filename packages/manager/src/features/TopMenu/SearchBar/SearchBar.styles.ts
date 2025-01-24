@@ -90,8 +90,10 @@ export const StyledSearchSuggestionContainer = styled(Paper, {
 export const StyledHelpContainer = styled(Box, {
   label: 'StyledHelpContainer',
 })(({ theme }) => ({
+  alignItems: 'center',
+  backgroundColor: theme.color.grey9,
   borderTop: `1px solid ${theme.palette.divider}`,
-  fontSize: '0.875rem',
+  display: 'flex',
+  fontSize: '0.8rem',
   padding: theme.spacing(2),
-  paddingTop: theme.spacing(2),
 }));

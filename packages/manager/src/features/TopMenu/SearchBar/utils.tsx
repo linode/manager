@@ -1,3 +1,6 @@
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
+import * as React from 'react';
+
 import type { ExtendedSearchableItem, SearchResultItem } from './SearchBar';
 
 export const createFinalOptions = (
@@ -10,6 +13,7 @@ export const createFinalOptions = (
     data: {
       searchText,
     },
+    icon: <ManageSearchIcon />,
     label: `View search results page for "${searchText}"`,
     value: 'redirect',
   };
