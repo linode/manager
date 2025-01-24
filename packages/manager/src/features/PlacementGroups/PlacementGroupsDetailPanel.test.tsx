@@ -61,10 +61,8 @@ describe('PlacementGroupsDetailPanel', () => {
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          placement_group_type: 'affinity:local',
           id: 1,
           is_compliant: true,
-          placement_group_policy: 'strict',
           label: 'my-placement-group',
           members: [
             {
@@ -72,6 +70,8 @@ describe('PlacementGroupsDetailPanel', () => {
               linode_id: 1,
             },
           ],
+          placement_group_policy: 'strict',
+          placement_group_type: 'affinity:local',
           region: 'us-west',
         }),
       ],
