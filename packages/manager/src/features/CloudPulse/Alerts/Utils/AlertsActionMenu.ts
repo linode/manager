@@ -7,7 +7,8 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
  * @returns The actions based on the type of the alert
  */
 export const getAlertTypeToActionsList = ({
-  handleDetails, handleEdit
+  handleDetails,
+  handleEdit,
 }: ActionHandlers): Record<AlertDefinitionType, Action[]> => ({
   custom: [
     {

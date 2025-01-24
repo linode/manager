@@ -15,13 +15,14 @@ export const useResourcesQuery = (
     ...queryFactory.resources(resourceType, params, filters),
     enabled,
     select: (resources) => {
-      return resources.map((resource) => {
-        return {
-          id: resource.id,
-          label: resource.label,
-          region: resource.region,
-          regions: resource.regions ? resource.regions : [],
-        };
-      });
+      return resources.map(
+        (resource): CloudPulseResources => {
+          return {
+            id: String(resource.id),
+            label: resource.label,
+            region: resource.region,
+          };
+        }
+      );
     },
   });

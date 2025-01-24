@@ -1,8 +1,9 @@
+import { DateTime } from 'luxon';
+
 import { dashboardFactory } from 'src/factories';
 import { databaseQueries } from 'src/queries/databases/databases';
 
 import { RESOURCES } from './constants';
-import { deepEqual, getFilters } from './FilterBuilder';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -14,6 +15,7 @@ import {
   getResourcesProperties,
   getTimeDurationProperties,
 } from './FilterBuilder';
+import { deepEqual, getFilters } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseSelectTypes } from './models';
 
@@ -198,11 +200,15 @@ it('test checkIfAllMandatoryFiltersAreSelected method', () => {
   );
 
   expect(resourceSelectionConfig).toBeDefined();
-
+  const now = DateTime.now();
   let result = checkIfAllMandatoryFiltersAreSelected({
     dashboard: mockDashboard,
     filterValue: { region: 'us-east', resource_id: ['1', '2'] },
-    timeDuration: { unit: 'min', value: 30 },
+    timeDuration: {
+      end: now.toISO(),
+      preset: '30minutes',
+      start: now.minus({ minutes: 30 }).toISO(),
+    },
   });
 
   expect(result).toEqual(true);
@@ -210,7 +216,11 @@ it('test checkIfAllMandatoryFiltersAreSelected method', () => {
   result = checkIfAllMandatoryFiltersAreSelected({
     dashboard: mockDashboard,
     filterValue: { region: 'us-east' },
-    timeDuration: { unit: 'min', value: 30 },
+    timeDuration: {
+      end: now.toISO(),
+      preset: '30minutes',
+      start: now.minus({ minutes: 30 }).toISO(),
+    },
   });
 
   expect(result).toEqual(false);

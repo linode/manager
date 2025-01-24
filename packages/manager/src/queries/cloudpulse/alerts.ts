@@ -53,6 +53,15 @@ export const useAlertDefinitionQuery = (
   });
 };
 
+export const useAlertNotificationChannelsQuery = (
+  params?: Params,
+  filter?: Filter
+) => {
+  return useQuery<NotificationChannel[], APIError[]>({
+    ...queryFactory.notificationChannels._ctx.all(params, filter),
+  });
+};
+
 export const useEditAlertDefinitionResources = (
   serviceType: string,
   alertId: number
@@ -66,14 +75,5 @@ export const useEditAlertDefinitionResources = (
         queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId)
       );
     },
-  });
-};
-
-export const useAlertNotificationChannelsQuery = (
-  params?: Params,
-  filter?: Filter
-) => {
-  return useQuery<NotificationChannel[], APIError[]>({
-    ...queryFactory.notificationChannels._ctx.all(params, filter),
   });
 };

@@ -11,8 +11,8 @@ import {
   Alert,
   AlertServiceType,
   CreateAlertDefinitionPayload,
-  NotificationChannel,
   EditAlertResourcesPayload,
+  NotificationChannel,
 } from './types';
 import { BETA_API_ROOT as API_ROOT } from '../constants';
 import { Params, Filter, ResourcePage } from '../types';
@@ -29,21 +29,6 @@ export const createAlertDefinition = (
     ),
     setMethod('POST'),
     setData(data, createAlertDefinitionSchema)
-  );
-
-export const editAlertDefinitionResources = (
-  data: EditAlertResourcesPayload,
-  serviceType: string,
-  alertId: number
-) =>
-  Request<Alert>(
-    setURL(
-      `${API_ROOT}/monitor/services/${encodeURIComponent(
-        serviceType
-      )}/alert-definitions/${encodeURIComponent(alertId)}`
-    ),
-    setMethod('PUT'),
-    setData(data)
   );
 
 export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
@@ -82,4 +67,19 @@ export const getNotificationChannels = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
+  );
+
+export const editAlertDefinitionResources = (
+  data: EditAlertResourcesPayload,
+  serviceType: string,
+  alertId: number
+) =>
+  Request<Alert>(
+    setURL(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/alert-definitions/${encodeURIComponent(alertId)}`
+    ),
+    setMethod('PUT'),
+    setData(data)
   );

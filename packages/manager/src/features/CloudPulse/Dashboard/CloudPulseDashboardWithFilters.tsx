@@ -8,8 +8,12 @@ import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboar
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
+import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
-import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import {
+  convertToGmt,
+  defaultTimeDuration,
+} from '../Utils/CloudPulseDateTimePickerUtils';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
   checkIfFilterBuilderNeeded,
@@ -19,7 +23,7 @@ import {
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
 import type { FilterData, FilterValueType } from './CloudPulseDashboardLanding';
-import type { TimeDuration } from '@linode/api-v4';
+import type { DateTimeWithPreset } from '@linode/api-v4';
 
 export interface CloudPulseDashboardWithFiltersProp {
   /**
@@ -44,10 +48,9 @@ export const CloudPulseDashboardWithFilters = React.memo(
       label: {},
     });
 
-    const [timeDuration, setTimeDuration] = React.useState<TimeDuration>({
-      unit: 'min',
-      value: 30,
-    });
+    const [timeDuration, setTimeDuration] = React.useState<DateTimeWithPreset>(
+      defaultTimeDuration()
+    );
 
     const [showAppliedFilters, setShowAppliedFilters] = React.useState<boolean>(
       false
@@ -76,8 +79,12 @@ export const CloudPulseDashboardWithFilters = React.memo(
     );
 
     const handleTimeRangeChange = React.useCallback(
-      (timeDuration: TimeDuration) => {
-        setTimeDuration(timeDuration);
+      (timeDuration: DateTimeWithPreset) => {
+        setTimeDuration({
+          ...timeDuration,
+          end: convertToGmt(timeDuration.end),
+          start: convertToGmt(timeDuration.start),
+        });
       },
       []
     );
@@ -140,8 +147,16 @@ export const CloudPulseDashboardWithFilters = React.memo(
                     isServiceIntegration
                   />
                 </Grid>
-                <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
-                  <CloudPulseTimeRangeSelect
+                <Grid
+                  display="flex"
+                  gap={1}
+                  item
+                  justifyContent="end"
+                  md={8}
+                  sm={6}
+                  xs={12}
+                >
+                  <CloudPulseDateTimeRangePicker
                     handleStatsChange={handleTimeRangeChange}
                     savePreferences
                   />

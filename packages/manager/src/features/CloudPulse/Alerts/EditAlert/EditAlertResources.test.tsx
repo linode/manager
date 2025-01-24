@@ -10,10 +10,10 @@ import { EditAlertResources } from './EditAlertResources';
 
 // Mock Data
 const alertDetails = alertFactory.build({ service_type: 'linode' });
-const linodes = linodeFactory.buildList(3);
-const regions = regionFactory.buildList(1).map((region, index) => ({
+const linodes = linodeFactory.buildList(4);
+const regions = regionFactory.buildList(4).map((region, index) => ({
   ...region,
-  id: index < 3 ? linodes[index].region : region.id,
+  id: linodes[index].region,
 }));
 
 // Mock Queries
@@ -70,49 +70,16 @@ beforeEach(() => {
 });
 
 describe('EditAlertResources component tests', () => {
-  it('Edit alert resources happy path', async () => {
-    const mutateAsyncSpy = queryMocks.useEditAlertDefinitionResources()
-      .mutateAsync;
-
-    const push = vi.fn();
-    const history = createMemoryHistory(); // Create a memory history for testing
-    history.push = push;
-    history.push('/monitor/cloudpulse/alerts/definitions/edit/linode/1');
-
-    const { getByTestId } = renderWithTheme(
-      <Router history={history}>
-        <EditAlertResources />
-      </Router>
+  it('Edit alert resources happy path', () => {
+    const { getByPlaceholderText, getByTestId } = renderWithTheme(
+      <EditAlertResources />
     );
 
-    expect(getByTestId('saveresources')).toBeInTheDocument();
-    // click and save
-    await userEvent.click(getByTestId('saveresources'));
-
-    expect(getByTestId('editconfirmation')).toBeInTheDocument();
-
-    // click confirmation
-    await userEvent.click(getByTestId('editconfirmation'));
-
-    expect(mutateAsyncSpy).toHaveBeenCalledTimes(1);
-
-    expect(mutateAsyncSpy).toHaveBeenLastCalledWith({
-      resource_ids: Array.from({ length: 20 }, (_, i) => (i + 1).toString()),
-    });
-
-    expect(push).toHaveBeenLastCalledWith(
-      '/monitor/cloudpulse/alerts/definitions'
-    ); // after confirmation history updates to list page
-
-    // click on cancel
-    await userEvent.click(getByTestId('cancelsaveresources'));
-
-    expect(push.mock.calls.length).toBe(3); // 3 calls on landing edit page, on confirmation, on cancel click
-
-    expect(push).toHaveBeenLastCalledWith(
-      // after cancel click history updates to list page
-      '/monitor/cloudpulse/alerts/definitions'
-    );
+    expect(
+      getByPlaceholderText('Search for a Region or Resource')
+    ).toBeInTheDocument();
+    expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
+    expect(getByTestId('show_selected_only')).toBeInTheDocument();
   });
 
   it('Edit alert resources alert details error and loading path', () => {
@@ -151,5 +118,49 @@ describe('EditAlertResources component tests', () => {
     const { getByText } = renderWithTheme(<EditAlertResources />);
 
     expect(getByText('No Data to display.')).toBeInTheDocument();
+  });
+
+  it('Edit alert resources successful edit', async () => {
+    const mutateAsyncSpy = queryMocks.useEditAlertDefinitionResources()
+      .mutateAsync;
+
+    const push = vi.fn();
+    const history = createMemoryHistory(); // Create a memory history for testing
+    history.push = push;
+    history.push('/monitor/alerts/definitions/edit/linode/1');
+
+    const { getByTestId } = renderWithTheme(
+      <Router history={history}>
+        <EditAlertResources />
+      </Router>
+    );
+
+    expect(getByTestId('saveresources')).toBeInTheDocument();
+
+    expect(getByTestId('select_item_4')).toBeInTheDocument();
+
+    await userEvent.click(getByTestId('select_item_4'));
+
+    // click and save
+    await userEvent.click(getByTestId('saveresources'));
+
+    expect(getByTestId('editconfirmation')).toBeInTheDocument();
+
+    // click confirmation
+    await userEvent.click(getByTestId('editconfirmation'));
+
+    expect(mutateAsyncSpy).toHaveBeenCalledTimes(1); // check if edit is called
+
+    expect(push).toHaveBeenLastCalledWith('/monitor/alerts/definitions'); // after confirmation history updates to list page
+
+    // click on cancel
+    await userEvent.click(getByTestId('cancelsaveresources'));
+
+    expect(push.mock.calls.length).toBe(3); // 3 calls on landing edit page, on confirmation, on cancel click
+
+    expect(push).toHaveBeenLastCalledWith(
+      // after cancel click history updates to list page
+      '/monitor/alerts/definitions'
+    );
   });
 });
