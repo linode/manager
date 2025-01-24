@@ -103,6 +103,9 @@ export const NotificationMenu = () => {
           <Bell height="24px" width="24px" />
           {numNotifications > 0 && (
             <StyledChip
+              adjustBorderRadius={
+                numNotifications > 9 || showInProgressEventIcon
+              }
               icon={
                 Boolean(showInProgressEventIcon) ? (
                   <StyledAutorenewIcon data-testid="in-progress-event-icon" />
@@ -111,7 +114,6 @@ export const NotificationMenu = () => {
               color="error"
               data-testid="events-count-notification"
               label={numNotifications > 9 ? '9+' : numNotifications}
-              showPlus={numNotifications > 9}
               size="small"
             />
           )}
@@ -180,8 +182,8 @@ export const NotificationMenu = () => {
 
 const StyledChip = styled(Chip, {
   label: 'StyledEventNotificationChip',
-  shouldForwardProp: (prop) => prop !== 'showPlus',
-})<{ showPlus: boolean }>(({ theme, ...props }) => ({
+  shouldForwardProp: (prop) => prop !== 'adjustBorderRadius',
+})<{ adjustBorderRadius: boolean }>(({ theme, ...props }) => ({
   '& .MuiChip-icon': {
     margin: 0,
     marginLeft: theme.tokens.spacing[10],
@@ -190,7 +192,7 @@ const StyledChip = styled(Chip, {
     padding: 0,
   },
   backgroundColor: theme.tokens.header.Badge.Background,
-  borderRadius: props.showPlus ? theme.tokens.spacing[50] : '50%',
+  borderRadius: props.adjustBorderRadius ? theme.tokens.spacing[50] : '50%',
   color: theme.tokens.header.Badge.Text,
   flexDirection: 'row-reverse',
   font: theme.tokens.typography.Label.Bold.Xs,
