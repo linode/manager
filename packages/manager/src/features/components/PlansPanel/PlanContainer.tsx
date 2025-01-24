@@ -20,7 +20,7 @@ export interface PlanSelectionFilterOptionsTable {
   planFilter?: (plan: PlanWithAvailability) => boolean;
 }
 
-interface PlanSelectionDividers {
+export interface PlanSelectionDividers {
   flag: boolean;
   planType: LinodeTypeClass;
   tables: PlanSelectionFilterOptionsTable[];
