@@ -136,6 +136,7 @@ export const LinodeEntityDetail = (props: Props) => {
             linodePlan={linodePlan}
             linodeRegionDisplay={linodeRegionDisplay}
             linodeTags={linode.tags}
+            linodeLkeClusterId={linode.lke_cluster_id}
           />
         }
         header={

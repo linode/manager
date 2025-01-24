@@ -3,6 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
@@ -23,6 +24,7 @@ interface FooterProps {
   linodeCreated: string;
   linodeId: number;
   linodeLabel: string;
+  linodeLkeClusterId: null | number;
   linodePlan: null | string;
   linodeRegionDisplay: null | string;
   linodeTags: string[];
@@ -38,6 +40,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     linodeCreated,
     linodeId,
     linodeLabel,
+    linodeLkeClusterId,
     linodePlan,
     linodeRegionDisplay,
     linodeTags,
@@ -120,6 +123,14 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
             <StyledLabelBox component="span">Linode ID:</StyledLabelBox>{' '}
             {linodeId}
           </StyledListItem>
+          {linodeLkeClusterId && (
+            <StyledListItem>
+              <StyledLabelBox component="span">LKE Cluster ID:</StyledLabelBox>{' '}
+              <Link to={`/kubernetes/clusters/${linodeLkeClusterId}`}>
+                {linodeLkeClusterId}
+              </Link>
+            </StyledListItem>
+          )}
           <StyledListItem
             sx={{
               ...sxLastListItem,
