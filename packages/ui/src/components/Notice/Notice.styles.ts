@@ -5,6 +5,9 @@ export const useStyles = makeStyles()((theme) => ({
     borderLeft: `5px solid ${theme.palette.error.dark}`,
   },
   icon: {
+    '& g': {
+      stroke: theme.tokens.color.Neutrals.White,
+    },
     color: theme.tokens.color.Neutrals.White,
     left: -25,
     position: 'absolute',
@@ -43,6 +46,9 @@ export const useStyles = makeStyles()((theme) => ({
     borderLeft: `5px solid ${theme.palette.warning.dark}`,
   },
   warningIcon: {
+    '& path:first-of-type': {
+      stroke: theme.tokens.color.Neutrals[80],
+    },
     color: theme.tokens.color.Neutrals[80],
   },
 }));

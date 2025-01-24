@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Info from 'src/assets/icons/info.svg';
+
 import {
   CheckIcon,
   AlertIcon as ErrorIcon,
@@ -153,7 +155,7 @@ export const Notice = (props: NoticeProps) => {
       {...rest}
     >
       {important && variantMap.error && <ErrorIcon className={classes.icon} />}
-      {important && variantMap.info && <WarningIcon className={classes.icon} />}
+      {important && variantMap.info && <Info className={classes.icon} />}
       {important && variantMap.success && (
         <CheckIcon className={classes.icon} />
       )}
