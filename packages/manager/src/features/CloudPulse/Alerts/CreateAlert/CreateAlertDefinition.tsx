@@ -252,6 +252,7 @@ export const CreateAlertDefinition = () => {
           />
           {openAddNotification && (
             <Drawer
+              data-qa-buttons="true"
               onClose={onExitNotifications}
               open={openAddNotification}
               title="Add Notification Channel"

@@ -10,7 +10,7 @@ import { paginateResponse } from 'support/util/paginate';
 import { randomString } from 'support/util/random';
 import { makeResponse } from 'support/util/response';
 
-import type { Alert } from '@linode/api-v4';
+import type { Alert, CreateAlertDefinitionPayload, NotificationChannel } from '@linode/api-v4';
 import type {
   CloudPulseMetricsResponse,
   Dashboard,
@@ -309,5 +309,55 @@ export const mockGetAllAlertDefinitions = (
     'GET',
     apiMatcher('/monitor/alert-definitions?page_size=500'),
     paginateResponse(alert)
+  );
+};
+
+/**
+ * Mocks the API response for retrieving all alert channels from the monitoring service.
+ * This function intercepts a GET request to fetch alert channels and returns a mock
+ * response, simulating the behavior of the real API by providing a list of alert channels.
+ *
+ * The mock response is created using the provided `channel` object, allowing the test
+ * to simulate various scenarios with different alert channel configurations.
+ *
+ * @param {NotificationChannel} channel - An object representing the notification channel to mock as the response.
+ *                                        This should represent the alert channel being fetched by the API.
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted request.
+ */
+export const mockGetAlertChannels = (
+  channel: NotificationChannel[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('/monitor/alert-channels?page_size=500'),
+    paginateResponse(channel)
+  );
+};
+
+/**
+ * Mocks the API response for creating a new alert definition in the monitoring service.
+ * This function intercepts a POST request to create alert definitions and returns a mock
+ * response, simulating the behavior of the real API by returning the alert definition
+ * that was submitted in the request.
+ *
+ * The mock response is created using the provided `createAlertRequest` object, allowing
+ * the test to simulate various scenarios with different alert definitions.
+ *
+ * @param {string} serviceType - The type of service for which the alert definition is being created.
+ *                               This could be 'linode', 'dbaas', or another service type supported by the API.
+ * @param {CreateAlertDefinitionPayload} createAlertRequest 
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted request.
+ */
+
+export const mockCreateAlertDefinition = (
+  serviceType: string,
+  createAlertRequest: CreateAlertDefinitionPayload
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`/monitor/services/${serviceType}/alert-definitions`),
+    paginateResponse(createAlertRequest)
   );
 };

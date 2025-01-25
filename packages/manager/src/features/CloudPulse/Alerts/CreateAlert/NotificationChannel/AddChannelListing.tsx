@@ -106,6 +106,7 @@ export const AddChannelListing = React.memo((props: ChannelListProps) => {
       <Box mt={1}>
         <Button
           buttonType="outlined"
+          data-qa-buttons="true"
           onClick={onClickAddNotification}
           size="medium"
         >

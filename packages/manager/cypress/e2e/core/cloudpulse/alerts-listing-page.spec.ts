@@ -205,7 +205,7 @@ describe('Integration Tests for Dbaas Alert Listing Page', () => {
 
     // Check that the "Create Alert" button is visible
     ui.buttonGroup
-      .findButtonByTitle('Create Alert')
+      .findButtonByTitle('Create')
       .should('be.visible')
       .should('have.css', 'background-color', 'rgb(1, 116, 188)')
       .should('have.css', 'font-family', 'LatoWebBold, sans-serif')
