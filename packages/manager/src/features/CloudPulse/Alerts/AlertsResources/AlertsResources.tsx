@@ -14,6 +14,7 @@ import {
   getRegionsIdLabelMap,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { Region } from '@linode/api-v4';
@@ -57,8 +58,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
 
-  const [selectedResources, setSelectedResources] = React.useState<number[]>(
-    []
+  const [selectedResources, setSelectedResources] = React.useState<string[]>(
+    resourceIds
   );
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
@@ -77,24 +78,24 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const theme = useTheme();
 
+  React.useEffect(() => {
+    if (resources && isSelectionsNeeded) {
+      setSelectedResources(
+        resources
+          .filter((resource) => resourceIds.includes(resource.id))
+          .map((resource) => resource.id)
+      );
+    }
+  }, [resources, isSelectionsNeeded, resourceIds]);
+
   const {
     data: regions,
     isError: isRegionsError,
     isFetching: isRegionsFetching,
   } = useRegionsQuery();
 
-  React.useEffect(() => {
-    if (resources && isSelectionsNeeded) {
-      setSelectedResources(
-        resources
-          .filter((resource) => resourceIds.includes(String(resource.id)))
-          .map((resource) => Number(resource.id))
-      );
-    }
-  }, [resources, isSelectionsNeeded, resourceIds]);
-
   const handleSelection = React.useCallback(
-    (ids: number[], isSelectionAction: boolean) => {
+    (ids: string[], isSelectionAction: boolean) => {
       const onlySelected = isSelectionAction
         ? selectedResources
         : selectedResources.filter((resource) => !ids.includes(resource));
@@ -104,7 +105,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       setSelectedResources([...onlySelected, ...newlySelected]);
 
       if (handleResourcesSelection) {
-        handleResourcesSelection(ids.map((id) => String(id)));
+        handleResourcesSelection([...onlySelected, ...newlySelected]);
       }
     },
     [handleResourcesSelection, selectedResources]
@@ -141,16 +142,36 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     selectedResources,
   ]);
 
+  const handleAllSelection = React.useCallback(() => {
+    if (!resources) {
+      // Guard clause if data is undefined
+      return;
+    }
+
+    if (selectedResources.length === resources.length) {
+      // Unselect all
+      setSelectedResources([]);
+    } else {
+      // Select all
+      const allResources = resources.map((resource) => resource.id);
+      setSelectedResources(allResources);
+      if (handleResourcesSelection) {
+        handleResourcesSelection(allResources);
+      }
+    }
+  }, [handleResourcesSelection, resources, selectedResources]);
+
   /**
    * Holds the regions associated with the resources from list of regions
    */
   const regionOptions: Region[] = React.useMemo(() => {
     return getRegionOptions({
       data: resources,
+      isAdditionOrDeletionNeeded: isSelectionsNeeded,
       regionsIdToLabelMap,
       resourceIds,
     });
-  }, [resources, resourceIds, regionsIdToLabelMap]);
+  }, [resources, isSelectionsNeeded, regionsIdToLabelMap, resourceIds]);
 
   const titleRef = React.useRef<HTMLDivElement>(null); // when the page size, page number of table changes lets scroll until the title of this component
 
@@ -245,6 +266,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               </Grid>
             )}
           </Grid>
+          {isSelectionsNeeded && !(isResourcesError || isRegionsError) && (
+            <Grid item xs={12}>
+              <AlertsResourcesNotice
+                handleSelectionChange={handleAllSelection}
+                selectedResources={selectedResources.length}
+                totalResources={resources?.length ?? 0}
+              />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <DisplayAlertResources
               noDataText={
