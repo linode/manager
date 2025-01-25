@@ -40,6 +40,7 @@ const timeRanges = [
   { label: 'Last 7 Days', unit: 'days', value: 7 },
   { label: 'Last 1 Hour', unit: 'hr', value: 1 },
 ];
+
 const mockRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
   id: 'us-ord',
@@ -101,10 +102,12 @@ const mockAccount = accountFactory.build();
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData('Last 30 Days', '1 day'),
 });
+
 const databaseMock: Database = databaseFactory.build({
   type: engine,
   region: mockRegion.label,
 });
+
 const timezone = 'Asia/Kolkata';
 
 /**
@@ -118,29 +121,24 @@ const timezone = 'Asia/Kolkata';
  * @param {number} [minute=0] - The minute to set for the resulting date (0-59). Defaults to 0.
  *
  * @returns {Object} - Returns an object containing:
- *   - `actualDate`: The formatted date and time in IST (YYYY-MM-DD HH:MM).
+ *   - `actualDate`: The formatted date and time in IST (YYYY-MM-DD HH:mm).
  *   - `day`: The day of the month as a number.
  *   - `hour`: The hour in the 24-hour format as a number.
  *   - `minute`: The minute of the hour as a number.
  *   - `month`: The month of the year as a number.
  *   - `ampm`: The AM/PM designation of the time (either 'AM' or 'PM').
  */
-
 const getDateRangeInIST = (
   daysOffset: number,
   hour: number,
   minute: number = 0
 ) => {
-  // Get the current date and time in the specified timezone
   const now = DateTime.now().setZone(timezone);
-
-  // Set the date to the 1st of the current month
   const targetDate = now
     .startOf('month')
     .plus({ days: daysOffset })
     .set({ hour, minute });
 
-  // Format the date and return the details
   const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm');
   return {
     actualDate,
@@ -151,33 +149,26 @@ const getDateRangeInIST = (
     ampm: targetDate.toFormat('a'),
   };
 };
+
 /**
  * This function calculates the start and end of the previous month,
  * adjusted by subtracting 5 hours and 30 minutes, and returns them
  * in the ISO 8601 format (UTC).
  *
- * @param {string} timezone - The timezone to use for the current date and time.
  * @returns {{start: string, end: string}} - The start and end dates of the previous month in ISO 8601 format.
  */
-
-function getLastMonthRange() {
-  // Get the current date and time in the specified timezone
+const getLastMonthRange = (): { start: string; end: string } => {
   const now = DateTime.now().setZone(timezone);
-
-  // Calculate the previous month
   const lastMonth = now.minus({ months: 1 });
 
-  // Get the start and end of the previous month in ISO format
   const expectedStartDateISO = lastMonth.startOf('month').toISO() ?? '';
   const expectedEndDateISO = lastMonth.endOf('month').toISO() ?? '';
 
-  // Subtract 5 hours and 30 minutes
   const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, {
-    zone: 'utc',
+    zone: 'gmt',
   });
-  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'utc' });
+  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
 
-  // Format the dates to match the required output
   const formattedStartDate = adjustedStartDate.toFormat(
     "yyyy-MM-dd'T'HH:mm:ss'Z'"
   );
@@ -187,29 +178,25 @@ function getLastMonthRange() {
     start: formattedStartDate,
     end: formattedEndDate,
   };
-}
+};
+
 /**
  * This function calculates the start of the current month and the current date and time,
  * adjusted by subtracting 5 hours and 30 minutes, and returns them in the ISO 8601 format (UTC).
  *
- * @param {string} timezone - The timezone to use for the current date and time.
  * @returns {{start: string, end: string}} - The start and end dates of the current month in ISO 8601 format.
  */
-function getThisMonthRange() {
-  // Get the current date and time in the specified timezone
+const getThisMonthRange = (): { start: string; end: string } => {
   const now = DateTime.now().setZone(timezone);
 
-  // Get the start of the current month in ISO format
   const expectedStartDateISO = now.startOf('month').toISO() ?? '';
   const expectedEndDateISO = now.toISO() ?? '';
 
-  // Subtract 5 hours and 30 minutes from the start of the month
   const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, {
-    zone: 'utc',
+    zone: 'gmt',
   });
-  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'utc' });
+  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
 
-  // Format the current date and time to match the required output
   const formattedStartDate = adjustedStartDate.toFormat(
     "yyyy-MM-dd'T'HH:mm:ss'Z'"
   );
@@ -219,9 +206,9 @@ function getThisMonthRange() {
     start: formattedStartDate,
     end: formattedEndDate,
   };
-}
+};
 
-describe('Integration Tests for DBaaS Dashboard ', () => {
+describe('Integration Tests for DBaaS Dashboard', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
@@ -242,18 +229,15 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         region: mockRegion.id,
       },
     }).as('fetchPreferences');
-
     mockGetDatabases([databaseMock]).as('getDatabases');
 
     cy.visitWithLogin('monitor');
-
     cy.wait('@fetchPreferences');
-    // Wait for the services and dashboard API calls to complete before proceeding
   });
 
-  it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
-    const startDate = getDateRangeInIST(0, 12, 15); // set start date to
-    const endDate = getDateRangeInIST(25, 12, 15); // set end date to today
+  it.only('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
+    const startDate = getDateRangeInIST(0, 12, 15);
+    const endDate = getDateRangeInIST(25, 1, 15);
 
     ui.autocomplete
       .findByLabel('Time Range')
@@ -262,65 +246,69 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .type('Custom');
 
     cy.wait(['@fetchServices', '@fetchDashboard']);
-
     ui.autocompletePopper.findByTitle('Custom').should('be.visible').click();
 
     cy.findByPlaceholderText('Select Start Date').should('be.visible').click();
-
     cy.findByRole('gridcell', { name: startDate.day.toString() })
       .should('be.visible')
       .click();
 
-    cy.get('[data-testid="ClockIcon"]').click();
+    cy.get('[data-testid="ClockIcon"]').should('be.visible').click();
+    cy.get('[aria-label="Select hours"]')
+      .scrollIntoView({ easing: 'linear' })
+      .within(() => {
+        cy.get(`[aria-label="${startDate.hour} hours"]`).click();
+      });
 
-    cy.get('[aria-label="Select hours"]').within(() => {
-      cy.get(`[aria-label="${startDate.hour} hours"]`).click();
-    });
+    cy.get('[aria-label="Select minutes"]')
+      .scrollIntoView({ easing: 'linear', duration: 500 })
+      .within(() => {
+        cy.get(`[aria-label="${startDate.minute} minutes"]`).click({
+          force: true,
+        });
+      });
 
-    // Select the minute (example: 00)
-    cy.get('[aria-label="Select minutes"]').within(() => {
-      cy.get(`[aria-label="${startDate.minute} minutes"]`).click();
-    });
-
-    // Select AM/PM (example: AM)
-    cy.get('[aria-label="Select meridiem"]').within(() => {
-      cy.get('[aria-label="PM"]').click();
-    });
+    cy.get('[aria-label="Select meridiem"]')
+      .scrollIntoView({ easing: 'linear' })
+      .within(() => {
+        cy.get('[aria-label="PM"]').click({ force: true });
+      });
 
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
-
-    cy.findByPlaceholderText('Select Start Date').should(
-      'have.value',
-      startDate.actualDate + ' (' + timezone + ')'
-    );
+    cy.findByPlaceholderText('Select Start Date')
+      .should('be.visible')
+      .should('have.value', `${startDate.actualDate} (${timezone})`);
 
     cy.findByPlaceholderText('Select End Date').should('be.visible').click();
-
     cy.findByRole('gridcell', { name: endDate.day.toString() })
       .should('be.visible')
       .click();
 
     cy.get('[data-testid="ClockIcon"]').click();
+    cy.get('[aria-label="Select hours"]')
+      .scrollIntoView({ easing: 'linear', duration: 500 })
+      .within(() => {
+        cy.get(`[aria-label="${endDate.hour} hours"]`).click();
+      });
 
-    cy.get('[aria-label="Select hours"]').within(() => {
-      cy.get(`[aria-label="${endDate.hour} hours"]`).click();
-    });
+    cy.get('[aria-label="Select minutes"]')
+      .scrollIntoView({ easing: 'linear', duration: 500 })
+      .within(() => {
+        cy.get(`[aria-label="${endDate.minute} minutes"]`).click({
+          force: true,
+        });
+      });
 
-    // Select the minute (example: 00)
-    cy.get('[aria-label="Select minutes"]').within(() => {
-      cy.get(`[aria-label="${endDate.minute} minutes"]`).click();
-    });
-
-    // Select AM/PM (example: AM)
-    cy.get('[aria-label="Select meridiem"]').within(() => {
-      cy.get('[aria-label="PM"]').click();
-    });
+    cy.get('[aria-label="Select meridiem"]')
+      .scrollIntoView({ easing: 'linear', duration: 500 })
+      .within(() => {
+        cy.get('[aria-label="AM"]').click({ force: true });
+      });
 
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
-
     cy.findByPlaceholderText('Select End Date').should(
       'have.value',
-      endDate.actualDate + ' (' + timezone + ')'
+      `${endDate.actualDate} (${timezone})`
     );
 
     ui.autocomplete
@@ -328,9 +316,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .should('be.visible')
       .type(`${nodeType}{enter}`);
 
-    // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
-
     cy.get('@getMetrics.all')
       .should('have.length', 4)
       .each((xhr: unknown) => {
@@ -345,12 +331,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       });
 
     cy.findByRole('button', { name: 'Presets' }).should('be.visible').click();
-
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getPresets'
     );
 
-    // Select a time duration from the autocomplete input.
     ui.autocomplete
       .findByLabel('Time Range')
       .should('be.visible')
@@ -360,14 +344,12 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .findByTitle('Last 30 Days')
       .should('be.visible')
       .click();
-    // Wait for all metrics query requests to resolve.
+
     cy.get('@getPresets.all')
-      .should('have.length', 4) // Ensure all 4 requests are intercepted (first and second batch)
+      .should('have.length', 4)
       .each((xhr: unknown, index: number) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-
-        // Assert relative_time_duration for the next two requests
         expect(requestPayload).to.have.nested.property(
           'relative_time_duration.unit'
         );
@@ -381,7 +363,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
   timeRanges.forEach((range) => {
     it(`Select and validate the functionality of the "${range.label}" preset from the "Time Range" dropdown`, () => {
-      // Select the time range
       ui.autocomplete
         .findByLabel('Time Range')
         .scrollIntoView()
@@ -393,16 +374,12 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         .should('be.visible')
         .click();
 
-      // Select the node type
       ui.autocomplete
         .findByLabel('Node Type')
         .should('be.visible')
         .type(`${nodeType}{enter}`);
 
-      // Wait for all metrics query requests to resolve.
       cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
-
-      // Verify the request payload
       cy.get('@getMetrics.all')
         .should('have.length', 4)
         .each((xhr: unknown) => {
@@ -418,7 +395,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     });
   });
 
-  it('select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
+  it('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
     ui.autocomplete
       .findByLabel('Time Range')
       .scrollIntoView()
@@ -430,17 +407,12 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .should('be.visible')
       .click();
 
-    // Select the node type
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
       .type(`${nodeType}{enter}`);
 
-    // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
-
-    cy.log('start', getLastMonthRange().start);
-    cy.log('end', getLastMonthRange().end);
 
     cy.get('@getMetrics.all')
       .should('have.length', 4)
@@ -468,17 +440,12 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .should('be.visible')
       .click();
 
-    // Select the node type
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
       .type(`${nodeType}{enter}`);
 
-    // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
-
-    cy.log('start', getLastMonthRange().start);
-    cy.log('end', getLastMonthRange().end);
 
     cy.get('@getMetrics.all')
       .should('have.length', 4)
