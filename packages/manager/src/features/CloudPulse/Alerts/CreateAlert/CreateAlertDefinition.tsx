@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Paper, TextField, Typography } from '@linode/ui';
+import { Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';

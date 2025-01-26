@@ -278,19 +278,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           )}
           <Grid item xs={12}>
             <DisplayAlertResources
-              noDataText={
-                !(isResourcesError || isRegionsError) &&
-                !Boolean(filteredResources?.length)
-                  ? 'No data to display.'
-                  : undefined
-              }
-              errorText={'Table data is unavailable. Please try again later.'}
               filteredResources={filteredResources}
               handleSelection={isSelectionsNeeded ? handleSelection : undefined}
               isDataLoadingError={isResourcesError || isRegionsError}
               isSelectionsNeeded={isSelectionsNeeded}
               pageSize={pageSize}
-              regionOptions={regionOptions}
               scrollToElement={() => scrollToElement(titleRef.current)}
             />
           </Grid>
