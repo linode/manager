@@ -25,6 +25,7 @@ import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeverit
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannel/AddChannelListing';
 import { AddNotificationChannel } from './NotificationChannel/AddNotificationChannel';
+import { CreateAlertResources } from './Resources/CreateAlertResources';
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
@@ -158,13 +159,6 @@ export const CreateAlertDefinition = () => {
     setOpenAddNotification(false);
   };
 
-  const handleResourcesSelection = (resourceIds: string[]) => {
-    setValue('entity_ids', resourceIds, {
-      shouldTouch: true,
-      shouldValidate: true,
-    });
-  };
-
   const notifications = React.useMemo(() => {
     return (
       notificationData?.filter(
@@ -231,39 +225,7 @@ export const CreateAlertDefinition = () => {
           />
           <CloudPulseServiceSelect name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <Controller
-            render={({ field, fieldState }) => (
-              <Box mt={3}>
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  gap={2}
-                  sx={{ marginBottom: 1 }}
-                >
-                  <Typography variant="h2">2. Resources</Typography>
-                  {(formState.isSubmitted || fieldState.isTouched) &&
-                    fieldState.error && (
-                      <Typography
-                        color={theme.tokens.content.Text.Negative}
-                        variant="body2"
-                      >
-                        ({fieldState.error.message})
-                      </Typography>
-                    )}
-                </Box>
-                <Box sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}>
-                  <AlertResources
-                    handleResourcesSelection={handleResourcesSelection}
-                    isSelectionsNeeded
-                    resourceIds={field.value} // Controlled field
-                    serviceType={serviceTypeWatcher || undefined}
-                  />
-                </Box>
-              </Box>
-            )}
-            control={control}
-            name="entity_ids"
-          />
+          <CreateAlertResources name="entity_ids" />
           <MetricCriteriaField
             setMaxInterval={(interval: number) =>
               setMaxScrapeInterval(interval)
