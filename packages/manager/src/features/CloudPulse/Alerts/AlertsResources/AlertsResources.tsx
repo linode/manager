@@ -220,7 +220,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         )}
 
       {(isSelectionsNeeded || resourceIds.length > 0) && (
-        <Grid container mt={!showTitle ? 2 : 0} spacing={3}>
+        <Grid container spacing={3}>
           <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
             <Grid item md={3} xs={12}>
               <DebouncedSearchTextField
