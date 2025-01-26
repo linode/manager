@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Paper, TextField, Typography } from '@linode/ui';
+import { Box, Button, Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -98,12 +98,21 @@ export const CreateAlertDefinition = () => {
     getValues('serviceType')!
   );
 
-  /**
-   * The maxScrapeInterval variable will be required for the Trigger Conditions part of the Critieria section.
-   */
+  const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
+  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
+
+  const [openAddNotification, setOpenAddNotification] = React.useState(false);
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
-  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
+  const onSubmitAddNotification = (notificationId: number) => {
+    setValue('channel_ids', [...notificationChannelWatcher, notificationId], {
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: false,
+    });
+    setOpenAddNotification(false);
+  };
+
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
@@ -129,7 +138,6 @@ export const CreateAlertDefinition = () => {
     isError: notificationChannelsError,
     isLoading: notificationChannelsLoading,
   } = useAlertNotificationChannelsQuery();
-  const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
 
   const onChangeNotifications = (notifications: NotificationChannel[]) => {
     const notificationTemplateList = notifications.map(
@@ -137,17 +145,6 @@ export const CreateAlertDefinition = () => {
     );
     setValue('channel_ids', notificationTemplateList);
   };
-  const [openAddNotification, setOpenAddNotification] = React.useState(false);
-
-  const onSubmitAddNotification = (notificationId: number) => {
-    setValue('channel_ids', [...notificationChannelWatcher, notificationId], {
-      shouldDirty: false,
-      shouldTouch: false,
-      shouldValidate: false,
-    });
-    setOpenAddNotification(false);
-  };
-
   const notifications = React.useMemo(() => {
     return (
       notificationData?.filter(
@@ -171,7 +168,6 @@ export const CreateAlertDefinition = () => {
   const onAddNotifications = () => {
     setOpenAddNotification(true);
   };
-
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb crumbOverrides={overrides} pathname="/Definitions/Create" />

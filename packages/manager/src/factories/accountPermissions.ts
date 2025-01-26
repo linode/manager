@@ -20,6 +20,11 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         resource_type: 'linode',
         roles: [
           {
+            description: 'Access to create a linode instance',
+            name: 'linode_creator',
+            permissions: ['create_linode'],
+          },
+          {
             description:
               'Access to perform any supported action on all linode instances in the account',
             name: 'account_linode_admin',
@@ -46,6 +51,11 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
             description: 'Access to update a linode instance',
             name: 'linode_contributor',
             permissions: ['update_linode', 'view_linode'],
+          },
+          {
+            description: 'Access to view a linode instance',
+            name: 'linode_viewer',
+            permissions: ['view_linode'],
           },
         ],
       },

@@ -15,6 +15,7 @@ import { switchAccountSessionContext } from 'src/context/switchAccountSessionCon
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
@@ -60,6 +61,7 @@ export const UserMenu = React.memo(() => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { enqueueSnackbar } = useSnackbar();
+  const flags = useFlags();
   const sessionContext = React.useContext(switchAccountSessionContext);
 
   const hasGrant = (grant: GlobalGrantTypes) =>
@@ -130,6 +132,11 @@ export const UserMenu = React.memo(() => {
         display: 'Users & Grants',
         hide: isRestrictedUser,
         href: '/account/users',
+      },
+      {
+        display: 'Quotas',
+        hide: !flags.limitsEvolution?.enabled,
+        href: '/account/quotas',
       },
       // Restricted users can't view the Transfers tab regardless of their grants
       {

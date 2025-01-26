@@ -1,13 +1,14 @@
 import { Checkbox } from '@linode/ui';
-import { TableBody, TableHead, useTheme } from '@mui/material';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table/Table';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow/TableRow';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
@@ -19,26 +20,21 @@ export interface AlertInstance {
    */
   checked?: boolean;
   /**
-   * The id of the alert
+   * The id of the instance
    */
   id: string;
   /**
-   * The label of the alert
+   * The label of the instance
    */
   label: string;
 
   /**
-   * The region associated with the alert
+   * The region associated with the instance
    */
-  region?: string;
+  region: string;
 }
 
 export interface DisplayAlertResourceProp {
-  /**
-   * When passed, this error text will be displayed in the table
-   */
-  errorText: string;
-
   /**
    * The resources that needs to be displayed
    */
@@ -60,32 +56,24 @@ export interface DisplayAlertResourceProp {
   isSelectionsNeeded?: boolean;
 
   /**
-   * This is passed if there is no resources associated with the alerts
-   */
-  noDataText?: string;
-
-  /**
    * The size of the page needed in the table
    */
   pageSize: number;
-
   /**
-   * Callback to scroll till to the top of the Resources title section
+   * Callback to scroll till the element required on page change change or sorting change
    */
-  scrollToTitle: () => void;
+  scrollToElement: () => void;
 }
 
 export const DisplayAlertResources = React.memo(
   (props: DisplayAlertResourceProp) => {
     const {
-      errorText,
       filteredResources,
       handleSelection,
       isDataLoadingError,
       isSelectionsNeeded,
-      noDataText,
       pageSize,
-      scrollToTitle,
+      scrollToElement,
     } = props;
 
     const [sorting, setSorting] = React.useState<{
@@ -95,16 +83,19 @@ export const DisplayAlertResources = React.memo(
       order: 'asc',
       orderBy: 'label', // default order to be asc and orderBy will be label
     });
-
-    const theme = useTheme();
-
-    // The sorted data based on the selection in the table
+    // Holds the sorted data based on the selected sort order and column
     const sortedData = React.useMemo(() => {
-      return sortData(
+      return sortData<AlertInstance>(
         sorting.orderBy,
         sorting.order
-      )(filteredResources ?? []) as AlertInstance[];
+      )(filteredResources ?? []);
     }, [filteredResources, sorting]);
+
+    const scrollToGivenElement = React.useCallback(() => {
+      requestAnimationFrame(() => {
+        scrollToElement();
+      });
+    }, [scrollToElement]);
 
     const handleSort = React.useCallback(
       (
@@ -120,18 +111,18 @@ export const DisplayAlertResources = React.memo(
           order,
           orderBy,
         });
-        handlePageChange(1); // move to first page on sort change
-        scrollToTitle(); // scroll to title
+        handlePageChange(1); // Moves to the first page when the sort order or column changes
+        scrollToGivenElement();
       },
-      [scrollToTitle]
+      [scrollToGivenElement]
     );
 
     const handlePageNumberChange = React.useCallback(
       (handlePageChange: (page: number) => void, pageNumber: number) => {
-        handlePageChange(pageNumber); // move to requested page number
-        scrollToTitle(); // scroll to title
+        handlePageChange(pageNumber); // Moves to the requested page number
+        scrollToGivenElement();
       },
-      [scrollToTitle]
+      [scrollToGivenElement]
     );
 
     const handleSelectionChange = React.useCallback(
@@ -167,8 +158,8 @@ export const DisplayAlertResources = React.memo(
           page,
           pageSize,
         }) => (
-          <React.Fragment>
-            <Table data-qa-alert-table>
+          <>
+            <Table data-qa-alert-table data-testid="alert_resources_region">
               <TableHead>
                 <TableRow>
                   {isSelectionsNeeded && (
@@ -218,10 +209,13 @@ export const DisplayAlertResources = React.memo(
                   </TableSortCell>
                 </TableRow>
               </TableHead>
-              <TableBody data-qa-alert-table-body>
+              <TableBody
+                data-qa-alert-table-body
+                data-testid="alert_resources_content"
+              >
                 {!isDataLoadingError &&
-                  paginatedData.map(({ checked, id, label, region }) => (
-                    <TableRow data-qa-alert-row={id} key={id}>
+                  paginatedData.map(({ checked, id, label, region }, index) => (
+                    <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
                       {isSelectionsNeeded && (
                         <TableCell padding="checkbox">
                           <Checkbox
@@ -246,31 +240,28 @@ export const DisplayAlertResources = React.memo(
                   ))}
                 {isDataLoadingError && (
                   <TableRowError
-                    colSpan={3}
-                    message={errorText ?? 'Table data is unavailable.'}
+                    colSpan={2}
+                    message="Table data is unavailable. Please try again later."
                   />
                 )}
                 {paginatedData.length === 0 && (
                   <TableRow>
-                    <TableCell
-                      align="center"
-                      colSpan={3}
-                      height={theme.spacing(6)}
-                    >
-                      {noDataText ?? 'No results found.'}
+                    <TableCell align="center" colSpan={2} height="40px">
+                      No data to display.
                     </TableCell>
                   </TableRow>
                 )}
               </TableBody>
             </Table>
-            {!isDataLoadingError && !noDataText && (
+            {!isDataLoadingError && paginatedData.length !== 0 && (
               <PaginationFooter
                 handlePageChange={(page) => {
                   handlePageNumberChange(handlePageChange, page);
                 }}
                 handleSizeChange={(pageSize) => {
                   handlePageSizeChange(pageSize);
-                  handlePageNumberChange(handlePageChange, 1); // move to first page
+                  handlePageNumberChange(handlePageChange, 1); // Moves to the first page after page size change
+                  scrollToGivenElement();
                 }}
                 count={count}
                 eventCategory="alerts_resources"
@@ -278,7 +269,7 @@ export const DisplayAlertResources = React.memo(
                 pageSize={pageSize}
               />
             )}
-          </React.Fragment>
+          </>
         )}
       </Paginate>
     );

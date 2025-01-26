@@ -94,12 +94,22 @@ export interface AccountAvailability {
   unavailable: Capabilities[];
 }
 
+export const linodeInterfaceAccountSettings = [
+  'legacy_config_only',
+  'legacy_config_default_but_linode_allowed',
+  'linode_default_but_legacy_config_allowed',
+  'linode_only',
+];
+
+export type LinodeInterfaceAccountSetting = typeof linodeInterfaceAccountSettings[number];
+
 export interface AccountSettings {
   managed: boolean;
   longview_subscription: string | null;
   network_helper: boolean;
   backups_enabled: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
+  interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
 }
 
 export interface ActivePromotion {
@@ -358,6 +368,9 @@ export const EventActionKeys = [
   'image_delete',
   'image_update',
   'image_upload',
+  'interface_create',
+  'interface_delete',
+  'interface_update',
   'ipaddress_update',
   'ipv6pool_add',
   'ipv6pool_delete',
