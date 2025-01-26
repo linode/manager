@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Paper, TextField, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material';
+import { Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -14,14 +13,9 @@ import {
   useCreateAlertDefinition,
 } from 'src/queries/cloudpulse/alerts';
 
-import { AlertResources } from '../AlertsResources/AlertsResources';
-import { getAlertBoxStyles } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
-// import { EngineOption } from './GeneralInformation/EngineOption';
-// import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
-// import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannel/AddChannelListing';
 import { AddNotificationChannel } from './NotificationChannel/AddNotificationChannel';
@@ -101,8 +95,6 @@ export const CreateAlertDefinition = () => {
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
     getValues('serviceType')!
   );
-
-  const theme = useTheme();
 
   /**
    * The maxScrapeInterval variable will be required for the Trigger Conditions part of the Critieria section.
