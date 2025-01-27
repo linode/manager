@@ -31,13 +31,29 @@ export interface AlertResourcesProp {
   alertResourceIds: string[];
 
   /**
+   * Callback for publishing the selected resources
+   */
+  handleResourcesSelection?: (resources: string[]) => void;
+
+  /**
+   * This controls whether we need to show the checkbox in case of editing the resources
+   */
+  isSelectionsNeeded?: boolean;
+
+  /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
   serviceType: string;
 }
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
-  const { alertLabel, alertResourceIds, serviceType } = props;
+  const {
+    alertLabel,
+    alertResourceIds,
+    handleResourcesSelection,
+    isSelectionsNeeded,
+    serviceType,
+  } = props;
   const [searchText, setSearchText] = React.useState<string>();
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
 
@@ -162,7 +178,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           <Grid item xs={12}>
             <DisplayAlertResources
               filteredResources={filteredResources}
+              handleSelection={handleResourcesSelection}
               isDataLoadingError={isDataLoadingError}
+              isSelectionsNeeded
               scrollToElement={() => scrollToElement(titleRef.current)}
             />
           </Grid>
