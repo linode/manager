@@ -165,7 +165,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   };
 
   const handlePresetSelection = (value: DatePresetType) => {
-    const now = DateTime.now();
+    const now = DateTime.now().set({ second: 0 });
     let newStartDateTime: DateTime | null = null;
     let newEndDateTime: DateTime | null = now;
 
