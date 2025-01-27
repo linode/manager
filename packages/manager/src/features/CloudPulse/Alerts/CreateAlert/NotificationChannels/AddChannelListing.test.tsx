@@ -8,10 +8,11 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { AddChannelListing } from './AddChannelListing';
 
+import type { CreateAlertDefinitionForm } from '../types';
 import type { NotificationChannel } from '@linode/api-v4';
 
 export const mockNotificationData: NotificationChannel[] = [
-  notificationChannelFactory.build(),
+  notificationChannelFactory.build({ id: 0 }),
 ];
 describe('Channel Listing component', () => {
   const user = userEvent.setup();
@@ -22,14 +23,22 @@ describe('Channel Listing component', () => {
         ? mockNotificationData[0].content.email.email_addresses
         : [];
 
-    const { getByText } = renderWithThemeAndHookFormContext({
+    const {
+      getByText,
+    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <AddChannelListing
-          notifications={mockNotificationData}
-          onChangeNotifications={vi.fn()}
-          onClickAddNotification={vi.fn()}
+          isNotificationChannelsError={false}
+          isNotificationChannelsLoading={false}
+          name="channel_ids"
+          notificationData={mockNotificationData}
         />
       ),
+      useFormOptions: {
+        defaultValues: {
+          channel_ids: [mockNotificationData[0].id],
+        },
+      },
     });
     expect(getByText('3. Notification Channels')).toBeVisible();
     expect(getByText(capitalize(mockNotificationData[0].label))).toBeVisible();
@@ -38,20 +47,29 @@ describe('Channel Listing component', () => {
   });
 
   it('should remove the fields', async () => {
-    const mockOnChangeNotifications = vi.fn();
-    const { getByTestId } = renderWithThemeAndHookFormContext({
+    const {
+      getByTestId,
+    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <AddChannelListing
-          notifications={mockNotificationData}
-          onChangeNotifications={mockOnChangeNotifications}
-          onClickAddNotification={vi.fn()}
+          isNotificationChannelsError={false}
+          isNotificationChannelsLoading={false}
+          name="channel_ids"
+          notificationData={mockNotificationData}
         />
       ),
+      useFormOptions: {
+        defaultValues: {
+          channel_ids: [mockNotificationData[0].id],
+        },
+      },
     });
     const notificationContainer = getByTestId('notification-channel-0');
     expect(notificationContainer).toBeInTheDocument();
+
     const clearButton = within(notificationContainer).getByTestId('clear-icon');
     await user.click(clearButton);
-    expect(mockOnChangeNotifications).toHaveBeenCalledWith([]);
+
+    expect(notificationContainer).not.toBeInTheDocument();
   });
 });

@@ -182,7 +182,8 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
         <ActionsPanel
           primaryButtonProps={{
             label: 'Add channel',
-            type: 'submit',
+            onClick: onSubmit,
+            type: 'button',
           }}
           secondaryButtonProps={{
             label: 'Cancel',
