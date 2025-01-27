@@ -52,18 +52,15 @@ export const CreateAlertResources = React.memo(
               sx={{ marginBottom: 1 }}
             >
               <Typography variant="h2">2. Resources</Typography>
-              {(formState.isSubmitted || fieldState.isTouched) &&
-                fieldState.error && (
-                  <Typography
-                    color={theme.tokens.content.Text.Negative}
-                    variant="body2"
-                  >
-                    ({fieldState.error.message})
-                  </Typography>
-                )}
             </Box>
             <Box sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}>
               <AlertResources
+                noSelectionErrorText={
+                  (formState.isSubmitted || fieldState.isTouched) &&
+                  fieldState.error
+                    ? fieldState.error.message
+                    : undefined
+                }
                 alertResourceIds={field.value}
                 handleResourcesSelection={handleResourcesSelection}
                 hideLabel

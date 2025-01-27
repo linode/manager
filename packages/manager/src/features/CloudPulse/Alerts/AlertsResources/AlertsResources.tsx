@@ -46,6 +46,11 @@ export interface AlertResourcesProp {
   isSelectionsNeeded?: boolean;
 
   /**
+   * The error text that needs to be displayed when no selections are made
+   */
+  noSelectionErrorText?: string;
+
+  /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
   serviceType?: string;
@@ -58,6 +63,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     handleResourcesSelection,
     hideLabel,
     isSelectionsNeeded,
+    noSelectionErrorText,
     serviceType,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
@@ -283,6 +289,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               </Grid>
             )}
           </Grid>
+          {noSelectionErrorText && (
+            <Grid item xs={12}>
+              <Typography
+                color={theme.tokens.content.Text.Negative}
+                variant="body2"
+              >
+                {noSelectionErrorText}
+              </Typography>
+            </Grid>
+          )}
           {isSelectionsNeeded && !(isResourcesError || isRegionsError) && (
             <Grid item xs={12}>
               <AlertsResourcesNotice
