@@ -52,22 +52,24 @@ describe('DateTimeRangePicker Component', () => {
     vi.setSystemTime(vi.getRealSystemTime());
 
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
-
+    const now = DateTime.now();
     // Open start date picker
     await userEvent.click(screen.getByLabelText('Start Date and Time'));
 
     await userEvent.click(screen.getByRole('gridcell', { name: '10' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-
-    const expectedStartTime = DateTime.fromObject({
-      day: 10,
-      month: DateTime.now().month,
-      year: DateTime.now().year,
-    }).toISO();
+    const expectedStartTime = DateTime.now()
+      .set({
+        day: 10,
+        month: DateTime.now().month,
+        year: DateTime.now().year,
+      })
+      .minus({ minutes: 30 })
+      .toISO();
 
     // Check if the onChange function is called with the expected  value
     expect(onChangeMock).toHaveBeenCalledWith({
-      end: null,
+      end: now.toISO(),
       preset: 'custom_range',
       start: expectedStartTime,
       timeZone: null,
@@ -97,17 +99,21 @@ describe('DateTimeRangePicker Component', () => {
       presetsProps: { ...Props.presetsProps },
     };
     renderWithTheme(<DateTimeRangePicker {...updateProps} />);
-
+    const now = DateTime.now();
     // Set the end date-time to the 15th
     const endDateField = screen.getByLabelText('End Date and Time');
     await userEvent.click(endDateField);
-    await userEvent.click(screen.getByRole('gridcell', { name: '15' }));
+    await userEvent.click(
+      screen.getByRole('gridcell', { name: now.day.toString() })
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
     // Set the start date-time to the 10th (which is earlier than the end date-time)
     const startDateField = screen.getByLabelText('Start Date and Time');
     await userEvent.click(startDateField);
-    await userEvent.click(screen.getByRole('gridcell', { name: '20' })); // Invalid date
+    await userEvent.click(
+      screen.getByRole('gridcell', { name: (now.day + 1).toString() })
+    ); // Invalid date
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
     // Confirm the error message is displayed
@@ -133,17 +139,21 @@ describe('DateTimeRangePicker Component', () => {
       },
     };
     renderWithTheme(<DateTimeRangePicker {...updatedProps} />);
-
+    const now = DateTime.now();
     // Set the end date-time to the 15th
     const endDateField = screen.getByLabelText('End Date and Time');
     await userEvent.click(endDateField);
-    await userEvent.click(screen.getByRole('gridcell', { name: '15' }));
+    await userEvent.click(
+      screen.getByRole('gridcell', { name: now.day.toString() })
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
     // Set the start date-time to the 20th (which is earlier than the end date-time)
     const startDateField = screen.getByLabelText('Start Date and Time');
     await userEvent.click(startDateField);
-    await userEvent.click(screen.getByRole('gridcell', { name: '20' })); // Invalid date
+    await userEvent.click(
+      screen.getByRole('gridcell', { name: (now.day + 1).toString() })
+    ); // Invalid date
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
     // Confirm the custom error message is displayed for the start date
@@ -244,7 +254,7 @@ describe('DateTimeRangePicker Component', () => {
 
     // Expected start and end dates in ISO format
     const expectedStartDateISO = DateTime.now().startOf('month').toISO();
-    const expectedEndDateISO = DateTime.now().endOf('month').toISO();
+    const expectedEndDateISO = DateTime.now().toISO();
 
     // Verify that onChange is called with the correct date range
     expect(onChangeMock).toHaveBeenCalledWith({
@@ -287,8 +297,14 @@ describe('DateTimeRangePicker Component', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('should display the date range fields with empty values when the "Custom Range" preset is selected', async () => {
-    renderWithTheme(<DateTimeRangePicker {...Props} />);
+  it('should display the date range fields with 30 min difference values when the "Custom Range" preset is selected', async () => {
+    const timezone = 'Asia/Kolkata';
+    renderWithTheme(
+      <DateTimeRangePicker
+        {...Props}
+        startDateProps={{ ...Props.startDateProps, timeZoneValue: timezone }}
+      />
+    );
 
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
@@ -297,14 +313,18 @@ describe('DateTimeRangePicker Component', () => {
     // Select the "Custom Range" option
     const customRange = screen.getByText('Custom');
     await userEvent.click(customRange);
+    const format = 'yyyy-MM-dd HH:mm';
+    const now = DateTime.now();
+    const start = now.minus({ minutes: 30 });
 
     // Verify the input fields display the correct values
     expect(
       screen.getByRole('textbox', { name: 'Start Date and Time' })
-    ).toHaveValue('');
+    ).toHaveValue(`${start.toFormat(format)} (${timezone})`);
+
     expect(
       screen.getByRole('textbox', { name: 'End Date and Time' })
-    ).toHaveValue('');
+    ).toHaveValue(`${now.toFormat(format)} (${timezone})`);
     expect(screen.getByRole('button', { name: 'Presets' })).toBeInTheDocument();
 
     // Set start date-time to the 15th

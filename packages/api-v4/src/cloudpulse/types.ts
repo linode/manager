@@ -21,7 +21,7 @@ export type MetricUnitType =
   | 'MB'
   | 'GB';
 export type NotificationStatus = 'Enabled' | 'Disabled';
-export type ChannelTypes = 'email' | 'slack' | 'pagerduty' | 'webhook';
+export type ChannelType = 'email' | 'slack' | 'pagerduty' | 'webhook';
 export type AlertNotificationType = 'default' | 'custom';
 type AlertNotificationEmail = 'email';
 type AlertNotificationSlack = 'slack';
@@ -237,11 +237,6 @@ export interface Alert {
   updated: string;
 }
 
-export interface DataSet {
-  [label: string]: number;
-  timestamp: number;
-}
-
 interface NotificationChannelAlerts {
   id: number;
   label: string;
@@ -251,7 +246,7 @@ interface NotificationChannelAlerts {
 interface NotificationChannelBase {
   id: number;
   label: string;
-  channel_type: ChannelTypes;
+  channel_type: ChannelType;
   type: AlertNotificationType;
   status: NotificationStatus;
   alerts: NotificationChannelAlerts[];

@@ -4,8 +4,8 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "husky": "^9.1.6",
-    "typescript": "^5.5.4",
-    "vitest": "^2.1.1"
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.3"
   },
   "scripts": {
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",

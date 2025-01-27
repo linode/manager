@@ -19,8 +19,7 @@ interface FilterResourceProps {
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
-  regionsIdToLabelMap: Map<string, Region>;
-
+  regionsIdToRegionMap: Map<string, Region>;
   /**
    * The resources associated with the alerts
    */
@@ -44,74 +43,15 @@ interface FilterResourceProps {
 
 /**
  * @param regions The list of regions
- * @returns A map of region id to Region object
+ * @returns A Map of region ID to Region object. Returns an empty Map if regions is undefined.
  */
-export const getRegionsIdLabelMap = (
+export const getRegionsIdRegionMap = (
   regions: Region[] | undefined
 ): Map<string, Region> => {
   if (!regions) {
     return new Map();
   }
-
   return new Map(regions.map((region) => [region.id, region]));
-};
-
-/**
- * @param filterProps
- * @returns
- */
-export const getFilteredResources = (
-  filterProps: FilterResourceProps
-): AlertInstance[] | undefined => {
-  const {
-    data,
-    filteredRegions,
-    isAdditionOrDeletionNeeded,
-    regionsIdToLabelMap,
-    resourceIds,
-    searchText,
-    selectedOnly,
-    selectedResources,
-  } = filterProps;
-  return data
-    ?.filter(
-      (resource) =>
-        isAdditionOrDeletionNeeded || resourceIds.includes(String(resource.id)) // if it is an edit page, selections will be true, no need to filter out resources not associated with alert
-    )
-    .filter((resource) => {
-      if (filteredRegions) {
-        return filteredRegions.includes(resource.region ?? '');
-      }
-      return true;
-    })
-    .map((resource) => {
-      return {
-        ...resource,
-        checked: selectedResources
-          ? selectedResources.includes(resource.id)
-          : false, // check for selections and drive the resources
-        region: resource.region
-          ? regionsIdToLabelMap.get(resource.region)
-            ? regionsIdToLabelMap.get(resource.region)?.label +
-              ` (${resource.region})`
-            : resource.region
-          : resource.region,
-      };
-    })
-    .filter((resource) => {
-      if (searchText) {
-        return (
-          resource.region
-            ?.toLocaleLowerCase()
-            .includes(searchText.toLocaleLowerCase()) ||
-          resource.label
-            .toLocaleLowerCase()
-            .includes(searchText.toLocaleLowerCase())
-        );
-      }
-      return true;
-    })
-    .filter((resource) => (selectedOnly ? resource.checked : true));
 };
 
 /**
@@ -124,19 +64,90 @@ export const getRegionOptions = (
   const {
     data,
     isAdditionOrDeletionNeeded,
-    regionsIdToLabelMap,
+    regionsIdToRegionMap,
     resourceIds,
   } = filterProps;
-  return Array.from(
-    new Set(
-      data
-        ?.filter(
-          ({ id }) => isAdditionOrDeletionNeeded || resourceIds.includes(id)
-        )
-        ?.map((resource) => {
-          const regionId = resource.region;
-          return regionId ? regionsIdToLabelMap.get(regionId) : null;
-        })
+  if (!data || !resourceIds.length || !regionsIdToRegionMap.size) {
+    return [];
+  }
+  const uniqueRegions = new Set<Region>();
+  data.forEach(({ id, region }) => {
+    if (isAdditionOrDeletionNeeded || resourceIds.includes(String(id))) {
+      const regionObject = region
+        ? regionsIdToRegionMap.get(region)
+        : undefined;
+      if (regionObject) {
+        uniqueRegions.add(regionObject);
+      }
+    }
+  });
+  return Array.from(uniqueRegions);
+};
+
+/**
+ * @param filterProps Props required to filter the resources on the table
+ * @returns Filtered instances to be displayed on the table
+ */
+export const getFilteredResources = (
+  filterProps: FilterResourceProps
+): AlertInstance[] => {
+  const {
+    data,
+    filteredRegions,
+    isAdditionOrDeletionNeeded,
+    regionsIdToRegionMap,
+    resourceIds,
+    searchText,
+    selectedOnly,
+    selectedResources,
+  } = filterProps;
+  if (!data || resourceIds.length === 0) {
+    return [];
+  }
+  return data // here we always use the base data from API for filtering as source of truth
+    .filter(
+      ({ id }) => isAdditionOrDeletionNeeded || resourceIds.includes(String(id))
     )
-  ).filter((region) => region !== null && region !== undefined); // filter out undefined and null regions
+    .map((resource) => {
+      const regionObj = resource.region
+        ? regionsIdToRegionMap.get(resource.region)
+        : undefined;
+      return {
+        ...resource,
+        checked: selectedResources
+          ? selectedResources.includes(resource.id)
+          : false,
+        region: resource.region // here replace region id, formatted to Chicago, US(us-west) compatible to display in table
+          ? regionObj
+            ? `${regionObj.label} (${regionObj.id})`
+            : resource.region
+          : '',
+      };
+    })
+    .filter(({ label, region }) => {
+      const matchesSearchText =
+        !searchText ||
+        region.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()) ||
+        label.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()); // check with search text
+
+      const matchesFilteredRegions =
+        !filteredRegions?.length ||
+        (region.length && filteredRegions.includes(region)); // check with filtered region
+
+      return matchesSearchText && matchesFilteredRegions; // match the search text and match the region selected
+    })
+    .filter((resource) => (selectedOnly ? resource.checked : true));
+};
+
+/**
+ * This methods scrolls to the given HTML Element
+ * @param scrollToElement The HTML Element to which we need to scroll
+ */
+export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
+  if (scrollToElement) {
+    window.scrollTo({
+      behavior: 'smooth',
+      top: scrollToElement.getBoundingClientRect().top + window.scrollY - 40,
+    });
+  }
 };

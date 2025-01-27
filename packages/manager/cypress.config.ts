@@ -19,6 +19,7 @@ import { logTestTagInfo } from './cypress/support/plugins/test-tagging-info';
 import cypressViteConfig from './cypress/vite.config';
 import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-override';
 import { postRunCleanup } from './cypress/support/plugins/post-run-cleanup';
+import { resetUserPreferences } from './cypress/support/plugins/reset-user-preferences';
 
 /**
  * Exports a Cypress configuration object.
@@ -92,6 +93,7 @@ export default defineConfig({
         discardPassedTestRecordings,
         fetchAccount,
         fetchLinodeRegions,
+        resetUserPreferences,
         regionOverrideCheck,
         featureFlagOverrides,
         logTestTagInfo,
