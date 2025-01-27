@@ -1,4 +1,3 @@
-import { fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { mockGetAllImages } from 'support/intercepts/images';
@@ -49,8 +48,8 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   ui.regionSelect.find().click();
   ui.regionSelect.findItemByRegionId(region.id).click();
 
-  fbtClick('Shared CPU');
-  getClick('[id="g6-nanode-1"][type="radio"]');
+  cy.findByText('Shared CPU').click();
+  cy.get('[id="g6-nanode-1"][type="radio"]').click();
   cy.get('[id="root-password"]').type(randomString(32));
 
   ui.button
@@ -62,9 +61,9 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
 
   cy.wait('@mockLinodeRequest');
 
-  fbtVisible(mockLinode.label);
-  fbtVisible(region.label);
-  fbtVisible(`${mockLinode.id}`);
+  cy.findByText(mockLinode.label).should('be.visible');
+  cy.findByText(region.label).should('be.visible');
+  cy.findByText(`${mockLinode.id}`).should('be.visible');
 };
 
 describe('create linode from image, mocked data', () => {

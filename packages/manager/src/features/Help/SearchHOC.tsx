@@ -11,7 +11,6 @@ import {
 import { truncate } from 'src/utilities/truncate';
 
 import type { SearchClient } from 'algoliasearch';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface SearchHit {
   _highlightResult?: any;
@@ -26,7 +25,7 @@ export interface AlgoliaState {
   searchAlgolia: (inputValue: string) => void;
   searchEnabled: boolean;
   searchError?: string;
-  searchResults: [Item[], Item[]];
+  searchResults: [ConvertedItems[], ConvertedItems[]];
 }
 
 interface SearchOptions {
@@ -38,11 +37,17 @@ interface AlgoliaContent {
   results: unknown;
 }
 
+export interface ConvertedItems {
+  data: { href: string; source: string };
+  label: string;
+  value: number;
+}
+
 // Functional helper methods
 export const convertDocsToItems = (
   highlight: boolean,
   hits: SearchHit[] = []
-): Item[] => {
+): ConvertedItems[] => {
   return hits.map((hit: SearchHit, idx: number) => {
     return {
       data: {
@@ -58,7 +63,7 @@ export const convertDocsToItems = (
 export const convertCommunityToItems = (
   highlight: boolean,
   hits: SearchHit[] = []
-): Item[] => {
+): ConvertedItems[] => {
   return hits.map((hit: SearchHit, idx: number) => {
     return {
       data: {

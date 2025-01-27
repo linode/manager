@@ -6,6 +6,18 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLinodesTableRow } from './PlacementGroupsLinodesTableRow';
 
+const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
+
 const defaultProps = {
   handleUnassignLinodeModal: vi.fn(),
   linode: linodeFactory.build({

@@ -5,8 +5,15 @@ import type {
   RecordType,
 } from '@linode/api-v4/lib/domains';
 
+type DomainTimeFields = Pick<
+  Domain,
+  'expire_sec' | 'refresh_sec' | 'retry_sec' | 'ttl_sec'
+>;
+
+type DomainRecordTimeFields = Pick<DomainRecord, 'ttl_sec'>;
+
 export const msToReadableTime = (v: number): null | string => {
-  const secondsToReadableTime: Record<number, string> = {
+  const msToReadableTimeMap: { [key: number]: string } = {
     0: 'Default',
     30: '30 seconds',
     120: '2 minutes',
@@ -23,11 +30,26 @@ export const msToReadableTime = (v: number): null | string => {
     1209600: '2 weeks',
     2419200: '4 weeks',
   };
-  return secondsToReadableTime?.[v] ?? null;
+
+  return v in msToReadableTimeMap ? msToReadableTimeMap[v] : null;
 };
 
-export const getTTL = (domain: Domain) =>
-  msToReadableTime(domain?.ttl_sec ?? 0);
+export function getTimeColumn(
+  record: Domain,
+  keyPath: keyof DomainTimeFields
+): null | string;
+
+export function getTimeColumn(
+  record: DomainRecord,
+  keyPath: keyof DomainRecordTimeFields
+): null | string;
+
+export function getTimeColumn(
+  record: Domain | DomainRecord,
+  keyPath: keyof (DomainRecordTimeFields | DomainTimeFields)
+) {
+  return msToReadableTime(record[keyPath] ?? 0);
+}
 
 export const typeEq = (type: RecordType) => (record: DomainRecord): boolean =>
   record.type === type;
