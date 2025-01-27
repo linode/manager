@@ -1,7 +1,23 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { ImagesRoute } from './ImagesRoute';
+
+import type { TableSearchParams } from '../types';
+
+export interface ImagesSearchParams extends TableSearchParams {
+  query?: string;
+}
+
+export interface ImageCreateDiskSearchParams {
+  selectedDiskFromSearch?: string;
+  selectedLinodeFromSearch?: string;
+}
+
+export interface ImageCreateUploadSearchParams {
+  imageDescription?: string;
+  imageLabel?: string;
+}
 
 const imagesRoute = createRoute({
   component: ImagesRoute,
@@ -12,22 +28,43 @@ const imagesRoute = createRoute({
 const imagesIndexRoute = createRoute({
   getParentRoute: () => imagesRoute,
   path: '/',
+  validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
-  import('src/features/Images/ImagesLanding/ImagesLanding').then(
-    (m) => m.imagesLandingLazyRoute
-  )
+  import('./imagesLazyRoutes').then((m) => m.imagesLandingLazyRoute)
 );
 
 const imagesCreateRoute = createRoute({
   getParentRoute: () => imagesRoute,
   path: 'create',
-}).lazy(() =>
-  import('src/features/Images/ImagesCreate/ImageCreate').then(
-    (m) => m.imageCreateLazyRoute
-  )
-);
+}).lazy(() => import('./imagesLazyRoutes').then((m) => m.imageCreateLazyRoute));
+
+const imagesCreateIndexRoute = createRoute({
+  beforeLoad: () => {
+    throw redirect({
+      to: '/images/create/disk',
+    });
+  },
+  getParentRoute: () => imagesCreateRoute,
+  path: '/',
+});
+
+const imagesCreateDiskRoute = createRoute({
+  getParentRoute: () => imagesCreateRoute,
+  path: 'disk',
+  validateSearch: (search: ImageCreateDiskSearchParams) => search,
+}).lazy(() => import('./imagesLazyRoutes').then((m) => m.imageCreateLazyRoute));
+
+const imagesCreateUploadRoute = createRoute({
+  getParentRoute: () => imagesCreateRoute,
+  path: 'upload',
+  validateSearch: (search: ImageCreateUploadSearchParams) => search,
+}).lazy(() => import('./imagesLazyRoutes').then((m) => m.imageCreateLazyRoute));
 
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute,
-  imagesCreateRoute,
+  imagesCreateRoute.addChildren([
+    imagesCreateIndexRoute,
+    imagesCreateDiskRoute,
+    imagesCreateUploadRoute,
+  ]),
 ]);

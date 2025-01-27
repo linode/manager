@@ -10,10 +10,9 @@ import {
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
@@ -96,10 +95,11 @@ const defaultDialogState = {
 
 export const ImagesLanding = () => {
   const { classes } = useStyles();
-  const history = useHistory();
+  // const history = useHistory();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
-  const location = useLocation();
+  // const location = useLocation();
   const isImagesReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
@@ -346,9 +346,13 @@ export const ImagesLanding = () => {
     queryClient.invalidateQueries({
       queryKey: imageQueries.paginated._def,
     });
-    history.push('/images/create/upload', {
-      imageDescription,
-      imageLabel,
+    // history.push('/images/create/upload', {
+    //   imageDescription,
+    //   imageLabel,
+    // });
+    navigate({
+      search: (prev) => ({ ...prev }),
+      to: '/images/create/upload',
     });
   };
 
@@ -359,22 +363,35 @@ export const ImagesLanding = () => {
   };
 
   const deployNewLinode = (imageID: string) => {
-    history.push({
-      pathname: `/linodes/create/`,
-      search: `?type=Images&imageID=${imageID}`,
-      state: { selectedImageId: imageID },
+    // history.push({
+    //   pathname: `/linodes/create/`,
+    //   search: `?type=Images&imageID=${imageID}`,
+    //   state: { selectedImageId: imageID },
+    // });
+    navigate({
+      search: (prev) => ({ ...prev }),
+      to: `/linodes/create`,
+      // state: { selectedImageId: imageID },
     });
   };
 
   const resetSearch = () => {
     queryParams.delete(searchParamKey);
-    history.push({ search: queryParams.toString() });
+    // history.push({ search: queryParams.toString() });
+    navigate({
+      search: (prev) => ({ ...prev, query: '' }),
+      to: '/images',
+    });
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     queryParams.delete('page');
     queryParams.set(searchParamKey, e.target.value);
-    history.push({ search: queryParams.toString() });
+    // history.push({ search: queryParams.toString() });
+    navigate({
+      search: (prev) => ({ ...prev, query: e.target.value }),
+      to: '/images',
+    });
   };
 
   const handlers: ImageHandlers = {
@@ -428,10 +445,12 @@ export const ImagesLanding = () => {
             resourceType: 'Images',
           }),
         }}
+        onButtonClick={() =>
+          navigate({ search: () => ({}), to: '/images/create' })
+        }
         disabledCreateButton={isImagesReadOnly}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         entity="Image"
-        onButtonClick={() => history.push('/images/create')}
         title="Images"
       />
       <TextField
@@ -686,9 +705,5 @@ export const ImagesLanding = () => {
     </React.Fragment>
   );
 };
-
-export const imagesLandingLazyRoute = createLazyRoute('/images')({
-  component: ImagesLanding,
-});
 
 export default ImagesLanding;
