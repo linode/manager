@@ -33,7 +33,7 @@ export const AlertListing = () => {
     history.push(`${location.pathname}/detail/${serviceType}/${id}`);
   };
 
-  const handleEditResources = ({ id, service_type: serviceType }: Alert) => {
+  const handleEdit = ({ id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/edit/${serviceType}/${id}`);
   };
 
@@ -80,7 +80,7 @@ export const AlertListing = () => {
             <AlertTableRow
               handlers={{
                 handleDetails: () => handleDetails(alert),
-                handleEditResources: () => handleEditResources(alert),
+                handleEdit: () => handleEdit(alert),
               }}
               alert={alert}
               key={alert.id}
