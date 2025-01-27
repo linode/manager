@@ -60,10 +60,11 @@ export const Avatar = (props: AvatarProps) => {
   const isAkamai =
     _username === 'Akamai' || _username.startsWith('lke-service-account');
 
-  const savedAvatarColor =
-    isAkamai || !avatarColorPreference
-      ? theme.tokens.color.Neutrals[30]
-      : avatarColorPreference;
+  const savedAvatarColor = isAkamai
+    ? theme.palette.primary.dark
+    : !avatarColorPreference
+    ? theme.tokens.color.Neutrals[30]
+    : avatarColorPreference;
 
   const avatarLetter = _username[0]?.toUpperCase() ?? '';
 
