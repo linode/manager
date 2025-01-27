@@ -166,30 +166,37 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   };
 
   const handlePresetSelection = (value: DatePresetType) => {
-    const now = DateTime.now().set({ second: 0 });
+    const now = DateTime.now();
     let newStartDateTime: DateTime | null = null;
-    let newEndDateTime: DateTime | null = now;
+    let newEndDateTime: DateTime | null = null;
 
     switch (value) {
       case '30minutes':
+        newEndDateTime = now.set({ second: 0 });
         newStartDateTime = now.minus({ minutes: 30 });
         break;
       case '1hour':
+        newEndDateTime = now.set({ second: 0 });
         newStartDateTime = now.minus({ hours: 1 });
         break;
       case '12hours':
+        newEndDateTime = now.set({ second: 0 });
         newStartDateTime = now.minus({ hours: 12 });
         break;
       case '24hours':
+        newEndDateTime = now.set({ second: 0 });
         newStartDateTime = now.minus({ hours: 24 });
         break;
       case '7days':
+        newEndDateTime = now.set({ second: 0 });
         newStartDateTime = now.minus({ days: 7 });
         break;
       case '30days':
+        newEndDateTime = now.set({ second: 0 });
         newStartDateTime = now.minus({ days: 30 });
         break;
       case 'this_month':
+        newEndDateTime = now;
         newStartDateTime = now.startOf('month');
         break;
       case 'last_month':
