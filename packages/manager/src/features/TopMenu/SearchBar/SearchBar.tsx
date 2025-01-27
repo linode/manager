@@ -5,7 +5,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import { MenuItem } from 'src/components/MenuItem';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
@@ -34,6 +33,7 @@ import {
   StyledSearchBarWrapperDiv,
 } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
+import { StyledSearchSuggestion } from './SearchSuggestion.styles';
 import { SearchSuggestionContainer } from './SearchSuggestionContainer';
 import { createFinalOptions } from './utils';
 
@@ -336,11 +336,11 @@ const SearchBarComponent = (props: SearchProps) => {
 
             if (isSpecialOption(option)) {
               return (
-                <MenuItem
+                <StyledSearchSuggestion
                   {...rest}
                   sx={(theme) => ({
-                    '&:hover svg': {
-                      color: `${theme.color.white} !important`,
+                    '&.MuiButtonBase-root': {
+                      padding: `${theme.spacing(1)} !important`,
                     },
                     fontFamily: theme.font.bold,
                   })}
@@ -360,7 +360,7 @@ const SearchBarComponent = (props: SearchProps) => {
                     </Box>
                   )}
                   {option.label}
-                </MenuItem>
+                </StyledSearchSuggestion>
               );
             }
 
@@ -382,6 +382,7 @@ const SearchBarComponent = (props: SearchProps) => {
             maxWidth: '100%',
             width: '100%',
           }}
+          autoHighlight
           data-qa-main-search
           disableClearable
           inputValue={searchText}

@@ -6,7 +6,11 @@ export const StyledSearchSuggestion = styled(MenuItem, {
   label: 'StyledSearchSuggestion',
 })(({ theme }) => ({
   '&.MuiButtonBase-root': {
-    '&:hover': {
+    '&.Mui-focused': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.color.white,
+    },
+    '&:hover, &.Mui-focused': {
       '& *:not(.tag-container *)': {
         color: theme.color.white,
       },
