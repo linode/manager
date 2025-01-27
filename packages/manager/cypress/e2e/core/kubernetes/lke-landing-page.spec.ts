@@ -1,5 +1,6 @@
 import type { KubernetesCluster } from '@linode/api-v4';
 import {
+  mockGetCluster,
   mockGetClusters,
   mockGetClusterPools,
   mockGetKubeconfig,
@@ -168,6 +169,32 @@ describe('LKE landing page', () => {
 
     cy.wait('@getKubeconfig');
     readDownload(mockKubeconfigFilename).should('eq', mockKubeconfigContents);
+  });
+
+  it('can view kubeconfig contents', () => {
+    const mockCluster = kubernetesClusterFactory.build();
+    const mockKubeconfigContents = '---'; // Valid YAML.
+    const mockKubeconfigResponse = {
+      kubeconfig: btoa(mockKubeconfigContents),
+    };
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetKubeconfig(mockCluster.id, mockKubeconfigResponse).as(
+      'getKubeconfig'
+    );
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster']);
+    // open drawer
+    cy.get('p:contains("View")')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    cy.wait('@getKubeconfig');
+    cy.findByTestId('drawer-title').should('be.visible');
+    cy.get('code')
+      .should('be.visible')
+      .within(() => {
+        cy.get('span').contains(mockKubeconfigContents);
+      });
   });
 
   it('does not show an Upgrade chip when there is no new kubernetes standard version', () => {
