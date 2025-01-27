@@ -23,6 +23,7 @@ import {
   FirewallTemplate,
   FirewallTemplateSlug,
   UpdateFirewallPayload,
+  UpdateFirewallRules,
   UpdateFirewallSettings,
 } from './types';
 
@@ -154,7 +155,10 @@ export const getFirewallRules = (
  * Updates the inbound and outbound Rules for a Firewall. Using this endpoint will
  * replace all of a Firewall's ruleset with the Rules specified in your request.
  */
-export const updateFirewallRules = (firewallID: number, data: FirewallRules) =>
+export const updateFirewallRules = (
+  firewallID: number,
+  data: UpdateFirewallRules
+) =>
   Request<FirewallRules>(
     setMethod('PUT'),
     setData(data), // Validation is too complicated for these; leave it to the API.

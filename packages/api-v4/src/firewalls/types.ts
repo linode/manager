@@ -17,7 +17,6 @@ export interface Firewall {
   entities: FirewallDeviceEntity[];
 }
 
-// @TODO Linode Interfaces - follow up on a separate type for firewall template's rules
 export interface FirewallRules {
   fingerprint?: string;
   inbound?: FirewallRuleType[] | null;
@@ -26,6 +25,15 @@ export interface FirewallRules {
   outbound_policy: FirewallPolicyType;
   version?: number;
 }
+
+export type UpdateFirewallRules = Omit<
+  FirewallRules,
+  'fingerprint' | 'version'
+>;
+
+// @TODO Linode Interfaces - follow up on if FirewallTemplate rules have the fingerprint / version fields.
+// FirewallRules do, but the objects returned from the getFirewallTemplate requests don't
+export type FirewallTemplateRules = UpdateFirewallRules;
 
 export interface FirewallRuleType {
   label?: string | null;
@@ -57,13 +65,13 @@ export type FirewallTemplateSlug = 'akamai-non-prod' | 'vpc' | 'public';
 
 export interface FirewallTemplate {
   slug: FirewallTemplateSlug;
-  rules: FirewallRules;
+  rules: FirewallTemplateRules;
 }
 
 export interface CreateFirewallPayload {
   label?: string;
   tags?: string[];
-  rules: FirewallRules;
+  rules: UpdateFirewallRules;
   devices?: {
     linodes?: number[];
     nodebalancers?: number[];
