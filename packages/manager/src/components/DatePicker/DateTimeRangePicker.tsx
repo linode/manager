@@ -124,10 +124,11 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     sx,
   } = props;
   const [startDateTime, setStartDateTime] = useState<DateTime | null>(
-    startDateTimeValue ?? DateTime.now().minus({ minutes: 30 })
+    startDateTimeValue ??
+      DateTime.now().set({ second: 0 }).minus({ minutes: 30 })
   );
   const [endDateTime, setEndDateTime] = useState<DateTime | null>(
-    endDateTimeValue ?? DateTime.now()
+    endDateTimeValue ?? DateTime.now().set({ second: 0 })
   );
   const [presetValue, setPresetValue] = useState<
     | {
