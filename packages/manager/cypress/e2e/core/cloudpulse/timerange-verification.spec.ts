@@ -40,6 +40,7 @@ const timeRanges = [
   { label: 'Last 7 Days', unit: 'days', value: 7 },
   { label: 'Last 1 Hour', unit: 'hr', value: 1 },
 ];
+const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 const mockRegion = regionFactory.build({
   capabilities: ['Managed Databases'],
@@ -146,7 +147,6 @@ const getDateRangeInIST = (
     hour: targetDate.hour,
     minute: targetDate.minute,
     month: targetDate.month,
-    ampm: targetDate.toFormat('a'),
   };
 };
 
@@ -169,10 +169,8 @@ const getLastMonthRange = (): { start: string; end: string } => {
   });
   const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
 
-  const formattedStartDate = adjustedStartDate.toFormat(
-    "yyyy-MM-dd'T'HH:mm:ss'Z'"
-  );
-  const formattedEndDate = adjustedEndDate.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  const formattedStartDate = adjustedStartDate.toFormat(formatter);
+  const formattedEndDate = adjustedEndDate.toFormat(formatter);
 
   return {
     start: formattedStartDate,
@@ -196,11 +194,8 @@ const getThisMonthRange = (): { start: string; end: string } => {
     zone: 'gmt',
   });
   const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
-
-  const formattedStartDate = adjustedStartDate.toFormat(
-    "yyyy-MM-dd'T'HH:mm:ss'Z'"
-  );
-  const formattedEndDate = adjustedEndDate.toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  const formattedStartDate = adjustedStartDate.toFormat(formatter);
+  const formattedEndDate = adjustedEndDate.toFormat(formatter);
 
   return {
     start: formattedStartDate,
@@ -235,9 +230,19 @@ describe('Integration Tests for DBaaS Dashboard', () => {
     cy.wait('@fetchPreferences');
   });
 
-  it.only('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
-    const startDate = getDateRangeInIST(0, 12, 15);
-    const endDate = getDateRangeInIST(25, 1, 15);
+  it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
+    const {
+      actualDate: startActualDate,
+      day: startDay,
+      hour: startHour,
+      minute: startMinute,
+    } = getDateRangeInIST(0, 12, 15);
+    const {
+      actualDate: endActualDate,
+      day: endDay,
+      hour: endHour,
+      minute: endMinute,
+    } = getDateRangeInIST(25, 1, 15);
 
     ui.autocomplete
       .findByLabel('Time Range')
@@ -249,7 +254,7 @@ describe('Integration Tests for DBaaS Dashboard', () => {
     ui.autocompletePopper.findByTitle('Custom').should('be.visible').click();
 
     cy.findByPlaceholderText('Select Start Date').should('be.visible').click();
-    cy.findByRole('gridcell', { name: startDate.day.toString() })
+    cy.findByRole('gridcell', { name: startDay.toString() })
       .should('be.visible')
       .click();
 
@@ -257,13 +262,13 @@ describe('Integration Tests for DBaaS Dashboard', () => {
     cy.get('[aria-label="Select hours"]')
       .scrollIntoView({ easing: 'linear' })
       .within(() => {
-        cy.get(`[aria-label="${startDate.hour} hours"]`).click();
+        cy.get(`[aria-label="${startHour} hours"]`).click();
       });
 
     cy.get('[aria-label="Select minutes"]')
       .scrollIntoView({ easing: 'linear', duration: 500 })
       .within(() => {
-        cy.get(`[aria-label="${startDate.minute} minutes"]`).click({
+        cy.get(`[aria-label="${startMinute} minutes"]`).click({
           force: true,
         });
       });
@@ -275,12 +280,13 @@ describe('Integration Tests for DBaaS Dashboard', () => {
       });
 
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
+
     cy.findByPlaceholderText('Select Start Date')
       .should('be.visible')
-      .should('have.value', `${startDate.actualDate} (${timezone})`);
+      .and('have.value', `${startActualDate} PM (${timezone})`);
 
     cy.findByPlaceholderText('Select End Date').should('be.visible').click();
-    cy.findByRole('gridcell', { name: endDate.day.toString() })
+    cy.findByRole('gridcell', { name: endDay.toString() })
       .should('be.visible')
       .click();
 
@@ -288,13 +294,13 @@ describe('Integration Tests for DBaaS Dashboard', () => {
     cy.get('[aria-label="Select hours"]')
       .scrollIntoView({ easing: 'linear', duration: 500 })
       .within(() => {
-        cy.get(`[aria-label="${endDate.hour} hours"]`).click();
+        cy.get(`[aria-label="${endHour} hours"]`).click();
       });
 
     cy.get('[aria-label="Select minutes"]')
       .scrollIntoView({ easing: 'linear', duration: 500 })
       .within(() => {
-        cy.get(`[aria-label="${endDate.minute} minutes"]`).click({
+        cy.get(`[aria-label="${endMinute} minutes"]`).click({
           force: true,
         });
       });
@@ -308,7 +314,7 @@ describe('Integration Tests for DBaaS Dashboard', () => {
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
     cy.findByPlaceholderText('Select End Date').should(
       'have.value',
-      `${endDate.actualDate} (${timezone})`
+      `${endActualDate} AM (${timezone})`
     );
 
     ui.autocomplete
@@ -323,10 +329,10 @@ describe('Integration Tests for DBaaS Dashboard', () => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
         expect(requestPayload.absolute_time_duration.start).to.equal(
-          convertToGmt(startDate.actualDate.replace(' ', 'T'))
+          convertToGmt(startActualDate.replace(' ', 'T'))
         );
         expect(requestPayload.absolute_time_duration.end).to.equal(
-          convertToGmt(endDate.actualDate.replace(' ', 'T'))
+          convertToGmt(endActualDate.replace(' ', 'T'))
         );
       });
 
@@ -428,7 +434,7 @@ describe('Integration Tests for DBaaS Dashboard', () => {
       });
   });
 
-  it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
+  it.only('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
     ui.autocomplete
       .findByLabel('Time Range')
       .scrollIntoView()
@@ -452,9 +458,14 @@ describe('Integration Tests for DBaaS Dashboard', () => {
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
+
         expect(requestPayload.absolute_time_duration.start).to.equal(
           getThisMonthRange().start
         );
+
+        cy.log('requestPayload', requestPayload.absolute_time_duration.end);
+        cy.log(' getThisMonthRange().start', getThisMonthRange().end);
+
         expect(requestPayload.absolute_time_duration.end).to.equal(
           getThisMonthRange().end
         );
