@@ -1,15 +1,17 @@
-import { Autocomplete, Button, TextField } from '@linode/ui';
+import { Autocomplete, TextField } from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import type { KubernetesTaintEffect, Taint } from '@linode/api-v4';
 
 interface Props {
-  handleSave: () => void;
+  handleCloseInputForm: () => void;
 }
 
 export const TaintInput = (props: Props) => {
-  const { handleSave } = props;
+  const { handleCloseInputForm } = props;
 
   const { control, setValue, watch } = useFormContext();
 
@@ -42,7 +44,7 @@ export const TaintInput = (props: Props) => {
       { shouldDirty: true }
     );
 
-    handleSave();
+    handleCloseInputForm();
   };
 
   return (
@@ -81,14 +83,19 @@ export const TaintInput = (props: Props) => {
         control={control}
         name="taints.effect"
       />
-
-      <Button
-        buttonType="primary"
-        onClick={handleAddTaint}
-        sx={{ marginTop: 2 }}
-      >
-        Add
-      </Button>
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'add-taint',
+          label: 'Add',
+          onClick: handleAddTaint,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel-taint',
+          label: 'Cancel',
+          onClick: handleCloseInputForm,
+        }}
+        style={{ flexDirection: 'row-reverse' }}
+      />
     </>
   );
 };

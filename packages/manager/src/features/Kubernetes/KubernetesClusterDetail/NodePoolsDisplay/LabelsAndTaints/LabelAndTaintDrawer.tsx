@@ -123,12 +123,15 @@ export const LabelAndTaintDrawer = (props: Props) => {
               }
             }}
             buttonType="outlined"
+            disabled={shouldShowLabelForm}
           >
             Add Label
           </Button>
           {shouldShowLabelForm && (
             <LabelInput
-              handleSave={() => setShouldShowLabelForm(!shouldShowLabelForm)}
+              handleCloseInputForm={() =>
+                setShouldShowLabelForm(!shouldShowLabelForm)
+              }
             />
           )}
 
@@ -143,12 +146,15 @@ export const LabelAndTaintDrawer = (props: Props) => {
               }
             }}
             buttonType="outlined"
+            disabled={shouldShowTaintForm}
           >
             Add Taint
           </Button>
           {shouldShowTaintForm && (
             <TaintInput
-              handleSave={() => setShouldShowTaintForm(!shouldShowTaintForm)}
+              handleCloseInputForm={() =>
+                setShouldShowTaintForm(!shouldShowTaintForm)
+              }
             />
           )}
 

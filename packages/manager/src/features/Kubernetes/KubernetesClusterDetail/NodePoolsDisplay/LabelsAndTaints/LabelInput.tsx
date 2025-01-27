@@ -1,16 +1,18 @@
-import { Button, IconButton, Stack, TextField } from '@linode/ui';
+import { IconButton, Stack, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+
 import type { Label } from '@linode/api-v4';
 
 interface Props {
-  handleSave: () => void;
+  handleCloseInputForm: () => void;
 }
 
 export const LabelInput = (props: Props) => {
-  const { handleSave } = props;
+  const { handleCloseInputForm } = props;
 
   const { control, setValue, watch } = useFormContext();
 
@@ -37,7 +39,7 @@ export const LabelInput = (props: Props) => {
       { shouldDirty: true }
     );
 
-    handleSave();
+    handleCloseInputForm();
   };
 
   return (
@@ -48,18 +50,18 @@ export const LabelInput = (props: Props) => {
             <Stack direction="row">
               <TextField
                 {...field}
+                containerProps={{ sx: { width: 399 } }}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
                 label="Label"
                 onChange={(e) => handleChangeLabel(e.target.value)}
                 placeholder="myapp.io/app: production"
-                sx={{ width: 385 }}
                 value={combinedLabel}
               />
               <IconButton
                 aria-label="Close Add Label form"
                 disableRipple
-                onClick={handleSave}
+                onClick={handleCloseInputForm}
                 size="medium"
                 sx={{ alignSelf: 'flex-end', paddingY: '7px' }}
               >
@@ -72,13 +74,19 @@ export const LabelInput = (props: Props) => {
         name="labels"
       />
 
-      <Button
-        buttonType="primary"
-        onClick={handleAddLabel}
-        sx={{ marginTop: 2 }}
-      >
-        Add
-      </Button>
+      <ActionsPanel
+        primaryButtonProps={{
+          'data-testid': 'add-label',
+          label: 'Add',
+          onClick: handleAddLabel,
+        }}
+        secondaryButtonProps={{
+          'data-testid': 'cancel-label',
+          label: 'Cancel',
+          onClick: handleCloseInputForm,
+        }}
+        style={{ flexDirection: 'row-reverse' }}
+      />
     </>
   );
 };
