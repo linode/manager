@@ -167,20 +167,6 @@ export const dimensionOperatorTypeMap: Record<
   startswith: 'starts with',
 };
 
-export const channelTypes: Record<ChannelTypes, string> = {
-  email: 'Email',
-  pagerduty: 'Pagerduty',
-  slack: 'Slack',
-  webhook: 'Webhook',
-};
-
-export const channelTypeOptions: Item<string, ChannelTypes>[] = Object.entries(
-  channelTypes
-).map(([key, label]) => ({
-  label,
-  value: key as ChannelTypes,
-}));
-
 export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
