@@ -6,9 +6,7 @@ import { useParams } from 'react-router-dom';
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import {
-  useAlertDefinitionQuery,
-} from 'src/queries/cloudpulse/alerts';
+import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { AlertResources } from '../AlertsResources/AlertsResources';
@@ -57,9 +55,7 @@ export const EditAlertResources = () => {
     return { newPathname: '/Definitions/Edit', overrides };
   }, [serviceType, alertId]);
 
-  const [, setSelectedResources] = React.useState<number[]>(
-    []
-  );
+  const [, setSelectedResources] = React.useState<number[]>([]);
 
   if (isFetching) {
     return (
@@ -123,5 +119,5 @@ export const EditAlertResources = () => {
         </Box>
       </Box>
     </>
-  )
+  );
 };
