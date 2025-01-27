@@ -1409,7 +1409,7 @@ export const lightTheme: ThemeOptions = {
           },
           // User Permissions Table
           '.MuiFormControlLabel-label': {
-            color: Table.HeaderFilled.Text,
+            color: Table.HeaderNested.Text,
           },
           // Icons in TH (i.e.: Summary View, Group by Tag)
           '.MuiIconButton-root': {
@@ -1418,14 +1418,9 @@ export const lightTheme: ThemeOptions = {
               color: Color.Brand[60],
               ...MuiTableHeadSvgStyles,
             },
-            svg: {
-              path: {
-                fill: Color.Neutrals.White,
-              },
-            },
           },
           borderBottom: 0,
-          color: Table.HeaderFilled.Text,
+          color: Table.HeaderNested.Text,
           fontWeight: Font.FontWeight.Bold,
           lineHeight: Font.LineHeight.Xxxs,
           whiteSpace: 'noWrap',
@@ -1455,12 +1450,12 @@ export const lightTheme: ThemeOptions = {
     MuiTableRow: {
       styleOverrides: {
         head: {
-          background: Table.HeaderFilled.Background,
+          background: Table.HeaderNested.Background,
         },
         root: {
           // Prevent needing `hover={false}` on header TableRows
           '&.MuiTableRow-head.MuiTableRow-hover:hover': {
-            backgroundColor: Table.HeaderFilled.Background,
+            backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
           '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
@@ -1487,7 +1482,7 @@ export const lightTheme: ThemeOptions = {
         },
         root: {
           '&.Mui-active': {
-            color: Table.HeaderFilled.Text,
+            color: Table.HeaderNested.Text,
           },
           ':hover, :focus': {
             ...MuiTableHeadSvgStyles,
@@ -1499,7 +1494,7 @@ export const lightTheme: ThemeOptions = {
             height: '16px',
             margin: `0 ${Spacing[20]}`,
             path: {
-              fill: Table.HeaderFilled.Text,
+              fill: Table.HeaderNested.Text,
             },
             width: '16px',
           },

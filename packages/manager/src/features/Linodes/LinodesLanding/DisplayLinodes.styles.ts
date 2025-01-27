@@ -27,7 +27,7 @@ export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
 })(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: theme.tokens.table.HeaderFilled.Background,
+  backgroundColor: theme.tokens.table.HeaderNested.Background,
   display: 'flex',
   height: 42,
   justifyContent: 'flex-end',

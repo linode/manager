@@ -144,7 +144,7 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
         <TableCell sx={{ padding: '0 !important' }}>
           <Box
             sx={{
-              backgroundColor: theme.tokens.table.HeaderFilled.Background,
+              backgroundColor: theme.tokens.table.HeaderNested.Background,
             }}
             alignItems="center"
             display="flex"

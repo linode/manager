@@ -133,7 +133,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                     ':hover': {
                       color: theme.tokens.color.Brand[60],
                     },
-                    color: theme.tokens.table.HeaderFilled.Icon,
+                    color: theme.tokens.table.HeaderNested.Icon,
                   })}
                   aria-describedby={groupByDescriptionId}
                   aria-label="Toggle group by tag"

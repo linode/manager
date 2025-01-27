@@ -774,7 +774,7 @@ export const darkTheme: ThemeOptions = {
         head: {
           // User Permissions Table
           '.MuiFormControlLabel-label': {
-            color: Table.HeaderFilled.Text,
+            color: Table.HeaderNested.Text,
           },
           // Icons in TH (i.e.: Summary View, Group by Tag)
           '.MuiIconButton-root': {
@@ -789,7 +789,7 @@ export const darkTheme: ThemeOptions = {
               },
             },
           },
-          color: Table.HeaderFilled.Text,
+          color: Table.HeaderNested.Text,
         },
         root: {
           borderBottom: `1px solid ${Table.Row.Border}`,
@@ -799,12 +799,12 @@ export const darkTheme: ThemeOptions = {
     MuiTableRow: {
       styleOverrides: {
         head: {
-          background: Table.HeaderFilled.Background,
+          background: Table.HeaderNested.Background,
         },
         root: {
           // Prevent needing `hover={false}` on header TableRows
           '&.MuiTableRow-head.MuiTableRow-hover:hover': {
-            backgroundColor: Table.HeaderFilled.Background,
+            backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
           '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
@@ -827,7 +827,7 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.Mui-active': {
-            color: Table.HeaderFilled.Text,
+            color: Table.HeaderNested.Text,
           },
           ':hover': {
             ...MuiTableHeadSvgStyles,
@@ -835,7 +835,7 @@ export const darkTheme: ThemeOptions = {
           },
           svg: {
             path: {
-              fill: Table.HeaderFilled.Text,
+              fill: Table.HeaderNested.Text,
             },
           },
         },
