@@ -244,10 +244,15 @@ describe('Create stackscripts', () => {
 
     cy.wait('@createStackScript').then((intercept) => {
       // Confirm the user is redirected to the StackScript details page
-      cy.url().should('endWith', `/stackscripts/${intercept.response?.body.id}`);
+      cy.url().should(
+        'endWith',
+        `/stackscripts/${intercept.response?.body.id}`
+      );
 
       // Confirm a success toast shows
-      ui.toast.assertMessage(`Successfully created StackScript ${intercept.response?.body.label}`);
+      ui.toast.assertMessage(
+        `Successfully created StackScript ${intercept.response?.body.label}`
+      );
     });
 
     ui.button
@@ -329,8 +334,10 @@ describe('Create stackscripts', () => {
 
       // Confirm the user is redirected to the StackScript details page
       cy.wait('@createStackScript').then((intercept) => {
-        console.log(intercept)
-        cy.url().should('endWith', `/stackscripts/${intercept.response?.body.id}`);
+        cy.url().should(
+          'endWith',
+          `/stackscripts/${intercept.response?.body.id}`
+        );
       });
 
       cy.wait('@getAllImages').then((res) => {
