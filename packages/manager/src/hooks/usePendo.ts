@@ -77,12 +77,12 @@ export const usePendo = () => {
   const optanonCookie = getCookie('OptanonConsent');
   // Since OptanonConsent cookie always has a .linode.com domain, only check for consent in dev/staging/prod envs.
   // When running the app locally, do not try to check for OneTrust cookie consent, just enable Pendo.
-  const hasConsentEnabled = !APP_ROOT.includes('localhost')
-    ? checkOptanonConsent(
-        optanonCookie,
-        ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
-      )
-    : true;
+  const hasConsentEnabled =
+    !APP_ROOT.includes('localhost') ||
+    checkOptanonConsent(
+      optanonCookie,
+      ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
+    );
 
   // This URL uses a Pendo-configured CNAME (M3-8742).
   const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;

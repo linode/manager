@@ -34,9 +34,7 @@ export const getCookie = (name: string) => {
     (cookie) => cookie.trim().startsWith(name + '=') // Trim whitespace so position in cookie string doesn't matter
   );
 
-  return selectedCookie
-    ? selectedCookie.trim().substring(name.length + 1)
-    : undefined;
+  return selectedCookie?.trim().substring(name.length + 1);
 };
 
 /**
