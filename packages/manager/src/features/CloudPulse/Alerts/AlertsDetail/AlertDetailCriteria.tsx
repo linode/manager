@@ -38,18 +38,23 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
         <Grid alignItems="center" container item md={8} xs={12}>
           <StyledAlertChip
             borderRadius={theme.spacing(0.3)}
+            data-qa-chip="All"
             label="All"
             variant="outlined"
           />
-          <StyledAlertTypography marginRight={0.5}>
+          <StyledAlertTypography
+            data-qa-item="criteria are met for"
+            marginRight={0.5}
+          >
             criteria are met for
           </StyledAlertTypography>
           <StyledAlertChip
             borderRadius={theme.spacing(0.3)}
+            data-qa-chip={triggerOccurrences}
             label={triggerOccurrences}
             variant="outlined"
           />
-          <StyledAlertTypography>
+          <StyledAlertTypography data-qa-item="consecutive occurrences">
             consecutive occurrences.
           </StyledAlertTypography>
         </Grid>
