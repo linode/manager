@@ -82,6 +82,7 @@ type RouteProps = RouteComponentProps<Params>;
 
 export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
+  filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
   linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;
@@ -189,6 +190,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
   render() {
     const {
+      filteredLinodesLoading,
       grants,
       handleRegionFilter,
       linodesData,
@@ -407,6 +409,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                   : ListView
                               }
                               display={linodeViewPreference}
+                              filteredLinodesLoading={filteredLinodesLoading}
                               handleRegionFilter={handleRegionFilter}
                               linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={true}
@@ -422,6 +425,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                   : ListView
                               }
                               display={linodeViewPreference}
+                              filteredLinodesLoading={filteredLinodesLoading}
                               handleRegionFilter={handleRegionFilter}
                               linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={false}
