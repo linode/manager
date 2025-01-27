@@ -11,6 +11,11 @@ export interface ActionHandlers {
    * Callback for show details action
    */
   handleDetails: () => void;
+
+  /**
+   * Callback for edit resources for default alerts
+   */
+  handleEditResources: () => void;
 }
 
 export interface AlertActionMenuProps {
