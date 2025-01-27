@@ -224,6 +224,16 @@ const SearchBarComponent = (props: SearchProps) => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' && searchText !== '' && combinedResults) {
+      history.push({
+        pathname: `/search`,
+        search: `?query=${encodeURIComponent(searchText)}`,
+      });
+      handleClose();
+    }
+  };
+
   const onSelect = (item: SearchResultItem) => {
     if (!item || item.label === '') {
       return;
@@ -247,6 +257,8 @@ const SearchBarComponent = (props: SearchProps) => {
     history.push(item.data.path);
     handleClose();
   };
+
+  const label = 'Search Products, IP Addresses, Tags...';
 
   const options = createFinalOptions(
     isLargeAccount ? apiResults : combinedResults,
@@ -313,8 +325,8 @@ const SearchBarComponent = (props: SearchProps) => {
                   },
                 }}
                 hideLabel
-                label="Main search"
-                placeholder="Search Products, IP Addresses, Tags..."
+                label={label}
+                placeholder={label}
               />
             );
           }}
@@ -370,19 +382,21 @@ const SearchBarComponent = (props: SearchProps) => {
             maxWidth: '100%',
             width: '100%',
           }}
+          data-qa-main-search
           disableClearable
           inputValue={searchText}
-          label="Main search"
+          label={label}
           loading={entitiesLoading}
           multiple={false}
           noOptionsText="No results"
           onBlur={handleBlur}
           onClose={handleClose}
           onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
           onOpen={handleOpen}
           open={menuOpen && searchText !== ''}
           options={options}
-          placeholder="Search Products, IP Addresses, Tags..."
+          placeholder={label}
           popupIcon={null}
           value={value}
         />
