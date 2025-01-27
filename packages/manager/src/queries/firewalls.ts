@@ -32,6 +32,7 @@ import type {
   Firewall,
   FirewallDevice,
   FirewallDevicePayload,
+  FirewallRules,
   FirewallTemplate,
   FirewallTemplateSlug,
   Params,
@@ -336,7 +337,7 @@ export const useDeleteFirewall = (id: number) => {
 
 export const useUpdateFirewallRulesMutation = (firewallId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<UpdateFirewallRules, APIError[], UpdateFirewallRules>({
+  return useMutation<FirewallRules, APIError[], UpdateFirewallRules>({
     mutationFn: (data) => updateFirewallRules(firewallId, data),
     onSuccess(updatedRules) {
       // Update rules on specific firewall
@@ -348,11 +349,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
           }
           return {
             ...oldData,
-            rules: {
-              ...oldData.rules,
-              ...updatedRules,
-              version: oldData.rules.version + 1,
-            },
+            rules: updatedRules,
           };
         }
       );
@@ -380,11 +377,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
 
           newData[indexOfFirewall] = {
             ...firewall,
-            rules: {
-              ...firewall.rules,
-              ...updatedRules,
-              version: firewall.rules.version + 1,
-            },
+            rules: updatedRules,
           };
           return { ...page, data: newData };
         }
@@ -413,11 +406,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
 
           newFirewalls[indexOfFirewall] = {
             ...firewall,
-            rules: {
-              ...firewall.rules,
-              ...updatedRules,
-              version: firewall.rules.version + 1,
-            },
+            rules: updatedRules,
           };
 
           return newFirewalls;
