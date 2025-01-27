@@ -127,11 +127,6 @@ export const CreateAlertDefinition = () => {
     isError: notificationChannelsError,
     isLoading: notificationChannelsLoading,
   } = useAlertNotificationChannelsQuery();
-  React.useEffect(() => {
-    if (!serviceTypeWatcher) {
-      setValue('entity_ids', [], { shouldValidate: true });
-    }
-  }, [serviceTypeWatcher, setValue]);
   const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
 
   const onChangeNotifications = (notifications: NotificationChannel[]) => {

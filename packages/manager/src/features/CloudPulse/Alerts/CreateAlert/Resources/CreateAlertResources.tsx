@@ -35,6 +35,12 @@ export const CreateAlertResources = React.memo(
       });
     };
 
+    React.useEffect(() => {
+      if (!serviceTypeWatcher) {
+        setValue('entity_ids', [], { shouldValidate: true });
+      }
+    }, [serviceTypeWatcher, setValue]);
+
     return (
       <Controller
         render={({ field, fieldState }) => (
