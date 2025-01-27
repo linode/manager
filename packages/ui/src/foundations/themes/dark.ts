@@ -11,6 +11,7 @@ import {
   Elevation,
   Interaction,
   NotificationToast,
+  Search,
   Select,
   TextField,
   Typography,
@@ -214,6 +215,23 @@ export const darkTheme: ThemeOptions = {
     },
     MuiAutocomplete: {
       styleOverrides: {
+        endAdornment: {
+          '.MuiAutocomplete-clearIndicator': {
+            visibility: 'visible !important',
+          },
+          '.MuiAutocomplete-popupIndicator': {
+            svg: {
+              fontSize: '28px',
+            },
+          },
+          paddingRight: 4,
+          svg: {
+            ':hover': {
+              color: `${Color.Brand[50]} !important`,
+            },
+            color: `${Search.Default.Icon} !important`,
+          },
+        },
         input: {
           '&::selection': {
             backgroundColor: customDarkModeOptions.bg.appBar,
@@ -901,6 +919,7 @@ export const darkTheme: ThemeOptions = {
     content: Content,
     elevation: Elevation,
     interaction: Interaction,
+    search: Search,
     typography: Typography,
   },
   typography: {

@@ -4,19 +4,16 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
+import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
 import { NO_ASSIGNED_ROLES_TEXT } from '../../Shared/constants';
-import { Entities } from '../../Shared/Entities/Entities';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
-import type { IamUserPermissions } from '@linode/api-v4';
-
-interface Props {
-  assignedRoles?: IamUserPermissions;
-}
-
-export const UserRoles = ({ assignedRoles }: Props) => {
+export const UserRoles = () => {
   const { username } = useParams<{ username: string }>();
+
+  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
   const handleClick = () => {
     // mock for UIE-8140: RBAC-4: User Roles - Assign New Role
@@ -40,14 +37,7 @@ export const UserRoles = ({ assignedRoles }: Props) => {
             </Button>
           </Stack>
           {hasAssignedRoles ? (
-            <div>
-              <p>UIE-8138 - assigned roles table</p>
-              {/* just for showing the Entities componnet, it will be gone wuth the AssignedPermissions component*/}
-
-              <Entities access="account_access" type="account" />
-              <Entities access="account_access" type="firewall" />
-              <Entities access="resource_access" type="linode" />
-            </div>
+            <AssignedRolesTable />
           ) : (
             <NoAssignedRoles text={NO_ASSIGNED_ROLES_TEXT} />
           )}

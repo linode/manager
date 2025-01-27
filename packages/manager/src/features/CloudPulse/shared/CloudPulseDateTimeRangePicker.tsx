@@ -4,8 +4,6 @@ import React from 'react';
 import { DateTimeRangePicker } from 'src/components/DatePicker/DateTimeRangePicker';
 import { useProfile } from 'src/queries/profile/profile';
 
-import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
-
 import type { DateTimeWithPreset, FilterValue } from '@linode/api-v4';
 
 interface CloudPulseDateTimeRangePickerProps {
@@ -42,9 +40,9 @@ export const CloudPulseDateTimeRangePicker = React.memo(
       }
       handleStatsChange(
         {
-          end: convertToGmt(end),
+          end,
           preset,
-          start: convertToGmt(start),
+          start,
         },
         savePreferences
       );
@@ -80,6 +78,7 @@ export const CloudPulseDateTimeRangePicker = React.memo(
         }}
         disabledTimeZone
         enablePresets
+        format="yyyy-MM-dd hh:mm a"
         onChange={handleDateChange}
       />
     );
