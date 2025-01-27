@@ -124,10 +124,11 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     sx,
   } = props;
   const [startDateTime, setStartDateTime] = useState<DateTime | null>(
-    startDateTimeValue ?? DateTime.now().minus({ minutes: 30 })
+    startDateTimeValue ??
+      DateTime.now().set({ second: 0 }).minus({ minutes: 30 })
   );
   const [endDateTime, setEndDateTime] = useState<DateTime | null>(
-    endDateTimeValue ?? DateTime.now()
+    endDateTimeValue ?? DateTime.now().set({ second: 0 })
   );
   const [presetValue, setPresetValue] = useState<
     | {
@@ -165,7 +166,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
   };
 
   const handlePresetSelection = (value: DatePresetType) => {
-    const now = DateTime.now();
+    const now = DateTime.now().set({ second: 0 });
     let newStartDateTime: DateTime | null = null;
     let newEndDateTime: DateTime | null = now;
 
@@ -190,7 +191,6 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
         break;
       case 'this_month':
         newStartDateTime = now.startOf('month');
-        newEndDateTime = now.endOf('month');
         break;
       case 'last_month':
         const lastMonth = now.minus({ months: 1 });

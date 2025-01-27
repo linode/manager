@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -12,21 +13,33 @@ import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
 import { AutoscalePoolDialog } from './AutoscalePoolDialog';
 import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
+import { LabelAndTaintDrawer } from './LabelsAndTaints/LabelAndTaintDrawer';
 import { NodePool } from './NodePool';
 import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
-import type { Region } from '@linode/api-v4';
+import type { KubernetesTier, Region } from '@linode/api-v4';
 
 export interface Props {
+  clusterCreated: string;
   clusterID: number;
   clusterLabel: string;
   clusterRegionId: string;
+  clusterTier: KubernetesTier;
   regionsData: Region[];
 }
 
 export const NodePoolsDisplay = (props: Props) => {
-  const { clusterID, clusterLabel, clusterRegionId, regionsData } = props;
+  const {
+    clusterCreated,
+    clusterID,
+    clusterLabel,
+    clusterRegionId,
+    clusterTier,
+    regionsData,
+  } = props;
+
+  const flags = useFlags();
 
   const {
     data: pools,
@@ -40,6 +53,10 @@ export const NodePoolsDisplay = (props: Props) => {
   const selectedPool = pools?.find((pool) => pool.id === selectedPoolId);
 
   const [isDeleteNodePoolOpen, setIsDeleteNodePoolOpen] = useState(false);
+  const [
+    isLabelsAndTaintsDrawerOpen,
+    setIsLabelsAndTaintsDrawerOpen,
+  ] = useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = useState(false);
   const [isRecycleAllPoolNodesOpen, setIsRecycleAllPoolNodesOpen] = useState(
     false
@@ -74,6 +91,11 @@ export const NodePoolsDisplay = (props: Props) => {
     setIsResizeDrawerOpen(true);
   };
 
+  const handleOpenLabelsAndTaintsDrawer = (poolId: number) => {
+    setSelectedPoolId(poolId);
+    setIsLabelsAndTaintsDrawerOpen(true);
+  };
+
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
   }
@@ -104,7 +126,7 @@ export const NodePoolsDisplay = (props: Props) => {
       {poolsError && <ErrorState errorText={poolsError[0].reason} />}
       <Stack spacing={2}>
         {_pools?.map((thisPool) => {
-          const { disk_encryption, id, nodes, tags } = thisPool;
+          const { count, disk_encryption, id, nodes, tags } = thisPool;
 
           const thisPoolType = types?.find(
             (thisType) => thisType.id === thisPool.type
@@ -131,8 +153,12 @@ export const NodePoolsDisplay = (props: Props) => {
                 setIsRecycleNodeOpen(true);
               }}
               autoscaler={thisPool.autoscaler}
+              clusterCreated={clusterCreated}
               clusterId={clusterID}
+              clusterTier={clusterTier}
+              count={count}
               encryptionStatus={disk_encryption}
+              handleClickLabelsAndTaints={handleOpenLabelsAndTaintsDrawer}
               handleClickResize={handleOpenResizeDrawer}
               isOnlyNodePool={pools?.length === 1}
               key={id}
@@ -157,6 +183,14 @@ export const NodePoolsDisplay = (props: Props) => {
         open={addDrawerOpen}
         regionsData={regionsData}
       />
+      {flags.lkeEnterprise?.enabled && (
+        <LabelAndTaintDrawer
+          clusterId={clusterID}
+          nodePool={selectedPool}
+          onClose={() => setIsLabelsAndTaintsDrawerOpen(false)}
+          open={isLabelsAndTaintsDrawerOpen}
+        />
+      )}
       <ResizeNodePoolDrawer
         kubernetesClusterId={clusterID}
         kubernetesRegionId={clusterRegionId}
@@ -164,18 +198,23 @@ export const NodePoolsDisplay = (props: Props) => {
         onClose={() => setIsResizeDrawerOpen(false)}
         open={isResizeDrawerOpen}
       />
-      <DeleteNodePoolDialog
-        kubernetesClusterId={clusterID}
-        nodePool={selectedPool}
-        onClose={() => setIsDeleteNodePoolOpen(false)}
-        open={isDeleteNodePoolOpen}
-      />
       <AutoscalePoolDialog
         clusterId={clusterID}
         handleOpenResizeDrawer={handleOpenResizeDrawer}
         nodePool={selectedPool}
         onClose={() => setIsAutoscaleDialogOpen(false)}
         open={isAutoscaleDialogOpen}
+      />
+      <DeleteNodePoolDialog
+        kubernetesClusterId={clusterID}
+        nodePool={selectedPool}
+        onClose={() => setIsDeleteNodePoolOpen(false)}
+        open={isDeleteNodePoolOpen}
+      />
+      <RecycleClusterDialog
+        clusterId={clusterID}
+        onClose={() => setIsRecycleClusterOpen(false)}
+        open={isRecycleClusterOpen}
       />
       <RecycleNodeDialog
         clusterId={clusterID}
@@ -188,11 +227,6 @@ export const NodePoolsDisplay = (props: Props) => {
         nodePoolId={selectedPoolId}
         onClose={() => setIsRecycleAllPoolNodesOpen(false)}
         open={isRecycleAllPoolNodesOpen}
-      />
-      <RecycleClusterDialog
-        clusterId={clusterID}
-        onClose={() => setIsRecycleClusterOpen(false)}
-        open={isRecycleClusterOpen}
       />
     </>
   );

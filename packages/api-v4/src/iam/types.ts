@@ -15,10 +15,12 @@ export type AccountAccessType =
   | 'account_linode_admin'
   | 'linode_creator'
   | 'linode_contributor'
+  | 'account_admin'
   | 'firewall_creator';
 
 export type RoleType =
   | 'linode_contributor'
+  | 'linode_viewer'
   | 'firewall_admin'
   | 'linode_creator'
   | 'firewall_creator';
@@ -33,7 +35,7 @@ export interface ResourceAccess {
   roles: RoleType[];
 }
 
-type PermissionType =
+export type PermissionType =
   | 'create_linode'
   | 'update_linode'
   | 'update_firewall'

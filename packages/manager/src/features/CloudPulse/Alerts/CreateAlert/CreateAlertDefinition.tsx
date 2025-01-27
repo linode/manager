@@ -20,8 +20,8 @@ import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
 import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
-import { AddChannelListing } from './NotificationChannel/AddChannelListing';
-import { AddNotificationChannel } from './NotificationChannel/AddNotificationChannel';
+import { AddChannelListing } from './NotificationChannels/AddChannelListing';
+import { AddNotificationChannel } from './NotificationChannels/AddNotificationChannel';
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
@@ -32,6 +32,7 @@ import type {
 } from './types';
 import type { NotificationChannel } from '@linode/api-v4/lib/cloudpulse/types';
 import type { ObjectSchema } from 'yup';
+
 
 const triggerConditionInitialValues: TriggerConditionForm = {
   criteria_condition: 'ALL',
@@ -98,12 +99,21 @@ export const CreateAlertDefinition = () => {
     getValues('serviceType')!
   );
 
-  /**
-   * The maxScrapeInterval variable will be required for the Trigger Conditions part of the Critieria section.
-   */
+  const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
+  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
+
+  const [openAddNotification, setOpenAddNotification] = React.useState(false);
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
-  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
+  const onSubmitAddNotification = (notificationId: number) => {
+    setValue('channel_ids', [...notificationChannelWatcher, notificationId], {
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: false,
+    });
+    setOpenAddNotification(false);
+  };
+
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
@@ -129,7 +139,6 @@ export const CreateAlertDefinition = () => {
     isError: notificationChannelsError,
     isLoading: notificationChannelsLoading,
   } = useAlertNotificationChannelsQuery();
-  const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
 
   const onChangeNotifications = (notifications: NotificationChannel[]) => {
     const notificationTemplateList = notifications.map(
@@ -137,17 +146,6 @@ export const CreateAlertDefinition = () => {
     );
     setValue('channel_ids', notificationTemplateList);
   };
-  const [openAddNotification, setOpenAddNotification] = React.useState(false);
-
-  const onSubmitAddNotification = (notificationId: number) => {
-    setValue('channel_ids', [...notificationChannelWatcher, notificationId], {
-      shouldDirty: false,
-      shouldTouch: false,
-      shouldValidate: false,
-    });
-    setOpenAddNotification(false);
-  };
-
   const notifications = React.useMemo(() => {
     return (
       notificationData?.filter(
@@ -171,7 +169,6 @@ export const CreateAlertDefinition = () => {
   const onAddNotifications = () => {
     setOpenAddNotification(true);
   };
-
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb crumbOverrides={overrides} pathname="/Definitions/Create" />

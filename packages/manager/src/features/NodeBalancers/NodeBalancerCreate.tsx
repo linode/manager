@@ -654,6 +654,9 @@ const NodeBalancerCreate = () => {
                 onProxyProtocolChange={onChange('proxy_protocol')}
                 onSessionStickinessChange={onChange('stickiness')}
                 onSslCertificateChange={onChange('ssl_cert')}
+                onUdpCheckPortChange={(value) =>
+                  onChange('udp_check_port')(value)
+                }
                 port={nodeBalancerFields.configs[idx].port!}
                 privateKey={nodeBalancerFields.configs[idx].ssl_key!}
                 protocol={nodeBalancerFields.configs[idx].protocol!}
@@ -661,6 +664,7 @@ const NodeBalancerCreate = () => {
                 removeNode={removeNodeBalancerConfigNode(idx)}
                 sessionStickiness={nodeBalancerFields.configs[idx].stickiness!}
                 sslCertificate={nodeBalancerFields.configs[idx].ssl_cert!}
+                udpCheckPort={nodeBalancerFields.configs[idx].udp_check_port!}
               />
             </Accordion>
           );
