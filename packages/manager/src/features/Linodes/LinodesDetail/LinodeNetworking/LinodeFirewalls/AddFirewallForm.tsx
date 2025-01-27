@@ -5,6 +5,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { number, object } from 'yup';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/FirewallDeviceLanding';
 import {
@@ -87,18 +88,17 @@ export const AddFirewallForm = (props: Props) => {
           control={form.control}
           name="firewallId"
         />
-        <Stack direction="row" justifyContent="flex-end" spacing={1}>
-          <Button buttonType="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            loading={form.formState.isSubmitting}
-            type="submit"
-          >
-            Add Firewall
-          </Button>
-        </Stack>
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Add Firewall',
+            loading: form.formState.isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            label: 'Cancel',
+            onClick: onCancel,
+          }}
+        />
       </Stack>
     </form>
   );
