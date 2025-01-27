@@ -81,6 +81,7 @@ describe('LKE summary page', () => {
     });
 
     // Confirms that the tags drawer shows up and the new tag exists
+    cy.get(`[data-qa-tag="${tag}"]`).should('be.visible');
     cy.get('[aria-label="Display all tags"]').should('be.visible').click();
     ui.drawer
       .findByTitle(`Tags (${mockCluster.label})`)
@@ -131,6 +132,7 @@ describe('LKE summary page', () => {
     ]);
 
     // Confirms that the tags drawer shows up
+    cy.get(`[data-qa-tag="${tagExisting}"]`).should('be.visible');
     cy.get('[aria-label="Display all tags"]').should('be.visible').click();
     ui.drawer
       .findByTitle(`Tags (${mockCluster.label})`)
@@ -199,6 +201,7 @@ describe('LKE summary page', () => {
     ]);
 
     // Confirms that the tags drawer shows up
+    cy.get(`[data-qa-tag="${tagExisting}"]`).should('be.visible');
     cy.get('[aria-label="Display all tags"]').should('be.visible').click();
     ui.drawer
       .findByTitle(`Tags (${mockCluster.label})`)
