@@ -12,6 +12,8 @@ import { notificationChannelSchema } from '../schemas';
 import type { NotificationChannelForm } from '../types';
 import type { ChannelType, NotificationChannel } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
+import Grid from '@mui/material/Grid';
+import { RenderChannelDetails } from './RenderChannelDetails';
 
 interface AddNotificationChannelProps {
   /**
@@ -163,7 +165,19 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
               control={control}
               name="label"
             />
-          </Box>
+          </Box>          
+          {selectedTemplate && selectedTemplate.channel_type === 'email' && (
+            <Box paddingTop={2}>
+              <Grid container>
+                <Grid item md={1} sm={1} xs={2}>
+                  <Typography variant="h3">To:</Typography>
+                </Grid>
+                <Grid item md="auto" overflow="auto" paddingRight={1} xs={12}>
+                  <RenderChannelDetails template={selectedTemplate} />
+                </Grid>
+              </Grid>
+            </Box>
+          )}
         </Box>
         <ActionsPanel
           primaryButtonProps={{
@@ -178,4 +192,4 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
       </form>
     </FormProvider>
   );
-};
+}; 
