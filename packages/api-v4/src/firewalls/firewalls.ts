@@ -265,7 +265,7 @@ export const getFirewallSettings = () =>
   );
 
 /**
- * getTemplate
+ * updateFirewallSettings
  *
  * Update which firewalls should be the interface default firewalls
  */

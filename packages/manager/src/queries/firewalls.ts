@@ -347,10 +347,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
           if (!oldData) {
             return undefined;
           }
-          return {
-            ...oldData,
-            rules: updatedRules,
-          };
+          return { ...oldData, rules: updatedRules };
         }
       );
 
