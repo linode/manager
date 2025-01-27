@@ -11,6 +11,7 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
+import { useFlags } from 'src/hooks/useFlags';
 import { pluralize } from 'src/utilities/pluralize';
 
 import { NodeTable } from './NodeTable';
@@ -29,6 +30,7 @@ interface Props {
   clusterTier: KubernetesTier;
   count: number;
   encryptionStatus: EncryptionStatus | undefined;
+  handleClickLabelsAndTaints: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
   isOnlyNodePool: boolean;
   nodes: PoolNodeResponse[];
@@ -49,6 +51,7 @@ export const NodePool = (props: Props) => {
     clusterTier,
     count,
     encryptionStatus,
+    handleClickLabelsAndTaints,
     handleClickResize,
     isOnlyNodePool,
     nodes,
@@ -60,6 +63,8 @@ export const NodePool = (props: Props) => {
     tags,
     typeLabel,
   } = props;
+
+  const flags = useFlags();
 
   return (
     <Box data-qa-node-pool-id={poolId} data-qa-node-pool-section>
@@ -88,6 +93,11 @@ export const NodePool = (props: Props) => {
           <ActionMenu
             actionsList={[
               {
+                disabled: !flags.lkeEnterprise?.enabled,
+                onClick: () => handleClickLabelsAndTaints(poolId),
+                title: 'Labels and Taints',
+              },
+              {
                 onClick: () => openAutoscalePoolDialog(poolId),
                 title: 'Autoscale Pool',
               },
@@ -113,6 +123,14 @@ export const NodePool = (props: Props) => {
         </Hidden>
         <Hidden smDown>
           <Stack alignItems="center" direction="row">
+            {flags.lkeEnterprise?.enabled && (
+              <StyledActionButton
+                compactY
+                onClick={() => handleClickLabelsAndTaints(poolId)}
+              >
+                Labels and Taints
+              </StyledActionButton>
+            )}
             <StyledActionButton
               compactY
               onClick={() => openAutoscalePoolDialog(poolId)}

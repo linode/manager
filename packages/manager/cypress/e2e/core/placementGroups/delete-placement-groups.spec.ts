@@ -5,6 +5,7 @@
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockDeletePlacementGroup,
+  mockGetPlacementGroup,
   mockGetPlacementGroups,
   mockUnassignPlacementGroupLinodes,
   mockDeletePlacementGroupError,
@@ -62,6 +63,7 @@ describe('Placement Group deletion', () => {
     });
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     cy.visitWithLogin('/placement-groups');
     cy.wait('@getPlacementGroups');
@@ -172,6 +174,7 @@ describe('Placement Group deletion', () => {
     mockGetPlacementGroups([mockPlacementGroup, secondMockPlacementGroup]).as(
       'getPlacementGroups'
     );
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     cy.visitWithLogin('/placement-groups');
     cy.wait(['@getPlacementGroups']);
@@ -254,6 +257,9 @@ describe('Placement Group deletion', () => {
               placementGroupAfterUnassignment,
               secondMockPlacementGroup,
             ]).as('getPlacementGroups');
+            mockGetPlacementGroup(placementGroupAfterUnassignment).as(
+              'getPlacementGroups'
+            );
 
             cy.findByText(mockLinode.label)
               .should('be.visible')
@@ -318,6 +324,7 @@ describe('Placement Group deletion', () => {
     });
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     cy.visitWithLogin('/placement-groups');
     cy.wait('@getPlacementGroups');
@@ -443,6 +450,7 @@ describe('Placement Group deletion', () => {
     mockGetPlacementGroups([mockPlacementGroup, secondMockPlacementGroup]).as(
       'getPlacementGroups'
     );
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     cy.visitWithLogin('/placement-groups');
     cy.wait(['@getPlacementGroups']);
