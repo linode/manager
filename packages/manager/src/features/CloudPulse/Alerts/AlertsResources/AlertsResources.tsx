@@ -36,6 +36,11 @@ export interface AlertResourcesProp {
   handleResourcesSelection?: (resources: string[]) => void;
 
   /**
+   * Property to control the visibility of the title
+   */
+  hideLabel?: boolean;
+
+  /**
    * This controls whether we need to show the checkbox in case of editing the resources
    */
   isSelectionsNeeded?: boolean;
@@ -44,11 +49,6 @@ export interface AlertResourcesProp {
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
   serviceType?: string;
-
-  /**
-   * Property to control the visibility of the title
-   */
-  showTitle?: boolean;
 }
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
@@ -56,9 +56,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertLabel,
     alertResourceIds,
     handleResourcesSelection,
+    hideLabel,
     isSelectionsNeeded,
     serviceType,
-    showTitle,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
@@ -197,13 +197,19 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     return <CircleProgress />;
   }
 
-  if (!isDataLoadingError && alertResourceIds.length === 0) {
+  if (
+    !isDataLoadingError &&
+    alertResourceIds.length === 0 &&
+    !isSelectionsNeeded
+  ) {
     return (
       <Stack gap={2}>
-        <Typography ref={titleRef} variant="h2">
-          {alertLabel || 'Resources'}
-          {/* It can be either the passed alert label or just Resources */}
-        </Typography>
+        {!hideLabel && (
+          <Typography ref={titleRef} variant="h2">
+            {alertLabel || 'Resources'}
+            {/* It can be either the passed alert label or just Resources */}
+          </Typography>
+        )}
         <StyledPlaceholder
           icon={EntityIcon}
           subtitle="You can assign alerts during the resource creation process."
@@ -215,11 +221,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   return (
     <Stack gap={2}>
-      <Typography ref={titleRef} variant="h2">
-        {alertLabel || 'Resources'}
-        {/* It can be either the passed alert label or just Resources */}
-      </Typography>
-      {(isDataLoadingError || alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
+      {!hideLabel && (
+        <Typography ref={titleRef} variant="h2">
+          {alertLabel || 'Resources'}
+          {/* It can be either the passed alert label or just Resources */}
+        </Typography>
+      )}
+      {(isDataLoadingError ||
+        alertResourceIds.length ||
+        isSelectionsNeeded) && ( // if there is data loading error display error message with empty table setup
         <Grid container spacing={3}>
           <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
             <Grid item md={3} xs={12}>

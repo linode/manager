@@ -64,9 +64,10 @@ export const CreateAlertResources = React.memo(
             </Box>
             <Box sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}>
               <AlertResources
+                alertResourceIds={field.value}
                 handleResourcesSelection={handleResourcesSelection}
+                hideLabel
                 isSelectionsNeeded
-                resourceIds={field.value}
                 serviceType={serviceTypeWatcher || undefined}
               />
             </Box>

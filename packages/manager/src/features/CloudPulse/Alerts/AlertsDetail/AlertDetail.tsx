@@ -126,7 +126,6 @@ export const AlertDetail = () => {
           <AlertResources
             alertResourceIds={entityIds}
             serviceType={serviceType}
-            showTitle
           />
         </Box>
         <Box
