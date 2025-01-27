@@ -346,7 +346,14 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
           if (!oldData) {
             return undefined;
           }
-          return { ...oldData, rules: { ...oldData.rules, ...updatedRules } };
+          return {
+            ...oldData,
+            rules: {
+              ...oldData.rules,
+              ...updatedRules,
+              version: oldData.rules.version + 1,
+            },
+          };
         }
       );
 
@@ -373,7 +380,11 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
 
           newData[indexOfFirewall] = {
             ...firewall,
-            rules: { ...firewall.rules, ...updatedRules },
+            rules: {
+              ...firewall.rules,
+              ...updatedRules,
+              version: firewall.rules.version + 1,
+            },
           };
           return { ...page, data: newData };
         }
@@ -402,7 +413,11 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
 
           newFirewalls[indexOfFirewall] = {
             ...firewall,
-            rules: { ...firewall.rules, ...updatedRules },
+            rules: {
+              ...firewall.rules,
+              ...updatedRules,
+              version: firewall.rules.version + 1,
+            },
           };
 
           return newFirewalls;
