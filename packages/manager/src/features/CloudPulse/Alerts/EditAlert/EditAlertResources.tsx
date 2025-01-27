@@ -1,12 +1,16 @@
 import { Box, CircleProgress } from '@linode/ui';
 import { useTheme } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
+import {
+  useAlertDefinitionQuery,
+  useEditAlertDefinitionResources,
+} from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { AlertResources } from '../AlertsResources/AlertsResources';
@@ -18,6 +22,7 @@ export const EditAlertResources = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
 
   const theme = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
 
   const definitionLanding = '/monitor/alerts/definitions';
 
@@ -26,15 +31,14 @@ export const EditAlertResources = () => {
     serviceType
   );
 
-  // const {
-  //   isError: isEditAlertError,
-  //   mutateAsync: editAlert,
-  //   reset: resetEditAlert,
-  // } = useEditAlertDefinitionResources(serviceType, Number(alertId));
+  const {
+    isError: isEditAlertError,
+    reset: resetEditAlert,
+  } = useEditAlertDefinitionResources(serviceType, Number(alertId)); // TODO: consume mutate and implement save resources in upcoming PR
 
   React.useEffect(() => {
     setSelectedResources(
-      alertDetails ? alertDetails.entity_ids.map((id) => Number(id)) : []
+      alertDetails ? alertDetails.entity_ids.map((id) => id) : []
     );
   }, [alertDetails]);
 
@@ -55,7 +59,7 @@ export const EditAlertResources = () => {
     return { newPathname: '/Definitions/Edit', overrides };
   }, [serviceType, alertId]);
 
-  const [, setSelectedResources] = React.useState<number[]>([]);
+  const [, setSelectedResources] = React.useState<string[]>([]);
 
   if (isFetching) {
     return (
@@ -94,9 +98,26 @@ export const EditAlertResources = () => {
     );
   }
 
+  if (isEditAlertError) {
+    enqueueSnackbar('Error while updating the resources. Try again later.', {
+      anchorOrigin: {
+        horizontal: 'right',
+        vertical: 'top', // show snackbar at the top
+      },
+      autoHideDuration: 5000,
+      style: {
+        marginTop: theme.spacing(18.75),
+      },
+      variant: 'error',
+    });
+    resetEditAlert(); // reset the mutate use hook states
+  }
+
   const handleResourcesSelection = (resourceIds: string[]) => {
-    setSelectedResources(resourceIds.map((id) => Number(id))); // here we just keep track of it, on save we will update it
+    setSelectedResources(resourceIds.map((id) => id)); // here we just keep track of it, on save we will update it
   };
+
+  const { entity_ids, label, service_type } = alertDetails;
 
   return (
     <>
@@ -110,11 +131,11 @@ export const EditAlertResources = () => {
       >
         <Box>
           <AlertResources
-            alertLabel={alertDetails.label}
-            alertResourceIds={alertDetails.entity_ids}
+            alertLabel={label}
+            alertResourceIds={entity_ids}
             handleResourcesSelection={handleResourcesSelection}
             isSelectionsNeeded
-            serviceType={alertDetails.service_type}
+            serviceType={service_type}
           />
         </Box>
       </Box>

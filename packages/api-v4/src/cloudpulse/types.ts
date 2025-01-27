@@ -294,3 +294,7 @@ export type NotificationChannel =
   | NotificationChannelSlack
   | NotificationChannelWebHook
   | NotificationChannelPagerDuty;
+
+export interface EditAlertResourcesPayload {
+  entity_ids: string[];
+}
