@@ -52,17 +52,17 @@ describe('DateTimeRangePicker Component', () => {
     vi.setSystemTime(vi.getRealSystemTime());
 
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
-    const now = DateTime.now();
+    const now = DateTime.now().set({ second: 0 });
     // Open start date picker
     await userEvent.click(screen.getByLabelText('Start Date and Time'));
 
     await userEvent.click(screen.getByRole('gridcell', { name: '10' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-    const expectedStartTime = DateTime.now()
+    const expectedStartTime = now
       .set({
         day: 10,
-        month: DateTime.now().month,
-        year: DateTime.now().year,
+        month: now.month,
+        year: now.year,
       })
       .minus({ minutes: 30 })
       .toISO();
@@ -99,7 +99,7 @@ describe('DateTimeRangePicker Component', () => {
       presetsProps: { ...Props.presetsProps },
     };
     renderWithTheme(<DateTimeRangePicker {...updateProps} />);
-    const now = DateTime.now();
+    const now = DateTime.now().set({ second: 0 });
     // Set the end date-time to the 15th
     const endDateField = screen.getByLabelText('End Date and Time');
     await userEvent.click(endDateField);
@@ -139,7 +139,7 @@ describe('DateTimeRangePicker Component', () => {
       },
     };
     renderWithTheme(<DateTimeRangePicker {...updatedProps} />);
-    const now = DateTime.now();
+    const now = DateTime.now().set({ second: 0 });
     // Set the end date-time to the 15th
     const endDateField = screen.getByLabelText('End Date and Time');
     await userEvent.click(endDateField);
@@ -162,7 +162,7 @@ describe('DateTimeRangePicker Component', () => {
 
   it('should set the date range for the last 24 hours when the "Last 24 Hours" preset is selected', async () => {
     renderWithTheme(<DateTimeRangePicker {...Props} />);
-
+    const now = DateTime.now().set({ second: 0 });
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
     await userEvent.click(presetsDropdown);
@@ -172,8 +172,8 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(last24HoursOption);
 
     // Expected start and end dates in ISO format
-    const expectedStartDateISO = DateTime.now().minus({ hours: 24 }).toISO(); // 2024-12-17T00:28:27.071-06:00
-    const expectedEndDateISO = DateTime.now().toISO(); // 2024-12-18T00:28:27.071-06:00
+    const expectedStartDateISO = now.minus({ hours: 24 }).toISO(); // 2024-12-17T00:28:27.071-06:00
+    const expectedEndDateISO = now.toISO(); // 2024-12-18T00:28:27.071-06:00
 
     // Verify onChangeMock was called with correct ISO strings
     expect(onChangeMock).toHaveBeenCalledWith({
@@ -189,7 +189,7 @@ describe('DateTimeRangePicker Component', () => {
 
   it('should set the date range for the last 7 days when the "Last 7 Days" preset is selected', async () => {
     renderWithTheme(<DateTimeRangePicker {...Props} />);
-
+    const now = DateTime.now().set({ second: 0 });
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
     await userEvent.click(presetsDropdown);
@@ -199,8 +199,8 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(last7DaysOption);
 
     // Expected start and end dates in ISO format
-    const expectedStartDateISO = DateTime.now().minus({ days: 7 }).toISO();
-    const expectedEndDateISO = DateTime.now().toISO();
+    const expectedStartDateISO = now.minus({ days: 7 }).toISO();
+    const expectedEndDateISO = now.toISO();
 
     // Verify that onChange is called with the correct date range
     expect(onChangeMock).toHaveBeenCalledWith({
@@ -216,7 +216,7 @@ describe('DateTimeRangePicker Component', () => {
 
   it('should set the date range for the last 30 days when the "Last 30 Days" preset is selected', async () => {
     renderWithTheme(<DateTimeRangePicker {...Props} />);
-
+    const now = DateTime.now().set({ second: 0 });
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
     await userEvent.click(presetsDropdown);
@@ -226,8 +226,8 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(last30DaysOption);
 
     // Expected start and end dates in ISO format
-    const expectedStartDateISO = DateTime.now().minus({ days: 30 }).toISO();
-    const expectedEndDateISO = DateTime.now().toISO();
+    const expectedStartDateISO = now.minus({ days: 30 }).toISO();
+    const expectedEndDateISO = now.toISO();
 
     // Verify that onChange is called with the correct date range
     expect(onChangeMock).toHaveBeenCalledWith({
@@ -243,7 +243,7 @@ describe('DateTimeRangePicker Component', () => {
 
   it('should set the date range for this month when the "This Month" preset is selected', async () => {
     renderWithTheme(<DateTimeRangePicker {...Props} />);
-
+    const now = DateTime.now().set({ second: 0 });
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
     await userEvent.click(presetsDropdown);
@@ -253,8 +253,8 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(thisMonthOption);
 
     // Expected start and end dates in ISO format
-    const expectedStartDateISO = DateTime.now().startOf('month').toISO();
-    const expectedEndDateISO = DateTime.now().toISO();
+    const expectedStartDateISO = now.startOf('month').toISO();
+    const expectedEndDateISO = now.toISO();
 
     // Verify that onChange is called with the correct date range
     expect(onChangeMock).toHaveBeenCalledWith({
@@ -279,7 +279,7 @@ describe('DateTimeRangePicker Component', () => {
     const lastMonthOption = screen.getByText('Last Month');
     await userEvent.click(lastMonthOption);
 
-    const lastMonth = DateTime.now().minus({ months: 1 });
+    const lastMonth = DateTime.now().set({ second: 0 }).minus({ months: 1 });
 
     // Expected start and end dates in ISO format
     const expectedStartDateISO = lastMonth.startOf('month').toISO();
@@ -314,7 +314,7 @@ describe('DateTimeRangePicker Component', () => {
     const customRange = screen.getByText('Custom');
     await userEvent.click(customRange);
     const format = 'yyyy-MM-dd HH:mm';
-    const now = DateTime.now();
+    const now = DateTime.now().set({ second: 0 });
     const start = now.minus({ minutes: 30 });
 
     // Verify the input fields display the correct values
