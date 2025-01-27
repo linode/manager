@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Autocomplete, Box, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -9,11 +8,12 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { channelTypeOptions } from '../../constants';
 import { getAlertBoxStyles } from '../../Utils/utils';
 import { notificationChannelSchema } from '../schemas';
-import { RenderChannelDetails } from './RenderChannelDetails';
 
 import type { NotificationChannelForm } from '../types';
 import type { ChannelType, NotificationChannel } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
+import Grid from '@mui/material/Grid';
+import { RenderChannelDetails } from './RenderChannelDetails';
 
 interface AddNotificationChannelProps {
   /**
@@ -74,15 +74,6 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
           (template) => template.channel_type === channelTypeWatcher
         )
       : null;
-
-  const templateOptions = React.useMemo(() => {
-    return selectedChannelTypeTemplate
-      ? selectedChannelTypeTemplate.map((template) => ({
-          label: template.label,
-          value: template.label,
-        }))
-      : [];
-  }, [selectedChannelTypeTemplate]);
 
   const selectedTemplate = selectedChannelTypeTemplate?.find(
     (template) => template.label === channelLabelWatcher
@@ -151,18 +142,14 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
-                  onChange={(
-                    _,
-                    selected: { label: string; value: string },
-                    reason
-                  ) => {
+                  onChange={(_, selected: { label: string }, reason) => {
                     field.onChange(
-                      reason === 'selectOption' ? selected.value : null
+                      reason === 'selectOption' ? selected.label : null
                     );
                   }}
                   value={
-                    templateOptions.find(
-                      (option) => option.value === field.value
+                    selectedChannelTypeTemplate?.find(
+                      (option) => option.label === field.value
                     ) ?? null
                   }
                   data-testid="channel-label"
@@ -171,28 +158,21 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
                   key={channelTypeWatcher}
                   label="Channel"
                   onBlur={field.onBlur}
-                  options={templateOptions}
+                  options={selectedChannelTypeTemplate ?? []}
                   placeholder="Select a Channel"
                 />
               )}
               control={control}
               name="label"
             />
-          </Box>
+          </Box>          
           {selectedTemplate && selectedTemplate.channel_type === 'email' && (
             <Box paddingTop={2}>
               <Grid container>
                 <Grid item md={1} sm={1} xs={2}>
                   <Typography variant="h3">To:</Typography>
                 </Grid>
-                <Grid
-                  item
-                  md="auto"
-                  overflow="auto"
-                  paddingRight={1}
-                  sm="auto"
-                  xs="auto"
-                >
+                <Grid item md="auto" overflow="auto" paddingRight={1} xs={12}>
                   <RenderChannelDetails template={selectedTemplate} />
                 </Grid>
               </Grid>
@@ -212,4 +192,4 @@ export const AddNotificationChannel = (props: AddNotificationChannelProps) => {
       </form>
     </FormProvider>
   );
-};
+}; 
