@@ -189,9 +189,9 @@ export const EditAlertResources = () => {
         <Box>
           <AlertResources
             alertLabel={alertDetails.label}
+            alertResourceIds={alertDetails.entity_ids}
             handleResourcesSelection={handleResourcesSelection}
             isSelectionsNeeded
-            resourceIds={alertDetails.entity_ids}
             serviceType={alertDetails.service_type}
             showTitle
           />

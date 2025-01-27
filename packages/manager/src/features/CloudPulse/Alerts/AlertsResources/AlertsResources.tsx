@@ -1,17 +1,18 @@
-import { Checkbox, CircleProgress, Typography } from '@linode/ui';
-import { Grid, styled, useTheme } from '@mui/material';
+import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
+import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
+import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
   getFilteredResources,
   getRegionOptions,
-  getRegionsIdLabelMap,
+  getRegionsIdRegionMap,
+  scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
@@ -25,6 +26,11 @@ export interface AlertResourcesProp {
    */
   alertLabel?: string;
   /**
+   * The set of resource ids associated with the alerts, that needs to be displayed
+   */
+  alertResourceIds: string[];
+
+  /**
    * Callback for publishing the selected resources
    */
   handleResourcesSelection?: (resources: string[]) => void;
@@ -33,11 +39,6 @@ export interface AlertResourcesProp {
    * This controls whether we need to show the checkbox in case of editing the resources
    */
   isSelectionsNeeded?: boolean;
-
-  /**
-   * The set of resource ids associated with the alerts, that needs to be displayed
-   */
-  resourceIds: string[];
 
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
@@ -53,23 +54,26 @@ export interface AlertResourcesProp {
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
     alertLabel,
+    alertResourceIds,
     handleResourcesSelection,
     isSelectionsNeeded,
-    resourceIds,
     serviceType,
     showTitle,
   } = props;
-
   const [searchText, setSearchText] = React.useState<string>();
-
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
-
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
-    resourceIds
+    alertResourceIds
   );
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const pageSize = 25;
+
+  const {
+    data: regions,
+    isError: isRegionsError,
+    isFetching: isRegionsFetching,
+  } = useRegionsQuery();
 
   const {
     data: resources,
@@ -88,17 +92,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     if (resources && isSelectionsNeeded) {
       setSelectedResources(
         resources
-          .filter((resource) => resourceIds.includes(resource.id))
+          .filter((resource) => alertResourceIds.includes(resource.id))
           .map((resource) => resource.id)
       );
     }
-  }, [resources, isSelectionsNeeded, resourceIds]);
-
-  const {
-    data: regions,
-    isError: isRegionsError,
-    isFetching: isRegionsFetching,
-  } = useRegionsQuery();
+  }, [resources, isSelectionsNeeded, alertResourceIds]);
 
   const handleSelection = React.useCallback(
     (ids: string[], isSelectionAction: boolean) => {
@@ -117,10 +115,19 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     [handleResourcesSelection, selectedResources]
   );
 
-  // The map holds the id of the region to the entire region object that needs to be displayed in table
-  const regionsIdToLabelMap: Map<string, Region> = React.useMemo(() => {
-    return getRegionsIdLabelMap(regions);
+  // A map linking region IDs to their corresponding region objects, used for quick lookup when displaying data in the table.
+  const regionsIdToRegionMap: Map<string, Region> = React.useMemo(() => {
+    return getRegionsIdRegionMap(regions);
   }, [regions]);
+
+  // Derived list of regions associated with the provided resource IDs, filtered based on available data.
+  const regionOptions: Region[] = React.useMemo(() => {
+    return getRegionOptions({
+      data: resources,
+      regionsIdToRegionMap,
+      resourceIds: alertResourceIds,
+    });
+  }, [resources, alertResourceIds, regionsIdToRegionMap]);
 
   /**
    * Holds the resources that are
@@ -131,8 +138,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       data: resources,
       filteredRegions,
       isAdditionOrDeletionNeeded: isSelectionsNeeded,
-      regionsIdToLabelMap,
-      resourceIds,
+      regionsIdToRegionMap,
+      resourceIds: alertResourceIds,
       searchText,
       selectedOnly,
       selectedResources,
@@ -141,8 +148,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     resources,
     filteredRegions,
     isSelectionsNeeded,
-    regionsIdToLabelMap,
-    resourceIds,
+    regionsIdToRegionMap,
+    alertResourceIds,
     searchText,
     selectedOnly,
     selectedResources,
@@ -167,81 +174,70 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     }
   }, [handleResourcesSelection, resources, selectedResources]);
 
-  /**
-   * Holds the regions associated with the resources from list of regions
-   */
-  const regionOptions: Region[] = React.useMemo(() => {
-    return getRegionOptions({
-      data: resources,
-      isAdditionOrDeletionNeeded: isSelectionsNeeded,
-      regionsIdToLabelMap,
-      resourceIds,
-    });
-  }, [resources, isSelectionsNeeded, regionsIdToLabelMap, resourceIds]);
+  const isDataLoadingError = isRegionsError || isResourcesError;
 
-  const titleRef = React.useRef<HTMLDivElement>(null); // when the page size, page number of table changes lets scroll until the title of this component
+  const handleSearchTextChange = (searchText: string) => {
+    setSearchText(searchText);
+  };
+
+  const handleFilteredRegionsChange = (selectedRegions: string[]) => {
+    setFilteredRegions(
+      selectedRegions.map(
+        (region) =>
+          regionsIdToRegionMap.get(region)
+            ? `${regionsIdToRegionMap.get(region)?.label} (${region})`
+            : region // Stores filtered regions in the format `region.label (region.id)` that is displayed and filtered in the table
+      )
+    );
+  };
+
+  const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
   }
 
-  const scrollToTitle = () => {
-    if (titleRef.current) {
-      window.scrollTo({
-        behavior: 'smooth',
-        top: titleRef.current.getBoundingClientRect().top + window.scrollY - 40, // Adjust offset if needed
-      });
-    }
-  };
+  if (!isDataLoadingError && alertResourceIds.length === 0) {
+    return (
+      <Stack gap={2}>
+        <Typography ref={titleRef} variant="h2">
+          {alertLabel || 'Resources'}
+          {/* It can be either the passed alert label or just Resources */}
+        </Typography>
+        <StyledPlaceholder
+          icon={EntityIcon}
+          subtitle="You can assign alerts during the resource creation process."
+          title="No resources are currently assigned to this alert definition."
+        />
+      </Stack>
+    );
+  }
 
   return (
-    <React.Fragment>
-      {showTitle && (
-        <Typography
-          fontSize={theme.spacing(2.25)}
-          marginBottom={2}
-          ref={titleRef}
-          variant="h2"
-        >
-          {alertLabel ?? 'Resources'}
-        </Typography>
-      )}
-      {!isResourcesError &&
-        !isRegionsError &&
-        !isSelectionsNeeded &&
-        resourceIds.length === 0 && (
-          <StyledPlaceholder
-            title={
-              'No resources are currently assigned to this alert definition.'
-            }
-            icon={EntityIcon}
-            subtitle="You can assign alerts during the resource creation process."
-          />
-        )}
-
-      {(isSelectionsNeeded || resourceIds.length > 0) && (
+    <Stack gap={2}>
+      <Typography ref={titleRef} variant="h2">
+        {alertLabel || 'Resources'}
+        {/* It can be either the passed alert label or just Resources */}
+      </Typography>
+      {(isDataLoadingError || alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
         <Grid container spacing={3}>
           <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
             <Grid item md={3} xs={12}>
               <DebouncedSearchTextField
-                onSearch={(value) => {
-                  setSearchText(value);
-                }}
                 sx={{
                   maxHeight: '34px',
                 }}
                 clearable
                 hideLabel
                 label="Search for a Region or Resource"
+                onSearch={handleSearchTextChange}
                 placeholder="Search for a Region or Resource"
                 value={searchText || ''}
               />
             </Grid>
             <Grid item md={4} xs={12}>
               <AlertsRegionFilter
-                handleSelectionChange={(value) => {
-                  setFilteredRegions(value);
-                }}
+                handleSelectionChange={handleFilteredRegionsChange}
                 regionOptions={regionOptions}
               />
             </Grid>
@@ -288,38 +284,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           )}
           <Grid item xs={12}>
             <DisplayAlertResources
-              noDataText={
-                !(isResourcesError || isRegionsError) &&
-                !Boolean(filteredResources?.length)
-                  ? 'No data to display.'
-                  : undefined
-              }
-              errorText={'Table data is unavailable. Please try again later.'}
               filteredResources={filteredResources}
               handleSelection={isSelectionsNeeded ? handleSelection : undefined}
               isDataLoadingError={isResourcesError || isRegionsError}
               isSelectionsNeeded={isSelectionsNeeded}
               pageSize={pageSize}
-              scrollToTitle={scrollToTitle}
+              scrollToElement={() => scrollToElement(titleRef.current)}
             />
           </Grid>
         </Grid>
       )}
-    </React.Fragment>
+    </Stack>
   );
 });
-
-export const StyledPlaceholder = styled(Placeholder, {
-  label: 'StyledPlaceholder',
-})(({ theme }) => ({
-  h1: {
-    fontSize: theme.spacing(2.5),
-  },
-  h2: {
-    fontSize: theme.spacing(2),
-  },
-  svg: {
-    color: theme.color.green,
-    maxHeight: theme.spacing(10.5),
-  },
-}));
