@@ -1,4 +1,4 @@
-import { Box, Button, Paper } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import * as React from 'react';
 import {
   Redirect,
@@ -67,24 +67,11 @@ export const AlertsLanding = React.memo(() => {
           }}
         >
           <TabLinkList tabs={accessibleTabs} />
-          {pathname === `${url}/definitions` && (
-            <Box>
-              <Button
-                onClick={() => {
-                  history.push(`${url}/definitions/create`);
-                }}
-                buttonType="primary"
-                variant="contained"
-              >
-                Create
-              </Button>
-            </Box>
-          )}
         </Box>
         <Switch>
           <Route
             component={AlertDefinitionLanding}
-            path="/monitor/alerts/definitions"
+            path={'/monitor/alerts/definitions'}
           />
           <Redirect from="*" to="/monitor/alerts/definitions" />
         </Switch>
