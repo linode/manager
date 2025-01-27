@@ -20,8 +20,8 @@ import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
 import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
-import { AddChannelListing } from './NotificationChannel/AddChannelListing';
-import { AddNotificationChannel } from './NotificationChannel/AddNotificationChannel';
+import { AddChannelListing } from './NotificationChannels/AddChannelListing';
+import { AddNotificationChannel } from './NotificationChannels/AddNotificationChannel';
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
@@ -32,6 +32,7 @@ import type {
 } from './types';
 import type { NotificationChannel } from '@linode/api-v4/lib/cloudpulse/types';
 import type { ObjectSchema } from 'yup';
+
 
 const triggerConditionInitialValues: TriggerConditionForm = {
   criteria_condition: 'ALL',
