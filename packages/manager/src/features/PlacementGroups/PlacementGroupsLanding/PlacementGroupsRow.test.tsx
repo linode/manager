@@ -22,7 +22,6 @@ const linode = linodeFactory.build({
 });
 
 const placementGroup = placementGroupFactory.build({
-  placement_group_type: 'anti_affinity:local',
   id: 1,
   is_compliant: false,
   label: 'group 1',
@@ -32,6 +31,7 @@ const placementGroup = placementGroupFactory.build({
       linode_id: 1,
     },
   ],
+  placement_group_type: 'anti_affinity:local',
   region: 'us-east',
 });
 

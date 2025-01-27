@@ -315,6 +315,7 @@ export const TextField = (props: TextFieldProps) => {
             }}
             status="help"
             text={labelTooltipText}
+            width={tooltipWidth}
           />
         )}
       </Box>
