@@ -180,7 +180,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               filteredResources={filteredResources}
               handleSelection={handleResourcesSelection}
               isDataLoadingError={isDataLoadingError}
-              isSelectionsNeeded
+              isSelectionsNeeded={isSelectionsNeeded}
               scrollToElement={() => scrollToElement(titleRef.current)}
             />
           </Grid>
