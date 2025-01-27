@@ -65,11 +65,7 @@ describe('LKE summary page', () => {
     ]);
 
     // LKE clusters can add tags from summary page
-    cy.get('[title="Add a tag"]')
-      .first()
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
+    cy.get('[title="Add a tag"]').first().click();
     cy.get('[data-qa-autocomplete="Create or Select a Tag"]')
       .should('be.visible')
       .clear()
@@ -77,7 +73,12 @@ describe('LKE summary page', () => {
     cy.findByText(`Create "${tag}"`).should('be.visible').click();
 
     // Confirms that a put request is sent
-    cy.wait('@updateCluster');
+    cy.wait('@updateCluster').then((xhr) => {
+      const data = xhr.response?.body;
+      if (data) {
+        expect(data.tags).to.deep.equal(mockClusterUpdated.tags);
+      }
+    });
 
     // Confirms that the tags drawer shows up and the new tag exists
     cy.get('[aria-label="Display all tags"]').should('be.visible').click();
@@ -138,10 +139,7 @@ describe('LKE summary page', () => {
         cy.findByText(tagExisting).should('be.visible');
 
         // LKE clusters can add tags from tags drawer
-        cy.get('[title="Add a tag"]')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+        cy.get('[title="Add a tag"]').first().click();
         cy.get('[data-qa-autocomplete="Create or Select a Tag"]')
           .should('be.visible')
           .clear()
@@ -149,7 +147,12 @@ describe('LKE summary page', () => {
         cy.findByText(`Create "${tagNew}"`).should('be.visible').click();
 
         // Confirms that a put request is sent
-        cy.wait('@updateCluster');
+        cy.wait('@updateCluster').then((xhr) => {
+          const data = xhr.response?.body;
+          if (data) {
+            expect(data.tags).to.deep.equal(mockClusterUpdated.tags);
+          }
+        });
 
         // New tag should exist
         cy.findByText(tagNew).should('be.visible');
@@ -207,7 +210,12 @@ describe('LKE summary page', () => {
         cy.get('[title="Delete tag"]').should('be.visible').click();
 
         // Confirms that a put request is sent
-        cy.wait('@updateCluster');
+        cy.wait('@updateCluster').then((xhr) => {
+          const data = xhr.response?.body;
+          if (data) {
+            expect(data.tags).to.deep.equal([]);
+          }
+        });
 
         // The tag is removed
         cy.findByText(tagExisting).should('not.exist');
