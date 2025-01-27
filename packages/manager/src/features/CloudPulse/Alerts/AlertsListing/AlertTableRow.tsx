@@ -2,12 +2,12 @@ import { Box } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { capitalize } from 'src/utilities/capitalize';
+import { formatDate } from 'src/utilities/formatDate';
 
 import { AlertActionMenu } from './AlertActionMenu';
 
@@ -61,7 +61,9 @@ export const AlertTableRow = (props: Props) => {
       </TableCell>
       <TableCell>{created_by}</TableCell>
       <TableCell>
-        <DateTimeDisplay value={updated} />
+        {formatDate(updated, {
+          format: 'MMM dd, yyyy, h:mm a',
+        })}
       </TableCell>
       <TableCell actionCell data-qa-alert-action-cell={`alert_${id}`}>
         <AlertActionMenu alertType={type} handlers={handlers} />

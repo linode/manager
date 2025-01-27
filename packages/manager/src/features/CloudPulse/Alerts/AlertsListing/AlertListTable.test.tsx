@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { alertFactory } from 'src/factories';
+import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertsListTable } from './AlertsListTable';
@@ -30,6 +31,7 @@ describe('Alert List Table test', () => {
   });
 
   it('should render the alert row', async () => {
+    const updated = new Date().toISOString();
     const { getByText } = renderWithTheme(
       <AlertsListTable
         alerts={[
@@ -38,7 +40,7 @@ describe('Alert List Table test', () => {
             label: 'Test Alert',
             service_type: 'linode',
             status: 'enabled',
-            updated: '2021-06-22T00:00:00',
+            updated,
           }),
         ]}
         isLoading={false}
@@ -49,6 +51,12 @@ describe('Alert List Table test', () => {
     expect(getByText('Linode')).toBeVisible();
     expect(getByText('Enabled')).toBeVisible();
     expect(getByText('user1')).toBeVisible();
-    expect(getByText('2021-06-22 00:00')).toBeVisible();
+    expect(
+      getByText(
+        formatDate(updated, {
+          format: 'MMM dd, yyyy, h:mm a',
+        })
+      )
+    ).toBeVisible();
   });
 });
