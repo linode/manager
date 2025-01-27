@@ -16,7 +16,7 @@ export const DateRangePicker = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
-  const [focusedField, setFocusedField] = useState<'end' | 'start'>('start');
+  const [focusedField, setFocusedField] = useState<'end' | 'start'>('start'); // Tracks focused input field
 
   const handleOpen = (
     event: React.MouseEvent<HTMLElement>,
@@ -25,8 +25,6 @@ export const DateRangePicker = () => {
     setAnchorEl(event.currentTarget);
     setOpen(true);
     setFocusedField(field);
-
-    // Validate dates when the popover is opened
     validateDates(startDate, endDate);
   };
 
@@ -50,17 +48,28 @@ export const DateRangePicker = () => {
     }
   };
 
-  const handleStartDateChange = (date: DateTime | null) => {
-    setStartDate(date);
-    validateDates(date, endDate);
-    if (date) {
-      setCurrentMonth(date); // Update calendar to show the new start date
-    }
-  };
+  const handleDateSelection = (date: DateTime) => {
+    if (focusedField === 'start') {
+      setStartDate(date);
 
-  const handleEndDateChange = (date: DateTime | null) => {
-    setEndDate(date);
-    validateDates(startDate, date);
+      // Clear end date **only** if the new start date is after the current end date
+      if (endDate && date > endDate) {
+        setEndDate(null);
+      }
+
+      setFocusedField('end'); // Automatically focus on the end date
+    } else {
+      if (startDate && date < startDate) {
+        // If the selected end date is earlier than the start date, update the start date
+        setStartDate(date);
+        setEndDate(null); // Clear the end date
+        setFocusedField('end'); // Refocus on the end date
+      } else {
+        setEndDate(date);
+        setFocusedField('start'); // Loop back to start date
+      }
+    }
+    validateDates(startDate, endDate);
   };
 
   const handlePresetSelect = (
@@ -69,10 +78,8 @@ export const DateRangePicker = () => {
   ) => {
     setStartDate(selectedStartDate);
     setEndDate(selectedEndDate);
-    setFocusedField('start');
+    setFocusedField('start'); // Reset focus to start after preset selection
     setCurrentMonth(selectedStartDate || DateTime.now());
-
-    // Clear errors when preset is selected
     setStartDateError('');
     setEndDateError('');
   };
@@ -81,17 +88,27 @@ export const DateRangePicker = () => {
     <Box>
       <Stack direction="row" spacing={2}>
         <DateField
+          onChange={(date) => {
+            setStartDate(date);
+
+            // Clear end date **only** if the new start date is after the current end date
+            if (endDate && date && date > endDate) {
+              setEndDate(null);
+            }
+            setFocusedField('end'); // Automatically focus on end date
+          }}
           errorText={startDateError}
           label="Start Date"
-          onChange={handleStartDateChange}
           onClick={(e) => handleOpen(e, 'start')}
           placeholder="YYYY-MM-DD"
           value={startDate}
         />
         <DateField
+          onChange={(date) => {
+            setEndDate(date);
+          }}
           errorText={endDateError}
           label="End Date"
-          onChange={handleEndDateChange}
           onClick={(e) => handleOpen(e, 'end')}
           placeholder="YYYY-MM-DD"
           value={endDate}
@@ -115,34 +132,20 @@ export const DateRangePicker = () => {
         >
           <Presets onPresetSelect={handlePresetSelect} />
           <Calendar
-            onDateClick={(date) => {
-              if (focusedField === 'start') {
-                handleStartDateChange(date);
-                setFocusedField('end');
-              } else {
-                handleEndDateChange(date);
-              }
-            }}
             direction="left"
             endDate={endDate}
             focusedField={focusedField}
             month={currentMonth}
+            onDateClick={handleDateSelection}
             setMonth={setCurrentMonth}
             startDate={startDate}
           />
           <Calendar
-            onDateClick={(date) => {
-              if (focusedField === 'start') {
-                handleStartDateChange(date);
-                setFocusedField('end');
-              } else {
-                handleEndDateChange(date);
-              }
-            }}
             direction="right"
             endDate={endDate}
             focusedField={focusedField}
             month={currentMonth.plus({ months: 1 })}
+            onDateClick={handleDateSelection}
             setMonth={(date) => setCurrentMonth(date.minus({ months: 1 }))}
             startDate={startDate}
           />
