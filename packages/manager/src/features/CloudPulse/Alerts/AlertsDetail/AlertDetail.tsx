@@ -26,7 +26,7 @@ export interface AlertRouteParams {
 }
 
 export const AlertDetail = () => {
-  const { alertId, serviceType } = useParams<RouteParams>();
+  const { alertId, serviceType } = useParams<AlertRouteParams>();
 
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
     Number(alertId),
