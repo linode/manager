@@ -119,6 +119,12 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
     ['A', 'AAAA'].includes(thisRecord.type)
   );
 
+  const otherErrors = [
+    errors?.root?._unknown,
+    errors?.root?.none,
+    errors?.root?.root,
+  ];
+
   const handleRecordSubmissionSuccess = () => {
     props.updateRecords();
     handleClose();
@@ -139,7 +145,7 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
           message: error.reason,
         });
       } else {
-        setError('root', {
+        setError('root.root', {
           message: error.reason,
         });
       }
@@ -259,13 +265,11 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
       title={`${path([mode], modeMap)} ${path([type], typeMap)} Record`}
     >
       <form onSubmit={onSubmit} ref={formContainerRef}>
-        {errors?.root?._unknown && (
-          <Notice text={errors.root._unknown.message} variant="error" />
+        {otherErrors.map((error, idx) =>
+          error ? (
+            <Notice key={`error-${idx}`} text={error.message} variant="error" />
+          ) : null
         )}
-        {errors?.root?.none && (
-          <Notice text={errors.root.none.message} variant="error" />
-        )}
-        {errors?.root && <Notice text={errors.root.message} variant="error" />}
         {!hasARecords && type === 'NS' && (
           <Notice
             spacingTop={8}
