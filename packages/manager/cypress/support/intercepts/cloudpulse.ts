@@ -4,17 +4,20 @@
  * @returns Cypress chainable.
  */
 
+import { cloudPulseServicelMap } from 'support/constants/cloud-pulse';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { randomString } from 'support/util/random';
 import { makeResponse } from 'support/util/response';
 
-import type { Alert, CreateAlertDefinitionPayload, NotificationChannel } from '@linode/api-v4';
 import type {
+  Alert,
   CloudPulseMetricsResponse,
+  CreateAlertDefinitionPayload,
   Dashboard,
   MetricDefinition,
+  NotificationChannel,
 } from '@linode/api-v4';
 
 /**
@@ -46,13 +49,14 @@ export const mockGetCloudPulseMetricDefinitions = (
  */
 
 export const mockGetCloudPulseServices = (
-  ...serviceTypes: string[]
+  serviceTypes: string[]
 ): Cypress.Chainable<null> => {
   const services = serviceTypes.map((serviceType) => ({
-    label: serviceType === 'linode' ? 'linode' : 'dbaas',
+    label: cloudPulseServicelMap.get(serviceType) || 'dbaas',
     service_type: serviceType,
   }));
 
+  // Intercept the API call and return the mocked response
   return cy.intercept(
     'GET',
     apiMatcher('/monitor/services'),
@@ -307,7 +311,7 @@ export const mockGetAllAlertDefinitions = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher('/monitor/alert-definitions?page_size=500'),
+    apiMatcher('/monitor/alert-definitions*'),
     paginateResponse(alert)
   );
 };
@@ -330,7 +334,7 @@ export const mockGetAlertChannels = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher('/monitor/alert-channels?page_size=500'),
+    apiMatcher('/monitor/alert-channels*'),
     paginateResponse(channel)
   );
 };
@@ -346,7 +350,7 @@ export const mockGetAlertChannels = (
  *
  * @param {string} serviceType - The type of service for which the alert definition is being created.
  *                               This could be 'linode', 'dbaas', or another service type supported by the API.
- * @param {CreateAlertDefinitionPayload} createAlertRequest 
+ * @param {CreateAlertDefinitionPayload} createAlertRequest
  *
  * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted request.
  */

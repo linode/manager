@@ -38,7 +38,7 @@ export const triggerConditionFactory = Factory.Sync.makeFactory<TriggerCondition
     trigger_occurrences: 3,
   }
 );
-const rulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
+export const rulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
   aggregation_type: 'avg',
   dimension_filters: [
     {
@@ -48,14 +48,14 @@ const rulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
     },
   ],
   metric: 'cpu_usage',
-  operator: 'gt',
+  operator: 'gte',
   threshold: 1000,
 });
 export const alertDefinitionFactory = Factory.Sync.makeFactory<CreateAlertDefinitionPayload>(
   {
     channel_ids: [1, 2, 3],
     description: 'This is a default alert description.',
-    entity_ids: ['1', '2', '3'],
+    entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Default Alert Label',
     rule_criteria: {
       rules: [rulesFactory.build()],

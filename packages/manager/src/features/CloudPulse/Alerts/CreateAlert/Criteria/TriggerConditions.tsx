@@ -152,7 +152,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                   height: '30px',
                   width: '30px',
                 }}
-                data-qa-trigger="trigger-occurences"
+                data-qa-trigger_occurences
                 data-testid="trigger-occurences"
                 errorText={fieldState.error?.message}
                 label=""

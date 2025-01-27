@@ -248,7 +248,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                     onWheel={(event: React.SyntheticEvent<Element, Event>) =>
                       event.target instanceof HTMLElement && event.target.blur()
                     }
-                    data-qa-threshold="threshold"
+                    data-qa-threshold
                     data-testid="threshold"
                     errorText={fieldState.error?.message}
                     label="Threshold"

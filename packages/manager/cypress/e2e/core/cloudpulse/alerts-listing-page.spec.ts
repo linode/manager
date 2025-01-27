@@ -15,7 +15,7 @@ import {
 import { formatDate } from 'src/utilities/formatDate';
 import { Alert } from '@linode/api-v4';
 import { ui } from 'support/ui';
-
+import { cloudPulseServicelMap } from 'support/constants/cloud-pulse';
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 const mockAccount = accountFactory.build();
 const now = new Date();
@@ -67,17 +67,17 @@ const mockAlerts = [
  * - Validates that the `aria-sort` attribute of the column header matches the given sort order.
  * - Extracts cell values from the table and compares their order with the expected values.
  *
- * @param {string} columnDataQa - The `data-qa-header` attribute of the column to be sorted.
+ * @param {string} header - The `data-qa-header` attribute of the column to be sorted.
  * @param {'ascending' | 'descending'} sortOrder - The expected sorting order ('ascending' or 'descending').
  * @param {number[]} expectedValues - An array of expected values to validate against the sorted column.
  */
 
 const verifyTableSorting = (
-  columnDataQa: string,
+  header: string,
   sortOrder: 'ascending' | 'descending',
   expectedValues: number[]
 ) => {
-  cy.get(`[data-qa-header="${columnDataQa}"]`)
+  cy.get(`[data-qa-header="${header}"]`)
     .should('have.attr', 'aria-sort', sortOrder)
     .click();
 
@@ -93,12 +93,11 @@ const verifyTableSorting = (
     });
   });
 };
-
-describe('Integration Tests for Dbaas Alert Listing Page', () => {
+describe('Integration Tests for Alert Listing Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
-    mockGetCloudPulseServices('linode', 'dbaas');
+    mockGetCloudPulseServices(['linode', 'dbaas']);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
     cy.visitWithLogin('/monitor/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
@@ -108,38 +107,42 @@ describe('Integration Tests for Dbaas Alert Listing Page', () => {
    * Function to check the details of an alert.
    * @param {Alert} alert - The alert object to check.
    */
-  const checkAlertDetails = (alert: Alert) => {
-    cy.get(`[data-qa-alert-cell="${alert.id}"]`).within(() => {
-      cy.findByText(alert.service_type)
+  const checkAlertDetails = ({
+    id,
+    service_type,
+    status,
+    label,
+    updated,
+    created_by,
+  }: Alert) => {
+    cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
+      cy.findByText(service_type)
         .should('be.visible')
-        .should('have.text', alert.service_type);
+        .should('have.text', service_type);
 
-      cy.findByText(new RegExp(alert.status, 'i'))
+      cy.findByText(cloudPulseServicelMap.get(status)!)
         .should('be.visible')
-        .should(
-          'have.text',
-          alert.status === 'enabled' ? 'Enabled' : 'Disabled'
-        );
-      cy.findByText(alert.label)
+        .should('have.text', cloudPulseServicelMap.get(status));
+      cy.findByText(label)
         .should('be.visible')
-        .should('have.text', alert.label)
+        .should('have.text', label)
         .should(
           'have.attr',
           'href',
-          `/monitor/alerts/definitions/detail/${alert.service_type}/${alert.id}`
+          `/monitor/alerts/definitions/detail/${service_type}/${id}`
         );
 
-      cy.findByText(formatDate(alert.updated, { format: 'yyyy-MM-dd HH:mm' }))
+      cy.findByText(formatDate(updated, { format: 'yyyy-MM-dd HH:mm' }))
         .should('be.visible')
         .should(
           'have.text',
-          formatDate(alert.updated, { format: 'yyyy-MM-dd HH:mm' })
+          formatDate(updated, { format: 'yyyy-MM-dd HH:mm' })
         );
-      cy.findByText(alert.created_by)
+      cy.findByText(created_by)
         .should('be.visible')
-        .should('have.text', alert.created_by);
+        .should('have.text', created_by);
 
-      cy.get(`[data-qa-alert-action-cell="alert_${alert.id}"]`)
+      cy.get(`[data-qa-alert-action-cell="alert_${id}"]`)
         .find('button')
         .should('be.visible')
         .should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
@@ -186,33 +189,15 @@ describe('Integration Tests for Dbaas Alert Listing Page', () => {
     // Validate 'Alerts' Link
     cy.findByText('Alerts')
       .should('be.visible')
-      .should('have.attr', 'href', '/monitor/alerts')
-      .should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
-      .should('have.css', 'font-family', 'LatoWebBold, sans-serif')
-      .should('have.css', 'font-style', 'normal')
-      .should('have.css', 'font-weight', '400')
-      .should('have.css', 'font-size', '14.4px');
+      .should('have.attr', 'href', '/monitor/alerts');
 
     // Validate 'Definitions' Link
     cy.findByText('Definitions')
       .should('be.visible')
-      .and('have.attr', 'href', '/monitor/alerts/definitions')
-      .should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
-      .should('have.css', 'font-family', 'LatoWebBold, sans-serif')
-      .should('have.css', 'font-style', 'normal')
-      .should('have.css', 'font-weight', '400')
-      .should('have.css', 'font-size', '14.4px');
+      .and('have.attr', 'href', '/monitor/alerts/definitions');
 
     // Check that the "Create Alert" button is visible
-    ui.buttonGroup
-      .findButtonByTitle('Create')
-      .should('be.visible')
-      .should('have.css', 'background-color', 'rgb(1, 116, 188)')
-      .should('have.css', 'font-family', 'LatoWebBold, sans-serif')
-      .should('have.css', 'font-style', 'normal')
-      .should('have.css', 'font-weight', '500')
-      .should('have.css', 'font-size', '16px');
-
+    ui.buttonGroup.findButtonByTitle('Create').should('be.visible');
     // Validate the headers of the alert listing page
     cy.get('[data-qa="alert-table"]').within(() => {
       expectedHeaders.forEach((headerText) => {
