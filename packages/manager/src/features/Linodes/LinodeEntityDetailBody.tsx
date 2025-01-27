@@ -347,7 +347,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               data-testid="assigned-lke-cluster-label"
               to={`/kubernetes/clusters/${linodeLkeClusterId}`}
             >
-              {cluster?.label ?? linodeLkeClusterId}
+              {cluster?.label ?? `${linodeLkeClusterId}`}
             </Link>
             &nbsp;
             {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
