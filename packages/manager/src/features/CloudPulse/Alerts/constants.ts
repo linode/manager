@@ -1,6 +1,7 @@
 import type {
   AlertSeverityType,
   AlertStatusType,
+  ChannelType,
   DimensionFilterOperatorType,
   MetricAggregationType,
   MetricOperatorType,
@@ -29,7 +30,7 @@ export const engineTypeOptions: Item<string, string>[] = [
   },
 ];
 
-export const MetricOperatorOptions: Item<string, MetricOperatorType>[] = [
+export const metricOperatorOptions: Item<string, MetricOperatorType>[] = [
   {
     label: '>',
     value: 'gt',
@@ -52,7 +53,7 @@ export const MetricOperatorOptions: Item<string, MetricOperatorType>[] = [
   },
 ];
 
-export const MetricAggregationOptions: Item<string, MetricAggregationType>[] = [
+export const metricAggregationOptions: Item<string, MetricAggregationType>[] = [
   {
     label: 'Average',
     value: 'avg',
@@ -75,7 +76,7 @@ export const MetricAggregationOptions: Item<string, MetricAggregationType>[] = [
   },
 ];
 
-export const DimensionOperatorOptions: Item<
+export const dimensionOperatorOptions: Item<
   string,
   DimensionFilterOperatorType
 >[] = [
@@ -97,7 +98,7 @@ export const DimensionOperatorOptions: Item<
   },
 ];
 
-export const EvaluationPeriodOptions = {
+export const evaluationPeriodOptions = {
   dbaas: [{ label: '5 min', value: 300 }],
   linode: [
     { label: '1 min', value: 60 },
@@ -108,7 +109,7 @@ export const EvaluationPeriodOptions = {
   ],
 };
 
-export const PollingIntervalOptions = {
+export const pollingIntervalOptions = {
   dbaas: [{ label: '5 min', value: 300 }],
   linode: [
     { label: '1 min', value: 60 },
@@ -128,6 +129,20 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',
 };
+
+export const channelTypes: Record<ChannelType, string> = {
+  email: 'Email',
+  pagerduty: 'Pagerduty',
+  slack: 'Slack',
+  webhook: 'Webhook',
+};
+
+export const channelTypeOptions: Item<string, ChannelType>[] = Object.entries(
+  channelTypes
+).map(([key, label]) => ({
+  label,
+  value: key as ChannelType,
+}));
 export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   eq: '=',
   gt: '>',

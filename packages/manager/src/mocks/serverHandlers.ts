@@ -132,6 +132,7 @@ import type {
 } from '@linode/api-v4';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { accountResourcesFactory } from 'src/factories/accountResources';
+import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -396,6 +397,9 @@ const vpc = [
 ];
 
 const iam = [
+  http.get('*/iam/role-permissions', () => {
+    return HttpResponse.json(accountPermissionsFactory.build());
+  }),
   http.get('*/iam/role-permissions/users/:username', () => {
     return HttpResponse.json(userPermissionsFactory.build());
   }),
@@ -1782,12 +1786,15 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/longview/plan', () => {
-    const plan = longviewActivePlanFactory.build();
+    const plan = longviewActivePlanFactory.build({});
     return HttpResponse.json(plan);
   }),
   http.get('*/longview/subscriptions', () => {
     const subscriptions = longviewSubscriptionFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(subscriptions));
+  }),
+  http.post('https://longview.linode.com/fetch', () => {
+    return HttpResponse.json({});
   }),
   http.get('*/longview/clients', () => {
     const clients = longviewClientFactory.buildList(10);
