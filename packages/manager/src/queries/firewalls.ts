@@ -34,8 +34,10 @@ import type {
   FirewallDevicePayload,
   FirewallRules,
   FirewallTemplate,
+  FirewallTemplateSlug,
   Params,
   ResourcePage,
+  UpdateFirewallRules,
 } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
@@ -84,7 +86,7 @@ export const firewallQueries = createQueryKeys('firewalls', {
     },
     queryKey: null,
   },
-  template: (slug: string) => ({
+  template: (slug: FirewallTemplateSlug) => ({
     queryFn: () => getTemplate(slug),
     queryKey: [slug],
   }),
@@ -335,7 +337,7 @@ export const useDeleteFirewall = (id: number) => {
 
 export const useUpdateFirewallRulesMutation = (firewallId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<FirewallRules, APIError[], FirewallRules>({
+  return useMutation<FirewallRules, APIError[], UpdateFirewallRules>({
     mutationFn: (data) => updateFirewallRules(firewallId, data),
     onSuccess(updatedRules) {
       // Update rules on specific firewall

@@ -9,6 +9,7 @@ const secondaryFirewallEntityNameMap: Record<
   FirewallDeviceEntityType,
   string
 > = {
+  interface: 'Interface',
   linode: 'Linode',
   nodebalancer: 'NodeBalancer',
 };
