@@ -18,12 +18,12 @@ export interface Firewall {
 }
 
 export interface FirewallRules {
-  fingerprint?: string;
+  fingerprint: string;
   inbound?: FirewallRuleType[] | null;
   outbound?: FirewallRuleType[] | null;
   inbound_policy: FirewallPolicyType;
   outbound_policy: FirewallPolicyType;
-  version?: number;
+  version: number;
 }
 
 export type UpdateFirewallRules = Omit<

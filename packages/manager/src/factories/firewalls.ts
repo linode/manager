@@ -7,6 +7,7 @@ import type {
   FirewallRuleType,
   FirewallRules,
   FirewallTemplate,
+  FirewallTemplateRules,
 } from '@linode/api-v4/lib/firewalls/types';
 
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
@@ -22,11 +23,22 @@ export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
 });
 
 export const firewallRulesFactory = Factory.Sync.makeFactory<FirewallRules>({
+  fingerprint: '8a545843',
   inbound: firewallRuleFactory.buildList(1),
   inbound_policy: 'DROP',
   outbound: firewallRuleFactory.buildList(1),
   outbound_policy: 'ACCEPT',
+  version: 1,
 });
+
+export const firewallTemplateRulesFactory = Factory.Sync.makeFactory<FirewallTemplateRules>(
+  {
+    inbound: firewallRuleFactory.buildList(1),
+    inbound_policy: 'DROP',
+    outbound: firewallRuleFactory.buildList(1),
+    outbound_policy: 'ACCEPT',
+  }
+);
 
 export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
   created: '2020-01-01 00:00:00',
@@ -60,7 +72,7 @@ export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
 
 export const firewallTemplateFactory = Factory.Sync.makeFactory<FirewallTemplate>(
   {
-    rules: firewallRulesFactory.build(),
+    rules: firewallTemplateRulesFactory.build(),
     slug: 'akamai-non-prod',
   }
 );
