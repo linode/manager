@@ -78,7 +78,7 @@ export const usePendo = () => {
   // Since OptanonConsent cookie always has a .linode.com domain, only check for consent in dev/staging/prod envs.
   // When running the app locally, do not try to check for OneTrust cookie consent, just enable Pendo.
   const hasConsentEnabled =
-    !APP_ROOT.includes('localhost') ||
+    APP_ROOT.includes('localhost') ||
     checkOptanonConsent(
       optanonCookie,
       ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
