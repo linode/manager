@@ -1,5 +1,3 @@
-import { pathOr } from 'src/utilities/pathOr';
-
 import type { Props } from './DomainRecords';
 import type {
   Domain,
@@ -7,8 +5,8 @@ import type {
   RecordType,
 } from '@linode/api-v4/lib/domains';
 
-export const msToReadableTime = (v: number): null | string =>
-  pathOr<null | string, Record<number, string>>(null, [v], {
+export const msToReadableTime = (v: number): null | string => {
+  const secondsToReadableTime: Record<number, string> = {
     0: 'Default',
     30: '30 seconds',
     120: '2 minutes',
@@ -24,7 +22,9 @@ export const msToReadableTime = (v: number): null | string =>
     604800: '1 week',
     1209600: '2 weeks',
     2419200: '4 weeks',
-  });
+  };
+  return secondsToReadableTime?.[v] ?? null;
+};
 
 export const getTTL = (domain: Domain) =>
   msToReadableTime(domain?.ttl_sec ?? 0);
