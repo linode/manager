@@ -4,13 +4,15 @@ import React, { useState } from 'react';
 
 import { Box } from '../../Box/Box';
 import { Stack } from '../../Stack/Stack';
-import { TextField } from '../../TextField/TextField';
 import { Calendar } from '../Calendar/Calendar';
+import { DateField } from '../DateField';
 import { Presets } from './Presets';
 
 export const DateRangePicker = () => {
   const [startDate, setStartDate] = useState<DateTime | null>(null);
   const [endDate, setEndDate] = useState<DateTime | null>(null);
+  const [startDateError, setStartDateError] = useState('');
+  const [endDateError, setEndDateError] = useState('');
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
@@ -23,11 +25,42 @@ export const DateRangePicker = () => {
     setAnchorEl(event.currentTarget);
     setOpen(true);
     setFocusedField(field);
+
+    // Validate dates when the popover is opened
+    validateDates(startDate, endDate);
   };
 
   const handleClose = () => {
     setOpen(false);
     setAnchorEl(null);
+  };
+
+  const validateDates = (
+    newStartDate: DateTime | null,
+    newEndDate: DateTime | null
+  ) => {
+    if (newStartDate && newEndDate && newStartDate > newEndDate) {
+      setStartDateError(
+        'Start date must be earlier than or equal to end date.'
+      );
+      setEndDateError('End date must be later than or equal to start date.');
+    } else {
+      setStartDateError('');
+      setEndDateError('');
+    }
+  };
+
+  const handleStartDateChange = (date: DateTime | null) => {
+    setStartDate(date);
+    validateDates(date, endDate);
+    if (date) {
+      setCurrentMonth(date); // Update calendar to show the new start date
+    }
+  };
+
+  const handleEndDateChange = (date: DateTime | null) => {
+    setEndDate(date);
+    validateDates(startDate, date);
   };
 
   const handlePresetSelect = (
@@ -36,28 +69,32 @@ export const DateRangePicker = () => {
   ) => {
     setStartDate(selectedStartDate);
     setEndDate(selectedEndDate);
-    if (selectedStartDate) {
-      setCurrentMonth(selectedStartDate);
-    }
-  };
+    setFocusedField('start');
+    setCurrentMonth(selectedStartDate || DateTime.now());
 
-  const formatDate = (date: DateTime | null) =>
-    date ? date.toFormat('yyyy-LL-dd') : '';
+    // Clear errors when preset is selected
+    setStartDateError('');
+    setEndDateError('');
+  };
 
   return (
     <Box>
       <Stack direction="row" spacing={2}>
-        <TextField
+        <DateField
+          errorText={startDateError}
           label="Start Date"
+          onChange={handleStartDateChange}
           onClick={(e) => handleOpen(e, 'start')}
-          placeholder="Select start date"
-          value={formatDate(startDate)}
+          placeholder="YYYY-MM-DD"
+          value={startDate}
         />
-        <TextField
+        <DateField
+          errorText={endDateError}
           label="End Date"
+          onChange={handleEndDateChange}
           onClick={(e) => handleOpen(e, 'end')}
-          placeholder="Select end date"
-          value={formatDate(endDate)}
+          placeholder="YYYY-MM-DD"
+          value={endDate}
         />
       </Stack>
       <Popover
@@ -80,10 +117,10 @@ export const DateRangePicker = () => {
           <Calendar
             onDateClick={(date) => {
               if (focusedField === 'start') {
-                setStartDate(date);
+                handleStartDateChange(date);
                 setFocusedField('end');
               } else {
-                setEndDate(date);
+                handleEndDateChange(date);
               }
             }}
             direction="left"
@@ -96,10 +133,10 @@ export const DateRangePicker = () => {
           <Calendar
             onDateClick={(date) => {
               if (focusedField === 'start') {
-                setStartDate(date);
+                handleStartDateChange(date);
                 setFocusedField('end');
               } else {
-                setEndDate(date);
+                handleEndDateChange(date);
               }
             }}
             direction="right"
