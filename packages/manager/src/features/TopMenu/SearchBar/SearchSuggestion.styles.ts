@@ -46,6 +46,10 @@ export const StyledSuggestionDescription = styled('div', {
   color: theme.color.headline,
   fontSize: '.75rem',
   marginTop: 2,
+  overflowWrap: 'break-word',
+  whiteSpace: 'normal',
+  width: '100%',
+  wordBreak: 'break-word',
 }));
 
 export const StyledSegment = styled('span', {
@@ -67,11 +71,7 @@ export const StyledTagContainer = styled('div', {
     border: `1px solid transparent`,
     padding: '1px 6px 2px !important',
   },
-
   alignItems: 'center',
   display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'flex-end',
   paddingRight: theme.spacing(2),
-  width: '100%',
 }));

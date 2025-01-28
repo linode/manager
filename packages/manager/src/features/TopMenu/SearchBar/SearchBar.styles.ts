@@ -43,6 +43,12 @@ export const StyledSearchBarWrapperDiv = styled('div', {
     ...theme.inputStyles.hover,
   },
   ...theme.inputStyles.default,
+  '& .MuiAutocomplete-popper': {
+    [theme.breakpoints.up('md')]: {
+      left: `-${theme.spacing()} !important`,
+    },
+    width: '100% !important',
+  },
   alignItems: 'center',
   display: 'flex',
   flex: 1,

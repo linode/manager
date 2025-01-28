@@ -402,6 +402,10 @@ const SearchBarComponent = (props: SearchProps) => {
           value={value}
         />
         <StyledIconButton
+          sx={{
+            height: 22,
+            width: 22,
+          }}
           aria-label="close menu"
           color="inherit"
           onClick={toggleSearch}
