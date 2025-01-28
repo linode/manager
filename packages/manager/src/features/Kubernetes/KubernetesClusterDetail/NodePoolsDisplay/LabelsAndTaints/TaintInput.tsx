@@ -1,10 +1,9 @@
-import { Autocomplete, TextField, Typography } from '@linode/ui';
+import { Autocomplete, TextField } from '@linode/ui';
 import { kubernetesTaintSchema } from '@linode/validation';
 import React, { useState } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Link } from 'src/components/Link';
 
 import type { KubernetesTaintEffect } from '@linode/api-v4';
 
@@ -75,11 +74,8 @@ export const TaintInput = (props: Props) => {
             <TextField
               inputRef={field.ref}
               {...field}
-              InputProps={{ sx: { marginTop: 1 } }}
               error={!!fieldState.error}
               errorText={fieldState.error?.message}
-              helperText={taintHelperText}
-              helperTextPosition="top"
               label="Taint"
               onChange={(e) => setCombinedTaint(e.target.value)}
               placeholder="myapp.io/app: production"
@@ -122,14 +118,3 @@ export const TaintInput = (props: Props) => {
     </>
   );
 };
-
-const taintHelperText = (
-  <Typography>
-    A taint consists of a key, value, and effect, adhering to the guidelines
-    outlined in the Kubernetes{' '}
-    <Link to="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">
-      Taints and Tolerations
-    </Link>{' '}
-    documentation.
-  </Typography>
-);

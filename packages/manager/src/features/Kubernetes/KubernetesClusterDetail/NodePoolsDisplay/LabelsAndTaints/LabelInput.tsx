@@ -1,12 +1,10 @@
 import { IconButton, Stack, TextField } from '@linode/ui';
 import { kubernetesLabelSchema } from '@linode/validation';
 import Close from '@mui/icons-material/Close';
-import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Link } from 'src/components/Link';
 
 import type { Label } from '@linode/api-v4';
 
@@ -68,12 +66,9 @@ export const LabelInput = (props: Props) => {
             <Stack direction="row">
               <TextField
                 {...field}
-                InputProps={{ sx: { marginTop: 1 } }}
                 containerProps={{ sx: { width: 399 } }}
                 error={!!fieldState.error}
                 errorText={fieldState.error?.message}
-                helperText={labelHelperText}
-                helperTextPosition="top"
                 label="Label"
                 onChange={(e) => setCombinedLabel(e.target.value)}
                 placeholder="myapp.io/app: production"
@@ -111,14 +106,3 @@ export const LabelInput = (props: Props) => {
     </>
   );
 };
-
-const labelHelperText = (
-  <Typography>
-    Label key-value pairs should adhere to the specifications and restrictions
-    outlined in the Kubernetes{' '}
-    <Link to="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set">
-      Labels and Selectors
-    </Link>{' '}
-    documentation.
-  </Typography>
-);

@@ -4,6 +4,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -115,6 +116,14 @@ export const LabelAndTaintDrawer = (props: Props) => {
           </Typography>
 
           <Typography variant="h3"> Labels </Typography>
+          <Typography>
+            Label key-value pairs should adhere to the specifications and
+            restrictions outlined in the Kubernetes{' '}
+            <Link to="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set">
+              Labels and Selectors
+            </Link>{' '}
+            documentation.
+          </Typography>
           <LabelTable />
           <Button
             onClick={() => {
@@ -138,6 +147,14 @@ export const LabelAndTaintDrawer = (props: Props) => {
           <Divider spacingBottom={32} spacingTop={32} />
 
           <Typography variant="h3">Taints</Typography>
+          <Typography>
+            A taint consists of a key, value, and effect, adhering to the
+            guidelines outlined in the Kubernetes{' '}
+            <Link to="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">
+              Taints and Tolerations
+            </Link>{' '}
+            documentation.
+          </Typography>
           <TaintTable />
           <Button
             onClick={() => {
