@@ -3,7 +3,7 @@ import {
   resolve,
   resolveAlias,
   shouldResolve,
-} from './DomainRecordDrawer';
+} from './DomainRecordDrawerUtils';
 
 const exampleDomain = 'example.com';
 

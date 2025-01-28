@@ -116,7 +116,7 @@ type NotificationToast = MergeTypes<
  * Avoid doing this unless you have a good reason.
  */
 declare module '@mui/material/styles/createTheme' {
-  interface Theme {
+  export interface Theme {
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;
     applyLinkStyles?: any;
@@ -159,7 +159,7 @@ declare module '@mui/material/styles/createTheme' {
     visually: any;
   }
 
-  interface ThemeOptions {
+  export interface ThemeOptions {
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;
     applyLinkStyles?: any;

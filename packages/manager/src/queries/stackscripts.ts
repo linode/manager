@@ -1,6 +1,16 @@
-import { getStackScript, getStackScripts } from '@linode/api-v4';
+import {
+  createStackScript,
+  getStackScript,
+  getStackScripts,
+  updateStackScript,
+} from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -13,6 +23,7 @@ import type {
   Params,
   ResourcePage,
   StackScript,
+  StackScriptPayload,
 } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
@@ -50,6 +61,40 @@ export const useStackScriptQuery = (id: number, enabled = true) =>
     ...stackscriptQueries.stackscript(id),
     enabled,
   });
+
+export const useCreateStackScriptMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<StackScript, APIError[], StackScriptPayload>({
+    mutationFn: createStackScript,
+    onSuccess(stackscript) {
+      queryClient.setQueryData(
+        stackscriptQueries.stackscript(stackscript.id).queryKey,
+        stackscript
+      );
+      queryClient.invalidateQueries({
+        queryKey: stackscriptQueries.infinite._def,
+      });
+    },
+  });
+};
+
+export const useUpdateStackScriptMutation = (id: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<StackScript, APIError[], Partial<StackScriptPayload>>({
+    mutationFn: (data) => updateStackScript(id, data),
+    onSuccess(stackscript) {
+      queryClient.setQueryData(
+        stackscriptQueries.stackscript(stackscript.id).queryKey,
+        stackscript
+      );
+      queryClient.invalidateQueries({
+        queryKey: stackscriptQueries.infinite._def,
+      });
+    },
+  });
+};
 
 export const useStackScriptsInfiniteQuery = (
   filter: Filter = {},

@@ -1,77 +1,28 @@
-import { Notice } from '@linode/ui';
-import { Box } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
+import { Autocomplete, InputAdornment, Notice } from '@linode/ui';
+import Search from '@mui/icons-material/Search';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
-import { components } from 'react-select';
 import { debounce } from 'throttle-debounce';
-import { makeStyles } from 'tss-react/mui';
-
-import Search from 'src/assets/icons/search.svg';
-import EnhancedSelect from 'src/components/EnhancedSelect';
 
 import withSearch from '../SearchHOC';
 import { SearchItem } from './SearchItem';
 
 import type { AlgoliaState as AlgoliaProps } from '../SearchHOC';
-import type { Theme } from '@mui/material/styles';
+import type { ConvertedItems } from '../SearchHOC';
 import type { RouteComponentProps } from 'react-router-dom';
-import type { Item } from 'src/components/EnhancedSelect';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  enhancedSelectWrapper: {
-    '& .input': {
-      '& > div': {
-        marginRight: 0,
-      },
-      '& p': {
-        color: theme.color.grey1,
-        paddingLeft: theme.spacing(3),
-      },
-      maxWidth: '100%',
-    },
-    '& .react-select__value-container': {
-      paddingLeft: theme.spacing(4),
-    },
-    margin: '0 auto',
-    maxHeight: 500,
-    [theme.breakpoints.up('md')]: {
-      width: 500,
-    },
-    width: 300,
-  },
-  notice: {
-    '& p': {
-      color: theme.color.white,
-      font: theme.font.normal,
-    },
-  },
-  root: {
-    position: 'relative',
-  },
-  searchIcon: {
-    color: theme.color.grey1,
-    left: 5,
-    position: 'absolute',
-    top: 4,
-    zIndex: 3,
-  },
-}));
-
-const Control = (props: any) => (
-  <components.Control {...props}>
-    <Box display="flex" paddingRight={(theme) => theme.tokens.spacing[40]}>
-      <Search data-qa-search-icon />
-    </Box>
-    {props.children}
-  </components.Control>
-);
-
+interface SelectedItem {
+  data: { source: string };
+  label: string;
+  value: string;
+}
 interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
 
+/**
+ * For Algolia search to work locally, ensure you have valid values set for
+ * REACT_APP_ALGOLIA_APPLICATION_ID and REACT_APP_ALGOLIA_SEARCH_KEY in your .env file.
+ */
 const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
-  const { classes } = useStyles();
   const [inputValue, setInputValue] = React.useState('');
   const {
     history,
@@ -80,7 +31,6 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
     searchError,
     searchResults,
   } = props;
-  const theme = useTheme();
 
   const options = React.useMemo(() => {
     const [docs, community] = searchResults;
@@ -110,147 +60,113 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       : '/support/search/';
   };
 
-  const handleSelect = (selected: Item<string>) => {
+  const handleSelect = (selected: ConvertedItems | SelectedItem | null) => {
     if (!selected || !inputValue) {
       return;
     }
 
-    if (selected.value === 'search') {
+    const href =
+      selected?.data && 'href' in selected.data ? selected.data.href : '';
+    if (href) {
+      // If an href exists for the selected option, redirect directly to that link.
+      window.open(href, '_blank', 'noopener');
+    } else {
+      // If no href, we redirect to the search landing page.
       const link = getLinkTarget(inputValue);
       history.push(link);
-    } else {
-      const href = pathOr('', ['data', 'href'], selected);
-      window.open(href, '_blank', 'noopener');
     }
   };
-
-  // TODO: Just use <Autocomplete /> instead of <EnhancedSelect />
-  const selectStyles = {
-    control: (base: any) => ({
-      ...base,
-      '&.react-select__control--is-focused, &.react-select__control--is-focused:hover': {
-        border: `1px solid ${theme.tokens.search.Focus.Border}`,
-        boxShadow: 'none',
-      },
-      '&:focus': {
-        border: `1px solid ${theme.tokens.search.FocusEmpty.Border}`,
-      },
-      '&:hover': {
-        border: `1px solid ${theme.tokens.search.Hover.Border}`,
-      },
-      backgroundColor: theme.tokens.search.Default.Background,
-      border: `1px solid ${theme.tokens.search.Default.Border}`,
-      borderRadius: theme.tokens.borderRadius.None,
-      minHeight: 'inherit',
-      padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
-    }),
-    indicatorsContainer: (base: any) => ({
-      ...base,
-      '.react-select__indicator': {
-        color: theme.tokens.content.Icon.Primary.Default,
-        padding: 0,
-      },
-      '.react-select__indicator-separator': {
-        display: 'none',
-      },
-    }),
-    input: (base: any) => ({
-      ...base,
-      color: theme.tokens.search.Default.Text,
-    }),
-    menu: (base: any) => ({
-      ...base,
-      background: theme.tokens.dropdown.Background.Default,
-      border: 0,
-      borderRadius: theme.tokens.borderRadius.None,
-      boxShadow: theme.tokens.elevation.S,
-      margin: `${theme.tokens.spacing[20]} 0 0 0`,
-      maxWidth: '100%',
-    }),
-    menuList: (base: any) => ({
-      ...base,
-      // No Options Message
-      '> div > p': {
-        backgroundColor: theme.tokens.dropdown.Background.Default,
-        color: theme.tokens.dropdown.Text.Default,
-        padding: `${theme.tokens.spacing[40]} ${theme.tokens.spacing[50]}`,
-      },
-      padding: 0,
-    }),
-    option: (base: any) => ({
-      ...base,
-      '&:hover': {
-        backgroundColor: theme.tokens.dropdown.Background.Hover,
-      },
-      '> .MuiTypography-root': {
-        color: theme.tokens.content.Text.Secondary.Default,
-        font: theme.tokens.typography.Body.Regular,
-      },
-      '> div': {
-        '> .MuiTypography-root': {
-          color: theme.tokens.dropdown.Text.Default,
-          font: theme.tokens.typography.Body.Regular,
-        },
-        '> div': {
-          font: theme.tokens.typography.Label.Semibold.S,
-        },
-        display: 'flex',
-        justifyContent: 'space-between',
-      },
-      backgroundColor: theme.tokens.dropdown.Background.Default,
-      color: theme.tokens.dropdown.Text.Default,
-    }),
-    singleValue: (base: any) => ({
-      ...base,
-      color: theme.tokens.search.Filled.Text,
-      overflow: 'hidden',
-    }),
-    valueContainer: (base: any) => ({
-      ...base,
-      '&&': {
-        padding: 0,
-      },
-      '.select-placeholder': {
-        color: theme.tokens.search.Default.Text,
-        left: 0,
-      },
-      '> div': {
-        margin: 0,
-        padding: 0,
-      },
-    }),
-  };
-
   return (
     <React.Fragment>
       {searchError && (
-        <Notice className={classes.notice} spacingTop={8} variant="error">
+        <Notice
+          sx={(theme) => ({
+            '& p': {
+              color: theme.color.white,
+              fontFamily: 'LatoWeb',
+            },
+          })}
+          spacingTop={8}
+          variant="error"
+        >
           {searchError}
         </Notice>
       )}
-      <div className={classes.root}>
-        <EnhancedSelect
-          components={
-            {
-              Control,
-              DropdownIndicator: () => null,
-              Option: SearchItem,
-            } as any
-          }
-          className={classes.enhancedSelectWrapper}
-          disabled={!searchEnabled}
-          hideLabel
-          inputValue={inputValue}
-          isClearable={true}
-          isMulti={false}
-          label="Search for answers"
-          onChange={handleSelect}
-          onInputChange={onInputValueChange}
-          options={options}
-          placeholder="Search for answers..."
-          styles={selectStyles}
-        />
-      </div>
+      <Autocomplete
+        renderOption={(props, option) => {
+          return (
+            <SearchItem
+              data={option}
+              {...props}
+              key={`${props.key}-${option.value}`}
+            />
+          );
+        }}
+        slotProps={{
+          paper: {
+            sx: (theme) => ({
+              '& .MuiAutocomplete-listbox': {
+                '&::-webkit-scrollbar': {
+                  display: 'none',
+                },
+                border: 'none !important',
+                msOverflowStyle: 'none',
+                scrollbarWidth: 'none',
+              },
+              '& .MuiAutocomplete-option': {
+                ':hover': {
+                  backgroundColor:
+                    theme.name == 'light'
+                      ? `${theme.tokens.color.Brand[10]} !important`
+                      : `${theme.tokens.color.Neutrals[80]} !important`,
+                  color: theme.color.black,
+                  transition: 'background-color 0.2s',
+                },
+              },
+              boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
+              marginTop: 0.5,
+            }),
+          },
+        }}
+        sx={(theme) => ({
+          maxHeight: 500,
+          [theme.breakpoints.up('md')]: {
+            width: 500,
+          },
+          width: 300,
+        })}
+        textFieldProps={{
+          InputProps: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search
+                  sx={(theme) => ({
+                    color: `${theme.tokens.search.Default.SearchIcon} !important`,
+                  })}
+                  data-qa-search-icon
+                />
+              </InputAdornment>
+            ),
+            sx: (theme) => ({
+              '&.Mui-focused': {
+                borderColor: `${theme.tokens.color.Brand[70]} !important`,
+                boxShadow: 'none',
+              },
+              ':hover': {
+                borderColor: theme.tokens.search.Hover.Border,
+              },
+            }),
+          },
+          hideLabel: true,
+        }}
+        disabled={!searchEnabled}
+        inputValue={inputValue}
+        label="Search for answers"
+        onChange={(_, selected) => handleSelect(selected)}
+        onInputChange={(_, value) => onInputValueChange(value)}
+        options={options}
+        placeholder="Search"
+      />
     </React.Fragment>
   );
 };

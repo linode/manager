@@ -94,7 +94,7 @@ export const UserDetailsLanding = () => {
             <UserDetails />
           </SafeTabPanel>
           <SafeTabPanel index={++idx}>
-            <UserRoles assignedRoles={assignedRoles} />
+            <UserRoles />
           </SafeTabPanel>
           <SafeTabPanel index={++idx}>
             <UserEntities assignedRoles={assignedRoles} />

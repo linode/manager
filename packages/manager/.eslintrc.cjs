@@ -92,6 +92,7 @@ module.exports = {
         'src/features/Betas/**/*',
         'src/features/Domains/**/*',
         'src/features/Longview/**/*',
+        'src/features/PlacementGroups/**/*',
         'src/features/Volumes/**/*',
       ],
       rules: {

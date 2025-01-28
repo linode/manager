@@ -9,7 +9,7 @@ import { CollapsibleRow } from './CollapsibleRow';
 export interface TableItem {
   InnerTable: JSX.Element;
   OuterTableCells: JSX.Element;
-  id: number;
+  id: number | string;
   label: string;
 }
 

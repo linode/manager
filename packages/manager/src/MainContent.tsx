@@ -37,7 +37,6 @@ import { switchAccountSessionContext } from './context/switchAccountSessionConte
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
-import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
@@ -167,11 +166,6 @@ const AccountActivationLanding = React.lazy(
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
-const PlacementGroups = React.lazy(() =>
-  import('src/features/PlacementGroups').then((module) => ({
-    default: module.PlacementGroups,
-  }))
-);
 
 const CloudPulse = React.lazy(() =>
   import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
@@ -218,7 +212,6 @@ export const MainContent = () => {
   const username = profile?.username || '';
 
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
-  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
@@ -370,12 +363,6 @@ export const MainContent = () => {
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
                             <Route component={LinodesRoutes} path="/linodes" />
-                            {isPlacementGroupsEnabled && (
-                              <Route
-                                component={PlacementGroups}
-                                path="/placement-groups"
-                              />
-                            )}
                             <Route
                               component={NodeBalancers}
                               path="/nodebalancers"

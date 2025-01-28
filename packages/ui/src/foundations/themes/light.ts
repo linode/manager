@@ -357,16 +357,15 @@ export const lightTheme: ThemeOptions = {
           },
           '.MuiAutocomplete-popupIndicator': {
             svg: {
-              ':hover': {
-                opacity: 1,
-              },
               fontSize: '28px',
-              opacity: 0.5,
             },
           },
           paddingRight: 4,
           svg: {
-            color: Color.Neutrals[40],
+            ':hover': {
+              color: `${Color.Brand[70]} !important`,
+            },
+            color: `${Search.Default.Icon} !important`,
           },
         },
         groupLabel: {
@@ -406,7 +405,10 @@ export const lightTheme: ThemeOptions = {
           borderTop: 0,
         },
         option: {
-          '&.Mui-focused, :hover': {
+          '&.Mui-focused': {
+            backgroundColor: 'transparent',
+          },
+          '&:hover': {
             backgroundColor: `${primaryColors.main} !important`,
             color: primaryColors.white,
             transition: 'background-color 0.2s',
