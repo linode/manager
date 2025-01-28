@@ -90,7 +90,7 @@ export const getFilteredResources = (
     searchText,
     selectedResources,
   } = filterProps;
-  if (!data || resourceIds.length === 0) {
+  if (!data || (!isAdditionOrDeletionNeeded && resourceIds.length === 0)) {
     return [];
   }
   return data // here we always use the base data from API for filtering as source of truth

@@ -141,4 +141,30 @@ describe('getFilteredResources', () => {
     });
     expect(result.length).toBe(0);
   });
+  it('should return checked true for already selected instances', () => {
+    const // Case with searchText
+      result = getFilteredResources({
+        data,
+        filteredRegions: [],
+        regionsIdToRegionMap,
+        resourceIds: ['1', '2'],
+        searchText: '',
+        selectedResources: ['1'],
+      });
+    expect(result.length).toBe(2);
+    expect(result[0].checked).toBe(true);
+  });
+  it('should return all resources in case of edit flow', () => {
+    const // Case with searchText
+      result = getFilteredResources({
+        data,
+        filteredRegions: [],
+        isAdditionOrDeletionNeeded: true,
+        regionsIdToRegionMap,
+        resourceIds: [],
+        searchText: undefined,
+        selectedResources: ['1'],
+      });
+    expect(result.length).toBe(data.length);
+  });
 });
