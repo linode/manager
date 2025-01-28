@@ -26,6 +26,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'imageServiceGen2', label: 'Image Service Gen2' },
   { flag: 'imageServiceGen2Ga', label: 'Image Service Gen2 GA' },
+  { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'lkeEnterprise', label: 'LKE-Enterprise' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },

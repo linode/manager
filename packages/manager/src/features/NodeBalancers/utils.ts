@@ -48,11 +48,17 @@ export const createNewNodeBalancerConfig = (
   stickiness: SESSION_STICKINESS_DEFAULTS['http'],
 });
 
-export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
+export const getNodeForRequest = (
+  node: NodeBalancerConfigNodeFields,
+  config: NodeBalancerConfigFields
+) => ({
   address: node.address,
   label: node.label,
-  /* Force Node creation and updates to set mode to 'accept' */
-  mode: node.mode,
+  /**
+   * `mode` should not be specified for UDP because UDP does not
+   * support the various different modes.
+   */
+  mode: config.protocol !== 'udp' ? node.mode : undefined,
   port: node.port,
   weight: +node.weight!,
 });
@@ -108,10 +114,12 @@ export const transformConfigsForRequest = (
         check_timeout: !isNil(config.check_timeout)
           ? +config.check_timeout
           : undefined,
-        cipher_suite: config.cipher_suite || undefined,
+        cipher_suite: shouldIncludeCipherSuite(config)
+          ? config.cipher_suite
+          : undefined,
         id: undefined,
         nodebalancer_id: undefined,
-        nodes: config.nodes.map(nodeForRequest),
+        nodes: config.nodes.map((node) => getNodeForRequest(node, config)),
         nodes_status: undefined,
         port: config.port ? +config.port : undefined,
         protocol:
@@ -141,6 +149,10 @@ export const transformConfigsForRequest = (
       }
     ) as unknown) as NodeBalancerConfigFields;
   });
+};
+
+const shouldIncludeCipherSuite = (config: NodeBalancerConfigFields) => {
+  return config.protocol !== 'udp';
 };
 
 export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {

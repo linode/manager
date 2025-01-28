@@ -1,7 +1,6 @@
 import { Domain } from '@linode/api-v4';
 import { domainFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { fbtClick, getClick, getVisible } from 'support/helpers';
 import {
   interceptCreateDomain,
   mockGetDomains,
@@ -30,13 +29,15 @@ describe('Create a Domain', () => {
     interceptCreateDomain().as('createDomain');
     cy.visitWithLogin('/domains');
     cy.wait('@getDomains');
-    fbtClick('Create Domain');
+    cy.findByText('Create Domain').click();
     const label = randomDomainName();
-    getVisible('[id="domain"][data-testid="textfield-input"]').type(label);
-    getVisible('[id="soa-email-address"][data-testid="textfield-input"]').type(
-      'devs@linode.com'
-    );
-    getClick('[data-testid="submit"]');
+    cy.get('[id="domain"][data-testid="textfield-input"]')
+      .should('be.visible')
+      .type(label);
+    cy.get('[id="soa-email-address"][data-testid="textfield-input"]')
+      .should('be.visible')
+      .type('devs@linode.com');
+    cy.get('[data-testid="submit"]').click();
     cy.wait('@createDomain');
     cy.get('[data-qa-header]').should('contain', label);
   });

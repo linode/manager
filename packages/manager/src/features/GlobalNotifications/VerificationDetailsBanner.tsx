@@ -24,7 +24,7 @@ export const VerificationDetailsBanner = ({
   }
 
   return (
-    <Notice important spacing={1} variant="warning">
+    <Notice important variant="warning">
       <Box
         alignItems="center"
         display="flex"

@@ -1,11 +1,12 @@
-import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import { longviewTopProcessesFactory } from 'src/factories/longviewTopProcesses';
-import { LongviewTopProcesses } from 'src/features/Longview/request.types';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
-import { Props, TopProcesses, extendTopProcesses } from './TopProcesses';
+import { TopProcesses, extendTopProcesses } from './TopProcesses';
+
+import type { Props } from './TopProcesses';
+import type { LongviewTopProcesses } from 'src/features/Longview/request.types';
 
 const props: Props = {
   clientID: 1,
@@ -19,54 +20,52 @@ describe('Top Processes', () => {
       vi.clearAllMocks();
     });
 
-    it('renders the title', () => {
-      const { getByText } = render(wrapWithTheme(<TopProcesses {...props} />));
+    it('renders the title', async () => {
+      const { getByText } = await renderWithThemeAndRouter(
+        <TopProcesses {...props} />
+      );
       getByText('Top Processes');
     });
 
-    it('renders the View Details link', () => {
-      const { queryByText } = render(
-        wrapWithTheme(<TopProcesses {...props} />)
+    it('renders the View Details link', async () => {
+      const { queryByText } = await renderWithThemeAndRouter(
+        <TopProcesses {...props} />
       );
       expect(queryByText('View Details')).toBeDefined();
     });
 
-    it('renders rows for each process', () => {
+    it('renders rows for each process', async () => {
       const data = longviewTopProcessesFactory.build();
       // The component renders a maximum of 6 rows. Assert our test data has
       // fewer than seven processes so the test is valid.
       expect(Object.keys(data.Processes || {}).length).toBeLessThan(7);
 
-      const { getByText } = render(
-        wrapWithTheme(<TopProcesses {...props} topProcessesData={data} />)
+      const { getByText } = await renderWithThemeAndRouter(
+        <TopProcesses {...props} topProcessesData={data} />
       );
       Object.keys(data.Processes || {}).forEach((processName) => {
         getByText(processName);
       });
     });
 
-    it('renders loading state', () => {
-      const { getAllByTestId } = render(
-        wrapWithTheme(
-          <TopProcesses
-            clientID={1}
-            topProcessesData={{ Processes: {} }}
-            topProcessesLoading={true}
-          />
-        )
+    it('renders loading state', async () => {
+      const { getAllByTestId } = await renderWithThemeAndRouter(
+        <TopProcesses
+          clientID={1}
+          topProcessesData={{ Processes: {} }}
+          topProcessesLoading={true}
+        />
       );
       getAllByTestId('table-row-loading');
     });
 
-    it('renders error state', () => {
-      const { getByText } = render(
-        wrapWithTheme(
-          <TopProcesses
-            {...props}
-            topProcessesData={{ Processes: {} }}
-            topProcessesError={[{ reason: 'Error' }]}
-          />
-        )
+    it('renders error state', async () => {
+      const { getByText } = await renderWithThemeAndRouter(
+        <TopProcesses
+          {...props}
+          topProcessesData={{ Processes: {} }}
+          topProcessesError={[{ reason: 'Error' }]}
+        />
       );
       getByText('There was an error getting Top Processes.');
     });
