@@ -88,3 +88,31 @@ const controlPlaneACLOptionsSchema = object().shape({
 export const kubernetesControlPlaneACLPayloadSchema = object().shape({
   acl: controlPlaneACLOptionsSchema,
 });
+
+// Regex to match DNS subdomain prefix or a key with allowed characters
+const keyRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?(\/[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?)?$/;
+
+// Regex for value validation
+const valueRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
+
+export const taintSchema = object().shape({
+  key: string()
+    .matches(
+      keyRegex,
+      'Key must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 253 characters.'
+    )
+    .max(253, 'Key must be between 1 and 253 characters.')
+    .min(1, 'Key must be between 1 and 253 characters.')
+    .required('Key is required.'),
+  value: string()
+    .matches(
+      valueRegex,
+      'Value must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 63 characters.'
+    )
+    .max(63, 'Value must be between 0 and 63 characters.')
+    .notOneOf(
+      ['kubernetes.io', 'linode.com'],
+      'Value cannot be "kubernetes.io" or "linode.com".'
+    )
+    .notRequired(),
+});

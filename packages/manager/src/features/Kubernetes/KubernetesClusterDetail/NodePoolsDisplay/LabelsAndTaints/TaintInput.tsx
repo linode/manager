@@ -1,4 +1,5 @@
 import { Autocomplete, TextField } from '@linode/ui';
+import { taintSchema } from '@linode/validation';
 import React, { useState } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -13,7 +14,7 @@ interface Props {
 export const TaintInput = (props: Props) => {
   const { handleCloseInputForm } = props;
 
-  const { control } = useFormContext();
+  const { clearErrors, control, setError } = useFormContext();
 
   const { append } = useFieldArray({
     control,
@@ -32,15 +33,36 @@ export const TaintInput = (props: Props) => {
   ];
 
   const handleAddTaint = () => {
-    // Trigger validation on textfield.
-
     // Separate the combined taint.
     const [taintKey, taintValue] = combinedTaint
       .split(':')
       .map((str) => str.trim());
 
-    append({ effect: selectedEffect, key: taintKey, value: taintValue });
+    const newTaint = {
+      effect: selectedEffect,
+      key: taintKey,
+      value: taintValue,
+    };
 
+    try {
+      clearErrors();
+      taintSchema.validateSync(newTaint);
+      append(newTaint);
+      handleCloseInputForm();
+    } catch (e) {
+      setError(
+        'taints.combinedValue',
+        {
+          message: e.message,
+          type: 'validate',
+        },
+        { shouldFocus: true }
+      );
+    }
+  };
+
+  const handleClose = () => {
+    clearErrors();
     handleCloseInputForm();
   };
 
@@ -50,10 +72,10 @@ export const TaintInput = (props: Props) => {
         render={({ field, fieldState }) => {
           return (
             <TextField
+              inputRef={field.ref}
               {...field}
               error={!!fieldState.error}
               helperText={fieldState.error?.message}
-              inputRef={field.ref}
               label="Taint"
               onChange={(e) => setCombinedTaint(e.target.value)}
               placeholder="myapp.io/app: production"
@@ -90,7 +112,7 @@ export const TaintInput = (props: Props) => {
         secondaryButtonProps={{
           'data-testid': 'cancel-taint',
           label: 'Cancel',
-          onClick: handleCloseInputForm,
+          onClick: handleClose,
         }}
         style={{ flexDirection: 'row-reverse' }}
       />
