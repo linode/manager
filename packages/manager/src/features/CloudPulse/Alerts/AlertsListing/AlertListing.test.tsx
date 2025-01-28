@@ -39,13 +39,12 @@ describe('Alert Listing', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getAllByLabelText, getByText } = renderWithTheme(<AlertListing />);
+    const { getByText } = renderWithTheme(<AlertListing />);
     expect(getByText('Alert Name')).toBeInTheDocument();
     expect(getByText('Service')).toBeInTheDocument();
     expect(getByText('Status')).toBeInTheDocument();
     expect(getByText('Last Modified')).toBeInTheDocument();
     expect(getByText('Created By')).toBeInTheDocument();
-    expect(getAllByLabelText('Action menu for Alert').length).toBe(3);
   });
 
   it('should render the alert row', () => {
@@ -72,7 +71,9 @@ describe('Alert Listing', () => {
     const { getAllByLabelText, getByTestId } = renderWithTheme(
       <AlertListing />
     );
-    const firstActionMenu = getAllByLabelText('Action menu for Alert')[0];
+    const firstActionMenu = getAllByLabelText(
+      `Action menu for Alert ${mockResponse[0].label}`
+    )[0];
     await userEvent.click(firstActionMenu);
     expect(getByTestId('Show Details')).toBeInTheDocument();
   });

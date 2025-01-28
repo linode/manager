@@ -47,7 +47,11 @@ export const AlertTableRow = (props: Props) => {
       </TableCell>
       <TableCell>{created_by}</TableCell>
       <TableCell actionCell>
-        <AlertActionMenu alertType={type} handlers={handlers} />
+        <AlertActionMenu
+          alertLabel={label}
+          alertType={type}
+          handlers={handlers}
+        />
       </TableCell>
     </TableRow>
   );
