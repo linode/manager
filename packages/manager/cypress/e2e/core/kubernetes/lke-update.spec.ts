@@ -1111,7 +1111,7 @@ describe('LKE cluster updates', () => {
    * - Confirms that Labels and Taints can be added to a node pool.
    * - Confirms validation and errors are handled gracefully.
    */
-  it('can view, add, and delete node pool labels and taints', () => {
+  describe('confirms labels and taints functionality for a node pool', () => {
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
     });
@@ -1129,15 +1129,10 @@ describe('LKE cluster updates', () => {
       })
     );
 
-    const mockNodePoolUpdated = nodePoolFactory.build({
+    const mockNodePoolInitial = nodePoolFactory.build({
       id: 1,
       type: mockType.id,
       nodes: mockNodes,
-      taints: [],
-    });
-
-    const mockNodePoolInitial = nodePoolFactory.build({
-      ...mockNodePoolUpdated,
       labels: {
         ['example.com/my-app']: 'teams',
       },
@@ -1152,247 +1147,318 @@ describe('LKE cluster updates', () => {
 
     const mockDrawerTitle = 'Labels and Taints: Linode 2 GB Plan';
 
-    const mockNewLabel = 'my-label-key: my-label-value';
-    const mockNewTaint: Taint = {
-      key: 'my-taint-key',
-      value: 'my-taint-value',
-      effect: 'NoSchedule',
-    };
-
-    mockGetLinodes(mockNodePoolInstances);
-    mockGetLinodeType(mockType).as('getType');
-    mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
-      'getNodePools'
-    );
-    mockGetKubernetesVersions().as('getVersions');
-    mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
-      'getControlPlaneAcl'
-    );
-    mockGetDashboardUrl(mockCluster.id);
-    mockGetApiEndpoints(mockCluster.id);
-
-    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-    cy.wait([
-      '@getCluster',
-      '@getNodePools',
-      '@getVersions',
-      '@getType',
-      '@getControlPlaneAcl',
-    ]);
-
-    mockUpdateNodePool(mockCluster.id, mockNodePoolUpdated).as(
-      'updateNodePool'
-    );
-    mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]).as(
-      'getNodePoolsUpdated'
-    );
-
-    // Click "Labels and Taints" button and confirm drawer contents.
-    ui.button
-      .findByTitle('Labels and Taints')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.drawer
-      .findByTitle(mockDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        // Confirm drawer opens with the correct CTAs.
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.disabled');
-
-        ui.button
-          .findByTitle('Cancel')
-          .should('be.visible')
-          .should('be.enabled');
-
-        // Confirm that the Labels table exists and is populated with the correct details.
-        Object.entries(mockNodePoolInitial.labels).forEach(([key, value]) => {
-          cy.get(`tr[data-qa-label-row="${key}"]`)
-            .should('be.visible')
-            .within(() => {
-              cy.findByText(`${key}: ${value}`).should('be.visible');
-
-              // Confirm delete button exists, then click it.
-              ui.button
-                .findByAttribute('aria-label', `Remove ${key}: ${value}`)
-                .should('be.visible')
-                .should('be.enabled')
-                .click();
-
-              // Confirm the label is no longer visible.
-              cy.findByText(`${key}: ${value}`).should('not.exist');
-            });
-        });
-
-        // Confirm that the Taints table exists and is populated with the correct details.
-        mockNodePoolInitial.taints.forEach((taint: Taint) => {
-          cy.get(`tr[data-qa-taint-row="${taint.key}"]`)
-            .should('be.visible')
-            .within(() => {
-              cy.findByText(`${taint.key}: ${taint.value}`).should(
-                'be.visible'
-              );
-              cy.findByText(taint.effect).should('be.visible');
-
-              // Confirm delete button exists, then click it.
-              ui.button
-                .findByAttribute(
-                  'aria-label',
-                  `Remove ${taint.key}: ${taint.value}`
-                )
-                .should('be.visible')
-                .should('be.enabled')
-                .click();
-
-              // Confirm the taint is no longer visible.
-              cy.findByText(`${taint.key}: ${taint.value}`).should('not.exist');
-            });
-        });
-
-        // Confirm empty state text displays for both empty tables.
-        cy.findByText('No labels').should('be.visible');
-        cy.findByText('No taints').should('be.visible');
-
-        // Confirm form can be submitted.
-        ui.button
-          .findByTitle('Save Changes')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // Confirm request has the correct data.
-    cy.wait('@updateNodePool').then((xhr) => {
-      const data = xhr.response?.body;
-      if (data) {
-        const actualLabels: Label = data.labels;
-        const actualTaints: Taint[] = data.taints;
-
-        expect(actualLabels).to.deep.equal(mockNodePoolUpdated.labels);
-        expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
-      }
+    beforeEach(() => {
+      mockGetLinodes(mockNodePoolInstances);
+      mockGetLinodeType(mockType).as('getType');
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+        'getNodePools'
+      );
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
+        'getControlPlaneAcl'
+      );
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
     });
 
-    cy.wait('@getNodePoolsUpdated');
-
-    // Confirm drawer closes.
-    cy.findByText(mockDrawerTitle).should('not.exist');
-
-    // Confirm labels and taints can be added to tables.
-    ui.button
-      .findByTitle('Labels and Taints')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.drawer
-      .findByTitle(mockDrawerTitle)
-      .should('be.visible')
-      .within(() => {
-        // Add a label:
-
-        ui.button
-          .findByTitle('Add Label')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        // Confirm form button is disabled and label form displays with the correct CTAs.
-        ui.button
-          .findByTitle('Add Label')
-          .should('be.visible')
-          .should('be.disabled');
-
-        ui.button
-          .findByTitle('Add')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        // Confirm error validation for invalid label input.
-        cy.findByText('Labels must be valid key-value pairs.').should(
-          'be.visible'
-        );
-
-        // Confirm form adds a valid new label.
-        cy.findByLabelText('Label').click().type(mockNewLabel);
-
-        ui.button.findByTitle('Add').click();
-
-        // Confirm add form closes and Add Label button is re-enabled.
-        cy.findByLabelText('Label').should('not.exist');
-        cy.findByLabelText('Add').should('not.exist');
-
-        ui.button
-          .findByTitle('Add Label')
-          .should('be.visible')
-          .should('be.enabled');
-
-        // Confirm new label is visible in table.
-        cy.get(`tr[data-qa-label-row="my-label-key"]`)
-          .should('be.visible')
-          .within(() => {
-            cy.findByText(mockNewLabel).should('be.visible');
-          });
-
-        // Add a taint:
-
-        ui.button
-          .findByTitle('Add Taint')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        // Confirm form button is disabled and label form displays with the correct CTAs.
-        ui.button.findByTitle('Add Taint').should('be.disabled');
-
-        ui.button
-          .findByTitle('Add')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        // Confirm error validation for invalid taint input.
-        cy.contains(/Key must start with a letter or number/).should(
-          'be.visible'
-        );
-
-        // Confirm form adds a valid new taint.
-        cy.findByLabelText('Taint')
-          .click()
-          .type(`${mockNewTaint.key}: ${mockNewTaint.value}`);
-
-        ui.autocomplete.findByLabel('Effect').click();
-
-        ui.autocompletePopper
-          .findByTitle(mockNewTaint.effect)
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        ui.button.findByTitle('Add').click();
-
-        // Confirm add form closes and Add Taint button is re-enabled.
-        cy.findByLabelText('Taint').should('not.exist');
-        cy.findByLabelText('Add').should('not.exist');
-
-        ui.button.findByTitle('Add Taint').should('be.enabled');
-
-        // Confirm new taint is visible in table.
-        cy.get(`tr[data-qa-taint-row="${mockNewTaint.key}"]`)
-          .should('be.visible')
-          .within(() => {
-            cy.findByText(`${mockNewTaint.key}: ${mockNewTaint.value}`).should(
-              'be.visible'
-            );
-            cy.findByText(mockNewTaint.effect).should('be.visible');
-          });
+    it('can delete labels and taints', () => {
+      const mockNodePoolUpdated = nodePoolFactory.build({
+        id: 1,
+        type: mockType.id,
+        nodes: mockNodes,
+        taints: [],
+        labels: {},
       });
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getCluster',
+        '@getNodePools',
+        '@getVersions',
+        '@getType',
+        '@getControlPlaneAcl',
+      ]);
+
+      mockUpdateNodePool(mockCluster.id, mockNodePoolUpdated).as(
+        'updateNodePool'
+      );
+      mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]).as(
+        'getNodePoolsUpdated'
+      );
+
+      // Click "Labels and Taints" button and confirm drawer contents.
+      ui.button
+        .findByTitle('Labels and Taints')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(mockDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          // Confirm drawer opens with the correct CTAs.
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.disabled');
+
+          ui.button
+            .findByTitle('Cancel')
+            .should('be.visible')
+            .should('be.enabled');
+
+          // Confirm that the Labels table exists and is populated with the correct details.
+          Object.entries(mockNodePoolInitial.labels).forEach(([key, value]) => {
+            cy.get(`tr[data-qa-label-row="${key}"]`)
+              .should('be.visible')
+              .within(() => {
+                cy.findByText(`${key}: ${value}`).should('be.visible');
+
+                // Confirm delete button exists, then click it.
+                ui.button
+                  .findByAttribute('aria-label', `Remove ${key}: ${value}`)
+                  .should('be.visible')
+                  .should('be.enabled')
+                  .click();
+
+                // Confirm the label is no longer visible.
+                cy.findByText(`${key}: ${value}`).should('not.exist');
+              });
+          });
+
+          // Confirm that the Taints table exists and is populated with the correct details.
+          mockNodePoolInitial.taints.forEach((taint: Taint) => {
+            cy.get(`tr[data-qa-taint-row="${taint.key}"]`)
+              .should('be.visible')
+              .within(() => {
+                cy.findByText(`${taint.key}: ${taint.value}`).should(
+                  'be.visible'
+                );
+                cy.findByText(taint.effect).should('be.visible');
+
+                // Confirm delete button exists, then click it.
+                ui.button
+                  .findByAttribute(
+                    'aria-label',
+                    `Remove ${taint.key}: ${taint.value}`
+                  )
+                  .should('be.visible')
+                  .should('be.enabled')
+                  .click();
+
+                // Confirm the taint is no longer visible.
+                cy.findByText(`${taint.key}: ${taint.value}`).should(
+                  'not.exist'
+                );
+              });
+          });
+
+          // Confirm empty state text displays for both empty tables.
+          cy.findByText('No labels').should('be.visible');
+          cy.findByText('No taints').should('be.visible');
+
+          // Confirm form can be submitted.
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm request has the correct data.
+      cy.wait('@updateNodePool').then((xhr) => {
+        const data = xhr.response?.body;
+        if (data) {
+          const actualLabels: Label = data.labels;
+          const actualTaints: Taint[] = data.taints;
+
+          expect(actualLabels).to.deep.equal(mockNodePoolUpdated.labels);
+          expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
+        }
+      });
+
+      cy.wait('@getNodePoolsUpdated');
+
+      // Confirm drawer closes.
+      cy.findByText(mockDrawerTitle).should('not.exist');
+    });
+
+    it('can add labels and taints', () => {
+      const mockNewLabel = 'my-label-key: my-label-value';
+      const mockNewTaint: Taint = {
+        key: 'my-taint-key',
+        value: 'my-taint-value',
+        effect: 'NoSchedule',
+      };
+      const mockNodePoolUpdated = nodePoolFactory.build({
+        id: 1,
+        type: mockType.id,
+        nodes: mockNodes,
+        taints: [mockNewTaint],
+        labels: { 'my-label-key': 'my-label-value' },
+      });
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getCluster',
+        '@getNodePools',
+        '@getVersions',
+        '@getType',
+        '@getControlPlaneAcl',
+      ]);
+
+      mockUpdateNodePool(mockCluster.id, mockNodePoolUpdated).as(
+        'updateNodePool'
+      );
+      mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]).as(
+        'getNodePoolsUpdated'
+      );
+
+      // Click "Labels and Taints" button and confirm drawer contents.
+      ui.button
+        .findByTitle('Labels and Taints')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(mockDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          // Confirm drawer opens with the correct CTAs.
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.disabled');
+
+          ui.button
+            .findByTitle('Cancel')
+            .should('be.visible')
+            .should('be.enabled');
+
+          // Add a label:
+
+          ui.button
+            .findByTitle('Add Label')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm form button is disabled and label form displays with the correct CTAs.
+          ui.button
+            .findByTitle('Add Label')
+            .should('be.visible')
+            .should('be.disabled');
+
+          // Try to submit without adding a label.
+          ui.button
+            .findByTitle('Add')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm error validation for invalid label input.
+          cy.findByText('Labels must be valid key-value pairs.').should(
+            'be.visible'
+          );
+
+          // Confirm form adds a valid new label.
+          cy.findByLabelText('Label').click().type(mockNewLabel);
+
+          ui.button.findByTitle('Add').click();
+
+          // Confirm add form closes and Add Label button is re-enabled.
+          cy.findByLabelText('Label').should('not.exist');
+          cy.findByLabelText('Add').should('not.exist');
+          ui.button.findByTitle('Add Label').should('be.enabled');
+
+          // Confirm new label is visible in table.
+          cy.get(`tr[data-qa-label-row="my-label-key"]`)
+            .should('be.visible')
+            .within(() => {
+              cy.findByText(mockNewLabel).should('be.visible');
+            });
+
+          // Add a taint:
+
+          ui.button
+            .findByTitle('Add Taint')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm form button is disabled and label form displays with the correct CTAs.
+          ui.button.findByTitle('Add Taint').should('be.disabled');
+
+          // Try to submit without adding a taint.
+          ui.button
+            .findByTitle('Add')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm error validation for invalid taint input.
+          cy.contains(/Key must start with a letter or number/).should(
+            'be.visible'
+          );
+
+          // Confirm form adds a valid new taint.
+          cy.findByLabelText('Taint')
+            .click()
+            .type(`${mockNewTaint.key}: ${mockNewTaint.value}`);
+
+          ui.autocomplete.findByLabel('Effect').click();
+
+          ui.autocompletePopper
+            .findByTitle(mockNewTaint.effect)
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          ui.button.findByTitle('Add').click();
+
+          // Confirm add form closes and Add Taint button is re-enabled.
+          cy.findByLabelText('Taint').should('not.exist');
+          cy.findByLabelText('Add').should('not.exist');
+          ui.button.findByTitle('Add Taint').should('be.enabled');
+
+          // Confirm new taint is visible in table.
+          cy.get(`tr[data-qa-taint-row="${mockNewTaint.key}"]`)
+            .should('be.visible')
+            .within(() => {
+              cy.findByText(
+                `${mockNewTaint.key}: ${mockNewTaint.value}`
+              ).should('be.visible');
+              cy.findByText(mockNewTaint.effect).should('be.visible');
+            });
+
+          // Confirm form can be submitted.
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm request has the correct data.
+      cy.wait('@updateNodePool').then((xhr) => {
+        const data = xhr.response?.body;
+        if (data) {
+          const actualLabels: Label = data.labels;
+          const actualTaints: Taint[] = data.taints;
+
+          expect(actualLabels).to.deep.equal(mockNodePoolUpdated.labels);
+          expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
+        }
+      });
+
+      cy.wait('@getNodePoolsUpdated');
+
+      // Confirm drawer closes.
+      cy.findByText(mockDrawerTitle).should('not.exist');
+    });
   });
 
   describe('LKE cluster updates for DC-specific prices', () => {
