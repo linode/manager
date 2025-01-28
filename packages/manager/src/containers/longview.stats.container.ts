@@ -1,13 +1,14 @@
-import { path, pathOr } from 'ramda';
+import { path } from 'ramda';
 import { connect } from 'react-redux';
 
-import {
+import { getClientStats } from 'src/store/longviewStats/longviewStats.requests';
+
+import type {
   LongviewNotification,
   LongviewResponse,
 } from 'src/features/Longview/request.types';
-import { ApplicationState } from 'src/store';
-import { getClientStats } from 'src/store/longviewStats/longviewStats.requests';
-import { ThunkDispatch } from 'src/store/types';
+import type { ApplicationState } from 'src/store';
+import type { ThunkDispatch } from 'src/store/types';
 
 export interface LVClientData {
   longviewClientData: LongviewResponse['DATA'];
@@ -63,9 +64,9 @@ const connected = <OwnProps extends {}>(
       const foundClient = longviewStats[supplyClientID(ownProps)];
 
       return {
-        longviewClientData: pathOr({}, ['data'], foundClient),
+        longviewClientData: foundClient?.data ?? {},
         longviewClientDataError: path(['error'], foundClient),
-        longviewClientDataLoading: pathOr(true, ['loading'], foundClient),
+        longviewClientDataLoading: foundClient?.loading ?? true,
         longviewClientLastUpdated: path(['lastUpdated'], foundClient),
       };
     },

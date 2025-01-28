@@ -42,7 +42,9 @@ export const createLinodeInterface = (
 ) =>
   Request<LinodeInterface>(
     setURL(
-      `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/interfaces`
+      `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/interfaces`
     ),
     setMethod('POST'),
     setData(data, CreateLinodeInterfaceSchema)
@@ -58,7 +60,9 @@ export const createLinodeInterface = (
 export const getLinodeInterfaces = (linodeId: number) =>
   Request<LinodeInterfaces>(
     setURL(
-      `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/interfaces`
+      `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
+        linodeId
+      )}/interfaces`
     ),
     setMethod('GET')
   );

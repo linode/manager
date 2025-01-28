@@ -1,5 +1,4 @@
 import { CircleProgress, Notice, Paper } from '@linode/ui';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -301,8 +300,9 @@ type LongviewDetailParams = {
 
 const EnhancedLongviewDetail = compose<CombinedProps, {}>(
   React.memo,
+
   withClientStats<{ params: LongviewDetailParams }>((ownProps) => {
-    return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
+    return +(ownProps?.params?.id ?? '');
   }),
   withLongviewClients<Props, { params: LongviewDetailParams }>(
     (
@@ -317,7 +317,7 @@ const EnhancedLongviewDetail = compose<CombinedProps, {}>(
       // This is explicitly typed, otherwise `client` would be typed as
       // `LongviewClient`, even though there's a chance it could be undefined.
       const client: LongviewClient | undefined =
-        longviewClientsData[pathOr<string>('', ['match', 'params', 'id'], own)];
+        longviewClientsData[own.params.id ?? ''];
 
       return {
         client,

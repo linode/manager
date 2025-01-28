@@ -1,6 +1,5 @@
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
@@ -24,7 +23,6 @@ import {
   StyledPackageGrid,
 } from './IconSection.styles';
 
-import type { LongviewPackage } from '../../request.types';
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 interface Props {
@@ -34,78 +32,39 @@ interface Props {
 }
 
 export const IconSection = React.memo((props: Props) => {
-  const hostname = pathOr(
-    'Hostname not available',
-    ['SysInfo', 'hostname'],
-    props.longviewClientData
-  );
+  const hostname =
+    props.longviewClientData?.SysInfo?.hostname ?? 'Hostname not available';
 
-  const osDist = pathOr(
-    'Distro information not available',
-    ['SysInfo', 'os', 'dist'],
-    props.longviewClientData
-  );
+  const osDist =
+    props.longviewClientData?.SysInfo?.os?.dist ??
+    'Distro information not available';
 
-  const osDistVersion = pathOr(
-    '',
-    ['SysInfo', 'os', 'distversion'],
-    props.longviewClientData
-  );
+  const osDistVersion =
+    props.longviewClientData?.SysInfo?.os?.distversion ?? '';
 
-  const kernel = pathOr('', ['SysInfo', 'kernel'], props.longviewClientData);
+  const kernel = props.longviewClientData?.SysInfo?.kernel ?? '';
 
-  const cpuType = pathOr(
-    'CPU information not available',
-    ['SysInfo', 'cpu', 'type'],
-    props.longviewClientData
-  );
+  const cpuType =
+    props.longviewClientData?.SysInfo?.cpu?.type ??
+    'CPU information not available';
 
-  const uptime = pathOr<null | number>(
-    null,
-    ['Uptime'],
-    props.longviewClientData
-  );
-
+  const uptime = props.longviewClientData?.uptime ?? null;
   const formattedUptime =
     uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
 
-  const cpuCoreCount = pathOr(
-    '',
-    ['SysInfo', 'cpu', 'cores'],
-    props.longviewClientData
-  );
+  const cpuCoreCount = props.longviewClientData?.SysInfo?.cpu?.cores ?? '';
 
   const coreCountDisplay = cpuCoreCount && cpuCoreCount > 1 ? `Cores` : `Core`;
 
-  const packages = pathOr<LongviewPackage[] | null>(
-    null,
-    ['Packages'],
-    props.longviewClientData
-  );
+  const packages = props.longviewClientData?.Packages ?? null;
 
   const packagesToUpdate = getPackageNoticeText(packages);
 
-  const usedMemory = pathOr(
-    0,
-    ['Memory', 'real', 'used', 0, 'y'],
-    props.longviewClientData
-  );
-  const freeMemory = pathOr(
-    0,
-    ['Memory', 'real', 'free', 0, 'y'],
-    props.longviewClientData
-  );
+  const usedMemory = props.longviewClientData?.Memory?.real?.used?.[0]?.y ?? 0;
+  const freeMemory = props.longviewClientData?.Memory?.real?.free?.[0]?.y ?? 0;
 
-  const freeSwap = pathOr<number>(
-    0,
-    ['Memory', 'swap', 'free', 0, 'y'],
-    props.longviewClientData
-  );
-  const usedSwap = pathOr<number>(
-    0,
-    ['Memory', 'swap', 'used', 0, 'y'],
-    props.longviewClientData
-  );
+  const freeSwap = props.longviewClientData?.Memory?.swap?.free?.[0]?.y ?? 0;
+  const usedSwap = props.longviewClientData?.Memory?.swap?.used?.[0]?.y ?? 0;
 
   const convertedTotalMemory = getTotalMemoryUsage(usedMemory, freeMemory);
   const convertedTotalSwap = getTotalMemoryUsage(usedSwap, freeSwap);

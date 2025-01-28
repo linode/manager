@@ -1,9 +1,9 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import { pathOr } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
 
 import { getLastUpdated } from '../request';
-import { LongviewNotification } from '../request.types';
+
+import type { LongviewNotification } from '../request.types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export const useClientLastUpdated = (
   clientAPIKey?: string,
@@ -73,7 +73,7 @@ export const useClientLastUpdated = (
          * The first request we make after creating a new client will almost always
          * return an authentication failed error.
          */
-        const reason = pathOr('', [0, 'TEXT'], e);
+        const reason = e?.[0]?.['TEXT'] ?? '';
 
         if (mounted.current) {
           if (reason.match(/authentication/i)) {
