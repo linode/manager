@@ -585,11 +585,11 @@ export interface CreateLinodeRequest {
    * config interfaces or new Linode Interfaces) are in the above interfaces field.
    * Can either be 'legacy_config' or 'linode'.
    *
-   * If 'legacy_config', interfaces field must be InterfacePayload[]
-   * If 'linode', interfaces field must be CreateLinodeInterfacePayload[] and Linode
-   * Must be created in a region that supports the new interfaces.
+   * If 'legacy_config', interfaces field must be type InterfacePayload[]
+   * If 'linode', interfaces field must be type CreateLinodeInterfacePayload[] and Linode
+   * must be created in a region that supports the new interfaces.
    *
-   * Default value on interfaces_for_new_linodes field in AccountSettings object.
+   * Default value on depends on interfaces_for_new_linodes field in AccountSettings object.
    */
   interface_generation?: InterfaceGenerationType;
   /**
