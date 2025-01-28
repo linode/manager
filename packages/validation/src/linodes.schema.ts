@@ -646,7 +646,7 @@ export const ModifyLinodeInterfaceSchema = object({
   vlan: ModifyVlanInterfaceSchema,
 });
 
-const CreateLinodeInterfacesSchemas = array().of(CreateLinodeInterfaceSchema);
+// const CreateLinodeInterfacesSchemas = array().of(CreateLinodeInterfaceSchema);
 
 export const CreateLinodeSchema = object({
   type: string().ensure().required('Plan is required.'),
@@ -680,10 +680,10 @@ export const CreateLinodeSchema = object({
     // .concat(rootPasswordValidation),
     otherwise: (schema) => schema.notRequired(),
   }),
-  interfaces: mixed().oneOf([
-    ConfigProfileInterfacesSchema,
-    CreateLinodeInterfacesSchemas,
-  ]),
+  // ConfigProfileInterfacesSchema, // todo: figure out schema...
+  interfaces: array().of(
+    mixed().oneOf([ConfigProfileInterfacesSchema, CreateLinodeInterfaceSchema])
+  ),
   interface_generation: string(),
   network_helper: boolean(),
   ipv4: array().of(string()),
