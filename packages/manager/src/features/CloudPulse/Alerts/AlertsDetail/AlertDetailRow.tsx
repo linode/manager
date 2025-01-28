@@ -45,7 +45,7 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
   const theme = useTheme();
 
   return (
-    <Grid container item xs={12}>
+    <Grid container data-qa-item={label} item xs={12}>
       <Grid item sm={labelGridColumns} xs={12}>
         <StyledAlertTypography fontFamily={theme.font.bold}>
           {label}:
