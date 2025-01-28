@@ -703,9 +703,23 @@ export const CreateLinodeSchema = object({
       );
     }
   ),
-  interface_generation: string(),
+  interface_generation: string().oneOf(['legacy_config', 'linode']),
   network_helper: boolean(),
-  ipv4: array().of(string()),
+  ipv4: array()
+    .of(string())
+    .when('interface_generation', {
+      is: 'linode',
+      then: (schema) =>
+        schema
+          .nullable()
+          .notRequired()
+          .test({
+            name: 'IPv4 field is not allowed for Linode Interfaces',
+            message:
+              'ipv4 field must be ommitted or empty if using Linode Interfaces',
+            test: (value) => !value || value.length === 0,
+          }),
+    }),
   metadata: MetadataSchema,
   firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema,
