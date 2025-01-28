@@ -130,40 +130,7 @@ describe('CreateImageTab', () => {
     await findByText('Image scheduled for creation.');
   });
 
-  it('should render a notice if the user selects a Linode in a distributed compute region', async () => {
-    const region = regionFactory.build({ site_type: 'distributed' });
-    const linode = linodeFactory.build({ region: region.id });
-
-    server.use(
-      http.get('*/v4/linode/instances', () => {
-        return HttpResponse.json(makeResourcePage([linode]));
-      }),
-      http.get('*/v4/linode/instances/:id', () => {
-        return HttpResponse.json(linode);
-      }),
-      http.get('*/v4/regions', () => {
-        return HttpResponse.json(makeResourcePage([region]));
-      })
-    );
-
-    const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />);
-
-    const linodeSelect = getByLabelText('Linode');
-
-    await userEvent.click(linodeSelect);
-
-    const linodeOption = await findByText(linode.label);
-
-    await userEvent.click(linodeOption);
-
-    // Verify distributed compute region notice renders
-    await findByText(
-      "This Linode is in a distributed compute region. These regions can't store images.",
-      { exact: false }
-    );
-  });
-
-  it('should render a notice if the user selects a Linode in a region that does not support image storage and Image Service Gen 2 GA is enabled', async () => {
+  it('should render a notice if the user selects a Linode in a region that does not support image storage', async () => {
     const region = regionFactory.build({ capabilities: [] });
     const linode = linodeFactory.build({ region: region.id });
 
@@ -179,9 +146,7 @@ describe('CreateImageTab', () => {
       })
     );
 
-    const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />, {
-      flags: { imageServiceGen2: true, imageServiceGen2Ga: true },
-    });
+    const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 

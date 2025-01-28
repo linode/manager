@@ -141,9 +141,6 @@ export const CreateImageTab = () => {
     (r) => r.id === selectedLinode?.region
   );
 
-  const linodeIsInDistributedRegion =
-    selectedLinodeRegion?.site_type === 'distributed';
-
   /**
    * The 'Object Storage' capability indicates a region can store images
    */
@@ -213,33 +210,18 @@ export const CreateImageTab = () => {
               required
               value={selectedLinodeId}
             />
-            {selectedLinode &&
-              !linodeRegionSupportsImageStorage &&
-              flags.imageServiceGen2 &&
-              flags.imageServiceGen2Ga && (
-                <Notice variant="warning">
-                  This Linode’s region doesn’t support local image storage. This
-                  image will be stored in the core compute region that’s{' '}
-                  <Link to="https://techdocs.akamai.com/cloud-computing/docs/images#regions-and-captured-custom-images">
-                    geographically closest
-                  </Link>
-                  . After it’s stored, you can replicate it to other{' '}
-                  <Link to="https://www.linode.com/global-infrastructure/">
-                    core compute regions
-                  </Link>
-                  .
-                </Notice>
-              )}
-            {linodeIsInDistributedRegion && !flags.imageServiceGen2Ga && (
+            {selectedLinode && !linodeRegionSupportsImageStorage && (
               <Notice variant="warning">
-                This Linode is in a distributed compute region. These regions
-                can't store images. The image is stored in the core compute
-                region that is{' '}
-                <Link to="https://www.linode.com/global-infrastructure/">
+                This Linode’s region doesn’t support local image storage. This
+                image will be stored in the core compute region that’s{' '}
+                <Link to="https://techdocs.akamai.com/cloud-computing/docs/images#regions-and-captured-custom-images">
                   geographically closest
                 </Link>
-                . After it's stored, you can replicate it to other core compute
-                regions.
+                . After it’s stored, you can replicate it to other{' '}
+                <Link to="https://www.linode.com/global-infrastructure/">
+                  core compute regions
+                </Link>
+                .
               </Notice>
             )}
             <Controller

@@ -41,9 +41,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(<ImagesLanding />, {
-      flags: { imageServiceGen2: true },
-    });
+    const { getAllByText, getByTestId } = renderWithTheme(<ImagesLanding />);
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -58,7 +56,6 @@ describe('Images Landing Table', () => {
     expect(getAllByText('Image').length).toBe(2);
     expect(getAllByText('Status').length).toBe(2);
     expect(getAllByText('Replicated in').length).toBe(1);
-    expect(getAllByText('Compatibility').length).toBe(1);
     expect(getAllByText('Original Image').length).toBe(1);
     expect(getAllByText('All Replicas').length).toBe(1);
     expect(getAllByText('Created').length).toBe(2);
@@ -326,12 +323,10 @@ describe('Images Landing Table', () => {
     );
 
     const {
+      findAllByLabelText,
       getAllByLabelText,
       getByTestId,
-      findAllByLabelText,
-    } = renderWithTheme(<ImagesLanding />, {
-      flags: { imageServiceGen2: true },
-    });
+    } = renderWithTheme(<ImagesLanding />);
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
