@@ -1,6 +1,6 @@
 /**
  * @file Integration Tests for the CloudPulse DBaaS Alerts Show Detail Page.
- * 
+ *
  * This file contains Cypress tests that validate the display and content of the DBaaS Alerts Show Detail Page in the CloudPulse application.
  * It ensures that all alert details, criteria, and resource information are displayed correctly.
  */
@@ -26,6 +26,7 @@ import {
   severityMap,
   aggregationTypeMap,
 } from 'support/constants/alert';
+import { ui } from 'support/ui';
 
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 const mockAccount = accountFactory.build();
@@ -74,30 +75,38 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
     mockGetAlertDefinitions(service_type, id, alertDetails).as(
       'getDBaaSAlertDefinitions'
     );
+  });
 
+  it('navigates to the Show Details page from the list page', () => {
+    // Navigate to the alert definitions list page with login
     cy.visitWithLogin('/monitor/alerts/definitions');
 
+    // Wait for the alert definitions list API call to complete
     cy.wait('@getAlertDefinitionsList');
 
-    cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
-      // Ensure the alert label is visible
-      cy.findByText(label).should('be.visible');
-
-      // Action button within the alert cell should be visible and clickable
-      cy.get(`[data-qa-alert-action-cell="alert_${id}"]`)
-        .find('button')
-        .should('be.visible')
-        .click();
-    });
-
-    cy.get('[data-qa-action-menu-item="Show Details"]')
+    // Locate the alert with the specified label in the table
+    cy.findByText(label)
       .should('be.visible')
-      .click();
+      .closest('tr')
+      .within(() => {
+        ui.actionMenu
+          .findByTitle(`Action menu for Alert ${label}`)
+          .should('be.visible')
+          .click();
+      });
 
-    cy.wait(['@getDBaaSAlertDefinitions']);
+    // Select the "Show Details" option from the action menu
+    ui.actionMenuItem.findByTitle('Show Details').should('be.visible').click();
+
+    // Verify the URL ends with the expected details page path
+    cy.url().should('endWith', `/detail/${service_type}/${id}`);
   });
 
   it('should correctly display the details of the DBaaS alert in the alert details view', () => {
+    cy.visitWithLogin(
+      `/monitor/alerts/definitions/detail/${service_type}/${id}`
+    );
+
     // Validating contents of Overview Section
     cy.get('[data-qa-section="Overview"]').within(() => {
       // Validate Name field
