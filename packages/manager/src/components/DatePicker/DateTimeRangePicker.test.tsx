@@ -243,7 +243,7 @@ describe('DateTimeRangePicker Component', () => {
 
   it('should set the date range for this month when the "This Month" preset is selected', async () => {
     renderWithTheme(<DateTimeRangePicker {...Props} />);
-    const now = DateTime.now().set({ second: 0 });
+    const now = DateTime.now();
     // Open the presets dropdown
     const presetsDropdown = screen.getByLabelText('Date Presets');
     await userEvent.click(presetsDropdown);
