@@ -90,7 +90,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
           buttonType="primary"
           disabled={attachedFirewallData && attachedFirewallData.results >= 1}
           onClick={() => setIsAddFirewalDrawerOpen(true)}
-          tooltipText="NodeBalanacers can only have 1 Firewall assigned."
+          tooltipText="NodeBalanacers can only have one Firewall assigned."
         >
           Add Firewall
         </Button>
