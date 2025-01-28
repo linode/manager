@@ -1108,19 +1108,10 @@ describe('LKE cluster updates', () => {
    * - Confirms Labels and Taints button exists for a node pool.
    * - Confirms Labels and Taints drawer displays the expected Labels and Taints.
    * - Confirms Labels and Taints can be deleted from a node pool.
-   * - TODO - Part 2: Confirms that Labels and Taints can be added to a node pool.
-   * - TODO - Part 2: Confirms validation and errors are handled gracefully.
+   * - Confirms that Labels and Taints can be added to a node pool.
+   * - Confirms validation and errors are handled gracefully.
    */
-  it('can view and delete node pool labels and taints', () => {
-    // Mock the LKE-E feature flag. TODO: remove in Part 2.
-    mockAppendFeatureFlags({
-      lkeEnterprise: {
-        enabled: true,
-        la: true,
-        ga: false,
-      },
-    });
-
+  it('can view, add, and delete node pool labels and taints', () => {
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
     });
@@ -1160,6 +1151,13 @@ describe('LKE cluster updates', () => {
     });
 
     const mockDrawerTitle = 'Labels and Taints: Linode 2 GB Plan';
+
+    const mockNewLabel = 'my-label-key: my-label-value';
+    const mockNewTaint: Taint = {
+      key: 'my-taint-key',
+      value: 'my-taint-value',
+      effect: 'NoSchedule',
+    };
 
     mockGetLinodes(mockNodePoolInstances);
     mockGetLinodeType(mockType).as('getType');
@@ -1284,6 +1282,117 @@ describe('LKE cluster updates', () => {
 
     // Confirm drawer closes.
     cy.findByText(mockDrawerTitle).should('not.exist');
+
+    // Confirm labels and taints can be added to tables.
+    ui.button
+      .findByTitle('Labels and Taints')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.drawer
+      .findByTitle(mockDrawerTitle)
+      .should('be.visible')
+      .within(() => {
+        // Add a label:
+
+        ui.button
+          .findByTitle('Add Label')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm form button is disabled and label form displays with the correct CTAs.
+        ui.button
+          .findByTitle('Add Label')
+          .should('be.visible')
+          .should('be.disabled');
+
+        ui.button
+          .findByTitle('Add')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm error validation for invalid label input.
+        cy.findByText('Labels must be valid key-value pairs.').should(
+          'be.visible'
+        );
+
+        // Confirm form adds a valid new label.
+        cy.findByLabelText('Label').click().type(mockNewLabel);
+
+        ui.button.findByTitle('Add').click();
+
+        // Confirm add form closes and Add Label button is re-enabled.
+        cy.findByLabelText('Label').should('not.exist');
+        cy.findByLabelText('Add').should('not.exist');
+
+        ui.button
+          .findByTitle('Add Label')
+          .should('be.visible')
+          .should('be.enabled');
+
+        // Confirm new label is visible in table.
+        cy.get(`tr[data-qa-label-row="my-label-key"]`)
+          .should('be.visible')
+          .within(() => {
+            cy.findByText(mockNewLabel).should('be.visible');
+          });
+
+        // Add a taint:
+
+        ui.button
+          .findByTitle('Add Taint')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm form button is disabled and label form displays with the correct CTAs.
+        ui.button.findByTitle('Add Taint').should('be.disabled');
+
+        ui.button
+          .findByTitle('Add')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm error validation for invalid taint input.
+        cy.contains(/Key must start with a letter or number/).should(
+          'be.visible'
+        );
+
+        // Confirm form adds a valid new taint.
+        cy.findByLabelText('Taint')
+          .click()
+          .type(`${mockNewTaint.key}: ${mockNewTaint.value}`);
+
+        ui.autocomplete.findByLabel('Effect').click();
+
+        ui.autocompletePopper
+          .findByTitle(mockNewTaint.effect)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        ui.button.findByTitle('Add').click();
+
+        // Confirm add form closes and Add Taint button is re-enabled.
+        cy.findByLabelText('Taint').should('not.exist');
+        cy.findByLabelText('Add').should('not.exist');
+
+        ui.button.findByTitle('Add Taint').should('be.enabled');
+
+        // Confirm new taint is visible in table.
+        cy.get(`tr[data-qa-taint-row="${mockNewTaint.key}"]`)
+          .should('be.visible')
+          .within(() => {
+            cy.findByText(`${mockNewTaint.key}: ${mockNewTaint.value}`).should(
+              'be.visible'
+            );
+            cy.findByText(mockNewTaint.effect).should('be.visible');
+          });
+      });
   });
 
   describe('LKE cluster updates for DC-specific prices', () => {
