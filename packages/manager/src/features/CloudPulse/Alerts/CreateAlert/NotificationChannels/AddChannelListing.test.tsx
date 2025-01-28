@@ -11,9 +11,30 @@ import { AddChannelListing } from './AddChannelListing';
 import type { CreateAlertDefinitionForm } from '../types';
 import type { NotificationChannel } from '@linode/api-v4';
 
-export const mockNotificationData: NotificationChannel[] = [
+const queryMocks = vi.hoisted(() => ({
+  useAlertNotificationChannelsQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/cloudpulse/alerts', async () => {
+  const actual = await vi.importActual('src/queries/cloudpulse/alerts');
+  return {
+    ...actual,
+    useAlertNotificationChannelsQuery:
+      queryMocks.useAlertNotificationChannelsQuery,
+  };
+});
+
+const mockNotificationData: NotificationChannel[] = [
   notificationChannelFactory.build({ id: 0 }),
 ];
+
+queryMocks.useAlertNotificationChannelsQuery.mockReturnValue({
+  data: mockNotificationData,
+  isError: false,
+  isLoading: false,
+  status: 'success',
+});
+
 describe('Channel Listing component', () => {
   const user = userEvent.setup();
   it('should render the notification channels ', () => {
@@ -26,14 +47,7 @@ describe('Channel Listing component', () => {
     const {
       getByText,
     } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: (
-        <AddChannelListing
-          isNotificationChannelsError={false}
-          isNotificationChannelsLoading={false}
-          name="channel_ids"
-          notificationData={mockNotificationData}
-        />
-      ),
+      component: <AddChannelListing name="channel_ids" />,
       useFormOptions: {
         defaultValues: {
           channel_ids: [mockNotificationData[0].id],
@@ -50,14 +64,7 @@ describe('Channel Listing component', () => {
     const {
       getByTestId,
     } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: (
-        <AddChannelListing
-          isNotificationChannelsError={false}
-          isNotificationChannelsLoading={false}
-          name="channel_ids"
-          notificationData={mockNotificationData}
-        />
-      ),
+      component: <AddChannelListing name="channel_ids" />,
       useFormOptions: {
         defaultValues: {
           channel_ids: [mockNotificationData[0].id],

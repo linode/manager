@@ -7,10 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import {
-  useAlertNotificationChannelsQuery,
-  useCreateAlertDefinition,
-} from 'src/queries/cloudpulse/alerts';
+import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
@@ -112,11 +109,6 @@ export const CreateAlertDefinition = () => {
       }
     }
   });
-  const {
-    data: notificationData,
-    isError: notificationChannelsError,
-    isLoading: notificationChannelsLoading,
-  } = useAlertNotificationChannelsQuery();
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
@@ -179,12 +171,7 @@ export const CreateAlertDefinition = () => {
             maxScrapingInterval={maxScrapeInterval}
             name="trigger_conditions"
           />
-          <AddChannelListing
-            isNotificationChannelsError={notificationChannelsError}
-            isNotificationChannelsLoading={notificationChannelsLoading}
-            name="channel_ids"
-            notificationData={notificationData ?? []}
-          />
+          <AddChannelListing name="channel_ids" />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
