@@ -34,16 +34,15 @@ export const AlertDetailNotification = React.memo(
       isFetching,
     } = useAllAlertNotificationChannelsQuery({}, channelIdOrFilter);
 
+    // early returns for fetching, error and no data case
     if (isFetching) {
       return getAlertNotificationMessage(<CircleProgress />);
     }
-
     if (isError) {
       return getAlertNotificationMessage(
         <ErrorState errorText="Failed to load notification channels." />
       );
     }
-
     if (!channels?.length) {
       return getAlertNotificationMessage(
         <StyledPlaceholder
