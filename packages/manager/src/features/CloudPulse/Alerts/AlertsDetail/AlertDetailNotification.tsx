@@ -15,8 +15,9 @@ import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 import type { Filter } from '@linode/api-v4';
 
 interface NotificationChannelProps {
-  /*
-   * The list of channel ids associated with the alert for which we need to display the notification channels
+  /**
+   * List of channel IDs associated with the alert.
+   * These IDs are used to fetch and display notification channels.
    */
   channelIds: string[];
 }
@@ -24,7 +25,7 @@ export const AlertDetailNotification = React.memo(
   (props: NotificationChannelProps) => {
     const { channelIds } = props;
 
-    // filter for channel id list to be passed to API
+    // Construct filter for API request based on channel IDs
     const channelIdOrFilter: Filter = {
       '+or': channelIds.map((id) => ({ id })),
     };
@@ -35,7 +36,7 @@ export const AlertDetailNotification = React.memo(
       isFetching,
     } = useAllAlertNotificationChannelsQuery({}, channelIdOrFilter);
 
-    // early returns for fetching, error and no data case
+    // Handle loading, error, and empty state scenarios
     if (isFetching) {
       return getAlertNotificationMessage(<CircleProgress />);
     }
@@ -97,8 +98,8 @@ export const AlertDetailNotification = React.memo(
 );
 
 /**
- * @param messageComponent Components like CircleProgess, ErrorState, Placeholder that needs to be displayed
- * @returns JSX element with title
+ * Returns a common UI structure for loading, error, or empty states.
+ * @param content - A React component to display (e.g., CircleProgress, ErrorState, or Placeholder).
  */
 const getAlertNotificationMessage = (messageComponent: React.ReactNode) => {
   return (
