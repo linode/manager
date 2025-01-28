@@ -35,24 +35,21 @@ export const AlertDetailNotification = React.memo(
     } = useAllAlertNotificationChannelsQuery({}, channelIdOrFilter);
 
     if (isFetching) {
-      return <CircleProgress />;
+      return getAlertNotificationMessage(<CircleProgress />);
     }
 
-    if (isError || !channels?.length) {
-      // early return for error and channel empty case
-      return (
-        <Stack gap={2}>
-          <Typography variant="h2">Notification Channels</Typography>
-          {isError && (
-            <ErrorState errorText="Failed to load notification channels." />
-          )}
-          {!channels?.length && (
-            <StyledPlaceholder
-              icon={EntityIcon}
-              title="No notification channels to display."
-            />
-          )}
-        </Stack>
+    if (isError) {
+      return getAlertNotificationMessage(
+        <ErrorState errorText="Failed to load notification channels." />
+      );
+    }
+
+    if (!channels?.length) {
+      return getAlertNotificationMessage(
+        <StyledPlaceholder
+          icon={EntityIcon}
+          title="No notification channels to display."
+        />
       );
     }
 
@@ -98,3 +95,16 @@ export const AlertDetailNotification = React.memo(
     );
   }
 );
+
+/**
+ * @param messageComponent Components like CircleProgess, ErrorState, Placeholder that needs to be displayed
+ * @returns JSX element with title
+ */
+const getAlertNotificationMessage = (messageComponent: React.ReactNode) => {
+  return (
+    <Stack gap={2}>
+      <Typography variant="h2">Notification Channels</Typography>
+      {messageComponent}
+    </Stack>
+  );
+};
