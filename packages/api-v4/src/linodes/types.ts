@@ -582,7 +582,7 @@ export interface CreateLinodeRequest {
   interfaces?: InterfacePayload[] | CreateLinodeInterfacePayload[];
   /**
    * When present, used by the API to determine what type of interface objects (legacy
-   * configinterfaces or new Linode Interfaces) are in the above interfaces field.
+   * config interfaces or new Linode Interfaces) are in the above interfaces field.
    * Can either be 'legacy_config' or 'linode'.
    *
    * If 'legacy_config', interfaces field must be InterfacePayload[]
