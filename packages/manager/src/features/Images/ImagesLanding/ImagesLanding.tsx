@@ -245,12 +245,6 @@ export const ImagesLanding = () => {
     imageEvents
   );
 
-  // TODO Image Service V2: delete after GA
-  const multiRegionsEnabled =
-    (flags.imageServiceGen2 &&
-      manualImages?.data.some((image) => image.regions?.length)) ??
-    false;
-
   // Automatic images with the associated events tied in.
   const automaticImagesEvents = getEventsForImages(
     automaticImages?.data ?? [],
@@ -385,12 +379,10 @@ export const ImagesLanding = () => {
       setSelectedImageId(image.id);
       setIsEditDrawerOpen(true);
     },
-    onManageRegions: multiRegionsEnabled
-      ? (image) => {
-          setSelectedImageId(image.id);
-          setIsManageReplicasDrawerOpen(true);
-        }
-      : undefined,
+    onManageRegions: (image) => {
+      setSelectedImageId(image.id);
+      setIsManageReplicasDrawerOpen(true);
+    },
     onRestore: (image) => {
       setSelectedImageId(image.id);
       setIsRebuildDrawerOpen(true);
@@ -483,29 +475,20 @@ export const ImagesLanding = () => {
               <Hidden smDown>
                 <TableCell>Status</TableCell>
               </Hidden>
-              {multiRegionsEnabled && (
-                <Hidden smDown>
-                  <TableCell>Replicated in</TableCell>
-                </Hidden>
-              )}
-              {multiRegionsEnabled && !flags.imageServiceGen2Ga && (
-                <Hidden smDown>
-                  <TableCell>Compatibility</TableCell>
-                </Hidden>
-              )}
+              <Hidden smDown>
+                <TableCell>Replicated in</TableCell>
+              </Hidden>
               <TableSortCell
                 active={manualImagesOrderBy === 'size'}
                 direction={manualImagesOrder}
                 handleClick={handleManualImagesOrderChange}
                 label="size"
               >
-                {multiRegionsEnabled ? 'Original Image' : 'Size'}
+                Original Image
               </TableSortCell>
-              {multiRegionsEnabled && (
-                <Hidden mdDown>
-                  <TableCell>All Replicas</TableCell>
-                </Hidden>
-              )}
+              <Hidden mdDown>
+                <TableCell>All Replicas</TableCell>
+              </Hidden>
               <Hidden mdDown>
                 <TableSortCell
                   active={manualImagesOrderBy === 'created'}
@@ -516,11 +499,9 @@ export const ImagesLanding = () => {
                   Created
                 </TableSortCell>
               </Hidden>
-              {multiRegionsEnabled && (
-                <Hidden mdDown>
-                  <TableCell>Image ID</TableCell>
-                </Hidden>
-              )}
+              <Hidden mdDown>
+                <TableCell>Image ID</TableCell>
+              </Hidden>
               <TableCell />
             </TableRow>
           </TableHead>
@@ -543,7 +524,6 @@ export const ImagesLanding = () => {
                 handlers={handlers}
                 image={manualImage}
                 key={manualImage.id}
-                multiRegionsEnabled={multiRegionsEnabled}
               />
             ))}
           </TableBody>
