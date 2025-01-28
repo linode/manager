@@ -1,10 +1,10 @@
 import { Autocomplete, TextField } from '@linode/ui';
 import React, { useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
-import type { KubernetesTaintEffect, Taint } from '@linode/api-v4';
+import type { KubernetesTaintEffect } from '@linode/api-v4';
 
 interface Props {
   handleCloseInputForm: () => void;
@@ -13,16 +13,17 @@ interface Props {
 export const TaintInput = (props: Props) => {
   const { handleCloseInputForm } = props;
 
-  const { control, setValue, watch } = useFormContext();
+  const { control } = useFormContext();
 
-  const _taints: Taint[] = watch('taints');
+  const { append } = useFieldArray({
+    control,
+    name: 'taints',
+  });
 
   const [combinedTaint, setCombinedTaint] = useState('');
-  const [taintEffect, setTaintEffect] = useState('NoExecute');
-
-  const handleChangeTaint = (combinedValue: string) => {
-    setCombinedTaint(combinedValue);
-  };
+  const [selectedEffect, setSelectedEffect] = useState<KubernetesTaintEffect>(
+    'NoExecute'
+  );
 
   const effectOptions: { label: string; value: KubernetesTaintEffect }[] = [
     { label: 'NoExecute', value: 'NoExecute' },
@@ -31,18 +32,14 @@ export const TaintInput = (props: Props) => {
   ];
 
   const handleAddTaint = () => {
+    // Trigger validation on textfield.
+
     // Separate the combined taint.
     const [taintKey, taintValue] = combinedTaint
       .split(':')
       .map((str) => str.trim());
 
-    // Validation?
-
-    setValue(
-      'taints',
-      [..._taints, { effect: taintEffect, key: taintKey, value: taintValue }],
-      { shouldDirty: true }
-    );
+    append({ effect: selectedEffect, key: taintKey, value: taintValue });
 
     handleCloseInputForm();
   };
@@ -56,27 +53,28 @@ export const TaintInput = (props: Props) => {
               {...field}
               error={!!fieldState.error}
               helperText={fieldState.error?.message}
+              inputRef={field.ref}
               label="Taint"
-              onChange={(e) => handleChangeTaint(e.target.value)}
+              onChange={(e) => setCombinedTaint(e.target.value)}
               placeholder="myapp.io/app: production"
+              required
               value={combinedTaint}
             />
           );
         }}
         control={control}
-        name="taints"
+        name="taints.combinedValue"
       />
       <Controller
         render={({}) => (
           <Autocomplete
             value={
-              effectOptions.find((option) => option.value === taintEffect) ??
+              effectOptions.find((option) => option.value === selectedEffect) ??
               undefined
             }
-            data-qa-ticket-entity-type
             disableClearable
             label="Effect"
-            onChange={(e, option) => setTaintEffect(option.label)}
+            onChange={(e, option) => setSelectedEffect(option.value)}
             options={effectOptions}
           />
         )}
