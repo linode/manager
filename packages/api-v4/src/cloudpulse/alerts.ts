@@ -6,7 +6,12 @@ import Request, {
   setParams,
   setXFilter,
 } from '../request';
-import { Alert, AlertServiceType, CreateAlertDefinitionPayload, NotificationChannel } from './types';
+import {
+  Alert,
+  AlertServiceType,
+  CreateAlertDefinitionPayload,
+  NotificationChannel,
+} from './types';
 import { BETA_API_ROOT as API_ROOT } from '../constants';
 import { Params, Filter, ResourcePage } from '../types';
 

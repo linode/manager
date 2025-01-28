@@ -10,20 +10,26 @@ import { getChipLabels } from '../Utils/utils';
 import { AlertDetailRow } from './AlertDetailRow';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 
-interface NotificationProps {
+import type { Filter } from '@linode/api-v4';
+
+interface NotificationChannelProps {
   /*
    * The list of channel ids associated with the alert for which we need to display the notification channels
    */
   channelIds: string[];
 }
-export const AlertDetailNotification = (props: NotificationProps) => {
+export const AlertDetailNotification = (props: NotificationChannelProps) => {
   const { channelIds } = props;
+
+  const channelIdOrFilter: Filter = {
+    '+or': channelIds.map((id) => ({ id })),
+  };
 
   const {
     data: channels,
     isError,
     isFetching,
-  } = useAllAlertNotificationChannelsQuery({}, { id: channelIds.join(',') });
+  } = useAllAlertNotificationChannelsQuery({}, channelIdOrFilter);
 
   if (isFetching) {
     return <CircleProgress />;
