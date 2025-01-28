@@ -1,4 +1,4 @@
-import { PlacementGroup, Region } from '@linode/api-v4';
+import type { PlacementGroup, Region } from '@linode/api-v4';
 
 export interface PlacementGroupsDrawerPropsBase {
   onClose: () => void;
@@ -15,6 +15,7 @@ export interface PlacementGroupsCreateDrawerProps {
 
 export interface PlacementGroupsEditDrawerProps {
   disableEditButton: boolean;
+  isFetching: boolean;
   onClose: PlacementGroupsDrawerPropsBase['onClose'];
   onPlacementGroupEdit?: (placementGroup: PlacementGroup) => void;
   open: PlacementGroupsDrawerPropsBase['open'];

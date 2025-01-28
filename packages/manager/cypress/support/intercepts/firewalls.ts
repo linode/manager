@@ -5,7 +5,11 @@ import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 
-import type { Firewall, FirewallTemplate } from '@linode/api-v4';
+import type {
+  Firewall,
+  FirewallDevice,
+  FirewallTemplate,
+} from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch Firewalls.
@@ -99,6 +103,22 @@ export const interceptUpdateFirewallLinodes = (
   return cy.intercept(
     'POST',
     apiMatcher(`networking/firewalls/${firewallId}/devices`)
+  );
+};
+
+/**
+ * Mocks the POST request to add a Firewall device.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockAddFirewallDevice = (
+  firewallId: number,
+  firewallDevice: FirewallDevice
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`networking/firewalls/${firewallId}/devices`),
+    firewallDevice
   );
 };
 

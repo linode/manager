@@ -70,7 +70,8 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     <Grid
       sx={{
         flex: 1,
-        padding: 0,
+        paddingX: 1,
+        paddingY: 0,
       }}
       alignItems="center"
       container
