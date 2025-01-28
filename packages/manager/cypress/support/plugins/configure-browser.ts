@@ -53,21 +53,8 @@ export const configureBrowser: CypressPlugin = (on, _config) => {
       },
     };
 
-    // Disable Chrome's new headless implementation.
-    // This attempts to resolve indefinite test hanging.
-    //
-    // See also: https://github.com/cypress-io/cypress/issues/27264
-    if (browser.name === 'chrome' && browser.isHeadless) {
-      // If present, remove the `--headless=new` command line argument.
-      launchOptions.args = launchOptions.args.filter((arg: string) => {
-        return arg !== '--headless=new';
-      });
-      // Append `--headless=old` and `--disable-dev-shm-usage` args.
-      launchOptions.args.push('--headless=old');
-      launchOptions.args.push('--disable-dev-shm-usage');
-    }
-
     displayBrowserInfo(browser, launchOptions);
+
     return launchOptions;
   });
 };

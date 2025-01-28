@@ -121,6 +121,7 @@ export const LinodeEntityDetail = (props: Props) => {
             linodeId={linode.id}
             linodeIsInDistributedRegion={linodeIsInDistributedRegion}
             linodeLabel={linode.label}
+            linodeLkeClusterId={linode.lke_cluster_id}
             numCPUs={linode.specs.vcpus}
             numVolumes={numberOfVolumes}
             region={linode.region}
