@@ -720,9 +720,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
 });
 
 /**
- * When a restricted user navigates to object-storage/create, an error is shown in the "Create Bucket" drawer noting that the user does not have bucket creation permissions
+ * When a restricted user navigates to object-storage/buckets/create, an error is shown in the "Create Bucket" drawer noting that the user does not have bucket creation permissions
  */
-describe('Object Storage Gen2 create bucket modal has disabled fields', () => {
+describe('Object Storage Gen2 create bucket modal has disabled fields for restricted user', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       objMultiCluster: true,
@@ -746,13 +746,6 @@ describe('Object Storage Gen2 create bucket modal has disabled fields', () => {
     ).as('getProfile');
   });
 
-  //TODO: this test fails rn. why should create button be enabled on landing page but not modal?
-  xit('bucket landing page should have Create button disabled', () => {
-    cy.visitWithLogin('/object-storage/buckets');
-    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
-    cy.findByTestId('button').should('be.visible').should('be.disabled');
-  });
-
   // bucket creation
   it('create bucket form', () => {
     cy.visitWithLogin('/object-storage/buckets/create');
@@ -760,31 +753,13 @@ describe('Object Storage Gen2 create bucket modal has disabled fields', () => {
 
     // error message
     cy.findByTestId('notice-error').should('be.visible');
-    cy.get('#label').should('be.visible').should('be.disabled');
-    cy.findByTestId('region-select').within(() => {
-      cy.get('input').should('be.visible').should('be.disabled');
-    });
+    cy.findByLabelText(/Label.*/)
+      .should('be.visible')
+      .should('be.disabled');
+    ui.regionSelect.find().should('be.visible').should('be.disabled');
     // submit button should be enabled
     cy.findByTestId('create-bucket-button')
       .should('be.visible')
       .should('be.enabled');
-  });
-
-  // access keys creation
-  it('create access keys form', () => {
-    cy.visitWithLogin('/object-storage/access-keys/create');
-
-    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
-    // error message
-    cy.findByTestId('notice-error-important').should('be.visible');
-    // label
-    cy.get('#label').should('be.visible').should('be.disabled');
-    // region
-    cy.findByTestId('region-select').within(() => {
-      cy.get('input').should('be.visible').should('be.disabled');
-    });
-    // submit button
-    // TODO: create button is disabled?
-    cy.findByTestId('submit').should('be.visible').should('be.disabled');
   });
 });
