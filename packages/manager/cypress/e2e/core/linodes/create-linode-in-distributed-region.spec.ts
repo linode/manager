@@ -54,7 +54,7 @@ describe('Create Linode in Distributed Region', () => {
     cy.wait(['@getFeatureFlags', '@getRegions', '@getLinodeTypes']);
 
     // Pick a region from the distributed region list
-    cy.get('[data-testid="region"]').within(() => {
+    cy.findByTestId('region').within(() => {
       ui.tabList.findTabByTitle('Distributed').should('be.visible').click();
       linodeCreatePage.selectRegionById(mockRegion.id);
     });
@@ -65,8 +65,7 @@ describe('Create Linode in Distributed Region', () => {
     linodeCreatePage.setRootPassword(rootPass);
 
     cy.get('[data-qa-tp="Linode Plan"]').within(() => {
-      cy.get('[data-qa-plan-row="Dedicated 4 GB"]')
-        .closest('tr')
+      cy.findByRole('row', { name: /Dedicated 4 GB/i })
         .should('be.visible')
         .click();
     });
