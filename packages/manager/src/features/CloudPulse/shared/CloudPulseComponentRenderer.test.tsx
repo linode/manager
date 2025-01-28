@@ -6,6 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
+  getNodeTypeProperties,
   getRegionProperties,
   getResourcesProperties,
   getTagsProperties,
@@ -13,6 +14,7 @@ import {
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 const linodeFilterConfig = FILTER_CONFIG.get('linode');
+const dbaasFilterConfig = FILTER_CONFIG.get('dbaas');
 
 describe('ComponentRenderer component tests', () => {
   it('it should render provided tag filter in props', () => {
@@ -120,4 +122,39 @@ describe('ComponentRenderer component tests', () => {
       );
       expect(getByPlaceholderText('Select Resources')).toBeDefined();
     });
+
+  it('it should render provided node type filter in props', () => {
+    const resourceProps = dbaasFilterConfig?.filters.find(
+      (filter) => filter.configuration.filterKey === 'node_type'
+    );
+    const mockDashboard = dashboardFactory.build({
+      service_type: 'dbaas',
+    });
+
+    if (resourceProps === undefined) {
+      expect(true, 'resourceProps to be defined').toEqual(false); // fail test
+      return;
+    }
+
+    const { getByPlaceholderText } = renderWithTheme(
+      <Grid item sx={{ marginLeft: 2 }} xs>
+        {RenderComponent({
+          componentKey: 'node_type',
+          componentProps: {
+            ...getNodeTypeProperties(
+              {
+                config: resourceProps,
+                dashboard: mockDashboard,
+                dependentFilters: { resource_id: '1' },
+                isServiceAnalyticsIntegration: false,
+              },
+              vi.fn()
+            ),
+          },
+          key: 'node_type',
+        })}
+      </Grid>
+    );
+    expect(getByPlaceholderText('Select a Node Type')).toBeDefined();
+  });
 });

@@ -14,6 +14,8 @@ export const SIZE = 'size';
 
 export const LABEL = 'label';
 
+export const NODE_TYPE = 'node_type';
+
 export const REFRESH = 'refresh';
 
 export const TIME_GRANULARITY = 'timeGranularity';

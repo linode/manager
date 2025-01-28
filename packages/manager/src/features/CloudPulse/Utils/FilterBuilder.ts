@@ -1,4 +1,5 @@
 import {
+  NODE_TYPE,
   REGION,
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
@@ -10,6 +11,10 @@ import { CloudPulseSelectTypes } from './models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
+import type {
+  CloudPulseNodeTypeFilterProps,
+  CloudPulseNodeTypes,
+} from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
@@ -34,6 +39,7 @@ import type {
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
   dashboard: Dashboard;
+  database_ids?: number[] | undefined;
   dependentFilters?: {
     [key: string]: FilterValueType;
   };
@@ -155,6 +161,30 @@ export const getResourcesProperties = (
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: buildXFilter(config, dependentFilters ?? {}),
+  };
+};
+
+export const getNodeTypeProperties = (
+  props: CloudPulseFilterProperties,
+  handleNodeTypeChange: (
+    nodeType: CloudPulseNodeTypes | null,
+    savePref?: boolean
+  ) => void
+): CloudPulseNodeTypeFilterProps => {
+  const { filterKey, name: label, placeholder } = props.config.configuration;
+  const { dashboard, database_ids, dependentFilters, preferences } = props;
+  return {
+    database_ids,
+    defaultValue: preferences?.[NODE_TYPE],
+    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+      filterKey,
+      dependentFilters ?? {},
+      dashboard
+    ),
+    handleNodeTypeChange,
+    label,
+    placeholder,
+    savePreferences: true,
   };
 };
 
@@ -419,7 +449,8 @@ export const constructAdditionalRequestFilters = (
         operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
         value: Array.isArray(filter.filterValue)
           ? Array.of(filter.filterValue).join(',')
-          : String(filter.filterValue),
+          : String(filter.filterValue).charAt(0).toLowerCase() +
+            String(filter.filterValue).slice(1),
       });
     }
   }

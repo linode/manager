@@ -141,6 +141,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
+        dependency: ['resource_id'],
         filterKey: 'node_type',
         filterType: 'string',
         isFilterable: true, // isFilterable -- this determines whether you need to pass it metrics api
@@ -148,19 +149,8 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMultiSelect: false,
         name: 'Node Type',
         neededInServicePage: true,
-        options: [
-          {
-            id: 'primary',
-            label: 'Primary',
-          },
-          {
-            id: 'secondary',
-            label: 'Secondary',
-          },
-        ],
         placeholder: 'Select a Node Type',
         priority: 5,
-        type: CloudPulseSelectTypes.static,
       },
       name: 'Node Type',
     },

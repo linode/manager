@@ -28,6 +28,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
         dashboard={dashboardFactory.build({
           service_type: 'dbaas',
         })}
+        database_ids={[1, 2]}
         emitFilterChange={vi.fn()}
         handleToggleAppliedFilter={vi.fn()}
         isServiceAnalyticsIntegration={false}
@@ -36,5 +37,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
 
     expect(getByPlaceholderText('Select a Database Engine')).toBeDefined();
     expect(getByPlaceholderText('Select a Region')).toBeDefined();
+    expect(getByPlaceholderText('Select Database Clusters')).toBeDefined();
+    expect(getByPlaceholderText('Select a Node Type')).toBeDefined();
   });
 });
