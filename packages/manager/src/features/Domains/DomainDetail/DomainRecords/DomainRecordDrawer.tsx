@@ -4,16 +4,7 @@ import {
 } from '@linode/api-v4/lib/domains';
 import { Autocomplete, Notice, TextField } from '@linode/ui';
 import produce from 'immer';
-import {
-  cond,
-  defaultTo,
-  equals,
-  lensPath,
-  path,
-  pathOr,
-  pick,
-  set,
-} from 'ramda';
+import { cond, defaultTo, equals, lensPath, path, pick, set } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -592,7 +583,7 @@ export class DomainRecordDrawer extends React.Component<
      * This should be done on the API side, but several breaking
      * configurations will currently succeed on their end.
      */
-    const _domain = pathOr('', ['name'], data);
+    const _domain = data?.name ?? '';
     const invalidCNAME =
       data.type === 'CNAME' && !isValidCNAME(_domain, records);
 
