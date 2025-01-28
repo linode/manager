@@ -13,7 +13,7 @@ import type {
 } from './DomainRecordDrawer';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-export interface AdjustedTextFieldProps {
+interface AdjustedTextFieldProps {
   errorText?: string;
   helperText?: string;
   label: string;
