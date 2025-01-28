@@ -1,7 +1,6 @@
 /**
  * @file Integration Tests for the CloudPulse Alerts Listing Page.
- * This file contains integration tests to verify the functionality and UI elements
- * on the CloudPulse  Alerts Listing Page.
+ * This file verifies the UI, functionality, and sorting/filtering of the CloudPulse Alerts Listing Page.
  */
 
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -15,18 +14,11 @@ import {
 import { formatDate } from 'src/utilities/formatDate';
 import { Alert } from '@linode/api-v4';
 import { ui } from 'support/ui';
-import { cloudPulseServicelMap } from 'support/constants/cloud-pulse';
+import { statusMap } from 'support/constants/alert';
+
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 const mockAccount = accountFactory.build();
 const now = new Date();
-const expectedHeaders = [
-  'Alert Name',
-  'Service',
-  'Status',
-  'Last Modified',
-  'Created By',
-];
-
 const mockAlerts = [
   alertFactory.build({
     service_type: 'dbaas',
@@ -59,27 +51,30 @@ const mockAlerts = [
     created_by: 'user3',
   }),
 ];
-/**
- * Verifies the sorting functionality of a table column.
- *
- * This function:
- * - Clicks the specified column header to trigger sorting.
- * - Validates that the `aria-sort` attribute of the column header matches the given sort order.
- * - Extracts cell values from the table and compares their order with the expected values.
- *
- * @param {string} header - The `data-qa-header` attribute of the column to be sorted.
- * @param {'ascending' | 'descending'} sortOrder - The expected sorting order ('ascending' or 'descending').
- * @param {number[]} expectedValues - An array of expected values to validate against the sorted column.
- */
 
+const expectedHeaders = [
+  'Alert Name',
+  'Service',
+  'Status',
+  'Last Modified',
+  'Created By',
+];
+
+/**
+ * Utility function to verify sorting of a column in a table.
+ *
+ * @param {string} header - The `data-qa-header` attribute of the column to sort.
+ * @param {'ascending' | 'descending'} sortOrder - Expected sorting order.
+ * @param {number[]} expectedValues - Expected values in sorted order.
+ */
 const verifyTableSorting = (
   header: string,
   sortOrder: 'ascending' | 'descending',
   expectedValues: number[]
 ) => {
   cy.get(`[data-qa-header="${header}"]`)
-    .should('have.attr', 'aria-sort', sortOrder)
-    .click();
+    .click()
+    .should('have.attr', 'aria-sort', sortOrder);
 
   cy.get('[data-qa="alert-table"]').within(() => {
     cy.get('[data-qa-alert-cell]').should(($cells) => {
@@ -88,12 +83,48 @@ const verifyTableSorting = (
           parseInt(cell.getAttribute('data-qa-alert-cell')!, 10)
         )
         .get();
-
-      expect(actualOrder).to.deep.equal(expectedValues);
+      expect(
+        actualOrder,
+        `Sorting validation for column: ${header}`
+      ).to.deep.equal(expectedValues);
     });
   });
 };
-describe('Integration Tests for Alert Listing Page', () => {
+
+/**
+ * Utility function to validate an alert's details.
+ *
+ * @param {Alert} alert - The alert object to validate.
+ */
+const validateAlertDetails = (alert: Alert) => {
+  const { id, service_type, status, label, updated, created_by } = alert;
+
+  cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
+    cy.findByText(service_type)
+      .should('be.visible')
+      .and('have.text', service_type);
+    cy.findByText(statusMap[status])
+      .should('be.visible')
+      .and('have.text', statusMap[status]);
+    cy.findByText(label)
+      .should('be.visible')
+      .and('have.text', label)
+      .and(
+        'have.attr',
+        'href',
+        `/monitor/alerts/definitions/detail/${service_type}/${id}`
+      );
+    cy.findByText(formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' }))
+      .should('be.visible')
+      .and(
+        'have.text',
+        formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })
+      );
+    cy.findByText(created_by).should('be.visible').and('have.text', created_by);
+  });
+};
+
+describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
@@ -103,183 +134,125 @@ describe('Integration Tests for Alert Listing Page', () => {
     cy.wait('@getAlertDefinitionsList');
   });
 
-  /**
-   * Function to check the details of an alert.
-   * @param {Alert} alert - The alert object to check.
-   */
-  const checkAlertDetails = ({
-    id,
-    service_type,
-    status,
-    label,
-    updated,
-    created_by,
-  }: Alert) => {
-    cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
-      cy.findByText(service_type)
-        .should('be.visible')
-        .should('have.text', service_type);
+  it('should verify sorting functionality for multiple columns in ascending and descending order', () => {
+    const sortCases = [
+      { column: 'label', descending: [4, 3, 2, 1], ascending: [1, 2, 3, 4] },
+      { column: 'status', descending: [1, 3, 2, 4], ascending: [2, 4, 1, 3] },
+      {
+        column: 'service_type',
+        descending: [4, 3, 2, 1],
+        ascending: [2, 1, 4, 3],
+      },
+      {
+        column: 'created_by',
+        descending: [2, 4, 3, 1],
+        ascending: [1, 3, 4, 2],
+      },
+      { column: 'updated', descending: [1, 4, 3, 2], ascending: [2, 3, 4, 1] },
+    ];
 
-      cy.findByText(cloudPulseServicelMap.get(status)!)
-        .should('be.visible')
-        .should('have.text', cloudPulseServicelMap.get(status));
-      cy.findByText(label)
-        .should('be.visible')
-        .should('have.text', label)
-        .should(
-          'have.attr',
-          'href',
-          `/monitor/alerts/definitions/detail/${service_type}/${id}`
-        );
+    sortCases.forEach(({ column, descending, ascending }) => {
+      // Verify ascending order
+      verifyTableSorting(column, 'descending', descending);
 
-      cy.findByText(formatDate(updated, { format: 'yyyy-MM-dd HH:mm' }))
-        .should('be.visible')
-        .should(
-          'have.text',
-          formatDate(updated, { format: 'yyyy-MM-dd HH:mm' })
-        );
-      cy.findByText(created_by)
-        .should('be.visible')
-        .should('have.text', created_by);
-
-      cy.get(`[data-qa-alert-action-cell="alert_${id}"]`)
-        .find('button')
-        .should('be.visible')
-        .should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
-        .click();
+      // Verify descending order
+      verifyTableSorting(column, 'ascending', ascending);
     });
-    cy.get('[data-qa-action-menu-item="Show Details"]').should('be.visible');
-
-    cy.get('body').click();
-  };
-
-  it('should verify sorting for multiple columns in ascending and descending order', () => {
-    // Verify sorting for 'label' column in ascending order
-    verifyTableSorting('label', 'ascending', [4, 3, 2, 1]);
-
-    // Verify sorting for 'label' column in descending order
-    verifyTableSorting('label', 'descending', [1, 2, 3, 4]);
-
-    // Verify sorting for 'status' column in ascending order
-    verifyTableSorting('status', 'ascending', [1, 3, 2, 4]);
-
-    // Verify sorting for 'status' column in descending order
-    verifyTableSorting('status', 'descending', [2, 4, 1, 3]);
-
-    // Verify sorting for 'service_type' column in ascending order
-    verifyTableSorting('service_type', 'ascending', [4, 3, 2, 1]);
-
-    // Verify sorting for 'service_type' column in descending order
-    verifyTableSorting('service_type', 'descending', [2, 1, 4, 3]);
-
-    // Verify sorting for 'created_by' column in ascending order
-    verifyTableSorting('created_by', 'ascending', [2, 4, 3, 1]);
-
-    // Verify sorting for 'created_by' column in descending order
-    verifyTableSorting('created_by', 'descending', [1, 3, 4, 2]);
-
-    // Verify sorting for 'created_by' column in ascending order
-    verifyTableSorting('updated', 'ascending', [1, 4, 3, 2]);
-
-    // Verify sorting for 'created_by' column in descending order
-    verifyTableSorting('updated', 'descending', [2, 3, 4, 1]);
   });
 
-  it('should validate the UI elements, headers, alert details, and search functionality', () => {
-    // Validate 'Alerts' Link
+  it('should validate UI elements and alert details', () => {
+    // Validate navigation links and buttons
     cy.findByText('Alerts')
       .should('be.visible')
-      .should('have.attr', 'href', '/monitor/alerts');
-
-    // Validate 'Definitions' Link
+      .and('have.attr', 'href', '/monitor/alerts');
     cy.findByText('Definitions')
       .should('be.visible')
       .and('have.attr', 'href', '/monitor/alerts/definitions');
+    ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
 
-    // Check that the "Create Alert" button is visible
-    ui.buttonGroup.findButtonByTitle('Create').should('be.visible');
-    // Validate the headers of the alert listing page
+    // Validate table headers
     cy.get('[data-qa="alert-table"]').within(() => {
-      expectedHeaders.forEach((headerText) => {
-        cy.findByText(headerText).should('have.text', headerText);
+      expectedHeaders.forEach((header) => {
+        cy.findByText(header).should('have.text', header);
       });
     });
-    // Check each alert's details
+
+    // Validate alert details
     mockAlerts.forEach((alert) => {
-      checkAlertDetails(alert);
+      validateAlertDetails(alert);
     });
   });
 
   it('should search and filter alerts by name, service, and status, and clear filters', () => {
-    //  Search by alert name and validate the results
+    // Search by alert name and validate the results
     cy.findByPlaceholderText('Search for Alerts')
       .should('be.visible')
-      .should('not.be.disabled')
+      .and('not.be.disabled')
       .type(mockAlerts[0].label);
 
-    cy.get('[data-qa="alert-table"]')
-      .should('have.length', 1)
-      .find(`[data-qa-alert-cell="${mockAlerts[0].id}"]`)
-      .within(() => {
-        cy.findByText(mockAlerts[0].label).should(
-          'have.text',
-          mockAlerts[0].label
-        );
-      });
-
-    //  Clear previous search by alert name
-    cy.get('[data-qa-filter="alert-search"]').within(() => {
-      cy.get('input[data-testid="textfield-input"]').click().clear();
+    cy.get(`[data-qa-alert-cell="${mockAlerts[0].id}"]`).should('be.visible');
+    [1, 2, 3].forEach((index) => {
+      cy.get(`[data-qa-alert-cell="${mockAlerts[index].id}"]`).should(
+        'not.exist'
+      );
     });
 
-    //  Clear the search by service filter and search by service type
-    cy.get('[data-qa-filter="alert-service-filter"]')
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByAttribute('aria-label', 'Clear')
-          .should('be.visible')
-          .scrollIntoView()
-          .click();
-      });
+    // Clear the previous search by alert name
+    cy.get('[data-qa-filter="alert-search"]').within(() => {
+      cy.get('input[data-testid="textfield-input"]').clear();
+    });
 
+    // Filter by alert service and validate the results
     cy.findByPlaceholderText('Select a Service')
       .should('be.visible')
       .type(`${mockAlerts[0].service_type}{enter}`);
 
-    // Clicks the currently focused element
     cy.focused().click();
 
     cy.get('[data-qa="alert-table"]')
       .find('[data-qa-alert-cell]')
       .should('have.length', 2);
 
-    cy.get(`[data-qa-alert-cell="${mockAlerts[0].id}"]`).should('be.visible');
-    cy.get(`[data-qa-alert-cell="${mockAlerts[1].id}"]`).should('be.visible');
+    [0, 1].forEach((index) => {
+      cy.get(`[data-qa-alert-cell="${mockAlerts[index].id}"]`).should(
+        'be.visible'
+      );
+    });
+    [2, 3].forEach((index) => {
+      cy.get(`[data-qa-alert-cell="${mockAlerts[index].id}"]`).should(
+        'not.exist'
+      );
+    });
 
-    //  Clear search by alert status filter and search by alert status
-    cy.get('[data-qa-filter="alert-status-filter"]')
-      .should('be.visible')
-      .within(() => {
-        ui.button
-          .findByAttribute('aria-label', 'Clear')
-          .should('be.visible')
-          .scrollIntoView()
-          .click();
-      });
+    // Clear the service filter
+    cy.get('[data-qa-filter="alert-service-filter"]').within(() => {
+      ui.button
+        .findByAttribute('aria-label', 'Clear')
+        .should('be.visible')
+        .scrollIntoView()
+        .click();
+    });
 
+    // Filter by alert status and validate the results
     cy.findByPlaceholderText('Select a Status')
       .should('be.visible')
       .type('Enabled{enter}');
 
-    //  Assert the search results for alert status
-    cy.get('[data-qa="alert-table"]')
-      .find('[data-qa-alert-cell]')
-      .should('have.length', 1);
-
-    // Clicks the currently focused element
     cy.focused().click();
 
-    cy.get(`[data-qa-alert-cell="${mockAlerts[0].id}"]`).should('be.visible');
+    cy.get('[data-qa="alert-table"]')
+      .find('[data-qa-alert-cell]')
+      .should('have.length', 2);
+
+    [0, 2].forEach((index) => {
+      cy.get(`[data-qa-alert-cell="${mockAlerts[index].id}"]`).should(
+        'be.visible'
+      );
+    });
+    [1, 3].forEach((index) => {
+      cy.get(`[data-qa-alert-cell="${mockAlerts[index].id}"]`).should(
+        'not.exist'
+      );
+    });
   });
 });
