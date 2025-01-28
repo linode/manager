@@ -24,6 +24,7 @@ export const AlertDetailNotification = React.memo(
   (props: NotificationChannelProps) => {
     const { channelIds } = props;
 
+    // filter for channel id list to be passed to API
     const channelIdOrFilter: Filter = {
       '+or': channelIds.map((id) => ({ id })),
     };
