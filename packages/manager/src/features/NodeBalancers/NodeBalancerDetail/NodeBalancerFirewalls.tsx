@@ -2,6 +2,7 @@ import { Box, Button, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -81,10 +82,16 @@ export const NodeBalancerFirewalls = (props: Props) => {
 
   return (
     <Stack spacing={1}>
-      <Box alignItems="center" display="flex" justifyContent="space-between">
+      <Box
+        alignItems="center"
+        display="flex"
+        flexWrap={{ sm: 'unset', xs: 'wrap' }}
+        gap={1}
+        justifyContent="space-between"
+      >
         <Typography>
-          Cloud Firewall inbound and outbound rules are applied to Compute
-          Instances, but only inbound rules are applied to NodeBalancers.
+          Use a <Link to="/firewalls">Firewall</Link> to control network traffic
+          to your NodeBalancer. Only inbound rules are applied to NodeBalancers.
         </Typography>
         <Button
           buttonType="primary"
