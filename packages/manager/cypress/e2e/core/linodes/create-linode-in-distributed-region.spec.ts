@@ -1,8 +1,14 @@
 import { Region } from '@linode/api-v4';
-import { linodeFactory, regionFactory } from 'src/factories';
+import { linodeFactory, linodeTypeFactory, regionFactory } from 'src/factories';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockCreateLinode } from 'support/intercepts/linodes';
-import { mockGetRegions } from 'support/intercepts/regions';
+import {
+  mockCreateLinode,
+  mockGetLinodeTypes,
+} from 'support/intercepts/linodes';
+import {
+  mockGetRegionAvailability,
+  mockGetRegions,
+} from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomString } from 'support/util/random';
@@ -15,14 +21,21 @@ describe('Create Linode in Distributed Region', () => {
    */
   it('should be able to select a distributed region', () => {
     // create mocks
-    const regionOptions: Partial<Region> = {
+    const mockRegionOptions: Partial<Region> = {
       capabilities: ['Linodes', 'Distributed Plans'],
       site_type: 'distributed',
     };
-    const region = extendRegion(regionFactory.build(regionOptions));
+    const mockRegion = extendRegion(regionFactory.build(mockRegionOptions));
+    const mockLinodeTypes = [
+      linodeTypeFactory.build({
+        id: 'dedicated-edge-1',
+        label: 'Dedicated 4GB',
+        class: 'dedicated',
+      }),
+    ];
     const mockLinode = linodeFactory.build({
       label: randomLabel(),
-      region: region.id,
+      region: mockRegion.id,
     });
     const rootPass = randomString(32);
 
@@ -32,24 +45,27 @@ describe('Create Linode in Distributed Region', () => {
         la: true,
       },
     }).as('getFeatureFlags');
-    mockGetRegions([region]).as('getRegions');
+    mockGetRegions([mockRegion]).as('getRegions');
+    mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
+    mockGetRegionAvailability(mockRegion.id, []).as('getRegionAvailability');
     mockCreateLinode(mockLinode).as('createLinode');
 
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getRegions']);
+    cy.wait(['@getFeatureFlags', '@getRegions', '@getLinodeTypes']);
 
     // Pick a region from the distributed region list
     cy.get('[data-testid="region"]').within(() => {
       ui.tabList.findTabByTitle('Distributed').should('be.visible').click();
-      linodeCreatePage.selectRegionById(region.id);
+      linodeCreatePage.selectRegionById(mockRegion.id);
     });
 
+    cy.wait(['@getRegionAvailability']);
     linodeCreatePage.setLabel(mockLinode.label);
     linodeCreatePage.selectImage('Debian 11');
     linodeCreatePage.setRootPassword(rootPass);
 
     cy.get('[data-qa-tp="Linode Plan"]').within(() => {
-      cy.get('[data-qa-plan-row="Nanode 1 GB"]')
+      cy.get('[data-qa-plan-row="Dedicated 4 GB"]')
         .closest('tr')
         .should('be.visible')
         .click();
