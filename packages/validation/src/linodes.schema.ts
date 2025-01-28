@@ -678,17 +678,30 @@ export const CreateLinodeSchema = object({
     // .concat(rootPasswordValidation),
     otherwise: (schema) => schema.notRequired(),
   }),
-  interfaces: array().of(
-    lazy((item) => {
-      if (item && typeof item === 'object') {
-        if ('purpose' in item) {
-          return ConfigProfileInterfaceSchema;
-        } else {
-          return CreateLinodeInterfaceSchema;
-        }
+  interfaces: array().when(
+    'interface_generation',
+    ([interface_generation], schema) => {
+      if (interface_generation === 'linode') {
+        return schema.of(CreateLinodeInterfaceSchema);
       }
-      return ConfigProfileInterfaceSchema;
-    })
+
+      if (interface_generation === 'legacy_config') {
+        return schema.of(ConfigProfileInterfaceSchema);
+      }
+
+      return schema.of(
+        lazy((item) => {
+          if (item && typeof item === 'object') {
+            if ('purpose' in item) {
+              return ConfigProfileInterfaceSchema;
+            } else {
+              return CreateLinodeInterfaceSchema;
+            }
+          }
+          return ConfigProfileInterfaceSchema;
+        })
+      );
+    }
   ),
   interface_generation: string(),
   network_helper: boolean(),
