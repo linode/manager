@@ -1,8 +1,7 @@
-import Algolia, { SearchClient } from 'algoliasearch';
-import { pathOr } from 'ramda';
+/* eslint-disable react-refresh/only-export-components */
+import Algolia from 'algoliasearch';
 import * as React from 'react';
 
-import { Item } from 'src/components/EnhancedSelect/Select';
 import {
   ALGOLIA_APPLICATION_ID,
   ALGOLIA_SEARCH_KEY,
@@ -10,6 +9,8 @@ import {
   DOCS_BASE_URL,
 } from 'src/constants';
 import { truncate } from 'src/utilities/truncate';
+
+import type { SearchClient } from 'algoliasearch';
 
 interface SearchHit {
   _highlightResult?: any;
@@ -24,7 +25,7 @@ export interface AlgoliaState {
   searchAlgolia: (inputValue: string) => void;
   searchEnabled: boolean;
   searchError?: string;
-  searchResults: [Item[], Item[]];
+  searchResults: [ConvertedItems[], ConvertedItems[]];
 }
 
 interface SearchOptions {
@@ -36,11 +37,17 @@ interface AlgoliaContent {
   results: unknown;
 }
 
+export interface ConvertedItems {
+  data: { href: string; source: string };
+  label: string;
+  value: number;
+}
+
 // Functional helper methods
 export const convertDocsToItems = (
   highlight: boolean,
   hits: SearchHit[] = []
-): Item[] => {
+): ConvertedItems[] => {
   return hits.map((hit: SearchHit, idx: number) => {
     return {
       data: {
@@ -56,7 +63,7 @@ export const convertDocsToItems = (
 export const convertCommunityToItems = (
   highlight: boolean,
   hits: SearchHit[] = []
-): Item[] => {
+): ConvertedItems[] => {
   return hits.map((hit: SearchHit, idx: number) => {
     return {
       data: {
@@ -111,23 +118,7 @@ export default (options: SearchOptions) => (
 ) => {
   const { highlight, hitsPerPage } = options;
   class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {
-    componentDidMount() {
-      this.mounted = true;
-      this.initializeSearchIndices();
-    }
-    componentWillUnmount() {
-      this.mounted = false;
-    }
-
-    render() {
-      return React.createElement(Component, {
-        ...this.props,
-        ...this.state,
-      });
-    }
-
     client: SearchClient;
-
     initializeSearchIndices = () => {
       try {
         const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
@@ -203,8 +194,14 @@ export default (options: SearchOptions) => (
       }
 
       /* If err is undefined, the shape of content is guaranteed, but better to be safe: */
-      const docs = pathOr([], ['results', 0, 'hits'], content);
-      const community = pathOr([], ['results', 1, 'hits'], content);
+      const docs: SearchHit[] =
+        (Array.isArray(content.results) &&
+          (content.results?.[0] as { hits: SearchHit[] })?.hits) ||
+        [];
+      const community: SearchHit[] =
+        (Array.isArray(content.results) &&
+          (content.results?.[1] as { hits: SearchHit[] })?.hits) ||
+        [];
       const docsResults = convertDocsToItems(highlight, docs);
       const commResults = convertCommunityToItems(highlight, community);
       this.setState({
@@ -219,6 +216,22 @@ export default (options: SearchOptions) => (
       searchError: undefined,
       searchResults: [[], []],
     };
+
+    componentDidMount() {
+      this.mounted = true;
+      this.initializeSearchIndices();
+    }
+
+    componentWillUnmount() {
+      this.mounted = false;
+    }
+
+    render() {
+      return React.createElement(Component, {
+        ...this.props,
+        ...this.state,
+      });
+    }
   }
 
   return WrappedComponent;

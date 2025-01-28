@@ -71,6 +71,7 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
       {
         address: '10.11.12.13',
         gateway: '10.11.12.13',
+        interface_id: null,
         linode_id: 1,
         prefix: 24,
         public: true,
@@ -95,6 +96,7 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
     link_local: {
       address: '2001:DB8::0000',
       gateway: 'fe80::1',
+      interface_id: null,
       linode_id: 1,
       prefix: 64,
       public: false,
@@ -106,6 +108,7 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
     slaac: {
       address: '2001:DB8::0000',
       gateway: 'fe80::1',
+      interface_id: null,
       linode_id: 1,
       prefix: 64,
       public: true,
@@ -287,7 +290,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   group: '',
   hypervisor: 'kvm',
   id: Factory.each((i) => i),
-  image: 'linode/debian10',
+  image: 'linode/debian12',
   ipv4: ['50.116.6.212', '192.168.203.1'],
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
   label: Factory.each((i) => `linode-${i}`),
@@ -309,7 +312,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
 export const createLinodeRequestFactory = Factory.Sync.makeFactory<CreateLinodeRequest>(
   {
     booted: true,
-    image: 'linode/debian10',
+    image: 'linode/debian12',
     label: Factory.each((i) => `linode-${i}`),
     region: 'us-southeast',
     root_pass: 'linode-root-password',

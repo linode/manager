@@ -19,7 +19,9 @@ import {
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
+  alertDimensionsFactory,
   alertFactory,
+  alertRulesFactory,
   appTokenFactory,
   betaFactory,
   contactFactory,
@@ -129,6 +131,8 @@ import type {
   VolumeStatus,
 } from '@linode/api-v4';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountResourcesFactory } from 'src/factories/accountResources';
+import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -393,8 +397,17 @@ const vpc = [
 ];
 
 const iam = [
+  http.get('*/iam/role-permissions', () => {
+    return HttpResponse.json(accountPermissionsFactory.build());
+  }),
   http.get('*/iam/role-permissions/users/:username', () => {
     return HttpResponse.json(userPermissionsFactory.build());
+  }),
+];
+
+const resources = [
+  http.get('*/v4*/resources', () => {
+    return HttpResponse.json(accountResourcesFactory.build());
   }),
 ];
 
@@ -1773,12 +1786,15 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/longview/plan', () => {
-    const plan = longviewActivePlanFactory.build();
+    const plan = longviewActivePlanFactory.build({});
     return HttpResponse.json(plan);
   }),
   http.get('*/longview/subscriptions', () => {
     const subscriptions = longviewSubscriptionFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(subscriptions));
+  }),
+  http.post('https://longview.linode.com/fetch', () => {
+    return HttpResponse.json({});
   }),
   http.get('*/longview/clients', () => {
     const clients = longviewClientFactory.buildList(10);
@@ -2447,6 +2463,14 @@ export const handlers = [
         return HttpResponse.json(
           alertFactory.build({
             id: Number(params.id),
+            rule_criteria: {
+              rules: [
+                ...alertRulesFactory.buildList(2, {
+                  dimension_filters: alertDimensionsFactory.buildList(2),
+                }),
+                ...alertRulesFactory.buildList(1, { dimension_filters: [] }),
+              ],
+            },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
           })
         );
@@ -2499,12 +2523,12 @@ export const handlers = [
           available_aggregate_functions: ['min', 'max', 'avg'],
           dimensions: [
             {
-              dim_label: 'cpu',
+              dimension_label: 'cpu',
               label: 'CPU name',
               values: null,
             },
             {
-              dim_label: 'state',
+              dimension_label: 'state',
               label: 'State of CPU',
               values: [
                 'user',
@@ -2518,7 +2542,7 @@ export const handlers = [
               ],
             },
             {
-              dim_label: 'LINODE_ID',
+              dimension_label: 'LINODE_ID',
               label: 'Linode ID',
               values: null,
             },
@@ -2533,7 +2557,7 @@ export const handlers = [
           available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
           dimensions: [
             {
-              dim_label: 'state',
+              dimension_label: 'state',
               label: 'State of memory',
               values: [
                 'used',
@@ -2545,7 +2569,7 @@ export const handlers = [
               ],
             },
             {
-              dim_label: 'LINODE_ID',
+              dimension_label: 'LINODE_ID',
               label: 'Linode ID',
               values: null,
             },
@@ -2560,17 +2584,17 @@ export const handlers = [
           available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
           dimensions: [
             {
-              dim_label: 'device',
+              dimension_label: 'device',
               label: 'Device name',
               values: ['lo', 'eth0'],
             },
             {
-              dim_label: 'direction',
+              dimension_label: 'direction',
               label: 'Direction of network transfer',
               values: ['transmit', 'receive'],
             },
             {
-              dim_label: 'LINODE_ID',
+              dimension_label: 'LINODE_ID',
               label: 'Linode ID',
               values: null,
             },
@@ -2585,17 +2609,17 @@ export const handlers = [
           available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
           dimensions: [
             {
-              dim_label: 'device',
+              dimension_label: 'device',
               label: 'Device name',
               values: ['loop0', 'sda', 'sdb'],
             },
             {
-              dim_label: 'direction',
+              dimension_label: 'direction',
               label: 'Operation direction',
               values: ['read', 'write'],
             },
             {
-              dim_label: 'LINODE_ID',
+              dimension_label: 'LINODE_ID',
               label: 'Linode ID',
               values: null,
             },
@@ -2763,4 +2787,5 @@ export const handlers = [
   ...databases,
   ...vpc,
   ...iam,
+  ...resources,
 ];

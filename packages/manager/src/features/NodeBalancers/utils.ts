@@ -48,11 +48,17 @@ export const createNewNodeBalancerConfig = (
   stickiness: SESSION_STICKINESS_DEFAULTS['http'],
 });
 
-export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
+export const getNodeForRequest = (
+  node: NodeBalancerConfigNodeFields,
+  config: NodeBalancerConfigFields
+) => ({
   address: node.address,
   label: node.label,
-  /* Force Node creation and updates to set mode to 'accept' */
-  mode: node.mode,
+  /**
+   * `mode` should not be specified for UDP because UDP does not
+   * support the various different modes.
+   */
+  mode: config.protocol !== 'udp' ? node.mode : undefined,
   port: node.port,
   weight: +node.weight!,
 });
@@ -99,19 +105,20 @@ export const transformConfigsForRequest = (
         check_interval: !isNil(config.check_interval)
           ? +config.check_interval
           : undefined,
-        check_passive: shouldIncludePassiveCheck(config)
-          ? config.check_passive
-          : undefined,
+        // Passive checks must be false for UDP
+        check_passive: config.protocol === 'udp' ? false : config.check_passive,
         check_path: shouldIncludeCheckPath(config)
           ? config.check_path
           : undefined,
         check_timeout: !isNil(config.check_timeout)
           ? +config.check_timeout
           : undefined,
-        cipher_suite: config.cipher_suite || undefined,
+        cipher_suite: shouldIncludeCipherSuite(config)
+          ? config.cipher_suite
+          : undefined,
         id: undefined,
         nodebalancer_id: undefined,
-        nodes: config.nodes.map(nodeForRequest),
+        nodes: config.nodes.map((node) => getNodeForRequest(node, config)),
         nodes_status: undefined,
         port: config.port ? +config.port : undefined,
         protocol:
@@ -138,9 +145,14 @@ export const transformConfigsForRequest = (
             ? undefined
             : config.ssl_key || undefined,
         stickiness: config.stickiness || undefined,
+        udp_check_port: config.udp_check_port,
       }
     ) as unknown) as NodeBalancerConfigFields;
   });
+};
+
+const shouldIncludeCipherSuite = (config: NodeBalancerConfigFields) => {
+  return config.protocol !== 'udp';
 };
 
 export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
@@ -148,11 +160,6 @@ export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
     (config.check === 'http' || config.check === 'http_body') &&
     config.check_path
   );
-};
-
-const shouldIncludePassiveCheck = (config: NodeBalancerConfigFields) => {
-  // UDP does not support passive checks
-  return config.protocol !== 'udp';
 };
 
 export const shouldIncludeCheckBody = (config: NodeBalancerConfigFields) => {
@@ -186,6 +193,7 @@ export const setErrorMap = (errors: APIError[]) =>
       'ssl_key',
       'stickiness',
       'nodes',
+      'udp_check_port',
     ],
     filteredErrors(errors)
   );
@@ -223,6 +231,12 @@ export const getStickinessOptions = (
       { label: 'None', value: 'none' },
       { label: 'Session', value: 'session' },
       { label: 'Source IP', value: 'source_ip' },
+    ];
+  }
+  if (protocol === 'tcp') {
+    return [
+      { label: 'None', value: 'none' },
+      { label: 'Table', value: 'table' },
     ];
   }
   return [

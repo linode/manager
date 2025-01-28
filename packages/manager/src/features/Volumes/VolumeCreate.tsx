@@ -58,8 +58,8 @@ import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { SIZE_FIELD_WIDTH } from './constants';
-import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
-import { SizeField } from './VolumeDrawer/SizeField';
+import { ConfigSelect } from './Drawers/VolumeDrawer/ConfigSelect';
+import { SizeField } from './Drawers/VolumeDrawer/SizeField';
 
 import type { VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';

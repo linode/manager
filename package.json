@@ -4,8 +4,8 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "husky": "^9.1.6",
-    "typescript": "^5.5.4",
-    "vitest": "^2.1.1"
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.3"
   },
   "scripts": {
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
@@ -51,7 +51,9 @@
   "resolutions": {
     "node-fetch": "^2.6.7",
     "yaml": "^2.3.0",
-    "semver": "^7.5.2"
+    "semver": "^7.5.2",
+    "cookie": "^0.7.0",
+    "nanoid": "^3.3.8"
   },
   "workspaces": {
     "packages": [

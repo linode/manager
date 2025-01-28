@@ -198,3 +198,12 @@ export const FirewallDeviceSchema = object({
     .required('Device type is required.'),
   id: number().required('ID is required.'),
 });
+
+export const UpdateFirewallSettingsSchema = object({
+  default_firewall_ids: object({
+    interface_public: number(),
+    interface_vpc: number(),
+    linode: number(),
+    nodebalancer: number(),
+  }),
+});

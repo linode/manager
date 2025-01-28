@@ -35,6 +35,17 @@ describe("getAPIFilterFromQuery", () => {
     });
   });
 
+  it("handles +neq", () => {
+      const query = "status != active";
+
+      expect(getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] })).toEqual({
+        filter: {
+          status: { '+neq': "active" },
+        },
+        error: null,
+      });
+    });
+
   it("handles +lt", () => {
     const query = "size < 20";
 

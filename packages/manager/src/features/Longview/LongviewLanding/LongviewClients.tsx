@@ -1,12 +1,13 @@
 import { Autocomplete, Typography } from '@linode/ui';
-import { isEmpty, pathOr } from 'ramda';
+import { useLocation, useNavigate } from '@tanstack/react-router';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Link } from 'src/components/Link';
 import withLongviewClients from 'src/containers/longview.container';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
@@ -31,8 +32,8 @@ import type {
   LongviewClient,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
-import type { RouteComponentProps } from 'react-router-dom';
 import type { Props as LongviewProps } from 'src/containers/longview.container';
+import type { LongviewState } from 'src/routes/longview';
 import type { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import type { MapState } from 'src/store/types';
 
@@ -47,16 +48,15 @@ interface SortOption {
   value: SortKey;
 }
 
-export type LongviewClientsCombinedProps = Props &
-  RouteComponentProps &
-  LongviewProps &
-  StateProps;
+export type LongviewClientsCombinedProps = Props & LongviewProps & StateProps;
 
 type SortKey = 'cpu' | 'load' | 'name' | 'network' | 'ram' | 'storage' | 'swap';
 
 export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const { getLongviewClients } = props;
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as LongviewState;
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: accountSettings } = useAccountSettings();
@@ -130,21 +130,16 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   }, []);
 
   const handleSubmit = () => {
-    const {
-      history: { push },
-    } = props;
-
     if (isManaged) {
-      push({
-        pathname: '/support/tickets',
-        state: {
-          open: true,
-          title: 'Request for additional Longview clients',
-        },
+      navigate({
+        state: (prev) => ({ ...prev, ...locationState }),
+        to: '/support/tickets',
       });
       return;
     }
-    props.history.push('/longview/plan-details');
+    navigate({
+      to: '/longview/plan-details',
+    });
   };
 
   /**
@@ -299,9 +294,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-interface ComposeProps extends Props, RouteComponentProps {}
-
-export default compose<LongviewClientsCombinedProps, ComposeProps>(
+export default compose<LongviewClientsCombinedProps, Props>(
   React.memo,
   connected,
   withLongviewClients()
@@ -347,59 +340,42 @@ export const sortClientsBy = (
       });
     case 'cpu':
       return clients.sort((a, b) => {
-        const aCPU = getFinalUsedCPU(pathOr(0, [a.id, 'data'], clientData));
-        const bCPU = getFinalUsedCPU(pathOr(0, [b.id, 'data'], clientData));
-
+        const aCPU = getFinalUsedCPU(clientData?.[a.id]?.data ?? {});
+        const bCPU = getFinalUsedCPU(clientData?.[b.id]?.data ?? {});
         return sortFunc(aCPU, bCPU);
       });
     case 'ram':
       return clients.sort((a, b) => {
-        const aRam = sumUsedMemory(pathOr({}, [a.id, 'data'], clientData));
-        const bRam = sumUsedMemory(pathOr({}, [b.id, 'data'], clientData));
+        const aRam = sumUsedMemory(clientData?.[a.id]?.data ?? {});
+        const bRam = sumUsedMemory(clientData?.[b.id]?.data ?? {});
         return sortFunc(aRam, bRam);
       });
     case 'swap':
       return clients.sort((a, b) => {
-        const aSwap = pathOr<number>(
-          0,
-          [a.id, 'data', 'Memory', 'swap', 'used', 0, 'y'],
-          clientData
-        );
-        const bSwap = pathOr<number>(
-          0,
-          [b.id, 'data', 'Memory', 'swap', 'used', 0, 'y'],
-          clientData
-        );
+        const aSwap = clientData?.[a.id]?.data?.Memory?.swap?.used?.[0]?.y ?? 0;
+        const bSwap = clientData?.[b.id]?.data?.Memory?.swap?.used?.[0]?.y ?? 0;
         return sortFunc(aSwap, bSwap);
       });
     case 'load':
       return clients.sort((a, b) => {
-        const aLoad = pathOr<number>(
-          0,
-          [a.id, 'data', 'Load', 0, 'y'],
-          clientData
-        );
-        const bLoad = pathOr<number>(
-          0,
-          [b.id, 'data', 'Load', 0, 'y'],
-          clientData
-        );
+        const aLoad = clientData?.[a.id]?.data?.Load?.[0]?.y ?? 0;
+        const bLoad = clientData?.[b.id]?.data?.Load?.[0]?.y ?? 0;
         return sortFunc(aLoad, bLoad);
       });
     case 'network':
       return clients.sort((a, b) => {
         const aNet = generateUsedNetworkAsBytes(
-          pathOr(0, [a.id, 'data', 'Network', 'Interface'], clientData)
+          clientData?.[a.id]?.data?.Network?.Interface ?? {}
         );
         const bNet = generateUsedNetworkAsBytes(
-          pathOr(0, [b.id, 'data', 'Network', 'Interface'], clientData)
+          clientData?.[b.id]?.data?.Network?.Interface ?? {}
         );
         return sortFunc(aNet, bNet);
       });
     case 'storage':
       return clients.sort((a, b) => {
-        const aStorage = getUsedStorage(pathOr(0, [a.id, 'data'], clientData));
-        const bStorage = getUsedStorage(pathOr(0, [b.id, 'data'], clientData));
+        const aStorage = getUsedStorage(clientData?.[a.id]?.data ?? {});
+        const bStorage = getUsedStorage(clientData?.[b.id]?.data ?? {});
         return sortFunc(aStorage, bStorage);
       });
     default:
@@ -432,11 +408,7 @@ export const filterLongviewClientsByQuery = (
     }
 
     // If the label didn't match, check the hostname
-    const hostname = pathOr<string>(
-      '',
-      ['data', 'SysInfo', 'hostname'],
-      clientData[thisClient.id]
-    );
+    const hostname = clientData[thisClient.id]?.data?.SysInfo?.hostname ?? '';
     if (hostname.match(queryRegex)) {
       return true;
     }

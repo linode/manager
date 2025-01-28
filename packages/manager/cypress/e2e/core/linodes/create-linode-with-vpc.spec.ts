@@ -77,7 +77,7 @@ describe('Create Linode with VPCs', () => {
       linodes: [
         {
           id: mockLinode.id,
-          interfaces: [{ id: mockInterface.id, active: true }],
+          interfaces: [{ id: mockInterface.id, active: true, config_id: 1 }],
         },
       ],
     };
@@ -90,7 +90,7 @@ describe('Create Linode with VPCs', () => {
     cy.visitWithLogin('/linodes/create');
 
     linodeCreatePage.setLabel(mockLinode.label);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
@@ -204,7 +204,7 @@ describe('Create Linode with VPCs', () => {
       linodes: [
         {
           id: mockLinode.id,
-          interfaces: [{ id: mockInterface.id, active: true }],
+          interfaces: [{ id: mockInterface.id, active: true, config_id: 1 }],
         },
       ],
     };
@@ -214,7 +214,7 @@ describe('Create Linode with VPCs', () => {
     cy.visitWithLogin('/linodes/create');
 
     linodeCreatePage.setLabel(mockLinode.label);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));

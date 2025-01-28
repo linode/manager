@@ -103,9 +103,9 @@ interface MetricRequestProps {
   duration: TimeDuration;
 
   /**
-   * resource ids selected by user
+   * entity ids selected by user
    */
-  resourceIds: string[];
+  entityIds: string[];
 
   /**
    * list of CloudPulse resources available
@@ -267,7 +267,10 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
  * @param unit base unit of the values
  * @returns maximum possible rolled up unit based on the unit
  */
-export const generateMaxUnit = (legendRowsData: MetricsDisplayRow[], unit: string) => {
+export const generateMaxUnit = (
+  legendRowsData: MetricsDisplayRow[],
+  unit: string
+) => {
   const maxValue = Math.max(
     0,
     ...legendRowsData?.map((row) => row?.data.max ?? 0)
@@ -283,16 +286,16 @@ export const generateMaxUnit = (legendRowsData: MetricsDisplayRow[], unit: strin
 export const getCloudPulseMetricRequest = (
   props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
-  const { duration, resourceIds, resources, widget } = props;
+  const { duration, entityIds, resources, widget } = props;
   return {
     aggregate_function: widget.aggregate_function,
+    entity_ids: resources
+      ? entityIds.map((id) => parseInt(id, 10))
+      : widget.entity_ids.map((id) => parseInt(id, 10)),
     filters: undefined,
     group_by: widget.group_by,
     metric: widget.metric,
     relative_time_duration: duration ?? widget.time_duration,
-    resource_ids: resources
-      ? resourceIds.map((obj) => parseInt(obj, 10))
-      : widget.resource_id.map((obj) => parseInt(obj, 10)),
     time_granularity:
       widget.time_granularity.unit === 'Auto'
         ? undefined

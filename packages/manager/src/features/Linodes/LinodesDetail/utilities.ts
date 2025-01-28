@@ -11,7 +11,7 @@ export const lishLink = (
 };
 
 export const getSelectedDeviceOption = (
-  selectedValue: string,
+  selectedValue: null | string,
   optionList: { deviceType: string; label: string; value: any }[]
 ) => {
   if (!selectedValue) {

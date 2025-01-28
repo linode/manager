@@ -1,5 +1,7 @@
 import type {
   Config,
+  Domain,
+  DomainRecord,
   Event,
   Firewall,
   Linode,
@@ -79,11 +81,19 @@ export interface MockPresetExtra extends MockPresetBase {
  * Mock Preset Crud
  */
 export type MockPresetCrudGroup = {
-  id: 'Linodes' | 'Placement Groups' | 'Support Tickets' | 'Volumes';
+  id:
+    | 'Domains'
+    | 'Linodes'
+    | 'Placement Groups'
+    | 'Quotas'
+    | 'Support Tickets'
+    | 'Volumes';
 };
 export type MockPresetCrudId =
+  | 'domains:crud'
   | 'linodes:crud'
   | 'placement-groups:crud'
+  | 'quotas:crud'
   | 'support-tickets:crud'
   | 'volumes:crud';
 export interface MockPresetCrud extends MockPresetBase {
@@ -98,6 +108,8 @@ export type MockHandler = (mockState: MockState) => HttpHandler[];
  * Stateful data shared among mocks.
  */
 export interface MockState {
+  domainRecords: DomainRecord[];
+  domains: Domain[];
   eventQueue: Event[];
   firewalls: Firewall[];
   linodeConfigs: [number, Config][];

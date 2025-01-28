@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { equals, pathOr, sort, splitAt } from 'ramda';
+import { equals, sort } from 'ramda';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
@@ -9,6 +9,7 @@ import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
+import { pathOr } from 'src/utilities/pathOr';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import {
   sortByArrayLength,
@@ -16,6 +17,7 @@ import {
   sortByString,
   sortByUTFDate,
 } from 'src/utilities/sort-by';
+import { splitAt } from 'src/utilities/splitAt';
 
 import type { Order } from 'src/hooks/useOrder';
 import type { ManagerPreferences } from 'src/types/ManagerPreferences';
@@ -137,8 +139,16 @@ export const sortData = <T,>(orderBy: string, order: Order) => {
     }
 
     /** basically, if orderByProp exists, do a pathOr with that instead */
-    const aValue = pathOr('', !!orderByProp ? orderByProp : [orderBy], a);
-    const bValue = pathOr('', !!orderByProp ? orderByProp : [orderBy], b);
+    const aValue = pathOr<any, T>(
+      '',
+      !!orderByProp ? orderByProp : [orderBy],
+      a
+    );
+    const bValue = pathOr<any, T>(
+      '',
+      !!orderByProp ? orderByProp : [orderBy],
+      b
+    );
 
     if (Array.isArray(aValue) && Array.isArray(bValue)) {
       return sortByArrayLength(aValue, bValue, order);
