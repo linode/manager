@@ -1,6 +1,7 @@
 import { mockGetCluster, mockGetKubeconfig } from 'support/intercepts/lke';
 import { kubernetesClusterFactory } from 'src/factories';
 import { readDownload } from 'support/util/downloads';
+import { ui } from 'support/ui';
 
 const mockKubeconfigContents = '---'; // Valid YAML.
 const mockKubeconfigResponse = {
@@ -22,7 +23,7 @@ describe('LKE summary page', () => {
     const mockKubeconfigFilename = `${mockCluster.label}-kubeconfig.yaml`;
     cy.visitWithLogin(url);
     cy.wait(['@getCluster']);
-    cy.get(`p:contains(${mockKubeconfigFilename})`)
+    cy.findByText(mockKubeconfigFilename)
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -39,7 +40,7 @@ describe('LKE summary page', () => {
       .should('be.enabled')
       .click();
     cy.wait('@getKubeconfig');
-    cy.findByTestId('drawer-title').should('be.visible');
+    ui.drawer.findByTitle('View Kubeconfig').should('be.visible');
     cy.get('code')
       .should('be.visible')
       .within(() => {
