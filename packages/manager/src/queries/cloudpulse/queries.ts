@@ -80,7 +80,7 @@ export const queryFactory = createQueryKeys(key, {
     contextQueries: {
       all: (params?: Params, filter?: Filter) => ({
         queryFn: () => getAllNotificationChannels(params, filter),
-        queryKey: [params, filter, 'alert-channel'],
+        queryKey: [params, filter],
       }),
     },
     queryKey: null,
