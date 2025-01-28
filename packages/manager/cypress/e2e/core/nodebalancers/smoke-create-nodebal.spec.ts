@@ -17,7 +17,11 @@ const deployNodeBalancer = () => {
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 
-import { linodeFactory, nodeBalancerFactory, regionFactory } from 'src/factories';
+import {
+  linodeFactory,
+  nodeBalancerFactory,
+  regionFactory,
+} from 'src/factories';
 import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetLinodes } from 'support/intercepts/linodes';
@@ -122,7 +126,7 @@ describe('create NodeBalancer', () => {
 
     mockGetRegions([region]);
     mockGetLinodes([linode]);
-    interceptCreateNodeBalancer().as('createNodeBalancer')
+    interceptCreateNodeBalancer().as('createNodeBalancer');
 
     cy.visitWithLogin('/nodebalancers/create');
 
@@ -130,44 +134,40 @@ describe('create NodeBalancer', () => {
       .should('be.visible')
       .type('my-nodebalancer-1');
 
-    ui.autocomplete.findByLabel('Region')
-      .should('be.visible')
-      .click();
+    ui.autocomplete.findByLabel('Region').should('be.visible').click();
 
-    ui.autocompletePopper.findByTitle(region.id, { exact: false })
+    ui.autocompletePopper
+      .findByTitle(region.id, { exact: false })
       .should('be.visible')
       .should('be.enabled')
       .click();
 
-    cy.findByLabelText('Label')
-      .type("my-node-1");
+    cy.findByLabelText('Label').type('my-node-1');
 
-    cy.findByLabelText('IP Address')
-      .click()
-      .type(linode.ipv4[0]);
+    cy.findByLabelText('IP Address').click().type(linode.ipv4[0]);
 
-    ui.autocompletePopper.findByTitle(linode.label)
-      .click();
+    ui.autocompletePopper.findByTitle(linode.label).click();
 
-    ui.button.findByTitle('Create NodeBalancer')
+    ui.button
+      .findByTitle('Create NodeBalancer')
       .scrollIntoView()
       .should('be.enabled')
       .should('be.visible')
       .click();
 
-    const expectedError = 'Address Restricted: IP must not be within 192.168.0.0/17';
+    const expectedError =
+      'Address Restricted: IP must not be within 192.168.0.0/17';
 
     cy.wait('@createNodeBalancer')
       .its('response.body')
       .should('deep.equal', {
         errors: [
           { field: 'region', reason: 'region is not valid' },
-          { field: 'configs[0].nodes[0].address', reason: expectedError }
+          { field: 'configs[0].nodes[0].address', reason: expectedError },
         ],
       });
 
-    cy.findByText(expectedError)
-      .should('be.visible');
+    cy.findByText(expectedError).should('be.visible');
   });
 
   /*
