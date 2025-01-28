@@ -17,7 +17,6 @@ import {
   defaultTo,
   lensPath,
   over,
-  pathOr,
   set,
   view,
 } from 'ramda';
@@ -1016,7 +1015,7 @@ class NodeBalancerConfigurations extends React.Component<
   state: State = {
     configErrors: [],
     configSubmitting: [],
-    configs: pathOr([], ['response'], this.props.configs),
+    configs: this.props.configs?.response?.data ?? [],
     deleteConfigConfirmDialog: clone(
       NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState
     ),

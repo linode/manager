@@ -1,5 +1,4 @@
 import { Button, CircleProgress, Notice } from '@linode/ui';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
@@ -446,17 +445,14 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         !grants.data?.global.add_stackscripts;
 
       if (error) {
+        const apiError = handleUnauthorizedErrors(
+          error,
+          'You are not authorized to view StackScripts for this account.'
+        );
         return (
           <div style={{ overflow: 'hidden' }}>
             <ErrorState
-              errorText={pathOr(
-                'There was an error.',
-                [0, 'reason'],
-                handleUnauthorizedErrors(
-                  error,
-                  'You are not authorized to view StackScripts for this account.'
-                )
-              )}
+              errorText={apiError?.[0]?.reason ?? 'There was an error'}
             />
           </div>
         );
@@ -578,7 +574,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                    * would never be scrolled into view no matter how much you scrolled on the
                    * trackpad. Especially finicky at zoomed in browser sizes
                    */}
-                  <div style={{ minHeight: '150px' }}></div>
+                  <div style={{ minHeight: '150px' }} />
                 </Waypoint>
               ) : (
                 <Button
