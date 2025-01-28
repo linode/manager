@@ -75,11 +75,10 @@ export const TaintInput = (props: Props) => {
               inputRef={field.ref}
               {...field}
               error={!!fieldState.error}
-              helperText={fieldState.error?.message}
+              errorText={fieldState.error?.message}
               label="Taint"
               onChange={(e) => setCombinedTaint(e.target.value)}
               placeholder="myapp.io/app: production"
-              required
               value={combinedTaint}
             />
           );
