@@ -19,6 +19,16 @@ export interface ImageCreateUploadSearchParams {
   imageLabel?: string;
 }
 
+const imageActions = {
+  delete: 'delete',
+  deploy: 'deploy',
+  edit: 'edit',
+  'manage-replicas': 'manage-replicas',
+  rebuild: 'rebuild',
+} as const;
+
+export type ImageAction = typeof imageActions[keyof typeof imageActions];
+
 const imagesRoute = createRoute({
   component: ImagesRoute,
   getParentRoute: () => rootRoute,
@@ -28,6 +38,22 @@ const imagesRoute = createRoute({
 const imagesIndexRoute = createRoute({
   getParentRoute: () => imagesRoute,
   path: '/',
+  validateSearch: (search: ImagesSearchParams) => search,
+}).lazy(() =>
+  import('./imagesLazyRoutes').then((m) => m.imagesLandingLazyRoute)
+);
+
+const imageActionRoute = createRoute({
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in imageActions)) {
+      throw redirect({
+        search: () => ({}),
+        to: '/images',
+      });
+    }
+  },
+  getParentRoute: () => imagesRoute,
+  path: '$imageId/$action',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
   import('./imagesLazyRoutes').then((m) => m.imagesLandingLazyRoute)
@@ -61,7 +87,7 @@ const imagesCreateUploadRoute = createRoute({
 }).lazy(() => import('./imagesLazyRoutes').then((m) => m.imageCreateLazyRoute));
 
 export const imagesRouteTree = imagesRoute.addChildren([
-  imagesIndexRoute,
+  imagesIndexRoute.addChildren([imageActionRoute]),
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,
     imagesCreateDiskRoute,

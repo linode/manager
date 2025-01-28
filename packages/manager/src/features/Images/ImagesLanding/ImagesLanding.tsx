@@ -1,5 +1,4 @@
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Typography } from '@linode/ui';
 import {
   CircleProgress,
   IconButton,
@@ -7,10 +6,11 @@ import {
   Notice,
   Paper,
   TextField,
+  Typography,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
@@ -33,6 +33,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useDialogData } from 'src/hooks/useDialogData';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -45,6 +46,7 @@ import { useEventsInfiniteQuery } from 'src/queries/events/events';
 import {
   imageQueries,
   useDeleteImageMutation,
+  useImageQuery,
   useImagesQuery,
 } from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -57,8 +59,9 @@ import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
-import type { Filter, ImageStatus } from '@linode/api-v4';
+import type { Filter, Image, ImageStatus } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
+import type { ImageAction } from 'src/routes/images';
 
 const searchParamKey = 'query';
 
@@ -95,11 +98,15 @@ const defaultDialogState = {
 
 export const ImagesLanding = () => {
   const { classes } = useStyles();
-  // const history = useHistory();
+  const {
+    action,
+    imageId: selectedImageId,
+  }: { action: ImageAction; imageId: string } = useParams({
+    strict: false,
+  });
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
-  // const location = useLocation();
   const isImagesReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
@@ -229,6 +236,16 @@ export const ImagesLanding = () => {
     }
   );
 
+  const {
+    data: selectedImage,
+    isFetching: isFetchingSelectedImage,
+  } = useDialogData({
+    enabled: !!selectedImageId,
+    paramKey: 'imageId',
+    queryHook: useImageQuery,
+    redirectToOnNotFound: '/images',
+  });
+
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
 
   const { events } = useEventsInfiniteQuery();
@@ -257,18 +274,17 @@ export const ImagesLanding = () => {
     imageEvents
   );
 
-  const [selectedImageId, setSelectedImageId] = React.useState<string>();
+  // const [selectedImageId, setSelectedImageId] = React.useState<string>();
 
-  const [
-    isManageReplicasDrawerOpen,
-    setIsManageReplicasDrawerOpen,
-  ] = React.useState(false);
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
-  const [isRebuildDrawerOpen, setIsRebuildDrawerOpen] = React.useState(false);
+  // const [
+  //   isManageReplicasDrawerOpen,
+  //   setIsManageReplicasDrawerOpen,
+  // ] = React.useState(false);
+  // const [isRebuildDrawerOpen, setIsRebuildDrawerOpen] = React.useState(false);
 
-  const selectedImage =
-    manualImages?.data.find((i) => i.id === selectedImageId) ??
-    automaticImages?.data.find((i) => i.id === selectedImageId);
+  // const selectedImage =
+  //   manualImages?.data.find((i) => i.id === selectedImageId) ??
+  //   automaticImages?.data.find((i) => i.id === selectedImageId);
 
   const [dialog, setDialogState] = React.useState<ImageDialogState>(
     defaultDialogState
@@ -280,19 +296,34 @@ export const ImagesLanding = () => {
       ? 'Are you sure you want to cancel this Image upload?'
       : 'Are you sure you want to delete this Image?';
 
-  const openDialog = (image: string, imageID: string, status: ImageStatus) => {
-    setDialogState({
-      error: undefined,
-      image,
-      imageID,
-      open: true,
-      status,
-      submitting: false,
+  // const openDialog = (image: string, imageID: string, status: ImageStatus) => {
+  //   setDialogState({
+  //     error: undefined,
+  //     image,
+  //     imageID,
+  //     open: true,
+  //     status,
+  //     submitting: false,
+  //   });
+  // };
+  const handleEdit = (image: Image) => {
+    navigate({
+      params: { action: 'edit', imageId: image.id },
+      search: (prev) => prev,
+      to: '/images/$imageId/$action',
     });
   };
 
-  const closeDialog = () => {
-    setDialogState({ ...dialog, open: false });
+  const handleDelete = (image: Image) => {
+    navigate({
+      params: { action: 'delete', imageId: image.id },
+      search: (prev) => prev,
+      to: '/images/$imageId/$action',
+    });
+  };
+
+  const handleCloseDialog = () => {
+    navigate({ search: (prev) => prev, to: '/images' });
   };
 
   const handleRemoveImage = () => {
@@ -310,7 +341,7 @@ export const ImagesLanding = () => {
 
     deleteImage({ imageId: dialog.imageID! })
       .then(() => {
-        closeDialog();
+        handleCloseDialog();
         /**
          * request generated by the Pagey HOC.
          *
@@ -369,7 +400,7 @@ export const ImagesLanding = () => {
     //   state: { selectedImageId: imageID },
     // });
     navigate({
-      search: (prev) => ({ ...prev }),
+      search: (prev) => prev,
       to: `/linodes/create`,
       // state: { selectedImageId: imageID },
     });
@@ -396,22 +427,19 @@ export const ImagesLanding = () => {
 
   const handlers: ImageHandlers = {
     onCancelFailed: onCancelFailedClick,
-    onDelete: openDialog,
+    onDelete: handleDelete,
     onDeploy: deployNewLinode,
-    onEdit: (image) => {
-      setSelectedImageId(image.id);
-      setIsEditDrawerOpen(true);
-    },
-    onManageRegions: multiRegionsEnabled
-      ? (image) => {
-          setSelectedImageId(image.id);
-          setIsManageReplicasDrawerOpen(true);
-        }
-      : undefined,
-    onRestore: (image) => {
-      setSelectedImageId(image.id);
-      setIsRebuildDrawerOpen(true);
-    },
+    onEdit: handleEdit,
+    // onManageRegions: multiRegionsEnabled
+    //   ? (image) => {
+    //       setSelectedImageId(image.id);
+    //       setIsManageReplicasDrawerOpen(true);
+    //     }
+    //   : undefined,
+    // onRestore: (image) => {
+    //   setSelectedImageId(image.id);
+    //   setIsRebuildDrawerOpen(true);
+    // },
     onRetry: onRetryClick,
   };
 
@@ -656,22 +684,24 @@ export const ImagesLanding = () => {
       </Paper>
       <EditImageDrawer
         image={selectedImage}
-        onClose={() => setIsEditDrawerOpen(false)}
-        open={isEditDrawerOpen}
+        isFetching={isFetchingSelectedImage}
+        onClose={handleCloseDialog}
+        open={action === 'edit'}
       />
       <RebuildImageDrawer
         image={selectedImage}
-        onClose={() => setIsRebuildDrawerOpen(false)}
-        open={isRebuildDrawerOpen}
+        isFetching={isFetchingSelectedImage}
+        onClose={handleCloseDialog}
+        open={action === 'rebuild'}
       />
       <Drawer
-        onClose={() => setIsManageReplicasDrawerOpen(false)}
-        open={isManageReplicasDrawerOpen}
+        onClose={handleCloseDialog}
+        open={action === 'manage-replicas'}
         title={`Manage Replicas for ${selectedImage?.label}`}
       >
         <ManageImageReplicasForm
           image={selectedImage}
-          onClose={() => setIsManageReplicasDrawerOpen(false)}
+          onClose={handleCloseDialog}
         />
       </Drawer>
       <ConfirmationDialog
@@ -687,7 +717,7 @@ export const ImagesLanding = () => {
             secondaryButtonProps={{
               'data-testid': 'cancel',
               label: dialogAction === 'cancel' ? 'Keep Image' : 'Cancel',
-              onClick: closeDialog,
+              onClick: handleCloseDialog,
             }}
           />
         }
@@ -696,8 +726,9 @@ export const ImagesLanding = () => {
             ? 'Cancel Upload'
             : `Delete Image ${dialog.image}`
         }
-        onClose={closeDialog}
-        open={dialog.open}
+        isFetching={isFetchingSelectedImage}
+        onClose={handleCloseDialog}
+        open={action === 'delete'}
       >
         {dialog.error && <Notice text={dialog.error} variant="error" />}
         <Typography>{dialogMessage}</Typography>

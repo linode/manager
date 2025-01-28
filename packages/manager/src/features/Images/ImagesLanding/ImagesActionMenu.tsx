@@ -1,17 +1,18 @@
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-
-import type { Event, Image, ImageStatus } from '@linode/api-v4';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+
 import { useImageAndLinodeGrantCheck } from '../utils';
+
+import type { Event, Image } from '@linode/api-v4';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface Handlers {
   onCancelFailed?: (imageID: string) => void;
-  onDelete?: (label: string, imageID: string, status?: ImageStatus) => void;
+  onDelete?: (image: Image) => void;
   onDeploy?: (imageID: string) => void;
   onEdit?: (image: Image) => void;
   onManageRegions?: (image: Image) => void;
@@ -138,7 +139,7 @@ export const ImagesActionMenu = (props: Props) => {
           },
           {
             disabled: isImageReadOnly,
-            onClick: () => onDelete?.(label, id, status),
+            onClick: () => onDelete?.(image),
             title: isAvailable ? 'Delete' : 'Cancel',
             tooltip: isImageReadOnly
               ? getRestrictedResourceText({
