@@ -26,10 +26,30 @@ import type {
 } from './DomainRecordDrawer';
 import type { Control } from 'react-hook-form';
 
+type FieldRenderFunction = (idx: number) => JSX.Element;
+
+interface RecordTypeFields {
+  fields: FieldRenderFunction[];
+}
+
+interface DrawerTypes {
+  A: RecordTypeFields;
+  AAAA: RecordTypeFields;
+  CAA: RecordTypeFields;
+  CNAME: RecordTypeFields;
+  MX: RecordTypeFields;
+  NS: RecordTypeFields;
+  PTR: RecordTypeFields;
+  SRV: RecordTypeFields;
+  TXT: RecordTypeFields;
+  master: RecordTypeFields;
+  slave: RecordTypeFields;
+}
+
 export const generateDrawerTypes = (
   props: Pick<DomainRecordDrawerProps, 'domain' | 'type'>,
   control: Control<EditableDomainFields | EditableRecordFields>
-) => {
+): DrawerTypes => {
   return {
     A: {
       fields: [],
@@ -214,7 +234,6 @@ export const generateDrawerTypes = (
             name="ttl_sec"
           />
         ),
-        ,
       ],
     },
     MX: {
@@ -238,7 +257,6 @@ export const generateDrawerTypes = (
             name="target"
           />
         ),
-        ,
         (idx: number) => (
           <Controller
             render={({ field, fieldState }) => (
