@@ -69,8 +69,7 @@ export const DisplayAlertDetailChips = React.memo(
                   <Grid
                     item
                     key={index}
-                    marginLeft={mergeChips && index > 0 ? -3 : 0}
-                    pr={2}
+                    marginLeft={mergeChips && index > 0 ? -1 : 0}
                   >
                     <StyledAlertChip
                       borderRadius={getAlertChipBorderRadius({
