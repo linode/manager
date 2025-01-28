@@ -1,4 +1,4 @@
-import { Divider } from '@linode/ui';
+import { Box, Divider } from '@linode/ui';
 import { IconButton, useTheme } from '@mui/material';
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -95,52 +95,50 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   return (
     <Grid container>
-      <Grid container item m={3} rowGap={1} xs={12}>
-        <Grid
-          columnSpacing={2}
-          container
-          item
-          justifyContent="space-between"
-          rowSpacing={2}
-        >
-          <Grid display={'flex'} item md={4} sm={5} xs={12}>
-            <CloudPulseDashboardSelect
-              defaultValue={preferences?.dashboardId}
-              handleDashboardChange={onDashboardChange}
-              savePreferences
-            />
-          </Grid>
-          <Grid
-            display="flex"
-            gap={1}
-            item
-            justifyContent="end"
-            md={8}
-            sm={5}
-            xs={12}
-          >
-            <CloudPulseDateTimeRangePicker
-              defaultValue={preferences?.timeDuration}
-              handleStatsChange={handleTimeRangeChange}
-              savePreferences
-            />
-            <CloudPulseTooltip placement="bottom-end" title="Refresh">
-              <IconButton
-                sx={{
-                  marginBlockEnd: 'auto',
-                  marginTop: theme.spacing(3.5),
-                }}
-                aria-label="Refresh Dashboard Metrics"
-                data-testid="global-refresh"
-                disabled={!selectedDashboard}
-                onClick={handleGlobalRefresh}
-                size="small"
-              >
-                <StyledReload />
-              </IconButton>
-            </CloudPulseTooltip>
-          </Grid>
+      <Grid
+        container
+        display="flex"
+        flexWrap="wrap"
+        item
+        justifyContent="space-between"
+        m={3}
+        rowGap={2}
+        xs={12}
+      >
+        <Grid item lg={4} xs={12}>
+          <CloudPulseDashboardSelect
+            defaultValue={preferences?.dashboardId}
+            handleDashboardChange={onDashboardChange}
+            savePreferences
+          />
         </Grid>
+        <Box
+          display="flex"
+          flexDirection={{ md: 'row', xs: 'column' }}
+          flexWrap="wrap"
+          gap={2}
+        >
+          <CloudPulseDateTimeRangePicker
+            defaultValue={preferences?.timeDuration}
+            handleStatsChange={handleTimeRangeChange}
+            savePreferences
+          />
+          <CloudPulseTooltip placement="bottom-end" title="Refresh">
+            <IconButton
+              sx={{
+                marginBlockEnd: 'auto',
+                marginTop: { md: theme.spacing(3.5) },
+              }}
+              aria-label="Refresh Dashboard Metrics"
+              data-testid="global-refresh"
+              disabled={!selectedDashboard}
+              onClick={handleGlobalRefresh}
+              size="small"
+            >
+              <StyledReload />
+            </IconButton>
+          </CloudPulseTooltip>
+        </Box>
       </Grid>
       {selectedDashboard && (
         <Grid item xs={12}>

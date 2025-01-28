@@ -208,7 +208,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     }
 
     setStartDateTime(newStartDateTime);
-    setEndDateTime(newEndDateTime);
+    setEndDateTime(newEndDateTime?.set({ second: 0 }) ?? null);
     setPresetValue(
       presetsOptions.find((option) => option.value === value) ??
         presetsOptions[0]
