@@ -24,6 +24,10 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
     queryMocks.useAllAlertNotificationChannelsQuery,
 }));
 
+const notificationChannel = 'Notification Channels';
+const errorText = 'Failed to load notification channels.';
+const noDataText = 'No notification channels to display.';
+
 beforeEach(() => {
   queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue({
     data: notificationChannels,
@@ -38,7 +42,7 @@ describe('AlertDetailNotification component tests', () => {
       <AlertDetailNotification channelIds={['1', '2', '3']} />
     );
 
-    expect(getByText('Notification Channels')).toBeInTheDocument();
+    expect(getByText(notificationChannel)).toBeInTheDocument();
     expect(getAllByText('Email').length).toBe(notificationChannels.length);
     expect(getAllByText('1@test.com').length).toBe(notificationChannels.length);
     expect(getAllByText('2@test.com').length).toBe(notificationChannels.length);
@@ -57,9 +61,21 @@ describe('AlertDetailNotification component tests', () => {
       <AlertDetailNotification channelIds={['1', '2', '3']} />
     );
 
-    expect(getByText('Notification Channels')).toBeInTheDocument();
-    expect(
-      getByText('Failed to load notification channels.')
-    ).toBeInTheDocument();
+    expect(getByText(notificationChannel)).toBeInTheDocument();
+    expect(getByText(errorText)).toBeInTheDocument();
+  });
+
+  it('should render the no details message if api returns empty response', () => {
+    queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue({
+      data: [],
+      isError: false,
+      isFetching: false,
+    });
+    const { getByText } = renderWithTheme(
+      <AlertDetailNotification channelIds={['1', '2', '3']} />
+    );
+
+    expect(getByText(notificationChannel)).toBeInTheDocument();
+    expect(getByText(noDataText)).toBeInTheDocument();
   });
 });
