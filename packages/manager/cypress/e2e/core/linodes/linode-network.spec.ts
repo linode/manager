@@ -1,4 +1,9 @@
-import { linodeFactory, ipAddressFactory } from '@src/factories';
+import {
+  linodeFactory,
+  ipAddressFactory,
+  firewallFactory,
+  firewallDeviceFactory,
+} from '@src/factories';
 
 import type { IPRange } from '@linode/api-v4';
 
@@ -9,8 +14,12 @@ import {
 } from 'support/intercepts/linodes';
 import { mockUpdateIPAddress } from 'support/intercepts/networking';
 import { ui } from 'support/ui';
+import {
+  mockAddFirewallDevice,
+  mockGetFirewalls,
+} from 'support/intercepts/firewalls';
 
-describe('linode networking', () => {
+describe('IP Addresses', () => {
   const mockLinode = linodeFactory.build();
   const linodeIPv4 = mockLinode.ipv4[0];
   const mockRDNS = `${linodeIPv4}.ip.linodeusercontent.com`;
@@ -130,5 +139,90 @@ describe('linode networking', () => {
           .findByTitle(`Action menu for IP Address ${_ipv6Range.range}`)
           .should('be.visible');
       });
+  });
+});
+
+describe('Firewalls', () => {
+  it('allows the user to assign a Firewall from the Linode details page', () => {
+    const linode = linodeFactory.build();
+    const firewalls = firewallFactory.buildList(3);
+    const firewallToAttach = firewalls[1];
+    const firewallDevice = firewallDeviceFactory.build({
+      entity: { id: linode.id, type: 'linode' },
+    });
+
+    mockGetLinodeDetails(linode.id, linode).as('getLinode');
+    mockGetLinodeFirewalls(linode.id, []).as('getLinodeFirewalls');
+    mockGetFirewalls(firewalls).as('getFirewalls');
+    mockAddFirewallDevice(firewallToAttach.id, firewallDevice).as(
+      'addFirewallDevice'
+    );
+
+    cy.visitWithLogin(`/linodes/${linode.id}/networking`);
+
+    cy.wait(['@getLinode', '@getLinodeFirewalls']);
+
+    cy.findByText('No Firewalls are assigned.').should('be.visible');
+
+    ui.button
+      .findByTitle('Add Firewall')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Firewalls should fetch when the drawer's contents are mounted
+    cy.wait('@getFirewalls');
+
+    mockGetLinodeFirewalls(linode.id, [firewallToAttach]).as(
+      'getLinodeFirewalls'
+    );
+
+    ui.drawer.findByTitle('Add Firewall').within(() => {
+      cy.findByLabelText('Firewall').should('be.visible').click();
+
+      // Verify all firewalls show in the Select
+      for (const firewall of firewalls) {
+        ui.autocompletePopper
+          .findByTitle(firewall.label)
+          .should('be.visible')
+          .should('be.enabled');
+      }
+
+      ui.autocompletePopper.findByTitle(firewallToAttach.label).click();
+
+      ui.buttonGroup.find().within(() => {
+        ui.button
+          .findByTitle('Add Firewall')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    });
+
+    // Verify the request has the correct payload
+    cy.wait('@addFirewallDevice').then((xhr) => {
+      const requestPayload = xhr.request.body;
+      expect(requestPayload.id).to.equal(linode.id);
+      expect(requestPayload.type).to.equal('linode');
+    });
+
+    ui.toast.assertMessage('Successfully assigned Firewall');
+
+    // The Linode's firewalls list should be invalidated after the new firewall device was added
+    cy.wait('@getLinodeFirewalls');
+
+    // Verify the firewall shows up in the table
+    cy.findByText(firewallToAttach.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText('Unassign').should('be.visible').should('be.enabled');
+      });
+
+    // The "Add Firewall" button should now be disabled beause the Linode has a firewall attached
+    ui.button
+      .findByTitle('Add Firewall')
+      .should('be.visible')
+      .should('be.disabled');
   });
 });
