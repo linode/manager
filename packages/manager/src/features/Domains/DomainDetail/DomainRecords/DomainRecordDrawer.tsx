@@ -3,7 +3,7 @@ import {
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
 import { Notice } from '@linode/ui';
-import { path, pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -203,7 +203,7 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
      * This should be done on the API side, but several breaking
      * configurations will currently succeed on their end.
      */
-    const _domain = data?.name ?? '';
+    const _domain = (data?.name ?? '') as string;
     const invalidCNAME =
       data.type === 'CNAME' && !isValidCNAME(_domain, records);
 
