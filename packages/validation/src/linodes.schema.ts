@@ -686,7 +686,7 @@ export const CreateLinodeSchema = object({
       }
 
       if (interface_generation === 'legacy_config') {
-        return schema.of(ConfigProfileInterfaceSchema);
+        return ConfigProfileInterfacesSchema;
       }
 
       return schema.of(
