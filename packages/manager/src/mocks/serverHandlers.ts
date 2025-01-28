@@ -110,9 +110,6 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { accountResourcesFactory } from 'src/factories/accountResources';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { pickRandom } from 'src/utilities/random';
 
 import type {
@@ -134,6 +131,9 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
+import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountResourcesFactory } from 'src/factories/accountResources';
+import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
