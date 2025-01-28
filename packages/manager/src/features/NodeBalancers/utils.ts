@@ -106,9 +106,7 @@ export const transformConfigsForRequest = (
           ? +config.check_interval
           : undefined,
         // Passive checks must be false for UDP
-        check_passive: config.protocol === 'udp'
-          ? false
-          : config.check_passive,
+        check_passive: config.protocol === 'udp' ? false : config.check_passive,
         check_path: shouldIncludeCheckPath(config)
           ? config.check_path
           : undefined,

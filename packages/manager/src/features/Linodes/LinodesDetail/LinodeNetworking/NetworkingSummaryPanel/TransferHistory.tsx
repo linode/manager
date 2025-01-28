@@ -157,7 +157,7 @@ export const TransferHistory = React.memo((props: Props) => {
     );
 
     return (
-      <Box marginLeft={-5}>
+      <Box>
         <AreaChart
           areas={[
             {

@@ -197,7 +197,9 @@ describe('Update stackscripts', () => {
       .should('be.enabled')
       .click();
     cy.wait('@updateStackScript');
-    ui.toast.assertMessage(`Successfully updated StackScript ${updatedStackScripts[0].label}`);
+    ui.toast.assertMessage(
+      `Successfully updated StackScript ${updatedStackScripts[0].label}`
+    );
     cy.url().should('endWith', `/stackscripts/${updatedStackScripts[0].id}`);
   });
 

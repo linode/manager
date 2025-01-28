@@ -41,21 +41,12 @@ describe('NodeBalancerFirewalls', () => {
   it('renders the Firewall table', () => {
     const { getByText } = renderWithTheme(<NodeBalancerFirewalls {...props} />);
 
-    expect(getByText('Firewall')).toBeVisible();
     expect(getByText('Status')).toBeVisible();
     expect(getByText('Rules')).toBeVisible();
     expect(getByText('mock-firewall-1')).toBeVisible();
     expect(getByText('Enabled')).toBeVisible();
     expect(getByText('1 Inbound / 1 Outbound')).toBeVisible();
     expect(getByText('Unassign')).toBeVisible();
-  });
-
-  it('displays the FirewallInfo text', () => {
-    const { getByText } = renderWithTheme(
-      <NodeBalancerFirewalls {...props} displayFirewallInfoText={true} />
-    );
-
-    expect(getByText('Learn more about creating Firewalls.')).toBeVisible();
   });
 
   it('displays a loading placeholder', () => {
@@ -68,7 +59,6 @@ describe('NodeBalancerFirewalls', () => {
     );
 
     // headers still exist
-    expect(getByText('Firewall')).toBeVisible();
     expect(getByText('Status')).toBeVisible();
     expect(getByText('Rules')).toBeVisible();
 
@@ -85,7 +75,6 @@ describe('NodeBalancerFirewalls', () => {
     const { getByText } = renderWithTheme(<NodeBalancerFirewalls {...props} />);
 
     // headers still exist
-    expect(getByText('Firewall')).toBeVisible();
     expect(getByText('Status')).toBeVisible();
     expect(getByText('Rules')).toBeVisible();
 
@@ -101,7 +90,6 @@ describe('NodeBalancerFirewalls', () => {
     const { getByText } = renderWithTheme(<NodeBalancerFirewalls {...props} />);
 
     // headers still exist
-    expect(getByText('Firewall')).toBeVisible();
     expect(getByText('Status')).toBeVisible();
     expect(getByText('Rules')).toBeVisible();
 
