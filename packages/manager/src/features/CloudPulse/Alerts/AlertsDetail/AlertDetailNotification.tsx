@@ -58,10 +58,12 @@ export const AlertDetailNotification = React.memo(
 
     return (
       <Stack gap={2}>
-        <Typography variant="h2">Notification Channels</Typography>
+        <Typography marginBottom={2} variant="h2">
+          Notification Channels
+        </Typography>
         <Grid alignItems="center" container spacing={2}>
           {channels.map((notificationChannel, index) => {
-            const { channel_type, id, label, ...rest } = notificationChannel;
+            const { channel_type, id, label } = notificationChannel;
             return (
               <Grid container item key={id} spacing={2}>
                 <AlertDetailRow
