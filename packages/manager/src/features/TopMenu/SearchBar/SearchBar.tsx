@@ -393,6 +393,7 @@ const SearchBar = (props: SearchProps) => {
             position: 'absolute',
             top: '50%',
             transform: 'translate(-50%, -50%)',
+            visibility: searchActive ? 'visible' : 'hidden',
             width: `calc(100% - ${theme.tokens.spacing[80]})`,
             zIndex: searchActive ? 3 : 0,
           },
