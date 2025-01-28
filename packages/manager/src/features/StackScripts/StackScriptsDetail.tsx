@@ -42,7 +42,7 @@ export const StackScriptDetail = () => {
 
   const userCanModify = Boolean(
     stackscript?.mine &&
-    canUserModifyAccountStackScript(isRestrictedUser, stackScriptGrants, id)
+      canUserModifyAccountStackScript(isRestrictedUser, stackScriptGrants, id)
   );
 
   const handleCreateClick = () => {
