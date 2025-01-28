@@ -1,6 +1,5 @@
-import { IconButton, Stack, TextField } from '@linode/ui';
+import { TextField } from '@linode/ui';
 import { kubernetesLabelSchema } from '@linode/validation';
-import Close from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -63,27 +62,16 @@ export const LabelInput = (props: Props) => {
       <Controller
         render={({ field, fieldState }) => {
           return (
-            <Stack direction="row">
-              <TextField
-                {...field}
-                containerProps={{ sx: { width: 399 } }}
-                error={!!fieldState.error}
-                errorText={fieldState.error?.message}
-                label="Label"
-                onChange={(e) => setCombinedLabel(e.target.value)}
-                placeholder="myapp.io/app: production"
-                value={combinedLabel}
-              />
-              <IconButton
-                aria-label="Close Add Label form"
-                disableRipple
-                onClick={handleCloseInputForm}
-                size="medium"
-                sx={{ alignSelf: 'flex-end', paddingY: '7px' }}
-              >
-                <Close />
-              </IconButton>
-            </Stack>
+            <TextField
+              {...field}
+              containerProps={{ sx: { width: 399 } }}
+              error={!!fieldState.error}
+              errorText={fieldState.error?.message}
+              label="Label"
+              onChange={(e) => setCombinedLabel(e.target.value)}
+              placeholder="myapp.io/app: production"
+              value={combinedLabel}
+            />
           );
         }}
         control={control}
