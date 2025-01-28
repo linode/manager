@@ -19,9 +19,21 @@ import type { Item } from '../constants';
 import type { APIError, Alert, AlertServiceType } from '@linode/api-v4';
 
 export interface AlertsListTableProps {
+  /**
+   * The list of alerts to display
+   */
   alerts: Alert[];
+  /**
+   * An error to display if there was an issue fetching the alerts
+   */
   error?: APIError[];
+  /**
+   * A boolean indicating whether the alerts are loading
+   */
   isLoading: boolean;
+  /**
+   * The list of services to display in the table
+   */
   services: Item<string, AlertServiceType>[];
 }
 

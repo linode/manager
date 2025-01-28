@@ -33,7 +33,6 @@ import type {
 import type { NotificationChannel } from '@linode/api-v4/lib/cloudpulse/types';
 import type { ObjectSchema } from 'yup';
 
-
 const triggerConditionInitialValues: TriggerConditionForm = {
   criteria_condition: 'ALL',
   evaluation_period_seconds: null,

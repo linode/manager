@@ -110,6 +110,7 @@ export const AlertListing = () => {
     statusFilteredAlerts,
     statusFilters,
   ]);
+
   if (alerts && alerts.length == 0) {
     return (
       <StyledPlaceholder
@@ -206,6 +207,7 @@ export const AlertListing = () => {
             height: '34px',
             paddingBottom: 0,
             paddingTop: 0,
+            width: { md: '150px', xs: '200px' },
           }}
           buttonType="primary"
           data-qa-button="create-alert"
