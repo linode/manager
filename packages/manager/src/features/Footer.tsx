@@ -13,7 +13,7 @@ export const Footer = React.memo(() => {
       <Stack
         alignItems={{
           md: 'center',
-          xs: 'center',
+          xs: 'left',
         }}
         direction={{
           sm: 'row',
@@ -23,16 +23,31 @@ export const Footer = React.memo(() => {
           md: 'row',
           xs: 'column',
         }}
+        sx={(theme) => ({
+          borderTop: `1px solid ${theme.tokens.footer.Border}`,
+          padding: `12px 16px`,
+        })}
         textAlign={{
           sm: 'left',
-          xs: 'center',
+          xs: 'left',
         }}
         display="flex"
         justifyContent="space-between"
-        padding={2}
+        rowGap={2}
         spacing={{ xs: 1 }}
       >
-        <Stack direction="row" spacing={3}>
+        <Stack
+          sx={{
+            '&&': {
+              margin: 0,
+            },
+          }}
+          direction="row"
+          flexWrap="wrap"
+          gap={3}
+          rowGap={1}
+          spacing={3}
+        >
           <StyledLink
             sx={{ paddingLeft: 0 }}
             to={`https://github.com/linode/manager/releases/tag/linode-manager@v${packageJson.version}`}
@@ -44,7 +59,7 @@ export const Footer = React.memo(() => {
         </Stack>
         <Stack
           sx={{
-            '&&': { marginTop: 0 },
+            '&&': { marginLeft: 0, marginTop: 0 },
           }}
           direction="row"
           spacing={3}
@@ -55,8 +70,8 @@ export const Footer = React.memo(() => {
             })}
             variant="body1"
           >
-            Copyright ©{new Date().getFullYear()} Akamai Technologies, Inc. All
-            Rights Reserved
+            © {new Date().getFullYear()} Akamai Technologies, Inc. All Rights
+            Reserved
           </Typography>
         </Stack>
       </Stack>
@@ -65,6 +80,9 @@ export const Footer = React.memo(() => {
 });
 
 const StyledLink = styled(Link)(({ theme }) => ({
+  '&&': {
+    marginLeft: 0,
+  },
   '&:hover': {
     color: theme.tokens.footer.Link.Hover,
   },

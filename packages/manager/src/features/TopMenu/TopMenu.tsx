@@ -100,8 +100,8 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           <Stack
             sx={(theme) => ({
               gap: {
-                md: theme.tokens.spacing[70],
-                xs: 0,
+                sm: theme.tokens.spacing[70],
+                xs: theme.tokens.spacing[50],
               },
               paddingLeft: {
                 md: theme.tokens.spacing[80],
@@ -109,6 +109,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
               },
               paddingRight: {
                 md: 0,
+                sm: theme.tokens.spacing[60],
                 xs: theme.tokens.spacing[40],
               },
             })}
@@ -116,10 +117,17 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             direction="row"
             justifyContent="flex-end"
           >
-            <CreateMenu />
-            <Box display="flex">
-              {!isSmallScreen && <Help />}
-              {!isSmallScreen && <Community />}
+            {!isSmallScreen && <CreateMenu />}
+            <Box
+              gap={{
+                md: 0,
+                sm: theme.tokens.spacing[60],
+                xs: theme.tokens.spacing[50],
+              }}
+              display="flex"
+            >
+              <Help />
+              <Community />
               <NotificationMenu />
             </Box>
             <UserMenu />

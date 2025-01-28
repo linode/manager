@@ -9,6 +9,7 @@ import {
   Content,
   Dropdown,
   Elevation,
+  GlobalFooter,
   GlobalHeader,
   Interaction,
   NotificationToast,
@@ -755,15 +756,19 @@ export const darkTheme: ThemeOptions = {
           '&.MuiTable-zebra-nested': {
             '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
           },
-          // Collapsible Rows
-          '.MuiCollapse-root': {
-            borderBottom: `1px solid ${Border.Normal}`,
-          },
           // Nested Tables
           '.MuiTable-root': {
+            '.MuiTableCell-head': {
+              color: Table.HeaderOutlined.Text,
+            },
             '.MuiTableRow-head, .MuiTableRow-head.MuiTableRow-hover:hover': {
               background: Background.Neutralsubtle,
             },
+            border: 0,
+          },
+          // Collapsible Rows
+          '.MuiTableRow-root:not(:last-of-type) .MuiCollapse-root': {
+            borderBottom: `1px solid ${Border.Normal}`,
           },
           border: `1px solid ${Border.Normal}`,
         },
@@ -792,6 +797,11 @@ export const darkTheme: ThemeOptions = {
           color: Table.HeaderNested.Text,
         },
         root: {
+          '&.MuiTableCell-nested': {
+            '.MuiCollapse-root': {
+              borderBottom: `1px solid ${Border.Normal}`,
+            },
+          },
           borderBottom: `1px solid ${Table.Row.Border}`,
         },
       },
@@ -974,6 +984,7 @@ export const darkTheme: ThemeOptions = {
     content: Content,
     dropdown: Dropdown,
     elevation: Elevation,
+    footer: GlobalFooter,
     interaction: Interaction,
     search: Search,
     sideNavigation: SideNavigation,

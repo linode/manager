@@ -54,6 +54,8 @@ const StyledBetaChip = styled(Chip, {
   '& .MuiChip-label': {
     padding: 0,
   },
+  background: 'lch(77.7 28.7 275 / 0.12)',
+  color: theme.tokens.color.Ultramarine[50],
   font: theme.font.bold,
   fontSize: '0.625rem',
   height: 16,

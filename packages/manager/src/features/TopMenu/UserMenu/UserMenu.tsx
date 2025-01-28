@@ -55,10 +55,6 @@ export const UserMenu = React.memo(() => {
     theme.breakpoints.down('sm')
   );
 
-  const matchesMdDown = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down('md')
-  );
-
   React.useEffect(() => {
     // Run after we've switched to a proxy user.
     if (isProxyUser && !getStorage('is_proxy_user')) {
@@ -94,13 +90,13 @@ export const UserMenu = React.memo(() => {
           aria-describedby={id}
           data-testid="nav-group-profile"
           disableRipple
-          endIcon={!matchesMdDown && getEndIcon()}
+          endIcon={!matchesSmDown && getEndIcon()}
           onClick={(e) => setAnchorEl(e.currentTarget)}
           open={open}
           startIcon={isProxyUser ? <AvatarForProxy /> : <Avatar />}
         >
           <Stack
-            alignItems={'flex-end'}
+            alignItems={'flex-start'}
             sx={{ display: { md: 'flex', xs: 'none' } }}
           >
             <Typography
@@ -151,7 +147,9 @@ const StyledUserMenuButton = styled(Button, {
     },
   },
   '.MuiButton-icon svg': {
-    color: theme.tokens.header.Text.Default,
+    color: open
+      ? theme.tokens.header.Text.Hover
+      : theme.tokens.header.Text.Default,
   },
   '.MuiButton-startIcon': {
     '.MuiAvatar-root, .MuiTypography-root': {
@@ -171,6 +169,8 @@ const StyledUserMenuButton = styled(Button, {
     '.MuiButton-startIcon': {
       margin: 0,
     },
-    padding: theme.tokens.spacing[40],
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
   },
 }));

@@ -41,8 +41,7 @@ export const StyledActiveLink = styled(Link, {
   font: theme.tokens.typography.Body.Semibold,
   minHeight: 32,
   minWidth: SIDEBAR_WIDTH,
-  padding: 0,
-  paddingLeft: 48,
+  padding: `0px 8px 0px 48px`,
   position: 'relative',
   ...(props.isActiveLink && {
     backgroundColor: theme.tokens.color.Neutrals[100],
@@ -130,6 +129,10 @@ export const StyledAccordion = styled(Accordion, {
         fill: theme.tokens.color.Neutrals['White'],
         stroke: 'transparent',
       },
+    },
+    // Spacing between the accordion and the next accordion
+    '.MuiCollapse-entered .MuiAccordionDetails-root': {
+      marginBottom: theme.tokens.spacing[40],
     },
     backgroundColor: theme.tokens.color.Neutrals[90],
   })

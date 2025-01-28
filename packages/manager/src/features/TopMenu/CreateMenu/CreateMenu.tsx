@@ -152,11 +152,6 @@ export const CreateMenu = () => {
   return (
     <Box sx={{ flexGrow: isMediumScreen ? 1 : 0 }}>
       <Button
-        sx={(theme) => ({
-          [theme.breakpoints.down('md')]: {
-            marginRight: theme.tokens.spacing[40],
-          },
-        })}
         aria-controls={open ? 'basic-menu' : undefined}
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"

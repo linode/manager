@@ -29,7 +29,7 @@ import type {
   DropdownTypes as DropdownTypesLight,
   ElevationTypes as ElevationTypesLight,
   FontTypes,
-  GlobalFooterTypes,
+  GlobalFooterTypes as GlobalFooterTypesLight,
   GlobalHeaderTypes,
   InteractionTypes as InteractionTypesLight,
   RadiusTypes,
@@ -47,6 +47,7 @@ import type {
   ContentTypes as ContentTypesDark,
   DropdownTypes as DropdownTypesDark,
   ElevationTypes as ElevationTypesDark,
+  GlobalFooterTypes as GlobalFooterTypesDark,
   InteractionTypes as InteractionTypesDark,
   SearchTypes as SearchTypesDark,
   SideNavigationTypes as SideNavigationTypesDark,
@@ -55,6 +56,7 @@ import type {
 
 export type ThemeName = 'dark' | 'light';
 
+type FooterTypes = MergeTypes<GlobalFooterTypesLight, GlobalFooterTypesDark>;
 type SearchTypes = MergeTypes<SearchTypesLight, SearchTypesDark>;
 type AccentTypes = MergeTypes<AccentTypesLight, AccentTypesDark>;
 type ActionTypes = MergeTypes<ActionTypesLight, ActionTypesDark>;
@@ -144,7 +146,7 @@ declare module '@mui/material/styles/createTheme' {
       dropdown: DropdownTypes;
       elevation: ElevationTypes;
       font: FontTypes;
-      footer: GlobalFooterTypes;
+      footer: FooterTypes;
       header: GlobalHeaderTypes;
       interaction: InteractionTypes;
       radius: RadiusTypes;
@@ -187,7 +189,7 @@ declare module '@mui/material/styles/createTheme' {
       dropdown?: DropdownTypes;
       elevation?: ElevationTypes;
       font?: FontTypes;
-      footer?: GlobalFooterTypes;
+      footer?: FooterTypes;
       header?: GlobalHeaderTypes;
       interaction?: InteractionTypes;
       radius?: RadiusTypes;

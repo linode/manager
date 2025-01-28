@@ -31,6 +31,7 @@ import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { StyledIconButton } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
 
 import type { Item } from 'src/components/EnhancedSelect/Select';
@@ -204,6 +205,11 @@ const SearchBar = (props: SearchProps) => {
     setSearchText(_searchText);
   };
 
+  const toggleSearch = () => {
+    setSearchActive(!searchActive);
+    setMenuOpen(!menuOpen);
+  };
+
   const onClose = () => {
     document.body.classList.remove('searchOverlay');
     setSearchActive(false);
@@ -304,6 +310,7 @@ const SearchBar = (props: SearchProps) => {
       backgroundColor: theme.tokens.header.Search.Background,
       border: `1px solid ${theme.tokens.header.Search.Border.Default}`,
       borderRadius: theme.tokens.borderRadius.None,
+      cursor: 'text',
       minHeight: 'inherit',
       padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
     }),
@@ -356,6 +363,7 @@ const SearchBar = (props: SearchProps) => {
       },
       '.select-placeholder': {
         color: theme.tokens.header.Search.Text.Placeholder,
+        font: theme.tokens.typography.Label.Regular.Placeholder,
         left: 0,
       },
       '> div': {
@@ -366,35 +374,59 @@ const SearchBar = (props: SearchProps) => {
   };
 
   return (
-    <Box>
-      <label className="visually-hidden" htmlFor="main-search">
-        Main search
-      </label>
-      <EnhancedSelect
-        blurInputOnSelect
-        components={{ Control, Option }}
-        filterOption={filterResults}
-        guidance={guidanceText()}
-        hideLabel
-        isClearable={false}
-        isLoading={entitiesLoading}
-        isMulti={false}
-        label="Main search"
-        menuIsOpen={menuOpen}
-        onChange={onSelect}
-        onFocus={onFocus}
-        onInputChange={handleSearchChange}
-        onKeyDown={onKeyDown}
-        onMenuClose={onClose}
-        onMenuOpen={onOpen}
-        openMenuOnClick={false}
-        openMenuOnFocus={false}
-        options={finalOptions}
-        placeholder="Search Products, IP Addresses, Tags..."
-        styles={selectStyles}
-        value={value}
-      />
-    </Box>
+    <React.Fragment>
+      <StyledIconButton
+        aria-label="open menu"
+        color="inherit"
+        disableRipple
+        onClick={toggleSearch}
+        size="large"
+      >
+        <Search />
+      </StyledIconButton>
+      <Box
+        sx={{
+          maxWidth: '800px',
+          [theme.breakpoints.down('sm')]: {
+            left: '50%',
+            opacity: searchActive ? 1 : 0,
+            position: 'absolute',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: `calc(100% - ${theme.tokens.spacing[80]})`,
+            zIndex: searchActive ? 3 : 0,
+          },
+        }}
+      >
+        <label className="visually-hidden" htmlFor="main-search">
+          Main search
+        </label>
+        <EnhancedSelect
+          blurInputOnSelect
+          components={{ Control, Option }}
+          filterOption={filterResults}
+          guidance={guidanceText()}
+          hideLabel
+          isClearable={false}
+          isLoading={entitiesLoading}
+          isMulti={false}
+          label="Main search"
+          menuIsOpen={menuOpen}
+          onChange={onSelect}
+          onFocus={onFocus}
+          onInputChange={handleSearchChange}
+          onKeyDown={onKeyDown}
+          onMenuClose={onClose}
+          onMenuOpen={onOpen}
+          openMenuOnClick={false}
+          openMenuOnFocus={false}
+          options={finalOptions}
+          placeholder="Search Products, IP Addresses, Tags..."
+          styles={selectStyles}
+          value={value}
+        />
+      </Box>
+    </React.Fragment>
   );
 };
 

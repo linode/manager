@@ -1419,7 +1419,7 @@ export const lightTheme: ThemeOptions = {
               ...MuiTableHeadSvgStyles,
             },
           },
-          borderBottom: 0,
+          borderBottom: `1px solid ${Border.Normal}`,
           color: Table.HeaderNested.Text,
           fontWeight: Font.FontWeight.Bold,
           lineHeight: Font.LineHeight.Xxxs,
@@ -1427,6 +1427,9 @@ export const lightTheme: ThemeOptions = {
         },
         root: {
           '&.MuiTableCell-nested': {
+            '.MuiCollapse-root': {
+              borderBottom: `1px solid ${Border.Normal}`,
+            },
             border: 0,
             height: 'inherit', // Override default height - hidden by default
             padding: 0,
