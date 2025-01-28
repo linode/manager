@@ -59,7 +59,9 @@ export const EditAlertResources = () => {
     return { newPathname: '/Definitions/Edit', overrides };
   }, [serviceType, alertId]);
 
-  const [, setSelectedResources] = React.useState<string[]>([]);
+  const [selectedResources, setSelectedResources] = React.useState<string[]>(
+    []
+  );
 
   if (isFetching) {
     return (
@@ -117,7 +119,7 @@ export const EditAlertResources = () => {
     setSelectedResources(resourceIds.map((id) => id)); // here we just keep track of it, on save we will update it
   };
 
-  const { entity_ids, label, service_type } = alertDetails;
+  const { label, service_type } = alertDetails;
 
   return (
     <>
@@ -132,7 +134,7 @@ export const EditAlertResources = () => {
         <Box>
           <AlertResources
             alertLabel={label}
-            alertResourceIds={entity_ids}
+            alertResourceIds={selectedResources}
             handleResourcesSelection={handleResourcesSelection}
             isSelectionsNeeded
             serviceType={service_type}

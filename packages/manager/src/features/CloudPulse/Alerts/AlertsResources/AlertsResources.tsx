@@ -56,6 +56,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
+  const [selectedResources, setSelectedResources] = React.useState<string[]>(
+    alertResourceIds
+  );
 
   const {
     data: regions,
@@ -73,6 +76,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     {},
     serviceType === 'dbaas' ? { platform: 'rdbms-default' } : {}
   );
+
+  React.useEffect(() => {
+    if (resources && isSelectionsNeeded) {
+      setSelectedResources(
+        resources
+          .filter((resource) => alertResourceIds.includes(resource.id))
+          .map((resource) => resource.id)
+      );
+    }
+  }, [resources, isSelectionsNeeded, alertResourceIds]);
 
   // A map linking region IDs to their corresponding region objects, used for quick lookup when displaying data in the table.
   const regionsIdToRegionMap: Map<string, Region> = React.useMemo(() => {
@@ -112,17 +125,38 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     return getFilteredResources({
       data: resources,
       filteredRegions,
+      isAdditionOrDeletionNeeded: isSelectionsNeeded,
       regionsIdToRegionMap,
       resourceIds: alertResourceIds,
       searchText,
+      selectedResources,
     });
   }, [
     resources,
+    filteredRegions,
+    isSelectionsNeeded,
+    regionsIdToRegionMap,
     alertResourceIds,
     searchText,
-    filteredRegions,
-    regionsIdToRegionMap,
+    selectedResources,
   ]);
+
+  const handleSelection = React.useCallback(
+    (ids: string[], isSelectionAction: boolean) => {
+      const onlySelected = isSelectionAction
+        ? selectedResources
+        : selectedResources.filter((resource) => !ids.includes(resource));
+
+      const newlySelected = ids.filter((id) => !selectedResources.includes(id));
+
+      setSelectedResources([...onlySelected, ...newlySelected]);
+
+      if (handleResourcesSelection) {
+        handleResourcesSelection([...onlySelected, ...newlySelected]);
+      }
+    },
+    [handleResourcesSelection, selectedResources]
+  );
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
 
@@ -178,7 +212,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           <Grid item xs={12}>
             <DisplayAlertResources
               filteredResources={filteredResources}
-              handleSelection={handleResourcesSelection}
+              handleSelection={handleSelection}
               isDataLoadingError={isDataLoadingError}
               isSelectionsNeeded={isSelectionsNeeded}
               scrollToElement={() => scrollToElement(titleRef.current)}

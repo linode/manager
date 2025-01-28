@@ -12,9 +12,14 @@ interface FilterResourceProps {
    */
   filteredRegions?: string[];
   /**
+   * Property to integrate and edit the resources associated with alerts
+   */
+  isAdditionOrDeletionNeeded?: boolean;
+  /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
   regionsIdToRegionMap: Map<string, Region>;
+
   /**
    * The resources associated with the alerts
    */
@@ -24,6 +29,11 @@ interface FilterResourceProps {
    * The search text with which the resources needed to be filtered
    */
   searchText?: string;
+
+  /**
+   * This property helps to track the list of selected resources
+   */
+  selectedResources?: string[];
 }
 
 /**
@@ -74,21 +84,28 @@ export const getFilteredResources = (
   const {
     data,
     filteredRegions,
+    isAdditionOrDeletionNeeded,
     regionsIdToRegionMap,
     resourceIds,
     searchText,
+    selectedResources,
   } = filterProps;
   if (!data || resourceIds.length === 0) {
     return [];
   }
   return data // here we always use the base data from API for filtering as source of truth
-    .filter(({ id }) => resourceIds.includes(String(id)))
+    .filter(
+      ({ id }) => isAdditionOrDeletionNeeded || resourceIds.includes(String(id))
+    )
     .map((resource) => {
       const regionObj = resource.region
         ? regionsIdToRegionMap.get(resource.region)
         : undefined;
       return {
         ...resource,
+        checked: selectedResources
+          ? selectedResources.includes(resource.id)
+          : false,
         region: resource.region // here replace region id, formatted to Chicago, US(us-west) compatible to display in table
           ? regionObj
             ? `${regionObj.label} (${regionObj.id})`
