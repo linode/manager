@@ -64,7 +64,6 @@ export const LabelInput = (props: Props) => {
           return (
             <TextField
               {...field}
-              containerProps={{ sx: { width: 399 } }}
               error={!!fieldState.error}
               errorText={fieldState.error?.message}
               label="Label"
