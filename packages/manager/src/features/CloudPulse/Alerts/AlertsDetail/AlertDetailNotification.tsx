@@ -38,20 +38,20 @@ export const AlertDetailNotification = React.memo(
       return <CircleProgress />;
     }
 
-    if (isError) {
+    if (isError || !channels?.length) {
+      // early return for error and channel empty case
       return (
         <Stack gap={2}>
           <Typography variant="h2">Notification Channels</Typography>
-          <ErrorState errorText="Failed to load notification channels." />
-        </Stack>
-      );
-    }
-
-    if (!channels?.length) {
-      return (
-        <Stack gap={2}>
-          <Typography variant="h2">Notification Channels</Typography>
-          <StyledPlaceholder icon={EntityIcon} title="No data to display." />
+          {isError && (
+            <ErrorState errorText="Failed to load notification channels." />
+          )}
+          {!channels?.length && (
+            <StyledPlaceholder
+              icon={EntityIcon}
+              title="No notification channels to display."
+            />
+          )}
         </Stack>
       );
     }
