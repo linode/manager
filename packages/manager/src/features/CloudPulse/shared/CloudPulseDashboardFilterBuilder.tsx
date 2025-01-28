@@ -11,6 +11,7 @@ import NullComponent from 'src/components/NullComponent';
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
   DASHBOARD_ID,
+  NODE_TYPE,
   REGION,
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
@@ -20,6 +21,7 @@ import {
 import {
   getCustomSelectProperties,
   getFilters,
+  getNodeTypeProperties,
   getRegionProperties,
   getResourcesProperties,
   getTagsProperties,
@@ -28,6 +30,7 @@ import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
+import type { CloudPulseNodeTypes } from './CloudPulseNodeTypeFilter';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { CloudPulseTags } from './CloudPulseTagsFilter';
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
@@ -38,6 +41,11 @@ export interface CloudPulseDashboardFilterBuilderProps {
    * Since it is going to integrated after a dashboard selection component, it is easily available to pass.
    */
   dashboard: Dashboard;
+
+  /**
+   * selected database ids
+   */
+  database_ids?: number[];
 
   /**
    * all the selection changes in the filter goes through this method
@@ -67,6 +75,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
   (props: CloudPulseDashboardFilterBuilderProps) => {
     const {
       dashboard,
+      database_ids,
       emitFilterChange,
       handleToggleAppliedFilter,
       isServiceAnalyticsIntegration,
@@ -127,6 +136,22 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         checkAndUpdateDependentFilters(filterKey, filterValue);
       },
       [emitFilterChange, checkAndUpdateDependentFilters]
+    );
+
+    const handleNodeTypeChange = React.useCallback(
+      (nodeType: CloudPulseNodeTypes | null, savePref: boolean = false) => {
+        const selectedNodeType = nodeType?.label;
+        emitFilterChangeByFilterKey(
+          NODE_TYPE,
+          selectedNodeType,
+          selectedNodeType ? [selectedNodeType] : [],
+          savePref,
+          {
+            [NODE_TYPE]: selectedNodeType,
+          }
+        );
+      },
+      [emitFilterChangeByFilterKey]
     );
 
     const handleTagsChange = React.useCallback(
@@ -238,6 +263,22 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleResourceChange
           );
+        } else if (config.configuration.filterKey === NODE_TYPE) {
+          return getNodeTypeProperties(
+            {
+              config,
+              dashboard,
+              database_ids: database_ids?.length
+                ? database_ids
+                : (dependentFilterReference.current[RESOURCE_ID] as number[]),
+              dependentFilters: database_ids?.length
+                ? { resource_id: database_ids }
+                : dependentFilterReference.current,
+              isServiceAnalyticsIntegration,
+              preferences,
+            },
+            handleNodeTypeChange
+          );
         } else {
           return getCustomSelectProperties(
             {
@@ -253,6 +294,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       },
       [
         dashboard,
+        handleNodeTypeChange,
         handleTagsChange,
         handleRegionChange,
         handleResourceChange,
