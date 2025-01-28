@@ -31,6 +31,7 @@ import type { Flags } from 'src/featureFlags';
 import { Interception } from 'cypress/types/net-stubbing';
 import { DateTime } from 'luxon';
 import { convertToGmt } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
+import { formatDate } from 'src/utilities/formatDate';
 
 const timeRanges = [
   { label: 'Last 30 Minutes', unit: 'min', value: 30 },
@@ -434,7 +435,8 @@ describe('Integration Tests for DBaaS Dashboard', () => {
       });
   });
 
-  it.only('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
+  it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
+    const start= getThisMonthRange().start;
     ui.autocomplete
       .findByLabel('Time Range')
       .scrollIntoView()
@@ -446,29 +448,26 @@ describe('Integration Tests for DBaaS Dashboard', () => {
       .should('be.visible')
       .click();
 
-    ui.autocomplete
+      ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
       .type(`${nodeType}{enter}`);
 
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
 
-    cy.get('@getMetrics.all')
+    const end= getThisMonthRange().end;
+
+     cy.get('@getMetrics.all')
       .should('have.length', 4)
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
 
-        expect(requestPayload.absolute_time_duration.start).to.equal(
-          getThisMonthRange().start
-        );
+        expect(requestPayload.absolute_time_duration.start).to.equal(start);
 
-        cy.log('requestPayload', requestPayload.absolute_time_duration.end);
-        cy.log(' getThisMonthRange().start', getThisMonthRange().end);
-
-        expect(requestPayload.absolute_time_duration.end).to.equal(
-          getThisMonthRange().end
-        );
+      cy.log("end date",  formatDate(end, { format: 'yyyy-MM-dd hh:mm a' }))
+      cy.log("requestPayload date",  formatDate(requestPayload.absolute_time_duration.end, { format: 'yyyy-MM-dd hh:mm a' }))
+        expect( formatDate(requestPayload.absolute_time_duration.end, { format: 'yyyy-MM-dd hh:mm' })).to.equal( formatDate(end, { format: 'yyyy-MM-dd hh:mm' }));
       });
   });
 });
