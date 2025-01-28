@@ -16,7 +16,7 @@ export interface Handlers {
   onDeploy?: (imageID: string) => void;
   onEdit?: (image: Image) => void;
   onManageRegions?: (image: Image) => void;
-  onRestore?: (image: Image) => void;
+  onRebuild?: (image: Image) => void;
   onRetry?: (
     imageID: string,
     label: string,
@@ -41,7 +41,7 @@ export const ImagesActionMenu = (props: Props) => {
     onDeploy,
     onEdit,
     onManageRegions,
-    onRestore,
+    onRebuild,
     onRetry,
   } = handlers;
 
@@ -125,7 +125,7 @@ export const ImagesActionMenu = (props: Props) => {
           },
           {
             disabled: !isAvailableLinodesPresent || isDisabled,
-            onClick: () => onRestore?.(image),
+            onClick: () => onRebuild?.(image),
             title: 'Rebuild an Existing Linode',
             tooltip: !isAvailableLinodesPresent
               ? getRestrictedResourceText({
@@ -162,7 +162,7 @@ export const ImagesActionMenu = (props: Props) => {
     image,
     onManageRegions,
     onDeploy,
-    onRestore,
+    onRebuild,
     onDelete,
   ]);
 

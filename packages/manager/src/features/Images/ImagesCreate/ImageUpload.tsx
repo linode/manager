@@ -54,11 +54,9 @@ export const ImageUpload = () => {
     strict: false,
   });
   const navigate = useNavigate();
-  // const { location } = useHistory<ImageUploadNavigationState | undefined>();
 
   const dispatch = useDispatch<Dispatch>();
   const hasPendingUpload = usePendingUpload();
-  // const { push } = useHistory();
   const flags = useFlags();
 
   const [uploadProgress, setUploadProgress] = useState<AxiosProgressEvent>();

@@ -5,6 +5,11 @@ import { ImagesRoute } from './ImagesRoute';
 
 import type { TableSearchParams } from '../types';
 
+export type ImagesCreateState = {
+  imageDescription?: string;
+  imageLabel?: string;
+};
+
 export interface ImagesSearchParams extends TableSearchParams {
   query?: string;
 }
@@ -23,7 +28,7 @@ const imageActions = {
   delete: 'delete',
   deploy: 'deploy',
   edit: 'edit',
-  'manage-replicas': 'manage-replicas',
+  manageReplicas: 'manageReplicas',
   rebuild: 'rebuild',
 } as const;
 

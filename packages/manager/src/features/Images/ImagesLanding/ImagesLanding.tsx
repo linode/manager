@@ -13,6 +13,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
+import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
@@ -81,18 +83,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 interface ImageDialogState {
   error?: string;
-  image?: string;
-  imageID?: string;
-  open: boolean;
   status?: ImageStatus;
   submitting: boolean;
 }
 
-const defaultDialogState = {
+const defaultDialogState: ImageDialogState = {
   error: undefined,
-  image: '',
-  imageID: '',
-  open: false,
   submitting: false,
 };
 
@@ -104,6 +100,7 @@ export const ImagesLanding = () => {
   }: { action: ImageAction; imageId: string } = useParams({
     strict: false,
   });
+  const history = useHistory();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
@@ -112,8 +109,12 @@ export const ImagesLanding = () => {
   });
   const queryParams = new URLSearchParams(location.search);
   const query = queryParams.get(searchParamKey) ?? '';
-
   const queryClient = useQueryClient();
+  const [dialogState, setDialogState] = React.useState<ImageDialogState>(
+    defaultDialogState
+  );
+  const dialogStatus =
+    dialogState.status === 'pending_upload' ? 'cancel' : 'delete';
 
   /**
    * At the time of writing: `label`, `tags`, `size`, `status`, `region` are filterable.
@@ -274,41 +275,17 @@ export const ImagesLanding = () => {
     imageEvents
   );
 
-  // const [selectedImageId, setSelectedImageId] = React.useState<string>();
-
-  // const [
-  //   isManageReplicasDrawerOpen,
-  //   setIsManageReplicasDrawerOpen,
-  // ] = React.useState(false);
-  // const [isRebuildDrawerOpen, setIsRebuildDrawerOpen] = React.useState(false);
-
-  // const selectedImage =
-  //   manualImages?.data.find((i) => i.id === selectedImageId) ??
-  //   automaticImages?.data.find((i) => i.id === selectedImageId);
-
-  const [dialog, setDialogState] = React.useState<ImageDialogState>(
-    defaultDialogState
-  );
-
-  const dialogAction = dialog.status === 'pending_upload' ? 'cancel' : 'delete';
-  const dialogMessage =
-    dialogAction === 'cancel'
-      ? 'Are you sure you want to cancel this Image upload?'
-      : 'Are you sure you want to delete this Image?';
-
-  // const openDialog = (image: string, imageID: string, status: ImageStatus) => {
-  //   setDialogState({
-  //     error: undefined,
-  //     image,
-  //     imageID,
-  //     open: true,
-  //     status,
-  //     submitting: false,
-  //   });
-  // };
   const handleEdit = (image: Image) => {
     navigate({
       params: { action: 'edit', imageId: image.id },
+      search: (prev) => prev,
+      to: '/images/$imageId/$action',
+    });
+  };
+
+  const handleRebuild = (image: Image) => {
+    navigate({
+      params: { action: 'rebuild', imageId: image.id },
       search: (prev) => prev,
       to: '/images/$imageId/$action',
     });
@@ -323,23 +300,25 @@ export const ImagesLanding = () => {
   };
 
   const handleCloseDialog = () => {
+    setDialogState(defaultDialogState);
     navigate({ search: (prev) => prev, to: '/images' });
   };
 
-  const handleRemoveImage = () => {
-    if (!dialog.imageID) {
+  const handleDeleteImage = (image: Image) => {
+    if (!image.id) {
       setDialogState((dialog) => ({
         ...dialog,
         error: 'Image is not available.',
       }));
     }
+
     setDialogState((dialog) => ({
       ...dialog,
       error: undefined,
       submitting: true,
     }));
 
-    deleteImage({ imageId: dialog.imageID! })
+    deleteImage({ imageId: image.id })
       .then(() => {
         handleCloseDialog();
         /**
@@ -361,28 +340,26 @@ export const ImagesLanding = () => {
           err,
           'There was an error deleting the image.'
         );
-        setDialogState((dialog) => ({
-          ...dialog,
+        setDialogState({
+          ...dialogState,
           error: _error,
           submitting: false,
-        }));
+        });
+        handleCloseDialog();
       });
   };
 
-  const onRetryClick = (
-    imageId: string,
-    imageLabel: string,
-    imageDescription: string
-  ) => {
+  const onRetryClick = (imageLabel: string, imageDescription: string) => {
     queryClient.invalidateQueries({
       queryKey: imageQueries.paginated._def,
     });
-    // history.push('/images/create/upload', {
-    //   imageDescription,
-    //   imageLabel,
-    // });
     navigate({
       search: (prev) => ({ ...prev }),
+      state: (prev) => ({
+        ...prev,
+        imageDescription,
+        imageLabel,
+      }),
       to: '/images/create/upload',
     });
   };
@@ -393,16 +370,10 @@ export const ImagesLanding = () => {
     });
   };
 
-  const deployNewLinode = (imageID: string) => {
-    // history.push({
-    //   pathname: `/linodes/create/`,
-    //   search: `?type=Images&imageID=${imageID}`,
-    //   state: { selectedImageId: imageID },
-    // });
-    navigate({
-      search: (prev) => prev,
-      to: `/linodes/create`,
-      // state: { selectedImageId: imageID },
+  const handleDeployNewLinode = (imageId: string) => {
+    history.push({
+      pathname: `/linodes/create/`,
+      search: `?type=Images&imageID=${imageId}`,
     });
   };
 
@@ -428,7 +399,7 @@ export const ImagesLanding = () => {
   const handlers: ImageHandlers = {
     onCancelFailed: onCancelFailedClick,
     onDelete: handleDelete,
-    onDeploy: deployNewLinode,
+    onDeploy: handleDeployNewLinode,
     onEdit: handleEdit,
     // onManageRegions: multiRegionsEnabled
     //   ? (image) => {
@@ -436,10 +407,7 @@ export const ImagesLanding = () => {
     //       setIsManageReplicasDrawerOpen(true);
     //     }
     //   : undefined,
-    // onRestore: (image) => {
-    //   setSelectedImageId(image.id);
-    //   setIsRebuildDrawerOpen(true);
-    // },
+    onRebuild: handleRebuild,
     onRetry: onRetryClick,
   };
 
@@ -696,7 +664,7 @@ export const ImagesLanding = () => {
       />
       <Drawer
         onClose={handleCloseDialog}
-        open={action === 'manage-replicas'}
+        open={action === 'manageReplicas'}
         title={`Manage Replicas for ${selectedImage?.label}`}
       >
         <ManageImageReplicasForm
@@ -710,28 +678,34 @@ export const ImagesLanding = () => {
             primaryButtonProps={{
               'data-testid': 'submit',
               label:
-                dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image',
-              loading: dialog.submitting,
-              onClick: handleRemoveImage,
+                dialogStatus === 'cancel' ? 'Cancel Upload' : 'Delete Image',
+              loading: dialogState.submitting,
+              onClick: () => handleDeleteImage(selectedImage!),
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
-              label: dialogAction === 'cancel' ? 'Keep Image' : 'Cancel',
+              label: dialogStatus === 'cancel' ? 'Keep Image' : 'Cancel',
               onClick: handleCloseDialog,
             }}
           />
         }
         title={
-          dialogAction === 'cancel'
+          dialogStatus === 'cancel'
             ? 'Cancel Upload'
-            : `Delete Image ${dialog.image}`
+            : `Delete Image ${selectedImage?.label}`
         }
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'delete'}
       >
-        {dialog.error && <Notice text={dialog.error} variant="error" />}
-        <Typography>{dialogMessage}</Typography>
+        {dialogState.error && (
+          <Notice text={dialogState.error} variant="error" />
+        )}
+        <Typography>
+          {dialogStatus === 'cancel'
+            ? 'Are you sure you want to cancel this Image upload?'
+            : 'Are you sure you want to delete this Image?'}
+        </Typography>
       </ConfirmationDialog>
     </React.Fragment>
   );
