@@ -1,4 +1,5 @@
 import { IconButton, Stack, TextField } from '@linode/ui';
+import { labelSchema } from '@linode/validation';
 import Close from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -14,15 +15,11 @@ interface Props {
 export const LabelInput = (props: Props) => {
   const { handleCloseInputForm } = props;
 
-  const { control, setValue, watch } = useFormContext();
+  const { clearErrors, control, setError, setValue, watch } = useFormContext();
 
   const [combinedLabel, setCombinedLabel] = useState('');
 
   const _labels: Label = watch('labels');
-
-  const handleChangeLabel = (combinedValue: string) => {
-    setCombinedLabel(combinedValue);
-  };
 
   const handleAddLabel = () => {
     // Separate the combined label.
@@ -30,15 +27,34 @@ export const LabelInput = (props: Props) => {
       .split(':')
       .map((str) => str.trim());
 
-    // Validation?
+    const newLabels = { ..._labels, [labelKey]: labelValue };
 
-    // Add the new key-value pair to the existing labels object.
-    setValue(
-      'labels',
-      { ..._labels, [labelKey]: labelValue },
-      { shouldDirty: true }
-    );
+    try {
+      clearErrors();
+      labelSchema.validateSync(newLabels);
 
+      // Add the new key-value pair to the existing labels object.
+      setValue(
+        'labels',
+        { ..._labels, [labelKey]: labelValue },
+        { shouldDirty: true }
+      );
+
+      handleCloseInputForm();
+    } catch (e) {
+      setError(
+        'labels',
+        {
+          message: e.message,
+          type: 'validate',
+        },
+        { shouldFocus: true }
+      );
+    }
+  };
+
+  const handleClose = () => {
+    clearErrors();
     handleCloseInputForm();
   };
 
@@ -50,11 +66,14 @@ export const LabelInput = (props: Props) => {
             <Stack direction="row">
               <TextField
                 {...field}
+                labelTooltipText={
+                  "A label's key must begin with a letter or number and may contain letters, numbers, hyphens, dots, and underscores. Optionally, the key can begin with a valid DNS subdomain prefix."
+                }
                 containerProps={{ sx: { width: 399 } }}
                 error={!!fieldState.error}
-                helperText={fieldState.error?.message}
+                errorText={fieldState.error?.message}
                 label="Label"
-                onChange={(e) => handleChangeLabel(e.target.value)}
+                onChange={(e) => setCombinedLabel(e.target.value)}
                 placeholder="myapp.io/app: production"
                 value={combinedLabel}
               />
@@ -83,7 +102,7 @@ export const LabelInput = (props: Props) => {
         secondaryButtonProps={{
           'data-testid': 'cancel-label',
           label: 'Cancel',
-          onClick: handleCloseInputForm,
+          onClick: handleClose,
         }}
         style={{ flexDirection: 'row-reverse' }}
       />

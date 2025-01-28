@@ -89,16 +89,66 @@ export const kubernetesControlPlaneACLPayloadSchema = object().shape({
   acl: controlPlaneACLOptionsSchema,
 });
 
-// Regex to match DNS subdomain prefix or a key with allowed characters
-const keyRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?(\/[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?)?$/;
+// Starts with a letter or number and contains letters, numbers, hyphens, dots, and underscores
+const alphaNumericValidCharactersRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
 
-// Regex for value validation
-const valueRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
+// DNS subdomain prefix (example.com/my-app)
+const dnsPrefixRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
+
+const validateLabel = (labels: { [key: string]: string }): boolean => {
+  if (labels) {
+    for (const [labelKey, labelValue] of Object.entries(labels)) {
+      // Confirm the key and value both exist.
+      if (!labelKey || !labelValue) {
+        return false;
+      }
+
+      // If the key has a slash, validate it as a DNS subdomain; else, validate as a simple key.
+      if (labelKey.includes('/')) {
+        const [prefix, suffix] = labelKey.split('/');
+
+        if (!dnsPrefixRegex.test(prefix)) {
+          return false;
+        }
+
+        // Confirm total key length is 128 chars max (DNS limit) and suffix is 62 chars max.
+        if (labelKey.length > 128 || suffix.length > 62) {
+          return false;
+        }
+      } else {
+        // Simple keys contain valid alphanumeric characters up to a max length of 63.
+        if (
+          labelKey.length > 63 ||
+          !alphaNumericValidCharactersRegex.test(labelKey)
+        ) {
+          return false;
+        }
+      }
+
+      // Label values contain valid alphanumeric characters up to a max length of 63.
+      if (
+        labelValue.length > 63 ||
+        !alphaNumericValidCharactersRegex.test(labelValue)
+      ) {
+        return false;
+      }
+    }
+
+    // All key-value pairs are valid.
+    return true;
+  }
+  return false; // No label provided.
+};
+export const labelSchema = object().test({
+  name: 'validateLabels',
+  message: 'Labels must be valid key-value pairs.',
+  test: validateLabel,
+});
 
 export const taintSchema = object().shape({
   key: string()
     .matches(
-      keyRegex,
+      alphaNumericValidCharactersRegex || dnsPrefixRegex,
       'Key must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 253 characters.'
     )
     .max(253, 'Key must be between 1 and 253 characters.')
@@ -106,7 +156,7 @@ export const taintSchema = object().shape({
     .required('Key is required.'),
   value: string()
     .matches(
-      valueRegex,
+      alphaNumericValidCharactersRegex,
       'Value must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 63 characters.'
     )
     .max(63, 'Value must be between 0 and 63 characters.')
