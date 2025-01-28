@@ -95,57 +95,59 @@ const alphaNumericValidCharactersRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9
 // DNS subdomain prefix (example.com/my-app)
 const dnsPrefixRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
 
-const validateLabel = (labels: { [key: string]: string }): boolean => {
+const MAX_DNS_KEY_TOTAL_LENGTH = 128;
+const MAX_DNS_KEY_SUFFIX_LENGTH = 62;
+const MAX_SIMPLE_KEY_OR_VALUE_LENGTH = 63;
+
+const validateKubernetesLabel = (labels: {
+  [key: string]: string;
+}): boolean => {
   if (labels) {
     for (const [labelKey, labelValue] of Object.entries(labels)) {
       // Confirm the key and value both exist.
       if (!labelKey || !labelValue) {
         return false;
       }
-
       // If the key has a slash, validate it as a DNS subdomain; else, validate as a simple key.
       if (labelKey.includes('/')) {
         const [prefix, suffix] = labelKey.split('/');
-
         if (!dnsPrefixRegex.test(prefix)) {
           return false;
         }
-
-        // Confirm total key length is 128 chars max (DNS limit) and suffix is 62 chars max.
-        if (labelKey.length > 128 || suffix.length > 62) {
+        if (
+          labelKey.length > MAX_DNS_KEY_TOTAL_LENGTH ||
+          suffix.length > MAX_DNS_KEY_SUFFIX_LENGTH
+        ) {
           return false;
         }
       } else {
-        // Simple keys contain valid alphanumeric characters up to a max length of 63.
         if (
-          labelKey.length > 63 ||
+          labelKey.length > MAX_SIMPLE_KEY_OR_VALUE_LENGTH ||
           !alphaNumericValidCharactersRegex.test(labelKey)
         ) {
           return false;
         }
       }
-
-      // Label values contain valid alphanumeric characters up to a max length of 63.
+      // Validate the alphanumeric value.
       if (
-        labelValue.length > 63 ||
+        labelValue.length > MAX_SIMPLE_KEY_OR_VALUE_LENGTH ||
         !alphaNumericValidCharactersRegex.test(labelValue)
       ) {
         return false;
       }
     }
-
-    // All key-value pairs are valid.
-    return true;
+    return true; // All key-value pairs are valid.
   }
   return false; // No label provided.
 };
-export const labelSchema = object().test({
+
+export const kubernetesLabelSchema = object().test({
   name: 'validateLabels',
   message: 'Labels must be valid key-value pairs.',
-  test: validateLabel,
+  test: validateKubernetesLabel,
 });
 
-export const taintSchema = object().shape({
+export const kubernetesTaintSchema = object().shape({
   key: string()
     .matches(
       alphaNumericValidCharactersRegex || dnsPrefixRegex,

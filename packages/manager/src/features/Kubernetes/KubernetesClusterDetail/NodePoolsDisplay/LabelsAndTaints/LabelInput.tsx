@@ -1,5 +1,5 @@
 import { IconButton, Stack, TextField } from '@linode/ui';
-import { labelSchema } from '@linode/validation';
+import { kubernetesLabelSchema } from '@linode/validation';
 import Close from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -31,7 +31,7 @@ export const LabelInput = (props: Props) => {
 
     try {
       clearErrors();
-      labelSchema.validateSync(newLabels);
+      kubernetesLabelSchema.validateSync(newLabels);
 
       // Add the new key-value pair to the existing labels object.
       setValue(

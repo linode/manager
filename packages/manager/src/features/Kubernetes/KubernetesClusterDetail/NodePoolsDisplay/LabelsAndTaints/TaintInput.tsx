@@ -1,5 +1,5 @@
 import { Autocomplete, TextField } from '@linode/ui';
-import { taintSchema } from '@linode/validation';
+import { kubernetesTaintSchema } from '@linode/validation';
 import React, { useState } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -46,7 +46,7 @@ export const TaintInput = (props: Props) => {
 
     try {
       clearErrors();
-      taintSchema.validateSync(newTaint);
+      kubernetesTaintSchema.validateSync(newTaint);
       append(newTaint);
       handleCloseInputForm();
     } catch (e) {
