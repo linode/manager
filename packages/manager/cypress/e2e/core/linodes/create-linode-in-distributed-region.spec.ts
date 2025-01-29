@@ -28,9 +28,9 @@ describe('Create Linode in Distributed Region', () => {
     const mockRegion = extendRegion(regionFactory.build(mockRegionOptions));
     const mockLinodeTypes = [
       linodeTypeFactory.build({
-        id: 'dedicated-edge-1',
-        label: 'Dedicated 4GB',
-        class: 'dedicated',
+        id: 'nanode-edge-1',
+        label: 'Nanode 1GB',
+        class: 'nanode',
       }),
     ];
     const mockLinode = linodeFactory.build({
@@ -65,7 +65,7 @@ describe('Create Linode in Distributed Region', () => {
     linodeCreatePage.setRootPassword(rootPass);
 
     cy.get('[data-qa-tp="Linode Plan"]').within(() => {
-      cy.findByRole('row', { name: /Dedicated 4 GB/i })
+      cy.findByRole('row', { name: /Nanode 1 GB/i })
         .should('be.visible')
         .click();
     });
