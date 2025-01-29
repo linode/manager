@@ -226,10 +226,10 @@ export interface Alert {
   };
   trigger_conditions: TriggerCondition;
   alert_channels: {
-    id: string;
+    id: number;
     label: string;
     url: string;
-    type: 'channel';
+    type: 'alert-channel';
   }[];
   created_by: string;
   updated_by: string;
