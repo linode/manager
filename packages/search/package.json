@@ -9,8 +9,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest",
-    "precommit": "tsc"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "peggy": "^4.0.3",
