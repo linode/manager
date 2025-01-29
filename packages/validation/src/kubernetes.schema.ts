@@ -131,7 +131,9 @@ const validateKubernetesLabel = (labels: {
       // Validate the alphanumeric value.
       if (
         labelValue.length > MAX_SIMPLE_KEY_OR_VALUE_LENGTH ||
-        !alphaNumericValidCharactersRegex.test(labelValue)
+        !alphaNumericValidCharactersRegex.test(labelValue) ||
+        labelValue.includes('kubernetes.io') ||
+        labelValue.includes('linode.com')
       ) {
         return false;
       }

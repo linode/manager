@@ -31,6 +31,7 @@ import {
   mockGetControlPlaneACLError,
   mockGetTieredKubernetesVersions,
   mockUpdateClusterError,
+  mockUpdateNodePoolError,
 } from 'support/intercepts/lke';
 import {
   mockGetLinodeType,
@@ -1352,18 +1353,6 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.disabled');
 
-          // Try to submit without adding a label.
-          ui.button
-            .findByTitle('Add')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-
-          // Confirm error validation for invalid label input.
-          cy.findByText('Labels must be valid key-value pairs.').should(
-            'be.visible'
-          );
-
           // Confirm form adds a valid new label.
           cy.findByLabelText('Label').click().type(mockNewLabel);
 
@@ -1391,18 +1380,6 @@ describe('LKE cluster updates', () => {
 
           // Confirm form button is disabled and label form displays with the correct CTAs.
           ui.button.findByTitle('Add Taint').should('be.disabled');
-
-          // Try to submit without adding a taint.
-          ui.button
-            .findByTitle('Add')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-
-          // Confirm error validation for invalid taint input.
-          cy.contains(/Key must start with a letter or number/).should(
-            'be.visible'
-          );
 
           // Confirm form adds a valid new taint.
           cy.findByLabelText('Taint')
@@ -1458,6 +1435,151 @@ describe('LKE cluster updates', () => {
 
       // Confirm drawer closes.
       cy.findByText(mockDrawerTitle).should('not.exist');
+    });
+
+    it('can handle validation and errors for labels and taints', () => {
+      const invalidDNSSubdomainLabel = `my-app/${randomString(129)}`;
+      const invalidLabels = [
+        'label with spaces',
+        'key-and-no-value',
+        randomString(64),
+        invalidDNSSubdomainLabel,
+        'valid-key: invalid value',
+        '!invalid-characters: value',
+        'key: kubernetes.io',
+        'key: linode.com',
+      ];
+
+      const invalidTaintKeys = [
+        randomString(254),
+        'key with spaces',
+        '!invalid-characters',
+      ];
+      const invalidTaintValues = [
+        `key:${randomString(64)}`,
+        'key: kubernetes.io',
+        'key: linode.com',
+        'key:value with spaces',
+      ];
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getCluster',
+        '@getNodePools',
+        '@getVersions',
+        '@getType',
+        '@getControlPlaneAcl',
+      ]);
+      const mockErrorMessage = 'API Error';
+
+      mockUpdateNodePoolError(
+        mockCluster.id,
+        mockNodePoolInitial,
+        mockErrorMessage
+      ).as('updateNodePoolError');
+
+      // Click "Labels and Taints" button and confirm drawer contents.
+      ui.button
+        .findByTitle('Labels and Taints')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(mockDrawerTitle)
+        .should('be.visible')
+        .within(() => {
+          ui.button.findByTitle('Add Label').click();
+
+          // Try to submit without adding a label.
+          ui.button.findByTitle('Add').click();
+
+          // Confirm error validation for invalid label input.
+          cy.findByText('Labels must be valid key-value pairs.').should(
+            'be.visible'
+          );
+
+          invalidLabels.forEach((invalidLabel) => {
+            cy.findByLabelText('Label').click().clear().type(invalidLabel);
+
+            // Try to submit with invalid label.
+            ui.button.findByTitle('Add').click();
+
+            // Confirm error validation for invalid label input.
+            cy.findByText('Labels must be valid key-value pairs.').should(
+              'be.visible'
+            );
+          });
+
+          // Submit a valid label to enable the 'Save Changes' button.
+          cy.findByLabelText('Label')
+            .click()
+            .clear()
+            .type('mockKey: mockValue');
+
+          ui.button.findByTitle('Add').click();
+
+          ui.button.findByTitle('Add Taint').click();
+
+          // Try to submit without adding a taint.
+          ui.button.findByTitle('Add').click();
+
+          // Confirm error validation for invalid taint input.
+          cy.findByText(/Key must start with a letter or number/).should(
+            'be.visible'
+          );
+
+          invalidTaintKeys.forEach((invalidTaintKey, index) => {
+            cy.findByLabelText('Taint').click().clear().type(invalidTaintKey);
+
+            // Try to submit taint with invalid key.
+            ui.button.findByTitle('Add').click();
+
+            if (index === 0) {
+              cy.findByText('Key must be between 1 and 253 characters.').should(
+                'be.visible'
+              );
+            } else {
+              cy.findByText(/Key must start with a letter or number/).should(
+                'be.visible'
+              );
+            }
+          });
+
+          invalidTaintValues.forEach((invalidTaintValue, index) => {
+            cy.findByLabelText('Taint').click().clear().type(invalidTaintValue);
+
+            // Try to submit taint with invalid value.
+            ui.button.findByTitle('Add').click();
+
+            if (index === 0) {
+              cy.findByText(
+                'Value must be between 0 and 63 characters.'
+              ).should('be.visible');
+            } else if (index === invalidTaintValues.length - 1) {
+              cy.findByText(/Value must start with a letter or number/).should(
+                'be.visible'
+              );
+            } else {
+              cy.findByText(
+                'Value cannot be "kubernetes.io" or "linode.com".'
+              ).should('be.visible');
+            }
+          });
+
+          ui.button.findByAttribute('data-testid', 'cancel-taint').click();
+
+          // Try to submit form, but mock an API error.
+          ui.button
+            .findByTitle('Save Changes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm error message shows when API request fails.
+      cy.wait('@updateNodePoolError');
+      cy.findAllByText(mockErrorMessage).should('be.visible');
     });
   });
 
