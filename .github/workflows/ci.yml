@@ -48,10 +48,14 @@ jobs:
 
   publish-validation:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
     needs: build-validation
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+          version: 10
       - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
@@ -61,6 +65,7 @@ jobs:
         with:
           token: ${{ secrets.NPM_AUTH_TOKEN }}
           package: ./packages/validation/package.json
+          dry-run: true
       - name: slack-notify
         uses: rtCamp/action-slack-notify@master
         if: steps.npm-publish.outputs.type != 'none'
