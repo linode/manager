@@ -73,7 +73,7 @@ const SearchBar = (props: SearchProps) => {
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const theme = useTheme();
 
-  const isMdScreen = useMediaQuery(theme.breakpoints.only('md'));
+  const isMdScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const searchHelperText = isMdScreen
     ? 'Search...'
