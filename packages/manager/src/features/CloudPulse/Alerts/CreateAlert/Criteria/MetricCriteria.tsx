@@ -92,7 +92,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
       <Button
         onClick={() =>
           append({
-            aggregation_type: null,
+            aggregate_function: null,
             dimension_filters: [],
             metric: null,
             operator: null,
