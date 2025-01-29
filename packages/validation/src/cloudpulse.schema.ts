@@ -41,6 +41,6 @@ export const createAlertDefinitionSchema = object({
       .min(1, 'At least one metric criteria is required.'),
   }),
   trigger_conditions: triggerConditionValidation,
-  channel_ids: array(number()),
+  channel_ids: array().of(number()).min(1, 'At least one channel is required.'),
   tags: array().of(string()).notRequired(),
 });

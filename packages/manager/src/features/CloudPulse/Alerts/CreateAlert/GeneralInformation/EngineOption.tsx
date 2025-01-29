@@ -35,7 +35,7 @@ export const EngineOption = (props: EngineOptionProps) => {
           }
           data-testid="engine-option"
           errorText={fieldState.error?.message}
-          label="Engine Option"
+          label="Database Engine"
           onBlur={field.onBlur}
           options={engineTypeOptions}
           placeholder="Select an Engine"

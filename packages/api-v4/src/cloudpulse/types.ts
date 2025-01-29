@@ -111,6 +111,7 @@ export interface MetricDefinition {
   scrape_interval: string;
   available_aggregate_functions: string[];
   dimensions: Dimension[];
+  is_alertable: boolean;
 }
 
 export interface Dimension {
