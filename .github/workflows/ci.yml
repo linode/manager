@@ -285,7 +285,7 @@ jobs:
 
   publish-sdk:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
     needs:
       - test-sdk
       - validate-sdk
@@ -293,22 +293,24 @@ jobs:
       - publish-validation
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+          version: 10
       - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
-      - uses: JS-DevTools/npm-publish@v1
-        id: npm-publish
-        with:
-          token: ${{ secrets.NPM_AUTH_TOKEN }}
-          package: ./packages/api-v4/package.json
+      - run: pnpm publish --dry-run --access public --no-git-checks
+        working-directory: packages/api-v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: slack-notify
         uses: rtCamp/action-slack-notify@master
-        if: steps.npm-publish.outputs.type != 'none'
         env:
           SLACK_CHANNEL: api-js-client
-          SLACK_TITLE: "Linode JS Client v${{ steps.npm-publish.outputs.version}}"
-          SLACK_MESSAGE: ":rocket: Linode JS Client has been published to NPM: ${{ steps.npm-publish.outputs.old-version }} => ${{ steps.npm-publish.outputs.version }}. View the changelog at https://github.com/linode/manager/blob/master/packages/api-v4/CHANGELOG.md"
+          SLACK_TITLE: "Linode API-v4 Client has been published"
+          SLACK_MESSAGE: ":rocket: Linode API-v4 Client has been published to NPM. View the changelog at https://github.com/linode/manager/blob/master/packages/api-v4/CHANGELOG.md"
           SLACK_USERNAME: npm-bot
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_ICON_EMOJI: ":package:"
