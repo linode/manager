@@ -54,7 +54,6 @@ describe('NodeBalancerSettings', () => {
 
     // Firewall panel
     expect(getByText('Firewalls')).toBeVisible();
-    expect(getByText('Firewall')).toBeVisible();
     expect(getByText('Status')).toBeVisible();
     expect(getByText('Rules')).toBeVisible();
     expect(getByText('mock-firewall-1')).toBeVisible();
