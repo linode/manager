@@ -121,14 +121,21 @@ describe('Object Storage Gen2 create access key modal has disabled fields for re
 
     cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
     // error message
-    cy.findByTestId('notice-error-important').should('be.visible');
-    // label
-    cy.findByLabelText(/Label.*/)
+    ui.drawer
+      .findByTitle('Create Access Key')
       .should('be.visible')
-      .should('be.disabled');
-    // region
-    ui.regionSelect.find().should('be.visible').should('be.disabled');
-    // submit button is disabled
-    cy.findByTestId('submit').should('be.visible').should('be.disabled');
+      .within(() => {
+        cy.findByText(
+          /You don't have bucket_access to create an Access Key./
+        ).should('be.visible');
+        // label
+        cy.findByLabelText(/Label.*/)
+          .should('be.visible')
+          .should('be.disabled');
+        // region
+        ui.regionSelect.find().should('be.visible').should('be.disabled');
+        // submit button is disabled
+        cy.findByTestId('submit').should('be.visible').should('be.disabled');
+      });
   });
 });

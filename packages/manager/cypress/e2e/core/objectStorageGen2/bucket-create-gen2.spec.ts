@@ -752,14 +752,21 @@ describe('Object Storage Gen2 create bucket modal has disabled fields for restri
     cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
 
     // error message
-    cy.findByTestId('notice-error').should('be.visible');
-    cy.findByLabelText(/Label.*/)
+    ui.drawer
+      .findByTitle('Create Bucket')
       .should('be.visible')
-      .should('be.disabled');
-    ui.regionSelect.find().should('be.visible').should('be.disabled');
-    // submit button should be enabled
-    cy.findByTestId('create-bucket-button')
-      .should('be.visible')
-      .should('be.enabled');
+      .within(() => {
+        cy.findByText(/You don't have permissions to create a Bucket./).should(
+          'be.visible'
+        );
+        cy.findByLabelText(/Label.*/)
+          .should('be.visible')
+          .should('be.disabled');
+        ui.regionSelect.find().should('be.visible').should('be.disabled');
+        // submit button should be enabled
+        cy.findByTestId('create-bucket-button')
+          .should('be.visible')
+          .should('be.enabled');
+      });
   });
 });
