@@ -28,7 +28,20 @@ export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricC
 );
 
 export const alertFactory = Factory.Sync.makeFactory<Alert>({
-  channels: [],
+  channels: [
+    {
+      id: '1',
+      label: 'sample1',
+      type: 'channel',
+      url: '',
+    },
+    {
+      id: '2',
+      label: 'sample2',
+      type: 'channel',
+      url: '',
+    },
+  ],
   created: new Date().toISOString(),
   created_by: 'user1',
   description: 'Test description',
