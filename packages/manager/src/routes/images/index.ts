@@ -10,8 +10,8 @@ export interface ImagesSearchParams extends TableSearchParams {
 }
 
 export interface ImageCreateDiskSearchParams {
-  selectedDiskFromSearch?: string;
-  selectedLinodeFromSearch?: string;
+  selectedDisk?: string;
+  selectedLinode?: string;
 }
 
 export interface ImageCreateUploadSearchParams {

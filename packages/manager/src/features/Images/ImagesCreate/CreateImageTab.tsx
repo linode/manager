@@ -33,7 +33,10 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import type { CreateImagePayload } from '@linode/api-v4';
 
 export const CreateImageTab = () => {
-  const { selectedDiskFromSearch, selectedLinodeFromSearch } = useSearch({
+  const {
+    selectedDisk: selectedDiskFromSearch,
+    selectedLinode: selectedLinodeFromSearch,
+  } = useSearch({
     strict: false,
   });
   const navigate = useNavigate();
