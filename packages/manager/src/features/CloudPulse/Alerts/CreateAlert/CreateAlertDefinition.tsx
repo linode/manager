@@ -34,7 +34,7 @@ const triggerConditionInitialValues: TriggerConditionForm = {
   trigger_occurrences: 0,
 };
 const criteriaInitialValues: MetricCriteriaForm = {
-  aggregation_type: null,
+  aggregate_function: null,
   dimension_filters: [],
   metric: null,
   operator: null,
