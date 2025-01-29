@@ -108,7 +108,7 @@ export const NodePoolsDisplay = (props: Props) => {
         flexWrap="wrap"
         justifyContent="space-between"
         spacing={2}
-        sx={{ paddingLeft: { md: 0, sm: 1, xs: 1 } }}
+        sx={{ paddingLeft: { md: 0, sm: 1, xs: 1 }, paddingTop: 3 }}
       >
         <Typography variant="h2">Node Pools</Typography>
         <Stack direction="row" spacing={1}>
