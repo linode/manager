@@ -60,19 +60,16 @@ jobs:
         with:
           name: packages-validation-lib
           path: packages/validation/lib
-      - uses: JS-DevTools/npm-publish@v1
-        id: npm-publish
-        with:
-          token: "faketoken"
-          package: ./packages/validation/package.json
-          dry-run: true
+      - run: pnpm publish --dry-run --access public --no-git-checks
+        working-directory: packages/validation
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: slack-notify
         uses: rtCamp/action-slack-notify@master
-        if: steps.npm-publish.outputs.type != 'none'
         env:
           SLACK_CHANNEL: api-js-client
-          SLACK_TITLE: "Linode Validation v${{ steps.npm-publish.outputs.version}}"
-          SLACK_MESSAGE: ":rocket: Linode Validation Library has been published to NPM: ${{ steps.npm-publish.outputs.old-version }} => ${{ steps.npm-publish.outputs.version }}. View the changelog at https://github.com/linode/manager/blob/master/packages/validation/CHANGELOG.md"
+          SLACK_TITLE: "Linode Validation has been published"
+          SLACK_MESSAGE: ":rocket: Linode Validation Library has been published to NPM. View the changelog at https://github.com/linode/manager/blob/master/packages/validation/CHANGELOG.md"
           SLACK_USERNAME: npm-bot
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_ICON_EMOJI: ":package:"
