@@ -77,7 +77,6 @@ export interface EditableDomainFields extends EditableSharedFields {
   refresh_sec?: number;
   retry_sec?: number;
   soa_email?: string;
-  ttl_sec?: number;
 }
 
 type ErrorFields =
