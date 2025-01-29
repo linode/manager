@@ -61,7 +61,7 @@ const expectedHeaders = [
 ];
 
 /**
- * Utility function to verify sorting of a column in a table.
+ * Verifies sorting of a column in the alerts table.
  *
  * @param {string} header - The `data-qa-header` attribute of the column to sort.
  * @param {'ascending' | 'descending'} sortOrder - Expected sorting order.
