@@ -59,9 +59,7 @@ export const EditAlertResources = () => {
     return { newPathname: '/Definitions/Edit', overrides };
   }, [serviceType, alertId]);
 
-  const [selectedResources, setSelectedResources] = React.useState<string[]>(
-    []
-  );
+  const [, setSelectedResources] = React.useState<string[]>([]);
 
   if (isFetching) {
     return (
