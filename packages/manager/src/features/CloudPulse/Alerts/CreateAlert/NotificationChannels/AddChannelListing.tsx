@@ -83,48 +83,56 @@ export const AddChannelListing = React.memo((props: AddChannelListingProps) => {
     handleCloseDrawer();
   };
 
-  const NotificationChannelCard = (props: NotificationChannelsProps) => {
-    const { id, notification } = props;
-    return (
-      <Box
-        sx={(theme) => ({
-          ...getAlertBoxStyles(theme),
-          borderRadius: 1,
-          overflow: 'auto',
-          padding: theme.spacing(2),
-        })}
-        data-testid={`notification-channel-${id}`}
-        key={id}
-      >
-        <Stack direction="row" justifyContent="space-between">
-          <Typography marginBottom={2} variant="h3">
-            {capitalize(notification?.label ?? 'Unnamed Channel')}
-          </Typography>
-          <ClearIconButton handleClick={() => handleRemove(id)} />
-        </Stack>
-        <Stack alignItems="baseline" direction="row">
-          <Typography variant="h3" width={100}>
-            Type:
-          </Typography>
-          <Typography variant="subtitle2">
-            {
-              channelTypeOptions.find(
-                (option) => option.value === notification?.channel_type
-              )?.label
-            }
-          </Typography>
-        </Stack>
-        <Stack alignItems="baseline" direction="row">
-          <Typography variant="h3" width={100}>
-            To:
-          </Typography>
-          <Typography variant="subtitle2">
-            {notification && <RenderChannelDetails template={notification} />}
-          </Typography>
-        </Stack>
-      </Box>
-    );
-  };
+  const NotificationChannelCard = React.memo(
+    (props: NotificationChannelsProps) => {
+      const { id, notification } = props;
+      return (
+        <Box
+          sx={(theme) => ({
+            ...getAlertBoxStyles(theme),
+            borderRadius: 1,
+            overflow: 'auto',
+            padding: theme.spacing(2),
+          })}
+          data-testid={`notification-channel-${id}`}
+          key={id}
+        >
+          <Stack direction="row" justifyContent="space-between">
+            <Typography marginBottom={2} variant="h3">
+              {capitalize(notification?.label ?? 'Unnamed Channel')}
+            </Typography>
+            <ClearIconButton handleClick={() => handleRemove(id)} />
+          </Stack>
+          <Stack alignItems="baseline" direction="row">
+            <Typography variant="h3" width={100}>
+              Type:
+            </Typography>
+            <Typography variant="subtitle2">
+              {
+                channelTypeOptions.find(
+                  (option) => option.value === notification?.channel_type
+                )?.label
+              }
+            </Typography>
+          </Stack>
+          <Stack alignItems="baseline" direction="row">
+            <Typography variant="h3" width={100}>
+              To:
+            </Typography>
+            <Typography variant="subtitle2">
+              {notification && <RenderChannelDetails template={notification} />}
+            </Typography>
+          </Stack>
+        </Box>
+      );
+    },
+    (prevProps, nextProps) => {
+      return (
+        prevProps.id === nextProps.id &&
+        prevProps.notification.id === nextProps.notification.id
+      );
+    }
+  );
 
   return (
     <>
