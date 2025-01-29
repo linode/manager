@@ -7,11 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { Drawer } from 'src/components/Drawer';
-import {
-  useAlertNotificationChannelsQuery,
-  useCreateAlertDefinition,
-} from 'src/queries/cloudpulse/alerts';
+import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
@@ -21,7 +17,6 @@ import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
 import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
-import { AddNotificationChannel } from './NotificationChannels/AddNotificationChannel';
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
@@ -30,7 +25,6 @@ import type {
   MetricCriteriaForm,
   TriggerConditionForm,
 } from './types';
-import type { NotificationChannel } from '@linode/api-v4/lib/cloudpulse/types';
 import type { ObjectSchema } from 'yup';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
@@ -40,7 +34,7 @@ const triggerConditionInitialValues: TriggerConditionForm = {
   trigger_occurrences: 0,
 };
 const criteriaInitialValues: MetricCriteriaForm = {
-  aggregation_type: null,
+  aggregate_function: null,
   dimension_filters: [],
   metric: null,
   operator: null,
@@ -85,33 +79,15 @@ export const CreateAlertDefinition = () => {
     ),
   });
 
-  const {
-    control,
-    formState,
-    getValues,
-    handleSubmit,
-    setError,
-    setValue,
-  } = formMethods;
+  const { control, formState, getValues, handleSubmit, setError } = formMethods;
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
     getValues('serviceType')!
   );
 
-  const notificationChannelWatcher = useWatch({ control, name: 'channel_ids' });
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
 
-  const [openAddNotification, setOpenAddNotification] = React.useState(false);
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
-
-  const onSubmitAddNotification = (notificationId: number) => {
-    setValue('channel_ids', [...notificationChannelWatcher, notificationId], {
-      shouldDirty: false,
-      shouldTouch: false,
-      shouldValidate: false,
-    });
-    setOpenAddNotification(false);
-  };
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -133,41 +109,7 @@ export const CreateAlertDefinition = () => {
       }
     }
   });
-  const {
-    data: notificationData,
-    isError: notificationChannelsError,
-    isLoading: notificationChannelsLoading,
-  } = useAlertNotificationChannelsQuery();
 
-  const onChangeNotifications = (notifications: NotificationChannel[]) => {
-    const notificationTemplateList = notifications.map(
-      (notification) => notification.id
-    );
-    setValue('channel_ids', notificationTemplateList);
-  };
-  const notifications = React.useMemo(() => {
-    return (
-      notificationData?.filter(
-        (notification) => !notificationChannelWatcher.includes(notification.id)
-      ) ?? []
-    );
-  }, [notificationChannelWatcher, notificationData]);
-
-  const selectedNotifications = React.useMemo(() => {
-    return (
-      notificationData?.filter((notification) =>
-        notificationChannelWatcher.includes(notification.id)
-      ) ?? []
-    );
-  }, [notificationChannelWatcher, notificationData]);
-
-  const onExitNotifications = () => {
-    setOpenAddNotification(false);
-  };
-
-  const onAddNotifications = () => {
-    setOpenAddNotification(true);
-  };
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb crumbOverrides={overrides} pathname="/Definitions/Create" />
@@ -229,11 +171,7 @@ export const CreateAlertDefinition = () => {
             maxScrapingInterval={maxScrapeInterval}
             name="trigger_conditions"
           />
-          <AddChannelListing
-            notifications={selectedNotifications}
-            onChangeNotifications={onChangeNotifications}
-            onClickAddNotification={onAddNotifications}
-          />
+          <AddChannelListing name="channel_ids" />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
@@ -246,21 +184,6 @@ export const CreateAlertDefinition = () => {
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />
-          {openAddNotification && (
-            <Drawer
-              onClose={onExitNotifications}
-              open={openAddNotification}
-              title="Add Notification Channel"
-            >
-              <AddNotificationChannel
-                isNotificationChannelsError={notificationChannelsError}
-                isNotificationChannelsLoading={notificationChannelsLoading}
-                onCancel={onExitNotifications}
-                onSubmitAddNotification={onSubmitAddNotification}
-                templateData={notifications}
-              />
-            </Drawer>
-          )}
         </form>
       </FormProvider>
     </Paper>

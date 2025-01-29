@@ -64,7 +64,7 @@ export const Metric = (props: MetricCriteriaProps) => {
     operation: string
   ) => {
     const fieldValue: MetricCriteriaForm = {
-      aggregation_type: null,
+      aggregate_function: null,
       dimension_filters: [],
       metric: null,
       operator: null,
@@ -200,7 +200,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                 />
               )}
               control={control}
-              name={`${name}.aggregation_type`}
+              name={`${name}.aggregate_function`}
             />
           </Grid>
           <Grid item lg={2} md={3} sm={6} xs={12}>

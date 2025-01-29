@@ -34,8 +34,10 @@ import type {
   FirewallDevicePayload,
   FirewallRules,
   FirewallTemplate,
+  FirewallTemplateSlug,
   Params,
   ResourcePage,
+  UpdateFirewallRules,
 } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
@@ -84,7 +86,7 @@ export const firewallQueries = createQueryKeys('firewalls', {
     },
     queryKey: null,
   },
-  template: (slug: string) => ({
+  template: (slug: FirewallTemplateSlug) => ({
     queryFn: () => getTemplate(slug),
     queryKey: [slug],
   }),
@@ -99,11 +101,17 @@ export const useAllFirewallDevicesQuery = (id: number) =>
     firewallQueries.firewall(id)._ctx.devices
   );
 
-export const useAddFirewallDeviceMutation = (id: number) => {
+export const useAddFirewallDeviceMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<FirewallDevice, APIError[], FirewallDevicePayload>({
-    mutationFn: (data) => addFirewallDevice(id, data),
-    onSuccess(firewallDevice) {
+  return useMutation<
+    FirewallDevice,
+    APIError[],
+    FirewallDevicePayload & { firewallId: number }
+  >({
+    mutationFn: ({ firewallId, ...data }) =>
+      addFirewallDevice(firewallId, data),
+    onSuccess(firewallDevice, vars) {
+      const id = vars.firewallId;
       // Append the new entity to the Firewall object in the paginated store
       queryClient.setQueriesData<ResourcePage<Firewall>>(
         { queryKey: firewallQueries.firewalls._ctx.paginated._def },
@@ -335,7 +343,7 @@ export const useDeleteFirewall = (id: number) => {
 
 export const useUpdateFirewallRulesMutation = (firewallId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<FirewallRules, APIError[], FirewallRules>({
+  return useMutation<FirewallRules, APIError[], UpdateFirewallRules>({
     mutationFn: (data) => updateFirewallRules(firewallId, data),
     onSuccess(updatedRules) {
       // Update rules on specific firewall

@@ -17,18 +17,23 @@ import {
 import { BETA_API_ROOT as API_ROOT } from '../constants';
 import { Params, Filter, ResourcePage } from '../types';
 
+const bearer = 'Bearer vagrant';
+
 export const createAlertDefinition = (
   data: CreateAlertDefinitionPayload,
   serviceType: AlertServiceType
 ) =>
   Request<Alert>(
     setURL(
-      `${API_ROOT}/monitor/services/${encodeURIComponent(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
         serviceType!
       )}/alert-definitions`
     ),
     setMethod('POST'),
-    setData(data, createAlertDefinitionSchema)
+    setData(data, createAlertDefinitionSchema),
+    setHeaders({
+      Authorization: bearer,
+    })
   );
 
 export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
@@ -40,7 +45,7 @@ export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
     setParams(params),
     setXFilter(filters),
     setHeaders({
-      Authorization: 'Bearer vagrant',
+      Authorization: bearer,
     })
   );
 
@@ -57,16 +62,21 @@ export const getAlertDefinitionByServiceTypeAndId = (
     ),
     setMethod('GET'),
     setHeaders({
-      Authorization: 'Bearer vagrant',
+      Authorization: bearer,
     })
   );
 
 export const getNotificationChannels = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<NotificationChannel>>(
-    setURL(`${API_ROOT}/monitor/alert-channels`),
+    setURL(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/monitor/alert-channels`
+    ),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filters),
+    setHeaders({
+      Authorization: bearer,
+    })
   );
 
 export const editAlertDefinitionResources = (

@@ -10,7 +10,7 @@ const dimensionFilters = object({
 
 const metricCriteria = object({
   metric: string().required(fieldErrorMessage),
-  aggregation_type: string().required(fieldErrorMessage),
+  aggregate_function: string().required(fieldErrorMessage),
   operator: string().required(fieldErrorMessage),
   threshold: number()
     .required(fieldErrorMessage)

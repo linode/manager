@@ -1,117 +1,172 @@
 import { Box, Button, Stack, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
 import React from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useAllAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { channelTypeOptions } from '../../constants';
 import { getAlertBoxStyles } from '../../Utils/utils';
 import { ClearIconButton } from '../Criteria/ClearIconButton';
+import { AddNotificationChannelDrawer } from './AddNotificationChannelDrawer';
 import { RenderChannelDetails } from './RenderChannelDetails';
 
+import type { CreateAlertDefinitionForm } from '../types';
 import type { NotificationChannel } from '@linode/api-v4';
+import type { FieldPathByValue } from 'react-hook-form';
 
-interface ChannelListProps {
+interface AddChannelListingProps {
   /**
-   * Notification channel list passed to the component to be displayed in the form
+   *  FieldPathByValue for the notification channel ids
    */
-  notifications: NotificationChannel[];
-  /**
-   * Method to handle the deletions of the Notification Channels in the form
-   * @param notifications sends the latest list of notification channels
-   * @returns void
-   */
-  onChangeNotifications: (notifications: NotificationChannel[]) => void;
-  /**
-   * Method to enable the add notification channel drawer
-   * @returns void
-   */
-  onClickAddNotification: () => void;
+  name: FieldPathByValue<CreateAlertDefinitionForm, number[]>;
 }
 
-export const AddChannelListing = React.memo((props: ChannelListProps) => {
+interface NotificationChannelsProps {
+  /**
+   * index of the NotificationChannels map
+   */
+  id: number;
+  /**
+   * NotificationChannel object
+   */
+  notification: NotificationChannel;
+}
+export const AddChannelListing = React.memo((props: AddChannelListingProps) => {
+  const { name } = props;
+  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
+  const [openAddNotification, setOpenAddNotification] = React.useState(false);
+
+  const notificationChannelWatcher = useWatch({
+    control,
+    name,
+  });
   const {
-    notifications,
-    onChangeNotifications,
-    onClickAddNotification,
-  } = props;
+    data: notificationData,
+    isError: notificationChannelsError,
+    isLoading: notificationChannelsLoading,
+  } = useAllAlertNotificationChannelsQuery();
+
+  const notifications = React.useMemo(() => {
+    return (
+      notificationData?.filter(
+        ({ id }) => !notificationChannelWatcher.includes(id)
+      ) ?? []
+    );
+  }, [notificationChannelWatcher, notificationData]);
+
+  const selectedNotifications = React.useMemo(() => {
+    return (
+      notificationChannelWatcher
+        .map((notificationId) =>
+          notificationData?.find(({ id }) => id === notificationId)
+        )
+        .filter((notification) => notification !== undefined) ?? []
+    );
+  }, [notificationChannelWatcher, notificationData]);
+
   const handleRemove = (index: number) => {
-    const newList = notifications.filter((_, i) => i !== index);
-    onChangeNotifications(newList);
+    const newList = notificationChannelWatcher.filter((_, i) => i !== index);
+    setValue(name, newList);
   };
+
+  const handleOpenDrawer = () => {
+    setOpenAddNotification(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setOpenAddNotification(false);
+  };
+
+  const handleAddNotification = (notificationId: number) => {
+    setValue(name, [...notificationChannelWatcher, notificationId]);
+    handleCloseDrawer();
+  };
+
+  const NotificationChannelCard = React.memo(
+    (props: NotificationChannelsProps) => {
+      const { id, notification } = props;
+      return (
+        <Box
+          sx={(theme) => ({
+            ...getAlertBoxStyles(theme),
+            borderRadius: 1,
+            overflow: 'auto',
+            padding: theme.spacing(2),
+          })}
+          data-testid={`notification-channel-${id}`}
+          key={id}
+        >
+          <Stack direction="row" justifyContent="space-between">
+            <Typography marginBottom={2} variant="h3">
+              {capitalize(notification?.label ?? 'Unnamed Channel')}
+            </Typography>
+            <ClearIconButton handleClick={() => handleRemove(id)} />
+          </Stack>
+          <Stack alignItems="baseline" direction="row">
+            <Typography variant="h3" width={100}>
+              Type:
+            </Typography>
+            <Typography variant="subtitle2">
+              {
+                channelTypeOptions.find(
+                  (option) => option.value === notification?.channel_type
+                )?.label
+              }
+            </Typography>
+          </Stack>
+          <Stack alignItems="baseline" direction="row">
+            <Typography variant="h3" width={100}>
+              To:
+            </Typography>
+            <Typography variant="subtitle2">
+              {notification && <RenderChannelDetails template={notification} />}
+            </Typography>
+          </Stack>
+        </Box>
+      );
+    },
+    (prevProps, nextProps) => {
+      return (
+        prevProps.id === nextProps.id &&
+        prevProps.notification.id === nextProps.notification.id
+      );
+    }
+  );
+
   return (
     <>
       <Typography marginBottom={1} marginTop={3} variant="h2">
         3. Notification Channels
       </Typography>
       <Stack spacing={1}>
-        {notifications.length > 0 &&
-          notifications.map((notification, id) => {
-            return (
-              <Box
-                sx={(theme) => ({
-                  ...getAlertBoxStyles(theme),
-                  borderRadius: 1,
-                  overflow: 'auto',
-                  padding: 0,
-                  paddingBottom: theme.spacing(2),
-                })}
-                data-testid={`notification-channel-${id}`}
-                key={id}
-              >
-                <Box
-                  sx={(theme) => ({
-                    alignItems: 'center',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    paddingBottom: theme.spacing(1),
-                    paddingLeft: theme.spacing(2),
-                    paddingRight: theme.spacing(2),
-                    paddingTop: theme.spacing(2),
-                  })}
-                >
-                  <Typography alignItems="flex-end" variant="h3">
-                    {capitalize(notification.label)}
-                  </Typography>
-                  <ClearIconButton handleClick={() => handleRemove(id)} />
-                </Box>
-                <Grid container paddingLeft={2}>
-                  <Grid alignItems="center" container item md={1} sm={1} xs={2}>
-                    <Typography variant="h3">Type:</Typography>
-                  </Grid>
-                  <Grid container item md="auto" sm="auto" xs={2}>
-                    <Typography alignItems="center" variant="subtitle2">
-                      {
-                        channelTypeOptions.find(
-                          (option) => option.value === notification.channel_type
-                        )?.label
-                      }
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid container paddingLeft={2}>
-                  <Grid alignContent="center" item md={1} sm={1} xs={2}>
-                    <Typography variant="h3">To:</Typography>
-                  </Grid>
-                  <Grid item md="auto" paddingRight={1} sm="auto" xs="auto">
-                    {notification && (
-                      <RenderChannelDetails template={notification} />
-                    )}
-                  </Grid>
-                </Grid>
-              </Box>
-            );
-          })}
+        {selectedNotifications.length > 0 &&
+          selectedNotifications.map((notification, id) => (
+            <NotificationChannelCard
+              id={id}
+              key={id}
+              notification={notification}
+            />
+          ))}
       </Stack>
-      <Box mt={1}>
-        <Button
-          buttonType="outlined"
-          onClick={onClickAddNotification}
-          size="medium"
-        >
-          Add notification channel
-        </Button>
-      </Box>
+      <Button
+        buttonType="outlined"
+        onClick={handleOpenDrawer}
+        size="medium"
+        sx={(theme) => ({ marginTop: theme.spacing(2) })}
+        type="button"
+      >
+        Add notification channel
+      </Button>
+
+      <AddNotificationChannelDrawer
+        handleCloseDrawer={handleCloseDrawer}
+        isNotificationChannelsError={notificationChannelsError}
+        isNotificationChannelsLoading={notificationChannelsLoading}
+        onSubmitAddNotification={handleAddNotification}
+        open={openAddNotification}
+        templateData={notifications ?? []}
+      />
     </>
   );
 });

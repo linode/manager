@@ -20,6 +20,10 @@ export interface ActionHandlers {
 
 export interface AlertActionMenuProps {
   /**
+   * The label of the alert
+   */
+  alertLabel: string;
+  /**
    * Type of the alert
    */
   alertType: AlertDefinitionType;
@@ -30,11 +34,11 @@ export interface AlertActionMenuProps {
 }
 
 export const AlertActionMenu = (props: AlertActionMenuProps) => {
-  const { alertType, handlers } = props;
+  const { alertLabel, alertType, handlers } = props;
   return (
     <ActionMenu
       actionsList={getAlertTypeToActionsList(handlers)[alertType]}
-      ariaLabel="Action menu for Alert"
+      ariaLabel={`Action menu for Alert ${alertLabel}`}
     />
   );
 };
