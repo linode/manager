@@ -105,6 +105,7 @@ export const queryFactory = createQueryKeys(key, {
         return volumeQueries.lists._ctx.all(params, filters); // default to volumes
     }
   },
+
   token: (serviceType: string | undefined, request: JWETokenPayLoad) => ({
     queryFn: () => getJWEToken(request, serviceType!),
     queryKey: [serviceType, { resource_ids: request.entity_ids.sort() }],
