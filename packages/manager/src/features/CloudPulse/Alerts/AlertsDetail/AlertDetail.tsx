@@ -134,7 +134,7 @@ export const AlertDetail = () => {
           }}
         >
           <AlertDetailNotification
-            channelIds={alertDetails.channels.map(({ id }) => id)}
+            channelIds={alertDetails.alert_channels.map(({ id }) => id)}
           />
         </Box>
       </Box>
