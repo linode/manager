@@ -33,6 +33,7 @@ const linodes = linodeFactory.buildList(3).map((value, index) => {
 
 const searchPlaceholder = 'Search for a Region or Resource';
 const regionPlaceholder = 'Select Regions';
+const checkedAttribute = 'data-qa-checked';
 
 beforeAll(() => {
   window.scrollTo = vi.fn(); // mock for scrollTo and scroll
@@ -41,7 +42,13 @@ beforeAll(() => {
 
 beforeEach(() => {
   queryMocks.useResourcesQuery.mockReturnValue({
-    data: linodes,
+    data: linodes.map((linode) => {
+      return {
+        id: String(linode.id),
+        label: linode.label,
+        region: linode.region,
+      };
+    }),
     isError: false,
     isFetching: false,
   });
@@ -172,5 +179,52 @@ describe('AlertResources component tests', () => {
         .map(({ textContent }) => textContent)
         .every((text, index) => text?.includes(linodes[index].region)) // validation
     ).toBe(true);
+  });
+
+  it('should handle selection correctly and publish', async () => {
+    const handleResourcesSelection = vi.fn();
+
+    const { getByTestId } = renderWithTheme(
+      <AlertResources
+        alertResourceIds={['1', '2']}
+        handleResourcesSelection={handleResourcesSelection}
+        isSelectionsNeeded
+        serviceType="linode"
+      />
+    );
+    // validate, by default selections are there
+    expect(getByTestId('select_item_1')).toHaveAttribute(
+      checkedAttribute,
+      'true'
+    );
+    expect(getByTestId('select_item_3')).toHaveAttribute(
+      checkedAttribute,
+      'false'
+    );
+
+    // validate it selects 3
+    await userEvent.click(getByTestId('select_item_3'));
+    expect(getByTestId('select_item_3')).toHaveAttribute(
+      checkedAttribute,
+      'true'
+    );
+    expect(handleResourcesSelection).toHaveBeenCalledWith(['1', '2', '3']);
+
+    // unselect 3 and test
+    await userEvent.click(getByTestId('select_item_3'));
+    // validate it gets unselected
+    expect(getByTestId('select_item_3')).toHaveAttribute(
+      checkedAttribute,
+      'false'
+    );
+    expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2']);
+
+    // click select all
+    await userEvent.click(getByTestId('select_all_in_page_1'));
+    expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2', '3']);
+
+    // click select all again to unselect all
+    await userEvent.click(getByTestId('select_all_in_page_1'));
+    expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
   });
 });

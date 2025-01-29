@@ -1,7 +1,4 @@
-import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
 
 import { alertFactory, linodeFactory, regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -18,7 +15,6 @@ const regions = regionFactory.buildList(4).map((region, index) => ({
   ...region,
   id: linodes[index].region,
 }));
-const checkedAttribute = 'data-qa-checked';
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
@@ -78,38 +74,15 @@ beforeEach(() => {
 
 describe('EditAlertResources component tests', () => {
   it('Edit alert resources happy path', async () => {
-    const { getByPlaceholderText, getByTestId } = renderWithTheme(
+    const { getByPlaceholderText, getByText } = renderWithTheme(
       <EditAlertResources />
     );
-
+    // validate resources sections is rendered
     expect(
       getByPlaceholderText('Search for a Region or Resource')
     ).toBeInTheDocument();
     expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
-
-    // validate, by default selections are there
-    expect(getByTestId('select_item_1')).toHaveAttribute(
-      checkedAttribute,
-      'true'
-    );
-    expect(getByTestId('select_item_2')).toHaveAttribute(
-      checkedAttribute,
-      'true'
-    );
-
-    expect(getByTestId('select_item_4')).toHaveAttribute(
-      checkedAttribute,
-      'false'
-    );
-
-    // click item 4
-    await userEvent.click(getByTestId('select_item_4'));
-
-    // validate it gets selected
-    expect(getByTestId('select_item_4')).toHaveAttribute(
-      checkedAttribute,
-      'true'
-    );
+    expect(getByText(alertDetails.label)).toBeInTheDocument();
   });
 
   it('Edit alert resources alert details error and loading path', () => {
@@ -118,9 +91,7 @@ describe('EditAlertResources component tests', () => {
       isError: true, // simulate error
       isFetching: false,
     });
-
     const { getByText } = renderWithTheme(<EditAlertResources />);
-
     expect(
       getByText(
         'An error occurred while loading the alerts definitions and resources. Please try again later.'
@@ -132,9 +103,7 @@ describe('EditAlertResources component tests', () => {
       isError: false,
       isFetching: true, // simulate loading
     });
-
     const { getByTestId } = renderWithTheme(<EditAlertResources />);
-
     expect(getByTestId('circle-progress')).toBeInTheDocument();
   });
 
@@ -144,9 +113,7 @@ describe('EditAlertResources component tests', () => {
       isError: false,
       isFetching: false,
     });
-
     const { getByText } = renderWithTheme(<EditAlertResources />);
-
     expect(getByText('No Data to display.')).toBeInTheDocument();
   });
 });
