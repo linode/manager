@@ -37,8 +37,8 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useDialogData } from 'src/hooks/useDialogData';
 import { useFlags } from 'src/hooks/useFlags';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   isEventImageUpload,
@@ -53,6 +53,15 @@ import {
 } from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import {
+  AUTOMATIC_IMAGES_DEFAULT_ORDER,
+  AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+  AUTOMATIC_IMAGES_ORDER_PREFERENCE_KEY,
+  AUTOMATIC_IMAGES_PREFERENCE_KEY,
+  MANUAL_IMAGES_DEFAULT_ORDER,
+  MANUAL_IMAGES_DEFAULT_ORDER_BY,
+  MANUAL_IMAGES_PREFERENCE_KEY,
+} from '../constants';
 import { getEventsForImages } from '../utils';
 import { EditImageDrawer } from './EditImageDrawer';
 import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
@@ -138,20 +147,30 @@ export const ImagesLanding = () => {
     searchableFieldsWithoutOperator: ['label', 'tags'],
   });
 
-  const paginationForManualImages = usePagination(1, 'images-manual', 'manual');
+  const paginationForManualImages = usePaginationV2({
+    currentRoute: '/images',
+    preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
 
   const {
     handleOrderChange: handleManualImagesOrderChange,
     order: manualImagesOrder,
     orderBy: manualImagesOrderBy,
-  } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: MANUAL_IMAGES_DEFAULT_ORDER,
+        orderBy: MANUAL_IMAGES_DEFAULT_ORDER_BY,
+      },
+      from: '/images',
     },
-    'images-manual-order',
-    'manual'
-  );
+    preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
+    prefix: 'manual',
+  });
 
   const manualImagesFilter: Filter = {
     ['+order']: manualImagesOrder,
@@ -188,23 +207,30 @@ export const ImagesLanding = () => {
   );
 
   // Pagination, order, and query hooks for automatic/recovery images
-  const paginationForAutomaticImages = usePagination(
-    1,
-    'images-automatic',
-    'automatic'
-  );
+  const paginationForAutomaticImages = usePaginationV2({
+    currentRoute: '/images',
+    preferenceKey: AUTOMATIC_IMAGES_PREFERENCE_KEY,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
+
   const {
     handleOrderChange: handleAutomaticImagesOrderChange,
     order: automaticImagesOrder,
     orderBy: automaticImagesOrderBy,
-  } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: AUTOMATIC_IMAGES_DEFAULT_ORDER,
+        orderBy: AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+      },
+      from: '/images',
     },
-    'images-automatic-order',
-    'automatic'
-  );
+    preferenceKey: AUTOMATIC_IMAGES_ORDER_PREFERENCE_KEY,
+    prefix: 'automatic',
+  });
 
   const automaticImagesFilter: Filter = {
     ['+order']: automaticImagesOrder,
