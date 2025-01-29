@@ -297,10 +297,15 @@ jobs:
         with:
           run_install: false
           version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+          cache: "pnpm"
       - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
+      - run: pnpm install --frozen-lockfile
       - run: pnpm publish --dry-run --access public --no-git-checks
         working-directory: packages/api-v4
         env:
