@@ -2454,7 +2454,10 @@ export const handlers = [
       ...alertFactory.buildList(5, { status: 'disabled' }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
-      ...alertFactory.buildList(36, { updated: '2021-10-16T04:00:00', status: 'disabled'}),
+      ...alertFactory.buildList(36, {
+        updated: '2021-10-16T04:00:00',
+        status: 'disabled',
+      }),
       ...customAlertsWithServiceType,
     ];
     return HttpResponse.json(makeResourcePage(alerts));
@@ -2487,6 +2490,11 @@ export const handlers = [
   ),
   http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
     return HttpResponse.json({}, { status: 200 });
+  }),
+  http.get('*/monitor/alert-channels', () => {
+    return HttpResponse.json(
+      makeResourcePage(notificationChannelFactory.buildList(3))
+    );
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
