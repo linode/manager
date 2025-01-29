@@ -52,7 +52,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   rule_criteria: {
     rules: [
       {
-        aggregation_function: 'avg',
+        aggregate_function: 'avg',
         dimension_filters: [
           {
             dimension_label: 'Test',
@@ -68,7 +68,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
         unit: 'Bytes',
       },
       {
-        aggregation_function: 'avg',
+        aggregate_function: 'avg',
         dimension_filters: [
           {
             dimension_label: 'OperatingSystem',
