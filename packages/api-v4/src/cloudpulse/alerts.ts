@@ -69,7 +69,7 @@ export const getAlertDefinitionByServiceTypeAndId = (
 export const getNotificationChannels = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<NotificationChannel>>(
     setURL(
-      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/monitor/alert-channels`
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/alert-channels`
     ),
     setMethod('GET'),
     setParams(params),
