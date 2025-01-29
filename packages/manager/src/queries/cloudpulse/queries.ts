@@ -75,7 +75,6 @@ export const queryFactory = createQueryKeys(key, {
     queryFn: () => getMetricDefinitionsByServiceType(serviceType!),
     queryKey: [serviceType],
   }),
-
   notificationChannels: {
     contextQueries: {
       all: (params?: Params, filter?: Filter) => ({
@@ -85,7 +84,6 @@ export const queryFactory = createQueryKeys(key, {
     },
     queryKey: null,
   },
-
   resources: (
     resourceType: string | undefined,
     params?: Params,

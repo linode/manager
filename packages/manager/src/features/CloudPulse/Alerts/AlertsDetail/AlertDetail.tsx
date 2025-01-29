@@ -97,6 +97,7 @@ export const AlertDetail = () => {
       <Box display="flex" flexDirection="column" gap={2}>
         <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
           <Box
+            data-qa-section="Overview"
             flexBasis="50%"
             maxHeight={sectionMaxHeight}
             sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
@@ -108,6 +109,7 @@ export const AlertDetail = () => {
               ...getAlertBoxStyles(theme),
               overflow: 'auto',
             }}
+            data-qa-section="Criteria"
             flexBasis="50%"
             maxHeight={sectionMaxHeight}
           >
