@@ -12,6 +12,7 @@ import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 import { AlertResources } from '../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
+import { AlertDetailNotification } from './AlertDetailNotification';
 import { AlertDetailOverview } from './AlertDetailOverview';
 
 export interface AlertRouteParams {
@@ -124,6 +125,16 @@ export const AlertDetail = () => {
           <AlertResources
             alertResourceIds={entityIds}
             serviceType={serviceType}
+          />
+        </Box>
+        <Box
+          sx={{
+            ...getAlertBoxStyles(theme),
+            overflow: 'auto',
+          }}
+        >
+          <AlertDetailNotification
+            channelIds={alertDetails.channels.map(({ id }) => id)}
           />
         </Box>
       </Box>

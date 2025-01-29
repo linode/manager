@@ -11,6 +11,7 @@ import {
   AlertServiceType,
   CreateAlertDefinitionPayload,
   EditAlertResourcesPayload,
+  NotificationChannel,
 } from './types';
 import { BETA_API_ROOT as API_ROOT } from '../constants';
 import { Params, Filter, ResourcePage } from '../types';
@@ -63,4 +64,11 @@ export const editAlertDefinitionResources = (
     ),
     setMethod('PUT'),
     setData(data)
+  );
+export const getNotificationChannels = (params?: Params, filters?: Filter) =>
+  Request<ResourcePage<NotificationChannel>>(
+    setURL(`${API_ROOT}/monitor/alert-channels`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
   );
