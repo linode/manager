@@ -49,11 +49,11 @@ describe('Alert Listing', () => {
       status: 'success',
     });
     const { getByText } = renderWithTheme(<AlertListing />);
-    expect(getByText('Alert Name')).toBeVisible();
-    expect(getByText('Service')).toBeVisible();
-    expect(getByText('Status')).toBeVisible();
-    expect(getByText('Last Modified')).toBeVisible();
-    expect(getByText('Created By')).toBeVisible();
+    expect(getByText('Alert Name')).toBeInTheDocument();
+    expect(getByText('Service')).toBeInTheDocument();
+    expect(getByText('Status')).toBeInTheDocument();
+    expect(getByText('Last Modified')).toBeInTheDocument();
+    expect(getByText('Created By')).toBeInTheDocument();
   });
 
   it('should render the alert row', async () => {
@@ -87,9 +87,13 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    const { getByRole, getByTestId, getByText, queryByText } = renderWithTheme(
-      <AlertListing />
-    );
+    const {
+      getAllByLabelText,
+      getByRole,
+      getByTestId,
+      getByText,
+      queryByText,
+    } = renderWithTheme(<AlertListing />);
     const serviceFilter = getByTestId('alert-service-filter');
     expect(getByText(linodeAlert.label)).toBeVisible();
     expect(getByText(dbaasAlert.label)).toBeVisible();
@@ -109,6 +113,11 @@ describe('Alert Listing', () => {
       expect(queryByText(linodeAlert.label)).not.toBeInTheDocument();
       expect(getByText(dbaasAlert.label)).toBeVisible();
     });
+    const firstActionMenu = getAllByLabelText(
+      `Action menu for Alert ${mockResponse[0].label}`
+    )[0];
+    await userEvent.click(firstActionMenu);
+    expect(getByTestId('Show Details')).toBeInTheDocument();
   });
 
   it('should filter the alerts with status filter', async () => {

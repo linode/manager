@@ -1,3 +1,15 @@
+## [2025-01-28] - v0.59.0
+
+
+### Changed:
+
+- Allow `cipher_suite` to be `none` in NodeBalancer schemas ([#11515](https://github.com/linode/manager/pull/11515))
+
+### Tech Stories:
+
+- Update `tsconfig.json` to use `bundler` moduleResolution ([#11487](https://github.com/linode/manager/pull/11487))
+
+
 ## [2025-01-14] - v0.58.0
 
 ### Added:
