@@ -111,7 +111,7 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
     mockGetAlertChannels([notificationChannels]);
   });
 
-  it.skip('navigates to the Show Details page from the list page', () => {
+  it('navigates to the Show Details page from the list page', () => {
     // Navigate to the alert definitions list page with login
     cy.visitWithLogin('/monitor/alerts/definitions');
 
@@ -352,7 +352,7 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
 
       cy.findByText(databases[0].label).should('be.visible');
       [1, 2, 3].forEach((i) =>
-        cy.findByText(databases[i].label).should('not.exist')
+       cy.findByText(databases[i].label).should('not.exist')
       );
 
       // Search by region
