@@ -55,6 +55,10 @@ export const UserMenu = React.memo(() => {
     theme.breakpoints.down('sm')
   );
 
+  const matchesMdDown = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('md')
+  );
+
   React.useEffect(() => {
     // Run after we've switched to a proxy user.
     if (isProxyUser && !getStorage('is_proxy_user')) {
@@ -90,7 +94,7 @@ export const UserMenu = React.memo(() => {
           aria-describedby={id}
           data-testid="nav-group-profile"
           disableRipple
-          endIcon={!matchesSmDown && getEndIcon()}
+          endIcon={!matchesMdDown && getEndIcon()}
           onClick={(e) => setAnchorEl(e.currentTarget)}
           open={open}
           startIcon={isProxyUser ? <AvatarForProxy /> : <Avatar />}

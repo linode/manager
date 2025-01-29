@@ -9,9 +9,9 @@ export const StyledHeading = styled('h3', {
   shouldForwardProp: omittedProps(['paddingTop']),
 })<{ paddingTop?: boolean }>(({ theme, ...props }) => ({
   '& svg': {
-    height: 16,
+    height: 20,
     marginRight: theme.spacing(1),
-    width: 16,
+    width: 20,
   },
   alignItems: 'center',
   color: theme.name === 'dark' ? theme.tokens.color.Neutrals[50] : 'inherit',

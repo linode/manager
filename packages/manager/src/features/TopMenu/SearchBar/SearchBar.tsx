@@ -1,4 +1,5 @@
 import { Box } from '@linode/ui';
+import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { take } from 'ramda';
 import * as React from 'react';
@@ -71,6 +72,12 @@ const SearchBar = (props: SearchProps) => {
   const isLargeAccount = useIsLargeAccount(searchActive);
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const theme = useTheme();
+
+  const isMdScreen = useMediaQuery(theme.breakpoints.only('md'));
+
+  const searchHelperText = isMdScreen
+    ? 'Search...'
+    : 'Search Products, IP Addresses, Tags...';
 
   // Only request things if the search bar is open/active and we
   // know if the account is large or not
@@ -364,6 +371,7 @@ const SearchBar = (props: SearchProps) => {
       '.select-placeholder': {
         color: theme.tokens.header.Search.Text.Placeholder,
         font: theme.tokens.typography.Label.Regular.Placeholder,
+        fontStyle: 'italic',
         left: 0,
       },
       '> div': {
@@ -422,7 +430,7 @@ const SearchBar = (props: SearchProps) => {
           openMenuOnClick={false}
           openMenuOnFocus={false}
           options={finalOptions}
-          placeholder="Search Products, IP Addresses, Tags..."
+          placeholder={searchHelperText}
           styles={selectStyles}
           value={value}
         />

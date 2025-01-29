@@ -101,7 +101,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             sx={(theme) => ({
               gap: {
                 sm: theme.tokens.spacing[70],
-                xs: theme.tokens.spacing[50],
+                xs: theme.tokens.spacing[40],
               },
               paddingLeft: {
                 md: theme.tokens.spacing[80],
@@ -122,7 +122,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
               gap={{
                 md: 0,
                 sm: theme.tokens.spacing[60],
-                xs: theme.tokens.spacing[50],
+                xs: theme.tokens.spacing[40],
               }}
               display="flex"
             >

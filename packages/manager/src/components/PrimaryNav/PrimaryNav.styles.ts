@@ -91,9 +91,9 @@ export const StyledAccordion = styled(Accordion, {
         color: props.isActiveProductFamily
           ? theme.tokens.color.Brand[60]
           : theme.tokens.color.Neutrals['White'],
-        height: 22,
+        height: 24,
         transition: theme.transitions.create(['color']),
-        width: 22,
+        width: 24,
       },
       alignItems: 'center',
       display: 'flex',

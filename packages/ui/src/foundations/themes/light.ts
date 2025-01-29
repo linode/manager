@@ -1556,7 +1556,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           [breakpoints.down('md')]: {
-            padding: `0`,
+            padding: `0 ${Spacing[40]}`,
           },
           [breakpoints.up('md')]: {
             padding: `0 ${Spacing[60]}`, // To override default MUI breakpoint padding
