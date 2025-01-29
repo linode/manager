@@ -1,4 +1,5 @@
-import type { ServiceTypesList } from '@linode/api-v4';
+import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
+import type { NotificationChannel, ServiceTypesList } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
 interface AlertChipBorderProps {
@@ -86,4 +87,34 @@ export const getAlertChipBorderRadius = (
     return `0 ${borderRadiusPxValue} ${borderRadiusPxValue} 0`;
   }
   return '0';
+};
+
+/**
+ * @param value The notification channel object for which we need to display the chips
+ * @returns The label and the values that needs to be displayed based on channel type
+ */
+export const getChipLabels = (
+  value: NotificationChannel
+): AlertDimensionsProp => {
+  if (value.channel_type === 'email') {
+    return {
+      label: 'To',
+      values: value.content.email.email_addresses,
+    };
+  } else if (value.channel_type === 'slack') {
+    return {
+      label: 'Slack Webhook URL',
+      values: [value.content.slack.slack_webhook_url],
+    };
+  } else if (value.channel_type === 'pagerduty') {
+    return {
+      label: 'Service API Key',
+      values: [value.content.pagerduty.service_api_key],
+    };
+  } else {
+    return {
+      label: 'Webhook URL',
+      values: [value.content.webhook.webhook_url],
+    };
+  }
 };
