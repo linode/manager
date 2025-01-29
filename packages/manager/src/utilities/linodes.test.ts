@@ -22,7 +22,7 @@ describe('addMaintenanceToLinodes', () => {
 });
 
 describe('useIsLinodeInterfacesEnabled', () => {
-  it('returns true if the feature is enabled', () => {
+  it('returns enabled: true if the feature is enabled', () => {
     const options = { flags: { linodeInterfaces: { enabled: true } } };
 
     const { result } = renderHook(() => useIsLinodeInterfacesEnabled(), {
@@ -32,7 +32,7 @@ describe('useIsLinodeInterfacesEnabled', () => {
     expect(result.current?.enabled).toBe(true);
   });
 
-  it('returns false if the feature is NOT enabled', () => {
+  it('returns enabled: false if the feature is NOT enabled', () => {
     const options = { flags: { linodeInterfaces: { enabled: false } } };
 
     const { result } = renderHook(() => useIsLinodeInterfacesEnabled(), {
