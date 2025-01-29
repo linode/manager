@@ -2,7 +2,7 @@ import { Box, Button, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { useAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
+import { useAllAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { channelTypeOptions } from '../../constants';
@@ -45,7 +45,7 @@ export const AddChannelListing = React.memo((props: AddChannelListingProps) => {
     data: notificationData,
     isError: notificationChannelsError,
     isLoading: notificationChannelsLoading,
-  } = useAlertNotificationChannelsQuery();
+  } = useAllAlertNotificationChannelsQuery();
 
   const notifications = React.useMemo(() => {
     return (

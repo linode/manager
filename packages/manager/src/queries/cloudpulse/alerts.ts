@@ -49,7 +49,7 @@ export const useAlertDefinitionQuery = (
   });
 };
 
-export const useAlertNotificationChannelsQuery = (
+export const useAllAlertNotificationChannelsQuery = (
   params?: Params,
   filter?: Filter
 ) => {

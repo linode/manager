@@ -12,15 +12,15 @@ import type { CreateAlertDefinitionForm } from '../types';
 import type { NotificationChannel } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
-  useAlertNotificationChannelsQuery: vi.fn().mockReturnValue({}),
+  useAllAlertNotificationChannelsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/alerts');
   return {
     ...actual,
-    useAlertNotificationChannelsQuery:
-      queryMocks.useAlertNotificationChannelsQuery,
+    useAllAlertNotificationChannelsQuery:
+      queryMocks.useAllAlertNotificationChannelsQuery,
   };
 });
 
@@ -28,7 +28,7 @@ const mockNotificationData: NotificationChannel[] = [
   notificationChannelFactory.build({ id: 0 }),
 ];
 
-queryMocks.useAlertNotificationChannelsQuery.mockReturnValue({
+queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue({
   data: mockNotificationData,
   isError: false,
   isLoading: false,
