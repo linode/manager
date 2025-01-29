@@ -24,6 +24,10 @@ export interface ActionMenuProps {
    */
   ariaLabel: string;
   /**
+   * If true, stop event propagation when handling clicks so that clicks don't open/close the accordion
+   */
+  isInAccordionHeader?: boolean;
+  /**
    * A function that is called when the Menu is opened. Useful for analytics.
    */
   onOpen?: () => void;
@@ -35,7 +39,7 @@ export interface ActionMenuProps {
  * No more than 8 items should be displayed within an action menu.
  */
 export const ActionMenu = React.memo((props: ActionMenuProps) => {
-  const { actionsList, ariaLabel, onOpen } = props;
+  const { actionsList, ariaLabel, isInAccordionHeader, onOpen } = props;
 
   const menuId = convertToKebabCase(ariaLabel);
   const buttonId = `${convertToKebabCase(ariaLabel)}-button`;
@@ -44,13 +48,19 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (isInAccordionHeader) {
+      event.stopPropagation();
+    }
     setAnchorEl(event.currentTarget);
     if (onOpen) {
       onOpen();
     }
   };
 
-  const handleClose = () => {
+  const handleClose = (event: React.MouseEvent<HTMLLIElement>) => {
+    if (isInAccordionHeader) {
+      event.stopPropagation();
+    }
     setAnchorEl(null);
   };
 
@@ -131,9 +141,9 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
       >
         {actionsList.map((a, idx) => (
           <MenuItem
-            onClick={() => {
+            onClick={(e) => {
               if (!a.disabled) {
-                handleClose();
+                handleClose(e);
                 a.onClick();
               }
             }}
