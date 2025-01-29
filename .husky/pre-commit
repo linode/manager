@@ -1,1 +1,1 @@
-pnpm run -r --if-present precommit 
+pnpm run -r --if-present precommit
