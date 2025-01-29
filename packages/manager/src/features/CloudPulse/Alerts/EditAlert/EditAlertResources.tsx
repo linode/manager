@@ -1,6 +1,5 @@
 import { Box, CircleProgress } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -9,7 +8,7 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAlertDefinitionQuery,
-  useEditAlertDefinitionResources,
+  useEditAlertDefinitionEntities,
 } from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
@@ -22,7 +21,6 @@ export const EditAlertResources = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
 
   const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
 
   const definitionLanding = '/monitor/alerts/definitions';
 
@@ -31,10 +29,7 @@ export const EditAlertResources = () => {
     serviceType
   );
 
-  const {
-    isError: isEditAlertError,
-    reset: resetEditAlert,
-  } = useEditAlertDefinitionResources(serviceType, Number(alertId)); // TODO: consume mutate and implement save resources in upcoming PR
+  const {} = useEditAlertDefinitionEntities(serviceType, Number(alertId)); // TODO: consume mutate, error from hook and implement save resources in upcoming PR
 
   React.useEffect(() => {
     setSelectedResources(
@@ -96,21 +91,6 @@ export const EditAlertResources = () => {
         </Box>
       </>
     );
-  }
-
-  if (isEditAlertError) {
-    enqueueSnackbar('Error while updating the resources. Try again later.', {
-      anchorOrigin: {
-        horizontal: 'right',
-        vertical: 'top', // show snackbar at the top
-      },
-      autoHideDuration: 5000,
-      style: {
-        marginTop: theme.spacing(18.75),
-      },
-      variant: 'error',
-    });
-    resetEditAlert(); // reset the mutate use hook states
   }
 
   const handleResourcesSelection = (resourceIds: string[]) => {
