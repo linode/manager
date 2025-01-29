@@ -2480,48 +2480,8 @@ export const handlers = [
     }
   ),
   http.get('*/monitor/alert-channels', () => {
-    const emailNotificationChannel = notificationChannelFactory.build();
-    const slackNotificationChannel = notificationChannelFactory.build({
-      channel_type: 'slack',
-      content: {
-        slack: {
-          message: 'Sample Alert',
-          slack_channel: 'You have a new Alert',
-          slack_webhook_url: 'https://cloud.linode.com',
-        },
-      },
-    });
-    const pagerNotificationChannel = notificationChannelFactory.build({
-      channel_type: 'pagerduty',
-      content: {
-        pagerduty: {
-          attributes: ['abc', 'efg'],
-          description: 'pager duty notification',
-          service_api_key: '123',
-        },
-      },
-    });
-    const webhookNotificationChannel = notificationChannelFactory.build({
-      channel_type: 'webhook',
-      content: {
-        webhook: {
-          http_headers: [
-            {
-              header_key: 'http-header-key',
-              header_value: 'http-header-value',
-            },
-          ],
-          webhook_url: 'http://my-web-hook.com',
-        },
-      },
-    });
     return HttpResponse.json(
-      makeResourcePage([
-        emailNotificationChannel,
-        slackNotificationChannel,
-        pagerNotificationChannel,
-        webhookNotificationChannel,
-      ])
+      makeResourcePage(notificationChannelFactory.buildList(3))
     );
   }),
   http.get('*/monitor/services', () => {
