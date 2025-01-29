@@ -11,12 +11,12 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomString } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
 
-describe('Create Linode in Distributed Region', () => {
+describe('Create Linode in a Core Region', () => {
   /*
-   * - Confirms Linode create flow can be completed with a distributed region
+   * - Confirms Linode create flow can be completed with a core region
    * - Creates a basic Nanode and confirms interactions succeed and outgoing request contains expected data.
    */
-  it('should be able to select a distributed region', () => {
+  it('should be able to select a core region', () => {
     // create mocks
     const mockRegionOptions: Partial<Region> = {
       capabilities: ['Linodes', 'Distributed Plans'],
@@ -42,7 +42,7 @@ describe('Create Linode in Distributed Region', () => {
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getFeatureFlags', '@getRegions']);
 
-    // Pick a region from the distributed region list
+    // Pick a region from the core region list
     cy.findByTestId('region').within(() => {
       ui.tabList.findTabByTitle('Core').should('be.visible').click();
       linodeCreatePage.selectRegionById(mockRegion.id);
