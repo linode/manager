@@ -63,7 +63,7 @@ jobs:
       - uses: JS-DevTools/npm-publish@v1
         id: npm-publish
         with:
-          token: ${{ secrets.NPM_AUTH_TOKEN }}
+          token: "faketoken"
           package: ./packages/validation/package.json
           dry-run: true
       - name: slack-notify
