@@ -22,7 +22,6 @@ describe('Image Table Row', () => {
     onEdit: vi.fn(),
     onManageRegions: vi.fn(),
     onRebuild: vi.fn(),
-    onRetry: vi.fn(),
   };
 
   it('should render an image row with Image Service Gen2 enabled', async () => {

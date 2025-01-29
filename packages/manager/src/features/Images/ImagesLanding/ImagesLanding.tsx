@@ -10,7 +10,7 @@ import {
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
@@ -63,9 +63,7 @@ import { RebuildImageDrawer } from './RebuildImageDrawer';
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
 import type { Filter, Image, ImageStatus } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { ImageAction } from 'src/routes/images';
-
-const searchParamKey = 'query';
+import type { ImageAction, ImagesSearchParams } from 'src/routes/images';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -100,6 +98,8 @@ export const ImagesLanding = () => {
   }: { action: ImageAction; imageId: string } = useParams({
     strict: false,
   });
+  const search: ImagesSearchParams = useSearch({ from: '/images' });
+  const { query } = search;
   const history = useHistory();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -107,8 +107,6 @@ export const ImagesLanding = () => {
   const isImagesReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
-  const queryParams = new URLSearchParams(location.search);
-  const query = queryParams.get(searchParamKey) ?? '';
   const queryClient = useQueryClient();
   const [dialogState, setDialogState] = React.useState<ImageDialogState>(
     defaultDialogState
@@ -275,33 +273,33 @@ export const ImagesLanding = () => {
     imageEvents
   );
 
-  const handleEdit = (image: Image) => {
+  const actionHandler = (image: Image, action: ImageAction) => {
     navigate({
-      params: { action: 'edit', imageId: image.id },
+      params: { action, imageId: image.id },
       search: (prev) => prev,
       to: '/images/$imageId/$action',
     });
+  };
+
+  const handleEdit = (image: Image) => {
+    actionHandler(image, 'edit');
   };
 
   const handleRebuild = (image: Image) => {
-    navigate({
-      params: { action: 'rebuild', imageId: image.id },
-      search: (prev) => prev,
-      to: '/images/$imageId/$action',
-    });
+    actionHandler(image, 'rebuild');
   };
 
   const handleDelete = (image: Image) => {
-    navigate({
-      params: { action: 'delete', imageId: image.id },
-      search: (prev) => prev,
-      to: '/images/$imageId/$action',
-    });
+    actionHandler(image, 'delete');
   };
 
   const handleCloseDialog = () => {
     setDialogState(defaultDialogState);
     navigate({ search: (prev) => prev, to: '/images' });
+  };
+
+  const handleManageRegions = (image: Image) => {
+    actionHandler(image, 'manage-replicas');
   };
 
   const handleDeleteImage = (image: Image) => {
@@ -349,21 +347,6 @@ export const ImagesLanding = () => {
       });
   };
 
-  const onRetryClick = (imageLabel: string, imageDescription: string) => {
-    queryClient.invalidateQueries({
-      queryKey: imageQueries.paginated._def,
-    });
-    navigate({
-      search: (prev) => ({ ...prev }),
-      state: (prev) => ({
-        ...prev,
-        imageDescription,
-        imageLabel,
-      }),
-      to: '/images/create/upload',
-    });
-  };
-
   const onCancelFailedClick = () => {
     queryClient.invalidateQueries({
       queryKey: imageQueries.paginated._def,
@@ -378,20 +361,19 @@ export const ImagesLanding = () => {
   };
 
   const resetSearch = () => {
-    queryParams.delete(searchParamKey);
-    // history.push({ search: queryParams.toString() });
     navigate({
-      search: (prev) => ({ ...prev, query: '' }),
+      search: (prev) => ({ ...prev, query: undefined }),
       to: '/images',
     });
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    queryParams.delete('page');
-    queryParams.set(searchParamKey, e.target.value);
-    // history.push({ search: queryParams.toString() });
     navigate({
-      search: (prev) => ({ ...prev, query: e.target.value }),
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        query: e.target.value || undefined,
+      }),
       to: '/images',
     });
   };
@@ -401,14 +383,8 @@ export const ImagesLanding = () => {
     onDelete: handleDelete,
     onDeploy: handleDeployNewLinode,
     onEdit: handleEdit,
-    // onManageRegions: multiRegionsEnabled
-    //   ? (image) => {
-    //       setSelectedImageId(image.id);
-    //       setIsManageReplicasDrawerOpen(true);
-    //     }
-    //   : undefined,
+    onManageRegions: multiRegionsEnabled ? handleManageRegions : undefined,
     onRebuild: handleRebuild,
-    onRetry: onRetryClick,
   };
 
   if (manualImagesLoading || automaticImagesLoading) {
@@ -473,7 +449,7 @@ export const ImagesLanding = () => {
         hideLabel
         label="Search"
         placeholder="Search Images"
-        value={query}
+        value={query ?? ''}
       />
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
@@ -663,8 +639,9 @@ export const ImagesLanding = () => {
         open={action === 'rebuild'}
       />
       <Drawer
+        isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
-        open={action === 'manageReplicas'}
+        open={action === 'manage-replicas'}
         title={`Manage Replicas for ${selectedImage?.label}`}
       >
         <ManageImageReplicasForm

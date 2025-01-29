@@ -17,11 +17,6 @@ export interface Handlers {
   onEdit?: (image: Image) => void;
   onManageRegions?: (image: Image) => void;
   onRebuild?: (image: Image) => void;
-  onRetry?: (
-    imageID: string,
-    label: string,
-    description: null | string
-  ) => void;
 }
 
 interface Props {
@@ -42,7 +37,6 @@ export const ImagesActionMenu = (props: Props) => {
     onEdit,
     onManageRegions,
     onRebuild,
-    onRetry,
   } = handlers;
 
   const isImageReadOnly = useIsResourceRestricted({
@@ -66,94 +60,81 @@ export const ImagesActionMenu = (props: Props) => {
   const actions: Action[] = React.useMemo(() => {
     const isDisabled = status && status !== 'available';
     const isAvailable = !isDisabled;
-    const isFailed = event?.status === 'failed';
-    return isFailed
-      ? [
-          {
-            onClick: () => onRetry?.(id, label, description),
-            title: 'Retry',
-          },
-          {
-            onClick: () => onCancelFailed?.(id),
-            title: 'Cancel',
-          },
-        ]
-      : [
-          {
-            disabled: isImageReadOnly || isDisabled,
-            onClick: () => onEdit?.(image),
-            title: 'Edit',
-            tooltip: isImageReadOnly
-              ? getRestrictedResourceText({
-                  action: 'edit',
-                  isSingular: true,
-                  resourceType: 'Images',
-                })
-              : isDisabled
-              ? 'Image is not yet available for use.'
-              : undefined,
-          },
-          ...(onManageRegions && image.regions && image.regions.length > 0
-            ? [
-                {
-                  disabled: isImageReadOnly || isDisabled,
-                  onClick: () => onManageRegions(image),
-                  title: 'Manage Replicas',
-                  tooltip: isImageReadOnly
-                    ? getRestrictedResourceText({
-                        action: 'edit',
-                        isSingular: true,
-                        resourceType: 'Images',
-                      })
-                    : undefined,
-                },
-              ]
-            : []),
-          {
-            disabled: isAddLinodeRestricted || isDisabled,
-            onClick: () => onDeploy?.(id),
-            title: 'Deploy to New Linode',
-            tooltip: isAddLinodeRestricted
-              ? getRestrictedResourceText({
-                  action: 'create',
-                  isSingular: false,
-                  resourceType: 'Linodes',
-                })
-              : isDisabled
-              ? 'Image is not yet available for use.'
-              : undefined,
-          },
-          {
-            disabled: !isAvailableLinodesPresent || isDisabled,
-            onClick: () => onRebuild?.(image),
-            title: 'Rebuild an Existing Linode',
-            tooltip: !isAvailableLinodesPresent
-              ? getRestrictedResourceText({
-                  action: 'rebuild',
-                  isSingular: false,
-                  resourceType: 'Linodes',
-                })
-              : isDisabled
-              ? 'Image is not yet available for use.'
-              : undefined,
-          },
-          {
-            disabled: isImageReadOnly,
-            onClick: () => onDelete?.(image),
-            title: isAvailable ? 'Delete' : 'Cancel',
-            tooltip: isImageReadOnly
-              ? getRestrictedResourceText({
-                  action: 'delete',
-                  isSingular: true,
-                  resourceType: 'Images',
-                })
-              : undefined,
-          },
-        ];
+    return [
+      {
+        disabled: isImageReadOnly || isDisabled,
+        onClick: () => onEdit?.(image),
+        title: 'Edit',
+        tooltip: isImageReadOnly
+          ? getRestrictedResourceText({
+              action: 'edit',
+              isSingular: true,
+              resourceType: 'Images',
+            })
+          : isDisabled
+          ? 'Image is not yet available for use.'
+          : undefined,
+      },
+      ...(onManageRegions && image.regions && image.regions.length > 0
+        ? [
+            {
+              disabled: isImageReadOnly || isDisabled,
+              onClick: () => onManageRegions(image),
+              title: 'Manage Replicas',
+              tooltip: isImageReadOnly
+                ? getRestrictedResourceText({
+                    action: 'edit',
+                    isSingular: true,
+                    resourceType: 'Images',
+                  })
+                : undefined,
+            },
+          ]
+        : []),
+      {
+        disabled: isAddLinodeRestricted || isDisabled,
+        onClick: () => onDeploy?.(id),
+        title: 'Deploy to New Linode',
+        tooltip: isAddLinodeRestricted
+          ? getRestrictedResourceText({
+              action: 'create',
+              isSingular: false,
+              resourceType: 'Linodes',
+            })
+          : isDisabled
+          ? 'Image is not yet available for use.'
+          : undefined,
+      },
+      {
+        disabled: !isAvailableLinodesPresent || isDisabled,
+        onClick: () => onRebuild?.(image),
+        title: 'Rebuild an Existing Linode',
+        tooltip: !isAvailableLinodesPresent
+          ? getRestrictedResourceText({
+              action: 'rebuild',
+              isSingular: false,
+              resourceType: 'Linodes',
+            })
+          : isDisabled
+          ? 'Image is not yet available for use.'
+          : undefined,
+      },
+      {
+        disabled: isImageReadOnly,
+        onClick: () => onDelete?.(image),
+        title: isAvailable ? 'Delete' : 'Cancel',
+        tooltip: isImageReadOnly
+          ? getRestrictedResourceText({
+              action: 'delete',
+              isSingular: true,
+              resourceType: 'Images',
+            })
+          : undefined,
+      },
+    ];
   }, [
     status,
     event,
-    onRetry,
     id,
     label,
     description,
