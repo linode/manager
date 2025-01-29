@@ -95,7 +95,9 @@ describe('OneClick Apps (OCA)', () => {
         .findByTitle(getMarketplaceAppLabel(candidateStackScript.label))
         .should('be.visible')
         .within(() => {
-          cy.findByText(candidateApp.description).should('be.visible');
+          cy.findByText(replaceHTMLEntities(candidateApp.description)).should(
+            'be.visible'
+          );
           cy.findByText(candidateApp.summary).should('be.visible');
           cy.findByText(candidateApp.website!).should('be.visible');
         });
@@ -265,3 +267,26 @@ function getRandomApp(): number {
   const id = +appKeys[index];
   return id;
 }
+
+/**
+ * Replaces the HTML entities such as &amp; and &reg; with the html character
+ * This fn is the corollary to scripts/junit-summary/util/escape.ts which converts the html character to the html entity
+ * Taken from https://stackoverflow.com/questions/76821044/how-to-replace-html-entity-by-the-string-character
+ * *
+ * @param str - string containing html entities
+ *
+ * @returns string
+ */
+const replaceHTMLEntities = (str: string) => {
+  const htmlEntities: { [key: string]: string } = {
+    '&amp;': '&',
+    '&reg;': '®',
+  };
+
+  const strDecoded = str.replace(/&[\w#]+;/g, (entity) => {
+    return htmlEntities[entity] || entity;
+  });
+  // replace any tab characters. some descriptions (ie, OCA id 595742) have double spaces that get converted to tabs
+  // also need to replace line breaks, either <br/> or <br> (see OCA id 1132204)
+  return strDecoded.replace('\t', '').replace(/<br ?\/?>/g, '');
+};
