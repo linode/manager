@@ -17,7 +17,7 @@ export const alertDimensionsFactory = Factory.Sync.makeFactory<AlertDefinitionDi
 
 export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>(
   {
-    aggregation_type: 'avg',
+    aggregation_function: 'avg',
     dimension_filters: alertDimensionsFactory.buildList(1),
     label: 'CPU Usage',
     metric: 'cpu_usage',
