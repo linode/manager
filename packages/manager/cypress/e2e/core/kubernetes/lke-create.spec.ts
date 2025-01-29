@@ -11,6 +11,7 @@ import {
   regionFactory,
   nodePoolFactory,
   kubeLinodeFactory,
+  lkeHighAvailabilityTypeFactory,
 } from 'src/factories';
 import {
   mockCreateCluster,
@@ -57,6 +58,7 @@ import {
   latestKubernetesVersion,
 } from 'support/constants/lke';
 import { lkeEnterpriseTypeFactory } from 'src/factories';
+import { pluralize } from 'src/utilities/pluralize';
 
 const dedicatedNodeCount = 4;
 const nanodeNodeCount = 3;
@@ -126,7 +128,10 @@ const mockedLKEHAClusterPrices: PriceType[] = [
     transfer: 0,
   },
 ];
-const mockedLKEEnterprisePrices = [lkeEnterpriseTypeFactory.build()];
+const mockedLKEEnterprisePrices = [
+  lkeHighAvailabilityTypeFactory.build(),
+  lkeEnterpriseTypeFactory.build(),
+];
 const clusterPlans: LkePlanDescription[] = [
   {
     nodeCount: dedicatedNodeCount,
@@ -313,6 +318,11 @@ describe('LKE Cluster Creation', () => {
         .should('have.length', similarNodePoolCount)
         .first()
         .should('be.visible');
+
+      // Confirm total number of nodes are shown for each pool
+      cy.findAllByText(
+        pluralize('Node', 'Nodes', clusterPlan.nodeCount)
+      ).should('be.visible');
     });
 
     ui.breadcrumb
@@ -486,7 +496,8 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
    * - Confirms that HA helper text updates dynamically to display pricing when a region is selected.
    */
   it('can dynamically update prices when creating an LKE cluster based on region', () => {
-    const dcSpecificPricingRegion = getRegionById('us-east');
+    // In staging API, only the Dallas region is available for LKE creation
+    const dcSpecificPricingRegion = getRegionById('us-central');
     const clusterLabel = randomLabel();
     const clusterPlans = new Array(2)
       .fill(null)
@@ -1067,16 +1078,19 @@ describe('LKE Cluster Creation with LKE-E', () => {
      * - Confirms an LKE-E supported region can be selected
      * - Confirms an LKE-E supported k8 version can be selected
      * - Confirms the checkout bar displays the correct LKE-E info
-     * - Confirms an enterprise cluster can be created
+     * - Confirms an enterprise cluster can be created with the correct chip, version, and price
+     * - Confirms that the total node count for each pool is displayed
      */
     it('creates an LKE-E cluster with the account capability', () => {
       const clusterLabel = randomLabel();
       const mockedEnterpriseCluster = kubernetesClusterFactory.build({
         label: clusterLabel,
-        region: clusterRegion.id,
+        region: 'us-iad',
         tier: 'enterprise',
         k8s_version: latestEnterpriseTierKubernetesVersion.id,
       });
+      const mockedEnterpriseClusterPools = [nanodeMemoryPool, dedicatedCpuPool];
+      const mockedLKEClusterTypes = [dedicatedType, nanodeType];
 
       mockGetAccount(
         accountFactory.build({
@@ -1089,6 +1103,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       mockGetKubernetesVersions([latestKubernetesVersion]).as(
         'getKubernetesVersions'
       );
+      mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
       mockGetLKEClusterTypes(mockedLKEEnterprisePrices).as(
         'getLKEEnterpriseClusterTypes'
       );
@@ -1107,6 +1122,12 @@ describe('LKE Cluster Creation with LKE-E', () => {
       mockGetCluster(mockedEnterpriseCluster).as('getCluster');
       mockCreateCluster(mockedEnterpriseCluster).as('createCluster');
       mockGetClusters([mockedEnterpriseCluster]).as('getClusters');
+      mockGetClusterPools(
+        mockedEnterpriseCluster.id,
+        mockedEnterpriseClusterPools
+      ).as('getClusterPools');
+      mockGetDashboardUrl(mockedEnterpriseCluster.id).as('getDashboardUrl');
+      mockGetApiEndpoints(mockedEnterpriseCluster.id).as('getApiEndpoints');
 
       cy.visitWithLogin('/kubernetes/clusters');
       cy.wait(['@getAccount']);
@@ -1221,8 +1242,8 @@ describe('LKE Cluster Creation with LKE-E', () => {
           cy.findByText(`Dedicated 4 GB Plan`).should('be.visible');
           cy.findByText('$144.00').should('be.visible');
           cy.findByText(`Linode 2 GB Plan`).should('be.visible');
-          cy.findByText('$36.00').should('be.visible');
-          cy.findByText('$480.00').should('be.visible');
+          cy.findByText('$15.00').should('be.visible');
+          cy.findByText('$459.00').should('be.visible');
 
           ui.button
             .findByTitle('Create Cluster')
@@ -1232,16 +1253,35 @@ describe('LKE Cluster Creation with LKE-E', () => {
         });
 
       // Wait for LKE cluster to be created and confirm that we are redirected
-      // to the cluster summary page, where the cluster has an LKE-E version.
-      cy.wait(['@getCluster', '@createCluster']);
+      // to the cluster summary page.
+      cy.wait([
+        '@getCluster',
+        '@getClusterPools',
+        '@createCluster',
+        '@getLKEEnterpriseClusterTypes',
+        '@getLinodeTypes',
+        '@getDashboardUrl',
+        '@getApiEndpoints',
+      ]);
+
       cy.url().should(
         'endWith',
         `/kubernetes/clusters/${mockedEnterpriseCluster.id}/summary`
       );
 
+      // Confirm the LKE-E cluster has the correct enterprise chip, version, and pricing.
+      cy.findByText('ENTERPRISE').should('be.visible');
       cy.findByText(
         `Version ${latestEnterpriseTierKubernetesVersion.id}`
       ).should('be.visible');
+      cy.findByText('$459.00/month').should('be.visible');
+
+      clusterPlans.forEach((clusterPlan) => {
+        // Confirm total number of nodes are shown for each pool
+        cy.findAllByText(
+          pluralize('Node', 'Nodes', clusterPlan.nodeCount)
+        ).should('be.visible');
+      });
     });
 
     it('disables the Cluster Type selection without the LKE-E account capability', () => {

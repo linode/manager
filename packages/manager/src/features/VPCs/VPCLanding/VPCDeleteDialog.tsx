@@ -50,6 +50,7 @@ export const VPCDeleteDialog = (props: Props) => {
         type: 'VPC',
       }}
       errors={error}
+      expand
       label="VPC Label"
       loading={isPending}
       onClick={onDeleteVPC}

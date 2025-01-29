@@ -1,20 +1,22 @@
 import { Autocomplete, Box } from '@linode/ui';
-import { Stack, TextField, Typography } from '@linode/ui';
+import { TextField, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
-  MetricAggregationOptions,
-  MetricOperatorOptions,
+  metricAggregationOptions,
+  metricOperatorOptions,
 } from '../../constants';
+import { getAlertBoxStyles } from '../../Utils/utils';
 import { ClearIconButton } from './ClearIconButton';
+import { DimensionFilters } from './DimensionFilter';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from '../types';
 import type {
-  AvailableMetrics,
   MetricAggregationType,
+  MetricDefinition,
   MetricOperatorType,
 } from '@linode/api-v4';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -23,7 +25,7 @@ interface MetricCriteriaProps {
   /**
    * metric data fetched by the metric definitions endpoint
    */
-  data: AvailableMetrics[];
+  data: MetricDefinition[];
   /**
    * variable to check for metric definitions api call error state
    */
@@ -68,15 +70,13 @@ export const Metric = (props: MetricCriteriaProps) => {
       operator: null,
       threshold: 0,
     };
-    if (operation === 'selectOption') {
-      setValue(name, {
-        ...fieldValue,
-        metric: selected.value,
-      });
-    }
-    if (operation === 'clear') {
-      setValue(name, fieldValue);
-    }
+    setValue(
+      name,
+      operation === 'selectOption'
+        ? { ...fieldValue, metric: selected.value }
+        : fieldValue,
+      { shouldValidate: true }
+    );
   };
 
   const metricOptions = React.useMemo(() => {
@@ -102,7 +102,7 @@ export const Metric = (props: MetricCriteriaProps) => {
     MetricAggregationType
   >[] => {
     return selectedMetric && selectedMetric.available_aggregate_functions
-      ? MetricAggregationOptions.filter((option) =>
+      ? metricAggregationOptions.filter((option) =>
           selectedMetric.available_aggregate_functions.includes(option.value)
         )
       : [];
@@ -112,21 +112,22 @@ export const Metric = (props: MetricCriteriaProps) => {
   return (
     <Box
       sx={(theme) => ({
-        backgroundColor:
-          theme.name === 'light' ? theme.color.grey5 : theme.color.grey9,
+        ...getAlertBoxStyles(theme),
         borderRadius: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
         p: 2,
       })}
       data-testid={`${name}-id`}
     >
-      <Stack>
+      <Box display="flex" flexDirection="column" gap={1}>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h3">Metric Threshold</Typography>
-          <Box>
-            {showDeleteIcon && <ClearIconButton handleClick={onMetricDelete} />}
-          </Box>
+          {showDeleteIcon && <ClearIconButton handleClick={onMetricDelete} />}
         </Box>
-        <Grid alignItems="flex-start" container spacing={2}>
+
+        <Grid container spacing={2}>
           <Grid item md={3} sm={6} xs={12}>
             <Controller
               render={({ field, fieldState }) => (
@@ -149,22 +150,21 @@ export const Metric = (props: MetricCriteriaProps) => {
                   }}
                   textFieldProps={{
                     labelTooltipText:
-                      'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way.',
+                      'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.',
                   }}
                   value={
-                    field.value !== null
-                      ? metricOptions.find(
-                          (option) => option.value === field.value
-                        )
-                      : null
+                    metricOptions.find(
+                      (option) => option.value === field.value
+                    ) ?? null
                   }
-                  data-testid="Data-field"
+                  data-testid="data-field"
                   disabled={!serviceWatcher}
                   label="Data Field"
                   loading={isMetricDefinitionLoading}
+                  noMarginTop
                   onBlur={field.onBlur}
                   options={metricOptions}
-                  placeholder="Select a Data field"
+                  placeholder="Select a Data Field"
                   size="medium"
                 />
               )}
@@ -181,28 +181,23 @@ export const Metric = (props: MetricCriteriaProps) => {
                     newValue: { label: string; value: MetricAggregationType },
                     operation
                   ) => {
-                    if (operation === 'selectOption') {
-                      field.onChange(newValue.value);
-                    }
-                    if (operation === 'clear') {
-                      field.onChange(null);
-                    }
+                    field.onChange(
+                      operation === 'selectOption' ? newValue.value : null
+                    );
                   }}
                   value={
-                    field.value !== null
-                      ? aggOptions.find(
-                          (option) => option.value === field.value
-                        )
-                      : null
+                    aggOptions.find((option) => option.value === field.value) ??
+                    null
                   }
-                  data-testid="Aggregation-type"
+                  data-testid="aggregation-type"
                   disabled={aggOptions.length === 0}
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
                   label="Aggregation Type"
+                  noMarginTop
                   onBlur={field.onBlur}
                   options={aggOptions}
-                  placeholder="Select an Aggregation type"
+                  placeholder="Select an Aggregation Type"
                   sx={{ paddingTop: { sm: 1, xs: 0 } }}
                 />
               )}
@@ -210,7 +205,7 @@ export const Metric = (props: MetricCriteriaProps) => {
               name={`${name}.aggregation_type`}
             />
           </Grid>
-          <Grid item md={2} sm={6} xs={12}>
+          <Grid item lg={2} md={3} sm={6} xs={12}>
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
@@ -219,27 +214,25 @@ export const Metric = (props: MetricCriteriaProps) => {
                     selected: { label: string; value: MetricOperatorType },
                     operation
                   ) => {
-                    if (operation === 'selectOption') {
-                      field.onChange(selected.value);
-                    }
-                    if (operation === 'clear') {
-                      field.onChange(null);
-                    }
+                    field.onChange(
+                      operation === 'selectOption' ? selected.value : null
+                    );
                   }}
                   value={
                     field.value !== null
-                      ? MetricOperatorOptions.find(
+                      ? metricOperatorOptions.find(
                           (option) => option.value === field.value
                         )
                       : null
                   }
-                  data-testid="Operator"
+                  data-testid="operator"
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
                   label="Operator"
+                  noMarginTop
                   onBlur={field.onBlur}
-                  options={MetricOperatorOptions}
-                  placeholder="Select an operator"
+                  options={metricOperatorOptions}
+                  placeholder="Select an Operator"
                   sx={{ paddingTop: { sm: 1, xs: 0 } }}
                 />
               )}
@@ -247,51 +240,53 @@ export const Metric = (props: MetricCriteriaProps) => {
               name={`${name}.operator`}
             />
           </Grid>
-          <Grid item marginTop={{ sm: 1, xs: 0 }} md={3} sm={6} xs={12}>
-            <Grid alignItems="flex-start" container spacing={2}>
-              <Grid item md={6} sm={6} xs={6}>
-                <Controller
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      onWheel={(event: React.SyntheticEvent<Element, Event>) =>
-                        event.target instanceof HTMLElement &&
-                        event.target.blur()
-                      }
-                      data-testid="threshold"
-                      errorText={fieldState.error?.message}
-                      label="Threshold"
-                      min={0}
-                      name={`${name}.threshold`}
-                      onBlur={field.onBlur}
-                      onChange={(e) => field.onChange(e.target.value)}
-                      sx={{ height: '34px' }}
-                      type="number"
-                      value={field.value ?? 0}
-                    />
-                  )}
-                  control={control}
-                  name={`${name}.threshold`}
-                />
-              </Grid>
-              <Grid item marginTop={1.75} md={6} sm={6} xs={6}>
-                <Typography
-                  sx={{
-                    alignItems: 'flex-end',
-                    display: 'flex',
-                    height: '56px',
-                  }}
-                  variant="body1"
-                >
-                  {/* There are discussions going on with the UX and within the team about the
-                   * units being outside of the TextField or inside as an adornments
-                   */}
-                  {unit}
-                </Typography>
-              </Grid>
-            </Grid>
+          <Grid item lg={2} md={3} sm={6} xs={12}>
+            <Box display="flex" gap={1}>
+              <Controller
+                render={({ field, fieldState }) => (
+                  <TextField
+                    onWheel={(event: React.SyntheticEvent<Element, Event>) =>
+                      event.target instanceof HTMLElement && event.target.blur()
+                    }
+                    data-testid="threshold"
+                    errorText={fieldState.error?.message}
+                    label="Threshold"
+                    min={0}
+                    name={`${name}.threshold`}
+                    noMarginTop
+                    onBlur={field.onBlur}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    sx={{ height: '34px', marginTop: { sm: 1, xs: 0 } }}
+                    type="number"
+                    value={field.value ?? 0}
+                  />
+                )}
+                control={control}
+                name={`${name}.threshold`}
+              />
+              <Typography
+                sx={{
+                  alignItems: 'flex-end',
+                  display: 'flex',
+                  height: '56px',
+                }}
+                variant="body1"
+              >
+                {/* There are discussions going on with the UX and within the team about the
+                 * units being outside of the TextField or inside as an adornments
+                 */}
+                {unit}
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
-      </Stack>
+      </Box>
+      <DimensionFilters
+        dataFieldDisabled={metricWatcher === null}
+        dimensionOptions={selectedMetric?.dimensions ?? []}
+        key={metricWatcher}
+        name={`${name}.dimension_filters`}
+      />
     </Box>
   );
 };

@@ -89,15 +89,13 @@ const dashboard = dashboardFactory.build({
   }),
 });
 
-const metricDefinitions = {
-  data: metrics.map(({ title, name, unit }) =>
-    dashboardMetricFactory.build({
-      label: title,
-      metric: name,
-      unit,
-    })
-  ),
-};
+const metricDefinitions = metrics.map(({ title, name, unit }) =>
+  dashboardMetricFactory.build({
+    label: title,
+    metric: name,
+    unit,
+  })
+);
 
 const mockLinode = linodeFactory.build({
   label: clusterName,
@@ -434,7 +432,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         .should('be.visible')
         .within(() => {
           ui.button
-            .findByAttribute('aria-label', 'Zoom In')
+            .findByAttribute('aria-label', 'Zoom Out')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -466,7 +464,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
           // click zoom out and validate the same
           ui.button
-            .findByAttribute('aria-label', 'Zoom Out')
+            .findByAttribute('aria-label', 'Zoom In')
             .should('be.visible')
             .should('be.enabled')
             .scrollIntoView()

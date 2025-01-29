@@ -176,7 +176,6 @@ export const useAllLinodesQuery = (
     ...linodeQueries.linodes._ctx.all(params, filter),
     ...queryPresets.longLived,
     enabled,
-    placeholderData: keepPreviousData,
   });
 };
 
@@ -295,7 +294,7 @@ export const useCreateLinodeMutation = () => {
 
       if (vpcId) {
         // If a Linode is created with a VPC, invalidate the related VPC queries.
-        queryClient.invalidateQueries({ queryKey: vpcQueries.all.queryKey });
+        queryClient.invalidateQueries({ queryKey: vpcQueries.all._def });
         queryClient.invalidateQueries({ queryKey: vpcQueries.paginated._def });
         queryClient.invalidateQueries({
           queryKey: vpcQueries.vpc(vpcId).queryKey,

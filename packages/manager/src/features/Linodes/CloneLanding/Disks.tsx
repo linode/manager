@@ -1,6 +1,6 @@
 import { Checkbox } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { intersection, pathOr } from 'ramda';
+import { intersection } from 'ramda';
 import * as React from 'react';
 
 import Paginate from 'src/components/Paginate';
@@ -59,11 +59,7 @@ export const Disks = (props: DisksProps) => {
                           // Is there anything in common between this disk's
                           // associatedConfigIds and the selectedConfigsIds?
                           intersection(
-                            pathOr(
-                              [],
-                              [disk.id, 'associatedConfigIds'],
-                              diskSelection
-                            ),
+                            diskSelection?.[disk.id]?.associatedConfigIds ?? [],
                             selectedConfigIds
                           ).length > 0;
 

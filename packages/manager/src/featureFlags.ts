@@ -121,6 +121,7 @@ export interface Flags {
   imageServiceGen2: boolean;
   imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
+  limitsEvolution: BaseFeatureFlag;
   linodeDiskEncryption: boolean;
   lkeEnterprise: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
@@ -141,6 +142,7 @@ export interface Flags {
   taxId: BaseFeatureFlag;
   taxes: Taxes;
   tpaProviders: Provider[];
+  udp: boolean;
 }
 
 interface MarketplaceAppOverride {
@@ -231,7 +233,7 @@ export type ProductInformationBannerLocation =
   | 'Databases'
   | 'Domains'
   | 'Firewalls'
-  | 'Identity and Access Management'
+  | 'Identity and Access'
   | 'Images'
   | 'Kubernetes'
   | 'LinodeCreate' // Use for Marketplace banners

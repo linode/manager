@@ -7,8 +7,8 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { Metric } from './Metric';
 
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AvailableMetrics } from '@linode/api-v4';
-const mockData: AvailableMetrics[] = [
+import type { MetricDefinition } from '@linode/api-v4';
+const mockData: MetricDefinition[] = [
   {
     available_aggregate_functions: ['min', 'max', 'avg'],
     dimensions: [
@@ -91,11 +91,11 @@ describe('Metric component tests', () => {
         },
       }
     );
-    const dataFieldContainer = container.getByTestId('Data-field');
+    const dataFieldContainer = container.getByTestId('data-field');
     expect(
       within(dataFieldContainer).getByRole('button', {
         name:
-          'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way.',
+          'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.',
       })
     );
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
@@ -140,7 +140,7 @@ describe('Metric component tests', () => {
       }
     );
 
-    const aggregationTypeContainer = container.getByTestId('Aggregation-type');
+    const aggregationTypeContainer = container.getByTestId('aggregation-type');
     const aggregationTypeInput = within(
       aggregationTypeContainer
     ).getByRole('button', { name: 'Open' });
@@ -185,7 +185,7 @@ describe('Metric component tests', () => {
         },
       }
     );
-    const operatorContainer = container.getByTestId('Operator');
+    const operatorContainer = container.getByTestId('operator');
     const operatorInput = within(operatorContainer).getByRole('button', {
       name: 'Open',
     });

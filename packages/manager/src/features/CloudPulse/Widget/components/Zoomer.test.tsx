@@ -10,21 +10,21 @@ describe('Cloud Pulse Zoomer', () => {
   it('Should render zoomer with zoom-out button', () => {
     const props: ZoomIconProperties = {
       handleZoomToggle: vi.fn(),
-      zoomIn: false,
+      zoomIn: true,
     };
     const { getByTestId } = renderWithTheme(<ZoomIcon {...props} />);
 
     expect(getByTestId('zoom-out')).toBeInTheDocument();
-    expect(getByTestId('Maximize')).toBeInTheDocument(); // test id for tooltip
+    expect(getByTestId('Minimize')).toBeInTheDocument(); // test id for tooltip
   }),
     it('Should render zoomer with zoom-in button', () => {
       const props: ZoomIconProperties = {
         handleZoomToggle: vi.fn(),
-        zoomIn: true,
+        zoomIn: false,
       };
       const { getByTestId } = renderWithTheme(<ZoomIcon {...props} />);
 
       expect(getByTestId('zoom-in')).toBeInTheDocument();
-      expect(getByTestId('Minimize')).toBeInTheDocument(); // test id for tooltip
+      expect(getByTestId('Maximize')).toBeInTheDocument(); // test id for tooltip
     });
 });

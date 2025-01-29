@@ -7,7 +7,13 @@ export interface IPAddress {
   public: boolean;
   rdns: string | null;
   linode_id: number;
+  interface_id: number | null;
   region: string;
+  vpc_nat_1_1?: {
+    address: string;
+    subnet_id: number;
+    vpc_id: number;
+  } | null;
 }
 
 export interface IPRangeBaseData {

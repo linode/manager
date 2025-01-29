@@ -2,13 +2,20 @@ import { filter, isNil } from 'ramda';
 
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import { SESSION_STICKINESS_DEFAULTS } from './constants';
+
 import type {
   NodeBalancerConfigFields,
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from './types';
-import type { APIError } from '@linode/api-v4';
-import type { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
+import type {
+  APIError,
+  Algorithm,
+  NodeBalancerConfigNode,
+  Protocol,
+  Stickiness,
+} from '@linode/api-v4';
 
 export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
   address: '',
@@ -38,14 +45,20 @@ export const createNewNodeBalancerConfig = (
   proxy_protocol: 'none',
   ssl_cert: undefined,
   ssl_key: undefined,
-  stickiness: 'table',
+  stickiness: SESSION_STICKINESS_DEFAULTS['http'],
 });
 
-export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
+export const getNodeForRequest = (
+  node: NodeBalancerConfigNodeFields,
+  config: NodeBalancerConfigFields
+) => ({
   address: node.address,
   label: node.label,
-  /* Force Node creation and updates to set mode to 'accept' */
-  mode: node.mode,
+  /**
+   * `mode` should not be specified for UDP because UDP does not
+   * support the various different modes.
+   */
+  mode: config.protocol !== 'udp' ? node.mode : undefined,
   port: node.port,
   weight: +node.weight!,
 });
@@ -77,7 +90,7 @@ export const transformConfigsForRequest = (
   configs: NodeBalancerConfigFields[]
 ): NodeBalancerConfigFields[] => {
   return configs.map((config: NodeBalancerConfigFields) => {
-    return filter(
+    return (filter(
       /* remove the (key: value) pairs that we set to undefined */
       (el) => el !== undefined,
       {
@@ -92,17 +105,20 @@ export const transformConfigsForRequest = (
         check_interval: !isNil(config.check_interval)
           ? +config.check_interval
           : undefined,
-        check_passive: config.check_passive /* will be boolean or undefined */,
+        // Passive checks must be false for UDP
+        check_passive: config.protocol === 'udp' ? false : config.check_passive,
         check_path: shouldIncludeCheckPath(config)
           ? config.check_path
           : undefined,
         check_timeout: !isNil(config.check_timeout)
           ? +config.check_timeout
           : undefined,
-        cipher_suite: config.cipher_suite || undefined,
+        cipher_suite: shouldIncludeCipherSuite(config)
+          ? config.cipher_suite
+          : undefined,
         id: undefined,
         nodebalancer_id: undefined,
-        nodes: config.nodes.map(nodeForRequest),
+        nodes: config.nodes.map((node) => getNodeForRequest(node, config)),
         nodes_status: undefined,
         port: config.port ? +config.port : undefined,
         protocol:
@@ -129,19 +145,14 @@ export const transformConfigsForRequest = (
             ? undefined
             : config.ssl_key || undefined,
         stickiness: config.stickiness || undefined,
+        udp_check_port: config.udp_check_port,
       }
-    ) as any;
-  }) as NodeBalancerConfigFields[];
+    ) as unknown) as NodeBalancerConfigFields;
+  });
 };
 
-/* Transform the Node fields in an array of Nodes into valid request data
-   Does not modify in-place, returns a deep clone of the Nodes */
-export const transformConfigNodesForRequest = (
-  nodes: NodeBalancerConfigNode[]
-): NodeBalancerConfigNodeFields[] => {
-  return nodes.map((node: NodeBalancerConfigNodeFields) =>
-    nodeForRequest(node)
-  );
+const shouldIncludeCipherSuite = (config: NodeBalancerConfigFields) => {
+  return config.protocol !== 'udp';
 };
 
 export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
@@ -182,6 +193,55 @@ export const setErrorMap = (errors: APIError[]) =>
       'ssl_key',
       'stickiness',
       'nodes',
+      'udp_check_port',
     ],
     filteredErrors(errors)
   );
+
+interface AlgorithmOption {
+  label: string;
+  value: Algorithm;
+}
+
+export const getAlgorithmOptions = (protocol: Protocol): AlgorithmOption[] => {
+  if (protocol === 'udp') {
+    return [
+      { label: 'Round Robin', value: 'roundrobin' },
+      { label: 'Least Connections', value: 'leastconn' },
+      { label: 'Ring Hash', value: 'ring_hash' },
+    ];
+  }
+  return [
+    { label: 'Round Robin', value: 'roundrobin' },
+    { label: 'Least Connections', value: 'leastconn' },
+    { label: 'Source', value: 'source' },
+  ];
+};
+
+interface StickinessOption {
+  label: string;
+  value: Stickiness;
+}
+
+export const getStickinessOptions = (
+  protocol: Protocol
+): StickinessOption[] => {
+  if (protocol === 'udp') {
+    return [
+      { label: 'None', value: 'none' },
+      { label: 'Session', value: 'session' },
+      { label: 'Source IP', value: 'source_ip' },
+    ];
+  }
+  if (protocol === 'tcp') {
+    return [
+      { label: 'None', value: 'none' },
+      { label: 'Table', value: 'table' },
+    ];
+  }
+  return [
+    { label: 'None', value: 'none' },
+    { label: 'Table', value: 'table' },
+    { label: 'HTTP Cookie', value: 'http_cookie' },
+  ];
+};
