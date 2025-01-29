@@ -30,7 +30,7 @@ export interface Props {
   hasAgreed: boolean;
   highAvailability?: boolean;
   highAvailabilityPrice: string;
-  pools: KubeNodePoolResponse[];
+  pools: KubeNodePoolResponse[] | undefined;
   region: string | undefined;
   regionsData: Region[];
   removePool: (poolIdx: number) => void;
@@ -57,12 +57,12 @@ export const KubeCheckoutBar = (props: Props) => {
     updatePool,
   } = props;
 
-  // Show a warning if any of the pools have fewer than 3 nodes
-  const showWarning = pools.some((thisPool) => thisPool.count < 3);
+  const showWarning = pools?.some((thisPool) => thisPool.count < 3) ?? false;
 
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
-  const typesQuery = useSpecificTypes(pools.map((pool) => pool.type));
+  const safePools = pools ?? [];
+  const typesQuery = useSpecificTypes(safePools.map((pool) => pool.type));
   const types = extendTypesQueryResult(typesQuery);
   const isLoading = typesQuery.some((query) => query.isLoading);
 
@@ -73,7 +73,7 @@ export const KubeCheckoutBar = (props: Props) => {
     selectedRegionId: region,
   });
 
-  const needsAPool = pools.length < 1;
+  const needsAPool = pools && pools.length < 1;
 
   const gdprConditions = !hasAgreed && showGDPRCheckbox;
 
@@ -102,7 +102,8 @@ export const KubeCheckoutBar = (props: Props) => {
       }
       calculatedPrice={
         region
-          ? getTotalClusterPrice({
+          ? pools &&
+            getTotalClusterPrice({
               enterprisePrice: enterprisePrice ?? undefined,
               highAvailabilityPrice:
                 highAvailability && !enterprisePrice
@@ -146,29 +147,30 @@ export const KubeCheckoutBar = (props: Props) => {
             )}/month`}</Typography>
           </StyledBox>
         )}
-        {pools.map((thisPool, idx) => (
-          <NodePoolSummaryItem
-            poolType={
-              types?.find((thisType) => thisType.id === thisPool.type) || null
-            }
-            price={
-              region
-                ? getKubernetesMonthlyPrice({
-                    count: thisPool.count,
-                    region,
-                    type: thisPool.type,
-                    types: types ?? [],
-                  })
-                : undefined
-            }
-            updateNodeCount={(updatedCount: number) =>
-              updatePool(idx, { ...thisPool, count: updatedCount })
-            }
-            key={idx}
-            nodeCount={thisPool.count}
-            onRemove={() => removePool(idx)}
-          />
-        ))}
+        {pools &&
+          pools.map((thisPool, idx) => (
+            <NodePoolSummaryItem
+              poolType={
+                types?.find((thisType) => thisType.id === thisPool.type) || null
+              }
+              price={
+                region
+                  ? getKubernetesMonthlyPrice({
+                      count: thisPool.count,
+                      region,
+                      type: thisPool.type,
+                      types: types ?? [],
+                    })
+                  : undefined
+              }
+              updateNodeCount={(updatedCount: number) =>
+                updatePool(idx, { ...thisPool, count: updatedCount })
+              }
+              key={idx}
+              nodeCount={thisPool.count}
+              onRemove={() => removePool(idx)}
+            />
+          ))}
         <Divider dark spacingBottom={0} spacingTop={16} />
         {showWarning && (
           <Notice

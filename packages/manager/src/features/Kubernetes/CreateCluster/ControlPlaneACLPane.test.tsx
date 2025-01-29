@@ -12,8 +12,8 @@ const props: ControlPlaneACLProps = {
   errorText: undefined,
   handleIPv4Change: vi.fn(),
   handleIPv6Change: vi.fn(),
-  ipV4Addr: [{ address: '' }],
-  ipV6Addr: [{ address: '' }],
+  ipV4Addr: [''],
+  ipV6Addr: [''],
   setControlPlaneACL: vi.fn(),
 };
 
