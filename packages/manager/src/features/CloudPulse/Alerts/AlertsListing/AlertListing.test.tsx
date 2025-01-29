@@ -94,13 +94,9 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    const {
-      getAllByLabelText,
-      getByRole,
-      getByTestId,
-      getByText,
-      queryByText,
-    } = renderWithTheme(<AlertListing />);
+    const { getByRole, getByTestId, getByText, queryByText } = renderWithTheme(
+      <AlertListing />
+    );
     const serviceFilter = getByTestId('alert-service-filter');
     expect(getByText(linodeAlert.label)).toBeVisible();
     expect(getByText(dbaasAlert.label)).toBeVisible();
