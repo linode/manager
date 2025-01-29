@@ -33,7 +33,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
     return ruleCriteria.rules.map(
       (
         {
-          aggregation_function: aggregationType,
+          aggregate_function: aggregationType,
           dimension_filters: dimensionFilters,
           label,
           operator,
