@@ -116,10 +116,10 @@ export const EditAlertResources = () => {
   }
 
   const handleResourcesSelection = (resourceIds: string[]) => {
-    setSelectedResources(resourceIds.map((id) => id)); // here we just keep track of it, on save we will update it
+    setSelectedResources(resourceIds.map((id) => id)); // keep track of the selected resources and update it on save
   };
 
-  const { label, service_type } = alertDetails;
+  const { entity_ids, label, service_type } = alertDetails;
 
   return (
     <>
@@ -134,7 +134,7 @@ export const EditAlertResources = () => {
         <Box>
           <AlertResources
             alertLabel={label}
-            alertResourceIds={selectedResources}
+            alertResourceIds={entity_ids}
             handleResourcesSelection={handleResourcesSelection}
             isSelectionsNeeded
             serviceType={service_type}

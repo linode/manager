@@ -164,7 +164,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     return <CircleProgress />;
   }
 
-  if (!isDataLoadingError && alertResourceIds.length === 0) {
+  if (
+    !isDataLoadingError &&
+    !isSelectionsNeeded &&
+    alertResourceIds.length === 0
+  ) {
     return (
       <Stack gap={2}>
         <Typography ref={titleRef} variant="h2">
