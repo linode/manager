@@ -685,22 +685,7 @@ export const CreateLinodeSchema = object({
         return schema.of(CreateLinodeInterfaceSchema);
       }
 
-      if (interface_generation === 'legacy_config') {
-        return ConfigProfileInterfacesSchema;
-      }
-
-      return schema.of(
-        lazy((item) => {
-          if (item && typeof item === 'object') {
-            if ('purpose' in item) {
-              return ConfigProfileInterfaceSchema;
-            } else {
-              return CreateLinodeInterfaceSchema;
-            }
-          }
-          return ConfigProfileInterfaceSchema;
-        })
-      );
+      return ConfigProfileInterfacesSchema;
     }
   ),
   interface_generation: string().oneOf(['legacy_config', 'linode']),
