@@ -51,6 +51,7 @@ describe('AlertDetailNotification component tests', () => {
       expect(getByText(channel.label)).toBeInTheDocument();
     });
   });
+
   it('should render the error state if api throws error', () => {
     queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue({
       data: makeResourcePage(notificationChannels),
