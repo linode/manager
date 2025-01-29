@@ -28,7 +28,7 @@ export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricC
 );
 
 export const alertFactory = Factory.Sync.makeFactory<Alert>({
-  channels: [
+  alert_channels: [
     {
       id: '1',
       label: 'sample1',
@@ -52,7 +52,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   rule_criteria: {
     rules: [
       {
-        aggregation_type: 'avg',
+        aggregation_function: 'avg',
         dimension_filters: [
           {
             dimension_label: 'Test',
@@ -68,7 +68,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
         unit: 'Bytes',
       },
       {
-        aggregation_type: 'avg',
+        aggregation_function: 'avg',
         dimension_filters: [
           {
             dimension_label: 'OperatingSystem',

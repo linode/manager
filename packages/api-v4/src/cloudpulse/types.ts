@@ -183,7 +183,7 @@ export interface EditAlertResourcesPayload {
 }
 export interface MetricCriteria {
   metric: string;
-  aggregation_type: MetricAggregationType;
+  aggregate_function: MetricAggregationType;
   operator: MetricOperatorType;
   threshold: number;
   dimension_filters?: DimensionFilter[];
@@ -225,7 +225,7 @@ export interface Alert {
     rules: AlertDefinitionMetricCriteria[];
   };
   trigger_conditions: TriggerCondition;
-  channels: {
+  alert_channels: {
     id: string;
     label: string;
     url: string;
