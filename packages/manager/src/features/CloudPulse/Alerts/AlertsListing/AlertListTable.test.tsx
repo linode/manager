@@ -1,4 +1,3 @@
-import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { alertFactory } from 'src/factories';
@@ -28,9 +27,7 @@ describe('Alert List Table test', () => {
         services={[]}
       />
     );
-    await waitFor(() => {
-      expect(getByText('Error in fetching the alerts')).toBeVisible();
-    });
+    expect(getByText('Error in fetching the alerts')).toBeVisible();
   });
 
   it('should render the alert row', async () => {

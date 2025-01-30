@@ -49,7 +49,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   };
 
   return (
-    <OrderBy data={alerts} order="asc" orderBy={'service'}>
+    <OrderBy data={alerts} order="asc" orderBy="service">
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
           {({
@@ -74,6 +74,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                           handleClick={handleOrderChange}
                           key={value.label}
                           label={value.label}
+                          noWrap
                         >
                           {value.colName}
                         </TableSortCell>
