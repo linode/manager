@@ -1286,6 +1286,66 @@ describe('LKE cluster updates', () => {
     cy.findByText(mockDrawerTitle).should('not.exist');
   });
 
+  it('does not collapse the accordion when an action button is clicked in the accordion header', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools']);
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      // Accordion should be expanded by default
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+
+      // Click on an action button
+      cy.get('[data-testid="node-pool-actions"]')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Autoscale Pool')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+    });
+
+    // Exit dialog
+    ui.dialog
+      .findByTitle('Autoscale Pool')
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      // Check that the accordion is still expanded
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+
+      // Accordion should close on non-action button clicks
+      cy.get('[data-qa-panel-subheading]').click();
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'false'
+      );
+    });
+  });
+
   describe('LKE cluster updates for DC-specific prices', () => {
     /*
      * - Confirms node pool resize UI flow using mocked API responses.
