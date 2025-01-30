@@ -79,7 +79,7 @@ export const getNotificationChannels = (params?: Params, filters?: Filter) =>
     })
   );
 
-export const editAlertDefinitionResources = (
+export const editAlertDefinitionEntities = (
   data: EditAlertResourcesPayload,
   serviceType: string,
   alertId: number

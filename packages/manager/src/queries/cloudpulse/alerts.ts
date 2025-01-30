@@ -1,6 +1,6 @@
 import {
   createAlertDefinition,
-  editAlertDefinitionResources,
+  editAlertDefinitionEntities,
 } from '@linode/api-v4/lib/cloudpulse';
 import {
   keepPreviousData,
@@ -62,14 +62,14 @@ export const useAllAlertNotificationChannelsQuery = (
   });
 };
 
-export const useEditAlertDefinitionResources = (
+export const useEditAlertDefinitionEntities = (
   serviceType: string,
   alertId: number
 ) => {
   const queryClient = useQueryClient();
   return useMutation<Alert, APIError[], EditAlertResourcesPayload>({
     mutationFn: (data) =>
-      editAlertDefinitionResources(data, serviceType, alertId),
+      editAlertDefinitionEntities(data, serviceType, alertId),
     onSuccess() {
       queryClient.invalidateQueries(
         queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId)
