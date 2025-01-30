@@ -77,15 +77,18 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     serviceType === 'dbaas' ? { platform: 'rdbms-default' } : {}
   );
 
-  React.useEffect(() => {
-    if (resources && isSelectionsNeeded) {
-      setSelectedResources(
-        resources
-          .filter(({ id }) => alertResourceIds.includes(id))
-          .map(({ id }) => id)
-      );
+  const computedSelectedResources = React.useMemo(() => {
+    if (!isSelectionsNeeded || !resources) {
+      return alertResourceIds;
     }
+    return resources
+      .filter(({ id }) => alertResourceIds.includes(id))
+      .map(({ id }) => id);
   }, [resources, isSelectionsNeeded, alertResourceIds]);
+
+  React.useEffect(() => {
+    setSelectedResources(computedSelectedResources);
+  }, [computedSelectedResources]);
 
   // A map linking region IDs to their corresponding region objects, used for quick lookup when displaying data in the table.
   const regionsIdToRegionMap: Map<string, Region> = React.useMemo(() => {
@@ -159,8 +162,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
   const isNoResources =
     !isDataLoadingError && !isSelectionsNeeded && alertResourceIds.length === 0;
-  const isRenderComponent =
-    isDataLoadingError || isSelectionsNeeded || alertResourceIds.length; // if there is data loading error display error message with empty table setup
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
@@ -188,7 +189,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {alertLabel || 'Resources'}
         {/* It can be either the passed alert label or just Resources */}
       </Typography>
-      {isRenderComponent && (
+      {!isNoResources && (
         <Grid container spacing={3}>
           <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
             <Grid item md={3} xs={12}>

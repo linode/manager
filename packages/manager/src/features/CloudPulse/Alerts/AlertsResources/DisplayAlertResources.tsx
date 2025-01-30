@@ -159,7 +159,7 @@ export const DisplayAlertResources = React.memo(
                           )
                         }
                         sx={{
-                          padding: 0,
+                          p: 0,
                         }}
                         checked={isAllPageSelected(paginatedData)}
                         data-testid={`select_all_in_page_${page}`}

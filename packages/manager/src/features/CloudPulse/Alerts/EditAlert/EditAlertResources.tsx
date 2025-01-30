@@ -111,7 +111,9 @@ export const EditAlertResources = () => {
 
 /**
  * Returns a common UI structure for loading, error, or empty states.
- * @param content - A React component to display (e.g., CircleProgress, ErrorState, or Placeholder).
+ * @param messageComponent - A React component to display (e.g., CircleProgress, ErrorState, or Placeholder).
+ * @param pathName - The current pathname to be provided in breadcrumb
+ * @param crumbOverrides - The overrides to be provided in breadcrumb
  */
 const getEditAlertMessage = (
   messageComponent: React.ReactNode,
