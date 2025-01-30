@@ -62,11 +62,11 @@ export const getRegionOptions = (
     regionsIdToRegionMap,
     resourceIds,
   } = filterProps;
-  const earlyReturn =
+  const isEmpty =
     !data ||
     (!isAdditionOrDeletionNeeded && !resourceIds.length) ||
     !regionsIdToRegionMap.size;
-  if (earlyReturn) {
+  if (isEmpty) {
     return [];
   }
   const uniqueRegions = new Set<Region>();

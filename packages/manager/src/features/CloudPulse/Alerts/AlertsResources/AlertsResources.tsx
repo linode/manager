@@ -189,40 +189,38 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {alertLabel || 'Resources'}
         {/* It can be either the passed alert label or just Resources */}
       </Typography>
-      {!isNoResources && (
-        <Grid container spacing={3}>
-          <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
-            <Grid item md={3} xs={12}>
-              <DebouncedSearchTextField
-                sx={{
-                  maxHeight: '34px',
-                }}
-                clearable
-                hideLabel
-                label="Search for a Region or Resource"
-                onSearch={handleSearchTextChange}
-                placeholder="Search for a Region or Resource"
-                value={searchText || ''}
-              />
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <AlertsRegionFilter
-                handleSelectionChange={handleFilteredRegionsChange}
-                regionOptions={regionOptions}
-              />
-            </Grid>
+      <Grid container spacing={3}>
+        <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
+          <Grid item md={3} xs={12}>
+            <DebouncedSearchTextField
+              sx={{
+                maxHeight: '34px',
+              }}
+              clearable
+              hideLabel
+              label="Search for a Region or Resource"
+              onSearch={handleSearchTextChange}
+              placeholder="Search for a Region or Resource"
+              value={searchText || ''}
+            />
           </Grid>
-          <Grid item xs={12}>
-            <DisplayAlertResources
-              filteredResources={filteredResources}
-              handleSelection={handleSelection}
-              isDataLoadingError={isDataLoadingError}
-              isSelectionsNeeded={isSelectionsNeeded}
-              scrollToElement={() => scrollToElement(titleRef.current)}
+          <Grid item md={4} xs={12}>
+            <AlertsRegionFilter
+              handleSelectionChange={handleFilteredRegionsChange}
+              regionOptions={regionOptions}
             />
           </Grid>
         </Grid>
-      )}
+        <Grid item xs={12}>
+          <DisplayAlertResources
+            filteredResources={filteredResources}
+            handleSelection={handleSelection}
+            isDataLoadingError={isDataLoadingError}
+            isSelectionsNeeded={isSelectionsNeeded}
+            scrollToElement={() => scrollToElement(titleRef.current)}
+          />
+        </Grid>
+      </Grid>
     </Stack>
   );
 });
