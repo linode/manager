@@ -83,8 +83,8 @@ export const firewallSettingsFactory = Factory.Sync.makeFactory<FirewallSettings
     default_firewall_ids: {
       linode: 1,
       nodebalancer: 1,
-      interface_public: 1,
-      interface_vpc: 1,
+      public_interface: 1,
+      vpc_interface: 1,
     },
   }
 );
