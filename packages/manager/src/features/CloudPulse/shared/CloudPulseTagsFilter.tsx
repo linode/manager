@@ -18,7 +18,7 @@ export interface CloudPulseTagsSelectProps {
   label: string;
   optional?: boolean;
   placeholder?: string;
-  region?: FilterValueType;
+  region: FilterValueType;
   resourceType: string | undefined;
   savePreferences?: boolean;
 }
@@ -40,7 +40,7 @@ export const CloudPulseTagsSelect = React.memo(
     const { data: linodes, isError, isLoading } = useAllLinodesQuery();
     // fetch all linode instances, consume the associated tags
     const tags = React.useMemo(() => {
-      if (!linodes) {
+      if (!linodes || !region) {
         return [];
       }
 
