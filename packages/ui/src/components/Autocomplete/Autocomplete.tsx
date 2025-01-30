@@ -14,7 +14,6 @@ import {
 } from './Autocomplete.styles';
 
 import type { TextFieldProps } from '../TextField';
-import type { PaperProps } from '@mui/material';
 import type {
   AutocompleteProps,
   AutocompleteRenderInputParams,
@@ -29,8 +28,7 @@ export interface EnhancedAutocompleteProps<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     'renderInput'
   > {
-  PaperComponent?: React.ComponentType<PaperProps>;
-  /** Removes "select all" option for mutliselect */
+  /** Removes "select all" option for multiselect */
   disableSelectAll?: boolean;
   /** Provides a hint with error styling to assist users. */
   errorText?: string;
@@ -93,7 +91,6 @@ export const Autocomplete = <
     placeholder,
     renderInput,
     renderOption,
-    PaperComponent,
     selectAllLabel = '',
     textFieldProps,
     value,
@@ -174,7 +171,6 @@ export const Autocomplete = <
         );
       }}
       ChipProps={{ deleteIcon: <CloseIcon /> }}
-      PaperComponent={PaperComponent ?? props.PaperComponent}
       PopperComponent={CustomPopper}
       clearOnBlur={clearOnBlur}
       data-qa-autocomplete={label}
