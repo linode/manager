@@ -48,7 +48,7 @@ jobs:
 
   publish-validation:
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     needs: build-validation
     steps:
       - uses: actions/checkout@v4
@@ -60,7 +60,7 @@ jobs:
         with:
           name: packages-validation-lib
           path: packages/validation/lib
-      - run: pnpm publish --dry-run --access public --no-git-checks
+      - run: pnpm publish --access public --no-git-checks
         working-directory: packages/validation
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -254,38 +254,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter linode-manager typecheck
 
-  build-manager:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    needs: build-sdk
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20.17"
-          cache: "pnpm"
-      - uses: actions/download-artifact@v4
-        with:
-          name: packages-validation-lib
-          path: packages/validation/lib
-      - uses: actions/download-artifact@v4
-        with:
-          name: packages-api-v4-lib
-          path: packages/api-v4/lib
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run --filter linode-manager run build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: packages-manager-build
-          path: packages/manager/build
-
   publish-sdk:
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     needs:
       - test-sdk
       - validate-sdk
@@ -306,7 +277,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
-      - run: pnpm publish --dry-run --access public --no-git-checks
+      - run: pnpm publish --access public --no-git-checks
         working-directory: packages/api-v4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
