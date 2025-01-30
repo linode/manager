@@ -206,6 +206,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   if (
     !isDataLoadingError &&
+    !isSelectionsNeeded &&
     alertResourceIds.length === 0 &&
     !isSelectionsNeeded
   ) {
@@ -242,8 +243,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         </Typography>
       )}
       {(isDataLoadingError ||
-        alertResourceIds.length ||
-        isSelectionsNeeded) && ( // if there is data loading error display error message with empty table setup
+        isSelectionsNeeded ||
+        alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
         <Grid container spacing={3}>
           <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
             <Grid item md={3} xs={12}>
