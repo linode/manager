@@ -110,13 +110,13 @@ export const database: PartialEventMap<'database'> = {
     finished: (e) => (
       <>
         Database <EventLink event={e} to="entity" /> migration{' '}
-        <strong>completed</strong>
+        <strong>completed</strong>.
       </>
     ),
     started: (e) => (
       <>
         Database <EventLink event={e} to="entity" /> migration{' '}
-        <strong>in progress</strong>
+        <strong>in progress</strong>.
       </>
     ),
   },
