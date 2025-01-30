@@ -57,7 +57,8 @@ export const AlertTableRow = (props: Props) => {
         </Box>
       </TableCell>
       <TableCell>
-        {services.find((service) => service.value === service_type)?.label}
+        {services.find((service) => service.value === service_type)?.label ??
+          service_type}
       </TableCell>
       <TableCell>{created_by}</TableCell>
       <TableCell>
@@ -65,8 +66,12 @@ export const AlertTableRow = (props: Props) => {
           format: 'MMM dd, yyyy, h:mm a',
         })}
       </TableCell>
-      <TableCell actionCell data-qa-alert-action-cell={`alert_${id}`}>
-        <AlertActionMenu alertType={type} handlers={handlers} />
+      <TableCell actionCell>
+        <AlertActionMenu
+          alertLabel={label}
+          alertType={type}
+          handlers={handlers}
+        />
       </TableCell>
     </TableRow>
   );

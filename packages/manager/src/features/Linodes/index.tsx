@@ -60,8 +60,15 @@ export const LinodesLandingWrapper = React.memo(() => {
   >(storage.regionFilter.get());
 
   // We need to grab all linodes so a filtered result of 0 does not display the empty state landing page
-  const { data: allLinodes } = useAllLinodesQuery();
-  const { data: filteredLinodes, error, isLoading } = useAllLinodesQuery(
+  const {
+    data: allLinodes,
+    isLoading: allLinodesLoading,
+  } = useAllLinodesQuery();
+  const {
+    data: filteredLinodes,
+    error,
+    isLoading: filteredLinodesLoading,
+  } = useAllLinodesQuery(
     {},
     isGeckoLAEnabled ? generateLinodesXFilter(regionFilter) : {}
   );
@@ -87,11 +94,12 @@ export const LinodesLandingWrapper = React.memo(() => {
       someLinodesHaveScheduledMaintenance={Boolean(
         someLinodesHaveScheduledMaintenance
       )}
+      filteredLinodesLoading={filteredLinodesLoading}
       handleRegionFilter={handleRegionFilter}
       linodesData={filteredLinodesData}
       linodesInTransition={linodesInTransition(events ?? [])}
       linodesRequestError={error ?? undefined}
-      linodesRequestLoading={isLoading}
+      linodesRequestLoading={allLinodesLoading}
       totalNumLinodes={allLinodes?.length ?? 0}
     />
   );

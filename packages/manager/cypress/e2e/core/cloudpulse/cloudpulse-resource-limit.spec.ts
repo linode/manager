@@ -2,9 +2,9 @@
  * This test suite validates the behavior of the DBaaS (Database as a Service) Dashboard,
  * specifically focusing on how the system handles the maximum resource selection limit
  * for database clusters. It contains two main test cases:
- * 
+ *
  * Ticket: DI-21897
- * 
+ *
  * 1. **Max Resource Limit Reached**:
  *    - clusters exceeding the selection limit will be disabled, but they will still be visible in dropdown.
  *      the "Select All" option is hidden and only the available clusters (up to the limit)
@@ -24,11 +24,19 @@
  */
 
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {mockGetCloudPulseDashboard,mockGetCloudPulseDashboards,mockGetCloudPulseServices,
+import {
+  mockGetCloudPulseDashboard,
+  mockGetCloudPulseDashboards,
+  mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
 import { ui } from 'support/ui';
 import { widgetDetails } from 'support/constants/widgets';
-import {accountFactory,dashboardFactory, databaseFactory,regionFactory,widgetFactory,
+import {
+  accountFactory,
+  dashboardFactory,
+  databaseFactory,
+  regionFactory,
+  widgetFactory,
 } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
@@ -37,8 +45,14 @@ import type { Flags } from 'src/featureFlags';
 import { Database } from '@linode/api-v4';
 import { mockGetDatabases } from 'support/intercepts/databases';
 
-const { metrics, id, serviceType, dashboardName, engine, clusterName } =
-  widgetDetails.dbaas;
+const {
+  metrics,
+  id,
+  serviceType,
+  dashboardName,
+  engine,
+  clusterName,
+} = widgetDetails.dbaas;
 
 const flags: Partial<Flags> = {
   aclp: { enabled: true, beta: true },
@@ -109,7 +123,7 @@ describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
   beforeEach(() => {
     mockGetAccount(mockAccount);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetCloudPulseDashboard(id, dashboard);
     mockGetRegions([mockRegion]).as('fetchRegion');
     mockGetUserPreferences({});

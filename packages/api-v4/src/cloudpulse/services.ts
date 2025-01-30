@@ -1,21 +1,39 @@
 import { BETA_API_ROOT as API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setURL } from '../request';
+import Request, {
+  setData,
+  setHeaders,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
 import {
   JWEToken,
   JWETokenPayLoad,
   MetricDefinition,
   ServiceTypesList,
 } from './types';
-import { ResourcePage } from 'src/types';
+import { Filter, Params, ResourcePage } from 'src/types';
 
-export const getMetricDefinitionsByServiceType = (serviceType: string) => {
+const bearer = 'Bearer vagrant';
+
+export const getMetricDefinitionsByServiceType = (
+  serviceType: string,
+  params?: Params,
+  filters?: Filter
+) => {
   return Request<ResourcePage<MetricDefinition>>(
     setURL(
-      `${API_ROOT}/monitor/services/${encodeURIComponent(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
         serviceType
       )}/metric-definitions`
     ),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setHeaders({
+      Authorization: bearer,
+    })
   );
 };
 
@@ -31,6 +49,11 @@ export const getJWEToken = (data: JWETokenPayLoad, serviceType: string) =>
 // Returns the list of service types available
 export const getCloudPulseServiceTypes = () =>
   Request<ServiceTypesList>(
-    setURL(`${API_ROOT}/monitor/services`),
-    setMethod('GET')
+    setURL(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services`
+    ),
+    setMethod('GET'),
+    setHeaders({
+      Authorization: bearer,
+    })
   );

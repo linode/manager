@@ -44,7 +44,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
   const {
     isPending: addDeviceIsLoading,
     mutateAsync: addDevice,
-  } = useAddFirewallDeviceMutation(Number(id));
+  } = useAddFirewallDeviceMutation();
 
   const [selectedNodebalancers, setSelectedNodebalancers] = React.useState<
     NodeBalancer[]
@@ -60,7 +60,11 @@ export const AddNodebalancerDrawer = (props: Props) => {
 
     const results = await Promise.allSettled(
       selectedNodebalancers.map((nodebalancer) =>
-        addDevice({ id: nodebalancer.id, type: 'nodebalancer' })
+        addDevice({
+          firewallId: Number(id),
+          id: nodebalancer.id,
+          type: 'nodebalancer',
+        })
       )
     );
 

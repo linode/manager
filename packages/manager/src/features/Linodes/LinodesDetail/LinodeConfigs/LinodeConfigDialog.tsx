@@ -19,7 +19,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { equals, pathOr, repeat } from 'ramda';
+import { equals, repeat } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -93,7 +93,7 @@ interface EditableFields {
   comments?: string;
   devices: DevicesAsStrings;
   helpers: Helpers;
-  initrd: null | number | string;
+  initrd: null | string;
   interfaces: ExtendedInterface[];
   kernel?: string;
   label: string;
@@ -142,7 +142,7 @@ const defaultInterfaceList = padInterfaceList([
   },
 ]);
 
-const defaultFieldsValues = {
+const defaultFieldsValues: EditableFields = {
   comments: '',
   devices: {},
   helpers: {
@@ -564,27 +564,28 @@ export const LinodeConfigDialog = (props: Props) => {
     disks: initrdDisks,
   };
 
-  const categorizedInitrdOptions = Object.entries(initrdDisksObject).reduce(
-    (acc, [category, items]) => {
-      const categoryTitle = titlecase(category);
-      const options = [
-        ...items.map(({ id, label }) => {
-          return {
-            deviceType: categoryTitle,
-            label,
-            value: String(id) as null | number | string,
-          };
-        }),
-        {
+  const categorizedInitrdOptions: {
+    deviceType: string;
+    label: string;
+    value: null | string;
+  }[] = Object.entries(initrdDisksObject).reduce((acc, [category, items]) => {
+    const categoryTitle = titlecase(category);
+    const options = [
+      ...items.map(({ id, label }) => {
+        return {
           deviceType: categoryTitle,
-          label: 'Recovery – Finnix (initrd)',
-          value: String(finnixDiskID),
-        },
-      ];
-      return [...acc, ...options];
-    },
-    []
-  );
+          label,
+          value: String(id),
+        };
+      }),
+      {
+        deviceType: categoryTitle,
+        label: 'Recovery – Finnix (initrd)',
+        value: String(finnixDiskID),
+      },
+    ];
+    return [...acc, ...options];
+  }, []);
 
   categorizedInitrdOptions.unshift({
     deviceType: '',
@@ -856,11 +857,13 @@ export const LinodeConfigDialog = (props: Props) => {
             <Grid xs={12}>
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
+                getSelected={(slot) =>
+                  values.devices?.[slot as keyof DevicesAsStrings] ?? ''
+                }
                 counter={deviceCounter}
                 devices={availableDevices}
                 disabled={isReadOnly}
                 errorText={formik.errors.devices as string}
-                getSelected={(slot) => pathOr('', [slot], values.devices)}
                 onChange={handleDevicesChanges}
                 slots={deviceSlots}
               />

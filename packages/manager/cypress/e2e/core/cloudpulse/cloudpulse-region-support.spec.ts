@@ -60,7 +60,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetCloudPulseDashboard(id, dashboard);
     mockGetRegions([mockRegion, extendedMockRegion]).as('fetchRegion');
     mockGetUserPreferences({});
@@ -136,7 +136,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     const flags: Partial<Flags> = {
       aclp: { enabled: true, beta: true },
       aclpResourceTypeMap: [
-         {
+        {
           dimensionKey: 'cluster_id',
           maxResourceSelections: 10,
           serviceType: 'dbaas',

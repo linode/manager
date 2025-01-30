@@ -1,4 +1,4 @@
-import type { AlertDimensionsProp } from '../AlertsDetail/AlertDetailChips';
+import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { NotificationChannel, ServiceTypesList } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
@@ -24,30 +24,27 @@ interface AlertChipBorderProps {
 
 /**
  * @param serviceType Service type for which the label needs to be displayed
- * @param serviceTypes List of available service types in ACLP
- * @returns The label for the given service type
+ * @param serviceTypeList List of available service types in Cloud Pulse
+ * @returns The label for the given service type from available service types
  */
 export const getServiceTypeLabel = (
   serviceType: string,
-  serviceTypes: ServiceTypesList | undefined
+  serviceTypeList: ServiceTypesList | undefined
 ) => {
-  if (!serviceTypes) {
+  if (!serviceTypeList) {
     return serviceType;
   }
 
-  for (const service of serviceTypes?.data) {
-    if (service.service_type === serviceType) {
-      return service.label;
-    }
-  }
-
-  return serviceType;
+  return (
+    serviceTypeList.data.find(
+      ({ service_type: serviceTypeObj }) => serviceTypeObj === serviceType
+    )?.label || serviceType
+  );
 };
 
 /**
- *
- * @param theme mui theme
- * @returns The style needed for box in alerts
+ * @param theme MUI theme object
+ * @returns The style object for the box used in alert details page
  */
 export const getAlertBoxStyles = (theme: Theme) => ({
   backgroundColor: theme.tokens.background.Neutral,
@@ -92,6 +89,10 @@ export const getAlertChipBorderRadius = (
   return '0';
 };
 
+/**
+ * @param value The notification channel object for which we need to display the chips
+ * @returns The label and the values that needs to be displayed based on channel type
+ */
 export const getChipLabels = (
   value: NotificationChannel
 ): AlertDimensionsProp => {

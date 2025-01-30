@@ -38,6 +38,7 @@ const mockData: MetricDefinition[] = [
         values: [],
       },
     ],
+    is_alertable: true,
     label: 'CPU utilization',
     metric: 'system_cpu_utilization_percent',
     metric_type: 'gauge',

@@ -4,17 +4,20 @@
  * @returns Cypress chainable.
  */
 
+import { cloudPulseServicelMap } from 'support/constants/cloud-pulse';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { randomString } from 'support/util/random';
 import { makeResponse } from 'support/util/response';
 
-import type { Alert } from '@linode/api-v4';
 import type {
+  Alert,
   CloudPulseMetricsResponse,
+  CreateAlertDefinitionPayload,
   Dashboard,
   MetricDefinition,
+  NotificationChannel,
 } from '@linode/api-v4';
 
 /**
@@ -38,21 +41,26 @@ export const mockGetCloudPulseMetricDefinitions = (
 };
 
 /**
- * Intercepts  GET requests for metric definitions.
- *
- * This function mocks the API response for requests to the endpoint
- * `dashboardMetricsData`.
- *
- * @returns {Cypress.Chainable<null>} The chainable Cypress object.
+ * Mocks the API response for the '/monitor/services' endpoint with the provided service types.
+ * This function intercepts the GET request for the specified API and returns a mocked response
+ * with service types, either a single service type or multiple service types.
+ * @param {string | string[]} serviceTypes - A single service type (e.g., 'linode') or an array of service types
+ * @returns {Cypress.Chainable<null>} - Returns a Cypress chainable object to continue the test.
  */
 
 export const mockGetCloudPulseServices = (
-  serviceType: string
+  serviceTypes: string[]
 ): Cypress.Chainable<null> => {
+  const services = serviceTypes.map((serviceType) => ({
+    label: cloudPulseServicelMap.get(serviceType) || 'dbaas',
+    service_type: serviceType,
+  }));
+
+  // Intercept the API call and return the mocked response
   return cy.intercept(
     'GET',
     apiMatcher('/monitor/services'),
-    paginateResponse([{ service_type: serviceType }])
+    paginateResponse(services)
   );
 };
 
@@ -303,7 +311,57 @@ export const mockGetAllAlertDefinitions = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher('/monitor/alert-definitions?page_size=500'),
+    apiMatcher('/monitor/alert-definitions*'),
     paginateResponse(alert)
+  );
+};
+
+/**
+ * Mocks the API response for retrieving all alert channels from the monitoring service.
+ * This function intercepts a GET request to fetch alert channels and returns a mock
+ * response, simulating the behavior of the real API by providing a list of alert channels.
+ *
+ * The mock response is created using the provided `channel` object, allowing the test
+ * to simulate various scenarios with different alert channel configurations.
+ *
+ * @param {NotificationChannel} channel - An object representing the notification channel to mock as the response.
+ *                                        This should represent the alert channel being fetched by the API.
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted request.
+ */
+export const mockGetAlertChannels = (
+  channel: NotificationChannel[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('/monitor/alert-channels*'),
+    paginateResponse(channel)
+  );
+};
+
+/**
+ * Mocks the API response for creating a new alert definition in the monitoring service.
+ * This function intercepts a POST request to create alert definitions and returns a mock
+ * response, simulating the behavior of the real API by returning the alert definition
+ * that was submitted in the request.
+ *
+ * The mock response is created using the provided `createAlertRequest` object, allowing
+ * the test to simulate various scenarios with different alert definitions.
+ *
+ * @param {string} serviceType - The type of service for which the alert definition is being created.
+ *                               This could be 'linode', 'dbaas', or another service type supported by the API.
+ * @param {CreateAlertDefinitionPayload} createAlertRequest
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted request.
+ */
+
+export const mockCreateAlertDefinition = (
+  serviceType: string,
+  createAlertRequest: CreateAlertDefinitionPayload
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`/monitor/services/${serviceType}/alert-definitions`),
+    paginateResponse(createAlertRequest)
   );
 };
