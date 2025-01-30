@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { firewallFactory } from 'src/factories';
+import { firewallDeviceFactory, firewallFactory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,
@@ -11,7 +11,7 @@ import {
 
 import { mswDB } from '../../../indexedDB';
 
-import type { Firewall } from '@linode/api-v4';
+import type { Firewall, FirewallDevice } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
@@ -45,6 +45,33 @@ export const getFirewalls = (mockState: MockState) => [
       }
 
       return makeResponse(firewall);
+    }
+  ),
+
+  http.get(
+    '*/v4beta/networking/firewalls/:id/devices',
+    async ({
+      params,
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<FirewallDevice>>
+    > => {
+      const id = Number(params.id);
+      const firewall = await mswDB.get('firewalls', id);
+      const firewallDevices = await mswDB.getAll('firewallDevices');
+
+      if (!firewall || !firewallDevices) {
+        return makeNotFoundResponse();
+      }
+
+      const devices = firewallDevices
+        .filter((deviceTuple) => deviceTuple[0] === id)
+        .map((deviceTuple) => deviceTuple[1]);
+
+      return makePaginatedResponse({
+        data: devices,
+        request,
+      });
     }
   ),
 ];
@@ -161,6 +188,49 @@ export const getFirewallSettings = (mockState: MockState) => [];
 
 export const updateFirewallSettings = (mockState: MockState) => [];
 
-export const getFirewallDevices = (mockState: MockState) => [];
+export const createFirewallDevices = (mockState: MockState) => [
+  http.post(
+    '*/v4beta/networking/firewalls/:id/devices',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | FirewallDevice>> => {
+      const firewallId = Number(params.id);
+      const firewall = await mswDB.get('firewalls', firewallId);
 
-export const createFirewallDevices = (mockState: MockState) => [];
+      if (!firewall) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = await request.clone().json();
+
+      const firewallDevice = firewallDeviceFactory.build({
+        ...payload,
+        created: DateTime.now().toISO(),
+        updated: DateTime.now().toISO(),
+      });
+
+      await mswDB.add(
+        'firewallDevices',
+        [firewallId, firewallDevice],
+        mockState
+      );
+
+      queueEvents({
+        event: {
+          action: 'firewall_device_add',
+          entity: {
+            id: firewallId,
+            label: firewall.label,
+            type: 'firewall',
+            url: `/v4beta/networking/firewalls/${firewallId}/devices`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
+
+      return makeResponse(firewallDevice);
+    }
+  ),
+];
