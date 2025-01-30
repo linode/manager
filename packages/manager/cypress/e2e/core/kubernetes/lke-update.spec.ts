@@ -1287,9 +1287,15 @@ describe('LKE cluster updates', () => {
     });
 
     it('can add labels and taints', () => {
-      const mockNewLabel = 'my-label-key: my-label-value';
+      const mockNewSimpleLabel = 'my-label-key: my-label-value';
+      const mockNewDNSLabel = 'my-label-key.io/app: my-label-value';
       const mockNewTaint: Taint = {
         key: 'my-taint-key',
+        value: 'my-taint-value',
+        effect: 'NoSchedule',
+      };
+      const mockNewDNSTaint: Taint = {
+        key: 'my-taint-key.io/app',
         value: 'my-taint-value',
         effect: 'NoSchedule',
       };
@@ -1297,8 +1303,11 @@ describe('LKE cluster updates', () => {
         id: 1,
         type: mockType.id,
         nodes: mockNodes,
-        taints: [mockNewTaint],
-        labels: { 'my-label-key': 'my-label-value' },
+        taints: [mockNewTaint, mockNewDNSTaint],
+        labels: {
+          'my-label-key': 'my-label-value',
+          'my-label-key.io/app': 'my-label-value',
+        },
       });
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
@@ -1353,22 +1362,29 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.disabled');
 
-          // Confirm form adds a valid new label.
-          cy.findByLabelText('Label').click().type(mockNewLabel);
+          // Confirm labels with simple keys and DNS subdomain keys can be added.
+          [mockNewSimpleLabel, mockNewDNSLabel].forEach((newLabel, index) => {
+            // Confirm form adds a valid new label.
+            cy.findByLabelText('Label').click().type(newLabel);
 
-          ui.button.findByTitle('Add').click();
+            ui.button.findByTitle('Add').click();
 
-          // Confirm add form closes and Add Label button is re-enabled.
-          cy.findByLabelText('Label').should('not.exist');
-          cy.findByLabelText('Add').should('not.exist');
-          ui.button.findByTitle('Add Label').should('be.enabled');
+            // Confirm add form closes and Add Label button is re-enabled.
+            cy.findByLabelText('Label').should('not.exist');
+            cy.findByLabelText('Add').should('not.exist');
+            ui.button.findByTitle('Add Label').should('be.enabled');
 
-          // Confirm new label is visible in table.
-          cy.get(`tr[data-qa-label-row="my-label-key"]`)
-            .should('be.visible')
-            .within(() => {
-              cy.findByText(mockNewLabel).should('be.visible');
-            });
+            // Confirm new label is visible in table.
+            cy.get(`tr[data-qa-label-row="${newLabel.split(':')[0]}"]`)
+              .should('be.visible')
+              .within(() => {
+                cy.findByText(newLabel).should('be.visible');
+              });
+
+            if (index === 0) {
+              ui.button.findByTitle('Add Label').click();
+            }
+          });
 
           // Add a taint:
 
@@ -1381,35 +1397,42 @@ describe('LKE cluster updates', () => {
           // Confirm form button is disabled and label form displays with the correct CTAs.
           ui.button.findByTitle('Add Taint').should('be.disabled');
 
-          // Confirm form adds a valid new taint.
-          cy.findByLabelText('Taint')
-            .click()
-            .type(`${mockNewTaint.key}: ${mockNewTaint.value}`);
+          // Confirm taints with simple keys and DNS subdomain keys can be added.
+          [mockNewTaint, mockNewDNSTaint].forEach((newTaint, index) => {
+            // Confirm form adds a valid new taint.
+            cy.findByLabelText('Taint')
+              .click()
+              .type(`${newTaint.key}: ${newTaint.value}`);
 
-          ui.autocomplete.findByLabel('Effect').click();
+            ui.autocomplete.findByLabel('Effect').click();
 
-          ui.autocompletePopper
-            .findByTitle(mockNewTaint.effect)
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
+            ui.autocompletePopper
+              .findByTitle(newTaint.effect)
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
 
-          ui.button.findByTitle('Add').click();
+            ui.button.findByTitle('Add').click();
 
-          // Confirm add form closes and Add Taint button is re-enabled.
-          cy.findByLabelText('Taint').should('not.exist');
-          cy.findByLabelText('Add').should('not.exist');
-          ui.button.findByTitle('Add Taint').should('be.enabled');
+            // Confirm add form closes and Add Taint button is re-enabled.
+            cy.findByLabelText('Taint').should('not.exist');
+            cy.findByLabelText('Add').should('not.exist');
+            ui.button.findByTitle('Add Taint').should('be.enabled');
 
-          // Confirm new taint is visible in table.
-          cy.get(`tr[data-qa-taint-row="${mockNewTaint.key}"]`)
-            .should('be.visible')
-            .within(() => {
-              cy.findByText(
-                `${mockNewTaint.key}: ${mockNewTaint.value}`
-              ).should('be.visible');
-              cy.findByText(mockNewTaint.effect).should('be.visible');
-            });
+            // Confirm new taint is visible in table.
+            cy.get(`tr[data-qa-taint-row="${newTaint.key}"]`)
+              .should('be.visible')
+              .within(() => {
+                cy.findByText(`${newTaint.key}: ${newTaint.value}`).should(
+                  'be.visible'
+                );
+                cy.findByText(newTaint.effect).should('be.visible');
+              });
+
+            if (index === 0) {
+              ui.button.findByTitle('Add Taint').click();
+            }
+          });
 
           // Confirm form can be submitted.
           ui.button
@@ -1425,6 +1448,7 @@ describe('LKE cluster updates', () => {
         if (data) {
           const actualLabels: Label = data.labels;
           const actualTaints: Taint[] = data.taints;
+          console.log({ actualTaints }, { actualLabels });
 
           expect(actualLabels).to.deep.equal(mockNodePoolUpdated.labels);
           expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
@@ -1525,9 +1549,7 @@ describe('LKE cluster updates', () => {
           ui.button.findByTitle('Add').click();
 
           // Confirm error validation for invalid taint input.
-          cy.findByText(/Key must start with a letter or number/).should(
-            'be.visible'
-          );
+          cy.findByText('Key is required.').should('be.visible');
 
           invalidTaintKeys.forEach((invalidTaintKey, index) => {
             cy.findByLabelText('Taint').click().clear().type(invalidTaintKey);

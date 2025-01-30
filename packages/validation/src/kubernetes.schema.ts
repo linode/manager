@@ -93,7 +93,7 @@ export const kubernetesControlPlaneACLPayloadSchema = object().shape({
 const alphaNumericValidCharactersRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
 
 // DNS subdomain prefix (example.com/my-app)
-const dnsPrefixRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
+const dnsPrefixRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-./]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
 
 const MAX_DNS_KEY_TOTAL_LENGTH = 128;
 const MAX_DNS_KEY_SUFFIX_LENGTH = 62;
@@ -151,13 +151,19 @@ export const kubernetesLabelSchema = object().test({
 
 export const kubernetesTaintSchema = object().shape({
   key: string()
-    .matches(
-      alphaNumericValidCharactersRegex || dnsPrefixRegex,
-      'Key must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 253 characters.'
+    .required('Key is required.')
+    .test(
+      'valid-key',
+      'Key must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 253 characters.',
+      (value) => {
+        return (
+          alphaNumericValidCharactersRegex.test(value) ||
+          dnsPrefixRegex.test(value)
+        );
+      }
     )
     .max(253, 'Key must be between 1 and 253 characters.')
-    .min(1, 'Key must be between 1 and 253 characters.')
-    .required('Key is required.'),
+    .min(1, 'Key must be between 1 and 253 characters.'),
   value: string()
     .matches(
       alphaNumericValidCharactersRegex,
