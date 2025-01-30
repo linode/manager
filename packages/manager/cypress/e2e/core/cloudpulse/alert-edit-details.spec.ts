@@ -5,7 +5,6 @@
  * The tests verify that alert details, including severity, status, and resource information,
  * are correctly displayed and interactive on the Edit page. It ensures that users can navigate
  * from the list page to the edit page, correctly select and manage resources, and update alert definitions.
- *
  */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -16,7 +15,6 @@ import {
 } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import type { Flags } from 'src/featureFlags';
-
 import {
   mockGetAlertDefinitions,
   mockGetAllAlertDefinitions,
@@ -36,7 +34,6 @@ const alertDetails = alertFactory.build({
   type: 'system',
 });
 const { service_type, id, label } = alertDetails;
-
 const regions = [
   regionFactory.build({
     capabilities: ['Managed Databases'],
@@ -49,7 +46,6 @@ const regions = [
     label: 'Newark',
   }),
 ];
-
 const databases: Database[] = databaseFactory
   .buildList(50)
   .map((db, index) => ({
@@ -118,7 +114,6 @@ describe('Integration Tests for Edit Alert', () => {
       'contain.text',
       '3 of 50 resources are selected'
     );
-
     // Select all resources
     cy.get('[data-qa-notice="true"]').within(() => {
       ui.button
