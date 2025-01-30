@@ -1,5 +1,12 @@
 import { BETA_API_ROOT as API_ROOT } from 'src/constants';
-import Request, { setData, setHeaders, setMethod, setURL } from '../request';
+import Request, {
+  setData,
+  setHeaders,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
 import {
   JWEToken,
   JWETokenPayLoad,
@@ -22,6 +29,8 @@ export const getMetricDefinitionsByServiceType = (
       )}/metric-definitions`
     ),
     setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
     setHeaders({
       Authorization: bearer,
     })
