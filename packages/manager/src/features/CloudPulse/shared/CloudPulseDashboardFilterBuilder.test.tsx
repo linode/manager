@@ -28,10 +28,10 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
         dashboard={dashboardFactory.build({
           service_type: 'dbaas',
         })}
-        database_ids={[1, 2]}
         emitFilterChange={vi.fn()}
         handleToggleAppliedFilter={vi.fn()}
         isServiceAnalyticsIntegration={false}
+        resource_ids={[1, 2]}
       />
     );
 

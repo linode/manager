@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { dashboardFactory } from 'src/factories';
 import { databaseQueries } from 'src/queries/databases/databases';
 
-import { RESOURCES } from './constants';
+import { RESOURCE_ID, RESOURCES } from './constants';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -222,6 +222,39 @@ describe('checkIfWeNeedToDisableFilterByFilterKey', () => {
 });
 
 it('test getNodeTypeProperties', () => {
+  const nodeTypeSelectionConfig = dbaasConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Node Type'
+  );
+
+  expect(nodeTypeSelectionConfig).toBeDefined();
+
+  if (nodeTypeSelectionConfig) {
+    const {
+      database_ids,
+      disabled,
+      handleNodeTypeChange,
+      label,
+      savePreferences,
+    } = getNodeTypeProperties(
+      {
+        config: nodeTypeSelectionConfig,
+        dashboard: dbaasDashboard,
+        dependentFilters: { [RESOURCE_ID]: [1] },
+        isServiceAnalyticsIntegration: false,
+        resource_ids: [1],
+      },
+      vi.fn()
+    );
+    const { name } = nodeTypeSelectionConfig.configuration;
+    expect(database_ids).toEqual([1]);
+    expect(handleNodeTypeChange).toBeDefined();
+    expect(savePreferences).toEqual(true);
+    expect(disabled).toEqual(false);
+    expect(label).toEqual(name);
+  }
+});
+
+it('test getNodeTypeProperties with disabled true', () => {
   const nodeTypeSelectionConfig = dbaasConfig?.filters.find(
     (filterObj) => filterObj.name === 'Node Type'
   );

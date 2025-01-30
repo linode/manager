@@ -43,11 +43,6 @@ export interface CloudPulseDashboardFilterBuilderProps {
   dashboard: Dashboard;
 
   /**
-   * selected database ids
-   */
-  database_ids?: number[];
-
-  /**
    * all the selection changes in the filter goes through this method
    */
   emitFilterChange: (
@@ -69,17 +64,22 @@ export interface CloudPulseDashboardFilterBuilderProps {
    * Last selected values from user preferences
    */
   preferences?: AclpConfig;
+
+  /**
+   * selected resource ids
+   */
+  resource_ids?: number[];
 }
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
   (props: CloudPulseDashboardFilterBuilderProps) => {
     const {
       dashboard,
-      database_ids,
       emitFilterChange,
       handleToggleAppliedFilter,
       isServiceAnalyticsIntegration,
       preferences,
+      resource_ids,
     } = props;
 
     const [, setDependentFilters] = React.useState<{
@@ -268,14 +268,14 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             {
               config,
               dashboard,
-              database_ids: database_ids?.length
-                ? database_ids
-                : (dependentFilterReference.current[RESOURCE_ID] as number[]),
-              dependentFilters: database_ids?.length
-                ? { resource_id: database_ids }
+              dependentFilters: resource_ids?.length
+                ? { [RESOURCE_ID]: resource_ids }
                 : dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
+              resource_ids: resource_ids?.length
+                ? resource_ids
+                : (dependentFilterReference.current[RESOURCE_ID] as number[]),
             },
             handleNodeTypeChange
           );

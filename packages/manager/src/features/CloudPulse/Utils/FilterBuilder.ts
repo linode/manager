@@ -39,12 +39,12 @@ import type {
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
   dashboard: Dashboard;
-  database_ids?: number[] | undefined;
   dependentFilters?: {
     [key: string]: FilterValueType;
   };
   isServiceAnalyticsIntegration: boolean;
   preferences?: AclpConfig;
+  resource_ids?: number[] | undefined;
 }
 
 interface CloudPulseMandatoryFilterCheckProps {
@@ -172,9 +172,9 @@ export const getNodeTypeProperties = (
   ) => void
 ): CloudPulseNodeTypeFilterProps => {
   const { filterKey, name: label, placeholder } = props.config.configuration;
-  const { dashboard, database_ids, dependentFilters, preferences } = props;
+  const { dashboard, dependentFilters, preferences, resource_ids } = props;
   return {
-    database_ids,
+    database_ids: resource_ids,
     defaultValue: preferences?.[NODE_TYPE],
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
