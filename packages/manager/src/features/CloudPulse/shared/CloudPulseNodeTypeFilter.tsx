@@ -89,7 +89,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
 
     return (
       <Autocomplete
-        onChange={(e, selectedNode) => {
+        onChange={(_e, selectedNode) => {
           handleNodeTypeChange(selectedNode, savePreferences);
           setSelectedNodeType(selectedNode);
         }}
@@ -102,7 +102,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
         clearOnBlur
         data-testid="node-type-select"
         disabled={disabled}
-        errorText={isError ? 'Error loading node types' : ''}
+        errorText={isError ? 'Error loading node types.' : ''}
         fullWidth
         label={label || 'Node Type'}
         loading={isLoading}
