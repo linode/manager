@@ -108,7 +108,7 @@ export const defaultFieldsState = (
   weight: props.weight ?? '5',
 });
 
-const getMasterPayload = (
+const getMasterData = (
   fields: EditableDomainFields
 ): Pick<
   EditableDomainFields,
@@ -132,10 +132,10 @@ const getMasterPayload = (
 };
 
 /**
- * Get payload for `A`, `AAAA`, `CNAME`, `NS`, `TXT` records
+ * Get data for `A`, `AAAA`, `CNAME`, `NS`, `TXT` records
  * @param fields - (unfiltered) Domain Record form data fields
  */
-const getSharedRecordPayload = (
+const getSharedRecordData = (
   fields: EditableRecordFields
 ): Pick<EditableRecordFields, 'name' | 'target' | 'ttl_sec'> => {
   return {
@@ -145,7 +145,7 @@ const getSharedRecordPayload = (
   };
 };
 
-const getCAARecordPayload = (
+const getCAARecordData = (
   fields: EditableRecordFields
 ): Pick<EditableRecordFields, 'name' | 'tag' | 'target' | 'ttl_sec'> => {
   return {
@@ -156,7 +156,7 @@ const getCAARecordPayload = (
   };
 };
 
-const getMXRecordPayload = (
+const getMXRecordData = (
   fields: EditableRecordFields
 ): Pick<EditableRecordFields, 'name' | 'priority' | 'target' | 'ttl_sec'> => {
   return {
@@ -167,7 +167,7 @@ const getMXRecordPayload = (
   };
 };
 
-const getSRVRecordPayload = (
+const getSRVRecordData = (
   fields: EditableRecordFields
 ): Pick<
   EditableRecordFields,
@@ -190,23 +190,23 @@ export const filterDataByType = (
 ): Partial<EditableDomainFields | EditableRecordFields> => {
   switch (type) {
     case 'master':
-      return getMasterPayload(fields);
+      return getMasterData(fields);
 
     case 'A':
     case 'AAAA':
     case 'CNAME':
     case 'NS':
     case 'TXT':
-      return getSharedRecordPayload(fields);
+      return getSharedRecordData(fields);
 
     case 'CAA':
-      return getCAARecordPayload(fields);
+      return getCAARecordData(fields);
 
     case 'MX':
-      return getMXRecordPayload(fields);
+      return getMXRecordData(fields);
 
     case 'SRV':
-      return getSRVRecordPayload(fields);
+      return getSRVRecordData(fields);
 
     default:
       return {};
