@@ -110,19 +110,22 @@ export const LabelAndTaintDrawer = (props: Props) => {
             marginBottom={(theme) => theme.spacing(4)}
             marginTop={(theme) => theme.spacing()}
           >
-            Labels and Taints will be applied to Nodes in this Node Pool. They
-            can be further defined using the Kubernetes API, although edits will
-            be overwritten when Nodes or Pools are recycled.
+            Manage custom labels and taints directly through LKE. Changes are
+            applied to all nodes in this node pool.{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/deploy-and-manage-a-kubernetes-cluster-with-the-api#add-labels-and-taints-to-your-lke-node-pools">
+              Learn more
+            </Link>
+            .
           </Typography>
 
           <Typography variant="h3"> Labels </Typography>
           <Typography>
-            Label key-value pairs should adhere to the specifications and
-            restrictions outlined in the Kubernetes{' '}
+            Labels are key-value pairs that are used as identifiers. Review the
+            guidelines in the{' '}
             <Link to="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set">
-              Labels and Selectors
-            </Link>{' '}
-            documentation.
+              Kubernetes documentation
+            </Link>
+            .
           </Typography>
           <LabelTable />
           <Button
@@ -148,12 +151,13 @@ export const LabelAndTaintDrawer = (props: Props) => {
 
           <Typography variant="h3">Taints</Typography>
           <Typography>
-            A taint consists of a key, value, and effect, adhering to the
-            guidelines outlined in the Kubernetes{' '}
+            Taints are used to control which pods can be placed on nodes in this
+            node pool. They consist of a key, value, and effect. Review the
+            guidelines in the{' '}
             <Link to="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">
-              Taints and Tolerations
-            </Link>{' '}
-            documentation.
+              Kubernetes documentation
+            </Link>
+            .
           </Typography>
           <TaintTable />
           <Button
