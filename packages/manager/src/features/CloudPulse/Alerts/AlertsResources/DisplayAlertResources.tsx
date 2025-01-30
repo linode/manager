@@ -154,7 +154,7 @@ export const DisplayAlertResources = React.memo(
                         }
                         onClick={() =>
                           handleSelectionChange(
-                            paginatedData.map((resource) => resource.id),
+                            paginatedData.map(({ id }) => id),
                             !isAllPageSelected(paginatedData)
                           )
                         }
