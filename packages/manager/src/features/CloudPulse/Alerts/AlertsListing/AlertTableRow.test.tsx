@@ -96,7 +96,9 @@ describe('Alert Row', () => {
         services={mockServices}
       />
     );
-    const firstActionMenu = getAllByLabelText('Action menu for Alert')[0];
+    const firstActionMenu = getAllByLabelText(
+      `Action menu for Alert ${alert.label}`
+    )[0];
     await userEvent.click(firstActionMenu);
     expect(getByTestId('Show Details')).toBeInTheDocument();
   });

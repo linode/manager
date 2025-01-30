@@ -73,7 +73,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 }}
                 textFieldProps={{
                   labelTooltipText:
-                    'Choose how often you intend to evaluate the alert condition.',
+                    'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
                 }}
                 value={
                   getEvaluationPeriodOptions().find(
@@ -108,7 +108,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 }}
                 textFieldProps={{
                   labelTooltipText:
-                    'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
+                    'Choose how often you intend to evaluate the alert condition.',
                 }}
                 value={
                   getPollingIntervalOptions().find(

@@ -1,3 +1,18 @@
+/**
+ * @fileoverview Cypress test suite for the "Create Alert" functionality.
+ *
+ * This test suite validates the process of creating an alert in the cloud monitoring system,
+ * ensuring that users can navigate to the alert creation page, fill in required details,
+ * and successfully submit the form. It also verifies the API interactions and UI behavior.
+ *
+ * Key Features:
+ * - Mocks API responses for accounts, regions, Linodes, and alert definitions.
+ * - Tests navigation from the Alert Listings page to the Create Alert page.
+ * - Automates form filling, metric selection, and alert creation.
+ * - Asserts successful alert creation with API validation and toast notifications.
+ *
+ */
+
 import { Flags } from 'src/featureFlags';
 import {
   mockCreateAlertDefinition,
@@ -63,6 +78,7 @@ const mockAlerts = [
     service_type: 'linode',
   }),
 ];
+
 /**
  * Fills metric details in the form.
  * @param ruleIndex - The index of the rule to fill.
@@ -117,14 +133,30 @@ describe('Create Alert', () => {
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
     mockGetAlertChannels(notificationChannels);
     mockCreateAlertDefinition('linode', customAlertDefinition).as(
-      'getAlertDefinition'
+      'createAlertDefinition'
     );
-
-    // Visit the create alert page
-    cy.visitWithLogin('monitor/alerts/definitions/create');
   });
 
-  it('should create an alert', () => {
+  it('should navigate to the Create Alert page from the Alert Listings page', () => {
+    // Navigate to the alert definitions list page with login
+    cy.visitWithLogin('/monitor/alerts/definitions');
+
+    // Wait for the alert definitions list API call to complete
+    cy.wait('@getAlertDefinitionsList');
+
+    ui.buttonGroup
+      .findButtonByTitle('Create Alert')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Verify the URL ends with the expected details page path
+    cy.url().should('endWith', 'monitor/alerts/definitions/create');
+  });
+
+  it('should successfully create a new alert', () => {
+    cy.visitWithLogin('monitor/alerts/definitions/create');
+
     // Enter Name and Description
     cy.findByPlaceholderText('Enter Name')
       .should('be.visible')
@@ -186,20 +218,19 @@ describe('Create Alert', () => {
       .clear()
       .type('5');
 
+    // Add notification channel
     ui.buttonGroup
       .findButtonByTitle('Add notification channel')
       .should('be.visible')
       .click();
 
     ui.autocomplete.findByLabel('Type').should('be.visible').type('Email');
-
     ui.autocompletePopper.findByTitle('Email').should('be.visible').click();
 
     ui.autocomplete
       .findByLabel('Channel')
       .should('be.visible')
       .type('channel-1');
-
     ui.autocompletePopper.findByTitle('channel-1').should('be.visible').click();
 
     ui.drawer
@@ -211,9 +242,23 @@ describe('Create Alert', () => {
           .should('be.visible')
           .click();
       });
-    cy.get('[data-testid="button"]')
+
+    // Submit the form
+    cy.get('[data-qa-cancel="true"]').should('be.visible').should('be.enabled');
+    cy.get('[data-qa-buttons="true"]')
+      .find('button')
+      .filter('[type="submit"]')
       .should('be.visible')
-      .filter('[label="Submit"]')
+      .should('be.enabled')
       .click();
+
+    // Wait for the create alert API call to complete and verify the response
+    cy.wait('@createAlertDefinition').then(({ request, response }) => {
+      expect(response).to.have.property('statusCode', 200);
+    });
+
+    // Verify URL redirection and toast notification
+    cy.url().should('endWith', 'monitor/alerts/definitions');
+    ui.toast.assertMessage('Alert successfully created');
   });
 });
