@@ -92,7 +92,7 @@ describe('CloudPulseNodeTypeFilter', () => {
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <CloudPulseNodeTypeFilter {...props}/>
+      <CloudPulseNodeTypeFilter {...props} />
     );
 
     await userEvent.click(getByLabelText('Node Type'));
