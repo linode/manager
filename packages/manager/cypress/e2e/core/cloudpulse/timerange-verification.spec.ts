@@ -32,6 +32,7 @@ import { Interception } from 'cypress/types/net-stubbing';
 import { DateTime } from 'luxon';
 import { convertToGmt } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
 import { formatDate } from 'src/utilities/formatDate';
+import type { DateTimeWithPreset } from '@linode/api-v4';
 
 const timeRanges = [
   { label: 'Last 30 Minutes', unit: 'min', value: 30 },
@@ -158,7 +159,7 @@ const getDateRangeInIST = (
  *
  * @returns {{start: string, end: string}} - The start and end dates of the previous month in ISO 8601 format.
  */
-const getLastMonthRange = (): { start: string; end: string } => {
+const getLastMonthRange = (): DateTimeWithPreset => {
   const now = DateTime.now().setZone(timezone);
   const lastMonth = now.minus({ months: 1 });
 
@@ -185,7 +186,7 @@ const getLastMonthRange = (): { start: string; end: string } => {
  *
  * @returns {{start: string, end: string}} - The start and end dates of the current month in ISO 8601 format.
  */
-const getThisMonthRange = (): { start: string; end: string } => {
+const getThisMonthRange = (): DateTimeWithPreset => {
   const now = DateTime.now().setZone(timezone);
 
   const expectedStartDateISO = now.startOf('month').toISO() ?? '';
@@ -210,7 +211,7 @@ describe('Integration Tests for DBaaS Dashboard', () => {
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetCloudPulseDashboard(id, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
@@ -436,7 +437,7 @@ describe('Integration Tests for DBaaS Dashboard', () => {
   });
 
   it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
-    const start= getThisMonthRange().start;
+    const start = getThisMonthRange().start;
     ui.autocomplete
       .findByLabel('Time Range')
       .scrollIntoView()
@@ -448,16 +449,16 @@ describe('Integration Tests for DBaaS Dashboard', () => {
       .should('be.visible')
       .click();
 
-      ui.autocomplete
+    ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
       .type(`${nodeType}{enter}`);
 
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
 
-    const end= getThisMonthRange().end;
+    const end = getThisMonthRange().end;
 
-     cy.get('@getMetrics.all')
+    cy.get('@getMetrics.all')
       .should('have.length', 4)
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
@@ -465,9 +466,18 @@ describe('Integration Tests for DBaaS Dashboard', () => {
 
         expect(requestPayload.absolute_time_duration.start).to.equal(start);
 
-      cy.log("end date",  formatDate(end, { format: 'yyyy-MM-dd hh:mm a' }))
-      cy.log("requestPayload date",  formatDate(requestPayload.absolute_time_duration.end, { format: 'yyyy-MM-dd hh:mm a' }))
-        expect( formatDate(requestPayload.absolute_time_duration.end, { format: 'yyyy-MM-dd hh:mm' })).to.equal( formatDate(end, { format: 'yyyy-MM-dd hh:mm' }));
+        cy.log('end date', formatDate(end, { format: 'yyyy-MM-dd hh:mm a' }));
+        cy.log(
+          'requestPayload date',
+          formatDate(requestPayload.absolute_time_duration.end, {
+            format: 'yyyy-MM-dd hh:mm a',
+          })
+        );
+        expect(
+          formatDate(requestPayload.absolute_time_duration.end, {
+            format: 'yyyy-MM-dd hh:mm',
+          })
+        ).to.equal(formatDate(end, { format: 'yyyy-MM-dd hh:mm' }));
       });
   });
 });
