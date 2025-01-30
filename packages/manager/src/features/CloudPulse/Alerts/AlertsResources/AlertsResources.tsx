@@ -234,6 +234,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           {/* It can be either the passed alert label or just Resources */}
         </Typography>
       )}
+      {isSelectionsNeeded && (
+        <Typography ref={titleRef} variant="body1">
+          You can enable/disable alerts for resources you have access to. Some
+          resources linked to this definition may be hidden due to your access
+          restrictions.
+        </Typography>
+      )}
       {(isDataLoadingError ||
         alertResourceIds.length ||
         isSelectionsNeeded) && ( // if there is data loading error display error message with empty table setup
