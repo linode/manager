@@ -19,7 +19,7 @@ const regions = regionFactory.buildList(4).map((region, index) => ({
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
-  useEditAlertDefinitionResources: vi.fn(),
+  useEditAlertDefinitionEntities: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
 }));
@@ -27,7 +27,7 @@ const queryMocks = vi.hoisted(() => ({
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
-  useEditAlertDefinitionResources: queryMocks.useEditAlertDefinitionResources,
+  useEditAlertDefinitionEntities: queryMocks.useEditAlertDefinitionEntities,
 }));
 
 vi.mock('src/queries/cloudpulse/resources', () => ({
@@ -63,7 +63,7 @@ beforeEach(() => {
     isError: false,
     isFetching: false,
   });
-  queryMocks.useEditAlertDefinitionResources.mockReturnValue({
+  queryMocks.useEditAlertDefinitionEntities.mockReturnValue({
     mutateAsync: vi.fn().mockResolvedValue({}),
     reset: vi.fn(),
   });
@@ -121,7 +121,7 @@ describe('EditAlertResources component tests', () => {
   });
 
   it('Edit alert resources successful edit', async () => {
-    const mutateAsyncSpy = queryMocks.useEditAlertDefinitionResources()
+    const mutateAsyncSpy = queryMocks.useEditAlertDefinitionEntities()
       .mutateAsync;
 
     const push = vi.fn();
