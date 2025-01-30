@@ -179,7 +179,7 @@ export interface CreateAlertDefinitionPayload {
   channel_ids: number[];
 }
 export interface EditAlertResourcesPayload {
-  resource_ids: string[];
+  entity_ids: string[];
 }
 export interface MetricCriteria {
   metric: string;
