@@ -210,7 +210,6 @@ export const AlertListing = () => {
             width: { md: '150px', xs: '200px' },
           }}
           buttonType="primary"
-          data-qa-button="create-alert"
           data-qa-buttons="true"
           variant="contained"
         >

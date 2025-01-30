@@ -160,7 +160,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       'getMetrics'
     );
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetDatabase(databaseMock).as('getDatabase');
     mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
 
