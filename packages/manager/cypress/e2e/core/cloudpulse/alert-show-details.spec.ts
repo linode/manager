@@ -65,6 +65,7 @@ const mockLinode = linodeFactory.build({
 });
 const alertDetails = alertFactory.build({
   service_type: 'dbaas',
+  label: "1wqqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqw",
   severity: 1,
   status: 'enabled',
   type: 'system',
