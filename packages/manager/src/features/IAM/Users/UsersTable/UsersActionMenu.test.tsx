@@ -59,7 +59,7 @@ describe('UsersActionMenu', () => {
 
     // Check if only the proxy user action is rendered
     expect(queryByText('View User Details')).not.toBeInTheDocument();
-    expect(queryByText('View User Roles')).not.toBeInTheDocument();
+    expect(queryByText('View Assigned Roles')).not.toBeInTheDocument();
     expect(queryByText('Delete User')).not.toBeInTheDocument();
 
     // Click "Manage Access" and verify history.push is called with the correct URL
@@ -94,11 +94,11 @@ describe('UsersActionMenu', () => {
       '/iam/users/test_user/details'
     );
 
-    // Check if "View User Roles" action is present
-    const viewRolesButton = getByText('View User Roles');
+    // Check if "View Assigned Roles" action is present
+    const viewRolesButton = getByText('View Assigned Roles');
     expect(viewRolesButton).toBeInTheDocument();
 
-    // Click "View User Roles" and verify history.push is called with the correct URL
+    // Click "View Assigned Roles" and verify history.push is called with the correct URL
     fireEvent.click(viewRolesButton);
     expect(mockHistory.push).toHaveBeenCalledWith('/iam/users/test_user/roles');
 
