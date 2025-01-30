@@ -2,9 +2,7 @@
  * @file Integration Tests for the CloudPulse Edit Alert Page.
  *
  * This file contains Cypress tests for the Edit Alert page of the CloudPulse application.
- * The tests verify that alert details, including severity, status, and resource information,
  * are correctly displayed and interactive on the Edit page. It ensures that users can navigate
- * from the list page to the edit page, correctly select and manage resources, and update alert definitions.
  */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
