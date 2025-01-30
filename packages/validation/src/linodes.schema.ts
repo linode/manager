@@ -419,24 +419,16 @@ export const UpdateLinodeSchema = object({
   backups,
 });
 
-const SSHKeySchema = object({
-  id: number(),
-  label: string(),
-  ssh_key: string(),
-  created: string(),
-});
-
-// Include `shape()` here so that the schema can be extended without TS complaining.
-export const RebuildLinodeSchema = object().shape({
+export const RebuildLinodeSchema = object({
   image: string().required('An image is required.'),
   root_pass: string().required('Password is required.'),
-  authorized_keys: array().of(SSHKeySchema),
-  authorized_users: array().of(string()),
-  stackscript_id: number().notRequired(),
-  stackscript_data,
-  booted: boolean().notRequired(),
-  metadata: MetadataSchema,
-  disk_encryption: DiskEncryptionSchema,
+  authorized_keys: array().of(string().required()),
+  authorized_users: array().of(string().required()),
+  stackscript_id: number().optional(),
+  stackscript_data: stackscript_data.notRequired(),
+  booted: boolean().optional(),
+  metadata: MetadataSchema.optional(),
+  disk_encryption: string().oneOf(['enabled', 'disabled']).optional(),
 });
 
 export const RebuildLinodeFromStackScriptSchema = RebuildLinodeSchema.shape({

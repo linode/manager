@@ -1,6 +1,4 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Autocomplete, Button, Stack, Typography } from '@linode/ui';
-import { RebuildLinodeSchema } from '@linode/validation';
 import React, { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
@@ -10,14 +8,19 @@ import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import PasswordInput from 'src/components/PasswordInput/PasswordInput';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { useRebuildLinodeMutation } from 'src/queries/linodes/linodes';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/StackScriptSelectionList';
-import { REBUILD_OPTIONS } from './utils';
+import { UserDefinedFields } from '../../LinodeCreate/Tabs/StackScripts/UserDefinedFields/UserDefinedFields';
+import { REBUILD_OPTIONS, resolver } from './utils';
 
-import type { LinodeRebuildType } from './utils';
-import type { RebuildRequest } from '@linode/api-v4';
-import type { Resolver } from 'react-hook-form';
+import type {
+  Context,
+  LinodeRebuildType,
+  RebuildLinodeFormValues,
+} from './utils';
 
 interface Props {
   linodeId: number | undefined;
@@ -33,16 +36,23 @@ export const LinodeRebuildDialog = (props: Props) => {
   const {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
+  const { data: isTypeToConfirmEnabled } = usePreferences(
+    (preferences) => preferences?.type_to_confirm
+  );
 
   const { mutateAsync: rebuildLinode } = useRebuildLinodeMutation(
     linodeId ?? 0
   );
 
-  const form = useForm<RebuildRequest>({
-    resolver: yupResolver(RebuildLinodeSchema) as Resolver<RebuildRequest>,
+  const form = useForm<RebuildLinodeFormValues, Context>({
+    context: {
+      isTypeToConfirmEnabled,
+      linodeLabel,
+    },
+    resolver,
   });
 
-  const onSubmit = async (values: RebuildRequest) => {
+  const onSubmit = async (values: RebuildLinodeFormValues) => {
     try {
       await rebuildLinode(values);
     } catch (errors) {
@@ -88,6 +98,8 @@ export const LinodeRebuildDialog = (props: Props) => {
             {type === 'From Community StackScript' && (
               <StackScriptSelectionList type="Community" />
             )}
+            {(type === 'From Community StackScript' ||
+              type === 'From Account StackScript') && <UserDefinedFields />}
             <Controller
               render={({ field, fieldState }) => (
                 <ImageSelect
@@ -135,8 +147,8 @@ export const LinodeRebuildDialog = (props: Props) => {
                     onChange={(checked) =>
                       field.onChange(checked ? 'enabled' : 'disabled')
                     }
-                    descriptionCopy={''}
-                    disabledReason={''}
+                    descriptionCopy="Secure this Linode using data at rest encryption."
+                    disabledReason=""
                     error={fieldState.error?.message}
                     isEncryptEntityChecked={field.value === 'enabled'}
                   />
@@ -145,6 +157,30 @@ export const LinodeRebuildDialog = (props: Props) => {
                 name="disk_encryption"
               />
             )}
+            <Controller
+              render={({ field, fieldState }) => (
+                <TypeToConfirm
+                  confirmationText={
+                    <span>
+                      To confirm these changes, type the label of the Linode (
+                      <strong>{linodeLabel}</strong>) in the field below:
+                    </span>
+                  }
+                  visible={
+                    isTypeToConfirmEnabled === undefined ||
+                    isTypeToConfirmEnabled === true
+                  }
+                  errorText={fieldState.error?.message}
+                  hideLabel
+                  label="Linode Label"
+                  onChange={field.onChange}
+                  title="Confirm"
+                  value={field.value ?? ''}
+                />
+              )}
+              control={form.control}
+              name="confirmationText"
+            />
             <Stack
               alignItems="center"
               direction="row"
