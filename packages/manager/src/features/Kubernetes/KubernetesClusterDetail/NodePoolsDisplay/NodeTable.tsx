@@ -106,7 +106,7 @@ export const NodeTable = React.memo((props: Props) => {
   )
     ? rowData.filter((row) => {
         if (statusFilter === 'provisioning') {
-          return row.instanceStatus === undefined;
+          return ['provisioning', undefined].includes(row.instanceStatus);
         }
         return row.instanceStatus === statusFilter;
       })
