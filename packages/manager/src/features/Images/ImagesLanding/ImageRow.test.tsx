@@ -135,10 +135,6 @@ describe('Image Table Row', () => {
     expect(handlers.onRebuild).toBeCalledWith(image);
 
     await userEvent.click(getByText('Delete'));
-    expect(handlers.onDelete).toBeCalledWith(
-      image.label,
-      image.id,
-      image.status
-    );
+    expect(handlers.onDelete).toBeCalledWith(image);
   });
 });

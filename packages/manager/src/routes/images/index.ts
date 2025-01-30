@@ -19,6 +19,11 @@ export interface ImageCreateUploadSearchParams {
   imageLabel?: string;
 }
 
+type ImageActionRouteParams = {
+  action: ImageAction;
+  imageId: string;
+};
+
 const imageActions = {
   delete: 'delete',
   deploy: 'deploy',
@@ -53,6 +58,16 @@ const imageActionRoute = createRoute({
     }
   },
   getParentRoute: () => imagesRoute,
+  params: {
+    parse: ({ action, imageId }: ImageActionRouteParams) => ({
+      action,
+      imageId,
+    }),
+    stringify: ({ action, imageId }: ImageActionRouteParams) => ({
+      action,
+      imageId,
+    }),
+  },
   path: '$imageId/$action',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
