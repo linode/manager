@@ -217,6 +217,7 @@ export const EditAlertResources = () => {
               ml: 1,
             }}
             buttonType="primary"
+            data-qa-buttons="true"
             data-testid="saveresources"
             disabled={isSameResourcesSelected}
           >
