@@ -24,13 +24,13 @@ export const ImagesRoutes = () => {
         variant="info"
       >
         <Typography fontSize="inherit" py={1}>
-          Image encryption is automatically applied when you create a new image.{' '}
-          If some of your images are unencrypted, they will be automatically
-          encrypted by March 1, 2025.{' '}
+          Encryption is automatically applied when you create a new image.
+          Older, unencrypted images will be automatically encrypted with an
+          upcoming release, or you can{' '}
           <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
-            Learn how
+            recreate
           </Link>{' '}
-          to update and protect your images.
+          the image.
         </Typography>
       </DismissibleBanner>
       <Switch>
