@@ -82,6 +82,8 @@ export const LabelAndTaintDrawer = (props: Props) => {
   };
 
   const handleClose = () => {
+    setShouldShowLabelForm(false);
+    setShouldShowTaintForm(false);
     onClose();
     form.reset();
   };
