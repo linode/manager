@@ -38,7 +38,9 @@ export const CloudPulseMultiResourceSelect = (
     Boolean(region && serviceType),
     serviceType?.toString(),
     {},
-    serviceType === 'dbaas' ? { engine, region } : { region }
+    serviceType === 'dbaas'
+      ? { ...{ platform: 'rdbms-default' }, engine, region }
+      : { region }
   );
 
   const getResourcesList = React.useMemo((): Item<string, string>[] => {
