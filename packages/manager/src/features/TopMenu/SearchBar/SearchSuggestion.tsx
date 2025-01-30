@@ -1,5 +1,4 @@
 import { Box } from '@linode/ui';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
@@ -17,6 +16,7 @@ import {
 
 import type { LinodeStatus } from '@linode/api-v4/lib/linodes';
 import type { OptionProps } from 'react-select';
+import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 
 export interface SearchSuggestionT {
   description: string;
@@ -40,7 +40,7 @@ export interface SearchSuggestionProps extends OptionProps<any, any> {
 export const SearchSuggestion = (props: SearchSuggestionProps) => {
   const { data, innerProps, innerRef, label, selectProps } = props;
   const { description, icon, searchText, status, tags } = data.data;
-  const searchResultIcon = pathOr<string>('default', [], icon);
+  const searchResultIcon = (icon ?? 'default') as EntityVariants;
 
   const handleClick = () => {
     const suggestion = data;
