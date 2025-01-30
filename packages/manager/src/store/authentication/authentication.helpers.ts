@@ -6,11 +6,15 @@ import {
   ticketReply,
 } from 'src/utilities/storage';
 
-export const clearLocalStorage = () => {
+export const clearTokenDataFromLocalStorage = () => {
   authentication.token.set('');
   authentication.scopes.set('');
   authentication.expire.set('');
+};
+
+export const clearNonceAndCodeVerifierFromLocalStorage = () => {
   authentication.nonce.set('');
+  authentication.codeVerifier.set('');
 };
 
 export const clearUserInput = () => {
