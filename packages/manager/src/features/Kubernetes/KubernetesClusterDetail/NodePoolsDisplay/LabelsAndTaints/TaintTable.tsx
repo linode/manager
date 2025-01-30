@@ -22,7 +22,9 @@ export const TaintTable = () => {
       'taints',
       taints.filter(
         (taint) =>
-          taint.key !== removedTaint.key || taint.value !== removedTaint.value
+          taint.key !== removedTaint.key ||
+          taint.value !== removedTaint.value ||
+          taint.effect !== removedTaint.effect
       ),
       { shouldDirty: true }
     );
