@@ -436,6 +436,10 @@ export const ImagesLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
       <LandingHeader
+        breadcrumbProps={{
+          pathname: 'Images',
+          removeCrumbX: 1,
+        }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
