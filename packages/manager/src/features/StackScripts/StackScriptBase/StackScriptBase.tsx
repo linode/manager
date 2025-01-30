@@ -452,7 +452,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         return (
           <div style={{ overflow: 'hidden' }}>
             <ErrorState
-              errorText={apiError?.[0]?.reason ?? 'There was an error'}
+              errorText={apiError?.[0]?.reason ?? 'There was an error.'}
             />
           </div>
         );
