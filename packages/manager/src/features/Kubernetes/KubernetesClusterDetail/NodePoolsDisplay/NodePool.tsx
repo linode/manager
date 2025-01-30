@@ -17,6 +17,7 @@ import { pluralize } from 'src/utilities/pluralize';
 
 import { NodeTable } from './NodeTable';
 
+import type { StatusFilter } from './NodePoolsDisplay';
 import type {
   AutoscaleSettings,
   KubernetesTier,
@@ -40,6 +41,7 @@ interface Props {
   openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  statusFilter: StatusFilter;
   tags: string[];
   typeLabel: string;
 }
@@ -61,6 +63,7 @@ export const NodePool = (props: Props) => {
     openRecycleAllNodesDialog,
     openRecycleNodeDialog,
     poolId,
+    statusFilter,
     tags,
     typeLabel,
   } = props;
@@ -222,6 +225,7 @@ export const NodePool = (props: Props) => {
         nodes={nodes}
         openRecycleNodeDialog={openRecycleNodeDialog}
         poolId={poolId}
+        statusFilter={statusFilter}
         tags={tags}
         typeLabel={typeLabel}
       />

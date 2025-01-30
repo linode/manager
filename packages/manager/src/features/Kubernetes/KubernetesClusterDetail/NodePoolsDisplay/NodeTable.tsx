@@ -35,6 +35,7 @@ import {
   StyledVerticalDivider,
 } from './NodeTable.styles';
 
+import type { StatusFilter } from './NodePoolsDisplay';
 import type { NodeRow } from './NodeRow';
 import type {
   KubernetesTier,
@@ -51,6 +52,7 @@ export interface Props {
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  statusFilter: StatusFilter;
   tags: string[];
   typeLabel: string;
 }
@@ -66,6 +68,7 @@ export const NodeTable = React.memo((props: Props) => {
     nodes,
     openRecycleNodeDialog,
     poolId,
+    statusFilter,
     tags,
     typeLabel,
   } = props;
@@ -98,6 +101,17 @@ export const NodeTable = React.memo((props: Props) => {
 
   const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
 
+  const filteredRowData = ['offline', 'provisioning', 'running'].includes(
+    statusFilter
+  )
+    ? rowData.filter((row) => {
+        if (statusFilter === 'provisioning') {
+          return row.instanceStatus === undefined;
+        }
+        return row.instanceStatus === statusFilter;
+      })
+    : null;
+
   // It takes ~5 minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
   // since nodes are not returned right away unlike standard LKE
   const isEnterpriseClusterWithin10MinsOfCreation = () => {
@@ -120,7 +134,7 @@ export const NodeTable = React.memo((props: Props) => {
   };
 
   return (
-    <OrderBy data={rowData} order={'asc'} orderBy={'label'}>
+    <OrderBy data={filteredRowData || rowData} order={'asc'} orderBy={'label'}>
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
           {({

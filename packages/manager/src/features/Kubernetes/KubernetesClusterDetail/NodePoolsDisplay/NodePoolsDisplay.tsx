@@ -1,8 +1,9 @@
-import { Button, CircleProgress, Stack, Typography } from '@linode/ui';
+import { Button, CircleProgress, Select, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { FormLabel } from 'src/components/FormLabel';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
@@ -19,6 +20,34 @@ import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
 import type { KubernetesTier, Region } from '@linode/api-v4';
+
+export type StatusFilter = 'all' | 'offline' | 'provisioning' | 'running';
+
+interface StatusFilterOption {
+  label: string;
+  value: StatusFilter;
+}
+
+const statusOptions: StatusFilterOption[] = [
+  {
+    label: 'Show All',
+    value: 'all',
+  },
+  {
+    label: 'Running',
+    value: 'running',
+  },
+  {
+    label: 'Offline',
+    value: 'offline',
+  },
+  {
+    label: 'Provisioning',
+    value: 'provisioning',
+  },
+];
+
+const ariaIdentifier = 'node-pool-status-filter';
 
 export interface Props {
   clusterCreated: string;
@@ -72,6 +101,8 @@ export const NodePoolsDisplay = (props: Props) => {
   const typesQuery = useSpecificTypes(_pools?.map((pool) => pool.type) ?? []);
   const types = extendTypesQueryResult(typesQuery);
 
+  const [statusFilter, setStatusFilter] = React.useState<StatusFilter>('all');
+
   const handleShowMore = () => {
     if (numPoolsToDisplay < (pools?.length ?? 0)) {
       setNumPoolsToDisplay(
@@ -112,6 +143,28 @@ export const NodePoolsDisplay = (props: Props) => {
       >
         <Typography variant="h2">Node Pools</Typography>
         <Stack direction="row" spacing={1}>
+          <Stack alignItems="end" direction="row">
+            <FormLabel htmlFor={ariaIdentifier}>
+              <Typography ml={1} mr={1}>
+                Status
+              </Typography>
+            </FormLabel>
+            <Select
+              value={
+                statusOptions?.find(
+                  (option) => option.value === statusFilter
+                ) ?? null
+              }
+              data-qa-status-filter
+              hideLabel
+              id={ariaIdentifier}
+              label="Status"
+              onChange={(_, item) => setStatusFilter(item?.value)}
+              options={statusOptions ?? []}
+              placeholder="Select a status"
+              sx={{ width: 130 }}
+            />
+          </Stack>
           <Button
             buttonType="secondary"
             onClick={() => setIsRecycleClusterOpen(true)}
@@ -164,6 +217,7 @@ export const NodePoolsDisplay = (props: Props) => {
               key={id}
               nodes={nodes ?? []}
               poolId={thisPool.id}
+              statusFilter={statusFilter}
               tags={tags}
               typeLabel={typeLabel}
             />
