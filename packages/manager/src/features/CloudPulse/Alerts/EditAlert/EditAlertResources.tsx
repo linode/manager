@@ -8,7 +8,7 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAlertDefinitionQuery,
-  useEditAlertDefinitionEntities,
+  useEditAlertDefinition,
 } from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
@@ -29,7 +29,7 @@ export const EditAlertResources = () => {
     serviceType
   );
 
-  const {} = useEditAlertDefinitionEntities(serviceType, Number(alertId)); // TODO: consume mutate, error from hook and implement save resources in upcoming PR
+  const {} = useEditAlertDefinition(serviceType, Number(alertId)); // TODO: consume mutate, error from hook and implement save resources in upcoming PR
 
   React.useEffect(() => {
     setSelectedResources(

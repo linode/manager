@@ -19,14 +19,14 @@ const regions = regionFactory.buildList(4).map((region, index) => ({
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
-  useEditAlertDefinitionEntities: vi.fn(),
+  useEditAlertDefinition: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
 }));
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
-  useEditAlertDefinitionEntities: queryMocks.useEditAlertDefinitionEntities,
+  useEditAlertDefinition: queryMocks.useEditAlertDefinition,
 }));
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
@@ -66,7 +66,7 @@ beforeEach(() => {
     isError: false,
     isFetching: false,
   });
-  queryMocks.useEditAlertDefinitionEntities.mockReturnValue({
+  queryMocks.useEditAlertDefinition.mockReturnValue({
     mutateAsync: vi.fn().mockResolvedValue({}),
     reset: vi.fn(),
   });

@@ -295,6 +295,6 @@ export type NotificationChannel =
   | NotificationChannelWebHook
   | NotificationChannelPagerDuty;
 
-export interface EditAlertEntitiesPayload {
+export interface EditAlertDefinitionPayload {
   entity_ids: string[];
 }
