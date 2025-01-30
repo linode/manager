@@ -130,10 +130,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const regionOptions: Region[] = React.useMemo(() => {
     return getRegionOptions({
       data: resources,
+      isAdditionOrDeletionNeeded: isSelectionsNeeded,
       regionsIdToRegionMap,
       resourceIds: alertResourceIds,
     });
-  }, [resources, alertResourceIds, regionsIdToRegionMap]);
+  }, [resources, isSelectionsNeeded, regionsIdToRegionMap, alertResourceIds]);
 
   /**
    * Holds the resources that are

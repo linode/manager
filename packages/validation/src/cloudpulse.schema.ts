@@ -10,7 +10,7 @@ const dimensionFilters = object({
 
 const metricCriteria = object({
   metric: string().required(fieldErrorMessage),
-  aggregation_type: string().required(fieldErrorMessage),
+  aggregate_function: string().required(fieldErrorMessage),
   operator: string().required(fieldErrorMessage),
   threshold: number()
     .required(fieldErrorMessage)
@@ -34,13 +34,14 @@ export const createAlertDefinitionSchema = object({
   severity: number().oneOf([0, 1, 2, 3]).required(fieldErrorMessage),
   entity_ids: array()
     .of(string().required())
-    .min(1, 'At least one resource is required.').required('Resources are required'),
+    .min(1, 'At least one resource is required.')
+    .required('Resources are required'),
   rule_criteria: object({
     rules: array()
       .of(metricCriteria)
       .min(1, 'At least one metric criteria is required.'),
   }),
   trigger_conditions: triggerConditionValidation,
-  channel_ids: array(number()),
+  channel_ids: array().of(number()).min(1, 'At least one channel is required.'),
   tags: array().of(string()).notRequired(),
 });

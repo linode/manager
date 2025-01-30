@@ -11,7 +11,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAlertDefinitionQuery,
-  useEditAlertDefinitionResources,
+  useEditAlertDefinitionEntities,
 } from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
@@ -41,7 +41,7 @@ export const EditAlertResources = () => {
     isError: isEditAlertError,
     mutateAsync: editAlert,
     reset: resetEditAlert,
-  } = useEditAlertDefinitionResources(serviceType, Number(alertId));
+  } = useEditAlertDefinitionEntities(serviceType, Number(alertId));
 
   React.useEffect(() => {
     setSelectedResources(
@@ -131,7 +131,7 @@ export const EditAlertResources = () => {
   const saveResources = () => {
     setShowConfirmation(false);
     editAlert({
-      resource_ids: selectedResources.map((id) => String(id)),
+      entity_ids: selectedResources.map((id) => String(id)),
     }).then(() => {
       // on success land on the alert definition list page and show a success snackbar
       history.push(definitionLanding);

@@ -133,35 +133,27 @@ export const CloudPulseDashboardWithFilters = React.memo(
           }}
         >
           <Grid container>
-            <Grid container item m={3} rowGap={1} xs={12}>
-              <Grid
-                columnSpacing={2}
-                container
-                item
-                justifyContent="space-between"
-                rowSpacing={2}
-              >
-                <Grid display={'flex'} item md={4} sm={5} xs={12}>
-                  <CloudPulseDashboardSelect
-                    defaultValue={dashboardId}
-                    isServiceIntegration
-                  />
-                </Grid>
-                <Grid
-                  display="flex"
-                  gap={1}
-                  item
-                  justifyContent="end"
-                  md={8}
-                  sm={6}
-                  xs={12}
-                >
-                  <CloudPulseDateTimeRangePicker
-                    handleStatsChange={handleTimeRangeChange}
-                    savePreferences
-                  />
-                </Grid>
+            <Grid
+              container
+              display="flex"
+              flexWrap="wrap"
+              item
+              justifyContent="space-between"
+              m={3}
+              rowGap={2}
+              xs={12}
+            >
+              <Grid item md={4} xs={12}>
+                <CloudPulseDashboardSelect
+                  defaultValue={dashboardId}
+                  isServiceIntegration
+                />
               </Grid>
+
+              <CloudPulseDateTimeRangePicker
+                handleStatsChange={handleTimeRangeChange}
+                savePreferences
+              />
             </Grid>
 
             <Grid item xs={12}>
