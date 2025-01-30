@@ -12,6 +12,8 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
+import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
+
 import type { Order } from 'src/hooks/useOrder';
 
 export interface AlertInstance {
@@ -129,20 +131,6 @@ export const DisplayAlertResources = React.memo(
       },
       [handleSelection]
     );
-
-    const isAllPageSelected = (paginatedData: AlertInstance[]): boolean => {
-      return (
-        Boolean(paginatedData?.length) &&
-        paginatedData.every((resource) => resource.checked)
-      );
-    };
-
-    const isSomeSelected = (paginatedData: AlertInstance[]): boolean => {
-      return (
-        Boolean(paginatedData?.length) &&
-        paginatedData.some((resource) => resource.checked)
-      );
-    };
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({

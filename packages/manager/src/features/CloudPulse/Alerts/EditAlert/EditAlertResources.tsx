@@ -16,6 +16,7 @@ import { AlertResources } from '../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../Utils/utils';
 
 import type { AlertRouteParams } from '../AlertsDetail/AlertDetail';
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export const EditAlertResources = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
@@ -57,39 +58,26 @@ export const EditAlertResources = () => {
   const [, setSelectedResources] = React.useState<string[]>([]);
 
   if (isFetching) {
-    return (
-      <>
-        <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
-          <CircleProgress />
-        </Box>
-      </>
-    );
+    return getEditAlertMessage(<CircleProgress />, newPathname, overrides);
   }
 
   if (isError) {
-    return (
-      <>
-        <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
-          <ErrorState
-            errorText={
-              'An error occurred while loading the alerts definitions and resources. Please try again later.'
-            }
-          />
-        </Box>
-      </>
+    return getEditAlertMessage(
+      <ErrorState
+        errorText={
+          'An error occurred while loading the alerts definitions and resources. Please try again later.'
+        }
+      />,
+      newPathname,
+      overrides
     );
   }
 
   if (!alertDetails) {
-    return (
-      <>
-        <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
-          <StyledPlaceholder icon={EntityIcon} title="No Data to display." />
-        </Box>
-      </>
+    return getEditAlertMessage(
+      <StyledPlaceholder icon={EntityIcon} title="No Data to display." />,
+      newPathname,
+      overrides
     );
   }
 
@@ -109,15 +97,32 @@ export const EditAlertResources = () => {
           ...getAlertBoxStyles(theme),
         }}
       >
-        <Box>
-          <AlertResources
-            alertLabel={label}
-            alertResourceIds={entity_ids}
-            handleResourcesSelection={handleResourcesSelection}
-            isSelectionsNeeded
-            serviceType={service_type}
-          />
-        </Box>
+        <AlertResources
+          alertLabel={label}
+          alertResourceIds={entity_ids}
+          handleResourcesSelection={handleResourcesSelection}
+          isSelectionsNeeded
+          serviceType={service_type}
+        />
+      </Box>
+    </>
+  );
+};
+
+/**
+ * Returns a common UI structure for loading, error, or empty states.
+ * @param content - A React component to display (e.g., CircleProgress, ErrorState, or Placeholder).
+ */
+const getEditAlertMessage = (
+  messageComponent: React.ReactNode,
+  pathName: string,
+  crumbOverrides: CrumbOverridesProps[]
+) => {
+  return (
+    <>
+      <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathName} />
+      <Box alignContent="center" height="600px">
+        {messageComponent}
       </Box>
     </>
   );

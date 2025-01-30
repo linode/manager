@@ -68,6 +68,16 @@ describe('getRegionOptions', () => {
     });
     expect(result.length).toBe(2); // Should still return unique regions
   });
+  it('should return all region objects if resourceIds is empty and isAdditionOrDeletionNeeded is true', () => {
+    const result = getRegionOptions({
+      data,
+      isAdditionOrDeletionNeeded: true,
+      regionsIdToRegionMap: regionsIdToLabelMap,
+      resourceIds: [],
+    });
+    // Valid case
+    expect(result.length).toBe(3);
+  });
 });
 
 describe('getFilteredResources', () => {

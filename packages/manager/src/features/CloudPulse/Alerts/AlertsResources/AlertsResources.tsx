@@ -81,8 +81,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     if (resources && isSelectionsNeeded) {
       setSelectedResources(
         resources
-          .filter((resource) => alertResourceIds.includes(resource.id))
-          .map((resource) => resource.id)
+          .filter(({ id }) => alertResourceIds.includes(id))
+          .map(({ id }) => id)
       );
     }
   }, [resources, isSelectionsNeeded, alertResourceIds]);
@@ -96,10 +96,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const regionOptions: Region[] = React.useMemo(() => {
     return getRegionOptions({
       data: resources,
+      isAdditionOrDeletionNeeded: isSelectionsNeeded,
       regionsIdToRegionMap,
       resourceIds: alertResourceIds,
     });
-  }, [resources, alertResourceIds, regionsIdToRegionMap]);
+  }, [resources, alertResourceIds, regionsIdToRegionMap, isSelectionsNeeded]);
 
   const isDataLoadingError = isRegionsError || isResourcesError;
 
@@ -143,32 +144,29 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const handleSelection = React.useCallback(
     (ids: string[], isSelectionAction: boolean) => {
-      const onlySelected = isSelectionAction
-        ? selectedResources
-        : selectedResources.filter((resource) => !ids.includes(resource));
+      setSelectedResources((prevSelected) => {
+        const updatedSelection = isSelectionAction
+          ? [...prevSelected, ...ids.filter((id) => !prevSelected.includes(id))]
+          : prevSelected.filter((resource) => !ids.includes(resource));
 
-      const newlySelected = ids.filter((id) => !selectedResources.includes(id));
-
-      setSelectedResources([...onlySelected, ...newlySelected]);
-
-      if (handleResourcesSelection) {
-        handleResourcesSelection([...onlySelected, ...newlySelected]);
-      }
+        handleResourcesSelection?.(updatedSelection);
+        return updatedSelection;
+      });
     },
-    [handleResourcesSelection, selectedResources]
+    [handleResourcesSelection]
   );
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
+  const isNoResources =
+    !isDataLoadingError && !isSelectionsNeeded && alertResourceIds.length === 0;
+  const isRenderComponent =
+    isDataLoadingError || isSelectionsNeeded || alertResourceIds.length; // if there is data loading error display error message with empty table setup
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
   }
 
-  if (
-    !isDataLoadingError &&
-    !isSelectionsNeeded &&
-    alertResourceIds.length === 0
-  ) {
+  if (isNoResources) {
     return (
       <Stack gap={2}>
         <Typography ref={titleRef} variant="h2">
@@ -190,7 +188,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {alertLabel || 'Resources'}
         {/* It can be either the passed alert label or just Resources */}
       </Typography>
-      {(isDataLoadingError || alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
+      {isRenderComponent && (
         <Grid container spacing={3}>
           <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
             <Grid item md={3} xs={12}>

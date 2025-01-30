@@ -5,6 +5,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EditAlertResources } from './EditAlertResources';
 
+import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+
 const linodes = linodeFactory.buildList(4);
 // Mock Data
 const alertDetails = alertFactory.build({
@@ -15,6 +17,13 @@ const regions = regionFactory.buildList(4).map((region, index) => ({
   ...region,
   id: linodes[index].region,
 }));
+const cloudPulseResources: CloudPulseResources[] = linodes.map((linode) => {
+  return {
+    id: String(linode.id),
+    label: linode.label,
+    region: linode.region,
+  };
+});
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
@@ -51,13 +60,7 @@ beforeEach(() => {
     isFetching: false,
   });
   queryMocks.useResourcesQuery.mockReturnValue({
-    data: linodes.map((linode) => {
-      return {
-        id: String(linode.id),
-        label: linode.label,
-        region: linode.region,
-      };
-    }),
+    data: cloudPulseResources,
     isError: false,
     isFetching: false,
   });

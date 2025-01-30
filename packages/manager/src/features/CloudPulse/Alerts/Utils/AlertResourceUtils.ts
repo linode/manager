@@ -56,13 +56,22 @@ export const getRegionsIdRegionMap = (
 export const getRegionOptions = (
   filterProps: FilterResourceProps
 ): Region[] => {
-  const { data, regionsIdToRegionMap, resourceIds } = filterProps;
-  if (!data || !resourceIds.length || !regionsIdToRegionMap.size) {
+  const {
+    data,
+    isAdditionOrDeletionNeeded,
+    regionsIdToRegionMap,
+    resourceIds,
+  } = filterProps;
+  const earlyReturn =
+    !data ||
+    (!isAdditionOrDeletionNeeded && !resourceIds.length) ||
+    !regionsIdToRegionMap.size;
+  if (earlyReturn) {
     return [];
   }
   const uniqueRegions = new Set<Region>();
   data.forEach(({ id, region }) => {
-    if (resourceIds.includes(String(id))) {
+    if (isAdditionOrDeletionNeeded || resourceIds.includes(String(id))) {
       const regionObject = region
         ? regionsIdToRegionMap.get(region)
         : undefined;
@@ -138,4 +147,20 @@ export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
       top: scrollToElement.getBoundingClientRect().top + window.scrollY - 40,
     });
   }
+};
+
+/**
+ * @param data The list of alert instances displayed in the table.
+ * @returns True if, all instances are selected else false.
+ */
+export const isAllPageSelected = (data: AlertInstance[]): boolean => {
+  return Boolean(data?.length) && data.every((resource) => resource.checked);
+};
+
+/**
+ * @param data The list of alert instances displayed in the table.
+ * @returns True if, any one of instances is selected else false.
+ */
+export const isSomeSelected = (data: AlertInstance[]): boolean => {
+  return Boolean(data?.length) && data.some((resource) => resource.checked);
 };

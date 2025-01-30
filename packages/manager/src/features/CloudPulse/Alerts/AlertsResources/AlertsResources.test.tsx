@@ -6,6 +6,7 @@ import { linodeFactory, regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertResources } from './AlertsResources';
+import { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
@@ -34,6 +35,13 @@ const linodes = linodeFactory.buildList(3).map((value, index) => {
 const searchPlaceholder = 'Search for a Region or Resource';
 const regionPlaceholder = 'Select Regions';
 const checkedAttribute = 'data-qa-checked';
+const cloudPulseResources: CloudPulseResources[] = linodes.map((linode) => {
+  return {
+    id: String(linode.id),
+    label: linode.label,
+    region: linode.region,
+  };
+});
 
 beforeAll(() => {
   window.scrollTo = vi.fn(); // mock for scrollTo and scroll
@@ -42,13 +50,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   queryMocks.useResourcesQuery.mockReturnValue({
-    data: linodes.map((linode) => {
-      return {
-        id: String(linode.id),
-        label: linode.label,
-        region: linode.region,
-      };
-    }),
+    data: cloudPulseResources,
     isError: false,
     isFetching: false,
   });
