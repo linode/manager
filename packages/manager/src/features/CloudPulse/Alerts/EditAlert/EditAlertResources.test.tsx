@@ -28,14 +28,12 @@ const cloudPulseResources: CloudPulseResources[] = linodes.map((linode) => {
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
-  useEditAlertDefinition: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
 }));
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
-  useEditAlertDefinition: queryMocks.useEditAlertDefinition,
 }));
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
@@ -68,10 +66,6 @@ beforeEach(() => {
     data: regions,
     isError: false,
     isFetching: false,
-  });
-  queryMocks.useEditAlertDefinition.mockReturnValue({
-    mutateAsync: vi.fn().mockResolvedValue({}),
-    reset: vi.fn(),
   });
 });
 

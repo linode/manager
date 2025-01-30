@@ -6,10 +6,7 @@ import { useParams } from 'react-router-dom';
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import {
-  useAlertDefinitionQuery,
-  useEditAlertDefinition,
-} from 'src/queries/cloudpulse/alerts';
+import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { AlertResources } from '../AlertsResources/AlertsResources';
@@ -29,8 +26,7 @@ export const EditAlertResources = () => {
     Number(alertId),
     serviceType
   );
-
-  const {} = useEditAlertDefinition(serviceType, Number(alertId)); // TODO: consume mutate, error from hook and implement save resources in upcoming PR
+  const [, setSelectedResources] = React.useState<string[]>([]);
 
   React.useEffect(() => {
     setSelectedResources(
@@ -54,8 +50,6 @@ export const EditAlertResources = () => {
 
     return { newPathname: '/Definitions/Edit', overrides };
   }, [serviceType, alertId]);
-
-  const [, setSelectedResources] = React.useState<string[]>([]);
 
   if (isFetching) {
     return getEditAlertMessage(<CircleProgress />, newPathname, overrides);
@@ -82,7 +76,7 @@ export const EditAlertResources = () => {
   }
 
   const handleResourcesSelection = (resourceIds: string[]) => {
-    setSelectedResources(resourceIds.map((id) => id)); // keep track of the selected resources and update it on save
+    setSelectedResources(resourceIds); // keep track of the selected resources and update it on save
   };
 
   const { entity_ids, label, service_type } = alertDetails;
