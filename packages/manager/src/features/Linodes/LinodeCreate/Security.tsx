@@ -2,7 +2,7 @@ import { Divider, Paper, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import UserSSHKeyPanel from 'src/components/AccessPanel/UserSSHKeyPanel';
+import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
 import {
   DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES,
   DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION,

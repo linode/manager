@@ -8,7 +8,6 @@ import { DescriptionList } from 'src/components/DescriptionList/DescriptionList'
 import { Drawer } from 'src/components/Drawer';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
-import { REBUILD_LINODE_IMAGE_PARAM_NAME } from '../../Linodes/LinodesDetail/LinodeRebuild/RebuildFromImage';
 import { useImageAndLinodeGrantCheck } from '../utils';
 
 import type { Image } from '@linode/api-v4';
@@ -44,7 +43,7 @@ export const RebuildImageDrawer = (props: Props) => {
     history.push({
       pathname: `/linodes/${values.linodeId}/rebuild`,
       search: new URLSearchParams({
-        [REBUILD_LINODE_IMAGE_PARAM_NAME]: image.id,
+        selectedImageId: image.id,
       }).toString(),
     });
   });

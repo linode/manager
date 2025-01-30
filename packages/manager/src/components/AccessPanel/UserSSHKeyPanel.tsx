@@ -49,7 +49,7 @@ interface Props {
   setAuthorizedUsers: (usernames: string[]) => void;
 }
 
-const UserSSHKeyPanel = (props: Props) => {
+export const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
   const theme = useTheme();
   const { authorizedUsers, disabled, setAuthorizedUsers } = props;
@@ -230,5 +230,3 @@ const UserSSHKeyPanel = (props: Props) => {
     </React.Fragment>
   );
 };
-
-export default React.memo(UserSSHKeyPanel);

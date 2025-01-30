@@ -20,7 +20,7 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
-import UserSSHKeyPanel from './UserSSHKeyPanel';
+import { UserSSHKeyPanel } from './UserSSHKeyPanel';
 
 import type { Theme } from '@mui/material/styles';
 

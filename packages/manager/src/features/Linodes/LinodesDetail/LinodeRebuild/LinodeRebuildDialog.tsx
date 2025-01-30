@@ -1,19 +1,23 @@
-import { Autocomplete, Notice, Typography } from '@linode/ui';
-import { styled, useTheme } from '@mui/material/styles';
-import * as React from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Autocomplete, Button, Stack, Typography } from '@linode/ui';
+import { RebuildLinodeSchema } from '@linode/validation';
+import React, { useState } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
+import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { ErrorMessage } from 'src/components/ErrorMessage';
-import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+import { Encryption } from 'src/components/Encryption/Encryption';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
+import PasswordInput from 'src/components/PasswordInput/PasswordInput';
+import { useRebuildLinodeMutation } from 'src/queries/linodes/linodes';
 
-import { HostMaintenanceError } from '../HostMaintenanceError';
-import { LinodePermissionsError } from '../LinodePermissionsError';
-import { RebuildFromImage } from './RebuildFromImage';
-import { RebuildFromStackScript } from './RebuildFromStackScript';
+import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/StackScriptSelectionList';
+import { REBUILD_OPTIONS } from './utils';
+
+import type { LinodeRebuildType } from './utils';
+import type { RebuildRequest } from '@linode/api-v4';
+import type { Resolver } from 'react-hook-form';
 
 interface Props {
   linodeId: number | undefined;
@@ -22,195 +26,141 @@ interface Props {
   open: boolean;
 }
 
-type MODES =
-  | 'fromAccountStackScript'
-  | 'fromCommunityStackScript'
-  | 'fromImage';
-
-const options: {
-  label: string;
-  value: MODES;
-}[] = [
-  { label: 'From Image', value: 'fromImage' },
-  { label: 'From Community StackScript', value: 'fromCommunityStackScript' },
-  { label: 'From Account StackScript', value: 'fromAccountStackScript' },
-];
-
-const passwordHelperText = 'Set a password for your rebuilt Linode.';
-
 export const LinodeRebuildDialog = (props: Props) => {
   const { linodeId, linodeLabel, onClose, open } = props;
-  const modalRef = React.useRef<HTMLDivElement>(null);
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-  const { data: linode } = useLinodeQuery(
-    linodeId ?? -1,
-    linodeId !== undefined && open
+  const [type, setType] = useState<LinodeRebuildType>('From Image');
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
+
+  const { mutateAsync: rebuildLinode } = useRebuildLinodeMutation(
+    linodeId ?? 0
   );
 
-  const { data: regionsData } = useRegionsQuery();
+  const form = useForm<RebuildRequest>({
+    resolver: yupResolver(RebuildLinodeSchema) as Resolver<RebuildRequest>,
+  });
 
-  const isReadOnly =
-    Boolean(profile?.restricted) &&
-    grants?.linode.find((grant) => grant.id === linodeId)?.permissions ===
-      'read_only';
-
-  const hostMaintenance = linode?.status === 'stopped';
-  const unauthorized = isReadOnly;
-  const disabled = hostMaintenance || unauthorized;
-
-  // LDE-related checks
-  const isEncrypted = linode?.disk_encryption === 'enabled';
-  const isLKELinode = Boolean(linode?.lke_cluster_id);
-  const linodeIsInDistributedRegion = getIsDistributedRegion(
-    regionsData ?? [],
-    linode?.region ?? ''
-  );
-
-  const theme = useTheme();
-
-  const [mode, setMode] = React.useState<MODES>('fromImage');
-  const [rebuildError, setRebuildError] = React.useState<string>('');
-
-  const [
-    diskEncryptionEnabled,
-    setDiskEncryptionEnabled,
-  ] = React.useState<boolean>(isEncrypted);
-
-  const onExitDrawer = () => {
-    setRebuildError('');
-    setMode('fromImage');
-  };
-
-  const handleRebuildError = (status: string) => {
-    setRebuildError(status);
-    scrollErrorIntoViewV2(modalRef);
-  };
-
-  const toggleDiskEncryptionEnabled = () => {
-    setDiskEncryptionEnabled(!diskEncryptionEnabled);
+  const onSubmit = async (values: RebuildRequest) => {
+    try {
+      await rebuildLinode(values);
+    } catch (errors) {
+      for (const error of errors) {
+        form.setError(error.field ?? 'root', { message: error.reason });
+      }
+    }
   };
 
   return (
     <Dialog
-      TransitionProps={{ onExited: onExitDrawer }}
       fullHeight
       fullWidth
-      maxWidth="md"
       onClose={onClose}
       open={open}
-      ref={modalRef}
-      title={`Rebuild Linode ${linodeLabel ?? ''}`}
+      title={`Rebuild Linode ${linodeLabel}`}
     >
-      <StyledDiv>
-        {unauthorized && <LinodePermissionsError />}
-        {hostMaintenance && <HostMaintenanceError />}
-        {rebuildError && (
-          <Notice variant="error">
-            <ErrorMessage
-              entity={{
-                id: linodeId,
-                type: 'linode_id',
-              }}
-              message={rebuildError}
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <Stack spacing={2}>
+            <Typography>
+              If you can’t rescue an existing disk, it’s time to rebuild your
+              Linode. There are a couple of different ways you can do this:
+              either restore from a backup or start over with a fresh Linux
+              distribution.{' '}
+              <strong>
+                Rebuilding will destroy all data on all existing disks on this
+                Linode.
+              </strong>
+            </Typography>
+            <Autocomplete
+              disableClearable
+              label="Rebuild From"
+              noMarginTop
+              onChange={(e, value) => setType(value.label)}
+              options={REBUILD_OPTIONS}
+              textFieldProps={{ hideLabel: true }}
+              value={REBUILD_OPTIONS.find((o) => o.label === type)}
             />
-          </Notice>
-        )}
-        <Typography
-          data-qa-rebuild-desc
-          sx={{ paddingBottom: theme.spacing(2) }}
-        >
-          If you can&rsquo;t rescue an existing disk, it&rsquo;s time to rebuild
-          your Linode. There are a couple of different ways you can do this:
-          either restore from a backup or start over with a fresh Linux
-          distribution.&nbsp;
-          <strong>
-            Rebuilding will destroy all data on all existing disks on this
-            Linode.
-          </strong>
-        </Typography>
-        <Autocomplete
-          onChange={(_, selected) => {
-            setMode(selected?.value ?? 'fromImage');
-            setRebuildError('');
-          }}
-          textFieldProps={{
-            hideLabel: true,
-          }}
-          defaultValue={options.find((option) => option.value === mode)}
-          disableClearable
-          disabled={disabled}
-          label="From Image"
-          options={options}
-        />
-      </StyledDiv>
-      {mode === 'fromImage' && (
-        <RebuildFromImage
-          disabled={disabled}
-          diskEncryptionEnabled={diskEncryptionEnabled}
-          handleRebuildError={handleRebuildError}
-          isLKELinode={isLKELinode}
-          linodeId={linodeId ?? -1}
-          linodeIsInDistributedRegion={linodeIsInDistributedRegion}
-          linodeLabel={linode?.label}
-          linodeRegion={linode?.region}
-          onClose={onClose}
-          passwordHelperText={passwordHelperText}
-          toggleDiskEncryptionEnabled={toggleDiskEncryptionEnabled}
-        />
-      )}
-      {mode === 'fromCommunityStackScript' && (
-        <RebuildFromStackScript
-          disabled={disabled}
-          diskEncryptionEnabled={diskEncryptionEnabled}
-          handleRebuildError={handleRebuildError}
-          isLKELinode={isLKELinode}
-          linodeId={linodeId ?? -1}
-          linodeIsInDistributedRegion={linodeIsInDistributedRegion}
-          linodeLabel={linode?.label}
-          linodeRegion={linode?.region}
-          onClose={onClose}
-          passwordHelperText={passwordHelperText}
-          toggleDiskEncryptionEnabled={toggleDiskEncryptionEnabled}
-          type="community"
-        />
-      )}
-      {mode === 'fromAccountStackScript' && (
-        <RebuildFromStackScript
-          disabled={disabled}
-          diskEncryptionEnabled={diskEncryptionEnabled}
-          handleRebuildError={handleRebuildError}
-          isLKELinode={isLKELinode}
-          linodeId={linodeId ?? -1}
-          linodeIsInDistributedRegion={linodeIsInDistributedRegion}
-          linodeLabel={linode?.label}
-          linodeRegion={linode?.region}
-          onClose={onClose}
-          passwordHelperText={passwordHelperText}
-          toggleDiskEncryptionEnabled={toggleDiskEncryptionEnabled}
-          type="account"
-        />
-      )}
+            {type === 'From Account StackScript' && (
+              <StackScriptSelectionList type="Account" />
+            )}
+            {type === 'From Community StackScript' && (
+              <StackScriptSelectionList type="Community" />
+            )}
+            <Controller
+              render={({ field, fieldState }) => (
+                <ImageSelect
+                  errorText={fieldState.error?.message}
+                  noMarginTop
+                  onChange={(value) => field.onChange(value?.id ?? null)}
+                  value={field.value ?? null}
+                  variant="all"
+                />
+              )}
+              control={form.control}
+              name="image"
+            />
+            <Controller
+              render={({ field, fieldState }) => (
+                <PasswordInput
+                  autoComplete="off"
+                  errorText={fieldState.error?.message}
+                  helperText="Set a password for your rebuilt Linode."
+                  label="Root Password"
+                  noMarginTop
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  placeholder="Enter a password."
+                  value={field.value ?? ''}
+                />
+              )}
+              control={form.control}
+              name="root_pass"
+            />
+            <Controller
+              render={({ field }) => (
+                <UserSSHKeyPanel
+                  authorizedUsers={field.value ?? []}
+                  setAuthorizedUsers={field.onChange}
+                />
+              )}
+              control={form.control}
+              name="authorized_users"
+            />
+            {isDiskEncryptionFeatureEnabled && (
+              <Controller
+                render={({ field, fieldState }) => (
+                  <Encryption
+                    onChange={(checked) =>
+                      field.onChange(checked ? 'enabled' : 'disabled')
+                    }
+                    descriptionCopy={''}
+                    disabledReason={''}
+                    error={fieldState.error?.message}
+                    isEncryptEntityChecked={field.value === 'enabled'}
+                  />
+                )}
+                control={form.control}
+                name="disk_encryption"
+              />
+            )}
+            <Stack
+              alignItems="center"
+              direction="row"
+              justifyContent="flex-end"
+            >
+              <Button
+                buttonType="primary"
+                loading={form.formState.isSubmitting}
+                type="submit"
+              >
+                Rebuild Linode
+              </Button>
+            </Stack>
+          </Stack>
+        </form>
+      </FormProvider>
     </Dialog>
   );
 };
-
-const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
-  '& + div': {
-    '& .MuiPaper-root': {
-      '& .MuiTableCell-head': {
-        top: theme.spacing(11),
-      },
-      '& > div': {
-        padding: 0,
-      },
-      padding: 0,
-    },
-    '& .notice': {
-      padding: theme.spacing(2),
-    },
-    padding: 0,
-  },
-  paddingBottom: theme.spacing(2),
-}));
