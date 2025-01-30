@@ -12,6 +12,7 @@ import {
   getMetricsCallCustomFilters,
   getRegionProperties,
   getResourcesProperties,
+  getTagsProperties,
   getTimeDurationProperties,
 } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
@@ -47,6 +48,38 @@ it('test getRegionProperties method', () => {
     expect(handleRegionChange).toBeDefined();
     expect(selectedDashboard).toEqual(mockDashboard);
     expect(label).toEqual(name);
+  }
+});
+
+it('test getTagsProperties', () => {
+  const tagsConfig = linodeConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Tags'
+  );
+
+  expect(tagsConfig).toBeDefined();
+
+  if (tagsConfig) {
+    const {
+      disabled,
+      handleTagsChange,
+      label,
+      region,
+      resourceType,
+    } = getTagsProperties(
+      {
+        config: tagsConfig,
+        dashboard: mockDashboard,
+        dependentFilters: { region: 'us-east' },
+        isServiceAnalyticsIntegration: true,
+      },
+      vi.fn()
+    );
+    const { name } = tagsConfig.configuration;
+    expect(handleTagsChange).toBeDefined();
+    expect(disabled).toEqual(false);
+    expect(label).toEqual(name);
+    expect(region).toEqual('us-east');
+    expect(resourceType).toEqual('linode');
   }
 });
 

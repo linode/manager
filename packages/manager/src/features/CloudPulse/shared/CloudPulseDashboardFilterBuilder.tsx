@@ -209,6 +209,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             {
               config,
               dashboard,
+              dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
             },

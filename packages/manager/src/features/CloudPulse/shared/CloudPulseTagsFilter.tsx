@@ -4,6 +4,7 @@ import React from 'react';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { themes } from 'src/utilities/theme';
 
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { FilterValue, Linode } from '@linode/api-v4';
 
 export interface CloudPulseTags {
@@ -17,6 +18,7 @@ export interface CloudPulseTagsSelectProps {
   label: string;
   optional?: boolean;
   placeholder?: string;
+  region?: FilterValueType;
   resourceType: string | undefined;
   savePreferences?: boolean;
 }
@@ -25,10 +27,12 @@ export const CloudPulseTagsSelect = React.memo(
   (props: CloudPulseTagsSelectProps) => {
     const {
       defaultValue,
+      disabled,
       handleTagsChange,
       label,
       optional,
       placeholder,
+      region,
       resourceType,
       savePreferences,
     } = props;
@@ -39,12 +43,17 @@ export const CloudPulseTagsSelect = React.memo(
       if (!linodes) {
         return [];
       }
+
+      const linodesByRegion = linodes.filter(
+        (linode: Linode) => linode.region === region
+      ); // filter linodes by region to achieve tags by region
+
       return Array.from(
-        new Set(linodes.flatMap((linode: Linode) => linode.tags))
+        new Set(linodesByRegion.flatMap((linode: Linode) => linode.tags))
       )
         .sort()
         .map((tag) => ({ label: tag })) as CloudPulseTags[];
-    }, [linodes]);
+    }, [linodes, region]);
 
     const [selectedTags, setSelectedTags] = React.useState<CloudPulseTags[]>();
 
@@ -104,7 +113,7 @@ export const CloudPulseTagsSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="tags-select"
-        disabled={!resourceType}
+        disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Tags'}.` : ''}
         label={label || 'Tags'}
         limitTags={1}
