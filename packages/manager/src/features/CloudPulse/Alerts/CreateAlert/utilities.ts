@@ -42,12 +42,16 @@ export const filterMetricCriteriaFormValues = (
   formValues: MetricCriteriaForm[]
 ): MetricCriteria[] => {
   return formValues.map((rule) => {
-    const values = omitProps(rule, ['aggregation_type', 'operator', 'metric']);
+    const values = omitProps(rule, [
+      'aggregate_function',
+      'operator',
+      'metric',
+    ]);
     return {
       ...values,
-      aggregation_type: rule.aggregation_type ?? 'avg',
+      aggregate_function: rule.aggregate_function ?? 'avg',
       dimension_filters: filterDimensionFilterFormValues(
-        rule.dimension_filters
+        rule.dimension_filters ?? []
       ),
       metric: rule.metric ?? '',
       operator: rule.operator ?? 'eq',

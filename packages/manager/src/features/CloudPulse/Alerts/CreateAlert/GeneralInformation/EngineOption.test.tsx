@@ -11,7 +11,7 @@ describe('EngineOption component tests', () => {
     const { getByLabelText, getByTestId } = renderWithThemeAndHookFormContext({
       component: <EngineOption name="engineType" />,
     });
-    expect(getByLabelText('Engine Option')).toBeInTheDocument();
+    expect(getByLabelText('Database Engine')).toBeInTheDocument();
     expect(getByTestId('engine-option')).toBeInTheDocument();
   });
   it('should render the options happy path', async () => {

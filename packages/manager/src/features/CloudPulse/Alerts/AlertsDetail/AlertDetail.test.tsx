@@ -13,19 +13,18 @@ import { AlertDetail } from './AlertDetail';
 
 // Mock Data
 const alertDetails = alertFactory.build({ service_type: 'linode' });
+const notificationChannels = notificationChannelFactory.buildList(3);
+
 const linodes = linodeFactory.buildList(3);
 const regions = regionFactory.buildList(1).map((region, index) => ({
   ...region,
   id: index < 3 ? linodes[index].region : region.id,
 }));
-const notificationChannels = notificationChannelFactory.buildList(3, {
-  content: { email: { email_addresses: ['1@test.com', '2@test.com'] } },
-});
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
-  useAlertNotificationChannelsQuery: vi.fn(),
+  useAllAlertNotificationChannelsQuery: vi.fn(),
   useCloudPulseServiceTypes: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
@@ -34,18 +33,8 @@ const queryMocks = vi.hoisted(() => ({
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
-  useAlertNotificationChannelsQuery:
-    queryMocks.useAlertNotificationChannelsQuery,
-}));
-
-vi.mock('src/queries/cloudpulse/resources', () => ({
-  ...vi.importActual('src/queries/cloudpulse/resources'),
-  useResourcesQuery: queryMocks.useResourcesQuery,
-}));
-
-vi.mock('src/queries/regions/regions', () => ({
-  ...vi.importActual('src/queries/regions/regions'),
-  useRegionsQuery: queryMocks.useRegionsQuery,
+  useAllAlertNotificationChannelsQuery:
+    queryMocks.useAllAlertNotificationChannelsQuery,
 }));
 
 vi.mock('src/queries/cloudpulse/services', () => {
@@ -82,11 +71,6 @@ beforeEach(() => {
     isError: false,
     isFetching: false,
   });
-  queryMocks.useAlertNotificationChannelsQuery.mockReturnValue({
-    data: notificationChannels,
-    isError: false,
-    isFetching: false,
-  });
   queryMocks.useCloudPulseServiceTypes.mockReturnValue({
     data: { data: serviceTypesFactory.buildList(1) },
     isFetching: false,
@@ -98,6 +82,11 @@ beforeEach(() => {
   });
   queryMocks.useRegionsQuery.mockReturnValue({
     data: regions,
+    isError: false,
+    isFetching: false,
+  });
+  queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue({
+    data: notificationChannels,
     isError: false,
     isFetching: false,
   });
@@ -147,7 +136,7 @@ describe('AlertDetail component tests', () => {
     expect(getByText('Overview')).toBeInTheDocument();
     expect(getByText('Criteria')).toBeInTheDocument(); // validate if criteria is present
     expect(getByText('Resources')).toBeInTheDocument(); // validate if resources is present
-    expect(getByText('Notification Channels')).toBeInTheDocument();
+    expect(getByText('Notification Channels')).toBeInTheDocument(); // validate if notification channels is present
     expect(getByText('Name:')).toBeInTheDocument();
     expect(getByText('Description:')).toBeInTheDocument();
   });

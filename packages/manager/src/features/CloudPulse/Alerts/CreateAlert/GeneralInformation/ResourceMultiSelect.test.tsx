@@ -207,7 +207,7 @@ describe('ResourceMultiSelect component tests', () => {
         />
       ),
     });
-    expect(getByLabelText('Clusters'));
+    expect(getByLabelText('Database Clusters'));
   });
 
   it('should render error messages when there is an API call failure', () => {

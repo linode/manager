@@ -110,6 +110,8 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
+import { accountPermissionsFactory } from 'src/factories/accountPermissions';
+import { accountResourcesFactory } from 'src/factories/accountResources';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { pickRandom } from 'src/utilities/random';
 
@@ -132,8 +134,6 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
-import { accountResourcesFactory } from 'src/factories/accountResources';
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -2431,20 +2431,24 @@ export const handlers = [
       return HttpResponse.json(response);
     }
   ),
-  http.get('*/monitor/alert-definitions', async ({ request }) => {
+  http.get('*/monitor/alert-definitions', async () => {
     const customAlerts = alertFactory.buildList(5, {
       severity: 0,
       type: 'user',
       updated: '2021-10-16T04:00:00',
     });
     const customAlertsWithServiceType = alertFactory.buildList(4, {
+      created_by: 'user2',
       service_type: 'dbaas',
       severity: 1,
       type: 'user',
-      created_by: 'user2',
     });
-    const defaultAlerts = alertFactory.buildList(4, { type: 'system' });
+    const defaultAlerts = alertFactory.buildList(4, {
+      created_by: 'System',
+      type: 'system',
+    });
     const defaultAlertsWithServiceType = alertFactory.buildList(3, {
+      created_by: 'System',
       service_type: 'dbaas',
       severity: 3,
       type: 'system',
@@ -2454,7 +2458,10 @@ export const handlers = [
       ...alertFactory.buildList(5, { status: 'disabled' }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
-      ...alertFactory.buildList(36, { updated: '2021-10-16T04:00:00', status: 'disabled'}),
+      ...alertFactory.buildList(36, {
+        updated: '2021-10-16T04:00:00',
+        status: 'disabled',
+      }),
       ...customAlertsWithServiceType,
     ];
     return HttpResponse.json(makeResourcePage(alerts));
@@ -2487,6 +2494,11 @@ export const handlers = [
   ),
   http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
     return HttpResponse.json({}, { status: 200 });
+  }),
+  http.get('*/monitor/alert-channels', () => {
+    return HttpResponse.json(
+      makeResourcePage(notificationChannelFactory.buildList(3))
+    );
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {

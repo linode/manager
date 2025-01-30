@@ -29,4 +29,4 @@ export const getAllNotificationChannels = (
       { ...params, ...passedParams },
       { ...filter, ...passedFilter }
     )
-  )().then((data) => data.data);
+  )().then(({ data }) => data);

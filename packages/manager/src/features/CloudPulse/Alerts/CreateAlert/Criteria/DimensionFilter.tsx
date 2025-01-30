@@ -21,7 +21,10 @@ interface DimensionFilterProps {
   /**
    * name used for the component to set in the form
    */
-  name: FieldPathByValue<CreateAlertDefinitionForm, DimensionFilterForm[]>;
+  name: FieldPathByValue<
+    CreateAlertDefinitionForm,
+    DimensionFilterForm[] | null
+  >;
 }
 export const DimensionFilters = (props: DimensionFilterProps) => {
   const { dataFieldDisabled, dimensionOptions, name } = props;

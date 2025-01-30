@@ -30,10 +30,10 @@ export interface CreateAlertDefinitionForm
 export interface MetricCriteriaForm
   extends Omit<
     MetricCriteria,
-    'aggregation_type' | 'dimension_filters' | 'metric' | 'operator'
+    'aggregate_function' | 'dimension_filters' | 'metric' | 'operator'
   > {
-  aggregation_type: MetricAggregationType | null;
-  dimension_filters: DimensionFilterForm[];
+  aggregate_function: MetricAggregationType | null;
+  dimension_filters: DimensionFilterForm[] | null;
   metric: null | string;
   operator: MetricOperatorType | null;
 }
