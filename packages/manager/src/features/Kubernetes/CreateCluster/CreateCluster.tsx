@@ -163,7 +163,6 @@ export const CreateCluster = () => {
   }));
 
   const createCluster = (formData: any) => {
-    // Extract values from formData
     const {
       apl_enabled,
       control_plane,
@@ -175,45 +174,42 @@ export const CreateCluster = () => {
       tier,
     } = formData;
 
-    // // Check for IP errors (IPv4 and IPv6)
-    // if (
-    //   formData.control_plane.acl.addresses.ipv4.some((ip) => ip.error) ||
-    //   formData.control_plane.acl.addresses.ipv6.some((ip) => ip.error)
-    // ) {
-    //   scrollErrorIntoViewV2(formContainerRef);
-    //   return;
-    // }
-
     const { push } = history;
-    setErrors(undefined);
 
-    // // Extract IPv4 and IPv6 from the form data
-    // const _ipv4 = formData.control_plane.acl.addresses.ipv4
-    //   .map((ip) => ip.address)
-    //   .filter((ip) => ip !== '');
+    const ipv4 = formData?.control_plane.acl?.addresses?.ipv4 || [];
 
-    // const _ipv6 = formData.control_plane.acl.addresses.ipv6
-    //   .map((ip) => ip.address)
-    //   .filter((ip) => ip !== '');
+    const _ipv4 = ipv4
+      .map((ip: string) => ip)
+      .filter((ip: string) => ip !== '');
 
-    // Create the payload for IPv4 and IPv6 addresses
-    // const addressIPv4Payload = {
-    //   ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
-    // };
+    const ipv6 = formData?.control_plane.acl?.addresses?.ipv6 || [];
 
-    // const addressIPv6Payload = {
-    //   ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
-    // };
+    const _ipv6 = ipv6
+      .map((ip: string) => ip)
+      .filter((ip: string) => ip !== '');
 
-    // Prepare the final payload
+    const addressIPv4Payload = {
+      ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
+    };
+
+    const addressIPv6Payload = {
+      ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
+    };
+
     let payload: CreateKubeClusterPayload = {
       control_plane: {
         acl: {
-          enabled: control_plane?.acl?.enabled, // control_plane ACL enabled value
+          enabled: control_plane?.acl?.enabled ?? false,
           'revision-id': '',
-          ...control_plane?.acl?.enabled,
+          ...(control_plane?.acl?.enabled &&
+            (_ipv4?.length > 0 || _ipv6.length > 0) && {
+              addresses: {
+                ...addressIPv4Payload,
+                ...addressIPv6Payload,
+              },
+            }),
         },
-        high_availability: control_plane.high_availability ?? false, // Use high availability value from formData
+        high_availability: control_plane.high_availability ?? false,
       },
       k8s_version,
       label,
@@ -221,7 +217,6 @@ export const CreateCluster = () => {
       region,
     };
 
-    // Additional properties based on feature flags
     if (apl_enabled) {
       payload = { ...payload, apl_enabled };
     }
@@ -230,13 +225,12 @@ export const CreateCluster = () => {
       payload = { ...payload, tier };
     }
 
-    // Choose the correct create cluster function based on the feature flags
+    // Choose the correct function to create the cluster
     const createClusterFn =
       apl_enabled || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
-    // Make the API request
     createClusterFn(payload)
       .then((cluster) => {
         push(`/kubernetes/clusters/${cluster.id}`);
@@ -249,94 +243,9 @@ export const CreateCluster = () => {
       })
       .catch((err) => {
         setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
-        // setSubmitting(false);
         scrollErrorIntoViewV2(formContainerRef);
       });
   };
-  // const createCluster = (formData) => {
-  //   if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
-  //     scrollErrorIntoViewV2(formContainerRef);
-  //     return;
-  //   }
-
-  //   const { push } = history;
-  //   setErrors(undefined);
-  //   // setSubmitting(true);
-
-  //   const node_pools = nodePools.map(
-  //     pick(['type', 'count'])
-  //   ) as CreateNodePoolData[];
-
-  //   const _ipv4 = ipV4Addr
-  //     .map((ip) => {
-  //       return ip.address;
-  //     })
-  //     .filter((ip) => ip !== '');
-
-  //   const _ipv6 = ipV6Addr
-  //     .map((ip) => {
-  //       return ip.address;
-  //     })
-  //     .filter((ip) => ip !== '');
-
-  //   const addressIPv4Payload = {
-  //     ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
-  //   };
-
-  //   const addressIPv6Payload = {
-  //     ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
-  //   };
-
-  //   let payload: CreateKubeClusterPayload = {
-  //     control_plane: {
-  //       acl: {
-  //         enabled: controlPlaneACL,
-  //         'revision-id': '',
-  //         ...(controlPlaneACL && // only send the IPs if we are enabling IPACL
-  //           (_ipv4.length > 0 || _ipv6.length > 0) && {
-  //           addresses: {
-  //             ...addressIPv4Payload,
-  //             ...addressIPv6Payload,
-  //           },
-  //         }),
-  //       },
-  //       high_availability: highAvailability ?? false,
-  //     },
-  //     // label
-  //     // k8s_version: version,
-  //     node_pools,
-  //     region: selectedRegion?.id,
-  //   };
-
-  //   if (showAPL) {
-  //     payload = { ...payload, apl_enabled };
-  //   }
-
-  //   if (isLkeEnterpriseLAFeatureEnabled) {
-  //     payload = { ...payload, tier: selectedTier };
-  //   }
-
-  //   const createClusterFn =
-  //     showAPL || isLkeEnterpriseLAFeatureEnabled
-  //       ? createKubernetesClusterBeta
-  //       : createKubernetesCluster;
-
-  //   createClusterFn(payload)
-  //     .then((cluster) => {
-  //       push(`/kubernetes/clusters/${cluster.id}`);
-  //       if (hasAgreed) {
-  //         updateAccountAgreements({
-  //           eu_model: true,
-  //           privacy_policy: true,
-  //         }).catch(reportAgreementSigningError);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
-  //       // setSubmitting(false);
-  //       scrollErrorIntoViewV2(formContainerRef);
-  //     });
-  // };
 
   const toggleHasAgreed = () => setAgreed((prevHasAgreed) => !prevHasAgreed);
 
@@ -573,14 +482,20 @@ export const CreateCluster = () => {
                     <ControlPlaneACLPane
                       {...field}
                       handleIPv4Change={(value) => {
-                        if (field.value !== value) {
-                          field.onChange(value);
+                        const updatedACL = { ...field.value };
+                        if (!updatedACL.addresses) {
+                          updatedACL.addresses = {};
                         }
+                        updatedACL.addresses.ipv4 = value;
+                        field.onChange(updatedACL);
                       }}
                       handleIPv6Change={(value) => {
-                        if (field.value !== value) {
-                          field.onChange(value);
+                        const updatedACL = { ...field.value };
+                        if (!updatedACL.addresses) {
+                          updatedACL.addresses = {};
                         }
+                        updatedACL.addresses.ipv6 = value;
+                        field.onChange(updatedACL);
                       }}
                       enableControlPlaneACL={controlPlaneACL}
                       errorText={errorMap.control_plane}
@@ -648,7 +563,7 @@ export const CreateCluster = () => {
               updatePool,
               removePool,
               onSubmit,
-              // createCluster,
+              createCluster,
               classes,
             ]}
             createCluster={onSubmit}
