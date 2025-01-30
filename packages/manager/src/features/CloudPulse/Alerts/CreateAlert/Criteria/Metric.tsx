@@ -70,13 +70,11 @@ export const Metric = (props: MetricCriteriaProps) => {
       operator: null,
       threshold: 0,
     };
-    setValue(
-      name,
-      operation === 'selectOption'
-        ? { ...fieldValue, metric: selected.value }
-        : fieldValue,
-      { shouldValidate: true }
-    );
+    if (operation === 'selectOption') {
+      setValue(`${name}.metric`, selected.value, { shouldValidate: true });
+    } else {
+      setValue(name, fieldValue);
+    }
   };
 
   const metricOptions = React.useMemo(() => {
@@ -226,6 +224,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                       : null
                   }
                   data-testid="operator"
+                  disabled={!metricWatcher}
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
                   label="Operator"

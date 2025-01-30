@@ -4,19 +4,23 @@ import { queryFactory } from './queries';
 
 import type {
   APIError,
+  Filter,
   JWEToken,
   JWETokenPayLoad,
   MetricDefinition,
+  Params,
   ResourcePage,
   ServiceTypesList,
 } from '@linode/api-v4';
 
 export const useGetCloudPulseMetricDefinitionsByServiceType = (
   serviceType: string | undefined,
-  enabled: boolean
+  enabled: boolean,
+  params?: Params,
+  filter?: Filter
 ) => {
   return useQuery<ResourcePage<MetricDefinition>, APIError[]>({
-    ...queryFactory.metricsDefinitons(serviceType),
+    ...queryFactory.metricsDefinitons(serviceType, params, filter),
     enabled,
   });
 };

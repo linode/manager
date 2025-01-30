@@ -6,11 +6,15 @@ import {
   MetricDefinition,
   ServiceTypesList,
 } from './types';
-import { ResourcePage } from 'src/types';
+import { Filter, Params, ResourcePage } from 'src/types';
 
 const bearer = 'Bearer vagrant';
 
-export const getMetricDefinitionsByServiceType = (serviceType: string) => {
+export const getMetricDefinitionsByServiceType = (
+  serviceType: string,
+  params?: Params,
+  filters?: Filter
+) => {
   return Request<ResourcePage<MetricDefinition>>(
     setURL(
       `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(

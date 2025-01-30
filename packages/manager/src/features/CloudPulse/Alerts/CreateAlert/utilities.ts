@@ -51,7 +51,7 @@ export const filterMetricCriteriaFormValues = (
       ...values,
       aggregate_function: rule.aggregate_function ?? 'avg',
       dimension_filters: filterDimensionFilterFormValues(
-        rule.dimension_filters
+        rule.dimension_filters ?? []
       ),
       metric: rule.metric ?? '',
       operator: rule.operator ?? 'eq',

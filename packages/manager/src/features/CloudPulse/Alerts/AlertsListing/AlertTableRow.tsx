@@ -57,7 +57,8 @@ export const AlertTableRow = (props: Props) => {
         </Box>
       </TableCell>
       <TableCell>
-        {services.find((service) => service.value === service_type)?.label}
+        {services.find((service) => service.value === service_type)?.label ??
+          service_type}
       </TableCell>
       <TableCell>{created_by}</TableCell>
       <TableCell>
