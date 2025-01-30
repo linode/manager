@@ -7,6 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import EnhancedSelect from 'src/components/EnhancedSelect/Select';
+import { Link } from 'src/components/Link';
 import { reportException } from 'src/exceptionReporting';
 import {
   getRestrictedResourceText,
@@ -429,7 +430,10 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
               id="taxIdAgreementCheckbox"
             />
             <Typography component="label" htmlFor="taxIdAgreementCheckbox">
-              {TAX_ID_AGREEMENT_TEXT}
+              {TAX_ID_AGREEMENT_TEXT}{' '}
+              <Link to="https://www.akamai.com/legal/privacy-statement">
+                Akamai Privacy Statement.
+              </Link>
             </Typography>
           </Grid>
         )}
