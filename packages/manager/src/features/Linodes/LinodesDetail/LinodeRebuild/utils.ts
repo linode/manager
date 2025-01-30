@@ -15,7 +15,7 @@ export const REBUILD_OPTIONS = [
 export type LinodeRebuildType = typeof REBUILD_OPTIONS[number]['label'];
 
 export interface RebuildLinodeFormValues extends RebuildRequest {
-  confirmationText: string;
+  confirmationText?: string;
 }
 
 export interface Context {
@@ -25,7 +25,7 @@ export interface Context {
 
 const RebuildLinodeFormSchema = RebuildLinodeSchema.concat(
   object({
-    confirmationText: string().required(),
+    confirmationText: string(),
   })
 );
 

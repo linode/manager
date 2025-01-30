@@ -11,9 +11,11 @@ import PasswordInput from 'src/components/PasswordInput/PasswordInput';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { useRebuildLinodeMutation } from 'src/queries/linodes/linodes';
 import { usePreferences } from 'src/queries/profile/preferences';
+import { utoa } from 'src/utilities/metadata';
 
 import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/StackScriptSelectionList';
 import { UserDefinedFields } from '../../LinodeCreate/Tabs/StackScripts/UserDefinedFields/UserDefinedFields';
+import { UserData } from './UserData';
 import { REBUILD_OPTIONS, resolver } from './utils';
 
 import type {
@@ -53,6 +55,10 @@ export const LinodeRebuildDialog = (props: Props) => {
   });
 
   const onSubmit = async (values: RebuildLinodeFormValues) => {
+    if (values.metadata?.user_data) {
+      values.metadata.user_data = utoa(values.metadata.user_data);
+    }
+
     try {
       await rebuildLinode(values);
     } catch (errors) {
@@ -157,6 +163,7 @@ export const LinodeRebuildDialog = (props: Props) => {
                 name="disk_encryption"
               />
             )}
+            <UserData linodeId={linodeId ?? 0} />
             <Controller
               render={({ field, fieldState }) => (
                 <TypeToConfirm
@@ -166,16 +173,13 @@ export const LinodeRebuildDialog = (props: Props) => {
                       <strong>{linodeLabel}</strong>) in the field below:
                     </span>
                   }
-                  visible={
-                    isTypeToConfirmEnabled === undefined ||
-                    isTypeToConfirmEnabled === true
-                  }
                   errorText={fieldState.error?.message}
                   hideLabel
                   label="Linode Label"
                   onChange={field.onChange}
                   title="Confirm"
                   value={field.value ?? ''}
+                  visible={isTypeToConfirmEnabled}
                 />
               )}
               control={form.control}
