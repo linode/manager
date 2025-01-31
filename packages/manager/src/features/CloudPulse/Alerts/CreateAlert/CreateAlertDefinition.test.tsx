@@ -59,7 +59,6 @@ describe('AlertDefinition Create', () => {
     expect(getByText('4. Notification Channels')).toBeVisible();
     expect(getByLabelText('Evaluation Period')).toBeVisible();
     expect(getByLabelText('Polling Interval')).toBeVisible();
-    expect(getByText('3. Notification Channels')).toBeVisible();
   });
 
   it('should be able to enter a value in the textbox', async () => {
