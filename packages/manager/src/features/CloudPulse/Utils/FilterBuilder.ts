@@ -63,7 +63,6 @@ export const getTagsProperties = (
 ): CloudPulseTagsSelectProps => {
   const { filterKey, name: label, placeholder } = props.config.configuration;
   const {
-    config,
     dashboard,
     dependentFilters,
     isServiceAnalyticsIntegration,
@@ -83,7 +82,6 @@ export const getTagsProperties = (
     region: dependentFilters?.[REGION],
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
-    xFilter: buildXFilter(config, dependentFilters ?? {}),
   };
 };
 
