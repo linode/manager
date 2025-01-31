@@ -4,8 +4,10 @@ import React from 'react';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { themes } from 'src/utilities/theme';
 
+import { deepEqual } from '../Utils/FilterBuilder';
+
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { FilterValue, Linode } from '@linode/api-v4';
+import type { Filter, FilterValue, Linode } from '@linode/api-v4';
 
 export interface CloudPulseTags {
   label: string;
@@ -21,6 +23,7 @@ export interface CloudPulseTagsSelectProps {
   region: FilterValueType;
   resourceType: string | undefined;
   savePreferences?: boolean;
+  xFilter?: Filter;
 }
 
 export const CloudPulseTagsSelect = React.memo(
@@ -35,32 +38,34 @@ export const CloudPulseTagsSelect = React.memo(
       region,
       resourceType,
       savePreferences,
+      xFilter,
     } = props;
 
-    const { data: linodes, isError, isLoading } = useAllLinodesQuery();
+    const { data: linodesByRegion, isError, isLoading } = useAllLinodesQuery(
+      {},
+      xFilter ? xFilter : { region: region as string },
+      !disabled && Boolean(region && resourceType)
+    );
+
     // fetch all linode instances, consume the associated tags
     const tags = React.useMemo(() => {
-      if (!linodes || !region) {
+      if (!linodesByRegion) {
         return [];
       }
-
-      const linodesByRegion = linodes.filter(
-        (linode: Linode) => linode.region === region
-      ); // filter linodes by region to achieve tags by region
 
       return Array.from(
         new Set(linodesByRegion.flatMap((linode: Linode) => linode.tags))
       )
         .sort()
         .map((tag) => ({ label: tag })) as CloudPulseTags[];
-    }, [linodes, region]);
+    }, [linodesByRegion]);
 
     const [selectedTags, setSelectedTags] = React.useState<CloudPulseTags[]>();
 
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     React.useEffect(() => {
-      if (!tags || !savePreferences) {
+      if (!tags || !savePreferences || !region) {
         setSelectedTags([]);
         handleTagsChange([]);
         return;
@@ -75,7 +80,7 @@ export const CloudPulseTagsSelect = React.memo(
       handleTagsChange(filteredTags);
       setSelectedTags(filteredTags);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tags, resourceType]);
+    }, [tags, resourceType, region, xFilter]);
 
     return (
       <Autocomplete
@@ -125,5 +130,30 @@ export const CloudPulseTagsSelect = React.memo(
         value={selectedTags ?? []}
       />
     );
-  }
+  },
+  compareProps
 );
+
+function compareProps(
+  prevProps: CloudPulseTagsSelectProps,
+  nextProps: CloudPulseTagsSelectProps
+): boolean {
+  // these properties can be extended going forward
+  const keysToCompare: (keyof CloudPulseTagsSelectProps)[] = [
+    'region',
+    'resourceType',
+  ];
+
+  for (const key of keysToCompare) {
+    if (prevProps[key] !== nextProps[key]) {
+      return false;
+    }
+  }
+
+  if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
+    return false;
+  }
+
+  // Ignore function props in comparison
+  return true;
+}
