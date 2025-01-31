@@ -240,8 +240,8 @@ describe('Billing Contact', () => {
         cy.findByText('Akamai Privacy Statement.').should('be.visible');
         cy.get('[data-qa-save-contact-info="true"]').should('be.disabled');
         cy.get('[data-testid="tax-id-checkbox"]').click();
-        cy.get('[data-qa-save-contact-info="true"]').should('be.enabled');
         cy.get('[data-qa-save-contact-info="true"]')
+          .should('be.enabled')
           .click()
           .then(() => {
             cy.wait('@updateAccount').then((xhr) => {
