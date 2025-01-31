@@ -7,6 +7,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
+import { capitalize } from 'src/utilities/capitalize';
 import { extendType } from 'src/utilities/extendType';
 
 import { LabelInput } from './LabelInput';
@@ -45,6 +46,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
     control,
     formState,
     setValue,
+    watch,
     ...form
   } = useForm<LabelsAndTaintsFormFields>({
     defaultValues: {
@@ -73,9 +75,30 @@ export const LabelAndTaintDrawer = (props: Props) => {
     } catch (errResponse) {
       for (const error of errResponse) {
         if (error.field) {
-          form.setError(error.field, { message: error.reason });
+          const invalidLabelKey = error.field.split('.')[1];
+          const invalidLabelPrefixText = invalidLabelKey
+            ? `${invalidLabelKey}: `
+            : '';
+
+          if (error.field.includes('labels')) {
+            form.setError('root', {
+              message: `${invalidLabelPrefixText}${capitalize(error.reason)}`,
+            });
+          } else if (error.field.includes('taints')) {
+            const index = error.field.slice(7, 8); // Field will be: taints[i]
+            const _taints = watch('taints');
+            const invalidTaintPrefixText = _taints[index].key
+              ? `${_taints[index].key}: `
+              : '';
+
+            form.setError('root', {
+              message: `${invalidTaintPrefixText}${capitalize(error.reason)}`,
+            });
+          }
         } else {
-          form.setError('root', { message: error.reason });
+          form.setError('root', {
+            message: `${capitalize(error.reason)}`,
+          });
         }
       }
     }
@@ -105,6 +128,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
         control={control}
         formState={formState}
         setValue={setValue}
+        watch={watch}
         {...form}
       >
         <form onSubmit={form.handleSubmit(onSubmit)}>

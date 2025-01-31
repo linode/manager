@@ -108,6 +108,14 @@ const validateKubernetesLabel = (labels: {
       if (!labelKey || !labelValue) {
         return false;
       }
+
+      if (
+        labelKey.includes('kubernetes.io') ||
+        labelKey.includes('linode.com')
+      ) {
+        return false;
+      }
+
       // If the key has a slash, validate it as a DNS subdomain; else, validate as a simple key.
       if (labelKey.includes('/')) {
         const [prefix, suffix] = labelKey.split('/');
@@ -131,9 +139,7 @@ const validateKubernetesLabel = (labels: {
       // Validate the alphanumeric value.
       if (
         labelValue.length > MAX_SIMPLE_KEY_OR_VALUE_LENGTH ||
-        !alphaNumericValidCharactersRegex.test(labelValue) ||
-        labelValue.includes('kubernetes.io') ||
-        labelValue.includes('linode.com')
+        !alphaNumericValidCharactersRegex.test(labelValue)
       ) {
         return false;
       }

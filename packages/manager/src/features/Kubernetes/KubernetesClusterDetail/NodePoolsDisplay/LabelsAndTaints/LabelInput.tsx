@@ -33,11 +33,7 @@ export const LabelInput = (props: Props) => {
       kubernetesLabelSchema.validateSync(newLabels);
 
       // Add the new key-value pair to the existing labels object.
-      setValue(
-        'labels',
-        { ..._labels, [labelKey]: labelValue },
-        { shouldDirty: true }
-      );
+      setValue('labels', newLabels, { shouldDirty: true });
 
       handleCloseInputForm();
     } catch (e) {
