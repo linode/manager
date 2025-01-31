@@ -4,10 +4,8 @@ import React from 'react';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { themes } from 'src/utilities/theme';
 
-import { deepEqual } from '../Utils/FilterBuilder';
-
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { Filter, FilterValue, Linode } from '@linode/api-v4';
+import type { FilterValue, Linode } from '@linode/api-v4';
 
 export interface CloudPulseTags {
   label: string;
@@ -23,7 +21,6 @@ export interface CloudPulseTagsSelectProps {
   region: FilterValueType;
   resourceType: string | undefined;
   savePreferences?: boolean;
-  xFilter?: Filter;
 }
 
 export const CloudPulseTagsSelect = React.memo(
@@ -38,12 +35,12 @@ export const CloudPulseTagsSelect = React.memo(
       region,
       resourceType,
       savePreferences,
-      xFilter,
     } = props;
 
+    const regionFilter = region ? (region as string) : undefined;
     const { data: linodesByRegion, isError, isLoading } = useAllLinodesQuery(
       {},
-      xFilter ? xFilter : { region: region as string },
+      { region: regionFilter },
       !disabled && Boolean(region && resourceType)
     );
 
@@ -82,7 +79,7 @@ export const CloudPulseTagsSelect = React.memo(
         setSelectedTags(filteredTags);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tags, resourceType, region, xFilter]);
+    }, [tags, resourceType, region]);
 
     return (
       <Autocomplete
@@ -132,30 +129,5 @@ export const CloudPulseTagsSelect = React.memo(
         value={selectedTags ?? []}
       />
     );
-  },
-  compareProps
+  }
 );
-
-function compareProps(
-  prevProps: CloudPulseTagsSelectProps,
-  nextProps: CloudPulseTagsSelectProps
-): boolean {
-  // these properties can be extended going forward
-  const keysToCompare: (keyof CloudPulseTagsSelectProps)[] = [
-    'region',
-    'resourceType',
-  ];
-
-  for (const key of keysToCompare) {
-    if (prevProps[key] !== nextProps[key]) {
-      return false;
-    }
-  }
-
-  if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
-    return false;
-  }
-
-  // Ignore function props in comparison
-  return true;
-}

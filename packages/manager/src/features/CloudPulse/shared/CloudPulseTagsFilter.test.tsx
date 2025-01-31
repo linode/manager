@@ -16,7 +16,6 @@ const props: CloudPulseTagsSelectProps = {
   optional: true,
   region: 'us-east',
   resourceType: 'linode',
-  xFilter: { region: 'us-east' },
 };
 
 const queryMocks = vi.hoisted(() => ({
@@ -92,7 +91,7 @@ describe('CloudPulseTagsSelect component tests', () => {
       status: 'success',
     });
     const { getByRole, queryAllByRole } = renderWithTheme(
-      <CloudPulseTagsSelect {...props} xFilter={{ region: 'us-central' }} />
+      <CloudPulseTagsSelect {...props} region={'us-central'} />
     );
     await user.click(getByRole('button', { name: 'Open' }));
     const options = queryAllByRole('option');
