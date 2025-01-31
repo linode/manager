@@ -16,7 +16,7 @@ export interface CreateAlertResourcesProp {
   name: FieldPathByValue<CreateAlertDefinitionForm, string[]>;
 }
 
-export const CreateAlertResources = React.memo(
+export const CloudPulseModifyAlertResources = React.memo(
   (props: CreateAlertResourcesProp) => {
     const { name } = props;
 

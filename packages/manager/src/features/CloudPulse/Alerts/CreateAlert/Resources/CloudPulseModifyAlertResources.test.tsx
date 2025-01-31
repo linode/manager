@@ -4,7 +4,7 @@ import React from 'react';
 import { alertFactory, linodeFactory, regionFactory } from 'src/factories';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { CreateAlertResources } from './CreateAlertResources';
+import { CloudPulseModifyAlertResources } from './CloudPulseModifyAlertResources';
 
 import type { CreateAlertDefinitionForm } from '../types';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
@@ -78,7 +78,7 @@ describe('CreateAlertResources component tests', () => {
       getByPlaceholderText,
       getByTestId,
     } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: <CreateAlertResources name="entity_ids" />,
+      component: <CloudPulseModifyAlertResources name="entity_ids" />,
       useFormOptions: {
         defaultValues: {
           entity_ids: [],

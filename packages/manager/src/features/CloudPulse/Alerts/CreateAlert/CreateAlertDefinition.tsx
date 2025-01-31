@@ -14,7 +14,7 @@ import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
-import { CreateAlertResources } from './Resources/CreateAlertResources';
+import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
@@ -150,7 +150,7 @@ export const CreateAlertDefinition = () => {
           />
           <CloudPulseServiceSelect name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <CreateAlertResources name="entity_ids" />
+          <CloudPulseModifyAlertResources name="entity_ids" />
           <MetricCriteriaField
             setMaxInterval={(interval: number) =>
               setMaxScrapeInterval(interval)
