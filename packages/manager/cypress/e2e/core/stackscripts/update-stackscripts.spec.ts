@@ -197,15 +197,10 @@ describe('Update stackscripts', () => {
       .should('be.enabled')
       .click();
     cy.wait('@updateStackScript');
-    cy.url().should('endWith', '/stackscripts/account');
-    cy.wait('@getStackScripts');
-
-    cy.findByText(stackscriptLabel)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        cy.findByText(stackscriptDesc).should('be.visible');
-      });
+    ui.toast.assertMessage(
+      `Successfully updated StackScript ${updatedStackScripts[0].label}`
+    );
+    cy.url().should('endWith', `/stackscripts/${updatedStackScripts[0].id}`);
   });
 
   /*

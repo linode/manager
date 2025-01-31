@@ -1,10 +1,16 @@
-import { Divider, Notice, Stack, TextField, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Divider,
+  Notice,
+  Stack,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { VPCPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/VPCPanel';
 import { useVlansQuery } from 'src/queries/vlans';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -13,7 +19,7 @@ import type {
   InterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4/lib/linodes/types';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { SelectOption } from '@linode/ui';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface InterfaceErrors extends VPCInterfaceErrors, OtherInterfaceErrors {}
@@ -87,7 +93,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
 
   const [newVlan, setNewVlan] = React.useState('');
 
-  const purposeOptions: Item<ExtendedPurpose>[] = [
+  const purposeOptions: SelectOption<ExtendedPurpose>[] = [
     {
       label: 'Public Internet',
       value: 'public',

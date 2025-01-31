@@ -1,7 +1,6 @@
-import { Box, Radio, Typography } from '@linode/ui';
+import { Box, FormControlLabel, Radio, Typography } from '@linode/ui';
 import React from 'react';
 
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
@@ -61,9 +60,10 @@ export const BucketRateLimitTable = ({
     <Box>
       <FormLabel>
         <Typography
+          {...typographyProps}
           data-testid="bucketRateLimit"
           marginBottom={1}
-          {...typographyProps}
+          marginTop={2}
         >
           Bucket Rate Limits
         </Typography>
@@ -83,7 +83,7 @@ export const BucketRateLimitTable = ({
           'This endpoint type supports up to 750 Requests Per Second (RPS). '
         )}
         Understand{' '}
-        <Link to="https://techdocs.akamai.com/cloud-computing/docs/create-and-manage-buckets">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/object-storage-product-limits#optimize-to-avoid-rate-limiting">
           bucket rate limits
         </Link>
         .

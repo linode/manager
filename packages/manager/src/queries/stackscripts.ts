@@ -1,4 +1,5 @@
 import {
+  createStackScript,
   deleteStackScript,
   getStackScript,
   getStackScripts,
@@ -63,6 +64,23 @@ export const useStackScriptQuery = (id: number, enabled = true) =>
     ...stackscriptQueries.stackscript(id),
     enabled,
   });
+
+export const useCreateStackScriptMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<StackScript, APIError[], StackScriptPayload>({
+    mutationFn: createStackScript,
+    onSuccess(stackscript) {
+      queryClient.setQueryData(
+        stackscriptQueries.stackscript(stackscript.id).queryKey,
+        stackscript
+      );
+      queryClient.invalidateQueries({
+        queryKey: stackscriptQueries.infinite._def,
+      });
+    },
+  });
+};
 
 export const useStackScriptsInfiniteQuery = (
   filter: Filter = {},

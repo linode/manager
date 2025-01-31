@@ -6,6 +6,7 @@ import {
   linodeFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
+  linodeTypeFactory,
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -24,24 +25,26 @@ import {
   mockRecycleAllNodes,
   mockGetDashboardUrl,
   mockGetApiEndpoints,
-  mockGetClusters,
   mockUpdateControlPlaneACL,
   mockGetControlPlaneACL,
   mockUpdateControlPlaneACLError,
   mockGetControlPlaneACLError,
+  mockGetTieredKubernetesVersions,
+  mockUpdateClusterError,
 } from 'support/intercepts/lke';
 import {
   mockGetLinodeType,
   mockGetLinodeTypes,
   mockGetLinodes,
 } from 'support/intercepts/linodes';
-import type { PoolNodeResponse, Linode } from '@linode/api-v4';
+import type { PoolNodeResponse, Linode, Taint, Label } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { randomIp, randomLabel } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { randomString } from 'support/util/random';
+import { buildArray } from 'support/util/arrays';
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
@@ -133,7 +136,7 @@ describe('LKE cluster updates', () => {
      * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
      * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
      */
-    it('can upgrade kubernetes version from the details page', () => {
+    it('can upgrade standard kubernetes version from the details page', () => {
       const oldVersion = '1.25';
       const newVersion = '1.26';
 
@@ -235,63 +238,132 @@ describe('LKE cluster updates', () => {
       ui.toast.findByMessage('Recycle started successfully.');
     });
 
-    it('can upgrade the kubernetes version from the landing page', () => {
-      const oldVersion = '1.25';
-      const newVersion = '1.26';
+    /*
+     * - Confirms UI flow of upgrading Kubernetes enterprise version using mocked API requests.
+     * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
+     * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
+     */
+    it('can upgrade enterprise kubernetes version from the details page', () => {
+      const oldVersion = '1.31.1+lke1';
+      const newVersion = '1.31.1+lke2';
 
-      const cluster = kubernetesClusterFactory.build({
-        k8s_version: oldVersion,
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Kubernetes Enterprise'],
+        })
+      ).as('getAccount');
+
+      // TODO LKE-E: Remove once feature is in GA
+      mockAppendFeatureFlags({
+        lkeEnterprise: { enabled: true, la: true },
       });
 
-      const updatedCluster = { ...cluster, k8s_version: newVersion };
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: oldVersion,
+        tier: 'enterprise',
+      });
 
-      mockGetClusters([cluster]).as('getClusters');
-      mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
-      mockUpdateCluster(cluster.id, updatedCluster).as('updateCluster');
-      mockRecycleAllNodes(cluster.id).as('recycleAllNodes');
+      const mockClusterUpdated = {
+        ...mockCluster,
+        k8s_version: newVersion,
+      };
 
-      cy.visitWithLogin(`/kubernetes/clusters`);
+      const upgradePrompt =
+        'A new version of Kubernetes is available (1.31.1+lke2).';
 
-      cy.wait(['@getClusters', '@getVersions']);
+      const upgradeNotes = [
+        'Once the upgrade is complete you will need to recycle all nodes in your cluster',
+        // Confirm that the old version and new version are both shown.
+        oldVersion,
+        newVersion,
+      ];
 
-      cy.findByText(oldVersion).should('be.visible');
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetTieredKubernetesVersions('enterprise', [
+        { id: newVersion, tier: 'enterprise' },
+        { id: oldVersion, tier: 'enterprise' },
+      ]).as('getTieredVersions');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockUpdateCluster(mockCluster.id, mockClusterUpdated).as('updateCluster');
+      mockGetDashboardUrl(mockCluster.id);
+      mockGetApiEndpoints(mockCluster.id);
 
-      cy.findByText('UPGRADE')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getAccount',
+        '@getCluster',
+        '@getNodePools',
+        '@getTieredVersions',
+      ]);
 
-      ui.dialog
-        .findByTitle(
-          `Step 1: Upgrade ${cluster.label} to Kubernetes ${newVersion}`
-        )
-        .should('be.visible');
-
-      mockGetClusters([updatedCluster]).as('getClusters');
-
+      // Confirm that upgrade prompt is shown.
+      cy.findByText(upgradePrompt).should('be.visible');
       ui.button
         .findByTitle('Upgrade Version')
         .should('be.visible')
         .should('be.enabled')
         .click();
 
-      cy.wait(['@updateCluster', '@getClusters']);
+      ui.dialog
+        .findByTitle(
+          `Step 1: Upgrade ${mockCluster.label} to Kubernetes ${newVersion}`
+        )
+        .should('be.visible')
+        .within(() => {
+          upgradeNotes.forEach((note: string) => {
+            cy.findAllByText(note, { exact: false }).should('be.visible');
+          });
+
+          ui.button
+            .findByTitle('Upgrade Version')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Wait for API response and assert toast message is shown.
+      cy.wait('@updateCluster');
+
+      // Verify the banner goes away because the version update has happened
+      cy.findByText(upgradePrompt).should('not.exist');
+
+      mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
+
+      const stepTwoDialogTitle = 'Step 2: Recycle All Cluster Nodes';
 
       ui.dialog
-        .findByTitle('Step 2: Recycle All Cluster Nodes')
-        .should('be.visible');
-
-      ui.button
-        .findByTitle('Recycle All Nodes')
+        .findByTitle(stepTwoDialogTitle)
         .should('be.visible')
-        .should('be.enabled')
-        .click();
+        .within(() => {
+          cy.findByText('Kubernetes version has been updated successfully.', {
+            exact: false,
+          }).should('be.visible');
 
+          cy.findByText(
+            'For the changes to take full effect you must recycle the nodes in your cluster.',
+            { exact: false }
+          ).should('be.visible');
+
+          ui.button
+            .findByTitle('Recycle All Nodes')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Verify clicking the "Recycle All Nodes" makes an API call
       cy.wait('@recycleAllNodes');
 
-      ui.toast.assertMessage('Recycle started successfully.');
+      // Verify the upgrade dialog closed
+      cy.findByText(stepTwoDialogTitle).should('not.exist');
 
-      cy.findByText(newVersion).should('be.visible');
+      // Verify the banner is still gone after the flow
+      cy.findByText(upgradePrompt).should('not.exist');
+
+      // Verify the version is correct after the update
+      cy.findByText(`Version ${newVersion}`);
+
+      ui.toast.findByMessage('Recycle started successfully.');
     });
 
     /*
@@ -858,6 +930,364 @@ describe('LKE cluster updates', () => {
         .should('be.visible')
         .should('be.disabled');
     });
+
+    /*
+     * - Confirms LKE summary page updates to reflect new cluster name.
+     */
+    it('can rename cluster', () => {
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+      });
+      const mockNewCluster = kubernetesClusterFactory.build({
+        label: 'newClusterName',
+      });
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockUpdateCluster(mockCluster.id, mockNewCluster).as('updateCluster');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+      // LKE clusters can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
+      cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
+      cy.get('[data-qa-edit-field]').within(() => {
+        cy.findByTestId('textfield-input')
+          .should('be.visible')
+          .should('have.value', mockCluster.label)
+          .clear()
+          .type(`${mockNewCluster.label}{enter}`);
+      });
+
+      cy.wait('@updateCluster');
+
+      cy.findAllByText(mockNewCluster.label).should('be.visible');
+      cy.findAllByText(mockCluster.label).should('not.exist');
+    });
+
+    /*
+     * - Confirms error message shows when the API request fails.
+     */
+    it('can handle API errors when renaming cluster', () => {
+      const mockCluster = kubernetesClusterFactory.build({
+        k8s_version: latestKubernetesVersion,
+      });
+      const mockErrorCluster = kubernetesClusterFactory.build({
+        label: 'errorClusterName',
+      });
+      const mockErrorMessage = 'API request fails';
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetKubernetesVersions().as('getVersions');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+      mockUpdateClusterError(mockCluster.id, mockErrorMessage).as(
+        'updateClusterError'
+      );
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
+      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+
+      // LKE cluster can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
+      cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
+      cy.get('[data-qa-edit-field]').within(() => {
+        cy.findByTestId('textfield-input')
+          .should('be.visible')
+          .should('have.value', mockCluster.label)
+          .clear()
+          .type(`${mockErrorCluster.label}{enter}`);
+      });
+
+      // Error message shows when API request fails.
+      cy.wait('@updateClusterError');
+      cy.findAllByText(mockErrorMessage).should('be.visible');
+    });
+  });
+
+  it('can add and delete node pool tags', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+
+    const mockType = linodeTypeFactory.build();
+
+    const mockNodePoolInstances = buildArray(3, () =>
+      linodeFactory.build({ label: randomLabel() })
+    );
+
+    const mockNodes = mockNodePoolInstances.map((linode, i) =>
+      kubeLinodeFactory.build({
+        instance_id: linode.id,
+        status: 'ready',
+      })
+    );
+
+    const mockNodePoolNoTags = nodePoolFactory.build({
+      id: 1,
+      type: mockType.id,
+      nodes: mockNodes,
+    });
+
+    const mockNodePoolWithTags = {
+      ...mockNodePoolNoTags,
+      tags: ['test-tag'],
+    };
+
+    mockGetLinodes(mockNodePoolInstances);
+    mockGetLinodeType(linodeTypeFactory.build({ id: mockType.id })).as(
+      'getType'
+    );
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockNodePoolNoTags]).as(
+      'getNodePoolsNoTags'
+    );
+    mockGetKubernetesVersions().as('getVersions');
+    mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
+      'getControlPlaneAcl'
+    );
+    mockUpdateNodePool(mockCluster.id, mockNodePoolWithTags).as('addTag');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait([
+      '@getCluster',
+      '@getNodePoolsNoTags',
+      '@getVersions',
+      '@getType',
+      '@getControlPlaneAcl',
+    ]);
+
+    // Confirm that Linode instance info has finished loading before attempting
+    // to interact with the tag button.
+    mockNodePoolInstances.forEach((linode) => {
+      cy.findByText(linode.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText('Running').should('be.visible');
+        });
+    });
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePoolNoTags.id}"]`).within(() => {
+      ui.button.findByTitle('Add a tag').should('be.visible').click();
+
+      cy.findByLabelText('Create or Select a Tag')
+        .should('be.visible')
+        .type(`${mockNodePoolWithTags.tags[0]}`);
+
+      ui.autocompletePopper
+        .findByTitle(`Create "${mockNodePoolWithTags.tags[0]}"`)
+        .scrollIntoView()
+        .should('be.visible')
+        .click();
+    });
+
+    mockGetClusterPools(mockCluster.id, [mockNodePoolWithTags]).as(
+      'getNodePoolsWithTags'
+    );
+
+    cy.wait(['@addTag', '@getNodePoolsWithTags']);
+
+    mockUpdateNodePool(mockCluster.id, mockNodePoolNoTags).as('deleteTag');
+    mockGetClusterPools(mockCluster.id, [mockNodePoolNoTags]).as(
+      'getNodePoolsNoTags'
+    );
+
+    // Delete the newly added node pool tag.
+    cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`)
+      .should('be.visible')
+      .within(() => {
+        cy.get('[data-qa-delete-tag="true"]').should('be.visible').click();
+      });
+
+    cy.wait(['@deleteTag', '@getNodePoolsNoTags']);
+
+    cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`).should(
+      'not.exist'
+    );
+  });
+
+  /*
+   * - Confirms Labels and Taints button exists for a node pool.
+   * - Confirms Labels and Taints drawer displays the expected Labels and Taints.
+   * - Confirms Labels and Taints can be deleted from a node pool.
+   * - TODO - Part 2: Confirms that Labels and Taints can be added to a node pool.
+   * - TODO - Part 2: Confirms validation and errors are handled gracefully.
+   */
+  it('can view and delete node pool labels and taints', () => {
+    // Mock the LKE-E feature flag. TODO: remove in Part 2.
+    mockAppendFeatureFlags({
+      lkeEnterprise: {
+        enabled: true,
+        la: true,
+        ga: false,
+      },
+    });
+
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+
+    const mockType = linodeTypeFactory.build({ label: 'Linode 2 GB' });
+
+    const mockNodePoolInstances = buildArray(1, () =>
+      linodeFactory.build({ label: randomLabel() })
+    );
+
+    const mockNodes = mockNodePoolInstances.map((linode, i) =>
+      kubeLinodeFactory.build({
+        instance_id: linode.id,
+        status: 'ready',
+      })
+    );
+
+    const mockNodePoolUpdated = nodePoolFactory.build({
+      id: 1,
+      type: mockType.id,
+      nodes: mockNodes,
+      taints: [],
+    });
+
+    const mockNodePoolInitial = nodePoolFactory.build({
+      ...mockNodePoolUpdated,
+      labels: {
+        ['example.com/my-app']: 'teams',
+      },
+      taints: [
+        {
+          effect: 'NoSchedule',
+          key: 'example.com/my-app',
+          value: 'teamA',
+        },
+      ],
+    });
+
+    const mockDrawerTitle = 'Labels and Taints: Linode 2 GB Plan';
+
+    mockGetLinodes(mockNodePoolInstances);
+    mockGetLinodeType(mockType).as('getType');
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
+      'getNodePools'
+    );
+    mockGetKubernetesVersions().as('getVersions');
+    mockGetControlPlaneACL(mockCluster.id, { acl: { enabled: false } }).as(
+      'getControlPlaneAcl'
+    );
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait([
+      '@getCluster',
+      '@getNodePools',
+      '@getVersions',
+      '@getType',
+      '@getControlPlaneAcl',
+    ]);
+
+    mockUpdateNodePool(mockCluster.id, mockNodePoolUpdated).as(
+      'updateNodePool'
+    );
+    mockGetClusterPools(mockCluster.id, [mockNodePoolUpdated]).as(
+      'getNodePoolsUpdated'
+    );
+
+    // Click "Labels and Taints" button and confirm drawer contents.
+    ui.button
+      .findByTitle('Labels and Taints')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.drawer
+      .findByTitle(mockDrawerTitle)
+      .should('be.visible')
+      .within(() => {
+        // Confirm drawer opens with the correct CTAs.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        ui.button
+          .findByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled');
+
+        // Confirm that the Labels table exists and is populated with the correct details.
+        Object.entries(mockNodePoolInitial.labels).forEach(([key, value]) => {
+          cy.get(`tr[data-qa-label-row="${key}"]`)
+            .should('be.visible')
+            .within(() => {
+              cy.findByText(`${key}: ${value}`).should('be.visible');
+
+              // Confirm delete button exists, then click it.
+              ui.button
+                .findByAttribute('aria-label', `Remove ${key}: ${value}`)
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
+
+              // Confirm the label is no longer visible.
+              cy.findByText(`${key}: ${value}`).should('not.exist');
+            });
+        });
+
+        // Confirm that the Taints table exists and is populated with the correct details.
+        mockNodePoolInitial.taints.forEach((taint: Taint) => {
+          cy.get(`tr[data-qa-taint-row="${taint.key}"]`)
+            .should('be.visible')
+            .within(() => {
+              cy.findByText(`${taint.key}: ${taint.value}`).should(
+                'be.visible'
+              );
+              cy.findByText(taint.effect).should('be.visible');
+
+              // Confirm delete button exists, then click it.
+              ui.button
+                .findByAttribute(
+                  'aria-label',
+                  `Remove ${taint.key}: ${taint.value}`
+                )
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
+
+              // Confirm the taint is no longer visible.
+              cy.findByText(`${taint.key}: ${taint.value}`).should('not.exist');
+            });
+        });
+
+        // Confirm empty state text displays for both empty tables.
+        cy.findByText('No labels').should('be.visible');
+        cy.findByText('No taints').should('be.visible');
+
+        // Confirm form can be submitted.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm request has the correct data.
+    cy.wait('@updateNodePool').then((xhr) => {
+      const data = xhr.response?.body;
+      if (data) {
+        const actualLabels: Label = data.labels;
+        const actualTaints: Taint[] = data.taints;
+
+        expect(actualLabels).to.deep.equal(mockNodePoolUpdated.labels);
+        expect(actualTaints).to.deep.equal(mockNodePoolUpdated.taints);
+      }
+    });
+
+    cy.wait('@getNodePoolsUpdated');
+
+    // Confirm drawer closes.
+    cy.findByText(mockDrawerTitle).should('not.exist');
   });
 
   describe('LKE cluster updates for DC-specific prices', () => {
@@ -1427,7 +1857,7 @@ describe('LKE ACL updates', () => {
         .click();
 
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // Confirm submit button is disabled if form has not been changed
@@ -1508,7 +1938,7 @@ describe('LKE ACL updates', () => {
 
       // confirm data within drawer is updated and edit IPs again
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // Confirm submit button is disabled if form has not been changed
@@ -1565,7 +1995,7 @@ describe('LKE ACL updates', () => {
 
       // confirm data within drawer is updated again
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // confirm updated IPv6 addresses display
@@ -1625,7 +2055,7 @@ describe('LKE ACL updates', () => {
         .click();
 
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // Confirm submit button is disabled if form has not been changed
@@ -1694,7 +2124,7 @@ describe('LKE ACL updates', () => {
 
       // confirm data within drawer is updated
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // confirm enable toggle was updated
@@ -1758,7 +2188,7 @@ describe('LKE ACL updates', () => {
       );
 
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // Confirm installation notice is displayed
@@ -1840,7 +2270,7 @@ describe('LKE ACL updates', () => {
         .click();
 
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // Confirm ACL IP validation works as expected for IPv4

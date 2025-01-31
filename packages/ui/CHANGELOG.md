@@ -1,3 +1,59 @@
+## [2025-01-28] - v0.6.0
+
+
+### Changed:
+
+- Refactor and clean up `Notice` ([#11480](https://github.com/linode/manager/pull/11480))
+
+### Removed:
+
+- `marketing` variant on `Notice` component ([#11480](https://github.com/linode/manager/pull/11480))
+
+## [2025-01-14] - v0.5.0
+
+### Added:
+
+- New Select component ([#11391](https://github.com/linode/manager/pull/11391))
+- New `color="warning"` button style and improved type-safety ([#11469](https://github.com/linode/manager/pull/11469))
+- New `MuiButton` variant `loading` along with `color="warning"` styles" ([#11469](https://github.com/linode/manager/pull/11469))
+
+### Changed:
+
+- Update `EditableText` to not use `react-router-dom` and accept a `LinkComponent` prop ([#11333](https://github.com/linode/manager/pull/11333))
+
+### Fixed:
+
+- `sx` prop now properly works being passed down to `Notice` component ([#11469](https://github.com/linode/manager/pull/11469))
+
+## [2024-12-10] - v0.4.0
+
+### Added:
+
+- `Notice` and `Tooltip` components ([#11174](https://github.com/linode/manager/pull/11174))
+- `Divider` component ([#11205](https://github.com/linode/manager/pull/11205))
+- `CircleProgress` component ([#11214](https://github.com/linode/manager/pull/11214))
+- `Stack` component ([#11228](https://github.com/linode/manager/pull/11228))
+- `Radio` component ([#11244](https://github.com/linode/manager/pull/11244))
+- `Button` component and styled variants ([#11250](https://github.com/linode/manager/pull/11250))
+- `RadioGroup` component ([#11254](https://github.com/linode/manager/pull/11254))
+- Linter rules for common pr feedback points ([#11258](https://github.com/linode/manager/pull/11258))
+- `Chip` component ([#11266](https://github.com/linode/manager/pull/11266))
+- `ClickAwayListener` component ([#11267](https://github.com/linode/manager/pull/11267))
+- `TooltipIcon` component ([#11269](https://github.com/linode/manager/pull/11269))
+- `Checkbox` component ([#11279](https://github.com/linode/manager/pull/11279))
+- `H1Header` component ([#11283](https://github.com/linode/manager/pull/11283))
+- `TextField` component and `convertToKebabCase` utility function ([#11290](https://github.com/linode/manager/pull/11290))
+- `Toggle` component and `ToggleOn` and `ToggleOff` icons ([#11296](https://github.com/linode/manager/pull/11296))
+- `Typography` component and story ([#11299](https://github.com/linode/manager/pull/11299))
+- `EditableText` component ([#11308](https://github.com/linode/manager/pull/11308))
+- `Autocomplete`, `List`, and `ListItem` components ([#11314](https://github.com/linode/manager/pull/11314))
+- `Accordion` component ([#11316](https://github.com/linode/manager/pull/11316))
+- `FormControlLabel` component ([#11353](https://github.com/linode/manager/pull/11353))
+
+### Tech Stories:
+
+- Update `TextField` component to not depend on `ramda` ([#11306](https://github.com/linode/manager/pull/11306))
+
 ## [2024-11-12] - v0.3.0
 
 ### Added:
@@ -19,7 +75,6 @@
 - Add Alias tokens to theme ([#11138](https://github.com/linode/manager/pull/11138))
 
 ## [2024-10-28] - v0.2.0
-
 
 ### Added:
 

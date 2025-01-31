@@ -9,7 +9,10 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { extendType } from 'src/utilities/extendType';
 
-import { ADD_NODE_POOLS_DESCRIPTION } from '../ClusterList/constants';
+import {
+  ADD_NODE_POOLS_DESCRIPTION,
+  ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION,
+} from '../ClusterList/constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
 
 import type {
@@ -106,8 +109,8 @@ const Panel = (props: NodePoolPanelProps) => {
         <KubernetesPlansPanel
           copy={
             isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
-              ? ADD_NODE_POOLS_DESCRIPTION
-              : 'Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool.'
+              ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
+              : ADD_NODE_POOLS_DESCRIPTION
           }
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
@@ -118,8 +121,8 @@ const Panel = (props: NodePoolPanelProps) => {
               return false;
             }
 
-            // No Nanodes or GPUs in Kubernetes clusters
-            return t.class !== 'nanode' && t.class !== 'gpu';
+            // No Nanodes in Kubernetes clusters
+            return t.class !== 'nanode';
           })}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}

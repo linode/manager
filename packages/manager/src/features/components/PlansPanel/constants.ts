@@ -4,14 +4,16 @@ export const LIMITED_AVAILABILITY_COPY =
   'This plan has limited deployment availability.';
 export const SMALLER_PLAN_DISABLED_COPY =
   'Resizing to smaller plans is not supported.';
+export const PLAN_IS_SMALLER_THAN_USAGE_COPY =
+  'The usage storage in this plan is smaller than your current usage.';
 export const PLAN_NOT_AVAILABLE_IN_REGION_COPY =
   "This plan isn't available for the selected region.";
 export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
   'This plan is currently unavailable.';
 export const PLAN_IS_TOO_SMALL_FOR_APL_COPY =
-  'This plan is too small for Application Platform for LKE.';
+  'This plan is too small for Akamai App Platform.';
 export const APL_NOTICE_COPY =
-  'Shared CPU instances are currently not available for Application Platform for LKE';
+  'Shared CPU instances are currently not available for Akamai App Platform.';
 
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
@@ -27,6 +29,9 @@ export const GPU_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/gpu-compute-instances';
 export const TRANSFER_COSTS_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs';
+// TODO: accelerated plans - update to GA link (when GA launches)
+export const ACCELERATED_COMPUTE_INSTANCES_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/accelerated-compute-instances-beta';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   accelerated_devices: 0,

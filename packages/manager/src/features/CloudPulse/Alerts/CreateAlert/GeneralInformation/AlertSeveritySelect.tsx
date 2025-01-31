@@ -1,7 +1,6 @@
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import { alertSeverityOptions } from '../../constants';
 
@@ -48,7 +47,7 @@ export const CloudPulseAlertSeveritySelect = (
                 )
               : null
           }
-          data-testid={'severity'}
+          data-testid="severity"
           errorText={fieldState.error?.message}
           label="Severity"
           onBlur={field.onBlur}

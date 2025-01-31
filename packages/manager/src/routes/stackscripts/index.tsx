@@ -1,8 +1,8 @@
 import { createRoute } from '@tanstack/react-router';
-import React from 'react';
 
-import StackScriptCreate from 'src/features/StackScripts/StackScriptCreate/StackScriptCreate';
-import { StackScriptsDetail } from 'src/features/StackScripts/StackScriptsDetail';
+import { StackScriptCreate } from 'src/features/StackScripts/StackScriptCreate/StackScriptCreate';
+import { StackScriptEdit } from 'src/features/StackScripts/StackScriptEdit';
+import { StackScriptDetail } from 'src/features/StackScripts/StackScriptsDetail';
 
 import { rootRoute } from '../root';
 import { StackScriptsRoute } from './StackscriptsRoute';
@@ -42,14 +42,14 @@ const stackScriptsCommunityRoute = createRoute({
 
 const stackScriptsCreateRoute = createRoute({
   // TODO: TanStack Router - broken, perhaps due to being a class component.
-  component: () => <StackScriptCreate mode="create" />,
+  component: StackScriptCreate,
   getParentRoute: () => stackScriptsRoute,
   path: 'create',
 });
 
 const stackScriptsDetailRoute = createRoute({
   // TODO: TanStack Router - broken, perhaps due to being a class component.
-  component: () => <StackScriptsDetail />,
+  component: StackScriptDetail,
   getParentRoute: () => stackScriptsRoute,
   parseParams: (params) => ({
     stackScriptID: Number(params.stackScriptID),
@@ -59,7 +59,7 @@ const stackScriptsDetailRoute = createRoute({
 
 const stackScriptsEditRoute = createRoute({
   // TODO: TanStack Router - broken, perhaps due to being a class component.
-  component: () => <StackScriptCreate mode="edit" />,
+  component: StackScriptEdit,
   getParentRoute: () => stackScriptsRoute,
   parseParams: (params) => ({
     stackScriptID: Number(params.stackScriptID),

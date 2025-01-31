@@ -1,6 +1,6 @@
+import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useGetCustomFiltersQuery } from 'src/queries/cloudpulse/customfilters';
 
 import {
@@ -68,10 +68,12 @@ export interface CloudPulseCustomSelectProps {
    * The callback function , that will be called on a filter change
    * @param filterKey - The filterKey of the component
    * @param value - The selected filter value
+   * @param labels - Labels of the selected filter value
    */
   handleSelectionChange: (
     filterKey: string,
     value: FilterValueType,
+    labels: string[],
     savePref?: boolean,
     updatedPreferenceData?: AclpConfig
   ) => void;

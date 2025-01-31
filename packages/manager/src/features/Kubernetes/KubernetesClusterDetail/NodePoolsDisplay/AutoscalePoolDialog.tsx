@@ -1,4 +1,11 @@
-import { Button, Notice, TextField, Toggle, Typography } from '@linode/ui';
+import {
+  Button,
+  FormControlLabel,
+  Notice,
+  TextField,
+  Toggle,
+  Typography,
+} from '@linode/ui';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
@@ -8,7 +15,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 
@@ -26,9 +32,6 @@ interface Props {
 const useStyles = makeStyles()((theme: Theme) => ({
   disabled: {
     opacity: 0.5,
-  },
-  errorText: {
-    color: theme.color.red,
   },
   input: {
     '& input': {
@@ -213,16 +216,16 @@ export const AutoscalePoolDialog = (props: Props) => {
             />
           </Grid>
           <Grid style={{ padding: '0 8px' }} xs={12}>
-            {errors.min ? (
-              <Typography className={classes.errorText}>
+            {errors.min && (
+              <Typography color={(theme) => theme.palette.error.dark}>
                 {errors.min}
               </Typography>
-            ) : null}
-            {errors.max ? (
-              <Typography className={classes.errorText}>
+            )}
+            {errors.max && (
+              <Typography color={(theme) => theme.palette.error.dark}>
                 {errors.max}
               </Typography>
-            ) : null}
+            )}
           </Grid>
         </Grid>
       </form>

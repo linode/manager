@@ -1,7 +1,8 @@
 import { CircleProgress, Paper } from '@linode/ui';
 import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
@@ -17,46 +18,38 @@ import {
   getStackScriptUrl,
 } from './stackScriptUtils';
 
-export const StackScriptsDetail = () => {
-  const { data: profile } = useProfile();
+export const StackScriptDetail = () => {
   const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
   const { stackScriptId } = useParams<{ stackScriptId: string }>();
+
   const id = Number(stackScriptId);
-  const history = useHistory();
 
-  const { data: stackScript, error, isLoading } = useStackScriptQuery(id);
-
+  const { data: stackscript, error, isLoading } = useStackScriptQuery(id);
   const {
     error: updateError,
     mutateAsync: updateStackScript,
     reset,
   } = useUpdateStackScriptMutation(id);
 
-  const username = profile?.username;
-  const userCannotAddLinodes =
-    profile?.restricted && !grants?.global.add_linodes;
+  const history = useHistory();
+  const location = useLocation();
 
   const isRestrictedUser = profile?.restricted ?? false;
+  const username = profile?.username;
+  const userCannotAddLinodes = isRestrictedUser && !grants?.global.add_linodes;
   const stackScriptGrants = grants?.stackscript ?? [];
 
   const userCanModify = Boolean(
-    stackScript?.mine &&
-      canUserModifyAccountStackScript(
-        isRestrictedUser,
-        stackScriptGrants,
-        +stackScriptId
-      )
+    stackscript?.mine &&
+      canUserModifyAccountStackScript(isRestrictedUser, stackScriptGrants, id)
   );
 
   const handleCreateClick = () => {
-    if (!stackScript) {
+    if (!stackscript) {
       return;
     }
-    const url = getStackScriptUrl(
-      stackScript.username,
-      stackScript.id,
-      username
-    );
+    const url = getStackScriptUrl(stackscript.username, id, username);
     history.push(url);
   };
 
@@ -69,21 +62,22 @@ export const StackScriptsDetail = () => {
   }
 
   if (error) {
-    return <ErrorState errorText={error?.[0].reason} />;
+    return <ErrorState errorText={error[0].reason} />;
   }
 
-  if (!stackScript) {
+  if (!stackscript) {
     return <NotFound />;
   }
 
   return (
     <>
+      <DocumentTitleSegment segment={`${stackscript.label} | StackScripts`} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
             {
               label: 'StackScripts',
-              linkTo: stackScript.mine
+              linkTo: stackscript.mine
                 ? '/stackscripts/account'
                 : '/stackscripts/community',
               position: 1,
@@ -92,9 +86,9 @@ export const StackScriptsDetail = () => {
           labelOptions: { noCap: true },
           onEditHandlers: userCanModify
             ? {
-                editableTextTitle: stackScript.label,
-                errorText: updateError ? updateError[0].reason : undefined,
-                onCancel: reset,
+                editableTextTitle: stackscript.label,
+                errorText: updateError?.[0].reason,
+                onCancel: () => reset(),
                 onEdit: handleLabelChange,
               }
             : undefined,
@@ -105,10 +99,10 @@ export const StackScriptsDetail = () => {
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/stackscripts"
         onButtonClick={handleCreateClick}
-        title={stackScript.label}
+        title={stackscript.label}
       />
       <Paper>
-        <StackScript data={stackScript} userCanModify={userCanModify} />
+        <StackScript data={stackscript} userCanModify={userCanModify} />
       </Paper>
     </>
   );

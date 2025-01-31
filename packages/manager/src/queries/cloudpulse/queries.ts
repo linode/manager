@@ -1,4 +1,5 @@
 import {
+  getAlertDefinitionByServiceTypeAndId,
   getCloudPulseServiceTypes,
   getDashboardById,
   getDashboards,
@@ -11,6 +12,7 @@ import { databaseQueries } from '../databases/databases';
 import { getAllLinodesRequest } from '../linodes/requests';
 import { volumeQueries } from '../volumes/volumes';
 import { fetchCloudPulseMetrics } from './metrics';
+import { getAllAlertsRequest, getAllNotificationChannels } from './requests';
 
 import type {
   CloudPulseMetricsRequest,
@@ -23,7 +25,21 @@ const key = 'Clousepulse';
 
 export const queryFactory = createQueryKeys(key, {
   alerts: {
-    // This query key is a placeholder , it will be updated once the relevant queries are added
+    contextQueries: {
+      alert: {
+        // This query key is a placeholder , it will be updated once the relevant queries are added
+        queryKey: null,
+      },
+      alertByServiceTypeAndId: (serviceType: string, alertId: number) => ({
+        queryFn: () =>
+          getAlertDefinitionByServiceTypeAndId(serviceType, alertId),
+        queryKey: [alertId, serviceType],
+      }),
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllAlertsRequest(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
     queryKey: null,
   },
   dashboardById: (dashboardId: number) => ({
@@ -59,7 +75,15 @@ export const queryFactory = createQueryKeys(key, {
     queryFn: () => getMetricDefinitionsByServiceType(serviceType!),
     queryKey: [serviceType],
   }),
-
+  notificationChannels: {
+    contextQueries: {
+      all: (params?: Params, filter?: Filter) => ({
+        queryFn: () => getAllNotificationChannels(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
   resources: (
     resourceType: string | undefined,
     params?: Params,
@@ -84,6 +108,6 @@ export const queryFactory = createQueryKeys(key, {
 
   token: (serviceType: string | undefined, request: JWETokenPayLoad) => ({
     queryFn: () => getJWEToken(request, serviceType!),
-    queryKey: [serviceType, { resource_ids: request.resource_ids.sort() }],
+    queryKey: [serviceType, { resource_ids: request.entity_ids.sort() }],
   }),
 });

@@ -1,5 +1,7 @@
 import type {
   Config,
+  Domain,
+  DomainRecord,
   Event,
   Firewall,
   Linode,
@@ -37,7 +39,7 @@ export type MockPresetBaselineId =
   | 'baseline:api-unstable'
   | 'baseline:crud'
   | 'baseline:legacy'
-  | 'baseline:preset-mocking';
+  | 'baseline:static-mocking';
 export interface MockPresetBaseline extends MockPresetBase {
   group: MockPresetBaselineGroup;
   id: MockPresetBaselineId;
@@ -47,18 +49,24 @@ export interface MockPresetBaseline extends MockPresetBase {
  * Mock Preset Extra
  */
 export type MockPresetExtraGroup = {
-  id: 'API' | 'Account' | 'Limits' | 'Managed' | 'Regions';
-  type: 'checkbox' | 'select';
+  id:
+    | 'API'
+    | 'Account'
+    | 'Capabilities'
+    | 'Limits'
+    | 'Managed'
+    | 'Profile'
+    | 'Regions';
+  type: 'account' | 'checkbox' | 'profile' | 'select';
 };
 export type MockPresetExtraId =
-  | 'account:child-proxy'
-  | 'account:lke-enterprise-enabled'
+  | 'account:custom'
   | 'account:managed-disabled'
   | 'account:managed-enabled'
-  | 'account:parent'
   | 'api:response-time'
   | 'limits:linode-limits'
   | 'limits:lke-limits'
+  | 'profile:custom'
   | 'regions:core-and-distributed'
   | 'regions:core-only'
   | 'regions:legacy';
@@ -73,11 +81,19 @@ export interface MockPresetExtra extends MockPresetBase {
  * Mock Preset Crud
  */
 export type MockPresetCrudGroup = {
-  id: 'Linodes' | 'Placement Groups' | 'Support Tickets' | 'Volumes';
+  id:
+    | 'Domains'
+    | 'Linodes'
+    | 'Placement Groups'
+    | 'Quotas'
+    | 'Support Tickets'
+    | 'Volumes';
 };
 export type MockPresetCrudId =
+  | 'domains:crud'
   | 'linodes:crud'
   | 'placement-groups:crud'
+  | 'quotas:crud'
   | 'support-tickets:crud'
   | 'volumes:crud';
 export interface MockPresetCrud extends MockPresetBase {
@@ -92,6 +108,8 @@ export type MockHandler = (mockState: MockState) => HttpHandler[];
  * Stateful data shared among mocks.
  */
 export interface MockState {
+  domainRecords: DomainRecord[];
+  domains: Domain[];
   eventQueue: Event[];
   firewalls: Firewall[];
   linodeConfigs: [number, Config][];

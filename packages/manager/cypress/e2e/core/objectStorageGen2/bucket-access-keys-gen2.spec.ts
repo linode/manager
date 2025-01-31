@@ -1,7 +1,9 @@
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetAccessKeys } from 'support/intercepts/object-storage';
 import { accountFactory, objectStorageKeyFactory } from 'src/factories';
+import { profileFactory } from 'src/factories/profile';
 import { ui } from 'support/ui';
 
 describe('Object Storage gen2 access keys tests', () => {
@@ -59,12 +61,12 @@ describe('Object Storage gen2 access keys tests', () => {
     cy.findByText(mockAccessKey1.label).should('be.visible');
     cy.findByText(mockAccessKey2.label).should('be.visible');
     cy.findByText('US, Newark, NJ (E3): us-east.com').should('be.visible');
-    cy.findByText('US, Atlanta, GA (E3): us-southeast.com').should(
-      'be.visible'
-    );
 
-    // confirm endpoint types are present in the drawer
-    cy.findByText('and 3 more...').should('be.visible').click();
+    // Using contains since the text includes additional information, i.e. '| +2 regions | Show All'
+    cy.contains('US, Atlanta, GA (E3): us-southeast.com').should('be.visible');
+    cy.contains('+ 3 regions').should('be.visible');
+    cy.findByText('Show All').should('be.visible').click();
+
     ui.drawer
       .findByTitle('Regions / S3 Hostnames')
       .should('be.visible')
@@ -82,6 +84,58 @@ describe('Object Storage gen2 access keys tests', () => {
         cy.get('input[value="IT, Milan (E0): it-mil.com"]').should(
           'be.visible'
         );
+      });
+  });
+});
+
+/**
+ * When a restricted user navigates to object-storage/access-keys/create, an error is shown in the "Create Access Key" drawer noting that the user does not have access key creation permissions
+ */
+describe('Object Storage Gen2 create access key modal has disabled fields for restricted user', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      objMultiCluster: true,
+      objectStorageGen2: { enabled: true },
+    }).as('getFeatureFlags');
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: [
+          'Object Storage',
+          'Object Storage Endpoint Types',
+          'Object Storage Access Key Regions',
+        ],
+      })
+    ).as('getAccount');
+    // restricted user
+    mockGetProfile(
+      profileFactory.build({
+        email: 'mock-user@linode.com',
+        restricted: true,
+      })
+    ).as('getProfile');
+  });
+
+  // access keys creation
+  it('create access keys form', () => {
+    cy.visitWithLogin('/object-storage/access-keys/create');
+
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
+    // error message
+    ui.drawer
+      .findByTitle('Create Access Key')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(
+          /You don't have bucket_access to create an Access Key./
+        ).should('be.visible');
+        // label
+        cy.findByLabelText(/Label.*/)
+          .should('be.visible')
+          .should('be.disabled');
+        // region
+        ui.regionSelect.find().should('be.visible').should('be.disabled');
+        // submit button is disabled
+        cy.findByTestId('submit').should('be.visible').should('be.disabled');
       });
   });
 });

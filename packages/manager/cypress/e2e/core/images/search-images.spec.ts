@@ -24,7 +24,7 @@ describe('Search Images', () => {
     cy.defer(
       () =>
         createTestLinode(
-          { image: 'linode/debian10', region: 'us-east' },
+          { image: 'linode/debian12', region: 'us-east' },
           { waitForDisks: true }
         ),
       'create linode'
@@ -68,7 +68,7 @@ describe('Search Images', () => {
             cy.contains(image2.label).should('be.visible');
 
             // Use the main search bar to search and filter images
-            cy.get('[id="main-search"').type(image2.label);
+            ui.mainSearch.find().type(image2.label);
             ui.autocompletePopper.findByTitle(image2.label).click();
 
             // Confirm that only the second image is shown.

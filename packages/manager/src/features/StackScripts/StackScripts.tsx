@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   Redirect,
   Route,
@@ -13,7 +13,7 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const StackScriptsDetail = React.lazy(() =>
   import('./StackScriptsDetail').then((module) => ({
-    default: module.StackScriptsDetail,
+    default: module.StackScriptDetail,
   }))
 );
 const StackScriptsLanding = React.lazy(() =>
@@ -21,8 +21,16 @@ const StackScriptsLanding = React.lazy(() =>
     default: module.StackScriptsLanding,
   }))
 );
-const StackScriptCreate = React.lazy(
-  () => import('./StackScriptCreate/StackScriptCreate')
+const StackScriptCreate = React.lazy(() =>
+  import('./StackScriptCreate/StackScriptCreate').then((module) => ({
+    default: module.StackScriptCreate,
+  }))
+);
+
+const StackScriptEdit = React.lazy(() =>
+  import('./StackScriptEdit').then((module) => ({
+    default: module.StackScriptEdit,
+  }))
 );
 
 export const StackScripts = () => {
@@ -47,15 +55,11 @@ export const StackScripts = () => {
         <Route component={StackScriptsLanding} path={`${path}/account`} />
         <Route component={StackScriptsLanding} path={`${path}/community`} />
         <Route component={StackScriptsLanding} exact path={path} />
+        <Route component={StackScriptCreate} exact path={`${path}/create`} />
         <Route
-          exact
-          path={`${path}/create`}
-          render={() => <StackScriptCreate mode="create" />}
-        />
-        <Route
+          component={StackScriptEdit}
           exact
           path={`${path}/:stackScriptID/edit`}
-          render={() => <StackScriptCreate mode="edit" />}
         />
         <Route
           component={StackScriptsDetail}

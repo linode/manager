@@ -1,7 +1,7 @@
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import type { Item } from '../../constants';
@@ -38,14 +38,14 @@ export const CloudPulseMultiResourceSelect = (
     Boolean(region && serviceType),
     serviceType?.toString(),
     {},
-    engine !== null ? { engine, region } : { region }
+    serviceType === 'dbaas' ? { engine, region } : { region }
   );
 
   const getResourcesList = React.useMemo((): Item<string, string>[] => {
     return resources && resources.length > 0
       ? resources.map((resource) => ({
           label: resource.label,
-          value: resource.id,
+          value: resource.id.toString(),
         }))
       : [];
   }, [resources]);

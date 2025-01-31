@@ -57,8 +57,10 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
 
   const configuration =
     database.cluster_size === 1
-      ? 'Primary'
-      : `Primary +${database.cluster_size - 1} replicas`;
+      ? 'Primary (1 Node)'
+      : database.cluster_size > 2
+      ? `Primary (+${database.cluster_size - 1} Nodes)`
+      : `Primary (+${database.cluster_size - 1} Node)`;
 
   const sxTooltipIcon = {
     marginLeft: 0.5,
@@ -137,7 +139,9 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
               </StyledSummaryTextTypography>
               <StyledSummaryTextTypography>
                 <span style={{ fontFamily: theme.font.bold }}>Used</span>{' '}
-                {database.used_disk_size_gb} GB
+                {database.used_disk_size_gb !== null
+                  ? `${database.used_disk_size_gb} GB`
+                  : 'N/A'}
               </StyledSummaryTextTypography>
             </>
           ) : (

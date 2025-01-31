@@ -1,7 +1,6 @@
-import { Checkbox } from '@linode/ui';
+import { Checkbox, FormControlLabel } from '@linode/ui';
 import React from 'react';
 
-import { FormControlLabel } from './FormControlLabel';
 import { FormGroup } from './FormGroup';
 
 import type { Meta, StoryObj } from '@storybook/react';

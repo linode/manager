@@ -122,7 +122,8 @@ export const BucketDetailsDrawer = React.memo(
         )}
         {typeof size === 'number' && (
           <Typography variant="subtitle2">
-            {readableBytes(size).formatted}
+            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
+            {readableBytes(size, { base10: true }).formatted}
           </Typography>
         )}
         {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled. */}

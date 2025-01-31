@@ -8,6 +8,7 @@ import {
   mockGetBucketAccess,
   mockCreateBucketError,
 } from 'support/intercepts/object-storage';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { checkRateLimitsTable } from 'support/util/object-storage-gen2';
@@ -18,6 +19,7 @@ import {
   objectStorageEndpointsFactory,
   regionFactory,
 } from 'src/factories';
+import { profileFactory } from 'src/factories/profile';
 import { chooseRegion } from 'support/util/regions';
 import type { ACLType, ObjectStorageEndpoint } from '@linode/api-v4';
 
@@ -233,9 +235,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    // Wait for the newly 'created' mocked bucket to appear
-    cy.wait(['@getBuckets']);
-
     // Confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {
       const requestPayload = xhr.request.body;
@@ -355,9 +354,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .should('be.enabled')
           .click();
       });
-
-    // Wait for the newly 'created' mocked bucket to appear
-    cy.wait(['@getBuckets']);
 
     // Confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {
@@ -483,9 +479,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    // Wait for the newly 'created' mocked bucket to appear
-    cy.wait(['@getBuckets']);
-
     // Confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {
       const requestPayload = xhr.request.body;
@@ -608,9 +601,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    // Wait for the newly 'created' mocked bucket to appear
-    cy.wait(['@getBuckets']);
-
     // Confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {
       const requestPayload = xhr.request.body;
@@ -725,6 +715,58 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
         cy.wait('@createBucket');
         cy.findByText(mockErrorMessage).should('be.visible');
+      });
+  });
+});
+
+/**
+ * When a restricted user navigates to object-storage/buckets/create, an error is shown in the "Create Bucket" drawer noting that the user does not have bucket creation permissions
+ */
+describe('Object Storage Gen2 create bucket modal has disabled fields for restricted user', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      objMultiCluster: true,
+      objectStorageGen2: { enabled: true },
+    }).as('getFeatureFlags');
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: [
+          'Object Storage',
+          'Object Storage Endpoint Types',
+          'Object Storage Access Key Regions',
+        ],
+      })
+    ).as('getAccount');
+    // restricted user
+    mockGetProfile(
+      profileFactory.build({
+        email: 'mock-user@linode.com',
+        restricted: true,
+      })
+    ).as('getProfile');
+  });
+
+  // bucket creation
+  it('create bucket form', () => {
+    cy.visitWithLogin('/object-storage/buckets/create');
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
+
+    // error message
+    ui.drawer
+      .findByTitle('Create Bucket')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(/You don't have permissions to create a Bucket./).should(
+          'be.visible'
+        );
+        cy.findByLabelText(/Label.*/)
+          .should('be.visible')
+          .should('be.disabled');
+        ui.regionSelect.find().should('be.visible').should('be.disabled');
+        // submit button should be enabled
+        cy.findByTestId('create-bucket-button')
+          .should('be.visible')
+          .should('be.enabled');
       });
   });
 });

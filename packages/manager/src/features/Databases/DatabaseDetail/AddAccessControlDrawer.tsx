@@ -5,13 +5,24 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
+import {
+  ACCESS_CONTROLS_DRAWER_TEXT,
+  ACCESS_CONTROLS_DRAWER_TEXT_LEGACY,
+  ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,
+  ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
+  LEARN_MORE_LINK,
+  LEARN_MORE_LINK_LEGACY,
+} from 'src/features/Databases/constants';
+import { isDefaultDatabase } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import {
   extendedIPToString,
   ipFieldPlaceholder,
+  ipV6FieldPlaceholder,
   stringToExtendedIP,
   validateIPs,
 } from 'src/utilities/ipUtils';
@@ -65,6 +76,8 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
     database.id
   );
 
+  const isDefaultDB = isDefaultDatabase(database);
+
   const handleUpdateAccessControlsClick = (
     { _allowList }: Values,
     {
@@ -112,7 +125,9 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
   const onValidate = ({ _allowList }: Values) => {
     const validatedIPs = validateIPs(_allowList, {
       allowEmptyAddress: false,
-      errorMessage: 'Must be a valid IPv4 address.',
+      errorMessage: isDefaultDB
+        ? ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT
+        : ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
     });
 
     setValues({ _allowList: validatedIPs });
@@ -166,8 +181,9 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
     }
   }, [open, resetForm]);
 
+  const learnMoreLink = isDefaultDB ? LEARN_MORE_LINK : LEARN_MORE_LINK_LEGACY;
   return (
-    <Drawer onClose={onClose} open={open} title="Manage Access Controls">
+    <Drawer onClose={onClose} open={open} title="Manage Access">
       <React.Fragment>
         {error ? <Notice text={error} variant="error" /> : null}
         {allowListErrors
@@ -180,11 +196,21 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
             ))
           : null}
         <Typography className={classes.instructions} variant="body1">
-          Add, edit, or remove IPv4 addresses and ranges that should be
-          authorized to access your cluster.
+          {isDefaultDB
+            ? ACCESS_CONTROLS_DRAWER_TEXT
+            : ACCESS_CONTROLS_DRAWER_TEXT_LEGACY}{' '}
+          <Link to={learnMoreLink}>Learn more</Link>.
         </Typography>
         <form onSubmit={handleSubmit}>
           <MultipleIPInput
+            buttonText={
+              values._allowList && values._allowList.length > 0
+                ? 'Add Another IP'
+                : 'Add an IP'
+            }
+            placeholder={
+              isDefaultDB ? ipV6FieldPlaceholder : ipFieldPlaceholder
+            }
             aria-label="Allowed IP Addresses or Ranges"
             className={classes.ipSelect}
             forDatabaseAccessControls
@@ -192,8 +218,7 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
             ips={values._allowList!}
             onBlur={handleIPBlur}
             onChange={handleIPChange}
-            placeholder={ipFieldPlaceholder}
-            title="Allowed IP Address(es) or Range(s)"
+            title="Allowed IP Addresses or Ranges"
           />
           <ActionsPanel
             primaryButtonProps={{

@@ -1,10 +1,15 @@
-import { Notice, Radio, RadioGroup, TextField } from '@linode/ui';
+import {
+  FormControlLabel,
+  Notice,
+  Radio,
+  RadioGroup,
+  TextField,
+} from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateDomainMutation } from 'src/queries/domains';
@@ -20,12 +25,13 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface EditDomainDrawerProps {
   domain: Domain | undefined;
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
-  const { domain, onClose, open } = props;
+  const { domain, isFetching, onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -116,7 +122,12 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
   const disabled = !canEdit;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Domain">
+    <Drawer
+      isFetching={isFetching}
+      onClose={onClose}
+      open={open}
+      title="Edit Domain"
+    >
       {!canEdit && (
         <Notice variant="error">
           You do not have permission to modify this Domain.

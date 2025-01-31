@@ -26,15 +26,18 @@ import { profileQueries } from '../profile/profile';
 import { getAllVolumeTypes, getAllVolumes } from './requests';
 
 import type {
+  APIError,
   AttachVolumePayload,
   CloneVolumePayload,
+  Filter,
+  Params,
+  PriceType,
   ResizeVolumePayload,
+  ResourcePage,
   UpdateVolumeRequest,
   Volume,
   VolumeRequestPayload,
 } from '@linode/api-v4';
-import type { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import type { Filter, Params, PriceType } from '@linode/api-v4/src/types';
 
 export const volumeQueries = createQueryKeys('volumes', {
   linode: (linodeId: number) => ({

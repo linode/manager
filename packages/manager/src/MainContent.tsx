@@ -1,5 +1,6 @@
 import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -30,7 +31,7 @@ import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
-import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
+import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
 import { useProfile } from './queries/profile/profile';
@@ -129,12 +130,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Volumes = React.lazy(() => import('src/features/Volumes'));
-const Domains = React.lazy(() =>
-  import('src/features/Domains').then((module) => ({
-    default: module.DomainsRoutes,
-  }))
-);
 const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() =>
   import('src/features/Kubernetes').then((module) => ({
@@ -163,7 +158,6 @@ const SupportTicketDetail = React.lazy(() =>
     })
   )
 );
-const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
 const Help = React.lazy(() =>
   import('./features/Help/index').then((module) => ({
@@ -184,11 +178,6 @@ const AccountActivationLanding = React.lazy(
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
-const PlacementGroups = React.lazy(() =>
-  import('src/features/PlacementGroups').then((module) => ({
-    default: module.PlacementGroups,
-  }))
-);
 
 const CloudPulse = React.lazy(() =>
   import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
@@ -196,10 +185,19 @@ const CloudPulse = React.lazy(() =>
   }))
 );
 
+const IAM = React.lazy(() =>
+  import('src/features/IAM').then((module) => ({
+    default: module.IdentityAccessManagement,
+  }))
+);
+
 export const MainContent = () => {
   const { classes, cx } = useStyles();
-  const { data: preferences } = usePreferences();
+  const { data: isDesktopSidebarOpenPreference } = usePreferences(
+    (preferences) => preferences?.desktop_sidebar_open
+  );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
+  const queryClient = useQueryClient();
 
   const globalErrors = useGlobalErrors();
 
@@ -225,12 +223,13 @@ export const MainContent = () => {
   const username = profile?.username || '';
 
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
-  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
   const { isACLPEnabled } = useIsACLPEnabled();
+
+  const { isIAMEnabled } = useIsIAMEnabled();
 
   /**
    * this is the case where the user has successfully completed signup
@@ -277,11 +276,11 @@ export const MainContent = () => {
     return <MaintenanceScreen />;
   }
 
-  const desktopMenuIsOpen = preferences?.desktop_sidebar_open ?? false;
+  const desktopMenuIsOpen = isDesktopSidebarOpenPreference ?? false;
 
   const desktopMenuToggle = () => {
     updatePreferences({
-      desktop_sidebar_open: !preferences?.desktop_sidebar_open,
+      desktop_sidebar_open: !isDesktopSidebarOpenPreference,
     });
   };
 
@@ -321,21 +320,11 @@ export const MainContent = () => {
                       <React.Suspense fallback={<SuspenseLoader />}>
                         <Switch>
                           <Route component={LinodesRoutes} path="/linodes" />
-                          {isPlacementGroupsEnabled && (
-                            <Route
-                              component={PlacementGroups}
-                              path="/placement-groups"
-                            />
-                          )}
-                          <Route component={Volumes} path="/volumes" />
-                          <Redirect path="/volumes*" to="/volumes" />
                           <Route
                             component={NodeBalancers}
                             path="/nodebalancers"
                           />
-                          <Route component={Domains} path="/domains" />
                           <Route component={Managed} path="/managed" />
-                          <Route component={Longview} path="/longview" />
                           <Route component={Images} path="/images" />
                           <Route
                             component={StackScripts}
@@ -346,6 +335,9 @@ export const MainContent = () => {
                             path="/object-storage"
                           />
                           <Route component={Kubernetes} path="/kubernetes" />
+                          {isIAMEnabled && (
+                            <Route component={IAM} path="/iam" />
+                          )}
                           <Route component={Account} path="/account" />
                           <Route component={Profile} path="/profile" />
                           <Route component={Help} path="/support" />
@@ -370,6 +362,7 @@ export const MainContent = () => {
                            */}
                           <Route path="*">
                             <RouterProvider
+                              context={{ queryClient }}
                               router={migrationRouter as AnyRouter}
                             />
                           </Route>

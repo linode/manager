@@ -1,7 +1,7 @@
+import { Autocomplete } from '@linode/ui';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
@@ -38,6 +38,7 @@ export const RegionSelect = <
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
+    forcefullyShownRegionIds,
     helperText,
     ignoreAccountAvailability,
     label,
@@ -61,6 +62,7 @@ export const RegionSelect = <
 
   const regionOptions = getRegionOptions({
     currentCapability,
+    forcefullyShownRegionIds,
     regionFilter,
     regions,
   });
@@ -114,14 +116,14 @@ export const RegionSelect = <
             <RegionOption
               disabledOptions={disabledRegions[region.id]}
               item={region}
-              key={key}
+              key={`${region.id}-${key}`}
               props={rest}
             />
           );
         }}
         sx={(theme) => ({
           [theme.breakpoints.up('md')]: {
-            width: '416px',
+            width: tooltipText ? '458px' : '416px',
           },
         })}
         textFieldProps={{

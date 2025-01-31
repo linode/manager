@@ -274,13 +274,13 @@ export const PhoneVerification = ({
                   }))}
                   slotProps={{
                     paper: {
-                      sx: {
-                        border: '1px solid #3683dc',
+                      sx: (theme) => ({
+                        border: `1px solid ${theme.tokens.color.Ultramarine[80]}`,
                         maxHeight: '285px',
                         overflow: 'hidden',
                         textWrap: 'nowrap',
                         width: 'fit-content',
-                      },
+                      }),
                     },
                   }}
                   textFieldProps={{

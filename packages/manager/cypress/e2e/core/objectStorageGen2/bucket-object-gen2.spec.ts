@@ -8,14 +8,17 @@ import {
   regionFactory,
 } from 'src/factories';
 import { chooseRegion } from 'support/util/regions';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ObjectStorageEndpoint } from '@linode/api-v4';
 import { randomItem, randomLabel } from 'support/util/random';
+import { extendRegion } from 'support/util/regions';
 import {
   mockCreateBucket,
   mockGetBucket,
   mockGetBucketObjectFilename,
   mockGetBucketObjects,
   mockGetBucketsForRegion,
+  mockGetBucketsForRegionError,
   mockGetObjectStorageEndpoints,
   mockUploadBucketObject,
   mockUploadBucketObjectS3,
@@ -84,8 +87,8 @@ describe('Object Storage Gen2 bucket object tests', () => {
 
   const ACLNotification = 'Private: Only you can download this Object';
 
-  // For E0/E1, confirm CORS toggle and ACL selection are both present
-  // For E2/E3, confirm ACL and Cors are removed
+  // For E0/E1, ACL selection is present
+  // For E2/E3, confirm ACL is removed
   const checkBucketObjectDetailsDrawer = (
     bucketFilename: string,
     endpointType: string
@@ -95,16 +98,8 @@ describe('Object Storage Gen2 bucket object tests', () => {
         endpointType === 'Standard (E3)' ||
         endpointType === 'Standard (E2)'
       ) {
-        ui.toggle.find().should('not.exist');
-        cy.contains('CORS Enabled').should('not.exist');
         cy.findByLabelText('Access Control List (ACL)').should('not.exist');
       } else {
-        ui.toggle
-          .find()
-          .should('have.attr', 'data-qa-toggle', 'true')
-          .should('be.visible');
-        cy.contains('CORS Enabled').should('be.visible');
-
         cy.contains(ACLNotification).should('not.exist');
         // Verify that ACL selection show up as options
         cy.findByLabelText('Access Control List (ACL)')
@@ -131,7 +126,7 @@ describe('Object Storage Gen2 bucket object tests', () => {
   };
 
   /**
-  
+
      */
   it('can check Object details drawer with E0 endpoint type', () => {
     const endpointTypeE0 = 'Legacy (E0)';
@@ -371,5 +366,117 @@ describe('Object Storage Gen2 bucket object tests', () => {
     ui.drawer.findByTitle(bucketFilename).should('be.visible');
 
     checkBucketObjectDetailsDrawer(bucketFilename, endpointTypeE3);
+  });
+
+  it('displays successfully fetched buckets, warning message for single failed fetch', () => {
+    const mockRegions = regionFactory
+      .buildList(2, {
+        capabilities: ['Object Storage'],
+      })
+      .map((region) => extendRegion(region));
+    mockGetRegions(mockRegions).as('getRegions');
+    const mockEndpoints = mockRegions.map((mockRegion) => {
+      return objectStorageEndpointsFactory.build({
+        endpoint_type: 'E2',
+        region: mockRegion.id,
+        s3_endpoint: `${mockRegion.id}.linodeobjects.com`,
+      });
+    });
+
+    mockGetObjectStorageEndpoints(mockEndpoints).as('getEndpoints');
+    const mockBucket1 = objectStorageBucketFactoryGen2.build({
+      label: randomLabel(),
+      region: mockRegions[0].id,
+    });
+    // this bucket should display
+    mockGetBucketsForRegion(mockRegions[0].id, [mockBucket1]).as(
+      'getBucketsForRegion'
+    );
+    mockGetBucketsForRegionError(mockRegions[1].id).as(
+      'getBucketsForRegionError'
+    );
+
+    cy.visitWithLogin('/object-storage/buckets');
+    cy.wait([
+      '@getRegions',
+      '@getEndpoints',
+      '@getBucketsForRegion',
+      '@getBucketsForRegionError',
+    ]);
+    // table with retrieved bucket
+    cy.findByText(mockBucket1.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText(mockRegions[0].label).should('be.visible');
+      });
+    // warning message
+    cy.findByTestId('notice-warning-important').within(() => {
+      cy.contains(
+        `There was an error loading buckets in ${mockRegions[1].label}`
+      );
+    });
+    cy.contains(
+      `If you have buckets in ${mockRegions[1].label}, you may not see them listed below.`
+    );
+  });
+
+  it('displays successfully fetched buckets, warning message for multiple failed fetches', () => {
+    const mockRegions = regionFactory.buildList(3, {
+      capabilities: ['Object Storage'],
+    });
+    mockGetRegions(mockRegions).as('getRegions');
+    const mockEndpoints = mockRegions.map((mockRegion) => {
+      return objectStorageEndpointsFactory.build({
+        endpoint_type: 'E2',
+        region: mockRegion.id,
+        s3_endpoint: `${mockRegion.id}.linodeobjects.com`,
+      });
+    });
+
+    mockGetObjectStorageEndpoints(mockEndpoints).as('getEndpoints');
+    const mockBucket1 = objectStorageBucketFactoryGen2.build({
+      label: randomLabel(),
+      region: mockRegions[0].id,
+    });
+    // this bucket should display
+    mockGetBucketsForRegion(mockRegions[0].id, [mockBucket1]).as(
+      'getBucketsForRegion'
+    );
+    // force errors for 2 regions' buckets
+    mockGetBucketsForRegionError(mockRegions[1].id).as(
+      'getBucketsForRegionError0'
+    );
+    mockGetBucketsForRegionError(mockRegions[2].id).as(
+      'getBucketsForRegionError1'
+    );
+    cy.visitWithLogin('/object-storage/buckets');
+    cy.wait([
+      '@getRegions',
+      '@getEndpoints',
+      '@getBucketsForRegion',
+      '@getBucketsForRegionError0',
+      '@getBucketsForRegionError1',
+    ]);
+    // table with retrieved bucket
+    cy.get('table tbody tr').should('have.length', 1);
+    // warning message
+    cy.findByTestId('notice-warning-important').within(() => {
+      cy.contains(
+        'There was an error loading buckets in the following regions:'
+      );
+      const strError1 = `${mockRegions[1].country.toUpperCase()}, ${
+        mockRegions[1].label
+      }`;
+      const strError2 = `${mockRegions[2].country.toUpperCase()}, ${
+        mockRegions[2].label
+      }`;
+      cy.get('ul>li').eq(0).contains(strError1);
+      cy.get('ul>li').eq(1).contains(strError2);
+      // bottom of warning message
+      cy.contains(
+        'If you have buckets in these regions, you may not see them listed below.'
+      );
+    });
   });
 });

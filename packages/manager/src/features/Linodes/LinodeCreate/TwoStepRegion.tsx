@@ -1,7 +1,6 @@
-import { Box, Paper, Typography } from '@linode/ui';
+import { Autocomplete, Box, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
@@ -76,7 +75,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
   const { params } = useLinodeCreateQueryParams();
 
   return (
-    <Paper>
+    <Paper data-testid="region">
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink

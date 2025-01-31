@@ -1,13 +1,11 @@
-import { Stack, Chip } from '@linode/ui';
+import { Autocomplete, Chip, Stack, StyledListItem } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
-import { StyledListItem } from '../Autocomplete/Autocomplete.styles';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
@@ -39,6 +37,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
+    forcefullyShownRegionIds,
     helperText,
     isClearable,
     label,
@@ -57,7 +56,11 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     isLoading: accountAvailabilityLoading,
   } = useAllAccountAvailabilitiesQuery();
 
-  const regionOptions = getRegionOptions({ currentCapability, regions });
+  const regionOptions = getRegionOptions({
+    currentCapability,
+    forcefullyShownRegionIds,
+    regions,
+  });
 
   const selectedRegions = regionOptions.filter((r) =>
     selectedIds.includes(r.id)

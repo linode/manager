@@ -28,11 +28,6 @@ const BucketSSL = React.lazy(() =>
     default: module.BucketSSL,
   }))
 );
-const BucketProperties = React.lazy(() =>
-  import('./BucketProperties').then((module) => ({
-    default: module.BucketProperties,
-  }))
-);
 
 interface MatchProps {
   bucketName: string;
@@ -64,7 +59,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
 
   const { endpoint_type } = bucket ?? {};
 
-  const isSSLEnabled = endpoint_type !== 'E2' && endpoint_type !== 'E3';
+  const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
 
   const tabs = [
     {
@@ -75,15 +70,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       routeName: `${props.match.url}/access`,
       title: 'Access',
     },
-    ...(flags.objectStorageGen2?.enabled
-      ? [
-          {
-            routeName: `${props.match.url}/properties`,
-            title: 'Properties',
-          },
-        ]
-      : []),
-    ...(isSSLEnabled
+    ...(!isGen2Endpoint
       ? [
           {
             routeName: `${props.match.url}/ssl`,
@@ -136,11 +123,6 @@ export const BucketDetailLanding = React.memo((props: Props) => {
                 endpointType={endpoint_type}
               />
             </SafeTabPanel>
-            {flags.objectStorageGen2?.enabled && bucket && (
-              <SafeTabPanel index={2}>
-                <BucketProperties bucket={bucket} />
-              </SafeTabPanel>
-            )}
             <SafeTabPanel index={tabs.length - 1}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
             </SafeTabPanel>

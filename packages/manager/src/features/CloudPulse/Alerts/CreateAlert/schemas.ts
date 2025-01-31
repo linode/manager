@@ -1,15 +1,23 @@
 import { createAlertDefinitionSchema } from '@linode/validation';
 import { object, string } from 'yup';
 
+const fieldErrorMessage = 'This field is required.';
+
 const engineOptionValidation = string().when('service_type', {
   is: 'dbaas',
-  otherwise: string().notRequired().nullable(),
-  then: string().required('Engine type is required.').nullable(),
+  otherwise: (schema) => schema.notRequired().nullable(),
+  then: (schema) => schema.required(fieldErrorMessage).nullable(),
 });
+
 export const CreateAlertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
     engineType: engineOptionValidation,
-    region: string().required('Region is required.'),
-    serviceType: string().required('Service is required.').nullable(),
+    region: string().required(fieldErrorMessage),
+    serviceType: string().required(fieldErrorMessage),
   })
 );
+
+export const notificationChannelSchema = object({
+  channel_type: string().required(fieldErrorMessage),
+  label: string().required(fieldErrorMessage),
+});

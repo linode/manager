@@ -6,22 +6,31 @@ import {
   Tooltip,
   Typography,
 } from '@linode/ui';
+import Divider from '@mui/material/Divider';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
+import { useFlags } from 'src/hooks/useFlags';
+import { pluralize } from 'src/utilities/pluralize';
 
 import { NodeTable } from './NodeTable';
 
 import type {
   AutoscaleSettings,
+  KubernetesTier,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
   autoscaler: AutoscaleSettings;
+  clusterCreated: string;
+  clusterId: number;
+  clusterTier: KubernetesTier;
+  count: number;
   encryptionStatus: EncryptionStatus | undefined;
+  handleClickLabelsAndTaints: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
   isOnlyNodePool: boolean;
   nodes: PoolNodeResponse[];
@@ -30,13 +39,19 @@ interface Props {
   openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  tags: string[];
   typeLabel: string;
 }
 
 export const NodePool = (props: Props) => {
   const {
     autoscaler,
+    clusterCreated,
+    clusterId,
+    clusterTier,
+    count,
     encryptionStatus,
+    handleClickLabelsAndTaints,
     handleClickResize,
     isOnlyNodePool,
     nodes,
@@ -45,8 +60,11 @@ export const NodePool = (props: Props) => {
     openRecycleAllNodesDialog,
     openRecycleNodeDialog,
     poolId,
+    tags,
     typeLabel,
   } = props;
+
+  const flags = useFlags();
 
   return (
     <Box data-qa-node-pool-id={poolId} data-qa-node-pool-section>
@@ -61,10 +79,24 @@ export const NodePool = (props: Props) => {
           py: 0,
         }}
       >
-        <Typography variant="h2">{typeLabel}</Typography>
+        <Box display="flex">
+          <Typography variant="h2">{typeLabel}</Typography>
+          <Divider
+            orientation="vertical"
+            sx={(theme) => ({ height: 16, margin: `4px ${theme.spacing(1)}` })}
+          />
+          <Typography variant="h2">
+            {pluralize('Node', 'Nodes', count)}
+          </Typography>
+        </Box>
         <Hidden smUp>
           <ActionMenu
             actionsList={[
+              {
+                disabled: !flags.lkeEnterprise?.enabled,
+                onClick: () => handleClickLabelsAndTaints(poolId),
+                title: 'Labels and Taints',
+              },
               {
                 onClick: () => openAutoscalePoolDialog(poolId),
                 title: 'Autoscale Pool',
@@ -91,6 +123,14 @@ export const NodePool = (props: Props) => {
         </Hidden>
         <Hidden smDown>
           <Stack alignItems="center" direction="row">
+            {flags.lkeEnterprise?.enabled && (
+              <StyledActionButton
+                compactY
+                onClick={() => handleClickLabelsAndTaints(poolId)}
+              >
+                Labels and Taints
+              </StyledActionButton>
+            )}
             <StyledActionButton
               compactY
               onClick={() => openAutoscalePoolDialog(poolId)}
@@ -134,10 +174,14 @@ export const NodePool = (props: Props) => {
         </Hidden>
       </Paper>
       <NodeTable
+        clusterCreated={clusterCreated}
+        clusterId={clusterId}
+        clusterTier={clusterTier}
         encryptionStatus={encryptionStatus}
         nodes={nodes}
         openRecycleNodeDialog={openRecycleNodeDialog}
         poolId={poolId}
+        tags={tags}
         typeLabel={typeLabel}
       />
     </Box>

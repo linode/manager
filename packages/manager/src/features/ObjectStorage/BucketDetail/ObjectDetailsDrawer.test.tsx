@@ -23,8 +23,6 @@ vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
   };
 });
 
-vi.mock('src/components/EnhancedSelect/Select');
-
 const props: ObjectDetailsDrawerProps = {
   bucketName: 'my-bucket',
   clusterId: 'cluster-id',
@@ -51,7 +49,7 @@ describe('ObjectDetailsDrawer', () => {
       expect(getByText(/^Last modified: 2019-12-31/)).toBeInTheDocument()
     );
 
-    expect(getByText('12.1 KB')).toBeInTheDocument();
+    expect(getByText('12.3 KB')).toBeInTheDocument();
     expect(getByText(/^https:\/\/my-bucket/)).toBeInTheDocument();
   });
 

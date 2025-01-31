@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { FormControlLabel, Typography } from '@linode/ui';
 import {
   Box,
   Divider,
@@ -13,7 +13,6 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import {
   useAllocateIPMutation,
@@ -24,11 +23,15 @@ import { useCreateIPv6RangeMutation } from 'src/queries/networking/networking';
 import { ExplainerCopy } from './ExplainerCopy';
 
 import type { IPv6Prefix } from '@linode/api-v4/lib/networking';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export type IPType = 'v4Private' | 'v4Public';
 
-const ipOptions: Item<IPType>[] = [
+type IPOption = {
+  label: string;
+  value: IPType;
+};
+
+const ipOptions: IPOption[] = [
   { label: 'Public', value: 'v4Public' },
   { label: 'Private', value: 'v4Private' },
 ];

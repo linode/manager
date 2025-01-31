@@ -89,10 +89,17 @@ module.exports = {
     {
       files: [
         // for each new features added to the migration router, add its directory here
-        'src/features/Betas/*',
+        'src/features/Betas/**/*',
+        'src/features/Domains/**/*',
+        'src/features/Longview/**/*',
+        'src/features/PlacementGroups/**/*',
+        'src/features/Volumes/**/*',
       ],
       rules: {
         'no-restricted-imports': [
+          // This needs to remain an error however trying to link to a feature that is not yet migrated will break the router
+          // For those cases react-router-dom history.push is still needed
+          // using `eslint-disable-next-line no-restricted-imports` can help bypass those imports
           'error',
           {
             paths: [
@@ -114,14 +121,20 @@ module.exports = {
                   'withRouter',
                 ],
                 message:
-                  'Please use routing utilities from @tanstack/react-router.',
+                  'Please use routing utilities intended for @tanstack/react-router.',
                 name: 'react-router-dom',
               },
               {
-                importNames: ['renderWithTheme'],
+                importNames: ['TabLinkList'],
                 message:
-                  'Please use the wrapWithThemeAndRouter helper function for testing components being migrated to TanStack Router.',
-                name: 'src/utilities/testHelpers',
+                  'Please use the TanStackTabLinkList component for components being migrated to TanStack Router.',
+                name: 'src/components/Tabs/TabLinkList',
+              },
+              {
+                importNames: ['OrderBy', 'default'],
+                message:
+                  'Please use useOrderV2 hook for components being migrated to TanStack Router.',
+                name: 'src/components/OrderBy',
               },
             ],
           },
@@ -318,7 +331,6 @@ module.exports = {
     'scanjs-rules/call_addEventListener': 'warn',
     'scanjs-rules/call_parseFromString': 'error',
     'scanjs-rules/new_Function': 'error',
-    'scanjs-rules/property_crypto': 'error',
     'scanjs-rules/property_geolocation': 'error',
     // sonar
     'sonarjs/cognitive-complexity': 'off',

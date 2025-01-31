@@ -4,6 +4,11 @@ import React from 'react';
 import { APP_ROOT, PENDO_API_KEY } from 'src/constants';
 import { useAccount } from 'src/queries/account/account.js';
 import { useProfile } from 'src/queries/profile/profile';
+import {
+  ONE_TRUST_COOKIE_CATEGORIES,
+  checkOptanonConsent,
+  getCookie,
+} from 'src/utilities/analytics/utils';
 
 import { loadScript } from './useScript';
 
@@ -41,14 +46,14 @@ export const transformUrl = (url: string) => {
   const oauthPathMatchingRegex = /(#access_token).*/;
   let transformedUrl = url;
 
-  // Replace any ids with XXXX and keep the rest of the URL intact
-  transformedUrl = url.replace(idMatchingRegex, '/XXXX');
+  // Replace any ids with * and keep the rest of the URL intact
+  transformedUrl = url.replace(idMatchingRegex, `/*`);
 
-  // Replace the region and bucket names with XXXX and keep the rest of the URL intact.
+  // Replace the region and bucket names with * and keep the rest of the URL intact.
   // Object storage file navigation is truncated via the 'clear search' transform.
   transformedUrl = transformedUrl.replace(
     bucketPathMatchingRegex,
-    'buckets/XXXX/XXXX'
+    'buckets/*/*'
   );
 
   // Remove everything after access_token
@@ -60,7 +65,7 @@ export const transformUrl = (url: string) => {
 };
 
 /**
- * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists.
+ * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists and OneTrust consent is present.
  */
 export const usePendo = () => {
   const { data: account } = useAccount();
@@ -69,10 +74,21 @@ export const usePendo = () => {
   const accountId = hashUniquePendoId(account?.euuid);
   const visitorId = hashUniquePendoId(profile?.uid.toString());
 
-  const PENDO_URL = `https://cdn.pendo.io/agent/static/${PENDO_API_KEY}/pendo.js`;
+  const optanonCookie = getCookie('OptanonConsent');
+  // Since OptanonConsent cookie always has a .linode.com domain, only check for consent in dev/staging/prod envs.
+  // When running the app locally, do not try to check for OneTrust cookie consent, just enable Pendo.
+  const hasConsentEnabled =
+    APP_ROOT.includes('localhost') ||
+    checkOptanonConsent(
+      optanonCookie,
+      ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
+    );
+
+  // This URL uses a Pendo-configured CNAME (M3-8742).
+  const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;
 
   React.useEffect(() => {
-    if (PENDO_API_KEY) {
+    if (PENDO_API_KEY && hasConsentEnabled) {
       // Adapted Pendo install script for readability
       // Refer to: https://support.pendo.io/hc/en-us/articles/21362607464987-Components-of-the-install-script#01H6S2EXET8C9FGSHP08XZAE4F
 
@@ -152,5 +168,5 @@ export const usePendo = () => {
         });
       });
     }
-  }, [PENDO_URL, accountId, visitorId]);
+  }, [PENDO_URL, accountId, hasConsentEnabled, visitorId]);
 };

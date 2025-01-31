@@ -113,7 +113,8 @@ interface InputToolTipProps {
   tooltipWidth?: number;
 }
 
-interface TextFieldPropsOverrides extends StandardTextFieldProps {
+interface TextFieldPropsOverrides
+  extends Omit<StandardTextFieldProps, 'label'> {
   // We override this prop to make it required
   label: string;
 }
@@ -166,6 +167,7 @@ export const TextField = (props: TextFieldProps) => {
 
   const [_value, setValue] = React.useState<Value>(value);
   const theme = useTheme();
+  const fallbackId = React.useId();
 
   React.useEffect(() => {
     setValue(value);
@@ -249,7 +251,14 @@ export const TextField = (props: TextFieldProps) => {
   }
 
   const validInputId =
-    inputId || (label ? convertToKebabCase(`${label}`) : undefined);
+    inputId ||
+    (label
+      ? convertToKebabCase(label)
+      : // label could still be an empty string
+        fallbackId);
+
+  const helperTextId = `${validInputId}-helper-text`;
+  const errorTextId = `${validInputId}-error-text`;
 
   const labelSuffixText = required
     ? '(required)'
@@ -306,6 +315,7 @@ export const TextField = (props: TextFieldProps) => {
             }}
             status="help"
             text={labelTooltipText}
+            width={tooltipWidth}
           />
         )}
       </Box>
@@ -313,10 +323,10 @@ export const TextField = (props: TextFieldProps) => {
       {helperText && helperTextPosition === 'top' && (
         <FormHelperText
           sx={{
-            marginBottom: theme.spacing(),
-            marginTop: theme.spacing(),
+            marginTop: 0,
           }}
           data-qa-textfield-helper-text
+          id={helperTextId}
         >
           {helperText}
         </FormHelperText>
@@ -364,6 +374,9 @@ export const TextField = (props: TextFieldProps) => {
             ...SelectProps,
           }}
           inputProps={{
+            'aria-describedby': helperText ? helperTextId : undefined,
+            'aria-errormessage': errorText ? errorTextId : undefined,
+            'aria-invalid': !!error || !!errorText,
             'data-testid': 'textfield-input',
             id: validInputId,
             ...inputProps,
@@ -371,7 +384,7 @@ export const TextField = (props: TextFieldProps) => {
           sx={{
             marginTop: 0,
             ...(Boolean(tooltipText) && {
-              width: '415px',
+              width: '416px',
             }),
             ...props.sx,
           }}
@@ -437,7 +450,7 @@ export const TextField = (props: TextFieldProps) => {
         </FormHelperText>
       )}
       {helperText && helperTextPosition === 'bottom' && (
-        <FormHelperText data-qa-textfield-helper-text>
+        <FormHelperText data-qa-textfield-helper-text id={helperTextId}>
           {helperText}
         </FormHelperText>
       )}

@@ -51,6 +51,11 @@ export interface DashboardProperties {
    * optional flag to check whether changes should be stored in preferences or not (in case this component is reused)
    */
   savePref?: boolean;
+
+  /**
+   * Selected tags for the dashboard
+   */
+  tags?: string[];
 }
 
 export const CloudPulseDashboard = (props: DashboardProperties) => {
@@ -67,7 +72,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
     return {
-      resource_ids: resources?.map((resource) => Number(resource)) ?? [],
+      entity_ids: resources?.map((resource) => Number(resource)) ?? [],
     };
   };
 

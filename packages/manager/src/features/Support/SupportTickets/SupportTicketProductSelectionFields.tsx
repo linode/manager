@@ -1,8 +1,7 @@
-import { FormHelperText, TextField } from '@linode/ui';
+import { Autocomplete, FormHelperText, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
@@ -97,7 +96,9 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     data: vpcs,
     error: vpcsError,
     isLoading: vpcsLoading,
-  } = useAllVPCsQuery(entityType === 'vpc_id');
+  } = useAllVPCsQuery({
+    enabled: entityType === 'vpc_id',
+  });
 
   const getEntityOptions = (): { label: string; value: number | string }[] => {
     const reactQueryEntityDataMap = {
@@ -133,10 +134,12 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     if (entityType === 'bucket') {
       return (
         reactQueryEntityDataMap['bucket']?.buckets?.map(
-          ({ label, region }) => ({
-            label,
-            value: region ?? '',
-          })
+          ({ cluster, label, region }) => {
+            return {
+              label,
+              value: region ?? cluster,
+            };
+          }
         ) || []
       );
     }
@@ -186,8 +189,15 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     : undefined;
 
   const selectedEntity =
-    entityOptions.find((thisEntity) => String(thisEntity.value) === entityId) ||
-    null;
+    entityType === 'bucket'
+      ? entityOptions.find(
+          (thisEntity) =>
+            String(thisEntity.value) === entityId &&
+            thisEntity.label === entityInputValue
+        ) || null
+      : entityOptions.find(
+          (thisEntity) => String(thisEntity.value) === entityId
+        ) || null;
 
   const renderEntityTypes = () => {
     return Object.keys(ENTITY_MAP).map((key: string) => {

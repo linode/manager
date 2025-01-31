@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import {
@@ -147,7 +147,7 @@ describe('ObjectStorageLanding', () => {
 
   it('renders a "Total usage" section if there is more than one Bucket', async () => {
     const buckets = objectStorageBucketFactory.buildList(2, {
-      size: 1024 * 1024 * 1024 * 5,
+      size: 1e9 * 5,
     });
 
     // Mock Clusters
@@ -168,5 +168,57 @@ describe('ObjectStorageLanding', () => {
     renderWithTheme(<BucketLanding />);
 
     await screen.findByText(/Total storage used: 10 GB/);
+  });
+
+  it('renders error notice for multiple regions', async () => {
+    objectStorageBucketFactory.resetSequenceNumber();
+    objectStorageClusterFactory.resetSequenceNumber();
+
+    // Create multiple down clusters in different regions
+    const downClusters = [
+      objectStorageClusterFactory.build({ region: 'us-west' }),
+      objectStorageClusterFactory.build({ region: 'ap-south' }),
+      objectStorageClusterFactory.build({ region: 'eu-west' }),
+    ];
+
+    // Mock Clusters
+    server.use(
+      http.get('*/object-storage/clusters', () => {
+        const upCluster = objectStorageClusterFactory.build({
+          region: 'us-east',
+        });
+        return HttpResponse.json(
+          makeResourcePage([...downClusters, upCluster])
+        );
+      })
+    );
+
+    // Mock bucket errors for each down cluster
+    server.use(
+      ...downClusters.map((cluster) =>
+        http.get(`*/object-storage/buckets/${cluster.id}`, () => {
+          return HttpResponse.json([{ reason: 'Cluster offline!' }], {
+            status: 500,
+          });
+        })
+      ),
+      // Mock successful response for up cluster
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            objectStorageBucketFactory.buildList(1, { cluster: 'us-east' })
+          )
+        );
+      })
+    );
+
+    renderWithTheme(<BucketLanding />);
+
+    await waitFor(() => {
+      const errorRegions = ['US, Fremont, CA', 'SG, Singapore', 'GB, London'];
+      for (const region of errorRegions) {
+        expect(screen.queryByText(region)).toBeInTheDocument();
+      }
+    });
   });
 });

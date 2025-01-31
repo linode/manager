@@ -15,8 +15,6 @@ const AUTHENTICATED_READ_TEXT = 'Authenticated Read';
 const BUCKET_ACCESS_URL = '*object-storage/buckets/*/*/access';
 const OBJECT_ACCESS_URL = '*object-storage/buckets/*/*/object-acl';
 
-vi.mock('src/components/EnhancedSelect/Select');
-
 const defaultProps: Props = {
   clusterOrRegion: 'in-maa',
   endpointType: 'E1',
@@ -30,16 +28,13 @@ describe('AccessSelect', () => {
       flags: { objectStorageGen2: { enabled: true } },
     });
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
   it.each([
     ['bucket', 'E0', true],
     ['bucket', 'E1', true],
     ['bucket', 'E2', false],
     ['bucket', 'E3', false],
-    ['object', 'E0', true],
-    ['object', 'E1', true],
+    ['object', 'E0', false],
+    ['object', 'E1', false],
     ['object', 'E2', false],
     ['object', 'E3', false],
   ])(

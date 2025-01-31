@@ -1,6 +1,5 @@
-import { Box, Chip, Stack, StyledActionButton, Typography } from '@linode/ui';
+import { Box, Stack, StyledActionButton, Typography } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -11,7 +10,10 @@ import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
-import { getKubeControlPlaneACL } from 'src/features/Kubernetes/kubeUtils';
+import {
+  getKubeControlPlaneACL,
+  useIsLkeEnterpriseEnabled,
+} from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -21,6 +23,7 @@ import {
 } from 'src/queries/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import { ClusterChips } from '../ClusterList/ClusterChips';
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
@@ -38,8 +41,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
 
   const { data: account } = useAccount();
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
-
-  const theme = useTheme();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -73,6 +74,8 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     isLoading: isLoadingKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(cluster.id, !!showControlPlaneACL);
 
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+
   const [
     resetKubeConfigDialogOpen,
     setResetKubeConfigDialogOpen,
@@ -95,7 +98,17 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     <Box>
       <EntityDetail
         body={
-          <Stack direction="row" flexWrap="wrap" gap={2} px={3} py={2}>
+          <Stack
+            sx={(theme) => ({
+              padding: theme.spacing(2),
+              [theme.breakpoints.down('sm')]: {
+                padding: theme.spacing(1),
+              },
+            })}
+            direction="row"
+            flexWrap="wrap"
+            gap={2}
+          >
             <KubeClusterSpecs cluster={cluster} />
             <KubeConfigDisplay
               clusterId={cluster.id}
@@ -104,18 +117,19 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
               isResettingKubeConfig={isResettingKubeConfig}
               setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
             />
-            {cluster.control_plane.high_availability && (
-              <Chip
-                sx={(theme) => ({
-                  borderColor: theme.color.green,
-                  position: 'absolute',
-                  right: theme.spacing(3),
-                })}
-                label="HA CLUSTER"
-                size="small"
-                variant="outlined"
-              />
-            )}
+            <ClusterChips
+              sx={(theme) => ({
+                position: 'absolute',
+                right: theme.spacing(3),
+                [theme.breakpoints.down('sm')]: {
+                  '& .MuiChip-root': {
+                    marginRight: 0,
+                  },
+                  flexDirection: 'column',
+                },
+              })}
+              cluster={cluster}
+            />
           </Stack>
         }
         footer={
@@ -135,12 +149,15 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         header={
           <EntityHeader>
             <Box
-              sx={{
+              sx={(theme) => ({
                 paddingBottom: theme.spacing(),
                 paddingLeft: theme.spacing(3),
                 paddingRight: theme.spacing(1),
                 paddingTop: theme.spacing(),
-              }}
+                [theme.breakpoints.down('sm')]: {
+                  paddingLeft: theme.spacing(2),
+                },
+              })}
             >
               <Typography variant="h2">Summary</Typography>
             </Box>
@@ -162,13 +179,16 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                 />
               </Hidden>
               <Hidden smDown>
-                <StyledActionButton
-                  disabled={Boolean(dashboardError) || !dashboard}
-                  endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
-                  onClick={() => window.open(dashboard?.url, '_blank')}
-                >
-                  Kubernetes Dashboard
-                </StyledActionButton>
+                {isLkeEnterpriseLAFeatureEnabled &&
+                cluster.tier === 'enterprise' ? undefined : (
+                  <StyledActionButton
+                    disabled={Boolean(dashboardError) || !dashboard}
+                    endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
+                    onClick={() => window.open(dashboard?.url, '_blank')}
+                  >
+                    Kubernetes Dashboard
+                  </StyledActionButton>
+                )}
                 <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
                   Delete Cluster
                 </StyledActionButton>
@@ -185,12 +205,12 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         open={drawerOpen}
       />
       <KubeControlPlaneACLDrawer
+        aclData={aclData}
         closeDrawer={() => setControlPlaneACLDrawerOpen(false)}
         clusterId={cluster.id}
         clusterLabel={cluster.label}
         clusterMigrated={!isErrorKubernetesACL}
         open={isControlPlaneACLDrawerOpen}
-        showControlPlaneACL={!!showControlPlaneACL}
       />
       <DeleteKubernetesClusterDialog
         clusterId={cluster.id}

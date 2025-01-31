@@ -147,26 +147,27 @@ export const FirewallRuleTypeSchema = object().shape({
     .required('Protocol is required.'),
   ports: string().when('protocol', {
     is: (val: any) => val !== 'ICMP' && val !== 'IPENCAP',
-    then: validateFirewallPorts,
+    then: () => validateFirewallPorts,
     // Workaround to get the test to fail if ports is defined when protocol === ICMP or IPENCAP
-    otherwise: string().test({
-      name: 'protocol',
-      message: 'Ports are not allowed for ICMP and IPENCAP protocols.',
-      test: (value) => typeof value === 'undefined',
-    }),
+    otherwise: (schema) =>
+      schema.test({
+        name: 'protocol',
+        message: 'Ports are not allowed for ICMP and IPENCAP protocols.',
+        test: (value) => typeof value === 'undefined',
+      }),
   }),
   addresses: object()
     .shape({
-      ipv4: array().of(ipAddress).nullable(true),
-      ipv6: array().of(ipAddress).nullable(true),
+      ipv4: array().of(ipAddress).nullable(),
+      ipv6: array().of(ipAddress).nullable(),
     })
     .strict(true)
-    .nullable(true),
+    .nullable(),
 });
 
 export const FirewallRuleSchema = object().shape({
-  inbound: array(FirewallRuleTypeSchema).nullable(true),
-  outbound: array(FirewallRuleTypeSchema).nullable(true),
+  inbound: array(FirewallRuleTypeSchema).nullable(),
+  outbound: array(FirewallRuleTypeSchema).nullable(),
   inbound_policy: mixed()
     .oneOf(['ACCEPT', 'DROP'])
     .required('Inbound policy is required.'),
@@ -196,4 +197,13 @@ export const FirewallDeviceSchema = object({
     .oneOf(['linode', 'nodebalancer'])
     .required('Device type is required.'),
   id: number().required('ID is required.'),
+});
+
+export const UpdateFirewallSettingsSchema = object({
+  default_firewall_ids: object({
+    interface_public: number(),
+    interface_vpc: number(),
+    linode: number(),
+    nodebalancer: number(),
+  }),
 });

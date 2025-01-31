@@ -131,7 +131,7 @@ const planSelectionTable = 'List of Linode Plans';
 
 const notices = {
   limitedAvailability: '[data-testid="limited-availability-banner"]',
-  unavailable: '[data-testid="notice-error"]',
+  unavailable: '[data-qa-error="true"]',
 };
 
 authenticate();
@@ -409,6 +409,57 @@ describe('displays specific linode plans for GPU', () => {
   });
 });
 
+describe('displays specific kubernetes plans for GPU', () => {
+  beforeEach(() => {
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
+    mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
+      'getRegionAvailability'
+    );
+    mockAppendFeatureFlags({
+      gpuv2: {
+        transferBanner: true,
+        planDivider: true,
+        egressBanner: true,
+      },
+    }).as('getFeatureFlags');
+  });
+
+  it('Should render divided tables when GPU divider enabled', () => {
+    cy.visitWithLogin('/kubernetes/create');
+    cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
+    ui.regionSelect.find().click();
+    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+
+    // GPU tab
+    // Should display two separate tables
+    cy.findByText('GPU').click();
+    cy.get(k8PlansPanel).within(() => {
+      cy.findAllByRole('alert').should('have.length', 2);
+      cy.get(notices.unavailable).should('be.visible');
+
+      cy.findByRole('table', {
+        name: 'List of NVIDIA RTX 4000 Ada Plans',
+      }).within(() => {
+        cy.findByText('NVIDIA RTX 4000 Ada').should('be.visible');
+        cy.findAllByRole('row').should('have.length', 2);
+        cy.get('[data-qa-plan-row="gpu-2 Ada"]').should(
+          'have.attr',
+          'disabled'
+        );
+      });
+
+      cy.findByRole('table', {
+        name: 'List of NVIDIA Quadro RTX 6000 Plans',
+      }).within(() => {
+        cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
+        cy.findAllByRole('row').should('have.length', 2);
+        cy.get('[data-qa-plan-row="gpu-1"]').should('have.attr', 'disabled');
+      });
+    });
+  });
+});
+
 describe('Linode Accelerated plans', () => {
   beforeEach(() => {
     mockGetRegions(mockRegions).as('getRegions');
@@ -488,7 +539,7 @@ describe('Linode Accelerated plans', () => {
 
         cy.findByText('Accelerated').click();
         cy.get(linodePlansPanel).within(() => {
-          cy.findAllByRole('alert').should('have.length', 1);
+          cy.findAllByRole('alert').should('have.length', 2);
 
           cy.findByRole('table', {
             name: 'List of Linode Plans',
@@ -543,7 +594,7 @@ describe('Linode Accelerated plans', () => {
 
         cy.findByText('Accelerated').click();
         cy.get(k8PlansPanel).within(() => {
-          cy.findAllByRole('alert').should('have.length', 1);
+          cy.findAllByRole('alert').should('have.length', 2);
 
           cy.findByRole('table', { name: planSelectionTable }).within(() => {
             cy.findAllByRole('row').should('have.length', 2);

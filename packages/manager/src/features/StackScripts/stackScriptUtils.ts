@@ -1,7 +1,23 @@
 import { getStackScripts } from '@linode/api-v4';
 
 import type { StackScriptsRequest } from './types';
-import type { Filter, Grant, Params, StackScript } from '@linode/api-v4';
+import type {
+  Filter,
+  Grant,
+  Params,
+  ResourcePage,
+  StackScript,
+  StackScriptPayload,
+} from '@linode/api-v4';
+
+export type StackScriptCategory = 'account' | 'community';
+
+export const emptyResult: ResourcePage<StackScript> = {
+  data: [],
+  page: 1,
+  pages: 1,
+  results: 0,
+};
 
 const oneClickFilter = [
   {
@@ -166,4 +182,10 @@ export const getStackScriptImages = (images: StackScript['images']) => {
  */
 export const isLKEStackScript = (stackscript: StackScript) => {
   return stackscript.username.startsWith('lke-service-account-');
+};
+
+export const stackscriptFieldNameOverrides: Partial<
+  Record<keyof StackScriptPayload, string>
+> = {
+  rev_note: 'revision note',
 };
