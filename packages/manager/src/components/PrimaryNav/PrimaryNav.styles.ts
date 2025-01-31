@@ -74,13 +74,17 @@ export const StyledAccordion = styled(Accordion, {
 })<{ isActiveProductFamily: boolean; isCollapsed: boolean }>(
   ({ theme, ...props }) => ({
     '& h3': {
-      '& p': {
+      '& span': {
         color: theme.tokens.color.Neutrals['White'],
-        font: props.isActiveProductFamily
-          ? theme.tokens.typography.Label.Bold.S
-          : theme.tokens.typography.Label.Semibold.S,
+        fontFamily: theme.tokens.font.FontFamily.Brand,
+        fontSize: theme.tokens.font.FontSize.Xxxs,
+        // eslint-disable-next-line
+        fontWeight: theme.tokens.font.FontWeight.Extrabold,
+        letterSpacing: theme.tokens.typography.Heading.OverlineLetterSpacing,
+        lineHeight: theme.tokens.font.LineHeight.Xxxs,
         paddingLeft: theme.tokens.spacing[50],
         paddingRight: theme.tokens.spacing[50],
+        textTransform: 'uppercase',
         transition: theme.transitions.create(['opacity']),
         ...(props.isCollapsed && {
           opacity: 0,
