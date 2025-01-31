@@ -11,6 +11,7 @@ import {
   CreateFirewallSchema,
   FirewallDeviceSchema,
   UpdateFirewallSchema,
+  UpdateFirewallSettingsSchema,
 } from '@linode/validation/lib/firewalls.schema';
 import {
   CreateFirewallPayload,
@@ -18,8 +19,12 @@ import {
   FirewallDevice,
   FirewallDevicePayload,
   FirewallRules,
+  FirewallSettings,
   FirewallTemplate,
+  FirewallTemplateSlug,
   UpdateFirewallPayload,
+  UpdateFirewallRules,
+  UpdateFirewallSettings,
 } from './types';
 
 /**
@@ -150,7 +155,10 @@ export const getFirewallRules = (
  * Updates the inbound and outbound Rules for a Firewall. Using this endpoint will
  * replace all of a Firewall's ruleset with the Rules specified in your request.
  */
-export const updateFirewallRules = (firewallID: number, data: FirewallRules) =>
+export const updateFirewallRules = (
+  firewallID: number,
+  data: UpdateFirewallRules
+) =>
   Request<FirewallRules>(
     setMethod('PUT'),
     setData(data), // Validation is too complicated for these; leave it to the API.
@@ -245,6 +253,29 @@ export const deleteFirewallDevice = (firewallID: number, deviceID: number) =>
     )
   );
 
+/**
+ * getFirewallSettings
+ *
+ * Returns current interface default firewall settings
+ */
+export const getFirewallSettings = () =>
+  Request<FirewallSettings>(
+    setMethod('GET'),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/settings`)
+  );
+
+/**
+ * updateFirewallSettings
+ *
+ * Update which firewalls should be the interface default firewalls
+ */
+export const updateFirewallSettings = (data: UpdateFirewallSettings) =>
+  Request<FirewallSettings>(
+    setMethod('PUT'),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/settings`),
+    setData(data, UpdateFirewallSettingsSchema)
+  );
+
 // #region Templates
 
 /**
@@ -262,9 +293,8 @@ export const getTemplates = () =>
  * getTemplate
  *
  * Get a specific firewall template by its slug.
- *
  */
-export const getTemplate = (templateSlug: string) =>
+export const getTemplate = (templateSlug: FirewallTemplateSlug) =>
   Request<FirewallTemplate>(
     setMethod('GET'),
     setURL(

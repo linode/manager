@@ -1,8 +1,14 @@
-import { Grant } from '@linode/api-v4/lib/account';
-import { StackScript, getStackScripts } from '@linode/api-v4/lib/stackscripts';
-import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import { getStackScripts } from '@linode/api-v4';
 
 import type { StackScriptsRequest } from './types';
+import type {
+  Filter,
+  Grant,
+  Params,
+  ResourcePage,
+  StackScript,
+  StackScriptPayload,
+} from '@linode/api-v4';
 
 export type StackScriptCategory = 'account' | 'community';
 
@@ -150,4 +156,10 @@ export const canUserModifyAccountStackScript = (
 
   // User must have "read_write" permissions to modify StackScript
   return grantsForThisStackScript.permissions === 'read_write';
+};
+
+export const stackscriptFieldNameOverrides: Partial<
+  Record<keyof StackScriptPayload, string>
+> = {
+  rev_note: 'revision note',
 };

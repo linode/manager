@@ -73,7 +73,6 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       endpoint_type: 'E3',
       quota_limit: 1_000_000_000_000_000, // a petabyte
       quota_name: 'Total Capacity',
-      region_applied: 'us-east',
       resource_metric: 'byte',
       s3_endpoint: 'us-east-1.linodeobjects.com',
       used: 900_000_000_000_000,
@@ -82,7 +81,6 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       endpoint_type: 'E3',
       quota_limit: 1000,
       quota_name: 'Number of Buckets',
-      region_applied: 'us-east',
       resource_metric: 'bucket',
       s3_endpoint: 'us-east-1.linodeobjects.com',
     }),
@@ -90,7 +88,6 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       endpoint_type: 'E3',
       quota_limit: 10_000_000,
       quota_name: 'Number of Objects',
-      region_applied: 'us-east',
       resource_metric: 'object',
       s3_endpoint: 'us-east-1.linodeobjects.com',
     }),

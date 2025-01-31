@@ -51,7 +51,7 @@ describe('resize linode', () => {
 
       cy.wait('@linodeResize');
       cy.contains(
-        "Your linode will be warm resized and will automatically attempt to power off and restore to it's previous state."
+        'Your linode will be warm resized and will automatically attempt to power off and restore to its previous state.'
       ).should('be.visible');
     });
   });

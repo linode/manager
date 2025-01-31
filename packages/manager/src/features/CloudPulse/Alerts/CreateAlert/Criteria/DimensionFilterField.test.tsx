@@ -4,7 +4,7 @@ import React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { DimensionOperatorOptions } from '../../constants';
+import { dimensionOperatorOptions } from '../../constants';
 import { DimensionFilterField } from './DimensionFilterField';
 
 import type { CreateAlertDefinitionForm } from '../types';
@@ -149,19 +149,19 @@ describe('Dimension filter field component', () => {
 
     expect(
       await container.findByRole('option', {
-        name: DimensionOperatorOptions[1].label,
+        name: dimensionOperatorOptions[1].label,
       })
     );
 
     await user.click(
       await container.findByRole('option', {
-        name: DimensionOperatorOptions[0].label,
+        name: dimensionOperatorOptions[0].label,
       })
     );
 
     expect(within(operatorContainer).getByRole('combobox')).toHaveAttribute(
       'value',
-      DimensionOperatorOptions[0].label
+      dimensionOperatorOptions[0].label
     );
   });
 

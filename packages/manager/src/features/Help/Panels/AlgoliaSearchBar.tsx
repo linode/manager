@@ -1,6 +1,5 @@
 import { Autocomplete, InputAdornment, Notice } from '@linode/ui';
 import Search from '@mui/icons-material/Search';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
@@ -66,7 +65,8 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       return;
     }
 
-    const href = pathOr('', ['data', 'href'], selected);
+    const href =
+      selected?.data && 'href' in selected.data ? selected.data.href : '';
     if (href) {
       // If an href exists for the selected option, redirect directly to that link.
       window.open(href, '_blank', 'noopener');
