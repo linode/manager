@@ -244,9 +244,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       {isSelectionsNeeded &&
         (alertType === 'system' || alertType === 'default') && (
           <Typography ref={titleRef} variant="body1">
-            You can enable/disable alerts for resources you have access to. Some
-            resources linked to this definition may be hidden due to your access
-            restrictions.
+            You can enable or disable this system alert for each resource you
+            have access to. Select the resources listed below you want to enable
+            the alert for.
           </Typography>
         )}
       {(isDataLoadingError ||
