@@ -179,11 +179,14 @@ describe('Domain record helper methods', () => {
       });
     });
 
-    it('should return an empty object for PTR, slave types', () => {
+    it('should return an empty object for PTR, slave types (default cases)', () => {
       const types: (DomainType | RecordType)[] = ['slave', 'PTR'];
 
       types.forEach((type) => {
-        const result = filterDataByType(mockRecordFields, type);
+        const mockFields =
+          type === 'slave' ? mockDomainFields : mockRecordFields;
+
+        const result = filterDataByType(mockFields, type);
 
         expect(result).toEqual({});
       });
