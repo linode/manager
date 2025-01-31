@@ -197,71 +197,39 @@ describe('Community Stackscripts integration tests', () => {
     interceptGetStackScripts().as('getStackScripts');
 
     // Fetch all public Images to later use while filtering StackScripts.
-    cy.defer(() =>
-      depaginate((page) => getImages({ page }, { is_public: true }))
-    ).then((publicImages: Image[]) => {
-      cy.visitWithLogin('/stackscripts/community');
-      cy.wait('@getStackScripts');
+    cy.visitWithLogin('/stackscripts/community');
+    cy.wait('@getStackScripts');
 
-      // Confirm that empty state is not shown.
-      cy.get('[data-qa-placeholder-container="resources-section"]').should(
-        'not.exist'
-      );
-      cy.findByText('Automate deployment scripts').should('not.exist');
+    // Confirm that empty state is not shown.
+    cy.get('[data-qa-placeholder-container="resources-section"]').should(
+      'not.exist'
+    );
+    cy.findByText('Automate deployment scripts').should('not.exist');
 
-      // Confirm that scrolling to the bottom of the StackScripts list causes
-      // pagination to occur automatically. Perform this check 3 times.
-      for (let i = 0; i < 3; i += 1) {
-        cy.findByLabelText('List of StackScripts')
-          .should('be.visible')
-          .within(() => {
-            // Scroll to the bottom of the StackScripts list, confirm Cloud fetches StackScripts,
-            // then confirm that list updates with the new StackScripts shown.
-            cy.get('tr').last().scrollIntoView();
-            cy.wait('@getStackScripts').then((xhr) => {
-              const stackScripts = xhr.response?.body['data'] as
-                | StackScript[]
-                | undefined;
+    // Confirm that scrolling to the bottom of the StackScripts list causes
+    // pagination to occur automatically. Perform this check 3 times.
+    for (let i = 0; i < 3; i += 1) {
+      cy.findByLabelText('List of StackScripts')
+        .should('be.visible')
+        .within(() => {
+          // Scroll to the bottom of the StackScripts list, confirm Cloud fetches StackScripts,
+          // then confirm that list updates with the new StackScripts shown.
+          cy.get('tr').last().scrollIntoView();
+          cy.wait('@getStackScripts').then((xhr) => {
+            const stackScripts = xhr.response?.body['data'] as
+              | StackScript[]
+              | undefined;
 
-              if (!stackScripts) {
-                throw new Error(
-                  'Unexpected response received when fetching StackScripts'
-                );
-              }
-
-              // Cloud Manager hides certain StackScripts from the landing page (although they can
-              // still be found via search). It does this if either condition is met:
-              //
-              // - The StackScript is only compatible with deprecated Images
-              // - The StackScript is only compatible with LKE Images
-              //
-              // As a consequence, we can't use the API response directly to assert
-              // that content is shown in the list. We need to apply identical filters
-              // to the response first, then assert the content using that data.
-              const filteredStackScripts = stackScripts.filter(
-                (stackScript: StackScript) => {
-                  const hasNonDeprecatedImages = stackScript.images.some(
-                    (stackScriptImage) => {
-                      return !!publicImages.find(
-                        (publicImage) => publicImage.id === stackScriptImage
-                      );
-                    }
-                  );
-
-                  const usesKubeImage = stackScript.images.some(
-                    (stackScriptImage) => isLinodeKubeImageId(stackScriptImage)
-                  );
-                  return hasNonDeprecatedImages && !usesKubeImage;
-                }
+            if (!stackScripts) {
+              throw new Error(
+                'Unexpected response received when fetching StackScripts'
               );
-
-              cy.contains(
-                `${filteredStackScripts[0].username} / ${filteredStackScripts[0].label}`
-              ).should('be.visible');
-            });
-          });
-      }
-    });
+            }
+            
+            cy.contains(`${stackScripts[0].username} / ${stackScripts[0].label}`).should('be.visible');
+        });
+      });
+    }
   });
 
   /*
