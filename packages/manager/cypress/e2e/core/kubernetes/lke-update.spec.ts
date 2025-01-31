@@ -952,11 +952,13 @@ describe('LKE cluster updates', () => {
 
       // LKE clusters can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
       cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
-      cy.findByTestId('textfield-input')
-        .should('be.visible')
-        .should('have.value', mockCluster.label)
-        .clear()
-        .type(`${mockNewCluster.label}{enter}`);
+      cy.get('[data-qa-edit-field]').within(() => {
+        cy.findByTestId('textfield-input')
+          .should('be.visible')
+          .should('have.value', mockCluster.label)
+          .clear()
+          .type(`${mockNewCluster.label}{enter}`);
+      });
 
       cy.wait('@updateCluster');
 
@@ -988,11 +990,13 @@ describe('LKE cluster updates', () => {
 
       // LKE cluster can be renamed by clicking on the cluster's name in the breadcrumbs towards the top of the page.
       cy.get('[data-testid="editable-text"] > [data-testid="button"]').click();
-      cy.findByTestId('textfield-input')
-        .should('be.visible')
-        .should('have.value', mockCluster.label)
-        .clear()
-        .type(`${mockErrorCluster.label}{enter}`);
+      cy.get('[data-qa-edit-field]').within(() => {
+        cy.findByTestId('textfield-input')
+          .should('be.visible')
+          .should('have.value', mockCluster.label)
+          .clear()
+          .type(`${mockErrorCluster.label}{enter}`);
+      });
 
       // Error message shows when API request fails.
       cy.wait('@updateClusterError');
