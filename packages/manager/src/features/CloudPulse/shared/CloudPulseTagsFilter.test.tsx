@@ -16,6 +16,7 @@ const props: CloudPulseTagsSelectProps = {
   optional: true,
   region: 'us-east',
   resourceType: 'linode',
+  xFilter: { region: 'us-east' },
 };
 
 const queryMocks = vi.hoisted(() => ({
@@ -85,13 +86,13 @@ describe('CloudPulseTagsSelect component tests', () => {
     const user = userEvent.setup();
 
     queryMocks.useAllLinodesQuery.mockReturnValue({
-      data: linodeFactory.buildList(2, { tags: ['tag-2', 'tag-3'] }),
+      data: [],
       isError: false,
       isLoading: false,
       status: 'success',
     });
     const { getByRole, queryAllByRole } = renderWithTheme(
-      <CloudPulseTagsSelect {...props} region={'us-central'} />
+      <CloudPulseTagsSelect {...props} xFilter={{ region: 'us-central' }} />
     );
     await user.click(getByRole('button', { name: 'Open' }));
     const options = queryAllByRole('option');

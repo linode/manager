@@ -75,6 +75,22 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   filters: [
     {
       configuration: {
+        dependency: ['region'],
+        filterKey: 'tags',
+        filterType: 'string',
+        isFilterable: false,
+        isMetricsFilter: false,
+        isMultiSelect: true,
+        isOptional: true,
+        name: 'Tags',
+        neededInServicePage: false,
+        placeholder: 'Select Tags',
+        priority: 4,
+      },
+      name: 'Tags',
+    },
+    {
+      configuration: {
         filterKey: 'engine',
         filterType: 'string',
         isFilterable: false, // isFilterable -- this determines whethere you need to pass it metrics api
