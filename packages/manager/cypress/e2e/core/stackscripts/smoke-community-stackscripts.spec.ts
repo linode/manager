@@ -1,8 +1,7 @@
 import type { StackScript } from '@linode/api-v4';
-import { Profile, getImages, getProfile } from '@linode/api-v4';
+import { Profile, getProfile } from '@linode/api-v4';
 
 import { stackScriptFactory } from 'src/factories';
-import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { authenticate } from 'support/api/authentication';
@@ -15,11 +14,8 @@ import {
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { depaginate } from 'support/util/paginate';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-import type { Image } from '@linode/api-v4';
 
 const mockStackScripts: StackScript[] = [
   stackScriptFactory.build({
