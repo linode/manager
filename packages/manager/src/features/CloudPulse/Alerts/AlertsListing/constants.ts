@@ -1,22 +1,22 @@
 export const AlertListingTableLabelMap = [
   {
     colName: 'Alert Name',
-    label: 'alertName',
-  },
-  {
-    colName: 'Service',
-    label: 'service',
+    label: 'label',
   },
   {
     colName: 'Status',
     label: 'status',
   },
   {
-    colName: 'Last Modified',
-    label: 'lastModified',
+    colName: 'Service',
+    label: 'service_type',
   },
   {
     colName: 'Created By',
-    label: 'createdBy',
+    label: 'created_by',
+  },
+  {
+    colName: 'Last Modified',
+    label: 'updated',
   },
 ];

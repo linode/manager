@@ -110,6 +110,9 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
+import { accountPermissionsFactory } from 'src/factories/accountPermissions';
+import { accountResourcesFactory } from 'src/factories/accountResources';
+import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { pickRandom } from 'src/utilities/random';
 
 import type {
@@ -131,9 +134,6 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
-import { accountResourcesFactory } from 'src/factories/accountResources';
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -2431,25 +2431,32 @@ export const handlers = [
       return HttpResponse.json(response);
     }
   ),
-  http.get('*/monitor/alert-definitions', async ({ request }) => {
-    const customAlerts = alertFactory.buildList(2, {
+  http.get('*/monitor/alert-definitions', async () => {
+    const customAlerts = alertFactory.buildList(10, {
       severity: 0,
       type: 'user',
     });
-    const customAlertsWithServiceType = alertFactory.buildList(2, {
+    const customAlertsWithServiceType = alertFactory.buildList(10, {
       service_type: 'dbaas',
       severity: 1,
       type: 'user',
     });
-    const defaultAlerts = alertFactory.buildList(1, { type: 'system' });
-    const defaultAlertsWithServiceType = alertFactory.buildList(1, {
+    const defaultAlerts = alertFactory.buildList(15, {
+      created_by: 'System',
+      type: 'system',
+    });
+    const defaultAlertsWithServiceType = alertFactory.buildList(7, {
+      created_by: 'System',
       service_type: 'dbaas',
       severity: 3,
       type: 'system',
     });
     const alerts = [
       ...defaultAlerts,
-      ...alertFactory.buildList(3, { status: 'disabled' }),
+      ...alertFactory.buildList(8, {
+        service_type: 'linode',
+        status: 'disabled',
+      }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
       ...alertFactory.buildList(3),
