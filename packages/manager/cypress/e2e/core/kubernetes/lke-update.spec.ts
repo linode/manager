@@ -1470,8 +1470,8 @@ describe('LKE cluster updates', () => {
         invalidDNSSubdomainLabel,
         'valid-key: invalid value',
         '!invalid-characters: value',
-        'key: kubernetes.io',
-        'key: linode.com',
+        'kubernetes.io: value',
+        'linode.com: value',
       ];
 
       const invalidTaintKeys = [
