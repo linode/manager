@@ -169,7 +169,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
     mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetCloudPulseDashboard(id, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(

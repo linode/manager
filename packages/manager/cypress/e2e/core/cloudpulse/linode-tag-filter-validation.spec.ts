@@ -112,7 +112,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetLinodes(linodes).as('fetchResources');
     mockGetCloudPulseDashboard(id, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
