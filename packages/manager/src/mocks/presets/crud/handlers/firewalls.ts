@@ -347,3 +347,5 @@ export const deleteFirewallDevice = (mockState: MockState) => [
     }
   ),
 ];
+
+// @TODO Linode Interfaces - add mocks for firewall settings/firewall templates as needed
