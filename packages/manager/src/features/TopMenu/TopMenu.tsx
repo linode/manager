@@ -14,7 +14,7 @@ import { CreateMenu } from './CreateMenu/CreateMenu';
 import { Help } from './Help';
 import { InternalAdminBanner } from './InternalAdminBanner';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
-import SearchBar from './SearchBar/SearchBar';
+import { SearchBar } from './SearchBar/SearchBar';
 import { TopMenuTooltip } from './TopMenuTooltip';
 import { UserMenu } from './UserMenu';
 
