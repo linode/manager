@@ -105,6 +105,7 @@ export const createFirewall = (mockState: MockState) => [
       const firewall = firewallFactory.build({
         ...payload,
         created: DateTime.now().toISO(),
+        entities: [],
         updated: DateTime.now().toISO(),
       });
 
@@ -261,18 +262,30 @@ export const createFirewallDevice = (mockState: MockState) => [
       }
 
       const payload = await request.clone().json();
+      const entity = {
+        ...payload,
+        label: `linode-${payload.id}`,
+        url: `/linodes/${payload.id}`,
+      };
 
       const firewallDevice = firewallDeviceFactory.build({
-        ...payload,
         created: DateTime.now().toISO(),
+        entity,
         updated: DateTime.now().toISO(),
       });
+
+      const updatedFirewall = {
+        ...firewall,
+        entities: [...firewall.entities, entity],
+      };
 
       await mswDB.add(
         'firewallDevices',
         [firewallId, firewallDevice],
         mockState
       );
+
+      await mswDB.update('firewalls', firewallId, updatedFirewall, mockState);
 
       queueEvents({
         event: {
@@ -281,7 +294,7 @@ export const createFirewallDevice = (mockState: MockState) => [
             id: firewallId,
             label: firewall.label,
             type: 'firewallDevice',
-            url: `/v4beta/networking/firewalls/${firewallId}/devices`,
+            url: `/v4beta/networking/firewalls/${firewallId}/linodes`,
           },
         },
         mockState,
@@ -294,7 +307,7 @@ export const createFirewallDevice = (mockState: MockState) => [
 ];
 
 export const deleteFirewallDevice = (mockState: MockState) => [
-  http.post(
+  http.delete(
     '*/v4beta/networking/firewalls/:id/devices/:deviceId',
     async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
       const firewallId = Number(params.id);
@@ -306,7 +319,15 @@ export const deleteFirewallDevice = (mockState: MockState) => [
         return makeNotFoundResponse();
       }
 
+      const updatedFirewall = {
+        ...firewall,
+        entities: firewall.entities.filter(
+          (entity) => entity.id !== firewallDevice[1].entity.id
+        ),
+      };
+
       await mswDB.delete('firewallDevices', deviceId, mockState);
+      await mswDB.update('firewalls', firewallId, updatedFirewall, mockState);
 
       queueEvents({
         event: {
@@ -315,7 +336,7 @@ export const deleteFirewallDevice = (mockState: MockState) => [
             id: firewall.id,
             label: firewall.label,
             type: 'firewallDevice',
-            url: `/v4beta/networking/firewalls/${firewall.id}`,
+            url: `/v4beta/networking/firewalls/${firewall.id}/linodes`,
           },
         },
         mockState,

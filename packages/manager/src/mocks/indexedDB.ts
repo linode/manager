@@ -165,11 +165,12 @@ export const mswDB = {
                 // Some items may be stored as [number, Entity]
                 const isItemTuple = Array.isArray(item) && item.length >= 2;
 
-                if (!hasId(item) || (isItemTuple && !hasId(item[1]))) {
-                  return false;
-                }
+                const itemTupleToFind =
+                  isItemTuple && hasId(item[1]) && item[1].id === id;
 
-                return isItemTuple ? item[1].id === id : item.id === id;
+                const itemToFind = hasId(item) && item.id === id;
+
+                return itemTupleToFind || itemToFind;
               });
               if (index !== -1) {
                 state[entity].splice(index, 1);
@@ -333,11 +334,12 @@ export const mswDB = {
               // Some items may be stored as [number, Entity]
               const isItemTuple = Array.isArray(item) && item.length >= 2;
 
-              if (!hasId(item) || (isItemTuple && !hasId(item[1]))) {
-                return false;
-              }
+              const itemTupleToFind =
+                isItemTuple && hasId(item[1]) && item[1].id === id;
 
-              return isItemTuple ? item[1].id === id : item.id === id;
+              const itemToFind = hasId(item) && item.id === id;
+
+              return itemTupleToFind || itemToFind;
             });
           };
 
