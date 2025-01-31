@@ -9,12 +9,15 @@ import {
   accountFactory,
   alertFactory,
   alertRulesFactory,
+  databaseFactory,
+  notificationChannelFactory,
   regionFactory,
 } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import type { Flags } from 'src/featureFlags';
 
 import {
+  mockGetAlertChannels,
   mockGetAlertDefinitions,
   mockGetAllAlertDefinitions,
 } from 'support/intercepts/cloudpulse';
@@ -27,15 +30,39 @@ import {
   aggregationTypeMap,
 } from 'support/constants/alert';
 import { ui } from 'support/ui';
+import { Database } from '@linode/api-v4';
+import { mockGetDatabases } from 'support/intercepts/databases';
 
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 const mockAccount = accountFactory.build();
+const regions = [
+  regionFactory.build({
+    capabilities: ['Managed Databases'],
+    id: 'us-ord',
+    label: 'Chicago, IL',
+    country: 'us',
+  }),
+  regionFactory.build({
+    capabilities: ['Managed Databases'],
+    id: 'us-east',
+    label: 'Newark',
+    country: 'us',
+  }),
+];
+
+const databases: Database[] = databaseFactory.buildList(5).map((db, index) => ({
+  ...db,
+  type: 'MySQL',
+  region: regions[index % regions.length].id,
+  engine: 'mysql',
+}));
+
 const alertDetails = alertFactory.build({
   service_type: 'dbaas',
   severity: 1,
   status: 'enabled',
   type: 'system',
-  entity_ids: ['1', '2'],
+  entity_ids: databases.slice(0, 4).map((db) => db.id.toString()),
   rule_criteria: { rules: alertRulesFactory.buildList(2) },
 });
 const {
@@ -49,19 +76,18 @@ const {
   updated,
 } = alertDetails;
 const { rules } = rule_criteria;
-const regions = [
-  regionFactory.build({
-    capabilities: ['Managed Databases'],
-    id: 'us-ord',
-    label: 'Chicago, IL',
-  }),
-  regionFactory.build({
-    capabilities: ['Managed Databases'],
-    id: 'us-east',
-    label: 'US, Newark',
-  }),
-];
+const notificationChannels = notificationChannelFactory.build();
 
+const verifyRowOrder = (expectedIds: string[]) => {
+  cy.get('[data-qa-alert-row]').then(($rows) => {
+    const alertRowIds = $rows
+      .map((index, row) => row.getAttribute('data-qa-alert-row'))
+      .get();
+    expectedIds.forEach((expectedId, index) => {
+      expect(alertRowIds[index]).to.equal(expectedId);
+    });
+  });
+};
 /**
  * Integration tests for the CloudPulse DBaaS Alerts Detail Page, ensuring that the alert details, criteria, and resource information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
  */
@@ -75,6 +101,8 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
     mockGetAlertDefinitions(service_type, id, alertDetails).as(
       'getDBaaSAlertDefinitions'
     );
+    mockGetDatabases(databases).as('getMockedDbaasDatabases');
+    mockGetAlertChannels([notificationChannels]);
   });
 
   it('navigates to the Show Details page from the list page', () => {
@@ -106,6 +134,7 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
     cy.visitWithLogin(
       `/monitor/alerts/definitions/detail/${service_type}/${id}`
     );
+    cy.wait(['@getDBaaSAlertDefinitions', '@getMockedDbaasDatabases']);
 
     // Validating contents of Overview Section
     cy.get('[data-qa-section="Overview"]').within(() => {
@@ -127,7 +156,7 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       });
       // Validate Service field
       cy.findByText('Service:').should('be.visible');
-      cy.findByText('Databases').should('be.visible');
+      cy.findByText('dbaas').should('be.visible');
 
       // Validate Type field
       cy.findByText('Type:').should('be.visible');
@@ -234,6 +263,107 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       cy.get('[data-qa-item="consecutive occurrences"]')
         .should('be.visible')
         .should('have.text', 'consecutive occurrences.');
+    });
+    //  Validate the Resources section (Resource and Region columns)
+    cy.get('[data-qa-section="Resources"]').within(() => {
+      ui.heading
+        .findByText('resource')
+        .scrollIntoView()
+        .should('be.visible')
+        .should('have.text', 'Resource');
+
+      ui.heading
+        .findByText('region')
+        .should('be.visible')
+        .should('have.text', 'Region');
+
+      cy.findByPlaceholderText('Search for a Region or Resource').should(
+        'be.visible'
+      );
+
+      cy.findByPlaceholderText('Select Regions').should('be.visible');
+
+      cy.get('[data-qa-alert-row]').should('have.length', 4);
+
+      // Validate resource-region mapping for each row in the table
+
+      cy.get('[data-qa-alert-table="true"]').within(() => {
+        // Get the number of rows in the table
+        cy.get('[data-qa-alert-row]')
+          .should('have.length', 4)
+          .each((row, index) => {
+            const db = databases[index];
+            const rowNumber = index + 1;
+
+            cy.wrap(row).within(() => {
+              cy.get(`[data-qa-alert-cell="${rowNumber}_resource"]`).should(
+                'have.text',
+                db.label
+              );
+
+              cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
+                'have.text',
+                `US, ${regions.find((r) => r.id === db.region)?.label} (${
+                  db.region
+                })`
+              );
+            });
+          });
+      });
+
+      // Sorting by Resource and Region columns
+      ui.heading.findByText('resource').should('be.visible').click();
+      verifyRowOrder(['4', '3', '2', '1']);
+
+      ui.heading.findByText('resource').should('be.visible').click();
+      verifyRowOrder(['1', '2', '3', '4']);
+
+      ui.heading.findByText('region').should('be.visible').click();
+      verifyRowOrder(['2', '4', '1', '3']);
+
+      ui.heading.findByText('region').should('be.visible').click();
+      verifyRowOrder(['1', '3', '2', '4']);
+
+      // Search by Resource
+      cy.findByPlaceholderText('Search for a Region or Resource')
+        .should('be.visible')
+        .type(databases[0].label);
+
+      cy.get('[data-qa-alert-table="true"]')
+        .find('[data-qa-alert-row]')
+        .should('have.length', 1);
+
+      cy.findByText(databases[0].label).should('be.visible');
+      [1, 2, 3].forEach((i) =>
+        cy.findByText(databases[i].label).should('not.exist')
+      );
+
+      // Search by region
+      cy.findByPlaceholderText('Search for a Region or Resource').clear();
+
+      ui.regionSelect.find().click().type(`${regions[0].label}{enter}`);
+      ui.regionSelect.find().click();
+
+      cy.get('[data-qa-alert-table="true"]')
+        .find('[data-qa-alert-row]')
+        .should('have.length', 2);
+
+      [0, 2].forEach((i) =>
+        cy.get(`[data-qa-alert-cell="${i}_region"]`).should('not.exist')
+      );
+      [1, 3].forEach((i) =>
+        cy.get(`[data-qa-alert-cell="${i}_region"]`).should('be.visible')
+      );
+    });
+    // Validate Notification Channels Section
+    cy.get('[data-qa-section="Notification Channels"]').within(() => {
+      cy.findByText('Type:').should('be.visible');
+      cy.findByText('Email').should('be.visible');
+      cy.findByText('Channel:').should('be.visible');
+      cy.findByText('Channel-1').should('be.visible');
+      cy.findByText('To:').should('be.visible');
+      cy.findByText('test@test.com').should('be.visible');
+      cy.findByText('test2@test.com').should('be.visible');
     });
   });
 });

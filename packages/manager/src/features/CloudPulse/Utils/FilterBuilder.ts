@@ -54,6 +54,7 @@ interface CloudPulseMandatoryFilterCheckProps {
  * @param config - accepts a CloudPulseServiceTypeFilters of tag key
  * @param handleTagsChange - the callback when we select new tag
  * @param dashboard - the selected dashboard's service type
+ * @param dependentFilters - tags are dependent on region filter, we need this for disabling the tags selection component
  * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
  * @returns CloudPulseTagSelectProps
  */
@@ -61,14 +62,25 @@ export const getTagsProperties = (
   props: CloudPulseFilterProperties,
   handleTagsChange: (tags: CloudPulseTags[], savePref?: boolean) => void
 ): CloudPulseTagsSelectProps => {
-  const { name: label, placeholder } = props.config.configuration;
-  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
+  const { filterKey, name: label, placeholder } = props.config.configuration;
+  const {
+    dashboard,
+    dependentFilters,
+    isServiceAnalyticsIntegration,
+    preferences,
+  } = props;
   return {
     defaultValue: preferences?.[TAGS],
+    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+      filterKey,
+      dependentFilters ?? {},
+      dashboard
+    ),
     handleTagsChange,
     label,
     optional: props.config.configuration.isOptional,
     placeholder,
+    region: dependentFilters?.[REGION],
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
   };
