@@ -1,4 +1,4 @@
-import { Autocomplete, Box, TextField } from '@linode/ui';
+import { Autocomplete, Box, IconButton, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
@@ -29,10 +29,7 @@ import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import {
-  StyledIconButton,
-  StyledSearchBarWrapperDiv,
-} from './SearchBar.styles';
+import { StyledIconButton, StyledSearchIcon } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
 import { StyledSearchSuggestion } from './SearchSuggestion.styles';
 import { SearchSuggestionContainer } from './SearchSuggestionContainer';
@@ -286,14 +283,21 @@ const SearchBarComponent = (props: SearchProps) => {
       >
         <Search />
       </StyledIconButton>
-      <StyledSearchBarWrapperDiv className={searchActive ? 'active' : ''}>
-        <Search
-          style={{
-            color: theme.tokens.color.Neutrals[40],
-            fontSize: '2rem',
-          }}
-          data-qa-search-icon
-        />
+      <Box
+        sx={{
+          maxWidth: '800px',
+          [theme.breakpoints.down('sm')]: {
+            left: '50%',
+            opacity: searchActive ? 1 : 0,
+            position: 'absolute',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            visibility: searchActive ? 'visible' : 'hidden',
+            width: `calc(100% - ${theme.tokens.spacing[80]})`,
+            zIndex: searchActive ? 3 : 0,
+          },
+        }}
+      >
         <label className="visually-hidden" htmlFor="main-search">
           Main search
         </label>
@@ -319,6 +323,34 @@ const SearchBarComponent = (props: SearchProps) => {
             return (
               <TextField
                 {...params}
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <IconButton
+                      sx={{
+                        '> svg': {
+                          '&:hover': {
+                            color: theme.tokens.header.Search.Icon.Hover,
+                          },
+
+                          color: theme.tokens.header.Search.Icon.Default,
+                        },
+                        height: 16,
+                        [theme.breakpoints.up('sm')]: {
+                          display: 'none',
+                        },
+                        width: 16,
+                      }}
+                      aria-label="close menu"
+                      color="inherit"
+                      onClick={toggleSearch}
+                      size="large"
+                    >
+                      <Close />
+                    </IconButton>
+                  ),
+                  startAdornment: <StyledSearchIcon />,
+                }}
                 inputProps={{
                   ...params.inputProps,
                   sx: {
@@ -397,10 +429,25 @@ const SearchBarComponent = (props: SearchProps) => {
               />
             );
           }}
-          sx={{
+          sx={(theme) => ({
+            '& .MuiInput-root .MuiInput-input': {
+              padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
+            },
+            '&.MuiAutocomplete-root': {
+              '&.Mui-focused, &.Mui-focused:hover': {
+                borderColor: theme.tokens.header.Search.Border.Active,
+              },
+              '&:hover': {
+                borderColor: theme.tokens.header.Search.Border.Hover,
+              },
+              '.MuiInput-root': {
+                paddingRight: theme.tokens.spacing[40],
+              },
+              border: `1px solid ${theme.tokens.header.Search.Border.Default}`,
+            },
             maxWidth: '100%',
             width: '100%',
-          }}
+          })}
           autoHighlight
           data-qa-main-search
           disableClearable
@@ -420,28 +467,7 @@ const SearchBarComponent = (props: SearchProps) => {
           popupIcon={null}
           value={value}
         />
-        <StyledIconButton
-          sx={{
-            height: 22,
-            width: 22,
-          }}
-          aria-label="close menu"
-          color="inherit"
-          onClick={toggleSearch}
-          size="large"
-        >
-          <Close
-            sx={(theme) => ({
-              '& > span': {
-                padding: 2,
-              },
-              '&:hover, &:focus': {
-                color: theme.palette.primary.main,
-              },
-            })}
-          />
-        </StyledIconButton>
-      </StyledSearchBarWrapperDiv>
+      </Box>
     </React.Fragment>
   );
 };

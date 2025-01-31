@@ -882,7 +882,7 @@ export const lightTheme: ThemeOptions = {
           [breakpoints.only('xs')]: {
             fontSize: '1rem',
           },
-          fontSize: '0.9rem',
+          fontSize: Typography.Body.Regular,
           padding: 8,
         },
         inputMultiline: {
