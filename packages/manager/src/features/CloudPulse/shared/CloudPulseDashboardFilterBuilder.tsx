@@ -138,6 +138,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           selectedTags,
           savePref,
           {
+            [RESOURCE_ID]: undefined,
             [TAGS]: selectedTags,
           }
         );
@@ -171,6 +172,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         const updatedPreferenceData = {
           [REGION]: region,
           [RESOURCES]: undefined,
+          [TAGS]: undefined,
         };
         emitFilterChangeByFilterKey(
           REGION,

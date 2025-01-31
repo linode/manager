@@ -50,7 +50,7 @@ export const CloudPulseTagsSelect = React.memo(
     // fetch all linode instances, consume the associated tags
     const tags = React.useMemo(() => {
       if (!linodesByRegion) {
-        return [];
+        return undefined;
       }
 
       return Array.from(
@@ -65,20 +65,22 @@ export const CloudPulseTagsSelect = React.memo(
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     React.useEffect(() => {
-      if (!tags || !savePreferences || !region) {
-        setSelectedTags([]);
-        handleTagsChange([]);
-        return;
+      if (!tags || !savePreferences || selectedTags) {
+        if (selectedTags) {
+          setSelectedTags([]);
+          handleTagsChange([]);
+        }
+      } else {
+        const defaultTags =
+          defaultValue && Array.isArray(defaultValue)
+            ? defaultValue.map((tag) => String(tag))
+            : [];
+        const filteredTags = tags.filter((tag) =>
+          defaultTags.includes(String(tag.label))
+        );
+        handleTagsChange(filteredTags);
+        setSelectedTags(filteredTags);
       }
-      const defaultTags =
-        defaultValue && Array.isArray(defaultValue)
-          ? defaultValue.map((tag) => String(tag))
-          : [];
-      const filteredTags = tags.filter((tag) =>
-        defaultTags.includes(String(tag.label))
-      );
-      handleTagsChange(filteredTags);
-      setSelectedTags(filteredTags);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tags, resourceType, region, xFilter]);
 
@@ -125,7 +127,7 @@ export const CloudPulseTagsSelect = React.memo(
         loading={isLoading}
         multiple
         noMarginTop
-        options={tags}
+        options={tags ?? []}
         placeholder={selectedTags?.length ? '' : placeholder || 'Select Tags'}
         value={selectedTags ?? []}
       />
