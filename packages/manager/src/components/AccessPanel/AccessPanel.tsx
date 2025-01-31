@@ -24,8 +24,10 @@ import { UserSSHKeyPanel } from './UserSSHKeyPanel';
 
 import type { Theme } from '@mui/material/styles';
 
-const PasswordInput = React.lazy(
-  () => import('src/components/PasswordInput/PasswordInput')
+const PasswordInput = React.lazy(() =>
+  import('src/components/PasswordInput/PasswordInput').then((module) => ({
+    default: module.PasswordInput,
+  }))
 );
 
 const useStyles = makeStyles<void, 'passwordInputOuter'>()(

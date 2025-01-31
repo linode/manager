@@ -14,7 +14,7 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import PasswordInput from 'src/components/PasswordInput/PasswordInput';
+import { PasswordInput } from 'src/components/PasswordInput/PasswordInput';
 
 import {
   getIsUDFHeader,
