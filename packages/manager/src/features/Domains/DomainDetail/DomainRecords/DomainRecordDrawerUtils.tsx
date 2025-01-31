@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { cond, equals, pick } from 'ramda';
 
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 
@@ -83,68 +82,6 @@ export const castFormValuesToNumeric = (
   });
 };
 
-export const filterDataByType = (
-  fields: EditableDomainFields | EditableRecordFields,
-  t: DomainType | RecordType
-): Partial<EditableDomainFields | EditableRecordFields> =>
-  cond([
-    [
-      () => equals('master', t),
-      () =>
-        pick(
-          [
-            'domain',
-            'soa_email',
-            'refresh_sec',
-            'retry_sec',
-            'expire_sec',
-            'ttl_sec',
-            'axfr_ips',
-          ],
-          fields
-        ),
-    ],
-    // [
-    //   () => equals('slave', t),
-    //   () => pick([], fields),
-    // ],
-    [() => equals('A', t), () => pick(['name', 'target', 'ttl_sec'], fields)],
-    [
-      () => equals('AAAA', t),
-      () => pick(['name', 'target', 'ttl_sec'], fields),
-    ],
-    [
-      () => equals('CAA', t),
-      () => pick(['name', 'tag', 'target', 'ttl_sec'], fields),
-    ],
-    [
-      () => equals('CNAME', t),
-      () => pick(['name', 'target', 'ttl_sec'], fields),
-    ],
-    [
-      () => equals('MX', t),
-      () => pick(['target', 'priority', 'ttl_sec', 'name'], fields),
-    ],
-    [() => equals('NS', t), () => pick(['target', 'name', 'ttl_sec'], fields)],
-    [
-      () => equals('SRV', t),
-      () =>
-        pick(
-          [
-            'service',
-            'protocol',
-            'priority',
-            'port',
-            'weight',
-            'target',
-            'ttl_sec',
-          ],
-          fields
-        ),
-    ],
-    [() => equals('TXT', t), () => pick(['name', 'target', 'ttl_sec'], fields)],
-  ])();
-
 /**
  * the defaultFieldState is used to pre-populate the drawer with either
  * editable data or defaults.
@@ -170,3 +107,108 @@ export const defaultFieldsState = (
   ttl_sec: props.ttl_sec ?? 0,
   weight: props.weight ?? '5',
 });
+
+const getMasterData = (
+  fields: EditableDomainFields
+): Pick<
+  EditableDomainFields,
+  | 'axfr_ips'
+  | 'domain'
+  | 'expire_sec'
+  | 'refresh_sec'
+  | 'retry_sec'
+  | 'soa_email'
+  | 'ttl_sec'
+> => {
+  return {
+    axfr_ips: fields.axfr_ips,
+    domain: fields.domain,
+    expire_sec: fields.expire_sec,
+    refresh_sec: fields.refresh_sec,
+    retry_sec: fields.retry_sec,
+    soa_email: fields.soa_email,
+    ttl_sec: fields.ttl_sec,
+  };
+};
+
+/**
+ * Get data for `A`, `AAAA`, `CNAME`, `NS`, `TXT` records
+ * @param fields - (unfiltered) Domain Record form data fields
+ */
+const getSharedRecordData = (
+  fields: EditableRecordFields
+): Pick<EditableRecordFields, 'name' | 'target' | 'ttl_sec'> => {
+  return {
+    name: fields.name,
+    target: fields.target,
+    ttl_sec: fields.ttl_sec,
+  };
+};
+
+const getCAARecordData = (
+  fields: EditableRecordFields
+): Pick<EditableRecordFields, 'name' | 'tag' | 'target' | 'ttl_sec'> => {
+  return {
+    name: fields.name,
+    tag: fields.tag,
+    target: fields.target,
+    ttl_sec: fields.ttl_sec,
+  };
+};
+
+const getMXRecordData = (
+  fields: EditableRecordFields
+): Pick<EditableRecordFields, 'name' | 'priority' | 'target' | 'ttl_sec'> => {
+  return {
+    name: fields.name,
+    priority: fields.priority,
+    target: fields.target,
+    ttl_sec: fields.ttl_sec,
+  };
+};
+
+const getSRVRecordData = (
+  fields: EditableRecordFields
+): Pick<
+  EditableRecordFields,
+  'port' | 'priority' | 'protocol' | 'service' | 'target' | 'ttl_sec' | 'weight'
+> => {
+  return {
+    port: fields.port,
+    priority: fields.priority,
+    protocol: fields.protocol,
+    service: fields.service,
+    target: fields.target,
+    ttl_sec: fields.ttl_sec,
+    weight: fields.weight,
+  };
+};
+
+export const filterDataByType = (
+  fields: EditableDomainFields | EditableRecordFields,
+  type: DomainType | RecordType
+): Partial<EditableDomainFields | EditableRecordFields> => {
+  switch (type) {
+    case 'master':
+      return getMasterData(fields);
+
+    case 'A':
+    case 'AAAA':
+    case 'CNAME':
+    case 'NS':
+    case 'TXT':
+      return getSharedRecordData(fields);
+
+    case 'CAA':
+      return getCAARecordData(fields);
+
+    case 'MX':
+      return getMXRecordData(fields);
+
+    case 'SRV':
+      return getSRVRecordData(fields);
+
+    default:
+      return {};
+  }
+};
