@@ -11,7 +11,7 @@ import {
 
 import { mswDB } from '../../../indexedDB';
 
-import type { Firewall, FirewallDevice } from '@linode/api-v4';
+import type { Firewall, FirewallDevice, FirewallRules } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
@@ -147,16 +147,16 @@ export const updateFirewall = (mockState: MockState) => [
         ...(await request.clone().json()),
         updated: DateTime.now().toISO(),
       };
-      const updatedDomain = { ...firewall, ...payload };
+      const updatedFirewall = { ...firewall, ...payload };
 
-      await mswDB.update('firewalls', id, updatedDomain, mockState);
+      await mswDB.update('firewalls', id, updatedFirewall, mockState);
 
       queueEvents({
         event: {
           action: 'firewall_update',
           entity: {
             id: firewall.id,
-            label: firewall.label,
+            label: updatedFirewall.label,
             type: 'firewall',
             url: `/v4beta/networking/firewalls/${firewall.id}`,
           },
@@ -165,7 +165,7 @@ export const updateFirewall = (mockState: MockState) => [
         sequence: [{ status: 'notification' }],
       });
 
-      return makeResponse(updatedDomain);
+      return makeResponse(updatedFirewall);
     }
   ),
 ];
@@ -198,6 +198,50 @@ export const deleteFirewall = (mockState: MockState) => [
       });
 
       return makeResponse({});
+    }
+  ),
+];
+
+export const updateFirewallRules = (mockState: MockState) => [
+  http.put(
+    '*/v4beta/networking/firewalls/:id/rules',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | FirewallRules>> => {
+      const id = Number(params.id);
+      const firewall = await mswDB.get('firewalls', id);
+
+      if (!firewall) {
+        return makeNotFoundResponse();
+      }
+
+      const payload: FirewallRules = {
+        ...(await request.clone().json()),
+      };
+      const updatedRules = { ...firewall.rules, ...payload };
+      const updatedFirewall = {
+        ...firewall,
+        rules: updatedRules,
+      };
+
+      await mswDB.update('firewalls', id, updatedFirewall, mockState);
+
+      queueEvents({
+        event: {
+          action: 'firewall_rules_update',
+          entity: {
+            id: firewall.id,
+            label: firewall.label,
+            type: 'firewall',
+            url: `/v4beta/networking/firewalls/${firewall.id}`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
+
+      return makeResponse(updatedRules);
     }
   ),
 ];

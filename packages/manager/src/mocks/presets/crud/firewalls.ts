@@ -5,6 +5,7 @@ import {
   deleteFirewallDevice,
   getFirewalls,
   updateFirewall,
+  updateFirewallRules,
 } from 'src/mocks/presets/crud/handlers/firewalls';
 
 import type { MockPresetCrud } from 'src/mocks/types';
@@ -18,6 +19,7 @@ export const firewallCrudPreset: MockPresetCrud = {
     deleteFirewallDevice,
     getFirewalls,
     updateFirewall,
+    updateFirewallRules,
   ],
   id: 'firewalls:crud',
   label: 'Firewall CRUD',
