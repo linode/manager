@@ -72,25 +72,19 @@ const verifyTableSorting = (
   sortOrder: 'ascending' | 'descending',
   expectedValues: number[]
 ) => {
-  cy.get(`[data-qa-header="${header}"]`)
+  ui.heading
+    .findByText(header)
     .click()
     .should('have.attr', 'aria-sort', sortOrder);
-
   cy.get('[data-qa="alert-table"]').within(() => {
     cy.get('[data-qa-alert-cell]').should(($cells) => {
-      const actualOrder = $cells
-        .map((_, cell) =>
-          parseInt(cell.getAttribute('data-qa-alert-cell')!, 10)
-        )
-        .get();
-      expect(
-        actualOrder,
-        `Sorting validation for column: ${header}`
-      ).to.deep.equal(expectedValues);
+      const actualValues = $cells
+        .toArray()
+        .map((cell) => parseInt(cell.getAttribute('data-qa-alert-cell')!, 10));
+      expect(actualValues).to.eql(expectedValues);
     });
   });
 };
-
 /**
  * Utility function to validate an alert's details.
  *
@@ -160,7 +154,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     });
   });
 
-  it('should validate UI elements and alert details', () => {
+  it('should validate alert details on the listing page.', () => {
     // Validate navigation links and buttons
     cy.findByText('Alerts')
       .should('be.visible')

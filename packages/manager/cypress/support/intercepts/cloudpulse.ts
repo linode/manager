@@ -338,7 +338,6 @@ export const mockGetAlertChannels = (
     paginateResponse(channel)
   );
 };
-
 /**
  * Mocks the API response for creating a new alert definition in the monitoring service.
  * This function intercepts a POST request to create alert definitions and returns a mock
