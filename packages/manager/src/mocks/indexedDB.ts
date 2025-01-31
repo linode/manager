@@ -162,11 +162,14 @@ export const mswDB = {
           const deleteEntity = (state: MockState | undefined) => {
             if (state && state[entity]) {
               const index = state[entity].findIndex((item) => {
-                if (!hasId(item)) {
+                // Some items may be stored as [number, Entity]
+                const isItemTuple = Array.isArray(item) && item.length >= 2;
+
+                if (!hasId(item) || (isItemTuple && !hasId(item[1]))) {
                   return false;
                 }
 
-                return item.id === id;
+                return isItemTuple ? item[1].id === id : item.id === id;
               });
               if (index !== -1) {
                 state[entity].splice(index, 1);
@@ -327,10 +330,14 @@ export const mswDB = {
 
           const findEntity = (state: MockState | undefined) => {
             return state?.[entity]?.find((item) => {
-              if (!hasId(item)) {
+              // Some items may be stored as [number, Entity]
+              const isItemTuple = Array.isArray(item) && item.length >= 2;
+
+              if (!hasId(item) || (isItemTuple && !hasId(item[1]))) {
                 return false;
               }
-              return item.id === id;
+
+              return isItemTuple ? item[1].id === id : item.id === id;
             });
           };
 

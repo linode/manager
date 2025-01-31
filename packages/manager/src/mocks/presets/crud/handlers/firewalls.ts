@@ -74,6 +74,24 @@ export const getFirewalls = (mockState: MockState) => [
       });
     }
   ),
+
+  http.get(
+    '*/v4beta/networking/firewalls/:id/devices/:deviceId',
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | FirewallDevice>> => {
+      const id = Number(params.id);
+      const deviceId = Number(params.deviceId);
+      const firewall = await mswDB.get('firewalls', id);
+      const firewallDevice = await mswDB.get('firewallDevices', deviceId);
+
+      if (!firewall || !firewallDevice) {
+        return makeNotFoundResponse();
+      }
+
+      return makeResponse(firewallDevice[1]);
+    }
+  ),
 ];
 
 export const createFirewall = (mockState: MockState) => [
@@ -184,11 +202,7 @@ export const deleteFirewall = (mockState: MockState) => [
   ),
 ];
 
-export const getFirewallSettings = (mockState: MockState) => [];
-
-export const updateFirewallSettings = (mockState: MockState) => [];
-
-export const createFirewallDevices = (mockState: MockState) => [
+export const createFirewallDevice = (mockState: MockState) => [
   http.post(
     '*/v4beta/networking/firewalls/:id/devices',
     async ({
@@ -222,7 +236,7 @@ export const createFirewallDevices = (mockState: MockState) => [
           entity: {
             id: firewallId,
             label: firewall.label,
-            type: 'firewall',
+            type: 'firewallDevice',
             url: `/v4beta/networking/firewalls/${firewallId}/devices`,
           },
         },
@@ -231,6 +245,40 @@ export const createFirewallDevices = (mockState: MockState) => [
       });
 
       return makeResponse(firewallDevice);
+    }
+  ),
+];
+
+export const deleteFirewallDevice = (mockState: MockState) => [
+  http.post(
+    '*/v4beta/networking/firewalls/:id/devices/:deviceId',
+    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+      const firewallId = Number(params.id);
+      const deviceId = Number(params.deviceId);
+      const firewall = await mswDB.get('firewalls', firewallId);
+      const firewallDevice = await mswDB.get('firewallDevices', deviceId);
+
+      if (!firewall || !firewallDevice) {
+        return makeNotFoundResponse();
+      }
+
+      await mswDB.delete('firewallDevices', deviceId, mockState);
+
+      queueEvents({
+        event: {
+          action: 'firewall_device_remove',
+          entity: {
+            id: firewall.id,
+            label: firewall.label,
+            type: 'firewallDevice',
+            url: `/v4beta/networking/firewalls/${firewall.id}`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
+
+      return makeResponse({});
     }
   ),
 ];

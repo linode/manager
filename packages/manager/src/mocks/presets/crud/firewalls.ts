@@ -1,7 +1,8 @@
 import {
   createFirewall,
-  createFirewallDevices,
+  createFirewallDevice,
   deleteFirewall,
+  deleteFirewallDevice,
   getFirewalls,
   updateFirewall,
 } from 'src/mocks/presets/crud/handlers/firewalls';
@@ -12,8 +13,9 @@ export const firewallCrudPreset: MockPresetCrud = {
   group: { id: 'Firewalls' },
   handlers: [
     createFirewall,
-    createFirewallDevices,
+    createFirewallDevice,
     deleteFirewall,
+    deleteFirewallDevice,
     getFirewalls,
     updateFirewall,
   ],
