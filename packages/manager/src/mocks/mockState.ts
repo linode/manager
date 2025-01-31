@@ -27,6 +27,7 @@ export const emptyStore: MockState = {
   eventQueue: [],
   firewallDevices: [],
   firewalls: [],
+  ipAddresses: [],
   linodeConfigs: [],
   linodes: [],
   notificationQueue: [],

@@ -19,6 +19,9 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
     case 'firewalls:crud':
       await mswDB.deleteAll('firewalls', mockState, 'seedState');
       break;
+    case 'ip-addresses:crud':
+      await mswDB.deleteAll('ipAddresses', mockState, 'seedState');
+      break;
     case 'linodes:crud':
       await mswDB.deleteAll('linodes', mockState, 'seedState');
       await mswDB.deleteAll('linodeConfigs', mockState, 'seedState');

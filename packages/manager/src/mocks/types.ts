@@ -5,6 +5,7 @@ import type {
   Event,
   Firewall,
   FirewallDevice,
+  IPAddress,
   Linode,
   Notification,
   PlacementGroup,
@@ -86,7 +87,7 @@ export type MockPresetCrudGroup = {
     | 'Domains'
     | 'Firewalls'
     | 'Linodes'
-    | 'Networking'
+    | 'IP Addresses'
     | 'Placement Groups'
     | 'Quotas'
     | 'Support Tickets'
@@ -96,7 +97,7 @@ export type MockPresetCrudId =
   | 'domains:crud'
   | 'firewalls:crud'
   | 'linodes:crud'
-  | 'networking:crud'
+  | 'ip-addresses:crud'
   | 'placement-groups:crud'
   | 'quotas:crud'
   | 'support-tickets:crud'
@@ -118,6 +119,7 @@ export interface MockState {
   eventQueue: Event[];
   firewallDevices: [number, FirewallDevice][];
   firewalls: Firewall[];
+  ipAddresses: IPAddress[];
   linodeConfigs: [number, Config][];
   linodes: Linode[];
   notificationQueue: Notification[];

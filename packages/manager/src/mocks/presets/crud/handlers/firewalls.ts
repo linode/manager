@@ -1,7 +1,12 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { firewallDeviceFactory, firewallFactory } from 'src/factories';
+import {
+  firewallDeviceFactory,
+  firewallFactory,
+  firewallSettingsFactory,
+  firewallTemplateFactory,
+} from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,
@@ -11,7 +16,13 @@ import {
 
 import { mswDB } from '../../../indexedDB';
 
-import type { Firewall, FirewallDevice, FirewallRules } from '@linode/api-v4';
+import type {
+  Firewall,
+  FirewallDevice,
+  FirewallRules,
+  FirewallSettings,
+  FirewallTemplate,
+} from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
@@ -348,4 +359,58 @@ export const deleteFirewallDevice = (mockState: MockState) => [
   ),
 ];
 
-// @TODO Linode Interfaces - add mocks for firewall settings/firewall templates as needed
+// todo: integrate with db if needed
+export const getFirewallTemplates = () => [
+  http.get(
+    '*/v4beta/networking/firewalls/templates',
+    ({
+      request,
+    }): StrictResponse<
+      APIErrorResponse | APIPaginatedResponse<FirewallTemplate>
+    > => {
+      const templates = firewallTemplateFactory.buildList(3);
+      return makePaginatedResponse({
+        data: templates,
+        request,
+      });
+    }
+  ),
+
+  http.get(
+    '*/v4beta/networking/firewalls/templates/:slug',
+    async (): Promise<StrictResponse<APIErrorResponse | FirewallTemplate>> => {
+      const firewallTemplate = firewallTemplateFactory.build();
+
+      return makeResponse(firewallTemplate);
+    }
+  ),
+];
+
+// todo: integrate with db if needed
+export const getFirewallSettings = () => [
+  http.get(
+    '*/v4beta/networking/firewalls/settings',
+    async (): Promise<StrictResponse<APIErrorResponse | FirewallSettings>> => {
+      const firewallSettings = firewallSettingsFactory.build();
+
+      return makeResponse(firewallSettings);
+    }
+  ),
+];
+
+// todo: integrate with db if needed
+export const updateFirewallSettings = () => [
+  http.put(
+    '*/v4beta/networking/firewalls/settings',
+    async ({
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | FirewallSettings>> => {
+      const payload = await request.clone().json();
+      const firewallSettings = firewallSettingsFactory.build({
+        ...payload,
+      });
+
+      return makeResponse(firewallSettings);
+    }
+  ),
+];
