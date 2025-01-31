@@ -35,7 +35,7 @@ export const createAlertDefinitionSchema = object({
   entity_ids: array()
     .of(string().required())
     .min(1, 'At least one resource is required.')
-    .required('Resources are required'),
+    .required(),
   rule_criteria: object({
     rules: array()
       .of(metricCriteria)
