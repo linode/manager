@@ -1469,7 +1469,8 @@ describe('LKE cluster updates', () => {
         randomString(64),
         invalidDNSSubdomainLabel,
         'valid-key: invalid value',
-        '!invalid-characters: value',
+        '%invalid-character: value',
+        'example.com/myapp: %invalid-character',
         'kubernetes.io: value',
         'linode.com: value',
       ];

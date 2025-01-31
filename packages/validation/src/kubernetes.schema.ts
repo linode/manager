@@ -89,11 +89,11 @@ export const kubernetesControlPlaneACLPayloadSchema = object().shape({
   acl: controlPlaneACLOptionsSchema,
 });
 
-// Starts with a letter or number and contains letters, numbers, hyphens, dots, and underscores
+// Starts and ends with a letter or number and contains letters, numbers, hyphens, dots, and underscores
 const alphaNumericValidCharactersRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
 
-// DNS subdomain prefix (example.com/my-app)
-const dnsPrefixRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-./]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
+// DNS subdomain key (example.com/my-app)
+const dnsKeyRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-./]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
 
 const MAX_DNS_KEY_TOTAL_LENGTH = 128;
 const MAX_DNS_KEY_SUFFIX_LENGTH = 62;
@@ -118,8 +118,9 @@ const validateKubernetesLabel = (labels: {
 
       // If the key has a slash, validate it as a DNS subdomain; else, validate as a simple key.
       if (labelKey.includes('/')) {
-        const [prefix, suffix] = labelKey.split('/');
-        if (!dnsPrefixRegex.test(prefix)) {
+        const suffix = labelKey.split('/')[0];
+
+        if (!dnsKeyRegex.test(labelKey)) {
           return false;
         }
         if (
@@ -164,7 +165,7 @@ export const kubernetesTaintSchema = object().shape({
       (value) => {
         return (
           alphaNumericValidCharactersRegex.test(value) ||
-          dnsPrefixRegex.test(value)
+          dnsKeyRegex.test(value)
         );
       }
     )
