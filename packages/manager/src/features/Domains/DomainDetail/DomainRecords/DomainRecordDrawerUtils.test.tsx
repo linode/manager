@@ -1,9 +1,16 @@
 import {
   castFormValuesToNumeric,
+  filterDataByType,
   resolve,
   resolveAlias,
   shouldResolve,
 } from './DomainRecordDrawerUtils';
+
+import type {
+  EditableDomainFields,
+  EditableRecordFields,
+} from './DomainRecordDrawer';
+import type { DomainType, RecordType } from '@linode/api-v4/lib/domains';
 
 const exampleDomain = 'example.com';
 
@@ -81,6 +88,107 @@ describe('Domain record helper methods', () => {
       const result = castFormValuesToNumeric(formValues, ['apple']);
       expect(result).toEqual({
         apple: undefined,
+      });
+    });
+  });
+
+  describe('filterDataByType', () => {
+    const mockDomainFields: EditableDomainFields = {
+      axfr_ips: ['192.168.0.1'],
+      domain: exampleDomain,
+      expire_sec: 3600,
+      refresh_sec: 7200,
+      retry_sec: 300,
+      soa_email: 'soa@example.com',
+      ttl_sec: 86400,
+    };
+
+    const mockRecordFields: EditableRecordFields = {
+      name: 'www',
+      port: '80',
+      priority: '10',
+      protocol: 'tcp',
+      service: '_http',
+      tag: 'tag-example',
+      target: exampleDomain,
+      ttl_sec: 3600,
+      weight: '5',
+    };
+
+    it('should return correct master data for domain type "master"', () => {
+      const result = filterDataByType(mockDomainFields, 'master');
+
+      expect(result).toEqual({
+        axfr_ips: ['192.168.0.1'],
+        domain: exampleDomain,
+        expire_sec: 3600,
+        refresh_sec: 7200,
+        retry_sec: 300,
+        soa_email: 'soa@example.com',
+        ttl_sec: 86400,
+      });
+    });
+
+    it('should return correct record data for "A", "AAAA", "CNAME", "NS", "TXT" types', () => {
+      const recordTypes: RecordType[] = ['A', 'AAAA', 'CNAME', 'NS', 'TXT'];
+
+      recordTypes.forEach((type) => {
+        const result = filterDataByType(mockRecordFields, type);
+
+        expect(result).toEqual({
+          name: 'www',
+          target: exampleDomain,
+          ttl_sec: 3600,
+        });
+      });
+    });
+
+    it('should return correct CAA record data for type "CAA"', () => {
+      const result = filterDataByType(mockRecordFields, 'CAA');
+
+      expect(result).toEqual({
+        name: 'www',
+        tag: 'tag-example',
+        target: exampleDomain,
+        ttl_sec: 3600,
+      });
+    });
+
+    it('should return correct MX record data for type "MX"', () => {
+      const result = filterDataByType(mockRecordFields, 'MX');
+
+      expect(result).toEqual({
+        name: 'www',
+        priority: '10',
+        target: exampleDomain,
+        ttl_sec: 3600,
+      });
+    });
+
+    it('should return correct SRV record data for type "SRV"', () => {
+      const result = filterDataByType(mockRecordFields, 'SRV');
+
+      expect(result).toEqual({
+        port: '80',
+        priority: '10',
+        protocol: 'tcp',
+        service: '_http',
+        target: exampleDomain,
+        ttl_sec: 3600,
+        weight: '5',
+      });
+    });
+
+    it('should return an empty object for PTR, slave types (default cases)', () => {
+      const types: (DomainType | RecordType)[] = ['slave', 'PTR'];
+
+      types.forEach((type) => {
+        const mockFields =
+          type === 'slave' ? mockDomainFields : mockRecordFields;
+
+        const result = filterDataByType(mockFields, type);
+
+        expect(result).toEqual({});
       });
     });
   });
