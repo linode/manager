@@ -1,9 +1,7 @@
-import { TextField } from '@linode/ui';
+import { Button, Stack, TextField } from '@linode/ui';
 import { kubernetesLabelSchema } from '@linode/validation';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import type { Label } from '@linode/api-v4';
 
@@ -72,20 +70,18 @@ export const LabelInput = (props: Props) => {
         control={control}
         name="labels"
       />
-
-      <ActionsPanel
-        primaryButtonProps={{
-          'data-testid': 'add-label',
-          label: 'Add',
-          onClick: handleAddLabel,
-        }}
-        secondaryButtonProps={{
-          'data-testid': 'cancel-label',
-          label: 'Cancel',
-          onClick: handleClose,
-        }}
-        style={{ flexDirection: 'row-reverse' }}
-      />
+      <Stack flexDirection="row" marginTop={2}>
+        <Button buttonType="primary" onClick={handleAddLabel}>
+          Add
+        </Button>
+        <Button
+          buttonType="secondary"
+          data-testid="cancel-label"
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+      </Stack>
     </>
   );
 };

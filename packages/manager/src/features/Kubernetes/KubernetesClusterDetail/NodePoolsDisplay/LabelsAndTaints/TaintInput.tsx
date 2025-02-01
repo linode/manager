@@ -1,9 +1,7 @@
-import { Autocomplete, TextField } from '@linode/ui';
+import { Autocomplete, Button, Stack, TextField } from '@linode/ui';
 import { kubernetesTaintSchema } from '@linode/validation';
 import React, { useState } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import type { KubernetesTaintEffect } from '@linode/api-v4';
 
@@ -102,19 +100,18 @@ export const TaintInput = (props: Props) => {
         control={control}
         name="taints.effect"
       />
-      <ActionsPanel
-        primaryButtonProps={{
-          'data-testid': 'add-taint',
-          label: 'Add',
-          onClick: handleAddTaint,
-        }}
-        secondaryButtonProps={{
-          'data-testid': 'cancel-taint',
-          label: 'Cancel',
-          onClick: handleClose,
-        }}
-        style={{ flexDirection: 'row-reverse' }}
-      />
+      <Stack flexDirection="row" marginTop={2}>
+        <Button buttonType="primary" onClick={handleAddTaint}>
+          Add
+        </Button>
+        <Button
+          buttonType="secondary"
+          data-testid="cancel-taint"
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+      </Stack>
     </>
   );
 };
