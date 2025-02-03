@@ -1,5 +1,11 @@
+import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
+
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
-import type { NotificationChannel, ServiceTypesList } from '@linode/api-v4';
+import type {
+  AlertDefinitionMetricCriteria,
+  NotificationChannel,
+  ServiceTypesList,
+} from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
 interface AlertChipBorderProps {
@@ -117,4 +123,32 @@ export const getChipLabels = (
       values: [value.content.webhook.webhook_url],
     };
   }
+};
+
+export interface ProcessedCriteria {
+  aggregationType: string;
+  label: string;
+  operator: string;
+  threshold: number;
+  unit: string;
+}
+
+export const processMetricCriteria = (
+  criterias: AlertDefinitionMetricCriteria[]
+): ProcessedCriteria[] => {
+  return criterias
+    .map((criteria) => {
+      const { aggregate_function, label, operator, threshold, unit } = criteria;
+      return {
+        aggregationType: aggregationTypeMap[aggregate_function],
+        label,
+        operator: metricOperatorTypeMap[operator],
+        threshold,
+        unit,
+      };
+    })
+    .reduce<ProcessedCriteria[]>((previousValue, currentValue) => {
+      previousValue.push(currentValue);
+      return previousValue;
+    }, []);
 };
