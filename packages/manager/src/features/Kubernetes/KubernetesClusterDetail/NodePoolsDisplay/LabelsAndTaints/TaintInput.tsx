@@ -9,6 +9,12 @@ interface Props {
   handleCloseInputForm: () => void;
 }
 
+const effectOptions: { label: string; value: KubernetesTaintEffect }[] = [
+  { label: 'NoExecute', value: 'NoExecute' },
+  { label: 'NoSchedule', value: 'NoSchedule' },
+  { label: 'PreferNoSchedule', value: 'PreferNoSchedule' },
+];
+
 export const TaintInput = (props: Props) => {
   const { handleCloseInputForm } = props;
 
@@ -23,12 +29,6 @@ export const TaintInput = (props: Props) => {
   const [selectedEffect, setSelectedEffect] = useState<KubernetesTaintEffect>(
     'NoExecute'
   );
-
-  const effectOptions: { label: string; value: KubernetesTaintEffect }[] = [
-    { label: 'NoExecute', value: 'NoExecute' },
-    { label: 'NoSchedule', value: 'NoSchedule' },
-    { label: 'PreferNoSchedule', value: 'PreferNoSchedule' },
-  ];
 
   const handleAddTaint = () => {
     // Separate the combined taint.

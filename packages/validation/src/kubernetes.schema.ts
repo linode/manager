@@ -102,52 +102,49 @@ const MAX_SIMPLE_KEY_OR_VALUE_LENGTH = 63;
 const validateKubernetesLabel = (labels: {
   [key: string]: string;
 }): boolean => {
-  if (labels) {
-    for (const [labelKey, labelValue] of Object.entries(labels)) {
-      // Confirm the key and value both exist.
-      if (!labelKey || !labelValue) {
+  if (!labels) {
+    return false; // No label provided.
+  }
+  for (const [labelKey, labelValue] of Object.entries(labels)) {
+    // Confirm the key and value both exist.
+    if (!labelKey || !labelValue) {
+      return false;
+    }
+
+    if (labelKey.includes('kubernetes.io') || labelKey.includes('linode.com')) {
+      return false;
+    }
+
+    // If the key has a slash, validate it as a DNS subdomain; else, validate as a simple key.
+    if (labelKey.includes('/')) {
+      const suffix = labelKey.split('/')[0];
+
+      if (!dnsKeyRegex.test(labelKey)) {
         return false;
       }
-
       if (
-        labelKey.includes('kubernetes.io') ||
-        labelKey.includes('linode.com')
+        labelKey.length > MAX_DNS_KEY_TOTAL_LENGTH ||
+        suffix.length > MAX_DNS_KEY_SUFFIX_LENGTH
       ) {
         return false;
       }
-
-      // If the key has a slash, validate it as a DNS subdomain; else, validate as a simple key.
-      if (labelKey.includes('/')) {
-        const suffix = labelKey.split('/')[0];
-
-        if (!dnsKeyRegex.test(labelKey)) {
-          return false;
-        }
-        if (
-          labelKey.length > MAX_DNS_KEY_TOTAL_LENGTH ||
-          suffix.length > MAX_DNS_KEY_SUFFIX_LENGTH
-        ) {
-          return false;
-        }
-      } else {
-        if (
-          labelKey.length > MAX_SIMPLE_KEY_OR_VALUE_LENGTH ||
-          !alphaNumericValidCharactersRegex.test(labelKey)
-        ) {
-          return false;
-        }
-      }
-      // Validate the alphanumeric value.
+    } else {
       if (
-        labelValue.length > MAX_SIMPLE_KEY_OR_VALUE_LENGTH ||
-        !alphaNumericValidCharactersRegex.test(labelValue)
+        labelKey.length > MAX_SIMPLE_KEY_OR_VALUE_LENGTH ||
+        !alphaNumericValidCharactersRegex.test(labelKey)
       ) {
         return false;
       }
     }
-    return true; // All key-value pairs are valid.
+    // Validate the alphanumeric value.
+    if (
+      labelValue.length > MAX_SIMPLE_KEY_OR_VALUE_LENGTH ||
+      !alphaNumericValidCharactersRegex.test(labelValue)
+    ) {
+      return false;
+    }
   }
-  return false; // No label provided.
+  return true; // All key-value pairs are valid.
 };
 
 export const kubernetesLabelSchema = object().test({

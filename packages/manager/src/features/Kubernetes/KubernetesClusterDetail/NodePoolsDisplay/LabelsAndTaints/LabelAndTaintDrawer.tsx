@@ -74,30 +74,28 @@ export const LabelAndTaintDrawer = (props: Props) => {
       handleClose();
     } catch (errResponse) {
       for (const error of errResponse) {
-        // Format error nicely so it includes the label or taint key for identification, if possible.
-        if (error.field) {
-          if (error.field.includes('labels')) {
-            const invalidLabelKey = error.field.split('.')[1]; // error.field will be: labels.key
-            const invalidLabelPrefixText = invalidLabelKey
-              ? `Error on ${invalidLabelKey}: `
-              : '';
-            form.setError('root', {
-              message: `${invalidLabelPrefixText}${capitalize(error.reason)}`,
-            });
-          } else if (error.field.includes('taints')) {
-            const index = error.field.slice(7, 8); // error.field will be: taints[i]
-            const _taints = watch('taints');
-            const invalidTaintPrefixText = _taints[index].key
-              ? `Error on ${_taints[index].key}: `
-              : '';
-
-            form.setError('root', {
-              message: `${invalidTaintPrefixText}${capitalize(error.reason)}`,
-            });
-          }
-        } else {
+        if (!error.field) {
           form.setError('root', {
             message: `${capitalize(error.reason)}`,
+          });
+        }
+        // Format error nicely so it includes the label or taint key for identification, if possible.
+        if (error.field.includes('labels')) {
+          const invalidLabelKey = error.field.split('.')[1]; // error.field will be: labels.key
+          const invalidLabelPrefixText = invalidLabelKey
+            ? `Error on ${invalidLabelKey}: `
+            : '';
+          form.setError('root', {
+            message: `${invalidLabelPrefixText}${capitalize(error.reason)}`,
+          });
+        } else if (error.field.includes('taints')) {
+          const index = error.field.slice(7, 8); // error.field will be: taints[i]
+          const _taints = watch('taints');
+          const invalidTaintPrefixText = _taints[index].key
+            ? `Error on ${_taints[index].key}: `
+            : '';
+          form.setError('root', {
+            message: `${invalidTaintPrefixText}${capitalize(error.reason)}`,
           });
         }
       }
