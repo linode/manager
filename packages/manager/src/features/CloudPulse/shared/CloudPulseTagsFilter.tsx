@@ -63,9 +63,9 @@ export const CloudPulseTagsSelect = React.memo(
 
     React.useEffect(() => {
       if (disabled && !selectedTags) {
-        return; // To save default values, go through side effects if disabled is false
+        return;
       }
-
+      // To save default values, go through side effects if disabled is false
       if (!tags || !savePreferences || selectedTags) {
         if (selectedTags) {
           setSelectedTags([]);
