@@ -55,7 +55,11 @@ beforeEach(() => {
 describe('AlertResources component tests', () => {
   it('should render search input, region filter', () => {
     const { getByText } = renderWithTheme(
-      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources
+        alertResourceIds={['1', '2', '3']}
+        alertType="system"
+        serviceType="linode"
+      />
     );
     expect(getByText(searchPlaceholder)).toBeInTheDocument();
     expect(getByText(regionPlaceholder)).toBeInTheDocument();
@@ -67,7 +71,11 @@ describe('AlertResources component tests', () => {
       isFetching: true,
     });
     const { getByTestId, queryByText } = renderWithTheme(
-      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources
+        alertResourceIds={['1', '2', '3']}
+        alertType="system"
+        serviceType="linode"
+      />
     );
     expect(getByTestId('circle-progress')).toBeInTheDocument();
     expect(queryByText(searchPlaceholder)).not.toBeInTheDocument();
@@ -81,7 +89,11 @@ describe('AlertResources component tests', () => {
       isFetching: false,
     });
     const { getByText } = renderWithTheme(
-      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources
+        alertResourceIds={['1', '2', '3']}
+        alertType="system"
+        serviceType="linode"
+      />
     );
     expect(
       getByText('Table data is unavailable. Please try again later.')
@@ -95,7 +107,11 @@ describe('AlertResources component tests', () => {
       getByText,
       queryByText,
     } = renderWithTheme(
-      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources
+        alertResourceIds={['1', '2', '3']}
+        alertType="system"
+        serviceType="linode"
+      />
     );
     // Get the search input box
     const searchInput = getByPlaceholderText(searchPlaceholder);
@@ -130,7 +146,11 @@ describe('AlertResources component tests', () => {
 
   it('should handle sorting correctly', async () => {
     const { getByTestId } = renderWithTheme(
-      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources
+        alertResourceIds={['1', '2', '3']}
+        alertType="system"
+        serviceType="linode"
+      />
     );
     const resourceColumn = getByTestId('resource'); // get the resource header column
     await userEvent.click(resourceColumn);
