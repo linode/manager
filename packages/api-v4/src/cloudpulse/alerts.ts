@@ -66,6 +66,19 @@ export const getAlertDefinitionByServiceTypeAndId = (
     })
   );
 
+export const getAlertDefinitionByServiceType = (serviceType: string) =>
+  Request<ResourcePage<Alert>>(
+    setURL(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/alert-definitions`
+    ),
+    setMethod('GET'),
+    setHeaders({
+      Authorization: bearer,
+    })
+  );
+
 export const getNotificationChannels = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<NotificationChannel>>(
     setURL(

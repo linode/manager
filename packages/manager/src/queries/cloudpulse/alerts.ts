@@ -53,6 +53,12 @@ export const useAlertDefinitionQuery = (
   });
 };
 
+export const useAlertDefinitionByServiceTypeQuery = (serviceType: string) => {
+  return useQuery<Alert[], APIError[]>({
+    ...queryFactory.alerts._ctx.alertsByServiceType(serviceType),
+  });
+};
+
 export const useAllAlertNotificationChannelsQuery = (
   params?: Params,
   filter?: Filter

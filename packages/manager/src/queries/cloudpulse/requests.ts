@@ -1,4 +1,8 @@
-import { getAlertDefinitions, getNotificationChannels } from '@linode/api-v4';
+import {
+  getAlertDefinitionByServiceType,
+  getAlertDefinitions,
+  getNotificationChannels,
+} from '@linode/api-v4';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -18,6 +22,11 @@ export const getAllAlertsRequest = (
       { ...params, ...passedParams },
       { ...filter, ...passedFilter }
     )
+  )().then((data) => data.data);
+
+export const getAllertsByServiceTypeRequest = (serviceType: string) =>
+  getAll<Alert>((params, filter) =>
+    getAlertDefinitionByServiceType(serviceType)
   )().then((data) => data.data);
 
 export const getAllNotificationChannels = (
