@@ -78,7 +78,7 @@ describe('linode landing checks', () => {
     cy.url().should('endWith', routes.linodeLanding);
   });
 
-  it.only('checks the landing page side menu items', () => {
+  it('checks the landing page side menu items', () => {
     cy.findByTitle('Akamai - Dashboard').should('be.visible');
     cy.findByTestId('menu-item-Linodes').should('be.visible');
     cy.findByTestId('menu-item-Volumes').should('be.visible');
