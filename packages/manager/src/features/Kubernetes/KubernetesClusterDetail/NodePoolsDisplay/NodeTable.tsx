@@ -134,7 +134,7 @@ export const NodeTable = React.memo((props: Props) => {
   };
 
   return (
-    <OrderBy data={filteredRowData || rowData} order={'asc'} orderBy={'label'}>
+    <OrderBy data={filteredRowData || rowData} order="asc" orderBy="label">
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
           {({

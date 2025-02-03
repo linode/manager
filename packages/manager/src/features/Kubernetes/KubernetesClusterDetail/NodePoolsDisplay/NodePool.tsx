@@ -133,7 +133,7 @@ export const NodePool = (props: Props) => {
                   },
                 ]}
                 ariaLabel={`Action menu for Node Pool ${poolId}`}
-                isInAccordionHeader
+                stopClickPropagation
               />
             </Box>
           </Hidden>
@@ -143,6 +143,7 @@ export const NodePool = (props: Props) => {
           >
             <Stack
               alignItems="center"
+              data-testid="node-pool-actions"
               direction="row"
               position="absolute"
               right={(theme) => theme.spacing(5)}
