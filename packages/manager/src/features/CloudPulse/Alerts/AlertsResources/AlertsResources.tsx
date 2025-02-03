@@ -18,7 +18,7 @@ import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
-import type { Region } from '@linode/api-v4';
+import type { AlertDefinitionType, Region } from '@linode/api-v4';
 
 export interface AlertResourcesProp {
   /**
@@ -29,6 +29,11 @@ export interface AlertResourcesProp {
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
   alertResourceIds: string[];
+
+  /**
+   * The type of the alert system / user
+   */
+  alertType: AlertDefinitionType;
 
   /**
    * Callback for publishing the selected resources
@@ -50,6 +55,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
     alertLabel,
     alertResourceIds,
+    alertType,
     handleResourcesSelection,
     isSelectionsNeeded,
     serviceType,
@@ -214,6 +220,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {alertLabel || 'Resources'}
         {/* It can be either the passed alert label or just Resources */}
       </Typography>
+      {isSelectionsNeeded &&
+        (alertType === 'system' || alertType === 'default') && (
+          <Typography ref={titleRef} variant="body1">
+            You can enable or disable this system alert for each resource you
+            have access to. Select the resources listed below you want to enable
+            the alert for.
+          </Typography>
+        )}
       {(isDataLoadingError || alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
         <Grid container spacing={3}>
           <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
