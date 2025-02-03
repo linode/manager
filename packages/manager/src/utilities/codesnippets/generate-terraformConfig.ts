@@ -1,18 +1,15 @@
 import { escapeStringForCLI } from '../escapeStringForCLI';
 
-import type {
-  CreateLinodeRequest,
-  InterfacePayload,
-} from '@linode/api-v4/lib/linodes';
-
-// @TODO Linode Interfaces - fix/address casting
+import type { LinodeCreateFormValues } from 'src/features/Linodes/LinodeCreate/utilities';
 
 /**
  * Generates a Terraform config to setup a Linode instance.
  * @param {Object} config - The configuration object for the Linode instance.
  * @returns {string} - Bash commands to write a Terraform config.
  */
-export function generateTerraformConfig(config: CreateLinodeRequest): string {
+export function generateTerraformConfig(
+  config: LinodeCreateFormValues
+): string {
   let terraformConfig = `resource "linode_instance" "web" {\n`;
 
   if (config.label) {
@@ -40,7 +37,7 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
   }
 
   if (config.interfaces && config.interfaces.length > 0) {
-    config.interfaces.forEach((interfaceConfig: InterfacePayload) => {
+    config.interfaces.forEach((interfaceConfig) => {
       terraformConfig += `  interface {\n    purpose = "${interfaceConfig.purpose}"\n`;
       if (interfaceConfig.subnet_id) {
         terraformConfig += `    subnet_id = ${interfaceConfig.subnet_id}\n`;

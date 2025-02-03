@@ -339,6 +339,7 @@ export interface UpgradeInterfaceData {
   dry_run: boolean;
   interfaces: LinodeInterface[];
 }
+
 // ----------------------------------------------------------
 
 export interface DiskDevice {

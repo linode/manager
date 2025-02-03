@@ -1,10 +1,10 @@
 import { generateTerraformConfig } from './generate-terraformConfig';
 
-import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type { LinodeCreateFormValues } from 'src/features/Linodes/LinodeCreate/utilities';
 
 describe('generateTerraformConfig', () => {
   it('should generate correct configuration with all properties', () => {
-    const config: CreateLinodeRequest = {
+    const config: LinodeCreateFormValues = {
       authorized_keys: ['ssh-rsa AAA...'],
       authorized_users: ['user123'],
       backup_id: 67890,

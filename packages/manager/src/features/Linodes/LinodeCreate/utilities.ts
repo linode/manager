@@ -17,6 +17,7 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { LinodeCreateType } from './types';
 import type {
+  CreateLinodeInterfacePayload,
   CreateLinodeRequest,
   InterfacePayload,
   Linode,
@@ -166,8 +167,7 @@ export const getLinodeCreatePayload = (
   }
 
   values.interfaces = getInterfacesPayload(
-    // @TODO Linode Interfaces - fix/address casting
-    values.interfaces as InterfacePayload[],
+    values.interfaces,
     Boolean(values.private_ip)
   );
 
@@ -262,9 +262,17 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    */
   hasSignedEUAgreement?: boolean;
   /**
+   * The legacy config interface
+   */
+  interfaces?: InterfacePayload[];
+  /**
    * The currently selected Linode
    */
   linode?: Linode | null;
+  /**
+   * New Linode interfaces
+   */
+  newInterfaces?: CreateLinodeInterfacePayload[];
 }
 
 export interface LinodeCreateFormContext {

@@ -1,9 +1,4 @@
-import type {
-  CreateLinodeRequest,
-  InterfacePayload,
-} from '@linode/api-v4/lib/linodes';
-
-// @TODO Linode Interfaces - fix/address casting
+import type { LinodeCreateFormValues } from 'src/features/Linodes/LinodeCreate/utilities';
 
 /**
  * Escapes special characters in a string for use in Python strings.
@@ -20,7 +15,7 @@ function escapePythonString(value: string): string {
  * @returns {string} - Python code as a string.
  */
 export function generatePythonLinodeSnippet(
-  config: CreateLinodeRequest
+  config: LinodeCreateFormValues
 ): string {
   let snippet = "client = LinodeClient(token=os.getenv('LINODE_TOKEN'))\n";
   snippet += 'new_linode = client.linode.instance_create(\n';
@@ -61,7 +56,7 @@ export function generatePythonLinodeSnippet(
   // Handling interfaces
   if (config.interfaces && config.interfaces.length > 0) {
     snippet += '    interfaces=[\n';
-    config.interfaces.forEach((iface: InterfacePayload) => {
+    config.interfaces.forEach((iface) => {
       snippet += `        {\n`;
       if (iface.label) {
         snippet += `            "label": "${escapePythonString(

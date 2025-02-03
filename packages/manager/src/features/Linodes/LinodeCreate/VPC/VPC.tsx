@@ -29,15 +29,8 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
 
-import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
-import type { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
+import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
-
-// @TODO Linode Interfaces - clean this up/fix/address casting :/
-type InterfaceFieldErrors = Merge<
-  FieldError,
-  FieldErrorsImpl<InterfacePayload[]>
->;
 
 export const VPC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
@@ -46,7 +39,7 @@ export const VPC = () => {
     control,
     formState,
     setValue,
-  } = useFormContext<CreateLinodeRequest>();
+  } = useFormContext<LinodeCreateFormValues>();
 
   const { data: regions } = useRegionsQuery();
 
@@ -294,13 +287,9 @@ export const VPC = () => {
                   <Typography fontFamily={(theme) => theme.font.bold}>
                     Assign additional IPv4 ranges
                   </Typography>
-                  {(formState.errors.interfaces as InterfaceFieldErrors)?.[1]
-                    ?.ip_ranges?.message && (
+                  {formState.errors.interfaces?.[1]?.ip_ranges?.message && (
                     <Notice
-                      text={
-                        (formState.errors.interfaces as InterfaceFieldErrors)[1]
-                          ?.ip_ranges?.message
-                      }
+                      text={formState.errors.interfaces[1]?.ip_ranges?.message}
                       variant="error"
                     />
                   )}
@@ -312,13 +301,9 @@ export const VPC = () => {
                     </Link>
                     .
                   </Typography>
-                  {(formState.errors.interfaces as InterfaceFieldErrors)?.[0]
-                    ?.ip_ranges?.message && (
+                  {formState.errors.interfaces?.[0]?.ip_ranges?.message && (
                     <Notice
-                      text={
-                        (formState.errors.interfaces as InterfaceFieldErrors)[0]
-                          ?.ip_ranges?.message
-                      }
+                      text={formState.errors.interfaces[0]?.ip_ranges?.message}
                       variant="error"
                     />
                   )}

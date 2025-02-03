@@ -1,9 +1,4 @@
-import type {
-  CreateLinodeRequest,
-  InterfacePayload,
-} from '@linode/api-v4/lib/linodes';
-
-// @TODO Linode Interfaces - fix/address casting
+import type { LinodeCreateFormValues } from 'src/features/Linodes/LinodeCreate/utilities';
 
 /**
  * Escapes special characters in a string for use in YAML and shell commands.
@@ -19,7 +14,7 @@ function escapeYAMLString(str: string) {
  * @param {Object} config - Configuration details for the instance.
  * @returns {string} - The Ansible config as a string.
  */
-export function generateAnsibleConfig(config: CreateLinodeRequest): string {
+export function generateAnsibleConfig(config: LinodeCreateFormValues): string {
   let configStr = `- name: Create a new Linode instance.\n  linode.cloud.instance:\n`;
 
   configStr += `    state: "present"\n`;
@@ -82,7 +77,7 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
   }
   if (config.interfaces && config.interfaces.length > 0) {
     configStr += `    interfaces:\n`;
-    config.interfaces.forEach((iface: InterfacePayload) => {
+    config.interfaces.forEach((iface) => {
       configStr += `      - purpose: "${escapeYAMLString(iface.purpose)}"\n`;
       if (iface.subnet_id) {
         configStr += `        subnet_id: ${iface.subnet_id}\n`;
