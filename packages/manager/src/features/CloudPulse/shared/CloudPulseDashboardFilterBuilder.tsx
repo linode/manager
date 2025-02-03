@@ -30,7 +30,6 @@ import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
-import type { CloudPulseNodeTypes } from './CloudPulseNodeTypeFilter';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { CloudPulseTags } from './CloudPulseTagsFilter';
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
@@ -139,17 +138,14 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const handleNodeTypeChange = React.useCallback(
-      (nodeType: CloudPulseNodeTypes | null, savePref: boolean = false) => {
-        const selectedNodeType = nodeType?.label;
-        emitFilterChangeByFilterKey(
-          NODE_TYPE,
-          selectedNodeType,
-          selectedNodeType ? [selectedNodeType] : [],
-          savePref,
-          {
-            [NODE_TYPE]: selectedNodeType,
-          }
-        );
+      (
+        nodeTypeId: string | undefined,
+        label: string[],
+        savePref: boolean = false
+      ) => {
+        emitFilterChangeByFilterKey(NODE_TYPE, nodeTypeId, label, savePref, {
+          [NODE_TYPE]: nodeTypeId,
+        });
       },
       [emitFilterChangeByFilterKey]
     );
@@ -179,6 +175,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           resourceId.map((resource) => resource.label),
           savePref,
           {
+            [NODE_TYPE]: undefined,
             [RESOURCES]: resourceId.map((resource: { id: string }) =>
               String(resource.id)
             ),

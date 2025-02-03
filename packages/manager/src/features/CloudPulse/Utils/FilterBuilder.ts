@@ -11,10 +11,7 @@ import { CloudPulseSelectTypes } from './models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
-import type {
-  CloudPulseNodeTypeFilterProps,
-  CloudPulseNodeTypes,
-} from '../shared/CloudPulseNodeTypeFilter';
+import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
@@ -167,12 +164,19 @@ export const getResourcesProperties = (
 export const getNodeTypeProperties = (
   props: CloudPulseFilterProperties,
   handleNodeTypeChange: (
-    nodeType: CloudPulseNodeTypes | null,
+    nodeType: null | string | undefined,
+    label: string[],
     savePref?: boolean
   ) => void
 ): CloudPulseNodeTypeFilterProps => {
   const { filterKey, name: label, placeholder } = props.config.configuration;
-  const { dashboard, dependentFilters, preferences, resource_ids } = props;
+  const {
+    dashboard,
+    dependentFilters,
+    isServiceAnalyticsIntegration,
+    preferences,
+    resource_ids,
+  } = props;
   return {
     database_ids: resource_ids,
     defaultValue: preferences?.[NODE_TYPE],
@@ -184,7 +188,7 @@ export const getNodeTypeProperties = (
     handleNodeTypeChange,
     label,
     placeholder,
-    savePreferences: true,
+    savePreferences: !isServiceAnalyticsIntegration,
   };
 };
 
