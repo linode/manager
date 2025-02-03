@@ -1,7 +1,6 @@
 import {
   Accordion,
   Box,
-  Paper,
   Stack,
   StyledActionButton,
   Tooltip,
@@ -70,11 +69,10 @@ export const NodePool = (props: Props) => {
   return (
     <Accordion
       heading={
-        <Paper
+        <Box
           sx={{
             alignItems: 'center',
             display: 'flex',
-            flexWrap: 'wrap',
             justifyContent: 'space-between',
             p: 0,
           }}
@@ -200,7 +198,7 @@ export const NodePool = (props: Props) => {
               </Tooltip>
             </Stack>
           </Hidden>
-        </Paper>
+        </Box>
       }
       data-qa-node-pool-id={poolId}
       data-qa-node-pool-section
