@@ -213,8 +213,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   if (
     !isDataLoadingError &&
     !isSelectionsNeeded &&
-    alertResourceIds.length === 0 &&
-    !isSelectionsNeeded
+    alertResourceIds.length === 0
   ) {
     return (
       <Stack gap={2}>

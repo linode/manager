@@ -7,6 +7,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertResources } from './AlertsResources';
 
+import type { AlertResourcesProp } from './AlertsResources';
+
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
   useResourcesQuery: queryMocks.useResourcesQuery,
@@ -33,6 +35,11 @@ const linodes = linodeFactory.buildList(3).map((value, index) => {
 
 const searchPlaceholder = 'Search for a Region or Resource';
 const regionPlaceholder = 'Select Regions';
+const alertResourcesProp: AlertResourcesProp = {
+  alertResourceIds: ['1', '2', '3'],
+  alertType: 'system',
+  serviceType: 'linode',
+};
 
 beforeAll(() => {
   window.scrollTo = vi.fn(); // mock for scrollTo and scroll
@@ -55,11 +62,7 @@ beforeEach(() => {
 describe('AlertResources component tests', () => {
   it('should render search input, region filter', () => {
     const { getByText } = renderWithTheme(
-      <AlertResources
-        alertResourceIds={['1', '2', '3']}
-        alertType="system"
-        serviceType="linode"
-      />
+      <AlertResources {...alertResourcesProp} />
     );
     expect(getByText(searchPlaceholder)).toBeInTheDocument();
     expect(getByText(regionPlaceholder)).toBeInTheDocument();
@@ -71,11 +74,7 @@ describe('AlertResources component tests', () => {
       isFetching: true,
     });
     const { getByTestId, queryByText } = renderWithTheme(
-      <AlertResources
-        alertResourceIds={['1', '2', '3']}
-        alertType="system"
-        serviceType="linode"
-      />
+      <AlertResources {...alertResourcesProp} />
     );
     expect(getByTestId('circle-progress')).toBeInTheDocument();
     expect(queryByText(searchPlaceholder)).not.toBeInTheDocument();
@@ -89,11 +88,7 @@ describe('AlertResources component tests', () => {
       isFetching: false,
     });
     const { getByText } = renderWithTheme(
-      <AlertResources
-        alertResourceIds={['1', '2', '3']}
-        alertType="system"
-        serviceType="linode"
-      />
+      <AlertResources {...alertResourcesProp} />
     );
     expect(
       getByText('Table data is unavailable. Please try again later.')
@@ -106,13 +101,7 @@ describe('AlertResources component tests', () => {
       getByTestId,
       getByText,
       queryByText,
-    } = renderWithTheme(
-      <AlertResources
-        alertResourceIds={['1', '2', '3']}
-        alertType="system"
-        serviceType="linode"
-      />
-    );
+    } = renderWithTheme(<AlertResources {...alertResourcesProp} />);
     // Get the search input box
     const searchInput = getByPlaceholderText(searchPlaceholder);
     await userEvent.type(searchInput, linodes[1].label);
@@ -146,11 +135,7 @@ describe('AlertResources component tests', () => {
 
   it('should handle sorting correctly', async () => {
     const { getByTestId } = renderWithTheme(
-      <AlertResources
-        alertResourceIds={['1', '2', '3']}
-        alertType="system"
-        serviceType="linode"
-      />
+      <AlertResources {...alertResourcesProp} />
     );
     const resourceColumn = getByTestId('resource'); // get the resource header column
     await userEvent.click(resourceColumn);
