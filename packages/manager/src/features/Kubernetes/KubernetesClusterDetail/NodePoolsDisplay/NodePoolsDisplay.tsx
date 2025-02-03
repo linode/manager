@@ -4,7 +4,6 @@ import { Waypoint } from 'react-waypoint';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormLabel } from 'src/components/FormLabel';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -67,8 +66,6 @@ export const NodePoolsDisplay = (props: Props) => {
     clusterTier,
     regionsData,
   } = props;
-
-  const flags = useFlags();
 
   const {
     data: pools,
@@ -237,14 +234,12 @@ export const NodePoolsDisplay = (props: Props) => {
         open={addDrawerOpen}
         regionsData={regionsData}
       />
-      {flags.lkeEnterprise?.enabled && (
-        <LabelAndTaintDrawer
-          clusterId={clusterID}
-          nodePool={selectedPool}
-          onClose={() => setIsLabelsAndTaintsDrawerOpen(false)}
-          open={isLabelsAndTaintsDrawerOpen}
-        />
-      )}
+      <LabelAndTaintDrawer
+        clusterId={clusterID}
+        nodePool={selectedPool}
+        onClose={() => setIsLabelsAndTaintsDrawerOpen(false)}
+        open={isLabelsAndTaintsDrawerOpen}
+      />
       <ResizeNodePoolDrawer
         kubernetesClusterId={clusterID}
         kubernetesRegionId={clusterRegionId}

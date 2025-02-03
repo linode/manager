@@ -12,7 +12,6 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
-import { useFlags } from 'src/hooks/useFlags';
 import { pluralize } from 'src/utilities/pluralize';
 
 import { NodeTable } from './NodeTable';
@@ -68,8 +67,6 @@ export const NodePool = (props: Props) => {
     typeLabel,
   } = props;
 
-  const flags = useFlags();
-
   return (
     <Accordion
       heading={
@@ -95,10 +92,7 @@ export const NodePool = (props: Props) => {
               {pluralize('Node', 'Nodes', count)}
             </Typography>
           </Box>
-          <Hidden
-            lgUp={flags.lkeEnterprise?.enabled}
-            smUp={!flags.lkeEnterprise?.enabled}
-          >
+          <Hidden lgUp>
             <Box
               alignItems="center"
               position="absolute"
@@ -107,7 +101,6 @@ export const NodePool = (props: Props) => {
               <ActionMenu
                 actionsList={[
                   {
-                    disabled: !flags.lkeEnterprise?.enabled,
                     onClick: () => handleClickLabelsAndTaints(poolId),
                     title: 'Labels and Taints',
                   },
@@ -137,10 +130,7 @@ export const NodePool = (props: Props) => {
               />
             </Box>
           </Hidden>
-          <Hidden
-            lgDown={flags.lkeEnterprise?.enabled}
-            smDown={!flags.lkeEnterprise?.enabled}
-          >
+          <Hidden lgDown>
             <Stack
               alignItems="center"
               data-testid="node-pool-actions"
@@ -148,17 +138,15 @@ export const NodePool = (props: Props) => {
               position="absolute"
               right={(theme) => theme.spacing(5)}
             >
-              {flags.lkeEnterprise?.enabled && (
-                <StyledActionButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleClickLabelsAndTaints(poolId);
-                  }}
-                  compactY
-                >
-                  Labels and Taints
-                </StyledActionButton>
-              )}
+              <StyledActionButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClickLabelsAndTaints(poolId);
+                }}
+                compactY
+              >
+                Labels and Taints
+              </StyledActionButton>
               <StyledActionButton
                 onClick={(e) => {
                   e.stopPropagation();

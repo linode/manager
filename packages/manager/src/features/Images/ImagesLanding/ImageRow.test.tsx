@@ -21,8 +21,7 @@ describe('Image Table Row', () => {
     onDeploy: vi.fn(),
     onEdit: vi.fn(),
     onManageRegions: vi.fn(),
-    onRestore: vi.fn(),
-    onRetry: vi.fn(),
+    onRebuild: vi.fn(),
   };
 
   it('should render an image row with Image Service Gen2 enabled', async () => {
@@ -133,13 +132,9 @@ describe('Image Table Row', () => {
     expect(handlers.onDeploy).toBeCalledWith(image.id);
 
     await userEvent.click(getByText('Rebuild an Existing Linode'));
-    expect(handlers.onRestore).toBeCalledWith(image);
+    expect(handlers.onRebuild).toBeCalledWith(image);
 
     await userEvent.click(getByText('Delete'));
-    expect(handlers.onDelete).toBeCalledWith(
-      image.label,
-      image.id,
-      image.status
-    );
+    expect(handlers.onDelete).toBeCalledWith(image);
   });
 });
