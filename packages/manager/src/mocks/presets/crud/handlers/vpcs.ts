@@ -204,3 +204,163 @@ export const deleteVPC = (mockState: MockState) => [
     }
   ),
 ];
+
+export const createSubnet = (mockState: MockState) => [
+  http.post(
+    '*/v4beta/networking/firewalls/:id/devices',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | FirewallDevice>> => {
+      const firewallId = Number(params.id);
+      const firewall = await mswDB.get('firewalls', firewallId);
+
+      if (!firewall) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = await request.clone().json();
+      const entity = {
+        ...payload,
+        label: `linode-${payload.id}`,
+        url: `/linodes/${payload.id}`,
+      };
+
+      const firewallDevice = firewallDeviceFactory.build({
+        created: DateTime.now().toISO(),
+        entity,
+        updated: DateTime.now().toISO(),
+      });
+
+      const updatedFirewall = {
+        ...firewall,
+        entities: [...firewall.entities, entity],
+      };
+
+      await mswDB.add(
+        'firewallDevices',
+        [firewallId, firewallDevice],
+        mockState
+      );
+
+      await mswDB.update('firewalls', firewallId, updatedFirewall, mockState);
+
+      queueEvents({
+        event: {
+          action: 'firewall_device_add',
+          entity: {
+            id: firewallId,
+            label: firewall.label,
+            type: 'firewallDevice',
+            url: `/v4beta/networking/firewalls/${firewallId}/linodes`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
+
+      return makeResponse(firewallDevice);
+    }
+  ),
+];
+
+export const updateSubnet = (mockState: MockState) => [
+  http.post(
+    '*/v4beta/networking/firewalls/:id/devices',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | FirewallDevice>> => {
+      const firewallId = Number(params.id);
+      const firewall = await mswDB.get('firewalls', firewallId);
+
+      if (!firewall) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = await request.clone().json();
+      const entity = {
+        ...payload,
+        label: `linode-${payload.id}`,
+        url: `/linodes/${payload.id}`,
+      };
+
+      const firewallDevice = firewallDeviceFactory.build({
+        created: DateTime.now().toISO(),
+        entity,
+        updated: DateTime.now().toISO(),
+      });
+
+      const updatedFirewall = {
+        ...firewall,
+        entities: [...firewall.entities, entity],
+      };
+
+      await mswDB.add(
+        'firewallDevices',
+        [firewallId, firewallDevice],
+        mockState
+      );
+
+      await mswDB.update('firewalls', firewallId, updatedFirewall, mockState);
+
+      queueEvents({
+        event: {
+          action: 'firewall_device_add',
+          entity: {
+            id: firewallId,
+            label: firewall.label,
+            type: 'firewallDevice',
+            url: `/v4beta/networking/firewalls/${firewallId}/linodes`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
+
+      return makeResponse(firewallDevice);
+    }
+  ),
+];
+
+export const deleteSubnet = (mockState: MockState) => [
+  http.delete(
+    '*/v4beta/networking/firewalls/:id/devices/:deviceId',
+    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+      const firewallId = Number(params.id);
+      const deviceId = Number(params.deviceId);
+      const firewall = await mswDB.get('firewalls', firewallId);
+      const firewallDevice = await mswDB.get('firewallDevices', deviceId);
+
+      if (!firewall || !firewallDevice) {
+        return makeNotFoundResponse();
+      }
+
+      const updatedFirewall = {
+        ...firewall,
+        entities: firewall.entities.filter(
+          (entity) => entity.id !== firewallDevice[1].entity.id
+        ),
+      };
+
+      await mswDB.delete('firewallDevices', deviceId, mockState);
+      await mswDB.update('firewalls', firewallId, updatedFirewall, mockState);
+
+      queueEvents({
+        event: {
+          action: 'firewall_device_remove',
+          entity: {
+            id: firewall.id,
+            label: firewall.label,
+            type: 'firewallDevice',
+            url: `/v4beta/networking/firewalls/${firewall.id}/linodes`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
+
+      return makeResponse({});
+    }
+  ),
+];
