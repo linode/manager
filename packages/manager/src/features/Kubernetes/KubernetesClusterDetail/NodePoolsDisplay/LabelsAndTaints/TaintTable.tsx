@@ -15,9 +15,11 @@ import type { Taint } from '@linode/api-v4';
 export const TaintTable = () => {
   const { setValue, watch } = useFormContext();
 
+  const deleteButtonRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
+
   const taints: Taint[] = watch('taints');
 
-  const handleRemoveTaint = (removedTaint: Taint) => {
+  const handleRemoveTaint = (removedTaint: Taint, index: number) => {
     setValue(
       'taints',
       taints.filter(
@@ -28,6 +30,12 @@ export const TaintTable = () => {
       ),
       { shouldDirty: true }
     );
+
+    // Set focus to the 'x' button on the row above after selected taint is removed
+    const newFocusedButtonIndex = Math.max(index - 1, 0);
+    setTimeout(() => {
+      deleteButtonRefs.current[newFocusedButtonIndex]?.focus();
+    });
   };
 
   return (
@@ -55,7 +63,8 @@ export const TaintTable = () => {
                     <IconButton
                       aria-label={`Remove ${taint.key}: ${taint.value}`}
                       disableRipple
-                      onClick={() => handleRemoveTaint(taint)}
+                      onClick={() => handleRemoveTaint(taint, i)}
+                      ref={(node) => (deleteButtonRefs.current[i] = node)}
                       size="medium"
                       sx={{ marginLeft: 'auto' }}
                     >

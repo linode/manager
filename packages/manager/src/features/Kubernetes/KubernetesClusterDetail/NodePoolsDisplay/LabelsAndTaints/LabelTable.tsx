@@ -15,14 +15,22 @@ import type { Label } from '@linode/api-v4';
 export const LabelTable = () => {
   const { setValue, watch } = useFormContext();
 
+  const deleteButtonRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
+
   const labels: Label = watch('labels');
   const labelsArray = labels ? Object.entries(labels) : [];
 
-  const handleRemoveLabel = (labelKey: string) => {
+  const handleRemoveLabel = (labelKey: string, index: number) => {
     const newLabels = Object.fromEntries(
       labelsArray.filter(([key]) => key !== labelKey)
     );
     setValue('labels', newLabels, { shouldDirty: true });
+
+    // Set focus to the 'x' button on the row above after selected label is removed
+    const newFocusedButtonIndex = Math.max(index - 1, 0);
+    setTimeout(() => {
+      deleteButtonRefs.current[newFocusedButtonIndex]?.focus();
+    });
   };
 
   return (
@@ -45,7 +53,8 @@ export const LabelTable = () => {
                     <IconButton
                       aria-label={`Remove ${key}: ${value}`}
                       disableRipple
-                      onClick={() => handleRemoveLabel(key)}
+                      onClick={() => handleRemoveLabel(key, i)}
+                      ref={(node) => (deleteButtonRefs.current[i] = node)}
                       size="medium"
                       sx={{ marginLeft: 'auto' }}
                     >
