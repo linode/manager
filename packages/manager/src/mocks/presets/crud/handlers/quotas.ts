@@ -6,6 +6,7 @@ import {
   makePaginatedResponse,
   makeResponse,
 } from 'src/mocks/utilities/response';
+import { pickRandom } from 'src/utilities/random';
 
 import type { Quota, QuotaType, QuotaUsage } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
@@ -137,21 +138,27 @@ export const getQuotas = () => [
           return makeResponse(
             quotaUsageFactory.build({
               quota_limit: quota.quota_limit,
-              used: 8,
+              used: pickRandom([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
             })
           );
         case 'lke':
           return makeResponse(
             quotaUsageFactory.build({
               quota_limit: quota.quota_limit,
-              used: 12,
+              used: pickRandom([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
             })
           );
         case 'object-storage':
           return makeResponse(
             quotaUsageFactory.build({
               quota_limit: quota.quota_limit,
-              used: 900_000_000_000_000,
+              used: pickRandom([
+                0,
+                100_000_000_000_000,
+                200_000_000_000_000,
+                300_000_000_000_000,
+                400_000_000_000_000,
+              ]),
             })
           );
         default:

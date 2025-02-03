@@ -63,6 +63,10 @@ export interface Quota {
   s3_endpoint?: string;
 }
 
+/**
+ * A usage limit for a given Quota based on service metrics such
+ * as vCPUs, instances or storage size.
+ */
 export interface QuotaUsage {
   /**
    * The account-wide limit for this service, measured in units
