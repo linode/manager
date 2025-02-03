@@ -10,7 +10,7 @@ export const ipAddressSeeder: MockSeeder = {
   desc: 'IP Address Seeds',
   group: { id: 'IP Addresses' },
   id: 'ip-addresses:crud',
-  label: 'Firewalls',
+  label: 'IP Addresses',
 
   seeder: async (mockState: MockState) => {
     const seedsCountMap = getSeedsCountMap();
