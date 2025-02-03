@@ -82,8 +82,6 @@ x-e2e-runners:
     context: .
     dockerfile: ./packages/manager/Dockerfile
     target: e2e
-    args:
-      NODE_VERSION: 20.17.0
   env_file: ./packages/manager/.env
   volumes: *default-volumes
   entrypoint: 'yarn'
@@ -156,8 +154,6 @@ services:
       context: .
       dockerfile: ./packages/manager/Dockerfile
       target: e2e-reverse-proxy
-      args:
-        NODE_VERSION: 20.17.0
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
