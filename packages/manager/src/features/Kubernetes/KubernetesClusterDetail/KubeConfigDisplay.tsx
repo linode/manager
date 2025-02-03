@@ -49,7 +49,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     cursor: 'pointer',
     display: 'flex',
     marginBottom: theme.spacing(1),
-    padding: `0 ${theme.spacing(0.5)}`,
+    padding: `0 ${theme.spacing(0.6)}`,
   },
   kubeconfigElements: {
     alignItems: 'center',
@@ -63,10 +63,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   kubeconfigIcons: {
-    height: 16,
+    height: 14,
     margin: `0 ${theme.spacing(1)}`,
     objectFit: 'contain',
-    width: 16,
+    width: 14,
   },
   label: {
     fontFamily: theme.font.bold,
