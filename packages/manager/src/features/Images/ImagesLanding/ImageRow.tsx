@@ -78,6 +78,7 @@ export const ImageRow = (props: Props) => {
           {label}
           <Stack alignItems="center" direction="row" gap={1}>
             {type === 'manual' &&
+              status !== 'creating' &&
               !image.capabilities.includes('distributed-sites') && (
                 <Tooltip title="This image is not encrypted. You can recreate the image to enable encryption and then delete this image.">
                   <div style={{ display: 'flex' }}>

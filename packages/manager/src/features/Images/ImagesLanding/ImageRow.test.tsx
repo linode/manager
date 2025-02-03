@@ -77,6 +77,7 @@ describe('Image Table Row', () => {
     const image = imageFactory.build({
       capabilities: ['cloud-init'],
       regions: [],
+      status: 'available',
     });
 
     const { getByLabelText } = renderWithTheme(
@@ -86,6 +87,27 @@ describe('Image Table Row', () => {
     expect(
       getByLabelText('This image is not encrypted.', { exact: false })
     ).toBeVisible();
+  });
+
+  it('should not show an unencrypted icon when a "Gen2" Image is still "creating"', () => {
+    // The API does not populate the "distributed-sites" capability until the image is done creating.
+    // We must account for this because the image would show as "Unencrypted" while it is creating,
+    // then suddenly show as encrypted once it was done creating. We don't want that.
+    // Therefore, we decided we won't show the unencrypted icon until the image is done creating to
+    // prevent confusion.
+    const image = imageFactory.build({
+      capabilities: ['cloud-init'],
+      status: 'creating',
+      type: 'manual',
+    });
+
+    const { queryByLabelText } = renderWithTheme(
+      wrapWithTableBody(<ImageRow handlers={handlers} image={image} />)
+    );
+
+    expect(
+      queryByLabelText('This image is not encrypted.', { exact: false })
+    ).toBeNull();
   });
 
   it('should show N/A if Image does not have any regions', () => {
