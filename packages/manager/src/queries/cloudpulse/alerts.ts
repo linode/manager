@@ -70,9 +70,7 @@ export const useEditAlertDefinition = (
   return useMutation<Alert, APIError[], EditAlertDefinitionPayload>({
     mutationFn: (data) => editAlertDefinition(data, serviceType, alertId),
     onSuccess() {
-      queryClient.invalidateQueries(
-        queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId)
-      );
+      queryClient.invalidateQueries(queryFactory.alerts);
     },
   });
 };
