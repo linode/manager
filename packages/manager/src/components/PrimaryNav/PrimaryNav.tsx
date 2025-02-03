@@ -385,7 +385,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 heading={
                   <>
                     {productFamily.icon}
-                    <span>{productFamily.name}</span>
+                    <span className="productFamilyName">
+                      {productFamily.name}
+                    </span>
                   </>
                 }
                 isActiveProductFamily={

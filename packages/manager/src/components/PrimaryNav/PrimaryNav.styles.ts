@@ -74,7 +74,7 @@ export const StyledAccordion = styled(Accordion, {
 })<{ isActiveProductFamily: boolean; isCollapsed: boolean }>(
   ({ theme, ...props }) => ({
     '& h3': {
-      '& span': {
+      '& .productFamilyName': {
         color: theme.tokens.color.Neutrals['White'],
         fontFamily: theme.tokens.font.FontFamily.Brand,
         fontSize: theme.tokens.font.FontSize.Xxxs,

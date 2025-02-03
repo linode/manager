@@ -94,7 +94,7 @@ const StyledDrawer = styled(Drawer, {
     [theme.breakpoints.up('md')]: {
       '& .MuiDrawer-paper': {
         '&:hover': {
-          '& .primaryNavLink, .akamai-logo-name, p': {
+          '& .primaryNavLink, .akamai-logo-name, .productFamilyName': {
             opacity: 1,
           },
           '.MuiAccordion-region, div[class*="StyledSingleLinkBox"]': {
