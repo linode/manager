@@ -78,13 +78,25 @@ export const CreateCluster = () => {
     'standard'
   );
 
+  const {
+    isLoadingVersions,
+    versions: versionData,
+    versionsError,
+  } = useLkeStandardOrEnterpriseVersions(selectedTier);
+
+  const versions = (versionData ?? []).map((thisVersion) => ({
+    label: thisVersion.id,
+    value: thisVersion.id,
+  }));
+
   const formValues = React.useMemo(() => {
     return {
       apl_enabled: false,
       hasAgreed: hasAgreed || false,
+      k8s_version: versions && versions.length > 0 ? versions[0].label : '1.31',
       tier: selectedTier || 'standard',
     };
-  }, [hasAgreed, selectedTier]);
+  }, [hasAgreed, selectedTier, versions]);
 
   const {
     control,
@@ -151,17 +163,6 @@ export const CreateCluster = () => {
     isLkeEnterpriseLAFlagEnabled,
   } = useIsLkeEnterpriseEnabled();
 
-  const {
-    isLoadingVersions,
-    versions: versionData,
-    versionsError,
-  } = useLkeStandardOrEnterpriseVersions(selectedTier);
-
-  const versions = (versionData ?? []).map((thisVersion) => ({
-    label: thisVersion.id,
-    value: thisVersion.id,
-  }));
-
   const createCluster = (formData: any) => {
     const {
       apl_enabled,
@@ -176,17 +177,9 @@ export const CreateCluster = () => {
 
     const { push } = history;
 
-    const ipv4 = formData?.control_plane.acl?.addresses?.ipv4 || [];
+    const _ipv4 = control_plane.acl?.addresses?.ipv4;
 
-    const _ipv4 = ipv4
-      .map((ip: string) => ip)
-      .filter((ip: string) => ip !== '');
-
-    const ipv6 = formData?.control_plane.acl?.addresses?.ipv6 || [];
-
-    const _ipv6 = ipv6
-      .map((ip: string) => ip)
-      .filter((ip: string) => ip !== '');
+    const _ipv6 = control_plane.acl?.addresses?.ipv6;
 
     const addressIPv4Payload = {
       ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
@@ -199,15 +192,12 @@ export const CreateCluster = () => {
     let payload: CreateKubeClusterPayload = {
       control_plane: {
         acl: {
-          enabled: control_plane?.acl?.enabled ?? false,
-          'revision-id': '',
-          ...(control_plane?.acl?.enabled &&
-            (_ipv4?.length > 0 || _ipv6.length > 0) && {
-              addresses: {
-                ...addressIPv4Payload,
-                ...addressIPv6Payload,
-              },
-            }),
+          ...((_ipv4?.length > 0 || _ipv6.length > 0) && {
+            addresses: {
+              ...addressIPv4Payload,
+              ...addressIPv6Payload,
+            },
+          }),
         },
         high_availability: control_plane.high_availability ?? false,
       },
