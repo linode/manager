@@ -1,6 +1,8 @@
 import { Notice, Typography } from '@linode/ui';
 import React from 'react';
 
+import { SupportLink } from 'src/components/SupportLink';
+
 export const DatabaseMigrationInfoBanner = () => {
   return (
     <Notice important top={10} variant="warning">
@@ -8,10 +10,10 @@ export const DatabaseMigrationInfoBanner = () => {
         Legacy clusters decommission
       </Typography>
       <Typography lineHeight="20px">
-        The legacy database clusters will be available only till the end of{' '}
-        2025. By that time, we’ll migrate your clusters to the new solution. In
-        case of questions regarding the new database clusters or the migration,
-        contact the Support team.
+        Legacy database clusters will only be available until the end of 2025.
+        At that time, we’ll migrate your clusters to the new solution. For
+        questions regarding the new database clusters or the migration,{' '}
+        <SupportLink entity={{ type: 'database_id' }} text="contact support" />.
       </Typography>
     </Notice>
   );
