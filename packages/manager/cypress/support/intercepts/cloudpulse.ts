@@ -4,7 +4,7 @@
  * @returns Cypress chainable.
  */
 
-import { cloudPulseServicelMap } from 'support/constants/cloud-pulse';
+import { cloudPulseServicelMap } from 'support/constants/cloudpulse';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
@@ -362,5 +362,34 @@ export const mockCreateAlertDefinition = (
     'POST',
     apiMatcher(`/monitor/services/${serviceType}/alert-definitions`),
     paginateResponse(createAlertRequest)
+  );
+};
+/**
+ * Mocks the API response for updating an alert definition in the monitoring service.
+ * This function intercepts a `PUT` request to update a specific alert definition and returns a mock
+ * response, simulating the behavior of the real API by providing the updated alert object.
+ *
+ * The mock response allows the test to simulate the scenario where the system is successfully
+ * updating an alert definition without actually calling the backend API.
+ *
+ * @param {string} serviceType - The type of service (e.g., "web", "database") where the alert
+ *                               definition is being updated. This value is part of the URL in the request.
+ * @param {number} id - The unique identifier of the alert definition being updated. This ID is part
+ *                      of the URL in the request.
+ * @param {Alert} alert - The updated `Alert` object that will be returned as the mock response.
+ *                        This object represents the new alert definition.
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted
+ *                                     `PUT` request and the mock response.
+ */
+export const mockUpdateAlertDefinitions = (
+  serviceType: string,
+  id: number,
+  alert: Alert
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/monitor/services/${serviceType}/alert-definitions/${id}`),
+    makeResponse(alert)
   );
 };
