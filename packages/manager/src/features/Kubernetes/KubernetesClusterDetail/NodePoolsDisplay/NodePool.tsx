@@ -91,13 +91,13 @@ export const NodePool = (props: Props) => {
             </Typography>
           </Box>
           <Hidden lgUp>
-            <Box position="absolute" right={(theme) => theme.spacing(10)}>
-              {autoscaler.enabled && (
+            {autoscaler.enabled && (
+              <Box position="absolute" right={(theme) => theme.spacing(10)}>
                 <Typography mx={1}>
                   (Min {autoscaler.min} / Max {autoscaler.max})
                 </Typography>
-              )}
-            </Box>
+              </Box>
+            )}
             <Box
               alignItems="center"
               position="absolute"
