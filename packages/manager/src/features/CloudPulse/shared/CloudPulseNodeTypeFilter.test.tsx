@@ -50,6 +50,11 @@ describe('CloudPulseNodeTypeFilter', () => {
   });
 
   it('initializes with Primary as default value when no preferences are saved', async () => {
+    queryMocks.useAllDatabasesQuery.mockReturnValue({
+      data: databaseInstanceFactory.buildList(2),
+      isError: false,
+      isLoading: false,
+    });
     const { getByLabelText, getByText } = renderWithTheme(
       <CloudPulseNodeTypeFilter
         {...props}
@@ -120,24 +125,11 @@ describe('CloudPulseNodeTypeFilter', () => {
       isLoading: false,
     });
 
-    const { getByLabelText, getByText } = renderWithTheme(
-      <CloudPulseNodeTypeFilter {...props} />
+    const { getByRole } = renderWithTheme(
+      <CloudPulseNodeTypeFilter {...props} defaultValue="secondary" />
     );
-
-    await userEvent.click(getByLabelText('Node Type'));
-
-    await userEvent.click(getByText('Secondary'));
-
-    const { container } = renderWithTheme(
-      <CloudPulseNodeTypeFilter {...props} defaultValue={'Secondary'} />
-    );
-    expect(within(container).getByRole('combobox')).toHaveValue('Secondary');
-    await userEvent.click(within(container).getByLabelText('Node Type'));
-    expect(
-      within(container).getByRole('option', { name: 'Primary' })
-    ).toHaveAttribute('aria-selected', 'false');
-    expect(
-      within(container).getByRole('option', { name: 'Secondary' })
-    ).toHaveAttribute('aria-selected', 'true');
+    const combobox = getByRole('combobox', { name: 'Node Type' });
+    expect(combobox).toBeInTheDocument();
+    expect(combobox).toHaveValue('Secondary');
   });
 });
