@@ -30,7 +30,21 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   );
 
   const [searchText, setSearchText] = React.useState<string>('');
+  const [selectedType, setSelectedType] = React.useState<
+    AlertDefinitionType | undefined
+  >();
 
+  const filteredAlerts = React.useMemo(() => {
+    return (
+      alerts?.filter((alert) => {
+        return (
+          (!selectedType || alert.type === selectedType) &&
+          (!searchText ||
+            alert.label.toLowerCase().includes(searchText.toLowerCase()))
+        );
+      }) ?? []
+    );
+  }, [alerts, searchText, selectedType]);
   const history = useHistory();
 
   const types = React.useMemo<{ label: AlertDefinitionType }[]>(() => {
@@ -69,9 +83,11 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               value={searchText}
             />
             <Autocomplete
+              onChange={(_, selectedValue) => {
+                setSelectedType(selectedValue?.label);
+              }}
               label=""
               noMarginTop
-              onChange={(_, selectedValue) => {}}
               options={types}
               placeholder="Select Alert Type"
               sx={{ width: '250px' }}
@@ -83,7 +99,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               { columnName: 'Metric Threshold', label: 'id' },
               { columnName: 'Alert Type', label: 'type' },
             ]}
-            alerts={alerts ?? []}
+            alerts={filteredAlerts}
             entityId={entityId}
             entityName={entityName}
             ordeByColumn="Alert Name"
