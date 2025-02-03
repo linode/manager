@@ -211,14 +211,17 @@ describe('VPC assign/unassign flows', () => {
       subnets: [mockSubnet],
     });
 
-    const mockLinodeConfig = linodeConfigFactory.build({
-      interfaces: [
-        LinodeConfigInterfaceFactoryWithVPC.build({
-          vpc_id: mockVPC.id,
-          subnet_id: mockSubnet.id,
-        }),
-      ],
+    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+      vpc_id: mockVPC.id,
+      subnet_id: mockSubnet.id,
     });
+    const mockLinodeConfig = linodeConfigFactory.build({
+      interfaces: [vpcInterface],
+    });
+
+    const mockLinodeConfigInterfaces = mockLinodeConfig.interfaces ?? [
+      vpcInterface,
+    ];
 
     mockGetVPCs(mockVPCs).as('getVPCs');
     mockGetVPC(mockVPC).as('getVPC');
@@ -304,12 +307,12 @@ describe('VPC assign/unassign flows', () => {
         mockDeleteLinodeConfigInterface(
           mockLinode.id,
           mockLinodeConfig.id,
-          mockLinodeConfig.interfaces![0].id
+          mockLinodeConfigInterfaces[0].id
         ).as('deleteLinodeConfigInterface1');
         mockDeleteLinodeConfigInterface(
           mockSecondLinode.id,
           mockLinodeConfig.id,
-          mockLinodeConfig.interfaces![0].id
+          mockLinodeConfigInterfaces[0].id
         ).as('deleteLinodeConfigInterface2');
         ui.button
           .findByTitle('Unassign Linodes')

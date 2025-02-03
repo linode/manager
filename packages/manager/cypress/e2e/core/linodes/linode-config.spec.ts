@@ -593,10 +593,11 @@ describe('Linode Config management', () => {
       });
 
       // Mock config with public internet eth0, VLAN eth1, and VPC eth2.
+      const mockConfigInterfaces = mockConfig.interfaces ?? [];
       const mockConfigWithVpc: Config = {
         ...mockConfig,
         interfaces: [
-          ...mockConfig.interfaces!,
+          ...mockConfigInterfaces,
           LinodeConfigInterfaceFactoryWithVPC.build({
             label: undefined,
             vpc_id: mockVPC.id,

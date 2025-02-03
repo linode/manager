@@ -675,7 +675,6 @@ export const CreateLinodeSchema = object({
       schema.required(
         'You must provide a root password when deploying from an image.'
       ),
-    // .concat(rootPasswordValidation),
     otherwise: (schema) => schema.notRequired(),
   }),
   interfaces: array().when(
