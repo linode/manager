@@ -1,6 +1,7 @@
 import { Divider, Notice, Stack } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -15,12 +16,13 @@ import type { Image } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const RebuildImageDrawer = (props: Props) => {
-  const { image, onClose, open } = props;
+  const { image, isFetching, onClose, open } = props;
 
   const history = useHistory();
   const {
@@ -56,6 +58,7 @@ export const RebuildImageDrawer = (props: Props) => {
 
   return (
     <Drawer
+      isFetching={isFetching}
       onClose={handleClose}
       open={open}
       title="Rebuild an Existing Linode from an Image"
