@@ -67,7 +67,11 @@ export const getRegionOptions = (
     regionsIdToRegionMap,
     resourceIds,
   } = filterProps;
-  if (!data || !resourceIds.length || !regionsIdToRegionMap.size) {
+  if (
+    !data ||
+    (!isAdditionOrDeletionNeeded && !resourceIds.length) ||
+    !regionsIdToRegionMap.size
+  ) {
     return [];
   }
   const uniqueRegions = new Set<Region>();
@@ -101,7 +105,7 @@ export const getFilteredResources = (
     selectedOnly,
     selectedResources,
   } = filterProps;
-  if (!data || resourceIds.length === 0) {
+  if (!data || (!isAdditionOrDeletionNeeded && resourceIds.length === 0)) {
     return [];
   }
   return data // here we always use the base data from API for filtering as source of truth

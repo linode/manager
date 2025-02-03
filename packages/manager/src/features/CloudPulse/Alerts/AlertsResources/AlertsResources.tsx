@@ -41,14 +41,24 @@ export interface AlertResourcesProp {
   handleResourcesSelection?: (resources: string[]) => void;
 
   /**
+   * Property to control the visibility of the title
+   */
+  hideLabel?: boolean;
+
+  /**
    * This controls whether we need to show the checkbox in case of editing the resources
    */
   isSelectionsNeeded?: boolean;
 
   /**
+   * The error text that needs to be displayed when no selections are made
+   */
+  noSelectionErrorText?: string;
+
+  /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
-  serviceType: string;
+  serviceType?: string;
 }
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
@@ -57,7 +67,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertResourceIds,
     alertType,
     handleResourcesSelection,
+    hideLabel,
     isSelectionsNeeded,
+    noSelectionErrorText,
     serviceType,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
@@ -198,13 +210,19 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     return <CircleProgress />;
   }
 
-  if (!isDataLoadingError && alertResourceIds.length === 0) {
+  if (
+    !isDataLoadingError &&
+    !isSelectionsNeeded &&
+    alertResourceIds.length === 0
+  ) {
     return (
       <Stack gap={2}>
-        <Typography ref={titleRef} variant="h2">
-          {alertLabel || 'Resources'}
-          {/* It can be either the passed alert label or just Resources */}
-        </Typography>
+        {!hideLabel && (
+          <Typography ref={titleRef} variant="h2">
+            {alertLabel || 'Resources'}
+            {/* It can be either the passed alert label or just Resources */}
+          </Typography>
+        )}
         <StyledPlaceholder
           icon={EntityIcon}
           subtitle="You can assign alerts during the resource creation process."
@@ -216,10 +234,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   return (
     <Stack gap={2}>
-      <Typography ref={titleRef} variant="h2">
-        {alertLabel || 'Resources'}
-        {/* It can be either the passed alert label or just Resources */}
-      </Typography>
+      {!hideLabel && (
+        <Typography ref={titleRef} variant="h2">
+          {alertLabel || 'Resources'}
+          {/* It can be either the passed alert label or just Resources */}
+        </Typography>
+      )}
       {isSelectionsNeeded &&
         (alertType === 'system' || alertType === 'default') && (
           <Typography ref={titleRef} variant="body1">
@@ -228,7 +248,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             the alert for.
           </Typography>
         )}
-      {(isDataLoadingError || alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
+      {(isDataLoadingError ||
+        isSelectionsNeeded ||
+        alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
         <Grid container spacing={3}>
           <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
             <Grid item md={3} xs={12}>
@@ -282,6 +304,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               </Grid>
             )}
           </Grid>
+          {noSelectionErrorText && (
+            <Grid item xs={12}>
+              <Typography
+                color={theme.tokens.content.Text.Negative}
+                variant="body2"
+              >
+                {noSelectionErrorText}
+              </Typography>
+            </Grid>
+          )}
           {isSelectionsNeeded && !(isResourcesError || isRegionsError) && (
             <Grid item xs={12}>
               <AlertsResourcesNotice
