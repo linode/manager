@@ -46,8 +46,8 @@ RUN apt-get -y install google-chrome-stable
 RUN rm -rf /var/cache/apt/*
 RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get clean
-USER node
 RUN npm install -g "cypress@$CYPRESS_INSTALL_VERSION"
+USER node
 WORKDIR /home/node/app
 VOLUME /home/node/app
 ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
