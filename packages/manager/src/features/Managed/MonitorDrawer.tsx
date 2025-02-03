@@ -111,13 +111,13 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
    * values such as `notes` come back from the API as null, so remove those
    * as well.
    */
-  const _monitor =
-    monitor &&
-    (Object.fromEntries(
-      Object.entries(monitor).filter(
-        ([key, value]) => value !== null && key in emptyInitialValues
-      )
-    ) as ManagedServicePayload);
+  const _monitor = monitor
+    ? (Object.fromEntries(
+        Object.entries(monitor).filter(
+          ([key, value]) => value !== null && key in emptyInitialValues
+        )
+      ) as ManagedServicePayload)
+    : ({} as ManagedServicePayload);
 
   const initialValues = { ...emptyInitialValues, ..._monitor };
 

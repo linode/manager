@@ -191,7 +191,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                       name="phone.secondary"
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      value={values?.phone?.primary ?? ''}
+                      value={values?.phone?.secondary ?? ''}
                     />
                   </Grid>
                 </Grid>
