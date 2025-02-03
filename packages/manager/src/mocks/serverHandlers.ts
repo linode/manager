@@ -728,6 +728,11 @@ export const handlers = [
         region: 'us-central',
       }),
       linodeFactory.build({
+        label: 'linode_with_tag_test4',
+        region: 'us-east',
+        tags: ['test4'],
+      }),
+      linodeFactory.build({
         label: 'eu-linode',
         region: 'eu-west',
       }),
@@ -744,6 +749,7 @@ export const handlers = [
       const headers = JSON.parse(request.headers.get('x-filter') || '{}');
       const orFilters = headers['+or'];
       const andFilters = headers['+and'];
+      const regionFilter = headers.region;
 
       let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
 
@@ -767,6 +773,12 @@ export const handlers = [
           return orFilters.some((filter: { tags: string }) =>
             linode.tags.includes(filter.tags)
           );
+        });
+      }
+
+      if (regionFilter) {
+        filteredLinodes = filteredLinodes.filter((linode) => {
+          return linode.region === regionFilter;
         });
       }
 
