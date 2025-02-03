@@ -325,7 +325,7 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
           (!dependentFilter ||
             (Array.isArray(dependentFilter) && dependentFilter.length === 0))
         ) {
-          return true; // Since filters are set one by one, disabled will be true until the values present inside the dependent filter don't match with the values stored in the preference key
+          return true; // Since filters are set one by one, disabled will be true until the values present inside the dependent filter don't exactly match with the values stored in the preference key
         }
 
         return (
