@@ -18,6 +18,8 @@ const LongviewDetailWrapper = () => {
     return null;
   }
 
+  // Leaving this old `match` prop in case it's somehow needed somewhere
+  // see https://github.com/linode/manager/pull/11599
   const props = {
     match: {
       params: {
