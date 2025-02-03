@@ -62,6 +62,10 @@ export const CloudPulseTagsSelect = React.memo(
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     React.useEffect(() => {
+      if (disabled && !selectedTags) {
+        return;
+      }
+      // To save default values, go through side effects if disabled is false
       if (!tags || !savePreferences || selectedTags) {
         if (selectedTags) {
           setSelectedTags([]);
@@ -79,7 +83,7 @@ export const CloudPulseTagsSelect = React.memo(
         setSelectedTags(filteredTags);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tags, resourceType, region]);
+    }, [tags, resourceType, region, disabled]);
 
     return (
       <Autocomplete

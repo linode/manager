@@ -202,6 +202,23 @@ it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
   );
 
   expect(result).toEqual(true);
+
+  result = checkIfWeNeedToDisableFilterByFilterKey(
+    'resource_id',
+    { region: 'us-east', tags: undefined },
+    mockDashboard,
+    { ['region']: 'us-east', ['tags']: ['tag-1'] }
+  );
+
+  expect(result).toEqual(true); // disabled is true as tags are not updated in dependent filters
+
+  result = checkIfWeNeedToDisableFilterByFilterKey(
+    'tags',
+    { region: undefined },
+    mockDashboard
+  );
+
+  expect(result).toEqual(true);
 });
 
 it('test buildXfilter method', () => {
