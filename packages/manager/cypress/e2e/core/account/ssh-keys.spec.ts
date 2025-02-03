@@ -57,7 +57,8 @@ describe('SSH keys', () => {
         cy.findByText('Label is required.');
 
         // When a user tries to create an SSH key without the SSH Public Key, a form validation error appears
-        cy.get('[id="label"]').clear().type(mockSSHKey.label);
+        cy.get('[id="label"]').clear();
+        cy.type(mockSSHKey.label);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -66,7 +67,8 @@ describe('SSH keys', () => {
         cy.findAllByText(sshFormatErrorMessage).should('be.visible');
 
         // An alert displays when the format of SSH key is incorrect
-        cy.get('[id="ssh-public-key"]').clear().type('WrongFormatSshKey');
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.type('WrongFormatSshKey');
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -74,7 +76,8 @@ describe('SSH keys', () => {
           .click();
         cy.findAllByText(sshFormatErrorMessage).should('be.visible');
 
-        cy.get('[id="ssh-public-key"]').clear().type(mockSSHKey.ssh_key);
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.type(mockSSHKey.ssh_key);
         ui.button
           .findByTitle('Cancel')
           .should('be.visible')
@@ -101,8 +104,10 @@ describe('SSH keys', () => {
         cy.get('[id="ssh-public-key"]').should('be.empty');
 
         // Create a new ssh key
-        cy.get('[id="label"]').clear().type(mockSSHKey.label);
-        cy.get('[id="ssh-public-key"]').clear().type(mockSSHKey.ssh_key);
+        cy.get('[id="label"]').clear();
+        cy.type(mockSSHKey.label);
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.type(mockSSHKey.ssh_key);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -157,8 +162,10 @@ describe('SSH keys', () => {
         cy.get('[id="ssh-public-key"]').should('be.empty');
 
         // Create a new ssh key
-        cy.get('[id="label"]').clear().type(sshKeyLabel);
-        cy.get('[id="ssh-public-key"]').clear().type(sshPublicKey);
+        cy.get('[id="label"]').clear();
+        cy.type(sshKeyLabel);
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.type(sshPublicKey);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -228,7 +235,8 @@ describe('SSH keys', () => {
         cy.findByText('Label is required.');
 
         // SSH label is not modified when the operation is cancelled
-        cy.get('[id="label"]').clear().type(newSSHKeyLabel);
+        cy.get('[id="label"]').clear();
+        cy.type(newSSHKeyLabel);
         ui.button
           .findByTitle('Cancel')
           .should('be.visible')
@@ -250,7 +258,8 @@ describe('SSH keys', () => {
       .should('be.visible')
       .within(() => {
         // Update a new ssh key
-        cy.get('[id="label"]').clear().type(newSSHKeyLabel);
+        cy.get('[id="label"]').clear();
+        cy.type(newSSHKeyLabel);
         ui.button
           .findByTitle('Save')
           .should('be.visible')

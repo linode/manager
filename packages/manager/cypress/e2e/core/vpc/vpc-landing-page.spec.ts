@@ -119,14 +119,14 @@ describe('VPC landing page', () => {
         cy.findByLabelText('Label')
           .should('be.visible')
           .should('have.value', mockVPCs[1].label)
-          .clear()
-          .type(mockUpdatedVPC.label);
+          .clear();
+        cy.type(mockUpdatedVPC.label);
 
         cy.findByLabelText('Description')
           .should('be.visible')
           .should('have.value', mockVPCs[1].description)
-          .clear()
-          .type(mockUpdatedVPC.description);
+          .clear();
+        cy.type(mockUpdatedVPC.description);
 
         // TODO Add interactions/assertions for region selection once feature is available.
         ui.button
@@ -183,10 +183,8 @@ describe('VPC landing page', () => {
       .findByTitle(`Delete VPC ${mockVPCs[0].label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('VPC Label')
-          .should('be.visible')
-          .click()
-          .type(mockVPCs[0].label);
+        cy.findByLabelText('VPC Label').should('be.visible').click();
+        cy.type(mockVPCs[0].label);
 
         ui.button
           .findByTitle('Delete')
@@ -217,10 +215,8 @@ describe('VPC landing page', () => {
       .findByTitle(`Delete VPC ${mockVPCs[1].label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('VPC Label')
-          .should('be.visible')
-          .click()
-          .type(mockVPCs[1].label);
+        cy.findByLabelText('VPC Label').should('be.visible').click();
+        cy.type(mockVPCs[1].label);
 
         ui.button
           .findByTitle('Delete')
@@ -277,10 +273,8 @@ describe('VPC landing page', () => {
       .findByTitle(`Delete VPC ${mockVPCs[0].label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('VPC Label')
-          .should('be.visible')
-          .click()
-          .type(mockVPCs[0].label);
+        cy.findByLabelText('VPC Label').should('be.visible').click();
+        cy.type(mockVPCs[0].label);
 
         ui.button
           .findByTitle('Delete')

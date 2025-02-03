@@ -166,9 +166,8 @@ describe('Billing Activity Feed', () => {
       const timezone = profile.timezone;
       cy.visitWithLogin('/account/billing');
       cy.wait(['@getInvoices', '@getPayments']);
-      cy.findByText('Billing & Payment History')
-        .scrollIntoView()
-        .should('be.visible');
+      cy.findByText('Billing & Payment History').scrollIntoView();
+      cy.should('be.visible');
 
       // Confirm that payments and invoices from the past 6 months are displayed,
       // and that payments and invoices beyond 6 months are not displayed.
@@ -196,7 +195,8 @@ describe('Billing Activity Feed', () => {
       mockGetInvoices(invoiceMocks).as('getInvoices');
       mockGetPayments(paymentMocks).as('getPayments');
 
-      cy.findByText('Transaction Dates').click().type(`All Time`);
+      cy.findByText('Transaction Dates').click();
+      cy.type(`All Time`);
       ui.autocompletePopper
         .findByTitle(`All Time`)
         .should('be.visible')
@@ -214,7 +214,8 @@ describe('Billing Activity Feed', () => {
       });
 
       // Change transaction type drop-down to "Payments" only.
-      cy.findByText('Transaction Types').click().type(`Payments`);
+      cy.findByText('Transaction Types').click();
+      cy.type(`Payments`);
       ui.autocompletePopper
         .findByTitle(`Payments`)
         .should('be.visible')
@@ -268,7 +269,8 @@ describe('Billing Activity Feed', () => {
     cy.wait(['@getInvoices', '@getPayments', '@getPaymentMethods']);
 
     // Change invoice date selection from "6 Months" to "All Time".
-    cy.findByText('Transaction Dates').click().type('All Time');
+    cy.findByText('Transaction Dates').click();
+    cy.type('All Time');
     ui.autocompletePopper.findByTitle('All Time').should('be.visible').click();
 
     cy.get('[data-qa-billing-activity-panel]')
@@ -372,10 +374,8 @@ describe('Billing Activity Feed', () => {
       // This isn't strictly necessary, but is the most straightforward way to
       // get Cloud to re-fetch the user's profile data with the new timezone
       // applied.
-      cy.findByText('Timezone')
-        .should('be.visible')
-        .click()
-        .type(`${timezoneLabel}{enter}`);
+      cy.findByText('Timezone').should('be.visible').click();
+      cy.type(`${timezoneLabel}{enter}`);
 
       ui.button
         .findByTitle('Update Timezone')

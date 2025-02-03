@@ -204,10 +204,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Selecting a dashboard from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Dashboard')
-      .should('be.visible')
-      .type(dashboardName);
+    ui.autocomplete.findByLabel('Dashboard').should('be.visible');
+    cy.type(dashboardName);
 
     ui.autocompletePopper
       .findByTitle(dashboardName)
@@ -215,10 +213,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .click();
 
     // Select a time duration from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Time Range')
-      .should('be.visible')
-      .type(timeDurationToSelect);
+    ui.autocomplete.findByLabel('Time Range').should('be.visible');
+    cy.type(timeDurationToSelect);
 
     ui.autocompletePopper
       .findByTitle(timeDurationToSelect)
@@ -226,10 +222,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .click();
 
     //Select a Database Engine from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Engine')
-      .should('be.visible')
-      .type(engine);
+    ui.autocomplete.findByLabel('Database Engine').should('be.visible');
+    cy.type(engine);
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
@@ -246,25 +240,22 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       ).should('not.exist');
     });
 
-    ui.regionSelect.find().click().clear();
+    ui.regionSelect.find().click();
+    cy.clear();
     ui.regionSelect
       .findItemByRegionId(mockRegion.id, [mockRegion])
       .should('be.visible')
       .click();
 
     // Select a resource (Database Clusters) from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Clusters')
-      .should('be.visible')
-      .type(clusterName);
+    ui.autocomplete.findByLabel('Database Clusters').should('be.visible');
+    cy.type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
 
     // Select a Node from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Node Type')
-      .should('be.visible')
-      .type(`${nodeType}{enter}`);
+    ui.autocomplete.findByLabel('Node Type').should('be.visible');
+    cy.type(`${nodeType}{enter}`);
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
@@ -467,8 +458,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             .findByAttribute('aria-label', 'Zoom In')
             .should('be.visible')
             .should('be.enabled')
-            .scrollIntoView()
-            .click({ force: true });
+            .scrollIntoView();
+          cy.click({ force: true });
           cy.get('@widget').should('be.visible');
           cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(

@@ -97,17 +97,13 @@ describe('Delete Machine Images', () => {
             .findByTitle('Edit Image')
             .should('be.visible')
             .within(() => {
-              cy.findByLabelText('Label')
-                .should('be.visible')
-                .click()
-                .clear()
-                .type(newLabel);
+              cy.findByLabelText('Label').should('be.visible').click();
+              cy.clear();
+              cy.type(newLabel);
 
-              cy.findByLabelText('Description')
-                .should('be.visible')
-                .click()
-                .clear()
-                .type(newDescription);
+              cy.findByLabelText('Description').should('be.visible').click();
+              cy.clear();
+              cy.type(newDescription);
 
               ui.button
                 .findByTitle('Save Changes')

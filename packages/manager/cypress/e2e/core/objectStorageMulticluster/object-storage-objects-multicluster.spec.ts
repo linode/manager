@@ -185,10 +185,8 @@ describe('Object Storage Multicluster objects', () => {
         .findByTitle('Create Folder')
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Folder Name')
-            .should('be.visible')
-            .click()
-            .type(bucketFolderName);
+          cy.findByLabelText('Folder Name').should('be.visible').click();
+          cy.type(bucketFolderName);
 
           ui.buttonGroup
             .findButtonByTitle('Create')
@@ -228,7 +226,8 @@ describe('Object Storage Multicluster objects', () => {
         .findByTitle(`Delete Bucket ${bucketLabel}`)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Bucket Name').click().type(bucketLabel);
+          cy.findByText('Bucket Name').click();
+          cy.type(bucketLabel);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')
@@ -279,8 +278,8 @@ describe('Object Storage Multicluster objects', () => {
             .should('be.visible')
             .should('not.have.value', 'Loading access...')
             .should('have.value', 'Private')
-            .click()
-            .type('Public Read');
+            .click();
+          cy.type('Public Read');
 
           ui.autocompletePopper
             .findByTitle('Public Read')

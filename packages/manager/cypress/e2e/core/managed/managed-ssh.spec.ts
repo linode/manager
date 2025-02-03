@@ -135,23 +135,17 @@ describe('Managed SSH Access tab', () => {
       .findByTitle(`Edit SSH Access for ${linodeLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('User Account')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newUser);
+        cy.findByLabelText('User Account').should('be.visible').click();
+        cy.clear;
+        cy.type(newUser);
 
         // Set IP address to 'Any'.
-        cy.findByLabelText('IP Address')
-          .should('be.visible')
-          .click()
-          .type('Any{enter}');
+        cy.findByLabelText('IP Address').should('be.visible').click();
+        cy.type('Any{enter}');
 
-        cy.findByLabelText('Port')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(`${newPort}`);
+        cy.findByLabelText('Port').should('be.visible').click();
+        cy.clear;
+        cy.type(`${newPort}`);
 
         ui.button
           .findByTitle('Save Changes')

@@ -76,20 +76,16 @@ describe('Managed Credentials tab', () => {
       .findByTitle('Add Credential')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .click()
-          .type(credentialLabel);
+        cy.findByLabelText('Label').should('be.visible').click();
+        cy.type(credentialLabel);
 
         cy.findByLabelText('Username', { exact: false })
           .should('be.visible')
-          .click()
-          .type(credentialUsername);
+          .click();
+        cy.type(credentialUsername);
 
-        cy.findByLabelText('Password')
-          .should('be.visible')
-          .click()
-          .type(credentialPassword);
+        cy.findByLabelText('Password').should('be.visible').click();
+        cy.type(credentialPassword);
 
         ui.buttonGroup
           .findButtonByTitle('Add Credential')
@@ -150,11 +146,9 @@ describe('Managed Credentials tab', () => {
       .should('be.visible')
       .within(() => {
         // Update label.
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(credentialNewLabel);
+        cy.findByLabelText('Label').should('be.visible').click();
+        cy.clear;
+        cy.type(credentialNewLabel);
 
         ui.button
           .findByTitle('Update label')
@@ -168,13 +162,11 @@ describe('Managed Credentials tab', () => {
         // Update credentials.
         cy.findByLabelText('Username', { exact: false })
           .should('be.visible')
-          .click()
-          .type(randomString());
+          .click();
+        cy.type(randomString());
 
-        cy.findByLabelText('Password')
-          .should('be.visible')
-          .click()
-          .type(randomString());
+        cy.findByLabelText('Password').should('be.visible').click();
+        cy.type(randomString());
 
         ui.button
           .findByTitle('Update credentials')
@@ -232,10 +224,8 @@ describe('Managed Credentials tab', () => {
       .findByTitle(`Delete Credential ${credentialLabel}?`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Credential Name:')
-          .should('be.visible')
-          .click()
-          .type(credentialLabel);
+        cy.findByLabelText('Credential Name:').should('be.visible').click();
+        cy.type(credentialLabel);
 
         ui.buttonGroup
           .findButtonByTitle('Delete Credential')

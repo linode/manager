@@ -63,7 +63,7 @@ describe('Search Images', () => {
             expect(cy.contains(image2.label).should('not.exist'));
 
             // Clear search, confirm both images are shown.
-            cy.findByTestId('clear-images-search').click();
+            cy.findByTestId('clear-images-search').clear();
             cy.contains(image1.label).should('be.visible');
             cy.contains(image2.label).should('be.visible');
 

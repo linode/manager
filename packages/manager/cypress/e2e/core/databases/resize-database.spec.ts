@@ -39,7 +39,8 @@ const resizeDatabase = (initialLabel: string) => {
     .findByTitle(`Resize Database Cluster ${initialLabel}?`)
     .should('be.visible')
     .within(() => {
-      cy.findByLabelText('Cluster Name').click().type(initialLabel);
+      cy.findByLabelText('Cluster Name').click();
+      cy.type(initialLabel);
       ui.buttonGroup
         .findButtonByTitle('Resize Cluster')
         .should('be.visible')

@@ -69,11 +69,8 @@ describe('Personal access tokens', () => {
         cy.findAllByText('Child Account Access').should('not.exist');
 
         // Confirm submit button is disabled without specifying scopes.
-        ui.buttonGroup
-          .findButtonByTitle('Create Token')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.disabled');
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
+        cy.should('be.visible').should('be.disabled');
 
         // Select just one scope.
         cy.get('[data-qa-row="Account"]').within(() => {
@@ -81,11 +78,8 @@ describe('Personal access tokens', () => {
         });
 
         // Confirm submit button is still disabled without specifying ALL scopes.
-        ui.buttonGroup
-          .findButtonByTitle('Create Token')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.disabled');
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
+        cy.should('be.visible').should('be.disabled');
 
         // Specify ALL scopes by selecting the "No Access" Select All radio button.
         cy.get('[data-qa-perm-no-access-radio]').click();
@@ -96,32 +90,22 @@ describe('Personal access tokens', () => {
         );
 
         // Confirm submit button is enabled; attempt to submit form without specifying a label.
-        ui.buttonGroup
-          .findButtonByTitle('Create Token')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
+        cy.should('be.visible').should('be.enabled').click();
 
         // Confirm validation error.
-        cy.findByText('Label must be between 1 and 100 characters.')
-          .scrollIntoView()
-          .should('be.visible');
+        cy.findByText(
+          'Label must be between 1 and 100 characters.'
+        ).scrollIntoView();
+        cy.should('be.visible');
 
         // Specify a label and re-submit.
-        cy.findByLabelText('Label')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click()
-          .type(token.label);
+        cy.findByLabelText('Label').scrollIntoView();
+        cy.should('be.visible').should('be.enabled').click();
+        cy.type(token.label);
 
-        ui.buttonGroup
-          .findButtonByTitle('Create Token')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
+        cy.should('be.visible').should('be.enabled').click();
       });
 
     // Confirm that PAT secret dialog is shown and close it.
@@ -219,11 +203,9 @@ describe('Personal access tokens', () => {
       .findByTitle('Edit Personal Access Token')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newToken.label);
+        cy.findByLabelText('Label').should('be.visible').click();
+        cy.clear;
+        cy.type(newToken.label);
 
         ui.buttonGroup
           .findButtonByTitle('Save')

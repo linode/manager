@@ -31,12 +31,12 @@ describe('Create a Domain', () => {
     cy.wait('@getDomains');
     cy.findByText('Create Domain').click();
     const label = randomDomainName();
-    cy.get('[id="domain"][data-testid="textfield-input"]')
-      .should('be.visible')
-      .type(label);
-    cy.get('[id="soa-email-address"][data-testid="textfield-input"]')
-      .should('be.visible')
-      .type('devs@linode.com');
+    cy.get('[id="domain"][data-testid="textfield-input"]').should('be.visible');
+    cy.type(label);
+    cy.get('[id="soa-email-address"][data-testid="textfield-input"]').should(
+      'be.visible'
+    );
+    cy.type('devs@linode.com');
     cy.get('[data-testid="submit"]').click();
     cy.wait('@createDomain');
     cy.get('[data-qa-header]').should('contain', label);

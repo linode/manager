@@ -197,29 +197,25 @@ describe('clone linode', () => {
 
     // Open VLAN accordion and select existing VLAN.
     ui.accordionHeading.findByTitle('VLAN').click();
-    ui.accordion
-      .findByTitle('VLAN')
-      .scrollIntoView()
-      .should('be.visible')
-      .within(() => {
-        cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
+    ui.accordion.findByTitle('VLAN').scrollIntoView();
+    cy.should('be.visible').within(() => {
+      cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
 
-        ui.autocompletePopper
-          .findByTitle(mockVlan.label)
-          .should('be.visible')
-          .click();
+      ui.autocompletePopper
+        .findByTitle(mockVlan.label)
+        .should('be.visible')
+        .click();
 
-        cy.findByLabelText(/IPAM Address/)
-          .should('be.enabled')
-          .type(mockVlan.cidr_block);
-      });
+      cy.findByLabelText(/IPAM Address/)
+        .should('be.enabled')
+        .type(mockVlan.cidr_block);
+    });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('VLAN Attached').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.within(() => {
+      cy.findByText('VLAN Attached').should('be.visible');
+    });
 
     ui.button
       .findByTitle('Create Linode')
@@ -329,8 +325,8 @@ describe('clone linode', () => {
 
     ui.regionSelect
       .findBySelectedItem(`${initialRegion.label} (${initialRegion.id})`)
-      .click()
-      .type(`${newRegion.label}{enter}`);
+      .click();
+    cy.type(`${newRegion.label}{enter}`);
 
     cy.findByText(dcPricingRegionDifferenceNotice, { exact: false }).should(
       'be.visible'

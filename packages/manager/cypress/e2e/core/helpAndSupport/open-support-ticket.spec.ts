@@ -97,15 +97,15 @@ describe('open support tickets', () => {
       mockAttachSupportTicketFile(ticketId).as('attachmentPost');
 
       cy.contains('Open New Ticket').click();
-      cy.get('input[placeholder="Enter a title for your ticket."]')
-        .click({ scrollBehavior: false })
-        .type(ticketLabel);
+      cy.get('input[placeholder="Enter a title for your ticket."]').click({
+        scrollBehavior: false,
+      });
+      cy.type(ticketLabel);
       cy.findByLabelText('Severity').should('not.exist');
       cy.get('[data-qa-ticket-entity-type]').click();
       cy.contains('General/Account/Billing').should('be.visible');
-      cy.get('[data-qa-ticket-description="true"]')
-        .click()
-        .type(ticketDescription);
+      cy.get('[data-qa-ticket-description="true"]').click();
+      cy.type(ticketDescription);
       cy.get('[id="attach-file"]').attachFile(image);
       cy.get('[value="test_screenshot.png"]').should('be.visible');
       cy.get('[data-qa-submit="true"]').click();
@@ -172,18 +172,14 @@ describe('open support tickets', () => {
       .within(() => {
         cy.findByLabelText('Title', { exact: false })
           .should('be.visible')
-          .click()
-          .type(mockTicket.summary);
+          .click();
+        cy.type(mockTicket.summary);
 
-        cy.findByLabelText('Severity')
-          .should('be.visible')
-          .click()
-          .type(`${mockTicket.severity}{downarrow}{enter}`);
+        cy.findByLabelText('Severity').should('be.visible').click();
+        cy.type(`${mockTicket.severity}{downarrow}{enter}`);
 
-        cy.get('[data-qa-ticket-description]')
-          .should('be.visible')
-          .click()
-          .type(mockTicket.description);
+        cy.get('[data-qa-ticket-description]').should('be.visible').click();
+        cy.type(mockTicket.description);
 
         ui.button
           .findByTitle('Open Ticket')
@@ -281,12 +277,8 @@ describe('open support tickets', () => {
           .should('be.visible')
           .should('have.value', mockFormFields.companyName);
 
-        ui.button
-          .findByTitle('Open Ticket')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+        ui.button.findByTitle('Open Ticket').scrollIntoView();
+        cy.should('be.visible').should('be.enabled').click();
 
         // Confirm validation errors display when trying to submit without required fields.
         cy.findByText('Use case is required.');
@@ -294,20 +286,14 @@ describe('open support tickets', () => {
         cy.findByText('Links to public information are required.');
 
         // Complete the rest of the form.
-        cy.get('[data-qa-ticket-use-case]')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.useCase);
+        cy.get('[data-qa-ticket-use-case]').should('be.visible').click();
+        cy.type(mockFormFields.useCase);
 
-        cy.get('[data-qa-ticket-email-domains]')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.emailDomains);
+        cy.get('[data-qa-ticket-email-domains]').should('be.visible').click();
+        cy.type(mockFormFields.emailDomains);
 
-        cy.get('[data-qa-ticket-public-info]')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.publicInfo);
+        cy.get('[data-qa-ticket-public-info]').should('be.visible').click();
+        cy.type(mockFormFields.publicInfo);
 
         // Confirm there is no description field or file upload section.
         cy.findByText('Description').should('not.exist');
@@ -451,12 +437,8 @@ describe('open support tickets', () => {
           .should('be.visible')
           .should('have.attr', 'href', 'https://www.linode.com/pricing/');
 
-        ui.button
-          .findByTitle('Open Ticket')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+        ui.button.findByTitle('Open Ticket').scrollIntoView();
+        cy.should('be.visible').should('be.enabled').click();
 
         // Confirm validation errors display when trying to submit without required fields.
         cy.findByText('Use case is required.');
@@ -465,18 +447,14 @@ describe('open support tickets', () => {
         // Complete the rest of the form.
         cy.findByLabelText('Total number of Linodes you need?')
           .should('be.visible')
-          .click()
-          .type(mockFormFields.numberOfEntities);
+          .click();
+        cy.type(mockFormFields.numberOfEntities);
 
-        cy.get('[data-qa-ticket-use-case]')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.useCase);
+        cy.get('[data-qa-ticket-use-case]').should('be.visible').click();
+        cy.type(mockFormFields.useCase);
 
-        cy.get('[data-qa-ticket-public-info]')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.publicInfo);
+        cy.get('[data-qa-ticket-public-info]').should('be.visible').click();
+        cy.type(mockFormFields.publicInfo);
 
         // Confirm there is no description field or file upload section.
         cy.findByText('Description').should('not.exist');
@@ -551,17 +529,14 @@ describe('open support tickets', () => {
       .within(() => {
         cy.findByLabelText('Title', { exact: false })
           .should('be.visible')
-          .click()
-          .type(mockTicket.summary);
+          .click();
+        cy.type(mockTicket.summary);
 
-        cy.get('[data-qa-ticket-description]')
-          .should('be.visible')
-          .click()
-          .type(mockTicket.description);
+        cy.get('[data-qa-ticket-description]').should('be.visible').click();
+        cy.type(mockTicket.description);
 
-        cy.get('[data-qa-ticket-entity-type]')
-          .click()
-          .type(`Linodes{downarrow}{enter}`);
+        cy.get('[data-qa-ticket-entity-type]').click();
+        cy.type(`Linodes{downarrow}{enter}`);
 
         // Attempt to submit the form without an entity selected and confirm validation error.
         ui.button
@@ -572,9 +547,8 @@ describe('open support tickets', () => {
         cy.findByText('Please select a Linode.').should('be.visible');
 
         // Select an entity type for which there are no entities.
-        cy.get('[data-qa-ticket-entity-type]')
-          .click()
-          .type(`Kubernetes{downarrow}{enter}`);
+        cy.get('[data-qa-ticket-entity-type]').click();
+        cy.type(`Kubernetes{downarrow}{enter}`);
 
         // Confirm the validation error clears when a new entity type is selected.
         cy.findByText('Please select a Linode.').should('not.exist');
@@ -588,15 +562,12 @@ describe('open support tickets', () => {
           .should('be.disabled');
 
         // Select another entity type.
-        cy.get('[data-qa-ticket-entity-type]')
-          .click()
-          .type(`{selectall}{del}Domains{uparrow}{enter}`);
+        cy.get('[data-qa-ticket-entity-type]').click();
+        cy.type(`{selectall}{del}Domains{uparrow}{enter}`);
 
         // Select an entity.
-        cy.get('[data-qa-ticket-entity-id]')
-          .should('be.visible')
-          .click()
-          .type(`${mockDomain.domain}{downarrow}{enter}`);
+        cy.get('[data-qa-ticket-entity-id]').should('be.visible').click();
+        cy.type(`${mockDomain.domain}{downarrow}{enter}`);
 
         ui.button
           .findByTitle('Open Ticket')

@@ -53,11 +53,9 @@ describeRegions('Can update Linodes', (region) => {
       cy.get('[data-qa-panel="Linode Label"]')
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Label')
-            .should('be.visible')
-            .click()
-            .clear()
-            .type(newLabel);
+          cy.findByLabelText('Label').should('be.visible').click();
+          cy.clear();
+          cy.type(newLabel);
 
           ui.button
             .findByTitle('Save')
@@ -121,7 +119,8 @@ describeRegions('Can update Linodes', (region) => {
         cy.get('[data-qa-panel="Reset Root Password"]')
           .should('be.visible')
           .within(() => {
-            cy.findByText('Disk').should('be.visible').click().type(disk.label);
+            cy.findByText('Disk').should('be.visible').clear();
+            cy.type(disk.label);
 
             ui.autocompletePopper
               .findByTitle(disk.label)
@@ -130,9 +129,9 @@ describeRegions('Can update Linodes', (region) => {
 
             cy.findByLabelText('New Root Password')
               .should('be.visible')
-              .click()
-              .clear()
-              .type(newPassword);
+              .clear();
+            cy.clear();
+            cy.type(newPassword);
 
             ui.button
               .findByTitle('Save')

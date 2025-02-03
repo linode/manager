@@ -173,15 +173,11 @@ describe('Migrate Linode With Firewall', () => {
         .findByTitle('Create Firewall')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Label')
-            .should('be.visible')
-            .click()
-            .type(firewallLabel);
+          cy.findByText('Label').should('be.visible').click();
+          cy.type(firewallLabel);
 
-          cy.findByText('Linodes')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByText('Linodes').should('be.visible').click();
+          cy.type(linode.label);
 
           ui.autocompletePopper
             .findByTitle(linode.label)

@@ -72,10 +72,8 @@ const assertPasswordComplexity = (
   desiredPassword: string,
   passwordStrength: 'Weak' | 'Fair' | 'Good'
 ) => {
-  cy.findByLabelText('Root Password')
-    .should('be.visible')
-    .clear()
-    .type(desiredPassword);
+  cy.findByLabelText('Root Password').should('be.visible').clear();
+  cy.type(desiredPassword);
 
   cy.contains(`Strength: ${passwordStrength}`).should('be.visible');
 };
@@ -198,10 +196,10 @@ describe('rebuild linode', () => {
           .click();
 
         cy.wait('@getStackScripts');
-        cy.findByLabelText('Search by Label, Username, or Description')
-          .scrollIntoView()
-          .should('be.visible')
-          .type(`${stackScriptName}`);
+        cy.findByLabelText(
+          'Search by Label, Username, or Description'
+        ).scrollIntoView();
+        cy.should('be.visible').type(`${stackScriptName}`);
 
         cy.wait('@getStackScripts');
         cy.findByLabelText('List of StackScripts').within(() => {
@@ -273,10 +271,10 @@ describe('rebuild linode', () => {
           .should('be.visible')
           .click();
 
-        cy.findByLabelText('Search by Label, Username, or Description')
-          .scrollIntoView()
-          .should('be.visible')
-          .type(`${stackScript.label}`);
+        cy.findByLabelText(
+          'Search by Label, Username, or Description'
+        ).scrollIntoView();
+        cy.should('be.visible').type(`${stackScript.label}`);
 
         cy.findByLabelText('List of StackScripts').within(() => {
           cy.get(`[id="${stackScript.id}"][type="radio"]`).click();
@@ -317,19 +315,14 @@ describe('rebuild linode', () => {
     cy.visitWithLogin(`/linodes/${mockLinode.id}?rebuild=true`);
     findRebuildDialog(mockLinode.label).within(() => {
       ui.autocomplete.findByLabel('From Image').should('be.visible');
-      ui.autocomplete
-        .findByLabel('Images')
-        .should('be.visible')
-        .click()
-        .type(image);
+      ui.autocomplete.findByLabel('Images').should('be.visible').click();
+      cy.type(image);
       ui.autocompletePopper.findByTitle(image).should('be.visible').click();
 
       assertPasswordComplexity(rootPassword, 'Good');
 
-      cy.findByLabelText('Linode Label')
-        .should('be.visible')
-        .click()
-        .type(mockLinode.label);
+      cy.findByLabelText('Linode Label').should('be.visible').click();
+      cy.type(mockLinode.label);
 
       submitRebuild();
       cy.wait('@rebuildLinode');

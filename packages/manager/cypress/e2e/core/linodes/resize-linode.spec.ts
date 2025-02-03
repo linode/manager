@@ -33,10 +33,8 @@ describe('resize linode', () => {
           cy.contains('Linode 8 GB').should('be.visible').click();
 
           // Select warm resize option, and enter Linode label in type-to-confirm field.
-          cy.findByText('Warm resize')
-            .scrollIntoView()
-            .should('be.visible')
-            .click();
+          cy.findByText('Warm resize').scrollIntoView();
+          cy.should('be.visible').click();
 
           cy.findByLabelText('Linode Label').type(linode.label);
 
@@ -75,10 +73,8 @@ describe('resize linode', () => {
 
           cy.contains('Linode 8 GB').should('be.visible').click();
 
-          cy.findByText('Cold resize')
-            .scrollIntoView()
-            .should('be.visible')
-            .click();
+          cy.findByText('Cold resize').scrollIntoView();
+          cy.should('be.visible').click();
 
           cy.findByLabelText('Linode Label').type(linode.label);
 
@@ -197,9 +193,8 @@ describe('resize linode', () => {
       cy.wait('@linodeResize');
       cy.contains(
         'The current disk size of your Linode is too large for the new service plan. Please resize your disk to accommodate the new plan. You can read our Resize Your Linode guide for more detailed instructions.'
-      )
-        .scrollIntoView()
-        .should('be.visible');
+      ).scrollIntoView();
+      cy.should('be.visible');
 
       // Normal flow when resizing a linode to a smaller size after first resizing
       // its disk.
@@ -239,7 +234,8 @@ describe('resize linode', () => {
         .within(() => {
           cy.contains('Size (required)').should('be.visible').click();
 
-          cy.focused().clear().type(size);
+          cy.focused().clear();
+          cy.type(size);
 
           ui.buttonGroup
             .findButtonByTitle('Resize')

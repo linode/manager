@@ -186,8 +186,10 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        cy.findByText('Label').click();
+        cy.type(bucketLabel);
+        ui.regionSelect.find().click();
+        cy.type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -264,7 +266,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -324,8 +327,10 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        cy.findByText('Label').click();
+        cy.type(bucketLabel);
+        ui.regionSelect.find().click();
+        cy.type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -387,7 +392,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -447,8 +453,10 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        cy.findByText('Label').click();
+        cy.type(bucketLabel);
+        ui.regionSelect.find().click();
+        cy.type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -508,7 +516,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -568,19 +577,17 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        cy.findByText('Label').click();
+        cy.type(bucketLabel);
+        ui.regionSelect.find().click();
+        cy.type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
 
         // Select E3 endpoint
-        ui.autocompletePopper
-          .findByTitle('Standard (E3)')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+        ui.autocompletePopper.findByTitle('Standard (E3)').scrollIntoView();
+        cy.should('be.visible').should('be.enabled').click();
 
         // Confirm bucket rate limits text for E3 endpoint
         cy.findByText('Bucket Rate Limits').should('be.visible');
@@ -629,7 +636,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -671,7 +679,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        ui.regionSelect.find().click();
+        cy.type(`${mockRegion.label}{enter}`);
 
         // Confirms error appears when an endpoint isn't selected, and disappears after one is selected
         ui.buttonGroup
@@ -686,12 +695,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .should('be.visible')
           .click();
 
-        ui.autocompletePopper
-          .findByTitle('Standard (E3)')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+        ui.autocompletePopper.findByTitle('Standard (E3)').scrollIntoView();
+        cy.should('be.visible').should('be.enabled').click();
 
         cy.contains('Endpoint Type is required.').should('not.exist');
 
@@ -703,7 +708,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
 
         cy.contains('Label is required.').should('be.visible');
-        cy.findByText('Label').click().type(bucketLabel);
+        cy.findByText('Label').click();
+        cy.type(bucketLabel);
         cy.contains('Label is required.').should('not.exist');
 
         // confirms (mock) API error appears

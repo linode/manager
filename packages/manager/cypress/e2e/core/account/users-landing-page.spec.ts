@@ -333,10 +333,10 @@ describe('Users landing page', () => {
       .findByTitle('Add a User')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
-        cy.findByText('Email')
-          .click()
-          .type(`${newUser.username}@test.com{enter}`);
+        cy.findByText('Username').click();
+        cy.type(`${newUser.username}{enter}`);
+        cy.findByText('Email').click();
+        cy.type(`${newUser.username}@test.com{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Cancel')
           .should('be.visible')
@@ -358,10 +358,10 @@ describe('Users landing page', () => {
       .findByTitle('Add a User')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
-        cy.findByText('Email')
-          .click()
-          .type(`${newUser.username}@test.com{enter}`);
+        cy.findByText('Username').click();
+        cy.type(`${newUser.username}{enter}`);
+        cy.findByText('Email').click();
+        cy.type(`${newUser.username}@test.com{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Cancel')
           .should('be.visible')
@@ -394,10 +394,12 @@ describe('Users landing page', () => {
         cy.findByText('Email address is required.').should('be.visible');
 
         // type username
-        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Username').click();
+        cy.type(`${newUser.username}{enter}`);
 
         // an inline error message will be displayed when the email address is invalid
-        cy.findByText('Email').click().type(`not_valid_email_address{enter}`);
+        cy.findByText('Email').click();
+        cy.type(`not_valid_email_address{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Add User')
           .should('be.visible')
@@ -406,10 +408,9 @@ describe('Users landing page', () => {
         cy.findByText('Must be a valid Email address.').should('be.visible');
 
         // type email address
-        cy.get('[id="email"]')
-          .click()
-          .clear()
-          .type(`${newUser.username}@test.com{enter}`);
+        cy.get('[id="email"]').click();
+        cy.clear;
+        cy.type(`${newUser.username}@test.com{enter}`);
 
         ui.buttonGroup
           .findButtonByTitle('Add User')
@@ -467,10 +468,10 @@ describe('Users landing page', () => {
       .findByTitle('Add a User')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
-        cy.findByText('Email')
-          .click()
-          .type(`${newUser.username}@test.com{enter}`);
+        cy.findByText('Username').click();
+        cy.type(`${newUser.username}{enter}`);
+        cy.findByText('Email').click();
+        cy.type(`${newUser.username}@test.com{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Cancel')
           .should('be.visible')
@@ -504,10 +505,12 @@ describe('Users landing page', () => {
         cy.findByText('Email address is required.').should('be.visible');
 
         // type username
-        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Username').click();
+        cy.type(`${newUser.username}{enter}`);
 
         // an inline error message will be displayed when the email address is invalid
-        cy.findByText('Email').click().type(`not_valid_email_address{enter}`);
+        cy.findByText('Email').click();
+        cy.type(`not_valid_email_address{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Add User')
           .should('be.visible')
@@ -516,10 +519,9 @@ describe('Users landing page', () => {
         cy.findByText('Must be a valid Email address.').should('be.visible');
 
         // type email address
-        cy.get('[id="email"]')
-          .click()
-          .clear()
-          .type(`${newUser.username}@test.com{enter}`);
+        cy.get('[id="email"]').click();
+        cy.clear;
+        cy.type(`${newUser.username}@test.com{enter}`);
 
         // toggle to disable full access
         cy.get('[data-qa-create-restricted="true"]')

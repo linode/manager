@@ -70,14 +70,12 @@ const fillOutStackscriptForm = (
   // Fill out "StackScript Label", "Description", "Target Images", and "Script" fields.
   cy.findByLabelText(/^StackScript Label.*/)
     .should('be.visible')
-    .click()
-    .type(label);
+    .click();
+  cy.type(label);
 
   if (description) {
-    cy.findByLabelText('Description')
-      .should('be.visible')
-      .click()
-      .type(description);
+    cy.findByLabelText('Description').should('be.visible').click();
+    cy.type(description);
   }
 
   ui.autocomplete.findByLabel('Target Images').should('be.visible').click();
@@ -108,11 +106,9 @@ const fillOutLinodeForm = (label: string, regionName: string) => {
     .click();
   ui.regionSelect.find().should('have.value', `${region.label} (${region.id})`);
 
-  cy.findByText('Linode Label')
-    .should('be.visible')
-    .click()
-    .type('{selectall}{backspace}')
-    .type(label);
+  cy.findByText('Linode Label').should('be.visible').click();
+  cy.type('{selectall}{backspace}');
+  cy.type(label);
 
   cy.findByText('Dedicated CPU').should('be.visible').click();
   cy.get('[id="g6-dedicated-2"]').click();
@@ -267,16 +263,12 @@ describe('Create stackscripts', () => {
     // Fill out Linode creation form, confirm UDF fields behave as expected.
     fillOutLinodeForm(linodeLabel, linodeRegion.label);
 
-    cy.findByLabelText('Example Password')
-      .should('be.visible')
-      .click()
-      .type(randomString(32));
+    cy.findByLabelText('Example Password').should('be.visible').click();
+    cy.type(randomString(32));
 
-    cy.findByLabelText('Example Title')
-      .should('be.visible')
-      .click()
-      .type('{selectall}{backspace}')
-      .type(randomString(12));
+    cy.findByLabelText('Example Title').should('be.visible').click();
+    cy.type('{selectall}{backspace}');
+    cy.type(randomString(12));
 
     ui.button
       .findByTitle('Create Linode')
@@ -368,17 +360,14 @@ describe('Create stackscripts', () => {
           const imageLabel = imageSample.label;
           cy.findAllByText(imageLabel, { exact: false })
             .last()
-            .scrollIntoView()
-            .should('exist')
-            .should('be.visible');
+            .scrollIntoView();
+          cy.should('exist').should('be.visible');
         });
       });
 
       // Select private image.
-      cy.findByText(privateImage.label)
-        .scrollIntoView()
-        .should('be.visible')
-        .click();
+      cy.findByText(privateImage.label).scrollIntoView();
+      cy.should('be.visible').click();
 
       interceptCreateLinode().as('createLinode');
       fillOutLinodeForm(

@@ -72,14 +72,12 @@ describe('create image (using mocks)', () => {
     cy.findByLabelText('Label')
       .should('be.enabled')
       .should('be.visible')
-      .clear()
-      .type(mockNewImage.label);
+      .clear();
+    cy.type(mockNewImage.label);
 
     // Give the Image a description
-    cy.findByLabelText('Description')
-      .should('be.enabled')
-      .should('be.visible')
-      .type(mockNewImage.description!);
+    cy.findByLabelText('Description').should('be.enabled').should('be.visible');
+    cy.type(mockNewImage.description!);
 
     // Mock the Image creation POST response
     mockCreateImage(mockNewImage).as('createImage');

@@ -72,7 +72,8 @@ describe('Delete a Domain', () => {
               .findButtonByTitle('Delete Domain')
               .should('be.visible')
               .should('be.disabled');
-            cy.contains('Domain Name').click().type(domain.domain);
+            cy.contains('Domain Name').click();
+            cy.type(domain.domain);
 
             ui.buttonGroup
               .findButtonByTitle('Delete Domain')

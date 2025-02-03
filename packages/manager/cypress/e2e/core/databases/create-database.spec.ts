@@ -86,17 +86,14 @@ describe('create a database cluster, mocked data', () => {
             cy.findByText('Create').should('be.visible');
           });
 
-        cy.findByText('Cluster Label')
-          .should('be.visible')
-          .click()
-          .type(configuration.label);
+        cy.findByText('Cluster Label').should('be.visible').click();
+        cy.type(configuration.label);
 
-        cy.findByText('Database Engine')
-          .should('be.visible')
-          .click()
-          .type(`${configuration.engine} v${configuration.version}{enter}`);
+        cy.findByText('Database Engine').should('be.visible').click();
+        cy.type(`${configuration.engine} v${configuration.version}{enter}`);
 
-        ui.regionSelect.find().click().type(`${databaseRegionLabel}{enter}`);
+        ui.regionSelect.find().click();
+        cy.type(`${databaseRegionLabel}{enter}`);
 
         // Click either the "Dedicated CPU" or "Shared CPU" tab, according
         // to the type of cluster being created.

@@ -50,9 +50,8 @@ describe('Notifications Menu', () => {
       .within(() => {
         // Confirm that all mocked events are shown in the notification menu.
         mockEvents.forEach((event) => {
-          cy.get(`[data-qa-event="${event.id}"]`)
-            .scrollIntoView()
-            .should('be.visible');
+          cy.get(`[data-qa-event="${event.id}"]`).scrollIntoView();
+          cy.should('be.visible');
         });
       });
   });
@@ -101,9 +100,8 @@ describe('Notifications Menu', () => {
       .within(() => {
         // Confirm that first 20 events in response are displayed.
         shownEvents.forEach((event) => {
-          cy.get(`[data-qa-event="${event.id}"]`)
-            .scrollIntoView()
-            .should('be.visible');
+          cy.get(`[data-qa-event="${event.id}"]`).scrollIntoView();
+          cy.should('be.visible');
         });
 
         // Confirm that last 5 events in response are not displayed.

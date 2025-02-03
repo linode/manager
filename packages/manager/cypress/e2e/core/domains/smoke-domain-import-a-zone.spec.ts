@@ -45,7 +45,9 @@ describe('Import a Zone', () => {
           .should('be.disabled');
 
         // Verify only filling out Domain cannot import
-        cy.findByLabelText('Domain').click().clear().type(zone.domain);
+        cy.findByLabelText('Domain').click();
+        cy.clear();
+        cy.type(zone.domain);
         ui.buttonGroup
           .findButtonByTitle('Import')
           .should('be.visible')
@@ -54,11 +56,12 @@ describe('Import a Zone', () => {
         cy.findByText('Remote nameserver is required.');
 
         // Verify invalid domain cannot import
-        cy.findByLabelText('Domain').click().clear().type('1');
-        cy.findByLabelText('Remote Nameserver')
-          .click()
-          .clear()
-          .type(zone.remote_nameserver);
+        cy.findByLabelText('Domain').click();
+        cy.clear();
+        cy.type('1');
+        cy.findByLabelText('Remote Nameserver').click();
+        cy.clear;
+        cy.type(zone.remote_nameserver);
         ui.buttonGroup
           .findButtonByTitle('Import')
           .should('be.visible')
@@ -67,11 +70,11 @@ describe('Import a Zone', () => {
         cy.findByText('Domain is not valid.');
 
         // Verify only filling out RemoteNameserver cannot import
-        cy.findByLabelText('Domain').click().clear();
-        cy.findByLabelText('Remote Nameserver')
-          .click()
-          .clear()
-          .type(zone.remote_nameserver);
+        cy.findByLabelText('Domain').click();
+        cy.clear();
+        cy.findByLabelText('Remote Nameserver').click();
+        cy.clear;
+        cy.type(zone.remote_nameserver);
         ui.buttonGroup
           .findButtonByTitle('Import')
           .should('be.visible')
@@ -80,8 +83,12 @@ describe('Import a Zone', () => {
         cy.findByText('Domain is required.');
 
         // Verify invalid remote nameserver cannot import
-        cy.findByLabelText('Domain').click().clear().type(zone.domain);
-        cy.findByLabelText('Remote Nameserver').click().clear().type('1');
+        cy.findByLabelText('Domain').click();
+        cy.clear();
+        cy.type(zone.domain);
+        cy.findByLabelText('Remote Nameserver').click();
+        cy.clear();
+        cy.type('1');
         ui.buttonGroup
           .findButtonByTitle('Import')
           .should('be.visible')
@@ -92,11 +99,12 @@ describe('Import a Zone', () => {
         // Fill out and import the zone.
         mockImportDomain(mockDomain).as('importDomain');
         mockGetDomains([mockDomain]).as('getDomains');
-        cy.findByLabelText('Domain').click().clear().type(zone.domain);
-        cy.findByLabelText('Remote Nameserver')
-          .click()
-          .clear()
-          .type(zone.remote_nameserver);
+        cy.findByLabelText('Domain').click();
+        cy.clear();
+        cy.type(zone.domain);
+        cy.findByLabelText('Remote Nameserver').click();
+        cy.clear;
+        cy.type(zone.remote_nameserver);
         ui.buttonGroup
           .findButtonByTitle('Import')
           .should('be.visible')

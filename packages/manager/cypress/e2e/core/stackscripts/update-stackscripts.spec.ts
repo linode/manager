@@ -60,16 +60,15 @@ const fillOutStackscriptForm = (
   // Fill out "StackScript Label", "Description", "Target Images", and "Script" fields.
   cy.findByLabelText(/^StackScript Label.*/)
     .should('be.visible')
-    .click()
-    .clear()
-    .type(label);
+    .click();
+  cy.clear();
+  cy.type(label);
 
   if (description) {
-    cy.findByLabelText('Description')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(description);
+    cy.findByLabelText('Description').should('be.visible');
+    cy.click();
+    cy.clear();
+    cy.type(description);
   }
 
   ui.autocomplete.findByLabel('Target Images').should('be.visible').click();

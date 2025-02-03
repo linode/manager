@@ -83,9 +83,8 @@ describe('Placement Group create flow', () => {
         // Enter label, select region, and submit form.
         cy.findByLabelText('Label').type(mockPlacementGroup.label);
 
-        cy.findByLabelText('Region')
-          .click()
-          .type(`${mockPlacementGroupRegion.label}{enter}`);
+        cy.findByLabelText('Region').click();
+        cy.type(`${mockPlacementGroupRegion.label}{enter}`);
 
         cy.findByText(placementGroupLimitMessage).should('be.visible');
         cy.findByText(CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE).should(

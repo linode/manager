@@ -321,7 +321,8 @@ describe('longview', () => {
       .click();
 
     cy.get(`[data-qa-longview-client="${client.id}"]`).within(() => {
-      cy.get(`[data-testid="textfield-input"]`).clear().type(newClient.label);
+      cy.get(`[data-testid="textfield-input"]`).clear();
+      cy.type(newClient.label);
       cy.get(`[aria-label="Save new label"]`).should('be.visible').click();
     });
 

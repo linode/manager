@@ -42,7 +42,8 @@ const editCaaRecord = (name: string, newValue: string) => {
   ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
 
   // Edit the value field
-  cy.findByLabelText('Value').clear().type(newValue);
+  cy.findByLabelText('Value').clear();
+  cy.type(newValue);
   ui.button.findByTitle('Save').click();
 };
 

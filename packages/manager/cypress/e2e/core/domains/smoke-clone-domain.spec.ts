@@ -45,7 +45,8 @@ describe('Clone a Domain', () => {
           interceptCreateDomainRecord().as('apiCreateRecord');
           cy.findByText(rec.name).click();
           rec.fields.forEach((f) => {
-            cy.get(f.name).click().type(f.value);
+            cy.get(f.name).click();
+            cy.type(f.value);
           });
           cy.findByText('Save').click();
           cy.wait('@apiCreateRecord');
@@ -101,18 +102,18 @@ describe('Clone a Domain', () => {
               .should('be.disabled');
 
             // Confirm that an error is displayed when entering an invalid domain name
-            cy.findByLabelText('New Domain').click().type(invalidDomainName);
+            cy.findByLabelText('New Domain').click();
+            cy.type(invalidDomainName);
             ui.buttonGroup
               .findButtonByTitle('Create Domain')
               .should('be.visible')
               .should('be.enabled')
-              .click();
+              .clear();
             cy.findByText('Domain is not valid.').should('be.visible');
 
-            cy.findByLabelText('New Domain')
-              .click()
-              .clear()
-              .type(clonedDomainName);
+            cy.findByLabelText('New Domain').click();
+            cy.clear();
+            cy.type(clonedDomainName);
             ui.buttonGroup
               .findButtonByTitle('Create Domain')
               .should('be.visible')

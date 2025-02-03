@@ -106,13 +106,12 @@ describe('Create Linode', () => {
           linodeCreatePage.setRootPassword(randomString(32));
 
           // Confirm information in summary is shown as expected.
-          cy.get('[data-qa-linode-create-summary]')
-            .scrollIntoView()
-            .within(() => {
-              cy.findByText('Debian 12').should('be.visible');
-              cy.findByText(linodeRegion.label).should('be.visible');
-              cy.findByText(planConfig.planLabel).should('be.visible');
-            });
+          cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+          cy.within(() => {
+            cy.findByText('Debian 12').should('be.visible');
+            cy.findByText(linodeRegion.label).should('be.visible');
+            cy.findByText(planConfig.planLabel).should('be.visible');
+          });
 
           // Create Linode and confirm it's provisioned as expected.
           ui.button
@@ -229,13 +228,12 @@ describe('Create Linode', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm information in summary is shown as expected.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Debian 12').should('be.visible');
-        cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
-        cy.findByText(mockAcceleratedType[0].label).should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.within(() => {
+      cy.findByText('Debian 12').should('be.visible');
+      cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
+      cy.findByText(mockAcceleratedType[0].label).should('be.visible');
+    });
 
     // Create Linode and confirm it's provisioned as expected.
     ui.button
@@ -362,7 +360,8 @@ describe('Create Linode', () => {
 
     // Check the 'Backups' add on
     cy.get('[data-testid="backups"]').should('be.visible').click();
-    ui.regionSelect.find().click().type(`${region.label} {enter}`);
+    ui.regionSelect.find().click();
+    cy.type(`${region.label} {enter}`);
 
     // Verify VPCs get fetched once a region is selected
     cy.wait('@getVPCs');
@@ -379,10 +378,8 @@ describe('Create Linode', () => {
           'be.visible'
         );
         // select VPC
-        cy.findByLabelText('Assign VPC')
-          .should('be.visible')
-          .focus()
-          .type(`${mockVPC.label}{downArrow}{enter}`);
+        cy.findByLabelText('Assign VPC').should('be.visible').focus();
+        cy.type(`${mockVPC.label}{downArrow}{enter}`);
         // select subnet
         cy.findByPlaceholderText('Select Subnet')
           .should('be.visible')
@@ -399,10 +396,12 @@ describe('Create Linode', () => {
       .findByTitle('Add SSH Key')
       .should('be.visible')
       .within(() => {
-        cy.get('[id="label"]').clear().type(sshPublicKeyLabel);
+        cy.get('[id="label"]').clear();
+        cy.type(sshPublicKeyLabel);
 
         // An alert displays when the format of SSH key is incorrect
-        cy.get('[id="ssh-public-key"]').clear().type('WrongFormatSshKey');
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.type('WrongFormatSshKey');
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -413,7 +412,8 @@ describe('Create Linode', () => {
         ).should('be.visible');
 
         // Create a new ssh key
-        cy.get('[id="ssh-public-key"]').clear().type(sshPublicKey);
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.type(sshPublicKey);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -427,7 +427,9 @@ describe('Create Linode', () => {
     // When a user creates an SSH key, the list of SSH keys for each user updates to show the new key for the signed in user
     cy.findByText(sshPublicKeyLabel, { exact: false }).should('be.visible');
 
-    cy.get('#linode-label').clear().type(linodeLabel).click();
+    cy.get('#linode-label').clear();
+    cy.type(linodeLabel);
+    cy.click();
     cy.get('#root-password').type(rootpass);
 
     ui.button.findByTitle('Create Linode').click();

@@ -49,29 +49,25 @@ describe('Create Linode with VLANs', () => {
 
     // Open VLAN accordion and select existing VLAN.
     ui.accordionHeading.findByTitle('VLAN').click();
-    ui.accordion
-      .findByTitle('VLAN')
-      .scrollIntoView()
-      .should('be.visible')
-      .within(() => {
-        cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
+    ui.accordion.findByTitle('VLAN').scrollIntoView();
+    cy.should('be.visible').within(() => {
+      cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
 
-        ui.autocompletePopper
-          .findByTitle(mockVlan.label)
-          .should('be.visible')
-          .click();
+      ui.autocompletePopper
+        .findByTitle(mockVlan.label)
+        .should('be.visible')
+        .click();
 
-        cy.findByLabelText(/IPAM Address/)
-          .should('be.enabled')
-          .type(mockVlan.cidr_block);
-      });
+      cy.findByLabelText(/IPAM Address/)
+        .should('be.enabled')
+        .type(mockVlan.cidr_block);
+    });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('VLAN Attached').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.within(() => {
+      cy.findByText('VLAN Attached').should('be.visible');
+    });
 
     ui.button
       .findByTitle('Create Linode')
@@ -137,25 +133,21 @@ describe('Create Linode with VLANs', () => {
 
     // Open VLAN accordion and specify new VLAN.
     ui.accordionHeading.findByTitle('VLAN').click();
-    ui.accordion
-      .findByTitle('VLAN')
-      .scrollIntoView()
-      .should('be.visible')
-      .within(() => {
-        cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
+    ui.accordion.findByTitle('VLAN').scrollIntoView();
+    cy.should('be.visible').within(() => {
+      cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
 
-        ui.autocompletePopper
-          .findByTitle(`Create "${mockVlan.label}"`)
-          .should('be.visible')
-          .click();
-      });
+      ui.autocompletePopper
+        .findByTitle(`Create "${mockVlan.label}"`)
+        .should('be.visible')
+        .click();
+    });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('VLAN Attached').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.within(() => {
+      cy.findByText('VLAN Attached').should('be.visible');
+    });
 
     ui.button
       .findByTitle('Create Linode')
@@ -205,25 +197,21 @@ describe('Create Linode with VLANs', () => {
     // Expand VLAN accordion, confirm VLAN availability notice is displayed and
     // that VLAN fields are disabled while no region is selected.
     ui.accordionHeading.findByTitle('VLAN').click();
-    ui.accordion
-      .findByTitle('VLAN')
-      .scrollIntoView()
-      .within(() => {
-        cy.contains(availabilityNotice).should('be.visible');
-        cy.findByLabelText('VLAN').should('be.disabled');
-        cy.findByLabelText(/IPAM Address/).should('be.disabled');
-      });
+    ui.accordion.findByTitle('VLAN').scrollIntoView();
+    cy.within(() => {
+      cy.contains(availabilityNotice).should('be.visible');
+      cy.findByLabelText('VLAN').should('be.disabled');
+      cy.findByLabelText(/IPAM Address/).should('be.disabled');
+    });
 
     // Select a region that is known not to have VLAN capability.
     linodeCreatePage.selectRegionById(nonVlanRegion.id);
 
     // Confirm that VLAN fields are still disabled.
-    ui.accordion
-      .findByTitle('VLAN')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByLabelText('VLAN').should('be.disabled');
-        cy.findByLabelText(/IPAM Address/).should('be.disabled');
-      });
+    ui.accordion.findByTitle('VLAN').scrollIntoView();
+    cy.within(() => {
+      cy.findByLabelText('VLAN').should('be.disabled');
+      cy.findByLabelText(/IPAM Address/).should('be.disabled');
+    });
   });
 });

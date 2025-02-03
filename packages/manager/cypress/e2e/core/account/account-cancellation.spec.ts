@@ -130,7 +130,8 @@ describe('Account cancellation', () => {
         // Enter account cancellation comments, click "Close Account" again,
         // and this time mock a successful account cancellation response.
         mockCancelAccount(mockCancellationResponse).as('cancelAccount');
-        cy.contains('Comments (optional)').click().type(cancellationComments);
+        cy.contains('Comments (optional)').click();
+        cy.type(cancellationComments);
 
         ui.button
           .findByTitle('Close Account')
@@ -412,7 +413,8 @@ describe('Parent/Child account cancellation', () => {
         // Enter account cancellation comments, click "Close Account" again,
         // and this time mock a successful account cancellation response.
         mockCancelAccount(mockCancellationResponse).as('cancelAccount');
-        cy.contains('Comments (optional)').click().type(cancellationComments);
+        cy.contains('Comments (optional)').click();
+        cy.type(cancellationComments);
 
         ui.button
           .findByTitle('Close Account')

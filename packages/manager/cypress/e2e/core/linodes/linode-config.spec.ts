@@ -213,12 +213,8 @@ describe('Linode Config management', () => {
           .should('be.visible')
           .within(() => {
             cy.get('#ipam-input-1').type(newIpamAddress);
-            ui.button
-              .findByTitle('Save Changes')
-              .scrollIntoView()
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
+            ui.button.findByTitle('Save Changes').scrollIntoView();
+            cy.should('be.visible').should('be.enabled').click();
           });
 
         // Confirm that config update request succeeded and that toast appears.
@@ -343,17 +339,14 @@ describe('Linode Config management', () => {
               .should('be.visible')
               .type(sharedConfigLabel);
 
-            cy.findByText('Select a Kernel')
-              .scrollIntoView()
-              .click()
-              .type('Latest 64 bit{enter}');
+            cy.findByText('Select a Kernel').scrollIntoView();
+            cy.click();
+            cy.type('Latest 64 bit{enter}');
 
             ui.buttonGroup
               .findButtonByTitle('Add Configuration')
-              .scrollIntoView()
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
+              .scrollIntoView();
+            cy.should('be.visible').should('be.enabled').click();
           });
 
         // Confirm that new configuration is listed in table.
@@ -424,12 +417,8 @@ describe('Linode Config management', () => {
           .findByTitle('Confirm Delete')
           .should('be.visible')
           .within(() => {
-            ui.button
-              .findByTitle('Delete')
-              .scrollIntoView()
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
+            ui.button.findByTitle('Delete').scrollIntoView();
+            cy.should('be.visible').should('be.enabled').click();
           });
 
         // Confirm request succeeds, toast appears, and config is removed from list.
@@ -536,10 +525,9 @@ describe('Linode Config management', () => {
 
           // Confirm that "VPC" can be selected for either "eth0", "eth1", or "eth2".
           // Add VPC to eth0
-          cy.get('[data-qa-textfield-label="eth0"]')
-            .scrollIntoView()
-            .click()
-            .type('VPC');
+          cy.get('[data-qa-textfield-label="eth0"]').scrollIntoView();
+          cy.click();
+          cy.type('VPC');
 
           ui.select.findItemByText('VPC').should('be.visible').click();
 
@@ -549,10 +537,11 @@ describe('Linode Config management', () => {
 
           // Confirm that VPC is an option for eth1 and eth2, but don't select them.
           ['eth1', 'eth2'].forEach((interfaceName) => {
-            cy.get(`[data-qa-textfield-label="${interfaceName}"]`)
-              .scrollIntoView()
-              .click()
-              .type('VPC');
+            cy.get(
+              `[data-qa-textfield-label="${interfaceName}"]`
+            ).scrollIntoView();
+            cy.click();
+            cy.type('VPC');
 
             ui.select.findItemByText('VPC').should('be.visible');
 
@@ -561,10 +550,8 @@ describe('Linode Config management', () => {
 
           ui.buttonGroup
             .findButtonByTitle('Add Configuration')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
+            .scrollIntoView();
+          cy.should('be.visible').should('be.enabled').click();
         });
 
       cy.wait(['@createLinodeConfig', '@getLinodeConfigs', '@getVPC']);
@@ -642,17 +629,12 @@ describe('Linode Config management', () => {
         .should('be.visible')
         .within(() => {
           // Set eth2 to VPC and submit.
-          cy.get('[data-qa-textfield-label="eth2"]')
-            .scrollIntoView()
-            .click()
-            .type('VPC{enter}');
+          cy.get('[data-qa-textfield-label="eth2"]').scrollIntoView();
+          cy.click();
+          cy.type('VPC{enter}');
 
-          ui.button
-            .findByTitle('Save Changes')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
+          ui.button.findByTitle('Save Changes').scrollIntoView();
+          cy.should('be.visible').should('be.enabled').click();
         });
 
       cy.wait(['@updateLinodeConfigs', '@getLinodeConfigs', '@getVPC']);
@@ -747,36 +729,32 @@ describe('Linode Config management', () => {
           cy.get('#label').type(`${mockConfigWithVpc.label}`);
 
           // Sets eth0 to "Public Internet", and sets eth1 to "VPC"
-          cy.get('[data-qa-textfield-label="eth0"]')
-            .scrollIntoView()
-            .click()
-            .type('Public Internet');
+          cy.get('[data-qa-textfield-label="eth0"]').scrollIntoView();
+          cy.click();
+          cy.type('Public Internet');
           ui.select
             .findItemByText('Public Internet')
             .should('be.visible')
             .click();
-          cy.get('[data-qa-textfield-label="eth1"]')
-            .scrollIntoView()
-            .click()
-            .type('VPC');
+          cy.get('[data-qa-textfield-label="eth1"]').scrollIntoView();
+          cy.click();
+          cy.type('VPC');
           ui.select.findItemByText('VPC').should('be.visible').click();
           // Confirm that internet access warning is displayed.
           cy.findByText(LINODE_UNREACHABLE_HELPER_TEXT).should('be.visible');
 
           // Sets eth0 to "Public Internet", and sets eth1 to "VPC",
           // and checks "Assign a public IPv4 address for this Linode"
-          cy.get('[data-qa-textfield-label="VPC"]')
-            .scrollIntoView()
-            .click()
-            .type(`${mockVPC.label}`);
+          cy.get('[data-qa-textfield-label="VPC"]').scrollIntoView();
+          cy.click();
+          cy.type(`${mockVPC.label}`);
           ui.select
             .findItemByText(`${mockVPC.label}`)
             .should('be.visible')
             .click();
-          cy.get('[data-qa-textfield-label="Subnet"]')
-            .scrollIntoView()
-            .click()
-            .type(`${mockSubnet.label}`);
+          cy.get('[data-qa-textfield-label="Subnet"]').scrollIntoView();
+          cy.click();
+          cy.type(`${mockSubnet.label}`);
           ui.select
             .findItemByText(`${mockSubnet.label}`)
             .should('be.visible')
@@ -785,16 +763,13 @@ describe('Linode Config management', () => {
             .should('be.visible')
             .click();
           // Confirm that internet access warning is displayed.
-          cy.findByText(NATTED_PUBLIC_IP_HELPER_TEXT)
-            .scrollIntoView()
-            .should('be.visible');
+          cy.findByText(NATTED_PUBLIC_IP_HELPER_TEXT).scrollIntoView();
+          cy.should('be.visible');
 
           ui.buttonGroup
             .findButtonByTitle('Add Configuration')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
+            .scrollIntoView();
+          cy.should('be.visible').should('be.enabled').click();
         });
 
       cy.wait(['@createLinodeConfig', '@getLinodeConfigs', '@getVPC']);

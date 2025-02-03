@@ -62,7 +62,8 @@ describe('volume clone flow', () => {
           .closest('[data-qa-drawer="true"]')
           .should('be.visible')
           .within(() => {
-            cy.findByText('Label').click().type(cloneVolumeLabel);
+            cy.findByText('Label').click();
+            cy.type(cloneVolumeLabel);
             cy.get('[data-qa-buttons="true"]').within(() => {
               cy.findByText('Clone Volume').should('be.visible').click();
             });

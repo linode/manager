@@ -138,10 +138,8 @@ describe('Tests for API error handling', () => {
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Selecting a dashboard from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Dashboard')
-      .should('be.visible')
-      .type(dashboardName);
+    ui.autocomplete.findByLabel('Dashboard').should('be.visible');
+    cy.type(dashboardName);
 
     ui.autocompletePopper
       .findByTitle(dashboardName)
@@ -149,10 +147,8 @@ describe('Tests for API error handling', () => {
       .click();
 
     //Select a Database Engine from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Engine')
-      .should('be.visible')
-      .type(engine);
+    ui.autocomplete.findByLabel('Database Engine').should('be.visible');
+    cy.type(engine);
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
@@ -164,18 +160,14 @@ describe('Tests for API error handling', () => {
       .click();
 
     // Select a resource (Database Clusters) from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Clusters')
-      .should('be.visible')
-      .type(clusterName);
+    ui.autocomplete.findByLabel('Database Clusters').should('be.visible');
+    cy.type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
 
     // Select a Node from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Node Type')
-      .should('be.visible')
-      .type(`${nodeType}{enter}`);
+    ui.autocomplete.findByLabel('Node Type').should('be.visible');
+    cy.type(`${nodeType}{enter}`);
 
     // Wait for the API calls .
     cy.wait('@getMetricDefinitions');
@@ -209,10 +201,8 @@ describe('Tests for API error handling', () => {
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
-    ui.autocomplete
-      .findByLabel('Dashboard')
-      .should('be.visible')
-      .type(dashboardName);
+    ui.autocomplete.findByLabel('Dashboard').should('be.visible');
+    cy.type(dashboardName);
 
     ui.autocompletePopper
       .findByTitle(dashboardName)
@@ -220,10 +210,8 @@ describe('Tests for API error handling', () => {
       .click();
 
     // Select a Database Engine from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Engine')
-      .should('be.visible')
-      .type(engine);
+    ui.autocomplete.findByLabel('Database Engine').should('be.visible');
+    cy.type(engine);
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
@@ -236,18 +224,14 @@ describe('Tests for API error handling', () => {
       .click();
 
     // Select a resource (Database Clusters) from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Clusters')
-      .should('be.visible')
-      .type(clusterName);
+    ui.autocomplete.findByLabel('Database Clusters').should('be.visible');
+    cy.type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
 
     // Select a Node from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Node Type')
-      .should('be.visible')
-      .type(`${nodeType}{enter}`);
+    ui.autocomplete.findByLabel('Node Type').should('be.visible');
+    cy.type(`${nodeType}{enter}`);
 
     // Wait for the intercepted error response
     cy.wait('@getCloudPulseTokenError');
@@ -288,10 +272,8 @@ describe('Tests for API error handling', () => {
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     //  Select a dashboard from the autocomplete input. Verify that the input is visible before typing.
-    ui.autocomplete
-      .findByLabel('Dashboard')
-      .should('be.visible')
-      .type(dashboardName);
+    ui.autocomplete.findByLabel('Dashboard').should('be.visible');
+    cy.type(dashboardName);
 
     ui.autocompletePopper
       .findByTitle(dashboardName)
@@ -299,10 +281,8 @@ describe('Tests for API error handling', () => {
       .click();
 
     // Select a Database Engine from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Engine')
-      .should('be.visible')
-      .type(engine);
+    ui.autocomplete.findByLabel('Database Engine').should('be.visible');
+    cy.type(engine);
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
@@ -314,18 +294,14 @@ describe('Tests for API error handling', () => {
       .click();
 
     // Select a resource (Database Clusters) from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Clusters')
-      .should('be.visible')
-      .type(clusterName);
+    ui.autocomplete.findByLabel('Database Clusters').should('be.visible');
+    cy.type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
 
     //  Select a node type from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Node Type')
-      .should('be.visible')
-      .type(`${nodeType}{enter}`);
+    ui.autocomplete.findByLabel('Node Type').should('be.visible');
+    cy.type(`${nodeType}{enter}`);
 
     // Wait for the intercepted error response
     cy.wait('@getCloudPulseDashboardError');
@@ -347,10 +323,8 @@ describe('Tests for API error handling', () => {
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     //  Select a dashboard from the autocomplete input
-    ui.autocomplete
-      .findByLabel('Dashboard')
-      .should('be.visible')
-      .type(dashboardName);
+    ui.autocomplete.findByLabel('Dashboard').should('be.visible');
+    cy.type(dashboardName);
 
     ui.autocompletePopper
       .findByTitle(dashboardName)
@@ -377,10 +351,8 @@ describe('Tests for API error handling', () => {
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     //  Select a dashboard from the autocomplete input
-    ui.autocomplete
-      .findByLabel('Dashboard')
-      .should('be.visible')
-      .type(dashboardName);
+    ui.autocomplete.findByLabel('Dashboard').should('be.visible');
+    cy.type(dashboardName);
 
     ui.autocompletePopper
       .findByTitle(dashboardName)
@@ -396,10 +368,8 @@ describe('Tests for API error handling', () => {
       .click();
 
     //Select a Database Engine from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Database Engine')
-      .should('be.visible')
-      .type(engine);
+    ui.autocomplete.findByLabel('Database Engine').should('be.visible');
+    cy.type(engine);
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 

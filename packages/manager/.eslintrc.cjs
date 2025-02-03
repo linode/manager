@@ -22,7 +22,6 @@ module.exports = {
     'build',
     'storybook-static',
     '.storybook',
-    'e2e',
     'public',
     '!.eslintrc.js',
   ],

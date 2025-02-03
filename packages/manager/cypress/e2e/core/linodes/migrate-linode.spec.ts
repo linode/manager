@@ -176,7 +176,8 @@ describe('Migrate linodes', () => {
 
     // Confirm that user cannot select the Linode's current DC when migrating.
     // TODO Consider refactoring this flow into its own test.
-    ui.autocomplete.findByLabel('New Region').click().type(initialRegion.id);
+    ui.autocomplete.findByLabel('New Region').click();
+    cy.type(initialRegion.id);
 
     ui.autocompletePopper.find().within(() => {
       cy.contains(initialRegion.id).should('not.exist');
@@ -189,7 +190,9 @@ describe('Migrate linodes', () => {
     cy.findByText(dcPricingNewPriceLabel).should('not.exist');
     cy.get('[data-testid="new-price-panel"]').should('not.exist');
     // Change region selection to another region with the same price structure.
-    ui.regionSelect.find().click().clear().type(`${newRegion.label}{enter}`);
+    ui.regionSelect.find().click();
+    cy.clear();
+    cy.type(`${newRegion.label}{enter}`);
     // Confirm that DC pricing information still does not show up.
     cy.findByText(dcPricingCurrentPriceLabel).should('not.exist');
     cy.get('[data-testid="current-price-panel"]').should('not.exist');

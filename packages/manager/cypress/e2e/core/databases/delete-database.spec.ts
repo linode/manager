@@ -61,7 +61,8 @@ describe('Delete database clusters', () => {
             .findByTitle(`Delete Database Cluster ${database.label}`)
             .should('be.visible')
             .within(() => {
-              cy.findByLabelText('Cluster Name').click().type(database.label);
+              cy.findByLabelText('Cluster Name').click();
+              cy.type(database.label);
 
               ui.buttonGroup
                 .findButtonByTitle('Delete Cluster')
@@ -123,7 +124,8 @@ describe('Delete database clusters', () => {
             .findByTitle(`Delete Database Cluster ${database.label}`)
             .should('be.visible')
             .within(() => {
-              cy.findByLabelText('Cluster Name').click().type(database.label);
+              cy.findByLabelText('Cluster Name').click();
+              cy.type(database.label);
 
               ui.buttonGroup
                 .findButtonByTitle('Delete Cluster')

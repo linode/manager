@@ -184,10 +184,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Selecting a dashboard from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Dashboard')
-      .should('be.visible')
-      .type(dashboardName);
+    ui.autocomplete.findByLabel('Dashboard').should('be.visible');
+    cy.type(dashboardName);
 
     ui.autocompletePopper
       .findByTitle(dashboardName)
@@ -195,10 +193,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .click();
 
     // Select a time duration from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Time Range')
-      .should('be.visible')
-      .type(timeDurationToSelect);
+    ui.autocomplete.findByLabel('Time Range').should('be.visible');
+    cy.type(timeDurationToSelect);
 
     ui.autocompletePopper
       .findByTitle(timeDurationToSelect)
@@ -221,14 +217,14 @@ describe('Integration Tests for Linode Dashboard ', () => {
     });
 
     // Select a region from the dropdown.
-    ui.regionSelect.find().click().clear().type(`${region}{enter}`);
+    ui.regionSelect.find().click();
+    cy.clear();
+    cy.type(`${region}{enter}`);
 
     // Select a resource from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Resources')
-      .should('be.visible')
-      .type(`${resource}{enter}`)
-      .click();
+    ui.autocomplete.findByLabel('Resources').should('be.visible');
+    cy.type(`${resource}{enter}`);
+    cy.click();
 
     cy.findByText(resource).should('be.visible');
 
@@ -438,8 +434,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
             .findByAttribute('aria-label', 'Zoom In')
             .should('be.visible')
             .should('be.enabled')
-            .scrollIntoView()
-            .click({ force: true });
+            .scrollIntoView();
+          cy.click({ force: true });
           cy.get('@widget').should('be.visible');
 
           cy.get('.recharts-responsive-container').within(() => {

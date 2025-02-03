@@ -62,8 +62,10 @@ describe('object storage smoke tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${bucketRegion}{enter}`);
+        cy.findByText('Label').click();
+        cy.type(bucketLabel);
+        ui.regionSelect.find().click();
+        cy.type(`${bucketRegion}{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
@@ -199,7 +201,8 @@ describe('object storage smoke tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.enabled')

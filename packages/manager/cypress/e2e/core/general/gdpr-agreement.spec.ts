@@ -121,19 +121,16 @@ describe('GDPR agreement', () => {
 
     cy.get('[id="g6-nanode-1"]').click();
 
-    cy.findByLabelText('Linode Label').clear().type(linodeLabel);
+    cy.findByLabelText('Linode Label').clear();
+    cy.type(linodeLabel);
 
     cy.findByLabelText('Root Password').type(rootpass);
 
-    cy.get('[data-testid="eu-agreement-checkbox"]')
-      .scrollIntoView()
-      .should('be.visible');
+    cy.get('[data-testid="eu-agreement-checkbox"]').scrollIntoView();
+    cy.should('be.visible');
 
-    cy.findByText('Create Linode')
-      .scrollIntoView()
-      .should('be.enabled')
-      .should('be.visible')
-      .click();
+    cy.findByText('Create Linode').scrollIntoView();
+    cy.should('be.enabled').should('be.visible').click();
 
     cy.findByText(
       'You must agree to the EU agreement to deploy to this region.'

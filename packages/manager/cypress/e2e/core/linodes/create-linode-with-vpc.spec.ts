@@ -96,7 +96,8 @@ describe('Create Linode with VPCs', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
-    cy.findByText('Assign VPC').click().type(mockVPC.label);
+    cy.findByText('Assign VPC').click();
+    cy.type(mockVPC.label);
 
     ui.autocompletePopper
       .findByTitle(mockVPC.label)
@@ -110,11 +111,10 @@ describe('Create Linode with VPCs', () => {
     );
 
     // Confirm VPC assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('VPC Assigned').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.within(() => {
+      cy.findByText('VPC Assigned').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -236,7 +236,8 @@ describe('Create Linode with VPCs', () => {
         vpcCreateDrawer.submit();
 
         cy.wait('@createVpc');
-        cy.findByText(mockErrorMessage).scrollIntoView().should('be.visible');
+        cy.findByText(mockErrorMessage).scrollIntoView();
+        cy.should('be.visible');
 
         // Create VPC with successful API response mocked.
         mockCreateVPC(mockVPC).as('createVpc');
@@ -336,10 +337,8 @@ describe('Create Linode with VPCs', () => {
 
     linodeCreatePage.selectRegionById(mockRegion.id);
 
-    cy.findByLabelText('Assign VPC')
-      .scrollIntoView()
-      .should('be.visible')
-      .should('be.disabled');
+    cy.findByLabelText('Assign VPC').scrollIntoView();
+    cy.should('be.visible').should('be.disabled');
 
     cy.findByText(vpcNotAvailableMessage).should('be.visible');
   });

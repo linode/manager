@@ -21,10 +21,9 @@ describe('update linode label', () => {
       );
 
       cy.get(`[aria-label="Edit ${linode.label}"]`).click();
-      cy.get(`[id="edit-${linode.label}-label"]`)
-        .click()
-        .clear()
-        .type(`${newLinodeLabel}{enter}`);
+      cy.get(`[id="edit-${linode.label}-label"]`).click();
+      cy.clear();
+      cy.type(`${newLinodeLabel}{enter}`);
 
       cy.visitWithLogin('/linodes');
       cy.get(`[data-qa-linode="${newLinodeLabel}"]`).should('be.visible');
@@ -40,7 +39,9 @@ describe('update linode label', () => {
       );
 
       cy.visitWithLogin(`/linodes/${linode.id}/settings`);
-      cy.get('[id="label"]').click().clear().type(`${newLinodeLabel}{enter}`);
+      cy.get('[id="label"]').click();
+      cy.clear();
+      cy.type(`${newLinodeLabel}{enter}`);
       ui.buttonGroup.findButtonByTitle('Save').should('be.visible').click();
 
       cy.visitWithLogin('/linodes');
