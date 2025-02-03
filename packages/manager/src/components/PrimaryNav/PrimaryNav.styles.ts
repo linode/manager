@@ -41,7 +41,7 @@ export const StyledActiveLink = styled(Link, {
   font: theme.tokens.typography.Body.Semibold,
   minHeight: 32,
   minWidth: SIDEBAR_WIDTH,
-  padding: `0px 8px 0px 48px`,
+  padding: `8px 8px 8px 48px`,
   position: 'relative',
   ...(props.isActiveLink && {
     backgroundColor: theme.tokens.color.Neutrals[100],

@@ -384,7 +384,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               <StyledAccordion
                 heading={
                   <>
-                    {productFamily.icon}
+                    <Box flexShrink={0}>{productFamily.icon}</Box>
                     <span className="productFamilyName">
                       {productFamily.name}
                     </span>
