@@ -20,6 +20,8 @@ export const possibleStatuses: DatabaseStatus[] = [
   'active',
   'degraded',
   'failed',
+  'migrating',
+  'migrated',
   'provisioning',
   'resizing',
   'restoring',

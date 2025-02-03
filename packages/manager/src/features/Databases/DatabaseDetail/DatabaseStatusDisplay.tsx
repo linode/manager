@@ -16,6 +16,8 @@ export const databaseStatusMap: Record<DatabaseStatus, Status> = {
   active: 'active',
   degraded: 'inactive',
   failed: 'error',
+  migrated: 'inactive',
+  migrating: 'other',
   provisioning: 'other',
   resizing: 'other',
   restoring: 'other',
