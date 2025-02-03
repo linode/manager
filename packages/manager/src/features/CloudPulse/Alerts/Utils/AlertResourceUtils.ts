@@ -154,7 +154,7 @@ export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
  * @returns True if, all instances are selected else false.
  */
 export const isAllPageSelected = (data: AlertInstance[]): boolean => {
-  return Boolean(data?.length) && data.every((resource) => resource.checked);
+  return Boolean(data?.length) && data.every(({ checked }) => checked);
 };
 
 /**
@@ -162,5 +162,5 @@ export const isAllPageSelected = (data: AlertInstance[]): boolean => {
  * @returns True if, any one of instances is selected else false.
  */
 export const isSomeSelected = (data: AlertInstance[]): boolean => {
-  return Boolean(data?.length) && data.some((resource) => resource.checked);
+  return Boolean(data?.length) && data.some(({ checked }) => checked);
 };
