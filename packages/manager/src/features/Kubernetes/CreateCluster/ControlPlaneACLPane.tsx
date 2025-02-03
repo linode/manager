@@ -60,6 +60,17 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
   const ipv6Addresses = watch('ipv6Addresses');
 
   React.useEffect(() => {
+    if (enableControlPlaneACL) {
+      if (!ipv4Addresses || ipv4Addresses.length == 0) {
+        appendIPv4('');
+      }
+      if (!ipv6Addresses || ipv6Addresses.length == 0) {
+        appendIPv6('');
+      }
+    }
+  });
+
+  React.useEffect(() => {
     if (ipv4Addresses && ipv4Addresses.length) {
       handleIPv4Change(ipv4Addresses);
     }
@@ -121,10 +132,9 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
                       hideLabel
-                      label={`IPv4 Address ${index + 1}`}
+                      label={`IPv4 Addresses or CIDRs ip-address-${index}`}
                       onBlur={controllerField.onBlur}
-                      placeholder="10.0.0.0/24"
-                      sx={{ minWidth: 290 }}
+                      sx={{ minWidth: 350 }}
                     />
                   )}
                   control={control}
@@ -164,10 +174,9 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
                       hideLabel
-                      label={`IPv6 Address ${index + 1}`}
+                      label={`IPv6 Addresses or CIDRs ip-address-${index}`}
                       onBlur={controllerField.onBlur}
-                      placeholder="2001:db8::/32"
-                      sx={{ minWidth: 290 }}
+                      sx={{ minWidth: 350 }}
                     />
                   )}
                   control={control}
