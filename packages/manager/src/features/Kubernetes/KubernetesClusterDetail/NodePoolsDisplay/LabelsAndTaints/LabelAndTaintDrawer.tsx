@@ -144,7 +144,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
             .
           </Typography>
 
-          <Typography variant="h3"> Labels </Typography>
+          <Typography variant="h3">Labels</Typography>
           <Typography>
             Labels are key-value pairs that are used as identifiers. Review the
             guidelines in the{' '}

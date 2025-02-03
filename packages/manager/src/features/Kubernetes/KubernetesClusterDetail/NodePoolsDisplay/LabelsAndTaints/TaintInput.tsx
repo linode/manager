@@ -85,7 +85,7 @@ export const TaintInput = (props: Props) => {
         name="taints.combinedValue"
       />
       <Controller
-        render={({}) => (
+        render={() => (
           <Autocomplete
             value={
               effectOptions.find((option) => option.value === selectedEffect) ??
