@@ -1,7 +1,7 @@
 import { dashboardFactory } from 'src/factories';
 import { databaseQueries } from 'src/queries/databases/databases';
 
-import { REGION, RESOURCES, TAGS } from './constants';
+import { RESOURCES } from './constants';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
