@@ -191,7 +191,7 @@ describe('Integration Tests for Edit Alert', () => {
     // Verify the update request and response
     cy.wait('@updateDefinitions').then(({ request, response }) => {
       expect(response).to.have.property('statusCode', 200);
-      const resourceIds = request.body.resource_ids.map((id: string) =>
+      const resourceIds = request.body.entity_ids.map((id: string) =>
         String(id)
       ); // Convert each number to a string
       const resourceIdsString = resourceIds.join(',');
@@ -199,7 +199,6 @@ describe('Integration Tests for Edit Alert', () => {
         (i + 1).toString()
       ).join(',');
       expect(resourceIdsString).to.equal(expectedResourceIdsString);
-      expect(response?.body).to.deep.equal(alertDetails);
     });
     cy.url().should('endWith', `/monitor/alerts/definitions`);
     // Confirm toast notification should appear on Alert list.

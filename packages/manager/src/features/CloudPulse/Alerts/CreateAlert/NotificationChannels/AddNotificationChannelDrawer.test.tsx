@@ -6,19 +6,20 @@ import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { channelTypeOptions } from '../../constants';
-import { AddNotificationChannel } from './AddNotificationChannel';
+import { AddNotificationChannelDrawer } from './AddNotificationChannelDrawer';
 
 const mockData = [notificationChannelFactory.build()];
 
-describe('AddNotificationChannel component', () => {
+describe('AddNotificationChannelDrawer component', () => {
   const user = userEvent.setup();
   it('should render the components', () => {
     const { getByLabelText, getByText } = renderWithTheme(
-      <AddNotificationChannel
+      <AddNotificationChannelDrawer
+        handleCloseDrawer={vi.fn()}
         isNotificationChannelsError={false}
         isNotificationChannelsLoading={false}
-        onCancel={vi.fn()}
         onSubmitAddNotification={vi.fn()}
+        open={true}
         templateData={mockData}
       />
     );
@@ -29,11 +30,12 @@ describe('AddNotificationChannel component', () => {
 
   it('should render the type component with happy path and able to select an option', async () => {
     const { findByRole, getByTestId } = renderWithTheme(
-      <AddNotificationChannel
+      <AddNotificationChannelDrawer
+        handleCloseDrawer={vi.fn()}
         isNotificationChannelsError={false}
         isNotificationChannelsLoading={false}
-        onCancel={vi.fn()}
         onSubmitAddNotification={vi.fn()}
+        open={true}
         templateData={mockData}
       />
     );
@@ -58,11 +60,12 @@ describe('AddNotificationChannel component', () => {
   });
   it('should render the label component with happy path and able to select an option', async () => {
     const { findByRole, getByRole, getByTestId } = renderWithTheme(
-      <AddNotificationChannel
+      <AddNotificationChannelDrawer
+        handleCloseDrawer={vi.fn()}
         isNotificationChannelsError={false}
         isNotificationChannelsLoading={false}
-        onCancel={vi.fn()}
         onSubmitAddNotification={vi.fn()}
+        open={true}
         templateData={mockData}
       />
     );
@@ -104,11 +107,12 @@ describe('AddNotificationChannel component', () => {
 
   it('should render the error messages from the client side validation', async () => {
     const { getAllByText, getByRole } = renderWithTheme(
-      <AddNotificationChannel
+      <AddNotificationChannelDrawer
+        handleCloseDrawer={vi.fn()}
         isNotificationChannelsError={false}
         isNotificationChannelsLoading={false}
-        onCancel={vi.fn()}
         onSubmitAddNotification={vi.fn()}
+        open={true}
         templateData={mockData}
       />
     );

@@ -90,7 +90,7 @@ export const AlertDetail = () => {
       </>
     );
   }
-  const { channels, entity_ids: entityIds } = alertDetails;
+  const { alert_channels, entity_ids: entityIds } = alertDetails;
   return (
     <>
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
@@ -135,7 +135,9 @@ export const AlertDetail = () => {
           }}
           data-qa-section="Notification Channels"
         >
-          <AlertDetailNotification channelIds={channels.map(({ id }) => id)} />
+          <AlertDetailNotification
+            channelIds={alert_channels.map(({ id }) => id)}
+          />
         </Box>
       </Box>
     </>

@@ -36,7 +36,9 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
     isLoading: isMetricDefinitionLoading,
   } = useGetCloudPulseMetricDefinitionsByServiceType(
     serviceType!,
-    serviceType !== null
+    serviceType !== null,
+    {},
+    { is_alertable: true }
   );
 
   const { control } = useFormContext<CreateAlertDefinitionForm>();
@@ -92,7 +94,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
       <Button
         onClick={() =>
           append({
-            aggregation_type: null,
+            aggregate_function: null,
             dimension_filters: [],
             metric: null,
             operator: null,

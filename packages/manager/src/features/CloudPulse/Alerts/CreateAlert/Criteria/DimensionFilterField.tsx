@@ -50,13 +50,13 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       operator: null,
       value: null,
     };
-    setValue(
-      name,
-      operation === 'selectOption'
-        ? { ...fieldValue, dimension_label: selected.value }
-        : fieldValue,
-      { shouldValidate: true }
-    );
+    if (operation === 'selectOption') {
+      setValue(`${name}.dimension_label`, selected.value, {
+        shouldValidate: true,
+      });
+    } else {
+      setValue(name, fieldValue);
+    }
   };
 
   const dimensionFieldWatcher = useWatch({
@@ -72,7 +72,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       : null;
 
   const valueOptions = () => {
-    if (selectedDimension !== null) {
+    if (selectedDimension !== null && selectedDimension.values) {
       return selectedDimension.values.map((val) => ({
         label: val,
         value: val,
@@ -131,6 +131,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 ) ?? null
               }
               data-testid="operator"
+              disabled={!dimensionFieldWatcher}
               errorText={fieldState.error?.message}
               label="Operator"
               onBlur={field.onBlur}
