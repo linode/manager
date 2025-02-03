@@ -1396,7 +1396,7 @@ describe('LKE cluster updates', () => {
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait(['@getCluster', '@getNodePools', '@getLinodes']);
 
-    // Filter is initially set show all nodes
+    // Filter is initially set to Show All nodes
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 4);
     });
@@ -1404,11 +1404,11 @@ describe('LKE cluster updates', () => {
       cy.get('[data-qa-node-row]').should('have.length', 2);
     });
 
-    // Filter by running status
-    cy.get('[data-testid="textfield-input"]').click();
+    // Filter by Running status
+    ui.autocomplete.findByLabel('Status').click();
     ui.autocompletePopper.findByTitle('Running').should('be.visible').click();
 
-    // Only running nodes should be displayed
+    // Only Running nodes should be displayed
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 2);
     });
@@ -1417,10 +1417,10 @@ describe('LKE cluster updates', () => {
     });
 
     // Filter by Offline status
-    cy.get('[data-testid="textfield-input"]').click();
+    ui.autocomplete.findByLabel('Status').click();
     ui.autocompletePopper.findByTitle('Offline').should('be.visible').click();
 
-    // Only offline nodes should be displayed
+    // Only Offline nodes should be displayed
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 1);
     });
@@ -1428,19 +1428,31 @@ describe('LKE cluster updates', () => {
       cy.get('[data-qa-node-row]').should('have.length', 1);
     });
 
-    // Filter by provisioning status
-    cy.get('[data-testid="textfield-input"]').click();
+    // Filter by Provisioning status
+    ui.autocomplete.findByLabel('Status').click();
     ui.autocompletePopper
       .findByTitle('Provisioning')
       .should('be.visible')
       .click();
 
-    // Only provisioning nodes should be displayed
+    // Only Provisioning nodes should be displayed
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 1);
     });
     cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 0);
+    });
+
+    // Filter by Show All status
+    ui.autocomplete.findByLabel('Status').click();
+    ui.autocompletePopper.findByTitle('Show All').should('be.visible').click();
+
+    // All nodes are displayed
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 4);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 2);
     });
   });
 
