@@ -74,7 +74,8 @@ export const getTagsProperties = (
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
-      dashboard
+      dashboard,
+      preferences
     ),
     handleTagsChange,
     label,
@@ -145,7 +146,8 @@ export const getResourcesProperties = (
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
-      dashboard
+      dashboard,
+      preferences
     ),
     handleResourcesSelection: handleResourceChange,
     label,
@@ -294,8 +296,11 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
   dependentFilters: {
     [key: string]: FilterValueType | TimeDuration;
   },
-  dashboard: Dashboard
+  dashboard: Dashboard,
+  preferences?: AclpConfig
 ): boolean | undefined => {
+  console.log(preferences);
+  console.log(filterKey);
   if (dashboard?.service_type) {
     const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
     const filters = serviceTypeConfig?.filters ?? [];
@@ -315,6 +320,15 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
     if (filter) {
       return filter.configuration.dependency?.some((dependent) => {
         const dependentFilter = dependentFilters[dependent];
+
+        if (
+          preferences &&
+          preferences[dependent] &&
+          (!dependentFilter ||
+            (Array.isArray(dependentFilter) && dependentFilter.length === 0))
+        ) {
+          return true; // here we are having in preferences but we are not having it in dependent filter
+        }
 
         return (
           !optionalFilters.has(dependent) &&
