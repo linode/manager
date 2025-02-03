@@ -298,8 +298,6 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
   dashboard: Dashboard,
   preferences?: AclpConfig
 ): boolean | undefined => {
-  console.log(preferences);
-  console.log(filterKey);
   if (dashboard?.service_type) {
     const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
     const filters = serviceTypeConfig?.filters ?? [];
@@ -326,7 +324,7 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
           (!dependentFilter ||
             (Array.isArray(dependentFilter) && dependentFilter.length === 0))
         ) {
-          return true; // here we are having in preferences but we are not having it in dependent filter
+          return true; // dependent filters should be updated as par with preferences updates
         }
 
         return (
