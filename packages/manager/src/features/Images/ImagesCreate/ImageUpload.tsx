@@ -256,11 +256,6 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <RegionSelect
-                  currentCapability={
-                    flags.disallowImageUploadToNonObjRegions
-                      ? 'Object Storage'
-                      : undefined
-                  }
                   disabled={
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
@@ -268,6 +263,7 @@ export const ImageUpload = () => {
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
+                  currentCapability="Object Storage" // Images use Object Storage as their storage backend
                   disableClearable
                   errorText={fieldState.error?.message}
                   ignoreAccountAvailability
