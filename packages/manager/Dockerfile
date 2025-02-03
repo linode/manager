@@ -37,16 +37,20 @@ CMD yarn start:manager:ci
 # by the tests.
 FROM nodejs-cloud-manager as e2e-build
 ENV CYPRESS_INSTALL_VERSION=13.16.1
-RUN apt-get update
-RUN apt-get install -y wget gnupg2 xvfb
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-RUN echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
-RUN apt-get update
-RUN apt-get -y install google-chrome-stable
-RUN rm -rf /var/cache/apt/*
-RUN rm -rf /var/lib/apt/lists/*
-RUN apt-get clean
-RUN npm install -g "cypress@$CYPRESS_INSTALL_VERSION"
+
+# Add Chrome apt repo
+RUN apt-get update \
+    && apt-get install -y wget gnupg2 \
+    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+    && apt-get update
+
+# Install Chrome, Cypress, and other dependencies, clean up apt cache.
+RUN apt-get install -y xvfb google-chrome-stable \
+    && rm -rf /var/cache/apt/* \
+    && rm -rf /var/lib/apt/lists* \
+    && apt-get clean \
+    && npm install -g "cypress@$CYPRESS_INSTALL_VERSION"
+
 USER node
 WORKDIR /home/node/app
 VOLUME /home/node/app
