@@ -28,12 +28,6 @@ export interface Quota {
   quota_limit: number;
 
   /**
-   * Current account usage, measured in units specified by the
-   * `resource_metric` field.
-   */
-  used: number;
-
-  /**
    * The unit of measurement for this service limit.
    */
   resource_metric:
@@ -52,7 +46,7 @@ export interface Quota {
    *
    * OBJ limits are applied by endpoint, not region.
    */
-  region_applied?: Region['id'] | 'global';
+  region_applied: Region['id'] | 'global';
 
   /**
    * The OBJ endpoint type to which this limit applies.
@@ -67,6 +61,20 @@ export interface Quota {
    * For OBJ limits only.
    */
   s3_endpoint?: string;
+}
+
+export interface QuotaUsage {
+  /**
+   * The account-wide limit for this service, measured in units
+   * specified by the `resource_metric` field.
+   */
+  quota_limit: number;
+
+  /**
+   * The current account usage, measured in units specified by the
+   * `resource_metric` field.
+   */
+  used: number;
 }
 
 export type QuotaType = 'linode' | 'lke' | 'object-storage';
