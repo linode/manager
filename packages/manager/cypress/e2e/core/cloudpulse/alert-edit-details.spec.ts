@@ -54,6 +54,7 @@ const databases: Database[] = databaseFactory
     engine: 'mysql',
   }));
 const pages = [1, 2];
+const expectedResourceIds = Array.from({ length: 50 }, (_, i) => String(i + 1));
 
 describe('Integration Tests for Edit Alert', () => {
   beforeEach(() => {
@@ -190,18 +191,23 @@ describe('Integration Tests for Edit Alert', () => {
 
     // Verify the update request and response
     cy.wait('@updateDefinitions').then(({ request, response }) => {
-      expect(response).to.have.property('statusCode', 200);
-      const resourceIds = request.body.entity_ids.map((id: string) =>
-        String(id)
-      ); // Convert each number to a string
-      const resourceIdsString = resourceIds.join(',');
-      const expectedResourceIdsString = Array.from({ length: 50 }, (_, i) =>
-        (i + 1).toString()
-      ).join(',');
-      expect(resourceIdsString).to.equal(expectedResourceIdsString);
+      // Assert successful API response
+      expect(response, 'API response should be successful').to.have.property(
+        'statusCode',
+        200
+      );
+
+      // Extract and convert entity IDs from request body
+      const resourceIds = request.body.entity_ids.map(String);
+      // Compare resource IDs
+      expect(
+        resourceIds.join(','),
+        'Resource IDs should match expected values'
+      ).to.equal(expectedResourceIds.join(','));
     });
-    cy.url().should('endWith', `/monitor/alerts/definitions`);
-    // Confirm toast notification should appear on Alert list.
+    cy.url().should('endWith', '/monitor/alerts/definitions');
+
+    // Confirm toast notification appears
     ui.toast.assertMessage('Alert resources successfully updated.');
   });
 });
