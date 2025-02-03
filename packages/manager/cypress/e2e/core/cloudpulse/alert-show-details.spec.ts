@@ -89,10 +89,10 @@ const verifyRowOrder = (expectedIds: string[]) => {
   });
 };
 /**
- * Integration tests for the CloudPulse DBaaS Alerts Detail Page, ensuring that the alert details, criteria, and resource information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
+ * Integration tests for the CloudPulse Alerts Detail Page, ensuring that the alert details, criteria, and resource information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
  */
 
-describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
+describe('Integration Tests for Alert Show Detail Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
