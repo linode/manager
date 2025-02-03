@@ -177,9 +177,9 @@ export const CreateCluster = () => {
 
     const { push } = history;
 
-    const _ipv4 = control_plane.acl?.addresses?.ipv4;
+    const _ipv4 = control_plane.acl?.addresses?.ipv4 || [];
 
-    const _ipv6 = control_plane.acl?.addresses?.ipv6;
+    const _ipv6 = control_plane.acl?.addresses?.ipv6 || [];
 
     const addressIPv4Payload = {
       ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
@@ -296,7 +296,7 @@ export const CreateCluster = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Grid className={classes.root} container ref={formContainerRef}>
+      <Grid className={classes.root} container>
         <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
         <LandingHeader
           docsLabel="Docs"
@@ -317,7 +317,6 @@ export const CreateCluster = () => {
             <Controller
               render={({ field }) => (
                 <TextField
-                  {...field}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     field.onChange(e.target.value);
                   }}
@@ -335,9 +334,8 @@ export const CreateCluster = () => {
               <>
                 <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
                 <Controller
-                  render={({ field }) => (
+                  render={({}) => (
                     <ClusterTypePanel
-                      {...field}
                       handleClusterTypeSelection={handleClusterTypeSelection}
                       selectedTier={selectedTier}
                     />
@@ -376,6 +374,7 @@ export const CreateCluster = () => {
                       disableClearable
                       errorText={errorMap.region}
                       onChange={(_, region) => field.onChange(region.id)}
+                      ref={null}
                       regions={regionsData}
                     />
                   )}
@@ -396,7 +395,6 @@ export const CreateCluster = () => {
             <Controller
               render={({ field }) => (
                 <Autocomplete
-                  {...field}
                   onChange={(_, selected) => {
                     field.onChange(selected?.value);
                   }}
@@ -421,7 +419,6 @@ export const CreateCluster = () => {
                     <Controller
                       render={({ field }) => (
                         <ApplicationPlatform
-                          {...field}
                           setAPL={(value) => {
                             field.onChange(value);
                             setValue('control_plane.acl.enabled', value);
@@ -442,9 +439,8 @@ export const CreateCluster = () => {
             {showHighAvailability && selectedTier !== 'enterprise' && (
               <Box data-testid="ha-control-plane">
                 <Controller
-                  render={({ field }) => (
+                  render={() => (
                     <HAControlPlane
-                      {...field}
                       highAvailabilityPrice={
                         isErrorKubernetesTypes || !highAvailabilityPrice
                           ? UNKNOWN_PRICE
@@ -470,7 +466,6 @@ export const CreateCluster = () => {
                 <Controller
                   render={({ field }) => (
                     <ControlPlaneACLPane
-                      {...field}
                       handleIPv4Change={(value) => {
                         const updatedACL = { ...field.value };
                         if (!updatedACL.addresses) {
@@ -501,9 +496,8 @@ export const CreateCluster = () => {
             )}
             <Divider sx={{ marginBottom: 4 }} />
             <Controller
-              render={({ field }) => (
+              render={() => (
                 <NodePoolPanel
-                  {...field}
                   addNodePool={(nodePool: Partial<KubeNodePoolResponse>) => {
                     addPool(nodePool);
                   }}

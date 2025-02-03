@@ -128,7 +128,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 <Controller
                   render={({ field: controllerField, fieldState }) => (
                     <TextField
-                      {...controllerField}
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
                       hideLabel
@@ -170,7 +169,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 <Controller
                   render={({ field: controllerField, fieldState }) => (
                     <TextField
-                      {...controllerField}
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
                       hideLabel
