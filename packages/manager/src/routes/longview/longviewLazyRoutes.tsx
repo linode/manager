@@ -13,15 +13,23 @@ export const longviewLandingLazyRoute = createLazyRoute('/longview')({
 // we'll just match the legacy routing behavior
 const LongviewDetailWrapper = () => {
   const { id } = useParams({ from: '/longview/clients/$id' });
-  const matchProps = {
+
+  if (!id) {
+    return null;
+  }
+
+  const props = {
     match: {
       params: {
         id,
       },
     },
+    params: {
+      id,
+    },
   };
 
-  return <EnhancedLongviewDetail {...matchProps} />;
+  return <EnhancedLongviewDetail {...props} />;
 };
 
 export const longviewDetailLazyRoute = createLazyRoute('/longview/clients/$id')(
