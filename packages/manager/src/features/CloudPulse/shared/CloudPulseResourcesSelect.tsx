@@ -105,7 +105,7 @@ export const CloudPulseResourcesSelect = React.memo(
       if (disabled && !selectedResources) {
         return;
       }
-
+      // To save default values, go through side effects if disabled is false
       if (resources && savePreferences && !selectedResources) {
         const defaultResources =
           defaultValue && Array.isArray(defaultValue)

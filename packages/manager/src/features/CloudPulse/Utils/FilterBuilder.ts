@@ -325,7 +325,7 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
           (!dependentFilter ||
             (Array.isArray(dependentFilter) && dependentFilter.length === 0))
         ) {
-          return true; // dependent filters should be updated as par with preferences updates
+          return true; // The values present inside the dependent filter should always match the values stored in the preference key
         }
 
         return (
