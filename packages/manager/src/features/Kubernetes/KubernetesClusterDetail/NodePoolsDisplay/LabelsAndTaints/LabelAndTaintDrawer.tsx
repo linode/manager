@@ -1,14 +1,18 @@
-import { Button, Notice, Typography } from '@linode/ui';
+import { Button, Divider, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
+import { capitalize } from 'src/utilities/capitalize';
 import { extendType } from 'src/utilities/extendType';
 
+import { LabelInput } from './LabelInput';
 import { LabelTable } from './LabelTable';
+import { TaintInput } from './TaintInput';
 import { TaintTable } from './TaintTable';
 
 import type { KubeNodePoolResponse, Label, Taint } from '@linode/api-v4';
@@ -28,6 +32,9 @@ interface LabelsAndTaintsFormFields {
 export const LabelAndTaintDrawer = (props: Props) => {
   const { clusterId, nodePool, onClose, open } = props;
 
+  const [shouldShowLabelForm, setShouldShowLabelForm] = React.useState(false);
+  const [shouldShowTaintForm, setShouldShowTaintForm] = React.useState(false);
+
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
 
   const { isPending, mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
@@ -39,6 +46,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
     control,
     formState,
     setValue,
+    watch,
     ...form
   } = useForm<LabelsAndTaintsFormFields>({
     defaultValues: {
@@ -66,16 +74,37 @@ export const LabelAndTaintDrawer = (props: Props) => {
       handleClose();
     } catch (errResponse) {
       for (const error of errResponse) {
-        if (error.field) {
-          form.setError(error.field, { message: error.reason });
-        } else {
-          form.setError('root', { message: error.reason });
+        if (!error.field) {
+          form.setError('root', {
+            message: `${capitalize(error.reason)}`,
+          });
+        }
+        // Format error nicely so it includes the label or taint key for identification, if possible.
+        if (error.field.includes('labels')) {
+          const invalidLabelKey = error.field.split('.')[1]; // error.field will be: labels.key
+          const invalidLabelPrefixText = invalidLabelKey
+            ? `Error on ${invalidLabelKey}: `
+            : '';
+          form.setError('root', {
+            message: `${invalidLabelPrefixText}${capitalize(error.reason)}`,
+          });
+        } else if (error.field.includes('taints')) {
+          const index = error.field.slice(7, 8); // error.field will be: taints[i]
+          const _taints = watch('taints');
+          const invalidTaintPrefixText = _taints[index].key
+            ? `Error on ${_taints[index].key}: `
+            : '';
+          form.setError('root', {
+            message: `${invalidTaintPrefixText}${capitalize(error.reason)}`,
+          });
         }
       }
     }
   };
 
   const handleClose = () => {
+    setShouldShowLabelForm(false);
+    setShouldShowTaintForm(false);
     onClose();
     form.reset();
   };
@@ -97,6 +126,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
         control={control}
         formState={formState}
         setValue={setValue}
+        watch={watch}
         {...form}
       >
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -104,38 +134,74 @@ export const LabelAndTaintDrawer = (props: Props) => {
             marginBottom={(theme) => theme.spacing(4)}
             marginTop={(theme) => theme.spacing()}
           >
-            Labels and Taints will be applied to Nodes in this Node Pool. They
-            can be further defined using the Kubernetes API, although edits will
-            be overwritten when Nodes or Pools are recycled.
+            Manage custom labels and taints directly through LKE. Changes are
+            applied to all nodes in this node pool.{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/deploy-and-manage-a-kubernetes-cluster-with-the-api#add-labels-and-taints-to-your-lke-node-pools">
+              Learn more
+            </Link>
+            .
           </Typography>
 
-          <Typography variant="h3"> Labels </Typography>
+          <Typography variant="h3">Labels</Typography>
+          <Typography>
+            Labels are key-value pairs that are used as identifiers. Review the
+            guidelines in the{' '}
+            <Link to="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set">
+              Kubernetes documentation
+            </Link>
+            .
+          </Typography>
           <LabelTable />
           <Button
             onClick={() => {
               {
-                /* TODO: Part 2 */
+                setShouldShowLabelForm(true);
               }
             }}
             buttonType="outlined"
+            disabled={shouldShowLabelForm}
           >
             Add Label
           </Button>
+          {shouldShowLabelForm && (
+            <LabelInput
+              handleCloseInputForm={() =>
+                setShouldShowLabelForm(!shouldShowLabelForm)
+              }
+            />
+          )}
 
-          <Typography marginTop={(theme) => theme.spacing(4)} variant="h3">
-            Taints
+          <Divider spacingBottom={32} spacingTop={32} />
+
+          <Typography variant="h3">Taints</Typography>
+          <Typography>
+            Taints are used to control which pods can be placed on nodes in this
+            node pool. They consist of a key, value, and effect. Review the
+            guidelines in the{' '}
+            <Link to="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">
+              Kubernetes documentation
+            </Link>
+            .
           </Typography>
           <TaintTable />
           <Button
             onClick={() => {
               {
-                /* TODO: Part 2 */
+                setShouldShowTaintForm(true);
               }
             }}
             buttonType="outlined"
+            disabled={shouldShowTaintForm}
           >
             Add Taint
           </Button>
+          {shouldShowTaintForm && (
+            <TaintInput
+              handleCloseInputForm={() =>
+                setShouldShowTaintForm(!shouldShowTaintForm)
+              }
+            />
+          )}
 
           <ActionsPanel
             primaryButtonProps={{

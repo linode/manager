@@ -14,7 +14,7 @@ export type Label = {
 export interface Taint {
   effect: KubernetesTaintEffect;
   key: string;
-  value: string;
+  value: string | undefined;
 }
 
 export interface KubernetesCluster {
