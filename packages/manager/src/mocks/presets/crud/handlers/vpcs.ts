@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { vpcFactory } from 'src/factories';
+import { subnetFactory, vpcFactory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,
@@ -207,153 +207,148 @@ export const deleteVPC = (mockState: MockState) => [
 
 export const createSubnet = (mockState: MockState) => [
   http.post(
-    '*/v4beta/networking/firewalls/:id/devices',
+    '*/v4/vpcs/:id/subnets',
     async ({
       params,
       request,
-    }): Promise<StrictResponse<APIErrorResponse | FirewallDevice>> => {
-      const firewallId = Number(params.id);
-      const firewall = await mswDB.get('firewalls', firewallId);
+    }): Promise<StrictResponse<APIErrorResponse | Subnet>> => {
+      const vpcId = Number(params.id);
+      const vpc = await mswDB.get('vpcs', vpcId);
 
-      if (!firewall) {
+      if (!vpc) {
         return makeNotFoundResponse();
       }
 
       const payload = await request.clone().json();
-      const entity = {
-        ...payload,
-        label: `linode-${payload.id}`,
-        url: `/linodes/${payload.id}`,
-      };
 
-      const firewallDevice = firewallDeviceFactory.build({
+      const subnet = subnetFactory.build({
+        ...payload,
         created: DateTime.now().toISO(),
-        entity,
         updated: DateTime.now().toISO(),
       });
 
-      const updatedFirewall = {
-        ...firewall,
-        entities: [...firewall.entities, entity],
+      const updatedVPC = {
+        ...vpc,
+        subnets: [...vpc.subnets, subnet],
       };
 
-      await mswDB.add(
-        'firewallDevices',
-        [firewallId, firewallDevice],
-        mockState
-      );
+      await mswDB.add('subnets', [vpcId, subnet], mockState);
 
-      await mswDB.update('firewalls', firewallId, updatedFirewall, mockState);
+      await mswDB.update('vpcs', vpcId, updatedVPC, mockState);
 
       queueEvents({
         event: {
-          action: 'firewall_device_add',
+          action: 'subnet_create',
           entity: {
-            id: firewallId,
-            label: firewall.label,
-            type: 'firewallDevice',
-            url: `/v4beta/networking/firewalls/${firewallId}/linodes`,
+            id: vpcId,
+            label: vpc.label,
+            type: 'subnet',
+            url: `/v4/vpcs/${vpcId}/subnets`,
           },
         },
         mockState,
         sequence: [{ status: 'notification' }],
       });
 
-      return makeResponse(firewallDevice);
+      return makeResponse(subnet);
     }
   ),
 ];
 
 export const updateSubnet = (mockState: MockState) => [
   http.post(
-    '*/v4beta/networking/firewalls/:id/devices',
+    '*/v4/vpcs/:id/subnets/:subnetId',
     async ({
       params,
       request,
-    }): Promise<StrictResponse<APIErrorResponse | FirewallDevice>> => {
-      const firewallId = Number(params.id);
-      const firewall = await mswDB.get('firewalls', firewallId);
+    }): Promise<StrictResponse<APIErrorResponse | Subnet>> => {
+      const vpcId = Number(params.id);
+      const subnetId = Number(params.subnetId);
+      const vpc = await mswDB.get('vpcs', vpcId);
+      const subnetFromDB = await mswDB.get('subnets', subnetId);
 
-      if (!firewall) {
+      if (!vpc || !subnetFromDB) {
         return makeNotFoundResponse();
       }
 
       const payload = await request.clone().json();
-      const entity = {
-        ...payload,
-        label: `linode-${payload.id}`,
-        url: `/linodes/${payload.id}`,
-      };
 
-      const firewallDevice = firewallDeviceFactory.build({
-        created: DateTime.now().toISO(),
-        entity,
+      const updatedSubnet = subnetFactory.build({
+        ...payload,
         updated: DateTime.now().toISO(),
       });
 
-      const updatedFirewall = {
-        ...firewall,
-        entities: [...firewall.entities, entity],
+      const updatedVPC = {
+        ...vpc,
+        subnets: vpc.subnets.map((subnet) => {
+          if (subnet.id !== subnetFromDB[1].id) {
+            return updatedSubnet;
+          }
+
+          return subnet;
+        }),
       };
 
-      await mswDB.add(
-        'firewallDevices',
-        [firewallId, firewallDevice],
+      // fix
+      await mswDB.update(
+        'subnets',
+        subnetId,
+        [vpcId, updatedSubnet],
         mockState
       );
 
-      await mswDB.update('firewalls', firewallId, updatedFirewall, mockState);
+      await mswDB.update('vpcs', vpcId, updatedVPC, mockState);
 
       queueEvents({
         event: {
-          action: 'firewall_device_add',
+          action: 'subnet_update',
           entity: {
-            id: firewallId,
-            label: firewall.label,
-            type: 'firewallDevice',
-            url: `/v4beta/networking/firewalls/${firewallId}/linodes`,
+            id: vpc.id,
+            label: vpc.label,
+            type: 'subnets',
+            url: `/v4/vpcs/${vpcId}/subnets`,
           },
         },
         mockState,
         sequence: [{ status: 'notification' }],
       });
 
-      return makeResponse(firewallDevice);
+      return makeResponse(updatedSubnet);
     }
   ),
 ];
 
 export const deleteSubnet = (mockState: MockState) => [
   http.delete(
-    '*/v4beta/networking/firewalls/:id/devices/:deviceId',
+    '*/v4/vpcs/:id/subnets/:subnetId',
     async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
-      const firewallId = Number(params.id);
-      const deviceId = Number(params.deviceId);
-      const firewall = await mswDB.get('firewalls', firewallId);
-      const firewallDevice = await mswDB.get('firewallDevices', deviceId);
+      const vpcId = Number(params.id);
+      const subnetId = Number(params.subnetId);
+      const vpc = await mswDB.get('vpcs', vpcId);
+      const subnetFromDB = await mswDB.get('subnets', subnetId);
 
-      if (!firewall || !firewallDevice) {
+      if (!vpc || !subnetFromDB) {
         return makeNotFoundResponse();
       }
 
-      const updatedFirewall = {
-        ...firewall,
-        entities: firewall.entities.filter(
-          (entity) => entity.id !== firewallDevice[1].entity.id
+      const updatedVPC = {
+        ...vpc,
+        subnets: vpc.subnets.filter(
+          (subnet) => subnet.id !== subnetFromDB[1].id
         ),
       };
 
-      await mswDB.delete('firewallDevices', deviceId, mockState);
-      await mswDB.update('firewalls', firewallId, updatedFirewall, mockState);
+      await mswDB.delete('subnets', subnetId, mockState);
+      await mswDB.update('vpcs', vpcId, updatedVPC, mockState);
 
       queueEvents({
         event: {
-          action: 'firewall_device_remove',
+          action: 'subnet_delete',
           entity: {
-            id: firewall.id,
-            label: firewall.label,
-            type: 'firewallDevice',
-            url: `/v4beta/networking/firewalls/${firewall.id}/linodes`,
+            id: vpc.id,
+            label: vpc.label,
+            type: 'subnet',
+            url: `/v4/vpcs/${vpc.id}/subnets`,
           },
         },
         mockState,
