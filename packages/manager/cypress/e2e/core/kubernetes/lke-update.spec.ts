@@ -1610,6 +1610,172 @@ describe('LKE cluster updates', () => {
     });
   });
 
+  it('does not collapse the accordion when an action button is clicked in the accordion header', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools']);
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      // Accordion should be expanded by default
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+
+      // Click on an action button
+      cy.get('[data-testid="node-pool-actions"]')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Autoscale Pool')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+    });
+
+    // Exit dialog
+    ui.dialog
+      .findByTitle('Autoscale Pool')
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      // Check that the accordion is still expanded
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+
+      // Accordion should close on non-action button clicks
+      cy.get('[data-qa-panel-subheading]').click();
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'false'
+      );
+    });
+  });
+
+  it('filters the node tables based on selected status filter', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+    const mockNodePools = [
+      nodePoolFactory.build({
+        count: 4,
+        nodes: [
+          ...kubeLinodeFactory.buildList(3),
+          kubeLinodeFactory.build({ status: 'not_ready' }),
+        ],
+      }),
+      nodePoolFactory.build({
+        nodes: kubeLinodeFactory.buildList(2),
+      }),
+    ];
+    const mockLinodes: Linode[] = [
+      linodeFactory.build({
+        id: mockNodePools[0].nodes[0].instance_id ?? undefined,
+      }),
+      linodeFactory.build({
+        id: mockNodePools[0].nodes[1].instance_id ?? undefined,
+      }),
+      linodeFactory.build({
+        id: mockNodePools[0].nodes[2].instance_id ?? undefined,
+        status: 'offline',
+      }),
+      linodeFactory.build({
+        id: mockNodePools[0].nodes[3].instance_id ?? undefined,
+        status: 'provisioning',
+      }),
+      linodeFactory.build({
+        id: mockNodePools[1].nodes[0].instance_id ?? undefined,
+      }),
+      linodeFactory.build({
+        id: mockNodePools[1].nodes[1].instance_id ?? undefined,
+        status: 'offline',
+      }),
+    ];
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+    mockGetLinodes(mockLinodes).as('getLinodes');
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools', '@getLinodes']);
+
+    // Filter is initially set to Show All nodes
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 4);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 2);
+    });
+
+    // Filter by Running status
+    ui.autocomplete.findByLabel('Status').click();
+    ui.autocompletePopper.findByTitle('Running').should('be.visible').click();
+
+    // Only Running nodes should be displayed
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 2);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 1);
+    });
+
+    // Filter by Offline status
+    ui.autocomplete.findByLabel('Status').click();
+    ui.autocompletePopper.findByTitle('Offline').should('be.visible').click();
+
+    // Only Offline nodes should be displayed
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 1);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 1);
+    });
+
+    // Filter by Provisioning status
+    ui.autocomplete.findByLabel('Status').click();
+    ui.autocompletePopper
+      .findByTitle('Provisioning')
+      .should('be.visible')
+      .click();
+
+    // Only Provisioning nodes should be displayed
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 1);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 0);
+    });
+
+    // Filter by Show All status
+    ui.autocomplete.findByLabel('Status').click();
+    ui.autocompletePopper.findByTitle('Show All').should('be.visible').click();
+
+    // All nodes are displayed
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 4);
+    });
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      cy.get('[data-qa-node-row]').should('have.length', 2);
+    });
+  });
+
   describe('LKE cluster updates for DC-specific prices', () => {
     /*
      * - Confirms node pool resize UI flow using mocked API responses.
