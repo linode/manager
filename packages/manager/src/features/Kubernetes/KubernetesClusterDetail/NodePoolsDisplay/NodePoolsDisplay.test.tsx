@@ -3,12 +3,16 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NodePoolsDisplay, Props } from './NodePoolsDisplay';
+import { NodePoolsDisplay } from './NodePoolsDisplay';
+
+import type { Props } from './NodePoolsDisplay';
 
 const props: Props = {
+  clusterCreated: '2025-01-13T02:58:58',
   clusterID: 123,
   clusterLabel: 'a cluster',
   clusterRegionId: 'us-east',
+  clusterTier: 'standard',
   regionsData: [],
 };
 

@@ -20,6 +20,13 @@ export type MetricUnitType =
   | 'KB'
   | 'MB'
   | 'GB';
+export type NotificationStatus = 'Enabled' | 'Disabled';
+export type ChannelType = 'email' | 'slack' | 'pagerduty' | 'webhook';
+export type AlertNotificationType = 'default' | 'custom';
+type AlertNotificationEmail = 'email';
+type AlertNotificationSlack = 'slack';
+type AlertNotificationPagerDuty = 'pagerduty';
+type AlertNotificationWebHook = 'webhook';
 export interface Dashboard {
   id: number;
   label: string;
@@ -55,7 +62,7 @@ export interface Widgets {
   filters: Filters[];
   serviceType: string;
   service_type: string;
-  resource_id: string[];
+  entity_ids: string[];
   time_granularity: TimeGranularity;
   time_duration: TimeDuration;
   unit: string;
@@ -106,7 +113,7 @@ export interface Dimension {
 }
 
 export interface JWETokenPayLoad {
-  resource_ids: number[];
+  entity_ids: number[];
 }
 
 export interface JWEToken {
@@ -120,7 +127,7 @@ export interface CloudPulseMetricsRequest {
   group_by: string;
   relative_time_duration: TimeDuration;
   time_granularity: TimeGranularity | undefined;
-  resource_ids: number[];
+  entity_ids: number[];
 }
 
 export interface CloudPulseMetricsResponse {
@@ -217,4 +224,77 @@ export interface Alert {
   updated_by: string;
   created: string;
   updated: string;
+}
+
+interface NotificationChannelAlerts {
+  id: number;
+  label: string;
+  url: string;
+  type: 'alerts-definitions';
+}
+interface NotificationChannelBase {
+  id: number;
+  label: string;
+  channel_type: ChannelType;
+  type: AlertNotificationType;
+  status: NotificationStatus;
+  alerts: NotificationChannelAlerts[];
+  created_by: string;
+  updated_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface NotificationChannelEmail extends NotificationChannelBase {
+  channel_type: AlertNotificationEmail;
+  content: {
+    email: {
+      email_addresses: string[];
+      subject: string;
+      message: string;
+    };
+  };
+}
+
+interface NotificationChannelSlack extends NotificationChannelBase {
+  channel_type: AlertNotificationSlack;
+  content: {
+    slack: {
+      slack_webhook_url: string;
+      slack_channel: string;
+      message: string;
+    };
+  };
+}
+
+interface NotificationChannelPagerDuty extends NotificationChannelBase {
+  channel_type: AlertNotificationPagerDuty;
+  content: {
+    pagerduty: {
+      service_api_key: string;
+      attributes: string[];
+      description: string;
+    };
+  };
+}
+interface NotificationChannelWebHook extends NotificationChannelBase {
+  channel_type: AlertNotificationWebHook;
+  content: {
+    webhook: {
+      webhook_url: string;
+      http_headers: {
+        header_key: string;
+        header_value: string;
+      }[];
+    };
+  };
+}
+export type NotificationChannel =
+  | NotificationChannelEmail
+  | NotificationChannelSlack
+  | NotificationChannelWebHook
+  | NotificationChannelPagerDuty;
+
+export interface EditAlertDefinitionPayload {
+  entity_ids: string[];
 }

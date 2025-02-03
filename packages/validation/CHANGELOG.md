@@ -1,3 +1,27 @@
+## [2025-01-28] - v0.59.0
+
+
+### Changed:
+
+- Allow `cipher_suite` to be `none` in NodeBalancer schemas ([#11515](https://github.com/linode/manager/pull/11515))
+
+### Tech Stories:
+
+- Update `tsconfig.json` to use `bundler` moduleResolution ([#11487](https://github.com/linode/manager/pull/11487))
+
+
+## [2025-01-14] - v0.58.0
+
+### Added:
+
+- Validation for UDP NodeBalancer support ([#11321](https://github.com/linode/manager/pull/11321))
+
+### Changed:
+
+- Update VPC validation to temporarily hide mention of IPv6 in UI, fix punctuation ([#11357](https://github.com/linode/manager/pull/11357))
+- Update VPC label validation schema punctuation, fix label validation regex ([#11393](https://github.com/linode/manager/pull/11393))
+- Error messages for few attributes ([#11445](https://github.com/linode/manager/pull/11445))
+
 ## [2024-12-10] - v0.57.0
 
 ### Added:

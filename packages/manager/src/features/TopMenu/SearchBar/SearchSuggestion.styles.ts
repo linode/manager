@@ -1,35 +1,23 @@
-import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import type { SearchSuggestionProps } from './SearchSuggestion';
+import { MenuItem } from 'src/components/MenuItem';
 
-export const StyledWrapperDiv = styled('div', {
-  label: 'StyledWrapperDiv',
-  shouldForwardProp: omittedProps(['isFocused']),
-})<Partial<SearchSuggestionProps>>(({ isFocused, theme }) => ({
-  '&:last-child': {
-    borderBottom: 0,
-  },
-  alignItems: 'space-between',
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  cursor: 'pointer',
-  justifyContent: 'space-between',
-  [theme.breakpoints.up('md')]: {
-    display: 'flex',
-  },
-  width: 'calc(100% + 2px)',
-
-  ...(isFocused && {
-    '& .tag': {
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.tokens.color.Neutrals.White,
-      },
-      backgroundColor: theme.bg.lightBlue1,
-      color: theme.palette.text.primary,
+export const StyledSearchSuggestion = styled(MenuItem, {
+  label: 'StyledSearchSuggestion',
+})(({ theme }) => ({
+  '&.MuiButtonBase-root': {
+    '&.Mui-focused': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.color.white,
     },
-    backgroundColor: `${theme.bg.main}`,
-  }),
+    '&:hover, &.Mui-focused': {
+      '& *:not(.tag-container *)': {
+        color: theme.color.white,
+      },
+    },
+    margin: '0 !important',
+    padding: '0 !important',
+  },
 }));
 
 export const StyledSuggestionIcon = styled('div', {
@@ -48,13 +36,8 @@ export const StyledSuggestionTitle = styled('div', {
   color: theme.palette.text.primary,
   fontFamily: theme.font.bold,
   fontSize: '1rem',
+  lineHeight: 1,
   wordBreak: 'break-all',
-}));
-
-export const StyledSegment = styled('span', {
-  label: 'StyledSegment',
-})(({ theme }) => ({
-  color: theme.palette.primary.main,
 }));
 
 export const StyledSuggestionDescription = styled('div', {
@@ -63,17 +46,32 @@ export const StyledSuggestionDescription = styled('div', {
   color: theme.color.headline,
   fontSize: '.75rem',
   marginTop: 2,
+  overflowWrap: 'break-word',
+  whiteSpace: 'normal',
+  width: '100%',
+  wordBreak: 'break-word',
+}));
+
+export const StyledSegment = styled('span', {
+  label: 'StyledSegment',
+})(({ theme }) => ({
+  color: theme.palette.primary.main,
 }));
 
 export const StyledTagContainer = styled('div', {
   label: 'StyledTagContainer',
-})(() => ({
-  '& > div': {
-    margin: '2px',
+})(({ theme }) => ({
+  '& .MuiButtonBase-root': {
+    height: 24,
+  },
+  '& .MuiChip-label': {
+    '&:hover': {
+      border: `1px solid ${theme.color.white}`,
+    },
+    border: `1px solid transparent`,
+    padding: '1px 6px 2px !important',
   },
   alignItems: 'center',
   display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'flex-end',
-  paddingRight: 8,
+  paddingRight: theme.spacing(2),
 }));

@@ -21,17 +21,20 @@ export interface ConfirmationDialogProps extends DialogProps {
  * - Avoid “Are you sure?” language. Assume the user knows what they want to do while helping them avoid unintended consequences.
  *
  */
-export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
+export const ConfirmationDialog = React.forwardRef<
+  HTMLDivElement,
+  ConfirmationDialogProps
+>((props, ref) => {
   const { actions, children, ...dialogProps } = props;
 
   return (
-    <Dialog {...dialogProps} PaperProps={{ role: undefined }}>
+    <Dialog {...dialogProps} PaperProps={{ role: undefined }} ref={ref}>
       {children}
       <Stack
         direction="row"
         justifyContent="flex-end"
         spacing={2}
-        sx={{ mt: 4 }}
+        sx={{ mt: 2 }}
       >
         {actions && typeof actions === 'function'
           ? actions(dialogProps)
@@ -39,4 +42,4 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
       </Stack>
     </Dialog>
   );
-};
+});

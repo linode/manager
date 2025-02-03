@@ -12,6 +12,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useProfile } from 'src/queries/profile/profile';
@@ -40,6 +41,9 @@ const Users = React.lazy(() =>
     default: module.UsersLanding,
   }))
 );
+const Quotas = React.lazy(() =>
+  import('./Quotas').then((module) => ({ default: module.Quotas }))
+);
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 const MaintenanceLanding = React.lazy(
   () => import('./Maintenance/MaintenanceLanding')
@@ -50,6 +54,7 @@ const AccountLanding = () => {
   const location = useLocation();
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
+  const { limitsEvolution } = useFlags();
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
@@ -58,6 +63,8 @@ const AccountLanding = () => {
   const isProxyUser = profile?.user_type === 'proxy';
   const isChildUser = profile?.user_type === 'child';
   const isParentUser = profile?.user_type === 'parent';
+
+  const showQuotasTab = limitsEvolution?.enabled ?? false;
 
   const isReadOnly =
     useRestrictedGlobalGrantCheck({
@@ -80,6 +87,14 @@ const AccountLanding = () => {
       routeName: '/account/users',
       title: 'Users & Grants',
     },
+    ...(showQuotasTab
+      ? [
+          {
+            routeName: '/account/quotas',
+            title: 'Quotas',
+          },
+        ]
+      : []),
     {
       routeName: '/account/login-history',
       title: 'Login History',
@@ -193,6 +208,11 @@ const AccountLanding = () => {
             <SafeTabPanel index={++idx}>
               <Users />
             </SafeTabPanel>
+            {showQuotasTab && (
+              <SafeTabPanel index={++idx}>
+                <Quotas />
+              </SafeTabPanel>
+            )}
             <SafeTabPanel index={++idx}>
               <AccountLogins />
             </SafeTabPanel>

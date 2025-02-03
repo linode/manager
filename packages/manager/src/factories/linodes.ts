@@ -71,6 +71,7 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
       {
         address: '10.11.12.13',
         gateway: '10.11.12.13',
+        interface_id: null,
         linode_id: 1,
         prefix: 24,
         public: true,
@@ -95,6 +96,7 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
     link_local: {
       address: '2001:DB8::0000',
       gateway: 'fe80::1',
+      interface_id: null,
       linode_id: 1,
       prefix: 64,
       public: false,
@@ -106,6 +108,7 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
     slaac: {
       address: '2001:DB8::0000',
       gateway: 'fe80::1',
+      interface_id: null,
       linode_id: 1,
       prefix: 64,
       public: true,

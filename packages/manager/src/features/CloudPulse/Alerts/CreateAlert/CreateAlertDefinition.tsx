@@ -16,6 +16,7 @@ import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
 import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
+import { AddChannelListing } from './NotificationChannels/AddChannelListing';
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
@@ -84,12 +85,10 @@ export const CreateAlertDefinition = () => {
     getValues('serviceType')!
   );
 
-  /**
-   * The maxScrapeInterval variable will be required for the Trigger Conditions part of the Critieria section.
-   */
+  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
+
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
-  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
@@ -172,6 +171,7 @@ export const CreateAlertDefinition = () => {
             maxScrapingInterval={maxScrapeInterval}
             name="trigger_conditions"
           />
+          <AddChannelListing name="channel_ids" />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',

@@ -124,9 +124,11 @@ export const KubernetesClusterDetail = () => {
           </Box>
         )}
         <NodePoolsDisplay
+          clusterCreated={cluster.created}
           clusterID={cluster.id}
           clusterLabel={cluster.label}
           clusterRegionId={cluster.region}
+          clusterTier={cluster.tier ?? 'standard'}
           regionsData={regionsData || []}
         />
       </Stack>

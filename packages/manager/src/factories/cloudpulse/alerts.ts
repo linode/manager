@@ -1,9 +1,47 @@
 import Factory from 'src/factories/factoryProxy';
 
+import type {
+  AlertDefinitionDimensionFilter,
+  AlertDefinitionMetricCriteria,
+} from '@linode/api-v4';
 import type { Alert } from '@linode/api-v4';
 
+export const alertDimensionsFactory = Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>(
+  {
+    dimension_label: 'operating_system',
+    label: 'Operating System',
+    operator: 'eq',
+    value: 'Linux',
+  }
+);
+
+export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>(
+  {
+    aggregation_type: 'avg',
+    dimension_filters: alertDimensionsFactory.buildList(1),
+    label: 'CPU Usage',
+    metric: 'cpu_usage',
+    operator: 'eq',
+    threshold: 60,
+    unit: 'Bytes',
+  }
+);
+
 export const alertFactory = Factory.Sync.makeFactory<Alert>({
-  channels: [],
+  channels: [
+    {
+      id: '1',
+      label: 'sample1',
+      type: 'channel',
+      url: '',
+    },
+    {
+      id: '2',
+      label: 'sample2',
+      type: 'channel',
+      url: '',
+    },
+  ],
   created: new Date().toISOString(),
   created_by: 'user1',
   description: 'Test description',
@@ -20,9 +58,9 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   tags: ['tag1', 'tag2'],
   trigger_conditions: {
     criteria_condition: 'ALL',
-    evaluation_period_seconds: 0,
-    polling_interval_seconds: 0,
-    trigger_occurrences: 0,
+    evaluation_period_seconds: 240,
+    polling_interval_seconds: 120,
+    trigger_occurrences: 3,
   },
   type: 'user',
   updated: new Date().toISOString(),
