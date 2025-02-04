@@ -5,12 +5,12 @@ import { useHistory } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NavTabs } from 'src/components/NavTabs/NavTabs';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { StackScriptLandingTable } from './StackScriptLandingTable';
 
 import type { NavTab } from 'src/components/NavTabs/NavTabs';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 export const StackScriptsLanding = () => {
   const history = useHistory();
