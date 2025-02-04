@@ -453,8 +453,7 @@ export const constructAdditionalRequestFilters = (
         operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
         value: Array.isArray(filter.filterValue)
           ? Array.of(filter.filterValue).join(',')
-          : String(filter.filterValue).charAt(0).toLowerCase() +
-            String(filter.filterValue).slice(1),
+          : String(filter.filterValue),
       });
     }
   }
