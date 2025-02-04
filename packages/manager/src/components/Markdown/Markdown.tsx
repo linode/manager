@@ -15,7 +15,7 @@ export interface HighlightedMarkdownProps {
 }
 
 /**
- * Renders markdown as HTML
+ * Renders markdown as HTML using https://github.com/markdown-it/markdown-it
  * - Used mostly for rendering support ticket messages
  * - Will perform syntax highlighting on any fenced code blocks
  */

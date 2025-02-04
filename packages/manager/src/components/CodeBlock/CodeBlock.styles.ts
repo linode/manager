@@ -3,6 +3,7 @@ import { makeStyles } from 'tss-react/mui';
 export const useCodeBlockStyles = makeStyles()((theme) => ({
   codeblock: {
     '& pre': {
+      borderRadius: theme.spacing(0.5),
       overflowX: 'auto',
       padding: theme.spacing(1.5),
     },
