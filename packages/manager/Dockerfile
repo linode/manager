@@ -12,7 +12,7 @@ ARG CYPRESS_VERSION=13.16.1
 #
 # Extends from the Node.js base image that corresponds with our latest supported
 # version of Node, and includes other tools that we rely on like pnpm and bun.
-FROM ${IMAGE_REGISTRY}/node:${NODE_VERSION}-bullseye-slim as nodejs-cloud-manager
+FROM ${IMAGE_REGISTRY}/node:${NODE_VERSION}-bullseye-slim AS nodejs-cloud-manager
 RUN npm install -g pnpm bun
 
 # `manager`
@@ -20,7 +20,7 @@ RUN npm install -g pnpm bun
 # Serves Cloud Manager.
 # Assumes Cloud Manager dependencies are installed at `/home/node/app/node_modules`,
 # and Cloud Manager is built.
-FROM nodejs-cloud-manager as manager
+FROM nodejs-cloud-manager AS manager
 ENV NODE_ENV=development
 WORKDIR /home/node/app
 VOLUME /home/node/app
@@ -66,7 +66,7 @@ RUN mkdir -p /home/node/.cache/Cypress && cypress install
 # e2e
 #
 # Runs Cloud Manager Cypress tests.
-FROM e2e-build as e2e
+FROM e2e-build AS e2e
 WORKDIR /home/node/app
 VOLUME /home/node/app
 USER node
@@ -79,7 +79,7 @@ ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
 #
 # Runs Cloud Manager Cypress tests, with Caddy installed.
 # Extends from `e2e`, and includes Caddy to support reverse proxying Cloud Manager.
-FROM e2e as e2e-reverse-proxy
+FROM e2e AS e2e-reverse-proxy
 USER root
 # Install Caddy.
 # Instructions adapted from Caddy documentation at caddyserver.com:
