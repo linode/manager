@@ -1,18 +1,25 @@
-import { Box, CircleProgress } from '@linode/ui';
+import { Box, Button, CircleProgress } from '@linode/ui';
 import { useTheme } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
+import {
+  useAlertDefinitionQuery,
+  useEditAlertDefinition,
+} from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { AlertResources } from '../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../Utils/utils';
 
 import type { AlertRouteParams } from '../AlertsDetail/AlertDetail';
+import type { ActionPanelProps } from 'src/components/ActionsPanel/ActionsPanel';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export const EditAlertResources = () => {
@@ -20,13 +27,28 @@ export const EditAlertResources = () => {
 
   const theme = useTheme();
 
+  const history = useHistory();
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const definitionLanding = '/monitor/alerts/definitions';
 
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
     Number(alertId),
     serviceType
   );
-  const [, setSelectedResources] = React.useState<string[]>([]);
+
+  const {
+    isError: isEditAlertError,
+    mutateAsync: editAlert,
+    reset: resetEditAlert,
+  } = useEditAlertDefinition(serviceType, Number(alertId));
+  const [selectedResources, setSelectedResources] = React.useState<string[]>(
+    []
+  );
+  const [showConfirmation, setShowConfirmation] = React.useState<boolean>(
+    false
+  );
 
   React.useEffect(() => {
     setSelectedResources(
@@ -50,6 +72,51 @@ export const EditAlertResources = () => {
 
     return { newPathname: '/Definitions/Edit', overrides };
   }, [serviceType, alertId]);
+
+  const saveResources = () => {
+    setShowConfirmation(false);
+    editAlert({
+      entity_ids: selectedResources.map((id) => String(id)),
+    }).then(() => {
+      // on success land on the alert definition list page and show a success snackbar
+      history.push(definitionLanding);
+      enqueueSnackbar('Alert resources successfully updated.', {
+        anchorOrigin: {
+          horizontal: 'right',
+          vertical: 'top', // Show snackbar at the top
+        },
+        autoHideDuration: 5000,
+        style: {
+          marginTop: '150px',
+        },
+        variant: 'success',
+      });
+    });
+  };
+
+  const saveConfirmationActionProps: ActionPanelProps = {
+    primaryButtonProps: {
+      'data-testid': 'editconfirmation',
+      label: 'Confirm',
+      onClick: saveResources,
+    },
+    secondaryButtonProps: {
+      label: 'Cancel',
+      onClick: () => setShowConfirmation(false),
+    },
+  };
+  const isSameResourcesSelected = React.useMemo((): boolean => {
+    if (
+      !alertDetails ||
+      !alertDetails?.entity_ids ||
+      selectedResources.length !== alertDetails?.entity_ids.length
+    ) {
+      return false;
+    }
+    return selectedResources.every((resource) =>
+      alertDetails?.entity_ids.includes(String(resource))
+    );
+  }, [alertDetails, selectedResources]);
 
   if (isFetching) {
     return getEditAlertMessage(<CircleProgress />, newPathname, overrides);
@@ -75,6 +142,21 @@ export const EditAlertResources = () => {
     );
   }
 
+  if (isEditAlertError) {
+    enqueueSnackbar('Error while updating the resources. Try again later.', {
+      anchorOrigin: {
+        horizontal: 'right',
+        vertical: 'top', // Show snackbar at the top
+      },
+      autoHideDuration: 5000,
+      style: {
+        marginTop: '150px',
+      },
+      variant: 'error',
+    });
+    resetEditAlert(); // reset the mutate use hook states
+  }
+
   const handleResourcesSelection = (resourceIds: string[]) => {
     setSelectedResources(resourceIds); // keep track of the selected resources and update it on save
   };
@@ -98,6 +180,47 @@ export const EditAlertResources = () => {
           isSelectionsNeeded
           serviceType={service_type}
         />
+        <Box alignSelf="flex-end" m={3} mb={0}>
+          <Button
+            onClick={() => {
+              history.push('/monitor/alerts/definitions');
+            }}
+            data-testid="cancelsaveresources"
+            variant="text"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              window.scrollTo({
+                behavior: 'instant',
+                top: 0,
+              });
+              setShowConfirmation(true);
+            }}
+            sx={{
+              ml: 1,
+            }}
+            buttonType="primary"
+            data-qa-buttons="true"
+            data-testid="saveresources"
+            disabled={isSameResourcesSelected}
+          >
+            Save
+          </Button>
+        </Box>
+        <ConfirmationDialog
+          sx={{
+            fontSize: '16px',
+          }}
+          actions={<ActionsPanel {...saveConfirmationActionProps} />}
+          onClose={() => setShowConfirmation(!showConfirmation)}
+          open={showConfirmation}
+          title="Confirm alert updates"
+        >
+          You have changed the resource settings for your alert.
+          <br /> This also updates your alert definition.
+        </ConfirmationDialog>
       </Box>
     </>
   );
