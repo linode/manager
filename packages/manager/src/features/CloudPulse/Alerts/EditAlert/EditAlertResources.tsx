@@ -1,6 +1,6 @@
 import { Box, Button, CircleProgress } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import { useSnackbar } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -29,8 +29,6 @@ export const EditAlertResources = () => {
 
   const history = useHistory();
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const definitionLanding = '/monitor/alerts/definitions';
 
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
@@ -38,11 +36,10 @@ export const EditAlertResources = () => {
     serviceType
   );
 
-  const {
-    isError: isEditAlertError,
-    mutateAsync: editAlert,
-    reset: resetEditAlert,
-  } = useEditAlertDefinition(serviceType, Number(alertId));
+  const { mutateAsync: editAlert } = useEditAlertDefinition(
+    serviceType,
+    Number(alertId)
+  );
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     []
   );
@@ -77,21 +74,18 @@ export const EditAlertResources = () => {
     setShowConfirmation(false);
     editAlert({
       entity_ids: selectedResources.map((id) => String(id)),
-    }).then(() => {
-      // on success land on the alert definition list page and show a success snackbar
-      history.push(definitionLanding);
-      enqueueSnackbar('Alert resources successfully updated.', {
-        anchorOrigin: {
-          horizontal: 'right',
-          vertical: 'top', // Show snackbar at the top
-        },
-        autoHideDuration: 5000,
-        style: {
-          marginTop: '150px',
-        },
-        variant: 'success',
+    })
+      .then(() => {
+        // on success land on the alert definition list page and show a success snackbar
+        history.push(definitionLanding);
+        enqueueASnackbar('Alert resources successfully updated.', 'success');
+      })
+      .catch(() => {
+        enqueueASnackbar(
+          'Error while updating the resources. Try again later.',
+          'error'
+        );
       });
-    });
   };
 
   const saveConfirmationActionProps: ActionPanelProps = {
@@ -140,21 +134,6 @@ export const EditAlertResources = () => {
       newPathname,
       overrides
     );
-  }
-
-  if (isEditAlertError) {
-    enqueueSnackbar('Error while updating the resources. Try again later.', {
-      anchorOrigin: {
-        horizontal: 'right',
-        vertical: 'top', // Show snackbar at the top
-      },
-      autoHideDuration: 5000,
-      style: {
-        marginTop: '150px',
-      },
-      variant: 'error',
-    });
-    resetEditAlert(); // reset the mutate use hook states
   }
 
   const handleResourcesSelection = (resourceIds: string[]) => {
@@ -245,4 +224,18 @@ const getEditAlertMessage = (
       </Box>
     </>
   );
+};
+
+const enqueueASnackbar = (message: string, variant: 'error' | 'success') => {
+  enqueueSnackbar(message, {
+    anchorOrigin: {
+      horizontal: 'right',
+      vertical: 'top', // Show snackbar at the top
+    },
+    autoHideDuration: 2000,
+    style: {
+      marginTop: '150px',
+    },
+    variant,
+  });
 };

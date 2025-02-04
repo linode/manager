@@ -1,4 +1,8 @@
+import { waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
 import React from 'react';
+import { Router } from 'react-router-dom';
 
 import { alertFactory, linodeFactory, regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -28,12 +32,14 @@ const cloudPulseResources: CloudPulseResources[] = linodes.map((linode) => {
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
+  useEditAlertDefinition: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
 }));
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
+  useEditAlertDefinition: queryMocks.useEditAlertDefinition,
 }));
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
@@ -66,6 +72,10 @@ beforeEach(() => {
     data: regions,
     isError: false,
     isFetching: false,
+  });
+  queryMocks.useEditAlertDefinition.mockReturnValue({
+    mutateAsync: vi.fn().mockResolvedValue({}),
+    reset: vi.fn(),
   });
 });
 
@@ -112,5 +122,96 @@ describe('EditAlertResources component tests', () => {
     });
     const { getByText } = renderWithTheme(<EditAlertResources />);
     expect(getByText('No Data to display.')).toBeInTheDocument();
+  });
+
+  it('Edit alert resources successful edit', async () => {
+    const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
+
+    const push = vi.fn();
+    const history = createMemoryHistory(); // Create a memory history for testing
+    history.push = push;
+    history.push('/monitor/alerts/definitions/edit/linode/1');
+
+    const { getByTestId, getByText } = renderWithTheme(
+      <Router history={history}>
+        <EditAlertResources />
+      </Router>
+    );
+
+    expect(getByTestId('saveresources')).toBeInTheDocument();
+
+    expect(getByTestId('select_item_4')).toBeInTheDocument();
+
+    await userEvent.click(getByTestId('select_item_4'));
+
+    // click and save
+    await userEvent.click(getByTestId('saveresources'));
+
+    expect(getByTestId('editconfirmation')).toBeInTheDocument();
+
+    // click confirmation
+    await userEvent.click(getByTestId('editconfirmation'));
+
+    expect(mutateAsyncSpy).toHaveBeenCalledTimes(1); // check if edit is called
+
+    expect(push).toHaveBeenLastCalledWith('/monitor/alerts/definitions'); // after confirmation history updates to list page
+
+    await waitFor(() => {
+      expect(
+        getByText('Alert resources successfully updated.') // validate whether snackbar is displayed properly
+      ).toBeInTheDocument();
+    });
+
+    // click on cancel
+    await userEvent.click(getByTestId('cancelsaveresources'));
+
+    expect(push.mock.calls.length).toBe(3); // 3 calls on landing edit page, on confirmation, on cancel click
+
+    expect(push).toHaveBeenLastCalledWith(
+      // after cancel click history updates to list page
+      '/monitor/alerts/definitions'
+    );
+  });
+
+  it('Edit alert resources error case', async () => {
+    const mockMutateAsync = vi.fn().mockRejectedValue(new Error('API Error'));
+    queryMocks.useEditAlertDefinition.mockReturnValue({
+      isError: true,
+      mutateAsync: mockMutateAsync,
+      reset: vi.fn(),
+    });
+
+    const push = vi.fn();
+    const history = createMemoryHistory(); // Create a memory history for testing
+    history.push = push;
+    history.push('/monitor/alerts/definitions/edit/linode/1');
+
+    const { getByTestId, getByText } = renderWithTheme(
+      <Router history={history}>
+        <EditAlertResources />
+      </Router>
+    );
+
+    expect(getByTestId('saveresources')).toBeInTheDocument();
+
+    expect(getByTestId('select_item_4')).toBeInTheDocument();
+
+    await userEvent.click(getByTestId('select_item_4'));
+
+    // click and save
+    await userEvent.click(getByTestId('saveresources'));
+
+    expect(getByTestId('editconfirmation')).toBeInTheDocument();
+
+    // click confirmation
+    await userEvent.click(getByTestId('editconfirmation'));
+
+    expect(mockMutateAsync).toHaveBeenCalledTimes(1);
+
+    await waitFor(() => {
+      expect(
+        getByText('Error while updating the resources. Try again later.') // validate whether snackbar is displayed properly
+      ).toBeInTheDocument();
+    });
   });
 });
