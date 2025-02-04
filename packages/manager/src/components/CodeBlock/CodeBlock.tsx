@@ -2,12 +2,13 @@ import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { getHighlighterTheme, shiki } from 'src/utilities/syntax-highlighter';
 import { useColorMode } from 'src/utilities/theme';
 
 import { StyledCommandDiv, StyledCopyTooltip } from './CodeBlock.styles';
 
-export type SupportedLanguage = 'bash' | 'javascript' | 'shell' | 'yaml';
+import type { SupportedLanguage } from 'src/utilities/syntax-highlighter';
 
 export interface CodeBlockProps {
   /** The CodeBlock command to be displayed */
@@ -30,15 +31,21 @@ export const CodeBlock = (props: CodeBlockProps) => {
     }
   };
 
-  // eslint-disable-next-line xss/no-mixed-html
-  const __html = shiki.codeToHtml(command.trim(), {
+  const unsafeHighlightedHtml = shiki.codeToHtml(command.trim(), {
     lang: language,
     theme: getHighlighterTheme(colorMode),
   });
 
+  const sanitizedHtml = sanitizeHTML({
+    allowMoreAttrs: ['class', 'style'],
+    allowMoreTags: ['code', 'span', 'pre'],
+    sanitizingTier: 'flexible',
+    text: unsafeHighlightedHtml,
+  });
+
   return (
     <StyledCommandDiv>
-      <Typography dangerouslySetInnerHTML={{ __html }} />
+      <Typography dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
       <StyledCopyTooltip
         onClickCallback={handleCopyIconClick ?? _handleCopyIconClick}
         text={command}

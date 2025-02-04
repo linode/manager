@@ -17,10 +17,12 @@ export interface SDKTabPanelProps {
   title: string;
 }
 
-const sdkOptions: OptionType[] = [
+const sdkOptions = [
   { label: 'Go (linodego)', value: 'go' },
   { label: 'Python (linode_api4-python)', value: 'python' },
-];
+] as const;
+
+type OptionType = typeof sdkOptions[number];
 
 export const SDKTabPanel = ({ payLoad }: SDKTabPanelProps) => {
   const [selectedSDK, setSelectedSDK] = useState<OptionType | undefined>();
@@ -65,7 +67,7 @@ export const SDKTabPanel = ({ payLoad }: SDKTabPanelProps) => {
               selectedSDK.value === 'go' ? linodegoSnippet : pythonLinodeSnippet
             }
             commandType={selectedSDK.value}
-            language={'bash'}
+            language={selectedSDK.value}
           />
         </>
       )}

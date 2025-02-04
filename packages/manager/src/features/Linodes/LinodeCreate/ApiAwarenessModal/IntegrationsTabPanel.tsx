@@ -72,7 +72,7 @@ export const IntegrationsTabPanel = ({
                 : terraformConfig
             }
             commandType={selectedIntegration.value}
-            language={'bash'}
+            language={selectedIntegration.value === 'ansible' ? 'yaml' : 'js'}
           />
         </>
       )}

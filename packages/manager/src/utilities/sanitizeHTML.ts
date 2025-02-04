@@ -14,6 +14,7 @@ export interface SanitizeOptions extends Config {
 }
 
 interface SanitizeHTMLOptions {
+  allowMoreAttrs?: string[];
   allowMoreTags?: string[];
   disallowedTagsMode?: DisallowedTagsMode;
   sanitizeOptions?: Config;
@@ -22,6 +23,7 @@ interface SanitizeHTMLOptions {
 }
 
 export const sanitizeHTML = ({
+  allowMoreAttrs,
   allowMoreTags,
   disallowedTagsMode = 'escape',
   sanitizeOptions: options = {},
@@ -29,7 +31,7 @@ export const sanitizeHTML = ({
   text,
 }: SanitizeHTMLOptions) => {
   DOMPurify.setConfig({
-    ALLOWED_ATTR: allowedHTMLAttr,
+    ALLOWED_ATTR: [...allowedHTMLAttr, ...(allowMoreAttrs ?? [])],
     ALLOWED_TAGS: getAllowedHTMLTags(sanitizingTier, allowMoreTags),
     KEEP_CONTENT: disallowedTagsMode === 'discard' ? false : true,
     RETURN_DOM: false,
@@ -66,7 +68,7 @@ export const sanitizeHTML = ({
   DOMPurify.addHook('uponSanitizeElement', (node, data) => {
     if (data.tagName === 'a') {
       anchorHandler(node as HTMLAnchorElement);
-    } else if (data.tagName === 'span') {
+    } else if (data.tagName === 'span' && !allowMoreAttrs?.includes('class')) {
       // Allow class attribute only for span elements
       const classAttr = node.getAttribute('class');
       if (classAttr && classAttr.trim() !== 'version') {

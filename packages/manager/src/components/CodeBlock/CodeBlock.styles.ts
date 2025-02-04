@@ -5,10 +5,8 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 export const StyledCommandDiv = styled('div', { label: 'StyledCommandDiv' })(
   ({ theme }) => ({
     '& pre': {
-      marginBottom: 0,
-      marginTop: `${theme.spacing(3)}`,
       overflowX: 'auto',
-      padding: 8,
+      padding: theme.spacing(1.5),
     },
     position: 'relative',
   })
