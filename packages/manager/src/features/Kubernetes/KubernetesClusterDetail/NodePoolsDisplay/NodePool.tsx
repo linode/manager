@@ -24,6 +24,7 @@ import type {
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
+  accordionExpanded: boolean;
   autoscaler: AutoscaleSettings;
   clusterCreated: string;
   clusterId: number;
@@ -46,6 +47,7 @@ interface Props {
 
 export const NodePool = (props: Props) => {
   const {
+    accordionExpanded,
     autoscaler,
     clusterCreated,
     clusterId,
@@ -210,7 +212,7 @@ export const NodePool = (props: Props) => {
       }
       data-qa-node-pool-id={poolId}
       data-qa-node-pool-section
-      defaultExpanded={true}
+      defaultExpanded={accordionExpanded}
     >
       <NodeTable
         clusterCreated={clusterCreated}

@@ -124,6 +124,27 @@ export const NodePoolsDisplay = (props: Props) => {
     setIsLabelsAndTaintsDrawerOpen(true);
   };
 
+  const defaultExpandedPools =
+    _pools
+      ?.filter((pool) => {
+        // If there's only one node pool, expand it no matter how many nodes there are
+        if (_pools.length === 1) {
+          return true;
+        }
+        // If there are more than 3 node pools, keep them all collapsed
+        if (_pools.length > 3) {
+          return false;
+        }
+        // Otherwise, if the user has between 1-3 node pools:
+        // If the node pool has 1-3 nodes, keep it expanded
+        if (pool.count <= 3) {
+          return true;
+        }
+        // Collapse everything else
+        return false;
+      })
+      .map(({ id }) => id) ?? [];
+
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
   }
@@ -202,6 +223,7 @@ export const NodePoolsDisplay = (props: Props) => {
                 setSelectedNodeId(nodeId);
                 setIsRecycleNodeOpen(true);
               }}
+              accordionExpanded={defaultExpandedPools.includes(id)}
               autoscaler={thisPool.autoscaler}
               clusterCreated={clusterCreated}
               clusterId={clusterID}
