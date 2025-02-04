@@ -51,7 +51,7 @@ RUN apt-get update \
     && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
     && apt-get update
 
-RUN apt-get install -y xvfb google-chrome-stable \
+RUN apt-get install -y google-chrome-stable \
     && rm -rf /var/cache/apt/* \
     && rm -rf /var/lib/apt/lists* \
     && apt-get clean \
