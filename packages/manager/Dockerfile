@@ -55,7 +55,7 @@ RUN apt-get install -y xvfb google-chrome-stable \
     && rm -rf /var/cache/apt/* \
     && rm -rf /var/lib/apt/lists* \
     && apt-get clean \
-    && npm install -g cypress@${CYPRESS_VERSION} pnpm bun
+    && npm install -g cypress@${CYPRESS_VERSION} pnpm bun yarn
 
 USER node
 WORKDIR /home/node/app
