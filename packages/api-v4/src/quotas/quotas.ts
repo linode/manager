@@ -1,7 +1,7 @@
 import { Filter, Params, ResourcePage as Page } from 'src/types';
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Quota, QuotaType } from './types';
+import { Quota, QuotaType, QuotaUsage } from './types';
 
 /**
  * getQuota
@@ -33,4 +33,18 @@ export const getQuotas = (
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
+  );
+
+/**
+ * getQuotaUsage
+ *
+ * Returns the usage for a single quota within a particular service specified by `type`.
+ *
+ * @param type { QuotaType } retrieve a quota within this service type.
+ * @param id { number } the quota ID to look up.
+ */
+export const getQuotaUsage = (type: QuotaType, id: number) =>
+  Request<QuotaUsage>(
+    setURL(`${API_ROOT}/${type}/quotas/${id}/usage`),
+    setMethod('GET')
   );
