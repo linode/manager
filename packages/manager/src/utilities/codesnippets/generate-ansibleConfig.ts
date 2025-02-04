@@ -1,6 +1,9 @@
 import { getIsLegacyInterfaceArray } from 'src/features/Linodes/LinodeCreate/utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
+
+// @TODO Linode Interfaces - need to handle case if interface is not legacy
+
 /**
  * Escapes special characters in a string for use in YAML and shell commands.
  * @param {string} str - The string to escape.

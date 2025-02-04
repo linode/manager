@@ -153,7 +153,6 @@ export const getLinodeCreatePayload = (
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
-    // 'newInterfaces',
   ]);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
@@ -167,8 +166,7 @@ export const getLinodeCreatePayload = (
     values.placement_group = undefined;
   }
 
-  // @TODO Linode Interfaces - update this condition as needed
-
+  // @TODO Linode Interfaces - need to handle case if interface is not legacy
   if (getIsLegacyInterfaceArray(values.interfaces)) {
     values.interfaces = getInterfacesPayload(
       values.interfaces,
@@ -285,18 +283,10 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    * Whether or not the user has signed the EU agreement
    */
   hasSignedEUAgreement?: boolean;
-  // /**
-  //  * The legacy config interface
-  //  */
-  // interfaces?: InterfacePayload[];
   /**
    * The currently selected Linode
    */
   linode?: Linode | null;
-  // /**
-  //  * New Linode interfaces
-  //  */
-  // newInterfaces?: CreateLinodeInterfacePayload[];
 }
 
 export interface LinodeCreateFormContext {

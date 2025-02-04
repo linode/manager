@@ -32,6 +32,8 @@ import { VPCRanges } from './VPCRanges';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
+// @TODO Linode Interfaces - need to handle case if interface is not legacy
+
 export const VPC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 

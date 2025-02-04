@@ -4,6 +4,8 @@ import { escapeStringForCLI } from '../escapeStringForCLI';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
+// @TODO Linode Interfaces - need to handle case if interface is not legacy
+
 /**
  * Generates a Terraform config to setup a Linode instance.
  * @param {Object} config - The configuration object for the Linode instance.

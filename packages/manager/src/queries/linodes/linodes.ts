@@ -283,6 +283,7 @@ export const useCreateLinodeMutation = () => {
 
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries(profileQueries.grants);
+      // @TODO Linode Interfaces - need to handle case if interface is not legacy
       if (getIsLegacyInterfaceArray(variables.interfaces)) {
         if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
           // If a Linode is created with a VLAN, invalidate vlans because

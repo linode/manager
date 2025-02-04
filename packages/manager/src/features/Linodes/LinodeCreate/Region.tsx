@@ -97,6 +97,7 @@ export const Region = React.memo(() => {
       setValue('hasSignedEUAgreement', false);
     }
 
+    // @TODO Linode Interfaces - need to handle case if interface is not legacy
     if (
       getIsLegacyInterfaceArray(values.interfaces) &&
       values.interfaces?.[0].vpc_id
@@ -106,6 +107,7 @@ export const Region = React.memo(() => {
       setValue('interfaces.0.subnet_id', null);
     }
 
+    // @TODO Linode Interfaces - need to handle case if interface is not legacy
     if (
       getIsLegacyInterfaceArray(values.interfaces) &&
       values.interfaces?.[1].label
