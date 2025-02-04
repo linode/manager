@@ -2,7 +2,7 @@
  * @file Cypress `routeHandler` that responds to API requests with a sequence of stubbed responses.
  */
 
-import type { CyHttpMessages } from '../../../../../node_modules/cypress/types/net-stubbing';
+import type { CyHttpMessages } from 'support/cypress-exports';
 
 /**
  * Returns a `routeHandler` function that replies with a sequence of stubbed responses.

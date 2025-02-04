@@ -1,8 +1,8 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 import { apiMatcher } from 'support/util/intercepts';
 
-import type { RouteMatcher } from '../../../../../node_modules/cypress/types/net-stubbing';
 import type { Method } from 'axios';
+import type { RouteMatcher } from 'support/cypress-exports';
 
 export const waitForAppLoad = (path = '/', withLogin = true) => {
   cy.intercept('GET', apiMatcher('account')).as('getAccount');
