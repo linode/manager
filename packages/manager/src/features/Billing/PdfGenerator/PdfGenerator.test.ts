@@ -125,7 +125,7 @@ describe('PdfGenerator', () => {
 
       // Check the content of the PDF
       expect(pdfText).toContain('Page 1 of 1');
-      expect(pdfText).toContain('Invoice Date:');
+      expect(pdfText).toContain(`Invoice Date: ${invoice.date}`);
       expect(pdfText).toContain('Invoice To:');
       expect(pdfText).toContain(
         `Remit to: ${getRemitToAddressText(
@@ -136,6 +136,34 @@ describe('PdfGenerator', () => {
       );
       expect(pdfText).toContain('Tax ID(s):');
       expect(pdfText).toContain(`Invoice: #${invoice.id}`);
+
+      // Verify table header and rows
+      const colHeaders = [
+        'Description',
+        'From',
+        'To',
+        'Quantity',
+        'Unit Price',
+        'Amount',
+        'Tax',
+        'Total',
+      ];
+      colHeaders.forEach((header) => {
+        expect(pdfText).toContain(header);
+      });
+      items.forEach((row) => {
+        expect(pdfText).toContain(row.amount);
+        expect(pdfText).toContain(row.label.replace(' -', ''));
+        expect(pdfText).toContain(row.quantity);
+        expect(pdfText).toContain(row.unit_price);
+        expect(pdfText).toContain(row.tax);
+        expect(pdfText).toContain(row.total);
+      });
+
+      expect(pdfText).toContain(`Subtotal (USD) $${invoice.subtotal}`);
+      expect(pdfText).toContain(`Tax Subtotal (USD) $${invoice.tax}`);
+      expect(pdfText).toContain(`Total (USD) $${invoice.total}`);
+
       expect(pdfText).toContain(
         'This invoice may include Linode Compute Instances that have been powered off as the data is maintained and resources are still reserved. If you no longer need powered-down Linodes, you can remove the service (https://techdocs.akamai.com/cloud-computing/docs/stop-further-billing) from your account.'
       );
