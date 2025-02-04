@@ -90,6 +90,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
 
     const primaryNode = nodeTypeMap.get(PRIMARY_NODE);
 
+    // calculate available options based on cluster size, keep only primary as option if max cluster size is 1 for chosen clusters, else secondary
     const availableOptions =
       isClusterSizeGreaterThanOne === undefined
         ? []
