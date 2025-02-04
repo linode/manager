@@ -13,7 +13,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import { TimeZoneSelect } from './TimeZoneSelect';
 
-import type { TextFieldProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
 import type { DateTime } from 'luxon';
@@ -97,11 +96,6 @@ export const DateTimePicker = ({
     timeZoneSelectProps.value || null
   );
 
-  const TimePickerFieldProps: TextFieldProps = {
-    label: timeSelectProps?.label ?? 'Select Time',
-    noMarginTop: true,
-  };
-
   const handleDateChange = (newDate: DateTime | null) => {
     setSelectedDateTime((prev) =>
       newDate
@@ -114,7 +108,7 @@ export const DateTimePicker = ({
   };
 
   const handleTimeChange = (newTime: DateTime | null) => {
-    if (newTime) {
+    if (newTime && !newTime.invalidReason) {
       setSelectedDateTime((prev) =>
         prev ? prev.set({ hour: newTime.hour, minute: newTime.minute }) : prev
       );
@@ -248,9 +242,7 @@ export const DateTimePicker = ({
                         padding: 0,
                       }),
                     },
-                    field: {
-                      readOnly: true,
-                    },
+
                     layout: {
                       sx: (theme: Theme) => ({
                         '& .MuiPickersLayout-contentWrapper': {
@@ -269,11 +261,13 @@ export const DateTimePicker = ({
                         },
                       }),
                     },
-                    textField: TimePickerFieldProps,
+                  }}
+                  sx={{
+                    marginTop: 0,
                   }}
                   data-qa-time="time-picker"
+                  label={timeSelectProps?.label || 'Select Time'}
                   onChange={handleTimeChange}
-                  slots={{ textField: TextField }}
                   value={selectedDateTime || null}
                 />
               </Grid>
