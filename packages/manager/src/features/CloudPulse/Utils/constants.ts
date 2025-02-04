@@ -1,5 +1,9 @@
 export const DASHBOARD_ID = 'dashboardId';
 
+export const PRIMARY_NODE = 'primary';
+
+export const SECONDARY_NODE = 'secondary';
+
 export const REGION = 'region';
 
 export const RESOURCES = 'resources';
