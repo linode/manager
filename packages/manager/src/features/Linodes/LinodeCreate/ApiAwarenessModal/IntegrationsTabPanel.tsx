@@ -9,10 +9,10 @@ import { generateTerraformConfig } from 'src/utilities/codesnippets/generate-ter
 import { AnsibleIntegrationResources } from './AnsibleIntegrationResources';
 import { TerraformIntegrationResources } from './TerraformIntegrationResources';
 
-import type { LinodeCreateFormValues } from '../utilities';
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface IntegrationsTabPanelProps {
-  payLoad: LinodeCreateFormValues;
+  payLoad: CreateLinodeRequest;
   title: string;
 }
 export interface OptionType {

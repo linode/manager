@@ -1,15 +1,15 @@
+import { getIsLegacyInterfaceArray } from 'src/features/Linodes/LinodeCreate/utilities';
+
 import { escapeStringForCLI } from '../escapeStringForCLI';
 
-import type { LinodeCreateFormValues } from 'src/features/Linodes/LinodeCreate/utilities';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 /**
  * Generates a Terraform config to setup a Linode instance.
  * @param {Object} config - The configuration object for the Linode instance.
  * @returns {string} - Bash commands to write a Terraform config.
  */
-export function generateTerraformConfig(
-  config: LinodeCreateFormValues
-): string {
+export function generateTerraformConfig(config: CreateLinodeRequest): string {
   let terraformConfig = `resource "linode_instance" "web" {\n`;
 
   if (config.label) {
@@ -36,7 +36,11 @@ export function generateTerraformConfig(
     terraformConfig += `  metadata {\n    user_data = "${config.metadata.user_data}"\n  }\n`;
   }
 
-  if (config.interfaces && config.interfaces.length > 0) {
+  if (
+    config.interfaces &&
+    config.interfaces.length > 0 &&
+    getIsLegacyInterfaceArray(config.interfaces)
+  ) {
     config.interfaces.forEach((interfaceConfig) => {
       terraformConfig += `  interface {\n    purpose = "${interfaceConfig.purpose}"\n`;
       if (interfaceConfig.subnet_id) {

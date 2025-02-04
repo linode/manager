@@ -143,16 +143,17 @@ export const tabs: LinodeCreateType[] = [
  * Performs some transformations to the Linode Create form data so that the data
  * is in the correct format for the API. Intended to be used in the "onSubmit" when creating a Linode.
  *
- * @param payload the initial raw values from the Linode Create form
+ * @param formValues the initial raw values from the Linode Create form
  * @returns final Linode Create payload to be sent to the API
  */
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = omitProps(formValues, [
+  const values: CreateLinodeRequest = omitProps(formValues, [
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
+    'newInterfaces',
   ]);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
@@ -166,12 +167,31 @@ export const getLinodeCreatePayload = (
     values.placement_group = undefined;
   }
 
-  values.interfaces = getInterfacesPayload(
-    values.interfaces,
-    Boolean(values.private_ip)
-  );
+  // @TODO Linode Interfaces - update this condition as needed
+  if (formValues.newInterfaces && formValues.newInterfaces.length > 0) {
+    values.interfaces = formValues.newInterfaces;
+  } else {
+    values.interfaces = getInterfacesPayload(
+      getIsLegacyInterfaceArray(values.interfaces) ? values.interfaces : [],
+      Boolean(values.private_ip)
+    );
+  }
 
   return values;
+};
+
+/**
+ * Determines if the given interfaces payload array is of legacy interface type
+ * or of the new Linode Interface type
+ * @param interfaces the interfaces to confirm
+ * @returns if interfaces is type InterfacePayload
+ */
+export const getIsLegacyInterfaceArray = (
+  interfaces: CreateLinodeInterfacePayload[] | InterfacePayload[] | undefined
+): interfaces is InterfacePayload[] => {
+  return (
+    interfaces === undefined || interfaces.some((iface) => 'purpose' in iface)
+  );
 };
 
 /**

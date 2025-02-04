@@ -1,5 +1,6 @@
-import type { LinodeCreateFormValues } from 'src/features/Linodes/LinodeCreate/utilities';
+import { getIsLegacyInterfaceArray } from 'src/features/Linodes/LinodeCreate/utilities';
 
+import type { CreateLinodeRequest } from '@linode/api-v4';
 /**
  * Escapes special characters in a string for use in YAML and shell commands.
  * @param {string} str - The string to escape.
@@ -14,7 +15,7 @@ function escapeYAMLString(str: string) {
  * @param {Object} config - Configuration details for the instance.
  * @returns {string} - The Ansible config as a string.
  */
-export function generateAnsibleConfig(config: LinodeCreateFormValues): string {
+export function generateAnsibleConfig(config: CreateLinodeRequest): string {
   let configStr = `- name: Create a new Linode instance.\n  linode.cloud.instance:\n`;
 
   configStr += `    state: "present"\n`;
@@ -75,7 +76,11 @@ export function generateAnsibleConfig(config: LinodeCreateFormValues): string {
       .map((tag) => escapeYAMLString(tag))
       .join('"\n      - "')}"\n`;
   }
-  if (config.interfaces && config.interfaces.length > 0) {
+  if (
+    config.interfaces &&
+    config.interfaces.length > 0 &&
+    getIsLegacyInterfaceArray(config.interfaces)
+  ) {
     configStr += `    interfaces:\n`;
     config.interfaces.forEach((iface) => {
       configStr += `      - purpose: "${escapeYAMLString(iface.purpose)}"\n`;

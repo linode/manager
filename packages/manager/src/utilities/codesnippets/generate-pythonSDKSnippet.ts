@@ -1,5 +1,6 @@
-import type { LinodeCreateFormValues } from 'src/features/Linodes/LinodeCreate/utilities';
+import { getIsLegacyInterfaceArray } from 'src/features/Linodes/LinodeCreate/utilities';
 
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 /**
  * Escapes special characters in a string for use in Python strings.
  * @param {string} str - The string to escape.
@@ -15,7 +16,7 @@ function escapePythonString(value: string): string {
  * @returns {string} - Python code as a string.
  */
 export function generatePythonLinodeSnippet(
-  config: LinodeCreateFormValues
+  config: CreateLinodeRequest
 ): string {
   let snippet = "client = LinodeClient(token=os.getenv('LINODE_TOKEN'))\n";
   snippet += 'new_linode = client.linode.instance_create(\n';
@@ -54,7 +55,11 @@ export function generatePythonLinodeSnippet(
     snippet += `    authorized_keys=[${keys}],\n`;
   }
   // Handling interfaces
-  if (config.interfaces && config.interfaces.length > 0) {
+  if (
+    config.interfaces &&
+    config.interfaces.length > 0 &&
+    getIsLegacyInterfaceArray(config.interfaces)
+  ) {
     snippet += '    interfaces=[\n';
     config.interfaces.forEach((iface) => {
       snippet += `        {\n`;
