@@ -19,6 +19,7 @@ const props: CloudPulseWidgetProperties = {
   availableMetrics: {
     available_aggregate_functions: ['min', 'max', 'avg'],
     dimensions: [],
+    is_alertable: true,
     label: 'CPU utilization',
     metric: 'system_cpu_utilization_percent',
     metric_type: 'gauge',
