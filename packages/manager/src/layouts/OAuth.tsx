@@ -164,6 +164,7 @@ export class OAuthCallbackPage extends Component<CombinedProps, State> {
         clearStorageAndRedirectToLogout();
       }
     } catch (error) {
+      console.error(error);
       clearStorageAndRedirectToLogout();
     }
   }
