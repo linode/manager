@@ -5,13 +5,19 @@ import { useHistory } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NavTabs } from 'src/components/NavTabs/NavTabs';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { StackScriptLandingTable } from './StackScriptLandingTable';
 
 import type { NavTab } from 'src/components/NavTabs/NavTabs';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 export const StackScriptsLanding = () => {
   const history = useHistory();
+
+  const isStackScriptCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_stackscripts',
+  });
 
   const tabs: NavTab[] = [
     {
@@ -30,9 +36,17 @@ export const StackScriptsLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="StackScripts" />
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'StackScripts',
+          }),
+        }}
         onButtonClick={() => {
           history.push('/stackscripts/create');
         }}
+        disabledCreateButton={isStackScriptCreationRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/stackscripts"
         entity="StackScript"
         removeCrumbX={1}

@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -15,11 +17,16 @@ import {
 export const StackScriptsEmptyLandingState = () => {
   const history = useHistory();
 
+  const isStackScriptCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_stackscripts',
+  });
+
   return (
     <ResourcesSection
       buttonProps={[
         {
           children: 'Create StackScript',
+          disabled: isStackScriptCreationRestricted,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
@@ -28,6 +35,11 @@ export const StackScriptsEmptyLandingState = () => {
             });
             history.push('/stackscripts/create');
           },
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'StackScripts',
+          }),
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

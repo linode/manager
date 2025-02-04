@@ -47,7 +47,7 @@ export const StackScriptMakePublicDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title=`Make StackScript ${stackscript?.label ?? ''} Public?`
+      title={`Make StackScript ${stackscript?.label ?? ''} Public?`}
     >
       <Typography>
         Are you sure you want to make {stackscript?.label} public? This action
