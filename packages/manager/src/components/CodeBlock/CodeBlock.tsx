@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import React from 'react';
 
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -6,7 +6,8 @@ import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { getHighlighterTheme, shiki } from 'src/utilities/syntax-highlighter';
 import { useColorMode } from 'src/utilities/theme';
 
-import { StyledCommandDiv, StyledCopyTooltip } from './CodeBlock.styles';
+import { CopyTooltip } from '../CopyTooltip/CopyTooltip';
+import { useCodeBlockStyles } from './CodeBlock.styles';
 
 import type { SupportedLanguage } from 'src/utilities/syntax-highlighter';
 
@@ -28,6 +29,11 @@ export interface CodeBlockProps {
    * The code's language. This will influence syntax highlighting.
    */
   language: SupportedLanguage;
+  /**
+   * Show line numbers on the code block
+   * @default true
+   */
+  showLineNumbers?: boolean;
 }
 
 /**
@@ -36,10 +42,17 @@ export interface CodeBlockProps {
  * This component uses https://github.com/shikijs/shiki to power the syntax highlighting.
  */
 export const CodeBlock = (props: CodeBlockProps) => {
-  const { analyticsLabel, code, handleCopyIconClick, language } = props;
+  const {
+    analyticsLabel,
+    code,
+    handleCopyIconClick,
+    language,
+    showLineNumbers = true,
+  } = props;
   const { colorMode } = useColorMode();
+  const { classes, cx } = useCodeBlockStyles();
 
-  const _handleCopyIconClick = () => {
+  const defaultHandleCopyIconClick = () => {
     if (analyticsLabel) {
       sendApiAwarenessClickEvent('Copy Icon', analyticsLabel);
     }
@@ -58,12 +71,17 @@ export const CodeBlock = (props: CodeBlockProps) => {
   });
 
   return (
-    <StyledCommandDiv>
+    <Box
+      className={cx(classes.codeblock, {
+        [classes.lineNumbers]: showLineNumbers,
+      })}
+    >
       <Typography dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
-      <StyledCopyTooltip
-        onClickCallback={handleCopyIconClick ?? _handleCopyIconClick}
+      <CopyTooltip
+        className={classes.copyIcon}
+        onClickCallback={handleCopyIconClick ?? defaultHandleCopyIconClick}
         text={code}
       />
-    </StyledCommandDiv>
+    </Box>
   );
 };

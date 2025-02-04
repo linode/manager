@@ -1,7 +1,7 @@
 import { Paper } from '@linode/ui';
 import * as React from 'react';
 
-import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Markdown } from 'src/components/Markdown/Markdown';
 
 interface Props {
   error?: string;

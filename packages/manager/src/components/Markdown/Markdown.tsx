@@ -27,6 +27,9 @@ export const Markdown = (props: HighlightedMarkdownProps) => {
   // This is "unsafe" because the output may contain HTML. To be deemed "safe" it
   // needs to be sanitized before rendered as HTML.
   const unsafeMarkdownIt = new MarkdownIt({
+    /**
+     * We pass a custom highlight function to perform syntax highlighting on code blocks
+     */
     highlight(str, lang) {
       try {
         return shiki.codeToHtml(str, {

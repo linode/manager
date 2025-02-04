@@ -1,13 +1,19 @@
-import { styled } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-
-export const StyledCommandDiv = styled('div', { label: 'StyledCommandDiv' })(
-  ({ theme }) => ({
+export const useCodeBlockStyles = makeStyles()((theme) => ({
+  codeblock: {
     '& pre': {
       overflowX: 'auto',
       padding: theme.spacing(1.5),
     },
+    position: 'relative',
+  },
+  copyIcon: {
+    position: 'absolute',
+    right: `${theme.spacing(1.5)}`,
+    top: `${theme.spacing(1)}`,
+  },
+  lineNumbers: {
     code: {
       counterIncrement: 'step 0',
       counterReset: 'step',
@@ -18,17 +24,8 @@ export const StyledCommandDiv = styled('div', { label: 'StyledCommandDiv' })(
       counterIncrement: 'step',
       display: 'inline-block',
       marginRight: '1.5rem',
-      textAlign: "right",
+      textAlign: 'right',
       width: '1rem',
     },
-    position: 'relative'
-  })
-);
-
-export const StyledCopyTooltip = styled(CopyTooltip, {
-  label: 'StyledCopyTooltip',
-})(({ theme }) => ({
-  position: 'absolute',
-  right: `${theme.spacing(1.5)}`,
-  top: `${theme.spacing(1)}`,
+  },
 }));

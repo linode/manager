@@ -8,8 +8,8 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
+import { Markdown } from 'src/components/Markdown/Markdown';
 import { NotFound } from 'src/components/NotFound';
 import { useCreateAccountBetaMutation } from 'src/queries/account/betas';
 import { useBetaQuery } from 'src/queries/betas';

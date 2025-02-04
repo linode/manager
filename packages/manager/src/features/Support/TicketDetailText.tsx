@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Markdown } from 'src/components/Markdown/Markdown';
 import { truncate } from 'src/utilities/truncate';
 
 import type { Theme } from '@mui/material/styles';

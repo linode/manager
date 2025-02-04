@@ -2,8 +2,8 @@ import { Tooltip } from '@linode/ui';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
-import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Link } from 'src/components/Link';
+import { Markdown } from 'src/components/Markdown/Markdown';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

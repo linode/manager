@@ -1,8 +1,8 @@
 import { Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Link } from 'src/components/Link';
+import { Markdown } from 'src/components/Markdown/Markdown';
 
 interface Props {
   isReply?: boolean;

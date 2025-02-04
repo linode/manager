@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Markdown } from 'src/components/Markdown/Markdown';
 import { reportException } from 'src/exceptionReporting';
 import { useFlags } from 'src/hooks/useFlags';
 import { isAfter } from 'src/utilities/date';

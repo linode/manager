@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Markdown } from './HighlightedMarkdown';
+import { Markdown } from './Markdown';
 
 const sampleMarkdown =
   '# Some markdown \n ```javascript\n const x = function() { return true; }\n```';
