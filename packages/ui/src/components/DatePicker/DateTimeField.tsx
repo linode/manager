@@ -38,8 +38,6 @@ export const DateTimeField = ({
   const errorTextId = `${validInputId}-error-text`;
 
   const handleChange = (newValue: DateTime | null) => {
-    // Parse the ISO date correctly, ensuring timezone handling
-
     if (newValue?.isValid) {
       onChange(newValue.startOf('day'));
     }
