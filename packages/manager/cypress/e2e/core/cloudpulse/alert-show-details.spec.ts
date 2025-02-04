@@ -286,29 +286,27 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
       // Validate resource-region mapping for each row in the table
 
-      cy.get('[data-qa-alert-table="true"]').within(() => {
-        // Get the number of rows in the table
-        cy.get('[data-qa-alert-row]')
-          .should('have.length', 4)
-          .each((row, index) => {
-            const db = databases[index];
-            const rowNumber = index + 1;
+      const regionMap = new Map(regions.map((r) => [r.id, r.label]));
 
-            cy.wrap(row).within(() => {
-              cy.get(`[data-qa-alert-cell="${rowNumber}_resource"]`).should(
-                'have.text',
-                db.label
-              );
+      cy.get('[data-qa-alert-row]')
+        .should('have.length', 4)
+        .each((row, index) => {
+          const db = databases[index];
+          const rowNumber = index + 1;
+          const regionLabel = regionMap.get(db.region) || 'Unknown Region';
 
-              cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
-                'have.text',
-                `US, ${regions.find((r) => r.id === db.region)?.label} (${
-                  db.region
-                })`
-              );
-            });
+          cy.wrap(row).within(() => {
+            cy.get(`[data-qa-alert-cell="${rowNumber}_resource"]`).should(
+              'have.text',
+              db.label
+            );
+
+            cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
+              'have.text',
+              `US, ${regionLabel} (${db.region})`
+            );
           });
-      });
+        });
 
       // Sorting by Resource and Region columns
       ui.heading.findByText('resource').should('be.visible').click();
