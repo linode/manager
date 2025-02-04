@@ -63,10 +63,10 @@ export const SDKTabPanel = ({ payLoad }: SDKTabPanelProps) => {
             <PythonSDKResources />
           )}
           <CodeBlock
-            command={
+            code={
               selectedSDK.value === 'go' ? linodegoSnippet : pythonLinodeSnippet
             }
-            commandType={selectedSDK.value}
+            analyticsLabel={selectedSDK.value}
             language={selectedSDK.value}
           />
         </>

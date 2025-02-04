@@ -272,7 +272,7 @@ export const StackScript = React.memo((props: StackScriptProps) => {
       <Typography className={classes.heading} variant="h3">
         Script
       </Typography>
-      <CodeBlock command={script} language="shell" />
+      <CodeBlock code={script} language="shell" />
     </div>
   );
 });

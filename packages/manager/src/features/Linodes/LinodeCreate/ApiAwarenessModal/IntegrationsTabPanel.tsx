@@ -66,12 +66,12 @@ export const IntegrationsTabPanel = ({
             <TerraformIntegrationResources />
           )}
           <CodeBlock
-            command={
+            code={
               selectedIntegration.value === 'ansible'
                 ? ansibleConfig
                 : terraformConfig
             }
-            commandType={selectedIntegration.value}
+            analyticsLabel={selectedIntegration.value}
             language={selectedIntegration.value === 'ansible' ? 'yaml' : 'js'}
           />
         </>

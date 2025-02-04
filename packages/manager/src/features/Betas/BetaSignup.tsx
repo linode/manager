@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { useCreateAccountBetaMutation } from 'src/queries/account/betas';
@@ -150,7 +150,7 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
               {beta.label}
             </Typography>
             <Typography paddingBottom={2}>{beta.description}</Typography>
-            <HighlightedMarkdown textOrMarkdown={betaAgreement} />
+            <Markdown textOrMarkdown={betaAgreement} />
             <Checkbox
               onChange={() => {
                 setHasAgreed(!hasAgreed);

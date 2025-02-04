@@ -2,7 +2,7 @@ import { Tooltip } from '@linode/ui';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
@@ -74,13 +74,13 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
       <Hidden lgDown>
         <TableCell>
           {isTruncated ? (
-            <Tooltip title={<HighlightedMarkdown textOrMarkdown={reason} />}>
+            <Tooltip title={<Markdown textOrMarkdown={reason} />}>
               <div>
-                <HighlightedMarkdown textOrMarkdown={truncatedReason} />
+                <Markdown textOrMarkdown={truncatedReason} />
               </div>
             </Tooltip>
           ) : (
-            <HighlightedMarkdown textOrMarkdown={truncatedReason} />
+            <Markdown textOrMarkdown={truncatedReason} />
           )}
         </TableCell>
       </Hidden>

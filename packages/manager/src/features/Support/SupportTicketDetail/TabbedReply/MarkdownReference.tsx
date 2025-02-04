@@ -1,7 +1,7 @@
 import { Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Link } from 'src/components/Link';
 
 interface Props {
@@ -41,12 +41,12 @@ export const MarkdownReference = (props: Props) => {
         <Typography>
           ```js
           <br />
-          const someCode = 'hello world';
+          const someCode = "hello world";
           <br />
           ```
         </Typography>
-        <HighlightedMarkdown
-          textOrMarkdown={'```ts\nconst someCode = "hello world"\n```'}
+        <Markdown
+          textOrMarkdown={'```ts\nconst someCode = "hello world";\n```'}
         />
       </Paper>
     </Stack>

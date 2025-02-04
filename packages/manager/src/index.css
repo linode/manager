@@ -9,6 +9,7 @@ html {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
 }
 
 body {
@@ -357,19 +358,4 @@ See: https://blog.chromium.org/2020/09/giving-users-and-developers-more.html
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
-}
-
-code {
-  counter-reset: step;
-  counter-increment: step 0;
-}
-
-code .line::before {
-  content: counter(step);
-  counter-increment: step;
-  width: 1rem;
-  margin-right: 1.5rem;
-  display: inline-block;
-  text-align: right;
-  color: rgba(115,138,148,.5)
 }

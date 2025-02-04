@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { reportException } from 'src/exceptionReporting';
 import { useFlags } from 'src/hooks/useFlags';
 import { isAfter } from 'src/utilities/date';
@@ -57,7 +57,7 @@ export const ProductInformationBanner = React.memo(
         variant={thisBanner.decoration.variant ?? 'warning'}
         {...rest}
       >
-        <HighlightedMarkdown textOrMarkdown={thisBanner.message} />
+        <Markdown textOrMarkdown={thisBanner.message} />
       </DismissibleBanner>
     );
   }

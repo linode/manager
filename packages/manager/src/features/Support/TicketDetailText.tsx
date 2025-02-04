@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+import { Markdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { truncate } from 'src/utilities/truncate';
 
 import type { Theme } from '@mui/material/styles';
@@ -52,7 +52,7 @@ export const TicketDetailText = (props: Props) => {
   return (
     <Grid className={classes.root} container spacing={2}>
       <Grid style={{ width: '100%' }}>
-        <HighlightedMarkdown textOrMarkdown={ticketReplyBody} />
+        <Markdown textOrMarkdown={ticketReplyBody} />
       </Grid>
       {truncatedText !== text && (
         <IconButton

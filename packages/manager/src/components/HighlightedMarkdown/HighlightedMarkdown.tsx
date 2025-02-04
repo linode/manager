@@ -14,7 +14,12 @@ export interface HighlightedMarkdownProps {
   textOrMarkdown: string;
 }
 
-export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
+/**
+ * Renders markdown as HTML
+ * - Used mostly for rendering support ticket messages
+ * - Will perform syntax highlighting on any fenced code blocks
+ */
+export const Markdown = (props: HighlightedMarkdownProps) => {
   const { className, sanitizeOptions, textOrMarkdown } = props;
 
   const { colorMode } = useColorMode();
@@ -29,7 +34,10 @@ export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
           theme: getHighlighterTheme(colorMode),
         });
       } catch (error) {
-        return '';
+        return shiki.codeToHtml(str, {
+          lang: 'js',
+          theme: getHighlighterTheme(colorMode),
+        });
       }
     },
     html: true,
@@ -39,6 +47,8 @@ export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
   const unsafeParsedMarkdown = unsafeMarkdownIt.render(textOrMarkdown);
 
   const sanitizedHtml = sanitizeHTML({
+    allowMoreAttrs: ['class', 'style'],
+    allowMoreTags: ['code', 'span', 'pre'],
     sanitizeOptions,
     sanitizingTier: 'flexible',
     text: unsafeParsedMarkdown,
@@ -48,6 +58,7 @@ export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
     <Typography
       className={className}
       dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+      sx={{ pre: { borderRadius: 1, p: 1 } }}
     />
   );
 };

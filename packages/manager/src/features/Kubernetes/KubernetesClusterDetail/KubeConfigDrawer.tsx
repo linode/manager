@@ -44,8 +44,8 @@ export const KubeConfigDrawer = (props: Props) => {
         </IconButton>
       </Box>
       <CodeBlock
-        command={(data ?? '').trim()}
-        commandType="Kube Config Yaml"
+        code={(data ?? '').trim()}
+        analyticsLabel="Kube Config Yaml"
         handleCopyIconClick={() => null}
         language="yaml"
       />

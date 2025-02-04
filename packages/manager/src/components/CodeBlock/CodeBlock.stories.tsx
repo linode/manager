@@ -6,8 +6,8 @@ import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof CodeBlock> = {
   args: {
-    command: 'echo "Hello World"',
-    commandType: 'Test label',
+    code: 'echo "Hello World"',
+    analyticsLabel: 'Test label',
     language: 'bash',
   },
   component: CodeBlock,

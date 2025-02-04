@@ -68,12 +68,6 @@ export const sanitizeHTML = ({
   DOMPurify.addHook('uponSanitizeElement', (node, data) => {
     if (data.tagName === 'a') {
       anchorHandler(node as HTMLAnchorElement);
-    } else if (data.tagName === 'span' && !allowMoreAttrs?.includes('class')) {
-      // Allow class attribute only for span elements
-      const classAttr = node.getAttribute('class');
-      if (classAttr && classAttr.trim() !== 'version') {
-        node.removeAttribute('class');
-      }
     }
   });
 

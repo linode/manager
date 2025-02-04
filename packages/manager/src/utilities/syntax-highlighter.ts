@@ -4,6 +4,7 @@ import html from '@shikijs/langs/html';
 import js from '@shikijs/langs/javascript';
 import python from '@shikijs/langs/python';
 import shell from '@shikijs/langs/shell';
+import typescript from '@shikijs/langs/typescript';
 import yaml from '@shikijs/langs/yaml';
 import darkTheme from '@shikijs/themes/one-dark-pro';
 import lightTheme from '@shikijs/themes/one-light';
@@ -19,6 +20,7 @@ const languages = {
   js,
   python,
   shell,
+  typescript,
   yaml,
 };
 
