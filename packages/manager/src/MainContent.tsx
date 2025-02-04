@@ -120,11 +120,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const Account = React.lazy(() =>
-  import('src/features/Account').then((module) => ({
-    default: module.Account,
-  }))
-);
 const LinodesRoutes = React.lazy(() =>
   import('src/features/Linodes').then((module) => ({
     default: module.LinodesRoutes,
@@ -336,7 +331,6 @@ export const MainContent = () => {
                           {isIAMEnabled && (
                             <Route component={IAM} path="/iam" />
                           )}
-                          <Route component={Account} path="/account" />
                           <Route component={Profile} path="/profile" />
                           <Route component={Help} path="/support" />
                           <Route component={SearchLanding} path="/search" />

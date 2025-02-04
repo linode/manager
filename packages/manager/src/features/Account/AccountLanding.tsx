@@ -1,19 +1,19 @@
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { matchPath, useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useTabs } from 'src/hooks/useTabs';
 import { useAccount } from 'src/queries/account/account';
 import { useProfile } from 'src/queries/profile/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -49,13 +49,11 @@ const MaintenanceLanding = React.lazy(
   () => import('./Maintenance/MaintenanceLanding')
 );
 
-const AccountLanding = () => {
-  const history = useHistory();
-  const location = useLocation();
+export const AccountLanding = () => {
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
   const { limitsEvolution } = useFlags();
-
+  const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
 
@@ -78,47 +76,38 @@ const AccountLanding = () => {
 
   const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
 
-  const tabs = [
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
-      routeName: '/account/billing',
       title: 'Billing Info',
+      to: '/account/billing',
     },
     {
-      routeName: '/account/users',
       title: 'Users & Grants',
+      to: '/account/users',
     },
-    ...(showQuotasTab
-      ? [
-          {
-            routeName: '/account/quotas',
-            title: 'Quotas',
-          },
-        ]
-      : []),
     {
-      routeName: '/account/login-history',
+      hide: !showQuotasTab,
+      title: 'Quotas',
+      to: '/account/quotas',
+    },
+
+    {
       title: 'Login History',
+      to: '/account/login-history',
     },
     {
-      routeName: '/account/service-transfers',
       title: 'Service Transfers',
+      to: '/account/service-transfers',
     },
     {
-      routeName: '/account/maintenance',
       title: 'Maintenance',
+      to: '/account/maintenance',
     },
     {
-      routeName: '/account/settings',
       title: 'Settings',
+      to: '/account/settings',
     },
-  ];
-
-  const overrideWhitelist = [
-    '/account/billing/make-payment',
-    '/account/billing/add-payment-method',
-    '/account/billing/edit',
-  ];
-
+  ]);
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
       return sessionContext.updateState({
@@ -129,28 +118,30 @@ const AccountLanding = () => {
     setIsDrawerOpen(true);
   };
 
-  const getDefaultTabIndex = () => {
-    const tabChoice = tabs.findIndex((tab) =>
-      Boolean(matchPath(tab.routeName, { path: location.pathname }))
-    );
+  // const overrideWhitelist = [
+  //   '/account/billing/make-payment',
+  //   '/account/billing/add-payment-method',
+  //   '/account/billing/edit',
+  // ];
 
-    if (tabChoice < 0) {
-      // Prevent redirect from overriding the URL change for `/account/billing/make-payment`, `/account/billing/add-payment-method`,
-      // and `/account/billing/edit`
-      if (!overrideWhitelist.includes(location.pathname)) {
-        history.push('/account/billing');
-      }
+  // const getDefaultTabIndex = () => {
+  //   const tabChoice = tabs.findIndex((tab) =>
+  //     Boolean(matchPath(tab.routeName, { path: location.pathname }))
+  //   );
 
-      // Redirect to the landing page if the path does not exist
-      return 0;
-    } else {
-      return tabChoice;
-    }
-  };
+  //   if (tabChoice < 0) {
+  //     // Prevent redirect from overriding the URL change for `/account/billing/make-payment`, `/account/billing/add-payment-method`,
+  //     // and `/account/billing/edit`
+  //     if (!overrideWhitelist.includes(location.pathname)) {
+  //       history.push('/account/billing');
+  //     }
 
-  const handleTabChange = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
+  //     // Redirect to the landing page if the path does not exist
+  //     return 0;
+  //   } else {
+  //     return tabChoice;
+  //   }
+  // };
 
   let idx = 0;
 
@@ -179,7 +170,7 @@ const AccountLanding = () => {
     landingHeaderProps.createButtonText = 'Make a Payment';
     if (!isAkamaiAccount) {
       landingHeaderProps.onButtonClick = () =>
-        history.replace('/account/billing/make-payment');
+        navigate({ to: '/account/billing/make-payment' });
     }
     landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
       <SwitchAccountButton
@@ -197,8 +188,8 @@ const AccountLanding = () => {
       <DocumentTitleSegment segment="Account Settings" />
       <LandingHeader {...landingHeaderProps} />
 
-      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
@@ -236,9 +227,3 @@ const AccountLanding = () => {
     </React.Fragment>
   );
 };
-
-export const accountLandingLazyRoute = createLazyRoute('/account')({
-  component: AccountLanding,
-});
-
-export default AccountLanding;

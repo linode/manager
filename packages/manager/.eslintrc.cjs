@@ -95,6 +95,7 @@ module.exports = {
         'src/features/Longview/**/*',
         'src/features/PlacementGroups/**/*',
         'src/features/Volumes/**/*',
+        'src/features/Account/**/*',
       ],
       rules: {
         'no-restricted-imports': [
