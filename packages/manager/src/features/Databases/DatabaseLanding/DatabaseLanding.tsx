@@ -16,6 +16,7 @@ import { DatabaseEmptyState } from 'src/features/Databases/DatabaseLanding/Datab
 import DatabaseLandingTable from 'src/features/Databases/DatabaseLanding/DatabaseLandingTable';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { DatabaseClusterInfoBanner } from 'src/features/GlobalNotifications/DatabaseClusterInfoBanner';
+import { DatabaseMigrationInfoBanner } from 'src/features/GlobalNotifications/DatabaseMigrationInfoBanner';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -189,6 +190,7 @@ const DatabaseLanding = () => {
         title="Database Clusters"
       />
       {showTabs && !isDatabasesV2GA && <DatabaseClusterInfoBanner />}
+      {showTabs && isDatabasesV2GA && <DatabaseMigrationInfoBanner />}
       <Box>
         {showTabs ? (
           <Tabs>
