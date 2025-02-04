@@ -13,6 +13,7 @@ import { formatDate } from 'src/utilities/formatDate';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { printInvoice } from './PdfGenerator';
+import { FlagSet } from 'src/featureFlags';
 
 server.use(
   http.get('/src/features/Billing/PdfGenerator/akamai-logo.png', () => {
@@ -58,7 +59,7 @@ const extractPdfText = (pdfDataBuffer: Buffer): Promise<string> => {
         return;
       }
       if (!item) {
-        // End of document, resolve with the extracted text
+        // End of document! Resolve with the extracted text
         resolve(textChunks.join(' '));
       } else if (item.text) {
         // Collect text items
@@ -67,6 +68,7 @@ const extractPdfText = (pdfDataBuffer: Buffer): Promise<string> => {
     });
   });
 };
+
 describe('PdfGenerator', () => {
   describe('printInvoice', () => {
     it('generates a valid PDF', async () => {
@@ -76,7 +78,6 @@ describe('PdfGenerator', () => {
         state: 'MH',
         zip: '400001',
       });
-
       const invoice = invoiceFactory.build({ label: 'invoice-test-1' });
       const items = invoiceItemFactory.buildList(5, {
         region: 'id-cgk',
@@ -84,19 +85,25 @@ describe('PdfGenerator', () => {
       const regions = regionFactory.buildList(1, {
         id: 'id-cgk',
       });
-      const taxes = {
+      const taxes: FlagSet['taxBanner'] | FlagSet['taxes'] = {
         country_tax: {
           tax_id: '9922CHE29001OSR',
           tax_name: 'India GST',
         },
         provincial_tax_ids: {},
       };
-
       // const flags = {
       //   /* mock flags data */
       // };
-
       const timezone = 'UTC';
+
+      const isAkamaiBilling = getShouldUseAkamaiBilling(invoice.date);
+      const isInternational = !['CA', 'US'].includes(account.country);
+
+      const date = formatDate(invoice.date, {
+        displayTime: true,
+        timezone,
+      });
 
       // Call the printInvoice function
       const pdfResult = await printInvoice({
@@ -108,27 +115,17 @@ describe('PdfGenerator', () => {
         timezone,
       });
 
-      const isAkamaiBilling = getShouldUseAkamaiBilling(invoice.date);
-      const isInternational = !['CA', 'US'].includes(account.country);
-
-      const date = formatDate(invoice.date, {
-        displayTime: true,
-        timezone,
-      });
-
       // Expect the PDF generation to be successful
       expect(pdfResult.status).toEqual('success');
 
       // Load the generated PDF content
       const pdfDataBuffer = fs.readFileSync(`invoice-${date}.pdf`);
-
       const pdfText = await extractPdfText(pdfDataBuffer);
 
       // Check the content of the PDF
       expect(pdfText).toContain('Page 1 of 1');
       expect(pdfText).toContain('Invoice Date:');
       expect(pdfText).toContain('Invoice To:');
-
       expect(pdfText).toContain(
         `Remit to: ${getRemitToAddressText(
           account.country,
@@ -136,7 +133,6 @@ describe('PdfGenerator', () => {
           isInternational
         )}`
       );
-
       expect(pdfText).toContain('Tax ID(s):');
       expect(pdfText).toContain(`Invoice: #${invoice.id}`);
       expect(pdfText).toContain(
