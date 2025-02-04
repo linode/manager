@@ -91,8 +91,8 @@ export interface FirewallDevicePayload {
 }
 
 export interface DefaultFirewallIDs {
-  interface_public: number;
-  interface_vpc: number;
+  public_interface: number;
+  vpc_interface: number;
   linode: number;
   nodebalancer: number;
 }
