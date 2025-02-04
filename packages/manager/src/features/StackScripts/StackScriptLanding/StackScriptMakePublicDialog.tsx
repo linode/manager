@@ -40,14 +40,14 @@ export const StackScriptMakePublicDialog = (props: Props) => {
             loading={isPending}
             onClick={() => mutate({ is_public: true })}
           >
-            Yes, make me a star!
+            Confirm
           </Button>
         </Stack>
       }
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title="Woah, just a word of caution..."
+      title=`Make StackScript ${stackscript?.label ?? ''} Public?`
     >
       <Typography>
         Are you sure you want to make {stackscript?.label} public? This action

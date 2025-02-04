@@ -149,7 +149,7 @@ export const canUserModifyAccountStackScript = (
 };
 
 /**
- * Gets a comma seperated string of Image IDs to display to the user
+ * Gets a comma separated string of Image IDs to display to the user
  * with the linode/ prefix removed from the Image IDs
  */
 export const getStackScriptImages = (images: StackScript['images']) => {
