@@ -122,9 +122,11 @@ import type {
   AlertServiceType,
   AlertSeverityType,
   AlertStatusType,
+  ClusterSize,
   CreateAlertDefinitionPayload,
   CreateObjectStorageKeyPayload,
   Dashboard,
+  DatabaseInstance,
   FirewallStatus,
   NotificationType,
   ObjectStorageEndpointTypes,
@@ -215,7 +217,16 @@ const entityTransfers = [
 
 const databases = [
   http.get('*/databases/instances', () => {
-    const databases = databaseInstanceFactory.buildList(9);
+    const databases: DatabaseInstance[] = [];
+    for (let i = 1; i <= 3; i++) {
+      databases.push(
+        databaseInstanceFactory.build({
+          cluster_size: i as ClusterSize,
+          id: i,
+          label: `database-instance-${i}`,
+        })
+      );
+    }
     return HttpResponse.json(makeResourcePage(databases));
   }),
 
