@@ -106,3 +106,34 @@ export const editAlertDefinitionEntities = (
     setMethod('PUT'),
     setData(data)
   );
+
+export const addEntityToAlert = (
+  serviceType: string,
+  entityId: string,
+  data: { 'alert-definition-id': number }
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/monitor/service/${encodeURIComponent(
+        serviceType
+      )}/entity/${encodeURIComponent(entityId)}/alert-definition`
+    ),
+    setMethod('POST'),
+    setData(data)
+  );
+
+export const deleteEntityFromAlert = (
+  serviceType: string,
+  entityId: string,
+  alertId: number
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/monitor/service/${encodeURIComponent(
+        serviceType
+      )}/entity/${encodeURIComponent(
+        entityId
+      )}/alert-definition/${encodeURIComponent(alertId)}`
+    ),
+    setMethod('DELETE')
+  );

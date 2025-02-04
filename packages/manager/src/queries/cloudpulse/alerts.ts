@@ -1,5 +1,7 @@
 import {
+  addEntityToAlert,
   createAlertDefinition,
+  deleteEntityFromAlert,
   editAlertDefinitionEntities,
 } from '@linode/api-v4/lib/cloudpulse';
 import {
@@ -81,5 +83,21 @@ export const useEditAlertDefinitionEntities = (
         queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId)
       );
     },
+  });
+};
+
+export const useUpdateEntityToAlert = (
+  serviceType: string,
+  entityId: string,
+  alertId: number,
+  currentStatus: boolean
+) => {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () =>
+      currentStatus
+        ? deleteEntityFromAlert(serviceType, entityId, alertId)
+        : addEntityToAlert(serviceType, entityId, {
+            'alert-definition-id': alertId,
+          }),
   });
 };
