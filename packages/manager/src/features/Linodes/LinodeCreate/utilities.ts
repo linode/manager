@@ -149,7 +149,7 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values: CreateLinodeRequest = omitProps(formValues, [
+  const values = omitProps(formValues, [
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
