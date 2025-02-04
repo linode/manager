@@ -22,7 +22,7 @@ server.use(
   })
 );
 
-const getRemitToAddressText = (
+const getExpectedRemitAddressText = (
   country: string,
   isAkamaiBilling: boolean,
   isInternational: boolean
@@ -128,7 +128,7 @@ describe('PdfGenerator', () => {
       expect(pdfText).toContain(`Invoice Date: ${invoice.date}`);
       expect(pdfText).toContain('Invoice To:');
       expect(pdfText).toContain(
-        `Remit to: ${getRemitToAddressText(
+        `Remit to: ${getExpectedRemitAddressText(
           account.country,
           isAkamaiBilling,
           isInternational
@@ -164,6 +164,7 @@ describe('PdfGenerator', () => {
       expect(pdfText).toContain(`Tax Subtotal (USD) $${invoice.tax}`);
       expect(pdfText).toContain(`Total (USD) $${invoice.total}`);
 
+      // Verify footer text
       expect(pdfText).toContain(
         'This invoice may include Linode Compute Instances that have been powered off as the data is maintained and resources are still reserved. If you no longer need powered-down Linodes, you can remove the service (https://techdocs.akamai.com/cloud-computing/docs/stop-further-billing) from your account.'
       );
