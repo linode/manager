@@ -5,12 +5,15 @@ import {
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { mockCreateLinode } from 'support/intercepts/linodes';
+import {
+  getRandomOCAId,
+  replaceHTMLEntities,
+} from 'support/util/one-click-apps';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { stackScriptFactory } from 'src/factories/stackscripts';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 import { getMarketplaceAppLabel } from 'src/features/Linodes/LinodeCreate/Tabs/Marketplace/utilities';
-import { decode } from 'he';
 
 import type { StackScript } from '@linode/api-v4';
 import { imageFactory, linodeFactory } from 'src/factories';
@@ -62,7 +65,7 @@ describe('OneClick Apps (OCA)', () => {
 
     cy.wait('@getStackScripts').then((xhr) => {
       const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
-      const candidateStackScriptId = getRandomApp();
+      const candidateStackScriptId = getRandomOCAId();
       const candidateApp = oneClickApps[candidateStackScriptId];
 
       if (!candidateApp) {
@@ -120,7 +123,7 @@ describe('OneClick Apps (OCA)', () => {
       }),
     ];
     // get a randomly selected app
-    const candidateStackScriptId = getRandomApp();
+    const candidateStackScriptId = getRandomOCAId();
     const stackscript = stackScriptFactory.build({
       id: candidateStackScriptId,
       username: 'linode',
@@ -255,28 +258,3 @@ describe('OneClick Apps (OCA)', () => {
     ui.toast.assertMessage(`Your Linode ${linode.label} is being created.`);
   });
 });
-
-/**
- * Returns the id of a randomly selected oneClickApp
- * @returns number
- */
-function getRandomApp(): number {
-  // pick a random app
-  const appKeys = Object.keys(oneClickApps);
-  const index = Math.floor(Math.random() * appKeys.length);
-  // id should be number, so "+" useful to coerce from string
-  const id = +appKeys[index];
-  return id;
-}
-
-/**
- * Replaces the HTML entities such as &amp; and &reg; with the html character
- * This fn is the corollary to scripts/junit-summary/util/escape.ts which converts the html character to the html entity
- * *
- * @param str - string containing html entities
- *
- * @returns string
- */
-const replaceHTMLEntities = (str: string) => {
-  return decode(str.replace('  ', ' '));
-};
