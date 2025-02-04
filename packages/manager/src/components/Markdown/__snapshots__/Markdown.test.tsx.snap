@@ -3,7 +3,7 @@
 exports[`HighlightedMarkdown component > should highlight text consistently 1`] = `
 <DocumentFragment>
   <p
-    class="MuiTypography-root MuiTypography-body1 css-4ofmxk-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 css-1sakd5k-MuiTypography-root"
   />
   <h1>
     Some markdown
@@ -15,7 +15,9 @@ exports[`HighlightedMarkdown component > should highlight text consistently 1`] 
     style="background-color:#FAFAFA;color:#383A42"
   >
     <code>
-      <span>
+      <span
+        class="line"
+      >
         <span
           style="color:#A626A4"
         >
@@ -59,7 +61,9 @@ exports[`HighlightedMarkdown component > should highlight text consistently 1`] 
       </span>
       
 
-      <span />
+      <span
+        class="line"
+      />
     </code>
   </pre>
   <p />
