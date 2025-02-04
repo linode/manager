@@ -35,9 +35,9 @@ export interface DateRangePickerProps {
    * preset value and timezone
    * */
   onApply?: (params: {
-    endDate: DateTime | null;
+    endDate: null | string;
     selectedPreset: null | string;
-    startDate: DateTime | null;
+    startDate: null | string;
     timeZone?: null | string;
   }) => void;
 
@@ -113,7 +113,11 @@ export const DateRangePicker = ({
   };
 
   const handleApply = () => {
-    onApply?.({ endDate, selectedPreset, startDate });
+    onApply?.({
+      endDate: endDate ? endDate.toISO() : null,
+      selectedPreset,
+      startDate: startDate ? startDate.toISO() : null,
+    });
     handleClose();
   };
 
@@ -229,6 +233,7 @@ export const DateRangePicker = ({
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         disableAutoFocus
         open={open}
+        role="dialog"
         sx={{ boxShadow: 3, zIndex: 1300 }}
         transformOrigin={{ horizontal: 'left', vertical: 'top' }}
       >
