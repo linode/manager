@@ -240,10 +240,12 @@ export const DateRangePicker = ({
           gap={2}
           paddingRight={2}
         >
-          <Presets
-            onPresetSelect={handlePresetSelect}
-            selectedPreset={selectedPreset}
-          />
+          {presetsProps?.enablePresets && (
+            <Presets
+              onPresetSelect={handlePresetSelect}
+              selectedPreset={selectedPreset}
+            />
+          )}
           <Calendar
             direction="left"
             endDate={endDate}
