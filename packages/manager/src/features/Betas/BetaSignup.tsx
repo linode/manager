@@ -150,11 +150,7 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
               {beta.label}
             </Typography>
             <Typography paddingBottom={2}>{beta.description}</Typography>
-            <HighlightedMarkdown
-              language="plaintext"
-              sanitizeOptions={{}}
-              textOrMarkdown={betaAgreement}
-            />
+            <HighlightedMarkdown textOrMarkdown={betaAgreement} />
             <Checkbox
               onChange={() => {
                 setHasAgreed(!hasAgreed);

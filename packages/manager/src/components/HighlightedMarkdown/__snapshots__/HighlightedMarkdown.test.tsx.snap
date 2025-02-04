@@ -3,51 +3,63 @@
 exports[`HighlightedMarkdown component > should highlight text consistently 1`] = `
 <DocumentFragment>
   <p
-    class="MuiTypography-root MuiTypography-body1 formatted-text undefined css-ma9s0e-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 css-4ofmxk-MuiTypography-root"
   />
   <h1>
     Some markdown
   </h1>
   
 
-  <pre>
-    <code
-      class="hljs javascript"
-    >
-      <span
-        class="hljs-keyword"
-      >
-        const
-      </span>
-       x = 
-      <span
-        class="hljs-function"
-      >
+  <pre
+    class="shiki one-light"
+    style="background-color:#FAFAFA;color:#383A42"
+  >
+    <code>
+      <span>
         <span
-          class="hljs-keyword"
+          style="color:#A626A4"
         >
-          function
+          const
         </span>
-        (
         <span
-          class="hljs-params"
-        />
-        ) 
+          style="color:#4078F2"
+        >
+           x
+        </span>
+        <span
+          style="color:#0184BC"
+        >
+           =
+        </span>
+        <span
+          style="color:#A626A4"
+        >
+           function
+        </span>
+        <span
+          style="color:#383A42"
+        >
+          () { 
+        </span>
+        <span
+          style="color:#A626A4"
+        >
+          return
+        </span>
+        <span
+          style="color:#986801"
+        >
+           true
+        </span>
+        <span
+          style="color:#383A42"
+        >
+          ; }
+        </span>
       </span>
-      { 
-      <span
-        class="hljs-keyword"
-      >
-        return
-      </span>
-       
-      <span
-        class="hljs-literal"
-      >
-        true
-      </span>
-      ; }
+      
 
+      <span />
     </code>
   </pre>
   <p />

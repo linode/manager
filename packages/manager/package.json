@@ -118,6 +118,7 @@
     ]
   },
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "^2.2.5",
     "@linode/eslint-plugin-cloud-manager": "^0.0.5",
     "@storybook/addon-a11y": "^8.4.7",
     "@storybook/addon-actions": "^8.4.7",
@@ -169,7 +170,6 @@
     "@types/zxcvbn": "^4.4.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "@4tw/cypress-drag-drop": "^2.2.5",
     "@vitejs/plugin-react-swc": "^3.7.2",
     "@vitest/coverage-v8": "^3.0.3",
     "@vitest/ui": "^3.0.3",
@@ -203,6 +203,7 @@
     "msw": "^2.2.3",
     "prettier": "~2.2.1",
     "redux-mock-store": "^1.5.3",
+    "shiki": "^2.2.0",
     "storybook": "^8.4.7",
     "storybook-dark-mode": "4.0.1",
     "vite": "^6.0.11",

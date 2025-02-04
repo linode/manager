@@ -46,7 +46,7 @@ export const KubeConfigDrawer = (props: Props) => {
         </StyledDownloadButton>
       </Box>
       <CodeBlock
-        command={data ?? ''}
+        command={(data ?? '').trim()}
         commandType="Kube Config Yaml"
         handleCopyIconClick={() => null}
         language="yaml"

@@ -1,20 +1,19 @@
+import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { getHighlighterTheme, shiki } from 'src/utilities/syntax-highlighter';
+import { useColorMode } from 'src/utilities/theme';
 
-import {
-  StyledCommandDiv,
-  StyledCopyTooltip,
-  StyledHighlightedMarkdown,
-} from './CodeBlock.styles';
+import { StyledCommandDiv, StyledCopyTooltip } from './CodeBlock.styles';
 
-import type { SupportedLanguage } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+export type SupportedLanguage = 'bash' | 'javascript' | 'shell' | 'yaml';
 
 export interface CodeBlockProps {
   /** The CodeBlock command to be displayed */
   command: string;
   /** Label for analytics */
-  commandType: string;
+  commandType?: string;
   /** Function to optionally override the component's internal handling of the copy icon */
   handleCopyIconClick?: () => void;
   /** The command language */
@@ -23,17 +22,23 @@ export interface CodeBlockProps {
 
 export const CodeBlock = (props: CodeBlockProps) => {
   const { command, commandType, handleCopyIconClick, language } = props;
+  const { colorMode } = useColorMode();
 
   const _handleCopyIconClick = () => {
-    sendApiAwarenessClickEvent('Copy Icon', commandType);
+    if (commandType) {
+      sendApiAwarenessClickEvent('Copy Icon', commandType);
+    }
   };
+
+  // eslint-disable-next-line xss/no-mixed-html
+  const __html = shiki.codeToHtml(command, {
+    lang: language,
+    theme: getHighlighterTheme(colorMode),
+  });
 
   return (
     <StyledCommandDiv>
-      <StyledHighlightedMarkdown
-        language={language}
-        textOrMarkdown={'```\n' + command + '\n```'}
-      />
+      <Typography dangerouslySetInnerHTML={{ __html }} />
       <StyledCopyTooltip
         onClickCallback={handleCopyIconClick ?? _handleCopyIconClick}
         text={command}

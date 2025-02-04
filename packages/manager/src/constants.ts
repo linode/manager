@@ -174,6 +174,7 @@ export const allowedHTMLAttr = [
   'href',
   'lang',
   'title',
+  'style',
   'align',
   'class',
   'rel',
