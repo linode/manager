@@ -56,7 +56,6 @@ import type {
   DeepPartial,
   Devices,
   Filter,
-  InterfacePayload,
   Kernel,
   Linode,
   LinodeCloneData,
