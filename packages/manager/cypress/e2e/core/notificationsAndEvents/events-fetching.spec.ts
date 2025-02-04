@@ -6,7 +6,7 @@ import { mockGetEvents, mockGetEventsPolling } from 'support/intercepts/events';
 import { DateTime } from 'luxon';
 import { eventFactory } from 'src/factories';
 import { randomNumber } from 'support/util/random';
-import { Interception } from 'cypress/types/net-stubbing';
+import type { Interception } from '../../../../../../node_modules/cypress/types/net-stubbing';
 import { mockGetVolumes } from 'support/intercepts/volumes';
 
 describe('Event fetching and polling', () => {

@@ -28,7 +28,7 @@ import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
-import { Interception } from 'cypress/types/net-stubbing';
+import type { Interception } from '../../../../../../node_modules/cypress/types/net-stubbing';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';

@@ -1,5 +1,5 @@
+import type { StaticResponse } from '../../../../../node_modules/cypress/types/net-stubbing';
 import type { ResourcePage } from '@linode/api-v4';
-import type { StaticResponse } from 'cypress/types/net-stubbing';
 
 /**
  * Paginated data.

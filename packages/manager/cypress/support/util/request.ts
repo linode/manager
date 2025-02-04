@@ -2,7 +2,7 @@
  * @file Utility functions for reading and manipulating HTTP request objects.
  */
 
-import { CyHttpMessages } from 'cypress/types/net-stubbing';
+import type { CyHttpMessages } from '../../../../../node_modules/cypress/types/net-stubbing';
 
 /**
  * Wraps the given value in an array if it is not already an array.

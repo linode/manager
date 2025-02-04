@@ -2,7 +2,7 @@
  * @file Utility functions to easily create HTTP response objects for Cypress tests.
  */
 
-import type { StaticResponse } from 'cypress/types/net-stubbing';
+import type { StaticResponse } from '../../../../../node_modules/cypress/types/net-stubbing';
 
 /**
  * Creates an HTTP response object with the given body data.
