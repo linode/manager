@@ -1,4 +1,10 @@
-import { Checkbox, Notice, Select, TextField, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Checkbox,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
 import { useFormik } from 'formik';
@@ -305,30 +311,30 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         </Grid>
 
         <Grid sm={6} xs={12}>
-          <Select
+          <Autocomplete
             textFieldProps={{
               dataAttrs: {
                 'data-qa-contact-country': true,
               },
+              required: true,
             }}
             value={countryResults.find(
               ({ value }) => value === formik.values.country
             )}
+            disableClearable
             disabled={isReadOnly}
             errorText={errorMap.country}
             label="Country"
             onChange={(_event, value) => handleCountryChange(value)}
             options={countryResults}
             placeholder="Select a Country"
-            required
-            searchable
           />
         </Grid>
         <Grid sm={6} xs={12}>
           {formik.values.country === 'US' || formik.values.country == 'CA' ? (
-            <Select
+            <Autocomplete
               onChange={(_event, value) =>
-                formik.setFieldValue('state', value.value)
+                formik.setFieldValue('state', value?.value)
               }
               placeholder={
                 formik.values.country === 'US'
@@ -339,18 +345,18 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
                 dataAttrs: {
                   'data-qa-contact-state-province': true,
                 },
+                required: true,
               }}
               value={
                 filteredRegionResults.find(
                   ({ value }) => value === formik.values.state
-                ) ?? null
+                ) ?? undefined
               }
+              disableClearable
               disabled={isReadOnly}
               errorText={errorMap.state}
               label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
               options={filteredRegionResults}
-              required
-              searchable
             />
           ) : (
             <TextField

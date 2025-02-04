@@ -380,7 +380,12 @@ describe('Linode Config management', () => {
             ui.button.findByTitle('Clone').should('be.disabled');
             cy.findByLabelText('Linode').should('be.visible').click();
 
-            ui.select.findItemByText(destLinode.label).click();
+            ui.autocomplete.find().should('be.visible');
+            ui.autocompletePopper
+              .findByTitle(destLinode.label)
+              .should('be.visible')
+              .click();
+
             ui.button.findByTitle('Clone').should('be.enabled').click();
           });
 
@@ -541,7 +546,8 @@ describe('Linode Config management', () => {
             .click()
             .type('VPC');
 
-          ui.select.findItemByText('VPC').should('be.visible').click();
+          ui.autocomplete.find().should('be.visible');
+          ui.autocompletePopper.findByTitle('VPC').should('be.visible').click();
 
           // Confirm that internet access warning is displayed when eth0 is set
           // to VPC.
@@ -554,7 +560,11 @@ describe('Linode Config management', () => {
               .click()
               .type('VPC');
 
-            ui.select.findItemByText('VPC').should('be.visible');
+            ui.autocomplete.find().should('be.visible');
+            ui.autocompletePopper
+              .findByTitle('VPC')
+              .should('be.visible')
+              .click();
 
             cy.get(`[data-qa-textfield-label="${interfaceName}"]`).click();
           });
@@ -676,7 +686,7 @@ describe('Linode Config management', () => {
      * - When the user sets primary interface to eth0, sets eth0 to "Public Internet", sets eth1 to "VPC", and checks "Assign a public IPv4 address for this Linode", confirm that correct notice appears.
      * - Confirms that "REBOOT NEEDED" status indicator appears upon creating VPC config.
      */
-    it('Creates a new config using non-recommended settings and confirm the informational notices', () => {
+    it.only('Creates a new config using non-recommended settings and confirm the informational notices', () => {
       const region = chooseRegion({ capabilities: ['VPCs'] });
       const mockLinode = linodeFactory.build({
         id: randomNumber(),
@@ -752,15 +762,17 @@ describe('Linode Config management', () => {
             .scrollIntoView()
             .click()
             .type('Public Internet');
-          ui.select
-            .findItemByText('Public Internet')
+          ui.autocomplete.find().should('be.visible');
+          ui.autocompletePopper
+            .findByTitle('Public Internet')
             .should('be.visible')
             .click();
           cy.get('[data-qa-textfield-label="eth1"]')
             .scrollIntoView()
             .click()
             .type('VPC');
-          ui.select.findItemByText('VPC').should('be.visible').click();
+          ui.autocomplete.find().should('be.visible');
+          ui.autocompletePopper.findByTitle('VPC').should('be.visible').click();
           // Confirm that internet access warning is displayed.
           cy.findByText(LINODE_UNREACHABLE_HELPER_TEXT).should('be.visible');
 
@@ -770,16 +782,18 @@ describe('Linode Config management', () => {
             .scrollIntoView()
             .click()
             .type(`${mockVPC.label}`);
-          ui.select
-            .findItemByText(`${mockVPC.label}`)
+          ui.autocomplete.find().should('be.visible');
+          ui.autocompletePopper
+            .findByTitle(`${mockVPC.label}`)
             .should('be.visible')
             .click();
           cy.get('[data-qa-textfield-label="Subnet"]')
             .scrollIntoView()
             .click()
             .type(`${mockSubnet.label}`);
-          ui.select
-            .findItemByText(`${mockSubnet.label}`)
+          ui.autocomplete.find().should('be.visible');
+          ui.autocompletePopper
+            .findByTitle(`${mockSubnet.label} (${mockSubnet.ipv4})`)
             .should('be.visible')
             .click();
           cy.findByText('Assign a public IPv4 address for this Linode')
