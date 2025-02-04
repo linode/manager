@@ -13,7 +13,8 @@ import { formatDate } from 'src/utilities/formatDate';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { printInvoice } from './PdfGenerator';
-import { FlagSet } from 'src/featureFlags';
+
+import type { FlagSet } from 'src/featureFlags';
 
 server.use(
   http.get('/src/features/Billing/PdfGenerator/akamai-logo.png', () => {
