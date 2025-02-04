@@ -111,7 +111,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
             selectedNode ? [selectedNode.label] : [],
             savePreferences
           );
-          setSelectedNodeType(selectedNode ?? null);
+          setSelectedNodeType(selectedNode);
         }}
         options={
           isClusterSizeGreaterThanOne !== undefined
