@@ -74,29 +74,15 @@ export const CreateCluster = () => {
   const { showAPL } = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
-  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
-    'standard'
-  );
-
-  const {
-    isLoadingVersions,
-    versions: versionData,
-    versionsError,
-  } = useLkeStandardOrEnterpriseVersions(selectedTier);
-
-  const versions = (versionData ?? []).map((thisVersion) => ({
-    label: thisVersion.id,
-    value: thisVersion.id,
-  }));
 
   const formValues = React.useMemo(() => {
     return {
       apl_enabled: false,
-      hasAgreed: hasAgreed || false,
-      k8s_version: versions && versions.length > 0 ? versions[0].label : '1.31',
-      tier: selectedTier || 'standard',
+      hasAgreed,
+      k8s_version: '1.31',
+      tier: 'standard' as KubernetesTier,
     };
-  }, [hasAgreed, selectedTier, versions]);
+  }, [hasAgreed]);
 
   const {
     control,
@@ -109,8 +95,22 @@ export const CreateCluster = () => {
     defaultValues: formValues,
   });
 
+  const selectedTier = watch('tier');
+
+  const {
+    isLoadingVersions,
+    versions: versionData,
+    versionsError,
+  } = useLkeStandardOrEnterpriseVersions(selectedTier);
+
+  const versions = (versionData ?? []).map((thisVersion) => ({
+    label: thisVersion.id,
+    value: thisVersion.id,
+  }));
+
   const selectedRegion = watch('region');
   const nodePool = watch('node_pools');
+  const aplEnabled = watch('apl_enabled');
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -119,8 +119,7 @@ export const CreateCluster = () => {
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
-    setSelectedTier(tier);
-
+    setValue('tier', tier);
     // HA is enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setValue('control_plane.high_availability', true);
@@ -192,6 +191,7 @@ export const CreateCluster = () => {
     let payload: CreateKubeClusterPayload = {
       control_plane: {
         acl: {
+          enabled: controlPlaneACL,
           ...((_ipv4?.length > 0 || _ipv6.length > 0) && {
             addresses: {
               ...addressIPv4Payload,
@@ -291,6 +291,7 @@ export const CreateCluster = () => {
   }
 
   const onSubmit = handleSubmit((data) => {
+    // console.log(isSubmitting);
     createCluster(data);
   });
 
@@ -449,7 +450,7 @@ export const CreateCluster = () => {
                       setHighAvailability={(value) =>
                         setValue('control_plane.high_availability', value)
                       }
-                      isAPLEnabled={getValues('apl_enabled')}
+                      isAPLEnabled={aplEnabled}
                       isErrorKubernetesTypes={isErrorKubernetesTypes}
                       isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                       selectedRegionId={getValues('region')}
@@ -514,7 +515,7 @@ export const CreateCluster = () => {
                   }
                   apiError={errorMap.node_pools}
                   hasSelectedRegion={hasSelectedRegion}
-                  isAPLEnabled={getValues('apl_enabled')}
+                  isAPLEnabled={aplEnabled}
                   isPlanPanelDisabled={isPlanPanelDisabled}
                   regionsData={regionsData}
                   selectedRegionId={selectedRegion}

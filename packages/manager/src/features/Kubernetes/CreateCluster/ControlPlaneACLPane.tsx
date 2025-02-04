@@ -16,7 +16,7 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LinkButton } from 'src/components/LinkButton';
-// import { validateIPs } from 'src/utilities/ipUtils';
+import { validateIPs } from 'src/utilities/ipUtils';
 
 export interface ControlPlaneACLProps {
   enableControlPlaneACL: boolean;
@@ -128,11 +128,13 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 <Controller
                   render={({ field: controllerField, fieldState }) => (
                     <TextField
+                      {...controllerField}
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
                       hideLabel
                       label={`IPv4 Addresses or CIDRs ip-address-${index}`}
                       onBlur={controllerField.onBlur}
+                      ref={null}
                       sx={{ minWidth: 350 }}
                     />
                   )}
@@ -169,11 +171,13 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 <Controller
                   render={({ field: controllerField, fieldState }) => (
                     <TextField
+                      {...controllerField}
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
                       hideLabel
                       label={`IPv6 Addresses or CIDRs ip-address-${index}`}
                       onBlur={controllerField.onBlur}
+                      ref={null}
                       sx={{ minWidth: 350 }}
                     />
                   )}
