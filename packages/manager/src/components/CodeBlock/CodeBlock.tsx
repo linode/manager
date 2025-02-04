@@ -31,7 +31,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
   };
 
   // eslint-disable-next-line xss/no-mixed-html
-  const __html = shiki.codeToHtml(command, {
+  const __html = shiki.codeToHtml(command.trim(), {
     lang: language,
     theme: getHighlighterTheme(colorMode),
   });

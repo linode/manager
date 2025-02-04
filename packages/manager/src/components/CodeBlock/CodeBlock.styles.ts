@@ -17,12 +17,6 @@ export const StyledCommandDiv = styled('div', { label: 'StyledCommandDiv' })(
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip',
 })(({ theme }) => ({
-  '& svg': {
-    color: theme.tokens.color.Green[60],
-  },
-  '& svg:hover': {
-    color: theme.tokens.color.Green[70],
-  },
   position: 'absolute',
   right: `${theme.spacing(1.5)}`,
   top: `${theme.spacing(1)}`,
