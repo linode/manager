@@ -38,8 +38,12 @@ CMD yarn start:manager:ci
 #
 # Builds an image containing Cypress and miscellaneous system utilities required
 # by the tests.
-FROM nodejs-cloud-manager as e2e-build
+#
+# Uses Cypress factory image. For more information, see:
+# https://github.com/cypress-io/cypress-docker-images/tree/master/factory#usage
+FROM ${IMAGE_REGISTRY}/cypress/factory:5.2.1 AS e2e-build
 ARG CYPRESS_VERSION
+ARG NODE_VERSION
 # Add Chrome apt repo
 RUN apt-get update \
     && apt-get install -y wget gnupg2 \
@@ -47,12 +51,11 @@ RUN apt-get update \
     && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
     && apt-get update
 
-# Install Chrome, Cypress, and other dependencies, clean up apt cache.
 RUN apt-get install -y xvfb google-chrome-stable \
     && rm -rf /var/cache/apt/* \
     && rm -rf /var/lib/apt/lists* \
     && apt-get clean \
-    && npm install -g "cypress@${CYPRESS_VERSION}"
+    && npm install -g cypress@${CYPRESS_VERSION} pnpm bun
 
 USER node
 WORKDIR /home/node/app
