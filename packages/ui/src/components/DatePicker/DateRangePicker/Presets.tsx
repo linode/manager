@@ -1,54 +1,66 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { Button } from '../../Button';
+import { StyledActionButton } from '../../Button/StyledActionButton';
 import { Stack } from '../../Stack';
+import { Typography } from '../../Typography/Typography';
+
+import type { Theme } from '@mui/material/styles';
 
 interface PresetsProps {
   onPresetSelect: (
     startDate: DateTime | null,
-    endDate: DateTime | null
+    endDate: DateTime | null,
+    presetLabel: null | string
   ) => void;
+  selectedPreset: null | string;
 }
 
-export const Presets = ({ onPresetSelect }: PresetsProps) => {
+export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
   const today = DateTime.now();
 
   const presets = [
     {
       getRange: () => ({
-        endDate: today.endOf('week'),
-        startDate: today.startOf('week'),
+        endDate: today,
+        startDate: today.minus({ hours: 1 }),
       }),
-      label: 'This Week',
+      label: 'Last hour',
     },
     {
       getRange: () => ({
-        endDate: today.minus({ weeks: 1 }).endOf('week'),
-        startDate: today.minus({ weeks: 1 }).startOf('week'),
+        endDate: today,
+        startDate: today.minus({ days: 1 }),
       }),
-      label: 'Last Week',
+      label: 'Last day',
     },
     {
       getRange: () => ({
         endDate: today,
         startDate: today.minus({ days: 6 }),
       }),
-      label: 'Last 7 Days',
+      label: 'Last 7 days',
     },
     {
       getRange: () => ({
-        endDate: today.endOf('month'),
-        startDate: today.startOf('month'),
+        endDate: today,
+        startDate: today.minus({ days: 30 }),
       }),
-      label: 'Current Month',
+      label: 'Last 30 days',
     },
     {
       getRange: () => ({
-        endDate: today.plus({ months: 1 }).endOf('month'),
-        startDate: today.plus({ months: 1 }).startOf('month'),
+        endDate: today,
+        startDate: today.minus({ days: 60 }),
       }),
-      label: 'Next Month',
+      label: 'Last 60 days',
+    },
+    {
+      getRange: () => ({
+        endDate: today,
+        startDate: today.minus({ days: 90 }),
+      }),
+      label: 'Last 90 days',
     },
     {
       getRange: () => ({ endDate: null, startDate: null }),
@@ -57,24 +69,53 @@ export const Presets = ({ onPresetSelect }: PresetsProps) => {
   ];
 
   return (
-    <Stack spacing={1}>
-      {presets.map((preset) => (
-        <Button
-          onClick={() => {
-            const { endDate, startDate } = preset.getRange();
-            onPresetSelect(startDate, endDate);
-          }}
-          sx={{
-            borderRadius: '8px',
-            padding: '8px 16px',
-            width: '140px',
-          }}
-          key={preset.label}
-          variant="outlined"
-        >
-          {preset.label}
-        </Button>
-      ))}
+    <Stack
+      sx={(theme: Theme) => ({
+        backgroundColor: theme.bg.app,
+        borderRight: `1px solid ${theme.borderColors.divider}`,
+        width: '134px',
+      })}
+      paddingLeft={1}
+      paddingRight={1 / 4}
+      paddingTop={3}
+    >
+      <Typography
+        sx={(theme: Theme) => ({
+          fontWeight: 'bold',
+          marginBottom: theme.spacing(1),
+          paddingLeft: theme.spacing(1),
+        })}
+      >
+        Presets
+      </Typography>
+      {presets.map((preset) => {
+        const isSelected = selectedPreset === preset.label;
+        const { endDate, startDate } = preset.getRange();
+        return (
+          <StyledActionButton
+            onClick={() => {
+              // handlePresetSelect(preset.label);
+              onPresetSelect(startDate, endDate, preset.label);
+            }}
+            sx={(theme: Theme) => ({
+              '&:active': { backgroundColor: theme.palette.primary.light },
+              '&:hover': {
+                backgroundColor: !isSelected ? theme.palette.primary.main : '',
+              },
+              backgroundColor: isSelected
+                ? theme.palette.primary.light
+                : 'transparent',
+              color: isSelected ? 'white' : theme.palette.text.primary,
+              justifyContent: 'flex-start',
+              padding: theme.spacing(),
+            })}
+            key={preset.label}
+            variant="text"
+          >
+            {preset.label}
+          </StyledActionButton>
+        );
+      })}
     </Stack>
   );
 };

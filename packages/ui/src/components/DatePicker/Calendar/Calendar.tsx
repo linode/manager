@@ -1,11 +1,14 @@
-import { MenuItem, Select } from '@mui/material';
+import { SvgIcon } from '@mui/material';
 import * as React from 'react';
 
+import { chevronLeft } from '../../../assets/icons/index';
+import { chevronRight } from '../../../assets/icons/index';
 import { Box } from '../../Box/Box';
 import { Button } from '../../Button/Button';
 import { Stack } from '../../Stack/Stack';
 import { Typography } from '../../Typography/Typography';
 
+import type { Theme } from '@mui/material/styles';
 import type { DateTime } from 'luxon';
 
 interface CalendarProps {
@@ -31,7 +34,6 @@ export const Calendar = ({
   const endOfMonth = month.endOf('month');
   const startDay = startOfMonth.weekday % 7;
 
-  const years = Array.from({ length: 81 }, (_, i) => 1960 + i);
   const months = [
     'January',
     'February',
@@ -67,23 +69,29 @@ export const Calendar = ({
 
     days.push(
       <Box
-        sx={{
-          '&:hover': { bgcolor: 'primary.200', color: 'text.primary' },
+        sx={(theme: Theme) => ({
+          '&:hover': {
+            bgcolor: !isStartOrEnd ? theme.bg.app : theme.palette.primary.main,
+            border: `1px solid ${theme.borderColors.divider}`,
+            borderRadius: '50%',
+            color: !isStartOrEnd ? theme.color.black : theme.color.white,
+          },
           alignItems: 'center',
           bgcolor: isStartOrEnd
-            ? 'primary.main'
+            ? theme.palette.primary.main
             : isSelected
-            ? 'primary.light'
+            ? theme.palette.primary.light
             : 'transparent',
           borderRadius: '50%',
-          color: isStartOrEnd || isSelected ? 'white' : 'text.primary',
+          color:
+            isStartOrEnd || isSelected ? 'white' : theme.palette.text.primary,
           cursor: 'pointer',
           display: 'flex',
           height: 40,
           justifyContent: 'center',
           transition: 'background-color 0.2s ease',
           width: 40,
-        }}
+        })}
         key={day}
         onClick={() => onDateClick(currentDay, focusedField)}
       >
@@ -91,60 +99,58 @@ export const Calendar = ({
       </Box>
     );
   }
+  const rightCalenderHeaderStyles = {
+    display: 'flex',
+    justifyContent: 'end',
+  };
 
   return (
-    <Box>
+    <Box paddingBottom={2}>
       <Stack
         alignItems="center"
         direction="row"
+        display="flex"
+        gap={1 / 2}
         justifyContent="center"
         marginBottom={3}
+        paddingTop={2}
         spacing={1}
       >
         {direction === 'left' && (
-          <Button onClick={() => setMonth(month.minus({ months: 1 }))}>
-            &larr; {/* Left arrow HTML entity */}
+          <Button
+            onClick={() => setMonth(month.minus({ months: 1 }))}
+            sx={{ flexGrow: 1, justifyContent: 'flex-start', minWidth: '60px' }}
+          >
+            <SvgIcon component={chevronLeft} viewBox="0 0 25 25" />
           </Button>
         )}
-        <Select
-          onChange={(e) =>
-            setMonth(month.set({ month: Number(e.target.value) }))
-          }
-          onClick={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
-          size="small"
-          value={month.month}
+        {/* Display month and year as read-only text */}
+        <Typography
+          sx={{
+            ...(direction === 'right' ? rightCalenderHeaderStyles : {}),
+            flexGrow: 3,
+            fontWeight: 'bold',
+          }}
         >
-          {months.map((monthName, index) => (
-            <MenuItem key={monthName} value={index + 1}>
-              {monthName}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          onChange={(e) =>
-            setMonth(month.set({ year: Number(e.target.value) }))
-          }
-          onClick={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
-          size="small"
-          value={month.year}
-        >
-          {years.map((year) => (
-            <MenuItem key={year} value={year}>
-              {year}
-            </MenuItem>
-          ))}
-        </Select>
+          {months[month.month - 1]} {month.year}
+        </Typography>
+
         {direction === 'right' && (
-          <Button onClick={() => setMonth(month.plus({ months: 1 }))}>
-            &rarr; {/* Right arrow HTML entity */}
+          <Button
+            onClick={() => setMonth(month.plus({ months: 1 }))}
+            sx={{ justifyContent: 'end' }}
+          >
+            <SvgIcon component={chevronRight} viewBox="0 0 25 25" />
           </Button>
         )}
       </Stack>
-      <Box display="grid" gap={1} gridTemplateColumns="repeat(7, 40px)">
-        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, index) => (
-          <Typography align="center" key={`weekday-${index}`}>
+      <Box display="grid" gridTemplateColumns="repeat(7, 40px)">
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d, index) => (
+          <Typography
+            align="center"
+            key={`weekday-${index}`}
+            sx={{ fontWeight: '400' }}
+          >
             {d}
           </Typography>
         ))}

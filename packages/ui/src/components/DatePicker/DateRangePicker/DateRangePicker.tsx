@@ -1,15 +1,18 @@
 import { Popover } from '@mui/material';
 import { DateTime } from 'luxon';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { Box } from '../../Box/Box';
+import { Button } from '../../Button/Button';
+import { Divider } from '../../Divider/Divider';
 import { Stack } from '../../Stack/Stack';
 import { Calendar } from '../Calendar/Calendar';
-import { DateField } from '../DateField';
+import { DateTimeField } from '../DateTimeField';
 import { Presets } from './Presets';
 
 export const DateRangePicker = () => {
   const [startDate, setStartDate] = useState<DateTime | null>(null);
+  const [selectedPreset, setSelectedPreset] = useState<null | string>(null);
   const [endDate, setEndDate] = useState<DateTime | null>(null);
   const [startDateError, setStartDateError] = useState('');
   const [endDateError, setEndDateError] = useState('');
@@ -18,11 +21,13 @@ export const DateRangePicker = () => {
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
   const [focusedField, setFocusedField] = useState<'end' | 'start'>('start'); // Tracks focused input field
 
-  const handleOpen = (
-    event: React.MouseEvent<HTMLElement>,
-    field: 'end' | 'start'
-  ) => {
-    setAnchorEl(event.currentTarget);
+  const startDateInputRef = useRef<HTMLInputElement | null>(null);
+  const endDateInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleOpen = (field: 'end' | 'start') => {
+    setAnchorEl(
+      startDateInputRef.current?.parentElement || startDateInputRef.current
+    );
     setOpen(true);
     setFocusedField(field);
     validateDates(startDate, endDate);
@@ -31,6 +36,10 @@ export const DateRangePicker = () => {
   const handleClose = () => {
     setOpen(false);
     setAnchorEl(null);
+  };
+
+  const handleApply = () => {
+    handleClose();
   };
 
   const validateDates = (
@@ -74,10 +83,12 @@ export const DateRangePicker = () => {
 
   const handlePresetSelect = (
     selectedStartDate: DateTime | null,
-    selectedEndDate: DateTime | null
+    selectedEndDate: DateTime | null,
+    selectedPresetLabel: null | string
   ) => {
     setStartDate(selectedStartDate);
     setEndDate(selectedEndDate);
+    setSelectedPreset(selectedPresetLabel);
     setFocusedField('start'); // Reset focus to start after preset selection
     setCurrentMonth(selectedStartDate || DateTime.now());
     setStartDateError('');
@@ -87,8 +98,9 @@ export const DateRangePicker = () => {
   return (
     <Box>
       <Stack direction="row" spacing={2}>
-        <DateField
+        <DateTimeField
           onChange={(date) => {
+            debugger;
             setStartDate(date);
 
             // Clear end date **only** if the new start date is after the current end date
@@ -98,26 +110,48 @@ export const DateRangePicker = () => {
             setFocusedField('end'); // Automatically focus on end date
           }}
           errorText={startDateError}
+          handleClose={handleClose}
+          inputRef={startDateInputRef}
           label="Start Date"
-          onClick={(e) => handleOpen(e, 'start')}
-          placeholder="YYYY-MM-DD"
+          onClick={() => handleOpen('start')}
+          // otherFieldRef={endDateInputRef}
+          placeholder="MM-DD-YYYY"
           value={startDate}
         />
-        <DateField
+        <DateTimeField
           onChange={(date) => {
             setEndDate(date);
           }}
           errorText={endDateError}
+          handleClose={handleClose}
+          inputRef={endDateInputRef}
           label="End Date"
-          onClick={(e) => handleOpen(e, 'end')}
-          placeholder="YYYY-MM-DD"
+          onClick={() => handleOpen('end')}
+          // otherFieldRef={startDateInputRef}
+          placeholder="MM-DD-YYYY"
           value={endDate}
         />
       </Stack>
       <Popover
+        onClose={(e: React.SyntheticEvent<HTMLElement>) => {
+          const target = e.target as HTMLElement;
+
+          // Check if click is inside the input field (anchorEl)
+          const isClickInsideInput = anchorEl?.contains(target);
+
+          // Check if click is inside the Popover itself
+          const isClickInsidePopover = target.closest('.MuiPopover-paper');
+
+          if (isClickInsideInput || isClickInsidePopover) {
+            return; // Prevent closing if clicked inside input or popover
+          }
+
+          handleClose(); // Close popover only when clicking outside
+        }}
+        // onClose={() => undefined}
         anchorEl={anchorEl}
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        onClose={handleClose}
+        disableAutoFocus
         open={open}
         sx={{ boxShadow: 3, zIndex: 1300 }}
         transformOrigin={{ horizontal: 'left', vertical: 'top' }}
@@ -128,9 +162,12 @@ export const DateRangePicker = () => {
           boxShadow={4}
           display="flex"
           gap={2}
-          p={2}
+          paddingRight={2}
         >
-          <Presets onPresetSelect={handlePresetSelect} />
+          <Presets
+            onPresetSelect={handlePresetSelect}
+            selectedPreset={selectedPreset}
+          />
           <Calendar
             direction="left"
             endDate={endDate}
@@ -149,6 +186,15 @@ export const DateRangePicker = () => {
             setMonth={(date) => setCurrentMonth(date.minus({ months: 1 }))}
             startDate={startDate}
           />
+        </Box>
+        <Divider spacingBottom={0} spacingTop={0} />
+        <Box display="flex" gap={2} justifyContent="flex-end" padding={2}>
+          <Button buttonType="outlined" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button buttonType="primary" onClick={handleApply}>
+            Apply
+          </Button>
         </Box>
       </Popover>
     </Box>

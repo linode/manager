@@ -629,6 +629,35 @@ export const darkTheme: ThemeOptions = {
         selected: {},
       },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        input: {
+          boxSizing: 'border-box',
+          [breakpoints.only('xs')]: {
+            fontSize: '1rem',
+          },
+          fontSize: '0.9rem',
+          padding: 8,
+        },
+        root: {
+          '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+            borderColor: TextField.Error.Border,
+            color: TextField.Error.Text,
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '1px',
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
+          },
+          backgroundColor: TextField.Default.Background,
+          borderColor: TextField.Default.Border,
+          borderRadius: 0,
+          boxSizing: 'border-box',
+          color: TextField.Filled.Text,
+          lineHeight: 1,
+          transition: 'border-color 225ms ease-in-out',
+        },
+      },
+    },
     MuiPaper: {
       styleOverrides: {
         outlined: {
