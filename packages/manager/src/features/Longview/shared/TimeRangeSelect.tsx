@@ -1,15 +1,16 @@
 import { getActiveLongviewPlan } from '@linode/api-v4/lib/longview';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import Select, {
-  BaseSelectProps,
-  Item,
-} from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
+
+import type {
+  BaseSelectProps,
+  Item,
+} from 'src/components/EnhancedSelect/Select';
 
 interface Props
   extends Omit<
@@ -39,7 +40,7 @@ export const TimeRangeSelect = React.memo((props: Props) => {
   React.useEffect(() => {
     getActiveLongviewPlan()
       .then((response) => {
-        setLongviewPro(!isEmpty(response));
+        setLongviewPro(!!Object.keys(response).length);
       })
       .catch(); // Swallow errors, default to free tier time select options.
   }, []);

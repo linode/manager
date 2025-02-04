@@ -1,9 +1,8 @@
-import Axios, { AxiosResponse } from 'axios';
-import { curry } from 'ramda';
+import Axios from 'axios';
 
 import { LONGVIEW_ROOT } from 'src/constants';
 
-import {
+import type {
   Get,
   LongviewAction,
   LongviewFieldName,
@@ -11,6 +10,7 @@ import {
   LongviewResponse,
   Options,
 } from './request.types';
+import type { AxiosResponse } from 'axios';
 
 /**
  * A successful LV request results in a response like this:
@@ -141,14 +141,6 @@ export const getLastUpdated = (token: string) => {
   return get(token, 'lastUpdated');
 };
 
-export const getValues = curry((token: string, options: Options) => {
+export const getValues = (token: string, options: Options) => {
   return get(token, 'getValues', options);
-});
-
-export const getLatestValue = curry((token: string, options: Options) => {
-  return get(token, 'getLatestValue', options);
-});
-
-export const getTopProcesses = curry((token: string, options?: Options) => {
-  return get(token, 'getTopProcesses', options);
-});
+};
