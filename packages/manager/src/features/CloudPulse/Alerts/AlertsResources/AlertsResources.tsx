@@ -280,7 +280,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             </Grid>
           )}
         </Grid>
-        {isSelectionsNeeded && !(isResourcesError || isRegionsError) && (
+        {isSelectionsNeeded && !isDataLoadingError && (
           <Grid item xs={12}>
             <AlertsResourcesNotice
               handleSelectionChange={handleAllSelection}

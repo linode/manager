@@ -13,14 +13,15 @@ export const AlertsResourcesNotice = React.memo(
     const { handleSelectionChange, selectedResources, totalResources } = props;
 
     return (
-      <StyledNotice
-        sx={{
-          height: '54px',
-        }}
-        variant="info"
-      >
-        <Typography data-testid="selection_notice">
-          {selectedResources} of {totalResources} resources are selected.{' '}
+      <StyledNotice variant="info">
+        <Typography
+          sx={(theme) => ({
+            fontFamily: theme.font.bold,
+          })}
+          data-testid="selection_notice"
+          variant="body2"
+        >
+          {selectedResources} of {totalResources} resources are selected.
         </Typography>
         {selectedResources !== totalResources && (
           <StyledButton
@@ -48,23 +49,18 @@ export const AlertsResourcesNotice = React.memo(
 );
 
 const StyledNotice = styled(Notice, { label: 'StyledNotice' })(({ theme }) => ({
-  '&&': {
-    p: {
-      lineHeight: '1.25rem',
-    },
-  },
   alignItems: 'center',
   background: theme.bg.bgPaper,
   borderRadius: 1,
   display: 'flex',
   flexWrap: 'nowrap',
-  justifyContent: 'space-between',
-  marginBottom: theme.spacing(0),
+  height: '54px',
+  marginBottom: 0,
   padding: theme.spacing(2),
 }));
 
 const StyledButton = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
-  marginBottom: theme.spacing(0.5),
+  marginLeft: theme.spacing(1),
   minHeight: 'auto',
   minWidth: 'auto',
   padding: 0,
