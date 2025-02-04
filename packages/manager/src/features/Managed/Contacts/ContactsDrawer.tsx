@@ -48,16 +48,16 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
 
   const { mutateAsync: createContact } = useCreateContactMutation();
   const { mutateAsync: updateContact } = useUpdateContactMutation(
-    contact?.id || -1
+    contact?.id ?? -1
   );
 
   // If we're in Edit mode, take the initialValues from the contact we're editing.
   // Otherwise, all initial values should be empty strings.
   const getContactInfo = (): ContactPayload => {
     return {
-      email: contact?.email || '',
+      email: contact?.email ?? '',
       group: contact?.group,
-      name: contact?.name || '',
+      name: contact?.name ?? '',
       phone: contact?.phone,
     };
   };
