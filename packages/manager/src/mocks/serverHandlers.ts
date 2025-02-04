@@ -1705,6 +1705,18 @@ export const handlers = [
         message: 'Low disk space.',
         status: 'notification',
       });
+      const dbMigrationEvents = eventFactory.buildList(1, {
+        action: 'database_migrate',
+        entity: { id: 11, label: 'database-11', type: 'database' },
+        message: 'Database migration started.',
+        status: 'started',
+      });
+      const dbMigrationFinishedEvents = eventFactory.buildList(1, {
+        action: 'database_migrate',
+        entity: { id: 11, label: 'database-11', type: 'database' },
+        message: 'Database migration finished.',
+        status: 'finished',
+      });
       const oldEvents = eventFactory.buildList(20, {
         action: 'account_update',
         percent_complete: 100,
@@ -1745,6 +1757,8 @@ export const handlers = [
       return HttpResponse.json(
         makeResourcePage([
           ...events,
+          ...dbMigrationEvents,
+          ...dbMigrationFinishedEvents,
           ...dbEvents,
           ...placementGroupAssignedEvent,
           ...placementGroupCreateEvent,
