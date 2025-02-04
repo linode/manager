@@ -31,6 +31,11 @@ interface FilterResourceProps {
   searchText?: string;
 
   /**
+   * Property to filter out only checked resources
+   */
+  selectedOnly?: boolean;
+
+  /**
    * This property helps to track the list of selected resources
    */
   selectedResources?: string[];
@@ -97,6 +102,7 @@ export const getFilteredResources = (
     regionsIdToRegionMap,
     resourceIds,
     searchText,
+    selectedOnly,
     selectedResources,
   } = filterProps;
   if (!data || (!isAdditionOrDeletionNeeded && resourceIds.length === 0)) {
@@ -122,7 +128,7 @@ export const getFilteredResources = (
           : '',
       };
     })
-    .filter(({ label, region }) => {
+    .filter(({ checked, label, region }) => {
       const matchesSearchText =
         !searchText ||
         region.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()) ||
@@ -132,7 +138,11 @@ export const getFilteredResources = (
         !filteredRegions?.length ||
         (region.length && filteredRegions.includes(region)); // check with filtered region
 
-      return matchesSearchText && matchesFilteredRegions; // match the search text and match the region selected
+      return (
+        matchesSearchText &&
+        matchesFilteredRegions &&
+        (selectedOnly ? checked : true) // if selected only, show only checked, else everything
+      ); // match the search text and match the region selected
     });
 };
 

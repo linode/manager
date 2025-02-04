@@ -1,4 +1,4 @@
-import { CircleProgress, Stack, Typography } from '@linode/ui';
+import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
@@ -15,11 +15,11 @@ import {
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
-import type { Region } from '@linode/api-v4';
-import { AlertsResourcesNotice } from './AlertsResourcesNotice';
+import type { AlertDefinitionType, Region } from '@linode/api-v4';
 
 export interface AlertResourcesProp {
   /**
@@ -30,6 +30,11 @@ export interface AlertResourcesProp {
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
   alertResourceIds: string[];
+
+  /**
+   * The type of the alert system | user
+   */
+  alertType: AlertDefinitionType;
 
   /**
    * Callback for publishing the selected resources
@@ -51,6 +56,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
     alertLabel,
     alertResourceIds,
+    alertType,
     handleResourcesSelection,
     isSelectionsNeeded,
     serviceType,
@@ -60,6 +66,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     alertResourceIds
   );
+  const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
 
   const {
     data: regions,
@@ -134,6 +141,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       regionsIdToRegionMap,
       resourceIds: alertResourceIds,
       searchText,
+      selectedOnly,
       selectedResources,
     });
   }, [
@@ -143,6 +151,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     regionsIdToRegionMap,
     alertResourceIds,
     searchText,
+    selectedOnly,
     selectedResources,
   ]);
 
@@ -212,6 +221,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {alertLabel || 'Resources'}
         {/* It can be either the passed alert label or just Resources */}
       </Typography>
+      {isSelectionsNeeded && alertType === 'system' && (
+        <Typography ref={titleRef} variant="body1">
+          You can enable or disable this system alert for each resource you have
+          access to. Select the resources listed below you want to enable the
+          alert for.
+        </Typography>
+      )}
       <Grid container spacing={3}>
         <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
           <Grid item md={3} xs={12}>
@@ -233,6 +249,35 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               regionOptions={regionOptions}
             />
           </Grid>
+          {isSelectionsNeeded && (
+            <Grid
+              sx={{
+                ml: {
+                  md: 2,
+                  xs: 0,
+                },
+              }}
+              item
+              md={4}
+              xs={12}
+            >
+              <Checkbox
+                sx={(theme) => ({
+                  maxHeight: '34px',
+                  pt: theme.spacing(1.2),
+                  svg: {
+                    backgroundColor: theme.color.white,
+                  },
+                })}
+                // checked={selectedOnly}
+                data-testid="show_selected_only"
+                disabled={!(Boolean(selectedResources.length) || selectedOnly)}
+                onClick={() => setSelectedOnly(!selectedOnly)}
+                text={'Show Selected Only'}
+                value={'Show Selected'}
+              />
+            </Grid>
+          )}
         </Grid>
         {isSelectionsNeeded && !(isResourcesError || isRegionsError) && (
           <Grid item xs={12}>
