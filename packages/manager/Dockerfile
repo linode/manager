@@ -5,6 +5,9 @@ ARG IMAGE_REGISTRY=docker.io
 # Node.js version to use.
 ARG NODE_VERSION=20.17.0
 
+# Cypress version.
+ARG CYPRESS_VERSION=13.16.1
+
 # Node.js base image for Cloud Manager CI tasks.
 #
 # Extends from the Node.js base image that corresponds with our latest supported
@@ -36,8 +39,7 @@ CMD yarn start:manager:ci
 # Builds an image containing Cypress and miscellaneous system utilities required
 # by the tests.
 FROM nodejs-cloud-manager as e2e-build
-ENV CYPRESS_INSTALL_VERSION=13.16.1
-
+ARG CYPRESS_VERSION
 # Add Chrome apt repo
 RUN apt-get update \
     && apt-get install -y wget gnupg2 \
@@ -50,7 +52,7 @@ RUN apt-get install -y xvfb google-chrome-stable \
     && rm -rf /var/cache/apt/* \
     && rm -rf /var/lib/apt/lists* \
     && apt-get clean \
-    && npm install -g "cypress@$CYPRESS_INSTALL_VERSION"
+    && npm install -g "cypress@${CYPRESS_VERSION}"
 
 USER node
 WORKDIR /home/node/app
