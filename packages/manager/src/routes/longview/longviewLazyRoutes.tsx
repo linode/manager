@@ -13,15 +13,25 @@ export const longviewLandingLazyRoute = createLazyRoute('/longview')({
 // we'll just match the legacy routing behavior
 const LongviewDetailWrapper = () => {
   const { id } = useParams({ from: '/longview/clients/$id' });
-  const matchProps = {
+
+  if (!id) {
+    return null;
+  }
+
+  // Leaving this old `match` prop in case it's somehow needed somewhere
+  // see https://github.com/linode/manager/pull/11599
+  const props = {
     match: {
       params: {
         id,
       },
     },
+    params: {
+      id,
+    },
   };
 
-  return <EnhancedLongviewDetail {...matchProps} />;
+  return <EnhancedLongviewDetail {...props} />;
 };
 
 export const longviewDetailLazyRoute = createLazyRoute('/longview/clients/$id')(
