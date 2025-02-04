@@ -29,6 +29,7 @@ import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricin
 
 import { getDisabledRegions } from './Region.utils';
 import { TwoStepRegion } from './TwoStepRegion';
+import { getIsLegacyInterfaceArray } from './utilities';
 import {
   getGeneratedLinodeLabel,
   useLinodeCreateQueryParams,
@@ -96,13 +97,19 @@ export const Region = React.memo(() => {
       setValue('hasSignedEUAgreement', false);
     }
 
-    if (values.interfaces?.[0].vpc_id) {
+    if (
+      getIsLegacyInterfaceArray(values.interfaces) &&
+      values.interfaces?.[0].vpc_id
+    ) {
       // If a VPC is selected, clear it because VPCs are region specific
       setValue('interfaces.0.vpc_id', null);
       setValue('interfaces.0.subnet_id', null);
     }
 
-    if (values.interfaces?.[1].label) {
+    if (
+      getIsLegacyInterfaceArray(values.interfaces) &&
+      values.interfaces?.[1].label
+    ) {
       // If a VLAN is selected, clear it because VLANs are region specific
       setValue('interfaces.1.label', null);
       setValue('interfaces.1.ipam_address', null);

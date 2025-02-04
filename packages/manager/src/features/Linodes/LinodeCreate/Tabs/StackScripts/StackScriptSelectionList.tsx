@@ -1,4 +1,5 @@
 import { getAPIFilterFromQuery } from '@linode/search';
+import { Typography } from '@linode/ui';
 import {
   Box,
   Button,
@@ -9,7 +10,6 @@ import {
   TextField,
   TooltipIcon,
 } from '@linode/ui';
-import { Typography } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
@@ -45,8 +45,8 @@ import {
   communityStackScriptFilter,
 } from './utilities';
 
-import type { LinodeCreateFormValues } from '../../utilities';
 import type { StackScriptTabType } from './utilities';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 interface Props {
   type: StackScriptTabType;
@@ -69,7 +69,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
     },
     getValues,
     setValue,
-  } = useFormContext<LinodeCreateFormValues>();
+  } = useFormContext<CreateLinodeRequest>();
 
   const { field } = useController({
     control,

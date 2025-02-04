@@ -153,7 +153,7 @@ export const getLinodeCreatePayload = (
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
-    'newInterfaces',
+    // 'newInterfaces',
   ]);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
@@ -168,11 +168,10 @@ export const getLinodeCreatePayload = (
   }
 
   // @TODO Linode Interfaces - update this condition as needed
-  if (formValues.newInterfaces && formValues.newInterfaces.length > 0) {
-    values.interfaces = formValues.newInterfaces;
-  } else {
+
+  if (getIsLegacyInterfaceArray(values.interfaces)) {
     values.interfaces = getInterfacesPayload(
-      getIsLegacyInterfaceArray(values.interfaces) ? values.interfaces : [],
+      values.interfaces,
       Boolean(values.private_ip)
     );
   }
@@ -185,12 +184,17 @@ export const getLinodeCreatePayload = (
  * or of the new Linode Interface type
  * @param interfaces the interfaces to confirm
  * @returns if interfaces is type InterfacePayload
+ *
+ * @TODO Linode Interfaces - may need to update some logic to to depend on Account Settings for Interfaces soon
+ * For now, an undefined/empty interfaces array will return true to match existing behavior
  */
 export const getIsLegacyInterfaceArray = (
   interfaces: CreateLinodeInterfacePayload[] | InterfacePayload[] | undefined
 ): interfaces is InterfacePayload[] => {
   return (
-    interfaces === undefined || interfaces.some((iface) => 'purpose' in iface)
+    interfaces === undefined ||
+    interfaces.length === 0 ||
+    interfaces.some((iface) => 'purpose' in iface)
   );
 };
 
@@ -281,18 +285,18 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    * Whether or not the user has signed the EU agreement
    */
   hasSignedEUAgreement?: boolean;
-  /**
-   * The legacy config interface
-   */
-  interfaces?: InterfacePayload[];
+  // /**
+  //  * The legacy config interface
+  //  */
+  // interfaces?: InterfacePayload[];
   /**
    * The currently selected Linode
    */
   linode?: Linode | null;
-  /**
-   * New Linode interfaces
-   */
-  newInterfaces?: CreateLinodeInterfacePayload[];
+  // /**
+  //  * New Linode interfaces
+  //  */
+  // newInterfaces?: CreateLinodeInterfacePayload[];
 }
 
 export interface LinodeCreateFormContext {

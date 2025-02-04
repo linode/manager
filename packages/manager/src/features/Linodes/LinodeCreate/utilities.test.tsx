@@ -1,14 +1,22 @@
-import { createLinodeRequestFactory } from 'src/factories';
+import {
+  createLinodeRequestFactory,
+  LinodeConfigInterfaceFactory,
+} from 'src/factories';
 import { base64UserData, userData } from 'src/utilities/metadata.test';
 
 import {
   getInterfacesPayload,
+  getIsLegacyInterfaceArray,
   getIsValidLinodeLabelCharacter,
   getLinodeCreatePayload,
   getLinodeLabelFromLabelParts,
   getTabIndex,
-  LinodeCreateFormValues,
 } from './utilities';
+import {
+  linodeInterfaceFactoryPublic,
+  linodeInterfaceFactoryVlan,
+  linodeInterfaceFactoryVPC,
+} from 'src/factories/linodeInterface';
 
 describe('getTabIndex', () => {
   it('should return 0 when there is no value specifying the tab', () => {
@@ -27,7 +35,7 @@ describe('getLinodeCreatePayload', () => {
   it('should return a basic payload', () => {
     const values = createLinodeRequestFactory.build();
 
-    expect(getLinodeCreatePayload(values as LinodeCreateFormValues)).toEqual(values);
+    expect(getLinodeCreatePayload(values)).toEqual(values);
   });
 
   it('should base64 encode metadata', () => {
@@ -35,7 +43,7 @@ describe('getLinodeCreatePayload', () => {
       metadata: { user_data: userData },
     });
 
-    expect(getLinodeCreatePayload(values as LinodeCreateFormValues)).toEqual({
+    expect(getLinodeCreatePayload(values)).toEqual({
       ...values,
       metadata: { user_data: base64UserData },
     });
@@ -46,7 +54,7 @@ describe('getLinodeCreatePayload', () => {
       placement_group: {},
     });
 
-    expect(getLinodeCreatePayload(values as LinodeCreateFormValues)).toEqual({
+    expect(getLinodeCreatePayload(values)).toEqual({
       ...values,
       placement_group: undefined,
     });
@@ -310,6 +318,26 @@ describe('getInterfacesPayload', () => {
         purpose: 'public',
       },
     ]);
+  });
+});
+
+describe('getIsLegacyInterfaceArray', () => {
+  it('determines the given interfaces are legacy', () => {
+    const legacyInterfaces = LinodeConfigInterfaceFactory.buildList(3);
+    expect(getIsLegacyInterfaceArray(legacyInterfaces)).toBe(true);
+    expect(getIsLegacyInterfaceArray(undefined)).toBe(true);
+    expect(getIsLegacyInterfaceArray([])).toBe(true);
+  });
+
+  it('returns false if the given interfaces are new Linode Interfaces', () => {
+    const linodeInterfacesVlan = linodeInterfaceFactoryVlan.buildList(3);
+    expect(getIsLegacyInterfaceArray(linodeInterfacesVlan)).toBe(false);
+
+    const linodeInterfacesVPC = linodeInterfaceFactoryVPC.buildList(3);
+    expect(getIsLegacyInterfaceArray(linodeInterfacesVPC)).toBe(false);
+
+    const linodeInterfacesPublic = linodeInterfaceFactoryPublic.buildList(3);
+    expect(getIsLegacyInterfaceArray(linodeInterfacesPublic)).toBe(false);
   });
 });
 
