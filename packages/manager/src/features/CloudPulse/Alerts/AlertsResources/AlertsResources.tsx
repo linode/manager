@@ -19,6 +19,7 @@ import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
 import type { Region } from '@linode/api-v4';
+import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 
 export interface AlertResourcesProp {
   /**
@@ -159,6 +160,28 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     [handleResourcesSelection]
   );
 
+  const handleAllSelection = React.useCallback(() => {
+    if (!resources) {
+      // Guard clause if data is undefined
+      return;
+    }
+
+    if (selectedResources.length === resources.length) {
+      // Unselect all
+      setSelectedResources([]);
+      if (handleResourcesSelection) {
+        handleResourcesSelection([]);
+      }
+    } else {
+      // Select all
+      const allResources = resources.map((resource) => resource.id);
+      setSelectedResources(allResources);
+      if (handleResourcesSelection) {
+        handleResourcesSelection(allResources);
+      }
+    }
+  }, [handleResourcesSelection, resources, selectedResources]);
+
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
   const isNoResources =
     !isDataLoadingError && !isSelectionsNeeded && alertResourceIds.length === 0;
@@ -211,6 +234,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         </Grid>
+        {isSelectionsNeeded && !(isResourcesError || isRegionsError) && (
+          <Grid item xs={12}>
+            <AlertsResourcesNotice
+              handleSelectionChange={handleAllSelection}
+              selectedResources={selectedResources.length}
+              totalResources={resources?.length ?? 0}
+            />
+          </Grid>
+        )}
         <Grid item xs={12}>
           <DisplayAlertResources
             filteredResources={filteredResources}

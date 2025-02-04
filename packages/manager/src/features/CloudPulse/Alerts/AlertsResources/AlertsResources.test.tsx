@@ -6,7 +6,8 @@ import { linodeFactory, regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertResources } from './AlertsResources';
-import { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+
+import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
@@ -186,7 +187,7 @@ describe('AlertResources component tests', () => {
   it('should handle selection correctly and publish', async () => {
     const handleResourcesSelection = vi.fn();
 
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <AlertResources
         alertResourceIds={['1', '2']}
         handleResourcesSelection={handleResourcesSelection}
@@ -204,6 +205,9 @@ describe('AlertResources component tests', () => {
       'false'
     );
 
+    const noticeText = getByTestId('selection_notice');
+    expect(noticeText).toHaveTextContent('2 of 3 resources are selected.');
+
     // validate it selects 3
     await userEvent.click(getByTestId('select_item_3'));
     expect(getByTestId('select_item_3')).toHaveAttribute(
@@ -211,6 +215,7 @@ describe('AlertResources component tests', () => {
       'true'
     );
     expect(handleResourcesSelection).toHaveBeenCalledWith(['1', '2', '3']);
+    expect(noticeText).toHaveTextContent('3 of 3 resources are selected.');
 
     // unselect 3 and test
     await userEvent.click(getByTestId('select_item_3'));
@@ -227,6 +232,14 @@ describe('AlertResources component tests', () => {
 
     // click select all again to unselect all
     await userEvent.click(getByTestId('select_all_in_page_1'));
+    expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
+
+    // click select all in notice and test
+    await userEvent.click(getByTestId('select_all_notice'));
+    expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2', '3']);
+
+    // click unselect all in notice and test
+    await userEvent.click(getByTestId('unselect_all_notice'));
     expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
   });
 });
