@@ -1,10 +1,10 @@
 import { Typography } from '@linode/ui';
+import { useTheme } from '@mui/material';
 import MarkdownIt from 'markdown-it';
 import React from 'react';
 
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { getHighlighterTheme, shiki } from 'src/utilities/syntax-highlighter';
-import { useColorMode } from 'src/utilities/theme';
 
 import type { SanitizeOptions } from 'src/utilities/sanitizeHTML';
 
@@ -22,7 +22,7 @@ export interface HighlightedMarkdownProps {
 export const Markdown = (props: HighlightedMarkdownProps) => {
   const { className, sanitizeOptions, textOrMarkdown } = props;
 
-  const { colorMode } = useColorMode();
+  const theme = useTheme();
 
   // This is "unsafe" because the output may contain HTML. To be deemed "safe" it
   // needs to be sanitized before rendered as HTML.
@@ -34,12 +34,12 @@ export const Markdown = (props: HighlightedMarkdownProps) => {
       try {
         return shiki.codeToHtml(str, {
           lang,
-          theme: getHighlighterTheme(colorMode),
+          theme: getHighlighterTheme(theme.palette.mode),
         });
       } catch (error) {
         return shiki.codeToHtml(str, {
           lang: 'js',
-          theme: getHighlighterTheme(colorMode),
+          theme: getHighlighterTheme(theme.palette.mode),
         });
       }
     },

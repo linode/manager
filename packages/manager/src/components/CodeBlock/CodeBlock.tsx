@@ -4,7 +4,6 @@ import React from 'react';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { getHighlighterTheme, shiki } from 'src/utilities/syntax-highlighter';
-import { useColorMode } from 'src/utilities/theme';
 
 import { CopyTooltip } from '../CopyTooltip/CopyTooltip';
 import { useCodeBlockStyles } from './CodeBlock.styles';
@@ -49,8 +48,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
     language,
     showLineNumbers = true,
   } = props;
-  const { colorMode } = useColorMode();
-  const { classes, cx } = useCodeBlockStyles();
+  const { classes, cx, theme } = useCodeBlockStyles();
 
   const defaultHandleCopyIconClick = () => {
     if (analyticsLabel) {
@@ -60,7 +58,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
 
   const unsafeHighlightedHtml = shiki.codeToHtml(code, {
     lang: language,
-    theme: getHighlighterTheme(colorMode),
+    theme: getHighlighterTheme(theme.palette.mode),
   });
 
   const sanitizedHtml = sanitizeHTML({
