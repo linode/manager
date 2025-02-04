@@ -80,7 +80,6 @@ export const CloudPulseNodeTypeFilter = React.memo(
         ]);
         return;
       }
-
       // when savePreferences is true and selected node is undefined
       if (
         isClusterSizeGreaterThanOne !== undefined &&
@@ -89,43 +88,17 @@ export const CloudPulseNodeTypeFilter = React.memo(
       ) {
         const nodeType =
           nodeTypeOptionslist.find((type) => type.id === defaultValue) ??
-          nodeTypeOptionslist[0]; // set default value if available else set primary as default
+          undefined;
         setSelectedNodeType(nodeType);
         handleNodeTypeChange(nodeType?.id, nodeType ? [nodeType?.label] : []);
         return;
       }
-      // when selected node type is null and clustersize is defined
-      if (
-        selectedNodeType == null &&
-        isClusterSizeGreaterThanOne !== undefined
-      ) {
-        setSelectedNodeType(nodeTypeOptionslist[0]);
-        handleNodeTypeChange(nodeTypeOptionslist[0].id, [
-          nodeTypeOptionslist[0].label,
-        ]);
-        return;
-      }
-      // if node type is already selected, check validity for current clusters
       if (selectedNodeType) {
-        if (isClusterSizeGreaterThanOne === undefined) {
-          setSelectedNodeType(null);
-          handleNodeTypeChange(undefined, []);
-          return;
-        }
-
-        const isNodeTypeValid = isClusterSizeGreaterThanOne
-          ? nodeTypeOptionslist.find((type) => type.id === selectedNodeType.id)
-          : false;
-
-        if (!isNodeTypeValid) {
-          setSelectedNodeType(nodeTypeOptionslist[0]);
-          handleNodeTypeChange(nodeTypeOptionslist[0].id, [
-            nodeTypeOptionslist[0].label,
-          ]);
-        }
+        setSelectedNodeType(null);
+        handleNodeTypeChange(undefined, []);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savePreferences, defaultValue, isClusterSizeGreaterThanOne]);
+    }, [savePreferences, database_ids]);
 
     return (
       <Autocomplete
