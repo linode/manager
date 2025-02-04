@@ -629,6 +629,56 @@ export const darkTheme: ThemeOptions = {
         selected: {},
       },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        input: {
+          '&.Mui-disabled': {
+            WebkitTextFillColor: 'unset !important',
+          },
+        },
+        root: {
+          '& svg': {
+            color: TextField.Default.InfoIcon,
+          },
+          '&.Mui-disabled': {
+            '& svg': {
+              color: TextField.Disabled.InfoIcon,
+            },
+            backgroundColor: TextField.Disabled.Background,
+            borderColor: TextField.Disabled.Border,
+            color: TextField.Disabled.Text,
+          },
+          '&.Mui-error': {
+            '& svg': {
+              color: TextField.Error.Icon,
+            },
+            backgroundColor: TextField.Error.Background,
+            borderColor: TextField.Error.Border,
+            color: TextField.Error.Text,
+          },
+          '&.Mui-focused': {
+            '& svg': {
+              color: TextField.Focus.Icon,
+            },
+            backgroundColor: TextField.Focus.Background,
+            borderColor: TextField.Focus.Border,
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
+            color: TextField.Focus.Text,
+          },
+          '&.Mui-hover': {
+            '& svg': {
+              color: TextField.Hover.Icon,
+            },
+            backgroundColor: TextField.Hover.Background,
+            borderColor: TextField.Hover.Border,
+            color: TextField.Hover.Text,
+          },
+          backgroundColor: TextField.Default.Background,
+          borderColor: TextField.Default.Border,
+          color: TextField.Filled.Text,
+        },
+      },
+    },
     MuiPaper: {
       styleOverrides: {
         outlined: {
