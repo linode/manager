@@ -90,7 +90,7 @@ export const AlertDetail = () => {
       </>
     );
   }
-  const { entity_ids: entityIds } = alertDetails;
+  const { entity_ids: entityIds, type } = alertDetails;
   return (
     <>
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
@@ -124,6 +124,7 @@ export const AlertDetail = () => {
         >
           <AlertResources
             alertResourceIds={entityIds}
+            alertType={type}
             serviceType={serviceType}
           />
         </Box>

@@ -175,25 +175,26 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       return;
     }
 
+    let currentSelections: string[] = [];
+
     if (selectedResources.length === resources.length) {
       // Unselect all
       setSelectedResources([]);
-      if (handleResourcesSelection) {
-        handleResourcesSelection([]);
-      }
     } else {
       // Select all
-      const allResources = resources.map((resource) => resource.id);
-      setSelectedResources(allResources);
-      if (handleResourcesSelection) {
-        handleResourcesSelection(allResources);
-      }
+      currentSelections = resources.map(({ id }) => id);
+      setSelectedResources(currentSelections);
+    }
+
+    if (handleResourcesSelection) {
+      handleResourcesSelection(currentSelections);
     }
   }, [handleResourcesSelection, resources, selectedResources]);
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
   const isNoResources =
     !isDataLoadingError && !isSelectionsNeeded && alertResourceIds.length === 0;
+  const showEditInformation = isSelectionsNeeded && alertType === 'system';
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
@@ -221,7 +222,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {alertLabel || 'Resources'}
         {/* It can be either the passed alert label or just Resources */}
       </Typography>
-      {isSelectionsNeeded && alertType === 'system' && (
+      {showEditInformation && (
         <Typography ref={titleRef} variant="body1">
           You can enable or disable this system alert for each resource you have
           access to. Select the resources listed below you want to enable the
@@ -273,8 +274,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                 data-testid="show_selected_only"
                 disabled={!(Boolean(selectedResources.length) || selectedOnly)}
                 onClick={() => setSelectedOnly(!selectedOnly)}
-                text={'Show Selected Only'}
-                value={'Show Selected'}
+                text="Show Selected Only"
+                value="Show Selected"
               />
             </Grid>
           )}

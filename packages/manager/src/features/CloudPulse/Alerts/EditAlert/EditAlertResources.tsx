@@ -140,7 +140,7 @@ export const EditAlertResources = () => {
     setSelectedResources(resourceIds); // keep track of the selected resources and update it on save
   };
 
-  const { entity_ids, label, service_type } = alertDetails;
+  const { entity_ids, label, service_type, type } = alertDetails;
 
   return (
     <>
@@ -155,6 +155,7 @@ export const EditAlertResources = () => {
         <AlertResources
           alertLabel={label}
           alertResourceIds={entity_ids}
+          alertType={type}
           handleResourcesSelection={handleResourcesSelection}
           isSelectionsNeeded
           serviceType={service_type}
