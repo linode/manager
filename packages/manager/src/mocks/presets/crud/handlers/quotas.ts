@@ -1,13 +1,14 @@
 import { http } from 'msw';
 
-import { quotaFactory } from 'src/factories/quotas';
+import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
 } from 'src/mocks/utilities/response';
+import { pickRandom } from 'src/utilities/random';
 
-import type { Quota, QuotaType } from '@linode/api-v4';
+import type { Quota, QuotaType, QuotaUsage } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type {
   APIErrorResponse,
@@ -23,7 +24,6 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quota_name: 'Dedicated CPU',
       region_applied: 'us-east',
       resource_metric: 'CPU',
-      used: 8,
     }),
     quotaFactory.build({
       description: 'Max number of vCPUs assigned to Linodes with Shared plans',
@@ -31,7 +31,6 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quota_name: 'Shared CPU',
       region_applied: 'us-east',
       resource_metric: 'CPU',
-      used: 22,
     }),
     quotaFactory.build({
       description: 'Max number of GPUs assigned to Linodes with GPU plans',
@@ -39,7 +38,6 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quota_name: 'GPU',
       region_applied: 'us-east',
       resource_metric: 'GPU',
-      used: 5,
     }),
     quotaFactory.build({
       description: 'Max number of VPUs assigned to Linodes with VPU plans',
@@ -47,7 +45,6 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quota_name: 'VPU',
       region_applied: 'us-east',
       resource_metric: 'VPU',
-      used: 20,
     }),
     quotaFactory.build({
       description:
@@ -56,7 +53,6 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quota_name: 'High Memory',
       region_applied: 'us-east',
       resource_metric: 'CPU',
-      used: 0,
     }),
   ],
   lke: [
@@ -65,7 +61,6 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quota_name: 'Total number of Clusters',
       region_applied: 'us-east',
       resource_metric: 'cluster',
-      used: 12,
     }),
   ],
   'object-storage': [
@@ -75,7 +70,6 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quota_name: 'Total Capacity',
       resource_metric: 'byte',
       s3_endpoint: 'us-east-1.linodeobjects.com',
-      used: 900_000_000_000_000,
     }),
     quotaFactory.build({
       endpoint_type: 'E3',
@@ -122,6 +116,54 @@ export const getQuotas = () => [
       }
 
       return makeResponse(quota);
+    }
+  ),
+
+  http.get(
+    '*/v4/:service/quotas/:id/usage',
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | QuotaUsage>> => {
+      const service = params.service as QuotaType;
+      const quota = mockQuotas[service].find(
+        ({ quota_id }) => quota_id === +params.id
+      );
+
+      if (!quota) {
+        return makeNotFoundResponse();
+      }
+
+      switch (service) {
+        case 'linode':
+          return makeResponse(
+            quotaUsageFactory.build({
+              quota_limit: quota.quota_limit,
+              used: pickRandom([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+            })
+          );
+        case 'lke':
+          return makeResponse(
+            quotaUsageFactory.build({
+              quota_limit: quota.quota_limit,
+              used: pickRandom([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+            })
+          );
+        case 'object-storage':
+          return makeResponse(
+            quotaUsageFactory.build({
+              quota_limit: quota.quota_limit,
+              used: pickRandom([
+                0,
+                100_000_000_000_000,
+                200_000_000_000_000,
+                300_000_000_000_000,
+                400_000_000_000_000,
+              ]),
+            })
+          );
+        default:
+          return makeNotFoundResponse();
+      }
     }
   ),
 ];

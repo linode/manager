@@ -12,10 +12,10 @@ import {
   Typography,
 } from '@linode/ui';
 import { createImageSchema } from '@linode/validation';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
@@ -29,21 +29,17 @@ import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { CreateImagePayload } from '@linode/api-v4';
-import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
 export const CreateImageTab = () => {
-  const location = useLocation();
-
-  const queryParams = React.useMemo(
-    () =>
-      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
-        location.search
-      ),
-    [location.search]
-  );
+  const {
+    selectedDisk: selectedDiskFromSearch,
+    selectedLinode: selectedLinodeFromSearch,
+  } = useSearch({
+    strict: false,
+  });
+  const navigate = useNavigate();
 
   const {
     control,
@@ -55,7 +51,7 @@ export const CreateImageTab = () => {
     watch,
   } = useForm<CreateImagePayload>({
     defaultValues: {
-      disk_id: +queryParams.selectedDisk,
+      disk_id: selectedDiskFromSearch ? +selectedDiskFromSearch : undefined,
     },
     mode: 'onBlur',
     resolver: yupResolver(createImageSchema),
@@ -64,7 +60,6 @@ export const CreateImageTab = () => {
   const flags = useFlags();
 
   const { enqueueSnackbar } = useSnackbar();
-  const { push } = useHistory();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
 
@@ -85,7 +80,10 @@ export const CreateImageTab = () => {
       enqueueSnackbar('Image scheduled for creation.', {
         variant: 'info',
       });
-      push('/images');
+      navigate({
+        search: () => ({}),
+        to: '/images',
+      });
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -98,7 +96,7 @@ export const CreateImageTab = () => {
   });
 
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
-    queryParams.selectedLinode ? +queryParams.selectedLinode : null
+    selectedLinodeFromSearch ? +selectedLinodeFromSearch : null
   );
 
   const { data: selectedLinode } = useLinodeQuery(

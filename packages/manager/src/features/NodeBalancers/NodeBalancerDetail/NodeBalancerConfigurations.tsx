@@ -17,7 +17,6 @@ import {
   defaultTo,
   lensPath,
   over,
-  pathOr,
   set,
   view,
 } from 'ramda';
@@ -54,7 +53,6 @@ import type {
   Grants,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
-  ResourcePage,
 } from '@linode/api-v4';
 import type { Lens } from 'ramda';
 import type { RouteComponentProps } from 'react-router-dom';
@@ -97,9 +95,7 @@ interface MatchProps {
 type RouteProps = RouteComponentProps<MatchProps>;
 
 interface PreloadedProps {
-  configs: PromiseLoaderResponse<
-    ResourcePage<NodeBalancerConfigFieldsWithStatus>
-  >;
+  configs: PromiseLoaderResponse<NodeBalancerConfigFieldsWithStatus[]>;
 }
 
 interface State {
@@ -1016,7 +1012,7 @@ class NodeBalancerConfigurations extends React.Component<
   state: State = {
     configErrors: [],
     configSubmitting: [],
-    configs: pathOr([], ['response'], this.props.configs),
+    configs: this.props.configs?.response ?? [],
     deleteConfigConfirmDialog: clone(
       NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState
     ),
