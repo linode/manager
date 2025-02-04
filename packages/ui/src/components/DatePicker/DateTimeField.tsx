@@ -13,6 +13,7 @@ import type { DateTime } from 'luxon';
 
 interface DateTimeFieldProps {
   errorText?: string;
+  format?: 'DD-MM-YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD';
   handleClose: () => void;
   inputRef?: React.RefObject<HTMLInputElement>;
   label: string;
@@ -25,6 +26,7 @@ interface DateTimeFieldProps {
 
 export const DateTimeField = ({
   errorText,
+  format,
   inputRef,
   label,
   onChange,
@@ -71,7 +73,7 @@ export const DateTimeField = ({
               helperText: '',
             },
           }}
-          format="MM/dd/yyyy"
+          format={format ?? 'MM/dd/yyyy'}
           inputRef={inputRef}
           onChange={handleChange}
           sx={{ marginTop: 1 }}

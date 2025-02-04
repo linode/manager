@@ -10,12 +10,86 @@ import { Calendar } from '../Calendar/Calendar';
 import { DateTimeField } from '../DateTimeField';
 import { Presets } from './Presets';
 
-export const DateRangePicker = () => {
-  const [startDate, setStartDate] = useState<DateTime | null>(null);
-  const [selectedPreset, setSelectedPreset] = useState<null | string>(null);
-  const [endDate, setEndDate] = useState<DateTime | null>(null);
-  const [startDateError, setStartDateError] = useState('');
-  const [endDateError, setEndDateError] = useState('');
+import type { SxProps } from '@mui/material/styles';
+
+export interface DateRangePickerProps {
+  /** Properties for the end date field */
+  endDateProps?: {
+    /** Custom error message for invalid end date */
+    errorMessage?: string;
+    /** Label for the end date field */
+    label?: string;
+    /** placeholder for the end date field */
+    placeholder?: string;
+    /** Whether to show the timezone selector for the end date */
+    showTimeZone?: boolean;
+    /** Initial or controlled value for the end date-time */
+    value?: DateTime | null;
+  };
+
+  /** Format for displaying the date-time */
+  format?: 'DD-MM-YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD';
+
+  /** Callback when the date-time range changes,
+   * this returns start date, end date in ISO formate,
+   * preset value and timezone
+   * */
+  onApply?: (params: {
+    endDate: DateTime | null;
+    selectedPreset: null | string;
+    startDate: DateTime | null;
+    timeZone?: null | string;
+  }) => void;
+
+  /** Additional settings for the presets dropdown */
+  presetsProps?: {
+    /** Default value for the presets field */
+    defaultValue?: string;
+    /** If true, shows the date presets field instead of the date pickers */
+    enablePresets?: boolean;
+  };
+
+  /** Properties for the start date field */
+  startDateProps?: {
+    /** Custom error message for invalid start date */
+    errorMessage?: string;
+    /** Label for the start date field */
+    label?: string;
+    /** placeholder for the start date field */
+    placeholder?: string;
+    /** Whether to show the timezone selector for the start date */
+    showTimeZone?: boolean;
+    /** Initial or controlled value for the start timezone */
+    timeZoneValue?: null | string;
+    /** Initial or controlled value for the start date-time */
+    value?: DateTime | null;
+  };
+
+  /** Any additional styles to apply to the root element */
+  sx?: SxProps;
+}
+
+export const DateRangePicker = ({
+  endDateProps,
+  format,
+  onApply,
+  presetsProps,
+  startDateProps,
+  sx,
+}: DateRangePickerProps) => {
+  const [startDate, setStartDate] = useState<DateTime | null>(
+    startDateProps?.value ?? null
+  );
+  const [selectedPreset, setSelectedPreset] = useState<null | string>(
+    presetsProps?.defaultValue ?? null
+  );
+  const [endDate, setEndDate] = useState<DateTime | null>(
+    endDateProps?.value ?? null
+  );
+  const [startDateError, setStartDateError] = useState(
+    startDateProps?.errorMessage
+  );
+  const [endDateError, setEndDateError] = useState(endDateProps?.errorMessage);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
@@ -39,6 +113,7 @@ export const DateRangePicker = () => {
   };
 
   const handleApply = () => {
+    onApply?.({ endDate, selectedPreset, startDate });
     handleClose();
   };
 
@@ -97,10 +172,9 @@ export const DateRangePicker = () => {
 
   return (
     <Box>
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={2} sx={sx}>
         <DateTimeField
           onChange={(date) => {
-            debugger;
             setStartDate(date);
 
             // Clear end date **only** if the new start date is after the current end date
@@ -110,12 +184,13 @@ export const DateRangePicker = () => {
             setFocusedField('end'); // Automatically focus on end date
           }}
           errorText={startDateError}
+          format={format}
           handleClose={handleClose}
           inputRef={startDateInputRef}
-          label="Start Date"
+          label={startDateProps?.label ?? 'Start Date'}
           onClick={() => handleOpen('start')}
           // otherFieldRef={endDateInputRef}
-          placeholder="MM-DD-YYYY"
+          placeholder={startDateProps?.placeholder ?? 'MM-DD-YYYY'}
           value={startDate}
         />
         <DateTimeField
@@ -123,12 +198,13 @@ export const DateRangePicker = () => {
             setEndDate(date);
           }}
           errorText={endDateError}
+          format={format}
           handleClose={handleClose}
           inputRef={endDateInputRef}
-          label="End Date"
+          label={endDateProps?.label ?? 'End Date'}
           onClick={() => handleOpen('end')}
           // otherFieldRef={startDateInputRef}
-          placeholder="MM-DD-YYYY"
+          placeholder={endDateProps?.placeholder ?? 'MM-DD-YYYY'}
           value={endDate}
         />
       </Stack>
