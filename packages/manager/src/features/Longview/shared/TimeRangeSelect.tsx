@@ -1,20 +1,19 @@
 import { getActiveLongviewPlan } from '@linode/api-v4/lib/longview';
+import { Select } from '@linode/ui';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import Select, {
-  BaseSelectProps,
-  Item,
-} from 'src/components/EnhancedSelect/Select';
 import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
 
+import type { SelectOption, SelectProps } from '@linode/ui';
+
 interface Props
   extends Omit<
-    BaseSelectProps<Item<Labels, Labels>, false>,
-    'defaultValue' | 'onChange'
+    SelectProps<SelectOption<Labels>>,
+    'defaultValue' | 'onChange' | 'options'
   > {
   defaultValue?: Labels;
   handleStatsChange?: (start: number, end: number) => void;
@@ -94,7 +93,7 @@ export const TimeRangeSelect = React.memo((props: Props) => {
     `${new Date().getFullYear()}`
   );
 
-  const handleChange = (item: Item<Labels, Labels>) => {
+  const handleChange = (item: SelectOption<Labels>) => {
     setTimeRange(item.value);
 
     refetchPreferences()
@@ -120,11 +119,8 @@ export const TimeRangeSelect = React.memo((props: Props) => {
   return (
     <Select
       {...restOfSelectProps}
-      isClearable={false}
-      isSearchable={false}
-      onChange={handleChange}
+      onChange={(_event, value) => handleChange(value)}
       options={options}
-      small
       value={options.find((o) => o.label === selectedTimeRange) || options[0]}
     />
   );
@@ -141,8 +137,8 @@ export const TimeRangeSelect = React.memo((props: Props) => {
 export const generateSelectOptions = (
   isLongviewPro: boolean,
   currentYear: string
-): Item<Labels, Labels>[] => {
-  const baseOptions: Item<Labels, Labels>[] = [
+): SelectOption<Labels>[] => {
+  const baseOptions: SelectOption<Labels>[] = [
     {
       label: 'Past 30 Minutes',
       value: 'Past 30 Minutes',

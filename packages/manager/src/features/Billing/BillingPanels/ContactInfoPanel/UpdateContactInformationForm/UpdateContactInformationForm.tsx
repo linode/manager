@@ -1,4 +1,4 @@
-import { Checkbox, Notice, TextField, Typography } from '@linode/ui';
+import { Checkbox, Notice, Select, TextField, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
 import { useFormik } from 'formik';
@@ -6,7 +6,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
 import { reportException } from 'src/exceptionReporting';
 import {
@@ -24,8 +23,7 @@ import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import type { Item } from 'src/components/EnhancedSelect/Select';
-
+import type { SelectOption } from '@linode/ui';
 interface Props {
   focusEmail: boolean;
   onClose: () => void;
@@ -150,12 +148,14 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
    * - region[0] is the readable name of the region (e.g. "Alabama")
    * - region[1] is the ISO 3166-2 code of the region (e.g. "AL")
    */
-  const countryResults: Item<string>[] = (allCountries || []).map((country) => {
-    return {
-      label: country[0],
-      value: country[1],
-    };
-  });
+  const countryResults: SelectOption<string>[] = (allCountries || []).map(
+    (country) => {
+      return {
+        label: country[0],
+        value: country[1],
+      };
+    }
+  );
 
   const currentCountryResult = (allCountries || []).filter((country) =>
     formik.values.country
@@ -200,7 +200,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
     formik.setFieldValue('company', '');
   }
 
-  const handleCountryChange = (item: Item<string>) => {
+  const handleCountryChange = (item: SelectOption<string>) => {
     formik.setFieldValue('country', item.value);
     formik.setFieldValue('tax_id', '');
   };
@@ -305,7 +305,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         </Grid>
 
         <Grid sm={6} xs={12}>
-          <EnhancedSelect
+          <Select
             textFieldProps={{
               dataAttrs: {
                 'data-qa-contact-country': true,
@@ -316,17 +316,20 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             )}
             disabled={isReadOnly}
             errorText={errorMap.country}
-            isClearable={false}
             label="Country"
-            onChange={(item) => handleCountryChange(item)}
+            onChange={(_event, value) => handleCountryChange(value)}
             options={countryResults}
             placeholder="Select a Country"
             required
+            searchable
           />
         </Grid>
         <Grid sm={6} xs={12}>
           {formik.values.country === 'US' || formik.values.country == 'CA' ? (
-            <EnhancedSelect
+            <Select
+              onChange={(_event, value) =>
+                formik.setFieldValue('state', value.value)
+              }
               placeholder={
                 formik.values.country === 'US'
                   ? 'Enter state'
@@ -344,11 +347,10 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
               }
               disabled={isReadOnly}
               errorText={errorMap.state}
-              isClearable={false}
               label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
-              onChange={(item) => formik.setFieldValue('state', item.value)}
               options={filteredRegionResults}
               required
+              searchable
             />
           ) : (
             <TextField
