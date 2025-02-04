@@ -19,6 +19,8 @@ import { mswDB } from '../../../indexedDB';
 import type {
   Firewall,
   FirewallDevice,
+  FirewallDeviceEntity,
+  FirewallDeviceEntityType,
   FirewallRules,
   FirewallSettings,
   FirewallTemplate,
@@ -113,6 +115,9 @@ export const createFirewall = (mockState: MockState) => [
     }): Promise<StrictResponse<APIErrorResponse | Firewall>> => {
       const payload = await request.clone().json();
 
+      const firewallEntities: FirewallDeviceEntity[] = [];
+      const createDevicePromises = [];
+
       const firewall = firewallFactory.build({
         ...payload,
         created: DateTime.now().toISO(),
@@ -120,7 +125,38 @@ export const createFirewall = (mockState: MockState) => [
         updated: DateTime.now().toISO(),
       });
 
-      await mswDB.add('firewalls', firewall, mockState);
+      if (payload.devices?.linodes) {
+        for (const linodeId of payload.devices?.linodes as number[]) {
+          const entity = {
+            id: linodeId,
+            label: `linode-${linodeId}`,
+            type: 'linode' as FirewallDeviceEntityType,
+            url: `/linodes/${linodeId}`,
+          };
+          firewallEntities.push(entity);
+
+          const firewallDevice = firewallDeviceFactory.build({
+            created: DateTime.now().toISO(),
+            entity,
+            updated: DateTime.now().toISO(),
+          });
+
+          createDevicePromises.push(
+            mswDB.add(
+              'firewallDevices',
+              [firewall.id, firewallDevice],
+              mockState
+            )
+          );
+        }
+      }
+
+      await Promise.all(createDevicePromises);
+      await mswDB.add(
+        'firewalls',
+        { ...firewall, entities: firewallEntities },
+        mockState
+      );
 
       queueEvents({
         event: {
