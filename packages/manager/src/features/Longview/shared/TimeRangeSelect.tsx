@@ -127,7 +127,7 @@ export const TimeRangeSelect = React.memo((props: Props) => {
 });
 
 /**
- * react-select option generator that aims to remain a pure function
+ * Select option generator that aims to remain a pure function
  * and take in the current datetime as an argument and generate select values
  * based on what it's passed.
  *
