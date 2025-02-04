@@ -118,8 +118,6 @@ export interface Flags {
   gecko2: GeckoFeatureFlag;
   gpuv2: gpuV2;
   iam: BetaFeatureFlag;
-  imageServiceGen2: boolean;
-  imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
   limitsEvolution: BaseFeatureFlag;
   linodeDiskEncryption: boolean;
