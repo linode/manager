@@ -6,6 +6,7 @@ import type {
   FirewallDeviceEntityType,
   FirewallRuleType,
   FirewallRules,
+  FirewallSettings,
   FirewallTemplate,
   FirewallTemplateRules,
 } from '@linode/api-v4/lib/firewalls/types';
@@ -74,5 +75,16 @@ export const firewallTemplateFactory = Factory.Sync.makeFactory<FirewallTemplate
   {
     rules: firewallTemplateRulesFactory.build(),
     slug: 'akamai-non-prod',
+  }
+);
+
+export const firewallSettingsFactory = Factory.Sync.makeFactory<FirewallSettings>(
+  {
+    default_firewall_ids: {
+      linode: 1,
+      nodebalancer: 1,
+      public_interface: 1,
+      vpc_interface: 1,
+    },
   }
 );
