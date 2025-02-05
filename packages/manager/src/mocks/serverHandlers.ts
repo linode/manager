@@ -532,80 +532,40 @@ export const handlers = [
     return HttpResponse.json(imageFactory.build());
   }),
   http.get('*/images', async ({ request }) => {
-    const privateImages = imageFactory.buildList(5, {
-      status: 'available',
-      type: 'manual',
-    });
-    const cloudinitCompatableDistro = imageFactory.build({
-      capabilities: ['cloud-init'],
-      id: 'metadata-test-distro',
-      is_public: true,
-      label: 'metadata-test-distro',
-      status: 'available',
-      type: 'manual',
-    });
-    const cloudinitCompatableImage = imageFactory.build({
-      capabilities: ['cloud-init'],
-      id: 'metadata-test-image',
-      label: 'metadata-test-image',
-      status: 'available',
-      type: 'manual',
-    });
-    const multiRegionsImage = imageFactory.build({
-      id: 'multi-regions-test-image',
-      label: 'multi-regions-test-image',
-      regions: [
-        { region: 'us-southeast', status: 'available' },
-        { region: 'us-east', status: 'pending' },
-      ],
-      status: 'available',
-      type: 'manual',
-    });
-    const creatingImages = imageFactory.buildList(2, {
-      status: 'creating',
-      type: 'manual',
-    });
-    const pendingImages = imageFactory.buildList(5, {
-      status: 'pending_upload',
-      type: 'manual',
-    });
-    const automaticImages = imageFactory.buildList(5, {
-      expiry: '2021-05-01',
-      type: 'automatic',
-    });
-    const publicImages = imageFactory.buildList(4, { is_public: true });
-    const distributedImage = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-sites'],
-      id: 'private/distributed-image',
-      label: 'distributed-image',
-      regions: [{ region: 'us-east', status: 'available' }],
-    });
-    const images = [
-      cloudinitCompatableDistro,
-      cloudinitCompatableImage,
-      multiRegionsImage,
-      distributedImage,
-      ...automaticImages,
-      ...privateImages,
-      ...publicImages,
-      ...pendingImages,
-      ...creatingImages,
-    ];
     const filter = request.headers.get('x-filter');
 
     if (filter?.includes('manual')) {
-      return HttpResponse.json(
-        makeResourcePage(images.filter((image) => image.type === 'manual'))
-      );
+      const images = [
+        imageFactory.build({
+          capabilities: ['distributed-sites'],
+          regions: [{ region: 'us-east', status: 'available' }],
+          type: 'manual',
+        }),
+        imageFactory.build({ capabilities: [], regions: [], type: 'manual' }),
+        imageFactory.build({
+          capabilities: ['distributed-sites', 'cloud-init'],
+          regions: [{ region: 'us-east', status: 'available' }],
+          type: 'manual',
+        }),
+        imageFactory.build({
+          capabilities: ['cloud-init'],
+          regions: [],
+          type: 'manual',
+        }),
+      ];
+      return HttpResponse.json(makeResourcePage(images));
     }
 
     if (filter?.includes('automatic')) {
-      return HttpResponse.json(
-        makeResourcePage(images.filter((image) => image.type === 'automatic'))
-      );
+      const images = imageFactory.buildList(5, {
+        capabilities: [],
+        regions: [],
+        type: 'automatic',
+      });
+      return HttpResponse.json(makeResourcePage(images));
     }
 
-    return HttpResponse.json(makeResourcePage(images));
+    return HttpResponse.json(makeResourcePage([]));
   }),
   http.post<any, UpdateImageRegionsPayload>(
     '*/v4/images/:id/regions',

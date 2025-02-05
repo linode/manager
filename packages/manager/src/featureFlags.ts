@@ -115,12 +115,9 @@ export interface Flags {
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
-  disallowImageUploadToNonObjRegions: boolean;
   gecko2: GeckoFeatureFlag;
   gpuv2: gpuV2;
   iam: BetaFeatureFlag;
-  imageServiceGen2: boolean;
-  imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
   limitsEvolution: BaseFeatureFlag;
   linodeDiskEncryption: boolean;
