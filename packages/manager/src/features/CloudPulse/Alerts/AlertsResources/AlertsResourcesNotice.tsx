@@ -2,8 +2,10 @@ import { Button, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
+import type { SelectUnselectAll } from './AlertsResources';
+
 interface AlertResourceNoticeProps {
-  handleSelectionChange: () => void;
+  handleSelectionChange: (action: SelectUnselectAll) => void;
   selectedResources: number;
   totalResources: number;
 }
@@ -11,6 +13,7 @@ interface AlertResourceNoticeProps {
 export const AlertsResourcesNotice = React.memo(
   (props: AlertResourceNoticeProps) => {
     const { handleSelectionChange, selectedResources, totalResources } = props;
+    const isSelectAll = selectedResources !== totalResources;
 
     return (
       <StyledNotice variant="info">
@@ -23,21 +26,21 @@ export const AlertsResourcesNotice = React.memo(
         >
           {selectedResources} of {totalResources} resources are selected.
         </Typography>
-        {selectedResources !== totalResources && (
+        {isSelectAll && (
           <StyledButton
             aria-label="Select All Resources"
             data-testid="select_all_notice"
-            onClick={handleSelectionChange}
+            onClick={() => handleSelectionChange('Select All')}
             variant="text"
           >
             Select All
           </StyledButton>
         )}
-        {selectedResources === totalResources && (
+        {!isSelectAll && (
           <StyledButton
             aria-label="Unselect All Resources"
             data-testid="unselect_all_notice"
-            onClick={handleSelectionChange}
+            onClick={() => handleSelectionChange('Unselect All')}
             variant="text"
           >
             Unselect All

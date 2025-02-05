@@ -2466,7 +2466,7 @@ export const handlers = [
     );
   }),
   http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
-    return HttpResponse.json({}, { status: 200 });
+    return HttpResponse.json(alertFactory.build());
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {

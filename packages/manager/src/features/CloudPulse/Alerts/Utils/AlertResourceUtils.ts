@@ -141,7 +141,7 @@ export const getFilteredResources = (
       return (
         matchesSearchText &&
         matchesFilteredRegions &&
-        (selectedOnly ? checked : true) // if selected only, show only checked, else everything
+        (!selectedOnly || checked) // if selected only, show only checked, else everything
       ); // match the search text and match the region selected
     });
 };

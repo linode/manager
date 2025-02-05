@@ -169,27 +169,29 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     [handleResourcesSelection]
   );
 
-  const handleAllSelection = React.useCallback(() => {
-    if (!resources) {
-      // Guard clause if data is undefined
-      return;
-    }
+  const handleAllSelection = React.useCallback(
+    (action: 'Select All' | 'Unselect All') => {
+      if (!resources) {
+        return;
+      }
 
-    let currentSelections: string[] = [];
+      let currentSelections: string[] = [];
 
-    if (selectedResources.length === resources.length) {
-      // Unselect all
-      setSelectedResources([]);
-    } else {
-      // Select all
-      currentSelections = resources.map(({ id }) => id);
-      setSelectedResources(currentSelections);
-    }
+      if (action === 'Unselect All') {
+        // Unselect all
+        setSelectedResources([]);
+      } else {
+        // Select all
+        currentSelections = resources.map(({ id }) => id);
+        setSelectedResources(currentSelections);
+      }
 
-    if (handleResourcesSelection) {
-      handleResourcesSelection(currentSelections);
-    }
-  }, [handleResourcesSelection, resources, selectedResources]);
+      if (handleResourcesSelection) {
+        handleResourcesSelection(currentSelections); // publish the resources selected
+      }
+    },
+    [handleResourcesSelection, resources]
+  );
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
   const isNoResources =
@@ -270,7 +272,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                     backgroundColor: theme.color.white,
                   },
                 })}
-                // checked={selectedOnly}
                 data-testid="show_selected_only"
                 disabled={!(Boolean(selectedResources.length) || selectedOnly)}
                 onClick={() => setSelectedOnly(!selectedOnly)}
