@@ -12,7 +12,6 @@ import Logout from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
-import { App } from './App';
 import NullComponent from './components/NullComponent';
 import { loadDevTools, shouldLoadDevTools } from './dev-tools/load';
 import './index.css';
@@ -33,10 +32,55 @@ const CancelLanding = React.lazy(() =>
   }))
 );
 
+const App = React.lazy(() =>
+  import('./App').then((module) => ({
+    default: module.App,
+  }))
+);
+
 const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
 );
 const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
+
+const useOAuth = () => ({ isAuthing: false });
+
+const Main2 = () => {
+  const { isAuthing } = useOAuth();
+
+  if (isAuthing) {
+    return (
+      <React.Suspense fallback={<SplashScreen />}>
+        <Router>
+          <Switch>
+            <Route component={OAuthCallbackPage} exact path="/oauth/callback" />
+            <Route
+              component={LoginAsCustomerCallback}
+              exact
+              path="/admin/callback"
+            />
+            <Route component={NullComponent} exact path="/nullauth" />
+            <Route component={Logout} exact path="/logout" />
+            <Route component={CancelLanding} exact path="/cancel" />
+          </Switch>
+        </Router>
+      </React.Suspense>
+    );
+  }
+
+  return (
+    <React.Suspense fallback={<SplashScreen />}>
+      <Router>
+        <Switch>
+          <Route component={Logout} exact path="/logout" />
+          <Route component={CancelLanding} exact path="/cancel" />
+          <Route component={Lish} path="/linodes/:linodeId/lish/:type" />
+          <Route component={App} />
+        </Switch>
+      </Router>
+    </React.Suspense>
+  );
+};
 
 const Main = () => {
   if (!navigator.cookieEnabled) {
@@ -47,41 +91,15 @@ const Main = () => {
     <ReduxStoreProvider store={store}>
       <QueryClientProvider client={queryClient}>
         <LinodeThemeWrapper>
-          <CssBaseline />
-          <React.Suspense fallback={<SplashScreen />}>
-            <Router>
-              <Switch>
-                <Route
-                  component={OAuthCallbackPage}
-                  exact
-                  path="/oauth/callback"
-                />
-                <Route
-                  component={LoginAsCustomerCallback}
-                  exact
-                  path="/admin/callback"
-                />
-                {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-                <Route component={NullComponent} exact path="/nullauth" />
-                <Route component={Logout} exact path="/logout" />
-                <Route component={CancelLanding} exact path="/cancel" />
-                <Snackbar
-                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                  autoHideDuration={4000}
-                  hideIconVariant={true}
-                  maxSnack={3}
-                >
-                  <Switch>
-                    <Route
-                      component={Lish}
-                      path="/linodes/:linodeId/lish/:type"
-                    />
-                    <Route component={App} />
-                  </Switch>
-                </Snackbar>
-              </Switch>
-            </Router>
-          </React.Suspense>
+          <Snackbar
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            autoHideDuration={4000}
+            hideIconVariant={true}
+            maxSnack={3}
+          >
+            <CssBaseline />
+            <Main2 />
+          </Snackbar>
         </LinodeThemeWrapper>
       </QueryClientProvider>
     </ReduxStoreProvider>
