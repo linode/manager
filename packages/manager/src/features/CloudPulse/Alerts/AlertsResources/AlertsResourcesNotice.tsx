@@ -5,8 +5,19 @@ import React from 'react';
 import type { SelectUnselectAll } from './AlertsResources';
 
 interface AlertResourceNoticeProps {
+  /**
+   * Callback to handle selection changes (select all or unselect all).
+   */
   handleSelectionChange: (action: SelectUnselectAll) => void;
+
+  /**
+   * The number of currently selected resources.
+   */
   selectedResources: number;
+
+  /**
+   * The total number of available resources.
+   */
   totalResources: number;
 }
 

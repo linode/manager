@@ -29,7 +29,7 @@ export const EditAlertResourcesConfirmDialog = React.memo(
 
     const actionProps: ActionPanelProps = {
       primaryButtonProps: {
-        'data-testid': 'editconfirmation',
+        'data-testid': 'edit-confirmation',
         label: 'Confirm',
         onClick: onConfirm,
       },
@@ -45,7 +45,6 @@ export const EditAlertResourcesConfirmDialog = React.memo(
         aria-live="assertive"
         onClose={onClose}
         open={openConfirmationDialog}
-        sx={{ fontSize: '16px' }}
         title="Confirm alert updates"
       >
         <Typography fontSize="16px" variant="body1">

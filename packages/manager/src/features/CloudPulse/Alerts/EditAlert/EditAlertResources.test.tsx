@@ -28,6 +28,9 @@ const cloudPulseResources: CloudPulseResources[] = linodes.map((linode) => {
     region: linode.region,
   };
 });
+const saveResources = 'save-resources';
+const editConfirmation = 'edit-confirmation';
+const cancelEdit = 'cancel-save-resources';
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
@@ -138,19 +141,19 @@ describe('EditAlertResources component tests', () => {
       </Router>
     );
 
-    expect(getByTestId('saveresources')).toBeInTheDocument();
+    expect(getByTestId(saveResources)).toBeInTheDocument();
 
     expect(getByTestId('select_item_4')).toBeInTheDocument();
 
     await userEvent.click(getByTestId('select_item_4'));
 
     // click and save
-    await userEvent.click(getByTestId('saveresources'));
+    await userEvent.click(getByTestId(saveResources));
 
-    expect(getByTestId('editconfirmation')).toBeInTheDocument();
+    expect(getByTestId(editConfirmation)).toBeInTheDocument();
 
     // click confirmation
-    await userEvent.click(getByTestId('editconfirmation'));
+    await userEvent.click(getByTestId(editConfirmation));
 
     expect(mutateAsyncSpy).toHaveBeenCalledTimes(1); // check if edit is called
 
@@ -163,7 +166,7 @@ describe('EditAlertResources component tests', () => {
     });
 
     // click on cancel
-    await userEvent.click(getByTestId('cancelsaveresources'));
+    await userEvent.click(getByTestId(cancelEdit));
 
     expect(push.mock.calls.length).toBe(3); // 3 calls on landing edit page, on confirmation, on cancel click
 
@@ -192,19 +195,19 @@ describe('EditAlertResources component tests', () => {
       </Router>
     );
 
-    expect(getByTestId('saveresources')).toBeInTheDocument();
+    expect(getByTestId(saveResources)).toBeInTheDocument();
 
     expect(getByTestId('select_item_4')).toBeInTheDocument();
 
     await userEvent.click(getByTestId('select_item_4'));
 
     // click and save
-    await userEvent.click(getByTestId('saveresources'));
+    await userEvent.click(getByTestId(saveResources));
 
-    expect(getByTestId('editconfirmation')).toBeInTheDocument();
+    expect(getByTestId(editConfirmation)).toBeInTheDocument();
 
     // click confirmation
-    await userEvent.click(getByTestId('editconfirmation'));
+    await userEvent.click(getByTestId(editConfirmation));
 
     expect(mockMutateAsync).toHaveBeenCalledTimes(1);
 

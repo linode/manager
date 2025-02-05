@@ -144,7 +144,7 @@ export const EditAlertResources = () => {
             onClick={() => {
               history.push('/monitor/alerts/definitions');
             }}
-            data-testid="cancelsaveresources"
+            data-testid="cancel-save-resources"
             variant="text"
           >
             Cancel
@@ -162,7 +162,7 @@ export const EditAlertResources = () => {
             }}
             buttonType="primary"
             data-qa-buttons="true"
-            data-testid="saveresources"
+            data-testid="save-resources"
             disabled={isSameResourcesSelected}
           >
             Save
