@@ -90,7 +90,7 @@ describe('PdfGenerator', () => {
     });
     const timezone = 'UTC';
 
-    // Mock International, US and CA accounts accounts
+    // Mock International, US and CA accounts
     const accountInternational1 = accountFactory.build({
       city: 'Mumbai',
       country: 'IN',
@@ -108,7 +108,7 @@ describe('PdfGenerator', () => {
       zip: 'T2A',
     });
 
-    // Mock Intertnational, US and CA taxes
+    // Mock International, US and CA taxes
     const taxesInternational1: Taxes = {
       country_tax: {
         tax_id: '9922CHE29001OSR',
