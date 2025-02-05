@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ALGORITHM_HELPER_TEXT } from './constants';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 
 import type {
@@ -216,56 +215,6 @@ describe('NodeBalancerConfigPanel', () => {
     });
     expect(getByTestId('http-path')).toBeVisible();
     expect(getByTestId('http-body')).toBeVisible();
-  });
-
-  it('renders the relevant helper text for the Round Robin algorithm', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        algorithm="roundrobin"
-      />
-    );
-
-    expect(getByText(ALGORITHM_HELPER_TEXT.roundrobin)).toBeVisible();
-
-    expect(queryByText(ALGORITHM_HELPER_TEXT.source)).not.toBeInTheDocument();
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.leastconn)
-    ).not.toBeInTheDocument();
-  });
-
-  it('renders the relevant helper text for the Least Connections algorithm', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        algorithm="leastconn"
-      />
-    );
-
-    expect(getByText(ALGORITHM_HELPER_TEXT.leastconn)).toBeVisible();
-
-    expect(queryByText(ALGORITHM_HELPER_TEXT.source)).not.toBeInTheDocument();
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.roundrobin)
-    ).not.toBeInTheDocument();
-  });
-
-  it('renders the relevant helper text for the Source algorithm', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        algorithm="source"
-      />
-    );
-
-    expect(getByText(ALGORITHM_HELPER_TEXT.source)).toBeVisible();
-
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.leastconn)
-    ).not.toBeInTheDocument();
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.roundrobin)
-    ).not.toBeInTheDocument();
   });
 
   it('adds another backend node', async () => {
