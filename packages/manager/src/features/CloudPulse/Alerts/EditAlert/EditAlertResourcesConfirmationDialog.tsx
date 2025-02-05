@@ -7,14 +7,25 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import type { ActionPanelProps } from 'src/components/ActionsPanel/ActionsPanel';
 
 interface AlertResourcesConfirmDialogProps {
+  /**
+   * Callback function to handle closing the confirmation dialog.
+   */
   onClose: () => void;
+
+  /**
+   * Callback function to handle confirmation action (e.g., saving resources).
+   */
   onConfirm: () => void;
-  open: boolean;
+
+  /**
+   * Boolean flag to control whether the confirmation dialog is open.
+   */
+  openConfirmationDialog: boolean;
 }
 
 export const EditAlertResourcesConfirmDialog = React.memo(
   (props: AlertResourcesConfirmDialogProps) => {
-    const { onClose, onConfirm, open } = props;
+    const { onClose, onConfirm, openConfirmationDialog } = props;
 
     const actionProps: ActionPanelProps = {
       primaryButtonProps: {
@@ -33,7 +44,7 @@ export const EditAlertResourcesConfirmDialog = React.memo(
         actions={<ActionsPanel {...actionProps} />}
         aria-live="assertive"
         onClose={onClose}
-        open={open}
+        open={openConfirmationDialog}
         sx={{ fontSize: '16px' }}
         title="Confirm alert updates"
       >

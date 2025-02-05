@@ -171,7 +171,7 @@ export const EditAlertResources = () => {
         <EditAlertResourcesConfirmDialog
           onClose={() => setShowConfirmation((prev) => !prev)}
           onConfirm={saveResources}
-          open={showConfirmation}
+          openConfirmationDialog={showConfirmation}
         />
       </Box>
     </>
