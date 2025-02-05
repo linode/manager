@@ -1,6 +1,6 @@
 import bash from '@shikijs/langs/bash';
 import go from '@shikijs/langs/go';
-import js from '@shikijs/langs/javascript';
+import javascript from '@shikijs/langs/javascript';
 import python from '@shikijs/langs/python';
 import shell from '@shikijs/langs/shell';
 import typescript from '@shikijs/langs/typescript';
@@ -15,7 +15,7 @@ import type { ThemeName } from '@linode/ui';
 const languages = {
   bash,
   go,
-  js,
+  javascript,
   python,
   shell,
   typescript,
