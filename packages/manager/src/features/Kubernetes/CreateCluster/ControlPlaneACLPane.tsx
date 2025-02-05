@@ -16,7 +16,6 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LinkButton } from 'src/components/LinkButton';
-import { validateIPs } from 'src/utilities/ipUtils';
 
 export interface ControlPlaneACLProps {
   enableControlPlaneACL: boolean;

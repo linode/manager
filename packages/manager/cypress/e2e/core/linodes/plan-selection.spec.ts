@@ -251,15 +251,13 @@ describe('displays kubernetes plans panel based on availability', () => {
 
     // Dedicated CPU tab
     // Should be selected/open by default
-    // Should have the limited availability notice
     // Should contain 5 plans (6 rows including the header row)
     // Should have 3 plans disabled
     // Should have no tooltips for the disabled plans (more than half disabled plans in the panel)
     // All inputs for a row should be enabled if row is enabled (only testing one row in suite)
     // All inputs for a disabled row should be disabled (only testing one row in suite)
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
-      cy.get(notices.limitedAvailability).should('be.visible');
+      cy.findAllByRole('alert').should('have.length', 0);
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 6);
@@ -319,14 +317,12 @@ describe('displays kubernetes plans panel based on availability', () => {
     });
 
     // High Memory tab
-    // Should have the limited availability notice
     // Should contain 1 plan (2 rows including the header row)
     // Should have one disabled plan
     // Should have no tooltip for the disabled plan (more than half disabled plans in the panel)
     cy.findByText('High Memory').click();
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
-      cy.get(notices.limitedAvailability).should('be.visible');
+      cy.findAllByRole('alert').should('have.length', 0);
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 2);
@@ -339,7 +335,6 @@ describe('displays kubernetes plans panel based on availability', () => {
     });
 
     // Premium CPU
-    // Should have the unavailable notice
     // Only present since we manually inject the 512 plan for it
     // Should contain 1 plan (2 rows including the header row)
     // Should have its whole panel disabled
@@ -347,7 +342,6 @@ describe('displays kubernetes plans panel based on availability', () => {
     cy.findByText('Premium CPU').click();
     cy.get(k8PlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 1);
-      cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 2);
@@ -436,17 +430,13 @@ describe('displays specific kubernetes plans for GPU', () => {
     cy.findByText('GPU').click();
     cy.get(k8PlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 2);
-      cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', {
         name: 'List of NVIDIA RTX 4000 Ada Plans',
       }).within(() => {
         cy.findByText('NVIDIA RTX 4000 Ada').should('be.visible');
         cy.findAllByRole('row').should('have.length', 2);
-        cy.get('[data-qa-plan-row="gpu-2 Ada"]').should(
-          'have.attr',
-          'disabled'
-        );
+        cy.get('[data-qa-plan-row="gpu-2 Ada"]').should('be.visible');
       });
 
       cy.findByRole('table', {
@@ -454,7 +444,7 @@ describe('displays specific kubernetes plans for GPU', () => {
       }).within(() => {
         cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
         cy.findAllByRole('row').should('have.length', 2);
-        cy.get('[data-qa-plan-row="gpu-1"]').should('have.attr', 'disabled');
+        cy.get('[data-qa-plan-row="gpu-1"]').should('be.visible');
       });
     });
   });
