@@ -176,14 +176,19 @@ export const isSomeSelected = (data: AlertInstance[]): boolean => {
 };
 
 /**
- * @param originalResourceIds The originally associated resource ids with the alert
- * @param selectedResourceIds The selected resources ids with the alert
- * @returns True if both are equal, else false
+ * Checks if two sets of resource IDs contain the same elements, regardless of order.
+ * @param originalResourceIds - The initial list of resource IDs.
+ * @param selectedResourceIds - The updated list of resource IDs to compare.
+ * @returns {boolean} - True if both sets contain the same elements, otherwise false.
  */
 export const isResourcesEqual = (
   originalResourceIds: string[] | undefined,
   selectedResourceIds: string[]
 ): boolean => {
+  if (!originalResourceIds) {
+    return selectedResourceIds.length === 0;
+  }
+
   if (originalResourceIds?.length !== selectedResourceIds.length) {
     return false;
   }
