@@ -31,6 +31,7 @@ interface Props {
   clusterTier: KubernetesTier;
   count: number;
   encryptionStatus: EncryptionStatus | undefined;
+  handleAccordionClick: () => void;
   handleClickLabelsAndTaints: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
   isOnlyNodePool: boolean;
@@ -54,6 +55,7 @@ export const NodePool = (props: Props) => {
     clusterTier,
     count,
     encryptionStatus,
+    handleAccordionClick,
     handleClickLabelsAndTaints,
     handleClickResize,
     isOnlyNodePool,
@@ -212,7 +214,8 @@ export const NodePool = (props: Props) => {
       }
       data-qa-node-pool-id={poolId}
       data-qa-node-pool-section
-      defaultExpanded={accordionExpanded}
+      expanded={accordionExpanded}
+      onClick={handleAccordionClick}
     >
       <NodeTable
         clusterCreated={clusterCreated}

@@ -145,6 +145,30 @@ export const NodePoolsDisplay = (props: Props) => {
       })
       .map(({ id }) => id) ?? [];
 
+  const [expandedAccordions, setExpandedAccordions] = useState<
+    number[] | undefined
+  >(undefined);
+
+  const handleAccordionClick = (id: number) => {
+    if (expandedAccordions === undefined) {
+      if (defaultExpandedPools.includes(id)) {
+        return setExpandedAccordions(
+          defaultExpandedPools.filter((poolId) => poolId !== id)
+        );
+      } else {
+        return setExpandedAccordions([id]);
+      }
+    }
+
+    if (expandedAccordions.includes(id)) {
+      setExpandedAccordions(
+        expandedAccordions.filter((number) => number !== id)
+      );
+    } else {
+      setExpandedAccordions([...expandedAccordions, id]);
+    }
+  };
+
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
   }
@@ -152,15 +176,19 @@ export const NodePoolsDisplay = (props: Props) => {
   return (
     <>
       <Stack
+        sx={{
+          paddingBottom: 1,
+          paddingLeft: { md: 0, sm: 1, xs: 1 },
+          paddingTop: 3,
+        }}
         alignItems="center"
         direction="row"
         flexWrap="wrap"
         justifyContent="space-between"
         spacing={2}
-        sx={{ paddingLeft: { md: 0, sm: 1, xs: 1 }, paddingTop: 3 }}
       >
-        <Typography variant="h2">Node Pools</Typography>
-        <Stack direction="row" spacing={1}>
+        <Stack alignItems="center" direction="row" spacing={2}>
+          <Typography variant="h2">Node Pools</Typography>
           <Stack alignItems="end" direction="row">
             <FormLabel htmlFor={ariaIdentifier}>
               <Typography ml={1} mr={1}>
@@ -183,6 +211,27 @@ export const NodePoolsDisplay = (props: Props) => {
               sx={{ width: 130 }}
             />
           </Stack>
+          {(expandedAccordions === undefined &&
+            defaultExpandedPools.length > 0) ||
+          (expandedAccordions && expandedAccordions.length > 0) ? (
+            <Button
+              buttonType="secondary"
+              compactX
+              onClick={() => setExpandedAccordions([])}
+            >
+              Collapse All
+            </Button>
+          ) : (
+            <Button
+              buttonType="secondary"
+              compactX
+              onClick={() => setExpandedAccordions(_pools?.map(({ id }) => id))}
+            >
+              Expand All
+            </Button>
+          )}
+        </Stack>
+        <Stack direction="row" spacing={1}>
           <Button
             buttonType="outlined"
             onClick={() => setIsRecycleClusterOpen(true)}
@@ -207,6 +256,11 @@ export const NodePoolsDisplay = (props: Props) => {
 
           return (
             <NodePool
+              accordionExpanded={
+                expandedAccordions === undefined
+                  ? defaultExpandedPools.includes(id)
+                  : expandedAccordions.includes(id)
+              }
               openAutoscalePoolDialog={(poolId) => {
                 setSelectedPoolId(poolId);
                 setIsAutoscaleDialogOpen(true);
@@ -223,13 +277,13 @@ export const NodePoolsDisplay = (props: Props) => {
                 setSelectedNodeId(nodeId);
                 setIsRecycleNodeOpen(true);
               }}
-              accordionExpanded={defaultExpandedPools.includes(id)}
               autoscaler={thisPool.autoscaler}
               clusterCreated={clusterCreated}
               clusterId={clusterID}
               clusterTier={clusterTier}
               count={count}
               encryptionStatus={disk_encryption}
+              handleAccordionClick={() => handleAccordionClick(id)}
               handleClickLabelsAndTaints={handleOpenLabelsAndTaintsDrawer}
               handleClickResize={handleOpenResizeDrawer}
               isOnlyNodePool={pools?.length === 1}
