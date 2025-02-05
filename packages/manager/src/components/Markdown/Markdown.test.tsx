@@ -7,7 +7,7 @@ import { Markdown } from './Markdown';
 const sampleMarkdown =
   '# Some markdown \n ```javascript\n const x = function() { return true; }\n```';
 
-describe('HighlightedMarkdown component', () => {
+describe('Markdown component', () => {
   it('should highlight text consistently', () => {
     const { asFragment } = renderWithTheme(
       <Markdown textOrMarkdown={sampleMarkdown} />
