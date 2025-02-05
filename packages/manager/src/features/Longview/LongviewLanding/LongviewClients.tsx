@@ -177,7 +177,7 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   // If this value is defined they're not on the free plan
   // and don't need to be CTA'd to upgrade.
 
-  const isLongviewPro = !!Object.keys(activeSubscription).length;
+  const isLongviewPro = Object.keys(activeSubscription).length > 0;
   /**
    * Do the actual sorting & filtering
    */
@@ -255,7 +255,7 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
       />
       <SubscriptionDialog
         clientLimit={
-          !Object.entries(activeSubscription).length
+          Object.entries(activeSubscription).length === 0
             ? 10
             : (activeSubscription as LongviewSubscription).clients_included
         }

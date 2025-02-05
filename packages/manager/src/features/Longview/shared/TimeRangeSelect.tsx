@@ -40,7 +40,7 @@ export const TimeRangeSelect = React.memo((props: Props) => {
   React.useEffect(() => {
     getActiveLongviewPlan()
       .then((response) => {
-        setLongviewPro(!!Object.keys(response).length);
+        setLongviewPro(Object.keys(response).length > 0);
       })
       .catch(); // Swallow errors, default to free tier time select options.
   }, []);

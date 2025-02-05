@@ -160,7 +160,7 @@ export const LongviewLanding = (props: LongviewProps) => {
       </StyledTabs>
       <SubscriptionDialog
         clientLimit={
-          !Object.keys(activeSubscriptionRequestHook.data).length
+          Object.keys(activeSubscriptionRequestHook.data).length === 0
             ? 10
             : (activeSubscriptionRequestHook.data as LongviewSubscription)
                 .clients_included
