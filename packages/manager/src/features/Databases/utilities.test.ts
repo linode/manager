@@ -13,6 +13,7 @@ import {
   isDefaultDatabase,
   isLegacyDatabase,
   isTimeOutsideBackup,
+  toFormatedDate,
   toISOString,
   upgradableVersions,
   useIsDatabasesEnabled,
@@ -359,30 +360,46 @@ describe('isDateOutsideBackup', () => {
 describe('isTimeOutsideBackup', () => {
   it('should return true when hour + selected date is before oldest backup', () => {
     const selectedDate = DateTime.fromISO('2024-10-02');
-    const oldestBackup = DateTime.fromISO('2024-10-02T09:00:00');
+    const oldestBackup = DateTime.fromISO('2024-10-02T09:00:00Z');
     const result = isTimeOutsideBackup(8, selectedDate, oldestBackup);
     expect(result).toEqual(true);
   });
 
   it('should return false when hour + selected date is equal to the oldest backup', () => {
     const selectedDate = DateTime.fromISO('2024-10-02');
-    const oldestBackup = DateTime.fromISO('2024-10-02T09:00:00');
+    const oldestBackup = DateTime.fromISO('2024-10-02T09:00:00Z');
     const result = isTimeOutsideBackup(9, selectedDate, oldestBackup);
     expect(result).toEqual(false);
   });
 
   it('should return false when hour + selected date is after the oldest backup', () => {
     const selectedDate = DateTime.fromISO('2024-10-03');
-    const oldestBackup = DateTime.fromISO('2024-10-02T09:00:00');
+    const oldestBackup = DateTime.fromISO('2024-10-02T09:00:00Z');
     const result = isTimeOutsideBackup(1, selectedDate, oldestBackup);
     expect(result).toEqual(false);
+  });
+});
+
+describe('toFormatedDate', () => {
+  it('should convert a date and time to the format YYYY-MM-DD HH:mm for the dialog', () => {
+    const selectedDate = DateTime.fromObject({ day: 15, month: 1, year: 2025 });
+    const selectedTime: TimeOption = { label: '14:00', value: 14 };
+    const result = toFormatedDate(selectedDate, selectedTime.value);
+    expect(result).toContain('2025-01-15 14:00');
+  });
+  it('should convert a date and time to the format YYYY-MM-DD HH:mm for the dialog', () => {
+    const selectedDate = null;
+    const today = DateTime.utc();
+    const mockTodayWithHours = `${today.toISODate()} ${today.hour}:00`;
+    const result = toFormatedDate(selectedDate, undefined);
+    expect(result).toContain(mockTodayWithHours);
   });
 });
 
 describe('toISOString', () => {
   it('should convert a date and time to ISO string format', () => {
     const selectedDate = DateTime.fromObject({ day: 15, month: 5, year: 2023 });
-    const selectedTime: TimeOption = { label: '02:00', value: 14 };
+    const selectedTime: TimeOption = { label: '14:00', value: 14 };
     const result = toISOString(selectedDate, selectedTime.value);
     expect(result).toContain('2023-05-15T14:00');
   });
