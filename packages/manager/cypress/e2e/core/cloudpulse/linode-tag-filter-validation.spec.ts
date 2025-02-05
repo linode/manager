@@ -342,7 +342,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
       .type(`${linodes[0].label}{enter}`)
       .click();
 
-    cy.get('button[aria-label="Clear"]').eq(1).click();
+    cy.get('button[aria-label="Clear"]').eq(2).click();
 
     ui.autocomplete.findByLabel('Tags').type('tag-4');
 
