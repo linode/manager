@@ -36,11 +36,9 @@ describe('Linode create mobile smoke', () => {
       linodeCreatePage.setRootPassword(randomString(32));
 
       cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-      cy.within(() => {
-        cy.findByText('Nanode 1 GB').should('be.visible');
-        cy.findByText('Ubuntu 24.04 LTS').should('be.visible');
-        cy.findByText(mockLinodeRegion.label).should('be.visible');
-      });
+      cy.findByText('Nanode 1 GB').should('be.visible');
+      cy.findByText('Ubuntu 24.04 LTS').should('be.visible');
+      cy.findByText(mockLinodeRegion.label).should('be.visible');
 
       ui.button
         .findByTitle('Create Linode')

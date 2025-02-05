@@ -32,7 +32,7 @@ const deleteLinodeFromActionMenu = (linodeLabel: string) => {
     .should('be.visible')
     .within(() => {
       cy.findByLabelText('Linode Label').should('be.visible').click();
-      cy.type(linodeLabel);
+      cy.focused().type(linodeLabel);
 
       ui.buttonGroup
         .findButtonByTitle('Delete')
@@ -95,7 +95,7 @@ describe('delete linode', () => {
         .should('be.visible')
         .within(() => {
           cy.findByLabelText('Linode Label').should('be.visible').click();
-          cy.type(linode.label);
+          cy.focused().type(linode.label);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')
@@ -144,7 +144,7 @@ describe('delete linode', () => {
         .should('be.visible')
         .within(() => {
           cy.findByLabelText('Linode Label').should('be.visible').click();
-          cy.type(linode.label);
+          cy.focused().type(linode.label);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')
@@ -187,7 +187,7 @@ describe('delete linode', () => {
         .should('be.visible')
         .within(() => {
           cy.findByLabelText('Linode Label').should('be.visible').click();
-          cy.type(linode.label);
+          cy.focused().type(linode.label);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')

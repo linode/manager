@@ -77,15 +77,15 @@ describe('Managed Credentials tab', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Label').should('be.visible').click();
-        cy.type(credentialLabel);
+        cy.focused().type(credentialLabel);
 
         cy.findByLabelText('Username', { exact: false })
           .should('be.visible')
           .click();
-        cy.type(credentialUsername);
+        cy.focused().type(credentialUsername);
 
         cy.findByLabelText('Password').should('be.visible').click();
-        cy.type(credentialPassword);
+        cy.focused().type(credentialPassword);
 
         ui.buttonGroup
           .findButtonByTitle('Add Credential')
@@ -147,8 +147,8 @@ describe('Managed Credentials tab', () => {
       .within(() => {
         // Update label.
         cy.findByLabelText('Label').should('be.visible').click();
-        cy.clear;
-        cy.type(credentialNewLabel);
+        cy.focused().clear();
+        cy.focused().type(credentialNewLabel);
 
         ui.button
           .findByTitle('Update label')
@@ -163,10 +163,10 @@ describe('Managed Credentials tab', () => {
         cy.findByLabelText('Username', { exact: false })
           .should('be.visible')
           .click();
-        cy.type(randomString());
+        cy.focused().type(randomString());
 
         cy.findByLabelText('Password').should('be.visible').click();
-        cy.type(randomString());
+        cy.focused().type(randomString());
 
         ui.button
           .findByTitle('Update credentials')
@@ -225,7 +225,7 @@ describe('Managed Credentials tab', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Credential Name:').should('be.visible').click();
-        cy.type(credentialLabel);
+        cy.focused().type(credentialLabel);
 
         ui.buttonGroup
           .findButtonByTitle('Delete Credential')

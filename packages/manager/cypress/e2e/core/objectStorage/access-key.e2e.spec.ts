@@ -58,7 +58,7 @@ describe('object storage access key end-to-end tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Label').click();
-        cy.type(keyLabel);
+        cy.focused().type(keyLabel);
         ui.buttonGroup
           .findButtonByTitle('Create Access Key')
           .should('be.visible')
@@ -159,7 +159,7 @@ describe('object storage access key end-to-end tests', () => {
         .should('be.visible')
         .within(() => {
           cy.findByText('Label').click();
-          cy.type(keyLabel);
+          cy.focused().type(keyLabel);
           cy.findByLabelText('Limited Access').click();
           cy.findByLabelText('Select read-only for all').click();
 

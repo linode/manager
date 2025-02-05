@@ -88,7 +88,7 @@ describe('Object Storage Multicluster access keys', () => {
       .should('be.visible')
       .within(() => {
         cy.contains('Label (required)').should('be.visible').click();
-        cy.type(mockAccessKey.label);
+        cy.focused().type(mockAccessKey.label);
 
         cy.contains('Regions (required)').should('be.visible').click();
 
@@ -103,7 +103,7 @@ describe('Object Storage Multicluster access keys', () => {
 
         // Close the regions drop-down.
         cy.contains('Regions (required)').should('be.visible').click();
-        cy.type('{esc}');
+        cy.focused().type('{esc}');
 
         // TODO Confirm expected regions are shown.
         ui.buttonGroup
@@ -202,10 +202,10 @@ describe('Object Storage Multicluster access keys', () => {
       .should('be.visible')
       .within(() => {
         cy.contains('Label (required)').should('be.visible').click();
-        cy.type(mockAccessKey.label);
+        cy.focused().type(mockAccessKey.label);
 
         cy.contains('Regions (required)').should('be.visible').click();
-        cy.type(`${mockRegion.label}{enter}`);
+        cy.focused().type(`${mockRegion.label}{enter}`);
 
         ui.autocompletePopper
           .findByTitle(`${mockRegion.label} (${mockRegion.id})`)
@@ -213,7 +213,7 @@ describe('Object Storage Multicluster access keys', () => {
 
         // Dismiss region drop-down.
         cy.contains('Regions (required)').should('be.visible').click();
-        cy.type('{esc}');
+        cy.focused().type('{esc}');
 
         // Enable "Limited Access" toggle for access key and confirm Create button is disabled.
         cy.findByText('Limited Access').should('be.visible').click();
@@ -355,11 +355,11 @@ describe('Object Storage Multicluster access keys', () => {
       .should('be.visible')
       .within(() => {
         cy.contains('Label (required)').should('be.visible').click();
-        cy.type('{selectall}{backspace}');
-        cy.type(mockUpdatedAccessKey.label);
+        cy.focused().type('{selectall}{backspace}');
+        cy.focused().type(mockUpdatedAccessKey.label);
 
         cy.contains('Regions (required)').should('be.visible').click();
-        cy.type(`${mockUpdatedRegion.label}{enter}{esc}`);
+        cy.focused().type(`${mockUpdatedRegion.label}{enter}{esc}`);
 
         cy.contains(mockUpdatedRegion.label).should('be.visible').and('exist');
 

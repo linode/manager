@@ -235,7 +235,7 @@ describe('resize linode', () => {
           cy.contains('Size (required)').should('be.visible').click();
 
           cy.focused().clear();
-          cy.type(size);
+          cy.focused().type(size);
 
           ui.buttonGroup
             .findButtonByTitle('Resize')

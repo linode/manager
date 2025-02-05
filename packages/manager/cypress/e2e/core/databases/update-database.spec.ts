@@ -47,8 +47,8 @@ const updateDatabaseLabel = (originalLabel: string, newLabel: string) => {
     .should('be.visible')
     .within(() => {
       cy.get('[data-testid="textfield-input"]').should('be.visible').click();
-      cy.clear();
-      cy.type(newLabel);
+      cy.focused().clear();
+      cy.focused().type(newLabel);
 
       cy.get('[data-qa-save-edit="true"]').should('be.visible').click();
     });
@@ -107,7 +107,7 @@ const manageAccessControl = (allowedIps: string[], existingIps: number = 0) => {
         cy.findByLabelText(
           `Allowed IP Addresses or Ranges ip-address-${index + existingIps}`
         ).click();
-        cy.type(allowedIp);
+        cy.focused().type(allowedIp);
       });
 
       ui.buttonGroup

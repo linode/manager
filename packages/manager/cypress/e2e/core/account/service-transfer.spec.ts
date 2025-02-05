@@ -77,7 +77,7 @@ const initiateLinodeTransfer = (linodeLabel: string) => {
  */
 const redeemToken = (token: string) => {
   cy.findByLabelText('Receive a Service Transfer').should('be.visible').click();
-  cy.type(token);
+  cy.focused().type(token);
 
   ui.button
     .findByTitle('Review Details')
@@ -435,9 +435,7 @@ describe('Account service transfers', () => {
     cy.get('[data-qa-panel="Received Service Transfers"]')
       .should('be.visible')
       .click();
-    cy.within(() => {
-      cy.findByText(token).should('be.visible');
-    });
+    cy.findByText(token).should('be.visible');
   });
 
   /*

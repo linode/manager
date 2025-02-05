@@ -82,7 +82,7 @@ describe('volume resize flow', () => {
           .should('be.visible')
           .within(() => {
             cy.findByText('Size').click();
-            cy.type(`{selectall}{backspace}${newSize}`);
+            cy.focused().type(`{selectall}{backspace}${newSize}`);
             cy.get('[data-qa-buttons="true"]').within(() => {
               cy.findByText('Resize Volume').should('be.visible').click();
             });

@@ -186,7 +186,7 @@ describe('Linode create flow with Placement Group', () => {
     // Type in a label, password and submit the form.
     mockCreateLinode(mockLinode).as('createLinode');
     cy.get('#linode-label').clear();
-    cy.type('linode-with-placement-group');
+    cy.focused().type('linode-with-placement-group');
     cy.get('#root-password').type(randomString(32));
 
     cy.findByText('Create Linode').should('be.enabled').click();
@@ -243,7 +243,7 @@ describe('Linode create flow with Placement Group', () => {
     cy.findByText(
       `Placement Groups in ${mockNewarkRegion.label} (${mockNewarkRegion.id})`
     ).click();
-    cy.type(`${mockPlacementGroup.label}`);
+    cy.focused().type(`${mockPlacementGroup.label}`);
     ui.autocompletePopper
       .findByTitle(mockPlacementGroup.label)
       .should('be.visible')

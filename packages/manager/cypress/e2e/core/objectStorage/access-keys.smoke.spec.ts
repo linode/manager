@@ -52,7 +52,7 @@ describe('object storage access keys smoke tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Label').click();
-        cy.type(mockAccessKey.label);
+        cy.focused().type(mockAccessKey.label);
         ui.buttonGroup.findButtonByTitle('Create Access Key').scrollIntoView();
         cy.should('be.visible').should('be.enabled').click();
       });

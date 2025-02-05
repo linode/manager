@@ -69,7 +69,7 @@ describe('Display Settings', () => {
         .should('be.visible')
         .should('have.value', username)
         .clear();
-      cy.type(newUsername);
+      cy.focused().type(newUsername);
 
       ui.button
         .findByTitle('Update Username')

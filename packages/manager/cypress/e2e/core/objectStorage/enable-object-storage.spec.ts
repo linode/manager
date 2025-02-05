@@ -151,7 +151,7 @@ describe('Object Storage enrollment', () => {
 
         // Select a region with special pricing structure.
         ui.regionSelect.find().click();
-        cy.type('Jakarta, ID{enter}');
+        cy.focused().type('Jakarta, ID{enter}');
 
         // Confirm DC-specific overage prices are shown in the drawer.
         cy.contains(
@@ -194,7 +194,7 @@ describe('Object Storage enrollment', () => {
     ui.drawer.findByTitle('Create Bucket').within(() => {
       // Select a region with regular pricing structure.
       ui.regionSelect.find().click();
-      cy.type('Newark, NJ{enter}');
+      cy.focused().type('Newark, NJ{enter}');
 
       // Confirm regular overage prices are shown in the drawer.
       cy.contains(

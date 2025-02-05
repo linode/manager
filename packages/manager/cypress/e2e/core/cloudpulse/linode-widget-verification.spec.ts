@@ -184,8 +184,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Selecting a dashboard from the autocomplete input.
-    ui.autocomplete.findByLabel('Dashboard').should('be.visible');
-    cy.type(dashboardName);
+    ui.autocomplete
+      .findByLabel('Dashboard')
+      .should('be.visible')
+      .type(dashboardName);
 
     ui.autocompletePopper
       .findByTitle(dashboardName)
@@ -193,20 +195,18 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .click();
 
     // Select a time duration from the autocomplete input.
-    ui.autocomplete.findByLabel('Time Range').should('be.visible');
-    cy.type(timeDurationToSelect);
+    ui.autocomplete
+      .findByLabel('Time Range')
+      .should('be.visible')
+      .type(timeDurationToSelect);
 
     ui.autocompletePopper
       .findByTitle(timeDurationToSelect)
       .should('be.visible')
       .click();
 
-    ui.regionSelect.find().click();
-
     //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-
-    ui.regionSelect.find().type(extendedMockRegion.label);
+    ui.regionSelect.find().type(`${region}{enter}`);
 
     // Since Linode does not support this region, we expect it to not be in the dropdown.
 
@@ -216,15 +216,15 @@ describe('Integration Tests for Linode Dashboard ', () => {
       ).should('not.exist');
     });
 
-    // Select a region from the dropdown.
-    ui.regionSelect.find().click();
-    cy.clear();
-    cy.type(`${region}{enter}`);
-
     // Select a resource from the autocomplete input.
-    ui.autocomplete.findByLabel('Resources').should('be.visible');
-    cy.type(`${resource}{enter}`);
-    cy.click();
+    ui.autocomplete
+      .findByLabel('Resources')
+      .should('be.visible')
+      .type(`${resource}{enter}`);
+    ui.autocomplete
+      .findByLabel('Resources')
+      .should('be.visible')
+      .type(`${resource}{enter}`);
 
     cy.findByText(resource).should('be.visible');
 
@@ -434,8 +434,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
             .findByAttribute('aria-label', 'Zoom In')
             .should('be.visible')
             .should('be.enabled')
-            .scrollIntoView();
-          cy.click({ force: true });
+            .scrollIntoView()
+            .click({ force: true });
           cy.get('@widget').should('be.visible');
 
           cy.get('.recharts-responsive-container').within(() => {

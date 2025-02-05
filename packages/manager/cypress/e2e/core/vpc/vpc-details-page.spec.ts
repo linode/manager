@@ -69,12 +69,10 @@ describe('VPC details page', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Label').should('be.visible').click();
-        cy.clear;
-        cy.type(mockVPCUpdated.label);
+        cy.focused().type(mockVPCUpdated.label);
 
         cy.findByLabelText('Description').should('be.visible').click();
-        cy.clear;
-        cy.type(mockVPCUpdated.description);
+        cy.focused().type(mockVPCUpdated.description);
 
         ui.button
           .findByTitle('Save')
@@ -99,7 +97,7 @@ describe('VPC details page', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('VPC Label').should('be.visible').click();
-        cy.type(mockVPCUpdated.label);
+        cy.focused().type(mockVPCUpdated.label);
 
         ui.button
           .findByTitle('Delete')
@@ -162,7 +160,7 @@ describe('VPC details page', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Subnet Label').should('be.visible').click();
-        cy.type(mockSubnet.label);
+        cy.focused().type(mockSubnet.label);
 
         cy.findByTestId('create-subnet-drawer-button')
           .should('be.visible')
@@ -205,9 +203,8 @@ describe('VPC details page', () => {
       .findByTitle('Edit Subnet')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label').should('be.visible').click();
-        cy.clear;
-        cy.type(mockEditedSubnet.label);
+        cy.findByLabelText('Label').should('be.visible').clear();
+        cy.focused().type(mockEditedSubnet.label);
 
         cy.findByLabelText('Subnet IP Address Range')
           .should('be.visible')
@@ -247,7 +244,7 @@ describe('VPC details page', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Subnet Label').should('be.visible').click();
-        cy.type(mockEditedSubnet.label);
+        cy.focused().type(mockEditedSubnet.label);
 
         ui.button
           .findByTitle('Delete')

@@ -62,7 +62,7 @@ describe('Delete database clusters', () => {
             .should('be.visible')
             .within(() => {
               cy.findByLabelText('Cluster Name').click();
-              cy.type(database.label);
+              cy.focused().type(database.label);
 
               ui.buttonGroup
                 .findButtonByTitle('Delete Cluster')
@@ -125,7 +125,7 @@ describe('Delete database clusters', () => {
             .should('be.visible')
             .within(() => {
               cy.findByLabelText('Cluster Name').click();
-              cy.type(database.label);
+              cy.focused().type(database.label);
 
               ui.buttonGroup
                 .findButtonByTitle('Delete Cluster')

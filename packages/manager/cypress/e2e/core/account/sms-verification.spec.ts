@@ -54,7 +54,7 @@ describe('SMS phone verification', () => {
     // @TODO Add steps to change country code before typing phone number.
 
     cy.findByLabelText('Phone Number').click();
-    cy.type(optInPhoneNumber);
+    cy.focused().type(optInPhoneNumber);
 
     ui.button
       .findByTitle('Send Verification Code')
@@ -67,7 +67,7 @@ describe('SMS phone verification', () => {
 
     // Mock invalid verification code for first attempt.
     cy.findByLabelText('Verification Code').should('be.visible').click();
-    cy.type(`${randomNumber(10000, 50000)}`);
+    cy.focused().type(`${randomNumber(10000, 50000)}`);
 
     ui.button
       .findByTitle('Verify Phone Number')
@@ -87,8 +87,8 @@ describe('SMS phone verification', () => {
     // Mock successful verification code for second attempt.
     mockVerifyVerificationCode().as('verifyCode');
     cy.findByLabelText('Verification Code').should('be.visible').click();
-    cy.clear();
-    cy.type(`${randomNumber(10000, 50000)}`);
+    cy.focused().clear();
+    cy.focused().type(`${randomNumber(10000, 50000)}`);
 
     ui.button
       .findByTitle('Verify Phone Number')

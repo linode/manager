@@ -76,7 +76,9 @@ describe('Placement Group update label flow', () => {
       cy.findByDisplayValue(mockPlacementGroup.label)
         .should('be.visible')
         .click();
-      cy.type(`{selectall}{backspace}${mockPlacementGroupUpdated.label}`);
+      cy.focused().type(
+        `{selectall}{backspace}${mockPlacementGroupUpdated.label}`
+      );
 
       cy.findByText('Edit').should('be.visible').click();
 
@@ -141,7 +143,9 @@ describe('Placement Group update label flow', () => {
       cy.findByDisplayValue(mockPlacementGroup.label)
         .should('be.visible')
         .click();
-      cy.type(`{selectall}{backspace}${mockPlacementGroupUpdated.label}`);
+      cy.focused().type(
+        `{selectall}{backspace}${mockPlacementGroupUpdated.label}`
+      );
 
       cy.findByText('Edit').should('be.visible').click();
 

@@ -32,7 +32,7 @@ describe('create image (e2e)', () => {
         .should('be.enabled')
         .should('have.attr', 'placeholder', 'Select a Linode')
         .click();
-      cy.type(linode.label);
+      cy.focused().type(linode.label);
 
       // Select the Linode
       ui.autocompletePopper
@@ -55,7 +55,7 @@ describe('create image (e2e)', () => {
         .should('be.enabled')
         .should('be.visible')
         .clear();
-      cy.type(label);
+      cy.focused().type(label);
 
       // Give the Image a description
       cy.findByLabelText('Description')

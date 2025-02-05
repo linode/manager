@@ -95,8 +95,8 @@ describe('Managed Monitors tab', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Monitor Label').should('be.visible').click();
-        cy.clear;
-        cy.type(newLabel);
+        cy.focused().clear();
+        cy.focused().type(newLabel);
 
         mockUpdateServiceMonitor(1, newMonitor).as('updateMonitor');
         mockGetServiceMonitors([newMonitor]).as('getMonitors');
@@ -182,11 +182,11 @@ describe('Managed Monitors tab', () => {
         cy.findByLabelText('Monitor Label', { exact: false })
           .should('be.visible')
           .click();
-        cy.type(monitorLabel);
+        cy.focused().type(monitorLabel);
 
         // Can't `findByLabelText` because multiple elements with "URL" label exist.
         cy.get('input[name="address"]').should('be.visible').click();
-        cy.type(monitorUrl);
+        cy.focused().type(monitorUrl);
 
         ui.buttonGroup
           .findButtonByTitle('Add Monitor')
@@ -246,7 +246,7 @@ describe('Managed Monitors tab', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Monitor Name:').should('be.visible').click();
-        cy.type(monitorLabel);
+        cy.focused().type(monitorLabel);
 
         ui.buttonGroup
           .findButtonByTitle('Delete Monitor')

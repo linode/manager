@@ -102,7 +102,7 @@ describe('Personal access tokens', () => {
         // Specify a label and re-submit.
         cy.findByLabelText('Label').scrollIntoView();
         cy.should('be.visible').should('be.enabled').click();
-        cy.type(token.label);
+        cy.focused().type(token.label);
 
         ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
         cy.should('be.visible').should('be.enabled').click();
@@ -204,8 +204,8 @@ describe('Personal access tokens', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Label').should('be.visible').click();
-        cy.clear;
-        cy.type(newToken.label);
+        cy.focused().clear();
+        cy.focused().type(newToken.label);
 
         ui.buttonGroup
           .findButtonByTitle('Save')

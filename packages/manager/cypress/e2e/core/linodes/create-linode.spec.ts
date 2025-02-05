@@ -107,11 +107,9 @@ describe('Create Linode', () => {
 
           // Confirm information in summary is shown as expected.
           cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-          cy.within(() => {
-            cy.findByText('Debian 12').should('be.visible');
-            cy.findByText(linodeRegion.label).should('be.visible');
-            cy.findByText(planConfig.planLabel).should('be.visible');
-          });
+          cy.findByText('Debian 12').should('be.visible');
+          cy.findByText(linodeRegion.label).should('be.visible');
+          cy.findByText(planConfig.planLabel).should('be.visible');
 
           // Create Linode and confirm it's provisioned as expected.
           ui.button
@@ -229,11 +227,9 @@ describe('Create Linode', () => {
 
     // Confirm information in summary is shown as expected.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-    cy.within(() => {
-      cy.findByText('Debian 12').should('be.visible');
-      cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
-      cy.findByText(mockAcceleratedType[0].label).should('be.visible');
-    });
+    cy.findByText('Debian 12').should('be.visible');
+    cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
+    cy.findByText(mockAcceleratedType[0].label).should('be.visible');
 
     // Create Linode and confirm it's provisioned as expected.
     ui.button
@@ -361,7 +357,7 @@ describe('Create Linode', () => {
     // Check the 'Backups' add on
     cy.get('[data-testid="backups"]').should('be.visible').click();
     ui.regionSelect.find().click();
-    cy.type(`${region.label} {enter}`);
+    cy.focused().type(`${region.label} {enter}`);
 
     // Verify VPCs get fetched once a region is selected
     cy.wait('@getVPCs');
@@ -379,7 +375,7 @@ describe('Create Linode', () => {
         );
         // select VPC
         cy.findByLabelText('Assign VPC').should('be.visible').focus();
-        cy.type(`${mockVPC.label}{downArrow}{enter}`);
+        cy.focused().type(`${mockVPC.label}{downArrow}{enter}`);
         // select subnet
         cy.findByPlaceholderText('Select Subnet')
           .should('be.visible')
@@ -397,11 +393,11 @@ describe('Create Linode', () => {
       .should('be.visible')
       .within(() => {
         cy.get('[id="label"]').clear();
-        cy.type(sshPublicKeyLabel);
+        cy.focused().type(sshPublicKeyLabel);
 
         // An alert displays when the format of SSH key is incorrect
         cy.get('[id="ssh-public-key"]').clear();
-        cy.type('WrongFormatSshKey');
+        cy.focused().type('WrongFormatSshKey');
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -413,7 +409,7 @@ describe('Create Linode', () => {
 
         // Create a new ssh key
         cy.get('[id="ssh-public-key"]').clear();
-        cy.type(sshPublicKey);
+        cy.focused().type(sshPublicKey);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -428,8 +424,8 @@ describe('Create Linode', () => {
     cy.findByText(sshPublicKeyLabel, { exact: false }).should('be.visible');
 
     cy.get('#linode-label').clear();
-    cy.type(linodeLabel);
-    cy.click();
+    cy.focused().type(linodeLabel);
+    cy.focused().click();
     cy.get('#root-password').type(rootpass);
 
     ui.button.findByTitle('Create Linode').click();

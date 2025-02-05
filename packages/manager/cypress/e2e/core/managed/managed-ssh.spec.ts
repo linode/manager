@@ -136,16 +136,16 @@ describe('Managed SSH Access tab', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('User Account').should('be.visible').click();
-        cy.clear;
-        cy.type(newUser);
+        cy.focused().clear();
+        cy.focused().type(newUser);
 
         // Set IP address to 'Any'.
         cy.findByLabelText('IP Address').should('be.visible').click();
-        cy.type('Any{enter}');
+        cy.focused().type('Any{enter}');
 
         cy.findByLabelText('Port').should('be.visible').click();
-        cy.clear;
-        cy.type(`${newPort}`);
+        cy.focused().clear();
+        cy.focused().type(`${newPort}`);
 
         ui.button
           .findByTitle('Save Changes')

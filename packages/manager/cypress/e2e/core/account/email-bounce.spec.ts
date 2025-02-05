@@ -105,7 +105,7 @@ describe('Email bounce banners', () => {
         .should('be.visible')
         .should('have.value', userprofileEmail)
         .clear();
-      cy.type(newEmail);
+      cy.focused().type(newEmail);
 
       cy.get('[data-qa-textfield-label="Email"]')
         .parent()

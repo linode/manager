@@ -58,7 +58,7 @@ describe('SSH keys', () => {
 
         // When a user tries to create an SSH key without the SSH Public Key, a form validation error appears
         cy.get('[id="label"]').clear();
-        cy.type(mockSSHKey.label);
+        cy.focused().type(mockSSHKey.label);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -68,7 +68,7 @@ describe('SSH keys', () => {
 
         // An alert displays when the format of SSH key is incorrect
         cy.get('[id="ssh-public-key"]').clear();
-        cy.type('WrongFormatSshKey');
+        cy.focused().type('WrongFormatSshKey');
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -77,7 +77,7 @@ describe('SSH keys', () => {
         cy.findAllByText(sshFormatErrorMessage).should('be.visible');
 
         cy.get('[id="ssh-public-key"]').clear();
-        cy.type(mockSSHKey.ssh_key);
+        cy.focused().type(mockSSHKey.ssh_key);
         ui.button
           .findByTitle('Cancel')
           .should('be.visible')
@@ -105,9 +105,9 @@ describe('SSH keys', () => {
 
         // Create a new ssh key
         cy.get('[id="label"]').clear();
-        cy.type(mockSSHKey.label);
+        cy.focused().type(mockSSHKey.label);
         cy.get('[id="ssh-public-key"]').clear();
-        cy.type(mockSSHKey.ssh_key);
+        cy.focused().type(mockSSHKey.ssh_key);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -163,9 +163,9 @@ describe('SSH keys', () => {
 
         // Create a new ssh key
         cy.get('[id="label"]').clear();
-        cy.type(sshKeyLabel);
+        cy.focused().type(sshKeyLabel);
         cy.get('[id="ssh-public-key"]').clear();
-        cy.type(sshPublicKey);
+        cy.focused().type(sshPublicKey);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -236,7 +236,7 @@ describe('SSH keys', () => {
 
         // SSH label is not modified when the operation is cancelled
         cy.get('[id="label"]').clear();
-        cy.type(newSSHKeyLabel);
+        cy.focused().type(newSSHKeyLabel);
         ui.button
           .findByTitle('Cancel')
           .should('be.visible')
@@ -259,7 +259,7 @@ describe('SSH keys', () => {
       .within(() => {
         // Update a new ssh key
         cy.get('[id="label"]').clear();
-        cy.type(newSSHKeyLabel);
+        cy.focused().type(newSSHKeyLabel);
         ui.button
           .findByTitle('Save')
           .should('be.visible')

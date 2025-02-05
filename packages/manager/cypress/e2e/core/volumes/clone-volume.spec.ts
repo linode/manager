@@ -63,7 +63,7 @@ describe('volume clone flow', () => {
           .should('be.visible')
           .within(() => {
             cy.findByText('Label').click();
-            cy.type(cloneVolumeLabel);
+            cy.focused().type(cloneVolumeLabel);
             cy.get('[data-qa-buttons="true"]').within(() => {
               cy.findByText('Clone Volume').should('be.visible').click();
             });

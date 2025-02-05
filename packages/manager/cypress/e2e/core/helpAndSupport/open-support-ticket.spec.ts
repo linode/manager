@@ -100,12 +100,12 @@ describe('open support tickets', () => {
       cy.get('input[placeholder="Enter a title for your ticket."]').click({
         scrollBehavior: false,
       });
-      cy.type(ticketLabel);
+      cy.focused().type(ticketLabel);
       cy.findByLabelText('Severity').should('not.exist');
       cy.get('[data-qa-ticket-entity-type]').click();
       cy.contains('General/Account/Billing').should('be.visible');
       cy.get('[data-qa-ticket-description="true"]').click();
-      cy.type(ticketDescription);
+      cy.focused().type(ticketDescription);
       cy.get('[id="attach-file"]').attachFile(image);
       cy.get('[value="test_screenshot.png"]').should('be.visible');
       cy.get('[data-qa-submit="true"]').click();
@@ -173,13 +173,13 @@ describe('open support tickets', () => {
         cy.findByLabelText('Title', { exact: false })
           .should('be.visible')
           .click();
-        cy.type(mockTicket.summary);
+        cy.focused().type(mockTicket.summary);
 
         cy.findByLabelText('Severity').should('be.visible').click();
-        cy.type(`${mockTicket.severity}{downarrow}{enter}`);
+        cy.focused().type(`${mockTicket.severity}{downarrow}{enter}`);
 
         cy.get('[data-qa-ticket-description]').should('be.visible').click();
-        cy.type(mockTicket.description);
+        cy.focused().type(mockTicket.description);
 
         ui.button
           .findByTitle('Open Ticket')
@@ -287,13 +287,13 @@ describe('open support tickets', () => {
 
         // Complete the rest of the form.
         cy.get('[data-qa-ticket-use-case]').should('be.visible').click();
-        cy.type(mockFormFields.useCase);
+        cy.focused().type(mockFormFields.useCase);
 
         cy.get('[data-qa-ticket-email-domains]').should('be.visible').click();
-        cy.type(mockFormFields.emailDomains);
+        cy.focused().type(mockFormFields.emailDomains);
 
         cy.get('[data-qa-ticket-public-info]').should('be.visible').click();
-        cy.type(mockFormFields.publicInfo);
+        cy.focused().type(mockFormFields.publicInfo);
 
         // Confirm there is no description field or file upload section.
         cy.findByText('Description').should('not.exist');
@@ -448,13 +448,13 @@ describe('open support tickets', () => {
         cy.findByLabelText('Total number of Linodes you need?')
           .should('be.visible')
           .click();
-        cy.type(mockFormFields.numberOfEntities);
+        cy.focused().type(mockFormFields.numberOfEntities);
 
         cy.get('[data-qa-ticket-use-case]').should('be.visible').click();
-        cy.type(mockFormFields.useCase);
+        cy.focused().type(mockFormFields.useCase);
 
         cy.get('[data-qa-ticket-public-info]').should('be.visible').click();
-        cy.type(mockFormFields.publicInfo);
+        cy.focused().type(mockFormFields.publicInfo);
 
         // Confirm there is no description field or file upload section.
         cy.findByText('Description').should('not.exist');
@@ -530,13 +530,13 @@ describe('open support tickets', () => {
         cy.findByLabelText('Title', { exact: false })
           .should('be.visible')
           .click();
-        cy.type(mockTicket.summary);
+        cy.focused().type(mockTicket.summary);
 
         cy.get('[data-qa-ticket-description]').should('be.visible').click();
-        cy.type(mockTicket.description);
+        cy.focused().type(mockTicket.description);
 
         cy.get('[data-qa-ticket-entity-type]').click();
-        cy.type(`Linodes{downarrow}{enter}`);
+        cy.focused().type(`Linodes{downarrow}{enter}`);
 
         // Attempt to submit the form without an entity selected and confirm validation error.
         ui.button
@@ -548,7 +548,7 @@ describe('open support tickets', () => {
 
         // Select an entity type for which there are no entities.
         cy.get('[data-qa-ticket-entity-type]').click();
-        cy.type(`Kubernetes{downarrow}{enter}`);
+        cy.focused().type(`Kubernetes{downarrow}{enter}`);
 
         // Confirm the validation error clears when a new entity type is selected.
         cy.findByText('Please select a Linode.').should('not.exist');
@@ -563,11 +563,11 @@ describe('open support tickets', () => {
 
         // Select another entity type.
         cy.get('[data-qa-ticket-entity-type]').click();
-        cy.type(`{selectall}{del}Domains{uparrow}{enter}`);
+        cy.focused().type(`{selectall}{del}Domains{uparrow}{enter}`);
 
         // Select an entity.
         cy.get('[data-qa-ticket-entity-id]').should('be.visible').click();
-        cy.type(`${mockDomain.domain}{downarrow}{enter}`);
+        cy.focused().type(`${mockDomain.domain}{downarrow}{enter}`);
 
         ui.button
           .findByTitle('Open Ticket')

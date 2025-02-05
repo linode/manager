@@ -56,7 +56,7 @@ describe('volume update flow', () => {
         cy.get('[data-qa-drawer="true"]').within(() => {
           cy.findByText('Edit Volume').should('be.visible');
           cy.findByDisplayValue(volume.label).should('be.visible').click();
-          cy.type(`{selectall}{backspace}${newLabel}`);
+          cy.focused().type(`{selectall}{backspace}${newLabel}`);
 
           cy.findByText('Save Changes').should('be.visible').click();
         });
@@ -122,7 +122,7 @@ describe('volume update flow', () => {
           cy.findByPlaceholderText('Type to choose or create a tag.')
             .should('be.visible')
             .click();
-          cy.type(`${newTags.join('{enter}')}{enter}`);
+          cy.focused().type(`${newTags.join('{enter}')}{enter}`);
 
           cy.findByText('Save Changes').should('be.visible').click();
         });

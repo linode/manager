@@ -187,9 +187,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Label').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.type(`${mockRegion.label}{enter}`);
+        cy.focused().type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -267,7 +267,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Bucket Name').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -328,9 +328,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Label').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.type(`${mockRegion.label}{enter}`);
+        cy.focused().type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -393,7 +393,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Bucket Name').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -454,9 +454,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Label').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.type(`${mockRegion.label}{enter}`);
+        cy.focused().type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -517,7 +517,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Bucket Name').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -578,9 +578,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Label').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.type(`${mockRegion.label}{enter}`);
+        cy.focused().type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -637,7 +637,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Bucket Name').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -680,7 +680,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .within(() => {
         ui.regionSelect.find().click();
-        cy.type(`${mockRegion.label}{enter}`);
+        cy.focused().type(`${mockRegion.label}{enter}`);
 
         // Confirms error appears when an endpoint isn't selected, and disappears after one is selected
         ui.buttonGroup
@@ -709,7 +709,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
         cy.contains('Label is required.').should('be.visible');
         cy.findByText('Label').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         cy.contains('Label is required.').should('not.exist');
 
         // confirms (mock) API error appears

@@ -38,9 +38,7 @@ describe('Create Linode with Add-ons', () => {
 
     // Confirm Backups assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-    cy.within(() => {
-      cy.findByText('Backups').should('be.visible');
-    });
+    cy.findByText('Backups').should('be.visible');
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -91,9 +89,7 @@ describe('Create Linode with Add-ons', () => {
 
     // Confirm Private IP assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-    cy.within(() => {
-      cy.findByText('Private IP').should('be.visible');
-    });
+    cy.findByText('Private IP').should('be.visible');
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button

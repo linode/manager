@@ -192,17 +192,17 @@ describe('OneClick Apps (OCA)', () => {
     )
       .should('be.visible')
       .click();
-    cy.type(firstName);
+    cy.focused().type(firstName);
 
     cy.findByLabelText(
       "The password for the Linode's non-root admin/SSH user (required)"
     )
       .should('be.visible')
       .click();
-    cy.type(password);
+    cy.focused().type(password);
 
     cy.findByLabelText('World Name (required)').should('be.visible').click();
-    cy.type(levelName);
+    cy.focused().type(levelName);
 
     // Check each field should persist when moving onto another field
     cy.findByLabelText(
@@ -217,11 +217,11 @@ describe('OneClick Apps (OCA)', () => {
 
     // Choose an image
     cy.findByPlaceholderText('Choose an image').click();
-    cy.type('{downArrow}{enter}');
+    cy.focused().type('{downArrow}{enter}');
 
     // Choose a region
     ui.regionSelect.find().click();
-    cy.type(`${region.id}{enter}`);
+    cy.focused().type(`${region.id}{enter}`);
 
     // Choose a Linode plan
     cy.get('[data-qa-plan-row="Dedicated 8 GB"]')
@@ -232,7 +232,7 @@ describe('OneClick Apps (OCA)', () => {
 
     // Enter a label.
     cy.findByText('Linode Label').should('be.visible').click();
-    cy.type(linodeLabel);
+    cy.focused().type(linodeLabel);
 
     // Choose a Root Password
     cy.get('[id="root-password"]').type(rootPassword);

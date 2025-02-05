@@ -101,7 +101,7 @@ describe('VPC assign/unassign flows', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Subnet Label').should('be.visible').click();
-        cy.type(mockSubnet.label);
+        cy.focused().type(mockSubnet.label);
 
         cy.findByTestId('create-subnet-drawer-button')
           .should('be.visible')
@@ -143,7 +143,7 @@ describe('VPC assign/unassign flows', () => {
           'getLinodeConfigs'
         );
         cy.findByLabelText('Linode').should('be.visible').click();
-        cy.type(mockLinode.label);
+        cy.focused().type(mockLinode.label);
         cy.should('have.value', mockLinode.label);
 
         ui.autocompletePopper
@@ -260,7 +260,7 @@ describe('VPC assign/unassign flows', () => {
         );
 
         cy.findByLabelText('Linodes').should('be.visible').click();
-        cy.type(mockLinode.label);
+        cy.focused().type(mockLinode.label);
 
         ui.autocompletePopper
           .findByTitle(mockLinode.label)
@@ -282,7 +282,7 @@ describe('VPC assign/unassign flows', () => {
           'getLinodeConfigs'
         );
         cy.findByText('Linodes').should('be.visible').click();
-        cy.type(mockSecondLinode.label);
+        cy.focused().type(mockSecondLinode.label);
         cy.findByText(mockSecondLinode.label).should('be.visible').click();
         cy.wait('@getLinodeConfigs');
 

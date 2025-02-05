@@ -97,7 +97,7 @@ describe('Create Linode with DC-specific pricing', () => {
       .should('have.attr', 'href', dcPricingDocsUrl);
 
     ui.regionSelect.find().click();
-    cy.type(`${newRegion.label} {enter}`);
+    cy.focused().type(`${newRegion.label} {enter}`);
     cy.findByText('Shared CPU').click();
     cy.get(`[id="${dcPricingMockLinodeTypes[0].id}"]`).click();
     // Confirm that the backup prices are displayed as expected.

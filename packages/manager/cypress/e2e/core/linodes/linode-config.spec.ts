@@ -340,8 +340,8 @@ describe('Linode Config management', () => {
               .type(sharedConfigLabel);
 
             cy.findByText('Select a Kernel').scrollIntoView();
-            cy.click();
-            cy.type('Latest 64 bit{enter}');
+            cy.focused().click();
+            cy.focused().type('Latest 64 bit{enter}');
 
             ui.buttonGroup
               .findButtonByTitle('Add Configuration')
@@ -526,8 +526,8 @@ describe('Linode Config management', () => {
           // Confirm that "VPC" can be selected for either "eth0", "eth1", or "eth2".
           // Add VPC to eth0
           cy.get('[data-qa-textfield-label="eth0"]').scrollIntoView();
-          cy.click();
-          cy.type('VPC');
+          cy.focused().click();
+          cy.focused().type('VPC');
 
           ui.select.findItemByText('VPC').should('be.visible').click();
 
@@ -540,8 +540,8 @@ describe('Linode Config management', () => {
             cy.get(
               `[data-qa-textfield-label="${interfaceName}"]`
             ).scrollIntoView();
-            cy.click();
-            cy.type('VPC');
+            cy.get(`[data-qa-textfield-label="${interfaceName}"]`).click();
+            cy.focused().type('VPC');
 
             ui.select.findItemByText('VPC').should('be.visible');
 
@@ -630,8 +630,8 @@ describe('Linode Config management', () => {
         .within(() => {
           // Set eth2 to VPC and submit.
           cy.get('[data-qa-textfield-label="eth2"]').scrollIntoView();
-          cy.click();
-          cy.type('VPC{enter}');
+          cy.get('[data-qa-textfield-label="eth2"]').click();
+          cy.focused().type('VPC{enter}');
 
           ui.button.findByTitle('Save Changes').scrollIntoView();
           cy.should('be.visible').should('be.enabled').click();
@@ -730,15 +730,15 @@ describe('Linode Config management', () => {
 
           // Sets eth0 to "Public Internet", and sets eth1 to "VPC"
           cy.get('[data-qa-textfield-label="eth0"]').scrollIntoView();
-          cy.click();
-          cy.type('Public Internet');
+          cy.get('[data-qa-textfield-label="eth0"]').click();
+          cy.focused().type('Public Internet');
           ui.select
             .findItemByText('Public Internet')
             .should('be.visible')
             .click();
           cy.get('[data-qa-textfield-label="eth1"]').scrollIntoView();
-          cy.click();
-          cy.type('VPC');
+          cy.get('[data-qa-textfield-label="eth1"]').click();
+          cy.focused().type('VPC');
           ui.select.findItemByText('VPC').should('be.visible').click();
           // Confirm that internet access warning is displayed.
           cy.findByText(LINODE_UNREACHABLE_HELPER_TEXT).should('be.visible');
@@ -746,15 +746,15 @@ describe('Linode Config management', () => {
           // Sets eth0 to "Public Internet", and sets eth1 to "VPC",
           // and checks "Assign a public IPv4 address for this Linode"
           cy.get('[data-qa-textfield-label="VPC"]').scrollIntoView();
-          cy.click();
-          cy.type(`${mockVPC.label}`);
+          cy.get('[data-qa-textfield-label="VPC"]').click();
+          cy.focused().type(`${mockVPC.label}`);
           ui.select
             .findItemByText(`${mockVPC.label}`)
             .should('be.visible')
             .click();
           cy.get('[data-qa-textfield-label="Subnet"]').scrollIntoView();
-          cy.click();
-          cy.type(`${mockSubnet.label}`);
+          cy.get('[data-qa-textfield-label="Subnet"]').click();
+          cy.focused().type(`${mockSubnet.label}`);
           ui.select
             .findItemByText(`${mockSubnet.label}`)
             .should('be.visible')

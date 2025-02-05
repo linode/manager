@@ -196,7 +196,7 @@ describe('Billing Activity Feed', () => {
       mockGetPayments(paymentMocks).as('getPayments');
 
       cy.findByText('Transaction Dates').click();
-      cy.type(`All Time`);
+      cy.focused().type(`All Time`);
       ui.autocompletePopper
         .findByTitle(`All Time`)
         .should('be.visible')
@@ -215,7 +215,7 @@ describe('Billing Activity Feed', () => {
 
       // Change transaction type drop-down to "Payments" only.
       cy.findByText('Transaction Types').click();
-      cy.type(`Payments`);
+      cy.focused().type(`Payments`);
       ui.autocompletePopper
         .findByTitle(`Payments`)
         .should('be.visible')
@@ -270,7 +270,7 @@ describe('Billing Activity Feed', () => {
 
     // Change invoice date selection from "6 Months" to "All Time".
     cy.findByText('Transaction Dates').click();
-    cy.type('All Time');
+    cy.focused().type('All Time');
     ui.autocompletePopper.findByTitle('All Time').should('be.visible').click();
 
     cy.get('[data-qa-billing-activity-panel]')
@@ -375,7 +375,7 @@ describe('Billing Activity Feed', () => {
       // get Cloud to re-fetch the user's profile data with the new timezone
       // applied.
       cy.findByText('Timezone').should('be.visible').click();
-      cy.type(`${timezoneLabel}{enter}`);
+      cy.focused().type(`${timezoneLabel}{enter}`);
 
       ui.button
         .findByTitle('Update Timezone')

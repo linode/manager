@@ -210,10 +210,10 @@ describe('LKE Cluster Creation', () => {
     cy.focused().type(`${clusterLabel}{enter}`);
 
     ui.regionSelect.find().click();
-    cy.type(`${clusterRegion.label}{enter}`);
+    cy.focused().type(`${clusterRegion.label}{enter}`);
 
     ui.autocomplete.findByLabel('Kubernetes Version').click();
-    cy.type(`${clusterVersion}{enter}`);
+    cy.focused().type(`${clusterVersion}{enter}`);
 
     cy.get('[data-testid="ha-radio-button-no"]').should('be.visible').click();
 
@@ -420,7 +420,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
     cy.focused().type(`${clusterLabel}{enter}`);
 
     ui.regionSelect.find().click();
-    cy.type(`${clusterRegion.label}{enter}`);
+    cy.focused().type(`${clusterRegion.label}{enter}`);
 
     cy.findByTestId('apl-label').should('have.text', 'Akamai App Platform');
     cy.findByTestId('apl-radio-button-yes').should('be.visible').click();
@@ -537,10 +537,10 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
 
     // Fill out LKE creation form label, region, and Kubernetes version fields.
     cy.findByLabelText('Cluster Label').should('be.visible').click();
-    cy.type(`${clusterLabel}{enter}`);
+    cy.focused().type(`${clusterLabel}{enter}`);
 
     ui.regionSelect.find().click();
-    cy.type(`${dcSpecificPricingRegion.label}{enter}`);
+    cy.focused().type(`${dcSpecificPricingRegion.label}{enter}`);
 
     // Confirm that HA price updates dynamically once region selection is made.
     cy.contains(/\$.*\/month/).should('be.visible');
@@ -567,7 +567,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
         .closest('tr')
         .within(() => {
           cy.get('[name="Quantity"]').should('be.visible').click();
-          cy.type(`{selectall}${nodeCount}`);
+          cy.focused().type(`{selectall}${nodeCount}`);
 
           ui.button
             .findByTitle('Add')
@@ -698,14 +698,14 @@ describe('LKE Cluster Creation with ACL', () => {
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label').should('be.visible').click();
-      cy.type(`${clusterLabel}{enter}`);
+      cy.focused().type(`${clusterLabel}{enter}`);
 
       ui.regionSelect.find().click();
-      cy.type(`${mockRegion.label}{enter}`);
+      cy.focused().type(`${mockRegion.label}{enter}`);
       cy.wait(['@getRegionAvailability']);
 
       cy.findByText('Kubernetes Version').should('be.visible').click();
-      cy.type(`${clusterVersion}{enter}`);
+      cy.focused().type(`${clusterVersion}{enter}`);
 
       cy.get('[data-testid="ha-radio-button-yes"]')
         .should('be.visible')
@@ -725,7 +725,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .closest('tr')
         .within(() => {
           cy.get('[name="Quantity"]').should('be.visible').click();
-          cy.type(`{selectall}${nodeCount}`);
+          cy.focused().type(`{selectall}${nodeCount}`);
 
           ui.button
             .findByTitle('Add')
@@ -803,13 +803,13 @@ describe('LKE Cluster Creation with ACL', () => {
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label').should('be.visible').click();
-      cy.type(`${clusterLabel}{enter}`);
+      cy.focused().type(`${clusterLabel}{enter}`);
 
       ui.regionSelect.find().click();
-      cy.type(`${mockRegion.label}{enter}`);
+      cy.focused().type(`${mockRegion.label}{enter}`);
 
       cy.findByText('Kubernetes Version').should('be.visible').click();
-      cy.type(`${clusterVersion}{enter}`);
+      cy.focused().type(`${clusterVersion}{enter}`);
 
       cy.get('[data-testid="ha-radio-button-yes"]')
         .should('be.visible')
@@ -829,17 +829,17 @@ describe('LKE Cluster Creation with ACL', () => {
       cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click();
-      cy.type('10.0.0.0/24');
+      cy.focused().type('10.0.0.0/24');
       cy.findByText('Add IPv4 Address')
         .should('be.visible')
         .should('be.enabled')
         .click();
       cy.get('[id="domain-transfer-ip-1"]').should('be.visible').click();
-      cy.type('10.0.1.0/24');
+      cy.focused().type('10.0.1.0/24');
       cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click();
-      cy.type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+      cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
       cy.findByText('Add IPv6 Address')
         .should('be.visible')
         .should('be.enabled')
@@ -852,7 +852,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .closest('tr')
         .within(() => {
           cy.get('[name="Quantity"]').should('be.visible').click();
-          cy.type(`{selectall}${nodeCount}`);
+          cy.focused().type(`{selectall}${nodeCount}`);
 
           ui.button
             .findByTitle('Add')
@@ -918,13 +918,13 @@ describe('LKE Cluster Creation with ACL', () => {
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label').should('be.visible').click();
-      cy.type(`${clusterLabel}{enter}`);
+      cy.focused().type(`${clusterLabel}{enter}`);
 
       ui.regionSelect.find().click();
-      cy.type(`${mockRegion.label}{enter}`);
+      cy.focused().type(`${mockRegion.label}{enter}`);
 
       cy.findByText('Kubernetes Version').should('be.visible').click();
-      cy.type(`${clusterVersion}{enter}`);
+      cy.focused().type(`${clusterVersion}{enter}`);
 
       cy.get('[data-testid="ha-radio-button-yes"]')
         .should('be.visible')
@@ -944,18 +944,17 @@ describe('LKE Cluster Creation with ACL', () => {
       cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click();
-      cy.type('invalid ip');
+      cy.focused().type('invalid ip');
 
       // click out of textbox and confirm error is visible
       cy.contains('Control Plane ACL').should('be.visible').click();
       cy.contains('Must be a valid IPv4 address.').should('be.visible');
       // enter valid IP
-      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0').should(
-        'be.visible'
-      );
-      cy.click();
-      cy.clear();
-      cy.type('10.0.0.0/24');
+      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
+        .should('be.visible')
+        .click();
+      cy.focused().clear();
+      cy.focused().type('10.0.0.0/24');
       // Click out of textbox and confirm error is gone
       cy.contains('Control Plane ACL').should('be.visible').click();
       cy.contains('Must be a valid IPv4 address.').should('not.exist');
@@ -964,7 +963,7 @@ describe('LKE Cluster Creation with ACL', () => {
       cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click();
-      cy.type('invalid ip');
+      cy.focused().type('invalid ip');
       // click out of textbox and confirm error is visible
       cy.contains('Control Plane ACL').should('be.visible').click();
       cy.contains('Must be a valid IPv6 address.').should('be.visible');
@@ -972,8 +971,8 @@ describe('LKE Cluster Creation with ACL', () => {
       cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click();
-      cy.clear();
-      cy.type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+      cy.focused().clear();
+      cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
       // Click out of textbox and confirm error is gone
       cy.contains('Control Plane ACL').should('be.visible').click();
       cy.contains('Must be a valid IPv6 address.').should('not.exist');
@@ -985,7 +984,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .closest('tr')
         .within(() => {
           cy.get('[name="Quantity"]').should('be.visible').click();
-          cy.type(`{selectall}${nodeCount}`);
+          cy.focused().type(`{selectall}${nodeCount}`);
 
           ui.button
             .findByTitle('Add')
@@ -1120,7 +1119,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       cy.wait(['@getKubernetesVersions', '@getTieredKubernetesVersions']);
 
       cy.findByLabelText('Cluster Label').should('be.visible').click();
-      cy.type(`${clusterLabel}{enter}`);
+      cy.focused().type(`${clusterLabel}{enter}`);
 
       cy.findByText('Cluster Tier').should('be.visible');
 
@@ -1146,14 +1145,14 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       // Confirm unsupported regions are not displayed
       ui.regionSelect.find().click();
-      cy.type('Newark, NJ');
+      cy.focused().type('Newark, NJ');
       ui.autocompletePopper.find().within(() => {
         cy.findByText('Newark, NJ (us-east)').should('not.exist');
       });
 
       // Select a supported region
       ui.regionSelect.find().clear();
-      cy.type('Washington, DC{enter}');
+      cy.focused().type('Washington, DC{enter}');
 
       // Confirm that there is a tooltip explanation for the region dropdown options
       ui.tooltip

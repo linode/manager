@@ -39,7 +39,7 @@ describe('create firewall', () => {
         cy.findByText('Label is required.');
         // Fill out and submit firewall create form.
         cy.contains('Label').click();
-        cy.type(firewall.label);
+        cy.focused().type(firewall.label);
         ui.buttonGroup
           .findButtonByTitle('Create Firewall')
           .should('be.visible')
@@ -91,9 +91,9 @@ describe('create firewall', () => {
         .within(() => {
           // Fill out and submit firewall create form.
           cy.contains('Label').click();
-          cy.type(firewall.label);
+          cy.focused().type(firewall.label);
           cy.findByLabelText('Linodes').should('be.visible').click();
-          cy.type(linode.label);
+          cy.focused().type(linode.label);
 
           ui.autocompletePopper
             .findByTitle(linode.label)

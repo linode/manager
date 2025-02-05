@@ -87,15 +87,15 @@ describe('Managed Contacts tab', () => {
         cy.findByLabelText('Name', { exact: false })
           .should('be.visible')
           .click();
-        cy.type(contactName);
+        cy.focused().type(contactName);
 
         cy.findByLabelText('E-mail', { exact: false })
           .should('be.visible')
           .click();
-        cy.type(contactEmail);
+        cy.focused().type(contactEmail);
 
         cy.findByLabelText('Primary Phone').should('be.visible').click();
-        cy.type(contactPrimaryPhone);
+        cy.focused().type(contactPrimaryPhone);
 
         ui.buttonGroup
           .findButtonByTitle('Add Contact')
@@ -172,18 +172,18 @@ describe('Managed Contacts tab', () => {
         cy.findByLabelText('Name', { exact: false })
           .should('be.visible')
           .click();
-        cy.clear;
-        cy.type(contactNewName);
+        cy.focused().clear();
+        cy.focused().type(contactNewName);
 
         cy.findByLabelText('E-mail', { exact: false })
           .should('be.visible')
           .click();
-        cy.clear;
-        cy.type(contactNewEmail);
+        cy.focused().clear();
+        cy.focused().type(contactNewEmail);
 
         cy.findByLabelText('Primary Phone').should('be.visible').click();
-        cy.clear;
-        cy.type(contactNewPrimaryPhone);
+        cy.focused().clear();
+        cy.focused().type(contactNewPrimaryPhone);
 
         ui.buttonGroup
           .findButtonByTitle('Save Changes')
@@ -238,7 +238,7 @@ describe('Managed Contacts tab', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Contact Name:').should('be.visible').click();
-        cy.type(contactName);
+        cy.focused().type(contactName);
 
         ui.buttonGroup
           .findButtonByTitle('Delete Contact')

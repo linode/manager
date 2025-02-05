@@ -83,9 +83,9 @@ const addFirewallRules = (rule: FirewallRuleType, direction: string) => {
         ? rule.description
         : 'test-description';
       cy.contains('Label').click();
-      cy.type('{selectall}{backspace}' + label);
+      cy.focused().type('{selectall}{backspace}' + label);
       cy.contains('Description').click();
-      cy.type(description);
+      cy.focused().type(description);
 
       const action = rule.action ? getRuleActionLabel(rule.action) : 'Accept';
       cy.contains(action).click();
@@ -140,7 +140,7 @@ const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
     .within(() => {
       // Fill out and submit firewall edit form.
       cy.findByLabelText('Linodes').should('be.visible').click();
-      cy.type(linode.label);
+      cy.focused().type(linode.label);
 
       ui.autocompletePopper
         .findByTitle(linode.label)
@@ -439,8 +439,8 @@ describe('update firewall', () => {
 
       cy.findByLabelText(`Edit ${firewall.label}`).click();
       cy.get(`[id="edit-${firewall.label}-label"]`).click();
-      cy.clear();
-      cy.type(`${newFirewallLabel}{enter}`);
+      cy.focused().clear();
+      cy.focused().type(`${newFirewallLabel}{enter}`);
 
       // Confirm Firewall label updates in breadcrumbs.
       ui.entityHeader.find().within(() => {

@@ -34,10 +34,10 @@ const createNodeBalancerWithUI = (
 
   cy.visitWithLogin('/nodebalancers/create');
   cy.get('[id="nodebalancer-label"]').should('be.visible').click();
-  cy.clear();
-  cy.type(nodeBal.label);
+  cy.focused().clear();
+  cy.focused().type(nodeBal.label);
   cy.findByPlaceholderText(/create a tag/i).click();
-  cy.type(entityTag);
+  cy.focused().type(entityTag);
 
   if (isDcPricingTest) {
     const newRegion = getRegionById('br-gru');
@@ -49,7 +49,7 @@ const createNodeBalancerWithUI = (
 
     // Confirms that the price will show up when the region is selected
     ui.regionSelect.find().click();
-    cy.type(`${regionName}{enter}`);
+    cy.focused().type(`${regionName}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText(`$10/month`).should('be.visible');
     });
@@ -61,23 +61,23 @@ const createNodeBalancerWithUI = (
 
     // Confirms that the summary updates to reflect price changes if the user changes their region.
     ui.regionSelect.find().click();
-    cy.clear();
-    cy.type(`${newRegion.label}{enter}`);
+    cy.focused().clear();
+    cy.focused().type(`${newRegion.label}{enter}`);
     cy.get('[data-qa-summary="true"]').within(() => {
       cy.findByText(`$14/month`).should('be.visible');
     });
   }
   // this will create the NB in newark, where the default Linode was created
   ui.regionSelect.find().click();
-  cy.clear();
-  cy.type(`${regionName}{enter}`);
+  cy.focused().clear();
+  cy.focused().type(`${regionName}{enter}`);
 
   // node backend config
   cy.findByText('Label').click();
-  cy.type(randomLabel());
+  cy.focused().type(randomLabel());
 
   cy.findByLabelText('IP Address').should('be.visible').click();
-  cy.type(nodeBal.ipv4);
+  cy.focused().type(nodeBal.ipv4);
 
   ui.autocompletePopper.findByTitle(nodeBal.ipv4).should('be.visible').click();
 
@@ -131,8 +131,9 @@ describe('create NodeBalancer', () => {
 
     cy.visitWithLogin('/nodebalancers/create');
 
-    cy.findByLabelText('NodeBalancer Label').should('be.visible');
-    cy.type('my-nodebalancer-1');
+    cy.findByLabelText('NodeBalancer Label')
+      .should('be.visible')
+      .type('my-nodebalancer-1');
 
     ui.autocomplete.findByLabel('Region').should('be.visible').click();
 
@@ -145,7 +146,7 @@ describe('create NodeBalancer', () => {
     cy.findByLabelText('Label').type('my-node-1');
 
     cy.findByLabelText('IP Address').click();
-    cy.type(linode.ipv4[0]);
+    cy.focused().type(linode.ipv4[0]);
 
     ui.autocompletePopper.findByTitle(linode.label).click();
 

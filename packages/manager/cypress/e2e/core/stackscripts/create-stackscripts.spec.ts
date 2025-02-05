@@ -71,11 +71,11 @@ const fillOutStackscriptForm = (
   cy.findByLabelText(/^StackScript Label.*/)
     .should('be.visible')
     .click();
-  cy.type(label);
+  cy.focused().type(label);
 
   if (description) {
     cy.findByLabelText('Description').should('be.visible').click();
-    cy.type(description);
+    cy.focused().type(description);
   }
 
   ui.autocomplete.findByLabel('Target Images').should('be.visible').click();
@@ -107,8 +107,8 @@ const fillOutLinodeForm = (label: string, regionName: string) => {
   ui.regionSelect.find().should('have.value', `${region.label} (${region.id})`);
 
   cy.findByText('Linode Label').should('be.visible').click();
-  cy.type('{selectall}{backspace}');
-  cy.type(label);
+  cy.focused().type('{selectall}{backspace}');
+  cy.focused().type(label);
 
   cy.findByText('Dedicated CPU').should('be.visible').click();
   cy.get('[id="g6-dedicated-2"]').click();
@@ -264,11 +264,11 @@ describe('Create stackscripts', () => {
     fillOutLinodeForm(linodeLabel, linodeRegion.label);
 
     cy.findByLabelText('Example Password').should('be.visible').click();
-    cy.type(randomString(32));
+    cy.focused().type(randomString(32));
 
     cy.findByLabelText('Example Title').should('be.visible').click();
-    cy.type('{selectall}{backspace}');
-    cy.type(randomString(12));
+    cy.focused().type('{selectall}{backspace}');
+    cy.focused().type(randomString(12));
 
     ui.button
       .findByTitle('Create Linode')

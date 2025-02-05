@@ -43,7 +43,7 @@ const editCaaRecord = (name: string, newValue: string) => {
 
   // Edit the value field
   cy.findByLabelText('Value').clear();
-  cy.type(newValue);
+  cy.focused().type(newValue);
   ui.button.findByTitle('Save').click();
 };
 

@@ -29,10 +29,10 @@ describe('Create Linodes', () => {
 
     // Enter label and password.
     cy.findByLabelText('Linode Label').click();
-    cy.clear();
-    cy.type(label);
+    cy.focused().clear();
+    cy.focused().type(label);
     cy.findByLabelText('Root Password').click();
-    cy.type(randomString(32));
+    cy.focused().type(randomString(32));
 
     // Submit.
     ui.button.findByTitle('Create Linode').click();

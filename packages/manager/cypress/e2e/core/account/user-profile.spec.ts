@@ -56,7 +56,7 @@ describe('User Profile', () => {
         .should('be.visible')
         .should('have.value', activeEmail)
         .clear();
-      cy.type(newEmail);
+      cy.focused().type(newEmail);
 
       cy.get('[data-qa-textfield-label="Email"]')
         .parent()
@@ -80,7 +80,7 @@ describe('User Profile', () => {
         .should('be.visible')
         .should('have.value', activeUsername)
         .clear();
-      cy.type(newUsername);
+      cy.focused().type(newUsername);
 
       cy.get('[data-qa-textfield-label="Username"]')
         .parent()
@@ -168,7 +168,7 @@ describe('User Profile', () => {
         .should('be.visible')
         .should('have.value', additionalUsername)
         .clear();
-      cy.type(newUsername);
+      cy.focused().type(newUsername);
 
       cy.get('[data-qa-textfield-label="Username"]')
         .parent()

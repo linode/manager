@@ -108,9 +108,9 @@ describe('object storage end-to-end tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Label').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.type(`${bucketRegion}{enter}`);
+        cy.focused().type(`${bucketRegion}{enter}`);
 
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
@@ -136,7 +136,7 @@ describe('object storage end-to-end tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Bucket Name').click();
-        cy.type(bucketLabel);
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -182,7 +182,7 @@ describe('object storage end-to-end tests', () => {
       .should('not.have.value', 'Loading access...')
       .should('have.value', 'Private')
       .click();
-    cy.type('Public Read');
+    cy.focused().type('Public Read');
 
     ui.autocompletePopper
       .findByTitle('Public Read')

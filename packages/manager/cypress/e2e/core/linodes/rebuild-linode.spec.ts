@@ -73,7 +73,7 @@ const assertPasswordComplexity = (
   passwordStrength: 'Weak' | 'Fair' | 'Good'
 ) => {
   cy.findByLabelText('Root Password').should('be.visible').clear();
-  cy.type(desiredPassword);
+  cy.focused().type(desiredPassword);
 
   cy.contains(`Strength: ${passwordStrength}`).should('be.visible');
 };
@@ -316,13 +316,13 @@ describe('rebuild linode', () => {
     findRebuildDialog(mockLinode.label).within(() => {
       ui.autocomplete.findByLabel('From Image').should('be.visible');
       ui.autocomplete.findByLabel('Images').should('be.visible').click();
-      cy.type(image);
+      cy.focused().type(image);
       ui.autocompletePopper.findByTitle(image).should('be.visible').click();
 
       assertPasswordComplexity(rootPassword, 'Good');
 
       cy.findByLabelText('Linode Label').should('be.visible').click();
-      cy.type(mockLinode.label);
+      cy.focused().type(mockLinode.label);
 
       submitRebuild();
       cy.wait('@rebuildLinode');

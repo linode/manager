@@ -31,11 +31,11 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
     .should('be.visible')
     .within(() => {
       cy.findByLabelText('Label').click();
-      cy.clear();
-      cy.type(oauthApp.label);
+      cy.focused().clear();
+      cy.focused().type(oauthApp.label);
       cy.findByLabelText('Callback URL').click();
-      cy.clear();
-      cy.type(oauthApp.redirect_uri);
+      cy.focused().clear();
+      cy.focused().type(oauthApp.redirect_uri);
       ui.buttonGroup
         .findButtonByTitle('Cancel')
         .should('be.visible')
@@ -58,11 +58,11 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
     .should('be.visible')
     .within(() => {
       cy.findByLabelText('Label').click();
-      cy.clear();
-      cy.type(oauthApp.label);
+      cy.focused().clear();
+      cy.focused().type(oauthApp.label);
       cy.findByLabelText('Callback URL').click();
-      cy.clear();
-      cy.type(oauthApp.redirect_uri);
+      cy.focused().clear();
+      cy.focused().type(oauthApp.redirect_uri);
     });
   ui.drawerCloseButton.find().click();
 
@@ -83,9 +83,9 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
     .within(() => {
       // An error message appears when attempting to create an OAuth App without a label
       cy.findByLabelText('Label').click();
-      cy.clear();
+      cy.focused().clear();
       cy.findByLabelText('Callback URL').click();
-      cy.clear();
+      cy.focused().clear();
       ui.button
         .findByTitle('Create')
         .should('be.visible')
@@ -96,11 +96,11 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
 
       // Fill out and submit OAuth App create form.
       cy.findByLabelText('Label').click();
-      cy.clear();
-      cy.type(oauthApp.label);
+      cy.focused().clear();
+      cy.focused().type(oauthApp.label);
       cy.findByLabelText('Callback URL').click();
-      cy.clear();
-      cy.type(oauthApp.redirect_uri);
+      cy.focused().clear();
+      cy.focused().type(oauthApp.redirect_uri);
       // Check the 'public' checkbox
       if (oauthApp.public) {
         cy.get('[data-qa-checked]').should('be.visible').click();
@@ -326,11 +326,11 @@ describe('OAuth Apps', () => {
           .should('be.disabled');
 
         cy.findByLabelText('Label').click();
-        cy.clear();
-        cy.type(updatedApps[0].label);
+        cy.focused().clear();
+        cy.focused().type(updatedApps[0].label);
         cy.findByLabelText('Callback URL').click();
-        cy.clear;
-        cy.type(updatedApps[0].label);
+        cy.focused().clear();
+        cy.focused().type(updatedApps[0].label);
 
         ui.buttonGroup
           .findButtonByTitle('Save Changes')

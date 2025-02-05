@@ -116,10 +116,10 @@ const uploadImage = (label: string) => {
   cy.visitWithLogin('/images/create/upload');
 
   cy.findByLabelText('Label').click();
-  cy.type(label);
+  cy.focused().type(label);
 
   cy.findByLabelText('Description').click();
-  cy.type('This is a machine image upload test');
+  cy.focused().type('This is a machine image upload test');
 
   ui.regionSelect.find().click();
   ui.regionSelect.findItemByRegionId(region.id).click();
@@ -193,10 +193,10 @@ describe('machine image', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Label').should('be.visible').clear();
-        cy.type(updatedLabel);
+        cy.focused().type(updatedLabel);
 
         cy.findByLabelText('Description').should('be.visible').clear();
-        cy.type(updatedDescription);
+        cy.focused().type(updatedDescription);
 
         ui.buttonGroup
           .findButtonByTitle('Save Changes')

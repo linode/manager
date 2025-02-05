@@ -19,7 +19,7 @@ const completeTypeToConfirmDialog = (clusterLabel: string) => {
     .within(() => {
       cy.findByText(deletionWarning, { exact: false }).should('be.visible');
       cy.findByLabelText('Cluster Name').should('be.visible').click();
-      cy.type(clusterLabel);
+      cy.focused().type(clusterLabel);
 
       ui.buttonGroup
         .findButtonByTitle('Delete Cluster')

@@ -97,7 +97,7 @@ describe('Create Linode with VPCs', () => {
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
     cy.findByText('Assign VPC').click();
-    cy.type(mockVPC.label);
+    cy.focused().type(mockVPC.label);
 
     ui.autocompletePopper
       .findByTitle(mockVPC.label)
@@ -112,9 +112,7 @@ describe('Create Linode with VPCs', () => {
 
     // Confirm VPC assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-    cy.within(() => {
-      cy.findByText('VPC Assigned').should('be.visible');
-    });
+    cy.findByText('VPC Assigned').should('be.visible');
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button

@@ -131,7 +131,7 @@ describe('Account cancellation', () => {
         // and this time mock a successful account cancellation response.
         mockCancelAccount(mockCancellationResponse).as('cancelAccount');
         cy.contains('Comments (optional)').click();
-        cy.type(cancellationComments);
+        cy.focused().type(cancellationComments);
 
         ui.button
           .findByTitle('Close Account')
@@ -414,7 +414,7 @@ describe('Parent/Child account cancellation', () => {
         // and this time mock a successful account cancellation response.
         mockCancelAccount(mockCancellationResponse).as('cancelAccount');
         cy.contains('Comments (optional)').click();
-        cy.type(cancellationComments);
+        cy.focused().type(cancellationComments);
 
         ui.button
           .findByTitle('Close Account')

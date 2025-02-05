@@ -43,15 +43,15 @@ describe('Capture Machine Images', () => {
 
       // Select the Linode's disk.
       cy.contains('Select a Disk').click();
-      cy.type(disk.label);
+      cy.focused().type(disk.label);
       ui.autocompletePopper.findByTitle(disk.label).click();
 
       // Specify a label and description for the captured image, click submit.
       cy.findByLabelText('Label').should('be.visible').click();
-      cy.type(imageLabel);
+      cy.focused().type(imageLabel);
 
       cy.findByLabelText('Description').should('be.visible').click();
-      cy.type(imageDescription);
+      cy.focused().type(imageDescription);
 
       ui.button
         .findByTitle('Create Image')

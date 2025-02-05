@@ -62,13 +62,13 @@ describe('LKE Create Cluster', () => {
     cy.findByText('Add Node Pools').should('be.visible');
 
     cy.findByLabelText('Cluster Label').click();
-    cy.type(mockCluster.label);
+    cy.focused().type(mockCluster.label);
 
     ui.regionSelect.find().click();
-    cy.type(`${chooseRegion().label}{enter}`);
+    cy.focused().type(`${chooseRegion().label}{enter}`);
 
     cy.findByText('Kubernetes Version').should('be.visible').click();
-    cy.type('{enter}');
+    cy.focused().type('{enter}');
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
 

@@ -91,7 +91,7 @@ describe('volume delete flow', () => {
           .should('be.visible')
           .within(() => {
             cy.findByLabelText('Volume Label').should('be.visible').click();
-            cy.type(volume.label);
+            cy.focused().type(volume.label);
 
             ui.buttonGroup
               .findButtonByTitle('Delete')

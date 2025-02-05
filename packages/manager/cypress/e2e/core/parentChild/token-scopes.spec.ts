@@ -93,7 +93,7 @@ describe('Token scopes', () => {
         // Specify a label and re-submit.
         cy.findByLabelText('Label').scrollIntoView();
         cy.should('be.visible').should('be.enabled').click();
-        cy.type(mockParentAccountToken.label);
+        cy.focused().type(mockParentAccountToken.label);
 
         ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
         cy.should('be.visible').should('be.enabled').click();
@@ -166,7 +166,7 @@ describe('Token scopes', () => {
         // Specify a label and re-submit.
         cy.findByLabelText('Label').scrollIntoView();
         cy.should('be.visible').should('be.enabled').click();
-        cy.type(mockParentAccountToken.label);
+        cy.focused().type(mockParentAccountToken.label);
 
         ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
         cy.should('be.visible').should('be.enabled').click();

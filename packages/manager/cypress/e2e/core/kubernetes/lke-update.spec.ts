@@ -543,21 +543,21 @@ describe('LKE cluster updates', () => {
           cy.findByText('Autoscaler').should('be.visible').click();
 
           cy.findByLabelText('Min').should('be.visible').click();
-          cy.clear();
-          cy.type(`${autoscaleMin}`);
+          cy.focused().clear();
+          cy.focused().type(`${autoscaleMin}`);
 
           cy.findByText(minWarning).should('be.visible');
 
           cy.findByLabelText('Max').should('be.visible').click();
-          cy.clear();
-          cy.type('101');
+          cy.focused().clear();
+          cy.focused().type('101');
 
           cy.findByText(minWarning).should('not.exist');
           cy.findByText(maxWarning).should('be.visible');
 
           cy.findByLabelText('Max').should('be.visible').click();
-          cy.clear();
-          cy.type(`${autoscaleMax}`);
+          cy.focused().clear();
+          cy.focused().type(`${autoscaleMax}`);
 
           cy.findByText(minWarning).should('not.exist');
           cy.findByText(maxWarning).should('not.exist');
@@ -706,7 +706,7 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.enabled')
             .click();
-          cy.click();
+          cy.focused().click();
 
           cy.findByLabelText('Edit Quantity').should('have.value', '3');
           cy.findByText(
@@ -753,7 +753,7 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.enabled')
             .click();
-          cy.click();
+          cy.focused().click();
 
           cy.findByText(decreaseSizeWarning).should('be.visible');
           cy.findByText(nodeSizeRecommendation).should('be.visible');
@@ -951,7 +951,7 @@ describe('LKE cluster updates', () => {
           .should('be.visible')
           .should('have.value', mockCluster.label)
           .clear();
-        cy.type(`${mockNewCluster.label}{enter}`);
+        cy.focused().type(`${mockNewCluster.label}{enter}`);
       });
 
       cy.wait('@updateCluster');
@@ -989,7 +989,7 @@ describe('LKE cluster updates', () => {
           .should('be.visible')
           .should('have.value', mockCluster.label)
           .clear();
-        cy.type(`${mockErrorCluster.label}{enter}`);
+        cy.focused().type(`${mockErrorCluster.label}{enter}`);
       });
 
       // Error message shows when API request fails.
@@ -1396,8 +1396,8 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.enabled')
             .click();
-          cy.click();
-          cy.click();
+          cy.focused().click();
+          cy.focused().click();
 
           cy.findByLabelText('Edit Quantity').should('have.value', '4');
           cy.findByText(
@@ -1512,7 +1512,7 @@ describe('LKE cluster updates', () => {
               cy.findByText('$14.40').should('be.visible');
               cy.findByText('$0.021').should('be.visible');
               cy.findByLabelText('Add 1').should('be.visible').click();
-              cy.click();
+              cy.focused().click();
             });
 
           // Assert that DC-specific prices are displayed as helper text.
@@ -1647,8 +1647,8 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.enabled')
             .click();
-          cy.click();
-          cy.click();
+          cy.focused().click();
+          cy.focused().click();
 
           cy.findByLabelText('Edit Quantity').should('have.value', '4');
           cy.findByText('Current pool: $0/month (1 node at $0/month)').should(
@@ -1752,7 +1752,7 @@ describe('LKE cluster updates', () => {
               // Assert that $0 prices are displayed the plan table, then add a node pool with 2 linodes.
               cy.findAllByText('$0').should('have.length', 2);
               cy.findByLabelText('Add 1').should('be.visible').click();
-              cy.click();
+              cy.focused().click();
             });
 
           // Assert that $0 prices are displayed as helper text.
@@ -1881,12 +1881,12 @@ describe('LKE ACL updates', () => {
             mockACLOptions['revision-id']
           );
           cy.findByLabelText('Revision ID').clear();
-          cy.type(mockRevisionId);
+          cy.focused().type(mockRevisionId);
 
           // Addresses section: confirm current IPv4 value and enter new IP
           cy.findByDisplayValue('10.0.3.0/24').should('be.visible').click();
-          cy.clear();
-          cy.type('10.0.0.0/24');
+          cy.focused().clear();
+          cy.focused().type('10.0.0.0/24');
 
           // submit
           ui.button
@@ -1958,7 +1958,7 @@ describe('LKE ACL updates', () => {
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click();
-          cy.type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+          cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
           cy.findByText('Add IPv6 Address')
             .should('be.visible')
             .should('be.enabled')
@@ -1966,7 +1966,7 @@ describe('LKE ACL updates', () => {
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-1')
             .should('be.visible')
             .click();
-          cy.type('f4a2:b849:4a24:d0d9:15f0:704b:f943:718f');
+          cy.focused().type('f4a2:b849:4a24:d0d9:15f0:704b:f943:718f');
 
           // submit
           ui.button
@@ -2082,7 +2082,7 @@ describe('LKE ACL updates', () => {
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click();
-          cy.type('10.0.0.0/24');
+          cy.focused().type('10.0.0.0/24');
           cy.findByText('Add IPv4 Address')
             .should('be.visible')
             .should('be.enabled')
@@ -2091,7 +2091,7 @@ describe('LKE ACL updates', () => {
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click();
-          cy.type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+          cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
           cy.findByText('Add IPv6 Address')
             .should('be.visible')
             .should('be.enabled')
@@ -2206,12 +2206,12 @@ describe('LKE ACL updates', () => {
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click();
-          cy.type('10.0.0.0/24');
+          cy.focused().type('10.0.0.0/24');
 
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click();
-          cy.type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+          cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
 
           // submit
           ui.button
@@ -2271,7 +2271,7 @@ describe('LKE ACL updates', () => {
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click();
-          cy.type('invalid ip');
+          cy.focused().type('invalid ip');
           // click out of textbox and confirm error is visible
           cy.contains('Addresses').should('be.visible').click();
           cy.contains('Must be a valid IPv4 address.').should('be.visible');
@@ -2279,8 +2279,8 @@ describe('LKE ACL updates', () => {
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click();
-          cy.clear();
-          cy.type('10.0.0.0/24');
+          cy.focused().clear();
+          cy.focused().type('10.0.0.0/24');
           // Click out of textbox and confirm error is gone
           cy.contains('Addresses').should('be.visible').click();
           cy.contains('Must be a valid IPv4 address.').should('not.exist');
@@ -2289,7 +2289,7 @@ describe('LKE ACL updates', () => {
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click();
-          cy.type('invalid ip');
+          cy.focused().type('invalid ip');
           // click out of textbox and confirm error is visible
           cy.findByText('Addresses').should('be.visible').click();
           cy.contains('Must be a valid IPv6 address.').should('be.visible');
@@ -2297,8 +2297,8 @@ describe('LKE ACL updates', () => {
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click();
-          cy.clear();
-          cy.type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+          cy.focused().clear();
+          cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
           // Click out of textbox and confirm error is gone
           cy.findByText('Addresses').should('be.visible').click();
           cy.contains('Must be a valid IPv6 address.').should('not.exist');

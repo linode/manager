@@ -334,9 +334,9 @@ describe('Users landing page', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Username').click();
-        cy.type(`${newUser.username}{enter}`);
+        cy.focused().type(`${newUser.username}{enter}`);
         cy.findByText('Email').click();
-        cy.type(`${newUser.username}@test.com{enter}`);
+        cy.focused().type(`${newUser.username}@test.com{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Cancel')
           .should('be.visible')
@@ -359,9 +359,9 @@ describe('Users landing page', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Username').click();
-        cy.type(`${newUser.username}{enter}`);
+        cy.focused().type(`${newUser.username}{enter}`);
         cy.findByText('Email').click();
-        cy.type(`${newUser.username}@test.com{enter}`);
+        cy.focused().type(`${newUser.username}@test.com{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Cancel')
           .should('be.visible')
@@ -395,11 +395,11 @@ describe('Users landing page', () => {
 
         // type username
         cy.findByText('Username').click();
-        cy.type(`${newUser.username}{enter}`);
+        cy.focused().type(`${newUser.username}{enter}`);
 
         // an inline error message will be displayed when the email address is invalid
         cy.findByText('Email').click();
-        cy.type(`not_valid_email_address{enter}`);
+        cy.focused().type(`not_valid_email_address{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Add User')
           .should('be.visible')
@@ -409,8 +409,8 @@ describe('Users landing page', () => {
 
         // type email address
         cy.get('[id="email"]').click();
-        cy.clear;
-        cy.type(`${newUser.username}@test.com{enter}`);
+        cy.focused().clear();
+        cy.focused().type(`${newUser.username}@test.com{enter}`);
 
         ui.buttonGroup
           .findButtonByTitle('Add User')
@@ -469,9 +469,9 @@ describe('Users landing page', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Username').click();
-        cy.type(`${newUser.username}{enter}`);
+        cy.focused().type(`${newUser.username}{enter}`);
         cy.findByText('Email').click();
-        cy.type(`${newUser.username}@test.com{enter}`);
+        cy.focused().type(`${newUser.username}@test.com{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Cancel')
           .should('be.visible')
@@ -506,11 +506,11 @@ describe('Users landing page', () => {
 
         // type username
         cy.findByText('Username').click();
-        cy.type(`${newUser.username}{enter}`);
+        cy.focused().type(`${newUser.username}{enter}`);
 
         // an inline error message will be displayed when the email address is invalid
         cy.findByText('Email').click();
-        cy.type(`not_valid_email_address{enter}`);
+        cy.focused().type(`not_valid_email_address{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Add User')
           .should('be.visible')
@@ -520,8 +520,8 @@ describe('Users landing page', () => {
 
         // type email address
         cy.get('[id="email"]').click();
-        cy.clear;
-        cy.type(`${newUser.username}@test.com{enter}`);
+        cy.focused().clear();
+        cy.focused().type(`${newUser.username}@test.com{enter}`);
 
         // toggle to disable full access
         cy.get('[data-qa-create-restricted="true"]')

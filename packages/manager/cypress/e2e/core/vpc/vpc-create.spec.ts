@@ -82,13 +82,13 @@ describe('VPC create flow', () => {
     cy.wait('@getRegions');
 
     ui.regionSelect.find().click();
-    cy.type(`${mockVPCRegion.label}{enter}`);
+    cy.focused().type(`${mockVPCRegion.label}{enter}`);
 
     cy.findByText('VPC Label').should('be.visible').click();
-    cy.type(mockVpc.label);
+    cy.focused().type(mockVpc.label);
 
     cy.findByText('Description').should('be.visible').click();
-    cy.type(mockVpc.description);
+    cy.focused().type(mockVpc.description);
 
     // Fill out the first Subnet.
     // Insert an invalid empty IP range to confirm client side validation.
@@ -96,10 +96,10 @@ describe('VPC create flow', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Subnet Label').should('be.visible').click();
-        cy.type(mockSubnets[0].label);
+        cy.focused().type(mockSubnets[0].label);
 
         cy.findByText('Subnet IP Address Range').should('be.visible').click();
-        cy.type(`{selectAll}{backspace}`);
+        cy.focused().type(`{selectAll}{backspace}`);
       });
 
     ui.button
@@ -112,8 +112,8 @@ describe('VPC create flow', () => {
 
     // Enter a random non-IP address string to further test client side validation.
     cy.findByText('Subnet IP Address Range').should('be.visible').click();
-    cy.type(`{selectAll}{backspace}`);
-    cy.type(randomString(18));
+    cy.focused().type(`{selectAll}{backspace}`);
+    cy.focused().type(randomString(18));
 
     ui.button
       .findByTitle('Create VPC')
@@ -125,8 +125,8 @@ describe('VPC create flow', () => {
 
     // Enter a valid IP address with an invalid network prefix to further test client side validation.
     cy.findByText('Subnet IP Address Range').should('be.visible').click();
-    cy.type(`{selectAll}{backspace}`);
-    cy.type(mockInvalidIpRange);
+    cy.focused().type(`{selectAll}{backspace}`);
+    cy.focused().type(mockInvalidIpRange);
 
     ui.button
       .findByTitle('Create VPC')
@@ -138,8 +138,8 @@ describe('VPC create flow', () => {
 
     // Replace invalid IP address range with valid range.
     cy.findByText('Subnet IP Address Range').should('be.visible').click();
-    cy.type(`{selectAll}{backspace}`);
-    cy.type(mockSubnets[0].ipv4!);
+    cy.focused().type(`{selectAll}{backspace}`);
+    cy.focused().type(mockSubnets[0].ipv4!);
 
     // Add another subnet that we will remove later.
     ui.button
@@ -154,8 +154,8 @@ describe('VPC create flow', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Subnet IP Address Range').should('be.visible').click();
-        cy.type(`{selectAll}{backspace}`);
-        cy.type(mockSubnetToDelete.ipv4!);
+        cy.focused().type(`{selectAll}{backspace}`);
+        cy.focused().type(mockSubnetToDelete.ipv4!);
       });
 
     ui.button
@@ -195,11 +195,11 @@ describe('VPC create flow', () => {
         .should('be.visible')
         .within(() => {
           cy.findByText('Subnet Label').should('be.visible').click();
-          cy.type(mockSubnet.label);
+          cy.focused().type(mockSubnet.label);
 
           cy.findByText('Subnet IP Address Range').should('be.visible').click();
-          cy.type(`{selectAll}{backspace}`);
-          cy.type(`${randomIp()}/${randomNumber(0, 32)}`);
+          cy.focused().type(`{selectAll}{backspace}`);
+          cy.focused().type(`${randomIp()}/${randomNumber(0, 32)}`);
         });
     });
 
@@ -280,10 +280,10 @@ describe('VPC create flow', () => {
     cy.wait('@getRegions');
 
     ui.regionSelect.find().click();
-    cy.type(`${mockVPCRegion.label}{enter}`);
+    cy.focused().type(`${mockVPCRegion.label}{enter}`);
 
     cy.findByText('VPC Label').should('be.visible').click();
-    cy.type(mockVpc.label);
+    cy.focused().type(mockVpc.label);
 
     // Remove the subnet.
     getSubnetNodeSection(0)

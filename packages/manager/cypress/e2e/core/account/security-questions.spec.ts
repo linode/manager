@@ -96,7 +96,7 @@ const setSecurityQuestionAnswer = (
     cy.findByLabelText(`Question ${questionNumber}`)
       .should('be.visible')
       .click();
-    cy.type(`${question}{enter}`);
+    cy.focused().type(`${question}{enter}`);
   });
 
   getSecurityQuestionAnswer(questionNumber).within(() => {
@@ -104,7 +104,7 @@ const setSecurityQuestionAnswer = (
       .should('be.visible')
       .should('be.enabled')
       .click();
-    cy.type(answer);
+    cy.focused().type(answer);
   });
 };
 

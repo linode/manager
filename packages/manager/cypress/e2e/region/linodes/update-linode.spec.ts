@@ -54,8 +54,8 @@ describeRegions('Can update Linodes', (region) => {
         .should('be.visible')
         .within(() => {
           cy.findByLabelText('Label').should('be.visible').click();
-          cy.clear();
-          cy.type(newLabel);
+          cy.focused().clear();
+          cy.focused().type(newLabel);
 
           ui.button
             .findByTitle('Save')
@@ -120,7 +120,7 @@ describeRegions('Can update Linodes', (region) => {
           .should('be.visible')
           .within(() => {
             cy.findByText('Disk').should('be.visible').clear();
-            cy.type(disk.label);
+            cy.focused().type(disk.label);
 
             ui.autocompletePopper
               .findByTitle(disk.label)
@@ -130,8 +130,8 @@ describeRegions('Can update Linodes', (region) => {
             cy.findByLabelText('New Root Password')
               .should('be.visible')
               .clear();
-            cy.clear();
-            cy.type(newPassword);
+            cy.focused().clear();
+            cy.focused().type(newPassword);
 
             ui.button
               .findByTitle('Save')

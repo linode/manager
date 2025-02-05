@@ -52,7 +52,7 @@ describe('Create Linode with Firewall', () => {
 
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
     cy.findByText('Assign Firewall').click();
-    cy.type(`${mockFirewall.label}`);
+    cy.focused().type(`${mockFirewall.label}`);
 
     ui.autocompletePopper
       .findByTitle(mockFirewall.label)
@@ -61,9 +61,7 @@ describe('Create Linode with Firewall', () => {
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-    cy.within(() => {
-      cy.findByText('Firewall Assigned').should('be.visible');
-    });
+    cy.findByText('Firewall Assigned').should('be.visible');
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -127,7 +125,7 @@ describe('Create Linode with Firewall', () => {
         cy.findByText('Label is required.');
         // Fill out and submit firewall create form.
         cy.contains('Label').click();
-        cy.type(mockFirewall.label);
+        cy.focused().type(mockFirewall.label);
         ui.buttonGroup
           .findButtonByTitle('Create Firewall')
           .should('be.visible')
@@ -142,7 +140,7 @@ describe('Create Linode with Firewall', () => {
 
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
     cy.findByText('Assign Firewall').click();
-    cy.type(`${mockFirewall.label}`);
+    cy.focused().type(`${mockFirewall.label}`);
 
     ui.autocompletePopper
       .findByTitle(mockFirewall.label)
@@ -151,9 +149,7 @@ describe('Create Linode with Firewall', () => {
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-    cy.within(() => {
-      cy.findByText('Firewall Assigned').should('be.visible');
-    });
+    cy.findByText('Firewall Assigned').should('be.visible');
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -265,9 +261,7 @@ describe('Create Linode with Firewall', () => {
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-    cy.within(() => {
-      cy.findByText('Firewall Assigned').should('be.visible');
-    });
+    cy.findByText('Firewall Assigned').should('be.visible');
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button

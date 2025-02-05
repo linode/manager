@@ -34,12 +34,12 @@ describe('Search Linodes', () => {
 
       // Use the main search bar to search and filter linode by id value
       ui.mainSearch.find().clear();
-      cy.type(`${linode.id}`);
+      cy.focused().type(`${linode.id}`);
       ui.autocompletePopper.findByTitle(linode.label).should('be.visible');
 
       // Use the main search bar to search and filter linode by id: pattern
       ui.mainSearch.find().clear();
-      cy.type(`id:${linode.id}`);
+      cy.focused().type(`id:${linode.id}`);
       ui.autocompletePopper.findByTitle(linode.label).should('be.visible');
     });
   });

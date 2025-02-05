@@ -122,7 +122,7 @@ describe('GDPR agreement', () => {
     cy.get('[id="g6-nanode-1"]').click();
 
     cy.findByLabelText('Linode Label').clear();
-    cy.type(linodeLabel);
+    cy.focused().type(linodeLabel);
 
     cy.findByLabelText('Root Password').type(rootpass);
 

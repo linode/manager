@@ -120,13 +120,13 @@ describe('VPC landing page', () => {
           .should('be.visible')
           .should('have.value', mockVPCs[1].label)
           .clear();
-        cy.type(mockUpdatedVPC.label);
+        cy.focused().type(mockUpdatedVPC.label);
 
         cy.findByLabelText('Description')
           .should('be.visible')
           .should('have.value', mockVPCs[1].description)
           .clear();
-        cy.type(mockUpdatedVPC.description);
+        cy.focused().type(mockUpdatedVPC.description);
 
         // TODO Add interactions/assertions for region selection once feature is available.
         ui.button
@@ -184,7 +184,7 @@ describe('VPC landing page', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('VPC Label').should('be.visible').click();
-        cy.type(mockVPCs[0].label);
+        cy.focused().type(mockVPCs[0].label);
 
         ui.button
           .findByTitle('Delete')
@@ -216,7 +216,7 @@ describe('VPC landing page', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('VPC Label').should('be.visible').click();
-        cy.type(mockVPCs[1].label);
+        cy.focused().type(mockVPCs[1].label);
 
         ui.button
           .findByTitle('Delete')
@@ -274,7 +274,7 @@ describe('VPC landing page', () => {
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('VPC Label').should('be.visible').click();
-        cy.type(mockVPCs[0].label);
+        cy.focused().type(mockVPCs[0].label);
 
         ui.button
           .findByTitle('Delete')

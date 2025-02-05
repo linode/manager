@@ -212,10 +212,9 @@ describe('clone linode', () => {
     });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
+    // TODO: ???
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-    cy.within(() => {
-      cy.findByText('VLAN Attached').should('be.visible');
-    });
+    cy.findByText('VLAN Attached').should('be.visible');
 
     ui.button
       .findByTitle('Create Linode')
@@ -326,7 +325,7 @@ describe('clone linode', () => {
     ui.regionSelect
       .findBySelectedItem(`${initialRegion.label} (${initialRegion.id})`)
       .click();
-    cy.type(`${newRegion.label}{enter}`);
+    cy.focused().type(`${newRegion.label}{enter}`);
 
     cy.findByText(dcPricingRegionDifferenceNotice, { exact: false }).should(
       'be.visible'

@@ -77,10 +77,10 @@ describe('Object Storage Multicluster Bucket create', () => {
       .within(() => {
         // Enter label.
         cy.contains('Label').click();
-        cy.type(mockBucket.label);
+        cy.focused().type(mockBucket.label);
         cy.log(`${mockRegionWithObj.label}`);
         cy.contains('Region').click();
-        cy.type(mockRegionWithObj.label);
+        cy.focused().type(mockRegionWithObj.label);
 
         ui.autocompletePopper
           .find()

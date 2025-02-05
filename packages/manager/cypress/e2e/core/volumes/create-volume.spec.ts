@@ -71,11 +71,11 @@ describe('volume create flow', () => {
 
     // Fill out and submit volume create form.
     cy.contains('Label').click();
-    cy.type(volume.label);
+    cy.focused().type(volume.label);
     cy.contains('Size').click();
-    cy.type(`{selectall}{backspace}${volume.size}`);
+    cy.focused().type(`{selectall}{backspace}${volume.size}`);
     ui.regionSelect.find().click();
-    cy.type(`${volume.region}{enter}`);
+    cy.focused().type(`${volume.region}{enter}`);
 
     cy.findByText('Create Volume').click();
     cy.wait('@createVolume');
@@ -128,14 +128,14 @@ describe('volume create flow', () => {
 
         // Fill out and submit volume create form.
         cy.contains('Label').click();
-        cy.type(volume.label);
+        cy.focused().type(volume.label);
         cy.contains('Size').click();
-        cy.type(`{selectall}{backspace}${volume.size}`);
+        cy.focused().type(`{selectall}{backspace}${volume.size}`);
         ui.regionSelect.find().click();
-        cy.type(`${volume.region}{enter}`);
+        cy.focused().type(`${volume.region}{enter}`);
 
         cy.findByLabelText('Linode').should('be.visible').click();
-        cy.type(linode.label);
+        cy.focused().type(linode.label);
 
         ui.autocompletePopper
           .findByTitle(linode.label)
@@ -209,7 +209,7 @@ describe('volume create flow', () => {
 
         // Select a linode without the BSE capability
         cy.findByLabelText('Linode').should('be.visible').click();
-        cy.type(linode.label);
+        cy.focused().type(linode.label);
 
         ui.autocompletePopper
           .findByTitle(linode.label)
@@ -265,7 +265,7 @@ describe('volume create flow', () => {
 
     // Select a linode without the BSE capability
     cy.findByLabelText('Linode').should('be.visible').click();
-    cy.type(mockLinode.label);
+    cy.focused().type(mockLinode.label);
 
     ui.autocompletePopper
       .findByTitle(mockLinode.label)
@@ -349,7 +349,7 @@ describe('volume create flow', () => {
         cy.findByPlaceholderText('Select a Volume')
           .should('be.visible')
           .click();
-        cy.type(`${volume.label}{downarrow}{enter}`);
+        cy.focused().type(`${volume.label}{downarrow}{enter}`);
         ui.autocompletePopper
           .findByTitle(volume.label)
           .should('be.visible')
@@ -397,7 +397,7 @@ describe('volume create flow', () => {
           );
           cy.contains('Create and Attach Volume').click();
           cy.contains('Label').click();
-          cy.type(volume.label);
+          cy.focused().type(volume.label);
           cy.contains('Size').type(`{selectall}{backspace}${volume.size}`);
           cy.findByText('Create Volume').click();
         });

@@ -118,7 +118,7 @@ const addDisk = (diskName: string, diskSize: number = DISK_CREATE_SIZE_MB) => {
     .within(() => {
       cy.findByLabelText('Label (required)').type(diskName);
       cy.findByLabelText('Size (required)').clear();
-      cy.type(`${diskSize}`);
+      cy.focused().type(`${diskSize}`);
       ui.button.findByTitle('Create').click();
     });
 
@@ -237,7 +237,7 @@ describe('linode storage tab', () => {
         .should('be.visible')
         .within(() => {
           cy.findByLabelText('Size (required)').clear();
-          cy.type(`${DISK_RESIZE_SIZE_MB}`);
+          cy.focused().type(`${DISK_RESIZE_SIZE_MB}`);
           ui.button.findByTitle('Resize').click();
         });
 

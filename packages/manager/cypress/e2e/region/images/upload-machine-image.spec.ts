@@ -28,10 +28,10 @@ describe('Upload Machine Images', () => {
     // Navigate to Image upload page, enter label, select region, and upload Image file.
     cy.visitWithLogin('/images/create/upload');
     cy.findByText('Label').should('be.visible').click();
-    cy.type(imageLabel);
+    cy.focused().type(imageLabel);
 
     cy.findByText('Description').should('be.visible').click();
-    cy.type(imageDescription);
+    cy.focused().type(imageDescription);
 
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId(region.id).should('be.visible').click();
