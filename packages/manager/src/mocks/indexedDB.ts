@@ -9,8 +9,9 @@ const SEED_STATE: ObjectStore = 'seedState';
 
 // Helper method to find an item in the DB. Returns true
 // if the given item has the same ID as the given number
-// Some items may be stored as [number, Entity]
 const findItem = (item: unknown, id: number) => {
+  // Some items may be stored as [number, Entity], so we
+  // need to check for both Entity and [number, Entity] types
   const isItemTuple = Array.isArray(item) && item.length >= 2;
 
   const itemTupleToFind = isItemTuple && hasId(item[1]) && item[1].id === id;
