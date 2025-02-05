@@ -174,3 +174,20 @@ export const isAllPageSelected = (data: AlertInstance[]): boolean => {
 export const isSomeSelected = (data: AlertInstance[]): boolean => {
   return Boolean(data?.length) && data.some(({ checked }) => checked);
 };
+
+/**
+ * @param originalResourceIds The originally associated resource ids with the alert
+ * @param selectedResourceIds The selected resources ids with the alert
+ * @returns True if both are equal, else false
+ */
+export const isResourcesEqual = (
+  originalResourceIds: string[] | undefined,
+  selectedResourceIds: string[]
+): boolean => {
+  if (originalResourceIds?.length !== selectedResourceIds.length) {
+    return false;
+  }
+
+  const originalSet = new Set(originalResourceIds);
+  return selectedResourceIds.every((id) => originalSet.has(id));
+};

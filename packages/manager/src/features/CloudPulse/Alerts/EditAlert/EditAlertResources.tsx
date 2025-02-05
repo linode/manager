@@ -5,9 +5,7 @@ import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAlertDefinitionQuery,
@@ -16,10 +14,11 @@ import {
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { AlertResources } from '../AlertsResources/AlertsResources';
+import { isResourcesEqual } from '../Utils/AlertResourceUtils';
 import { getAlertBoxStyles } from '../Utils/utils';
+import { EditAlertResourcesConfirmDialog } from './EditAlertResourcesConfirmationDialog';
 
 import type { AlertRouteParams } from '../AlertsDetail/AlertDetail';
-import type { ActionPanelProps } from 'src/components/ActionsPanel/ActionsPanel';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export const EditAlertResources = () => {
@@ -73,44 +72,24 @@ export const EditAlertResources = () => {
   const saveResources = () => {
     setShowConfirmation(false);
     editAlert({
-      entity_ids: selectedResources.map((id) => String(id)),
+      entity_ids: selectedResources,
     })
       .then(() => {
         // on success land on the alert definition list page and show a success snackbar
         history.push(definitionLanding);
-        enqueueASnackbar('Alert resources successfully updated.', 'success');
+        showSnackbar('Alert resources successfully updated.', 'success');
       })
       .catch(() => {
-        enqueueASnackbar(
+        showSnackbar(
           'Error while updating the resources. Try again later.',
           'error'
         );
       });
   };
-
-  const saveConfirmationActionProps: ActionPanelProps = {
-    primaryButtonProps: {
-      'data-testid': 'editconfirmation',
-      label: 'Confirm',
-      onClick: saveResources,
-    },
-    secondaryButtonProps: {
-      label: 'Cancel',
-      onClick: () => setShowConfirmation(false),
-    },
-  };
-  const isSameResourcesSelected = React.useMemo((): boolean => {
-    if (
-      !alertDetails ||
-      !alertDetails?.entity_ids ||
-      selectedResources.length !== alertDetails?.entity_ids.length
-    ) {
-      return false;
-    }
-    return selectedResources.every((resource) =>
-      alertDetails?.entity_ids.includes(String(resource))
-    );
-  }, [alertDetails, selectedResources]);
+  const isSameResourcesSelected = React.useMemo(
+    () => isResourcesEqual(alertDetails?.entity_ids, selectedResources),
+    [alertDetails, selectedResources]
+  );
 
   if (isFetching) {
     return getEditAlertMessage(<CircleProgress />, newPathname, overrides);
@@ -189,18 +168,11 @@ export const EditAlertResources = () => {
             Save
           </Button>
         </Box>
-        <ConfirmationDialog
-          sx={{
-            fontSize: '16px',
-          }}
-          actions={<ActionsPanel {...saveConfirmationActionProps} />}
-          onClose={() => setShowConfirmation(!showConfirmation)}
+        <EditAlertResourcesConfirmDialog
+          onClose={() => setShowConfirmation((prev) => !prev)}
+          onConfirm={saveResources}
           open={showConfirmation}
-          title="Confirm alert updates"
-        >
-          You have changed the resource settings for your alert.
-          <br /> This also updates your alert definition.
-        </ConfirmationDialog>
+        />
       </Box>
     </>
   );
@@ -227,7 +199,7 @@ const getEditAlertMessage = (
   );
 };
 
-const enqueueASnackbar = (message: string, variant: 'error' | 'success') => {
+const showSnackbar = (message: string, variant: 'error' | 'success') => {
   enqueueSnackbar(message, {
     anchorOrigin: {
       horizontal: 'right',
