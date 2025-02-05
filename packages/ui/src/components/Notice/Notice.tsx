@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Info from 'src/assets/icons/info.svg';
+import { InfoIcon } from '../../assets/icons';
 
 import {
   CheckIcon,
@@ -155,7 +155,7 @@ export const Notice = (props: NoticeProps) => {
       {...rest}
     >
       {important && variantMap.error && <ErrorIcon className={classes.icon} />}
-      {important && variantMap.info && <Info className={classes.icon} />}
+      {important && variantMap.info && <InfoIcon className={classes.icon} />}
       {important && variantMap.success && (
         <CheckIcon className={classes.icon} />
       )}
