@@ -113,7 +113,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
               if (response) {
                 const configWithVpcInterface = response.find((config) =>
-                  config.interfaces.some(
+                  config.interfaces?.some(
                     (_interface) =>
                       _interface.subnet_id === subnetId &&
                       _interface.purpose === 'vpc'

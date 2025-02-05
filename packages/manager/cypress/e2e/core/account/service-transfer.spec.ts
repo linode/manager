@@ -27,6 +27,9 @@ import { cleanUp } from 'support/util/cleanup';
 
 import type { EntityTransferStatus } from '@linode/api-v4';
 
+// Service transfer empty state message.
+const serviceTransferEmptyState = 'No data to display.';
+
 // Service transfer landing page URL.
 const serviceTransferLandingUrl = '/account/service-transfers';
 
@@ -134,6 +137,50 @@ describe('Account service transfers', () => {
     cy.findByText('Received Service Transfers').should('be.visible');
     cy.findByText('Sent Service Transfers').should('be.visible');
     cy.url().should('endWith', serviceTransferLandingUrl);
+  });
+
+  /*
+   * - Confirms the Service Transfers empty state when no service transfers exist on the account.
+   */
+  it('can display empty state when no service transfer exists', () => {
+    // Mock empty array for all three service transfers.
+    const pendingTransfers: EntityTransfer[] = [];
+    const receivedTransfers: EntityTransfer[] = [];
+    const sentTransfers: EntityTransfer[] = [];
+
+    mockGetEntityTransfers(
+      pendingTransfers,
+      receivedTransfers,
+      sentTransfers
+    ).as('getTransfers');
+
+    cy.visitWithLogin(serviceTransferLandingUrl);
+
+    // Wait for 3 requests to transfers endpoint -- each section loads transfers separately.
+    cy.wait(['@getTransfers', '@getTransfers', '@getTransfers']);
+
+    // Confirm that the "Pending Service Transfers" panel does not exist.
+    cy.get('[data-qa-panel="Pending Service Transfers"]').should('not.exist');
+
+    // Confirm that text "No data to display" is in "Received Service Transfers" panel.
+    cy.get('[data-qa-panel="Received Service Transfers"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get('[data-testid="KeyboardArrowDownIcon"]').click();
+        cy.findByText(serviceTransferEmptyState, { exact: false }).should(
+          'be.visible'
+        );
+      });
+
+    // Confirm that text "No data to display" is in "Sent Service Transfers" panel.
+    cy.get('[data-qa-panel="Sent Service Transfers"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get('[data-testid="KeyboardArrowDownIcon"]').click();
+        cy.findByText(serviceTransferEmptyState, { exact: false }).should(
+          'be.visible'
+        );
+      });
   });
 
   /*

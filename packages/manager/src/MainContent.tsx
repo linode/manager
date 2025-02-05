@@ -118,7 +118,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() =>
   import('src/features/Kubernetes').then((module) => ({
     default: module.Kubernetes,
@@ -368,7 +367,6 @@ export const MainContent = () => {
                               path="/nodebalancers"
                             />
                             <Route component={Managed} path="/managed" />
-                            <Route component={Images} path="/images" />
                             <Route
                               component={StackScripts}
                               path="/stackscripts"

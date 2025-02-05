@@ -39,6 +39,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   kubeconfigElement: {
     '&:first-of-type': {
       borderLeft: 'none',
+      paddingLeft: 0,
     },
     '&:hover': {
       opacity: 0.7,
@@ -47,13 +48,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
     borderLeft: `1px solid ${theme.tokens.color.Neutrals[40]}`,
     cursor: 'pointer',
     display: 'flex',
+    marginBottom: theme.spacing(1),
+    padding: `0 ${theme.spacing(0.6)}`,
   },
   kubeconfigElements: {
     alignItems: 'center',
     color: theme.palette.primary.main,
     display: 'flex',
     flexWrap: 'wrap',
-    gap: theme.spacing(1),
   },
   kubeconfigFileText: {
     color: theme.textColors.linkActiveLight,
@@ -61,10 +63,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   kubeconfigIcons: {
-    height: 16,
+    height: 14,
     margin: `0 ${theme.spacing(1)}`,
     objectFit: 'contain',
-    width: 16,
+    width: 14,
   },
   label: {
     font: theme.font.bold,
@@ -105,13 +107,17 @@ export const KubeConfigDisplay = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
 
-  const { isFetching, refetch: getKubeConfig } = useKubernetesKubeConfigQuery(
+  const { refetch: getKubeConfig } = useKubernetesKubeConfigQuery(
     clusterId,
+    false
+  );
+  const [isCopyTokenLoading, setIsCopyTokenLoading] = React.useState<boolean>(
     false
   );
 
   const onCopyToken = async () => {
     try {
+      setIsCopyTokenLoading(true);
       const { data } = await getKubeConfig();
       const token = data && data.match(/token:\s*(\S+)/);
       if (token && token[1]) {
@@ -122,11 +128,13 @@ export const KubeConfigDisplay = (props: Props) => {
           variant: 'error',
         });
       }
+      setIsCopyTokenLoading(false);
     } catch (error) {
       enqueueSnackbar({
         message: (error as APIError[])[0].reason,
         variant: 'error',
       });
+      setIsCopyTokenLoading(false);
     }
   };
 
@@ -197,22 +205,17 @@ export const KubeConfigDisplay = (props: Props) => {
             <DetailsIcon className={classes.kubeconfigIcons} />
             <Typography className={classes.kubeconfigFileText}>View</Typography>
           </Box>
-          <Box
-            className={classes.kubeconfigElement}
-            onClick={onCopyToken}
-            sx={{ marginLeft: isFetching ? 1.25 : 0 }}
-          >
-            {isFetching ? (
-              <CircleProgress noPadding={true} size="xs" />
+          <Box className={classes.kubeconfigElement} onClick={onCopyToken}>
+            {isCopyTokenLoading ? (
+              <CircleProgress
+                className={classes.kubeconfigIcons}
+                noPadding
+                size="xs"
+              />
             ) : (
               <CopyIcon className={classes.kubeconfigIcons} />
             )}
-            <Box
-              className={classes.kubeconfigFileText}
-              sx={{ marginLeft: isFetching ? 1 : 0 }}
-            >
-              Copy Token
-            </Box>
+            <Box className={classes.kubeconfigFileText}>Copy Token</Box>
           </Box>
           <Box
             className={classes.kubeconfigElement}
