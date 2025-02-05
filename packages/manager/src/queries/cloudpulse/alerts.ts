@@ -45,7 +45,7 @@ export const useAllAlertDefinitionsQuery = (
 };
 
 export const useAlertDefinitionQuery = (
-  alertId: string,
+  alertId: number,
   serviceType: string
 ) => {
   return useQuery<Alert, APIError[]>({
@@ -64,7 +64,7 @@ export const useAllAlertNotificationChannelsQuery = (
 
 export const useEditAlertDefinition = (
   serviceType: string,
-  alertId: number
+  alertId: string
 ) => {
   const queryClient = useQueryClient();
   return useMutation<Alert, APIError[], EditAlertDefinitionPayload>({

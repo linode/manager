@@ -31,13 +31,13 @@ export const EditAlertResources = () => {
   const definitionLanding = '/monitor/alerts/definitions';
 
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
-    alertId,
+    Number(alertId),
     serviceType
   );
 
   const { mutateAsync: editAlert } = useEditAlertDefinition(
     serviceType,
-    Number(alertId)
+    alertId
   );
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     []

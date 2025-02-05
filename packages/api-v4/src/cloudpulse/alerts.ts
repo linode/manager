@@ -40,7 +40,7 @@ export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
 
 export const getAlertDefinitionByServiceTypeAndId = (
   serviceType: string,
-  alertId: string
+  alertId: number
 ) =>
   Request<Alert>(
     setURL(
@@ -54,7 +54,7 @@ export const getAlertDefinitionByServiceTypeAndId = (
 export const editAlertDefinition = (
   data: EditAlertDefinitionPayload,
   serviceType: string,
-  alertId: number
+  alertId: string
 ) =>
   Request<Alert>(
     setURL(
