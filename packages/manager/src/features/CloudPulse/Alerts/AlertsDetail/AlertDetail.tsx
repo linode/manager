@@ -12,9 +12,10 @@ import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 import { AlertResources } from '../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
+import { AlertDetailNotification } from './AlertDetailNotification';
 import { AlertDetailOverview } from './AlertDetailOverview';
 
-interface RouteParams {
+export interface AlertRouteParams {
   /**
    * The id of the alert for which the data needs to be shown
    */
@@ -26,7 +27,7 @@ interface RouteParams {
 }
 
 export const AlertDetail = () => {
-  const { alertId, serviceType } = useParams<RouteParams>();
+  const { alertId, serviceType } = useParams<AlertRouteParams>();
 
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
     Number(alertId),
@@ -124,6 +125,16 @@ export const AlertDetail = () => {
           <AlertResources
             alertResourceIds={entityIds}
             serviceType={serviceType}
+          />
+        </Box>
+        <Box
+          sx={{
+            ...getAlertBoxStyles(theme),
+            overflow: 'auto',
+          }}
+        >
+          <AlertDetailNotification
+            channelIds={alertDetails.channels.map(({ id }) => id)}
           />
         </Box>
       </Box>

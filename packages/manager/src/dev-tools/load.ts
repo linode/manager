@@ -92,6 +92,10 @@ export async function loadDevTools(
         ...initialContext.eventQueue,
         ...(seedContext?.eventQueue || []),
       ],
+      firewallDevices: [
+        ...initialContext.firewallDevices,
+        ...(seedContext?.firewallDevices || []),
+      ],
       firewalls: [
         ...initialContext.firewalls,
         ...(seedContext?.firewalls || []),
