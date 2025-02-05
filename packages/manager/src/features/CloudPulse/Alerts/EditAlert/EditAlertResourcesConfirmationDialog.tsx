@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -30,13 +31,17 @@ export const EditAlertResourcesConfirmDialog = React.memo(
     return (
       <ConfirmationDialog
         actions={<ActionsPanel {...actionProps} />}
+        aria-live="assertive"
         onClose={onClose}
         open={open}
         sx={{ fontSize: '16px' }}
         title="Confirm alert updates"
       >
-        You have changed the resource settings for your alert.
-        <br /> This also updates your alert definition.
+        <Typography fontSize="16px" variant="body1">
+          You have changed the resource settings for your alert.
+          <br />
+          This also updates your alert definition.
+        </Typography>
       </ConfirmationDialog>
     );
   }
