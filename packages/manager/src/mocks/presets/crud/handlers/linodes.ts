@@ -3,6 +3,7 @@ import { http } from 'msw';
 
 import {
   configFactory,
+  firewallDeviceFactory,
   linodeBackupFactory,
   linodeDiskFactory,
   linodeFactory,
@@ -23,6 +24,7 @@ import type {
   Config,
   Disk,
   Firewall,
+  FirewallDeviceEntityType,
   Linode,
   LinodeBackupsResponse,
   LinodeIPsResponse,
@@ -110,6 +112,56 @@ export const createLinode = (mockState: MockState) => [
 
     if (!linode.label) {
       linode.label = `linode${linode.id}`;
+    }
+
+    if (payload.firewall_id) {
+      const firewall = await mswDB.get('firewalls', payload.firewall_id);
+      if (firewall) {
+        const entity = {
+          id: linode.id,
+          label: linode.label,
+          type: 'linode' as FirewallDeviceEntityType,
+          url: `/linodes/${linode.id}`,
+        };
+
+        const updatedFirewall = {
+          ...firewall,
+          entities: [...firewall.entities, entity],
+        };
+
+        const firewallDevice = firewallDeviceFactory.build({
+          created: DateTime.now().toISO(),
+          entity,
+          updated: DateTime.now().toISO(),
+        });
+
+        await mswDB.add(
+          'firewallDevices',
+          [firewall.id, firewallDevice],
+          mockState
+        );
+
+        await mswDB.update(
+          'firewalls',
+          firewall.id,
+          updatedFirewall,
+          mockState
+        );
+
+        queueEvents({
+          event: {
+            action: 'firewall_device_add',
+            entity: {
+              id: firewall.id,
+              label: firewall.label,
+              type: 'firewallDevice',
+              url: `/v4beta/networking/firewalls/${firewall.id}/linodes`,
+            },
+          },
+          mockState,
+          sequence: [{ status: 'notification' }],
+        });
+      }
     }
 
     const linodeConfig = configFactory.build({

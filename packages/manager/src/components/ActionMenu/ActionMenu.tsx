@@ -27,6 +27,11 @@ export interface ActionMenuProps {
    * A function that is called when the Menu is opened. Useful for analytics.
    */
   onOpen?: () => void;
+  /**
+   * If true, stop event propagation when handling clicks
+   * Ex: If the action menu is in an accordion, we don't want the click also opening/closing the accordion
+   */
+  stopClickPropagation?: boolean;
 }
 
 /**
@@ -35,7 +40,7 @@ export interface ActionMenuProps {
  * No more than 8 items should be displayed within an action menu.
  */
 export const ActionMenu = React.memo((props: ActionMenuProps) => {
-  const { actionsList, ariaLabel, onOpen } = props;
+  const { actionsList, ariaLabel, onOpen, stopClickPropagation } = props;
 
   const menuId = convertToKebabCase(ariaLabel);
   const buttonId = `${convertToKebabCase(ariaLabel)}-button`;
@@ -44,13 +49,19 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (stopClickPropagation) {
+      event.stopPropagation();
+    }
     setAnchorEl(event.currentTarget);
     if (onOpen) {
       onOpen();
     }
   };
 
-  const handleClose = () => {
+  const handleClose = (event: React.MouseEvent<HTMLLIElement>) => {
+    if (stopClickPropagation) {
+      event.stopPropagation();
+    }
     setAnchorEl(null);
   };
 
@@ -131,10 +142,13 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
       >
         {actionsList.map((a, idx) => (
           <MenuItem
-            onClick={() => {
+            onClick={(e) => {
               if (!a.disabled) {
-                handleClose();
+                handleClose(e);
                 a.onClick();
+              }
+              if (stopClickPropagation) {
+                e.stopPropagation();
               }
             }}
             data-qa-action-menu-item={a.title}

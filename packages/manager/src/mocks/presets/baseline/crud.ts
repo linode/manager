@@ -5,6 +5,7 @@ import {
 import { linodeCrudPreset } from 'src/mocks/presets/crud/linodes';
 
 import { domainCrudPreset } from '../crud/domains';
+import { firewallCrudPreset } from '../crud/firewalls';
 import { placementGroupsCrudPreset } from '../crud/placementGroups';
 import { quotasCrudPreset } from '../crud/quotas';
 import { supportTicketCrudPreset } from '../crud/supportTickets';
@@ -21,6 +22,7 @@ export const baselineCrudPreset: MockPresetBaseline = {
     ...supportTicketCrudPreset.handlers,
     ...volumeCrudPreset.handlers,
     ...domainCrudPreset.handlers,
+    ...firewallCrudPreset.handlers,
 
     // Events.
     getEvents,
