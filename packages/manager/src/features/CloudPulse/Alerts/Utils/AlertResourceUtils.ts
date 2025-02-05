@@ -1,3 +1,5 @@
+import { deepEqual } from '../../Utils/FilterBuilder';
+
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type { Region } from '@linode/api-v4';
@@ -188,11 +190,5 @@ export const isResourcesEqual = (
   if (!originalResourceIds) {
     return selectedResourceIds.length === 0;
   }
-
-  if (originalResourceIds?.length !== selectedResourceIds.length) {
-    return false;
-  }
-
-  const originalSet = new Set(originalResourceIds);
-  return selectedResourceIds.every((id) => originalSet.has(id));
+  return deepEqual(originalResourceIds, selectedResourceIds);
 };
