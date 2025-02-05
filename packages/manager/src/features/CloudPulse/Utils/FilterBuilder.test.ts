@@ -2,6 +2,7 @@ import { dashboardFactory } from 'src/factories';
 import { databaseQueries } from 'src/queries/databases/databases';
 
 import { RESOURCES } from './constants';
+import { deepEqual, getFilters } from './FilterBuilder';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
