@@ -92,14 +92,17 @@ export const LinodeEntityDetailHeader = (
     lishLaunch(id);
   };
 
-  const isRebootNeeded =
-    isRunning &&
-    configs?.some((config) =>
-      config.interfaces?.some(
-        (linodeInterface) =>
-          linodeInterface.purpose === 'vpc' && !linodeInterface.active
-      )
-    );
+  const isRebootNeeded = React.useMemo(
+    () =>
+      isRunning &&
+      configs?.some((config) =>
+        config.interfaces?.some(
+          (linodeInterface) =>
+            linodeInterface.purpose === 'vpc' && !linodeInterface.active
+        )
+      ),
+    [configs, isRunning]
+  );
 
   const formattedStatus = isRebootNeeded
     ? 'REBOOT NEEDED'
