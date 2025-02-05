@@ -41,27 +41,10 @@ type DispatchProps = {
 };
 
 export function useOAuth() {
-  const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-
-  useEffect(() => {
-    const token = authentication.token.get();
-    const hasToken = Boolean(token);
-
-    // If we initialize the app with the /callback url, we need to render routes but do no processing.
-    if (location.pathname.includes('/oauth/callback')) {
-      return;
-    }
-
-    // When we initialize the app...
-    if (hasToken) {
-      setIsLoading(false);
-      return;
-    }
-
-    // if we have mde it here, we need to authenticate
-    redirectToLogin(location.pathname);
-  }, [location]);
+  const isLoading =
+    location.pathname.includes('/oauth/callback') ||
+    window.location.pathname.includes('/oauth/callback');
 
   return { isLoading };
 }
