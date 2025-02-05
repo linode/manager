@@ -1,5 +1,6 @@
-import { Interface } from '@linode/api-v4/lib/linodes/types';
 import Factory from 'src/factories/factoryProxy';
+
+import type { Interface } from '@linode/api-v4/lib/linodes/types';
 
 export const LinodeConfigInterfaceFactory = Factory.Sync.makeFactory<Interface>(
   {
