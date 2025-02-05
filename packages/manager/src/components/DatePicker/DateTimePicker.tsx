@@ -1,5 +1,5 @@
-import { Divider } from '@linode/ui';
 import { InputAdornment, TextField } from '@linode/ui';
+import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { Grid, Popover } from '@mui/material';
@@ -9,6 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import React, { useEffect, useState } from 'react';
 
+import { timezones } from 'src/assets/timezones/timezones';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import { TimeZoneSelect } from './TimeZoneSelect';
@@ -171,9 +172,9 @@ export const DateTimePicker = ({
           }}
           value={
             selectedDateTime
-              ? `${selectedDateTime.toFormat(format)}${
-                  selectedTimeZone ? ` (${selectedTimeZone})` : ''
-                }`
+              ? `${selectedDateTime.toFormat(format)}${generateTimeZone(
+                  selectedTimeZone
+                )}`
               : ''
           }
           errorText={errorText}
@@ -303,4 +304,20 @@ export const DateTimePicker = ({
       </Popover>
     </LocalizationProvider>
   );
+};
+
+const generateTimeZone = (selectedTimezone: null | string): string => {
+  const offset = timezones.find((zone) => zone.name === selectedTimezone)
+    ?.offset;
+  if (!offset) {
+    return '';
+  }
+  const minutes = (Math.abs(offset * 60) % 60).toLocaleString(undefined, {
+    minimumIntegerDigits: 2,
+    useGrouping: false,
+  });
+  const hours = Math.floor(Math.abs(offset));
+  const isPositive = Math.abs(offset) === offset ? '+' : '-';
+
+  return ` (GMT${isPositive}${hours}:${minutes})`;
 };
