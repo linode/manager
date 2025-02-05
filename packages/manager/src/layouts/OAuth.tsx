@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { Component } from 'react';
+import { Component, useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useLocation, withRouter } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
@@ -15,6 +15,9 @@ import {
   authentication,
   getEnvLocalStorageOverrides,
 } from 'src/utilities/storage';
+
+import type { RouteComponentProps } from 'react-router-dom';
+import { redirectToLogin } from 'src/session';
 
 export type CombinedProps = DispatchProps & RouteComponentProps;
 
@@ -37,15 +40,33 @@ type DispatchProps = {
   ) => void;
 };
 
-type State = {
-  isLoading: boolean;
-};
+export function useOAuth() {
+  const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
 
-export class OAuthCallbackPage extends Component<CombinedProps, State> {
-  state: State = {
-    isLoading: false,
-  };
+  useEffect(() => {
+    const token = authentication.token.get();
+    const hasToken = Boolean(token);
 
+    // If we initialize the app with the /callback url, we need to render routes but do no processing.
+    if (location.pathname.includes('/oauth/callback')) {
+      return;
+    }
+
+    // When we initialize the app...
+    if (hasToken) {
+      setIsLoading(false);
+      return;
+    }
+
+    // if we have mde it here, we need to authenticate
+    redirectToLogin(location.pathname);
+  }, [location]);
+
+  return { isLoading };
+}
+
+export class OAuthCallbackPage extends Component<CombinedProps, {}> {
   checkNonce(nonce: string) {
     // nonce should be set and equal to ours otherwise retry auth
     const storedNonce = authentication.nonce.get();
@@ -125,14 +146,10 @@ export class OAuthCallbackPage extends Component<CombinedProps, State> {
           codeVerifier
         );
 
-        this.setState({ isLoading: true });
-
         const response = await fetch(`${loginURL}/oauth/token`, {
           body: formData,
           method: 'POST',
         });
-
-        this.setState({ isLoading: false });
 
         if (response.ok) {
           const tokenParams = await response.json();
@@ -169,13 +186,7 @@ export class OAuthCallbackPage extends Component<CombinedProps, State> {
   }
 
   render() {
-    const { isLoading } = this.state;
-
-    if (isLoading) {
-      return <SplashScreen />;
-    }
-
-    return null;
+    return <SplashScreen />;
   }
 }
 

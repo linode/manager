@@ -18,6 +18,7 @@ import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { queryClientFactory } from './queries/base';
 import { getRoot } from './utilities/rootManager';
+import { useOAuth } from 'src/layouts/OAuth';
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
@@ -43,41 +44,35 @@ const LoginAsCustomerCallback = React.lazy(
 );
 const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
 
-const useOAuth = () => ({ isAuthing: false });
-
 const Main2 = () => {
-  const { isAuthing } = useOAuth();
+  const { isLoading } = useOAuth();
 
-  if (isAuthing) {
+  if (isLoading) {
     return (
       <React.Suspense fallback={<SplashScreen />}>
-        <Router>
-          <Switch>
-            <Route component={OAuthCallbackPage} exact path="/oauth/callback" />
-            <Route
-              component={LoginAsCustomerCallback}
-              exact
-              path="/admin/callback"
-            />
-            <Route component={NullComponent} exact path="/nullauth" />
-            <Route component={Logout} exact path="/logout" />
-            <Route component={CancelLanding} exact path="/cancel" />
-          </Switch>
-        </Router>
+        <Switch>
+          <Route component={OAuthCallbackPage} exact path="/oauth/callback" />
+          <Route
+            component={LoginAsCustomerCallback}
+            exact
+            path="/admin/callback"
+          />
+          <Route component={NullComponent} exact path="/nullauth" />
+          <Route component={Logout} exact path="/logout" />
+          <Route component={CancelLanding} exact path="/cancel" />
+        </Switch>
       </React.Suspense>
     );
   }
 
   return (
     <React.Suspense fallback={<SplashScreen />}>
-      <Router>
-        <Switch>
-          <Route component={Logout} exact path="/logout" />
-          <Route component={CancelLanding} exact path="/cancel" />
-          <Route component={Lish} path="/linodes/:linodeId/lish/:type" />
-          <Route component={App} />
-        </Switch>
-      </Router>
+      <Switch>
+        <Route component={Logout} exact path="/logout" />
+        <Route component={CancelLanding} exact path="/cancel" />
+        <Route component={Lish} path="/linodes/:linodeId/lish/:type" />
+        <Route component={App} />
+      </Switch>
     </React.Suspense>
   );
 };
@@ -91,15 +86,17 @@ const Main = () => {
     <ReduxStoreProvider store={store}>
       <QueryClientProvider client={queryClient}>
         <LinodeThemeWrapper>
-          <Snackbar
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            autoHideDuration={4000}
-            hideIconVariant={true}
-            maxSnack={3}
-          >
-            <CssBaseline />
-            <Main2 />
-          </Snackbar>
+          <Router>
+            <Snackbar
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              autoHideDuration={4000}
+              hideIconVariant={true}
+              maxSnack={3}
+            >
+              <CssBaseline />
+              <Main2 />
+            </Snackbar>
+          </Router>
         </LinodeThemeWrapper>
       </QueryClientProvider>
     </ReduxStoreProvider>
