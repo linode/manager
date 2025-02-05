@@ -184,7 +184,7 @@ export const NodePoolsDisplay = (props: Props) => {
             />
           </Stack>
           <Button
-            buttonType="secondary"
+            buttonType="outlined"
             onClick={() => setIsRecycleClusterOpen(true)}
           >
             Recycle All Nodes
