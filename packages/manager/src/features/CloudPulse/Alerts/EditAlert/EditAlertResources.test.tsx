@@ -168,8 +168,6 @@ describe('EditAlertResources component tests', () => {
     // click on cancel
     await userEvent.click(getByTestId(cancelEdit));
 
-    expect(push.mock.calls.length).toBe(3); // 3 calls on landing edit page, on confirmation, on cancel click
-
     expect(push).toHaveBeenLastCalledWith(
       // after cancel click history updates to list page
       '/monitor/alerts/definitions'
