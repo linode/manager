@@ -87,10 +87,13 @@ export const LinodeRebuildForm = (props: Props) => {
             </strong>
           </Typography>
           <Autocomplete
+            onChange={(e, value) => {
+              form.setValue('stackscript_id', undefined);
+              setType(value.label);
+            }}
             disableClearable
             label="Rebuild From"
             noMarginTop
-            onChange={(e, value) => setType(value.label)}
             options={REBUILD_OPTIONS}
             value={REBUILD_OPTIONS.find((o) => o.label === type)}
           />
@@ -100,8 +103,7 @@ export const LinodeRebuildForm = (props: Props) => {
           {type === 'Community StackScript' && (
             <StackScriptSelectionList type="Community" />
           )}
-          {(type === 'Community StackScript' ||
-            type === 'Account StackScript') && <UserDefinedFields />}
+          {type.includes('StackScript') && <UserDefinedFields />}
           <Image />
           <Password />
           <SSHKeys />
