@@ -88,8 +88,8 @@ export type MockPresetCrudGroup = {
   id:
     | 'Domains'
     | 'Firewalls'
-    | 'Linodes'
     | 'IP Addresses'
+    | 'Linodes'
     | 'Placement Groups'
     | 'Quotas'
     | 'Support Tickets'
@@ -99,8 +99,8 @@ export type MockPresetCrudGroup = {
 export type MockPresetCrudId =
   | 'domains:crud'
   | 'firewalls:crud'
-  | 'linodes:crud'
   | 'ip-addresses:crud'
+  | 'linodes:crud'
   | 'placement-groups:crud'
   | 'quotas:crud'
   | 'support-tickets:crud'

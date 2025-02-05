@@ -11,7 +11,7 @@ import {
 
 import { mswDB } from '../../../indexedDB';
 
-import type { Subnet, VPC } from '@linode/api-v4';
+import type { CreateSubnetPayload, Subnet, VPC } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
@@ -107,11 +107,31 @@ export const createVPC = (mockState: MockState) => [
       const vpc = vpcFactory.build({
         ...payload,
         created: DateTime.now().toISO(),
-        entities: [],
+        subnets: [],
         updated: DateTime.now().toISO(),
       });
 
-      await mswDB.add('vpcs', vpc, mockState);
+      const createSubnetPromises = [];
+      const subnets: Subnet[] = [];
+
+      if (payload.subnets) {
+        for (const subnetPayload of payload.subnets as CreateSubnetPayload[]) {
+          const subnet = subnetFactory.build({
+            ...subnetPayload,
+            created: DateTime.now().toISO(),
+            linodes: [],
+            updated: DateTime.now().toISO(),
+          });
+          subnets.push(subnet);
+
+          createSubnetPromises.push(
+            mswDB.add('subnets', [vpc.id, subnet], mockState)
+          );
+        }
+      }
+
+      await Promise.all(createSubnetPromises);
+      await mswDB.add('vpcs', { ...vpc, subnets }, mockState);
 
       queueEvents({
         event: {
@@ -184,6 +204,15 @@ export const deleteVPC = (mockState: MockState) => [
         return makeNotFoundResponse();
       }
 
+      const deleteSubnetPromises = [];
+
+      for (const subnet of vpc.subnets) {
+        deleteSubnetPromises.push(
+          mswDB.delete('subnets', subnet.id, mockState)
+        );
+      }
+
+      await Promise.all(deleteSubnetPromises);
       await mswDB.delete('vpcs', id, mockState);
 
       queueEvents({
@@ -224,6 +253,7 @@ export const createSubnet = (mockState: MockState) => [
       const subnet = subnetFactory.build({
         ...payload,
         created: DateTime.now().toISO(),
+        linodes: [],
         updated: DateTime.now().toISO(),
       });
 
