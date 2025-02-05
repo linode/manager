@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Component } from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
@@ -15,6 +14,8 @@ import {
   authentication,
   getEnvLocalStorageOverrides,
 } from 'src/utilities/storage';
+
+import type { RouteComponentProps } from 'react-router-dom';
 
 export type CombinedProps = DispatchProps & RouteComponentProps;
 
@@ -37,58 +38,28 @@ type DispatchProps = {
   ) => void;
 };
 
-type State = {
-  isLoading: boolean;
-};
+export const OAuthCallbackPage = ({
+  dispatchStartSession,
+  history,
+}: CombinedProps) => {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { location } = history;
 
-export class OAuthCallbackPage extends Component<CombinedProps, State> {
-  state: State = {
-    isLoading: false,
-  };
-
-  checkNonce(nonce: string) {
+  const checkNonce = (nonce: string) => {
     // nonce should be set and equal to ours otherwise retry auth
     const storedNonce = authentication.nonce.get();
     authentication.nonce.set('');
     if (!(nonce && storedNonce === nonce)) {
       clearStorageAndRedirectToLogout();
     }
-  }
+  };
 
-  componentDidMount() {
-    /**
-     * If this URL doesn't have query params, or doesn't have enough entries, we know we don't have
-     * the data we need and should bounce
-     */
-
-    const { location } = this.props;
-
-    /**
-     * If the search doesn't contain parameters, there's no point continuing as we don't have
-     * the query params we need.
-     */
-
-    if (!location.search || location.search.length < 2) {
-      clearStorageAndRedirectToLogout();
-    }
-
-    const { code, returnTo, state: nonce } = getQueryParamsFromQueryString(
-      location.search
-    ) as OAuthQueryParams;
-
-    if (!code || !returnTo || !nonce) {
-      clearStorageAndRedirectToLogout();
-    }
-
-    this.exchangeAuthorizationCodeForToken(code, returnTo, nonce);
-  }
-
-  createFormData(
+  const createFormData = (
     clientID: string,
     code: string,
     nonce: string,
     codeVerifier: string
-  ): FormData {
+  ): FormData => {
     const formData = new FormData();
     formData.append('grant_type', 'authorization_code');
     formData.append('client_id', clientID);
@@ -96,13 +67,13 @@ export class OAuthCallbackPage extends Component<CombinedProps, State> {
     formData.append('state', nonce);
     formData.append('code_verifier', codeVerifier);
     return formData;
-  }
+  };
 
-  async exchangeAuthorizationCodeForToken(
+  const exchangeAuthorizationCodeForToken = async (
     code: string,
     returnTo: string,
     nonce: string
-  ) {
+  ) => {
     try {
       const expireDate = new Date();
       const codeVerifier = authentication.codeVerifier.get();
@@ -115,24 +86,23 @@ export class OAuthCallbackPage extends Component<CombinedProps, State> {
          * matches the one we stored when authentication was started. This confirms the initiator
          * and receiver are the same.
          */
+        checkNonce(nonce);
 
-        this.checkNonce(nonce);
-
-        const formData = this.createFormData(
+        const formData = createFormData(
           `${clientID}`,
           code,
           nonce,
           codeVerifier
         );
 
-        this.setState({ isLoading: true });
+        setIsLoading(true);
 
         const response = await fetch(`${loginURL}/oauth/token`, {
           body: formData,
           method: 'POST',
         });
 
-        this.setState({ isLoading: false });
+        setIsLoading(false);
 
         if (response.ok) {
           const tokenParams = await response.json();
@@ -146,7 +116,7 @@ export class OAuthCallbackPage extends Component<CombinedProps, State> {
             expireDate.getTime() + +tokenParams.expires_in * 1000
           );
 
-          this.props.dispatchStartSession(
+          dispatchStartSession(
             tokenParams.access_token,
             tokenParams.token_type,
             tokenParams.scopes,
@@ -156,7 +126,7 @@ export class OAuthCallbackPage extends Component<CombinedProps, State> {
           /**
            * All done, redirect this bad-boy to the returnTo URL we generated earlier.
            */
-          this.props.history.push(returnTo);
+          history.push(returnTo);
         } else {
           clearStorageAndRedirectToLogout();
         }
@@ -166,18 +136,29 @@ export class OAuthCallbackPage extends Component<CombinedProps, State> {
     } catch (error) {
       clearStorageAndRedirectToLogout();
     }
-  }
+  };
 
-  render() {
-    const { isLoading } = this.state;
-
-    if (isLoading) {
-      return <SplashScreen />;
+  React.useEffect(() => {
+    if (!location.search || location.search.length < 2) {
+      clearStorageAndRedirectToLogout();
+      return;
     }
 
-    return null;
-  }
-}
+    const { code, returnTo, state: nonce } = getQueryParamsFromQueryString(
+      location.search
+    );
+
+    if (!code || !returnTo || !nonce) {
+      clearStorageAndRedirectToLogout();
+      return;
+    }
+
+    exchangeAuthorizationCodeForToken(code, returnTo, nonce);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, dispatchStartSession, history]);
+
+  return isLoading ? <SplashScreen /> : null;
+};
 
 const clearStorageAndRedirectToLogout = () => {
   clearLocalStorage();
