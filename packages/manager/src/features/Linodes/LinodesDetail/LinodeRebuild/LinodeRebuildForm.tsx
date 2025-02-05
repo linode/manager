@@ -1,11 +1,8 @@
-import { Autocomplete, Notice, Stack, Typography } from '@linode/ui';
+import { Autocomplete, Divider, Notice, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
-import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
-import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { PasswordInput } from 'src/components/PasswordInput/PasswordInput';
 import { useRebuildLinodeMutation } from 'src/queries/linodes/linodes';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { utoa } from 'src/utilities/metadata';
@@ -14,6 +11,9 @@ import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/S
 import { Actions } from './Actions';
 import { Confirmation } from './Confirmation';
 import { DiskEncryption } from './DiskEncryption';
+import { Image } from './Image';
+import { Password } from './Password';
+import { SSHKeys } from './SSHKeys';
 import { UserData } from './UserData';
 import { UserDefinedFields } from './UserDefinedFields';
 import { REBUILD_OPTIONS, resolver } from './utils';
@@ -33,7 +33,7 @@ interface Props {
 export const LinodeRebuildForm = (props: Props) => {
   const { linodeId, linodeLabel, onSuccess } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const [type, setType] = useState<LinodeRebuildType>('From Image');
+  const [type, setType] = useState<LinodeRebuildType>('Image');
 
   const { data: typeToConfirmPreference } = usePreferences(
     (preferences) => preferences?.type_to_confirm
@@ -73,7 +73,7 @@ export const LinodeRebuildForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Stack spacing={2}>
+        <Stack divider={<Divider />} spacing={2}>
           {form.formState.errors.root && (
             <Notice text={form.formState.errors.root.message} variant="error" />
           )}
@@ -92,57 +92,19 @@ export const LinodeRebuildForm = (props: Props) => {
             noMarginTop
             onChange={(e, value) => setType(value.label)}
             options={REBUILD_OPTIONS}
-            textFieldProps={{ hideLabel: true }}
             value={REBUILD_OPTIONS.find((o) => o.label === type)}
           />
-          {type === 'From Account StackScript' && (
+          {type === 'Account StackScript' && (
             <StackScriptSelectionList type="Account" />
           )}
-          {type === 'From Community StackScript' && (
+          {type === 'Community StackScript' && (
             <StackScriptSelectionList type="Community" />
           )}
-          {(type === 'From Community StackScript' ||
-            type === 'From Account StackScript') && <UserDefinedFields />}
-          <Controller
-            render={({ field, fieldState }) => (
-              <ImageSelect
-                errorText={fieldState.error?.message}
-                noMarginTop
-                onChange={(value) => field.onChange(value?.id ?? null)}
-                value={field.value ?? null}
-                variant="all"
-              />
-            )}
-            control={form.control}
-            name="image"
-          />
-          <Controller
-            render={({ field, fieldState }) => (
-              <PasswordInput
-                autoComplete="off"
-                errorText={fieldState.error?.message}
-                helperText="Set a password for your rebuilt Linode."
-                label="Root Password"
-                noMarginTop
-                onBlur={field.onBlur}
-                onChange={field.onChange}
-                placeholder="Enter a password."
-                value={field.value ?? ''}
-              />
-            )}
-            control={form.control}
-            name="root_pass"
-          />
-          <Controller
-            render={({ field }) => (
-              <UserSSHKeyPanel
-                authorizedUsers={field.value ?? []}
-                setAuthorizedUsers={field.onChange}
-              />
-            )}
-            control={form.control}
-            name="authorized_users"
-          />
+          {(type === 'Community StackScript' ||
+            type === 'Account StackScript') && <UserDefinedFields />}
+          <Image />
+          <Password />
+          <SSHKeys />
           <DiskEncryption />
           <UserData linodeId={linodeId} />
           <Confirmation linodeLabel={linodeLabel} />

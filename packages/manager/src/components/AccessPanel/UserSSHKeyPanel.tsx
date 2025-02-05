@@ -1,4 +1,4 @@
-import { Button, Checkbox, Typography } from '@linode/ui';
+import { Box, Button, Checkbox, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -192,7 +192,7 @@ export const UserSSHKeyPanel = (props: Props) => {
   };
 
   return (
-    <React.Fragment>
+    <Box>
       <Typography className={classes.title} variant="h2">
         SSH Keys
       </Typography>
@@ -227,6 +227,6 @@ export const UserSSHKeyPanel = (props: Props) => {
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
       />
-    </React.Fragment>
+    </Box>
   );
 };

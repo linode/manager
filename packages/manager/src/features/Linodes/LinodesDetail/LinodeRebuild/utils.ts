@@ -7,9 +7,9 @@ import type { FieldErrors, Resolver } from 'react-hook-form';
 import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export const REBUILD_OPTIONS = [
-  { label: 'From Image' },
-  { label: 'From Community StackScript' },
-  { label: 'From Account StackScript' },
+  { label: 'Image' },
+  { label: 'Community StackScript' },
+  { label: 'Account StackScript' },
 ] as const;
 
 export type LinodeRebuildType = typeof REBUILD_OPTIONS[number]['label'];
