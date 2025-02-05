@@ -29,15 +29,15 @@ describe('Search Linodes', () => {
       cy.findByText(linode.label).should('be.visible');
 
       // Use the main search bar to search and filter linode by label
-      cy.get('[id="main-search"').type(linode.label);
+      ui.mainSearch.find().type(linode.label);
       ui.autocompletePopper.findByTitle(linode.label).should('be.visible');
 
       // Use the main search bar to search and filter linode by id value
-      cy.get('[id="main-search"').clear().type(`${linode.id}`);
+      ui.mainSearch.find().clear().type(`${linode.id}`);
       ui.autocompletePopper.findByTitle(linode.label).should('be.visible');
 
       // Use the main search bar to search and filter linode by id: pattern
-      cy.get('[id="main-search"').clear().type(`id:${linode.id}`);
+      ui.mainSearch.find().clear().type(`id:${linode.id}`);
       ui.autocompletePopper.findByTitle(linode.label).should('be.visible');
     });
   });

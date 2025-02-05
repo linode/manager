@@ -63,7 +63,10 @@ export const DatabaseRow = ({
   const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);
   const isLinkInactive =
-    status === 'suspended' || status === 'suspending' || status === 'resuming';
+    status === 'suspended' ||
+    status === 'suspending' ||
+    status === 'resuming' ||
+    status === 'migrated';
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const configuration =
