@@ -11,6 +11,7 @@ import type { ApplicationStore } from './store';
 import type { Profile } from '@linode/api-v4';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { redirectToLogin } from './session';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response
@@ -30,8 +31,8 @@ export const handleError = (
   store: ApplicationStore
 ) => {
   if (error.response && error.response.status === 401) {
-    // redirectToLogin(window.location.pathname);
-    clearStorageAndRedirectToLogout();
+    redirectToLogin(window.location.pathname);
+    // clearStorageAndRedirectToLogout();
   }
 
   const status: number = error.response?.status ?? 0;
