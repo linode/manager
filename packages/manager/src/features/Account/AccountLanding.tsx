@@ -190,7 +190,6 @@ export const AccountLanding = () => {
 
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
-
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={idx}>

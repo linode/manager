@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
@@ -9,7 +9,15 @@ const accountRoute = createRoute({
   path: 'account',
 });
 
+const logoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'logout',
+});
+
 const accountIndexRoute = createRoute({
+  beforeLoad: async () => {
+    throw redirect({ to: '/account/billing' });
+  },
   getParentRoute: () => accountRoute,
   path: '/',
 }).lazy(() =>
@@ -156,4 +164,5 @@ export const accountRouteTree = accountRoute.addChildren([
   accountBillingEditRoute,
   accountInvoicesInvoiceIdRoute,
   accountEntityTransfersCreateRoute,
+  logoutRoute,
 ]);

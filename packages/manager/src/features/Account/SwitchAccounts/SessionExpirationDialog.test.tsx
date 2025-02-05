@@ -1,5 +1,6 @@
 import { act, fireEvent } from '@testing-library/react';
 import React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { MemoryRouter } from 'react-router-dom';
 
 import { SessionExpirationDialog } from 'src/features/Account/SwitchAccounts/SessionExpirationDialog';

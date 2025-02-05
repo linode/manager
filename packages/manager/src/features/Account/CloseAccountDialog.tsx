@@ -2,6 +2,7 @@ import { cancelAccount } from '@linode/api-v4/lib/account';
 import { Notice, TextField, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
