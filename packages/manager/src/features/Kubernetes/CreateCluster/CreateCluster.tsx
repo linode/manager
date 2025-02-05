@@ -67,6 +67,7 @@ export const CreateCluster = () => {
   const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(false);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
@@ -84,14 +85,9 @@ export const CreateCluster = () => {
     };
   }, [hasAgreed]);
 
-  const {
-    control,
-    formState: { isSubmitting },
-    getValues,
-    handleSubmit,
-    setValue,
-    watch,
-  } = useForm<Required<CreateKubeClusterPayload>>({
+  const { control, getValues, handleSubmit, setValue, watch } = useForm<
+    Required<CreateKubeClusterPayload>
+  >({
     defaultValues: formValues,
   });
 
@@ -175,6 +171,7 @@ export const CreateCluster = () => {
     } = formData;
 
     const { push } = history;
+    setSubmitting(true);
 
     const _ipv4 = control_plane.acl?.addresses?.ipv4 || [];
 
@@ -233,6 +230,7 @@ export const CreateCluster = () => {
       })
       .catch((err) => {
         setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
+        setSubmitting(false);
         scrollErrorIntoViewV2(formContainerRef);
       });
   };
@@ -543,7 +541,7 @@ export const CreateCluster = () => {
               getValues('control_plane.high_availability'),
               getValues('region'),
               getValues('node_pools'),
-              isSubmitting,
+              submitting,
               typesData,
               updatePool,
               removePool,
@@ -560,7 +558,7 @@ export const CreateCluster = () => {
             regionsData={regionsData}
             removePool={removePool}
             showHighAvailability={showHighAvailability}
-            submitting={isSubmitting}
+            submitting={submitting}
             toggleHasAgreed={toggleHasAgreed}
             updatePool={updatePool}
           />
