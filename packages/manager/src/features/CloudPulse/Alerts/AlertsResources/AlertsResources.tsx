@@ -52,6 +52,8 @@ export interface AlertResourcesProp {
   serviceType: string;
 }
 
+export type SelectUnselectAll = 'Select All' | 'Unselect All';
+
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
     alertLabel,
@@ -170,7 +172,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
 
   const handleAllSelection = React.useCallback(
-    (action: 'Select All' | 'Unselect All') => {
+    (action: SelectUnselectAll) => {
       if (!resources) {
         return;
       }
