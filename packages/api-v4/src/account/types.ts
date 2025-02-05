@@ -331,6 +331,7 @@ export const EventActionKeys = [
   'database_scale',
   'database_update_failed',
   'database_update',
+  'database_migrate',
   'database_upgrade',
   'disk_create',
   'disk_delete',
