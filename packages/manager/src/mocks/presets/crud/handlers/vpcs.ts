@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { subnetFactory, vpcFactory } from 'src/factories';
+import { subnetFactory, vpcFactory, vpcIPFactory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,
@@ -11,7 +11,7 @@ import {
 
 import { mswDB } from '../../../indexedDB';
 
-import type { CreateSubnetPayload, Subnet, VPC } from '@linode/api-v4';
+import type { CreateSubnetPayload, Subnet, VPC, VPCIP } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
@@ -386,6 +386,42 @@ export const deleteSubnet = (mockState: MockState) => [
       });
 
       return makeResponse({});
+    }
+  ),
+];
+
+// TODO: integrate with DB if needed
+const vpcIPs = vpcIPFactory.buildList(10);
+
+export const getVPCIPs = () => [
+  http.get(
+    '*/v4/vpcs/ips',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<VPCIP>>
+    > => {
+      return makePaginatedResponse({
+        data: vpcIPs,
+        request,
+      });
+    }
+  ),
+
+  http.get(
+    '*/v4/:vpcId/ips',
+    async ({
+      params,
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<VPCIP>>
+    > => {
+      const specificVPCIPs = vpcIPs.filter((ip) => ip.vpc_id === +params.vpcId);
+
+      return makePaginatedResponse({
+        data: specificVPCIPs,
+        request,
+      });
     }
   ),
 ];

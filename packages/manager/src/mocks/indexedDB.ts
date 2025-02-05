@@ -7,6 +7,19 @@ type ObjectStore = 'mockState' | 'seedState';
 const MOCK_STATE: ObjectStore = 'mockState';
 const SEED_STATE: ObjectStore = 'seedState';
 
+// Helper method to find an item in the DB. Returns true
+// if the given item has the same ID as the given number
+// Some items may be stored as [number, Entity]
+const findItem = (item: unknown, id: number) => {
+  const isItemTuple = Array.isArray(item) && item.length >= 2;
+
+  const itemTupleToFind = isItemTuple && hasId(item[1]) && item[1].id === id;
+
+  const itemToFind = hasId(item) && item.id === id;
+
+  return itemTupleToFind || itemToFind;
+};
+
 export const mswDB = {
   add: async <T extends keyof MockState>(
     entity: T,
@@ -161,17 +174,9 @@ export const mswDB = {
 
           const deleteEntity = (state: MockState | undefined) => {
             if (state && state[entity]) {
-              const index = state[entity].findIndex((item) => {
-                // Some items may be stored as [number, Entity]
-                const isItemTuple = Array.isArray(item) && item.length >= 2;
-
-                const itemTupleToFind =
-                  isItemTuple && hasId(item[1]) && item[1].id === id;
-
-                const itemToFind = hasId(item) && item.id === id;
-
-                return itemTupleToFind || itemToFind;
-              });
+              const index = state[entity].findIndex((item) =>
+                findItem(item, id)
+              );
               if (index !== -1) {
                 state[entity].splice(index, 1);
               }
@@ -330,17 +335,7 @@ export const mswDB = {
           const seedState = seedRequest.result;
 
           const findEntity = (state: MockState | undefined) => {
-            return state?.[entity]?.find((item) => {
-              // Some items may be stored as [number, Entity]
-              const isItemTuple = Array.isArray(item) && item.length >= 2;
-
-              const itemTupleToFind =
-                isItemTuple && hasId(item[1]) && item[1].id === id;
-
-              const itemToFind = hasId(item) && item.id === id;
-
-              return itemTupleToFind || itemToFind;
-            });
+            return state?.[entity]?.find((item) => findItem(item, id));
           };
 
           const mockEntity = findEntity(mockState);
@@ -490,8 +485,10 @@ export const mswDB = {
       storeRequest.onsuccess = () => {
         const mockState = storeRequest.result;
         if (mockState && mockState[entity]) {
-          const index = mockState[entity].findIndex(
-            (item: { id: number }) => item.id === id
+          const index = mockState[
+            entity
+          ].findIndex((item: [number, { id: number }] | { id: number }) =>
+            findItem(item, id)
           );
           if (index !== -1) {
             Object.assign(mockState[entity][index], payload);
