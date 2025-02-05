@@ -214,7 +214,23 @@ const entityTransfers = [
 
 const databases = [
   http.get('*/databases/instances', () => {
-    const databases = databaseInstanceFactory.buildList(9);
+    const database1 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 1,
+      label: 'database-instance-1',
+    });
+    const database2 = databaseInstanceFactory.build({
+      cluster_size: 2,
+      id: 2,
+      label: 'database-instance-2',
+    });
+    const database3 = databaseInstanceFactory.build({
+      cluster_size: 3,
+      id: 3,
+      label: 'database-instance-3',
+    });
+
+    const databases = [database1, database2, database3];
     return HttpResponse.json(makeResourcePage(databases));
   }),
 

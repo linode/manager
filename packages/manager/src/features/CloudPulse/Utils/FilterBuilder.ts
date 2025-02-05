@@ -1,4 +1,5 @@
 import {
+  NODE_TYPE,
   REGION,
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
@@ -10,6 +11,7 @@ import { CloudPulseSelectTypes } from './models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
+import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
@@ -39,6 +41,7 @@ interface CloudPulseFilterProperties {
   };
   isServiceAnalyticsIntegration: boolean;
   preferences?: AclpConfig;
+  resource_ids?: number[] | undefined;
 }
 
 interface CloudPulseMandatoryFilterCheckProps {
@@ -155,6 +158,37 @@ export const getResourcesProperties = (
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: buildXFilter(config, dependentFilters ?? {}),
+  };
+};
+
+export const getNodeTypeProperties = (
+  props: CloudPulseFilterProperties,
+  handleNodeTypeChange: (
+    nodeType: null | string | undefined,
+    label: string[],
+    savePref?: boolean
+  ) => void
+): CloudPulseNodeTypeFilterProps => {
+  const { filterKey, name: label, placeholder } = props.config.configuration;
+  const {
+    dashboard,
+    dependentFilters,
+    isServiceAnalyticsIntegration,
+    preferences,
+    resource_ids,
+  } = props;
+  return {
+    database_ids: resource_ids,
+    defaultValue: preferences?.[NODE_TYPE],
+    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+      filterKey,
+      dependentFilters ?? {},
+      dashboard
+    ),
+    handleNodeTypeChange,
+    label,
+    placeholder,
+    savePreferences: !isServiceAnalyticsIntegration,
   };
 };
 
