@@ -215,7 +215,7 @@ export const NodePool = (props: Props) => {
       data-qa-node-pool-id={poolId}
       data-qa-node-pool-section
       expanded={accordionExpanded}
-      onClick={handleAccordionClick}
+      onChange={handleAccordionClick}
     >
       <NodeTable
         clusterCreated={clusterCreated}
