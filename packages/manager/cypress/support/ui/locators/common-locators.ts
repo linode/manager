@@ -1,37 +1,37 @@
 // This file contains locators that are common to multiple pages in the Manager.
 
-// Top menu items
+/** Top menu items. */
 export const topMenuItemsLocator = {
-  // Create Button
+  /** Top menu create button. */
   addNewMenuButton: '[data-qa-add-new-menu-button="true"]',
-  // Notifications Button
+  /** Top menu notifications button. */
   notificationsButton: '[aria-label="Notifications"]',
-  // Search Icon
+  /** Top menu search icon. */
   searchIcon: '[data-qa-search-icon="true"]',
-  // Search Text Field
+  /** Top menu search field. */
   searchInput: '[data-qa-main-search]',
-  // Toogle side menu bar button
+  /** Top menu navigation toggle. */
   toggleSideMenuButton: '[aria-label="open menu"]',
 };
 
-// Create menu items
+/** Top menu create dropdown items. */
 export const topMenuCreateItemsLocator = {
-  // Buckets Link
+  /** Top menu create dropdown items Buckets Link. */
   bucketsLink: '[href="/object-storage/buckets/create"]',
-  // Create Menu dropdown section
+  /** Top menu create dropdown. */
   createMenu: '[aria-labelledby="create-menu"]',
-  // Domains Link
+  /** Top menu create dropdown items Domains Link. */
   domainsLink: '[href="/domains/create"]',
-  // Firewalls Link
+  /** Top menu create dropdown items Firewalls Link. */
   firewallsLink: '[href="/firewalls/create"]',
-  // Kubernetes Link
+  /** Top menu create dropdown items Kubernetes Link. */
   kubernetesLink: '[href="/kubernetes/create"]',
-  // Linodes Link
+  /** Top menu create dropdown items Linodes Link. */
   linodesLink: '[href="/linodes/create"]',
-  // Marketplace Link
+  /** Top menu create dropdown items Marketplace(One-Click) Link. */
   marketplaceOneClickLink: '[href="/linodes/create?type=One-Click"]',
-  // NodeBalancers Link
+  /** Top menu create dropdown items NodeBalancers Link. */
   nodeBalancersLink: '[href="/nodebalancers/create"]',
-  // Volumes Link
+  /** Top menu create dropdown items Volumes Link. */
   volumesLink: '[href="/volumes/create"]',
 };
