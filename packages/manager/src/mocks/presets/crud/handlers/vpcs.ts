@@ -123,15 +123,25 @@ export const createVPC = (mockState: MockState) => [
             updated: DateTime.now().toISO(),
           });
           vpcSubnets.push(subnet);
-
-          createSubnetPromises.push(
-            mswDB.add('subnets', [vpc.id, subnet], mockState)
-          );
         }
       }
 
+      // sometimes our factory generates an already existing ID. We must get the actual
+      // ID of the newly created VPC in our mock DB
+      const createdVPC = await mswDB.add(
+        'vpcs',
+        { ...vpc, subnets: vpcSubnets },
+        mockState
+      );
+
+      // so that we can assign subnets to the correct VPC
+      for (const subnet of vpcSubnets) {
+        createSubnetPromises.push(
+          mswDB.add('subnets', [createdVPC.id, subnet], mockState)
+        );
+      }
+
       await Promise.all(createSubnetPromises);
-      await mswDB.add('vpcs', { ...vpc, subnets: vpcSubnets }, mockState);
 
       queueEvents({
         event: {
@@ -147,7 +157,7 @@ export const createVPC = (mockState: MockState) => [
         sequence: [{ status: 'notification' }],
       });
 
-      return makeResponse(vpc);
+      return makeResponse(createdVPC);
     }
   ),
 ];

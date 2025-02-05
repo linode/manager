@@ -25,7 +25,7 @@ export const mswDB = {
     entity: T,
     payload: MockState[T] extends Array<infer U> ? U : MockState[T],
     state: MockState
-  ): Promise<void> => {
+  ): Promise<MockState[T] extends Array<infer U> ? U : MockState[T]> => {
     const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
@@ -55,6 +55,22 @@ export const mswDB = {
             newId = newId + 1;
           }
           payload.id = newId;
+        } else if (
+          // generate unique ID for tuple type entities if necessary
+          Array.isArray(payload) &&
+          payload.length >= 2 &&
+          hasId(payload[1])
+        ) {
+          let newId = payload[1].id;
+          while (
+            mockState[entity].some(
+              // eslint-disable-next-line no-loop-func
+              (item: [number, { id: number }]) => item[1].id === newId
+            )
+          ) {
+            newId = newId + 1;
+          }
+          payload[1].id = newId;
         }
 
         mockState[entity].push(payload);
@@ -63,7 +79,7 @@ export const mswDB = {
         const updatedRequest = store.put({ id: 1, ...mockState });
 
         updatedRequest.onsuccess = () => {
-          resolve();
+          resolve(payload);
         };
         updatedRequest.onerror = (event) => {
           reject(event);
