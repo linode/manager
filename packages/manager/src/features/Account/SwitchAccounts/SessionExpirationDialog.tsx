@@ -92,8 +92,6 @@ export const SessionExpirationDialog = React.memo(
 
       updateCurrentToken({ userType: 'parent' });
 
-      // Reset flag for proxy user to display success toast once.
-      setStorage('is_proxy_user', 'false');
       setLogoutLoading(false);
 
       onClose();

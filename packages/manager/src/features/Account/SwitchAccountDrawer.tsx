@@ -12,7 +12,9 @@ import { authentication, getStorage, setStorage } from 'src/utilities/storage';
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
-import type { APIError, UserType } from '@linode/api-v4';
+import type { Account, APIError, UserType } from '@linode/api-v4';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   onClose: () => void;
@@ -20,9 +22,9 @@ interface Props {
   userType: UserType | undefined;
 }
 
-interface HandleSwitchToChildAccountProps {
+export interface HandleSwitchToChildAccountOptions {
   currentTokenWithBearer?: string;
-  euuid: string;
+  account: Account;
   event: React.MouseEvent<HTMLElement>;
   onClose: (e: React.SyntheticEvent<HTMLElement>) => void;
   userType: UserType | undefined;
@@ -30,7 +32,6 @@ interface HandleSwitchToChildAccountProps {
 
 export const SwitchAccountDrawer = (props: Props) => {
   const { onClose, open, userType } = props;
-  const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
   >([]);
@@ -49,16 +50,19 @@ export const SwitchAccountDrawer = (props: Props) => {
     validateParentToken,
   } = useParentChildAuthentication();
 
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+
   const createTokenErrorReason = createTokenError?.[0]?.reason;
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
       currentTokenWithBearer,
-      euuid,
+      account,
       event,
       onClose,
       userType,
-    }: HandleSwitchToChildAccountProps) => {
+    }: HandleSwitchToChildAccountOptions) => {
       const isProxyUser = userType === 'proxy';
 
       try {
@@ -72,7 +76,7 @@ export const SwitchAccountDrawer = (props: Props) => {
           updateParentTokenInLocalStorage({ currentTokenWithBearer });
         }
 
-        const proxyToken = await createToken(euuid);
+        const proxyToken = await createToken(account.euuid);
 
         setTokenInLocalStorage({
           prefix: 'authentication/proxy_token',
@@ -83,8 +87,16 @@ export const SwitchAccountDrawer = (props: Props) => {
         });
 
         updateCurrentToken({ userType: 'proxy' });
+
         onClose(event);
-        location.reload();
+
+        enqueueSnackbar(
+          `Account switched to ${account.company ?? account.email}.`,
+          {
+            variant: 'success',
+          }
+        );
+        queryClient.resetQueries();
       } catch (error) {
         // Error is handled by createTokenError.
       }
@@ -104,9 +116,6 @@ export const SwitchAccountDrawer = (props: Props) => {
       return;
     }
 
-    // Flag to prevent multiple clicks on the switch account link.
-    setSubmitting(true);
-
     // Revoke proxy token before switching to parent account.
     await revokeToken().catch(() => {
       /* Allow user account switching; tokens will expire naturally. */
@@ -114,11 +123,12 @@ export const SwitchAccountDrawer = (props: Props) => {
 
     updateCurrentToken({ userType: 'parent' });
 
-    // Reset flag for proxy user to display success toast once.
-    setStorage('is_proxy_user', 'false');
-
     onClose();
-    location.reload();
+
+    enqueueSnackbar(`Account switched to parent account.`, {
+      variant: 'success',
+    });
+    queryClient.resetQueries();
   }, [onClose, revokeToken, validateParentToken, updateCurrentToken]);
 
   return (
@@ -144,7 +154,6 @@ export const SwitchAccountDrawer = (props: Props) => {
                 handleSwitchToParentAccount();
               }}
               aria-label="parent-account-link"
-              disabled={isSubmitting}
             >
               switch back to your account
             </StyledLinkButton>
@@ -166,7 +175,6 @@ export const SwitchAccountDrawer = (props: Props) => {
         currentTokenWithBearer={
           isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
         }
-        isLoading={isSubmitting}
         onClose={onClose}
         onSwitchAccount={handleSwitchToChildAccount}
         searchQuery={query}
