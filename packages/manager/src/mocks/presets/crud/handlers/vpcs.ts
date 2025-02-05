@@ -21,7 +21,7 @@ import type {
 
 export const getVPCs = () => [
   http.get(
-    '*/v4/vpcs',
+    '*/v4beta/vpcs',
     async ({
       request,
     }): Promise<
@@ -41,7 +41,7 @@ export const getVPCs = () => [
   ),
 
   http.get(
-    '*/v4/vpcs/:id',
+    '*/v4beta/vpcs/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | VPC>> => {
       const id = Number(params.id);
       const vpc = await mswDB.get('vpcs', id);
@@ -55,7 +55,7 @@ export const getVPCs = () => [
   ),
 
   http.get(
-    '*/v4/vpcs/:id/subnets',
+    '*/v4beta/vpcs/:id/subnets',
     async ({
       params,
       request,
@@ -82,7 +82,7 @@ export const getVPCs = () => [
   ),
 
   http.get(
-    '*/v4/vpcs/:id/subnets/:subnetId',
+    '*/v4beta/vpcs/:id/subnets/:subnetId',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | Subnet>> => {
       const id = Number(params.id);
       const subnetId = Number(params.subnetId);
@@ -100,7 +100,7 @@ export const getVPCs = () => [
 
 export const createVPC = (mockState: MockState) => [
   http.post(
-    '*/v4/vpcs',
+    '*/v4beta/vpcs',
     async ({ request }): Promise<StrictResponse<APIErrorResponse | VPC>> => {
       const payload = await request.clone().json();
 
@@ -112,7 +112,7 @@ export const createVPC = (mockState: MockState) => [
       });
 
       const createSubnetPromises = [];
-      const subnets: Subnet[] = [];
+      const vpcSubnets: Subnet[] = [];
 
       if (payload.subnets) {
         for (const subnetPayload of payload.subnets as CreateSubnetPayload[]) {
@@ -122,7 +122,7 @@ export const createVPC = (mockState: MockState) => [
             linodes: [],
             updated: DateTime.now().toISO(),
           });
-          subnets.push(subnet);
+          vpcSubnets.push(subnet);
 
           createSubnetPromises.push(
             mswDB.add('subnets', [vpc.id, subnet], mockState)
@@ -131,7 +131,7 @@ export const createVPC = (mockState: MockState) => [
       }
 
       await Promise.all(createSubnetPromises);
-      await mswDB.add('vpcs', { ...vpc, subnets }, mockState);
+      await mswDB.add('vpcs', { ...vpc, subnets: vpcSubnets }, mockState);
 
       queueEvents({
         event: {
@@ -154,7 +154,7 @@ export const createVPC = (mockState: MockState) => [
 
 export const updateVPC = (mockState: MockState) => [
   http.put(
-    '*/v4/vpcs/:id',
+    '*/v4beta/vpcs/:id',
     async ({
       params,
       request,
@@ -195,7 +195,7 @@ export const updateVPC = (mockState: MockState) => [
 
 export const deleteVPC = (mockState: MockState) => [
   http.delete(
-    '*/v4/vpcs/:id',
+    '*/v4beta/vpcs/:id',
     async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
       const id = Number(params.id);
       const vpc = await mswDB.get('vpcs', id);
@@ -236,7 +236,7 @@ export const deleteVPC = (mockState: MockState) => [
 
 export const createSubnet = (mockState: MockState) => [
   http.post(
-    '*/v4/vpcs/:id/subnets',
+    '*/v4beta/vpcs/:id/subnets',
     async ({
       params,
       request,
@@ -286,8 +286,8 @@ export const createSubnet = (mockState: MockState) => [
 ];
 
 export const updateSubnet = (mockState: MockState) => [
-  http.post(
-    '*/v4/vpcs/:id/subnets/:subnetId',
+  http.put(
+    '*/v4beta/vpcs/:id/subnets/:subnetId',
     async ({
       params,
       request,
@@ -303,10 +303,11 @@ export const updateSubnet = (mockState: MockState) => [
 
       const payload = await request.clone().json();
 
-      const updatedSubnet = subnetFactory.build({
+      const updatedSubnet = {
+        ...subnetFromDB[1],
         ...payload,
         updated: DateTime.now().toISO(),
-      });
+      };
 
       const updatedVPC = {
         ...vpc,
@@ -319,7 +320,6 @@ export const updateSubnet = (mockState: MockState) => [
         }),
       };
 
-      // fix
       await mswDB.update(
         'subnets',
         subnetId,
@@ -350,7 +350,7 @@ export const updateSubnet = (mockState: MockState) => [
 
 export const deleteSubnet = (mockState: MockState) => [
   http.delete(
-    '*/v4/vpcs/:id/subnets/:subnetId',
+    '*/v4beta/vpcs/:id/subnets/:subnetId',
     async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
       const vpcId = Number(params.id);
       const subnetId = Number(params.subnetId);
@@ -395,7 +395,7 @@ const vpcIPs = vpcIPFactory.buildList(10);
 
 export const getVPCIPs = () => [
   http.get(
-    '*/v4/vpcs/ips',
+    '*/v4beta/vpcs/ips',
     async ({
       request,
     }): Promise<
@@ -409,7 +409,7 @@ export const getVPCIPs = () => [
   ),
 
   http.get(
-    '*/v4/:vpcId/ips',
+    '*/v4beta/:vpcId/ips',
     async ({
       params,
       request,
