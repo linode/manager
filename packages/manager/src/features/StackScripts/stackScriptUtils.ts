@@ -36,16 +36,6 @@ const oneClickFilter = [
 export const getOneClickApps = (params?: Params) =>
   getStackScripts(params, oneClickFilter);
 
-export const getStackScriptsByUser: StackScriptsRequest = (
-  username: string,
-  params?: Params,
-  filter?: Filter
-) =>
-  getStackScripts(params, {
-    ...filter,
-    username,
-  });
-
 export const getMineAndAccountStackScripts: StackScriptsRequest = (
   params?: Params,
   filter?: Filter
@@ -156,6 +146,42 @@ export const canUserModifyAccountStackScript = (
 
   // User must have "read_write" permissions to modify StackScript
   return grantsForThisStackScript.permissions === 'read_write';
+};
+
+/**
+ * Gets a comma separated string of Image IDs to display to the user
+ * with the linode/ prefix removed from the Image IDs
+ */
+export const getStackScriptImages = (images: StackScript['images']) => {
+  const cleanedImages: string[] = [];
+
+  for (const image of images) {
+    if (image === 'any/all') {
+      return 'Any/All';
+    }
+
+    if (!image) {
+      // Sometimes the API returns `null` in the images array 😳
+      continue;
+    }
+
+    if (image.startsWith('linode/')) {
+      cleanedImages.push(image.split('linode/')[1]);
+    } else {
+      cleanedImages.push(image);
+    }
+  }
+
+  return cleanedImages.join(', ');
+};
+/**
+ * Determines if a StackScript is a StackScript created by LKE.
+ *
+ * This function exists because the API returns these but we try
+ * to hide these StackScripts from the user in the UI.
+ */
+export const isLKEStackScript = (stackscript: StackScript) => {
+  return stackscript.username.startsWith('lke-service-account-');
 };
 
 export const stackscriptFieldNameOverrides: Partial<

@@ -16,9 +16,11 @@ const StackScriptsDetail = React.lazy(() =>
     default: module.StackScriptDetail,
   }))
 );
-
-const StackScriptsLanding = React.lazy(() => import('./StackScriptsLanding'));
-
+const StackScriptsLanding = React.lazy(() =>
+  import('./StackScriptLanding/StackScriptsLanding').then((module) => ({
+    default: module.StackScriptsLanding,
+  }))
+);
 const StackScriptCreate = React.lazy(() =>
   import('./StackScriptCreate/StackScriptCreate').then((module) => ({
     default: module.StackScriptCreate,

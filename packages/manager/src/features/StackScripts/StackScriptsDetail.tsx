@@ -13,6 +13,7 @@ import {
   useUpdateStackScriptMutation,
 } from 'src/queries/stackscripts';
 
+import { getRestrictedResourceText } from '../Account/utils';
 import {
   canUserModifyAccountStackScript,
   getStackScriptUrl,
@@ -93,6 +94,13 @@ export const StackScriptDetail = () => {
               }
             : undefined,
           pathname: location.pathname,
+        }}
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Linodes',
+          }),
         }}
         createButtonText="Deploy New Linode"
         disabledCreateButton={userCannotAddLinodes}

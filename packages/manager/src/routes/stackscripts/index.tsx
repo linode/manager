@@ -17,27 +17,27 @@ const stackScriptsLandingRoute = createRoute({
   getParentRoute: () => stackScriptsRoute,
   path: '/',
 }).lazy(() =>
-  import('src/features/StackScripts/StackScriptsLanding').then(
-    (m) => m.stackScriptsLandingLazyRoute
-  )
+  import(
+    'src/features/StackScripts/StackScriptLanding/StackScriptsLanding'
+  ).then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsAccountRoute = createRoute({
   getParentRoute: () => stackScriptsRoute,
   path: 'account',
 }).lazy(() =>
-  import('src/features/StackScripts/StackScriptsLanding').then(
-    (m) => m.stackScriptsLandingLazyRoute
-  )
+  import(
+    'src/features/StackScripts/StackScriptLanding/StackScriptsLanding'
+  ).then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsCommunityRoute = createRoute({
   getParentRoute: () => stackScriptsRoute,
   path: 'community',
 }).lazy(() =>
-  import('src/features/StackScripts/StackScriptsLanding').then(
-    (m) => m.stackScriptsLandingLazyRoute
-  )
+  import(
+    'src/features/StackScripts/StackScriptLanding/StackScriptsLanding'
+  ).then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsCreateRoute = createRoute({

@@ -227,7 +227,7 @@ describe('Update stackscripts', () => {
       .should('be.visible')
       .click();
     ui.dialog
-      .findByTitle('Woah, just a word of caution...')
+      .findByTitle(`Make StackScript ${stackScripts[0].label} Public?`)
       .should('be.visible')
       .within(() => {
         ui.button.findByTitle('Cancel').should('be.visible').click();
@@ -262,11 +262,11 @@ describe('Update stackscripts', () => {
       'mockGetStackScripts'
     );
     ui.dialog
-      .findByTitle('Woah, just a word of caution...')
+      .findByTitle(`Make StackScript ${stackScripts[0].label} Public?`)
       .should('be.visible')
       .within(() => {
         ui.button
-          .findByTitle('Yes, make me a star!')
+          .findByTitle('Confirm')
           .should('be.visible')
           .click();
       });
