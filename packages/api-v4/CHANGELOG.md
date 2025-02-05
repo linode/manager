@@ -1,3 +1,32 @@
+## [2025-02-11] - v0.134.0
+
+
+### Added:
+
+- Labels and Taints types and params ([#11528](https://github.com/linode/manager/pull/11528))
+- api request to fetch NotificationChannels ([#11547](https://github.com/linode/manager/pull/11547))
+- `service-transfer` related endpoints ([#11562](https://github.com/linode/manager/pull/11562))
+- `billing_agreement` to Agreements interface ([#11563](https://github.com/linode/manager/pull/11563))
+- Add `Enhanced Interfaces` to a Region's `Capabilities` ([#11584](https://github.com/linode/manager/pull/11584))
+- New database statuses for database_migration event ([#11590](https://github.com/linode/manager/pull/11590))
+
+### Changed:
+
+- Quotas API spec to make region field optional ([#11551](https://github.com/linode/manager/pull/11551))
+- Update Taint value to allow undefined ([#11553](https://github.com/linode/manager/pull/11553))
+- Mark `entity-transfers` related endpoints as deprecated ([#11562](https://github.com/linode/manager/pull/11562))
+
+### Upcoming Features:
+
+- update types for iam ([#11423](https://github.com/linode/manager/pull/11423))
+- Add new API types and endpoints for Linode Interfaces project: `/v4/linodes/instances` ([#11527](https://github.com/linode/manager/pull/11527))
+- update types for iam ([#11533](https://github.com/linode/manager/pull/11533))
+- Add and update `/v4/networking` endpoints and types for Linode Interfaces ([#11559](https://github.com/linode/manager/pull/11559))
+- Update `/v4/account` and `/v4/vpcs` endpoints and types for upcoming Linode Interfaces project ([#11562](https://github.com/linode/manager/pull/11562))
+- Update existing `v4/linodes/instances` endpoints and types for Linode Interfaces project ([#11566](https://github.com/linode/manager/pull/11566))
+- Add new `editAlertDefinition` endpoint to edit the resources associated with CloudPulse alerts ([#11583](https://github.com/linode/manager/pull/11583))
+- Add support for quotas usage endpoint ([#11597](https://github.com/linode/manager/pull/11597))
+
 ## [2025-01-28] - v0.133.0
 
 ### Changed:
