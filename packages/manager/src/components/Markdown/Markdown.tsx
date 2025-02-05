@@ -61,7 +61,7 @@ export const Markdown = (props: HighlightedMarkdownProps) => {
     <Typography
       className={className}
       dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-      sx={{ pre: { borderRadius: 1, p: 1 } }}
+      sx={{ pre: { borderRadius: 1, overflowX: 'auto', p: 1 } }}
     />
   );
 };
