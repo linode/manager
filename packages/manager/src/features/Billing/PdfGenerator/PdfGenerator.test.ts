@@ -156,44 +156,38 @@ describe('PdfGenerator', () => {
     };
 
     // Test cases
-    const tests: [string, Account, Taxes, Invoice][] = [
+    const tests: [string, [Account, Taxes, Invoice]][] = [
       [
         'International accounts',
-        accountInternational1,
-        taxesInternational1,
-        invoice,
+        [accountInternational1, taxesInternational1, invoice],
       ],
       [
         'International accounts with no taxes',
-        accountInternational1,
-        undefined,
-        invoice,
+        [accountInternational1, undefined, invoice],
       ],
       [
         'International (AE) accounts',
-        accountInternational2,
-        taxesInternational2,
-        invoice,
+        [accountInternational2, taxesInternational2, invoice],
       ],
       [
         'International accounts After DC Pricing Launch',
-        accountInternational1,
-        taxesInternational1,
-        invoiceAfterDCPricingLaunch,
+        [
+          accountInternational1,
+          taxesInternational1,
+          invoiceAfterDCPricingLaunch,
+        ],
       ],
-      ['US accounts', accountUS, taxesUS, invoice],
-      ['CA accounts', accountCA, taxesCA, invoice],
+      ['US accounts', [accountUS, taxesUS, invoice]],
+      ['CA accounts', [accountCA, taxesCA, invoice]],
       [
         'CA accounts After DC Pricing Launch',
-        accountCA,
-        taxesCA,
-        invoiceAfterDCPricingLaunch,
+        [accountCA, taxesCA, invoiceAfterDCPricingLaunch],
       ],
     ];
 
     it.each(tests)(
       'generates a valid PDF for %s',
-      async (type, account, taxes, invoice) => {
+      async (type, [account, taxes, invoice]) => {
         server.use(
           http.get('/src/features/Billing/PdfGenerator/akamai-logo.png', () => {
             return HttpResponse.json({});
@@ -207,17 +201,6 @@ describe('PdfGenerator', () => {
           timezone,
         });
         const hasRegionColumn = type.includes('After DC Pricing Launch');
-
-        // console.log(
-        //   'remit to----->',
-        //   getExpectedRemitAddressText(
-        //     account.country,
-        //     isAkamaiBilling,
-        //     isInternational
-        //   )
-        // );
-        // console.log('isAkamaiBilling', isAkamaiBilling);
-        // console.log('country---->', account.country);
 
         // Call the printInvoice function
         const pdfResult = await printInvoice({
