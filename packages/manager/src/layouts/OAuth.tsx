@@ -72,11 +72,11 @@ export class OAuthCallbackPage extends Component<RouteComponentProps, {}> {
       location.search
     ) as OAuthQueryParams;
 
-    if (!code || !returnTo || !nonce) {
+    if (!code || !nonce) {
       clearStorageAndRedirectToLogout();
     }
 
-    this.exchangeAuthorizationCodeForToken(code, returnTo, nonce);
+    this.exchangeAuthorizationCodeForToken(code, returnTo ?? '/', nonce);
   }
 
   createFormData(
