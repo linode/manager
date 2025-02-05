@@ -265,7 +265,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   },
                 })}
                 data-testid="show_selected_only"
-                disabled={!(Boolean(selectedResources.length) || selectedOnly)}
+                disabled={!(selectedResources.length || selectedOnly)}
                 onClick={() => setSelectedOnly(!selectedOnly)}
                 text="Show Selected Only"
                 value="Show Selected"

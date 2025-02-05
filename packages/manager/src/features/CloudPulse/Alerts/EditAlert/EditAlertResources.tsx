@@ -31,7 +31,7 @@ export const EditAlertResources = () => {
   const definitionLanding = '/monitor/alerts/definitions';
 
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
-    Number(alertId),
+    alertId,
     serviceType
   );
 
