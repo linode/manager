@@ -31,8 +31,6 @@ export type UpdateFirewallRules = Omit<
   'fingerprint' | 'version'
 >;
 
-// @TODO Linode Interfaces - follow up on if FirewallTemplate rules have the fingerprint / version fields.
-// FirewallRules do, but the objects returned from the getFirewallTemplate requests don't
 export type FirewallTemplateRules = UpdateFirewallRules;
 
 export interface FirewallRuleType {

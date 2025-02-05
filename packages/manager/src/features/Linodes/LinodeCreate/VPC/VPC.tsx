@@ -32,6 +32,8 @@ import { VPCRanges } from './VPCRanges';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
+// @TODO Linode Interfaces - need to handle case if interface is not legacy
+
 export const VPC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
@@ -287,12 +289,15 @@ export const VPC = () => {
                   <Typography fontFamily={(theme) => theme.font.bold}>
                     Assign additional IPv4 ranges
                   </Typography>
-                  {formState.errors.interfaces?.[1]?.ip_ranges?.message && (
-                    <Notice
-                      text={formState.errors.interfaces[1]?.ip_ranges?.message}
-                      variant="error"
-                    />
-                  )}
+                  {formState.errors.interfaces?.[1] &&
+                    'ip_ranges' in formState.errors.interfaces?.[1] && (
+                      <Notice
+                        text={
+                          formState.errors.interfaces[1]?.ip_ranges?.message
+                        }
+                        variant="error"
+                      />
+                    )}
                   <Typography>
                     Assign additional IPv4 address ranges that the VPC can use
                     to reach services running on this Linode.{' '}
@@ -301,12 +306,15 @@ export const VPC = () => {
                     </Link>
                     .
                   </Typography>
-                  {formState.errors.interfaces?.[0]?.ip_ranges?.message && (
-                    <Notice
-                      text={formState.errors.interfaces[0]?.ip_ranges?.message}
-                      variant="error"
-                    />
-                  )}
+                  {formState.errors.interfaces?.[0] &&
+                    'ip_ranges' in formState.errors.interfaces[0] && (
+                      <Notice
+                        text={
+                          formState.errors.interfaces[0]?.ip_ranges?.message
+                        }
+                        variant="error"
+                      />
+                    )}
                   <VPCRanges />
                 </>
               )}

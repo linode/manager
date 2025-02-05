@@ -19,9 +19,14 @@ export const getSubnetInterfaceFromConfigs = (
   subnetId: number
 ) => {
   for (const config of configs) {
-    for (const linodeInterface of config.interfaces) {
-      if (linodeInterface.ipv4?.vpc && linodeInterface.subnet_id === subnetId) {
-        return linodeInterface;
+    if (config.interfaces) {
+      for (const linodeInterface of config.interfaces) {
+        if (
+          linodeInterface.ipv4?.vpc &&
+          linodeInterface.subnet_id === subnetId
+        ) {
+          return linodeInterface;
+        }
       }
     }
   }
@@ -47,7 +52,7 @@ export const hasUnrecommendedConfiguration = (
     */
 
     if (
-      configInterfaces.some((_interface) => _interface.subnet_id === subnetId)
+      configInterfaces?.some((_interface) => _interface.subnet_id === subnetId)
     ) {
       const nonExplicitPrimaryVPCInterfaceIndex = configInterfaces.findIndex(
         (_interface) =>
