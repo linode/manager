@@ -2,7 +2,7 @@ import { Grid, Paper } from '@mui/material';
 import React from 'react';
 
 import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
 
 export const CloudPulseErrorPlaceholder = React.memo(
   (props: { errorMessage: string }) => {
@@ -10,7 +10,7 @@ export const CloudPulseErrorPlaceholder = React.memo(
     return (
       <Grid item xs={12}>
         <Paper>
-          <Placeholder
+          <StyledPlaceholder
             icon={CloudPulseIcon}
             isEntity
             subtitle={errorMessage}
