@@ -491,8 +491,18 @@ export const mswDB = {
             findItem(item, id)
           );
           if (index !== -1) {
-            Object.assign(mockState[entity][index], payload);
-            Object.assign(state[entity][index], payload);
+            const entityToUpdate = mockState[entity][index];
+            if (Array.isArray(entityToUpdate) && entityToUpdate.length >= 2) {
+              // If the entity is a tuple, update it accordingly
+              Object.assign(mockState[entity][index], [
+                entityToUpdate[0],
+                payload,
+              ]);
+              Object.assign(state[entity][index], [entityToUpdate[0], payload]);
+            } else {
+              Object.assign(mockState[entity][index], payload);
+              Object.assign(state[entity][index], payload);
+            }
 
             const updatedRequest = store.put({ id: 1, ...mockState });
             updatedRequest.onsuccess = () => resolve();
@@ -508,16 +518,28 @@ export const mswDB = {
             return;
           }
 
-          const index = seedState[entity].findIndex(
-            (item: { id: number }) => item.id === id
+          const index = seedState[
+            entity
+          ].findIndex((item: [number, { id: number }] | { id: number }) =>
+            findItem(item, id)
           );
           if (index === -1) {
             reject(new Error('Item not found'));
             return;
           }
 
-          Object.assign(seedState[entity][index], payload);
-          Object.assign(state[entity][index], payload);
+          const entityToUpdate = seedState[entity][index];
+          if (Array.isArray(entityToUpdate) && entityToUpdate.length >= 2) {
+            // If the entity is a tuple, update it accordingly
+            Object.assign(seedState[entity][index], [
+              entityToUpdate[0],
+              payload,
+            ]);
+            Object.assign(state[entity][index], [entityToUpdate[0], payload]);
+          } else {
+            Object.assign(seedState[entity][index], payload);
+            Object.assign(state[entity][index], payload);
+          }
 
           const updatedSeedRequest = seedStore.put({ id: 1, ...seedState });
           updatedSeedRequest.onsuccess = () => resolve();
