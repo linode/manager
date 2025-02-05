@@ -7,19 +7,13 @@
  */
 
 import { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { authentication } from 'src/utilities/storage';
 
-import type { MapDispatchToProps } from 'react-redux';
 import type { RouteComponentProps } from 'react-router-dom';
 import type { BaseQueryParams } from 'src/utilities/queryParams';
-
-interface LoginAsCustomerCallbackProps
-  extends DispatchProps,
-    RouteComponentProps {}
 
 interface QueryParams extends BaseQueryParams {
   access_token: string;
@@ -28,7 +22,7 @@ interface QueryParams extends BaseQueryParams {
   token_type: string;
 }
 
-export class LoginAsCustomerCallback extends PureComponent<LoginAsCustomerCallbackProps> {
+export class LoginAsCustomerCallback extends PureComponent<RouteComponentProps> {
   componentDidMount() {
     /**
      * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
@@ -75,11 +69,8 @@ export class LoginAsCustomerCallback extends PureComponent<LoginAsCustomerCallba
     /**
      * We have all the information we need and can persist it to localStorage and Redux.
      */
-    this.props.dispatchStartSession(
-      accessToken,
-      tokenType,
-      expireDate.toString()
-    );
+    authentication.token.set(`Admin ${accessToken}`);
+    authentication.expire.set(expireDate.toString());
 
     /**
      * All done, redirect to the destination from the hash params
@@ -93,31 +84,4 @@ export class LoginAsCustomerCallback extends PureComponent<LoginAsCustomerCallba
   }
 }
 
-interface DispatchProps {
-  dispatchStartSession: (
-    token: string,
-    tokenType: string,
-    expires: string
-  ) => void;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch
-) => {
-  return {
-    dispatchStartSession: (token, tokenType, expires) =>
-      dispatch(
-        handleStartSession({
-          expires,
-          scopes: '*',
-          token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
-            1
-          )} ${token}`,
-        })
-      ),
-  };
-};
-
-const connected = connect(undefined, mapDispatchToProps);
-
-export default connected(withRouter(LoginAsCustomerCallback));
+export default withRouter(LoginAsCustomerCallback);

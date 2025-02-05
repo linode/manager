@@ -1,7 +1,6 @@
 import { dark, light } from '@linode/ui';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { useAuthentication } from 'src/hooks/useAuthentication';
 import { usePreferences } from 'src/queries/profile/preferences';
 
 import type { ThemeName } from '@linode/ui';
@@ -52,13 +51,9 @@ export const getThemeFromPreferenceValue = (
 };
 
 export const useColorMode = () => {
-  const isAuthenticated = !!useAuthentication().token;
-
   const { data: themePreference } = usePreferences(
     (preferences) => preferences?.theme,
-    // Make sure we are authenticated before we fetch preferences.
-    // If we don't, we get an authentication loop.
-    isAuthenticated
+    false
   );
 
   const isSystemInDarkMode = useMediaQuery('(prefers-color-scheme: dark)');

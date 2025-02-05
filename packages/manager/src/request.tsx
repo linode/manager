@@ -2,10 +2,10 @@ import { baseRequest } from '@linode/api-v4/lib/request';
 import { AxiosHeaders } from 'axios';
 
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
-import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
-import { getEnvLocalStorageOverrides } from './utilities/storage';
+import { clearStorageAndRedirectToLogout } from './layouts/OAuth';
+import { authentication, getEnvLocalStorageOverrides } from './utilities/storage';
 
 import type { ApplicationStore } from './store';
 import type { Profile } from '@linode/api-v4';
@@ -30,11 +30,8 @@ export const handleError = (
   store: ApplicationStore
 ) => {
   if (error.response && error.response.status === 401) {
-    /**
-     * this will blow out redux state and the componentDidUpdate in the
-     * AuthenticationWrapper.tsx will be responsible for redirecting to Login
-     */
-    store.dispatch(handleLogout());
+    // redirectToLogin(window.location.pathname);
+    clearStorageAndRedirectToLogout();
   }
 
   const status: number = error.response?.status ?? 0;
@@ -122,9 +119,8 @@ export const isSuccessfulGETProfileResponse = (
 
 export const setupInterceptors = (store: ApplicationStore) => {
   baseRequest.interceptors.request.use((config) => {
-    const state = store.getState();
     /** Will end up being "Admin 1234" or "Bearer 1234" */
-    const token = ACCESS_TOKEN || (state.authentication?.token ?? '');
+    const token = ACCESS_TOKEN || authentication.token.get();
 
     const url = getURL(config);
 

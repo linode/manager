@@ -6,15 +6,13 @@ import { Drawer } from 'src/components/Drawer';
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
-import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getStorage, setStorage } from 'src/utilities/storage';
+import { authentication, getStorage, setStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
 import type { APIError, UserType } from '@linode/api-v4';
-import type { State as AuthState } from 'src/store/authentication';
 
 interface Props {
   onClose: () => void;
@@ -23,7 +21,7 @@ interface Props {
 }
 
 interface HandleSwitchToChildAccountProps {
-  currentTokenWithBearer?: AuthState['token'];
+  currentTokenWithBearer?: string;
   euuid: string;
   event: React.MouseEvent<HTMLElement>;
   onClose: (e: React.SyntheticEvent<HTMLElement>) => void;
@@ -41,7 +39,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   const isProxyUser = userType === 'proxy';
   const currentParentTokenWithBearer =
     getStorage('authentication/parent_token/token') ?? '';
-  const currentTokenWithBearer = useCurrentToken() ?? '';
+  const currentTokenWithBearer = authentication.token.get();
 
   const {
     createToken,

@@ -1,11 +1,9 @@
-import { Component, useEffect, useState } from 'react';
+import { Component } from 'react';
 import React from 'react';
-import { connect } from 'react-redux';
 import { useLocation, withRouter } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
-import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import {
   clearNonceAndCodeVerifierFromLocalStorage,
   clearTokenDataFromLocalStorage,
@@ -19,8 +17,6 @@ import {
 import type { RouteComponentProps } from 'react-router-dom';
 import { redirectToLogin } from 'src/session';
 
-export type CombinedProps = DispatchProps & RouteComponentProps;
-
 const localStorageOverrides = getEnvLocalStorageOverrides();
 const loginURL = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
 const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
@@ -31,25 +27,21 @@ export type OAuthQueryParams = {
   state: string; // nonce
 };
 
-type DispatchProps = {
-  dispatchStartSession: (
-    token: string,
-    tokenType: string,
-    scopes: string,
-    expiry: string
-  ) => void;
-};
-
 export function useOAuth() {
   const location = useLocation();
+  const hasToken = authentication.token.get();
   const isLoading =
     location.pathname.includes('/oauth/callback') ||
     window.location.pathname.includes('/oauth/callback');
 
+  if (!hasToken && !window.location.pathname.includes('/oauth/callback')) {
+    redirectToLogin(window.location.pathname);
+  }
+
   return { isLoading };
 }
 
-export class OAuthCallbackPage extends Component<CombinedProps, {}> {
+export class OAuthCallbackPage extends Component<RouteComponentProps, {}> {
   checkNonce(nonce: string) {
     // nonce should be set and equal to ours otherwise retry auth
     const storedNonce = authentication.nonce.get();
@@ -146,12 +138,9 @@ export class OAuthCallbackPage extends Component<CombinedProps, {}> {
             expireDate.getTime() + +tokenParams.expires_in * 1000
           );
 
-          this.props.dispatchStartSession(
-            tokenParams.access_token,
-            tokenParams.token_type,
-            tokenParams.scopes,
-            expireDate.toString()
-          );
+          authentication.scopes.set(tokenParams.scopes);
+          authentication.token.set(`Bearer ${tokenParams.access_token}`);
+          authentication.expire.set(expireDate.toString());
 
           /**
            * All done, redirect this bad-boy to the returnTo URL we generated earlier.
@@ -173,7 +162,7 @@ export class OAuthCallbackPage extends Component<CombinedProps, {}> {
   }
 }
 
-const clearStorageAndRedirectToLogout = () => {
+export const clearStorageAndRedirectToLogout = () => {
   clearLocalStorage();
   window.location.assign(loginURL + '/logout');
 };
@@ -183,19 +172,4 @@ const clearLocalStorage = () => {
   clearTokenDataFromLocalStorage();
 };
 
-const mapDispatchToProps = (dispatch: any): DispatchProps => ({
-  dispatchStartSession: (token, tokenType, scopes, expiry) =>
-    dispatch(
-      handleStartSession({
-        expires: expiry,
-        scopes,
-        token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
-          1
-        )} ${token}`,
-      })
-    ),
-});
-
-const connected = connect(undefined, mapDispatchToProps);
-
-export default connected(withRouter(OAuthCallbackPage));
+export default withRouter(OAuthCallbackPage);

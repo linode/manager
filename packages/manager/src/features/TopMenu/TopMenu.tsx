@@ -5,7 +5,6 @@ import * as React from 'react';
 import { AppBar } from 'src/components/AppBar';
 import { Hidden } from 'src/components/Hidden';
 import { Toolbar } from 'src/components/Toolbar';
-import { useAuthentication } from 'src/hooks/useAuthentication';
 
 import { Community } from './Community';
 import { CreateMenu } from './CreateMenu/CreateMenu';
@@ -14,6 +13,7 @@ import { NotificationMenu } from './NotificationMenu/NotificationMenu';
 import { SearchBar } from './SearchBar/SearchBar';
 import { TopMenuTooltip } from './TopMenuTooltip';
 import { UserMenu } from './UserMenu';
+import { authentication } from 'src/utilities/storage';
 
 export interface TopMenuProps {
   desktopMenuToggle: () => void;
@@ -29,7 +29,7 @@ export interface TopMenuProps {
 export const TopMenu = React.memo((props: TopMenuProps) => {
   const { desktopMenuToggle, isSideMenuOpen, openSideMenu, username } = props;
 
-  const { loggedInAsCustomer } = useAuthentication();
+  const loggedInAsCustomer = authentication.token.get().toLowerCase().startsWith('admin');
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'

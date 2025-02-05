@@ -6,10 +6,10 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { timezones } from 'src/assets/timezones/timezones';
-import { useAuthentication } from 'src/hooks/useAuthentication';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 import type { Profile } from '@linode/api-v4';
+import { authentication } from 'src/utilities/storage';
 
 type Timezone = typeof timezones[number];
 
@@ -40,7 +40,7 @@ const timezoneOptions = getTimezoneOptions();
 type Values = Pick<Profile, 'timezone'>;
 
 export const TimezoneForm = () => {
-  const { loggedInAsCustomer } = useAuthentication();
+  const loggedInAsCustomer = authentication.token.get().toLowerCase().startsWith('admin');
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
