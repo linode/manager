@@ -10,15 +10,15 @@ import {
 } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';
+import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utilities/pricing/constants';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { printInvoice } from './PdfGenerator';
 
-import type { Account } from '@linode/api-v4/lib/account/types';
+import type { Account, Invoice } from '@linode/api-v4/lib/account/types';
 import type { FlagSet } from 'src/featureFlags';
 
 type Taxes = FlagSet['taxBanner'] | FlagSet['taxes'];
-type AccountType = 'CA' | 'International (AE)' | 'International (IN)' | 'US';
 
 const getExpectedRemitAddressText = (
   country: string,
@@ -70,20 +70,27 @@ const extractPdfText = (pdfDataBuffer: Buffer): Promise<string> => {
 
 describe('PdfGenerator', () => {
   describe('printInvoice', () => {
+    // Mock invoices
     const invoice = invoiceFactory.build({ label: 'invoice-test-1' });
+    const invoiceAfterDCPricingLaunch = invoiceFactory.build({
+      date: new Date(
+        MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED
+      ).toISOString(),
+      label: 'invoice-test-2',
+    });
+
+    // Mock items
     const items = invoiceItemFactory.buildList(5, {
       region: 'id-cgk',
     });
+
+    // Mock regions and timezone
     const regions = regionFactory.buildList(1, {
       id: 'id-cgk',
     });
-    const isAkamaiBilling = getShouldUseAkamaiBilling(invoice.date);
     const timezone = 'UTC';
-    const date = formatDate(invoice.date, {
-      displayTime: true,
-      timezone,
-    });
 
+    // Mock International, US and CA accounts accounts
     const accountInternational1 = accountFactory.build({
       city: 'Mumbai',
       country: 'IN',
@@ -101,6 +108,7 @@ describe('PdfGenerator', () => {
       zip: 'T2A',
     });
 
+    // Mock Intertnational, US and CA taxes
     const taxesInternational1: Taxes = {
       country_tax: {
         tax_id: '9922CHE29001OSR',
@@ -147,16 +155,45 @@ describe('PdfGenerator', () => {
       },
     };
 
-    const tests: [AccountType, Account, Taxes][] = [
-      ['International (IN)', accountInternational1, taxesInternational1],
-      ['International (AE)', accountInternational2, taxesInternational2],
-      ['US', accountUS, taxesUS],
-      ['CA', accountCA, taxesCA],
+    // Test cases
+    const tests: [string, Account, Taxes, Invoice][] = [
+      [
+        'International accounts',
+        accountInternational1,
+        taxesInternational1,
+        invoice,
+      ],
+      [
+        'International accounts with no taxes',
+        accountInternational1,
+        undefined,
+        invoice,
+      ],
+      [
+        'International (AE) accounts',
+        accountInternational2,
+        taxesInternational2,
+        invoice,
+      ],
+      [
+        'International accounts After DC Pricing Launch',
+        accountInternational1,
+        taxesInternational1,
+        invoiceAfterDCPricingLaunch,
+      ],
+      ['US accounts', accountUS, taxesUS, invoice],
+      ['CA accounts', accountCA, taxesCA, invoice],
+      [
+        'CA accounts After DC Pricing Launch',
+        accountCA,
+        taxesCA,
+        invoiceAfterDCPricingLaunch,
+      ],
     ];
 
     it.each(tests)(
-      'generates a valid PDF for %s accounts',
-      async (_, account, taxes) => {
+      'generates a valid PDF for %s',
+      async (type, account, taxes, invoice) => {
         server.use(
           http.get('/src/features/Billing/PdfGenerator/akamai-logo.png', () => {
             return HttpResponse.json({});
@@ -164,6 +201,23 @@ describe('PdfGenerator', () => {
         );
 
         const isInternational = !['CA', 'US'].includes(account.country);
+        const isAkamaiBilling = getShouldUseAkamaiBilling(invoice.date);
+        const formatedDate = formatDate(invoice.date, {
+          displayTime: true,
+          timezone,
+        });
+        const hasRegionColumn = type.includes('After DC Pricing Launch');
+
+        // console.log(
+        //   'remit to----->',
+        //   getExpectedRemitAddressText(
+        //     account.country,
+        //     isAkamaiBilling,
+        //     isInternational
+        //   )
+        // );
+        // console.log('isAkamaiBilling', isAkamaiBilling);
+        // console.log('country---->', account.country);
 
         // Call the printInvoice function
         const pdfResult = await printInvoice({
@@ -179,7 +233,7 @@ describe('PdfGenerator', () => {
         expect(pdfResult.status).toEqual('success');
 
         // Load the generated PDF content
-        const pdfDataBuffer = fs.readFileSync(`invoice-${date}.pdf`);
+        const pdfDataBuffer = fs.readFileSync(`invoice-${formatedDate}.pdf`);
         const pdfText = await extractPdfText(pdfDataBuffer);
 
         // Check the content of the PDF
@@ -193,7 +247,10 @@ describe('PdfGenerator', () => {
             isInternational
           )}`
         );
-        expect(pdfText).toContain('Tax ID(s):');
+
+        if (taxes) {
+          expect(pdfText).toContain('Tax ID(s):');
+        }
 
         if (account.country === 'AE') {
           expect(pdfText).toContain(`Tax Invoice: #${invoice.id}`);
@@ -207,6 +264,7 @@ describe('PdfGenerator', () => {
           'From',
           'To',
           'Quantity',
+          ...(hasRegionColumn ? ['Region'] : []),
           'Unit Price',
           'Amount',
           'Tax',
@@ -221,6 +279,9 @@ describe('PdfGenerator', () => {
           expect(pdfText).toContain(row.amount);
           expect(pdfText).toContain(row.label.replace(' -', ''));
           expect(pdfText).toContain(row.quantity);
+          if (hasRegionColumn) {
+            expect(pdfText).toContain(row.region);
+          }
           expect(pdfText).toContain(row.unit_price);
           expect(pdfText).toContain(row.tax);
           expect(pdfText).toContain(row.total);
@@ -237,7 +298,7 @@ describe('PdfGenerator', () => {
         );
 
         // Cleanup: Delete the generated PDF file after testing
-        fs.unlinkSync(`invoice-${date}.pdf`);
+        fs.unlinkSync(`invoice-${formatedDate}.pdf`);
       }
     );
   });
