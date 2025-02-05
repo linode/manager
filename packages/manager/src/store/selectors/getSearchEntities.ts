@@ -91,7 +91,7 @@ export const imageToSearchableItem = (image: Image): SearchableItem => ({
     description: image.description || '',
     icon: 'image',
     /* TODO: Choose a real location for this to link to */
-    path: `/images?query=${image.label}`,
+    path: `/images?query="${image.label}"`,
     tags: [],
   },
   entityType: 'image',
@@ -157,7 +157,7 @@ export const bucketToSearchableItem = (
   data: {
     cluster: bucket.cluster,
     created: bucket.created,
-    description: readableBytes(bucket.size).formatted,
+    description: readableBytes(bucket.size, { base10: true }).formatted,
     icon: 'storage',
     label: bucket.label,
     path: `/object-storage/buckets/${bucket.cluster}/${bucket.label}`,

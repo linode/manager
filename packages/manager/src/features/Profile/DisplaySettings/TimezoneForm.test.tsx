@@ -27,9 +27,7 @@ describe('Timezone change form', () => {
   });
 
   it('should show a message if an admin is logged in as a customer', async () => {
-    const { getByTestId } = renderWithTheme(<TimezoneForm />, {
-      customStore: { authentication: { loggedInAsCustomer: true } },
-    });
+    const { getByTestId } = renderWithTheme(<TimezoneForm />);
 
     expect(getByTestId('admin-notice')).toBeInTheDocument();
   });
@@ -41,9 +39,7 @@ describe('Timezone change form', () => {
   });
 
   it("should include text with the user's current time zone in the admin warning", async () => {
-    const { queryByTestId } = renderWithTheme(<TimezoneForm />, {
-      customStore: { authentication: { loggedInAsCustomer: true } },
-    });
+    const { queryByTestId } = renderWithTheme(<TimezoneForm />);
 
     await waitFor(() => {
       expect(queryByTestId('admin-notice')).toHaveTextContent(

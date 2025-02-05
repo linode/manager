@@ -4,6 +4,7 @@
 
 import { randomLabel, randomNumber } from 'support/util/random';
 import {
+  mockGetPlacementGroup,
   mockGetPlacementGroups,
   mockUpdatePlacementGroup,
   mockUpdatePlacementGroupError,
@@ -48,6 +49,7 @@ describe('Placement Group update label flow', () => {
     };
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     mockUpdatePlacementGroup(
       mockPlacementGroup.id,
@@ -114,6 +116,7 @@ describe('Placement Group update label flow', () => {
     };
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     mockUpdatePlacementGroupError(
       mockPlacementGroup.id,

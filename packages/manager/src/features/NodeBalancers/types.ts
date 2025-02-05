@@ -41,9 +41,10 @@ export interface NodeBalancerConfigPanelProps {
   algorithm: Algorithm;
   checkBody: string;
   checkPassive: boolean;
+  udpCheckPort: number;
 
   checkPath: string;
-  configIdx?: number;
+  configIdx: number;
   disabled?: boolean;
   errors?: APIError[];
 
@@ -65,6 +66,8 @@ export interface NodeBalancerConfigPanelProps {
   onCheckPassiveChange: (v: boolean) => void;
   onCheckPathChange: (v: string) => void;
 
+  onUdpCheckPortChange: (v: number) => void;
+
   onDelete?: any;
   onHealthCheckAttemptsChange: (v: number | string) => void;
 
@@ -83,11 +86,11 @@ export interface NodeBalancerConfigPanelProps {
   onPortChange: (v: number | string) => void;
   onPrivateKeyChange: (v: string) => void;
 
-  onProtocolChange: (v: string) => void;
-  onProxyProtocolChange: (v: string) => void;
+  onProtocolChange: (v: Protocol) => void;
+  onProxyProtocolChange: (v: NodeBalancerProxyProtocol) => void;
 
   onSave?: () => void;
-  onSessionStickinessChange: (v: string) => void;
+  onSessionStickinessChange: (v: Stickiness) => void;
 
   onSslCertificateChange: (v: string) => void;
   port: number;

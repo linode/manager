@@ -14,6 +14,7 @@ import {
   Interaction,
   NotificationToast,
   Radius,
+  Search,
   Select,
   Spacing,
   Typography,
@@ -287,7 +288,6 @@ export const lightTheme: ThemeOptions = {
           },
           '& svg': {
             fill: Color.Brand[80],
-            stroke: Color.Brand[80],
           },
           '&.Mui-expanded': {
             '& .caret': {
@@ -325,16 +325,15 @@ export const lightTheme: ThemeOptions = {
           },
           '.MuiAutocomplete-popupIndicator': {
             svg: {
-              ':hover': {
-                opacity: 1,
-              },
               fontSize: '28px',
-              opacity: 0.5,
             },
           },
           paddingRight: 4,
           svg: {
-            color: Color.Neutrals[40],
+            ':hover': {
+              color: `${Color.Brand[70]} !important`,
+            },
+            color: `${Search.Default.Icon} !important`,
           },
         },
         groupLabel: {
@@ -374,7 +373,10 @@ export const lightTheme: ThemeOptions = {
           borderTop: 0,
         },
         option: {
-          '&.Mui-focused, :hover': {
+          '&.Mui-focused': {
+            backgroundColor: 'transparent',
+          },
+          '&:hover': {
             backgroundColor: `${primaryColors.main} !important`,
             color: primaryColors.white,
             transition: 'background-color 0.2s',
@@ -442,10 +444,6 @@ export const lightTheme: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         containedPrimary: {
-          // TODO: We can remove this after migration since we can define variants
-          '&.loading': {
-            backgroundColor: primaryColors.text,
-          },
           '&:active': {
             backgroundColor: Button.Primary.Pressed.Background,
           },
@@ -466,10 +464,6 @@ export const lightTheme: ThemeOptions = {
           padding: '2px 20px',
         },
         containedSecondary: {
-          // TODO: We can remove this after migration since we can define variants
-          '&.loading': {
-            color: primaryColors.text,
-          },
           '&:active': {
             backgroundColor: 'transparent',
             borderColor: Button.Secondary.Pressed.Text,
@@ -522,6 +516,26 @@ export const lightTheme: ThemeOptions = {
           transition: 'none',
         },
       },
+      variants: [
+        {
+          props: { color: 'error' },
+          style: {
+            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus': {
+              backgroundColor: Background.Negativesubtle,
+              border: `1px solid ${Border.Negative}`,
+              color: Content.Text.Negative,
+            },
+            '&[aria-disabled="true"]': {
+              backgroundColor: 'transparent',
+              border: `1px solid ${Button.Secondary.Disabled.Border}`,
+              color: Button.Secondary.Disabled.Text,
+            },
+            backgroundColor: 'transparent',
+            border: `1px solid ${Border.Negative}`,
+            color: Content.Text.Negative,
+          },
+        },
+      ],
     },
     MuiButtonBase: {
       styleOverrides: {
@@ -1662,6 +1676,7 @@ export const lightTheme: ThemeOptions = {
     font: Font,
     interaction: Interaction,
     radius: Radius,
+    search: Search,
     spacing: Spacing,
     typography: Typography,
   },

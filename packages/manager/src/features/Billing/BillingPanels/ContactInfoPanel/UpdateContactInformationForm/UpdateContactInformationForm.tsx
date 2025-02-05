@@ -1,4 +1,4 @@
-import { Notice, TextField } from '@linode/ui';
+import { Checkbox, Notice, TextField, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
 import { useFormik } from 'formik';
@@ -7,13 +7,19 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import EnhancedSelect from 'src/components/EnhancedSelect/Select';
+import { Link } from 'src/components/Link';
+import { reportException } from 'src/exceptionReporting';
 import {
   getRestrictedResourceText,
   useIsTaxIdEnabled,
 } from 'src/features/Account/utils';
-import { TAX_ID_HELPER_TEXT } from 'src/features/Billing/constants';
+import {
+  TAX_ID_AGREEMENT_TEXT,
+  TAX_ID_HELPER_TEXT,
+} from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount, useMutateAccount } from 'src/queries/account/account';
+import { useMutateAccountAgreements } from 'src/queries/account/agreements';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -31,9 +37,13 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { data: account } = useAccount();
   const { error, isPending, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>();
   const { data: profile } = useProfile();
+  const [billingAgreementChecked, setBillingAgreementChecked] = React.useState(
+    false
+  );
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
   const isChildUser = profile?.user_type === 'child';
   const isParentUser = profile?.user_type === 'parent';
@@ -68,6 +78,24 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       }
 
       await mutateAsync(clonedValues);
+
+      if (billingAgreementChecked) {
+        try {
+          await updateAccountAgreements({ billing_agreement: true });
+        } catch (error) {
+          let customErrorMessage =
+            'Expected to sign billing agreement, but the request resulted in an error';
+          const apiErrorMessage = error?.[0]?.reason;
+
+          if (apiErrorMessage) {
+            customErrorMessage += `: ${apiErrorMessage}`;
+          }
+
+          reportException(error, {
+            message: customErrorMessage,
+          });
+        }
+      }
 
       // If there's a "billing_email_bounce" notification on the account, and
       // the user has just updated their email, re-request notifications to
@@ -122,14 +150,14 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
    * - region[0] is the readable name of the region (e.g. "Alabama")
    * - region[1] is the ISO 3166-2 code of the region (e.g. "AL")
    */
-  const countryResults: Item<string>[] = allCountries.map((country) => {
+  const countryResults: Item<string>[] = (allCountries || []).map((country) => {
     return {
       label: country[0],
       value: country[1],
     };
   });
 
-  const currentCountryResult = allCountries.filter((country) =>
+  const currentCountryResult = (allCountries || []).filter((country) =>
     formik.values.country
       ? country[1] === formik.values.country
       : country[1] === account?.country
@@ -176,6 +204,8 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
     formik.setFieldValue('country', item.value);
     formik.setFieldValue('tax_id', '');
   };
+
+  const nonUSCountry = isTaxIdEnabled && formik.values.country !== 'US';
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -370,25 +400,51 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         </Grid>
         <Grid xs={12}>
           <TextField
-            helperText={
-              isTaxIdEnabled &&
-              formik.values.country !== 'US' &&
-              TAX_ID_HELPER_TEXT
-            }
             data-qa-contact-tax-id
             disabled={isReadOnly}
             errorText={errorMap.tax_id}
+            helperText={nonUSCountry && TAX_ID_HELPER_TEXT}
             label="Tax ID"
             name="tax_id"
             onChange={formik.handleChange}
             value={formik.values.tax_id}
           />
         </Grid>
+        {nonUSCountry && (
+          <Grid
+            alignItems="flex-start"
+            display="flex"
+            marginTop={(theme) => theme.tokens.spacing[60]}
+            xs={12}
+          >
+            <Checkbox
+              onChange={() =>
+                setBillingAgreementChecked(!billingAgreementChecked)
+              }
+              sx={(theme) => ({
+                marginRight: theme.tokens.spacing[40],
+                padding: 0,
+              })}
+              checked={billingAgreementChecked}
+              data-testid="tax-id-checkbox"
+              id="taxIdAgreementCheckbox"
+            />
+            <Typography component="label" htmlFor="taxIdAgreementCheckbox">
+              {TAX_ID_AGREEMENT_TEXT}{' '}
+              <Link to="https://www.akamai.com/legal/privacy-statement">
+                Akamai Privacy Statement.
+              </Link>
+            </Typography>
+          </Grid>
+        )}
       </Grid>
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'save-contact-info',
-          disabled: isReadOnly,
+          disabled:
+            isReadOnly ||
+            (nonUSCountry &&
+              (!billingAgreementChecked || !formik.values.tax_id)),
           label: 'Save Changes',
           loading: isPending,
           type: 'submit',

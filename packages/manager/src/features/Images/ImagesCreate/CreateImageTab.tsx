@@ -12,13 +12,11 @@ import {
   Typography,
 } from '@linode/ui';
 import { createImageSchema } from '@linode/validation';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory, useLocation } from 'react-router-dom';
 
-import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/Encryption/constants';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -31,21 +29,17 @@ import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { CreateImagePayload } from '@linode/api-v4';
-import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
 export const CreateImageTab = () => {
-  const location = useLocation();
-
-  const queryParams = React.useMemo(
-    () =>
-      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
-        location.search
-      ),
-    [location.search]
-  );
+  const {
+    selectedDisk: selectedDiskFromSearch,
+    selectedLinode: selectedLinodeFromSearch,
+  } = useSearch({
+    strict: false,
+  });
+  const navigate = useNavigate();
 
   const {
     control,
@@ -57,7 +51,7 @@ export const CreateImageTab = () => {
     watch,
   } = useForm<CreateImagePayload>({
     defaultValues: {
-      disk_id: +queryParams.selectedDisk,
+      disk_id: selectedDiskFromSearch ? +selectedDiskFromSearch : undefined,
     },
     mode: 'onBlur',
     resolver: yupResolver(createImageSchema),
@@ -66,7 +60,6 @@ export const CreateImageTab = () => {
   const flags = useFlags();
 
   const { enqueueSnackbar } = useSnackbar();
-  const { push } = useHistory();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
 
@@ -78,10 +71,6 @@ export const CreateImageTab = () => {
     globalGrantType: 'add_images',
   });
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
-
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createImage(values);
@@ -91,7 +80,10 @@ export const CreateImageTab = () => {
       enqueueSnackbar('Image scheduled for creation.', {
         variant: 'info',
       });
-      push('/images');
+      navigate({
+        search: () => ({}),
+        to: '/images',
+      });
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -104,7 +96,7 @@ export const CreateImageTab = () => {
   });
 
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
-    queryParams.selectedLinode ? +queryParams.selectedLinode : null
+    selectedLinodeFromSearch ? +selectedLinodeFromSearch : null
   );
 
   const { data: selectedLinode } = useLinodeQuery(
@@ -156,17 +148,6 @@ export const CreateImageTab = () => {
   const linodeRegionSupportsImageStorage = selectedLinodeRegion?.capabilities.includes(
     'Object Storage'
   );
-
-  /*
-    We only want to display the notice about disk encryption if:
-    1. the Disk Encryption feature is enabled
-    2. a linode is selected
-    2. the selected linode is not in an Edge region
-  */
-  const showDiskEncryptionWarning =
-    isDiskEncryptionFeatureEnabled &&
-    selectedLinodeId !== null &&
-    !linodeIsInDistributedRegion;
 
   const linodeSelectHelperText = grants?.linode.some(
     (grant) => grant.permissions === 'read_only'
@@ -257,13 +238,6 @@ export const CreateImageTab = () => {
                 </Link>
                 . After it's stored, you can replicate it to other core compute
                 regions.
-              </Notice>
-            )}
-            {showDiskEncryptionWarning && (
-              <Notice variant="warning">
-                <Typography sx={(theme) => ({ fontFamily: theme.font.normal })}>
-                  {DISK_ENCRYPTION_IMAGES_CAVEAT_COPY}
-                </Typography>
               </Notice>
             )}
             <Controller

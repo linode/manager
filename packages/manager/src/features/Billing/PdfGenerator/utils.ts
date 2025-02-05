@@ -1,5 +1,4 @@
 import autoTable from 'jspdf-autotable';
-import { pathOr } from 'ramda';
 
 import { ADDRESSES } from 'src/constants';
 import { formatDate } from 'src/utilities/formatDate';
@@ -392,11 +391,9 @@ const formatDescription = (desc?: string) => {
 
   if (isVolume) {
     const [volLabel, volID] = descChunks[1].split(' ');
-    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${pathOr(
-      '',
-      [2],
-      descChunks
-    )}\r\n${volID}`;
+    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${
+      descChunks?.[2] ?? ''
+    }\r\n${volID}`;
   }
 
   if (isBackup) {

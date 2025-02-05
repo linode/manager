@@ -19,7 +19,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { equals, pathOr, repeat } from 'ramda';
+import { equals, repeat } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -65,14 +65,15 @@ import {
   StyledFormGroup,
   StyledRadioGroup,
 } from './LinodeConfigDialog.styles';
+import { getPrimaryInterfaceIndex } from './utilities';
 
 import type { ExtendedInterface } from '../LinodeSettings/InterfaceSelect';
 import type {
+  APIError,
   Config,
   Interface,
   LinodeConfigCreationData,
-} from '@linode/api-v4/lib/linodes';
-import type { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
 import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
@@ -92,7 +93,7 @@ interface EditableFields {
   comments?: string;
   devices: DevicesAsStrings;
   helpers: Helpers;
-  initrd: null | number | string;
+  initrd: null | string;
   interfaces: ExtendedInterface[];
   kernel?: string;
   label: string;
@@ -141,7 +142,7 @@ const defaultInterfaceList = padInterfaceList([
   },
 ]);
 
-const defaultFieldsValues = {
+const defaultFieldsValues: EditableFields = {
   comments: '',
   devices: {},
   helpers: {
@@ -204,10 +205,7 @@ const interfacesToState = (interfaces?: Interface[]) => {
   return padInterfaceList(interfacesPayload);
 };
 
-const interfacesToPayload = (
-  interfaces?: ExtendedInterface[],
-  primaryInterfaceIndex?: number
-) => {
+const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
   if (!interfaces || interfaces.length === 0) {
     return [];
   }
@@ -228,12 +226,6 @@ const interfacesToPayload = (
     // and no other interfaces are specified, the API prefers
     // to receive an empty array.
     return [];
-  }
-
-  if (primaryInterfaceIndex !== undefined) {
-    interfaces.forEach(
-      (iface, i) => (iface.primary = i === primaryInterfaceIndex)
-    );
   }
 
   return filteredInterfaces as Interface[];
@@ -287,11 +279,6 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 
-  const [
-    primaryInterfaceIndex,
-    setPrimaryInterfaceIndex,
-  ] = React.useState<number>();
-
   const regionHasVLANS = regions.some(
     (thisRegion) =>
       thisRegion.id === linode?.region &&
@@ -337,7 +324,7 @@ export const LinodeConfigDialog = (props: Props) => {
       devices: createDevicesFromStrings(devices),
       helpers,
       initrd: initrd !== '' ? initrd : null,
-      interfaces: interfacesToPayload(interfaces, primaryInterfaceIndex),
+      interfaces: interfacesToPayload(interfaces),
       kernel,
       label,
       /** if the user did not toggle the limit radio button, send a value of 0 */
@@ -418,7 +405,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
       if (vpcId) {
         queryClient.invalidateQueries({
-          queryKey: vpcQueries.all.queryKey,
+          queryKey: vpcQueries.all._def,
         });
         queryClient.invalidateQueries({
           queryKey: vpcQueries.paginated._def,
@@ -502,14 +489,6 @@ export const LinodeConfigDialog = (props: Props) => {
           )
         );
 
-        const indexOfExistingPrimaryInterface = config.interfaces.findIndex(
-          (_interface) => _interface.primary === true
-        );
-
-        if (indexOfExistingPrimaryInterface !== -1) {
-          setPrimaryInterfaceIndex(indexOfExistingPrimaryInterface);
-        }
-
         resetForm({
           values: {
             comments: config.comments,
@@ -533,7 +512,6 @@ export const LinodeConfigDialog = (props: Props) => {
         resetForm({ values: defaultFieldsValues });
         setUseCustomRoot(false);
         setDeviceCounter(deviceCounterDefault);
-        setPrimaryInterfaceIndex(0);
       }
     }
   }, [open, config, initrdFromConfig, resetForm, queryClient]);
@@ -586,27 +564,28 @@ export const LinodeConfigDialog = (props: Props) => {
     disks: initrdDisks,
   };
 
-  const categorizedInitrdOptions = Object.entries(initrdDisksObject).reduce(
-    (acc, [category, items]) => {
-      const categoryTitle = titlecase(category);
-      const options = [
-        ...items.map(({ id, label }) => {
-          return {
-            deviceType: categoryTitle,
-            label,
-            value: String(id) as null | number | string,
-          };
-        }),
-        {
+  const categorizedInitrdOptions: {
+    deviceType: string;
+    label: string;
+    value: null | string;
+  }[] = Object.entries(initrdDisksObject).reduce((acc, [category, items]) => {
+    const categoryTitle = titlecase(category);
+    const options = [
+      ...items.map(({ id, label }) => {
+        return {
           deviceType: categoryTitle,
-          label: 'Recovery – Finnix (initrd)',
-          value: String(finnixDiskID),
-        },
-      ];
-      return [...acc, ...options];
-    },
-    []
-  );
+          label,
+          value: String(id),
+        };
+      }),
+      {
+        deviceType: categoryTitle,
+        label: 'Recovery – Finnix (initrd)',
+        value: String(finnixDiskID),
+      },
+    ];
+    return [...acc, ...options];
+  }, []);
 
   categorizedInitrdOptions.unshift({
     deviceType: '',
@@ -614,20 +593,20 @@ export const LinodeConfigDialog = (props: Props) => {
     value: null,
   });
 
-  const getPrimaryInterfaceOptions = (interfaces: ExtendedInterface[]) => {
-    return interfaces.map((_interface, idx) => {
-      return {
-        label: `eth${idx}`,
-        value: idx,
-      };
-    });
-  };
+  const interfacesWithoutPlaceholderInterfaces = values.interfaces.filter(
+    (i) => i.purpose !== 'none'
+  ) as Interface[];
 
-  const primaryInterfaceOptions = getPrimaryInterfaceOptions(values.interfaces);
+  const primaryInterfaceOptions = interfacesWithoutPlaceholderInterfaces.map(
+    (networkInterface, idx) => ({
+      label: `eth${idx}`,
+      value: idx,
+    })
+  );
 
-  const handlePrimaryInterfaceChange = (selectedValue: number) => {
-    setPrimaryInterfaceIndex(selectedValue);
-  };
+  const primaryInterfaceIndex = getPrimaryInterfaceIndex(
+    interfacesWithoutPlaceholderInterfaces
+  );
 
   /**
    * Form change handlers
@@ -878,11 +857,13 @@ export const LinodeConfigDialog = (props: Props) => {
             <Grid xs={12}>
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
+                getSelected={(slot) =>
+                  values.devices?.[slot as keyof DevicesAsStrings] ?? ''
+                }
                 counter={deviceCounter}
                 devices={availableDevices}
                 disabled={isReadOnly}
                 errorText={formik.errors.devices as string}
-                getSelected={(slot) => pathOr('', [slot], values.devices)}
                 onChange={handleDevicesChanges}
                 slots={deviceSlots}
               />
@@ -992,19 +973,36 @@ export const LinodeConfigDialog = (props: Props) => {
               )}
               <>
                 <Autocomplete
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value.value
-                  }
-                  onChange={(_, selected) =>
-                    handlePrimaryInterfaceChange(selected?.value)
+                  disableClearable={interfacesWithoutPlaceholderInterfaces.some(
+                    (i) => i.purpose === 'public' || i.purpose === 'vpc'
+                  )}
+                  onChange={(_, selected) => {
+                    const updatedInterfaces = [...values.interfaces];
+
+                    for (let i = 0; i < updatedInterfaces.length; i++) {
+                      if (selected && selected.value === i) {
+                        updatedInterfaces[i].primary = true;
+                      } else {
+                        updatedInterfaces[i].primary = false;
+                      }
+                    }
+
+                    formik.setValues({
+                      ...values,
+                      interfaces: updatedInterfaces,
+                    });
+                  }}
+                  value={
+                    primaryInterfaceIndex !== null
+                      ? primaryInterfaceOptions[primaryInterfaceIndex]
+                      : null
                   }
                   autoHighlight
                   data-testid="primary-interface-dropdown"
-                  disableClearable
                   disabled={isReadOnly}
                   label="Primary Interface (Default Route)"
-                  options={getPrimaryInterfaceOptions(values.interfaces)}
-                  value={primaryInterfaceOptions[primaryInterfaceIndex ?? 0]}
+                  options={primaryInterfaceOptions}
+                  placeholder="None"
                 />
                 <Divider
                   sx={{
@@ -1242,7 +1240,7 @@ export const unrecommendedConfigNoticeSelector = ({
   values,
 }: {
   _interface: ExtendedInterface;
-  primaryInterfaceIndex: number | undefined;
+  primaryInterfaceIndex: number | null;
   thisIndex: number;
   values: EditableFields;
 }): JSX.Element | null => {
@@ -1255,9 +1253,8 @@ export const unrecommendedConfigNoticeSelector = ({
 
   // Edge case: users w/ ability to have multiple VPC interfaces. Scenario 1 & 2 notices not helpful if that's done
   const primaryInterfaceIsVPC =
-    primaryInterfaceIndex !== undefined
-      ? values.interfaces[primaryInterfaceIndex].purpose === 'vpc'
-      : false;
+    primaryInterfaceIndex !== null &&
+    values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
 
   /*
    Scenario 1:

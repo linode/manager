@@ -1,14 +1,35 @@
 import { authentication } from './storage';
 
+/**
+ * The AuthCode is generated and used during the PKCE Authentication flow
+ */
+export interface AuthCode {
+  codeVerifier: string;
+  nonce: string;
+}
+
+export const getAuthCode = (): AuthCode => ({
+  codeVerifier: authentication.codeVerifier.get(),
+  nonce: authentication.nonce.get(),
+});
+
+export const setAuthCode = ({ codeVerifier, nonce }: AuthCode) => {
+  authentication.codeVerifier.set(codeVerifier);
+  authentication.nonce.set(nonce);
+};
+
+export const clearAuthCode = () => setAuthCode({ codeVerifier: '', nonce: '' });
+
+/**
+ * `AuthToken` is retrieved after authentication is complete and is stored
+ * for the duration of the session.
+ */
 export interface AuthToken {
   expiration: string;
   scopes: string;
   token: string;
 }
 
-/**
- * Retrieve the authentication token from local storage.
- */
 export const getAuthToken = (): AuthToken => ({
   expiration: authentication.expire.get(),
   scopes: authentication.scopes.get(),

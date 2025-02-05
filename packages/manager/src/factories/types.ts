@@ -1,7 +1,6 @@
 import Factory from 'src/factories/factoryProxy';
 
-import type { LinodeType } from '@linode/api-v4/lib/linodes/types';
-import type { PriceType } from '@linode/api-v4/src/types';
+import type { LinodeType, PriceType } from '@linode/api-v4';
 import type {
   PlanSelectionAvailabilityTypes,
   PlanWithAvailability,
@@ -211,6 +210,17 @@ export const lkeHighAvailabilityTypeFactory = Factory.Sync.makeFactory<PriceType
     transfer: 0,
   }
 );
+
+export const lkeEnterpriseTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'lke-e',
+  label: 'LKE Enterprise',
+  price: {
+    hourly: 0.45,
+    monthly: 300,
+  },
+  region_prices: [],
+  transfer: 0,
+});
 
 export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType>({
   id: 'objectstorage',

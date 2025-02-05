@@ -10,61 +10,112 @@ type Story = StoryObj<typeof DateTimeRangePicker>;
 
 export const Default: Story = {
   args: {
-    endDateErrorMessage: '',
-    endDateTimeValue: null,
-    endLabel: 'End Date and Time',
+    enablePresets: true,
+    endDateProps: {
+      label: 'End Date and Time',
+      placeholder: '',
+      showTimeZone: false,
+      value: null,
+    },
+
     format: 'yyyy-MM-dd HH:mm',
     onChange: action('DateTime range changed'),
-    showEndTimeZone: true,
-    showStartTimeZone: true,
-    startDateErrorMessage: '',
-    startDateTimeValue: null,
-    startLabel: 'Start Date and Time',
-    startTimeZoneValue: null,
+    presetsProps: {
+      defaultValue: '',
+      label: '',
+      placeholder: '',
+    },
+    startDateProps: {
+      errorMessage: '',
+      label: 'Start Date and Time',
+      placeholder: '',
+      showTimeZone: true,
+      timeZoneValue: null,
+      value: null,
+    },
+    sx: {},
   },
   render: (args) => <DateTimeRangePicker {...args} />,
 };
 
 export const WithInitialValues: Story = {
   args: {
-    endDateTimeValue: DateTime.now(),
-    endLabel: 'End Date and Time',
+    enablePresets: true,
+    endDateProps: {
+      label: 'End Date and Time',
+      showTimeZone: true,
+      value: DateTime.now(),
+    },
+
     format: 'yyyy-MM-dd HH:mm',
     onChange: action('DateTime range changed'),
-    showEndTimeZone: true,
-    showStartTimeZone: true,
-    startDateTimeValue: DateTime.now().minus({ days: 1 }),
-    startLabel: 'Start Date and Time',
-    startTimeZoneValue: 'America/New_York',
+    presetsProps: {
+      defaultValue: '7days',
+      label: 'Time Range',
+      placeholder: 'Select Range',
+    },
+    startDateProps: {
+      label: 'Start Date and Time',
+      showTimeZone: true,
+      timeZoneValue: 'America/New_York',
+      value: DateTime.now().minus({ days: 1 }),
+    },
+    sx: {},
   },
 };
 
 export const WithCustomErrors: Story = {
   args: {
-    endDateErrorMessage: 'End date must be after the start date.',
-    endDateTimeValue: DateTime.now().minus({ days: 1 }),
-    endLabel: 'Custom End Label',
+    enablePresets: true,
+    endDateProps: {
+      label: 'Custom End Label',
+      placeholder: '',
+      showTimeZone: false,
+      value: DateTime.now().minus({ days: 1 }),
+    },
     format: 'yyyy-MM-dd HH:mm',
     onChange: action('DateTime range changed'),
-    startDateErrorMessage: 'Start date must be before the end date.',
-    startDateTimeValue: DateTime.now().minus({ days: 2 }),
-    startLabel: 'Custom Start Label',
+    presetsProps: {
+      defaultValue: '',
+
+      label: '',
+      placeholder: '',
+    },
+    startDateProps: {
+      errorMessage: 'Start date must be before the end date.',
+      label: 'Start Date and Time',
+      placeholder: '',
+      showTimeZone: true,
+      timeZoneValue: null,
+      value: DateTime.now().minus({ days: 2 }),
+    },
   },
 };
 
 const meta: Meta<typeof DateTimeRangePicker> = {
   argTypes: {
-    endDateErrorMessage: {
-      control: 'text',
-      description: 'Custom error message for invalid end date',
-    },
-    endDateTimeValue: {
-      control: 'date',
-      description: 'Initial or controlled value for the end date-time',
-    },
-    endLabel: {
-      control: 'text',
-      description: 'Custom label for the end date-time picker',
+    endDateProps: {
+      errorMessage: {
+        control: 'text',
+        description: 'Custom error message for invalid end date',
+      },
+      label: {
+        control: 'text',
+        description: 'Custom label for the end date-time picker',
+      },
+      placeholder: {
+        control: 'text',
+        description: 'Placeholder for the end date-time',
+      },
+      showTimeZone: {
+        control: 'boolean',
+        description:
+          'Whether to show the timezone selector for the end date picker',
+      },
+      value: {
+        control: 'date',
+        description: 'Initial or controlled value for the end date-time',
+      },
     },
     format: {
       control: 'text',
@@ -74,31 +125,57 @@ const meta: Meta<typeof DateTimeRangePicker> = {
       action: 'DateTime range changed',
       description: 'Callback when the date-time range changes',
     },
-    showEndTimeZone: {
-      control: 'boolean',
-      description:
-        'Whether to show the timezone selector for the end date picker',
+    presetsProps: {
+      defaultValue: {
+        label: {
+          control: 'text',
+          description: 'Default value label for the presets field',
+        },
+        value: {
+          control: 'text',
+          description: 'Default value for the presets field',
+        },
+      },
+      enablePresets: {
+        control: 'boolean',
+        description:
+          'If true, shows the date presets field instead of the date pickers',
+      },
+      label: {
+        control: 'text',
+        description: 'Label for the presets dropdown',
+      },
+      placeholder: {
+        control: 'text',
+        description: 'Placeholder for the presets dropdown',
+      },
     },
-    showStartTimeZone: {
-      control: 'boolean',
-      description:
-        'Whether to show the timezone selector for the start date picker',
-    },
-    startDateErrorMessage: {
-      control: 'text',
-      description: 'Custom error message for invalid start date',
-    },
-    startDateTimeValue: {
-      control: 'date',
-      description: 'Initial or controlled value for the start date-time',
-    },
-    startLabel: {
-      control: 'text',
-      description: 'Custom label for the start date-time picker',
-    },
-    startTimeZoneValue: {
-      control: 'text',
-      description: 'Initial or controlled value for the start timezone',
+    startDateProps: {
+      errorMessage: {
+        control: 'text',
+        description: 'Custom error message for invalid start date',
+      },
+      placeholder: {
+        control: 'text',
+        description: 'Placeholder for the start date-time',
+      },
+      showTimeZone: {
+        control: 'boolean',
+        description:
+          'Whether to show the timezone selector for the start date picker',
+      },
+      startLabel: {
+        control: 'text',
+        description: 'Custom label for the start date-time picker',
+      },
+      timeZoneValue: {
+        control: 'text',
+        description: 'Initial or controlled value for the start timezone',
+      },
+      value: {
+        control: 'date',
+        description: 'Initial or controlled value for the start date-time',
+      },
     },
     sx: {
       control: 'object',
@@ -106,9 +183,9 @@ const meta: Meta<typeof DateTimeRangePicker> = {
     },
   },
   args: {
-    endLabel: 'End Date and Time',
+    endDateProps: { label: 'End Date and Time' },
     format: 'yyyy-MM-dd HH:mm',
-    startLabel: 'Start Date and Time',
+    startDateProps: { label: 'Start Date and Time' },
   },
   component: DateTimeRangePicker,
   title: 'Components/DatePicker/DateTimeRangePicker',

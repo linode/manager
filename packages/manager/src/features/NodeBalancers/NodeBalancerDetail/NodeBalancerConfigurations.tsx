@@ -17,7 +17,6 @@ import {
   defaultTo,
   lensPath,
   over,
-  pathOr,
   set,
   view,
 } from 'ramda';
@@ -39,7 +38,7 @@ import { lensFrom } from '../NodeBalancerCreate';
 import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  nodeForRequest,
+  getNodeForRequest,
   parseAddress,
   parseAddresses,
   transformConfigsForRequest,
@@ -54,7 +53,6 @@ import type {
   Grants,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
-  ResourcePage,
 } from '@linode/api-v4';
 import type { Lens } from 'ramda';
 import type { RouteComponentProps } from 'react-router-dom';
@@ -97,9 +95,7 @@ interface MatchProps {
 type RouteProps = RouteComponentProps<MatchProps>;
 
 interface PreloadedProps {
-  configs: PromiseLoaderResponse<
-    ResourcePage<NodeBalancerConfigFieldsWithStatus>
-  >;
+  configs: PromiseLoaderResponse<NodeBalancerConfigFieldsWithStatus[]>;
 }
 
 interface State {
@@ -281,7 +277,7 @@ class NodeBalancerConfigurations extends React.Component<
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
-    const nodeData = nodeForRequest(node);
+    const nodeData = getNodeForRequest(node, config);
 
     if (!nodeBalancerId) {
       return;
@@ -606,6 +602,7 @@ class NodeBalancerConfigurations extends React.Component<
       proxyProtocolLens: lensTo(['proxy_protocol']),
       sessionStickinessLens: lensTo(['stickiness']),
       sslCertificateLens: lensTo(['ssl_cert']),
+      udpCheckPortLens: lensTo(['udp_check_port']),
     };
 
     return (
@@ -676,6 +673,7 @@ class NodeBalancerConfigurations extends React.Component<
           onSave={this.onSaveConfig(idx)}
           onSessionStickinessChange={this.updateState(L.sessionStickinessLens)}
           onSslCertificateChange={this.updateState(L.sslCertificateLens)}
+          onUdpCheckPortChange={this.updateState(L.udpCheckPortLens, L)}
           port={view(L.portLens, this.state)}
           privateKey={view(L.privateKeyLens, this.state)}
           protocol={view(L.protocolLens, this.state)}
@@ -684,6 +682,7 @@ class NodeBalancerConfigurations extends React.Component<
           sessionStickiness={view(L.sessionStickinessLens, this.state)}
           sslCertificate={view(L.sslCertificateLens, this.state)}
           submitting={configSubmitting[idx]}
+          udpCheckPort={view(L.udpCheckPortLens, this.state)}
         />
       </Accordion>
     );
@@ -1013,7 +1012,7 @@ class NodeBalancerConfigurations extends React.Component<
   state: State = {
     configErrors: [],
     configSubmitting: [],
-    configs: pathOr([], ['response'], this.props.configs),
+    configs: this.props.configs?.response ?? [],
     deleteConfigConfirmDialog: clone(
       NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState
     ),
@@ -1031,7 +1030,7 @@ class NodeBalancerConfigurations extends React.Component<
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
-    const nodeData = nodeForRequest(node);
+    const nodeData = getNodeForRequest(node, config);
 
     if (!nodeBalancerId) {
       return;

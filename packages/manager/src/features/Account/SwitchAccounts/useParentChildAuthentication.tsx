@@ -16,7 +16,7 @@ import { getStorage } from 'src/utilities/storage';
 import type { Token, UserType } from '@linode/api-v4';
 
 export const useParentChildAuthentication = () => {
-  const currentTokenWithBearer = getAuthToken();
+  const currentTokenWithBearer = getAuthToken().token;
 
   const {
     error: createTokenError,

@@ -25,7 +25,7 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { Widgets } from '@linode/api-v4';
 import type {
-  AvailableMetrics,
+  MetricDefinition,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
@@ -56,12 +56,17 @@ export interface CloudPulseWidgetProperties {
   /**
    * metrics defined of this widget
    */
-  availableMetrics: AvailableMetrics | undefined;
+  availableMetrics: MetricDefinition | undefined;
 
   /**
    * time duration to fetch the metrics data in this widget
    */
   duration: TimeDuration;
+
+  /**
+   * entity ids selected by user to show metrics for
+   */
+  entityIds: string[];
 
   /**
    * Any error to be shown in this widget
@@ -72,11 +77,6 @@ export interface CloudPulseWidgetProperties {
    * Jwe token fetching status check
    */
   isJweTokenFetching: boolean;
-
-  /**
-   * resources ids selected by user to show metrics for
-   */
-  resourceIds: string[];
 
   /**
    * List of resources available of selected service type
@@ -141,8 +141,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     authToken,
     availableMetrics,
     duration,
+    entityIds,
     isJweTokenFetching,
-    resourceIds,
     resources,
     savePref,
     serviceType,
@@ -230,7 +230,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     {
       ...getCloudPulseMetricRequest({
         duration,
-        resourceIds,
+        entityIds,
         resources,
         widget,
       }),

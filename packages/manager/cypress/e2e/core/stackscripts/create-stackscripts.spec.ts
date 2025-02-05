@@ -128,9 +128,9 @@ const fillOutLinodeForm = (label: string, regionName: string) => {
  * @returns Promise that resolves to the new Image.
  */
 const createLinodeAndImage = async () => {
-  // 1.5GB
-  // Shout out to Debian for fitting on a 1.5GB disk.
-  const resizedDiskSize = 1536;
+  // 2GB
+  // Shout out to Debian for fitting on a 2GB disk.
+  const resizedDiskSize = 2048;
   const linode = await createTestLinode(
     createLinodeRequestFactory.build({
       label: randomLabel(),
@@ -188,7 +188,6 @@ describe('Create stackscripts', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
     const stackscriptImage = 'Alpine 3.19';
-    const stackscriptImageTag = 'alpine3.19';
 
     const linodeLabel = randomLabel();
     const linodeRegion = chooseRegion({ capabilities: ['Vlans'] });
@@ -243,21 +242,18 @@ describe('Create stackscripts', () => {
       .should('be.enabled')
       .click();
 
-    // Confirm the user is redirected to landing page and StackScript is shown.
-    cy.wait('@createStackScript');
-    cy.url().should('endWith', '/stackscripts/account');
-    cy.wait('@getStackScripts');
+    cy.wait('@createStackScript').then((intercept) => {
+      // Confirm the user is redirected to the StackScript details page
+      cy.url().should(
+        'endWith',
+        `/stackscripts/${intercept.response?.body.id}`
+      );
 
-    cy.findByText(stackscriptLabel)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        cy.findByText(stackscriptDesc).should('be.visible');
-        cy.findByText(stackscriptImageTag).should('be.visible');
-      });
-
-    // Navigate to StackScript details page and click deploy Linode button.
-    cy.findByText(stackscriptLabel).should('be.visible').click();
+      // Confirm a success toast shows
+      ui.toast.assertMessage(
+        `Successfully created StackScript ${intercept.response?.body.label}`
+      );
+    });
 
     ui.button
       .findByTitle('Deploy New Linode')
@@ -336,8 +332,13 @@ describe('Create stackscripts', () => {
         .should('be.enabled')
         .click();
 
-      cy.wait('@createStackScript');
-      cy.url().should('endWith', '/stackscripts/account');
+      // Confirm the user is redirected to the StackScript details page
+      cy.wait('@createStackScript').then((intercept) => {
+        cy.url().should(
+          'endWith',
+          `/stackscripts/${intercept.response?.body.id}`
+        );
+      });
 
       cy.wait('@getAllImages').then((res) => {
         // Fetch Images from response data and filter out Kubernetes images.
@@ -346,18 +347,6 @@ describe('Create stackscripts', () => {
           imageData,
           'public'
         );
-
-        cy.wait('@getStackScripts');
-        cy.findByText(stackscriptLabel)
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            cy.findByText(stackscriptDesc).should('be.visible');
-            cy.findByText(stackscriptImage).should('be.visible');
-          });
-
-        // Navigate to StackScript details page and click deploy Linode button.
-        cy.findByText(stackscriptLabel).should('be.visible').click();
 
         ui.button
           .findByTitle('Deploy New Linode')

@@ -32,7 +32,6 @@ import { switchAccountSessionContext } from './context/switchAccountSessionConte
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
-import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
 import { useProfile } from './queries/profile/profile';
@@ -131,12 +130,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Domains = React.lazy(() =>
-  import('src/features/Domains').then((module) => ({
-    default: module.DomainsRoutes,
-  }))
-);
-const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() =>
   import('src/features/Kubernetes').then((module) => ({
     default: module.Kubernetes,
@@ -164,7 +157,6 @@ const SupportTicketDetail = React.lazy(() =>
     })
   )
 );
-const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
 const Help = React.lazy(() =>
   import('./features/Help/index').then((module) => ({
@@ -185,11 +177,6 @@ const AccountActivationLanding = React.lazy(
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
-const PlacementGroups = React.lazy(() =>
-  import('src/features/PlacementGroups').then((module) => ({
-    default: module.PlacementGroups,
-  }))
-);
 
 const CloudPulse = React.lazy(() =>
   import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
@@ -235,7 +222,6 @@ export const MainContent = () => {
   const username = profile?.username || '';
 
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
-  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
@@ -333,20 +319,11 @@ export const MainContent = () => {
                       <React.Suspense fallback={<SuspenseLoader />}>
                         <Switch>
                           <Route component={LinodesRoutes} path="/linodes" />
-                          {isPlacementGroupsEnabled && (
-                            <Route
-                              component={PlacementGroups}
-                              path="/placement-groups"
-                            />
-                          )}
                           <Route
                             component={NodeBalancers}
                             path="/nodebalancers"
                           />
-                          <Route component={Domains} path="/domains" />
                           <Route component={Managed} path="/managed" />
-                          <Route component={Longview} path="/longview" />
-                          <Route component={Images} path="/images" />
                           <Route
                             component={StackScripts}
                             path="/stackscripts"

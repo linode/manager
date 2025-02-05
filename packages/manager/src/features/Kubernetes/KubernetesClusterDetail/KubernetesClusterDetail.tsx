@@ -78,10 +78,13 @@ export const KubernetesClusterDetail = () => {
 
   return (
     <Box>
-      <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster?.label}`} />
+      <DocumentTitleSegment
+        segment={`${cluster?.label} | Kubernetes Cluster`}
+      />
       <UpgradeKubernetesVersionBanner
         clusterID={cluster?.id}
         clusterLabel={cluster?.label}
+        clusterTier={cluster?.tier ?? 'standard'} // TODO LKE: remove fallback once LKE-E is in GA and tier is required
         currentVersion={cluster?.k8s_version}
       />
       <LandingHeader
@@ -121,9 +124,11 @@ export const KubernetesClusterDetail = () => {
           </Box>
         )}
         <NodePoolsDisplay
+          clusterCreated={cluster.created}
           clusterID={cluster.id}
           clusterLabel={cluster.label}
           clusterRegionId={cluster.region}
+          clusterTier={cluster.tier ?? 'standard'}
           regionsData={regionsData || []}
         />
       </Stack>

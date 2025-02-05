@@ -508,3 +508,47 @@ export const mockGetLKEClusterTypes = (
 ): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('lke/types*'), paginateResponse(types));
 };
+
+/**
+ * Intercepts PUT request to update an LKE cluster and mocks an error response.
+ *
+ * @param clusterId - ID of cluster for which to intercept PUT request.
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateClusterError = (
+  clusterId: number,
+  errorMessage: string = 'An unknown error occurred.',
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`lke/clusters/${clusterId}`),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
+ * Intercepts PUT request to update an LKE cluster node pool and mocks an error response.
+ *
+ * @param clusterId - ID of cluster for which to intercept PUT request.
+ * @param nodePoolId - Numeric ID of node pool for which to mock response.
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateNodePoolError = (
+  clusterId: number,
+  nodePool: KubeNodePoolResponse,
+  errorMessage: string = 'An unknown error occurred.',
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`lke/clusters/${clusterId}/pools/${nodePool.id}`),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};

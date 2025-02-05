@@ -26,9 +26,13 @@ const store = storeFactory();
 setupInterceptors(store);
 
 const Lish = React.lazy(() => import('src/features/Lish'));
-const CancelLanding = React.lazy(
-  () => import('src/features/CancelLanding/CancelLanding')
+
+const CancelLanding = React.lazy(() =>
+  import('src/features/CancelLanding/CancelLanding').then((module) => ({
+    default: module.CancelLanding,
+  }))
 );
+
 const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
 );

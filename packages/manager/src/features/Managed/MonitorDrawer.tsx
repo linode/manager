@@ -1,13 +1,17 @@
-import { InputAdornment, Notice, TextField } from '@linode/ui';
+import {
+  Autocomplete,
+  InputAdornment,
+  Notice,
+  Select,
+  TextField,
+} from '@linode/ui';
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
-import { pickBy } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import Select from 'src/components/EnhancedSelect/Select';
 
 import type {
   ManagedCredential,
@@ -78,7 +82,7 @@ const helperText = {
 };
 
 const getValueFromItem = (value: string, options: Item<any>[]) => {
-  return options.find((thisOption) => thisOption.value === value);
+  return options.find((thisOption) => thisOption.value === value) || null;
 };
 
 const getMultiValuesFromItems = (values: number[], options: Item<any>[]) => {
@@ -107,10 +111,13 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
    * values such as `notes` come back from the API as null, so remove those
    * as well.
    */
-  const _monitor = pickBy(
-    (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
-    monitor
-  ) as ManagedServicePayload;
+  const _monitor = monitor
+    ? (Object.fromEntries(
+        Object.entries(monitor).filter(
+          ([key, value]) => value !== null && key in emptyInitialValues
+        )
+      ) as ManagedServicePayload)
+    : ({} as ManagedServicePayload);
 
   const initialValues = { ...emptyInitialValues, ..._monitor };
 
@@ -157,7 +164,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
               />
 
               <Select
-                onChange={(item: Item<ServiceType>) =>
+                onChange={(_, item: Item<ServiceType>) =>
                   setFieldValue(
                     'consultation_group',
                     item === null ? '' : item.value
@@ -170,20 +177,20 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                   values.consultation_group || '',
                   groupOptions
                 )}
+                clearable
                 data-qa-add-consultation-group
                 errorText={errors.consultation_group}
-                isClearable
                 label="Contact Group"
-                name="consultation_group"
                 onBlur={handleBlur}
                 options={groupOptions}
                 placeholder="Select a group..."
+                searchable
               />
 
               <Grid container spacing={2}>
                 <Grid sm={6} xs={12}>
                   <Select
-                    onChange={(item: Item<ServiceType>) =>
+                    onChange={(_, item: Item<ServiceType>) =>
                       setFieldValue('service_type', item.value)
                     }
                     textFieldProps={{
@@ -191,9 +198,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                     }}
                     data-qa-add-service-type
                     errorText={errors.service_type}
-                    isClearable={false}
                     label="Monitor Type"
-                    name="service_type"
                     onBlur={handleBlur}
                     options={typeOptions}
                     value={getValueFromItem(values.service_type, typeOptions)}
@@ -254,13 +259,16 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 onChange={handleChange}
                 value={values.notes}
               />
-              <Select
-                onChange={(items: Item<number>[]) => {
+              <Autocomplete
+                onChange={(_, items: Item<number>[] | null) => {
                   setFieldValue(
                     'credentials',
-                    items.map((thisItem) => thisItem.value)
+                    items?.map((thisItem) => thisItem.value) || []
                   );
                 }}
+                placeholder={
+                  values?.credentials?.length === 0 ? 'None Required' : ''
+                }
                 textFieldProps={{
                   tooltipText: helperText.credentials,
                 }}
@@ -270,13 +278,10 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 )}
                 data-qa-add-credentials
                 errorText={errors.credentials}
-                isClearable={false}
-                isMulti
                 label="Credentials"
-                name="credentials"
+                multiple
                 onBlur={handleBlur}
                 options={credentialOptions}
-                placeholder="None Required"
               />
               <ActionsPanel
                 primaryButtonProps={{
