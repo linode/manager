@@ -17,7 +17,6 @@ import {
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { AlertResourceAdditionalFilters } from './AlertsResourcesAdditionalFilters';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
-import { serviceFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertFilterType } from './constants';
@@ -220,8 +219,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   };
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
-
-  const additionalFiltersToRender = serviceFiltersMap[serviceType ?? ''] ?? [];
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
