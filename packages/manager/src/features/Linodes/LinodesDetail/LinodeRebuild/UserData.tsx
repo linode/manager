@@ -10,6 +10,7 @@ import { useRegionQuery } from 'src/queries/regions/regions';
 import type { RebuildLinodeFormValues } from './utils';
 
 interface Props {
+  disabled: boolean;
   linodeId: number;
 }
 
@@ -41,13 +42,11 @@ export const UserData = (props: Props) => {
     );
   };
 
-  if (!region?.capabilities.includes('Metadata')) {
-    return null;
-  }
+  const doesRegionSupportMetadata = region?.capabilities.includes('Metadata');
+  const doesImageSupportCloudInit = image?.capabilities.includes('cloud-init');
 
-  if (!image?.capabilities.includes('cloud-init')) {
-    return null;
-  }
+  const disabled =
+    props.disabled || !doesRegionSupportMetadata || !doesImageSupportCloudInit;
 
   return (
     <Accordion
@@ -93,7 +92,7 @@ export const UserData = (props: Props) => {
                   userData: e.target.value,
                 });
               }}
-              disabled={field.value === ''}
+              disabled={field.value === '' || disabled}
               errorText={fieldState.error?.message}
               expand
               label="User Data"
@@ -103,6 +102,7 @@ export const UserData = (props: Props) => {
               value={field.value ?? ''}
             />
             <Checkbox
+              disabled={disabled}
               onChange={(e, checked) => field.onChange(checked ? '' : null)}
               sx={{ pl: 1.5 }}
               text={`Reuse user data previously provided for ${linode?.label}`}

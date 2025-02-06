@@ -12,12 +12,13 @@ import { useRegionQuery } from 'src/queries/regions/regions';
 import type { RebuildLinodeFormValues } from './utils';
 
 interface Props {
+  disabled: boolean;
   isLKELinode: boolean;
   linodeRegion: string;
 }
 
 export const DiskEncryption = (props: Props) => {
-  const { isLKELinode, linodeRegion } = props;
+  const { disabled, isLKELinode, linodeRegion } = props;
   const { control } = useFormContext<RebuildLinodeFormValues>();
 
   const { data: region } = useRegionQuery(linodeRegion);
@@ -53,7 +54,7 @@ export const DiskEncryption = (props: Props) => {
             field.onChange(checked ? 'enabled' : 'disabled')
           }
           descriptionCopy={description}
-          disabled={disableDiskEncryptionReason !== undefined}
+          disabled={disabled || disableDiskEncryptionReason !== undefined}
           disabledReason={disableDiskEncryptionReason}
           error={fieldState.error?.message}
           isEncryptEntityChecked={field.value === 'enabled'}

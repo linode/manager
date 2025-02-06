@@ -5,7 +5,11 @@ import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
 
 import type { RebuildLinodeFormValues } from './utils';
 
-export const SSHKeys = () => {
+interface Props {
+  disabled: boolean;
+}
+
+export const SSHKeys = (props: Props) => {
   const { control } = useFormContext<RebuildLinodeFormValues>();
 
   return (
@@ -13,6 +17,7 @@ export const SSHKeys = () => {
       render={({ field }) => (
         <UserSSHKeyPanel
           authorizedUsers={field.value ?? []}
+          disabled={props.disabled}
           setAuthorizedUsers={field.onChange}
         />
       )}

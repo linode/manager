@@ -7,7 +7,11 @@ import { useStackScriptQuery } from 'src/queries/stackscripts';
 import type { RebuildLinodeFormValues } from './utils';
 import type { Image as ImageType, StackScript } from '@linode/api-v4';
 
-export const Image = () => {
+interface Props {
+  disabled: boolean;
+}
+
+export const Image = (props: Props) => {
   const { control } = useFormContext<RebuildLinodeFormValues>();
 
   const stackscriptId = useWatch({
@@ -24,6 +28,7 @@ export const Image = () => {
     <Controller
       render={({ field, fieldState }) => (
         <ImageSelect
+          disabled={props.disabled}
           errorText={fieldState.error?.message}
           filter={getImageSelectFilter(stackscript)}
           label="Image"

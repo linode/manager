@@ -4,13 +4,18 @@ import { useFormContext } from 'react-hook-form';
 
 import type { RebuildLinodeFormValues } from './utils';
 
-export const Actions = () => {
+interface Props {
+  disabled: boolean;
+}
+
+export const Actions = (props: Props) => {
   const { formState } = useFormContext<RebuildLinodeFormValues>();
 
   return (
     <Stack alignItems="center" direction="row" justifyContent="flex-end">
       <Button
         buttonType="primary"
+        disabled={props.disabled}
         loading={formState.isSubmitting}
         type="submit"
       >

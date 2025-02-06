@@ -5,7 +5,11 @@ import { PasswordInput } from 'src/components/PasswordInput/PasswordInput';
 
 import type { RebuildLinodeFormValues } from './utils';
 
-export const Password = () => {
+interface Props {
+  disabled: boolean;
+}
+
+export const Password = (props: Props) => {
   const { control } = useFormContext<RebuildLinodeFormValues>();
 
   return (
@@ -13,6 +17,7 @@ export const Password = () => {
       render={({ field, fieldState }) => (
         <PasswordInput
           autoComplete="off"
+          disabled={props.disabled}
           errorText={fieldState.error?.message}
           helperText="Set a password for your rebuilt Linode."
           label="Root Password"

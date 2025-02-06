@@ -1,22 +1,25 @@
-import { Autocomplete, Divider, Notice, Stack, Typography } from '@linode/ui';
+import { Divider, Notice, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useRebuildLinodeMutation } from 'src/queries/linodes/linodes';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { utoa } from 'src/utilities/metadata';
 
 import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/StackScriptSelectionList';
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import { Actions } from './Actions';
 import { Confirmation } from './Confirmation';
 import { DiskEncryption } from './DiskEncryption';
 import { Image } from './Image';
 import { Password } from './Password';
+import { RebuildFromSelect } from './RebuildFrom';
 import { SSHKeys } from './SSHKeys';
 import { UserData } from './UserData';
 import { UserDefinedFields } from './UserDefinedFields';
-import { REBUILD_OPTIONS, resolver } from './utils';
+import { resolver } from './utils';
 
 import type {
   Context,
@@ -33,14 +36,18 @@ interface Props {
 export const LinodeRebuildForm = (props: Props) => {
   const { linode, onSuccess } = props;
   const { enqueueSnackbar } = useSnackbar();
+
   const [type, setType] = useState<LinodeRebuildType>('Image');
 
-  const { data: typeToConfirmPreference } = usePreferences(
-    (preferences) => preferences?.type_to_confirm
-  );
+  const isLinodeReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linode.id,
+  });
 
-  const isTypeToConfirmEnabled =
-    typeToConfirmPreference === undefined || typeToConfirmPreference === true;
+  const { data: isTypeToConfirmEnabled } = usePreferences(
+    (preferences) => preferences?.type_to_confirm ?? true
+  );
 
   const { mutateAsync: rebuildLinode } = useRebuildLinodeMutation(linode.id);
 
@@ -76,7 +83,8 @@ export const LinodeRebuildForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Stack divider={<Divider />} spacing={2}>
+        <Stack spacing={2}>
+          {isLinodeReadOnly && <LinodePermissionsError />}
           {form.formState.errors.root && (
             <Notice text={form.formState.errors.root.message} variant="error" />
           )}
@@ -89,21 +97,10 @@ export const LinodeRebuildForm = (props: Props) => {
               Linode.
             </strong>
           </Typography>
-          <Autocomplete
-            onChange={(e, value) => {
-              form.reset((values) => ({
-                ...values,
-                image: '',
-                stackscript_data: undefined,
-                stackscript_id: undefined,
-              }));
-              setType(value.label);
-            }}
-            disableClearable
-            label="Rebuild From"
-            noMarginTop
-            options={REBUILD_OPTIONS}
-            value={REBUILD_OPTIONS.find((o) => o.label === type)}
+          <RebuildFromSelect
+            disabled={isLinodeReadOnly}
+            setType={setType}
+            type={type}
           />
           {type === 'Account StackScript' && (
             <StackScriptSelectionList type="Account" />
@@ -112,16 +109,20 @@ export const LinodeRebuildForm = (props: Props) => {
             <StackScriptSelectionList type="Community" />
           )}
           {type.includes('StackScript') && <UserDefinedFields />}
-          <Image />
-          <Password />
-          <SSHKeys />
+          <Image disabled={isLinodeReadOnly} />
+          <Password disabled={isLinodeReadOnly} />
+          <SSHKeys disabled={isLinodeReadOnly} />
           <DiskEncryption
+            disabled={isLinodeReadOnly}
             isLKELinode={linode.lke_cluster_id !== null}
             linodeRegion={linode.region}
           />
-          <UserData linodeId={linode.id} />
-          <Confirmation linodeLabel={linode.label} />
-          <Actions />
+          <UserData disabled={isLinodeReadOnly} linodeId={linode.id} />
+          <Confirmation
+            disabled={isLinodeReadOnly}
+            linodeLabel={linode.label}
+          />
+          <Actions disabled={isLinodeReadOnly} />
         </Stack>
       </form>
     </FormProvider>

@@ -7,18 +7,16 @@ import { usePreferences } from 'src/queries/profile/preferences';
 import type { RebuildLinodeFormValues } from './utils';
 
 interface Props {
+  disabled: boolean;
   linodeLabel: string;
 }
 
 export const Confirmation = (props: Props) => {
   const { control } = useFormContext<RebuildLinodeFormValues>();
 
-  const { data: typeToConfirmPreference } = usePreferences(
-    (preferences) => preferences?.type_to_confirm
+  const { data: isTypeToConfirmEnabled } = usePreferences(
+    (preferences) => preferences?.type_to_confirm ?? true
   );
-
-  const isTypeToConfirmEnabled =
-    typeToConfirmPreference === undefined || typeToConfirmPreference === true;
 
   return (
     <Controller
@@ -30,6 +28,7 @@ export const Confirmation = (props: Props) => {
               <strong>{props.linodeLabel}</strong>) in the field below:
             </span>
           }
+          disabled={props.disabled}
           errorText={fieldState.error?.message}
           hideLabel
           label="Linode Label"
