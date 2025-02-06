@@ -8,12 +8,17 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
  */
 export const getAlertTypeToActionsList = ({
   handleDetails,
+  handleEdit,
 }: ActionHandlers): Record<AlertDefinitionType, Action[]> => ({
   // for now there is system and user alert types, in future more alert types can be added and action items will differ according to alert types
   system: [
     {
       onClick: handleDetails,
       title: 'Show Details',
+    },
+    {
+      onClick: handleEdit,
+      title: 'Edit',
     },
   ],
   user: [

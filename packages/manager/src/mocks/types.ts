@@ -4,6 +4,8 @@ import type {
   DomainRecord,
   Event,
   Firewall,
+  FirewallDevice,
+  IPAddress,
   Linode,
   Notification,
   PlacementGroup,
@@ -83,7 +85,9 @@ export interface MockPresetExtra extends MockPresetBase {
 export type MockPresetCrudGroup = {
   id:
     | 'Domains'
+    | 'Firewalls'
     | 'Linodes'
+    | 'IP Addresses'
     | 'Placement Groups'
     | 'Quotas'
     | 'Support Tickets'
@@ -91,7 +95,9 @@ export type MockPresetCrudGroup = {
 };
 export type MockPresetCrudId =
   | 'domains:crud'
+  | 'firewalls:crud'
   | 'linodes:crud'
+  | 'ip-addresses:crud'
   | 'placement-groups:crud'
   | 'quotas:crud'
   | 'support-tickets:crud'
@@ -111,7 +117,9 @@ export interface MockState {
   domainRecords: DomainRecord[];
   domains: Domain[];
   eventQueue: Event[];
+  firewallDevices: [number, FirewallDevice][];
   firewalls: Firewall[];
+  ipAddresses: IPAddress[];
   linodeConfigs: [number, Config][];
   linodes: Linode[];
   notificationQueue: Notification[];

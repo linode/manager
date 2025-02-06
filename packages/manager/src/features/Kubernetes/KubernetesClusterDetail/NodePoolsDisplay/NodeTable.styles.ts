@@ -53,7 +53,7 @@ export const StyledTableFooter = styled(Box, {
   background: theme.bg.bgPaper,
   display: 'flex',
   justifyContent: 'space-between',
-  padding: `0 ${theme.spacing(2)}`,
+  paddingLeft: theme.spacing(),
   [theme.breakpoints.down('md')]: {
     display: 'block',
     flexDirection: 'column',
