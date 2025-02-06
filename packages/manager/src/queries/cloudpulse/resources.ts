@@ -18,6 +18,7 @@ export const useResourcesQuery = (
       return resources.map(
         (resource): CloudPulseResources => {
           return {
+            engineType: resource?.engine,
             id: String(resource.id),
             label: resource.label,
             region: resource.region,

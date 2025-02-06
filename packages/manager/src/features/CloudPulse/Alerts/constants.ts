@@ -179,3 +179,8 @@ export const alertStatusOptions: Item<
   label,
   value: key as AlertStatusType,
 }));
+
+export const engineTypeMap: Record<string, string> = {
+  mysql: 'MySQL',
+  postgresql: 'PostgreSQL',
+}

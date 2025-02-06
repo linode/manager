@@ -8,10 +8,14 @@ interface FilterResourceProps {
    */
   data?: CloudPulseResources[];
   /**
+   * Incase of dbaas, we need to apply the engine type filter
+   */
+  engineType?: string;
+
+  /**
    * The selected regions on which the data needs to be filtered
    */
   filteredRegions?: string[];
-
   /**
    * Property to integrate and edit the resources associated with alerts
    */
@@ -20,6 +24,7 @@ interface FilterResourceProps {
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
   regionsIdToRegionMap: Map<string, Region>;
+
   /**
    * The resources associated with the alerts
    */
@@ -97,6 +102,7 @@ export const getFilteredResources = (
 ): AlertInstance[] => {
   const {
     data,
+    engineType: engineOption,
     filteredRegions,
     isAdditionOrDeletionNeeded,
     regionsIdToRegionMap,
@@ -110,7 +116,9 @@ export const getFilteredResources = (
   }
   return data // here we always use the base data from API for filtering as source of truth
     .filter(
-      ({ id }) => isAdditionOrDeletionNeeded || resourceIds.includes(String(id))
+      ({ engineType, id }) =>
+        (isAdditionOrDeletionNeeded || resourceIds.includes(String(id))) &&
+        (!engineOption || engineOption === engineType) // Ensure engineType is always checked
     )
     .map((resource) => {
       const regionObj = resource.region

@@ -12,6 +12,8 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
+import { serviceTypeBasedColumns } from './constants';
+
 import type { Order } from 'src/hooks/useOrder';
 
 export interface AlertInstance {
@@ -20,9 +22,14 @@ export interface AlertInstance {
    */
   checked?: boolean;
   /**
+   * The engine associated with the instance in case of databases
+   */
+  engineType?: string;
+  /**
    * The id of the instance
    */
   id: string;
+
   /**
    * The label of the instance
    */
@@ -63,6 +70,11 @@ export interface DisplayAlertResourceProp {
    * Callback to scroll till the element required on page change change or sorting change
    */
   scrollToElement: () => void;
+
+  /**
+   * The service type associated with the alert
+   */
+  serviceType?: string;
 }
 
 export const DisplayAlertResources = React.memo(
@@ -74,6 +86,7 @@ export const DisplayAlertResources = React.memo(
       isSelectionsNeeded,
       pageSize,
       scrollToElement,
+      serviceType,
     } = props;
 
     const [sorting, setSorting] = React.useState<{
@@ -148,6 +161,8 @@ export const DisplayAlertResources = React.memo(
       );
     };
 
+    const columns = serviceTypeBasedColumns[serviceType ?? 'linode'] ?? [];
+
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -183,30 +198,20 @@ export const DisplayAlertResources = React.memo(
                       />
                     </TableCell>
                   )}
-                  <TableSortCell
-                    handleClick={(orderBy, order) => {
-                      handleSort(orderBy, order, handlePageChange);
-                    }}
-                    active={sorting.orderBy === 'label'}
-                    data-qa-header="resource"
-                    data-testid="resource"
-                    direction={sorting.order}
-                    label="label"
-                  >
-                    Resource
-                  </TableSortCell>
-                  <TableSortCell
-                    handleClick={(orderBy, order) => {
-                      handleSort(orderBy, order, handlePageChange);
-                    }}
-                    active={sorting.orderBy === 'region'}
-                    data-qa-header="region"
-                    data-testid="region"
-                    direction={sorting.order}
-                    label="region"
-                  >
-                    Region
-                  </TableSortCell>
+                  {columns.map(({ label, sortingKey }) => (
+                    <TableSortCell
+                      handleClick={(orderBy, order) =>
+                        handleSort(orderBy, order, handlePageChange)
+                      }
+                      active={sorting.orderBy === sortingKey}
+                      data-testid={label.toLowerCase()}
+                      direction={sorting.order}
+                      key={label}
+                      label={sortingKey ?? ''}
+                    >
+                      {label}
+                    </TableSortCell>
+                  ))}
                 </TableRow>
               </TableHead>
               <TableBody
@@ -214,28 +219,36 @@ export const DisplayAlertResources = React.memo(
                 data-testid="alert_resources_content"
               >
                 {!isDataLoadingError &&
-                  paginatedData.map(({ checked, id, label, region }, index) => (
-                    <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
+                  paginatedData.map((resource, index) => (
+                    <TableRow
+                      data-qa-alert-row={resource.id}
+                      key={`${index}_${resource.id}`}
+                    >
                       {isSelectionsNeeded && (
                         <TableCell padding="checkbox">
                           <Checkbox
                             onClick={() => {
-                              handleSelectionChange([id], !checked);
+                              handleSelectionChange(
+                                [resource.id],
+                                !resource.checked
+                              );
                             }}
                             sx={{
                               padding: 0,
                             }}
-                            checked={checked}
-                            data-testid={`select_item_${id}`}
+                            checked={resource.checked}
+                            data-testid={`select_item_${resource.id}`}
                           />
                         </TableCell>
                       )}
-                      <TableCell data-qa-alert-cell={`${id}_resource`}>
-                        {label}
-                      </TableCell>
-                      <TableCell data-qa-alert-cell={`${id}_region`}>
-                        {region}
-                      </TableCell>
+                      {columns.map(({ accessor, label }) => (
+                        <TableCell
+                          data-qa-alert-cell={`${resource.id}_${label}`}
+                          key={label}
+                        >
+                          {accessor(resource)}
+                        </TableCell>
+                      ))}
                     </TableRow>
                   ))}
                 {isDataLoadingError && (

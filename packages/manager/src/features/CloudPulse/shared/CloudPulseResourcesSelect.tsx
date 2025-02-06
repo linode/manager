@@ -11,6 +11,7 @@ import { deepEqual } from '../Utils/FilterBuilder';
 import type { Filter, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
+  engineType?: string;
   id: string;
   label: string;
   region?: string;
