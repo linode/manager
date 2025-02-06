@@ -38,6 +38,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     return (
       alerts?.filter((alert) => {
         return (
+          alert.status &&
           (!selectedType || alert.type === selectedType) &&
           (!searchText ||
             alert.label.toLowerCase().includes(searchText.toLowerCase()))

@@ -51,12 +51,16 @@ export const AlertConfirmationDialog = React.memo(
           handleClose(alertId);
         })
         .catch(() => {
-          enqueueSnackbar('The update for the alert settings failed.', {
-            variant: 'error',
-          });
-          handleClose(alertId);
+          enqueueSnackbar(
+            `${isActive ? 'Disabling' : 'Enabling'} alert failed`,
+            {
+              variant: 'error',
+            }
+          );
+          handleCancel();
         });
     }, [
+      isActive,
       enqueueSnackbar,
       entityName,
       handleCancel,
