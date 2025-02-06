@@ -3,6 +3,8 @@ import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { capitalize } from 'src/utilities/capitalize';
+
 import { dimensionOperatorOptions } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
 
@@ -54,6 +56,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       setValue(`${name}.dimension_label`, selected.value, {
         shouldValidate: true,
       });
+      setValue(`${name}.operator`, fieldValue.operator);
+      setValue(`${name}.value`, fieldValue.value);
     } else {
       setValue(name, fieldValue);
     }
@@ -74,7 +78,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   const valueOptions = () => {
     if (selectedDimension !== null && selectedDimension.values) {
       return selectedDimension.values.map((val) => ({
-        label: val,
+        label: capitalize(val),
         value: val,
       }));
     }

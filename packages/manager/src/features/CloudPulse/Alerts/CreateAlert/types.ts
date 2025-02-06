@@ -33,7 +33,7 @@ export interface MetricCriteriaForm
     'aggregate_function' | 'dimension_filters' | 'metric' | 'operator'
   > {
   aggregate_function: MetricAggregationType | null;
-  dimension_filters: DimensionFilterForm[] | null;
+  dimension_filters: DimensionFilterForm[];
   metric: null | string;
   operator: MetricOperatorType | null;
 }

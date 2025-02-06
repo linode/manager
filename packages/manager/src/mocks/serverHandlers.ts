@@ -548,80 +548,40 @@ export const handlers = [
     return HttpResponse.json(imageFactory.build());
   }),
   http.get('*/images', async ({ request }) => {
-    const privateImages = imageFactory.buildList(5, {
-      status: 'available',
-      type: 'manual',
-    });
-    const cloudinitCompatableDistro = imageFactory.build({
-      capabilities: ['cloud-init'],
-      id: 'metadata-test-distro',
-      is_public: true,
-      label: 'metadata-test-distro',
-      status: 'available',
-      type: 'manual',
-    });
-    const cloudinitCompatableImage = imageFactory.build({
-      capabilities: ['cloud-init'],
-      id: 'metadata-test-image',
-      label: 'metadata-test-image',
-      status: 'available',
-      type: 'manual',
-    });
-    const multiRegionsImage = imageFactory.build({
-      id: 'multi-regions-test-image',
-      label: 'multi-regions-test-image',
-      regions: [
-        { region: 'us-southeast', status: 'available' },
-        { region: 'us-east', status: 'pending' },
-      ],
-      status: 'available',
-      type: 'manual',
-    });
-    const creatingImages = imageFactory.buildList(2, {
-      status: 'creating',
-      type: 'manual',
-    });
-    const pendingImages = imageFactory.buildList(5, {
-      status: 'pending_upload',
-      type: 'manual',
-    });
-    const automaticImages = imageFactory.buildList(5, {
-      expiry: '2021-05-01',
-      type: 'automatic',
-    });
-    const publicImages = imageFactory.buildList(4, { is_public: true });
-    const distributedImage = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-sites'],
-      id: 'private/distributed-image',
-      label: 'distributed-image',
-      regions: [{ region: 'us-east', status: 'available' }],
-    });
-    const images = [
-      cloudinitCompatableDistro,
-      cloudinitCompatableImage,
-      multiRegionsImage,
-      distributedImage,
-      ...automaticImages,
-      ...privateImages,
-      ...publicImages,
-      ...pendingImages,
-      ...creatingImages,
-    ];
     const filter = request.headers.get('x-filter');
 
     if (filter?.includes('manual')) {
-      return HttpResponse.json(
-        makeResourcePage(images.filter((image) => image.type === 'manual'))
-      );
+      const images = [
+        imageFactory.build({
+          capabilities: ['distributed-sites'],
+          regions: [{ region: 'us-east', status: 'available' }],
+          type: 'manual',
+        }),
+        imageFactory.build({ capabilities: [], regions: [], type: 'manual' }),
+        imageFactory.build({
+          capabilities: ['distributed-sites', 'cloud-init'],
+          regions: [{ region: 'us-east', status: 'available' }],
+          type: 'manual',
+        }),
+        imageFactory.build({
+          capabilities: ['cloud-init'],
+          regions: [],
+          type: 'manual',
+        }),
+      ];
+      return HttpResponse.json(makeResourcePage(images));
     }
 
     if (filter?.includes('automatic')) {
-      return HttpResponse.json(
-        makeResourcePage(images.filter((image) => image.type === 'automatic'))
-      );
+      const images = imageFactory.buildList(5, {
+        capabilities: [],
+        regions: [],
+        type: 'automatic',
+      });
+      return HttpResponse.json(makeResourcePage(images));
     }
 
-    return HttpResponse.json(makeResourcePage(images));
+    return HttpResponse.json(makeResourcePage([]));
   }),
   http.post<any, UpdateImageRegionsPayload>(
     '*/v4/images/:id/regions',
@@ -1733,6 +1693,18 @@ export const handlers = [
         message: 'Low disk space.',
         status: 'notification',
       });
+      const dbMigrationEvents = eventFactory.buildList(1, {
+        action: 'database_migrate',
+        entity: { id: 11, label: 'database-11', type: 'database' },
+        message: 'Database migration started.',
+        status: 'started',
+      });
+      const dbMigrationFinishedEvents = eventFactory.buildList(1, {
+        action: 'database_migrate',
+        entity: { id: 11, label: 'database-11', type: 'database' },
+        message: 'Database migration finished.',
+        status: 'finished',
+      });
       const oldEvents = eventFactory.buildList(20, {
         action: 'account_update',
         percent_complete: 100,
@@ -1773,6 +1745,8 @@ export const handlers = [
       return HttpResponse.json(
         makeResourcePage([
           ...events,
+          ...dbMigrationEvents,
+          ...dbMigrationFinishedEvents,
           ...dbEvents,
           ...placementGroupAssignedEvent,
           ...placementGroupCreateEvent,
@@ -2460,22 +2434,21 @@ export const handlers = [
     }
   ),
   http.get('*/monitor/alert-definitions', async () => {
-    const customAlerts = alertFactory.buildList(5, {
+    const customAlerts = alertFactory.buildList(10, {
       severity: 0,
       type: 'user',
       updated: '2021-10-16T04:00:00',
     });
-    const customAlertsWithServiceType = alertFactory.buildList(4, {
-      created_by: 'user2',
+    const customAlertsWithServiceType = alertFactory.buildList(10, {
       service_type: 'dbaas',
       severity: 1,
       type: 'user',
     });
-    const defaultAlerts = alertFactory.buildList(4, {
+    const defaultAlerts = alertFactory.buildList(15, {
       created_by: 'System',
       type: 'system',
     });
-    const defaultAlertsWithServiceType = alertFactory.buildList(3, {
+    const defaultAlertsWithServiceType = alertFactory.buildList(7, {
       created_by: 'System',
       service_type: 'dbaas',
       severity: 3,
@@ -2483,12 +2456,15 @@ export const handlers = [
     });
     const alerts = [
       ...defaultAlerts,
-      ...alertFactory.buildList(5, { status: 'disabled' }),
+      ...alertFactory.buildList(8, {
+        service_type: 'linode',
+        status: 'disabled',
+      }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
       ...alertFactory.buildList(36, {
-        updated: '2021-10-16T04:00:00',
         status: 'disabled',
+        updated: '2021-10-16T04:00:00',
       }),
       ...customAlertsWithServiceType,
     ];

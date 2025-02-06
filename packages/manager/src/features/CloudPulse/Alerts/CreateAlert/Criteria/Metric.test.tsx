@@ -156,8 +156,9 @@ describe('Metric component tests', () => {
       container.getByRole('option', { name: 'Average' })
     ).toBeInTheDocument();
 
-    await user.click(await container.findByRole('option', { name: 'Average' }));
+    const option = await container.findByRole('option', { name: 'Average' });
 
+    await user.click(option);
     expect(
       within(aggregationTypeContainer).getByRole('combobox')
     ).toHaveAttribute('value', 'Average');
@@ -197,7 +198,8 @@ describe('Metric component tests', () => {
     ).toBeInTheDocument();
     expect(container.getByRole('option', { name: '==' })).toBeInTheDocument();
     expect(container.getByRole('option', { name: '<' })).toBeInTheDocument();
-    await user.click(await container.findByRole('option', { name: '>' }));
+    const option = await container.findByRole('option', { name: '>' });
+    await user.click(option);
 
     expect(within(operatorContainer).getByRole('combobox')).toHaveAttribute(
       'value',

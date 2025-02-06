@@ -20,6 +20,7 @@ import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertFilterKey, AlertFilterType } from './constants';
+import type { AlertInstance } from './DisplayAlertResources';
 import type { AlertDefinitionType, Region } from '@linode/api-v4';
 
 export interface AlertResourcesProp {
@@ -105,32 +106,18 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const theme = useTheme();
 
-  React.useEffect(() => {
-    if (resources && isSelectionsNeeded) {
-      setSelectedResources(
-        resources
-          .filter((resource) => alertResourceIds.includes(resource.id))
-          .map((resource) => resource.id)
-      );
+  const computedSelectedResources = React.useMemo(() => {
+    if (!isSelectionsNeeded || !resources) {
+      return alertResourceIds;
     }
+    return resources
+      .filter(({ id }) => alertResourceIds.includes(id))
+      .map(({ id }) => id);
   }, [resources, isSelectionsNeeded, alertResourceIds]);
 
-  const handleSelection = React.useCallback(
-    (ids: string[], isSelectionAction: boolean) => {
-      const onlySelected = isSelectionAction
-        ? selectedResources
-        : selectedResources.filter((resource) => !ids.includes(resource));
-
-      const newlySelected = ids.filter((id) => !selectedResources.includes(id));
-
-      setSelectedResources([...onlySelected, ...newlySelected]);
-
-      if (handleResourcesSelection) {
-        handleResourcesSelection([...onlySelected, ...newlySelected]);
-      }
-    },
-    [handleResourcesSelection, selectedResources]
-  );
+  React.useEffect(() => {
+    setSelectedResources(computedSelectedResources);
+  }, [computedSelectedResources]);
 
   // A map linking region IDs to their corresponding region objects, used for quick lookup when displaying data in the table.
   const regionsIdToRegionMap: Map<string, Region> = React.useMemo(() => {
@@ -145,54 +132,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       regionsIdToRegionMap,
       resourceIds: alertResourceIds,
     });
-  }, [resources, isSelectionsNeeded, regionsIdToRegionMap, alertResourceIds]);
-
-  /**
-   * Holds the resources that are
-   * filtered based on the passed resourceIds, typed searchText and filtered regions
-   */
-  const filteredResources = React.useMemo(() => {
-    return getFilteredResources({
-      additionalFilters,
-      data: resources,
-      filteredRegions,
-      isAdditionOrDeletionNeeded: isSelectionsNeeded,
-      regionsIdToRegionMap,
-      resourceIds: alertResourceIds,
-      searchText,
-      selectedOnly,
-      selectedResources,
-    });
-  }, [
-    resources,
-    filteredRegions,
-    isSelectionsNeeded,
-    regionsIdToRegionMap,
-    alertResourceIds,
-    searchText,
-    selectedOnly,
-    selectedResources,
-    additionalFilters,
-  ]);
-
-  const handleAllSelection = React.useCallback(() => {
-    if (!resources) {
-      // Guard clause if data is undefined
-      return;
-    }
-
-    if (selectedResources.length === resources.length) {
-      // Unselect all
-      setSelectedResources([]);
-    } else {
-      // Select all
-      const allResources = resources.map((resource) => resource.id);
-      setSelectedResources(allResources);
-      if (handleResourcesSelection) {
-        handleResourcesSelection(allResources);
-      }
-    }
-  }, [handleResourcesSelection, resources, selectedResources]);
+  }, [resources, alertResourceIds, regionsIdToRegionMap, isSelectionsNeeded]);
 
   const isDataLoadingError = isRegionsError || isResourcesError;
 
@@ -220,18 +160,74 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       [filterKey]: value,
     }));
   };
+  /**
+   * Filters resources based on the provided resource IDs, search text, and filtered regions.
+   */
+  const filteredResources: AlertInstance[] = React.useMemo(() => {
+    return getFilteredResources({
+      additionalFilters,
+      data: resources,
+      filteredRegions,
+      isAdditionOrDeletionNeeded: isSelectionsNeeded,
+      regionsIdToRegionMap,
+      resourceIds: alertResourceIds,
+      searchText,
+      selectedOnly,
+      selectedResources,
+    });
+  }, [
+    resources,
+    filteredRegions,
+    isSelectionsNeeded,
+    regionsIdToRegionMap,
+    alertResourceIds,
+    searchText,
+    selectedResources,
+    additionalFilters,
+    selectedOnly,
+  ]);
+
+  const handleSelection = React.useCallback(
+    (ids: string[], isSelectionAction: boolean) => {
+      setSelectedResources((prevSelected) => {
+        const updatedSelection = isSelectionAction
+          ? [...prevSelected, ...ids.filter((id) => !prevSelected.includes(id))]
+          : prevSelected.filter((resource) => !ids.includes(resource));
+
+        handleResourcesSelection?.(updatedSelection);
+        return updatedSelection;
+      });
+    },
+    [handleResourcesSelection]
+  );
+  const handleAllSelection = React.useCallback(() => {
+    if (!resources) {
+      // Guard clause if data is undefined
+      return;
+    }
+
+    if (selectedResources.length === resources.length) {
+      // Unselect all
+      setSelectedResources([]);
+    } else {
+      // Select all
+      const allResources = resources.map((resource) => resource.id);
+      setSelectedResources(allResources);
+      if (handleResourcesSelection) {
+        handleResourcesSelection(allResources);
+      }
+    }
+  }, [handleResourcesSelection, resources, selectedResources]);
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
+  const isNoResources =
+    !isDataLoadingError && !isSelectionsNeeded && alertResourceIds.length === 0;
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
   }
 
-  if (
-    !isDataLoadingError &&
-    !isSelectionsNeeded &&
-    alertResourceIds.length === 0
-  ) {
+  if (isNoResources) {
     return (
       <Stack gap={2}>
         {!hideLabel && (

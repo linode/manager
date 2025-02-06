@@ -12,6 +12,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
+import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
 import { serviceTypeBasedColumns } from './constants';
 
 import type { Order } from 'src/hooks/useOrder';
@@ -146,23 +147,7 @@ export const DisplayAlertResources = React.memo(
       },
       [handleSelection]
     );
-
-    const isAllPageSelected = (paginatedData: AlertInstance[]): boolean => {
-      return (
-        Boolean(paginatedData?.length) &&
-        paginatedData.every((resource) => resource.checked)
-      );
-    };
-
-    const isSomeSelected = (paginatedData: AlertInstance[]): boolean => {
-      return (
-        Boolean(paginatedData?.length) &&
-        paginatedData.some((resource) => resource.checked)
-      );
-    };
-
     const columns = serviceTypeBasedColumns[serviceType ?? ''] ?? [];
-
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -186,12 +171,12 @@ export const DisplayAlertResources = React.memo(
                         }
                         onClick={() =>
                           handleSelectionChange(
-                            paginatedData.map((resource) => resource.id),
+                            paginatedData.map(({ id }) => id),
                             !isAllPageSelected(paginatedData)
                           )
                         }
                         sx={{
-                          padding: 0,
+                          p: 0,
                         }}
                         checked={isAllPageSelected(paginatedData)}
                         data-testid={`select_all_in_page_${page}`}

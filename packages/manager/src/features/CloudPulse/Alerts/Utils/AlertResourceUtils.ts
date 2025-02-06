@@ -29,7 +29,6 @@ interface FilterResourceProps {
    * Property to integrate and edit the resources associated with alerts
    */
   isAdditionOrDeletionNeeded?: boolean;
-
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
@@ -82,11 +81,11 @@ export const getRegionOptions = (
     regionsIdToRegionMap,
     resourceIds,
   } = filterProps;
-  if (
+  const isEmpty =
     !data ||
     (!isAdditionOrDeletionNeeded && !resourceIds.length) ||
-    !regionsIdToRegionMap.size
-  ) {
+    !regionsIdToRegionMap.size;
+  if (isEmpty) {
     return [];
   }
   const uniqueRegions = new Set<Region>();
@@ -185,4 +184,20 @@ export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
       top: scrollToElement.getBoundingClientRect().top + window.scrollY - 40,
     });
   }
+};
+
+/**
+ * @param data The list of alert instances displayed in the table.
+ * @returns True if, all instances are selected else false.
+ */
+export const isAllPageSelected = (data: AlertInstance[]): boolean => {
+  return Boolean(data?.length) && data.every(({ checked }) => checked);
+};
+
+/**
+ * @param data The list of alert instances displayed in the table.
+ * @returns True if, any one of instances is selected else false.
+ */
+export const isSomeSelected = (data: AlertInstance[]): boolean => {
+  return Boolean(data?.length) && data.some(({ checked }) => checked);
 };

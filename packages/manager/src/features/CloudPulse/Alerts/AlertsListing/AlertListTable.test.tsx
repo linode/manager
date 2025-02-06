@@ -4,7 +4,7 @@ import { alertFactory } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AlertsListTable } from './AlertsListTable';
+import { AlertsListTable } from './AlertListTable';
 
 describe('Alert List Table test', () => {
   it('should render the alert landing table ', async () => {

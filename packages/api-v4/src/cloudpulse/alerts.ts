@@ -11,7 +11,7 @@ import {
   Alert,
   AlertServiceType,
   CreateAlertDefinitionPayload,
-  EditAlertResourcesPayload,
+  EditAlertDefinitionPayload,
   NotificationChannel,
 } from './types';
 import { BETA_API_ROOT as API_ROOT } from '../constants';
@@ -66,21 +66,8 @@ export const getAlertDefinitionByServiceTypeAndId = (
     })
   );
 
-export const getNotificationChannels = (params?: Params, filters?: Filter) =>
-  Request<ResourcePage<NotificationChannel>>(
-    setURL(
-      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/alert-channels`
-    ),
-    setMethod('GET'),
-    setParams(params),
-    setXFilter(filters),
-    setHeaders({
-      Authorization: bearer,
-    })
-  );
-
-export const editAlertDefinitionEntities = (
-  data: EditAlertResourcesPayload,
+export const editAlertDefinition = (
+  data: EditAlertDefinitionPayload,
   serviceType: string,
   alertId: number
 ) =>
@@ -92,4 +79,16 @@ export const editAlertDefinitionEntities = (
     ),
     setMethod('PUT'),
     setData(data)
+  );
+export const getNotificationChannels = (params?: Params, filters?: Filter) =>
+  Request<ResourcePage<NotificationChannel>>(
+    setURL(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/monitor/alert-channels`
+    ),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setHeaders({
+      Authorization: bearer,
+    })
   );

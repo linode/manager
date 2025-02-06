@@ -1,6 +1,6 @@
 import { Box, Button, CircleProgress } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import { useSnackbar } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAlertDefinitionQuery,
-  useEditAlertDefinitionEntities,
+  useEditAlertDefinition,
 } from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
@@ -20,13 +20,12 @@ import { getAlertBoxStyles } from '../Utils/utils';
 
 import type { AlertRouteParams } from '../AlertsDetail/AlertDetail';
 import type { ActionPanelProps } from 'src/components/ActionsPanel/ActionsPanel';
+import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 export const EditAlertResources = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
 
   const history = useHistory();
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const theme = useTheme();
 
@@ -41,7 +40,7 @@ export const EditAlertResources = () => {
     isError: isEditAlertError,
     mutateAsync: editAlert,
     reset: resetEditAlert,
-  } = useEditAlertDefinitionEntities(serviceType, Number(alertId));
+  } = useEditAlertDefinition(serviceType, Number(alertId));
 
   React.useEffect(() => {
     setSelectedResources(
@@ -88,39 +87,26 @@ export const EditAlertResources = () => {
   }, [alertDetails, selectedResources]);
 
   if (isFetching) {
-    return (
-      <>
-        <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
-          <CircleProgress />
-        </Box>
-      </>
-    );
+    return getEditAlertMessage(<CircleProgress />, newPathname, overrides);
   }
 
   if (isError) {
-    return (
-      <>
-        <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
-          <ErrorState
-            errorText={
-              'An error occurred while loading the alerts definitions and resources. Please try again later.'
-            }
-          />
-        </Box>
-      </>
+    return getEditAlertMessage(
+      <ErrorState
+        errorText={
+          'An error occurred while loading the alerts definitions and resources. Please try again later.'
+        }
+      />,
+      newPathname,
+      overrides
     );
   }
 
   if (!alertDetails) {
-    return (
-      <>
-        <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
-          <StyledPlaceholder icon={EntityIcon} title="No Data to display." />
-        </Box>
-      </>
+    return getEditAlertMessage(
+      <StyledPlaceholder icon={EntityIcon} title="No Data to display." />,
+      newPathname,
+      overrides
     );
   }
 
@@ -176,6 +162,8 @@ export const EditAlertResources = () => {
     resetEditAlert(); // reset the mutate use hook states
   }
 
+  const { entity_ids, label, service_type, type } = alertDetails;
+
   return (
     <>
       <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
@@ -188,12 +176,12 @@ export const EditAlertResources = () => {
       >
         <Box>
           <AlertResources
-            alertLabel={alertDetails.label}
-            alertResourceIds={alertDetails.entity_ids}
-            alertType={alertDetails.type}
+            alertLabel={label}
+            alertResourceIds={entity_ids}
+            alertType={type}
             handleResourcesSelection={handleResourcesSelection}
             isSelectionsNeeded
-            serviceType={alertDetails.service_type}
+            serviceType={service_type}
           />
         </Box>
         <Box alignSelf="flex-end" m={3} mb={0}>
@@ -237,6 +225,27 @@ export const EditAlertResources = () => {
           You have changed the resource settings for your alert.
           <br /> This also updates your alert definition.
         </ConfirmationDialog>
+      </Box>
+    </>
+  );
+};
+
+/**
+ * Returns a common UI structure for loading, error, or empty states.
+ * @param messageComponent - A React component to display (e.g., CircleProgress, ErrorState, or Placeholder).
+ * @param pathName - The current pathname to be provided in breadcrumb
+ * @param crumbOverrides - The overrides to be provided in breadcrumb
+ */
+const getEditAlertMessage = (
+  messageComponent: React.ReactNode,
+  pathName: string,
+  crumbOverrides: CrumbOverridesProps[]
+) => {
+  return (
+    <>
+      <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathName} />
+      <Box alignContent="center" height="600px">
+        {messageComponent}
       </Box>
     </>
   );

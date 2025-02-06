@@ -15,11 +15,12 @@ import type { APIError, Image, UpdateImagePayload } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 export const EditImageDrawer = (props: Props) => {
-  const { image, onClose, open } = props;
+  const { image, isFetching, onClose, open } = props;
 
   const { canCreateImage } = useImageAndLinodeGrantCheck();
 
@@ -80,7 +81,12 @@ export const EditImageDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Edit Image">
+    <Drawer
+      isFetching={isFetching}
+      onClose={handleClose}
+      open={open}
+      title="Edit Image"
+    >
       {!canCreateImage && (
         <Notice
           text="You don't have permissions to edit images. Please contact an account administrator for details."

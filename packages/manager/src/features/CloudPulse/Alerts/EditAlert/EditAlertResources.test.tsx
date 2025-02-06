@@ -8,13 +8,25 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EditAlertResources } from './EditAlertResources';
 
-// Mock Data
-const alertDetails = alertFactory.build({ service_type: 'linode' });
+import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+
 const linodes = linodeFactory.buildList(4);
+// Mock Data
+const alertDetails = alertFactory.build({
+  entity_ids: ['1', '2', '3'],
+  service_type: 'linode',
+});
 const regions = regionFactory.buildList(4).map((region, index) => ({
   ...region,
   id: linodes[index].region,
 }));
+const cloudPulseResources: CloudPulseResources[] = linodes.map((linode) => {
+  return {
+    id: String(linode.id),
+    label: linode.label,
+    region: linode.region,
+  };
+});
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
@@ -34,7 +46,6 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
-
 vi.mock('src/queries/regions/regions', () => ({
   ...vi.importActual('src/queries/regions/regions'),
   useRegionsQuery: queryMocks.useRegionsQuery,
@@ -54,7 +65,7 @@ beforeEach(() => {
     isFetching: false,
   });
   queryMocks.useResourcesQuery.mockReturnValue({
-    data: linodes,
+    data: cloudPulseResources,
     isError: false,
     isFetching: false,
   });
@@ -102,9 +113,7 @@ describe('EditAlertResources component tests', () => {
       isError: false,
       isFetching: true, // simulate loading
     });
-
     const { getByTestId } = renderWithTheme(<EditAlertResources />);
-
     expect(getByTestId('circle-progress')).toBeInTheDocument();
   });
 

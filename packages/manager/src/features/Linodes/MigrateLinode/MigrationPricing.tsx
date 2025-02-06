@@ -56,7 +56,7 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
         {shouldShowBackupsPrice && (
           <>
             &nbsp;
-            <Typography fontFamily={theme.font.bold} fontSize={priceFontSize}>
+            <Typography sx={{ font: theme.font.bold }} fontSize={priceFontSize}>
               | Backups&nbsp;
             </Typography>
             <DisplayPrice

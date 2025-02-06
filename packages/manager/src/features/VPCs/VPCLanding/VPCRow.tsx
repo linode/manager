@@ -1,15 +1,16 @@
-import { VPC } from '@linode/api-v4/lib/vpcs/types';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
-import { Action } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+
+import type { VPC } from '@linode/api-v4/lib/vpcs/types';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   handleDeleteVPC: () => void;
@@ -35,9 +36,9 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
 
   const actions: Action[] = [
     {
+      disabled: isVPCReadOnly,
       onClick: handleEditVPC,
       title: 'Edit',
-      disabled: isVPCReadOnly,
       tooltip: isVPCReadOnly
         ? getRestrictedResourceText({
             action: 'edit',
@@ -47,9 +48,9 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
         : undefined,
     },
     {
+      disabled: isVPCReadOnly,
       onClick: handleDeleteVPC,
       title: 'Delete',
-      disabled: isVPCReadOnly,
       tooltip: isVPCReadOnly
         ? getRestrictedResourceText({
             action: 'delete',
