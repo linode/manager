@@ -401,13 +401,16 @@ export const CreateCluster = () => {
                   onChange={(_, selected) => {
                     field.onChange(selected?.value);
                   }}
+                  value={
+                    versions.find((v) => v.value === latestk8Version.label) ??
+                    null
+                  }
                   disableClearable={!!field.value}
                   errorText={errorMap.k8s_version}
                   label="Kubernetes Version"
                   loading={isLoadingVersions}
                   options={versions}
                   placeholder={' '}
-                  value={latestk8Version ?? null}
                 />
               )}
               control={control}

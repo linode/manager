@@ -16,6 +16,7 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LinkButton } from 'src/components/LinkButton';
+import { stringToExtendedIP, validateIPs } from 'src/utilities/ipUtils';
 
 export interface ControlPlaneACLProps {
   enableControlPlaneACL: boolean;
@@ -36,7 +37,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     setControlPlaneACL,
   } = props;
 
-  const { control, watch } = useForm();
+  const { control, setError, watch } = useForm();
   const {
     append: appendIPv4,
     fields: ipv4Fields,
@@ -128,11 +129,23 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                   render={({ field: controllerField, fieldState }) => (
                     <TextField
                       {...controllerField}
+                      onBlur={() => {
+                        const _ips = stringToExtendedIP(controllerField.value);
+                        const validatedIPs = validateIPs([_ips], {
+                          allowEmptyAddress: true,
+                          errorMessage: 'Must be a valid IPv4 address.',
+                        });
+                        if (validatedIPs[0].error) {
+                          setError(controllerField.name, {
+                            message: validatedIPs[0].error,
+                            type: 'manual',
+                          });
+                        }
+                      }}
                       error={!!fieldState.error}
-                      helperText={fieldState.error?.message}
+                      errorText={fieldState.error?.message}
                       hideLabel
                       label={`IPv4 Addresses or CIDRs ip-address-${index}`}
-                      onBlur={controllerField.onBlur}
                       ref={null}
                       sx={{ minWidth: 350 }}
                     />
@@ -171,11 +184,23 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                   render={({ field: controllerField, fieldState }) => (
                     <TextField
                       {...controllerField}
+                      onBlur={() => {
+                        const _ips = stringToExtendedIP(controllerField.value);
+                        const validatedIPs = validateIPs([_ips], {
+                          allowEmptyAddress: true,
+                          errorMessage: 'Must be a valid IPv4 address.',
+                        });
+                        if (validatedIPs[0].error) {
+                          setError(controllerField.name, {
+                            message: validatedIPs[0].error,
+                            type: 'manual',
+                          });
+                        }
+                      }}
                       error={!!fieldState.error}
-                      helperText={fieldState.error?.message}
+                      errorText={fieldState.error?.message}
                       hideLabel
                       label={`IPv6 Addresses or CIDRs ip-address-${index}`}
-                      onBlur={controllerField.onBlur}
                       ref={null}
                       sx={{ minWidth: 350 }}
                     />
