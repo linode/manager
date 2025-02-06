@@ -55,8 +55,6 @@ export const mockGetCloudPulseServices = (
     label: cloudPulseServicelMap.get(serviceType) || 'dbaas',
     service_type: serviceType,
   }));
-
-  // Intercept the API call and return the mocked response
   return cy.intercept(
     'GET',
     apiMatcher('/monitor/services'),

@@ -105,8 +105,6 @@ const verifyTableSorting = (
 };
 
 /**
- * Utility function to validate an alert's details.
- *
  * @param {Alert} alert - The alert object to validate.
  */
 const validateAlertDetails = (alert: Alert) => {
