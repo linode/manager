@@ -181,10 +181,10 @@ describe('Integration Tests for Alert Show Detail Page', () => {
           .eq(index)
           .within(() => {
             cy.get(
-              `[data-qa-chip="${aggregationTypeMap[rule.aggregation_type]}"]`
+              `[data-qa-chip="${aggregationTypeMap[rule.aggregate_function]}"]`
             )
               .should('be.visible')
-              .should('have.text', aggregationTypeMap[rule.aggregation_type]);
+              .should('have.text', aggregationTypeMap[rule.aggregate_function]);
 
             cy.get(`[data-qa-chip="${rule.label}"]`)
               .should('be.visible')

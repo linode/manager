@@ -136,7 +136,7 @@ export const AlertDetail = () => {
           data-qa-section="Notification Channels"
         >
           <AlertDetailNotification
-            channelIds={alertDetails.channels.map(({ id }) => id)}
+            channelIds={alertDetails.alert_channels.map(({ id }) => id)}
           />
         </Box>
       </Box>

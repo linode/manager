@@ -1,10 +1,10 @@
 import Factory from 'src/factories/factoryProxy';
 
 import type {
-  MetricDefinition,
   CloudPulseMetricsResponse,
   CloudPulseMetricsResponseData,
   Dashboard,
+  MetricDefinition,
   Widgets,
 } from '@linode/api-v4';
 import type { ChartVariant } from 'src/components/AreaChart/AreaChart';
@@ -56,6 +56,7 @@ export const dashboardMetricFactory = Factory.Sync.makeFactory<MetricDefinition>
   {
     available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
     dimensions: [],
+    is_alertable: true,
     label: Factory.each((i) => `widget_label_${i}`),
     metric: Factory.each((i) => `widget_metric_${i}`),
     metric_type: 'gauge',

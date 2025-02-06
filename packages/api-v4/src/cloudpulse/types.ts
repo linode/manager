@@ -111,6 +111,7 @@ export interface MetricDefinition {
   scrape_interval: string;
   available_aggregate_functions: string[];
   dimensions: Dimension[];
+  is_alertable: boolean;
 }
 
 export interface Dimension {
@@ -180,7 +181,7 @@ export interface CreateAlertDefinitionPayload {
 }
 export interface MetricCriteria {
   metric: string;
-  aggregation_type: MetricAggregationType;
+  aggregate_function: MetricAggregationType;
   operator: MetricOperatorType;
   threshold: number;
   dimension_filters?: DimensionFilter[];
@@ -222,11 +223,11 @@ export interface Alert {
     rules: AlertDefinitionMetricCriteria[];
   };
   trigger_conditions: TriggerCondition;
-  channels: {
-    id: string;
+  alert_channels: {
+    id: number;
     label: string;
     url: string;
-    type: 'channel';
+    type: 'alert-channel';
   }[];
   created_by: string;
   updated_by: string;

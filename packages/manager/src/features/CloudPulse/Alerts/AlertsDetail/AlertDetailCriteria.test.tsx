@@ -16,7 +16,7 @@ describe('AlertDetailCriteria component tests', () => {
     const alertDetails = alertFactory.build({
       rule_criteria: {
         rules: alertRulesFactory.buildList(2, {
-          aggregation_type: 'avg',
+          aggregate_function: 'avg',
           dimension_filters: alertDimensionsFactory.buildList(2),
           label: 'CPU Usage',
           metric: 'cpu_usage',
