@@ -29,7 +29,7 @@ const engineOptions: EngineType[] = [
   },
 ];
 
-export const AlertsEngineOptionFilter = React.memo(
+export const AlertsEngineTypeFilter = React.memo(
   (props: AlertsEngineOptionProps) => {
     const { handleFilterChange: handleSelection } = props;
 

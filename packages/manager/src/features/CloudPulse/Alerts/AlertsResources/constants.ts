@@ -1,5 +1,5 @@
 import { engineTypeMap } from '../constants';
-import { AlertsEngineOptionFilter } from './AlertsEngineTypeFilter';
+import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 
 import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
 import type { AlertInstance } from './DisplayAlertResources';
@@ -50,7 +50,7 @@ export const serviceToFiltersMap: Record<
   string,
   MemoExoticComponent<React.ComponentType<AlertsEngineOptionProps>>[]
 > = {
-  dbaas: [AlertsEngineOptionFilter], // dbaas uses Engine filter
+  dbaas: [AlertsEngineTypeFilter], // dbaas uses Engine filter
 };
 
 export type AlertFilterKey = 'engineType'; // will be extended to have tags, plan etc.,

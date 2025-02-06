@@ -43,6 +43,6 @@ describe('AlertResourceAdditionalFilters', () => {
     await userEvent.click(getByRole('option', { name: 'MySQL' }));
 
     // Verify handleFilterChange was called
-    expect(handleFilterChange).toHaveBeenCalledTimes(1);
+    expect(handleFilterChange).toHaveBeenCalledWith('mysql', 'engineType');
   });
 });

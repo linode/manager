@@ -3,7 +3,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AlertsEngineOptionFilter } from './AlertsEngineTypeFilter';
+import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 
 describe('AlertsEngineOptionFilter', () => {
   it('calls handleSelection with correct arguments when an engine type is selected', async () => {
@@ -12,7 +12,7 @@ describe('AlertsEngineOptionFilter', () => {
 
     // Render the component
     const { getByRole } = renderWithTheme(
-      <AlertsEngineOptionFilter handleFilterChange={handleSelection} />
+      <AlertsEngineTypeFilter handleFilterChange={handleSelection} />
     );
 
     await userEvent.click(getByRole('button', { name: 'Open' }));
