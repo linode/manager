@@ -45,7 +45,7 @@ export const useAllAlertDefinitionsQuery = (
 };
 
 export const useAlertDefinitionQuery = (
-  alertId: number,
+  alertId: string,
   serviceType: string
 ) => {
   return useQuery<Alert, APIError[]>({

@@ -40,7 +40,7 @@ export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
 
 export const getAlertDefinitionByServiceTypeAndId = (
   serviceType: string,
-  alertId: number
+  alertId: string
 ) =>
   Request<Alert>(
     setURL(
