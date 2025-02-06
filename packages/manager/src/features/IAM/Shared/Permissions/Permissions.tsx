@@ -49,9 +49,8 @@ export const Permissions = ({ permissions }: Props) => {
       }
     );
 
-    const numHiddenItems = firstHiddenIndex
-      ? itemsArray.length - firstHiddenIndex
-      : 0;
+    const numHiddenItems =
+      firstHiddenIndex !== -1 ? itemsArray.length - firstHiddenIndex : 0;
 
     setNumHiddenItems(numHiddenItems);
   }, [showAll, permissions]);
@@ -78,7 +77,7 @@ export const Permissions = ({ permissions }: Props) => {
       container
       data-testid="parent"
       direction="column"
-      sx={{ marginBottom: 1 }}
+      sx={{ marginBottom: 1.25 }}
     >
       <StyledGrid container item md={1}>
         <StyledTypography variant="body1">Permissions</StyledTypography>
@@ -91,12 +90,14 @@ export const Permissions = ({ permissions }: Props) => {
 
       <StyledContainer>
         <StyledClampedContent ref={containerRef} showAll={showAll}>
-          <StyledBox>
-            {numHiddenItems > 0 && <StyledSpan> +{numHiddenItems} </StyledSpan>}
-            <StyledLinkButton onClick={() => setShowAll(!showAll)}>
-              {showAll ? 'Hide' : ` Expand`}
-            </StyledLinkButton>
-          </StyledBox>
+          {(numHiddenItems > 0 || showAll) && (
+            <StyledBox>
+              {!showAll && <StyledSpan> +{numHiddenItems} </StyledSpan>}
+              <StyledLinkButton onClick={() => setShowAll(!showAll)}>
+                {showAll ? 'Hide' : ` Expand`}
+              </StyledLinkButton>
+            </StyledBox>
+          )}
 
           {permissions.map((permission: PermissionType, index: number) => (
             <StyledPermissionItem
