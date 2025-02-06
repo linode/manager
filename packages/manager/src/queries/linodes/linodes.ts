@@ -32,6 +32,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { getIsLegacyInterfaceArray } from 'src/features/Linodes/LinodeCreate/utilities';
 import { placementGroupQueries } from 'src/queries/placementGroups';
 import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
 
@@ -176,7 +177,6 @@ export const useAllLinodesQuery = (
     ...linodeQueries.linodes._ctx.all(params, filter),
     ...queryPresets.longLived,
     enabled,
-    placeholderData: keepPreviousData,
   });
 };
 
@@ -283,23 +283,27 @@ export const useCreateLinodeMutation = () => {
 
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries(profileQueries.grants);
+      // @TODO Linode Interfaces - need to handle case if interface is not legacy
+      if (getIsLegacyInterfaceArray(variables.interfaces)) {
+        if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
+          // If a Linode is created with a VLAN, invalidate vlans because
+          // they are derived from Linode configs.
+          queryClient.invalidateQueries({ queryKey: vlanQueries._def });
+        }
 
-      if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
-        // If a Linode is created with a VLAN, invalidate vlans because
-        // they are derived from Linode configs.
-        queryClient.invalidateQueries({ queryKey: vlanQueries._def });
-      }
+        const vpcId = variables.interfaces?.find((i) => i.purpose === 'vpc')
+          ?.vpc_id;
 
-      const vpcId = variables.interfaces?.find((i) => i.purpose === 'vpc')
-        ?.vpc_id;
-
-      if (vpcId) {
-        // If a Linode is created with a VPC, invalidate the related VPC queries.
-        queryClient.invalidateQueries({ queryKey: vpcQueries.all._def });
-        queryClient.invalidateQueries({ queryKey: vpcQueries.paginated._def });
-        queryClient.invalidateQueries({
-          queryKey: vpcQueries.vpc(vpcId).queryKey,
-        });
+        if (vpcId) {
+          // If a Linode is created with a VPC, invalidate the related VPC queries.
+          queryClient.invalidateQueries({ queryKey: vpcQueries.all._def });
+          queryClient.invalidateQueries({
+            queryKey: vpcQueries.paginated._def,
+          });
+          queryClient.invalidateQueries({
+            queryKey: vpcQueries.vpc(vpcId).queryKey,
+          });
+        }
       }
 
       // If the Linode is assigned to a placement group on creation,

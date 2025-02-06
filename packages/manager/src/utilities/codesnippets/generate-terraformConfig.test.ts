@@ -1,6 +1,6 @@
 import { generateTerraformConfig } from './generate-terraformConfig';
 
-import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 describe('generateTerraformConfig', () => {
   it('should generate correct configuration with all properties', () => {

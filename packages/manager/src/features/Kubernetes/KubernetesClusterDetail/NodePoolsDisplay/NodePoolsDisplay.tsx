@@ -1,8 +1,9 @@
-import { Button, CircleProgress, Stack, Typography } from '@linode/ui';
+import { Button, CircleProgress, Select, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { FormLabel } from 'src/components/FormLabel';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -12,11 +13,40 @@ import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
 import { AutoscalePoolDialog } from './AutoscalePoolDialog';
 import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
+import { LabelAndTaintDrawer } from './LabelsAndTaints/LabelAndTaintDrawer';
 import { NodePool } from './NodePool';
 import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
 import type { KubernetesTier, Region } from '@linode/api-v4';
+
+export type StatusFilter = 'all' | 'offline' | 'provisioning' | 'running';
+
+interface StatusFilterOption {
+  label: string;
+  value: StatusFilter;
+}
+
+const statusOptions: StatusFilterOption[] = [
+  {
+    label: 'Show All',
+    value: 'all',
+  },
+  {
+    label: 'Running',
+    value: 'running',
+  },
+  {
+    label: 'Offline',
+    value: 'offline',
+  },
+  {
+    label: 'Provisioning',
+    value: 'provisioning',
+  },
+];
+
+const ariaIdentifier = 'node-pool-status-filter';
 
 export interface Props {
   clusterCreated: string;
@@ -49,6 +79,10 @@ export const NodePoolsDisplay = (props: Props) => {
   const selectedPool = pools?.find((pool) => pool.id === selectedPoolId);
 
   const [isDeleteNodePoolOpen, setIsDeleteNodePoolOpen] = useState(false);
+  const [
+    isLabelsAndTaintsDrawerOpen,
+    setIsLabelsAndTaintsDrawerOpen,
+  ] = useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = useState(false);
   const [isRecycleAllPoolNodesOpen, setIsRecycleAllPoolNodesOpen] = useState(
     false
@@ -63,6 +97,8 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const typesQuery = useSpecificTypes(_pools?.map((pool) => pool.type) ?? []);
   const types = extendTypesQueryResult(typesQuery);
+
+  const [statusFilter, setStatusFilter] = React.useState<StatusFilter>('all');
 
   const handleShowMore = () => {
     if (numPoolsToDisplay < (pools?.length ?? 0)) {
@@ -83,6 +119,11 @@ export const NodePoolsDisplay = (props: Props) => {
     setIsResizeDrawerOpen(true);
   };
 
+  const handleOpenLabelsAndTaintsDrawer = (poolId: number) => {
+    setSelectedPoolId(poolId);
+    setIsLabelsAndTaintsDrawerOpen(true);
+  };
+
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
   }
@@ -95,10 +136,32 @@ export const NodePoolsDisplay = (props: Props) => {
         flexWrap="wrap"
         justifyContent="space-between"
         spacing={2}
-        sx={{ paddingLeft: { md: 0, sm: 1, xs: 1 } }}
+        sx={{ paddingLeft: { md: 0, sm: 1, xs: 1 }, paddingTop: 3 }}
       >
         <Typography variant="h2">Node Pools</Typography>
         <Stack direction="row" spacing={1}>
+          <Stack alignItems="end" direction="row">
+            <FormLabel htmlFor={ariaIdentifier}>
+              <Typography ml={1} mr={1}>
+                Status
+              </Typography>
+            </FormLabel>
+            <Select
+              value={
+                statusOptions?.find(
+                  (option) => option.value === statusFilter
+                ) ?? null
+              }
+              data-qa-status-filter
+              hideLabel
+              id={ariaIdentifier}
+              label="Status"
+              onChange={(_, item) => setStatusFilter(item?.value)}
+              options={statusOptions ?? []}
+              placeholder="Select a status"
+              sx={{ width: 130 }}
+            />
+          </Stack>
           <Button
             buttonType="secondary"
             onClick={() => setIsRecycleClusterOpen(true)}
@@ -145,11 +208,13 @@ export const NodePoolsDisplay = (props: Props) => {
               clusterTier={clusterTier}
               count={count}
               encryptionStatus={disk_encryption}
+              handleClickLabelsAndTaints={handleOpenLabelsAndTaintsDrawer}
               handleClickResize={handleOpenResizeDrawer}
               isOnlyNodePool={pools?.length === 1}
               key={id}
               nodes={nodes ?? []}
               poolId={thisPool.id}
+              statusFilter={statusFilter}
               tags={tags}
               typeLabel={typeLabel}
             />
@@ -169,6 +234,12 @@ export const NodePoolsDisplay = (props: Props) => {
         open={addDrawerOpen}
         regionsData={regionsData}
       />
+      <LabelAndTaintDrawer
+        clusterId={clusterID}
+        nodePool={selectedPool}
+        onClose={() => setIsLabelsAndTaintsDrawerOpen(false)}
+        open={isLabelsAndTaintsDrawerOpen}
+      />
       <ResizeNodePoolDrawer
         kubernetesClusterId={clusterID}
         kubernetesRegionId={clusterRegionId}
@@ -176,18 +247,23 @@ export const NodePoolsDisplay = (props: Props) => {
         onClose={() => setIsResizeDrawerOpen(false)}
         open={isResizeDrawerOpen}
       />
-      <DeleteNodePoolDialog
-        kubernetesClusterId={clusterID}
-        nodePool={selectedPool}
-        onClose={() => setIsDeleteNodePoolOpen(false)}
-        open={isDeleteNodePoolOpen}
-      />
       <AutoscalePoolDialog
         clusterId={clusterID}
         handleOpenResizeDrawer={handleOpenResizeDrawer}
         nodePool={selectedPool}
         onClose={() => setIsAutoscaleDialogOpen(false)}
         open={isAutoscaleDialogOpen}
+      />
+      <DeleteNodePoolDialog
+        kubernetesClusterId={clusterID}
+        nodePool={selectedPool}
+        onClose={() => setIsDeleteNodePoolOpen(false)}
+        open={isDeleteNodePoolOpen}
+      />
+      <RecycleClusterDialog
+        clusterId={clusterID}
+        onClose={() => setIsRecycleClusterOpen(false)}
+        open={isRecycleClusterOpen}
       />
       <RecycleNodeDialog
         clusterId={clusterID}
@@ -200,11 +276,6 @@ export const NodePoolsDisplay = (props: Props) => {
         nodePoolId={selectedPoolId}
         onClose={() => setIsRecycleAllPoolNodesOpen(false)}
         open={isRecycleAllPoolNodesOpen}
-      />
-      <RecycleClusterDialog
-        clusterId={clusterID}
-        onClose={() => setIsRecycleClusterOpen(false)}
-        open={isRecycleClusterOpen}
       />
     </>
   );

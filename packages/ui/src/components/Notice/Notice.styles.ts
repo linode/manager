@@ -8,7 +8,7 @@ export const useStyles = makeStyles()((theme) => ({
     color: theme.tokens.color.Neutrals.White,
     position: 'absolute',
     left: -25,
-    transform: "translateY(-50%)",
+    transform: 'translateY(-50%)',
     top: '50%',
   },
   important: {

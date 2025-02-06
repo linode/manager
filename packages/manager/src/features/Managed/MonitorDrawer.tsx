@@ -8,7 +8,6 @@ import {
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
-import { pickBy } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -112,10 +111,13 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
    * values such as `notes` come back from the API as null, so remove those
    * as well.
    */
-  const _monitor = pickBy(
-    (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
-    monitor
-  ) as ManagedServicePayload;
+  const _monitor = monitor
+    ? (Object.fromEntries(
+        Object.entries(monitor).filter(
+          ([key, value]) => value !== null && key in emptyInitialValues
+        )
+      ) as ManagedServicePayload)
+    : ({} as ManagedServicePayload);
 
   const initialValues = { ...emptyInitialValues, ..._monitor };
 

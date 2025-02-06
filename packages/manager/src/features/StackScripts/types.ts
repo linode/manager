@@ -1,5 +1,4 @@
-import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import type { ResourcePage, StackScript } from '@linode/api-v4';
 
 export type StackScriptsRequest = (
   params?: unknown,
