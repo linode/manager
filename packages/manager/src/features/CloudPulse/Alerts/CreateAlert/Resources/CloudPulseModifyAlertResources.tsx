@@ -45,7 +45,9 @@ export const CloudPulseModifyAlertResources = React.memo(
       <Controller
         render={({ field, fieldState }) => (
           <Box mt={3}>
-            <Typography variant="h2" mb={3}>2. Resources</Typography>
+            <Typography mb={3} variant="h2">
+              2. Resources
+            </Typography>
             <Box sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}>
               <AlertResources
                 noSelectionErrorText={

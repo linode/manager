@@ -15,9 +15,11 @@ import {
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { AlertResourceAdditionalFilters } from './AlertsResourcesAdditionalFilters';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
+import type { AlertFilterKey, AlertFilterType } from './constants';
 import type { AlertDefinitionType, Region } from '@linode/api-v4';
 
 export interface AlertResourcesProp {
@@ -77,6 +79,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     alertResourceIds
   );
+  const [additionalFilters, setAdditionalFilters] = React.useState<
+    Record<AlertFilterKey, AlertFilterType>
+  >({ engineType: undefined });
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const pageSize = 25;
@@ -148,6 +153,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
    */
   const filteredResources = React.useMemo(() => {
     return getFilteredResources({
+      additionalFilters,
       data: resources,
       filteredRegions,
       isAdditionOrDeletionNeeded: isSelectionsNeeded,
@@ -166,6 +172,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     searchText,
     selectedOnly,
     selectedResources,
+    additionalFilters,
   ]);
 
   const handleAllSelection = React.useCallback(() => {
@@ -202,6 +209,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             : region // Stores filtered regions in the format `region.label (region.id)` that is displayed and filtered in the table
       )
     );
+  };
+
+  const handleFilterChange = (
+    value: AlertFilterType,
+    filterKey: AlertFilterKey
+  ) => {
+    setAdditionalFilters((prev) => ({
+      ...prev,
+      [filterKey]: value,
+    }));
   };
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
@@ -252,7 +269,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         isSelectionsNeeded ||
         alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
         <Grid container spacing={3}>
-          <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
+          <Grid columnSpacing={2} container item rowSpacing={3} xs={12}>
             <Grid item md={3} xs={12}>
               <DebouncedSearchTextField
                 sx={{
@@ -272,18 +289,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                 regionOptions={regionOptions}
               />
             </Grid>
+            <AlertResourceAdditionalFilters
+              handleFilterChange={handleFilterChange}
+              serviceType={serviceType}
+            />
             {isSelectionsNeeded && (
-              <Grid
-                sx={{
-                  ml: {
-                    md: 2,
-                    xs: 0,
-                  },
-                }}
-                item
-                md={4}
-                xs={12}
-              >
+              <Grid item md={4} xs={12}>
                 <Checkbox
                   disabled={
                     !(Boolean(selectedResources.length) || selectedOnly)
@@ -331,6 +342,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               isSelectionsNeeded={isSelectionsNeeded}
               pageSize={pageSize}
               scrollToElement={() => scrollToElement(titleRef.current)}
+              serviceType={serviceType}
             />
           </Grid>
         </Grid>

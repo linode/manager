@@ -1,8 +1,22 @@
+import { deepEqual } from '../../Utils/FilterBuilder';
+import {
+  alertAdditionalFilterKeyMap,
+  alertApplicableFilterKeys,
+} from '../AlertsResources/constants';
+
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type {
+  AlertFilterKey,
+  AlertFilterType,
+} from '../AlertsResources/constants';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type { Region } from '@linode/api-v4';
 
 interface FilterResourceProps {
+  /**
+   * Additional filters for filtering the instances
+   */
+  additionalFilters?: Record<AlertFilterKey, AlertFilterType | undefined>;
   /**
    * The data to be filtered
    */
@@ -11,15 +25,16 @@ interface FilterResourceProps {
    * The selected regions on which the data needs to be filtered
    */
   filteredRegions?: string[];
-
   /**
    * Property to integrate and edit the resources associated with alerts
    */
   isAdditionOrDeletionNeeded?: boolean;
+
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
   regionsIdToRegionMap: Map<string, Region>;
+
   /**
    * The resources associated with the alerts
    */
@@ -96,6 +111,7 @@ export const getFilteredResources = (
   filterProps: FilterResourceProps
 ): AlertInstance[] => {
   const {
+    additionalFilters,
     data,
     filteredRegions,
     isAdditionOrDeletionNeeded,
@@ -140,7 +156,22 @@ export const getFilteredResources = (
 
       return matchesSearchText && matchesFilteredRegions; // match the search text and match the region selected
     })
-    .filter((resource) => (selectedOnly ? resource.checked : true));
+    .filter((resource) => (selectedOnly ? resource.checked : true))
+    .filter((resource) => {
+      if (!additionalFilters) {
+        return true;
+      }
+      return alertApplicableFilterKeys.every((key) => {
+        const value = additionalFilters[key];
+        if (value === undefined) {
+          return true;
+        } // Skip if no filter value
+        // Only apply filters that exist in `alertAdditionalFilterKeyMap`
+        const mappedKey = alertAdditionalFilterKeyMap[key];
+        const resourceValue = resource[mappedKey];
+        return deepEqual(resourceValue, value); // Compare primitive values
+      });
+    });
 };
 
 /**
