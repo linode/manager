@@ -127,6 +127,6 @@ export function generatePythonLinodeSnippet(
     snippet = snippet.slice(0, -2) + '\n';
   }
 
-  snippet += ')\n';
+  snippet += ')';
   return snippet;
 }

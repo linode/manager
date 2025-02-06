@@ -115,5 +115,5 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
     });
   }
 
-  return configStr;
+  return configStr.trim();
 }
