@@ -43,7 +43,6 @@ export const AlertsEngineOptionFilter = React.memo(
         }}
         autoHighlight
         clearOnBlur
-        disableClearable={false}
         label="Engine Type"
         options={engineOptions}
         placeholder="Select a Database Engine"
