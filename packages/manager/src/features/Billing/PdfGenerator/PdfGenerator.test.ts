@@ -14,7 +14,7 @@ import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utiliti
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { printInvoice } from './PdfGenerator';
-import { dateConversion } from './utils';
+import { dateConversion, getRemitAddress, getTaxSummaryBody } from './utils';
 
 import type { Account, Invoice } from '@linode/api-v4/lib/account/types';
 import type { FlagSet } from 'src/featureFlags';
@@ -121,6 +121,32 @@ const getExpectedTaxIdsText = (
   }
 
   return taxIdsText.join(' ').trim();
+};
+
+const expectedPdfFooter = (
+  country: string,
+  isAkamaiBilling: boolean,
+  isInternational: boolean
+) => {
+  const remitAddress = getRemitAddress(country, isAkamaiBilling);
+
+  const footerText: string[] = [];
+
+  if (isAkamaiBilling && isInternational) {
+    footerText.push(
+      `${remitAddress.address1}, ${remitAddress.city} ${remitAddress.zip}\r\n`
+    );
+  } else {
+    footerText.push(
+      `${remitAddress.address1}, ${remitAddress.city}, ${remitAddress.state} ${remitAddress.zip}\r\n`
+    );
+  }
+  footerText.push(`${remitAddress.country}\r\n`);
+  footerText.push(
+    'P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com\r\n'
+  );
+
+  return footerText.join(' ').trim();
 };
 
 const extractPdfText = (pdfDataBuffer: Buffer): Promise<string> => {
@@ -309,6 +335,7 @@ describe('PdfGenerator', () => {
           timezone,
         });
         const hasRegionColumn = type.includes('After DC Pricing Launch');
+        const taxSummaryData = getTaxSummaryBody(invoice.tax_summary);
 
         // Call the printInvoice function
         const pdfResult = await printInvoice({
@@ -383,13 +410,27 @@ describe('PdfGenerator', () => {
         });
 
         // Verify amount section
-        expect(pdfText).toContain(`Subtotal (USD) $${invoice.subtotal}`);
-        expect(pdfText).toContain(`Tax Subtotal (USD) $${invoice.tax}`);
-        expect(pdfText).toContain(`Total (USD) $${invoice.total}`);
+        expect(pdfText).toContain(
+          `Subtotal (USD) $${Number(invoice.subtotal).toFixed(2)}`
+        );
+        taxSummaryData.forEach(([taxName, taxValue]) => {
+          expect(pdfText).toContain(`${taxName} ${taxValue}`);
+        });
+        expect(pdfText).toContain(
+          `Tax Subtotal (USD) $${Number(invoice.tax).toFixed(2)}`
+        );
+        expect(pdfText).toContain(
+          `Total (USD) $${Number(invoice.total).toFixed(2)}`
+        );
 
-        // Verify footer text
+        // Verify table footer text
         expect(pdfText).toContain(
           'This invoice may include Linode Compute Instances that have been powered off as the data is maintained and resources are still reserved. If you no longer need powered-down Linodes, you can remove the service (https://techdocs.akamai.com/cloud-computing/docs/stop-further-billing) from your account.'
+        );
+
+        // Verify pdf footer text
+        expect(pdfText).toContain(
+          expectedPdfFooter(account.country, isAkamaiBilling, isInternational)
         );
 
         // Cleanup: Delete the generated PDF file after testing
