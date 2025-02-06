@@ -13,7 +13,7 @@ import {
 import { formatDate } from 'src/utilities/formatDate';
 import { Alert } from '@linode/api-v4';
 import { ui } from 'support/ui';
-import { statusMap } from 'support/constants/alert';
+import { alertStatuses } from 'src/features/CloudPulse/Alerts/constants';
 
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 const mockAccount = accountFactory.build();
@@ -25,7 +25,7 @@ const mockAlerts = [
     status: 'enabled',
     type: 'system',
     created_by: 'user1',
-    updated: new Date(now.getTime() - 1 * 86400).toISOString(),
+    updated: new Date(now.getTime() - 86400).toISOString(),
   }),
   alertFactory.build({
     service_type: 'dbaas',
@@ -116,9 +116,9 @@ const validateAlertDetails = (alert: Alert) => {
     cy.findByText(service_type)
       .should('be.visible')
       .and('have.text', service_type);
-    cy.findByText(statusMap[status])
+    cy.findByText(alertStatuses[status])
       .should('be.visible')
-      .and('have.text', statusMap[status]);
+      .and('have.text', alertStatuses[status]);
     cy.findByText(label)
       .should('be.visible')
       .and('have.text', label)

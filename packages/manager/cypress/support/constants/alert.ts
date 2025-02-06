@@ -1,6 +1,5 @@
 import type {
   AlertSeverityType,
-  AlertStatusType,
   DimensionFilterOperatorType,
   MetricAggregationType,
   MetricOperatorType,
@@ -36,9 +35,4 @@ export const aggregationTypeMap: Record<MetricAggregationType, string> = {
   max: 'Maximum',
   min: 'Minimum',
   sum: 'Sum',
-};
-
-export const statusMap: Record<AlertStatusType, string> = {
-  disabled: 'Disabled',
-  enabled: 'Enabled',
 };
