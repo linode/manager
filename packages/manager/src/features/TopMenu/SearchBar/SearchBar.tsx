@@ -1,10 +1,11 @@
-import { Autocomplete, Box, TextField } from '@linode/ui';
+import { Autocomplete, Box, IconButton, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import Search from '@mui/icons-material/Search';
+import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
+import Search from 'src/assets/icons/search.svg';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
@@ -28,10 +29,7 @@ import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import {
-  StyledIconButton,
-  StyledSearchBarWrapperDiv,
-} from './SearchBar.styles';
+import { StyledIconButton, StyledSearchIcon } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
 import { StyledSearchSuggestion } from './SearchSuggestion.styles';
 import { SearchSuggestionContainer } from './SearchSuggestionContainer';
@@ -69,6 +67,7 @@ const SearchBarComponent = (props: SearchProps) => {
   const history = useHistory();
   const isLargeAccount = useIsLargeAccount(searchActive);
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const theme = useTheme();
 
   // Only request things if the search bar is open/active and we
   // know if the account is large or not
@@ -258,7 +257,10 @@ const SearchBarComponent = (props: SearchProps) => {
     handleClose();
   };
 
-  const label = 'Search Products, IP Addresses, Tags...';
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const label = isSmallScreen
+    ? 'Search...'
+    : 'Search Products, IP Addresses, Tags...';
 
   const options = createFinalOptions(
     isLargeAccount ? apiResults : combinedResults,
@@ -275,19 +277,27 @@ const SearchBarComponent = (props: SearchProps) => {
       <StyledIconButton
         aria-label="open menu"
         color="inherit"
+        disableRipple
         onClick={toggleSearch}
         size="large"
       >
         <Search />
       </StyledIconButton>
-      <StyledSearchBarWrapperDiv className={searchActive ? 'active' : ''}>
-        <Search
-          sx={(theme) => ({
-            color: theme.tokens.color.Neutrals[40],
-            fontSize: '2rem',
-          })}
-          data-qa-search-icon
-        />
+      <Box
+        sx={{
+          maxWidth: '800px',
+          [theme.breakpoints.down('sm')]: {
+            left: '50%',
+            opacity: searchActive ? 1 : 0,
+            position: 'absolute',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            visibility: searchActive ? 'visible' : 'hidden',
+            width: `calc(100% - ${theme.tokens.spacing[80]})`,
+            zIndex: searchActive ? 3 : 0,
+          },
+        }}
+      >
         <label className="visually-hidden" htmlFor="main-search">
           Main search
         </label>
@@ -313,13 +323,54 @@ const SearchBarComponent = (props: SearchProps) => {
             return (
               <TextField
                 {...params}
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <IconButton
+                      sx={{
+                        '> svg': {
+                          '&:hover': {
+                            color: theme.tokens.header.Search.Icon.Hover,
+                          },
+
+                          color: theme.tokens.header.Search.Icon.Default,
+                        },
+                        height: 16,
+                        [theme.breakpoints.up('sm')]: {
+                          display: 'none',
+                        },
+                        width: 16,
+                      }}
+                      aria-label="close menu"
+                      color="inherit"
+                      onClick={toggleSearch}
+                      size="large"
+                    >
+                      <Close />
+                    </IconButton>
+                  ),
+                  startAdornment: (
+                    <StyledSearchIcon data-qa-search-icon="true" />
+                  ),
+                }}
+                inputProps={{
+                  ...params.inputProps,
+                  sx: {
+                    '&::placeholder': {
+                      color: theme.tokens.header.Search.Text.Placeholder,
+                      fontStyle: 'italic',
+                    },
+                  },
+                }}
                 onChange={(e) => {
                   handleSearchChange(e.target.value);
                 }}
                 sx={{
                   '& .MuiInputBase-root': {
+                    backgroundColor: theme.tokens.header.Search.Background,
                     border: 'none',
                     boxShadow: 'none !important',
+                    color: theme.tokens.header.Search.Text.Filled,
                     maxWidth: '100%',
                     minHeight: 30,
                   },
@@ -339,10 +390,10 @@ const SearchBarComponent = (props: SearchProps) => {
                 <StyledSearchSuggestion
                   {...rest}
                   sx={(theme) => ({
-                    '&.MuiButtonBase-root': {
+                    '&.MuiButtonBase-root.MuiMenuItem-root': {
                       padding: `${theme.spacing(1)} !important`,
                     },
-                    fontFamily: theme.font.bold,
+                    font: theme.font.bold,
                   })}
                   key={`${key}-${value}`}
                 >
@@ -350,10 +401,12 @@ const SearchBarComponent = (props: SearchProps) => {
                     <Box
                       sx={{
                         '& svg': {
-                          height: 24,
-                          width: 24,
+                          height: 26,
+                          position: 'relative',
+                          top: 2,
+                          width: 26,
                         },
-                        mx: 1.4,
+                        mx: 1.5,
                       }}
                     >
                       {option.icon}
@@ -378,10 +431,25 @@ const SearchBarComponent = (props: SearchProps) => {
               />
             );
           }}
-          sx={{
+          sx={(theme) => ({
+            '& .MuiInput-root .MuiInput-input': {
+              padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
+            },
+            '&.MuiAutocomplete-root': {
+              '&.Mui-focused, &.Mui-focused:hover': {
+                borderColor: theme.tokens.header.Search.Border.Active,
+              },
+              '&:hover': {
+                borderColor: theme.tokens.header.Search.Border.Hover,
+              },
+              '.MuiInput-root': {
+                paddingRight: theme.tokens.spacing[40],
+              },
+              border: `1px solid ${theme.tokens.header.Search.Border.Default}`,
+            },
             maxWidth: '100%',
             width: '100%',
-          }}
+          })}
           autoHighlight
           data-qa-main-search
           disableClearable
@@ -401,28 +469,7 @@ const SearchBarComponent = (props: SearchProps) => {
           popupIcon={null}
           value={value}
         />
-        <StyledIconButton
-          sx={{
-            height: 22,
-            width: 22,
-          }}
-          aria-label="close menu"
-          color="inherit"
-          onClick={toggleSearch}
-          size="large"
-        >
-          <Close
-            sx={(theme) => ({
-              '& > span': {
-                padding: 2,
-              },
-              '&:hover, &:focus': {
-                color: theme.palette.primary.main,
-              },
-            })}
-          />
-        </StyledIconButton>
-      </StyledSearchBarWrapperDiv>
+      </Box>
     </React.Fragment>
   );
 };

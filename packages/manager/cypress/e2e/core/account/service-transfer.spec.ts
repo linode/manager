@@ -166,7 +166,7 @@ describe('Account service transfers', () => {
     cy.get('[data-qa-panel="Received Service Transfers"]')
       .should('be.visible')
       .within(() => {
-        cy.get('[data-testid="KeyboardArrowDownIcon"]').click();
+        cy.get('[role="button"]').click();
         cy.findByText(serviceTransferEmptyState, { exact: false }).should(
           'be.visible'
         );
@@ -176,7 +176,7 @@ describe('Account service transfers', () => {
     cy.get('[data-qa-panel="Sent Service Transfers"]')
       .should('be.visible')
       .within(() => {
-        cy.get('[data-testid="KeyboardArrowDownIcon"]').click();
+        cy.get('[role="button"]').click();
         cy.findByText(serviceTransferEmptyState, { exact: false }).should(
           'be.visible'
         );

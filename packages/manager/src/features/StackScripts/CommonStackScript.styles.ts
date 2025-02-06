@@ -16,7 +16,7 @@ export const StyledDetailsButton = styled(Button, {
   '&:hover, &:focus': {
     backgroundColor: 'transparent',
   },
-  fontFamily: theme.font.normal,
+  font: theme.font.normal,
   fontSize: '0.875rem',
   marginTop: 0,
   padding: theme.spacing(),

@@ -1,5 +1,5 @@
-import { Button } from '@linode/ui';
-import { Grid, Typography, useTheme } from '@mui/material';
+import { Button, Typography } from '@linode/ui';
+import { Grid, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardArrowDownIcon from 'src/assets/icons/arrow_down.svg';
