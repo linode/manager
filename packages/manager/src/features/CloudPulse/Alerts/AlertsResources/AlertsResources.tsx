@@ -269,7 +269,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         isSelectionsNeeded ||
         alertResourceIds.length) && ( // if there is data loading error display error message with empty table setup
         <Grid container spacing={3}>
-          <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
+          <Grid columnSpacing={2} container item rowSpacing={3} xs={12}>
             <Grid item md={3} xs={12}>
               <DebouncedSearchTextField
                 sx={{
@@ -294,17 +294,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               serviceType={serviceType}
             />
             {isSelectionsNeeded && (
-              <Grid
-                sx={{
-                  ml: {
-                    md: 2,
-                    xs: 0,
-                  },
-                }}
-                item
-                md={4}
-                xs={12}
-              >
+              <Grid item md={4} xs={12}>
                 <Checkbox
                   disabled={
                     !(Boolean(selectedResources.length) || selectedOnly)
