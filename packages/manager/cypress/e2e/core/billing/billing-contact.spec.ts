@@ -152,8 +152,12 @@ describe('Billing Contact', () => {
         cy.findByLabelText('Phone').should('be.visible').click();
         cy.focused().clear();
         cy.focused().type(newAccountData['phone']);
-        cy.get('[data-qa-contact-state-province]').should('be.visible').click();
-        cy.focused().type(`${newAccountData['state']}{enter}`);
+        // need alias to be able to switch focus to modal popup
+        cy.get('[data-qa-contact-state-province]')
+          .as('qaState')
+          .should('be.visible')
+          .click();
+        cy.get('@qaState').type(`${newAccountData['state']}{enter}`);
         cy.findByLabelText('Tax ID').should('be.visible').click();
         cy.focused().clear();
         cy.focused().type(newAccountData['tax_id']);
@@ -198,8 +202,8 @@ describe('Billing Contact', () => {
         cy.findByLabelText('Postal Code').should('be.visible').click();
         cy.focused().clear();
         cy.focused().type(newAccountData['zip']);
-        cy.get('[data-qa-contact-country]').click();
-        cy.focused().type('Afghanistan{enter}');
+        cy.get('[data-qa-contact-country]').as('qaCountry').click();
+        cy.get('@qaCountry').type('Afghanistan{enter}');
         cy.findByLabelText('Tax ID').should('be.visible').click();
         cy.focused().clear();
         cy.focused().type(newAccountData['tax_id']);

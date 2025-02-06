@@ -106,11 +106,11 @@ describe('Create Linode', () => {
           linodeCreatePage.setRootPassword(randomString(32));
 
           // Confirm information in summary is shown as expected.
-          cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-          cy.findByText('Debian 12').should('be.visible');
-          cy.findByText(linodeRegion.label).should('be.visible');
-          cy.findByText(planConfig.planLabel).should('be.visible');
-
+          cy.get('[data-qa-linode-create-summary]').within(() => {
+            cy.findByText('Debian 12').should('be.visible');
+            cy.findByText(linodeRegion.label).should('be.visible');
+            cy.findByText(planConfig.planLabel).should('be.visible');
+          });
           // Create Linode and confirm it's provisioned as expected.
           ui.button
             .findByTitle('Create Linode')
