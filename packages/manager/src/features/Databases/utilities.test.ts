@@ -387,7 +387,7 @@ describe('toFormatedDate', () => {
     const result = toFormatedDate(selectedDate, selectedTime.value);
     expect(result).toContain('2025-01-15 14:00');
   });
-  it('should convert a date and time to the format YYYY-MM-DD HH:mm for the dialog', () => {
+  it('should handle newest full backup plus incremental option correctly in UTC', () => {
     const selectedDate = null;
     const today = DateTime.utc();
     const mockTodayWithHours = `${today.toISODate()} ${today.hour}:00`;
