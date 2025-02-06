@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { isEmpty } from '@linode/api-v4';
 import { RebuildLinodeSchema } from '@linode/validation';
 import { number, object, string } from 'yup';
 
@@ -90,9 +91,11 @@ export const resolver: Resolver<RebuildLinodeFormValues, Context> = async (
         }
       }
 
-      (errors as FieldErrors<RebuildLinodeFormValues>)[
-        'stackscript_data'
-      ] = stackScriptErrors;
+      if (!isEmpty(stackScriptErrors)) {
+        (errors as FieldErrors<RebuildLinodeFormValues>)[
+          'stackscript_data'
+        ] = stackScriptErrors;
+      }
     }
   }
 

@@ -93,8 +93,7 @@ const submitRebuild = () => {
 };
 
 // Error message that is displayed when desired password is not strong enough.
-const passwordComplexityError =
-  'Password does not meet strength requirement.';
+const passwordComplexityError = 'Password does not meet strength requirement.';
 
 authenticate();
 describe('rebuild linode', () => {
@@ -136,9 +135,9 @@ describe('rebuild linode', () => {
         ui.autocomplete
           .findByLabel('Rebuild From')
           .should('be.visible')
-          .should('have.value', 'From Image');
+          .should('have.value', 'Image');
 
-        ui.autocomplete.findByLabel('Images').should('be.visible').click();
+        ui.autocomplete.findByLabel('Image').should('be.visible').click();
         ui.autocompletePopper.findByTitle(image).should('be.visible').click();
 
         // Type to confirm.
@@ -190,9 +189,12 @@ describe('rebuild linode', () => {
 
       openRebuildDialog(linode.label);
       findRebuildDialog(linode.label).within(() => {
-        ui.autocomplete.findByLabel('Rebuild From').should('be.visible').click();
+        ui.autocomplete
+          .findByLabel('Rebuild From')
+          .should('be.visible')
+          .click();
         ui.autocompletePopper
-          .findByTitle('From Community StackScript')
+          .findByTitle('Community StackScript')
           .should('be.visible')
           .click();
 
@@ -206,7 +208,7 @@ describe('rebuild linode', () => {
 
         cy.get(`[id="stackscript-${stackScriptId}"]`).click();
 
-        ui.autocomplete.findByLabel('Images').should('be.visible').click();
+        ui.autocomplete.findByLabel('Image').should('be.visible').click();
         ui.autocompletePopper.findByTitle(image).should('be.visible').click();
 
         cy.findByLabelText('Linode Label')
@@ -265,9 +267,12 @@ describe('rebuild linode', () => {
 
       openRebuildDialog(linode.label);
       findRebuildDialog(linode.label).within(() => {
-        ui.autocomplete.findByLabel('Rebuild From').should('be.visible').click();
+        ui.autocomplete
+          .findByLabel('Rebuild From')
+          .should('be.visible')
+          .click();
         ui.autocompletePopper
-          .findByTitle('From Account StackScript')
+          .findByTitle('Account StackScript')
           .should('be.visible')
           .click();
 
@@ -278,7 +283,7 @@ describe('rebuild linode', () => {
 
         cy.get(`[id="stackscript-${stackScript.id}"]`).click();
 
-        ui.autocomplete.findByLabel('Images').should('be.visible').click();
+        ui.autocomplete.findByLabel('Image').should('be.visible').click();
         ui.autocompletePopper.findByTitle(image).should('be.visible').click();
 
         cy.findByLabelText('Linode Label')
@@ -314,7 +319,7 @@ describe('rebuild linode', () => {
     findRebuildDialog(mockLinode.label).within(() => {
       ui.autocomplete.findByLabel('Rebuild From').should('be.visible');
       ui.autocomplete
-        .findByLabel('Images')
+        .findByLabel('Image')
         .should('be.visible')
         .click()
         .type(image);

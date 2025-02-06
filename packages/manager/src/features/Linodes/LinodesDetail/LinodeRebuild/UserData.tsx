@@ -54,7 +54,7 @@ export const UserData = (props: Props) => {
       heading="Add User Data"
       summaryProps={{ sx: { p: 0 } }}
     >
-      <Notice spacingBottom={16} spacingTop={0} variant="success">
+      <Notice spacingBottom={8} spacingTop={0} variant="success">
         Adding new user data is recommended as part of the rebuild process.
       </Notice>
       <Typography>
@@ -71,6 +71,16 @@ export const UserData = (props: Props) => {
       {formatWarning && (
         <Notice spacingBottom={16} spacingTop={16} variant="warning">
           The user data may be formatted incorrectly.
+        </Notice>
+      )}
+      {image && !doesImageSupportCloudInit && (
+        <Notice spacingBottom={8} spacingTop={12} variant="warning">
+          The selected Images does not support cloud-init.
+        </Notice>
+      )}
+      {region && !doesRegionSupportMetadata && (
+        <Notice spacingBottom={8} spacingTop={12} variant="warning">
+          This Linode's region does not support metadata.
         </Notice>
       )}
       <Controller

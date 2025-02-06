@@ -1,4 +1,5 @@
-import { Notice, Stack, Typography } from '@linode/ui';
+import { isEmpty } from '@linode/api-v4';
+import { Divider, Notice, Stack, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef, useState } from 'react';
@@ -8,6 +9,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useRebuildLinodeMutation } from 'src/queries/linodes/linodes';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { utoa } from 'src/utilities/metadata';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/StackScriptSelectionList';
 import { LinodePermissionsError } from '../LinodePermissionsError';
@@ -27,8 +29,7 @@ import type {
   LinodeRebuildType,
   RebuildLinodeFormValues,
 } from './utils';
-import { isEmpty, type Linode } from '@linode/api-v4';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import type { Linode } from '@linode/api-v4';
 
 interface Props {
   linode: Linode;
@@ -114,37 +115,39 @@ export const LinodeRebuildForm = (props: Props) => {
               Linode.
             </strong>
           </Typography>
-          <RebuildFromSelect
-            disabled={isLinodeReadOnly}
-            setType={setType}
-            type={type}
-          />
-          {form.formState.errors.stackscript_id?.message && (
-            <Notice
-              text={form.formState.errors.stackscript_id?.message}
-              variant="error"
+          <Stack divider={<Divider />} spacing={2}>
+            <RebuildFromSelect
+              disabled={isLinodeReadOnly}
+              setType={setType}
+              type={type}
             />
-          )}
-          {type === 'Account StackScript' && (
-            <StackScriptSelectionList type="Account" />
-          )}
-          {type === 'Community StackScript' && (
-            <StackScriptSelectionList type="Community" />
-          )}
-          {type.includes('StackScript') && <UserDefinedFields />}
-          <Image disabled={isLinodeReadOnly} />
-          <Password disabled={isLinodeReadOnly} />
-          <SSHKeys disabled={isLinodeReadOnly} />
-          <DiskEncryption
-            disabled={isLinodeReadOnly}
-            isLKELinode={linode.lke_cluster_id !== null}
-            linodeRegion={linode.region}
-          />
-          <UserData disabled={isLinodeReadOnly} linodeId={linode.id} />
-          <Confirmation
-            disabled={isLinodeReadOnly}
-            linodeLabel={linode.label}
-          />
+            {form.formState.errors.stackscript_id?.message && (
+              <Notice
+                text={form.formState.errors.stackscript_id?.message}
+                variant="error"
+              />
+            )}
+            {type === 'Account StackScript' && (
+              <StackScriptSelectionList type="Account" />
+            )}
+            {type === 'Community StackScript' && (
+              <StackScriptSelectionList type="Community" />
+            )}
+            {type.includes('StackScript') && <UserDefinedFields />}
+            <Image disabled={isLinodeReadOnly} />
+            <Password disabled={isLinodeReadOnly} />
+            <SSHKeys disabled={isLinodeReadOnly} />
+            <DiskEncryption
+              disabled={isLinodeReadOnly}
+              isLKELinode={linode.lke_cluster_id !== null}
+              linodeRegion={linode.region}
+            />
+            <UserData disabled={isLinodeReadOnly} linodeId={linode.id} />
+            <Confirmation
+              disabled={isLinodeReadOnly}
+              linodeLabel={linode.label}
+            />
+          </Stack>
           <Actions disabled={isLinodeReadOnly} />
         </Stack>
       </form>
