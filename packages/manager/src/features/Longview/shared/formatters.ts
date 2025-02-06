@@ -1,6 +1,6 @@
 import { pathOr } from 'src/utilities/pathOr';
 
-import type { StatWithDummyPoint } from '../request.types';
+import type { CPU, StatWithDummyPoint } from '../request.types';
 
 // This formatting is from Classic
 export const formatCPU = (n: number) => {
@@ -73,39 +73,24 @@ export const formatCPU = (n: number) => {
  *    ]
  * )
  */
-export const pathMaybeAddDataInThePast = <T extends {}>(
+export const pathMaybeAddDataInThePast = <T extends CPU<'' | 'yAsNull'>>(
   data: T,
   selectedStartTimeInSeconds: number,
-  pathsToAddDataPointTo: string[][]
+  pathsToAddDataPointTo: Array<keyof T>
 ): T => {
   /*
-    iterate over all the paths and maybe add a dummy data point to the
-    data set specified
+  iterate over all the paths and maybe add a dummy data point to the
+  data set specified
   */
   const _data = structuredClone(data);
 
-  pathsToAddDataPointTo.forEach((eachPath) => {
-    const arrayOfStats = pathOr<StatWithDummyPoint[], T>([], eachPath, data);
+  pathsToAddDataPointTo.forEach((eachPath: keyof CPU) => {
+    const arrayOfStats = pathOr<StatWithDummyPoint[], T>([], [eachPath], data);
     const updatedData = maybeAddPastData(
       arrayOfStats,
       selectedStartTimeInSeconds
     );
-    let dataRef: any = _data;
-    for (const key of eachPath) {
-      if (
-        dataRef === null ||
-        dataRef[key] === undefined ||
-        dataRef[key] == null
-      ) {
-        return;
-      } else {
-        dataRef[key] = { ...dataRef[key] };
-      }
-      if (key === eachPath.at(-1)) {
-        dataRef[key] = updatedData;
-      }
-      dataRef = dataRef[key];
-    }
+    _data[eachPath] = updatedData;
   });
 
   return _data;
