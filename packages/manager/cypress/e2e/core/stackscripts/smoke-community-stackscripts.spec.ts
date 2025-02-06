@@ -221,10 +221,12 @@ describe('Community Stackscripts integration tests', () => {
                 'Unexpected response received when fetching StackScripts'
               );
             }
-            
-            cy.contains(`${stackScripts[0].username} / ${stackScripts[0].label}`).should('be.visible');
+
+            cy.contains(
+              `${stackScripts[0].username} / ${stackScripts[0].label}`
+            ).should('be.visible');
+          });
         });
-      });
     }
   });
 

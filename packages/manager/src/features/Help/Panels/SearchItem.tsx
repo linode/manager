@@ -2,7 +2,7 @@ import { ListItem, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import Arrow from 'src/assets/icons/diagonalArrow.svg';
+import ExternalLink from 'src/assets/icons/external-link.svg';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import type { Theme } from '@mui/material/styles';
@@ -79,7 +79,7 @@ export const SearchItem = (props: Props) => {
               {source}
             </Typography>
           </div>
-          <Arrow className={classes.arrow} />
+          <ExternalLink className={classes.arrow} />
         </div>
       )}
     </ListItem>
