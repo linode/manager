@@ -14,6 +14,7 @@ import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utiliti
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { printInvoice } from './PdfGenerator';
+import { dateConversion } from './utils';
 
 import type { Account, Invoice } from '@linode/api-v4/lib/account/types';
 import type { FlagSet } from 'src/featureFlags';
@@ -63,13 +64,63 @@ const getExpectedInvoiceAddressText = (account: Account) => {
     zip,
   } = account;
 
-  const invoiceTo = `${first_name} ${last_name} ${company} ${address_1} ${
-    Boolean(address_2) ? address_2 : ''
-  } ${city}, ${state}, ${zip} ${country} ${
-    Boolean(tax_id) ? `Tax ID: ${tax_id}` : ''
-  }`;
+  const invoiceTo: string[] = [];
 
-  return invoiceTo.replace(/\s+/g, ' ').trim();
+  invoiceTo.push(`${first_name} ${last_name} ${company} ${address_1}`);
+
+  if (Boolean(address_2)) {
+    invoiceTo.push(address_2);
+  }
+
+  invoiceTo.push(`${city}, ${state}, ${zip} ${country}`);
+
+  if (Boolean(tax_id)) {
+    invoiceTo.push(`Tax ID: ${tax_id}`);
+  }
+
+  return invoiceTo.join(' ').trim();
+};
+
+const getExpectedTaxIdsText = (
+  account: Account,
+  taxes: Taxes,
+  invoice: Invoice
+) => {
+  const convertedInvoiceDate = dateConversion(invoice.date);
+  const TaxStartDate =
+    taxes && taxes?.date ? dateConversion(taxes.date) : Infinity;
+  const hasTax = !taxes?.date ? true : convertedInvoiceDate > TaxStartDate;
+
+  if (!hasTax) {
+    return undefined;
+  }
+
+  const countryTax = taxes?.country_tax;
+  const provincialTax = taxes?.provincial_tax_ids?.[account.state];
+
+  const taxIdsText: string[] = [];
+
+  if (countryTax) {
+    taxIdsText.push(`${countryTax.tax_name}: ${countryTax.tax_id}`);
+    if (countryTax.tax_ids?.B2B) {
+      const { tax_id: b2bTaxId, tax_name: b2bTaxName } = countryTax.tax_ids.B2B;
+      taxIdsText.push(`${b2bTaxName}: ${b2bTaxId}`);
+    }
+  }
+
+  if (countryTax && countryTax.qi_registration) {
+    taxIdsText.push(`QI Registration # ${countryTax.qi_registration}`);
+  }
+
+  if (countryTax?.tax_info) {
+    taxIdsText.push(`${countryTax.tax_info}`);
+  }
+
+  if (provincialTax) {
+    taxIdsText.push(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
+  }
+
+  return taxIdsText.join(' ').trim();
 };
 
 const extractPdfText = (pdfDataBuffer: Buffer): Promise<string> => {
@@ -125,10 +176,10 @@ describe('PdfGenerator', () => {
     });
     const accountUS = accountFactory.build({ country: 'US' });
     const accountCA = accountFactory.build({
-      city: 'Calgary',
+      city: 'Vancouver',
       country: 'CA',
-      state: 'Alberta',
-      zip: 'T2A',
+      state: 'BC',
+      zip: 'V0R 1L1',
     });
 
     // Mock International, US and CA taxes
@@ -156,6 +207,36 @@ describe('PdfGenerator', () => {
     const taxesCA: Taxes = {
       country_tax: {
         tax_id: '871275582RT0001',
+        tax_name: 'Canadian GST',
+      },
+      provincial_tax_ids: {
+        BC: {
+          tax_id: '1471-1731',
+          tax_name: 'British Columbia PST',
+        },
+        MB: {
+          tax_id: '141763-3',
+          tax_name: 'Manitoba RST',
+        },
+        QC: {
+          tax_id: '1229976512TQ0001',
+          tax_name: 'Quebec QST',
+        },
+        SK: {
+          tax_id: '7648249',
+          tax_name: 'Saskatchewan PST',
+        },
+      },
+    };
+    const taxesCAWithAllDetails: Taxes = {
+      country_tax: {
+        qi_registration: 'QI-12345678',
+        tax_id: '871275582RT0001',
+        tax_ids: {
+          B2B: { tax_id: 'B2B-12345678', tax_name: 'B2B-example' },
+          B2C: { tax_id: 'B2C-12345678', tax_name: 'B2C-example' },
+        },
+        tax_info: 'tax-info-example',
         tax_name: 'Canadian GST',
       },
       provincial_tax_ids: {
@@ -205,6 +286,10 @@ describe('PdfGenerator', () => {
       [
         'CA accounts After DC Pricing Launch',
         [accountCA, taxesCA, invoiceAfterDCPricingLaunch],
+      ],
+      [
+        'CA accounts with all tax details',
+        [accountCA, taxesCAWithAllDetails, invoice],
       ],
     ];
 
@@ -257,7 +342,9 @@ describe('PdfGenerator', () => {
         );
 
         if (taxes) {
-          expect(pdfText).toContain('Tax ID(s):');
+          expect(pdfText).toContain(
+            `Tax ID(s): ${getExpectedTaxIdsText(account, taxes, invoice)}`
+          );
         }
 
         if (account.country === 'AE') {
