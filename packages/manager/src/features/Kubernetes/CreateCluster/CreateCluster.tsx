@@ -16,6 +16,7 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,
+  getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
@@ -75,23 +76,9 @@ export const CreateCluster = () => {
   const { showAPL } = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
-
-  const formValues = React.useMemo(() => {
-    return {
-      apl_enabled: false,
-      hasAgreed,
-      k8s_version: '1.31',
-      tier: 'standard' as KubernetesTier,
-    };
-  }, [hasAgreed]);
-
-  const { control, getValues, handleSubmit, setValue, watch } = useForm<
-    Required<CreateKubeClusterPayload>
-  >({
-    defaultValues: formValues,
-  });
-
-  const selectedTier = watch('tier');
+  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
+    'standard'
+  );
 
   const {
     isLoadingVersions,
@@ -104,6 +91,24 @@ export const CreateCluster = () => {
     value: thisVersion.id,
   }));
 
+  const versionsCopy = Array.from(versions);
+
+  const latestk8Version = getLatestVersion(versionsCopy);
+
+  const formValues = React.useMemo(() => {
+    return {
+      apl_enabled: false,
+      hasAgreed,
+      tier: 'standard' as KubernetesTier,
+    };
+  }, [hasAgreed]);
+
+  const { control, getValues, handleSubmit, setValue, watch } = useForm<
+    Required<CreateKubeClusterPayload>
+  >({
+    defaultValues: formValues,
+  });
+
   const selectedRegion = watch('region');
   const nodePool = watch('node_pools');
   const aplEnabled = watch('apl_enabled');
@@ -115,7 +120,7 @@ export const CreateCluster = () => {
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
-    setValue('tier', tier);
+    setSelectedTier(tier);
     // HA is enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setValue('control_plane.high_availability', true);
@@ -167,7 +172,6 @@ export const CreateCluster = () => {
       label,
       node_pools,
       region,
-      tier,
     } = formData;
 
     const { push } = history;
@@ -209,7 +213,7 @@ export const CreateCluster = () => {
     }
 
     if (isLkeEnterpriseLAFeatureEnabled) {
-      payload = { ...payload, tier };
+      payload = { ...payload, tier: selectedTier };
     }
 
     // Choose the correct function to create the cluster
@@ -403,7 +407,7 @@ export const CreateCluster = () => {
                   loading={isLoadingVersions}
                   options={versions}
                   placeholder={' '}
-                  value={versions.find((v) => v.value === field.value) ?? null}
+                  value={latestk8Version ?? null}
                 />
               )}
               control={control}
