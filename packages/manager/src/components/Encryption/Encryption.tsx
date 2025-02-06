@@ -72,7 +72,7 @@ export const Encryption = (props: EncryptionProps) => {
         flexDirection="row"
       >
         <Checkbox
-          checked={disabled ? false : isEncryptEntityChecked} // in Create flows, this will be defaulted to be checked. Otherwise, we will rely on the current encryption status for the initial value
+          checked={isEncryptEntityChecked}
           data-testid={checkboxTestId}
           disabled={disabled}
           onChange={(e, checked) => onChange(checked)}

@@ -81,6 +81,11 @@ export const UserData = (props: Props) => {
           The selected Images does not support cloud-init.
         </Notice>
       )}
+      {!image && (
+        <Notice spacingBottom={8} spacingTop={12} variant="warning">
+          Select an Image compatible with clout-init to configure user data.
+        </Notice>
+      )}
       {region && !doesRegionSupportMetadata && (
         <Notice spacingBottom={8} spacingTop={12} variant="warning">
           This Linode's region does not support metadata.
