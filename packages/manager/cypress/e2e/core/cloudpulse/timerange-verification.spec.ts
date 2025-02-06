@@ -33,11 +33,13 @@ import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import type { Flags } from 'src/featureFlags';
 import { Interception } from 'cypress/types/net-stubbing';
-import {
-  convertToGmt
- } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
+import { convertToGmt } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { getDateRangeInIST, getLastMonthRange, getThisMonthRange } from 'support/constants/date-utils';
+import {
+  getDateRangeInIST,
+  getLastMonthRange,
+  getThisMonthRange,
+} from 'support/constants/date-utils';
 
 const timeRanges = [
   { label: 'Last 30 Minutes', unit: 'min', value: 30 },
@@ -143,7 +145,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     mockGetDatabases([databaseMock]);
 
     cy.visitWithLogin('monitor');
-    cy.wait('@fetchPreferences');
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 
   it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
@@ -166,7 +168,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .type('Custom');
 
-    cy.wait(['@fetchServices', '@fetchDashboard']);
     ui.autocompletePopper.findByTitle('Custom').should('be.visible').click();
 
     cy.findByPlaceholderText('Select Start Date').should('be.visible').click();
