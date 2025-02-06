@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
 import { RebuildLinodeSchema } from '@linode/validation';
-import { number, object, string } from 'yup';
+import { boolean, number, object, string } from 'yup';
 
 import { stackscriptQueries } from 'src/queries/stackscripts';
 
@@ -22,6 +22,7 @@ export type LinodeRebuildType = typeof REBUILD_OPTIONS[number]['label'];
 
 export interface RebuildLinodeFormValues extends RebuildRequest {
   confirmationText?: string;
+  reuseUserData: boolean;
 }
 
 export interface Context {
@@ -34,6 +35,7 @@ export interface Context {
 const RebuildLinodeFromImageSchema = RebuildLinodeSchema.concat(
   object({
     confirmationText: string(),
+    reuseUserData: boolean().required(),
   })
 );
 

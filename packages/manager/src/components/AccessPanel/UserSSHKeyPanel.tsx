@@ -20,9 +20,10 @@ import { Avatar } from '../Avatar/Avatar';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
 
+import type { TypographyProps } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
 
-export const MAX_SSH_KEYS_DISPLAY = 25;
+const MAX_SSH_KEYS_DISPLAY = 25;
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cellCheckbox: {
@@ -46,13 +47,23 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   authorizedUsers: string[];
   disabled?: boolean;
+  /**
+   * Override the "SSH Keys" heading variant
+   * @default h2
+   */
+  headingVariant?: TypographyProps['variant'];
   setAuthorizedUsers: (usernames: string[]) => void;
 }
 
 export const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
   const theme = useTheme();
-  const { authorizedUsers, disabled, setAuthorizedUsers } = props;
+  const {
+    authorizedUsers,
+    disabled,
+    headingVariant,
+    setAuthorizedUsers,
+  } = props;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -193,7 +204,7 @@ export const UserSSHKeyPanel = (props: Props) => {
 
   return (
     <Box>
-      <Typography className={classes.title} variant="h2">
+      <Typography className={classes.title} variant={headingVariant ?? 'h2'}>
         SSH Keys
       </Typography>
       <Table spacingBottom={16}>

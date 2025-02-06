@@ -18,6 +18,7 @@ export const SSHKeys = (props: Props) => {
         <UserSSHKeyPanel
           authorizedUsers={field.value ?? []}
           disabled={props.disabled}
+          headingVariant="h3"
           setAuthorizedUsers={field.onChange}
         />
       )}

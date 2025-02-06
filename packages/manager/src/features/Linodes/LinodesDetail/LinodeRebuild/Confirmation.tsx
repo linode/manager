@@ -34,6 +34,7 @@ export const Confirmation = (props: Props) => {
           label="Linode Label"
           onChange={field.onChange}
           title="Confirm"
+          titleVariant="h3"
           value={field.value ?? ''}
           visible={isTypeToConfirmEnabled}
         />

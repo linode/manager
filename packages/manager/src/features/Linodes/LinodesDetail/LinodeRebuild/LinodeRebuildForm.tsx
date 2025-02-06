@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useRebuildLinodeMutation } from 'src/queries/linodes/linodes';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { utoa } from 'src/utilities/metadata';
@@ -54,6 +55,7 @@ export const LinodeRebuildForm = (props: Props) => {
 
   const queryClient = useQueryClient();
   const { mutateAsync: rebuildLinode } = useRebuildLinodeMutation(linode.id);
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const form = useForm<RebuildLinodeFormValues, Context>({
     context: {
@@ -64,20 +66,26 @@ export const LinodeRebuildForm = (props: Props) => {
     },
     defaultValues: {
       disk_encryption: linode.disk_encryption,
+      metadata: {
+        user_data: null,
+      },
+      reuseUserData: false,
     },
     resolver,
   });
 
   const onSubmit = async (values: RebuildLinodeFormValues) => {
-    if (values.metadata?.user_data) {
-      values.metadata.user_data = utoa(values.metadata.user_data);
-    } else {
+    if (values.reuseUserData) {
       values.metadata = undefined;
+    } else if (values.metadata?.user_data) {
+      values.metadata.user_data = utoa(values.metadata.user_data);
     }
 
     try {
       await rebuildLinode(values);
+
       enqueueSnackbar('Linode rebuild started.', { variant: 'info' });
+      checkForNewEvents();
       onSuccess();
     } catch (errors) {
       for (const error of errors) {

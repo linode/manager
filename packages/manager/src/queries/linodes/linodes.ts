@@ -504,7 +504,11 @@ export const useRebuildLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<Linode, APIError[], RebuildRequest>({
     mutationFn: (data) => rebuildLinode(id, data),
-    onSuccess() {
+    onSuccess(linode) {
+      queryClient.setQueryData(
+        linodeQueries.linode(linode.id).queryKey,
+        linode
+      );
       queryClient.invalidateQueries(linodeQueries.linodes);
       queryClient.invalidateQueries({
         exact: true,

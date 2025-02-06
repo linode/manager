@@ -17,7 +17,10 @@ interface Props {
 export const UserData = (props: Props) => {
   const { control } = useFormContext<RebuildLinodeFormValues>();
 
-  const imageId = useWatch({ control, name: 'image' });
+  const [imageId, reuseUserData] = useWatch({
+    control,
+    name: ['image', 'reuseUserData'],
+  });
 
   const [formatWarning, setFormatWarning] = React.useState(false);
 
@@ -85,42 +88,46 @@ export const UserData = (props: Props) => {
       )}
       <Controller
         render={({ field, fieldState }) => (
-          <>
-            <TextField
-              onBlur={(e) => {
-                field.onBlur();
-                checkFormat({
-                  hasInputValueChanged: false,
-                  userData: e.target.value,
-                });
-              }}
-              onChange={(e) => {
-                const value = e.target.value;
-                field.onChange(value === '' ? null : value);
-                checkFormat({
-                  hasInputValueChanged: true,
-                  userData: e.target.value,
-                });
-              }}
-              disabled={field.value === '' || disabled}
-              errorText={fieldState.error?.message}
-              expand
-              label="User Data"
-              labelTooltipText="Compatible formats include cloud-config data and executable scripts."
-              multiline
-              rows={1}
-              value={field.value ?? ''}
-            />
-            <Checkbox
-              disabled={disabled}
-              onChange={(e, checked) => field.onChange(checked ? '' : null)}
-              sx={{ pl: 1.5 }}
-              text={`Reuse user data previously provided for ${linode?.label}`}
-            />
-          </>
+          <TextField
+            onBlur={(e) => {
+              field.onBlur();
+              checkFormat({
+                hasInputValueChanged: false,
+                userData: e.target.value,
+              });
+            }}
+            onChange={(e) => {
+              const value = e.target.value;
+              field.onChange(value === '' ? null : value);
+              checkFormat({
+                hasInputValueChanged: true,
+                userData: e.target.value,
+              });
+            }}
+            disabled={reuseUserData || disabled}
+            errorText={fieldState.error?.message}
+            expand
+            label="User Data"
+            labelTooltipText="Compatible formats include cloud-config data and executable scripts."
+            multiline
+            rows={1}
+            value={field.value ?? ''}
+          />
         )}
         control={control}
         name="metadata.user_data"
+      />
+      <Controller
+        render={({ field }) => (
+          <Checkbox
+            disabled={disabled}
+            onChange={field.onChange}
+            sx={{ pl: 1.5 }}
+            text={`Reuse user data previously provided for ${linode?.label}`}
+          />
+        )}
+        control={control}
+        name="reuseUserData"
       />
     </Accordion>
   );
