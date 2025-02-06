@@ -322,7 +322,7 @@ export const updateSubnet = (mockState: MockState) => [
       const updatedVPC = {
         ...vpc,
         subnets: vpc.subnets.map((subnet) => {
-          if (subnet.id !== subnetFromDB[1].id) {
+          if (subnet.id === subnetFromDB[1].id) {
             return updatedSubnet;
           }
 
