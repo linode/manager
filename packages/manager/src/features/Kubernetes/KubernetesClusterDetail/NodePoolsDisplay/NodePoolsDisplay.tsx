@@ -1,4 +1,6 @@
 import { Button, CircleProgress, Select, Stack, Typography } from '@linode/ui';
+import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
@@ -189,28 +191,8 @@ export const NodePoolsDisplay = (props: Props) => {
       >
         <Stack alignItems="center" direction="row" spacing={2}>
           <Typography variant="h2">Node Pools</Typography>
-          <Stack alignItems="end" direction="row">
-            <FormLabel htmlFor={ariaIdentifier}>
-              <Typography ml={1} mr={1}>
-                Status
-              </Typography>
-            </FormLabel>
-            <Select
-              value={
-                statusOptions?.find(
-                  (option) => option.value === statusFilter
-                ) ?? null
-              }
-              data-qa-status-filter
-              hideLabel
-              id={ariaIdentifier}
-              label="Status"
-              onChange={(_, item) => setStatusFilter(item?.value)}
-              options={statusOptions ?? []}
-              placeholder="Select a status"
-              sx={{ width: 130 }}
-            />
-          </Stack>
+        </Stack>
+        <Stack alignItems="center" direction="row" spacing={1}>
           {(expandedAccordions === undefined &&
             defaultExpandedPools.length > 0) ||
           (expandedAccordions && expandedAccordions.length > 0) ? (
@@ -218,20 +200,41 @@ export const NodePoolsDisplay = (props: Props) => {
               buttonType="secondary"
               compactX
               onClick={() => setExpandedAccordions([])}
+              startIcon={<UnfoldLessIcon />}
+              sx={{ '& span': { marginRight: 0.5 } }}
             >
-              Collapse All
+              Collapse All Pools
             </Button>
           ) : (
             <Button
               buttonType="secondary"
               compactX
               onClick={() => setExpandedAccordions(_pools?.map(({ id }) => id))}
+              startIcon={<UnfoldMoreIcon />}
+              sx={{ '& span': { marginRight: 0.5 } }}
             >
-              Expand All
+              Expand All Pools
             </Button>
           )}
-        </Stack>
-        <Stack direction="row" spacing={1}>
+          <FormLabel htmlFor={ariaIdentifier}>
+            <Typography ml={1} mr={1}>
+              Status
+            </Typography>
+          </FormLabel>
+          <Select
+            value={
+              statusOptions?.find((option) => option.value === statusFilter) ??
+              null
+            }
+            data-qa-status-filter
+            hideLabel
+            id={ariaIdentifier}
+            label="Status"
+            onChange={(_, item) => setStatusFilter(item?.value)}
+            options={statusOptions ?? []}
+            placeholder="Select a status"
+            sx={{ width: 130 }}
+          />
           <Button
             buttonType="outlined"
             onClick={() => setIsRecycleClusterOpen(true)}
