@@ -133,9 +133,7 @@ describe('linode landing checks', () => {
       cy.get('[data-qa-search-icon="true"]')
         .should('be.visible')
         .should('be.visible');
-      cy.findByText('Search Products, IP Addresses, Tags...').should(
-        'be.visible'
-      );
+      ui.mainSearch.find().should('be.visible');
 
       cy.findByLabelText('Help & Support')
         .should('be.visible')

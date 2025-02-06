@@ -72,12 +72,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     fontSize: '1rem',
     marginTop: theme.spacing(1),
   },
-  root: {
-    '.detailsWrapper &': {
-      padding: theme.spacing(4),
-    },
-    backgroundColor: theme.bg.bgPaper,
-  },
 }));
 
 export interface StackScriptProps {
@@ -160,7 +154,7 @@ export const StackScript = React.memo((props: StackScriptProps) => {
       : `/stackscripts/community?${queryString}`;
 
   return (
-    <div className={classes.root}>
+    <div>
       <Box
         sx={{
           alignItems: 'flex-start',

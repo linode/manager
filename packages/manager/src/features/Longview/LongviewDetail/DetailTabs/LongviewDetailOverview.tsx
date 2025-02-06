@@ -1,15 +1,8 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Paper } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Paper } from '@linode/ui';
-import { Props as LVDataProps } from 'src/containers/longview.stats.container';
-import {
-  LongviewPortsResponse,
-  LongviewTopProcesses,
-} from 'src/features/Longview/request.types';
 
 import { LongviewPackageDrawer } from '../../LongviewPackageDrawer';
 import { ActiveConnections } from './ActiveConnections/ActiveConnections';
@@ -19,6 +12,13 @@ import { IconSection } from './IconSection';
 import { ListeningServices } from './ListeningServices/ListeningServices';
 import { OverviewGraphs } from './OverviewGraphs/OverviewGraphs';
 import { TopProcesses } from './TopProcesses';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
+import type {
+  LongviewPortsResponse,
+  LongviewTopProcesses,
+} from 'src/features/Longview/request.types';
 
 interface Props {
   client: string;
@@ -67,7 +67,7 @@ export const LongviewDetailOverview = (props: Props) => {
    */
   const _hasError = listeningPortsError || lastUpdatedError;
   const portsError = Boolean(_hasError)
-    ? pathOr<string>('Error retrieving data', [0, 'reason'], _hasError)
+    ? _hasError?.[0].reason ?? 'Error retrieving data'
     : undefined;
 
   return (
@@ -115,12 +115,12 @@ export const LongviewDetailOverview = (props: Props) => {
           xs={12}
         >
           <ListeningServices
-            services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
+            services={listeningPortsData.Ports?.listening ?? []}
             servicesError={portsError}
             servicesLoading={listeningPortsLoading && !lastUpdated}
           />
           <ActiveConnections
-            connections={pathOr([], ['Ports', 'active'], listeningPortsData)}
+            connections={listeningPortsData.Ports?.active ?? []}
             connectionsError={portsError}
             connectionsLoading={listeningPortsLoading && !lastUpdated}
           />

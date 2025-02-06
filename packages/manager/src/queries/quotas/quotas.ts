@@ -1,4 +1,4 @@
-import { getQuota, getQuotas } from '@linode/api-v4';
+import { getQuota, getQuotaUsage, getQuotas } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
@@ -10,6 +10,7 @@ import type {
   Params,
   Quota,
   QuotaType,
+  QuotaUsage,
   ResourcePage,
 } from '@linode/api-v4';
 
@@ -26,6 +27,10 @@ export const quotaQueries = createQueryKeys('quotas', {
       }),
       quota: (id: number) => ({
         queryFn: () => getQuota(type, id),
+        queryKey: [id],
+      }),
+      usage: (id: number) => ({
+        queryFn: () => getQuotaUsage(type, id),
         queryKey: [id],
       }),
     },
@@ -59,5 +64,15 @@ export const useAllQuotasQuery = (
 ) =>
   useQuery<Quota[], APIError[]>({
     ...quotaQueries.service(service)._ctx.all(params, filter),
+    enabled,
+  });
+
+export const useQuotaUsageQuery = (
+  service: QuotaType,
+  id: number,
+  enabled = true
+) =>
+  useQuery<QuotaUsage, APIError[]>({
+    ...quotaQueries.service(service)._ctx.usage(id),
     enabled,
   });

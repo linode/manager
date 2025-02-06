@@ -249,77 +249,7 @@ export const NodeBalancerConfigPanel = (
           />
         </Grid>
 
-        {protocol === 'https' && (
-          <Grid container spacing={2} xs={12}>
-            <Grid md={5} sm={6} xs={12}>
-              <TextField
-                data-qa-cert-field
-                data-testid="ssl-certificate"
-                disabled={disabled}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
-                errorText={errorMap.ssl_cert}
-                label="SSL Certificate"
-                multiline
-                onChange={onSslCertificateChange}
-                required={protocol === 'https'}
-                rows={3}
-                value={sslCertificate || ''}
-              />
-            </Grid>
-            <Grid md={5} sm={6} xs={12}>
-              <TextField
-                data-qa-private-key-field
-                data-testid="private-key"
-                disabled={disabled}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
-                errorText={errorMap.ssl_key}
-                label="Private Key"
-                multiline
-                onChange={onPrivateKeyChange}
-                required={protocol === 'https'}
-                rows={3}
-                value={privateKey || ''}
-              />
-            </Grid>
-          </Grid>
-        )}
-
-        {tcpSelected && (
-          <Grid md={6} xs={12}>
-            <Autocomplete
-              onChange={(_, selected) => {
-                props.onProxyProtocolChange(selected.value);
-              }}
-              textFieldProps={{
-                dataAttrs: {
-                  'data-qa-proxy-protocol-select': true,
-                },
-                errorGroup: forEdit ? `${configIdx}` : undefined,
-              }}
-              autoHighlight
-              disableClearable
-              disabled={disabled}
-              errorText={errorMap.proxy_protocol}
-              id={`proxy-protocol-${configIdx}`}
-              label="Proxy Protocol"
-              noMarginTop
-              options={proxyProtocolOptions}
-              size="small"
-              value={selectedProxyProtocol || proxyProtocolOptions[0]}
-            />
-            <FormHelperText>
-              Proxy Protocol preserves initial TCP connection information.
-              Please consult{' '}
-              <Link to="https://techdocs.akamai.com/cloud-computing/docs/using-proxy-protocol-with-nodebalancers">
-                our Proxy Protocol guide
-              </Link>
-              {` `}
-              for information on the differences between each option.
-            </FormHelperText>
-          </Grid>
-        )}
-
-        <Grid md={tcpSelected ? 6 : 3} xs={6}>
+        <Grid md={3} xs={6}>
           <Autocomplete
             onChange={(_, selected) => {
               props.onAlgorithmChange(selected.value);
@@ -370,6 +300,79 @@ export const NodeBalancerConfigPanel = (
             Route subsequent requests from the client to the same backend.
           </FormHelperText>
         </Grid>
+
+        {tcpSelected && (
+          <Grid md={6} xs={12}>
+            <Autocomplete
+              onChange={(_, selected) => {
+                props.onProxyProtocolChange(selected.value);
+              }}
+              textFieldProps={{
+                dataAttrs: {
+                  'data-qa-proxy-protocol-select': true,
+                },
+                errorGroup: forEdit ? `${configIdx}` : undefined,
+              }}
+              autoHighlight
+              disableClearable
+              disabled={disabled}
+              errorText={errorMap.proxy_protocol}
+              id={`proxy-protocol-${configIdx}`}
+              label="Proxy Protocol"
+              noMarginTop
+              options={proxyProtocolOptions}
+              size="small"
+              value={selectedProxyProtocol || proxyProtocolOptions[0]}
+            />
+            <FormHelperText>
+              Proxy Protocol preserves initial TCP connection information.
+              Please consult{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/using-proxy-protocol-with-nodebalancers">
+                our Proxy Protocol guide
+              </Link>
+              {` `}
+              for information on the differences between each option.
+            </FormHelperText>
+          </Grid>
+        )}
+
+        {protocol === 'https' && (
+          <Grid container spacing={2} xs={12}>
+            <Grid md={6} xs={12}>
+              <TextField
+                data-qa-cert-field
+                data-testid="ssl-certificate"
+                disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.ssl_cert}
+                expand
+                label="SSL Certificate"
+                multiline
+                onChange={onSslCertificateChange}
+                required={protocol === 'https'}
+                rows={3}
+                value={sslCertificate || ''}
+              />
+            </Grid>
+            <Grid md={6} xs={12}>
+              <TextField
+                data-qa-private-key-field
+                data-testid="private-key"
+                disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.ssl_key}
+                expand
+                label="Private Key"
+                multiline
+                onChange={onPrivateKeyChange}
+                required={protocol === 'https'}
+                rows={3}
+                value={privateKey || ''}
+              />
+            </Grid>
+          </Grid>
+        )}
+
         <Grid xs={12}>
           <Divider />
         </Grid>

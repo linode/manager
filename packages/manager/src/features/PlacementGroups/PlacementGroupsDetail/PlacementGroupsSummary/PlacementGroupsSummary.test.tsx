@@ -10,7 +10,6 @@ describe('PlacementGroups Summary', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <PlacementGroupsSummary
         placementGroup={placementGroupFactory.build({
-          placement_group_type: 'affinity:local',
           id: 3,
           is_compliant: true,
           label: 'pg-3',
@@ -36,6 +35,7 @@ describe('PlacementGroups Summary', () => {
               linode_id: 10,
             },
           ],
+          placement_group_type: 'affinity:local',
           region: 'us-east',
         })}
         region={regionFactory.build({

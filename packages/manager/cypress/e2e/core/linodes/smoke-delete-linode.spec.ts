@@ -14,9 +14,7 @@ const confirmDeletion = (linodeLabel: string) => {
   cy.findByText(linodeLabel).should('not.exist');
 
   // Confirm the linode instance is removed
-  cy.findByText('Search Products, IP Addresses, Tags...')
-    .click()
-    .type(`${linodeLabel}{enter}`);
+  ui.mainSearch.find().type(`${linodeLabel}{enter}`);
   cy.findByText('You searched for ...').should('be.visible');
   cy.findByText('Sorry, no results for this one.').should('be.visible');
 };

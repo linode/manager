@@ -51,7 +51,7 @@ describe('resize linode', () => {
 
       cy.wait('@linodeResize');
       cy.contains(
-        "Your linode will be warm resized and will automatically attempt to power off and restore to it's previous state."
+        'Your linode will be warm resized and will automatically attempt to power off and restore to its previous state.'
       ).should('be.visible');
     });
   });
@@ -155,7 +155,7 @@ describe('resize linode', () => {
     });
   });
 
-  it.only('resizes a linode by decreasing size', () => {
+  it('resizes a linode by decreasing size', () => {
     // Use `vlan_no_internet` security method.
     // This works around an issue where the Linode API responds with a 400
     // when attempting to interact with it shortly after booting up when the

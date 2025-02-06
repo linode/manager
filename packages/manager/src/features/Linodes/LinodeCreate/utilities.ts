@@ -17,6 +17,7 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { LinodeCreateType } from './types';
 import type {
+  CreateLinodeInterfacePayload,
   CreateLinodeRequest,
   InterfacePayload,
   Linode,
@@ -142,7 +143,7 @@ export const tabs: LinodeCreateType[] = [
  * Performs some transformations to the Linode Create form data so that the data
  * is in the correct format for the API. Intended to be used in the "onSubmit" when creating a Linode.
  *
- * @param payload the initial raw values from the Linode Create form
+ * @param formValues the initial raw values from the Linode Create form
  * @returns final Linode Create payload to be sent to the API
  */
 export const getLinodeCreatePayload = (
@@ -165,12 +166,34 @@ export const getLinodeCreatePayload = (
     values.placement_group = undefined;
   }
 
-  values.interfaces = getInterfacesPayload(
-    values.interfaces,
-    Boolean(values.private_ip)
-  );
+  // @TODO Linode Interfaces - need to handle case if interface is not legacy
+  if (getIsLegacyInterfaceArray(values.interfaces)) {
+    values.interfaces = getInterfacesPayload(
+      values.interfaces,
+      Boolean(values.private_ip)
+    );
+  }
 
   return values;
+};
+
+/**
+ * Determines if the given interfaces payload array is of legacy interface type
+ * or of the new Linode Interface type
+ * @param interfaces the interfaces to confirm
+ * @returns if interfaces is type InterfacePayload
+ *
+ * @TODO Linode Interfaces - may need to update some logic to to depend on Account Settings for Interfaces soon
+ * For now, an undefined/empty interfaces array will return true to match existing behavior
+ */
+export const getIsLegacyInterfaceArray = (
+  interfaces: CreateLinodeInterfacePayload[] | InterfacePayload[] | undefined
+): interfaces is InterfacePayload[] => {
+  return (
+    interfaces === undefined ||
+    interfaces.length === 0 ||
+    interfaces.some((iface) => 'purpose' in iface)
+  );
 };
 
 /**

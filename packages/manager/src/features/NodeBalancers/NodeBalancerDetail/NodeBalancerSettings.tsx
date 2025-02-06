@@ -16,7 +16,6 @@ import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
@@ -26,8 +25,6 @@ export const NodeBalancerSettings = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
-  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
-  const displayFirewallInfoText = attachedFirewallData?.results === 0;
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -100,10 +97,7 @@ export const NodeBalancerSettings = () => {
         </Button>
       </Accordion>
       <Accordion defaultExpanded heading="Firewalls">
-        <NodeBalancerFirewalls
-          displayFirewallInfoText={displayFirewallInfoText}
-          nodeBalancerId={id}
-        />
+        <NodeBalancerFirewalls nodeBalancerId={id} />
       </Accordion>
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField

@@ -10,6 +10,7 @@ export * from './entity';
 export * from './firewall';
 export * from './host';
 export * from './image';
+export * from './interface';
 export * from './ipaddress';
 export * from './ipv6pool';
 export * from './lassie';

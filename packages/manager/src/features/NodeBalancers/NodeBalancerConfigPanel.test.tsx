@@ -57,6 +57,7 @@ export const nbConfigPanelMockPropsForTest: NodeBalancerConfigPanelProps = {
   onSave: vi.fn(),
   onSessionStickinessChange: vi.fn(),
   onSslCertificateChange: vi.fn(),
+  onUdpCheckPortChange: vi.fn(),
   port: 80,
   privateKey: '',
   protocol: 'http',
@@ -64,6 +65,7 @@ export const nbConfigPanelMockPropsForTest: NodeBalancerConfigPanelProps = {
   removeNode: vi.fn(),
   sessionStickiness: 'table',
   sslCertificate: '',
+  udpCheckPort: 80,
 };
 
 const activeHealthChecksFormInputs = ['Interval', 'Timeout', 'Attempts'];
@@ -367,5 +369,27 @@ describe('NodeBalancerConfigPanel', () => {
     for (const algorithm of ['None', 'Session', 'Source IP']) {
       expect(getByText(algorithm)).toBeVisible();
     }
+  });
+
+  it('shows a "Health Check Port" field when health checks are enabled', async () => {
+    const onChange = vi.fn();
+
+    const { getByLabelText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        healthCheckType="connection"
+        onUdpCheckPortChange={onChange}
+        protocol="udp"
+      />,
+      { flags: { udp: true } }
+    );
+
+    const checkPortField = getByLabelText('Health Check Port');
+
+    expect(checkPortField).toBeVisible();
+
+    await userEvent.type(checkPortField, '8080');
+
+    expect(onChange).toHaveBeenCalledWith(8080);
   });
 });

@@ -1,8 +1,7 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
 import { CircleProgress, Notice } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -10,7 +9,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
   useMutatePlacementGroup,
   usePlacementGroupQuery,
@@ -23,22 +21,13 @@ import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroups
 import { PlacementGroupsSummary } from './PlacementGroupsSummary/PlacementGroupsSummary';
 
 export const PlacementGroupsDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const placementGroupId = +id;
+  const { id: placementGroupId } = useParams({ from: '/placement-groups/$id' });
 
   const {
     data: placementGroup,
     error: placementGroupError,
     isLoading,
   } = usePlacementGroupQuery(placementGroupId);
-  const { data: linodes, isFetching: isFetchingLinodes } = useAllLinodesQuery(
-    {},
-    {
-      '+or': placementGroup?.members.map((member) => ({
-        id: member.linode_id,
-      })),
-    }
-  );
   const { data: regions } = useRegionsQuery();
 
   const region = regions?.find(
@@ -70,10 +59,6 @@ export const PlacementGroupsDetail = () => {
       <ErrorState errorText="There was a problem retrieving your Placement Group. Please try again." />
     );
   }
-
-  const assignedLinodes = linodes?.filter((linode) =>
-    placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
-  );
 
   const { label, placement_group_type } = placementGroup;
 
@@ -125,8 +110,6 @@ export const PlacementGroupsDetail = () => {
       )}
       <PlacementGroupsSummary placementGroup={placementGroup} region={region} />
       <PlacementGroupsLinodes
-        assignedLinodes={assignedLinodes}
-        isFetchingLinodes={isFetchingLinodes}
         isLinodeReadOnly={isLinodeReadOnly}
         placementGroup={placementGroup}
         region={region}
@@ -134,15 +117,3 @@ export const PlacementGroupsDetail = () => {
     </>
   );
 };
-
-export const placementGroupsDetailLazyRoute = createLazyRoute(
-  '/placement-groups/$id'
-)({
-  component: PlacementGroupsDetail,
-});
-
-export const placementGroupsUnassignLazyRoute = createLazyRoute(
-  '/placement-groups/$id/linodes/unassign/$linodeId'
-)({
-  component: PlacementGroupsDetail,
-});

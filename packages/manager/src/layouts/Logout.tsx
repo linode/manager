@@ -1,14 +1,15 @@
-import { pathOr } from 'ramda';
 import { Component } from 'react';
-import { MapDispatchToProps, MapStateToProps, connect } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { connect } from 'react-redux';
 
 import { CLIENT_ID } from 'src/constants';
-import { ApplicationState } from 'src/store';
 import { clearUserInput } from 'src/store/authentication/authentication.helpers';
 import { handleLogout } from 'src/store/authentication/authentication.requests';
 import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
+
+import type { MapDispatchToProps, MapStateToProps } from 'react-redux';
+import type { AnyAction } from 'redux';
+import type { ThunkDispatch } from 'redux-thunk';
+import type { ApplicationState } from 'src/store';
 
 interface LogoutProps extends DispatchProps, StateProps {}
 
@@ -38,7 +39,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (
   state,
   ownProps
 ) => ({
-  token: pathOr('', ['authentication', 'token'], state),
+  token: state?.authentication?.token ?? '',
 });
 
 interface DispatchProps {

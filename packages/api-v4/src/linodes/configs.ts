@@ -3,7 +3,7 @@ import {
   UpdateConfigInterfaceOrderSchema,
   UpdateConfigInterfaceSchema,
   UpdateLinodeConfigSchema,
-  LinodeInterfaceSchema,
+  ConfigProfileInterfaceSchema,
 } from '@linode/validation/lib/linodes.schema';
 import { API_ROOT } from '../constants';
 import Request, {
@@ -98,6 +98,7 @@ export const deleteLinodeConfig = (linodeId: number, configId: number) =>
  * updateLinodeConfig
  *
  * Update a configuration profile.
+ * Interfaces field must be omitted or null if Linode is using new Linode Interfaces.
  *
  * @param linodeId { number } The id of a Linode the specified config is attached to.
  * @param configId { number } The id of the config to be updated.
@@ -164,6 +165,7 @@ export const getConfigInterface = (
  * appendConfigInterface
  *
  * Append a single new Linode config interface object to an existing config.
+ * Cannot be used for Linodes using the new Linode Interfaces.
  *
  * @param linodeId { number } The id of a Linode to receive the new config interface.
  * @param configId { number } The id of a config to receive the new interface.
@@ -180,7 +182,7 @@ export const appendConfigInterface = (
       )}/configs/${encodeURIComponent(configId)}/interfaces`
     ),
     setMethod('POST'),
-    setData(data, LinodeInterfaceSchema)
+    setData(data, ConfigProfileInterfaceSchema)
   );
 
 /**

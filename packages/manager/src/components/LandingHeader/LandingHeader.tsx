@@ -15,7 +15,7 @@ export interface LandingHeaderProps {
   analyticsLabel?: string;
   betaFeedbackLink?: string;
   breadcrumbDataAttrs?: { [key: string]: boolean };
-  breadcrumbProps?: BreadcrumbProps;
+  breadcrumbProps?: Partial<BreadcrumbProps>;
   buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
   disabledBreadcrumbEditButton?: boolean;

@@ -28,7 +28,7 @@ export interface EnhancedAutocompleteProps<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     'renderInput'
   > {
-  /** Removes "select all" option for mutliselect */
+  /** Removes "select all" option for multiselect */
   disableSelectAll?: boolean;
   /** Provides a hint with error styling to assist users. */
   errorText?: string;

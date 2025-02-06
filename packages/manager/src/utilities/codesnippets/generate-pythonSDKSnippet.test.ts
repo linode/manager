@@ -1,6 +1,7 @@
 import { generatePythonLinodeSnippet } from './generate-pythonSDKSnippet';
 
-import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type { CreateLinodeRequest } from '@linode/api-v4';
+
 describe('generatePythonLinodeSnippet', () => {
   it('should correctly generates Python snippet for creating a Linode instance with all possible fields', () => {
     const config: CreateLinodeRequest = {
@@ -12,13 +13,13 @@ describe('generatePythonLinodeSnippet', () => {
         {
           ip_ranges: ['192.168.0.1/24'],
           ipam_address: '192.168.0.1',
-          label: 'main-interface',
-          purpose: 'public',
-          subnet_id: 69513,
           ipv4: {
             nat_1_1: '192.168.1.100',
             vpc: '192.168.2.0',
           },
+          label: 'main-interface',
+          purpose: 'public',
+          subnet_id: 69513,
         },
         {
           ipam_address: '192.168.0.1',

@@ -45,6 +45,7 @@ describe('GDPR agreement', () => {
     mockGetAccountAgreements({
       privacy_policy: false,
       eu_model: false,
+      billing_agreement: false,
     }).as('getAgreements');
 
     cy.visitWithLogin('/linodes/create');
@@ -73,6 +74,7 @@ describe('GDPR agreement', () => {
     mockGetAccountAgreements({
       privacy_policy: false,
       eu_model: true,
+      billing_agreement: false,
     }).as('getAgreements');
 
     cy.visitWithLogin('/linodes/create');
@@ -101,6 +103,7 @@ describe('GDPR agreement', () => {
     mockGetAccountAgreements({
       privacy_policy: false,
       eu_model: false,
+      billing_agreement: false,
     }).as('getAgreements');
     const rootpass = randomString(32);
     const linodeLabel = randomLabel();
