@@ -23,15 +23,15 @@ import type {
   LinodeRebuildType,
   RebuildLinodeFormValues,
 } from './utils';
+import type { Linode } from '@linode/api-v4';
 
 interface Props {
-  linodeId: number;
-  linodeLabel: string;
+  linode: Linode;
   onSuccess: () => void;
 }
 
 export const LinodeRebuildForm = (props: Props) => {
-  const { linodeId, linodeLabel, onSuccess } = props;
+  const { linode, onSuccess } = props;
   const { enqueueSnackbar } = useSnackbar();
   const [type, setType] = useState<LinodeRebuildType>('Image');
 
@@ -42,12 +42,15 @@ export const LinodeRebuildForm = (props: Props) => {
   const isTypeToConfirmEnabled =
     typeToConfirmPreference === undefined || typeToConfirmPreference === true;
 
-  const { mutateAsync: rebuildLinode } = useRebuildLinodeMutation(linodeId);
+  const { mutateAsync: rebuildLinode } = useRebuildLinodeMutation(linode.id);
 
   const form = useForm<RebuildLinodeFormValues, Context>({
     context: {
       isTypeToConfirmEnabled,
-      linodeLabel,
+      linodeLabel: linode.label,
+    },
+    defaultValues: {
+      disk_encryption: linode.disk_encryption,
     },
     resolver,
   });
@@ -88,7 +91,12 @@ export const LinodeRebuildForm = (props: Props) => {
           </Typography>
           <Autocomplete
             onChange={(e, value) => {
-              form.setValue('stackscript_id', undefined);
+              form.reset((values) => ({
+                ...values,
+                image: '',
+                stackscript_data: undefined,
+                stackscript_id: undefined,
+              }));
               setType(value.label);
             }}
             disableClearable
@@ -107,9 +115,12 @@ export const LinodeRebuildForm = (props: Props) => {
           <Image />
           <Password />
           <SSHKeys />
-          <DiskEncryption />
-          <UserData linodeId={linodeId} />
-          <Confirmation linodeLabel={linodeLabel} />
+          <DiskEncryption
+            isLKELinode={linode.lke_cluster_id !== null}
+            linodeRegion={linode.region}
+          />
+          <UserData linodeId={linode.id} />
+          <Confirmation linodeLabel={linode.label} />
           <Actions />
         </Stack>
       </form>

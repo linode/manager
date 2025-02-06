@@ -2,20 +2,48 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Encryption } from 'src/components/Encryption/Encryption';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import {
+  getDiskEncryptionDisabledInRebuildReason,
+  getRebuildDiskEncryptionDescription,
+  useIsDiskEncryptionFeatureEnabled,
+} from 'src/components/Encryption/utils';
+import { useRegionQuery } from 'src/queries/regions/regions';
 
 import type { RebuildLinodeFormValues } from './utils';
 
-export const DiskEncryption = () => {
+interface Props {
+  isLKELinode: boolean;
+  linodeRegion: string;
+}
+
+export const DiskEncryption = (props: Props) => {
+  const { isLKELinode, linodeRegion } = props;
   const { control } = useFormContext<RebuildLinodeFormValues>();
+
+  const { data: region } = useRegionQuery(linodeRegion);
+
+  const isLinodeInDistributedRegion = region?.site_type === 'distributed';
+  const regionSupportsDiskEncryption =
+    region?.capabilities.includes('Disk Encryption') ?? false;
 
   const {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
 
   if (!isDiskEncryptionFeatureEnabled) {
-    return false;
+    return null;
   }
+
+  const disableDiskEncryptionReason = getDiskEncryptionDisabledInRebuildReason({
+    isLKELinode,
+    isLinodeInDistributedRegion,
+    regionSupportsDiskEncryption,
+  });
+
+  const description = getRebuildDiskEncryptionDescription({
+    isLKELinode,
+    isLinodeInDistributedRegion,
+  });
 
   return (
     <Controller
@@ -24,8 +52,9 @@ export const DiskEncryption = () => {
           onChange={(checked) =>
             field.onChange(checked ? 'enabled' : 'disabled')
           }
-          descriptionCopy="Secure this Linode using data at rest encryption."
-          disabledReason=""
+          descriptionCopy={description}
+          disabled={disableDiskEncryptionReason !== undefined}
+          disabledReason={disableDiskEncryptionReason}
           error={fieldState.error?.message}
           isEncryptEntityChecked={field.value === 'enabled'}
         />
