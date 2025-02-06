@@ -301,7 +301,7 @@ export const CreateCluster = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Grid className={classes.root} container>
+      <Grid className={classes.root} container ref={formContainerRef}>
         <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
         <LandingHeader
           docsLabel="Docs"
