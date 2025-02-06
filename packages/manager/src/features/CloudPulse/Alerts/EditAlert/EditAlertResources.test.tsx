@@ -31,7 +31,7 @@ const cloudPulseResources: CloudPulseResources[] = linodes.map((linode) => {
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
-  useEditAlertDefinitionEntities: vi.fn(),
+  useEditAlertDefinition: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
 }));
@@ -39,7 +39,7 @@ const queryMocks = vi.hoisted(() => ({
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
-  useEditAlertDefinitionEntities: queryMocks.useEditAlertDefinitionEntities,
+  useEditAlertDefinition: queryMocks.useEditAlertDefinition,
 }));
 
 vi.mock('src/queries/cloudpulse/resources', () => ({
@@ -74,7 +74,7 @@ beforeEach(() => {
     isError: false,
     isFetching: false,
   });
-  queryMocks.useEditAlertDefinitionEntities.mockReturnValue({
+  queryMocks.useEditAlertDefinition.mockReturnValue({
     mutateAsync: vi.fn().mockResolvedValue({}),
     reset: vi.fn(),
   });
@@ -130,8 +130,7 @@ describe('EditAlertResources component tests', () => {
   });
 
   it('Edit alert resources successful edit', async () => {
-    const mutateAsyncSpy = queryMocks.useEditAlertDefinitionEntities()
-      .mutateAsync;
+    const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
 
     const push = vi.fn();
     const history = createMemoryHistory(); // Create a memory history for testing
