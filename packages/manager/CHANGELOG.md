@@ -9,8 +9,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added:
 
-- AddChannelListing, RenderChannelDetails with Unit Tests, with api related changes for NotificationChannels ([#11547](https://github.com/linode/manager/pull/11547))
-- Improve region filter loading state in Linodes Landing ([#11550](https://github.com/linode/manager/pull/11550))
 - Labels and Taints to LKE Node Pools ([#11528](https://github.com/linode/manager/pull/11528), [#11553](https://github.com/linode/manager/pull/11553))
 - Firewall assignment on Linode and NodeBalancer detail pages ([#11567](https://github.com/linode/manager/pull/11567))
 - LKE cluster label and id on associated Linode's details page ([#11568](https://github.com/linode/manager/pull/11568))
@@ -25,6 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Improve StackScript create and edit forms ([#11532](https://github.com/linode/manager/pull/11532))
 - Don't allow "HTTP Cookie" session stickiness when NodeBalancer config protocol is TCP ([#11534](https://github.com/linode/manager/pull/11534))
 - Make the `RegionMultiSelect` in the "Manage Image Regions" drawer ignore account capabilities ([#11598](https://github.com/linode/manager/pull/11598))
+- Improve region filter loading state in Linodes Landing ([#11550](https://github.com/linode/manager/pull/11550))
 
 ### Fixed:
 
@@ -42,9 +41,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - TanStack Router Migration for Images Feature ([#11578](https://github.com/linode/manager/pull/11578))
 - Removed `imageServiceGen2` and `imageServiceGen2Ga` feature flags ([#11579](https://github.com/linode/manager/pull/11579))
 - Add Feature Flag for Linode Interfaces project ([#11584](https://github.com/linode/manager/pull/11584))
-- Add MSW crud operations for firewalls and get operations for IP addresses ([#11586](https://github.com/linode/manager/pull/11586))
+- Add MSW crud operations for Firewalls and `Get` operations for IP addresses ([#11586](https://github.com/linode/manager/pull/11586))
 - Remove ramda from `DomainRecords` pt2 ([#11587](https://github.com/linode/manager/pull/11587))
-- Remove ramda from Managed ([#11593](https://github.com/linode/manager/pull/11593))
+- Remove ramda from `Managed` ([#11593](https://github.com/linode/manager/pull/11593))
 - Remove `disallowImageUploadToNonObjRegions` feature flag ([#11598](https://github.com/linode/manager/pull/11598))
 - Add `ignoreAccountAvailability` prop to `RegionMultiSelect` ([#11598](https://github.com/linode/manager/pull/11598))
 - Update `markdown-it` to v14 ([#11602](https://github.com/linode/manager/pull/11602))
@@ -63,25 +62,26 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Stop using `--headless=old` Chrome flag to run headless Cypress tests ([#11561](https://github.com/linode/manager/pull/11561))
 - Fix `resize-linode.spec.ts` test failure caused by updated API notification message ([#11561](https://github.com/linode/manager/pull/11561))
 - Add tests for firewall assignment on Linode and NodeBalancer detail pages ([#11567](https://github.com/linode/manager/pull/11567))
-- tests for kubeconfig download and viewing ([#11571](https://github.com/linode/manager/pull/11571))
+- Add tests for downloading and viewing Kubeconfig file ([#11571](https://github.com/linode/manager/pull/11571))
 - Add Cypress test for Service Transfers empty state ([#11585](https://github.com/linode/manager/pull/11585))
 
 ### Upcoming Features:
 
 - Modify Cloud Manager to use OAuth PKCE ([#10600](https://github.com/linode/manager/pull/10600))
-- add new permissions component for iam ([#11423](https://github.com/linode/manager/pull/11423))
+- Add new permissions component for IAM ([#11423](https://github.com/linode/manager/pull/11423))
 - Add event messages for new `interface_create`, `interface_delete`, and `interface_update` events ([#11527](https://github.com/linode/manager/pull/11527))
-- add new table component for assigned roles in the iam ([#11533](https://github.com/linode/manager/pull/11533))
+- Add new table component for assigned roles in IAM ([#11533](https://github.com/linode/manager/pull/11533))
 - Add support for NodeBalancer UDP Health Check Port ([#11534](https://github.com/linode/manager/pull/11534))
 - Add filtering, pagination and sorting for resources section in CloudPulse alerts show details page ([#11541](https://github.com/linode/manager/pull/11541))
 - Revised validation error messages and tooltip texts for Create Alert form ([#11543](https://github.com/linode/manager/pull/11543))
 - Add placeholder Quotas tab in Accounts page ([#11551](https://github.com/linode/manager/pull/11551))
-- Add new Notification Channel listing section in CloudPulse alert details page ([#11554](https://github.com/linode/manager/pull/11554))
+- Add new Notification Channel listing section in CloudPulse Alert details page ([#11554](https://github.com/linode/manager/pull/11554))
 - Fix type errors that result from changes to `/v4/networking` endpoints ([#11559](https://github.com/linode/manager/pull/11559))
 - Add billing agreement checkbox to non-US countries for tax id purposes ([#11563](https://github.com/linode/manager/pull/11563))
 - Alerts Listing features: Pagination, Ordering, Searching, Filtering ([#11577](https://github.com/linode/manager/pull/11577))
-- Add scaffolding for new edit resource component for system alerts in CloudPulse alerts section ([#11583](https://github.com/linode/manager/pull/11583))
+- Add scaffolding for new edit resource component for system alerts in CloudPulse Alerts section ([#11583](https://github.com/linode/manager/pull/11583))
 - Add support for quotas usage endpoint ([#11597](https://github.com/linode/manager/pull/11597))
+- Add AddChannelListing and RenderChannelDetails for CloudPulse ([#11547](https://github.com/linode/manager/pull/11547))
 
 ## [2025-01-28] - v1.135.0
 
