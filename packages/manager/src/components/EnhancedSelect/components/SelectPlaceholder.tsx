@@ -22,7 +22,8 @@ export const SelectPlaceholder = (props: Props) => {
 };
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  fontSize: '0.9rem',
+  font: theme.tokens.typography.Label.Regular.Placeholder,
+  fontStyle: 'italic',
   left: '10px',
   overflow: 'hidden',
   position: 'absolute',

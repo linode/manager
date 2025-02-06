@@ -6,7 +6,7 @@ export const StyledAutocompleteContainer = styled(Box, {
 })(({ theme }) => ({
   '& .MuiAutocomplete-groupLabel': {
     color: theme.color.headline,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '1rem',
     lineHeight: 1,
     padding: '16px 4px 8px 10px',

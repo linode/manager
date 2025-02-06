@@ -206,7 +206,7 @@ export const DateTimePicker = ({
                 fontSize: '0.875rem',
               },
               '& .MuiPickersCalendarHeader-label': {
-                fontFamily: theme.font.bold,
+                font: theme.font.bold,
               },
               '& .MuiPickersCalendarHeader-root': {
                 borderBottom: `1px solid ${theme.borderColors.divider}`,

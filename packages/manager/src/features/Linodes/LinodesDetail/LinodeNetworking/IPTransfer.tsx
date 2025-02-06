@@ -284,13 +284,13 @@ export const IPTransfer = (props: Props) => {
         >
           <Typography>
             <Typography
-              sx={{
+              sx={(theme) => ({
+                font: theme.font.bold,
                 [theme.breakpoints.up('md')]: {
                   display: 'none',
                 },
-              }}
+              })}
               component="span"
-              fontFamily={theme.font.bold}
             >
               IP address:{' '}
             </Typography>

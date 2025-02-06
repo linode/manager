@@ -7,7 +7,7 @@ import type { NavEntity } from './PrimaryNav';
 import type { CreateEntity } from 'src/features/TopMenu/CreateMenu/CreateMenu';
 
 export interface BaseNavLink {
-  attr?: { [key: string]: any };
+  attr?: { [key: string]: unknown };
   display: CreateEntity | NavEntity;
   hide?: boolean;
   href: string;
@@ -17,7 +17,7 @@ export interface PrimaryLink extends BaseNavLink {
   activeLinks?: Array<string>;
   betaChipClassName?: string;
   isBeta?: boolean;
-  onClick?: (e: React.ChangeEvent<any>) => void;
+  onClick?: (e: React.ChangeEvent<HTMLAnchorElement>) => void;
 }
 
 interface PrimaryLinkProps extends PrimaryLink {
@@ -56,6 +56,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
     >
       <StyledPrimaryLinkBox
         className="primaryNavLink"
+        isActiveLink={isActiveLink}
         isCollapsed={isCollapsed}
       >
         {display}

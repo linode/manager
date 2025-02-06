@@ -10,12 +10,13 @@ export const Help = () => {
   return (
     <TopMenuTooltip title="Help & Support">
       <IconButton
+        disableRipple
         accessibleAriaLabel="Help & Support"
         component={Link}
         sx={topMenuIconButtonSx}
         to="/support"
       >
-        <HelpSVGIcon height="20px" width="20px" />
+        <HelpSVGIcon height="24px" width="24px" />
       </IconButton>
     </TopMenuTooltip>
   );

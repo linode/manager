@@ -3,18 +3,19 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
+import FolderIcon from 'src/assets/icons/objectStorage/folder.svg';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow, TableRowProps } from 'src/components/TableRow';
+import { TableRow } from 'src/components/TableRow';
 
 import { FolderActionMenu } from './FolderActionMenu';
+
+import type { TableRowProps } from 'src/components/TableRow';
 
 export interface FolderTableRowProps extends TableRowProps {
   displayName: string;
   folderName: string;
   handleClickDelete: (objectName: string) => void;
-  manuallyCreated: boolean;
 }
 
 export const FolderTableRow = (props: FolderTableRowProps) => {
@@ -22,16 +23,15 @@ export const FolderTableRow = (props: FolderTableRowProps) => {
     displayName,
     folderName,
     handleClickDelete,
-    manuallyCreated,
     ...tableRowProps
   } = props;
 
   return (
     <TableRow key={folderName} {...tableRowProps}>
-      <TableCell parentColumn="Object">
+      <TableCell>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <StyledIconWrapper>
-            <EntityIcon size={22} variant="folder" />
+            <FolderIcon size={22} />
           </StyledIconWrapper>
           <Grid>
             <Link

@@ -53,7 +53,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     flexDirection: 'row',
   },
   required: {
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
   },
   root: {
     marginTop: theme.spacing(),

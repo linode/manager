@@ -1,5 +1,5 @@
 import { Stack } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { Typography } from '@linode/ui';
 import React from 'react';
 import { useState } from 'react';
 

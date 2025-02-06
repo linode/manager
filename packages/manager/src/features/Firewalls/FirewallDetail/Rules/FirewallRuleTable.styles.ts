@@ -39,7 +39,7 @@ export const StyledTableRow = styled('tr', {
 export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
   ({ theme }) => ({
     backgroundColor: theme.bg.tableHeader,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '.875rem',
   })
 );

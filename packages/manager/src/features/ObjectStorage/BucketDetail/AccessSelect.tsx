@@ -253,7 +253,7 @@ export const AccessSelect = React.memo((props: Props) => {
         <Notice spacingBottom={0} spacingTop={16} variant="warning">
           <Typography
             sx={(theme) => ({
-              fontFamily: theme.font.bold,
+              font: theme.font.bold,
             })}
           >
             CORS (Cross Origin Sharing) is not available for endpoint types E2

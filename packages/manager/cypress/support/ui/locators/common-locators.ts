@@ -11,7 +11,7 @@ export const topMenuItemsLocator = {
   /** Top menu search field. */
   searchInput: '[data-qa-main-search]',
   /** Top menu navigation toggle. */
-  toggleSideMenuButton: '[aria-label="open menu"]',
+  toggleSideMenuButton: '[aria-label="unpin menu"]',
 };
 
 /** Top menu create dropdown items. */

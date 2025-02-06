@@ -26,7 +26,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
     alignItems: 'center',
     display: 'flex',
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: 14,
     paddingTop: theme.spacing(),
   },

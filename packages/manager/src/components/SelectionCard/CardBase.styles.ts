@@ -83,7 +83,7 @@ export const CardBaseHeading = styled('div', {
   color: theme.color.headline,
   columnGap: theme.spacing(2),
   display: 'flex',
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '1rem',
   wordBreak: 'break-word',
 }));

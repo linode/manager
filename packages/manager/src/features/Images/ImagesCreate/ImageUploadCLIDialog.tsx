@@ -1,3 +1,4 @@
+import { Typography as FontTypography } from '@linode/design-language-system';
 import { Typography } from '@linode/ui';
 import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -43,7 +44,7 @@ export const ImageUploadCLIDialog = (props: ImageUploadSuccessDialogProps) => {
         hideLabel
         label="CLI Command"
         noMarginTop
-        sx={{ fontFamily: 'UbuntuMono, monospace, sans-serif' }}
+        sx={{ font: FontTypography.Code }}
         value={command}
       />
       <Typography sx={{ paddingTop: 2 }}>

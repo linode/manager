@@ -301,7 +301,7 @@ export const TextField = (props: TextFieldProps) => {
         >
           {label}
           {labelSuffixText && (
-            <Box component="span" sx={{ fontFamily: theme.font.normal }}>
+            <Box component="span" sx={{ font: theme.font.normal }}>
               {' '}
               {labelSuffixText}
             </Box>

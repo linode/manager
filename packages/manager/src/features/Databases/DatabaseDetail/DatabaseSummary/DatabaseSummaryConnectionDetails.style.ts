@@ -31,7 +31,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       cursor: 'default',
     },
     color: theme.palette.primary.main,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '0.875rem',
     lineHeight: '1.125rem',
     marginLeft: theme.spacing(),
@@ -44,7 +44,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       lineHeight: '1.5rem',
     },
     '& span': {
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
     },
     background: theme.tokens.interaction.Background.Secondary,
     border: `1px solid ${
@@ -89,7 +89,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     marginLeft: 22,
   },
   provisioningText: {
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
     fontStyle: 'italic',
   },
   showBtn: {

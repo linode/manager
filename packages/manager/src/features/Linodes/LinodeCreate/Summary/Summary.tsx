@@ -159,7 +159,7 @@ export const Summary = () => {
                 key={item.title}
                 spacing={1}
               >
-                <Typography fontFamily={(theme) => theme.font.bold}>
+                <Typography sx={{ font: theme.font.bold }}>
                   {item.title}
                 </Typography>
                 {item.details && <Typography>{item.details}</Typography>}

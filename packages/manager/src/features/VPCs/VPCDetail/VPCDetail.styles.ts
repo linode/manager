@@ -1,5 +1,5 @@
 import { Box, Button } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 export const StyledActionButton = styled(Button, {
@@ -10,7 +10,7 @@ export const StyledActionButton = styled(Button, {
     color: theme.tokens.color.Neutrals.White,
   },
   color: theme.textColors.linkActiveLight,
-  fontFamily: theme.font.normal,
+  font: theme.font.normal,
   fontSize: '0.875rem',
   height: theme.spacing(5),
   minWidth: 'auto',

@@ -45,7 +45,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   priceDisplay: {
     '& span': {
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
     },
     color: theme.color.headline,
     display: 'inline',

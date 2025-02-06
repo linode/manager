@@ -1,5 +1,5 @@
 import { Stack, VisibilityTooltip } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { usePreferences } from 'src/queries/profile/preferences';

@@ -1,6 +1,5 @@
 import { styled } from '@mui/material/styles';
 
-import { latoWeb } from '../../foundations';
 import { Button } from './Button';
 
 /**
@@ -20,7 +19,7 @@ export const StyledActionButton = styled(Button, {
   }),
   background: 'transparent',
   color: theme.textColors.linkActiveLight,
-  fontFamily: latoWeb.normal,
+  font: theme.font.normal,
   fontSize: '14px',
   lineHeight: '16px',
   minWidth: 0,

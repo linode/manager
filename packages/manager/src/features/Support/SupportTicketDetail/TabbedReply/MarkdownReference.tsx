@@ -18,7 +18,9 @@ export const MarkdownReference = (props: Props) => {
           Markdown cheatsheet
         </Link>
       </Typography>
-      <Typography fontFamily={(theme) => theme.font.bold}>Examples</Typography>
+      <Typography sx={(theme) => ({ font: theme.font.bold })}>
+        Examples
+      </Typography>
       <Paper
         sx={(theme) => ({
           backgroundColor: theme.palette.background.default,

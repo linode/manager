@@ -1,8 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, Chip } from '@linode/ui';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import { Tag } from 'src/components/Tag/Tag';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 
 import {
@@ -40,12 +40,23 @@ export interface SearchSuggestionProps {
 
 export const SearchSuggestion = (props: SearchSuggestionProps) => {
   const { data, searchText, selectOption, selectProps, ...rest } = props;
+  const history = useHistory();
   const { data: suggestionData, label } = data;
   const { description, icon, status, tags } = suggestionData;
   const searchResultIcon = icon || 'default';
 
   const handleClick = () => {
     selectOption(data);
+  };
+
+  const handleTagQuery = (
+    e: React.MouseEvent<HTMLDivElement>,
+    label: string
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    history.push(`/search/?query=tag:${label}`);
+    selectProps.onMenuClose();
   };
 
   const maybeStyleSegment = (
@@ -80,13 +91,11 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
     }
 
     return tags.map((tag: string) => (
-      <Tag
+      <Chip
         className="tag"
-        closeMenu={selectProps.onMenuClose}
-        colorVariant="lightBlue"
-        component={'button' as 'div'}
         key={`tag-${tag}`}
         label={tag}
+        onClick={(e) => handleTagQuery(e, tag)}
       />
     ));
   };

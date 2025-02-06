@@ -111,7 +111,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
         {items.map((item) => (
           <Grid key={item.label} md={2} sm={2} xs={2}>
             <Stack direction="row" spacing={1}>
-              <Typography fontFamily={(theme) => theme.font.bold}>
+              <Typography sx={(theme) => ({ font: theme.font.bold })}>
                 {item.label}
               </Typography>
               {item.value}

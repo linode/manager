@@ -18,9 +18,10 @@ import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { usePagination } from 'src/hooks/usePagination';
 import { useInProgressEvents } from 'src/queries/events/events';
 
+import { DatabaseSettingsSuspendClusterDialog } from '../DatabaseDetail/DatabaseSettings/DatabaseSettingsSuspendClusterDialog';
+
 import type { DatabaseInstance } from '@linode/api-v4/lib/databases';
 import type { Order } from 'src/hooks/useOrder';
-import { DatabaseSettingsSuspendClusterDialog } from '../DatabaseDetail/DatabaseSettings/DatabaseSettingsSuspendClusterDialog';
 
 const preferenceKey = 'databases';
 
@@ -30,8 +31,8 @@ interface Props {
   isNewDatabase?: boolean;
   order: 'asc' | 'desc';
   orderBy: string;
-  showSuspend?: boolean;
   results: number | undefined;
+  showSuspend?: boolean;
 }
 const DatabaseLandingTable = ({
   data,
@@ -160,7 +161,7 @@ const DatabaseLandingTable = ({
                 Created
               </TableSortCell>
             </Hidden>
-            {isDatabasesV2GA && isNewDatabase && <TableCell></TableCell>}
+            {isDatabasesV2GA && isNewDatabase && <TableCell />}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -186,8 +187,8 @@ const DatabaseLandingTable = ({
                   ? 'You don’t have any Aiven Database Clusters created yet. Click Create Database Cluster to create one.'
                   : ''
               }
-              colSpan={7}
-            ></TableRowEmpty>
+              colSpan={8}
+            />
           )}
         </TableBody>
       </Table>

@@ -1,6 +1,6 @@
+import { Typography } from '@linode/ui';
 import { Box, IconButton } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import { Typography } from '@mui/material';
 import _DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
 

@@ -133,7 +133,7 @@ export const NodeBalancersLanding = () => {
                 Region
               </TableSortCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

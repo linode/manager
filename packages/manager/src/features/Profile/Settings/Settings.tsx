@@ -5,6 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
+import { EnableTableStriping } from './EnableTableStriping';
 import { MaskSensitiveData } from './MaskSensitiveData';
 import { Notifications } from './Notifications';
 import { PreferenceEditor } from './PreferenceEditor';
@@ -32,6 +33,7 @@ export const ProfileSettings = () => {
         <Theme />
         <TypeToConfirm />
         <MaskSensitiveData />
+        <EnableTableStriping />
       </Stack>
       <PreferenceEditor
         onClose={handleClosePreferenceEditor}

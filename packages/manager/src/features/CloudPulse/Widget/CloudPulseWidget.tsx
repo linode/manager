@@ -1,5 +1,5 @@
-import { Paper } from '@linode/ui';
-import { Box, Grid, Stack, Typography, useTheme } from '@mui/material';
+import { Paper, Typography } from '@linode/ui';
+import { Box, Grid, Stack, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 

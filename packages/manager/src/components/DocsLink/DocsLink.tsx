@@ -56,7 +56,7 @@ const StyledDocsLink = styled(Link, {
   },
   alignItems: 'center',
   display: 'flex',
-  fontFamily: theme.font.normal,
+  font: theme.font.normal,
   fontSize: '.875rem',
   lineHeight: 'normal',
   margin: 0,

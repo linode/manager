@@ -76,13 +76,13 @@ export const StyledButton = styled(Button, {
 export const StyledEnabledText = styled('span', {
   label: 'StyledEnabledText',
 })(({ theme }) => ({
-  fontFamily: theme.font.normal,
+  font: theme.font.normal,
   marginLeft: 4,
 }));
 
 export const StyledNotice = styled(Notice, {
   label: 'StyledNotice',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '0.875rem',
 }));

@@ -5,34 +5,6 @@ import { deepmerge } from '@mui/utils';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
 
-import type {
-  AccentTypes as AccentTypesLight,
-  ActionTypes as ActionTypesLight,
-  BackgroundTypes as BackgroundTypesLight,
-  BorderRadiusTypes,
-  BorderTypes as BorderTypesLight,
-  ChartTypes,
-  ColorTypes,
-  ContentTypes as ContentTypesLight,
-  ElevationTypes as ElevationTypesLight,
-  FontTypes,
-  InteractionTypes as InteractionTypesLight,
-  RadiusTypes,
-  SearchTypes as SearchTypesLight,
-  SpacingTypes,
-  TypographyTypes,
-} from '@linode/design-language-system';
-import type {
-  AccentTypes as AccentTypesDark,
-  ActionTypes as ActionTypesDark,
-  BackgroundTypes as BackgroundTypesDark,
-  BorderTypes as BorderTypesDark,
-  ContentTypes as ContentTypesDark,
-  ElevationTypes as ElevationTypesDark,
-  InteractionTypes as InteractionTypesDark,
-  SearchTypes as SearchTypesDark,
-} from '@linode/design-language-system/themes/dark';
-import type { latoWeb } from '../fonts';
 // Types & Interfaces
 import type {
   customDarkModeOptions,
@@ -45,9 +17,47 @@ import type {
   notificationToast,
   textColors,
 } from './light';
+import type {
+  AccentTypes as AccentTypesLight,
+  ActionTypes as ActionTypesLight,
+  BackgroundTypes as BackgroundTypesLight,
+  BorderRadiusTypes,
+  BorderTypes as BorderTypesLight,
+  ChartTypes,
+  ColorTypes,
+  ContentTypes as ContentTypesLight,
+  DropdownTypes as DropdownTypesLight,
+  ElevationTypes as ElevationTypesLight,
+  FontTypes,
+  GlobalFooterTypes as GlobalFooterTypesLight,
+  GlobalHeaderTypes,
+  InteractionTypes as InteractionTypesLight,
+  RadiusTypes,
+  SearchTypes as SearchTypesLight,
+  SideNavigationTypes as SideNavigationTypesLight,
+  SpacingTypes,
+  TableTypes as TableTypesLight,
+  TypographyTypes,
+} from '@linode/design-language-system';
+import type {
+  AccentTypes as AccentTypesDark,
+  ActionTypes as ActionTypesDark,
+  BackgroundTypes as BackgroundTypesDark,
+  BorderTypes as BorderTypesDark,
+  ContentTypes as ContentTypesDark,
+  DropdownTypes as DropdownTypesDark,
+  ElevationTypes as ElevationTypesDark,
+  GlobalFooterTypes as GlobalFooterTypesDark,
+  InteractionTypes as InteractionTypesDark,
+  SearchTypes as SearchTypesDark,
+  SideNavigationTypes as SideNavigationTypesDark,
+  TableTypes as TableTypesDark,
+} from '@linode/design-language-system/themes/dark';
 
 export type ThemeName = 'dark' | 'light';
 
+type FooterTypes = MergeTypes<GlobalFooterTypesLight, GlobalFooterTypesDark>;
+type SearchTypes = MergeTypes<SearchTypesLight, SearchTypesDark>;
 type AccentTypes = MergeTypes<AccentTypesLight, AccentTypesDark>;
 type ActionTypes = MergeTypes<ActionTypesLight, ActionTypesDark>;
 type BackgroundTypes = MergeTypes<BackgroundTypesLight, BackgroundTypesDark>;
@@ -55,9 +65,21 @@ type BorderTypes = MergeTypes<BorderTypesLight, BorderTypesDark>;
 type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
 type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
 type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
-type SearchTypes = MergeTypes<SearchTypesLight, SearchTypesDark>;
+type SideNavigationTypes = MergeTypes<
+  SideNavigationTypesLight,
+  SideNavigationTypesDark
+>;
+type DropdownTypes = MergeTypes<DropdownTypesLight, DropdownTypesDark>;
+type TableTypes = MergeTypes<TableTypesLight, TableTypesDark>;
 
-type Fonts = typeof latoWeb;
+type Fonts = {
+  bold: TypographyTypes['Body']['Bold'];
+  extrabold: TypographyTypes['Body']['Extrabold'];
+  italic: TypographyTypes['Body']['Italic'];
+  list: TypographyTypes['Body']['List'];
+  normal: TypographyTypes['Body']['Regular'];
+  semibold: TypographyTypes['Body']['Semibold'];
+};
 
 type MergeTypes<A, B> = Omit<A, keyof B> &
   Omit<B, keyof A> &
@@ -111,22 +133,27 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast: NotificationToast;
     textColors: TextColors;
     tokens: {
-      //  ---- Global tokens: theme agnostic ----
-      borderRadius: BorderRadiusTypes;
-      color: ColorTypes;
-      font: FontTypes;
-      search: SearchTypes;
-      spacing: SpacingTypes;
       // ----------------------------------------
       accent: AccentTypes;
       action: ActionTypes;
       background: BackgroundTypes;
+      //  ---- Global tokens: theme agnostic ----
       border: BorderTypes;
+      borderRadius: BorderRadiusTypes;
       chart: ChartTypes;
+      color: ColorTypes;
       content: ContentTypes;
+      dropdown: DropdownTypes;
       elevation: ElevationTypes;
+      font: FontTypes;
+      footer: FooterTypes;
+      header: GlobalHeaderTypes;
       interaction: InteractionTypes;
       radius: RadiusTypes;
+      search: SearchTypes;
+      sideNavigation: SideNavigationTypes;
+      spacing: SpacingTypes;
+      table: TableTypes;
       typography: TypographyTypes;
     };
     visually: any;
@@ -149,22 +176,27 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
-      //  ---- Global tokens: theme agnostic ----
-      borderRadius?: BorderRadiusTypes;
-      color?: ColorTypes;
-      font?: FontTypes;
-      search: SearchTypes;
-      spacing?: SpacingTypes;
       // ----------------------------------------
       accent?: AccentTypes;
       action?: ActionTypes;
       background?: BackgroundTypes;
       border?: BorderTypes;
+      //  ---- Global tokens: theme agnostic ----
+      borderRadius?: BorderRadiusTypes;
       chart?: ChartTypes;
+      color?: ColorTypes;
       content?: ContentTypes;
+      dropdown?: DropdownTypes;
       elevation?: ElevationTypes;
+      font?: FontTypes;
+      footer?: FooterTypes;
+      header?: GlobalHeaderTypes;
       interaction?: InteractionTypes;
       radius?: RadiusTypes;
+      search?: SearchTypes;
+      sideNavigation?: SideNavigationTypes;
+      spacing?: SpacingTypes;
+      table?: TableTypes;
       typography?: TypographyTypes;
     };
     visually?: any;

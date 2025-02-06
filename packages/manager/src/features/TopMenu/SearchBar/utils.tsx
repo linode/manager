@@ -52,6 +52,7 @@ export const createFinalOptions = (
     data: {
       searchText,
     },
+    icon: <ManageSearchIcon />,
     label: `View all ${results.length} results for "${searchText}"`,
     value: 'redirect',
   };

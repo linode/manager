@@ -16,6 +16,7 @@ export const preferencesFactory = Factory.Sync.makeFactory<ManagerPreferences>({
   domains_group_by_tag: true,
   firewall_beta_notification: true,
   gst_banner_dismissed: true,
+  isTableStripingEnabled: true,
   linode_news_banner_dismissed: true,
   linodes_group_by_tag: true,
   linodes_view_style: 'grid',

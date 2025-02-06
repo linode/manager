@@ -51,7 +51,7 @@ export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
 })(({ theme }) => ({
   color: theme.textColors.headlineStatic,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
 }));
 
 export const StyledTokenDiv = styled('div', {
