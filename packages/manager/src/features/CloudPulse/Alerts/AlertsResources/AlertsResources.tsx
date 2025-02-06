@@ -14,11 +14,13 @@ import {
   getRegionsIdRegionMap,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { AlertsEngineOptionFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { AlertResourceAdditionalFilters } from './AlertsResourcesAdditionalFilters';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
+import { serviceFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
+import type { AlertFilterType } from './constants';
 import type { AlertDefinitionType, Region } from '@linode/api-v4';
 
 export interface AlertResourcesProp {
@@ -78,7 +80,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     alertResourceIds
   );
-  const [engineType, setEngineType] = React.useState<string | undefined>();
+  const [additionalFilters, setAdditionalFilters] = React.useState<
+    Record<string, AlertFilterType | undefined>
+  >();
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const pageSize = 25;
@@ -150,8 +154,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
    */
   const filteredResources = React.useMemo(() => {
     return getFilteredResources({
+      additionalFilters,
       data: resources,
-      engineType,
       filteredRegions,
       isAdditionOrDeletionNeeded: isSelectionsNeeded,
       regionsIdToRegionMap,
@@ -169,7 +173,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     searchText,
     selectedOnly,
     selectedResources,
-    engineType,
+    additionalFilters,
   ]);
 
   const handleAllSelection = React.useCallback(() => {
@@ -207,11 +211,17 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       )
     );
   };
-  const handleEngineOptionChange = (engineType: string | undefined) => {
-    setEngineType(engineType);
+
+  const handleFilterChange = (value: AlertFilterType, filterKey: string) => {
+    setAdditionalFilters((prev) => ({
+      ...prev,
+      [filterKey]: value,
+    }));
   };
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
+
+  const additionalFiltersToRender = serviceFiltersMap[serviceType ?? ''] ?? [];
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
@@ -279,13 +289,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                 regionOptions={regionOptions}
               />
             </Grid>
-            {serviceType === 'dbaas' && (
-              <Grid item md={4} xs={12}>
-                <AlertsEngineOptionFilter
-                  handleSelection={handleEngineOptionChange}
-                />
-              </Grid>
-            )}
+            <AlertResourceAdditionalFilters
+              handleFilterChange={handleFilterChange}
+              serviceType={serviceType}
+            />
             {isSelectionsNeeded && (
               <Grid
                 sx={{

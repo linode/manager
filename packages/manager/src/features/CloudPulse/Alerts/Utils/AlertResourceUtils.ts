@@ -1,17 +1,19 @@
+import { deepEqual } from '../../Utils/FilterBuilder';
+
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { AlertFilterType } from '../AlertsResources/constants';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type { Region } from '@linode/api-v4';
 
 interface FilterResourceProps {
   /**
+   * Additional filters for filtering the instances
+   */
+  additionalFilters?: Record<string, AlertFilterType>;
+  /**
    * The data to be filtered
    */
   data?: CloudPulseResources[];
-  /**
-   * Incase of dbaas, we need to apply the engine type filter
-   */
-  engineType?: string;
-
   /**
    * The selected regions on which the data needs to be filtered
    */
@@ -20,6 +22,7 @@ interface FilterResourceProps {
    * Property to integrate and edit the resources associated with alerts
    */
   isAdditionOrDeletionNeeded?: boolean;
+
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
@@ -101,8 +104,8 @@ export const getFilteredResources = (
   filterProps: FilterResourceProps
 ): AlertInstance[] => {
   const {
+    additionalFilters,
     data,
-    engineType: engineOption,
     filteredRegions,
     isAdditionOrDeletionNeeded,
     regionsIdToRegionMap,
@@ -116,9 +119,7 @@ export const getFilteredResources = (
   }
   return data // here we always use the base data from API for filtering as source of truth
     .filter(
-      ({ engineType, id }) =>
-        (isAdditionOrDeletionNeeded || resourceIds.includes(String(id))) &&
-        (!engineOption || engineOption === engineType) // Ensure engineType is always checked
+      ({ id }) => isAdditionOrDeletionNeeded || resourceIds.includes(String(id))
     )
     .map((resource) => {
       const regionObj = resource.region
@@ -148,7 +149,19 @@ export const getFilteredResources = (
 
       return matchesSearchText && matchesFilteredRegions; // match the search text and match the region selected
     })
-    .filter((resource) => (selectedOnly ? resource.checked : true));
+    .filter((resource) => (selectedOnly ? resource.checked : true))
+    .filter((resource) => {
+      return (
+        !additionalFilters ||
+        !Object.keys(additionalFilters).length ||
+        Object.entries(additionalFilters).every(([key, value]) => {
+          return (
+            !additionalFilters[key] ||
+            deepEqual(resource[key as keyof AlertInstance], value)
+          );
+        })
+      );
+    });
 };
 
 /**

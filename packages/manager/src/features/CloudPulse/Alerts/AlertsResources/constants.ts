@@ -1,6 +1,9 @@
 import { engineTypeMap } from '../constants';
+import { AlertsEngineOptionFilter } from './AlertsEngineTypeFilter';
 
+import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
 import type { AlertInstance } from './DisplayAlertResources';
+import type { MemoExoticComponent } from 'react';
 
 interface ColumnConfig<T> {
   accessor: (data: T) => string;
@@ -42,3 +45,14 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
     },
   ],
 };
+
+export const serviceFiltersMap: Record<
+  string,
+  MemoExoticComponent<React.ComponentType<AlertsEngineOptionProps>>[]
+> = {
+  dbaas: [AlertsEngineOptionFilter], // dbaas uses Engine filter
+};
+
+export type AlertFilterKeys = 'engineType' | 'tags';
+
+export type AlertFilterType = boolean | number | string | undefined;
