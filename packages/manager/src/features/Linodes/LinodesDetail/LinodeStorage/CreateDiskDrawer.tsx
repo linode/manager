@@ -16,13 +16,13 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskCreateMutation,
 } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
@@ -65,12 +65,11 @@ export const CreateDiskDrawer = (props: Props) => {
 
   const { data: disks } = useAllLinodeDisksQuery(linodeId, open);
 
-  const { data: grants } = useGrants();
-  const { data: profile } = useProfile();
-
-  const disabled =
-    profile?.restricted &&
-    grants?.linode.find((g) => g.id === linodeId)?.permissions !== 'read_write';
+  const disabled = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linodeId,
+  });
 
   const { mutateAsync: createDisk, reset } = useLinodeDiskCreateMutation(
     linodeId
@@ -226,8 +225,8 @@ export const CreateDiskDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit-disk-form',
+            disabled,
             label: 'Create',
-            disabled: disabled,
             loading: formik.isSubmitting,
             type: 'submit',
           }}
