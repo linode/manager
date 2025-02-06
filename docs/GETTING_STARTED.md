@@ -3,7 +3,7 @@
 1. Fork this repository.
 2. Clone your fork to your local machine.
 3. Go to [cloud.linode.com/profile/clients](https://cloud.linode.com/profile/clients) and click "Add an OAuth App".
-4. Enter a label and set the callback URL to `http://localhost:3000/oauth/callback` and check the "Public" checkbox.
+4. Enter a label, set the callback URL to `http://localhost:3000/oauth/callback`, and check the "Public" checkbox.
 5. After your OAuth App has been created, copy the ID (not the secret).
 6. In `packages/manager`, copy the contents of `.env.example` and paste them into a new file called `.env`.
 7. In `.env` set `REACT_APP_CLIENT_ID` to the ID from step 5.
