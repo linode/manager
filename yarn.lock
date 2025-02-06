@@ -959,6 +959,16 @@
   dependencies:
     levn "^0.4.1"
 
+"@fontsource/fira-code@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/fira-code/-/fira-code-5.1.1.tgz#a58a7606e6fb904682fc42cb852169b258b4ced6"
+  integrity sha512-w9b1CtWyfdyZP2Y/j7Z86SNYtLXMZ4yGtxrtw0qejjrGuzoasEoMhgdLJOwX9exrpKRVFaecKjcAuWkvmvOITw==
+
+"@fontsource/nunito-sans@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/nunito-sans/-/nunito-sans-5.1.1.tgz#3085fbb5e55b2ad6322f6866a8318a9f1a028fca"
+  integrity sha512-84sV7nRYKFlzoY6FeLBAf1FF6+MebDXklVz28Phuh4L52t2juhjRmLXweehNN9pjgdvM0gXCe/kYsgI8WVELUQ==
+
 "@hookform/resolvers@3.9.1":
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.9.1.tgz#a23883c40bfd449cb6c6ab5a0fa0729184c950ff"
@@ -1235,10 +1245,10 @@
   resolved "https://registry.yarnpkg.com/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz#8ace5259254426ccef57f3175bc64ed7095ed919"
   integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
 
-"@linode/design-language-system@^2.6.1":
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/@linode/design-language-system/-/design-language-system-2.7.1.tgz#03ee024529a2543249ad986bd7ab85c39e8aa797"
-  integrity sha512-rrQbFOJD/tG+8Xz7lt3YO6E6sIPSeHGW8nRSqQYLQrw2hJssN1wdGTK92Uluyy+msJQkXSenkTmDf2l1iOGTrQ==
+"@linode/design-language-system@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@linode/design-language-system/-/design-language-system-3.0.0.tgz#6bfede8d2b375aaefd2d6a092f1a1e70fe4bee3d"
+  integrity sha512-LbrDgN0YbwDa1qsbPBV+BreFjk06R/CbcPCvWM4BvU6zrxqCkPVdErwfqJvdtDxRColXbIfn6NeFgq0sJaQ+sw==
 
 "@linode/eslint-plugin-cloud-manager@^0.0.5":
   version "0.0.5"

@@ -12,7 +12,7 @@ export const StyledChip = styled(Chip, {
       borderTopRightRadius: props.onDelete && 0,
     },
     borderRadius: 4,
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
     maxWidth: 350,
     padding: '7px 10px',
   },

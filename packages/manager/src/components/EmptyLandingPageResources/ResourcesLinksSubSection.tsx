@@ -15,7 +15,7 @@ const StyledResourcesLinksSubSection = styled('div', {
 })(({ theme }) => ({
   '& > a': {
     display: 'inline-block',
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     width: '100%',
   },
   '& > h2': {
