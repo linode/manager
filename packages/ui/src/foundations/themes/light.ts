@@ -288,7 +288,6 @@ export const lightTheme: ThemeOptions = {
           },
           '& svg': {
             fill: Color.Brand[80],
-            stroke: Color.Brand[80],
           },
           '&.Mui-expanded': {
             '& .caret': {
@@ -1051,6 +1050,71 @@ export const lightTheme: ThemeOptions = {
           padding: '10px 10px 10px 16px',
         },
         selected: {},
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        input: {
+          '&::placeholder': {
+            color: Color.Neutrals[50],
+          },
+          boxSizing: 'border-box',
+          [breakpoints.only('xs')]: {
+            fontSize: '1rem',
+          },
+          fontSize: '0.9rem',
+          padding: 8,
+        },
+        root: {
+          '& .MuiInputAdornment-root': {
+            margin: 0,
+          },
+          '& fieldset': {
+            border: 'none',
+          },
+          '& svg': {
+            '&:hover': {
+              color: Color.Brand[60],
+            },
+            color: primaryColors.main,
+            fontSize: 18,
+          },
+          '&.Mui-disabled': {
+            backgroundColor: Color.Neutrals[5],
+            borderColor: Color.Neutrals[40],
+            color: 'rgba(0, 0, 0, 0.75)',
+            input: {
+              cursor: 'not-allowed',
+            },
+            opacity: 0.5,
+          },
+          '&.Mui-error': {
+            borderColor: Interaction.Border.Error,
+          },
+          '&.Mui-focused': {
+            '& .select-option-icon': {
+              paddingLeft: `30px !important`,
+            },
+            borderColor: primaryColors.main,
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
+          },
+          '&.affirmative': {
+            borderColor: Color.Green[70],
+          },
+          alignItems: 'center',
+          backgroundColor: Color.Neutrals.White,
+          border: `1px solid ${Color.Neutrals[40]}`,
+          boxSizing: 'border-box',
+          [breakpoints.down('xs')]: {
+            maxWidth: '100%',
+            width: '100%',
+          },
+          color: primaryColors.text,
+          lineHeight: 1,
+          maxWidth: inputMaxWidth,
+          minHeight: 34,
+          transition: 'border-color 225ms ease-in-out',
+        },
       },
     },
     MuiPaper: {

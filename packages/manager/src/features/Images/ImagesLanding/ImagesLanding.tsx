@@ -1,5 +1,4 @@
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Typography } from '@linode/ui';
 import {
   CircleProgress,
   IconButton,
@@ -7,13 +6,15 @@ import {
   Notice,
   Paper,
   TextField,
+  Typography,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import React from 'react';
+// eslint-disable-next-line no-restricted-imports
+import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
@@ -34,9 +35,9 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFlags } from 'src/hooks/useFlags';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useDialogData } from 'src/hooks/useDialogData';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   isEventImageUpload,
@@ -46,10 +47,20 @@ import { useEventsInfiniteQuery } from 'src/queries/events/events';
 import {
   imageQueries,
   useDeleteImageMutation,
+  useImageQuery,
   useImagesQuery,
 } from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import {
+  AUTOMATIC_IMAGES_DEFAULT_ORDER,
+  AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+  AUTOMATIC_IMAGES_ORDER_PREFERENCE_KEY,
+  AUTOMATIC_IMAGES_PREFERENCE_KEY,
+  MANUAL_IMAGES_DEFAULT_ORDER,
+  MANUAL_IMAGES_DEFAULT_ORDER_BY,
+  MANUAL_IMAGES_PREFERENCE_KEY,
+} from '../constants';
 import { getEventsForImages } from '../utils';
 import { EditImageDrawer } from './EditImageDrawer';
 import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
@@ -58,10 +69,9 @@ import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
-import type { Filter, ImageStatus } from '@linode/api-v4';
+import type { Filter, Image, ImageStatus } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-
-const searchParamKey = 'query';
+import type { ImageAction, ImagesSearchParams } from 'src/routes/images';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -79,34 +89,37 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 interface ImageDialogState {
   error?: string;
-  image?: string;
-  imageID?: string;
-  open: boolean;
   status?: ImageStatus;
   submitting: boolean;
 }
 
-const defaultDialogState = {
+const defaultDialogState: ImageDialogState = {
   error: undefined,
-  image: '',
-  imageID: '',
-  open: false,
   submitting: false,
 };
 
 export const ImagesLanding = () => {
   const { classes } = useStyles();
+  const {
+    action,
+    imageId: selectedImageId,
+  }: { action: ImageAction; imageId: string } = useParams({
+    strict: false,
+  });
+  const search: ImagesSearchParams = useSearch({ from: '/images' });
+  const { query } = search;
   const history = useHistory();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const flags = useFlags();
-  const location = useLocation();
   const isImagesReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
-  const queryParams = new URLSearchParams(location.search);
-  const query = queryParams.get(searchParamKey) ?? '';
-
   const queryClient = useQueryClient();
+  const [dialogState, setDialogState] = React.useState<ImageDialogState>(
+    defaultDialogState
+  );
+  const dialogStatus =
+    dialogState.status === 'pending_upload' ? 'cancel' : 'delete';
 
   /**
    * At the time of writing: `label`, `tags`, `size`, `status`, `region` are filterable.
@@ -132,20 +145,30 @@ export const ImagesLanding = () => {
     searchableFieldsWithoutOperator: ['label', 'tags'],
   });
 
-  const paginationForManualImages = usePagination(1, 'images-manual', 'manual');
+  const paginationForManualImages = usePaginationV2({
+    currentRoute: '/images',
+    preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
 
   const {
     handleOrderChange: handleManualImagesOrderChange,
     order: manualImagesOrder,
     orderBy: manualImagesOrderBy,
-  } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: MANUAL_IMAGES_DEFAULT_ORDER,
+        orderBy: MANUAL_IMAGES_DEFAULT_ORDER_BY,
+      },
+      from: '/images',
     },
-    'images-manual-order',
-    'manual'
-  );
+    preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
+    prefix: 'manual',
+  });
 
   const manualImagesFilter: Filter = {
     ['+order']: manualImagesOrder,
@@ -182,23 +205,30 @@ export const ImagesLanding = () => {
   );
 
   // Pagination, order, and query hooks for automatic/recovery images
-  const paginationForAutomaticImages = usePagination(
-    1,
-    'images-automatic',
-    'automatic'
-  );
+  const paginationForAutomaticImages = usePaginationV2({
+    currentRoute: '/images',
+    preferenceKey: AUTOMATIC_IMAGES_PREFERENCE_KEY,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
+
   const {
     handleOrderChange: handleAutomaticImagesOrderChange,
     order: automaticImagesOrder,
     orderBy: automaticImagesOrderBy,
-  } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: AUTOMATIC_IMAGES_DEFAULT_ORDER,
+        orderBy: AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+      },
+      from: '/images',
     },
-    'images-automatic-order',
-    'automatic'
-  );
+    preferenceKey: AUTOMATIC_IMAGES_ORDER_PREFERENCE_KEY,
+    prefix: 'automatic',
+  });
 
   const automaticImagesFilter: Filter = {
     ['+order']: automaticImagesOrder,
@@ -229,6 +259,16 @@ export const ImagesLanding = () => {
     }
   );
 
+  const {
+    data: selectedImage,
+    isFetching: isFetchingSelectedImage,
+  } = useDialogData({
+    enabled: !!selectedImageId,
+    paramKey: 'imageId',
+    queryHook: useImageQuery,
+    redirectToOnNotFound: '/images',
+  });
+
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
 
   const { events } = useEventsInfiniteQuery();
@@ -245,72 +285,58 @@ export const ImagesLanding = () => {
     imageEvents
   );
 
-  // TODO Image Service V2: delete after GA
-  const multiRegionsEnabled =
-    (flags.imageServiceGen2 &&
-      manualImages?.data.some((image) => image.regions?.length)) ??
-    false;
-
   // Automatic images with the associated events tied in.
   const automaticImagesEvents = getEventsForImages(
     automaticImages?.data ?? [],
     imageEvents
   );
 
-  const [selectedImageId, setSelectedImageId] = React.useState<string>();
-
-  const [
-    isManageReplicasDrawerOpen,
-    setIsManageReplicasDrawerOpen,
-  ] = React.useState(false);
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
-  const [isRebuildDrawerOpen, setIsRebuildDrawerOpen] = React.useState(false);
-
-  const selectedImage =
-    manualImages?.data.find((i) => i.id === selectedImageId) ??
-    automaticImages?.data.find((i) => i.id === selectedImageId);
-
-  const [dialog, setDialogState] = React.useState<ImageDialogState>(
-    defaultDialogState
-  );
-
-  const dialogAction = dialog.status === 'pending_upload' ? 'cancel' : 'delete';
-  const dialogMessage =
-    dialogAction === 'cancel'
-      ? 'Are you sure you want to cancel this Image upload?'
-      : 'Are you sure you want to delete this Image?';
-
-  const openDialog = (image: string, imageID: string, status: ImageStatus) => {
-    setDialogState({
-      error: undefined,
-      image,
-      imageID,
-      open: true,
-      status,
-      submitting: false,
+  const actionHandler = (image: Image, action: ImageAction) => {
+    navigate({
+      params: { action, imageId: image.id },
+      search: (prev) => prev,
+      to: '/images/$imageId/$action',
     });
   };
 
-  const closeDialog = () => {
-    setDialogState({ ...dialog, open: false });
+  const handleEdit = (image: Image) => {
+    actionHandler(image, 'edit');
   };
 
-  const handleRemoveImage = () => {
-    if (!dialog.imageID) {
+  const handleRebuild = (image: Image) => {
+    actionHandler(image, 'rebuild');
+  };
+
+  const handleDelete = (image: Image) => {
+    actionHandler(image, 'delete');
+  };
+
+  const handleCloseDialog = () => {
+    setDialogState(defaultDialogState);
+    navigate({ search: (prev) => prev, to: '/images' });
+  };
+
+  const handleManageRegions = (image: Image) => {
+    actionHandler(image, 'manage-replicas');
+  };
+
+  const handleDeleteImage = (image: Image) => {
+    if (!image.id) {
       setDialogState((dialog) => ({
         ...dialog,
         error: 'Image is not available.',
       }));
     }
+
     setDialogState((dialog) => ({
       ...dialog,
       error: undefined,
       submitting: true,
     }));
 
-    deleteImage({ imageId: dialog.imageID! })
+    deleteImage({ imageId: image.id })
       .then(() => {
-        closeDialog();
+        handleCloseDialog();
         /**
          * request generated by the Pagey HOC.
          *
@@ -330,26 +356,13 @@ export const ImagesLanding = () => {
           err,
           'There was an error deleting the image.'
         );
-        setDialogState((dialog) => ({
-          ...dialog,
+        setDialogState({
+          ...dialogState,
           error: _error,
           submitting: false,
-        }));
+        });
+        handleCloseDialog();
       });
-  };
-
-  const onRetryClick = (
-    imageId: string,
-    imageLabel: string,
-    imageDescription: string
-  ) => {
-    queryClient.invalidateQueries({
-      queryKey: imageQueries.paginated._def,
-    });
-    history.push('/images/create/upload', {
-      imageDescription,
-      imageLabel,
-    });
   };
 
   const onCancelFailedClick = () => {
@@ -358,44 +371,38 @@ export const ImagesLanding = () => {
     });
   };
 
-  const deployNewLinode = (imageID: string) => {
+  const handleDeployNewLinode = (imageId: string) => {
     history.push({
       pathname: `/linodes/create/`,
-      search: `?type=Images&imageID=${imageID}`,
-      state: { selectedImageId: imageID },
+      search: `?type=Images&imageID=${imageId}`,
     });
   };
 
   const resetSearch = () => {
-    queryParams.delete(searchParamKey);
-    history.push({ search: queryParams.toString() });
+    navigate({
+      search: (prev) => ({ ...prev, query: undefined }),
+      to: '/images',
+    });
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    queryParams.delete('page');
-    queryParams.set(searchParamKey, e.target.value);
-    history.push({ search: queryParams.toString() });
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        query: e.target.value || undefined,
+      }),
+      to: '/images',
+    });
   };
 
   const handlers: ImageHandlers = {
     onCancelFailed: onCancelFailedClick,
-    onDelete: openDialog,
-    onDeploy: deployNewLinode,
-    onEdit: (image) => {
-      setSelectedImageId(image.id);
-      setIsEditDrawerOpen(true);
-    },
-    onManageRegions: multiRegionsEnabled
-      ? (image) => {
-          setSelectedImageId(image.id);
-          setIsManageReplicasDrawerOpen(true);
-        }
-      : undefined,
-    onRestore: (image) => {
-      setSelectedImageId(image.id);
-      setIsRebuildDrawerOpen(true);
-    },
-    onRetry: onRetryClick,
+    onDelete: handleDelete,
+    onDeploy: handleDeployNewLinode,
+    onEdit: handleEdit,
+    onManageRegions: handleManageRegions,
+    onRebuild: handleRebuild,
   };
 
   if (manualImagesLoading || automaticImagesLoading) {
@@ -421,6 +428,10 @@ export const ImagesLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
       <LandingHeader
+        breadcrumbProps={{
+          pathname: 'Images',
+          removeCrumbX: 1,
+        }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -428,10 +439,12 @@ export const ImagesLanding = () => {
             resourceType: 'Images',
           }),
         }}
+        onButtonClick={() =>
+          navigate({ search: () => ({}), to: '/images/create' })
+        }
         disabledCreateButton={isImagesReadOnly}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         entity="Image"
-        onButtonClick={() => history.push('/images/create')}
         title="Images"
       />
       <TextField
@@ -458,7 +471,7 @@ export const ImagesLanding = () => {
         hideLabel
         label="Search"
         placeholder="Search Images"
-        value={query}
+        value={query ?? ''}
       />
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
@@ -483,29 +496,20 @@ export const ImagesLanding = () => {
               <Hidden smDown>
                 <TableCell>Status</TableCell>
               </Hidden>
-              {multiRegionsEnabled && (
-                <Hidden smDown>
-                  <TableCell>Replicated in</TableCell>
-                </Hidden>
-              )}
-              {multiRegionsEnabled && !flags.imageServiceGen2Ga && (
-                <Hidden smDown>
-                  <TableCell>Compatibility</TableCell>
-                </Hidden>
-              )}
+              <Hidden smDown>
+                <TableCell>Replicated in</TableCell>
+              </Hidden>
               <TableSortCell
                 active={manualImagesOrderBy === 'size'}
                 direction={manualImagesOrder}
                 handleClick={handleManualImagesOrderChange}
                 label="size"
               >
-                {multiRegionsEnabled ? 'Original Image' : 'Size'}
+                Original Image
               </TableSortCell>
-              {multiRegionsEnabled && (
-                <Hidden mdDown>
-                  <TableCell>All Replicas</TableCell>
-                </Hidden>
-              )}
+              <Hidden mdDown>
+                <TableCell>All Replicas</TableCell>
+              </Hidden>
               <Hidden mdDown>
                 <TableSortCell
                   active={manualImagesOrderBy === 'created'}
@@ -516,11 +520,9 @@ export const ImagesLanding = () => {
                   Created
                 </TableSortCell>
               </Hidden>
-              {multiRegionsEnabled && (
-                <Hidden mdDown>
-                  <TableCell>Image ID</TableCell>
-                </Hidden>
-              )}
+              <Hidden mdDown>
+                <TableCell>Image ID</TableCell>
+              </Hidden>
               <TableCell />
             </TableRow>
           </TableHead>
@@ -543,7 +545,6 @@ export const ImagesLanding = () => {
                 handlers={handlers}
                 image={manualImage}
                 key={manualImage.id}
-                multiRegionsEnabled={multiRegionsEnabled}
               />
             ))}
           </TableBody>
@@ -637,22 +638,25 @@ export const ImagesLanding = () => {
       </Paper>
       <EditImageDrawer
         image={selectedImage}
-        onClose={() => setIsEditDrawerOpen(false)}
-        open={isEditDrawerOpen}
+        isFetching={isFetchingSelectedImage}
+        onClose={handleCloseDialog}
+        open={action === 'edit'}
       />
       <RebuildImageDrawer
         image={selectedImage}
-        onClose={() => setIsRebuildDrawerOpen(false)}
-        open={isRebuildDrawerOpen}
+        isFetching={isFetchingSelectedImage}
+        onClose={handleCloseDialog}
+        open={action === 'rebuild'}
       />
       <Drawer
-        onClose={() => setIsManageReplicasDrawerOpen(false)}
-        open={isManageReplicasDrawerOpen}
+        isFetching={isFetchingSelectedImage}
+        onClose={handleCloseDialog}
+        open={action === 'manage-replicas'}
         title={`Manage Replicas for ${selectedImage?.label}`}
       >
         <ManageImageReplicasForm
           image={selectedImage}
-          onClose={() => setIsManageReplicasDrawerOpen(false)}
+          onClose={handleCloseDialog}
         />
       </Drawer>
       <ConfirmationDialog
@@ -661,34 +665,37 @@ export const ImagesLanding = () => {
             primaryButtonProps={{
               'data-testid': 'submit',
               label:
-                dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image',
-              loading: dialog.submitting,
-              onClick: handleRemoveImage,
+                dialogStatus === 'cancel' ? 'Cancel Upload' : 'Delete Image',
+              loading: dialogState.submitting,
+              onClick: () => handleDeleteImage(selectedImage!),
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
-              label: dialogAction === 'cancel' ? 'Keep Image' : 'Cancel',
-              onClick: closeDialog,
+              label: dialogStatus === 'cancel' ? 'Keep Image' : 'Cancel',
+              onClick: handleCloseDialog,
             }}
           />
         }
         title={
-          dialogAction === 'cancel'
+          dialogStatus === 'cancel'
             ? 'Cancel Upload'
-            : `Delete Image ${dialog.image}`
+            : `Delete Image ${selectedImage?.label}`
         }
-        onClose={closeDialog}
-        open={dialog.open}
+        isFetching={isFetchingSelectedImage}
+        onClose={handleCloseDialog}
+        open={action === 'delete'}
       >
-        {dialog.error && <Notice text={dialog.error} variant="error" />}
-        <Typography>{dialogMessage}</Typography>
+        {dialogState.error && (
+          <Notice text={dialogState.error} variant="error" />
+        )}
+        <Typography>
+          {dialogStatus === 'cancel'
+            ? 'Are you sure you want to cancel this Image upload?'
+            : 'Are you sure you want to delete this Image?'}
+        </Typography>
       </ConfirmationDialog>
     </React.Fragment>
   );
 };
-
-export const imagesLandingLazyRoute = createLazyRoute('/images')({
-  component: ImagesLanding,
-});
 
 export default ImagesLanding;

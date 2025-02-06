@@ -1,5 +1,4 @@
 import { useMediaQuery } from '@mui/material';
-import { equals } from 'ramda';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
@@ -79,7 +78,8 @@ const memoized = (component: React.FC<ContactsTableContentProps>) =>
       // This is to prevent a slow-down that occurs
       // when opening the GroupDrawer or ContactsDrawer
       // when there are a large number of contacts.
-      equals(prevProps.contacts, nextProps.contacts) &&
+      JSON.stringify(prevProps.contacts) ===
+        JSON.stringify(nextProps.contacts) &&
       arePropsEqual<ContactsTableContentProps>(
         ['lastUpdated', 'loading', 'error'],
         prevProps,
