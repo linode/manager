@@ -30,7 +30,7 @@ export const AlertDetail = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
 
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
-    Number(alertId),
+    alertId,
     serviceType
   );
 
