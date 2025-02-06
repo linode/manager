@@ -1,9 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { imageFactory } from '@src/factories';
+import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { componentTests } from 'support/util/components';
-import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomNumber } from 'support/util/random';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
@@ -27,38 +27,15 @@ const createMockImage = (eol: null | string, deprecated: boolean) => {
 };
 
 /**
- * @param mockImage - The mock image to intercept and mock.
- */
-const interceptAndMockImageRequest = (mockImage: { id: string }) => {
-  cy.intercept('GET', apiMatcher('/images/*'), (req) => {
-    req.reply({
-      body: mockImage,
-      headers: { image: mockImage.id },
-    });
-  }).as('mockLinodeRequest');
-};
-
-/**
  * @param isPast - Whether the date should be in the past.
  * @param days - The number of days to add to the current date.
- * @returns - An object containing the date in two formats.
+ *
+ * @returns - An ISO 8601 string containing the date relative to now.
  */
 const generateDate = (isPast: boolean, days: number) => {
-  const date = new Date();
-  date.setDate(date.getDate() + (isPast ? -days : days));
-
-  const yyyyMMdd = date.toISOString().split('T')[0];
-  const mmddyyyy = `${(date.getMonth() + 1)
-    .toString()
-    .padStart(2, '0')}/${date
-    .getDate()
-    .toString()
-    .padStart(2, '0')}/${date.getFullYear()}`;
-
-  return {
-    mmddyyyy,
-    yyyyMMdd,
-  };
+  return isPast
+    ? DateTime.now().minus({ days }).toISO()
+    : DateTime.now().plus({ days }).toISO();
 };
 
 /**
@@ -108,11 +85,9 @@ componentTests('ImageSelect', (mount) => {
   describe('ImageSelect Component', () => {
     it('should display warning for deprecated image has reached eol', () => {
       const pastDate = generateDate(true, 1);
-      const mockPastDeprecatedImage = createMockImage(pastDate.yyyyMMdd, true);
-      mockGetAllImages([mockPastDeprecatedImage]).as('mockImage');
-      interceptAndMockImageRequest(mockPastDeprecatedImage);
+      const mockPastDeprecatedImage = createMockImage(pastDate, true);
+      mockGetAllImages([mockPastDeprecatedImage]);
       mount(<TestComponent />);
-
       cy.findByPlaceholderText('Choose a Linux distribution')
         .should('be.visible')
         .should('be.enabled')
@@ -126,18 +101,14 @@ componentTests('ImageSelect', (mount) => {
           'contain',
           getPastDeprecatedWarningMessage(
             mockPastDeprecatedImage.label,
-            pastDate.mmddyyyy
+            DateTime.fromISO(pastDate).toFormat('MM/dd/yyyy')
           )
         );
     });
     it('should display warning for deprecated image has future eol', () => {
       const futureDate = generateDate(false, 1);
-      const mockFutureDeprecatedImage = createMockImage(
-        futureDate.yyyyMMdd,
-        true
-      );
-      mockGetAllImages([mockFutureDeprecatedImage]).as('mockImage');
-      interceptAndMockImageRequest(mockFutureDeprecatedImage);
+      const mockFutureDeprecatedImage = createMockImage(futureDate, true);
+      mockGetAllImages([mockFutureDeprecatedImage]);
       mount(<TestComponent />);
       cy.findByPlaceholderText('Choose a Linux distribution')
         .should('be.visible')
@@ -150,14 +121,13 @@ componentTests('ImageSelect', (mount) => {
           'contain',
           getFutureDeprecatedWarningMessage(
             mockFutureDeprecatedImage.label,
-            futureDate.mmddyyyy
+            DateTime.fromISO(futureDate).toFormat('MM/dd/yyyy')
           )
         );
     });
     it('should not display warning for normal images', () => {
       const mockImage = createMockImage(null, false);
-      mockGetAllImages([mockImage]).as('mockImage');
-      interceptAndMockImageRequest(mockImage);
+      mockGetAllImages([mockImage]);
       mount(<TestComponent />);
       cy.findByPlaceholderText('Choose a Linux distribution')
         .should('be.visible')
