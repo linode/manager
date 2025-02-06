@@ -32,13 +32,13 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
     {
       id: 1,
       label: 'sample1',
-      type: 'channel',
+      type: 'alert-channel',
       url: '',
     },
     {
       id: 2,
       label: 'sample2',
-      type: 'channel',
+      type: 'alert-channel',
       url: '',
     },
   ],

@@ -219,7 +219,7 @@ export interface Alert {
     id: number;
     label: string;
     url: string;
-    type: 'channel';
+    type: 'alert-channel';
   }[];
   created_by: string;
   updated_by: string;

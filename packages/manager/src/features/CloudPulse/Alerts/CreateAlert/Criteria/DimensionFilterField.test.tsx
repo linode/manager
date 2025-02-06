@@ -148,11 +148,10 @@ describe('Dimension filter field component', () => {
       name: 'Open',
     });
     await user.click(dataFieldInput);
-    await user.click(
-      await container.findByRole('option', {
-        name: dimensionFieldMockData[1].label,
-      })
-    );
+    const option = await container.findByRole('option', {
+      name: dimensionFieldMockData[1].label,
+    });
+    await user.click(option);
     const operatorContainer = container.getByTestId('operator');
     const operatorInput = within(operatorContainer).getByRole('button', {
       name: 'Open',
