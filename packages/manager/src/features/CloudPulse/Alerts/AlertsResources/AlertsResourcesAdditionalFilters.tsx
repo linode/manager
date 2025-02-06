@@ -8,7 +8,13 @@ import { serviceFiltersMap } from './constants';
 import type { AlertFilterType } from './constants';
 
 interface AlertResourceFiltersProps {
+  /**
+   * Callback to publish the selected filter with filter key
+   */
   handleFilterChange: (value: AlertFilterType, filterKey: string) => void;
+  /**
+   * The service type associated with alerts like linode, dbaas etc.,
+   */
   serviceType?: string;
 }
 

@@ -4,6 +4,9 @@ import React from 'react';
 import type { AlertFilterKeys } from './constants';
 
 export interface AlertsEngineOptionProps {
+  /**
+   * Callback to publish the selected engine type
+   */
   handleFilterChange: (
     engineType: string | undefined,
     type: AlertFilterKeys
