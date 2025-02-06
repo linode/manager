@@ -4,7 +4,7 @@ import React from 'react';
 import type { AlertFilterKeys } from './constants';
 
 export interface AlertsEngineOptionProps {
-  handleSelection: (
+  handleFilterChange: (
     engineType: string | undefined,
     type: AlertFilterKeys
   ) => void;
@@ -28,7 +28,7 @@ const engineOptions: EngineType[] = [
 
 export const AlertsEngineOptionFilter = React.memo(
   (props: AlertsEngineOptionProps) => {
-    const { handleSelection } = props;
+    const { handleFilterChange: handleSelection } = props;
 
     return (
       <Autocomplete

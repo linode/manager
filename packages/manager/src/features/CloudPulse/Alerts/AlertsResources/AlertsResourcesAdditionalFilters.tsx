@@ -16,7 +16,7 @@ interface AlertResourceFiltersProps {
  * Dynamically renders filters based on serviceType using serviceFiltersMap.
  * Improves readability and reusability.
  */
-export const AlertResourceAdditionalFilters: React.FC<AlertResourceFiltersProps> = ({
+export const AlertResourceAdditionalFilters = ({
   handleFilterChange,
   serviceType,
 }: AlertResourceFiltersProps) => {
@@ -28,9 +28,9 @@ export const AlertResourceAdditionalFilters: React.FC<AlertResourceFiltersProps>
 
   return (
     <>
-      {filtersToRender.map((FilterComponent, index) => (
+      {filtersToRender.map((filterComponent, index) => (
         <Grid item key={index} md={4} xs={12}>
-          <FilterComponent handleSelection={handleFilterChange} />
+          {React.createElement(filterComponent, { handleFilterChange })}
         </Grid>
       ))}
     </>

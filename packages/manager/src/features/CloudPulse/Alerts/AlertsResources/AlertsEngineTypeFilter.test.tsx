@@ -1,4 +1,3 @@
-import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -13,7 +12,7 @@ describe('AlertsEngineOptionFilter', () => {
 
     // Render the component
     const { getByRole } = renderWithTheme(
-      <AlertsEngineOptionFilter handleSelection={handleSelection} />
+      <AlertsEngineOptionFilter handleFilterChange={handleSelection} />
     );
 
     await userEvent.click(getByRole('button', { name: 'Open' }));
