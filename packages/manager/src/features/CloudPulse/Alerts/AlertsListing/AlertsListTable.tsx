@@ -53,7 +53,12 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   };
 
   return (
-    <OrderBy data={alerts} order="asc" orderBy={'service'}>
+    <OrderBy
+      data={alerts}
+      order="asc"
+      orderBy="service"
+      preferenceKey="alerts-landing"
+    >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
           {({

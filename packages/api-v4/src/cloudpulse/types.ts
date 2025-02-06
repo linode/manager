@@ -179,8 +179,17 @@ export interface CreateAlertDefinitionPayload {
   trigger_conditions: TriggerCondition;
   channel_ids: number[];
 }
-export interface EditAlertResourcesPayload {
-  entity_ids: string[];
+export interface EditAlertDefinitionPayload {
+  label?: string;
+  tags?: string[];
+  description?: string;
+  entity_ids?: string[];
+  severity?: AlertSeverityType;
+  rule_criteria?: {
+    rules: MetricCriteria[];
+  };
+  trigger_conditions?: TriggerCondition;
+  channel_ids?: number[];
 }
 export interface MetricCriteria {
   metric: string;

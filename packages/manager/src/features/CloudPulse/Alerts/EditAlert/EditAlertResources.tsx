@@ -1,28 +1,26 @@
-import { Box, Button, CircleProgress } from '@linode/ui';
+import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import {
-  useAlertDefinitionQuery,
-  useEditAlertDefinitionEntities,
-} from 'src/queries/cloudpulse/alerts';
+import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { AlertResources } from '../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../Utils/utils';
 
-import type { AlertRouteParams } from '../AlertsDetail/AlertDetail';
+import type { Alert, AlertServiceType } from '@linode/api-v4';
 import type { ActionPanelProps } from 'src/components/ActionsPanel/ActionsPanel';
 
-export const EditAlertResources = () => {
-  const { alertId, serviceType } = useParams<AlertRouteParams>();
+interface EditAlertResourcesProps {
+  alertDetails: Alert;
+  serviceType: AlertServiceType;
+}
+export const EditAlertResources = (props: EditAlertResourcesProps) => {
+  const { alertDetails, serviceType } = props;
 
   const history = useHistory();
 
@@ -32,16 +30,12 @@ export const EditAlertResources = () => {
 
   const definitionLanding = '/monitor/alerts/definitions';
 
-  const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
-    Number(alertId),
-    serviceType
-  );
-
+  const alertId = alertDetails.id;
   const {
     isError: isEditAlertError,
     mutateAsync: editAlert,
     reset: resetEditAlert,
-  } = useEditAlertDefinitionEntities(serviceType, Number(alertId));
+  } = useEditAlertDefinition(serviceType, Number(alertId));
 
   React.useEffect(() => {
     setSelectedResources(
@@ -86,43 +80,6 @@ export const EditAlertResources = () => {
       alertDetails?.entity_ids.includes(String(resource))
     );
   }, [alertDetails, selectedResources]);
-
-  if (isFetching) {
-    return (
-      <>
-        <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
-          <CircleProgress />
-        </Box>
-      </>
-    );
-  }
-
-  if (isError) {
-    return (
-      <>
-        <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
-          <ErrorState
-            errorText={
-              'An error occurred while loading the alerts definitions and resources. Please try again later.'
-            }
-          />
-        </Box>
-      </>
-    );
-  }
-
-  if (!alertDetails) {
-    return (
-      <>
-        <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
-        <Box alignContent="center" height={theme.spacing(75)}>
-          <StyledPlaceholder icon={EntityIcon} title="No Data to display." />
-        </Box>
-      </>
-    );
-  }
 
   const handleResourcesSelection = (resourceIds: string[]) => {
     setSelectedResources(resourceIds.map((id) => Number(id))); // here we just keep track of it, on save we will update it
