@@ -49,6 +49,29 @@ const getExpectedRemitAddressText = (
   return `${expectedRemitAddress.entity} ${expectedRemitAddress.address1} ${address2} ${expectedRemitAddress.country}`;
 };
 
+const getExpectedInvoiceAddressText = (account: Account) => {
+  const {
+    address_1,
+    address_2,
+    city,
+    company,
+    country,
+    first_name,
+    last_name,
+    state,
+    tax_id,
+    zip,
+  } = account;
+
+  const invoiceTo = `${first_name} ${last_name} ${company} ${address_1} ${
+    Boolean(address_2) ? address_2 : ''
+  } ${city}, ${state}, ${zip} ${country} ${
+    Boolean(tax_id) ? `Tax ID: ${tax_id}` : ''
+  }`;
+
+  return invoiceTo.replace(/\s+/g, ' ').trim();
+};
+
 const extractPdfText = (pdfDataBuffer: Buffer): Promise<string> => {
   return new Promise((resolve, reject) => {
     const textChunks: string[] = [];
@@ -222,7 +245,9 @@ describe('PdfGenerator', () => {
         // Check the content of the PDF
         expect(pdfText).toContain('Page 1 of 1');
         expect(pdfText).toContain(`Invoice Date: ${invoice.date}`);
-        expect(pdfText).toContain('Invoice To:');
+        expect(pdfText).toContain(
+          `Invoice To: ${getExpectedInvoiceAddressText(account)}`
+        );
         expect(pdfText).toContain(
           `Remit to: ${getExpectedRemitAddressText(
             account.country,
