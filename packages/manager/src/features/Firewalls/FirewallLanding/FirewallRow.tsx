@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -34,7 +34,9 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
         <TableCell>{getRuleString(count)}</TableCell>
         <TableCell>{getDevicesCellString(entities)}</TableCell>
       </Hidden>
-      <TableCell sx={{ textAlign: 'end', whiteSpace: 'nowrap' }}>
+      <TableCell
+        sx={{ paddingRight: 0, textAlign: 'end', whiteSpace: 'nowrap' }}
+      >
         <FirewallActionMenu
           firewallID={id}
           firewallLabel={label}

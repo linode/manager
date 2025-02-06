@@ -197,15 +197,10 @@ describe('Update stackscripts', () => {
       .should('be.enabled')
       .click();
     cy.wait('@updateStackScript');
-    cy.url().should('endWith', '/stackscripts/account');
-    cy.wait('@getStackScripts');
-
-    cy.findByText(stackscriptLabel)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        cy.findByText(stackscriptDesc).should('be.visible');
-      });
+    ui.toast.assertMessage(
+      `Successfully updated StackScript ${updatedStackScripts[0].label}`
+    );
+    cy.url().should('endWith', `/stackscripts/${updatedStackScripts[0].id}`);
   });
 
   /*
@@ -232,7 +227,7 @@ describe('Update stackscripts', () => {
       .should('be.visible')
       .click();
     ui.dialog
-      .findByTitle('Woah, just a word of caution...')
+      .findByTitle(`Make StackScript ${stackScripts[0].label} Public?`)
       .should('be.visible')
       .within(() => {
         ui.button.findByTitle('Cancel').should('be.visible').click();
@@ -267,13 +262,10 @@ describe('Update stackscripts', () => {
       'mockGetStackScripts'
     );
     ui.dialog
-      .findByTitle('Woah, just a word of caution...')
+      .findByTitle(`Make StackScript ${stackScripts[0].label} Public?`)
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByTitle('Yes, make me a star!')
-          .should('be.visible')
-          .click();
+        ui.button.findByTitle('Confirm').should('be.visible').click();
       });
     cy.wait('@mockUpdateStackScript');
     cy.wait('@mockGetStackScripts');

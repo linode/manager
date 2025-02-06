@@ -12,7 +12,7 @@ import { databaseQueries } from '../databases/databases';
 import { getAllLinodesRequest } from '../linodes/requests';
 import { volumeQueries } from '../volumes/volumes';
 import { fetchCloudPulseMetrics } from './metrics';
-import { getAllAlertsRequest } from './requests';
+import { getAllAlertsRequest, getAllNotificationChannels } from './requests';
 
 import type {
   CloudPulseMetricsRequest,
@@ -71,11 +71,24 @@ export const queryFactory = createQueryKeys(key, {
       fetchCloudPulseMetrics(token, readApiEndpoint, serviceType, requestData),
     queryKey: [requestData, timeStamp, label],
   }),
-  metricsDefinitons: (serviceType: string | undefined) => ({
-    queryFn: () => getMetricDefinitionsByServiceType(serviceType!),
+  metricsDefinitons: (
+    serviceType: string | undefined,
+    params?: Params,
+    filter?: Filter
+  ) => ({
+    queryFn: () =>
+      getMetricDefinitionsByServiceType(serviceType!, params, filter),
     queryKey: [serviceType],
   }),
-
+  notificationChannels: {
+    contextQueries: {
+      all: (params?: Params, filter?: Filter) => ({
+        queryFn: () => getAllNotificationChannels(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
   resources: (
     resourceType: string | undefined,
     params?: Params,

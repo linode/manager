@@ -1,4 +1,3 @@
-import { Token } from '@linode/api-v4/lib/profile/types';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
@@ -16,6 +15,8 @@ import {
   StyledPermsTable,
 } from './APITokenDrawer.styles';
 import { basePermNameMap, scopeStringToPermTuples } from './utils';
+
+import type { Token } from '@linode/api-v4/lib/profile/types';
 
 interface Props {
   onClose: () => void;
@@ -73,13 +74,10 @@ export const ViewAPITokenDrawer = (props: Props) => {
                 data-qa-row={basePermNameMap[scopeTup[0]]}
                 key={scopeTup[0]}
               >
-                <StyledAccessCell padding="checkbox" parentColumn="Access">
+                <StyledAccessCell padding="checkbox">
                   {basePermNameMap[scopeTup[0]]}
                 </StyledAccessCell>
-                <StyledPermissionsCell
-                  padding="checkbox"
-                  parentColumn="No Access"
-                >
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 0}
                     disabled={false}
@@ -89,10 +87,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
                     viewOnly={true}
                   />
                 </StyledPermissionsCell>
-                <StyledPermissionsCell
-                  padding="checkbox"
-                  parentColumn="Read Only"
-                >
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 1}
                     disabled={false}
@@ -102,7 +97,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
                     viewOnly={true}
                   />
                 </StyledPermissionsCell>
-                <TableCell padding="checkbox" parentColumn="Read/Write">
+                <TableCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 2}
                     disabled={false}

@@ -21,7 +21,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   link: {
     display: 'inline-block',
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     marginTop: theme.spacing(2),
   },
   noResultsContainer: {

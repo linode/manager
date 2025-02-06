@@ -1,5 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
 import Algolia from 'algoliasearch';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import {
@@ -118,23 +118,7 @@ export default (options: SearchOptions) => (
 ) => {
   const { highlight, hitsPerPage } = options;
   class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {
-    componentDidMount() {
-      this.mounted = true;
-      this.initializeSearchIndices();
-    }
-    componentWillUnmount() {
-      this.mounted = false;
-    }
-
-    render() {
-      return React.createElement(Component, {
-        ...this.props,
-        ...this.state,
-      });
-    }
-
     client: SearchClient;
-
     initializeSearchIndices = () => {
       try {
         const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
@@ -210,8 +194,14 @@ export default (options: SearchOptions) => (
       }
 
       /* If err is undefined, the shape of content is guaranteed, but better to be safe: */
-      const docs = pathOr([], ['results', 0, 'hits'], content);
-      const community = pathOr([], ['results', 1, 'hits'], content);
+      const docs: SearchHit[] =
+        (Array.isArray(content.results) &&
+          (content.results?.[0] as { hits: SearchHit[] })?.hits) ||
+        [];
+      const community: SearchHit[] =
+        (Array.isArray(content.results) &&
+          (content.results?.[1] as { hits: SearchHit[] })?.hits) ||
+        [];
       const docsResults = convertDocsToItems(highlight, docs);
       const commResults = convertCommunityToItems(highlight, community);
       this.setState({
@@ -226,6 +216,22 @@ export default (options: SearchOptions) => (
       searchError: undefined,
       searchResults: [[], []],
     };
+
+    componentDidMount() {
+      this.mounted = true;
+      this.initializeSearchIndices();
+    }
+
+    componentWillUnmount() {
+      this.mounted = false;
+    }
+
+    render() {
+      return React.createElement(Component, {
+        ...this.props,
+        ...this.state,
+      });
+    }
   }
 
   return WrappedComponent;

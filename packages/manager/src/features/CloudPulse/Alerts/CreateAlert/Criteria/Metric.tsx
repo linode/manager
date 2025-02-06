@@ -5,9 +5,10 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
-  MetricAggregationOptions,
-  MetricOperatorOptions,
+  metricAggregationOptions,
+  metricOperatorOptions,
 } from '../../constants';
+import { getAlertBoxStyles } from '../../Utils/utils';
 import { ClearIconButton } from './ClearIconButton';
 import { DimensionFilters } from './DimensionFilter';
 
@@ -63,19 +64,21 @@ export const Metric = (props: MetricCriteriaProps) => {
     operation: string
   ) => {
     const fieldValue: MetricCriteriaForm = {
-      aggregation_type: null,
+      aggregate_function: null,
       dimension_filters: [],
       metric: null,
       operator: null,
       threshold: 0,
     };
-    setValue(
-      name,
-      operation === 'selectOption'
-        ? { ...fieldValue, metric: selected.value }
-        : fieldValue,
-      { shouldValidate: true }
-    );
+    if (operation === 'selectOption') {
+      setValue(`${name}.metric`, selected.value, { shouldValidate: true });
+      setValue(`${name}.aggregate_function`, fieldValue.aggregate_function);
+      setValue(`${name}.dimension_filters`, fieldValue.dimension_filters);
+      setValue(`${name}.operator`, fieldValue.operator);
+      setValue(`${name}.threshold`, fieldValue.threshold);
+    } else {
+      setValue(name, fieldValue);
+    }
   };
 
   const metricOptions = React.useMemo(() => {
@@ -101,7 +104,7 @@ export const Metric = (props: MetricCriteriaProps) => {
     MetricAggregationType
   >[] => {
     return selectedMetric && selectedMetric.available_aggregate_functions
-      ? MetricAggregationOptions.filter((option) =>
+      ? metricAggregationOptions.filter((option) =>
           selectedMetric.available_aggregate_functions.includes(option.value)
         )
       : [];
@@ -111,10 +114,7 @@ export const Metric = (props: MetricCriteriaProps) => {
   return (
     <Box
       sx={(theme) => ({
-        backgroundColor:
-          theme.name === 'light'
-            ? theme.tokens.color.Neutrals[5]
-            : theme.tokens.color.Neutrals.Black,
+        ...getAlertBoxStyles(theme),
         borderRadius: 1,
         display: 'flex',
         flexDirection: 'column',
@@ -152,7 +152,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   }}
                   textFieldProps={{
                     labelTooltipText:
-                      'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way.',
+                      'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.',
                   }}
                   value={
                     metricOptions.find(
@@ -166,7 +166,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   noMarginTop
                   onBlur={field.onBlur}
                   options={metricOptions}
-                  placeholder="Select a Data field"
+                  placeholder="Select a Data Field"
                   size="medium"
                 />
               )}
@@ -199,12 +199,12 @@ export const Metric = (props: MetricCriteriaProps) => {
                   noMarginTop
                   onBlur={field.onBlur}
                   options={aggOptions}
-                  placeholder="Select an Aggregation type"
+                  placeholder="Select an Aggregation Type"
                   sx={{ paddingTop: { sm: 1, xs: 0 } }}
                 />
               )}
               control={control}
-              name={`${name}.aggregation_type`}
+              name={`${name}.aggregate_function`}
             />
           </Grid>
           <Grid item lg={2} md={3} sm={6} xs={12}>
@@ -222,19 +222,20 @@ export const Metric = (props: MetricCriteriaProps) => {
                   }}
                   value={
                     field.value !== null
-                      ? MetricOperatorOptions.find(
+                      ? metricOperatorOptions.find(
                           (option) => option.value === field.value
                         )
                       : null
                   }
                   data-testid="operator"
+                  disabled={!metricWatcher}
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
                   label="Operator"
                   noMarginTop
                   onBlur={field.onBlur}
-                  options={MetricOperatorOptions}
-                  placeholder="Select an operator"
+                  options={metricOperatorOptions}
+                  placeholder="Select an Operator"
                   sx={{ paddingTop: { sm: 1, xs: 0 } }}
                 />
               )}

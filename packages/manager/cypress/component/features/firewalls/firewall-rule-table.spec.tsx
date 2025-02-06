@@ -418,9 +418,11 @@ componentTests('Firewall Rules Table', (mount) => {
           mount(
             <FirewallRulesLanding
               rules={{
+                fingerprint: '8a545843',
                 inbound: mockInboundRules,
                 inbound_policy: 'ACCEPT',
                 outbound_policy: 'DROP',
+                version: 1,
               }}
               disabled={false}
               firewallID={randomNumber()}
@@ -478,9 +480,11 @@ componentTests('Firewall Rules Table', (mount) => {
           mount(
             <FirewallRulesLanding
               rules={{
+                fingerprint: '8a545843',
                 inbound_policy: 'ACCEPT',
                 outbound: mockOutboundRules,
                 outbound_policy: 'DROP',
+                version: 1,
               }}
               disabled={false}
               firewallID={randomNumber()}
@@ -547,9 +551,11 @@ componentTests('Firewall Rules Table', (mount) => {
           mount(
             <FirewallRulesLanding
               rules={{
+                fingerprint: '8a545843',
                 inbound: mockInboundRules,
                 inbound_policy: 'ACCEPT',
                 outbound_policy: 'DROP',
+                version: 1,
               }}
               disabled={false}
               firewallID={randomNumber()}
@@ -576,9 +582,11 @@ componentTests('Firewall Rules Table', (mount) => {
           mount(
             <FirewallRulesLanding
               rules={{
+                fingerprint: '8a545843',
                 inbound_policy: 'ACCEPT',
                 outbound: mockOutboundRules,
                 outbound_policy: 'DROP',
+                version: 1,
               }}
               disabled={false}
               firewallID={randomNumber()}

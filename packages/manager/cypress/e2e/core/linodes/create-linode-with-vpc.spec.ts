@@ -77,7 +77,7 @@ describe('Create Linode with VPCs', () => {
       linodes: [
         {
           id: mockLinode.id,
-          interfaces: [{ id: mockInterface.id, active: true }],
+          interfaces: [{ id: mockInterface.id, active: true, config_id: 1 }],
         },
       ],
     };
@@ -204,7 +204,7 @@ describe('Create Linode with VPCs', () => {
       linodes: [
         {
           id: mockLinode.id,
-          interfaces: [{ id: mockInterface.id, active: true }],
+          interfaces: [{ id: mockInterface.id, active: true, config_id: 1 }],
         },
       ],
     };

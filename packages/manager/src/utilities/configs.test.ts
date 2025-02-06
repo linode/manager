@@ -12,23 +12,26 @@ describe('manually setting VPC Configs to active', () => {
     });
     const updatedConfigs = manuallySetVPCConfigInterfacesToActive([config]);
 
-    for (const linodeInterface of updatedConfigs[0].interfaces) {
-      expect(linodeInterface.active).toBe(true);
+    if (updatedConfigs[0].interfaces) {
+      for (const linodeInterface of updatedConfigs[0].interfaces) {
+        expect(linodeInterface.active).toBe(true);
+      }
     }
   });
   it('ignores non vpc interfaces', () => {
     const config = configFactory.build();
     const oldConfigState = { ...config };
     const updatedConfigs = manuallySetVPCConfigInterfacesToActive([config]);
-
-    for (let i = 0; i < updatedConfigs[0].interfaces.length; i++) {
-      const linodeInterface = updatedConfigs[0].interfaces[i];
-      if (linodeInterface.purpose !== 'vpc') {
-        expect(linodeInterface.active).toEqual(
-          oldConfigState.interfaces[i].active
-        );
-      } else {
-        expect(linodeInterface.active).toBe(true);
+    if (updatedConfigs[0].interfaces) {
+      for (let i = 0; i < updatedConfigs[0].interfaces.length; i++) {
+        const linodeInterface = updatedConfigs[0].interfaces[i];
+        if (linodeInterface.purpose !== 'vpc') {
+          expect(linodeInterface.active).toEqual(
+            oldConfigState.interfaces?.[i].active
+          );
+        } else {
+          expect(linodeInterface.active).toBe(true);
+        }
       }
     }
   });

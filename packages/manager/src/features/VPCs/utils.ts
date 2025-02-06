@@ -1,3 +1,5 @@
+import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs/utilities';
+
 import type { Config, Subnet } from '@linode/api-v4';
 
 export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
@@ -17,9 +19,14 @@ export const getSubnetInterfaceFromConfigs = (
   subnetId: number
 ) => {
   for (const config of configs) {
-    for (const linodeInterface of config.interfaces) {
-      if (linodeInterface.ipv4?.vpc && linodeInterface.subnet_id === subnetId) {
-        return linodeInterface;
+    if (config.interfaces) {
+      for (const linodeInterface of config.interfaces) {
+        if (
+          linodeInterface.ipv4?.vpc &&
+          linodeInterface.subnet_id === subnetId
+        ) {
+          return linodeInterface;
+        }
       }
     }
   }
@@ -35,8 +42,9 @@ export const hasUnrecommendedConfiguration = (
     const configInterfaces = config.interfaces;
 
     /*
-     If there is a VPC interface marked as active but not primary, we want to display a
-     message re: it not being a recommended configuration.
+     If there is a VPC interface marked as active but not primary, we then check if it
+     is implicitly the primary interface. If not, then we want to display a message
+     re: it not being a recommended configuration.
 
      Rationale: when the VPC interface is not the primary interface, it can communicate
      to other VMs within the same subnet, but not to VMs in a different subnet
@@ -44,13 +52,22 @@ export const hasUnrecommendedConfiguration = (
     */
 
     if (
-      configInterfaces.some((_interface) => _interface.subnet_id === subnetId)
+      configInterfaces?.some((_interface) => _interface.subnet_id === subnetId)
     ) {
-      return configInterfaces.some(
+      const nonExplicitPrimaryVPCInterfaceIndex = configInterfaces.findIndex(
         (_interface) =>
           _interface.active &&
           _interface.purpose === 'vpc' &&
           !_interface.primary
+      );
+
+      const primaryInterfaceIndex = getPrimaryInterfaceIndex(configInterfaces);
+
+      return (
+        // if there exists an active VPC interface not explicitly marked as primary,
+        nonExplicitPrimaryVPCInterfaceIndex !== -1 &&
+        // check if it actually is the (implicit) primary interface
+        primaryInterfaceIndex !== nonExplicitPrimaryVPCInterfaceIndex
       );
     }
   }

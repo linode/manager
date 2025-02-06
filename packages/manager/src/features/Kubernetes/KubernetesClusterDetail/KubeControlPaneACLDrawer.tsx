@@ -174,7 +174,7 @@ export const KubeControlPlaneACLDrawer = (
             <Notice spacingBottom={0} spacingTop={16} variant="warning">
               <StyledTypography
                 sx={(theme) => ({
-                  fontFamily: theme.font.bold,
+                  font: theme.font.bold,
                   fontSize: '15px',
                 })}
               >
