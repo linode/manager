@@ -37,7 +37,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     setControlPlaneACL,
   } = props;
 
-  const { control, setError, watch } = useForm();
+  const { clearErrors, control, setError, watch } = useForm();
   const {
     append: appendIPv4,
     fields: ipv4Fields,
@@ -140,6 +140,8 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                             message: validatedIPs[0].error,
                             type: 'manual',
                           });
+                        } else {
+                          clearErrors(controllerField.name);
                         }
                       }}
                       error={!!fieldState.error}
@@ -188,13 +190,15 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                         const _ips = stringToExtendedIP(controllerField.value);
                         const validatedIPs = validateIPs([_ips], {
                           allowEmptyAddress: true,
-                          errorMessage: 'Must be a valid IPv4 address.',
+                          errorMessage: 'Must be a valid IPv6 address.',
                         });
                         if (validatedIPs[0].error) {
                           setError(controllerField.name, {
                             message: validatedIPs[0].error,
                             type: 'manual',
                           });
+                        } else {
+                          clearErrors(controllerField.name);
                         }
                       }}
                       error={!!fieldState.error}

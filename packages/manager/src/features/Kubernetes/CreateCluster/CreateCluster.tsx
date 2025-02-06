@@ -63,6 +63,7 @@ import type { APIError } from '@linode/api-v4/lib/types';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
+  const [version, setVersion] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const formContainerRef = React.useRef<HTMLDivElement>(null);
@@ -91,10 +92,6 @@ export const CreateCluster = () => {
     value: thisVersion.id,
   }));
 
-  const versionsCopy = Array.from(versions);
-
-  const latestk8Version = getLatestVersion(versionsCopy);
-
   const formValues = React.useMemo(() => {
     return {
       apl_enabled: false,
@@ -118,6 +115,12 @@ export const CreateCluster = () => {
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
+
+  React.useEffect(() => {
+    if (versions.length > 0) {
+      setVersion(getLatestVersion(versions).value);
+    }
+  }, [versionData]);
 
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
@@ -168,7 +171,6 @@ export const CreateCluster = () => {
       apl_enabled,
       control_plane,
       hasAgreed,
-      k8s_version,
       label,
       node_pools,
       region,
@@ -202,7 +204,7 @@ export const CreateCluster = () => {
         },
         high_availability: control_plane.high_availability ?? false,
       },
-      k8s_version,
+      k8s_version: version,
       label,
       node_pools,
       region,
@@ -396,21 +398,18 @@ export const CreateCluster = () => {
             </StyledFieldWithDocsStack>
             <Divider sx={{ marginTop: 4 }} />
             <Controller
-              render={({ field }) => (
+              render={() => (
                 <Autocomplete
                   onChange={(_, selected) => {
-                    field.onChange(selected?.value);
+                    setVersion(selected?.value);
                   }}
-                  value={
-                    versions.find((v) => v.value === latestk8Version.label) ??
-                    null
-                  }
-                  disableClearable={!!field.value}
+                  disableClearable={!!version}
                   errorText={errorMap.k8s_version}
                   label="Kubernetes Version"
                   loading={isLoadingVersions}
                   options={versions}
                   placeholder={' '}
+                  value={versions.find((v) => v.value === version) ?? null}
                 />
               )}
               control={control}
