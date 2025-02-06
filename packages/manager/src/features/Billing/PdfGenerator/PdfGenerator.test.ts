@@ -113,7 +113,7 @@ const getExpectedTaxIdsText = (
   }
 
   if (countryTax?.tax_info) {
-    taxIdsText.push(`${countryTax.tax_info}`);
+    taxIdsText.push(countryTax.tax_info);
   }
 
   if (provincialTax) {
