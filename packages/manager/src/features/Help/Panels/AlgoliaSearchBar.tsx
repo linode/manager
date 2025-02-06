@@ -94,7 +94,13 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       )}
       <Autocomplete
         renderOption={(props, option) => {
-          return <SearchItem data={option} {...props} key={`${props.key}`} />;
+          return (
+            <SearchItem
+              data={option}
+              {...props}
+              key={`${props.key}-${option.value}`}
+            />
+          );
         }}
         slotProps={{
           paper: {
