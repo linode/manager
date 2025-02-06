@@ -1,6 +1,7 @@
-import { Divider, Notice, Stack, Typography } from '@linode/ui';
+import { Notice, Stack, Typography } from '@linode/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
@@ -26,7 +27,8 @@ import type {
   LinodeRebuildType,
   RebuildLinodeFormValues,
 } from './utils';
-import type { Linode } from '@linode/api-v4';
+import { isEmpty, type Linode } from '@linode/api-v4';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 interface Props {
   linode: Linode;
@@ -49,12 +51,15 @@ export const LinodeRebuildForm = (props: Props) => {
     (preferences) => preferences?.type_to_confirm ?? true
   );
 
+  const queryClient = useQueryClient();
   const { mutateAsync: rebuildLinode } = useRebuildLinodeMutation(linode.id);
 
   const form = useForm<RebuildLinodeFormValues, Context>({
     context: {
       isTypeToConfirmEnabled,
       linodeLabel: linode.label,
+      queryClient,
+      type,
     },
     defaultValues: {
       disk_encryption: linode.disk_encryption,
@@ -80,6 +85,18 @@ export const LinodeRebuildForm = (props: Props) => {
     }
   };
 
+  const previousSubmitCount = useRef<number>(0);
+
+  useEffect(() => {
+    if (
+      !isEmpty(form.formState.errors) &&
+      form.formState.submitCount > previousSubmitCount.current
+    ) {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
+    }
+    previousSubmitCount.current = form.formState.submitCount;
+  }, [form.formState]);
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -102,6 +119,12 @@ export const LinodeRebuildForm = (props: Props) => {
             setType={setType}
             type={type}
           />
+          {form.formState.errors.stackscript_id?.message && (
+            <Notice
+              text={form.formState.errors.stackscript_id?.message}
+              variant="error"
+            />
+          )}
           {type === 'Account StackScript' && (
             <StackScriptSelectionList type="Account" />
           )}

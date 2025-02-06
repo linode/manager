@@ -1,9 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { RebuildLinodeSchema } from '@linode/validation';
-import { object, string } from 'yup';
+import { number, object, string } from 'yup';
 
-import type { RebuildRequest } from '@linode/api-v4';
-import type { FieldErrors, Resolver } from 'react-hook-form';
+import { stackscriptQueries } from 'src/queries/stackscripts';
+
+import { getIsUDFRequired } from '../../LinodeCreate/Tabs/StackScripts/UserDefinedFields/utilities';
+
+import type { RebuildRequest, StackScript } from '@linode/api-v4';
+import type { QueryClient } from '@tanstack/react-query';
+import type { FieldError, FieldErrors, Resolver } from 'react-hook-form';
 import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export const REBUILD_OPTIONS = [
@@ -21,11 +26,19 @@ export interface RebuildLinodeFormValues extends RebuildRequest {
 export interface Context {
   isTypeToConfirmEnabled: ManagerPreferences['type_to_confirm'];
   linodeLabel: string | undefined;
+  queryClient: QueryClient;
+  type: LinodeRebuildType;
 }
 
-const RebuildLinodeFormSchema = RebuildLinodeSchema.concat(
+const RebuildLinodeFromImageSchema = RebuildLinodeSchema.concat(
   object({
     confirmationText: string(),
+  })
+);
+
+const RebuildLinodeFromStackScriptSchema = RebuildLinodeFromImageSchema.concat(
+  object({
+    stackscript_id: number().required('You must select a StackScript.'),
   })
 );
 
@@ -34,7 +47,12 @@ export const resolver: Resolver<RebuildLinodeFormValues, Context> = async (
   context,
   options
 ) => {
-  const { errors } = await yupResolver(RebuildLinodeFormSchema, {}, {})(
+  const schema =
+    context?.type === 'Image'
+      ? RebuildLinodeFromImageSchema
+      : RebuildLinodeFromStackScriptSchema;
+
+  const { errors } = await yupResolver(schema, {}, {})(
     values,
     context,
     options
@@ -48,6 +66,34 @@ export const resolver: Resolver<RebuildLinodeFormValues, Context> = async (
       message: `You must type the Linode label (${context.linodeLabel}) to confirm.`,
       type: 'required',
     };
+  }
+
+  if (context && values.stackscript_id) {
+    const stackscript = context.queryClient.getQueryData<StackScript>(
+      stackscriptQueries.stackscript(values.stackscript_id).queryKey
+    );
+
+    if (stackscript) {
+      const stackScriptErrors: Record<string, FieldError> = {};
+
+      for (const udf of stackscript.user_defined_fields) {
+        const stackscriptData = values.stackscript_data as
+          | Record<string, string>
+          | null
+          | undefined;
+
+        if (getIsUDFRequired(udf) && !stackscriptData?.[udf.name]) {
+          stackScriptErrors[udf.name] = {
+            message: `${udf.label} is required.`,
+            type: 'required',
+          };
+        }
+      }
+
+      (errors as FieldErrors<RebuildLinodeFormValues>)[
+        'stackscript_data'
+      ] = stackScriptErrors;
+    }
   }
 
   if (errors) {

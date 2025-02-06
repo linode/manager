@@ -35,16 +35,16 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
 
   const { control, formState } = useFormContext<CreateLinodeRequest>();
 
-  const { field } = useController<CreateLinodeRequest>({
+  const { field, fieldState } = useController<CreateLinodeRequest>({
     control,
     name: `stackscript_data.${userDefinedField.name}`,
   });
 
-  // @ts-expect-error UDFs don't abide by the form's error type.
-  const error = formState.errors?.[userDefinedField.name]?.message?.replace(
-    'the UDF',
-    ''
-  );
+  const error = (
+    // @ts-expect-error UDFs don't abide by the form's error type. This is an api-v4 bug.
+    formState.errors?.[userDefinedField.name] ?? fieldState.error
+  )?.message?.replace('the UDF', '');
+
   // We might be able to fix this by checking the message for "UDF" and fixing the key
   // when we put the error message in the react hook form state.
 

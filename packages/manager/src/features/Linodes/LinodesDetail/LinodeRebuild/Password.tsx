@@ -19,7 +19,6 @@ export const Password = (props: Props) => {
           autoComplete="off"
           disabled={props.disabled}
           errorText={fieldState.error?.message}
-          helperText="Set a password for your rebuilt Linode."
           label="Root Password"
           noMarginTop
           onBlur={field.onBlur}

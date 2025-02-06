@@ -39,7 +39,7 @@ export const UserDefinedFields = () => {
   return (
     <Stack spacing={2}>
       <Typography variant="h2">{stackscript.label} Setup</Typography>
-      {formState.errors.stackscript_data && (
+      {formState.errors.stackscript_data?.message && (
         <Notice
           text={formState.errors.stackscript_data.message as string}
           variant="error"
