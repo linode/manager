@@ -5,6 +5,7 @@ import {
   generateMaxUnit,
   getDimensionName,
   getLabelName,
+  getTimeDurationFromPreset,
   mapResourceIdToName,
 } from './CloudPulseWidgetUtils';
 
@@ -234,4 +235,19 @@ it('test mapResourceIdToName method', () => {
   expect(mapResourceIdToName('123', resources)).toBe('linode-1');
   expect(mapResourceIdToName('999', resources)).toBe('999');
   expect(mapResourceIdToName(undefined, resources)).toBe('');
+});
+
+describe('getTimeDurationFromPreset method', () => {
+  it('should return correct time duration for 24hours preset', () => {
+    const result = getTimeDurationFromPreset('24hours');
+    expect(result).toStrictEqual({
+      unit: 'hr',
+      value: 24,
+    });
+  });
+
+  it('shoult return undefined of invalid preset', () => {
+    const result = getTimeDurationFromPreset('15min');
+    expect(result).toBe(undefined);
+  });
 });
