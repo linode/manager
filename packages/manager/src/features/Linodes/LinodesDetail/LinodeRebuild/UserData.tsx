@@ -1,4 +1,4 @@
-import { Accordion, Notice, TextField, Typography } from '@linode/ui';
+import { Accordion, Checkbox, Notice, TextField, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -76,29 +76,38 @@ export const UserData = (props: Props) => {
       )}
       <Controller
         render={({ field, fieldState }) => (
-          <TextField
-            onBlur={(e) => {
-              field.onBlur();
-              checkFormat({
-                hasInputValueChanged: false,
-                userData: e.target.value,
-              });
-            }}
-            onChange={(e) => {
-              field.onChange(e);
-              checkFormat({
-                hasInputValueChanged: true,
-                userData: e.target.value,
-              });
-            }}
-            errorText={fieldState.error?.message}
-            expand
-            label="User Data"
-            labelTooltipText="Compatible formats include cloud-config data and executable scripts."
-            multiline
-            rows={1}
-            value={field.value ?? ''}
-          />
+          <>
+            <TextField
+              onBlur={(e) => {
+                field.onBlur();
+                checkFormat({
+                  hasInputValueChanged: false,
+                  userData: e.target.value,
+                });
+              }}
+              onChange={(e) => {
+                const value = e.target.value;
+                field.onChange(value === '' ? null : value);
+                checkFormat({
+                  hasInputValueChanged: true,
+                  userData: e.target.value,
+                });
+              }}
+              disabled={field.value === ''}
+              errorText={fieldState.error?.message}
+              expand
+              label="User Data"
+              labelTooltipText="Compatible formats include cloud-config data and executable scripts."
+              multiline
+              rows={1}
+              value={field.value ?? ''}
+            />
+            <Checkbox
+              onChange={(e, checked) => field.onChange(checked ? '' : null)}
+              sx={{ pl: 1.5 }}
+              text={`Reuse user data previously provided for ${linode?.label}`}
+            />
+          </>
         )}
         control={control}
         name="metadata.user_data"

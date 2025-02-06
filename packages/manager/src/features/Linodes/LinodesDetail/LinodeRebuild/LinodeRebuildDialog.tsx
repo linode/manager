@@ -15,13 +15,14 @@ interface Props {
 export const LinodeRebuildDialog = (props: Props) => {
   const { linodeId, linodeLabel, onClose, open } = props;
 
-  const { data: linode, isLoading } = useLinodeQuery(
+  const { data: linode, error, isLoading } = useLinodeQuery(
     linodeId ?? -1,
     Boolean(linodeId)
   );
 
   return (
     <Dialog
+      error={error?.[0].reason}
       fullHeight
       fullWidth
       isFetching={isLoading}
