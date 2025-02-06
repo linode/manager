@@ -349,7 +349,9 @@ const SearchBarComponent = (props: SearchProps) => {
                       <Close />
                     </IconButton>
                   ),
-                  startAdornment: <StyledSearchIcon />,
+                  startAdornment: (
+                    <StyledSearchIcon data-qa-search-icon="true" />
+                  ),
                 }}
                 inputProps={{
                   ...params.inputProps,

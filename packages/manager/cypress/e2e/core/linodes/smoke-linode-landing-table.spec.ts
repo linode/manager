@@ -113,9 +113,9 @@ describe('linode landing checks', () => {
     cy.get(
       '[data-testid="menu-item-Marketplace"][href="/linodes/create?type=One-Click"]'
     ).should('be.visible');
-    cy.get('[data-testid="menu-item-Account"][href="/account"]').should(
-      'be.visible'
-    );
+    cy.get('[data-testid="menu-item-Account"][href="/account"]')
+      .scrollIntoView()
+      .should('be.visible');
     cy.get('[data-testid="menu-item-Help & Support"][href="/support"]').should(
       'be.visible'
     );
@@ -124,7 +124,7 @@ describe('linode landing checks', () => {
   it('checks the landing top menu items', () => {
     cy.wait('@getProfile').then((xhr) => {
       const username = xhr.response?.body.username;
-      cy.get('[aria-label="open menu"]')
+      cy.get('[aria-label="unpin menu"]')
         .should('be.visible')
         .should('be.visible');
       cy.get('[data-qa-add-new-menu-button="true"]')
