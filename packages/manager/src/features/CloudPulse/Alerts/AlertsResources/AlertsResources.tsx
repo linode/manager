@@ -81,7 +81,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
   const [additionalFilters, setAdditionalFilters] = React.useState<
     Record<AlertFilterKeys, AlertFilterType | undefined>
-  >({ engineType: undefined, tags: undefined });
+  >({ engineType: undefined });
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const pageSize = 25;

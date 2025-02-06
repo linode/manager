@@ -1,7 +1,14 @@
 import { deepEqual } from '../../Utils/FilterBuilder';
+import {
+  alertAdditionalFilterKeyMap,
+  alertApplicableFilterKeys,
+} from '../AlertsResources/constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
-import type { AlertFilterType } from '../AlertsResources/constants';
+import type {
+  AlertFilterKeys,
+  AlertFilterType,
+} from '../AlertsResources/constants';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type { Region } from '@linode/api-v4';
 
@@ -9,7 +16,7 @@ interface FilterResourceProps {
   /**
    * Additional filters for filtering the instances
    */
-  additionalFilters?: Record<string, AlertFilterType>;
+  additionalFilters?: Record<AlertFilterKeys, AlertFilterType | undefined>;
   /**
    * The data to be filtered
    */
@@ -151,16 +158,19 @@ export const getFilteredResources = (
     })
     .filter((resource) => (selectedOnly ? resource.checked : true))
     .filter((resource) => {
-      return (
-        !additionalFilters ||
-        !Object.keys(additionalFilters).length ||
-        Object.entries(additionalFilters).every(([key, value]) => {
-          return (
-            !additionalFilters[key] ||
-            deepEqual(resource[key as keyof AlertInstance], value)
-          );
-        })
-      );
+      if (!additionalFilters) {
+        return true;
+      }
+      return alertApplicableFilterKeys.every((key) => {
+        const value = additionalFilters[key];
+        if (value === undefined) {
+          return true;
+        } // Skip if no filter value
+        // Only apply filters that exist in `alertAdditionalFilterKeyMap`
+        const mappedKey = alertAdditionalFilterKeyMap[key];
+        const resourceValue = resource[mappedKey];
+        return deepEqual(resourceValue, value); // Compare primitive values
+      });
     });
 };
 

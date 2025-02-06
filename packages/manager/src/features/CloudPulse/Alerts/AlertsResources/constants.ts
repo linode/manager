@@ -53,6 +53,15 @@ export const serviceFiltersMap: Record<
   dbaas: [AlertsEngineOptionFilter], // dbaas uses Engine filter
 };
 
-export type AlertFilterKeys = 'engineType' | 'tags';
+export type AlertFilterKeys = 'engineType';
 
 export type AlertFilterType = boolean | number | string | undefined;
+
+export const alertApplicableFilterKeys: AlertFilterKeys[] = ['engineType'];
+
+export const alertAdditionalFilterKeyMap: Record<
+  AlertFilterKeys,
+  keyof AlertInstance
+> = {
+  engineType: 'engineType',
+};

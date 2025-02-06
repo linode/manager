@@ -158,4 +158,16 @@ describe('getFilteredResources', () => {
     });
     expect(result.length).toBe(1);
   });
+  it('should return correct results if additional filters key value is undefined', () => {
+    const result = getFilteredResources({
+      additionalFilters: {
+        engineType: undefined,
+      },
+      data,
+      filteredRegions: [],
+      regionsIdToRegionMap,
+      resourceIds: ['1', '2', '3'],
+    });
+    expect(result.length).toBe(3);
+  });
 });
