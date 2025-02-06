@@ -2,7 +2,6 @@ import { Notice, Select, TextField } from '@linode/ui';
 import { createContactSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
-import { pick } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -49,14 +48,22 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
 
   const { mutateAsync: createContact } = useCreateContactMutation();
   const { mutateAsync: updateContact } = useUpdateContactMutation(
-    contact?.id || -1
+    contact?.id ?? -1
   );
 
   // If we're in Edit mode, take the initialValues from the contact we're editing.
   // Otherwise, all initial values should be empty strings.
+  const getContactInfo = (): ContactPayload => {
+    return {
+      email: contact?.email ?? '',
+      group: contact?.group,
+      name: contact?.name ?? '',
+      phone: contact?.phone,
+    };
+  };
+
   const initialValues: ContactPayload = isEditing
-    ? // Pick select properties to create a ContactPayload from Linode.ManagedContact.
-      (pick(['name', 'email', 'phone', 'group'], contact) as ContactPayload)
+    ? getContactInfo()
     : emptyContactPayload;
 
   const onSubmit = (

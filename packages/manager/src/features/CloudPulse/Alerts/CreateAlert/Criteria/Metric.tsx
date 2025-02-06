@@ -64,19 +64,21 @@ export const Metric = (props: MetricCriteriaProps) => {
     operation: string
   ) => {
     const fieldValue: MetricCriteriaForm = {
-      aggregation_type: null,
+      aggregate_function: null,
       dimension_filters: [],
       metric: null,
       operator: null,
       threshold: 0,
     };
-    setValue(
-      name,
-      operation === 'selectOption'
-        ? { ...fieldValue, metric: selected.value }
-        : fieldValue,
-      { shouldValidate: true }
-    );
+    if (operation === 'selectOption') {
+      setValue(`${name}.metric`, selected.value, { shouldValidate: true });
+      setValue(`${name}.aggregate_function`, fieldValue.aggregate_function);
+      setValue(`${name}.dimension_filters`, fieldValue.dimension_filters);
+      setValue(`${name}.operator`, fieldValue.operator);
+      setValue(`${name}.threshold`, fieldValue.threshold);
+    } else {
+      setValue(name, fieldValue);
+    }
   };
 
   const metricOptions = React.useMemo(() => {
@@ -202,7 +204,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                 />
               )}
               control={control}
-              name={`${name}.aggregation_type`}
+              name={`${name}.aggregate_function`}
             />
           </Grid>
           <Grid item lg={2} md={3} sm={6} xs={12}>
@@ -226,6 +228,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                       : null
                   }
                   data-testid="operator"
+                  disabled={!metricWatcher}
                   errorText={fieldState.error?.message}
                   key={metricWatcher}
                   label="Operator"

@@ -97,7 +97,6 @@ export const LinodeRow = (props: Props) => {
       key={id}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      sx={{ height: 'auto' }}
     >
       <TableCell noWrap>
         <Link tabIndex={0} to={`/linodes/${id}`}>

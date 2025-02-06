@@ -221,7 +221,7 @@ export const ImageSelect = (props: Props) => {
               variant="warning"
             >
               {image.eol && DateTime.fromISO(image.eol) > DateTime.now() ? (
-                <Typography fontFamily={(theme) => theme.font.bold}>
+                <Typography sx={(theme) => ({ font: theme.font.bold })}>
                   {image.label} will reach its end-of-life on{' '}
                   {formatDate(image.eol ?? '', { format: 'MM/dd/yyyy' })}. After
                   this date, this OS distribution will no longer receive
@@ -230,7 +230,7 @@ export const ImageSelect = (props: Props) => {
                   stability for your linodes.
                 </Typography>
               ) : (
-                <Typography fontFamily={(theme) => theme.font.bold}>
+                <Typography sx={(theme) => ({ font: theme.font.bold })}>
                   {image.label} reached its end-of-life on{' '}
                   {formatDate(image.eol ?? '', { format: 'MM/dd/yyyy' })}. This
                   OS distribution will no longer receive security updates or

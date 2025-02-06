@@ -29,7 +29,7 @@ const useStyles = makeStyles<void, 'caret'>()(
       backgroundColor: 'transparent !important',
       color: theme.color.headline,
       display: 'flex',
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
       paddingLeft: 0,
       paddingRight: 0,
       transition: theme.transitions.create('color'),

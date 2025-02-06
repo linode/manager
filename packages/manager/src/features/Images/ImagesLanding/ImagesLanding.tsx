@@ -12,7 +12,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
+import React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
@@ -36,7 +36,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useDialogData } from 'src/hooks/useDialogData';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -80,8 +79,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
     padding: 0,
   },
   imageTableHeader: {
-    marginLeft: theme.spacing(),
+    border: `1px solid ${theme.tokens.border.Normal}`,
+    borderBottom: 0,
     padding: theme.spacing(),
+    paddingLeft: theme.spacing(1.5),
   },
   imageTableSubheader: {
     marginTop: theme.spacing(),
@@ -112,7 +113,6 @@ export const ImagesLanding = () => {
   const history = useHistory();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const flags = useFlags();
   const isImagesReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
@@ -287,12 +287,6 @@ export const ImagesLanding = () => {
     imageEvents
   );
 
-  // TODO Image Service V2: delete after GA
-  const multiRegionsEnabled =
-    (flags.imageServiceGen2 &&
-      manualImages?.data.some((image) => image.regions?.length)) ??
-    false;
-
   // Automatic images with the associated events tied in.
   const automaticImagesEvents = getEventsForImages(
     automaticImages?.data ?? [],
@@ -409,7 +403,7 @@ export const ImagesLanding = () => {
     onDelete: handleDelete,
     onDeploy: handleDeployNewLinode,
     onEdit: handleEdit,
-    onManageRegions: multiRegionsEnabled ? handleManageRegions : undefined,
+    onManageRegions: handleManageRegions,
     onRebuild: handleRebuild,
   };
 
@@ -504,29 +498,20 @@ export const ImagesLanding = () => {
               <Hidden smDown>
                 <TableCell>Status</TableCell>
               </Hidden>
-              {multiRegionsEnabled && (
-                <Hidden smDown>
-                  <TableCell>Replicated in</TableCell>
-                </Hidden>
-              )}
-              {multiRegionsEnabled && !flags.imageServiceGen2Ga && (
-                <Hidden smDown>
-                  <TableCell>Compatibility</TableCell>
-                </Hidden>
-              )}
+              <Hidden smDown>
+                <TableCell>Replicated in</TableCell>
+              </Hidden>
               <TableSortCell
                 active={manualImagesOrderBy === 'size'}
                 direction={manualImagesOrder}
                 handleClick={handleManualImagesOrderChange}
                 label="size"
               >
-                {multiRegionsEnabled ? 'Original Image' : 'Size'}
+                Original Image
               </TableSortCell>
-              {multiRegionsEnabled && (
-                <Hidden mdDown>
-                  <TableCell>All Replicas</TableCell>
-                </Hidden>
-              )}
+              <Hidden mdDown>
+                <TableCell>All Replicas</TableCell>
+              </Hidden>
               <Hidden mdDown>
                 <TableSortCell
                   active={manualImagesOrderBy === 'created'}
@@ -537,11 +522,9 @@ export const ImagesLanding = () => {
                   Created
                 </TableSortCell>
               </Hidden>
-              {multiRegionsEnabled && (
-                <Hidden mdDown>
-                  <TableCell>Image ID</TableCell>
-                </Hidden>
-              )}
+              <Hidden mdDown>
+                <TableCell>Image ID</TableCell>
+              </Hidden>
               <TableCell />
             </TableRow>
           </TableHead>
@@ -564,7 +547,6 @@ export const ImagesLanding = () => {
                 handlers={handlers}
                 image={manualImage}
                 key={manualImage.id}
-                multiRegionsEnabled={multiRegionsEnabled}
               />
             ))}
           </TableBody>
