@@ -13,6 +13,7 @@ import {
   getMetricsCallCustomFilters,
   getRegionProperties,
   getResourcesProperties,
+  getTagsProperties,
   getTimeDurationProperties,
 } from './FilterBuilder';
 import { deepEqual, getFilters } from './FilterBuilder';
@@ -49,6 +50,38 @@ it('test getRegionProperties method', () => {
     expect(handleRegionChange).toBeDefined();
     expect(selectedDashboard).toEqual(mockDashboard);
     expect(label).toEqual(name);
+  }
+});
+
+it('test getTagsProperties', () => {
+  const tagsConfig = linodeConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Tags'
+  );
+
+  expect(tagsConfig).toBeDefined();
+
+  if (tagsConfig) {
+    const {
+      disabled,
+      handleTagsChange,
+      label,
+      region,
+      resourceType,
+    } = getTagsProperties(
+      {
+        config: tagsConfig,
+        dashboard: mockDashboard,
+        dependentFilters: { region: 'us-east' },
+        isServiceAnalyticsIntegration: true,
+      },
+      vi.fn()
+    );
+    const { name } = tagsConfig.configuration;
+    expect(handleTagsChange).toBeDefined();
+    expect(disabled).toEqual(false);
+    expect(label).toEqual(name);
+    expect(region).toEqual('us-east');
+    expect(resourceType).toEqual('linode');
   }
 });
 
@@ -145,6 +178,46 @@ it('test getResourceSelectionProperties method with disabled true', () => {
   }
 });
 
+describe('checkIfWeNeedToDisableFilterByFilterKey', () => {
+  // resources filter has region as mandatory and tags as an optional filter, this should reflect in the dependent filters
+  it('should enable filter when dependent filter region is provided', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: 'us-east' },
+      mockDashboard
+    );
+    expect(result).toEqual(false);
+  });
+
+  it('should disable filter when dependent filter region is undefined', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: undefined },
+      mockDashboard
+    );
+    expect(result).toEqual(true);
+  });
+
+  it('should disable filter when no dependent filters are provided', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      {},
+      mockDashboard
+    );
+    expect(result).toEqual(true);
+  });
+
+  it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: 'us-east', tags: undefined },
+      mockDashboard,
+      { region: 'us-east', tags: ['tag-1'] } // tags are defined in preferences which confirms that this optional filter was selected
+    );
+    expect(result).toEqual(true);
+  });
+});
+
 it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
   let result = checkIfWeNeedToDisableFilterByFilterKey(
     'resource_id',
@@ -165,6 +238,23 @@ it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
   result = checkIfWeNeedToDisableFilterByFilterKey(
     'resource_id',
     {},
+    mockDashboard
+  );
+
+  expect(result).toEqual(true);
+
+  result = checkIfWeNeedToDisableFilterByFilterKey(
+    'resource_id',
+    { region: 'us-east', tags: undefined },
+    mockDashboard,
+    { ['region']: 'us-east', ['tags']: ['tag-1'] }
+  );
+
+  expect(result).toEqual(true); // disabled is true as tags are not updated in dependent filters
+
+  result = checkIfWeNeedToDisableFilterByFilterKey(
+    'tags',
+    { region: undefined },
     mockDashboard
   );
 

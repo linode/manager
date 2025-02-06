@@ -11,6 +11,19 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   filters: [
     {
       configuration: {
+        filterKey: 'region',
+        filterType: 'string',
+        isFilterable: false,
+        isMetricsFilter: false,
+        name: 'Region',
+        neededInServicePage: false,
+        priority: 1,
+      },
+      name: 'Region',
+    },
+    {
+      configuration: {
+        dependency: ['region'],
         filterKey: 'tags',
         filterType: 'string',
         isFilterable: false,
@@ -23,18 +36,6 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         priority: 4,
       },
       name: 'Tags',
-    },
-    {
-      configuration: {
-        filterKey: 'region',
-        filterType: 'string',
-        isFilterable: false,
-        isMetricsFilter: false,
-        name: 'Region',
-        neededInServicePage: false,
-        priority: 1,
-      },
-      name: 'Region',
     },
     {
       configuration: {
