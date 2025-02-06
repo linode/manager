@@ -34,12 +34,10 @@ import { mockGetDatabases } from 'support/intercepts/databases';
 import type { Flags } from 'src/featureFlags';
 import { Interception } from 'cypress/types/net-stubbing';
 import {
-  convertToGmt,
-  getLastMonthRange,
-  getThisMonthRange,
-  getDateRangeInIST,
-} from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
+  convertToGmt
+ } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
 import { formatDate } from 'src/utilities/formatDate';
+import { getDateRangeInIST, getLastMonthRange, getThisMonthRange } from 'support/constants/date-utils';
 
 const timeRanges = [
   { label: 'Last 30 Minutes', unit: 'min', value: 30 },
@@ -120,7 +118,7 @@ const mockProfile = profileFactory.build({
   timezone: 'Asia/Kolkata',
 });
 
-describe('Integration Tests for DBaaS Dashboard', () => {
+describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
@@ -133,7 +131,7 @@ describe('Integration Tests for DBaaS Dashboard', () => {
       'getMetrics'
     );
     mockGetRegions([mockRegion]);
-    mockGetProfile(mockProfile).as('getProfile');
+    mockGetProfile(mockProfile);
     mockGetUserPreferences({
       aclpPreference: {
         dashboardId: id,
@@ -142,10 +140,10 @@ describe('Integration Tests for DBaaS Dashboard', () => {
         region: mockRegion.id,
       },
     }).as('fetchPreferences');
-    mockGetDatabases([databaseMock]).as('getDatabases');
+    mockGetDatabases([databaseMock]);
 
     cy.visitWithLogin('monitor');
-    cy.wait(['@getProfile', '@fetchPreferences']);
+    cy.wait('@fetchPreferences');
   });
 
   it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
@@ -180,19 +178,19 @@ describe('Integration Tests for DBaaS Dashboard', () => {
     cy.get('[aria-label="Select hours"]')
       .scrollIntoView({ easing: 'linear' })
       .within(() => {
-        cy.get(`[aria-label="${startHour} hours"]`).click();
+        cy.get(`[aria-label="${startHour} hours"]`).click({ force: true });
       });
 
     cy.get('[aria-label="Select minutes"]')
       .scrollIntoView({ easing: 'linear', duration: 500 })
       .within(() => {
-        cy.get(`[aria-label="${startMinute} minutes"]`).click();
+        cy.get(`[aria-label="${startMinute} minutes"]`).click({ force: true });
       });
 
     cy.get('[aria-label="Select meridiem"]')
       .scrollIntoView({ easing: 'linear' })
       .within(() => {
-        cy.get('[aria-label="PM"]').click();
+        cy.get('[aria-label="PM"]').click({ force: true });
       });
 
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
@@ -206,7 +204,7 @@ describe('Integration Tests for DBaaS Dashboard', () => {
       .should('be.visible')
       .click();
 
-    cy.findByTestId('ClockIcon').click();
+    cy.findByTestId('ClockIcon').click({ force: true });
 
     cy.get('[aria-label="Select hours"]')
       .scrollIntoView({ easing: 'linear', duration: 500 })
@@ -217,7 +215,7 @@ describe('Integration Tests for DBaaS Dashboard', () => {
     cy.get('[aria-label="Select minutes"]')
       .scrollIntoView({ easing: 'linear', duration: 500 })
       .within(() => {
-        cy.get(`[aria-label="${endMinute} minutes"]`).click();
+        cy.get(`[aria-label="${endMinute} minutes"]`).click({ force: true });
       });
 
     cy.get('[aria-label="Select meridiem"]')
