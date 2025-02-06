@@ -10,7 +10,7 @@ import { paginateResponse } from 'support/util/paginate';
 import { randomString } from 'support/util/random';
 import { makeResponse } from 'support/util/response';
 
-import type { Alert } from '@linode/api-v4';
+import type { Alert, NotificationChannel } from '@linode/api-v4';
 import type {
   CloudPulseMetricsResponse,
   Dashboard,
@@ -305,5 +305,28 @@ export const mockGetAllAlertDefinitions = (
     'GET',
     apiMatcher('/monitor/alert-definitions?page_size=500'),
     paginateResponse(alert)
+  );
+};
+
+/**
+ * Mocks the API response for retrieving all alert channels from the monitoring service.
+ * This function intercepts a GET request to fetch alert channels and returns a mock
+ * response, simulating the behavior of the real API by providing a list of alert channels.
+ *
+ * The mock response is created using the provided `channel` object, allowing the test
+ * to simulate various scenarios with different alert channel configurations.
+ *
+ * @param {NotificationChannel} channel - An object representing the notification channel to mock as the response.
+ *                                        This should represent the alert channel being fetched by the API.
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted request.
+ */
+export const mockGetAlertChannels = (
+  channel: NotificationChannel[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('/monitor/alert-channels*'),
+    paginateResponse(channel)
   );
 };
