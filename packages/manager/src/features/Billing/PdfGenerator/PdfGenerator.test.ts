@@ -1,7 +1,6 @@
 import fs from 'fs';
 import { PdfReader } from 'pdfreader';
 
-import { ADDRESSES } from 'src/constants';
 import {
   accountFactory,
   invoiceFactory,
@@ -26,20 +25,6 @@ const getExpectedRemitAddressText = (
   isAkamaiBilling: boolean,
   isInternational: boolean
 ) => {
-  const getRemitAddress = (country: string, isAkamaiBilling: boolean) => {
-    if (!isAkamaiBilling) {
-      return ADDRESSES.linode;
-    }
-    if (country === 'US') {
-      ADDRESSES.linode.entity = 'Akamai Technologies, Inc.';
-      return ADDRESSES.linode;
-    }
-    if (['CA'].includes(country)) {
-      return ADDRESSES.akamai.us;
-    }
-    return ADDRESSES.akamai.international;
-  };
-
   const expectedRemitAddress = getRemitAddress(country, isAkamaiBilling);
 
   const address2 =
