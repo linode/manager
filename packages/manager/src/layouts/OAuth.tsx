@@ -76,7 +76,7 @@ export class OAuthCallbackPage extends Component<CombinedProps, State> {
       location.search
     ) as OAuthQueryParams;
 
-    if (!code || !nonce) {
+    if (!code || !returnTo || !nonce) {
       clearStorageAndRedirectToLogout();
     }
 
