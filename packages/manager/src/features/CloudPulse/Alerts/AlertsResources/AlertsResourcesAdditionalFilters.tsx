@@ -3,7 +3,7 @@ import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
-import { serviceFiltersMap } from './constants';
+import { serviceToFiltersMap } from './constants';
 
 import type { AlertFilterType } from './constants';
 
@@ -26,7 +26,7 @@ export const AlertResourceAdditionalFilters = ({
   handleFilterChange,
   serviceType,
 }: AlertResourceFiltersProps) => {
-  const filtersToRender = serviceFiltersMap[serviceType ?? ''] ?? [];
+  const filtersToRender = serviceToFiltersMap[serviceType ?? ''] ?? [];
 
   if (!filtersToRender.length) {
     return <NullComponent />;

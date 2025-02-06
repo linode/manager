@@ -19,7 +19,7 @@ import { AlertResourceAdditionalFilters } from './AlertsResourcesAdditionalFilte
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
-import type { AlertFilterKeys, AlertFilterType } from './constants';
+import type { AlertFilterKey, AlertFilterType } from './constants';
 import type { AlertDefinitionType, Region } from '@linode/api-v4';
 
 export interface AlertResourcesProp {
@@ -80,7 +80,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertResourceIds
   );
   const [additionalFilters, setAdditionalFilters] = React.useState<
-    Record<AlertFilterKeys, AlertFilterType | undefined>
+    Record<AlertFilterKey, AlertFilterType>
   >({ engineType: undefined });
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
@@ -213,7 +213,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const handleFilterChange = (
     value: AlertFilterType,
-    filterKey: AlertFilterKeys
+    filterKey: AlertFilterKey
   ) => {
     setAdditionalFilters((prev) => ({
       ...prev,

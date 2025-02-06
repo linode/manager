@@ -161,7 +161,7 @@ export const DisplayAlertResources = React.memo(
       );
     };
 
-    const columns = serviceTypeBasedColumns[serviceType ?? 'linode'] ?? [];
+    const columns = serviceTypeBasedColumns[serviceType ?? ''] ?? [];
 
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>

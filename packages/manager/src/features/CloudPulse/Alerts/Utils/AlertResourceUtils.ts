@@ -6,7 +6,7 @@ import {
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 import type {
-  AlertFilterKeys,
+  AlertFilterKey,
   AlertFilterType,
 } from '../AlertsResources/constants';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
@@ -16,7 +16,7 @@ interface FilterResourceProps {
   /**
    * Additional filters for filtering the instances
    */
-  additionalFilters?: Record<AlertFilterKeys, AlertFilterType | undefined>;
+  additionalFilters?: Record<AlertFilterKey, AlertFilterType | undefined>;
   /**
    * The data to be filtered
    */

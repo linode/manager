@@ -46,21 +46,21 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   ],
 };
 
-export const serviceFiltersMap: Record<
+export const serviceToFiltersMap: Record<
   string,
   MemoExoticComponent<React.ComponentType<AlertsEngineOptionProps>>[]
 > = {
   dbaas: [AlertsEngineOptionFilter], // dbaas uses Engine filter
 };
 
-export type AlertFilterKeys = 'engineType';
+export type AlertFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
 
 export type AlertFilterType = boolean | number | string | undefined;
 
-export const alertApplicableFilterKeys: AlertFilterKeys[] = ['engineType'];
+export const alertApplicableFilterKeys: AlertFilterKey[] = ['engineType'];
 
 export const alertAdditionalFilterKeyMap: Record<
-  AlertFilterKeys,
+  AlertFilterKey,
   keyof AlertInstance
 > = {
   engineType: 'engineType',
