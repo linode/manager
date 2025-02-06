@@ -223,13 +223,17 @@ export const DisplayAlertResources = React.memo(
                   ))}
                 {isDataLoadingError && (
                   <TableRowError
-                    colSpan={3}
+                    colSpan={isSelectionsNeeded ? 3 : 2}
                     message="Table data is unavailable. Please try again later."
                   />
                 )}
                 {paginatedData.length === 0 && (
                   <TableRow>
-                    <TableCell align="center" colSpan={3} height="40px">
+                    <TableCell
+                      align="center"
+                      colSpan={isSelectionsNeeded ? 3 : 2}
+                      height="40px"
+                    >
                       No data to display.
                     </TableCell>
                   </TableRow>
