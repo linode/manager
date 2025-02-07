@@ -69,10 +69,3 @@ const StyledNotice = styled(Notice, { label: 'StyledNotice' })(({ theme }) => ({
   marginBottom: 0,
   padding: theme.spacing(2),
 }));
-
-// const StyledButton = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
-//   marginLeft: theme.spacing(1),
-//   minHeight: 'auto',
-//   minWidth: 'auto',
-//   padding: 0,
-// }));
