@@ -11,7 +11,7 @@ export const useVPCConfigInterface = (linodeId: number) => {
   configs?.find((config) => {
     const interfaces = config.interfaces;
 
-    const interfaceWithVPC = interfaces.find(
+    const interfaceWithVPC = interfaces?.find(
       (_interface) => _interface.purpose === 'vpc'
     );
 

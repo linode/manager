@@ -1,6 +1,8 @@
 import { Box, IconButton, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
+import Search from 'src/assets/icons/search.svg';
+
 export const StyledIconButton = styled(IconButton, {
   label: 'StyledIconButton',
 })(({ theme }) => ({
@@ -8,72 +10,22 @@ export const StyledIconButton = styled(IconButton, {
     justifyContent: 'flex-end',
   },
   '& svg': {
-    height: 25,
-    width: 25,
+    height: 24,
+    width: 24,
   },
   '&:hover, &:focus': {
-    color: theme.tokens.color.Neutrals[40],
+    color: theme.tokens.header.Search.Icon.Hover,
   },
   backgroundColor: 'inherit',
   border: 'none',
-  color: theme.tokens.color.Neutrals[40],
+  color: theme.tokens.header.Search.Icon.Default,
   cursor: 'pointer',
   padding: theme.spacing(),
   position: 'relative',
-  [theme.breakpoints.up('md')]: {
+  [theme.breakpoints.up('sm')]: {
     display: 'none',
   },
   top: 1,
-}));
-
-export const StyledSearchBarWrapperDiv = styled('div', {
-  label: 'StyledSearchBarWrapperDiv',
-})(({ theme }) => ({
-  '& svg': {
-    height: 20,
-    width: 20,
-  },
-  '&.active': {
-    ...theme.inputStyles.focused,
-    '&:hover': {
-      ...theme.inputStyles.focused,
-    },
-  },
-  '&:hover': {
-    ...theme.inputStyles.hover,
-  },
-  ...theme.inputStyles.default,
-  '& .MuiAutocomplete-popper': {
-    [theme.breakpoints.up('md')]: {
-      left: `-${theme.spacing()} !important`,
-    },
-    width: '100% !important',
-  },
-  alignItems: 'center',
-  display: 'flex',
-  flex: 1,
-  height: 34,
-  marginLeft: theme.spacing(1),
-  padding: theme.spacing(1),
-  position: 'relative', // for search results
-  [theme.breakpoints.down('md')]: {
-    '&.active': {
-      opacity: 1,
-      visibility: 'visible',
-      zIndex: 3,
-    },
-    left: 0,
-    margin: 0,
-    opacity: 0,
-    position: 'absolute',
-    visibility: 'hidden',
-    width: 'calc(100% - 100px)',
-    zIndex: -1,
-  },
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-  },
-  transition: theme.transitions.create(['opacity']),
 }));
 
 export const StyledSearchSuggestionContainer = styled(Paper, {
@@ -86,10 +38,13 @@ export const StyledSearchSuggestionContainer = styled(Paper, {
   '& .MuiAutocomplete-noOptions': {
     border: 'none',
   },
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: `0 0 10px ${theme.color.boxShadow}`,
-  marginTop: theme.spacing(2),
+  borderBottomLeftRadius: theme.shape.borderRadius,
+  borderBottomRightRadius: theme.shape.borderRadius,
+  boxShadow: `0 0 8px ${theme.color.boxShadow}`,
+  left: -2,
+  marginTop: theme.spacing(),
   padding: 0,
+  position: 'relative',
   width: '100%',
 }));
 
@@ -102,4 +57,16 @@ export const StyledHelpContainer = styled(Box, {
   display: 'flex',
   fontSize: '0.8rem',
   padding: theme.spacing(2),
+}));
+
+export const StyledSearchIcon = styled(Search, {
+  label: 'StyledSearchIcon',
+})(({ theme }) => ({
+  '&&': {
+    '&:hover': {
+      color: theme.tokens.header.Search.Icon.Hover,
+    },
+
+    color: theme.tokens.header.Search.Icon.Default,
+  },
 }));

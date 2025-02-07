@@ -1,4 +1,3 @@
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
@@ -21,16 +20,19 @@ export interface TableRowEmptyProps {
  * - An empty table should have language that clearly says why the table has no data and what action to take to populate with data.
  */
 export const TableRowEmpty = (props: TableRowEmptyProps) => {
+  const { colSpan, message } = props;
+
   return (
-    <TableRow data-testid={'table-row-empty'}>
-      <StyledTableCell colSpan={props.colSpan}>
-        {props.message || 'No items to display.'}
-      </StyledTableCell>
+    <TableRow data-testid={'table-row-empty'} hover={false}>
+      <TableCell
+        sx={{
+          height: '40px',
+          textAlign: 'center',
+        }}
+        colSpan={colSpan}
+      >
+        {message || 'No items to display.'}
+      </TableCell>
     </TableRow>
   );
 };
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  borderColor: theme.borderColors.borderTable,
-  textAlign: 'center',
-}));

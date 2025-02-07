@@ -2,9 +2,13 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type {
   AccountAccessType,
+  IamAccess,
+  IamAccessType,
+  IamAccountPermissions,
   PermissionType,
   ResourceTypePermissions,
   RoleType,
+  Roles,
 } from '@linode/api-v4';
 
 /**
@@ -119,4 +123,51 @@ const getDoesRolesMatchQuery = (query: string, role: ExtendedRoleMap) => {
   return searchableFields.some((field) =>
     queryWords.some((queryWord) => field.toLowerCase().includes(queryWord))
   );
+};
+
+export interface RolesType {
+  label: string;
+  value: string;
+}
+
+interface ExtendedRole extends Roles {
+  access: IamAccessType;
+  resource_type: ResourceTypePermissions;
+}
+
+export const getAllRoles = (
+  permissions: IamAccountPermissions
+): RolesType[] => {
+  const accessTypes: IamAccessType[] = ['account_access', 'resource_access'];
+
+  return accessTypes.flatMap((accessType: IamAccessType) =>
+    permissions[accessType].flatMap((resource: IamAccess) =>
+      resource.roles.map((role: Roles) => ({
+        label: role.name,
+        value: role.name,
+      }))
+    )
+  );
+};
+
+export const getRoleByName = (
+  accountPermissions: IamAccountPermissions,
+  roleName: string
+): ExtendedRole | null => {
+  const accessTypes: IamAccessType[] = ['account_access', 'resource_access'];
+
+  for (const permissionType of accessTypes) {
+    const resources = accountPermissions[permissionType];
+    for (const resource of resources) {
+      const role = resource.roles.find((role: Roles) => role.name === roleName);
+      if (role) {
+        return {
+          ...role,
+          access: permissionType, // Include access type (account or resource)
+          resource_type: resource.resource_type,
+        };
+      }
+    }
+  }
+  return null;
 };

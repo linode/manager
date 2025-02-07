@@ -54,11 +54,13 @@ const StyledBetaChip = styled(Chip, {
   '& .MuiChip-label': {
     padding: 0,
   },
-  fontFamily: '"LatoWebBold", sans-serif', // TODO: remove hardcoded font once theme is added to this package
+  background: 'lch(77.7 28.7 275 / 0.12)',
+  color: theme.tokens.color.Ultramarine[50],
+  font: theme.font.bold,
   fontSize: '0.625rem',
   height: 16,
   letterSpacing: '.25px',
-  marginLeft: theme.spacing(0.5),
+  marginLeft: theme.spacing(),
   padding: theme.spacing(0.5),
   textTransform: 'uppercase',
 }));

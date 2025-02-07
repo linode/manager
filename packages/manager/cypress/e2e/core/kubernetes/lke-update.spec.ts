@@ -1614,14 +1614,35 @@ describe('LKE cluster updates', () => {
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
     });
+    const mockSingleNodePool = mockNodePools[0];
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+    mockGetClusterPools(mockCluster.id, [mockSingleNodePool]).as(
+      'getNodePools'
+    );
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
     cy.wait(['@getCluster', '@getNodePools']);
 
-    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+    cy.get(`[data-qa-node-pool-id="${mockSingleNodePool.id}"]`).within(() => {
       // Accordion should be expanded by default
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+
+      // Click on a disabled button
+      cy.get('[data-testid="node-pool-actions"]')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Delete Pool')
+            .should('be.visible')
+            .should('be.disabled')
+            .click();
+        });
+
+      // Check that the accordion is still expanded
       cy.get(`[data-qa-panel-summary]`).should(
         'have.attr',
         'aria-expanded',
@@ -1652,7 +1673,7 @@ describe('LKE cluster updates', () => {
           .click();
       });
 
-    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+    cy.get(`[data-qa-node-pool-id="${mockSingleNodePool.id}"]`).within(() => {
       // Check that the accordion is still expanded
       cy.get(`[data-qa-panel-summary]`).should(
         'have.attr',
@@ -2349,6 +2370,7 @@ describe('LKE ACL updates', () => {
           // Confirm submit button is disabled if form has not been changed
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('not.be.enabled');
 
@@ -2363,6 +2385,7 @@ describe('LKE ACL updates', () => {
           // confirm submit button is now enabled
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled');
 
@@ -2383,6 +2406,7 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -2430,6 +2454,7 @@ describe('LKE ACL updates', () => {
           // Confirm submit button is disabled if form has not been changed
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('not.be.enabled');
 
@@ -2463,6 +2488,7 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -2547,6 +2573,7 @@ describe('LKE ACL updates', () => {
           // Confirm submit button is disabled if form has not been changed
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('not.be.enabled');
 
@@ -2561,6 +2588,7 @@ describe('LKE ACL updates', () => {
           // confirm submit button is now enabled
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled');
 
@@ -2592,6 +2620,7 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -2708,6 +2737,7 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -2798,6 +2828,7 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();

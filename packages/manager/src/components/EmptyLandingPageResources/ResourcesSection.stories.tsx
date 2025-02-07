@@ -1,6 +1,6 @@
 import React from 'react';
 
-import LinodeSvg from 'src/assets/icons/entityIcons/linode.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import {
   gettingStartedGuides,
   headers,
@@ -23,7 +23,7 @@ const meta: Meta<typeof ResourcesSection> = {
     descriptionMaxWidth: 500,
     gettingStartedGuidesData: gettingStartedGuides,
     headers,
-    icon: LinodeSvg,
+    icon: ComputeIcon,
     linkAnalyticsEvent,
     showTransferDisplay: true,
     wide: true,
