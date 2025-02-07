@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import LinodeSvg from 'src/assets/icons/entityIcons/linode.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import MarketplaceIcon from 'src/assets/icons/marketplace.svg';
 import PointerIcon from 'src/assets/icons/pointer.svg';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
@@ -73,7 +73,7 @@ export const LinodesLandingEmptyState = () => {
       descriptionMaxWidth={500}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={LinodeSvg}
+      icon={ComputeIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       showTransferDisplay={true}
       wide={true}

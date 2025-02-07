@@ -11,6 +11,7 @@ import { deepEqual } from '../Utils/FilterBuilder';
 import type { Filter, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
+  engineType?: string;
   id: string;
   label: string;
   region?: string;
@@ -102,6 +103,10 @@ export const CloudPulseResourcesSelect = React.memo(
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
+      if (disabled && !selectedResources) {
+        return;
+      }
+      // To save default values, go through side effects if disabled is false
       if (resources && savePreferences && !selectedResources) {
         const defaultResources =
           defaultValue && Array.isArray(defaultValue)

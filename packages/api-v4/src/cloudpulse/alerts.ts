@@ -11,11 +11,11 @@ import {
   Alert,
   AlertServiceType,
   CreateAlertDefinitionPayload,
-  EditAlertResourcesPayload,
+  EditAlertDefinitionPayload,
   NotificationChannel,
 } from './types';
-import { BETA_API_ROOT as API_ROOT } from '../constants';
 import { Params, Filter, ResourcePage } from '../types';
+import { API_ROOT } from 'src/constants';
 
 const bearer = 'Bearer vagrant';
 
@@ -51,7 +51,7 @@ export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
 
 export const getAlertDefinitionByServiceTypeAndId = (
   serviceType: string,
-  alertId: number
+  alertId: string
 ) =>
   Request<Alert>(
     setURL(
@@ -79,6 +79,23 @@ export const getAlertDefinitionByServiceType = (serviceType: string) =>
     })
   );
 
+export const editAlertDefinition = (
+  data: EditAlertDefinitionPayload,
+  serviceType: string,
+  alertId: string
+) =>
+  Request<Alert>(
+    setURL(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/alert-definitions/${encodeURIComponent(alertId)}`
+    ),
+    setMethod('PUT'),
+    setData(data),
+    setHeaders({
+      Authorization: bearer,
+    })
+  );
 export const getNotificationChannels = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<NotificationChannel>>(
     setURL(
@@ -90,21 +107,6 @@ export const getNotificationChannels = (params?: Params, filters?: Filter) =>
     setHeaders({
       Authorization: bearer,
     })
-  );
-
-export const editAlertDefinitionEntities = (
-  data: EditAlertResourcesPayload,
-  serviceType: string,
-  alertId: number
-) =>
-  Request<Alert>(
-    setURL(
-      `${API_ROOT}/monitor/services/${encodeURIComponent(
-        serviceType
-      )}/alert-definitions/${encodeURIComponent(alertId)}`
-    ),
-    setMethod('PUT'),
-    setData(data)
   );
 
 export const addEntityToAlert = (

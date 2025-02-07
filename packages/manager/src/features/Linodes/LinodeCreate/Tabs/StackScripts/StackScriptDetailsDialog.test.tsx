@@ -10,6 +10,7 @@ describe('StackScriptDetailsDialog', () => {
   it('should render StackScript data from the API', async () => {
     const stackscript = stackScriptFactory.build({
       id: 1234,
+      script: 'echo',
     });
 
     server.use(

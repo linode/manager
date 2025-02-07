@@ -28,7 +28,7 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { Flags } from 'src/featureFlags';
-import { Interception } from 'cypress/types/net-stubbing';
+import type { Interception } from 'support/cypress-exports';
 
 const timeDurationToSelect = 'Last 24 Hours';
 const flags: Partial<Flags> = {
@@ -49,8 +49,7 @@ const flags: Partial<Flags> = {
   ],
 };
 
-const { metrics, id, serviceType, dashboardName } =
-  widgetDetails.linode;
+const { metrics, id, serviceType, dashboardName } = widgetDetails.linode;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
@@ -113,7 +112,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetLinodes(linodes).as('fetchResources');
     mockGetCloudPulseDashboard(id, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
@@ -163,15 +162,15 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
       aclpPreference: {
         dashboardId: 1,
         widgets: {},
-        tags: ["tag-4","tag-2"],
+        tags: ['tag-4', 'tag-2'],
         region: 'us-ord',
-        resources: ['1','2'],
+        resources: ['1', '2'],
       },
     }).as('fetchPutPreferences');
 
     cy.visitWithLogin('monitor');
 
-    cy.wait(['@fetchServices', '@fetchDashboard','@fetchPutPreferences']);
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPutPreferences']);
 
     // Expand the applied filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
@@ -188,7 +187,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
           .should('be.visible')
           .should('have.text', linodes[0].label);
 
-          cy.get(`[data-qa-value="Resources ${linodes[1].label}"]`)
+        cy.get(`[data-qa-value="Resources ${linodes[1].label}"]`)
           .should('be.visible')
           .should('have.text', linodes[1].label);
 
@@ -196,7 +195,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
           .should('be.visible')
           .should('have.text', 'tag-4');
 
-          cy.get('[data-qa-value="Tags tag-2"]')
+        cy.get('[data-qa-value="Tags tag-2"]')
           .should('be.visible')
           .should('have.text', 'tag-2');
       });
@@ -343,7 +342,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
       .type(`${linodes[0].label}{enter}`)
       .click();
 
-    cy.get('button[aria-label="Clear"]').eq(1).click();
+    cy.get('button[aria-label="Clear"]').eq(2).click();
 
     ui.autocomplete.findByLabel('Tags').type('tag-4');
 

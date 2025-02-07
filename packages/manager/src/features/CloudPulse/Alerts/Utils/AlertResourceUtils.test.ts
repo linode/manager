@@ -68,15 +68,30 @@ describe('getRegionOptions', () => {
     });
     expect(result.length).toBe(2); // Should still return unique regions
   });
+  it('should return all region objects if resourceIds is empty and isAdditionOrDeletionNeeded is true', () => {
+    const result = getRegionOptions({
+      data,
+      isAdditionOrDeletionNeeded: true,
+      regionsIdToRegionMap: regionsIdToLabelMap,
+      resourceIds: [],
+    });
+    // Valid case
+    expect(result.length).toBe(3);
+  });
 });
 
 describe('getFilteredResources', () => {
   const regions = regionFactory.buildList(10);
   const regionsIdToRegionMap = getRegionsIdRegionMap(regions);
   const data: CloudPulseResources[] = [
-    { id: '1', label: 'Test', region: regions[0].id },
-    { id: '2', label: 'Test2', region: regions[1].id },
-    { id: '3', label: 'Test3', region: regions[2].id },
+    { engineType: 'mysql', id: '1', label: 'Test', region: regions[0].id },
+    { engineType: 'mysql', id: '2', label: 'Test2', region: regions[1].id },
+    {
+      engineType: 'postgresql',
+      id: '3',
+      label: 'Test3',
+      region: regions[2].id,
+    },
   ];
   it('should return correct filtered instances on only filtered regions', () => {
     const result = getFilteredResources({
@@ -140,5 +155,55 @@ describe('getFilteredResources', () => {
       resourceIds: ['1', '2'],
     });
     expect(result.length).toBe(0);
+  });
+  it('should return checked true for already selected instances', () => {
+    const // Case with searchText
+      result = getFilteredResources({
+        data,
+        filteredRegions: [],
+        regionsIdToRegionMap,
+        resourceIds: ['1', '2'],
+        searchText: '',
+        selectedResources: ['1'],
+      });
+    expect(result.length).toBe(2);
+    expect(result[0].checked).toBe(true);
+  });
+  it('should return all resources in case of edit flow', () => {
+    const // Case with searchText
+      result = getFilteredResources({
+        data,
+        filteredRegions: [],
+        isAdditionOrDeletionNeeded: true,
+        regionsIdToRegionMap,
+        resourceIds: [],
+        searchText: undefined,
+        selectedResources: ['1'],
+      });
+    expect(result.length).toBe(data.length);
+  });
+  it('should return correct results on additional filters', () => {
+    const result = getFilteredResources({
+      additionalFilters: {
+        engineType: 'postgresql',
+      },
+      data,
+      filteredRegions: [],
+      regionsIdToRegionMap,
+      resourceIds: ['1', '2', '3'],
+    });
+    expect(result.length).toBe(1);
+  });
+  it('should return correct results if additional filters key value is undefined', () => {
+    const result = getFilteredResources({
+      additionalFilters: {
+        engineType: undefined,
+      },
+      data,
+      filteredRegions: [],
+      regionsIdToRegionMap,
+      resourceIds: ['1', '2', '3'],
+    });
+    expect(result.length).toBe(3);
   });
 });

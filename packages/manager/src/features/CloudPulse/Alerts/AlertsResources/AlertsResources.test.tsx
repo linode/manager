@@ -7,6 +7,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertResources } from './AlertsResources';
 
+import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { AlertResourcesProp } from './AlertsResources';
+
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
   useResourcesQuery: queryMocks.useResourcesQuery,
@@ -33,6 +36,19 @@ const linodes = linodeFactory.buildList(3).map((value, index) => {
 
 const searchPlaceholder = 'Search for a Region or Resource';
 const regionPlaceholder = 'Select Regions';
+const alertResourcesProp: AlertResourcesProp = {
+  alertResourceIds: ['1', '2', '3'],
+  alertType: 'system',
+  serviceType: 'linode',
+};
+const checkedAttribute = 'data-qa-checked';
+const cloudPulseResources: CloudPulseResources[] = linodes.map((linode) => {
+  return {
+    id: String(linode.id),
+    label: linode.label,
+    region: linode.region,
+  };
+});
 
 beforeAll(() => {
   window.scrollTo = vi.fn(); // mock for scrollTo and scroll
@@ -41,7 +57,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   queryMocks.useResourcesQuery.mockReturnValue({
-    data: linodes,
+    data: cloudPulseResources,
     isError: false,
     isFetching: false,
   });
@@ -55,7 +71,7 @@ beforeEach(() => {
 describe('AlertResources component tests', () => {
   it('should render search input, region filter', () => {
     const { getByText } = renderWithTheme(
-      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources {...alertResourcesProp} />
     );
     expect(getByText(searchPlaceholder)).toBeInTheDocument();
     expect(getByText(regionPlaceholder)).toBeInTheDocument();
@@ -67,7 +83,7 @@ describe('AlertResources component tests', () => {
       isFetching: true,
     });
     const { getByTestId, queryByText } = renderWithTheme(
-      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources {...alertResourcesProp} />
     );
     expect(getByTestId('circle-progress')).toBeInTheDocument();
     expect(queryByText(searchPlaceholder)).not.toBeInTheDocument();
@@ -81,7 +97,7 @@ describe('AlertResources component tests', () => {
       isFetching: false,
     });
     const { getByText } = renderWithTheme(
-      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources {...alertResourcesProp} />
     );
     expect(
       getByText('Table data is unavailable. Please try again later.')
@@ -94,9 +110,7 @@ describe('AlertResources component tests', () => {
       getByTestId,
       getByText,
       queryByText,
-    } = renderWithTheme(
-      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
-    );
+    } = renderWithTheme(<AlertResources {...alertResourcesProp} />);
     // Get the search input box
     const searchInput = getByPlaceholderText(searchPlaceholder);
     await userEvent.type(searchInput, linodes[1].label);
@@ -130,7 +144,7 @@ describe('AlertResources component tests', () => {
 
   it('should handle sorting correctly', async () => {
     const { getByTestId } = renderWithTheme(
-      <AlertResources alertResourceIds={['1', '2', '3']} serviceType="linode" />
+      <AlertResources {...alertResourcesProp} />
     );
     const resourceColumn = getByTestId('resource'); // get the resource header column
     await userEvent.click(resourceColumn);
@@ -172,5 +186,76 @@ describe('AlertResources component tests', () => {
         .map(({ textContent }) => textContent)
         .every((text, index) => text?.includes(linodes[index].region)) // validation
     ).toBe(true);
+  });
+
+  it('should handle selection correctly and publish', async () => {
+    const handleResourcesSelection = vi.fn();
+
+    const { getByTestId, queryByTestId } = renderWithTheme(
+      <AlertResources
+        {...alertResourcesProp}
+        alertResourceIds={['1', '2']}
+        alertType="system"
+        handleResourcesSelection={handleResourcesSelection}
+        isSelectionsNeeded
+      />
+    );
+    // validate, by default selections are there
+    expect(getByTestId('select_item_1')).toHaveAttribute(
+      checkedAttribute,
+      'true'
+    );
+    expect(getByTestId('select_item_3')).toHaveAttribute(
+      checkedAttribute,
+      'false'
+    );
+
+    const noticeText = getByTestId('selection_notice');
+    expect(noticeText).toHaveTextContent('2 of 3 resources are selected.');
+
+    // validate it selects 3
+    await userEvent.click(getByTestId('select_item_3'));
+    expect(getByTestId('select_item_3')).toHaveAttribute(
+      checkedAttribute,
+      'true'
+    );
+    expect(handleResourcesSelection).toHaveBeenCalledWith(['1', '2', '3']);
+    expect(noticeText).toHaveTextContent('3 of 3 resources are selected.');
+
+    // unselect 3 and test
+    await userEvent.click(getByTestId('select_item_3'));
+    // validate it gets unselected
+    expect(getByTestId('select_item_3')).toHaveAttribute(
+      checkedAttribute,
+      'false'
+    );
+    expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2']);
+
+    // validate show selected only
+    const selectOnly = getByTestId('show_selected_only');
+    selectOnly.click();
+    expect(getByTestId('select_item_1')).toBeInTheDocument();
+    expect(getByTestId('select_item_2')).toBeInTheDocument();
+    expect(queryByTestId('select_item_3')).not.toBeInTheDocument();
+
+    // uncheck
+    selectOnly.click();
+    expect(getByTestId('select_item_3')).toBeInTheDocument();
+
+    // click select all
+    await userEvent.click(getByTestId('select_all_in_page_1'));
+    expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2', '3']);
+
+    // click select all again to unselect all
+    await userEvent.click(getByTestId('select_all_in_page_1'));
+    expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
+
+    // click select all in notice and test
+    await userEvent.click(getByTestId('select_all_notice'));
+    expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2', '3']);
+
+    // click unselect all in notice and test
+    await userEvent.click(getByTestId('unselect_all_notice'));
+    expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
   });
 });

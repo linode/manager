@@ -155,7 +155,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
               <Button
                 {...props}
                 sx={(theme) => ({
-                  fontFamily: theme.font.normal,
+                  font: theme.font.normal,
                   fontSize: '0.875rem',
                 })}
                 disabled={disableUnassignButton || props.disabled}

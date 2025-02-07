@@ -1,25 +1,7 @@
-import { omittedProps } from '@linode/ui';
-import { styled } from '@mui/material/styles';
-
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-
-import type { StackScriptTableHeadProps } from './StackScriptTableHead';
 import type { Theme } from '@mui/material/styles';
-
-const tableHeadStyles = (theme: Theme) => {
-  return {
-    '& span': {
-      color: theme.textColors.tableHeader,
-    },
-    color: theme.textColors.tableHeader,
-    top: 104,
-  };
-};
 
 export const sharedDeployCellStyles = (theme: Theme) => {
   return {
-    ...tableHeadStyles(theme),
     [theme.breakpoints.down('lg')]: {
       width: '15%',
     },
@@ -29,19 +11,20 @@ export const sharedDeployCellStyles = (theme: Theme) => {
     [theme.breakpoints.down('sm')]: {
       width: '28%',
     },
+    top: 104,
     width: '10%',
   };
 };
 
 export const sharedRevisionsCellStyles = (theme: Theme) => {
   return {
-    ...tableHeadStyles(theme),
     [theme.breakpoints.down('lg')]: {
       width: '17%',
     },
     [theme.breakpoints.down('md')]: {
       width: '23%',
     },
+    top: 104,
     whiteSpace: 'nowrap' as const,
     width: '13%',
   };
@@ -53,7 +36,7 @@ export const sharedStackScriptCellStyles = (
   theme: Theme
 ) => {
   return {
-    ...tableHeadStyles(theme),
+    top: 104,
     ...(category === 'account'
       ? {
           [theme.breakpoints.down('lg')]: {
@@ -85,56 +68,3 @@ export const sharedStackScriptCellStyles = (
     }),
   };
 };
-
-type CompatibleImageCellProps = Pick<StackScriptTableHeadProps, 'category'>;
-
-export const StyledCompatibleImagesCell = styled(TableCell, {
-  label: 'StyledCompatibleImagesCell',
-  shouldForwardProp: omittedProps(['category']),
-})<CompatibleImageCellProps>(({ category, theme }) => ({
-  ...tableHeadStyles(theme),
-  ...(category === 'account'
-    ? {
-        width: '20%',
-      }
-    : {
-        width: '26%',
-      }),
-  cursor: 'default !important',
-}));
-
-export const StyledEmptyTableCell = styled(TableCell, {
-  label: 'StyledEmptyTableCell',
-})(({ theme }) => ({
-  ...tableHeadStyles(theme),
-  cursor: 'default !important',
-}));
-
-export const StyledRootTableHead = styled(TableHead, {
-  label: 'StyledRootTableHead',
-})(({ theme }) => ({
-  '& th': {
-    '&:first-of-type': {
-      borderLeft: 'none',
-    },
-    '&:hover': {
-      ...theme.applyTableHeaderStyles,
-    },
-    '&:last-of-type': {
-      borderRight: 'none',
-    },
-    backgroundColor: theme.bg.tableHeader,
-    borderBottom: `2px solid ${theme.borderColors.borderTable}`,
-    borderTop: `2px solid ${theme.borderColors.borderTable}`,
-    fontFamily: theme.font.bold,
-    padding: '10px 15px',
-  },
-}));
-
-export const StyledStatusCell = styled(TableCell, {
-  label: 'StyledStatusCell',
-})(({ theme }) => ({
-  ...tableHeadStyles(theme),
-  cursor: 'default !important',
-  width: '7%',
-}));

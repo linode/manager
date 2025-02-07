@@ -72,6 +72,10 @@ export const Metric = (props: MetricCriteriaProps) => {
     };
     if (operation === 'selectOption') {
       setValue(`${name}.metric`, selected.value, { shouldValidate: true });
+      setValue(`${name}.aggregate_function`, fieldValue.aggregate_function);
+      setValue(`${name}.dimension_filters`, fieldValue.dimension_filters);
+      setValue(`${name}.operator`, fieldValue.operator);
+      setValue(`${name}.threshold`, fieldValue.threshold);
     } else {
       setValue(name, fieldValue);
     }
@@ -247,6 +251,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                     onWheel={(event: React.SyntheticEvent<Element, Event>) =>
                       event.target instanceof HTMLElement && event.target.blur()
                     }
+                    data-qa-threshold
                     data-testid="threshold"
                     errorText={fieldState.error?.message}
                     label="Threshold"

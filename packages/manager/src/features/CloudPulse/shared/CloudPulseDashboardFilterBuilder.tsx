@@ -1,5 +1,5 @@
-import { Button } from '@linode/ui';
-import { Grid, Typography, useTheme } from '@mui/material';
+import { Button, Typography } from '@linode/ui';
+import { Grid, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardArrowDownIcon from 'src/assets/icons/arrow_down.svg';
@@ -11,6 +11,7 @@ import NullComponent from 'src/components/NullComponent';
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
   DASHBOARD_ID,
+  NODE_TYPE,
   REGION,
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
@@ -20,6 +21,7 @@ import {
 import {
   getCustomSelectProperties,
   getFilters,
+  getNodeTypeProperties,
   getRegionProperties,
   getResourcesProperties,
   getTagsProperties,
@@ -61,6 +63,11 @@ export interface CloudPulseDashboardFilterBuilderProps {
    * Last selected values from user preferences
    */
   preferences?: AclpConfig;
+
+  /**
+   * selected resource ids
+   */
+  resource_ids?: number[];
 }
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
@@ -71,6 +78,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       handleToggleAppliedFilter,
       isServiceAnalyticsIntegration,
       preferences,
+      resource_ids,
     } = props;
 
     const [, setDependentFilters] = React.useState<{
@@ -129,6 +137,19 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       [emitFilterChange, checkAndUpdateDependentFilters]
     );
 
+    const handleNodeTypeChange = React.useCallback(
+      (
+        nodeTypeId: string | undefined,
+        label: string[],
+        savePref: boolean = false
+      ) => {
+        emitFilterChangeByFilterKey(NODE_TYPE, nodeTypeId, label, savePref, {
+          [NODE_TYPE]: nodeTypeId,
+        });
+      },
+      [emitFilterChangeByFilterKey]
+    );
+
     const handleTagsChange = React.useCallback(
       (tags: CloudPulseTags[], savePref: boolean = false) => {
         const selectedTags = tags.map((tag) => tag.label);
@@ -138,6 +159,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           selectedTags,
           savePref,
           {
+            [RESOURCE_ID]: undefined,
             [TAGS]: selectedTags,
           }
         );
@@ -153,6 +175,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           resourceId.map((resource) => resource.label),
           savePref,
           {
+            [NODE_TYPE]: undefined,
             [RESOURCES]: resourceId.map((resource: { id: string }) =>
               String(resource.id)
             ),
@@ -171,6 +194,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         const updatedPreferenceData = {
           [REGION]: region,
           [RESOURCES]: undefined,
+          [TAGS]: undefined,
         };
         emitFilterChangeByFilterKey(
           REGION,
@@ -209,6 +233,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             {
               config,
               dashboard,
+              dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
             },
@@ -235,6 +260,22 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleResourceChange
           );
+        } else if (config.configuration.filterKey === NODE_TYPE) {
+          return getNodeTypeProperties(
+            {
+              config,
+              dashboard,
+              dependentFilters: resource_ids?.length
+                ? { [RESOURCE_ID]: resource_ids }
+                : dependentFilterReference.current,
+              isServiceAnalyticsIntegration,
+              preferences,
+              resource_ids: resource_ids?.length
+                ? resource_ids
+                : (dependentFilterReference.current[RESOURCE_ID] as string[])?.map((id: string) => Number(id)),
+            },
+            handleNodeTypeChange
+          );
         } else {
           return getCustomSelectProperties(
             {
@@ -250,6 +291,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       },
       [
         dashboard,
+        handleNodeTypeChange,
         handleTagsChange,
         handleRegionChange,
         handleResourceChange,

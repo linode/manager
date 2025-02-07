@@ -12,6 +12,9 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
+import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
+import { serviceTypeBasedColumns } from './constants';
+
 import type { Order } from 'src/hooks/useOrder';
 
 export interface AlertInstance {
@@ -20,9 +23,14 @@ export interface AlertInstance {
    */
   checked?: boolean;
   /**
+   * The engine associated with the instance in case of databases
+   */
+  engineType?: string;
+  /**
    * The id of the instance
    */
   id: string;
+
   /**
    * The label of the instance
    */
@@ -54,15 +62,15 @@ export interface DisplayAlertResourceProp {
    * This controls whether to show the selection check box or not
    */
   isSelectionsNeeded?: boolean;
-
-  /**
-   * The size of the page needed in the table
-   */
-  pageSize: number;
   /**
    * Callback to scroll till the element required on page change change or sorting change
    */
   scrollToElement: () => void;
+
+  /**
+   * The service type associated with the alert
+   */
+  serviceType?: string;
 }
 
 export const DisplayAlertResources = React.memo(
@@ -72,9 +80,10 @@ export const DisplayAlertResources = React.memo(
       handleSelection,
       isDataLoadingError,
       isSelectionsNeeded,
-      pageSize,
       scrollToElement,
+      serviceType,
     } = props;
+    const pageSize = 25;
 
     const [sorting, setSorting] = React.useState<{
       order: Order;
@@ -133,21 +142,7 @@ export const DisplayAlertResources = React.memo(
       },
       [handleSelection]
     );
-
-    const isAllPageSelected = (paginatedData: AlertInstance[]): boolean => {
-      return (
-        Boolean(paginatedData?.length) &&
-        paginatedData.every((resource) => resource.checked)
-      );
-    };
-
-    const isSomeSelected = (paginatedData: AlertInstance[]): boolean => {
-      return (
-        Boolean(paginatedData?.length) &&
-        paginatedData.some((resource) => resource.checked)
-      );
-    };
-
+    const columns = serviceTypeBasedColumns[serviceType ?? ''] ?? [];
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -171,42 +166,32 @@ export const DisplayAlertResources = React.memo(
                         }
                         onClick={() =>
                           handleSelectionChange(
-                            paginatedData.map((resource) => resource.id),
+                            paginatedData.map(({ id }) => id),
                             !isAllPageSelected(paginatedData)
                           )
                         }
                         sx={{
-                          padding: 0,
+                          p: 0,
                         }}
                         checked={isAllPageSelected(paginatedData)}
                         data-testid={`select_all_in_page_${page}`}
                       />
                     </TableCell>
                   )}
-                  <TableSortCell
-                    handleClick={(orderBy, order) => {
-                      handleSort(orderBy, order, handlePageChange);
-                    }}
-                    active={sorting.orderBy === 'label'}
-                    data-qa-header="resource"
-                    data-testid="resource"
-                    direction={sorting.order}
-                    label="label"
-                  >
-                    Resource
-                  </TableSortCell>
-                  <TableSortCell
-                    handleClick={(orderBy, order) => {
-                      handleSort(orderBy, order, handlePageChange);
-                    }}
-                    active={sorting.orderBy === 'region'}
-                    data-qa-header="region"
-                    data-testid="region"
-                    direction={sorting.order}
-                    label="region"
-                  >
-                    Region
-                  </TableSortCell>
+                  {columns.map(({ label, sortingKey }) => (
+                    <TableSortCell
+                      handleClick={(orderBy, order) =>
+                        handleSort(orderBy, order, handlePageChange)
+                      }
+                      active={sorting.orderBy === sortingKey}
+                      data-testid={label.toLowerCase()}
+                      direction={sorting.order}
+                      key={label}
+                      label={sortingKey ?? ''}
+                    >
+                      {label}
+                    </TableSortCell>
+                  ))}
                 </TableRow>
               </TableHead>
               <TableBody
@@ -214,39 +199,51 @@ export const DisplayAlertResources = React.memo(
                 data-testid="alert_resources_content"
               >
                 {!isDataLoadingError &&
-                  paginatedData.map(({ checked, id, label, region }, index) => (
-                    <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
+                  paginatedData.map((resource, index) => (
+                    <TableRow
+                      data-qa-alert-row={resource.id}
+                      key={`${index}_${resource.id}`}
+                    >
                       {isSelectionsNeeded && (
                         <TableCell padding="checkbox">
                           <Checkbox
                             onClick={() => {
-                              handleSelectionChange([id], !checked);
+                              handleSelectionChange(
+                                [resource.id],
+                                !resource.checked
+                              );
                             }}
                             sx={{
                               padding: 0,
                             }}
-                            checked={checked}
-                            data-testid={`select_item_${id}`}
+                            checked={resource.checked}
+                            data-testid={`select_item_${resource.id}`}
                           />
                         </TableCell>
                       )}
-                      <TableCell data-qa-alert-cell={`${id}_resource`}>
-                        {label}
-                      </TableCell>
-                      <TableCell data-qa-alert-cell={`${id}_region`}>
-                        {region}
-                      </TableCell>
+                      {columns.map(({ accessor, label }) => (
+                        <TableCell
+                          data-qa-alert-cell={`${resource.id}_${label}`}
+                          key={label}
+                        >
+                          {accessor(resource)}
+                        </TableCell>
+                      ))}
                     </TableRow>
                   ))}
                 {isDataLoadingError && (
                   <TableRowError
-                    colSpan={3}
+                    colSpan={isSelectionsNeeded ? 3 : 2}
                     message="Table data is unavailable. Please try again later."
                   />
                 )}
                 {paginatedData.length === 0 && (
                   <TableRow>
-                    <TableCell align="center" colSpan={3} height="40px">
+                    <TableCell
+                      align="center"
+                      colSpan={isSelectionsNeeded ? 3 : 2}
+                      height="40px"
+                    >
                       No data to display.
                     </TableCell>
                   </TableRow>

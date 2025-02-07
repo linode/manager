@@ -28,10 +28,10 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { CloudPulseMetricsResponse } from '@linode/api-v4';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
-import { Interception } from 'cypress/types/net-stubbing';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import { Flags } from 'src/featureFlags';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
+import type { Interception } from 'support/cypress-exports';
 
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
@@ -92,7 +92,8 @@ const metricDefinitions = metrics.map(({ title, name, unit }) =>
   })
 );
 
-const mockLinode = linodeFactory.build({ tags: ['tag-2', 'tag-3'],
+const mockLinode = linodeFactory.build({
+  tags: ['tag-2', 'tag-3'],
   label: resource,
   id: kubeLinodeFactory.build().instance_id ?? undefined,
 });
@@ -168,7 +169,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
     mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetCloudPulseDashboard(id, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
@@ -205,18 +206,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .should('be.visible')
       .click();
 
-      ui.autocomplete
-      .findByLabel('Tags')
-      .should('be.visible')
-      .type("tag-2");
-
-    ui.autocompletePopper
-      .findByTitle("tag-2")
-      .should('be.visible')
-      .click();
-
     //  Select a region from the dropdown.
-  ui.regionSelect.find().type(extendedMockRegion.label);
+    ui.regionSelect.find().type(extendedMockRegion.label);
 
     // Since Linode does not support this region, we expect it to not be in the dropdown.
 
@@ -228,6 +219,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
     // Select a region from the dropdown.
     ui.regionSelect.find().click().clear().type(`${region}{enter}`);
+
+    ui.autocomplete.findByLabel('Tags').should('be.visible').type('tag-2');
+
+    ui.autocompletePopper.findByTitle('tag-2').should('be.visible').click();
 
     // Select a resource from the autocomplete input.
     ui.autocomplete
@@ -249,7 +244,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
           .should('be.visible')
           .should('have.text', 'US, Chicago, IL');
 
-          cy.get('[data-qa-value="Tags tag-2"]')
+        cy.get('[data-qa-value="Tags tag-2"]')
           .should('be.visible')
           .should('have.text', 'tag-2');
 

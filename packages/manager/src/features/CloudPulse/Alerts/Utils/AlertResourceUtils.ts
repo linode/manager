@@ -1,8 +1,22 @@
+import { deepEqual } from '../../Utils/FilterBuilder';
+import {
+  alertAdditionalFilterKeyMap,
+  alertApplicableFilterKeys,
+} from '../AlertsResources/constants';
+
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type {
+  AlertFilterKey,
+  AlertFilterType,
+} from '../AlertsResources/constants';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type { Region } from '@linode/api-v4';
 
 interface FilterResourceProps {
+  /**
+   * Additional filters for filtering the instances
+   */
+  additionalFilters?: Record<AlertFilterKey, AlertFilterType | undefined>;
   /**
    * The data to be filtered
    */
@@ -11,7 +25,6 @@ interface FilterResourceProps {
    * The selected regions on which the data needs to be filtered
    */
   filteredRegions?: string[];
-
   /**
    * Property to integrate and edit the resources associated with alerts
    */
@@ -20,6 +33,7 @@ interface FilterResourceProps {
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
   regionsIdToRegionMap: Map<string, Region>;
+
   /**
    * The resources associated with the alerts
    */
@@ -31,11 +45,11 @@ interface FilterResourceProps {
   searchText?: string;
 
   /**
-   * Property to filter out only selected resources
+   * Property to filter out only checked resources
    */
   selectedOnly?: boolean;
 
-  /*
+  /**
    * This property helps to track the list of selected resources
    */
   selectedResources?: string[];
@@ -67,7 +81,11 @@ export const getRegionOptions = (
     regionsIdToRegionMap,
     resourceIds,
   } = filterProps;
-  if (!data || !resourceIds.length || !regionsIdToRegionMap.size) {
+  const isEmpty =
+    !data ||
+    (!isAdditionOrDeletionNeeded && !resourceIds.length) ||
+    !regionsIdToRegionMap.size;
+  if (isEmpty) {
     return [];
   }
   const uniqueRegions = new Set<Region>();
@@ -92,6 +110,7 @@ export const getFilteredResources = (
   filterProps: FilterResourceProps
 ): AlertInstance[] => {
   const {
+    additionalFilters,
     data,
     filteredRegions,
     isAdditionOrDeletionNeeded,
@@ -101,7 +120,7 @@ export const getFilteredResources = (
     selectedOnly,
     selectedResources,
   } = filterProps;
-  if (!data || resourceIds.length === 0) {
+  if (!data || (!isAdditionOrDeletionNeeded && resourceIds.length === 0)) {
     return [];
   }
   return data // here we always use the base data from API for filtering as source of truth
@@ -124,7 +143,7 @@ export const getFilteredResources = (
           : '',
       };
     })
-    .filter(({ label, region }) => {
+    .filter(({ checked, label, region }) => {
       const matchesSearchText =
         !searchText ||
         region.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()) ||
@@ -134,9 +153,28 @@ export const getFilteredResources = (
         !filteredRegions?.length ||
         (region.length && filteredRegions.includes(region)); // check with filtered region
 
-      return matchesSearchText && matchesFilteredRegions; // match the search text and match the region selected
+      return (
+        matchesSearchText && // match the search text and match the region selected
+        matchesFilteredRegions &&
+        (!selectedOnly || checked)
+      ); // if selected only, show only checked, else everything
     })
-    .filter((resource) => (selectedOnly ? resource.checked : true));
+    .filter((resource) => (selectedOnly ? resource.checked : true))
+    .filter((resource) => {
+      if (!additionalFilters) {
+        return true;
+      }
+      return alertApplicableFilterKeys.every((key) => {
+        const value = additionalFilters[key];
+        if (value === undefined) {
+          return true;
+        } // Skip if no filter value
+        // Only apply filters that exist in `alertAdditionalFilterKeyMap`
+        const mappedKey = alertAdditionalFilterKeyMap[key];
+        const resourceValue = resource[mappedKey];
+        return deepEqual(resourceValue, value); // Compare primitive values
+      });
+    });
 };
 
 /**
@@ -150,4 +188,42 @@ export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
       top: scrollToElement.getBoundingClientRect().top + window.scrollY - 40,
     });
   }
+};
+
+/**
+ * @param data The list of alert instances displayed in the table.
+ * @returns True if, all instances are selected else false.
+ */
+export const isAllPageSelected = (data: AlertInstance[]): boolean => {
+  return Boolean(data?.length) && data.every(({ checked }) => checked);
+};
+
+/**
+ * @param data The list of alert instances displayed in the table.
+ * @returns True if, any one of instances is selected else false.
+ */
+export const isSomeSelected = (data: AlertInstance[]): boolean => {
+  return Boolean(data?.length) && data.some(({ checked }) => checked);
+};
+
+/**
+ * Checks if two sets of resource IDs contain the same elements, regardless of order.
+ * @param originalResourceIds - The initial list of resource IDs.
+ * @param selectedResourceIds - The updated list of resource IDs to compare.
+ * @returns {boolean} - True if both sets contain the same elements, otherwise false.
+ */
+export const isResourcesEqual = (
+  originalResourceIds: string[] | undefined,
+  selectedResourceIds: string[]
+): boolean => {
+  if (!originalResourceIds) {
+    return selectedResourceIds.length === 0;
+  }
+
+  if (originalResourceIds?.length !== selectedResourceIds.length) {
+    return false;
+  }
+
+  const originalSet = new Set(originalResourceIds);
+  return selectedResourceIds.every((id) => originalSet.has(id));
 };

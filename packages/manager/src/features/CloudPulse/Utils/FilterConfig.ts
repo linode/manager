@@ -11,6 +11,19 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   filters: [
     {
       configuration: {
+        filterKey: 'region',
+        filterType: 'string',
+        isFilterable: false,
+        isMetricsFilter: false,
+        name: 'Region',
+        neededInServicePage: false,
+        priority: 1,
+      },
+      name: 'Region',
+    },
+    {
+      configuration: {
+        dependency: ['region'],
         filterKey: 'tags',
         filterType: 'string',
         isFilterable: false,
@@ -23,18 +36,6 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         priority: 4,
       },
       name: 'Tags',
-    },
-    {
-      configuration: {
-        filterKey: 'region',
-        filterType: 'string',
-        isFilterable: false,
-        isMetricsFilter: false,
-        name: 'Region',
-        neededInServicePage: false,
-        priority: 1,
-      },
-      name: 'Region',
     },
     {
       configuration: {
@@ -140,6 +141,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
+        dependency: ['resource_id'],
         filterKey: 'node_type',
         filterType: 'string',
         isFilterable: true, // isFilterable -- this determines whether you need to pass it metrics api
@@ -147,19 +149,8 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMultiSelect: false,
         name: 'Node Type',
         neededInServicePage: true,
-        options: [
-          {
-            id: 'primary',
-            label: 'Primary',
-          },
-          {
-            id: 'secondary',
-            label: 'Secondary',
-          },
-        ],
         placeholder: 'Select a Node Type',
         priority: 5,
-        type: CloudPulseSelectTypes.static,
       },
       name: 'Node Type',
     },

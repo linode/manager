@@ -3,7 +3,6 @@ import {
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
 import { Notice } from '@linode/ui';
-import { path } from 'ramda';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -78,7 +77,6 @@ export interface EditableDomainFields extends EditableSharedFields {
   refresh_sec?: number;
   retry_sec?: number;
   soa_email?: string;
-  ttl_sec?: number;
 }
 
 type ErrorFields =
@@ -262,7 +260,7 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
     <Drawer
       onClose={handleClose}
       open={open}
-      title={`${path([mode], modeMap)} ${path([type], typeMap)} Record`}
+      title={`${modeMap[mode]} ${typeMap[type]} Record`}
     >
       <form onSubmit={onSubmit} ref={formContainerRef}>
         {otherErrors.map((error, idx) =>

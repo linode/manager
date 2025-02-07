@@ -1,4 +1,5 @@
 import {
+  NODE_TYPE,
   REGION,
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
@@ -10,6 +11,7 @@ import { CloudPulseSelectTypes } from './models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
+import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
@@ -39,6 +41,7 @@ interface CloudPulseFilterProperties {
   };
   isServiceAnalyticsIntegration: boolean;
   preferences?: AclpConfig;
+  resource_ids?: number[] | undefined;
 }
 
 interface CloudPulseMandatoryFilterCheckProps {
@@ -54,6 +57,7 @@ interface CloudPulseMandatoryFilterCheckProps {
  * @param config - accepts a CloudPulseServiceTypeFilters of tag key
  * @param handleTagsChange - the callback when we select new tag
  * @param dashboard - the selected dashboard's service type
+ * @param dependentFilters - tags are dependent on region filter, we need this for disabling the tags selection component
  * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
  * @returns CloudPulseTagSelectProps
  */
@@ -61,14 +65,26 @@ export const getTagsProperties = (
   props: CloudPulseFilterProperties,
   handleTagsChange: (tags: CloudPulseTags[], savePref?: boolean) => void
 ): CloudPulseTagsSelectProps => {
-  const { name: label, placeholder } = props.config.configuration;
-  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
+  const { filterKey, name: label, placeholder } = props.config.configuration;
+  const {
+    dashboard,
+    dependentFilters,
+    isServiceAnalyticsIntegration,
+    preferences,
+  } = props;
   return {
     defaultValue: preferences?.[TAGS],
+    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+      filterKey,
+      dependentFilters ?? {},
+      dashboard,
+      preferences
+    ),
     handleTagsChange,
     label,
     optional: props.config.configuration.isOptional,
     placeholder,
+    region: dependentFilters?.[REGION],
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
   };
@@ -133,7 +149,8 @@ export const getResourcesProperties = (
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
-      dashboard
+      dashboard,
+      preferences
     ),
     handleResourcesSelection: handleResourceChange,
     label,
@@ -141,6 +158,37 @@ export const getResourcesProperties = (
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: buildXFilter(config, dependentFilters ?? {}),
+  };
+};
+
+export const getNodeTypeProperties = (
+  props: CloudPulseFilterProperties,
+  handleNodeTypeChange: (
+    nodeType: null | string | undefined,
+    label: string[],
+    savePref?: boolean
+  ) => void
+): CloudPulseNodeTypeFilterProps => {
+  const { filterKey, name: label, placeholder } = props.config.configuration;
+  const {
+    dashboard,
+    dependentFilters,
+    isServiceAnalyticsIntegration,
+    preferences,
+    resource_ids,
+  } = props;
+  return {
+    database_ids: resource_ids,
+    defaultValue: preferences?.[NODE_TYPE],
+    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+      filterKey,
+      dependentFilters ?? {},
+      dashboard
+    ),
+    handleNodeTypeChange,
+    label,
+    placeholder,
+    savePreferences: !isServiceAnalyticsIntegration,
   };
 };
 
@@ -282,7 +330,8 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
   dependentFilters: {
     [key: string]: FilterValueType | TimeDuration;
   },
-  dashboard: Dashboard
+  dashboard: Dashboard,
+  preferences?: AclpConfig
 ): boolean | undefined => {
   if (dashboard?.service_type) {
     const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
@@ -303,6 +352,15 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
     if (filter) {
       return filter.configuration.dependency?.some((dependent) => {
         const dependentFilter = dependentFilters[dependent];
+
+        if (
+          preferences &&
+          preferences[dependent] &&
+          (!dependentFilter ||
+            (Array.isArray(dependentFilter) && dependentFilter.length === 0))
+        ) {
+          return true; // Since filters are set one by one, disabled will be true until the values that are defined inside the preferences are populated in the dependent filters as well
+        }
 
         return (
           !optionalFilters.has(dependent) &&

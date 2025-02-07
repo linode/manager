@@ -2,7 +2,7 @@ import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import StorageIcon from 'src/assets/icons/entityIcons/storage.svg';
 import { Currency } from 'src/components/Currency';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
@@ -59,7 +59,7 @@ export const BackupsPlaceholder = React.memo((props: Props) => {
           },
         ]}
         data-testid="backups"
-        icon={VolumeIcon}
+        icon={StorageIcon}
         isEntity
         renderAsSecondary
         title="Backups"

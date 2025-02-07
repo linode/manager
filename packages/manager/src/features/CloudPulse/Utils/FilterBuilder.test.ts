@@ -3,7 +3,8 @@ import { DateTime } from 'luxon';
 import { dashboardFactory } from 'src/factories';
 import { databaseQueries } from 'src/queries/databases/databases';
 
-import { RESOURCES } from './constants';
+import { RESOURCE_ID, RESOURCES } from './constants';
+import { deepEqual, getFilters } from './FilterBuilder';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -11,11 +12,12 @@ import {
   constructAdditionalRequestFilters,
   getCustomSelectProperties,
   getMetricsCallCustomFilters,
+  getNodeTypeProperties,
   getRegionProperties,
   getResourcesProperties,
+  getTagsProperties,
   getTimeDurationProperties,
 } from './FilterBuilder';
-import { deepEqual, getFilters } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseSelectTypes } from './models';
 
@@ -24,6 +26,8 @@ const mockDashboard = dashboardFactory.build();
 const linodeConfig = FILTER_CONFIG.get('linode');
 
 const dbaasConfig = FILTER_CONFIG.get('dbaas');
+
+const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas' });
 
 it('test getRegionProperties method', () => {
   const regionConfig = linodeConfig?.filters.find(
@@ -49,6 +53,38 @@ it('test getRegionProperties method', () => {
     expect(handleRegionChange).toBeDefined();
     expect(selectedDashboard).toEqual(mockDashboard);
     expect(label).toEqual(name);
+  }
+});
+
+it('test getTagsProperties', () => {
+  const tagsConfig = linodeConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Tags'
+  );
+
+  expect(tagsConfig).toBeDefined();
+
+  if (tagsConfig) {
+    const {
+      disabled,
+      handleTagsChange,
+      label,
+      region,
+      resourceType,
+    } = getTagsProperties(
+      {
+        config: tagsConfig,
+        dashboard: mockDashboard,
+        dependentFilters: { region: 'us-east' },
+        isServiceAnalyticsIntegration: true,
+      },
+      vi.fn()
+    );
+    const { name } = tagsConfig.configuration;
+    expect(handleTagsChange).toBeDefined();
+    expect(disabled).toEqual(false);
+    expect(label).toEqual(name);
+    expect(region).toEqual('us-east');
+    expect(resourceType).toEqual('linode');
   }
 });
 
@@ -144,6 +180,108 @@ it('test getResourceSelectionProperties method with disabled true', () => {
     expect(label).toEqual(name);
   }
 });
+it('test getNodeTypeProperties', () => {
+  const nodeTypeSelectionConfig = dbaasConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Node Type'
+  );
+
+  expect(nodeTypeSelectionConfig).toBeDefined();
+
+  if (nodeTypeSelectionConfig) {
+    const {
+      database_ids,
+      disabled,
+      handleNodeTypeChange,
+      label,
+      savePreferences,
+    } = getNodeTypeProperties(
+      {
+        config: nodeTypeSelectionConfig,
+        dashboard: dbaasDashboard,
+        dependentFilters: { [RESOURCE_ID]: [1] },
+        isServiceAnalyticsIntegration: false,
+        resource_ids: [1],
+      },
+      vi.fn()
+    );
+    const { name } = nodeTypeSelectionConfig.configuration;
+    expect(database_ids).toEqual([1]);
+    expect(handleNodeTypeChange).toBeDefined();
+    expect(savePreferences).toEqual(true);
+    expect(disabled).toEqual(false);
+    expect(label).toEqual(name);
+  }
+});
+
+it('test getNodeTypeProperties with disabled true', () => {
+  const nodeTypeSelectionConfig = dbaasConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Node Type'
+  );
+
+  expect(nodeTypeSelectionConfig).toBeDefined();
+
+  if (nodeTypeSelectionConfig) {
+    const {
+      disabled,
+      handleNodeTypeChange,
+      label,
+      savePreferences,
+    } = getNodeTypeProperties(
+      {
+        config: nodeTypeSelectionConfig,
+        dashboard: dbaasDashboard,
+        dependentFilters: {},
+        isServiceAnalyticsIntegration: false,
+      },
+      vi.fn()
+    );
+    const { name } = nodeTypeSelectionConfig.configuration;
+    expect(handleNodeTypeChange).toBeDefined();
+    expect(savePreferences).toEqual(true);
+    expect(disabled).toEqual(true);
+    expect(label).toEqual(name);
+  }
+});
+
+describe('checkIfWeNeedToDisableFilterByFilterKey', () => {
+  // resources filter has region as mandatory and tags as an optional filter, this should reflect in the dependent filters
+  it('should enable filter when dependent filter region is provided', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: 'us-east' },
+      mockDashboard
+    );
+    expect(result).toEqual(false);
+  });
+
+  it('should disable filter when dependent filter region is undefined', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: undefined },
+      mockDashboard
+    );
+    expect(result).toEqual(true);
+  });
+
+  it('should disable filter when no dependent filters are provided', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      {},
+      mockDashboard
+    );
+    expect(result).toEqual(true);
+  });
+
+  it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: 'us-east', tags: undefined },
+      mockDashboard,
+      { region: 'us-east', tags: ['tag-1'] } // tags are defined in preferences which confirms that this optional filter was selected
+    );
+    expect(result).toEqual(true);
+  });
+});
 
 it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
   let result = checkIfWeNeedToDisableFilterByFilterKey(
@@ -169,6 +307,40 @@ it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
   );
 
   expect(result).toEqual(true);
+
+  result = checkIfWeNeedToDisableFilterByFilterKey(
+    'resource_id',
+    { region: 'us-east', tags: undefined },
+    mockDashboard,
+    { ['region']: 'us-east', ['tags']: ['tag-1'] }
+  );
+
+  expect(result).toEqual(true); // disabled is true as tags are not updated in dependent filters
+
+  result = checkIfWeNeedToDisableFilterByFilterKey(
+    'tags',
+    { region: undefined },
+    mockDashboard
+  );
+
+  expect(result).toEqual(true);
+
+  result = checkIfWeNeedToDisableFilterByFilterKey(
+    'resource_id',
+    { region: 'us-east', tags: undefined },
+    mockDashboard,
+    { ['region']: 'us-east', ['tags']: ['tag-1'] }
+  );
+
+  expect(result).toEqual(true); // disabled is true as tags are not updated in dependent filters
+
+  result = checkIfWeNeedToDisableFilterByFilterKey(
+    'node_type',
+    { resource_id: undefined },
+    dbaasDashboard
+  );
+
+  expect(result).toEqual(true); // disabled is true as dependent filter is undefined
 });
 
 it('test buildXfilter method', () => {

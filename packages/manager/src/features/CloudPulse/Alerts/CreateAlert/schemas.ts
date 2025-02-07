@@ -3,17 +3,9 @@ import { object, string } from 'yup';
 
 const fieldErrorMessage = 'This field is required.';
 
-const engineOptionValidation = string().when('service_type', {
-  is: 'dbaas',
-  otherwise: (schema) => schema.notRequired().nullable(),
-  then: (schema) => schema.required(fieldErrorMessage).nullable(),
-});
-
 export const CreateAlertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
-    engineType: engineOptionValidation,
-    region: string().required(fieldErrorMessage),
-    serviceType: string().required(fieldErrorMessage),
+    serviceType: string().required(fieldErrorMessage), // HERE, i have removed region and engine type filter, upon confirmation and updated design from UX , will add and implement
   })
 );
 

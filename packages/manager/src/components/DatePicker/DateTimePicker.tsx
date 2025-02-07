@@ -1,5 +1,5 @@
-import { Divider } from '@linode/ui';
 import { InputAdornment, TextField } from '@linode/ui';
+import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { Grid, Popover } from '@mui/material';
@@ -9,11 +9,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import React, { useEffect, useState } from 'react';
 
+import { timezones } from 'src/assets/timezones/timezones';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import { TimeZoneSelect } from './TimeZoneSelect';
 
-import type { TextFieldProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
 import type { DateTime } from 'luxon';
@@ -97,11 +97,6 @@ export const DateTimePicker = ({
     timeZoneSelectProps.value || null
   );
 
-  const TimePickerFieldProps: TextFieldProps = {
-    label: timeSelectProps?.label ?? 'Select Time',
-    noMarginTop: true,
-  };
-
   const handleDateChange = (newDate: DateTime | null) => {
     setSelectedDateTime((prev) =>
       newDate
@@ -114,7 +109,7 @@ export const DateTimePicker = ({
   };
 
   const handleTimeChange = (newTime: DateTime | null) => {
-    if (newTime) {
+    if (newTime && !newTime.invalidReason) {
       setSelectedDateTime((prev) =>
         prev ? prev.set({ hour: newTime.hour, minute: newTime.minute }) : prev
       );
@@ -177,9 +172,9 @@ export const DateTimePicker = ({
           }}
           value={
             selectedDateTime
-              ? `${selectedDateTime.toFormat(format)}${
-                  selectedTimeZone ? ` (${selectedTimeZone})` : ''
-                }`
+              ? `${selectedDateTime.toFormat(format)}${generateTimeZone(
+                  selectedTimeZone
+                )}`
               : ''
           }
           errorText={errorText}
@@ -211,7 +206,7 @@ export const DateTimePicker = ({
                 fontSize: '0.875rem',
               },
               '& .MuiPickersCalendarHeader-label': {
-                fontFamily: theme.font.bold,
+                font: theme.font.bold,
               },
               '& .MuiPickersCalendarHeader-root': {
                 borderBottom: `1px solid ${theme.borderColors.divider}`,
@@ -248,9 +243,6 @@ export const DateTimePicker = ({
                         padding: 0,
                       }),
                     },
-                    field: {
-                      readOnly: true,
-                    },
                     layout: {
                       sx: (theme: Theme) => ({
                         '& .MuiPickersLayout-contentWrapper': {
@@ -269,11 +261,13 @@ export const DateTimePicker = ({
                         },
                       }),
                     },
-                    textField: TimePickerFieldProps,
+                  }}
+                  sx={{
+                    marginTop: 0,
                   }}
                   data-qa-time="time-picker"
+                  label={timeSelectProps?.label || 'Select Time'}
                   onChange={handleTimeChange}
-                  slots={{ textField: TextField }}
                   value={selectedDateTime || null}
                 />
               </Grid>
@@ -309,4 +303,20 @@ export const DateTimePicker = ({
       </Popover>
     </LocalizationProvider>
   );
+};
+
+const generateTimeZone = (selectedTimezone: null | string): string => {
+  const offset = timezones.find((zone) => zone.name === selectedTimezone)
+    ?.offset;
+  if (!offset) {
+    return '';
+  }
+  const minutes = (Math.abs(offset * 60) % 60).toLocaleString(undefined, {
+    minimumIntegerDigits: 2,
+    useGrouping: false,
+  });
+  const hours = Math.floor(Math.abs(offset));
+  const isPositive = Math.abs(offset) === offset ? '+' : '-';
+
+  return ` (GMT${isPositive}${hours}:${minutes})`;
 };

@@ -9,10 +9,16 @@ import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { alertStatusOptions } from '../constants';
-import { AlertsListTable } from './AlertsListTable';
+import { AlertsListTable } from './AlertListTable';
 
 import type { Item } from '../constants';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
+
+const searchAndSelectSx = {
+  md: '300px',
+  sm: '500px',
+  xs: '300px',
+};
 
 export const AlertListing = () => {
   const { url } = useRouteMatch();
@@ -123,7 +129,9 @@ export const AlertListing = () => {
           },
         ]}
         icon={AlertsIcon}
-        subtitle="Start monitoring your resources."
+        isEntity
+        renderAsSecondary
+        subtitle="Create alerts that notifies you of the potential issues within your systems to cut downtime and maintain the performance of your infrastructure."
         title=""
       />
     );
@@ -150,7 +158,7 @@ export const AlertListing = () => {
         >
           <DebouncedSearchTextField
             sx={{
-              width: { md: '300px', sm: '500px', xs: '300px' },
+              width: searchAndSelectSx,
             }}
             data-qa-filter="alert-search"
             label=""
@@ -161,18 +169,20 @@ export const AlertListing = () => {
           />
           <Autocomplete
             errorText={
-              serviceTypesError ? 'An error in fetching the services.' : ''
+              serviceTypesError
+                ? 'There was an error in fetching the services.'
+                : ''
             }
             onChange={(_, selected) => {
               setServiceFilters(selected);
             }}
             sx={{
-              width: { md: '300px', sm: '500px', xs: '300px' },
+              width: searchAndSelectSx,
             }}
             autoHighlight
             data-qa-filter="alert-service-filter"
             data-testid="alert-service-filter"
-            label={''}
+            label=""
             limitTags={2}
             loading={serviceTypesLoading}
             multiple
@@ -186,12 +196,12 @@ export const AlertListing = () => {
               setStatusFilters(selected);
             }}
             sx={{
-              width: { md: '300px', sm: '500px', xs: '300px' },
+              width: searchAndSelectSx,
             }}
             autoHighlight
             data-qa-filter="alert-status-filter"
             data-testid="alert-status-filter"
-            label={''}
+            label=""
             multiple
             noMarginTop
             options={alertStatusOptions}
@@ -207,6 +217,7 @@ export const AlertListing = () => {
             height: '34px',
             paddingBottom: 0,
             paddingTop: 0,
+            whiteSpace: 'noWrap',
             width: { md: '150px', xs: '200px' },
           }}
           buttonType="primary"
