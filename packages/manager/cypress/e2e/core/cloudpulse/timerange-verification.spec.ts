@@ -32,7 +32,7 @@ import { Database } from '@linode/api-v4';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import type { Flags } from 'src/featureFlags';
-import { Interception } from 'cypress/types/net-stubbing';
+import type { Interception } from 'support/cypress-exports';
 import { convertToGmt } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import {
