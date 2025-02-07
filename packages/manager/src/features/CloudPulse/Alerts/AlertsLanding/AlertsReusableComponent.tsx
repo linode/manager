@@ -14,6 +14,10 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/alerts';
 
 import { AlertListReusableTable } from '../AlertsListing/AlertListReusableTable';
+import {
+  convertAlertsToTypeSet,
+  filterAlertsByStatusAndType,
+} from '../Utils/utils';
 
 import type { AlertDefinitionType } from '@linode/api-v4';
 
@@ -46,26 +50,12 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   >();
 
   const filteredAlerts = React.useMemo(() => {
-    return (
-      alerts?.filter((alert) => {
-        return (
-          alert.status === 'enabled' &&
-          (!selectedType || alert.type === selectedType) &&
-          (!searchText ||
-            alert.label.toLowerCase().includes(searchText.toLowerCase()))
-        );
-      }) ?? []
-    );
+    return filterAlertsByStatusAndType(alerts, searchText, selectedType);
   }, [alerts, searchText, selectedType]);
   const history = useHistory();
 
   const types = React.useMemo<{ label: AlertDefinitionType }[]>(() => {
-    const types = new Set(alerts?.map((alert) => alert.type) ?? []);
-
-    return Array.from(types).reduce(
-      (previousValue, type) => [...previousValue, { label: type }],
-      []
-    );
+    return convertAlertsToTypeSet(alerts);
   }, [alerts]);
   if (isLoading) {
     return <CircleProgress />;
@@ -98,6 +88,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               onChange={(_, selectedValue) => {
                 setSelectedType(selectedValue?.label);
               }}
+              autoHighlight
               data-testid="alert-type-select"
               label=""
               noMarginTop

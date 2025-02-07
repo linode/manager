@@ -125,18 +125,18 @@ export const AlertListReusableTable = (props: AlertListReusableTableProps) => {
                     <TableHead>
                       <TableRow>
                         <TableCell actionCell />
-                        {columns.map((column) => {
+                        {columns.map(({ columnName, label }) => {
                           return (
                             <TableSortCell
-                              active={orderBy === column.label}
-                              data-qa-header={column.label}
-                              data-qa-sorting={column.label}
+                              active={orderBy === label}
+                              data-qa-header={label}
+                              data-qa-sorting={label}
                               direction={order}
                               handleClick={handleOrderChange}
-                              key={column.label}
-                              label={column.label}
+                              key={label}
+                              label={label}
                             >
-                              {column.columnName}
+                              {columnName}
                             </TableSortCell>
                           );
                         })}

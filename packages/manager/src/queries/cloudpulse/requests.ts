@@ -27,7 +27,7 @@ export const getAllAlertsRequest = (
 export const getAllertsByServiceTypeRequest = (serviceType: string) =>
   getAll<Alert>((_params, _filter) =>
     getAlertDefinitionByServiceType(serviceType)
-  )().then((data) => data.data);
+  )().then(({ data }) => data);
 
 export const getAllNotificationChannels = (
   passedParams: Params = {},

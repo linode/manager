@@ -2,7 +2,9 @@ import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type {
+  Alert,
   AlertDefinitionMetricCriteria,
+  AlertDefinitionType,
   NotificationChannel,
   ServiceTypesList,
 } from '@linode/api-v4';
@@ -151,4 +153,32 @@ export const processMetricCriteria = (
       previousValue.push(currentValue);
       return previousValue;
     }, []);
+};
+
+export const filterAlertsByStatusAndType = (
+  alerts: Alert[] | undefined,
+  searchText: string,
+  selectedType: string | undefined
+): Alert[] => {
+  return (
+    alerts?.filter((alert) => {
+      return (
+        alert.status === 'enabled' &&
+        (!selectedType || alert.type === selectedType) &&
+        (!searchText ||
+          alert.label.toLowerCase().includes(searchText.toLowerCase()))
+      );
+    }) ?? []
+  );
+};
+
+export const convertAlertsToTypeSet = (
+  alerts: Alert[] | undefined
+): { label: AlertDefinitionType }[] => {
+  const types = new Set(alerts?.map((alert) => alert.type) ?? []);
+
+  return Array.from(types).reduce(
+    (previousValue, type) => [...previousValue, { label: type }],
+    []
+  );
 };
