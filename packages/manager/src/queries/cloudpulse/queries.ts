@@ -30,7 +30,7 @@ export const queryFactory = createQueryKeys(key, {
         // This query key is a placeholder , it will be updated once the relevant queries are added
         queryKey: null,
       },
-      alertByServiceTypeAndId: (serviceType: string, alertId: number) => ({
+      alertByServiceTypeAndId: (serviceType: string, alertId: string) => ({
         queryFn: () =>
           getAlertDefinitionByServiceTypeAndId(serviceType, alertId),
         queryKey: [alertId, serviceType],

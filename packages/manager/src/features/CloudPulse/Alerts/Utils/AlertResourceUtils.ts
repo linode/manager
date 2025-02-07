@@ -31,6 +31,11 @@ interface FilterResourceProps {
   searchText?: string;
 
   /**
+   * Property to filter out only checked resources
+   */
+  selectedOnly?: boolean;
+
+  /**
    * This property helps to track the list of selected resources
    */
   selectedResources?: string[];
@@ -97,6 +102,7 @@ export const getFilteredResources = (
     regionsIdToRegionMap,
     resourceIds,
     searchText,
+    selectedOnly,
     selectedResources,
   } = filterProps;
   if (!data || (!isAdditionOrDeletionNeeded && resourceIds.length === 0)) {
@@ -122,7 +128,7 @@ export const getFilteredResources = (
           : '',
       };
     })
-    .filter(({ label, region }) => {
+    .filter(({ checked, label, region }) => {
       const matchesSearchText =
         !searchText ||
         region.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()) ||
@@ -132,7 +138,11 @@ export const getFilteredResources = (
         !filteredRegions?.length ||
         (region.length && filteredRegions.includes(region)); // check with filtered region
 
-      return matchesSearchText && matchesFilteredRegions; // match the search text and match the region selected
+      return (
+        matchesSearchText &&
+        matchesFilteredRegions &&
+        (!selectedOnly || checked) // if selected only, show only checked, else everything
+      ); // match the search text and match the region selected
     });
 };
 
@@ -163,4 +173,26 @@ export const isAllPageSelected = (data: AlertInstance[]): boolean => {
  */
 export const isSomeSelected = (data: AlertInstance[]): boolean => {
   return Boolean(data?.length) && data.some(({ checked }) => checked);
+};
+
+/**
+ * Checks if two sets of resource IDs contain the same elements, regardless of order.
+ * @param originalResourceIds - The initial list of resource IDs.
+ * @param selectedResourceIds - The updated list of resource IDs to compare.
+ * @returns {boolean} - True if both sets contain the same elements, otherwise false.
+ */
+export const isResourcesEqual = (
+  originalResourceIds: string[] | undefined,
+  selectedResourceIds: string[]
+): boolean => {
+  if (!originalResourceIds) {
+    return selectedResourceIds.length === 0;
+  }
+
+  if (originalResourceIds?.length !== selectedResourceIds.length) {
+    return false;
+  }
+
+  const originalSet = new Set(originalResourceIds);
+  return selectedResourceIds.every((id) => originalSet.has(id));
 };
