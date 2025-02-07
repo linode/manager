@@ -1,4 +1,5 @@
 import { Box, Stack } from '@linode/ui';
+import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
@@ -8,12 +9,17 @@ import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.util
 import type { Region } from '@linode/api-v4';
 import type { ListItemProps } from 'src/components/ListItemOption';
 
+interface RegionOptionProps extends ListItemProps<Region> {
+  showGlobalOption?: boolean;
+}
+
 export const RegionOption = ({
   disabledOptions,
   item,
   props,
   selected,
-}: ListItemProps<Region>) => {
+  showGlobalOption,
+}: RegionOptionProps) => {
   const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   return (
@@ -24,7 +30,11 @@ export const RegionOption = ({
       selected={selected}
     >
       <Stack alignItems="center" direction="row" gap={1} width="100%">
-        <Flag country={item.country} />
+        {showGlobalOption && item.id === 'global' ? (
+          <PublicIcon />
+        ) : (
+          <Flag country={item.country} />
+        )}
         {isGeckoLAEnabled ? item.label : `${item.label} (${item.id})`}
         <Box flexGrow={1} />
         {isGeckoLAEnabled && `(${item.id})`}

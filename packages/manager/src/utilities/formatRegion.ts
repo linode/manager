@@ -18,6 +18,10 @@ interface GDPRConfiguration {
 }
 
 export const getRegionCountryGroup = (region: Region | undefined) => {
+  if (region?.id === 'global') {
+    return '';
+  }
+
   if (!region) {
     return 'Other';
   }

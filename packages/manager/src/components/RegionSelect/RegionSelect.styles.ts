@@ -4,6 +4,10 @@ import { styled } from '@mui/material/styles';
 export const StyledAutocompleteContainer = styled(Box, {
   label: 'RegionSelect',
 })(({ theme }) => ({
+  // if subeheader is empty, hide it
+  '& .MuiListSubheader-root:empty': {
+    display: 'none',
+  },
   '& .MuiAutocomplete-groupLabel': {
     color: theme.color.headline,
     font: theme.font.bold,

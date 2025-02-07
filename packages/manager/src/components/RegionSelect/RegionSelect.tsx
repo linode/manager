@@ -48,6 +48,7 @@ export const RegionSelect = <
     regionFilter,
     regions,
     required,
+    showGlobalOption,
     tooltipText,
     value,
     width,
@@ -118,6 +119,7 @@ export const RegionSelect = <
               item={region}
               key={`${region.id}-${key}`}
               props={rest}
+              showGlobalOption={showGlobalOption}
             />
           );
         }}
@@ -149,10 +151,10 @@ export const RegionSelect = <
         groupBy={(option) => getRegionCountryGroup(option)}
         helperText={helperText}
         label={label ?? 'Region'}
-        loading={accountAvailabilityLoading}
+        loading={accountAvailabilityLoading || props.loading}
         loadingText="Loading regions..."
         noMarginTop={noMarginTop}
-        noOptionsText="No results"
+        noOptionsText={props.noOptionsText ?? 'No results'}
         onChange={onChange}
         options={regionOptions}
         placeholder={placeholder ?? 'Select a Region'}

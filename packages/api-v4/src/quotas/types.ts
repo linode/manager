@@ -81,4 +81,10 @@ export interface QuotaUsage {
   used: number;
 }
 
-export type QuotaType = 'linode' | 'lke' | 'object-storage';
+export const quotaTypes = {
+  linode: 'Linodes',
+  lke: 'Kubernetes',
+  'object-storage': 'Object Storage',
+} as const;
+
+export type QuotaType = keyof typeof quotaTypes;

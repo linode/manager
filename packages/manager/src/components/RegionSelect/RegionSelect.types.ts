@@ -53,6 +53,7 @@ export interface RegionSelectProps<
   regionFilter?: RegionFilterValue;
   regions: Region[];
   required?: boolean;
+  showGlobalOption?: boolean;
   tooltipText?: string;
   /**
    * The ID of the selected region.

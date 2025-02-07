@@ -58,6 +58,14 @@ export const getRegionOptions = ({
       const region1Group = getRegionCountryGroup(region1);
       const region2Group = getRegionCountryGroup(region2);
 
+      // Global (or empty) group comes first
+      if (region1Group === '') {
+        return -1;
+      }
+      if (region2Group === '') {
+        return 1;
+      }
+
       // North America group comes first
       if (
         region1Group === 'North America' &&
