@@ -2477,6 +2477,9 @@ export const handlers = [
       makeResourcePage(notificationChannelFactory.buildList(3))
     );
   }),
+  http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
+    return HttpResponse.json(alertFactory.build());
+  }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [
