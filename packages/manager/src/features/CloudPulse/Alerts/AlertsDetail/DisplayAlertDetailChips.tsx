@@ -54,7 +54,7 @@ export const DisplayAlertDetailChips = React.memo(
           <React.Fragment key={`${label}_${index}`}>
             <Grid item md={labelGridColumns} xs={12}>
               {index === 0 && (
-                <StyledAlertTypography fontFamily={theme.font.bold}>
+                <StyledAlertTypography sx={{ font: theme.font.bold }}>
                   {label}:
                 </StyledAlertTypography>
               )}

@@ -61,7 +61,7 @@ export const StyledLink = styled(Link, {
 })(({ theme }) => ({
   color: theme.textColors.linkActiveLight,
   display: 'block',
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '.875rem',
   lineHeight: '1.125rem',
 }));

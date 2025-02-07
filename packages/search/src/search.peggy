@@ -108,10 +108,10 @@ String "search value"
   / Word
 
 Word "word"
-  = [a-zA-Z0-9\-\.]+ { return text(); }
+  = [a-zA-Z0-9-_.@]+ { return text(); }
 
 StringWithSpaces "string with spaces"
-  = [a-zA-Z0-9\-|_\.\: ]+ { return text(); }
+  = [a-zA-Z0-9-_.:@ ]+ { return text(); }
 
 Number "numeric search value"
   = number:[0-9\.]+ { return parseFloat(number.join("")); }

@@ -1,4 +1,4 @@
-import { CircleProgress, Stack, Typography } from '@linode/ui';
+import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
@@ -15,10 +15,11 @@ import {
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
-import type { Region } from '@linode/api-v4';
+import type { AlertDefinitionType, Region } from '@linode/api-v4';
 
 export interface AlertResourcesProp {
   /**
@@ -29,6 +30,11 @@ export interface AlertResourcesProp {
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
   alertResourceIds: string[];
+
+  /**
+   * The type of the alert system | user
+   */
+  alertType: AlertDefinitionType;
 
   /**
    * Callback for publishing the selected resources
@@ -46,10 +52,13 @@ export interface AlertResourcesProp {
   serviceType: string;
 }
 
+export type SelectUnselectAll = 'Select All' | 'Unselect All';
+
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
     alertLabel,
     alertResourceIds,
+    alertType,
     handleResourcesSelection,
     isSelectionsNeeded,
     serviceType,
@@ -59,6 +68,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     alertResourceIds
   );
+  const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
 
   const {
     data: regions,
@@ -133,6 +143,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       regionsIdToRegionMap,
       resourceIds: alertResourceIds,
       searchText,
+      selectedOnly,
       selectedResources,
     });
   }, [
@@ -142,6 +153,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     regionsIdToRegionMap,
     alertResourceIds,
     searchText,
+    selectedOnly,
     selectedResources,
   ]);
 
@@ -159,9 +171,34 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     [handleResourcesSelection]
   );
 
+  const handleAllSelection = React.useCallback(
+    (action: SelectUnselectAll) => {
+      if (!resources) {
+        return;
+      }
+
+      let currentSelections: string[] = [];
+
+      if (action === 'Unselect All') {
+        // Unselect all
+        setSelectedResources([]);
+      } else {
+        // Select all
+        currentSelections = resources.map(({ id }) => id);
+        setSelectedResources(currentSelections);
+      }
+
+      if (handleResourcesSelection) {
+        handleResourcesSelection(currentSelections); // publish the resources selected
+      }
+    },
+    [handleResourcesSelection, resources]
+  );
+
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
   const isNoResources =
     !isDataLoadingError && !isSelectionsNeeded && alertResourceIds.length === 0;
+  const showEditInformation = isSelectionsNeeded && alertType === 'system';
 
   if (isResourcesFetching || isRegionsFetching) {
     return <CircleProgress />;
@@ -189,8 +226,22 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {alertLabel || 'Resources'}
         {/* It can be either the passed alert label or just Resources */}
       </Typography>
+      {showEditInformation && (
+        <Typography ref={titleRef} variant="body1">
+          You can enable or disable this system alert for each resource you have
+          access to. Select the resources listed below you want to enable the
+          alert for.
+        </Typography>
+      )}
       <Grid container spacing={3}>
-        <Grid columnSpacing={1} container item rowSpacing={3} xs={12}>
+        <Grid
+          alignItems="center"
+          columnSpacing={2}
+          container
+          item
+          rowSpacing={3}
+          xs={12}
+        >
           <Grid item md={3} xs={12}>
             <DebouncedSearchTextField
               sx={{
@@ -210,7 +261,32 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               regionOptions={regionOptions}
             />
           </Grid>
+          {isSelectionsNeeded && (
+            <Grid item md={4} xs={12}>
+              <Checkbox
+                sx={(theme) => ({
+                  svg: {
+                    backgroundColor: theme.tokens.color.Neutrals.White,
+                  },
+                })}
+                data-testid="show_selected_only"
+                disabled={!(selectedResources.length || selectedOnly)}
+                onClick={() => setSelectedOnly(!selectedOnly)}
+                text="Show Selected Only"
+                value="Show Selected"
+              />
+            </Grid>
+          )}
         </Grid>
+        {isSelectionsNeeded && !isDataLoadingError && (
+          <Grid item xs={12}>
+            <AlertsResourcesNotice
+              handleSelectionChange={handleAllSelection}
+              selectedResources={selectedResources.length}
+              totalResources={resources?.length ?? 0}
+            />
+          </Grid>
+        )}
         <Grid item xs={12}>
           <DisplayAlertResources
             filteredResources={filteredResources}

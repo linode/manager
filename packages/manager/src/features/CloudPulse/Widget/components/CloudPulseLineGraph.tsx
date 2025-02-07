@@ -1,5 +1,5 @@
-import { CircleProgress } from '@linode/ui';
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { CircleProgress, Typography } from '@linode/ui';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';

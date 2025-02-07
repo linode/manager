@@ -265,10 +265,7 @@ describe('Update stackscripts', () => {
       .findByTitle(`Make StackScript ${stackScripts[0].label} Public?`)
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByTitle('Confirm')
-          .should('be.visible')
-          .click();
+        ui.button.findByTitle('Confirm').should('be.visible').click();
       });
     cy.wait('@mockUpdateStackScript');
     cy.wait('@mockGetStackScripts');
