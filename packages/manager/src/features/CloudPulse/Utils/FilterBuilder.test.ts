@@ -244,6 +244,46 @@ it('test getNodeTypeProperties with disabled true', () => {
   }
 });
 
+describe('checkIfWeNeedToDisableFilterByFilterKey', () => {
+  // resources filter has region as mandatory and tags as an optional filter, this should reflect in the dependent filters
+  it('should enable filter when dependent filter region is provided', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: 'us-east' },
+      mockDashboard
+    );
+    expect(result).toEqual(false);
+  });
+
+  it('should disable filter when dependent filter region is undefined', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: undefined },
+      mockDashboard
+    );
+    expect(result).toEqual(true);
+  });
+
+  it('should disable filter when no dependent filters are provided', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      {},
+      mockDashboard
+    );
+    expect(result).toEqual(true);
+  });
+
+  it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: 'us-east', tags: undefined },
+      mockDashboard,
+      { region: 'us-east', tags: ['tag-1'] } // tags are defined in preferences which confirms that this optional filter was selected
+    );
+    expect(result).toEqual(true);
+  });
+});
+
 it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
   let result = checkIfWeNeedToDisableFilterByFilterKey(
     'resource_id',
