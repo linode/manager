@@ -1,20 +1,18 @@
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
 import {
-  StyledCompatibleImagesCell,
-  StyledEmptyTableCell,
-  StyledRootTableHead,
-  StyledStatusCell,
   sharedDeployCellStyles,
   sharedRevisionsCellStyles,
   sharedStackScriptCellStyles,
 } from './StackScriptTableHead.styles';
+
+import type { Theme } from '@mui/material/styles';
 
 type SortOrder = 'asc' | 'desc';
 
@@ -53,7 +51,7 @@ export const StackScriptTableHead = (props: StackScriptTableHeadProps) => {
   const communityStackScripts = category === 'community';
 
   return (
-    <StyledRootTableHead>
+    <TableHead>
       <TableRow>
         {/* The column width jumps in the Linode Create flow when the user
             clicks on the table header. This is currently also happening in
@@ -92,23 +90,36 @@ export const StackScriptTableHead = (props: StackScriptTableHeadProps) => {
         )}
         {!isSelecting && (
           <Hidden lgDown>
-            <StyledCompatibleImagesCell
-              category={category}
+            <TableCell
+              sx={{
+                ...(category === 'account'
+                  ? {
+                      width: '20%',
+                    }
+                  : {
+                      width: '26%',
+                    }),
+              }}
               data-qa-stackscript-compatible-images
             >
               Compatible Images
-            </StyledCompatibleImagesCell>
+            </TableCell>
           </Hidden>
         )}
         {!isSelecting && !communityStackScripts ? (
           <Hidden lgDown>
-            <StyledStatusCell data-qa-stackscript-status-header>
+            <TableCell
+              sx={{
+                width: '7%',
+              }}
+              data-qa-stackscript-status-header
+            >
               Status
-            </StyledStatusCell>
+            </TableCell>
           </Hidden>
         ) : null}
-        {!isSelecting && <StyledEmptyTableCell />}
+        {!isSelecting && <TableCell />}
       </TableRow>
-    </StyledRootTableHead>
+    </TableHead>
   );
 };

@@ -17,8 +17,8 @@ export const LongviewPackageRow = (props: Props) => {
 
   return (
     <TableRow>
-      <TableCell parentColumn={'Package'}>{lvPackage.name}</TableCell>
-      <TableCell parentColumn="Installed Version / Latest Version">
+      <TableCell>{lvPackage.name}</TableCell>
+      <TableCell>
         <div>{lvPackage.current}</div>
         <Box color={theme.color.green}>{lvPackage.new}</Box>
       </TableCell>

@@ -167,7 +167,7 @@ const Select = <
   props: BaseSelectProps<I, IsMulti, Clearable>
 ) => {
   const theme = useTheme<Theme>();
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
   const {
     blurInputOnSelect,
     className,
@@ -177,13 +177,11 @@ const Select = <
     errorText,
     filterOption,
     hideLabel,
-    inline,
     inputId,
     isClearable,
     isLoading,
     isMulti,
     label,
-    medium,
     noMarginTop,
     noOptionsMessage,
     onBlur,
@@ -195,7 +193,6 @@ const Select = <
     overflowPortal,
     placeholder,
     required,
-    small,
     textFieldProps,
     value,
     ...restOfProps
@@ -273,14 +270,7 @@ const Select = <
         InputLabelProps: {
           shrink: true,
         },
-        className: cx(
-          {
-            [classes.inline]: inline,
-            [classes.medium]: medium,
-            [classes.small]: small,
-          },
-          className
-        ),
+        className,
         disabled: props.isDisabled || props.disabled,
         errorGroup,
         errorText,
@@ -290,7 +280,7 @@ const Select = <
         required,
       }}
       blurInputOnSelect={blurInputOnSelect}
-      className={cx(classes.root, className)}
+      className={className}
       classNamePrefix="react-select"
       classes={classes}
       components={combinedComponents}
@@ -303,7 +293,7 @@ const Select = <
       isSearchable
       label={props.label}
       menuPlacement={props.menuPlacement || 'auto'}
-      noOptionsMessage={noOptionsMessage || (() => 'No results')}
+      noOptionsMessage={noOptionsMessage || (() => 'No search results')}
       onBlur={onBlur}
       onChange={_onChange}
       onFocus={onFocus}

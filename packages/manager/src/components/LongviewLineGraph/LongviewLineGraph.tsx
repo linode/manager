@@ -23,7 +23,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       color: theme.palette.text.primary,
     },
     color: theme.color.headline,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '1rem',
   },
 }));

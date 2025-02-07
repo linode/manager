@@ -41,7 +41,7 @@ export const AssignIPRanges = (props: Props) => {
         display="flex"
         flexDirection={includeDescriptionInTooltip ? 'row' : 'column'}
       >
-        <Typography sx={{ fontFamily: theme.font.bold }}>
+        <Typography sx={{ font: theme.font.bold }}>
           {ASSIGN_IPV4_RANGES_TITLE}
         </Typography>
         {includeDescriptionInTooltip ? (

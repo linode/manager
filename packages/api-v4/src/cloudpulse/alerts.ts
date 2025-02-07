@@ -10,6 +10,7 @@ import {
   Alert,
   AlertServiceType,
   CreateAlertDefinitionPayload,
+  EditAlertDefinitionPayload,
   NotificationChannel,
 } from './types';
 import { BETA_API_ROOT as API_ROOT } from '../constants';
@@ -39,7 +40,7 @@ export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
 
 export const getAlertDefinitionByServiceTypeAndId = (
   serviceType: string,
-  alertId: number
+  alertId: string
 ) =>
   Request<Alert>(
     setURL(
@@ -50,6 +51,20 @@ export const getAlertDefinitionByServiceTypeAndId = (
     setMethod('GET')
   );
 
+export const editAlertDefinition = (
+  data: EditAlertDefinitionPayload,
+  serviceType: string,
+  alertId: string
+) =>
+  Request<Alert>(
+    setURL(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/alert-definitions/${encodeURIComponent(alertId)}`
+    ),
+    setMethod('PUT'),
+    setData(data)
+  );
 export const getNotificationChannels = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<NotificationChannel>>(
     setURL(`${API_ROOT}/monitor/alert-channels`),

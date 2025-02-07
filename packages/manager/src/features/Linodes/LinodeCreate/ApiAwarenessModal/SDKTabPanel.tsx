@@ -9,7 +9,6 @@ import { generatePythonLinodeSnippet } from 'src/utilities/codesnippets/generate
 import { GoSDKResources } from './GoSDKResources';
 import { PythonSDKResources } from './PythonSDKResources';
 
-import type { OptionType } from './IntegrationsTabPanel';
 import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface SDKTabPanelProps {
@@ -17,10 +16,12 @@ export interface SDKTabPanelProps {
   title: string;
 }
 
-const sdkOptions: OptionType[] = [
+const sdkOptions = [
   { label: 'Go (linodego)', value: 'go' },
   { label: 'Python (linode_api4-python)', value: 'python' },
-];
+] as const;
+
+type OptionType = typeof sdkOptions[number];
 
 export const SDKTabPanel = ({ payLoad }: SDKTabPanelProps) => {
   const [selectedSDK, setSelectedSDK] = useState<OptionType | undefined>();
@@ -61,11 +62,11 @@ export const SDKTabPanel = ({ payLoad }: SDKTabPanelProps) => {
             <PythonSDKResources />
           )}
           <CodeBlock
-            command={
+            code={
               selectedSDK.value === 'go' ? linodegoSnippet : pythonLinodeSnippet
             }
-            commandType={selectedSDK.value}
-            language={'bash'}
+            analyticsLabel={selectedSDK.value}
+            language={selectedSDK.value}
           />
         </>
       )}
