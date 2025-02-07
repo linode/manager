@@ -28,7 +28,7 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { Flags } from 'src/featureFlags';
-import { Interception } from 'cypress/types/net-stubbing';
+import type { Interception } from 'support/cypress-exports';
 
 const timeDurationToSelect = 'Last 24 Hours';
 const flags: Partial<Flags> = {
