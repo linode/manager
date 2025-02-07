@@ -21,7 +21,11 @@ import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertFilterKey, AlertFilterType } from './constants';
 import type { AlertInstance } from './DisplayAlertResources';
-import type { AlertDefinitionType, AlertServiceType, Region } from '@linode/api-v4';
+import type {
+  AlertDefinitionType,
+  AlertServiceType,
+  Region,
+} from '@linode/api-v4';
 
 export interface AlertResourcesProp {
   /**
@@ -58,6 +62,8 @@ export interface AlertResourcesProp {
    */
   noSelectionErrorText?: string;
 
+  scrollElement: HTMLDivElement | null;
+
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
@@ -75,6 +81,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     hideLabel,
     isSelectionsNeeded,
     noSelectionErrorText,
+    scrollElement,
     serviceType,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
@@ -338,11 +345,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         )}
         <Grid item xs={12}>
           <DisplayAlertResources
+            scrollToElement={() =>
+              scrollToElement(titleRef.current ?? scrollElement)
+            }
             filteredResources={filteredResources}
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
-            scrollToElement={() => scrollToElement(titleRef.current)}
             serviceType={serviceType}
           />
         </Grid>

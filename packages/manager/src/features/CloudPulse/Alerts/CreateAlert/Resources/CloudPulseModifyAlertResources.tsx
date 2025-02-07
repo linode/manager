@@ -41,11 +41,13 @@ export const CloudPulseModifyAlertResources = React.memo(
       }
     }, [serviceTypeWatcher, setValue]);
 
+    const titleRef = React.useRef<HTMLDivElement>(null);
+
     return (
       <Controller
         render={({ field, fieldState }) => (
           <Box mt={3}>
-            <Typography mb={3} variant="h2">
+            <Typography mb={3} ref={titleRef} variant="h2">
               2. Resources
             </Typography>
             <Box sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}>
@@ -61,6 +63,7 @@ export const CloudPulseModifyAlertResources = React.memo(
                 handleResourcesSelection={handleResourcesSelection}
                 hideLabel
                 isSelectionsNeeded
+                scrollElement={titleRef.current}
                 serviceType={serviceTypeWatcher || undefined}
               />
             </Box>
