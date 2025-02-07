@@ -119,7 +119,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           gap={2}
         >
           <CloudPulseDateTimeRangePicker
-            defaultValue={preferences?.timeDuration}
+            defaultValue={preferences?.timeRange}
             handleStatsChange={handleTimeRangeChange}
             savePreferences
           />
