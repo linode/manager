@@ -21,7 +21,7 @@ import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertFilterKey, AlertFilterType } from './constants';
 import type { AlertInstance } from './DisplayAlertResources';
-import type { AlertDefinitionType, Region } from '@linode/api-v4';
+import type { AlertDefinitionType, AlertServiceType, Region } from '@linode/api-v4';
 
 export interface AlertResourcesProp {
   /**
@@ -61,7 +61,7 @@ export interface AlertResourcesProp {
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
-  serviceType?: string;
+  serviceType?: AlertServiceType;
 }
 
 export type SelectUnselectAll = 'Select All' | 'Unselect All';

@@ -16,6 +16,7 @@ import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
 import { serviceTypeBasedColumns } from './constants';
 
 import type { Order } from 'src/hooks/useOrder';
+import { AlertServiceType } from '@linode/api-v4';
 
 export interface AlertInstance {
   /**
@@ -70,7 +71,7 @@ export interface DisplayAlertResourceProp {
   /**
    * The service type associated with the alert
    */
-  serviceType?: string;
+  serviceType?: AlertServiceType;
 }
 
 export const DisplayAlertResources = React.memo(

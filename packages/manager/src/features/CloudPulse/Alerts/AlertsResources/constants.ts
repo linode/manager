@@ -1,3 +1,4 @@
+import { AlertServiceType } from '@linode/api-v4';
 import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 
@@ -11,7 +12,7 @@ interface ColumnConfig<T> {
   sortingKey?: keyof T;
 }
 
-type ServiceColumns<T> = Record<string, ColumnConfig<T>[]>;
+type ServiceColumns<T> = Record<AlertServiceType | '', ColumnConfig<T>[]>;
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   '': [ // for empty case lets display resource and region
