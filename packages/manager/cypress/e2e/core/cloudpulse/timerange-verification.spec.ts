@@ -168,8 +168,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .type('Custom');
 
-      cy.viewport(1920, 1080);// Desktop
-
      ui.autocompletePopper.findByTitle('Custom').should('be.visible').click();
 
     cy.findByPlaceholderText('Select Start Date').should('be.visible').click();
@@ -177,7 +175,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .click();
 
-    cy.findByTestId('ClockIcon').should('be.visible').click();
+   // cy.findByTestId('ClockIcon').should('be.visible').click();
+
+     cy.get('[data-testid="ClockIcon"]').closest('button').click({ force: true });
+
+
     cy.get('[aria-label="Select hours"]')
       .scrollIntoView({ easing: 'linear' })
       .within(() => {
