@@ -121,6 +121,7 @@ export const AlertDetail = () => {
             ...getAlertBoxStyles(theme),
             overflow: 'auto',
           }}
+          data-qa-section="Resources"
         >
           <AlertResources
             alertResourceIds={entityIds}
@@ -133,9 +134,10 @@ export const AlertDetail = () => {
             ...getAlertBoxStyles(theme),
             overflow: 'auto',
           }}
+          data-qa-section="Notification Channels"
         >
           <AlertDetailNotification
-            channelIds={alertDetails.channels.map(({ id }) => id)}
+            channelIds={alertDetails.alert_channels.map(({ id }) => id)}
           />
         </Box>
       </Box>

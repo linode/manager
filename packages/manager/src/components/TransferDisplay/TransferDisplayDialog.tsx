@@ -111,7 +111,7 @@ export const TransferDisplayDialog = React.memo(
                 marginTop={theme.spacing(2)}
               >
                 <Typography
-                  fontFamily={theme.font.bold}
+                  sx={{ font: theme.font.bold }}
                   fontSize={theme.typography.h3.fontSize}
                   marginBottom={theme.spacing()}
                 >

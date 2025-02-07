@@ -1,3 +1,5 @@
+import * as commonLocators from 'support/ui/locators/common-locators';
+
 /**
  * Drawer UI element.
  *
@@ -11,6 +13,6 @@ export const mainSearch = {
    * @returns Cypress chainable.
    */
   find: (): Cypress.Chainable => {
-    return cy.get('[data-qa-main-search]');
+    return cy.get(commonLocators.topMenuItemsLocator.searchInput);
   },
 };

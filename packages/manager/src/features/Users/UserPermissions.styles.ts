@@ -58,10 +58,6 @@ export const StyledUnrestrictedGrid = styled(Grid, {
   label: 'StyledUnrestrictedGrid',
 })(({ theme }) => ({
   paddingBottom: theme.spacing(2),
-  paddingLeft: theme.spacing(3),
-  [theme.breakpoints.down('sm')]: {
-    paddingLeft: theme.spacing(2),
-  },
 }));
 
 export const StyledPaper = styled(Paper, {

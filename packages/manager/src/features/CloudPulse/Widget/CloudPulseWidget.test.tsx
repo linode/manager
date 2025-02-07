@@ -1,4 +1,5 @@
 import userEvent from '@testing-library/user-event';
+import { DateTime } from 'luxon';
 import React from 'react';
 
 import {
@@ -19,13 +20,18 @@ const props: CloudPulseWidgetProperties = {
   availableMetrics: {
     available_aggregate_functions: ['min', 'max', 'avg'],
     dimensions: [],
+    is_alertable: true,
     label: 'CPU utilization',
     metric: 'system_cpu_utilization_percent',
     metric_type: 'gauge',
     scrape_interval: '2m',
     unit: 'percent',
   },
-  duration: { unit: 'min', value: 30 },
+  duration: {
+    end: DateTime.now().toISO(),
+    preset: '30minutes',
+    start: DateTime.now().minus({ minutes: 30 }).toISO(),
+  },
   entityIds: ['1', '2'],
   isJweTokenFetching: false,
   resources: [

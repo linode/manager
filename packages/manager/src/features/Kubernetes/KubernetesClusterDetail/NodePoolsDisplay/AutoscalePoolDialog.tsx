@@ -45,7 +45,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   notice: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: 15,
   },
   resize: {
