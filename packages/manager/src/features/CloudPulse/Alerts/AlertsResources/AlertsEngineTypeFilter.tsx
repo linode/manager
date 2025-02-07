@@ -1,7 +1,9 @@
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import type { AlertFilterKey, EngineType } from './types';
+import { engineOptions } from './constants';
+
+import type { AlertFilterKey } from './types';
 
 export interface AlertsEngineOptionProps {
   /**
@@ -12,17 +14,6 @@ export interface AlertsEngineOptionProps {
     type: AlertFilterKey
   ) => void;
 }
-
-const engineOptions: EngineType[] = [
-  {
-    id: 'mysql',
-    label: 'MySQL',
-  },
-  {
-    id: 'postgresql',
-    label: 'PostgreSQL',
-  },
-];
 
 export const AlertsEngineTypeFilter = React.memo(
   (props: AlertsEngineOptionProps) => {

@@ -3,7 +3,8 @@ import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 
 import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
 import type { AlertInstance } from './DisplayAlertResources';
-import type { AlertFilterKey, ServiceColumns } from './types';
+import type { AlertFilterKey, EngineType, ServiceColumns } from './types';
+import type { AlertServiceType } from '@linode/api-v4';
 import type { MemoExoticComponent } from 'react';
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
@@ -53,10 +54,12 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
 };
 
 export const serviceToFiltersMap: Record<
-  string,
+  '' | AlertServiceType,
   MemoExoticComponent<React.ComponentType<AlertsEngineOptionProps>>[]
 > = {
+  '': [], // default to empty
   dbaas: [AlertsEngineTypeFilter], // dbaas uses Engine filter
+  linode: [], // TODO: enhance with a tags filter
 };
 export const alertApplicableFilterKeys: AlertFilterKey[] = ['engineType'];
 
@@ -66,3 +69,14 @@ export const alertAdditionalFilterKeyMap: Record<
 > = {
   engineType: 'engineType',
 };
+
+export const engineOptions: EngineType[] = [
+  {
+    id: 'mysql',
+    label: 'MySQL',
+  },
+  {
+    id: 'postgresql',
+    label: 'PostgreSQL',
+  },
+];
