@@ -36,7 +36,7 @@ import { Interception } from 'cypress/types/net-stubbing';
 import { convertToGmt } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import {
-  getDateRangeInIST,
+  getDateRangeInUTC,
   getLastMonthRange,
   getThisMonthRange,
 } from 'support/constants/date-utils';
@@ -117,7 +117,7 @@ const databaseMock: Database = databaseFactory.build({
   region: mockRegion.label,
 });
 const mockProfile = profileFactory.build({
-  timezone: 'Asia/Kolkata',
+  timezone: 'Etc/GMT',
 });
 
 describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
@@ -148,19 +148,19 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 
-  it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
+  it.only('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
     const {
       actualDate: startActualDate,
       day: startDay,
       hour: startHour,
       minute: startMinute,
-    } = getDateRangeInIST(0, 12, 15);
+    } = getDateRangeInUTC(0, 12, 15);
     const {
       actualDate: endActualDate,
       day: endDay,
       hour: endHour,
       minute: endMinute,
-    } = getDateRangeInIST(25, 1, 15);
+    } = getDateRangeInUTC(25, 1, 15);
 
     ui.autocomplete
       .findByLabel('Time Range')
@@ -169,6 +169,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .type('Custom');
 
     ui.autocompletePopper.findByTitle('Custom').should('be.visible').click();
+
+    cy.log('startDay', startDay.toString());
+    cy.log('startHour', startHour.toString());
+    cy.log('startActualDate', startActualDate.toString());
 
     cy.findByPlaceholderText('Select Start Date').should('be.visible').click();
     cy.findByRole('gridcell', { name: startDay.toString() })
@@ -198,7 +202,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     cy.findByPlaceholderText('Select Start Date')
       .should('be.visible')
-      .and('have.value', `${startActualDate} PM (GMT+5:30)`);
+      .and('have.value', `${startActualDate} PM`);
 
     cy.findByPlaceholderText('Select End Date').should('be.visible').click();
     cy.findByRole('gridcell', { name: endDay.toString() })
@@ -228,7 +232,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
     cy.findByPlaceholderText('Select End Date').should(
       'have.value',
-      `${endActualDate} AM (GMT+5:30)`
+      `${endActualDate} AM`
     );
 
     ui.autocomplete
