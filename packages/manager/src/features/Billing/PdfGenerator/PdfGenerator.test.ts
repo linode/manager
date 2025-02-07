@@ -108,7 +108,7 @@ const getExpectedTaxIdsText = (
   return taxIdsText.join(' ').trim();
 };
 
-const expectedPdfFooter = (
+const getExpectedPdfFooterText = (
   country: string,
   isAkamaiBilling: boolean,
   isInternational: boolean
@@ -415,7 +415,11 @@ describe('PdfGenerator', () => {
 
         // Verify pdf footer text
         expect(pdfText).toContain(
-          expectedPdfFooter(account.country, isAkamaiBilling, isInternational)
+          getExpectedPdfFooterText(
+            account.country,
+            isAkamaiBilling,
+            isInternational
+          )
         );
 
         // Cleanup: Delete the generated PDF file after testing
