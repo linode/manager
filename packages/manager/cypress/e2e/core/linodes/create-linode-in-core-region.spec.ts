@@ -1,4 +1,3 @@
-import { Region } from '@linode/api-v4';
 import { linodeFactory, regionFactory } from 'src/factories';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateLinode } from 'support/intercepts/linodes';
@@ -9,7 +8,6 @@ import {
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomString } from 'support/util/random';
-import { extendRegion } from 'support/util/regions';
 
 describe('Create Linode in a Core Region', () => {
   /*
@@ -18,14 +16,18 @@ describe('Create Linode in a Core Region', () => {
    */
   it('should be able to select a core region', () => {
     // create mocks
-    const mockRegionOptions: Partial<Region> = {
-      capabilities: ['Linodes', 'Distributed Plans'],
+    const mockRegion1 = regionFactory.build({
+      capabilities: ['Linodes'],
       site_type: 'core',
-    };
-    const mockRegion = extendRegion(regionFactory.build(mockRegionOptions));
+    });
+    const mockRegion2 = regionFactory.build({
+      capabilities: ['Linodes', 'Distributed Plans'],
+      site_type: 'distributed',
+    });
+    const mockRegions = [mockRegion1, mockRegion2];
     const mockLinode = linodeFactory.build({
       label: randomLabel(),
-      region: mockRegion.id,
+      region: mockRegion1.id,
     });
     const rootPass = randomString(32);
 
@@ -35,8 +37,8 @@ describe('Create Linode in a Core Region', () => {
         la: true,
       },
     }).as('getFeatureFlags');
-    mockGetRegions([mockRegion]).as('getRegions');
-    mockGetRegionAvailability(mockRegion.id, []).as('getRegionAvailability');
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetRegionAvailability(mockRegion1.id, []).as('getRegionAvailability');
     mockCreateLinode(mockLinode).as('createLinode');
 
     cy.visitWithLogin('/linodes/create');
@@ -45,7 +47,7 @@ describe('Create Linode in a Core Region', () => {
     // Pick a region from the core region list
     cy.findByTestId('region').within(() => {
       ui.tabList.findTabByTitle('Core').should('be.visible').click();
-      linodeCreatePage.selectRegionById(mockRegion.id);
+      linodeCreatePage.selectRegionById(mockRegion1.id);
     });
 
     cy.wait(['@getRegionAvailability']);
