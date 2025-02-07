@@ -1,5 +1,3 @@
-import { pathOr } from 'src/utilities/pathOr';
-
 import type { CPU, StatWithDummyPoint } from '../request.types';
 
 // This formatting is from Classic
@@ -85,7 +83,7 @@ export const pathMaybeAddDataInThePast = <T extends CPU<'' | 'yAsNull'>>(
   const _data = structuredClone(data);
 
   pathsToAddDataPointTo.forEach((eachPath: keyof CPU) => {
-    const arrayOfStats = pathOr<StatWithDummyPoint[], T>([], [eachPath], data);
+    const arrayOfStats = data[eachPath] ?? [];
     const updatedData = maybeAddPastData(
       arrayOfStats,
       selectedStartTimeInSeconds
