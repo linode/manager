@@ -256,6 +256,14 @@ module.exports = {
         name: '@mui/material',
       },
     ],
+    'no-restricted-syntax': [
+      'warn', // @todo: change it to 'error'
+      {
+        message:
+          "The 'data-test-id' attribute is not allowed; use 'data-testid' instead.",
+        selector: "JSXAttribute[name.name='data-test-id']",
+      },
+    ],
     'no-throw-literal': 'warn',
     'no-trailing-spaces': 'warn',
     // allowing to init vars to undefined
