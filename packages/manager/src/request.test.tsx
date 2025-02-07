@@ -55,9 +55,9 @@ describe('Expiring Tokens', () => {
      * our original error
      */
     expect(getAuthToken()).toEqual({
-      expiration: null,
-      scopes: null,
-      token: null,
+      expiration: '',
+      scopes: '',
+      token: '',
     });
     expireToken.catch((e: APIError[]) =>
       expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)

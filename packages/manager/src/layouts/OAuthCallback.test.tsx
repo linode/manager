@@ -212,8 +212,8 @@ describe('layouts/OAuth', () => {
       );
 
       expect(getAuthToken()).toEqual({
-        expiry: expect.any(String),
-        scope: '*',
+        expiration: expect.any(String),
+        scopes: '*',
         token:
           'bearer 198864fedc821dbb5941cd5b8c273b4e25309a08d31c77cbf65a38372fdfe5b5',
       });

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import { revokeToken } from 'src/session';
-import { getAuthToken } from 'src/utilities/authentication';
+import { clearAuthToken, getAuthToken } from 'src/utilities/authentication';
 import {
   getEnvLocalStorageOverrides,
   stackScriptInProgress,
@@ -19,6 +19,7 @@ export const Logout = () => {
     clearUserInput();
     if (clientId && authToken) {
       revokeToken(clientId, authToken.split(' ')[1]);
+      clearAuthToken();
     }
     window.location.assign(getLoginUrl() + '/logout');
   }, []);
