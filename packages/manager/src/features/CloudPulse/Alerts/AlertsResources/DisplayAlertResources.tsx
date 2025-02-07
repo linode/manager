@@ -231,15 +231,19 @@ export const DisplayAlertResources = React.memo(
                   })}
                 {isDataLoadingError && (
                   <TableRowError
-                    colSpan={isSelectionsNeeded ? 3 : 2}
+                    colSpan={
+                      isSelectionsNeeded ? columns.length + 1 : columns.length
+                    }
                     message="Table data is unavailable. Please try again later."
                   />
                 )}
                 {paginatedData.length === 0 && (
                   <TableRow>
                     <TableCell
+                      colSpan={
+                        isSelectionsNeeded ? columns.length + 1 : columns.length
+                      }
                       align="center"
-                      colSpan={isSelectionsNeeded ? 3 : 2}
                       height="40px"
                     >
                       No data to display.
