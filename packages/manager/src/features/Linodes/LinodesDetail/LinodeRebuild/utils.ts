@@ -18,6 +18,8 @@ export const REBUILD_OPTIONS = [
   { label: 'Account StackScript' },
 ] as const;
 
+export const REBUILD_LINODE_IMAGE_PARAM_NAME = 'selectedImageId';
+
 export type LinodeRebuildType = typeof REBUILD_OPTIONS[number]['label'];
 
 export interface RebuildLinodeFormValues extends RebuildRequest {

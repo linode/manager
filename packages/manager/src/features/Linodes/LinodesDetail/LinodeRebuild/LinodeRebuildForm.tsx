@@ -4,6 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
@@ -23,7 +24,7 @@ import { RebuildFromSelect } from './RebuildFrom';
 import { SSHKeys } from './SSHKeys';
 import { UserData } from './UserData';
 import { UserDefinedFields } from './UserDefinedFields';
-import { resolver } from './utils';
+import { REBUILD_LINODE_IMAGE_PARAM_NAME, resolver } from './utils';
 
 import type {
   Context,
@@ -40,6 +41,8 @@ interface Props {
 export const LinodeRebuildForm = (props: Props) => {
   const { linode, onSuccess } = props;
   const { enqueueSnackbar } = useSnackbar();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
 
   const [type, setType] = useState<LinodeRebuildType>('Image');
 
@@ -66,6 +69,7 @@ export const LinodeRebuildForm = (props: Props) => {
     },
     defaultValues: {
       disk_encryption: linode.disk_encryption,
+      image: queryParams.get(REBUILD_LINODE_IMAGE_PARAM_NAME) ?? undefined,
       metadata: {
         user_data: null,
       },

@@ -12,6 +12,7 @@ import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useImageAndLinodeGrantCheck } from '../utils';
 
 import type { Image } from '@linode/api-v4';
+import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
 
 interface Props {
   image: Image | undefined;
@@ -45,7 +46,7 @@ export const RebuildImageDrawer = (props: Props) => {
     history.push({
       pathname: `/linodes/${values.linodeId}/rebuild`,
       search: new URLSearchParams({
-        selectedImageId: image.id,
+        [REBUILD_LINODE_IMAGE_PARAM_NAME]: image.id,
       }).toString(),
     });
   });
