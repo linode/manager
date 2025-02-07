@@ -62,11 +62,6 @@ export interface DisplayAlertResourceProp {
    * This controls whether to show the selection check box or not
    */
   isSelectionsNeeded?: boolean;
-
-  /**
-   * The size of the page needed in the table
-   */
-  pageSize: number;
   /**
    * Callback to scroll till the element required on page change change or sorting change
    */
@@ -85,10 +80,10 @@ export const DisplayAlertResources = React.memo(
       handleSelection,
       isDataLoadingError,
       isSelectionsNeeded,
-      pageSize,
       scrollToElement,
       serviceType,
     } = props;
+    const pageSize = 25;
 
     const [sorting, setSorting] = React.useState<{
       order: Order;
@@ -238,13 +233,17 @@ export const DisplayAlertResources = React.memo(
                   ))}
                 {isDataLoadingError && (
                   <TableRowError
-                    colSpan={3}
+                    colSpan={isSelectionsNeeded ? 3 : 2}
                     message="Table data is unavailable. Please try again later."
                   />
                 )}
                 {paginatedData.length === 0 && (
                   <TableRow>
-                    <TableCell align="center" colSpan={3} height="40px">
+                    <TableCell
+                      align="center"
+                      colSpan={isSelectionsNeeded ? 3 : 2}
+                      height="40px"
+                    >
                       No data to display.
                     </TableCell>
                   </TableRow>
