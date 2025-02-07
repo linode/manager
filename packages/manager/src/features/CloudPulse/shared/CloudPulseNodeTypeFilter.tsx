@@ -128,7 +128,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
         handleNodeTypeChange(undefined, []);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savePreferences, database_ids]);
+    }, [savePreferences, database_ids?.join(',')]);
 
     return (
       <Autocomplete
