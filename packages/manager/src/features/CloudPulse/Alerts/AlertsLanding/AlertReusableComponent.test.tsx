@@ -70,6 +70,18 @@ describe('Alert Resuable Component for contextual view', () => {
     expect(history.location.pathname).toBe('/monitor/alerts/definitions');
   });
 
+  it('Should go to alert details page on click of an alert', async () => {
+    const history = createMemoryHistory();
+    const { getByText } = renderWithTheme(
+      <Router history={history}>{component}</Router>
+    );
+    await userEvent.click(getByText(alerts[0].label));
+
+    expect(history.location.pathname).toBe(
+      `/monitor/alerts/definitions/detail/${serviceType}/${alerts[0].id}`
+    );
+  });
+
   it('Should filter alerts based on search text', async () => {
     const { getByPlaceholderText, getByText, queryByText } = renderWithTheme(
       component
@@ -88,9 +100,7 @@ describe('Alert Resuable Component for contextual view', () => {
 
     await userEvent.click(getByRole('option', { name: 'system' }));
 
-    const alert =
-      alerts.find((alert) => alert.type === 'system') ??
-      alerts[alerts.length - 1];
+    const alert = alerts[alerts.length - 1];
     expect(getByText(alert.label)).toBeInTheDocument();
   });
 });
