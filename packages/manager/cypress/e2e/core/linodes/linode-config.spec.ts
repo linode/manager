@@ -213,14 +213,8 @@ describe('Linode Config management', () => {
           .should('be.visible')
           .within(() => {
             cy.get('#ipam-input-1').type(newIpamAddress);
-            ui.button
-              .findByTitle('Save Changes')
-              .as('qaSaveChanges')
-              .scrollIntoView();
-            cy.get('@qaSaveChanges')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
+            ui.button.findByTitle('Save Changes').scrollIntoView();
+            ui.button.findByTitle('Save Changes').click();
           });
 
         // Confirm that config update request succeeded and that toast appears.

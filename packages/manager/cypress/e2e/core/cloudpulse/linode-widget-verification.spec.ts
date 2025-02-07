@@ -205,8 +205,12 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .should('be.visible')
       .click();
 
+    ui.regionSelect.find().click();
+
     //  Select a region from the dropdown.
-    ui.regionSelect.find().type(`${region}{enter}`);
+    ui.regionSelect.find().click();
+
+    ui.regionSelect.find().type(extendedMockRegion.label);
 
     // Since Linode does not support this region, we expect it to not be in the dropdown.
 
@@ -216,15 +220,17 @@ describe('Integration Tests for Linode Dashboard ', () => {
       ).should('not.exist');
     });
 
+    // Select a region from the dropdown.
+    ui.regionSelect.find().click();
+    ui.regionSelect.find().clear();
+    ui.regionSelect.find().type(`${region}{enter}`);
+
     // Select a resource from the autocomplete input.
     ui.autocomplete
       .findByLabel('Resources')
       .should('be.visible')
       .type(`${resource}{enter}`);
-    ui.autocomplete
-      .findByLabel('Resources')
-      .should('be.visible')
-      .type(`${resource}{enter}`);
+    ui.autocomplete.findByLabel('Resources').should('be.visible').click();
 
     cy.findByText(resource).should('be.visible');
 
