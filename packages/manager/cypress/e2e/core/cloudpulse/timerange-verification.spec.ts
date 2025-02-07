@@ -168,11 +168,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .type('Custom');
 
-    ui.autocompletePopper.findByTitle('Custom').should('be.visible').click();
+      cy.viewport(1920, 1080);// Desktop
 
-    cy.log('startDay', startDay.toString());
-    cy.log('startHour', startHour.toString());
-    cy.log('startActualDate', startActualDate.toString());
+     ui.autocompletePopper.findByTitle('Custom').should('be.visible').click();
 
     cy.findByPlaceholderText('Select Start Date').should('be.visible').click();
     cy.findByRole('gridcell', { name: startDay.toString() })
