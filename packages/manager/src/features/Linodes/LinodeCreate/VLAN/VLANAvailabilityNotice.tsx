@@ -61,5 +61,5 @@ const StyledFormattedRegionList = styled(List, {
 const StyledNoticeTypography = styled(Typography, {
   label: 'StyledNoticeTypography',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
 }));

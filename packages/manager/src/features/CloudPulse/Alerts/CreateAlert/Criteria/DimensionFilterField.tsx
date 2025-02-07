@@ -3,6 +3,8 @@ import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { capitalize } from 'src/utilities/capitalize';
+
 import { dimensionOperatorOptions } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
 
@@ -50,13 +52,15 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       operator: null,
       value: null,
     };
-    setValue(
-      name,
-      operation === 'selectOption'
-        ? { ...fieldValue, dimension_label: selected.value }
-        : fieldValue,
-      { shouldValidate: true }
-    );
+    if (operation === 'selectOption') {
+      setValue(`${name}.dimension_label`, selected.value, {
+        shouldValidate: true,
+      });
+      setValue(`${name}.operator`, fieldValue.operator);
+      setValue(`${name}.value`, fieldValue.value);
+    } else {
+      setValue(name, fieldValue);
+    }
   };
 
   const dimensionFieldWatcher = useWatch({
@@ -72,9 +76,9 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       : null;
 
   const valueOptions = () => {
-    if (selectedDimension !== null) {
+    if (selectedDimension !== null && selectedDimension.values) {
       return selectedDimension.values.map((val) => ({
-        label: val,
+        label: capitalize(val),
         value: val,
       }));
     }
@@ -131,6 +135,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 ) ?? null
               }
               data-testid="operator"
+              disabled={!dimensionFieldWatcher}
               errorText={fieldState.error?.message}
               label="Operator"
               onBlur={field.onBlur}
