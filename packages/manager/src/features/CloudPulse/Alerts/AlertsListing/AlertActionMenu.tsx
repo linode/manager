@@ -13,7 +13,7 @@ export interface ActionHandlers {
   handleDetails: () => void;
 
   /**
-   * Callback for edit action
+   * Callback for edit alerts action
    */
   handleEdit: () => void;
 }

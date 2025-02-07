@@ -12,12 +12,11 @@ export const StyledTypography = styled(Typography, {
 })(({ theme }) => ({
   fontFamily: theme.font.bold,
   marginBottom: 0,
-  paddingLeft: theme.spacing(0.5),
 }));
 
 export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(() => ({
   alignItems: 'center',
-  marginBottom: 0,
+  marginBottom: 2,
 }));
 
 export const StyledPermissionItem = styled(Typography, {
@@ -31,6 +30,7 @@ export const StyledPermissionItem = styled(Typography, {
 export const StyledContainer = styled('div', {
   label: 'StyledContainer',
 })(() => ({
+  marginLeft: -6,
   position: 'relative',
 }));
 
@@ -48,9 +48,9 @@ export const StyledBox = styled(Box, {
 })(({ theme }) => ({
   backgroundColor:
     theme.name === 'light'
-      ? theme.tokens.color.Neutrals.White
+      ? theme.tokens.color.Neutrals[5]
       : theme.tokens.color.Neutrals[90],
-  bottom: 0,
+  bottom: 1,
   display: 'flex',
   justifyContent: 'space-between',
   position: 'absolute',

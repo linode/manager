@@ -78,6 +78,11 @@ export interface RegionMultiSelectProps
    */
   forcefullyShownRegionIds?: Set<string>;
   helperText?: string;
+  /**
+   * Ignores account availability information when rendering region options
+   * @default false
+   */
+  ignoreAccountAvailability?: boolean;
   isClearable?: boolean;
   label?: string;
   onChange: (ids: string[]) => void;

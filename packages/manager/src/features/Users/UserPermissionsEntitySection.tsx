@@ -12,14 +12,13 @@ import React from 'react';
 
 import { createDisplayPage } from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { grantTypeMap } from 'src/features/Account/constants';
 import { usePagination } from 'src/hooks/usePagination';
-
-import { StyledGrantsTable } from './UserPermissionsEntitySection.styles';
 
 import type { Grant, GrantLevel, GrantType } from '@linode/api-v4/lib/account';
 import type { Theme } from '@mui/material/styles';
@@ -68,12 +67,12 @@ export const UserPermissionsEntitySection = React.memo(
             {grantTypeMap[entity]}
           </Typography>
         )}
-        <StyledGrantsTable aria-label="User Permissions" noBorder>
+        <Table aria-label="User Permissions">
           <TableHead data-qa-table-head>
             <TableRow
               sx={(theme) => ({
                 'span.MuiFormControlLabel-label': {
-                  fontFamily: theme.font.bold,
+                  font: theme.font.bold,
                 },
               })}
             >
@@ -145,11 +144,10 @@ export const UserPermissionsEntitySection = React.memo(
                         },
                       },
                     }}
-                    parentColumn="Label"
                   >
                     {grant.label}
                   </TableCell>
-                  <TableCell padding="checkbox" parentColumn="None">
+                  <TableCell padding="checkbox">
                     <Radio
                       inputProps={{
                         'aria-label': `Disallow access for ${grant.label}`,
@@ -162,7 +160,7 @@ export const UserPermissionsEntitySection = React.memo(
                       value="null"
                     />
                   </TableCell>
-                  <TableCell padding="checkbox" parentColumn="Read Only">
+                  <TableCell padding="checkbox">
                     <Radio
                       inputProps={{
                         'aria-label': `Allow read-only access for ${grant.label}`,
@@ -175,7 +173,7 @@ export const UserPermissionsEntitySection = React.memo(
                       value="read_only"
                     />
                   </TableCell>
-                  <TableCell padding="checkbox" parentColumn="Read-Write">
+                  <TableCell padding="checkbox">
                     <Radio
                       inputProps={{
                         'aria-label': `Allow read-write access for ${grant.label}`,
@@ -192,7 +190,7 @@ export const UserPermissionsEntitySection = React.memo(
               );
             })}
           </TableBody>
-        </StyledGrantsTable>
+        </Table>
         <PaginationFooter
           count={grants.length}
           eventCategory={`User Permissions for ${entity}`}

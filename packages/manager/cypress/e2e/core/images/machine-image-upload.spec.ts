@@ -9,6 +9,7 @@ import {
   mockDeleteImage,
   mockGetCustomImages,
   mockUpdateImage,
+  mockGetImage,
 } from 'support/intercepts/images';
 import { ui } from 'support/ui';
 import { interceptOnce } from 'support/ui/common';
@@ -170,6 +171,7 @@ describe('machine image', () => {
     };
 
     mockGetCustomImages([mockImage]).as('getImages');
+    mockGetImage(mockImage.id, mockImage).as('getImage');
     cy.visitWithLogin('/images');
     cy.wait('@getImages');
 
@@ -184,6 +186,7 @@ describe('machine image', () => {
     });
 
     ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
+    cy.wait('@getImage');
 
     mockUpdateImage(mockImage.id, mockImageUpdated).as('updateImage');
     mockGetCustomImages([mockImageUpdated]).as('getImages');
