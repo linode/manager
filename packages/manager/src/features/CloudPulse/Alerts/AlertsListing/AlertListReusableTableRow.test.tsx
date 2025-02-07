@@ -1,0 +1,54 @@
+import React from 'react';
+
+import { alertFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { processMetricCriteria } from '../Utils/utils';
+import { AlertListReusableTableRow } from './AlertListReusableTableRow';
+
+describe('Alert list table row', () => {
+  it('Should display the data', () => {
+    const alert = alertFactory.build();
+
+    const { getByText } = renderWithTheme(
+      <AlertListReusableTableRow
+        alert={alert}
+        handleToggle={vi.fn()}
+        status={true}
+      />
+    );
+
+    expect(getByText(alert.label)).toBeInTheDocument();
+    expect(getByText(alert.type)).toBeInTheDocument();
+  });
+
+  it('Should display metric threshold', () => {
+    const alert = alertFactory.build();
+    const processCriteria = processMetricCriteria(alert.rule_criteria.rules)[0];
+    const { getByText } = renderWithTheme(
+      <AlertListReusableTableRow
+        alert={alert}
+        handleToggle={vi.fn()}
+        status={false}
+      />
+    );
+    expect(
+      getByText(
+        `${processCriteria.label} ${processCriteria.operator} ${processCriteria.threshold} ${processCriteria.unit}`
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('Should have toggle button disabled', () => {
+    const alert = alertFactory.build();
+    const { getByRole } = renderWithTheme(
+      <AlertListReusableTableRow
+        alert={alert}
+        handleToggle={vi.fn()}
+        status={true}
+      />
+    );
+
+    expect(getByRole('checkbox')).toHaveProperty('checked');
+  });
+});

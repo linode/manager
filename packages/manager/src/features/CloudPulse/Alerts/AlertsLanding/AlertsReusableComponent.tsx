@@ -38,7 +38,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     return (
       alerts?.filter((alert) => {
         return (
-          alert.status &&
+          alert.status === 'enabled' &&
           (!selectedType || alert.type === selectedType) &&
           (!searchText ||
             alert.label.toLowerCase().includes(searchText.toLowerCase()))
@@ -56,17 +56,16 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
       []
     );
   }, [alerts]);
-
   if (isLoading) {
     return <CircleProgress />;
   }
-
   return (
     <Paper>
       <Stack gap={3}>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h2">Alerts</Typography>
           <Button
+            data-testid="manage-alerts"
             onClick={() => history.push('/monitor/alerts/definitions')}
             sx={{ border: '1px solid' }}
           >
@@ -76,6 +75,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
         <Stack gap={2}>
           <Box display="flex" gap={2}>
             <DebouncedSearchTextField
+              data-testid="search-alert"
               label=""
               noMarginTop
               onSearch={setSearchText}
@@ -87,6 +87,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               onChange={(_, selectedValue) => {
                 setSelectedType(selectedValue?.label);
               }}
+              data-testid="alert-type-select"
               label=""
               noMarginTop
               options={types}

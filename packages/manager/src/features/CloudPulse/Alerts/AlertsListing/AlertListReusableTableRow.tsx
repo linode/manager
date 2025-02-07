@@ -25,7 +25,7 @@ export const AlertListReusableTableRow = (
   const metricThreshold = processMetricCriteria(rule_criteria.rules);
 
   return (
-    <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
+    <TableRow data-qa-alert-cell={id} data-testid={id} key={`alert-row-${id}`}>
       <TableCell>
         <FormControlLabel
           control={

@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
