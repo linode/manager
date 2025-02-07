@@ -247,8 +247,8 @@ export const DatabaseDetail = () => {
           </SafeTabPanel>
           <SafeTabPanel index={5}>
             <DatabaseAlert
-              entityId="191215"
-              entityName="postgressdatatest"
+              entityId={String(database.id)}
+              entityName={database.label}
               serviceType="dbaas"
             />
           </SafeTabPanel>
