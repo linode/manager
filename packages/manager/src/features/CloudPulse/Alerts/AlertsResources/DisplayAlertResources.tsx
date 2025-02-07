@@ -185,6 +185,7 @@ export const DisplayAlertResources = React.memo(
                         handleSort(orderBy, order, handlePageChange)
                       }
                       active={sorting.orderBy === sortingKey}
+                      data-qa-header={label.toLowerCase()}
                       data-testid={label.toLowerCase()}
                       direction={sorting.order}
                       key={label}
@@ -220,7 +221,7 @@ export const DisplayAlertResources = React.memo(
                         )}
                         {columns.map(({ accessor, label }) => (
                           <TableCell
-                            data-qa-alert-cell={`${id}_${label}`}
+                            data-qa-alert-cell={`${id}_${label.toLowerCase()}`}
                             key={label}
                           >
                             {accessor(resource)}
