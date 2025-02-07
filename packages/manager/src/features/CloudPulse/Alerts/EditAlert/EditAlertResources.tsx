@@ -139,7 +139,7 @@ export const EditAlertResources = () => {
           isSelectionsNeeded
           serviceType={service_type}
         />
-        <Box alignSelf="flex-end" m={3} mb={0}>
+        <Box alignSelf="flex-end" display="flex" gap={1} m={3} mb={0}>
           <Button
             onClick={() => {
               history.push('/monitor/alerts/definitions');
@@ -156,9 +156,6 @@ export const EditAlertResources = () => {
                 top: 0,
               });
               setShowConfirmation(true);
-            }}
-            sx={{
-              ml: 1,
             }}
             buttonType="primary"
             data-qa-buttons="true"

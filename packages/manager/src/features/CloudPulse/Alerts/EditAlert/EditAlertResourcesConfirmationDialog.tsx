@@ -47,7 +47,12 @@ export const EditAlertResourcesConfirmDialog = React.memo(
         open={openConfirmationDialog}
         title="Confirm alert updates"
       >
-        <Typography fontSize="16px" variant="body1">
+        <Typography
+          sx={(theme) => ({
+            font: theme.tokens.typography.Body,
+          })}
+          variant="body1"
+        >
           You have changed the resource settings for your alert.
           <br />
           This also updates your alert definition.

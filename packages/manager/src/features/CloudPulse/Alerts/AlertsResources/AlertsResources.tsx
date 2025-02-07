@@ -234,7 +234,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         </Typography>
       )}
       <Grid container spacing={3}>
-        <Grid columnSpacing={2} container item rowSpacing={3} xs={12}>
+        <Grid
+          alignItems="center"
+          columnSpacing={2}
+          container
+          item
+          rowSpacing={3}
+          xs={12}
+        >
           <Grid item md={3} xs={12}>
             <DebouncedSearchTextField
               sx={{
@@ -258,10 +265,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             <Grid item md={4} xs={12}>
               <Checkbox
                 sx={(theme) => ({
-                  maxHeight: '34px',
-                  pt: theme.spacing(1.2),
                   svg: {
-                    backgroundColor: theme.color.white,
+                    backgroundColor: theme.tokens.color.Neutrals.White,
                   },
                 })}
                 data-testid="show_selected_only"
