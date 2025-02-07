@@ -1,8 +1,19 @@
+import { deepEqual } from '../../Utils/FilterBuilder';
+import {
+  alertAdditionalFilterKeyMap,
+  alertApplicableFilterKeys,
+} from '../AlertsResources/constants';
+
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
+import type { AlertFilterKey, AlertFilterType } from '../AlertsResources/types';
 import type { Region } from '@linode/api-v4';
 
 interface FilterResourceProps {
+  /**
+   * Additional filters for filtering the instances
+   */
+  additionalFilters?: Record<AlertFilterKey, AlertFilterType | undefined>;
   /**
    * The data to be filtered
    */
@@ -15,6 +26,7 @@ interface FilterResourceProps {
    * Property to integrate and edit the resources associated with alerts
    */
   isAdditionOrDeletionNeeded?: boolean;
+
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
@@ -96,6 +108,7 @@ export const getFilteredResources = (
   filterProps: FilterResourceProps
 ): AlertInstance[] => {
   const {
+    additionalFilters,
     data,
     filteredRegions,
     isAdditionOrDeletionNeeded,
@@ -143,6 +156,21 @@ export const getFilteredResources = (
         matchesFilteredRegions &&
         (!selectedOnly || checked) // if selected only, show only checked, else everything
       ); // match the search text and match the region selected
+    })
+    .filter((resource: AlertInstance) => {
+      if (!additionalFilters) {
+        return true;
+      }
+      return alertApplicableFilterKeys.every((key) => {
+        const value = additionalFilters[key];
+        if (value === undefined) {
+          return true;
+        } // Skip if no filter value
+        // Only apply filters that exist in `alertAdditionalFilterKeyMap`
+        const mappedKey = alertAdditionalFilterKeyMap[key];
+        const resourceValue = resource[mappedKey];
+        return deepEqual(resourceValue, value); // Compare primitive values
+      });
     });
 };
 

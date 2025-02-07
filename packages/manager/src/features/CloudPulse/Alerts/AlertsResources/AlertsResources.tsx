@@ -15,10 +15,12 @@ import {
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { AlertResourceAdditionalFilters } from './AlertsResourcesAdditionalFilters';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
+import type { AlertFilterKey, AlertFilterType } from './types';
 import type { AlertDefinitionType, Region } from '@linode/api-v4';
 
 export interface AlertResourcesProp {
@@ -69,6 +71,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertResourceIds
   );
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
+  const [additionalFilters, setAdditionalFilters] = React.useState<
+    Record<AlertFilterKey, AlertFilterType>
+  >({ engineType: undefined });
 
   const {
     data: regions,
@@ -132,11 +137,22 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     );
   };
 
+  const handleFilterChange = (
+    value: AlertFilterType,
+    filterKey: AlertFilterKey
+  ) => {
+    setAdditionalFilters((prev) => ({
+      ...prev,
+      [filterKey]: value,
+    }));
+  };
+
   /**
    * Filters resources based on the provided resource IDs, search text, and filtered regions.
    */
   const filteredResources: AlertInstance[] = React.useMemo(() => {
     return getFilteredResources({
+      additionalFilters,
       data: resources,
       filteredRegions,
       isAdditionOrDeletionNeeded: isSelectionsNeeded,
@@ -155,6 +171,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     searchText,
     selectedOnly,
     selectedResources,
+    additionalFilters,
   ]);
 
   const handleSelection = React.useCallback(
@@ -261,6 +278,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               regionOptions={regionOptions}
             />
           </Grid>
+          <AlertResourceAdditionalFilters
+            handleFilterChange={handleFilterChange}
+            serviceType={serviceType}
+          />
           {isSelectionsNeeded && (
             <Grid item md={4} xs={12}>
               <Checkbox
@@ -294,6 +315,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
             scrollToElement={() => scrollToElement(titleRef.current)}
+            serviceType={serviceType}
           />
         </Grid>
       </Grid>
