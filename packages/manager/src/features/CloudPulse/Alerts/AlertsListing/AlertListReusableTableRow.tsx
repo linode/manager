@@ -12,8 +12,20 @@ import type { ProcessedCriteria } from '../Utils/utils';
 import type { Alert } from '@linode/api-v4';
 
 interface AlertListReusableTableRowProps {
+  /**
+   * alert object which should be dispalyed in the row
+   */
   alert: Alert;
+
+  /**
+   * handler function for the click of toggle button
+   * @param alert alert object for which toggle button is click
+   */
   handleToggle: (alert: Alert) => void;
+
+  /**
+   * status for the alert whether it is enabled or disabled
+   */
   status?: boolean;
 }
 
