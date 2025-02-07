@@ -143,6 +143,9 @@ export const DisplayAlertResources = React.memo(
       [handleSelection]
     );
     const columns = serviceTypeBasedColumns[serviceType ?? ''] ?? [];
+    const colSpanCount = isSelectionsNeeded
+      ? columns.length + 1
+      : columns.length;
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -233,7 +236,7 @@ export const DisplayAlertResources = React.memo(
                   ))}
                 {isDataLoadingError && (
                   <TableRowError
-                    colSpan={isSelectionsNeeded ? 3 : 2}
+                    colSpan={colSpanCount}
                     message="Table data is unavailable. Please try again later."
                   />
                 )}
@@ -241,7 +244,7 @@ export const DisplayAlertResources = React.memo(
                   <TableRow>
                     <TableCell
                       align="center"
-                      colSpan={isSelectionsNeeded ? 3 : 2}
+                      colSpan={colSpanCount}
                       height="40px"
                     >
                       No data to display.

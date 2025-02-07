@@ -14,6 +14,18 @@ interface ColumnConfig<T> {
 type ServiceColumns<T> = Record<string, ColumnConfig<T>[]>;
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
+  '': [ // for empty case lets display resource and region
+    {
+      accessor: ({ label }) => label,
+      label: 'Resource',
+      sortingKey: 'label',
+    },
+    {
+      accessor: ({ region }) => region,
+      label: 'Region',
+      sortingKey: 'region',
+    },
+  ],
   dbaas: [
     {
       accessor: ({ label }) => label,
