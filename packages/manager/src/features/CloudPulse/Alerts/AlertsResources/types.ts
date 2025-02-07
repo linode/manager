@@ -1,3 +1,5 @@
+import type { AlertServiceType } from '@linode/api-v4';
+
 export interface ColumnConfig<T> {
   accessor: (data: T) => string;
   label: string;
@@ -9,7 +11,10 @@ export interface EngineType {
   label: string;
 }
 
-export type ServiceColumns<T> = Record<string, ColumnConfig<T>[]>;
+export type ServiceColumns<T> = Record<
+  '' | AlertServiceType,
+  ColumnConfig<T>[]
+>;
 
 export type AlertFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
 

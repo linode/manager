@@ -7,6 +7,19 @@ import type { AlertFilterKey, ServiceColumns } from './types';
 import type { MemoExoticComponent } from 'react';
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
+  '': [
+    // default fallback case when service type is empty, in the create flow, until we select a service type it will be empty
+    {
+      accessor: ({ label }) => label,
+      label: 'Resource',
+      sortingKey: 'label',
+    },
+    {
+      accessor: ({ region }) => region,
+      label: 'Region',
+      sortingKey: 'region',
+    },
+  ],
   dbaas: [
     {
       accessor: ({ label }) => label,

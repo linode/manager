@@ -15,6 +15,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
 import { serviceTypeBasedColumns } from './constants';
 
+import type { AlertServiceType } from '@linode/api-v4';
 import type { Order } from 'src/hooks/useOrder';
 
 export interface AlertInstance {
@@ -71,7 +72,7 @@ export interface DisplayAlertResourceProp {
   /**
    * The service type associated with the alert
    */
-  serviceType: string;
+  serviceType?: AlertServiceType;
 }
 
 export const DisplayAlertResources = React.memo(
@@ -144,6 +145,9 @@ export const DisplayAlertResources = React.memo(
       [handleSelection]
     );
     const columns = serviceTypeBasedColumns[serviceType ?? ''] ?? [];
+    const colSpanCount = isSelectionsNeeded
+      ? columns.length + 1
+      : columns.length;
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -232,19 +236,15 @@ export const DisplayAlertResources = React.memo(
                   })}
                 {isDataLoadingError && (
                   <TableRowError
-                    colSpan={
-                      isSelectionsNeeded ? columns.length + 1 : columns.length
-                    }
+                    colSpan={colSpanCount}
                     message="Table data is unavailable. Please try again later."
                   />
                 )}
                 {paginatedData.length === 0 && (
                   <TableRow>
                     <TableCell
-                      colSpan={
-                        isSelectionsNeeded ? columns.length + 1 : columns.length
-                      }
                       align="center"
+                      colSpan={colSpanCount}
                       height="40px"
                     >
                       No data to display.

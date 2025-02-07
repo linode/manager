@@ -6,6 +6,7 @@ import NullComponent from 'src/components/NullComponent';
 import { serviceToFiltersMap } from './constants';
 
 import type { AlertFilterType } from './types';
+import type { AlertServiceType } from '@linode/api-v4';
 
 interface AlertResourceFiltersProps {
   /**
@@ -15,7 +16,7 @@ interface AlertResourceFiltersProps {
   /**
    * The service type associated with alerts like linode, dbaas etc.,
    */
-  serviceType?: string;
+  serviceType?: AlertServiceType;
 }
 
 /**
