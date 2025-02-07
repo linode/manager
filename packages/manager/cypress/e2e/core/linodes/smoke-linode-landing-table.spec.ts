@@ -502,9 +502,7 @@ describe('linode landing checks for empty state', () => {
     cy.get(linodeLocators.nonEmptyLinodePage.docsLink).should('not.exist');
 
     // Assert that Download CSV button does not exist
-    cy.get(linodeLocators.nonEmptyLinodePage.downloadCsvButton)
-      .contains('Download CSV')
-      .should('not.exist');
+    cy.get('button').contains('Download CSV').should('not.exist');
   });
 
   it('checks restricted user has no access to create linode on linode landing page', () => {
@@ -612,6 +610,9 @@ describe('linode landing checks for non-empty state with restricted user', () =>
       .should('be.visible')
       .and('be.disabled')
       .trigger('mouseover');
+
+    // Assert that Download CSV button does exist
+    cy.get('button').contains('Download CSV').should('exist');
 
     // Assert that tooltip is visible with message
     ui.tooltip
