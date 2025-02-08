@@ -1,1 +1,1 @@
-yarn workspaces run precommit
+bun run --filters run precommit

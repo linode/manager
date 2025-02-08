@@ -7,7 +7,7 @@ The unit tests for Cloud Manager are written in Typescript using the [Vitest](ht
 To run tests, first build the **api-v4** package:
 
 ```shell
-yarn install:all && yarn workspace @linode/api-v4 build
+yarn install:all && bun run --filter @linode/api-v4 build
 ```
 
 Then you can start the tests:
@@ -38,7 +38,7 @@ yarn test linode
 To run a test in debug mode, add a `debugger` breakpoint inside one of the test cases, then run:
 
 ```shell
-yarn workspace linode-manager run test:debug
+bun run --filter linode-manager run test:debug
 ```
 
 Test execution will stop at the debugger statement, and you will be able to use Chrome's normal debugger to step through the tests (open `chrome://inspect/#devices` in Chrome).
@@ -243,12 +243,12 @@ Environment variables that can be used to improve test performance in some scena
     /* this test will not pass on cloud manager.
     it is only intended to show correct test structure, syntax,
     and to provide examples of patterns/methods commonly used in the tests */
-    
+
     // start of a test block. Multiple tests can be nested within
     describe('linode landing checks', () => {
       // hook that runs before each test
        beforeEach(() => {
-         // uses factory to build data (factories found in packages/manager/src/factories) 
+         // uses factory to build data (factories found in packages/manager/src/factories)
           const mockAccountSettings = accountSettingsFactory.build({
             managed: false,
           });
@@ -260,8 +260,8 @@ Environment variables that can be used to improve test performance in some scena
         });
         // start of individual test block
       it('checks the landng page side menu items', () => {
-          
-          /* intercept only once method for when a call happens multiple times 
+
+          /* intercept only once method for when a call happens multiple times
           but you only want to stub it once declared in `/cypress/support/ui/common.ts` */
            interceptOnce('GET', '*/profile/preferences*', {
               linodes_view_style: 'list',
@@ -287,7 +287,7 @@ Environment variables that can be used to improve test performance in some scena
                 cy.get(`[data-qa-ip-main]`)
                    // `realHover` and more real event methods from cypress real events plugin
                     .realHover()
-                    .then(() => { 
+                    .then(() => {
                         cy.get(`[aria-label="Copy ${ip} to clipboard"]`).should('be.visible');
                     });
                 cy.get(`[aria-label="Action menu for Linode ${label}"]`).should('be.visible');
@@ -303,11 +303,11 @@ Environment variables that can be used to improve test performance in some scena
     ```tsx
       // stub response syntax:
       cy.intercept('POST', ‘/path’, {response}) or cy.intercept(‘/path’, (req) => { req.reply({response})}).as('something');
-     // edit and end response syntax: 
+     // edit and end response syntax:
       cy.intercept('GET', ‘/path’, (req) => { req.send({edit: something})}).as('something');
      // edit request syntax:
       cy.intercept('POST', ‘/path’, (req) => { req.body.storyName = 'some name'; req.continue().as('something');
-  
+
       // use alias syntax:
        wait(‘@something’).then({})
       ```

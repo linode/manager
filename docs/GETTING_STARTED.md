@@ -39,9 +39,9 @@ You can then serve these files however you prefer or use our included local http
 ```bash
 yarn install:all
 
-yarn workspace linode-manager build
+bun run --filter linode-manager build
 
-yarn workspace linode-manager run start:ci
+bun run --filter linode-manager run start:ci
 ```
 
 ## Exposing Cloud Manager's dev server to the network

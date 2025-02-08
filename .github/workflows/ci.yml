@@ -25,7 +25,7 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
-      - run: yarn workspace ${{ matrix.package }} run lint
+      - run: bun run --filter ${{ matrix.package }} run lint
 
   build-validation:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
-      - run: yarn workspace @linode/validation run build
+      - run: bun run --filter @linode/validation run build
       - uses: actions/upload-artifact@v4
         with:
           name: packages-validation-lib
@@ -91,7 +91,7 @@ jobs:
         with:
           name: packages-validation-lib
           path: packages/validation/lib
-      - run: yarn workspace @linode/api-v4 run test
+      - run: bun run --filter @linode/api-v4 run test
 
   build-sdk:
     runs-on: ubuntu-latest
@@ -111,7 +111,7 @@ jobs:
           name: packages-validation-lib
           path: packages/validation/lib
       - run: yarn --frozen-lockfile
-      - run: yarn workspace @linode/api-v4 run build
+      - run: bun run --filter @linode/api-v4 run build
       - uses: actions/upload-artifact@v4
         with:
           name: packages-api-v4-lib
@@ -174,7 +174,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
-      - run: yarn workspace linode-manager run test
+      - run: bun run --filter linode-manager run test
 
   test-search:
     runs-on: ubuntu-latest
@@ -189,7 +189,7 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
-      - run: yarn workspace @linode/search run test
+      - run: bun run --filter @linode/search run test
 
   test-ui:
     runs-on: ubuntu-latest
@@ -204,7 +204,7 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
-      - run: yarn workspace @linode/ui run test
+      - run: bun run --filter @linode/ui run test
 
   typecheck-ui:
     runs-on: ubuntu-latest
@@ -220,7 +220,7 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
-      - run: yarn workspace @linode/ui run typecheck
+      - run: bun run --filter @linode/ui run typecheck
 
   typecheck-manager:
     runs-on: ubuntu-latest
@@ -244,7 +244,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
-      - run: yarn workspace linode-manager run typecheck
+      - run: bun run --filter linode-manager run typecheck
 
   build-manager:
     runs-on: ubuntu-latest
@@ -269,7 +269,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
-      - run: yarn workspace linode-manager run build
+      - run: bun run --filter linode-manager run build
       - uses: actions/upload-artifact@v4
         with:
           name: packages-manager-build
@@ -330,7 +330,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
-      - run: yarn workspace linode-manager run build-storybook
+      - run: bun run --filter linode-manager run build-storybook
       - uses: actions/upload-artifact@v4
         with:
           name: storybook-build
