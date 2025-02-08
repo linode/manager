@@ -18,12 +18,13 @@ interface GDPRConfiguration {
 }
 
 export const getRegionCountryGroup = (region: Region | undefined) => {
-  if (region?.id === 'global') {
-    return '';
-  }
-
   if (!region) {
     return 'Other';
+  }
+
+  // The global option should not be grouped
+  if (region.id === 'global') {
+    return '';
   }
 
   const continentCode =

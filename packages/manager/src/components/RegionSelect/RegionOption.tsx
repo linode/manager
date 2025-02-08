@@ -9,17 +9,12 @@ import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.util
 import type { Region } from '@linode/api-v4';
 import type { ListItemProps } from 'src/components/ListItemOption';
 
-interface RegionOptionProps extends ListItemProps<Region> {
-  showGlobalOption?: boolean;
-}
-
 export const RegionOption = ({
   disabledOptions,
   item,
   props,
   selected,
-  showGlobalOption,
-}: RegionOptionProps) => {
+}: ListItemProps<Region>) => {
   const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   return (
@@ -29,9 +24,24 @@ export const RegionOption = ({
       props={props}
       selected={selected}
     >
-      <Stack alignItems="center" direction="row" gap={1} width="100%">
-        {showGlobalOption && item.id === 'global' ? (
-          <PublicIcon />
+      <Stack
+        sx={(theme) => ({
+          '&:hover .public-icon': {
+            color: `${theme.tokens.color.Neutrals.White}`,
+          },
+        })}
+        alignItems="center"
+        direction="row"
+        gap={1}
+        width="100%"
+      >
+        {item.id === 'global' ? (
+          <PublicIcon
+            sx={(theme) => ({
+              color: `${theme.tokens.content.Icon.Primary.Active}`,
+            })}
+            className="public-icon"
+          />
         ) : (
           <Flag country={item.country} />
         )}

@@ -25,6 +25,7 @@ export const useGetRegionsForQuotaService = (
     isFetching: isFetchingBuckets,
   } = useObjectStorageBuckets();
   const globalOption = regionFactory.build({
+    capabilities: [],
     id: 'global',
     label: 'Global (Account level)',
   });

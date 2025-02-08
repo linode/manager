@@ -22,6 +22,7 @@ export interface GetRegionLabel {
   includeSlug?: boolean;
   region: Region;
 }
+
 export interface RegionSelectProps<
   DisableClearable extends boolean | undefined = undefined
 > extends Omit<
@@ -53,7 +54,6 @@ export interface RegionSelectProps<
   regionFilter?: RegionFilterValue;
   regions: Region[];
   required?: boolean;
-  showGlobalOption?: boolean;
   tooltipText?: string;
   /**
    * The ID of the selected region.

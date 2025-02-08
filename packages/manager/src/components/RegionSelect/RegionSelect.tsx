@@ -1,4 +1,5 @@
 import { Autocomplete } from '@linode/ui';
+import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
@@ -48,7 +49,6 @@ export const RegionSelect = <
     regionFilter,
     regions,
     required,
-    showGlobalOption,
     tooltipText,
     value,
     width,
@@ -119,7 +119,6 @@ export const RegionSelect = <
               item={region}
               key={`${region.id}-${key}`}
               props={rest}
-              showGlobalOption={showGlobalOption}
             />
           );
         }}
@@ -134,9 +133,19 @@ export const RegionSelect = <
             endAdornment:
               isGeckoLAEnabled && selectedRegion && `(${selectedRegion?.id})`,
             required,
-            startAdornment: selectedRegion && (
-              <Flag country={selectedRegion?.country} mr={1} />
-            ),
+            startAdornment:
+              selectedRegion &&
+              (selectedRegion.id === 'global' ? (
+                <PublicIcon
+                  sx={{
+                    height: '24px',
+                    mr: 1,
+                    width: '24px',
+                  }}
+                />
+              ) : (
+                <Flag country={selectedRegion?.country} mr={1} />
+              )),
           },
           tooltipText,
         }}

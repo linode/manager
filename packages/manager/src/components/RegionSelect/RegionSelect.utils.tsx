@@ -13,7 +13,7 @@ import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
-interface RegionSelectOptionsOptions {
+interface RegionSelectOptions {
   currentCapability: Capabilities | undefined;
   forcefullyShownRegionIds?: Set<string>;
   regionFilter?: RegionFilterValue;
@@ -25,7 +25,7 @@ export const getRegionOptions = ({
   forcefullyShownRegionIds,
   regionFilter,
   regions,
-}: RegionSelectOptionsOptions) => {
+}: RegionSelectOptions) => {
   return regions
     .filter((region) => {
       if (forcefullyShownRegionIds?.has(region.id)) {
@@ -58,7 +58,7 @@ export const getRegionOptions = ({
       const region1Group = getRegionCountryGroup(region1);
       const region2Group = getRegionCountryGroup(region2);
 
-      // Global (or empty) group comes first
+      // Global group comes first
       if (region1Group === '') {
         return -1;
       }

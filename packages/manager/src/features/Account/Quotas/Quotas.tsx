@@ -80,7 +80,6 @@ export const Quotas = () => {
               noOptionsText={`No resource found for ${selectedService.label}`}
               onChange={(_event, value) => setSelectedRegion(value?.id ?? null)}
               regions={regionsForQuotaService}
-              showGlobalOption
               value={selectedRegion ?? ''}
             />
           </Stack>
