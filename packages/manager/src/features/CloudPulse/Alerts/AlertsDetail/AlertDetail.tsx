@@ -131,6 +131,7 @@ export const AlertDetail = () => {
             alertResourceIds={entityIds}
             alertType={type}
             serviceType={serviceTypeObj}
+            alertClass={undefined}
           />
         </Box>
         <Box

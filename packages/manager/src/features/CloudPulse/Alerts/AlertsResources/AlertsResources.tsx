@@ -21,13 +21,23 @@ import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertFilterKey, AlertFilterType } from './constants';
 import type { AlertInstance } from './DisplayAlertResources';
-import type { AlertDefinitionType, AlertServiceType, Region } from '@linode/api-v4';
+import type {
+  AlertDefinitionType,
+  AlertServiceType,
+  Filter,
+  Region,
+} from '@linode/api-v4';
 
 export interface AlertResourcesProp {
+  /**
+   * Class of the alert (dedicated / shared)
+   */
+  alertClass?: string;
   /**
    * The label of the alert to be displayed
    */
   alertLabel?: string;
+
   /**
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
@@ -68,6 +78,7 @@ export type SelectUnselectAll = 'Select All' | 'Unselect All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
+    alertClass,
     alertLabel,
     alertResourceIds,
     alertType,
@@ -88,6 +99,47 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
 
+  const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+    if (alertType === 'user') {
+      return serviceType === 'dbaas' ? { platform: 'rdbms-default' } : {}; // no xFilter needed
+    }
+
+    if (serviceType && alertClass) {
+      if (serviceType !== 'dbaas') {
+        return {
+          and: [
+            {
+              type: {
+                '+contains': `${
+                  alertClass === 'dedicated' ? 'dedicated' : 'shared'
+                }`,
+              },
+            },
+          ],
+        };
+      } else {
+        return {
+          and: [
+            {
+              platform: {
+                '+eq': 'rdbms-default',
+              },
+            },
+            {
+              type: {
+                '+contains': `${
+                  alertClass === 'dedicated' ? 'dedicated' : 'shared'
+                }`,
+              },
+            },
+          ],
+        };
+      }
+    }
+
+    return undefined;
+  }, [alertClass, serviceType]);
+
   const {
     data: regions,
     isError: isRegionsError,
@@ -99,10 +151,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isError: isResourcesError,
     isFetching: isResourcesFetching,
   } = useResourcesQuery(
-    Boolean(serviceType),
+    Boolean(
+      serviceType && ((alertClass && xFilterToBeApplied) || alertClass === '')
+    ),
     serviceType,
     {},
-    serviceType === 'dbaas' ? { platform: 'rdbms-default' } : {}
+    xFilterToBeApplied
   );
 
   const theme = useTheme();
