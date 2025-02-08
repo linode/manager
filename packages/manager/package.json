@@ -96,7 +96,7 @@
     "lint": "eslint . --ext .js,.ts,.tsx --quiet",
     "build": "vite build",
     "build:analyze": "bunx vite-bundle-visualizer",
-    "precommit": "lint-staged && yarn typecheck",
+    "precommit": "lint-staged && bun typecheck",
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
