@@ -129,9 +129,7 @@ export const AlertDetail = () => {
           data-qa-section="Resources"
         >
           <AlertResources
-            alertClass={
-              alertDetails ? (alertClass ? alertClass : '') : undefined
-            }
+            alertClass={alertClass}
             alertResourceIds={entityIds}
             alertType={type}
             serviceType={serviceTypeObj}

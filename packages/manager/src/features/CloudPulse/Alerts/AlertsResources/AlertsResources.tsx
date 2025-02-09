@@ -100,44 +100,24 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
 
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
-    if (alertType === 'user') {
-      return serviceType === 'dbaas' ? { platform: 'rdbms-default' } : {}; // no xFilter needed
+    // If the serviceType is 'dbaas', always include the platform filter
+    const platformFilter: Filter | undefined =
+      serviceType === 'dbaas' ? { platform: 'rdbms-default' } : undefined;
+
+    // If alertType is not 'system' or alertClass is not defined, return only the platform filter (if applicable)
+    if (alertType !== 'system' || !alertClass) {
+      return platformFilter;
     }
 
-    if (serviceType && alertClass) {
-      if (serviceType !== 'dbaas') {
-        return {
-          and: [
-            {
-              type: {
-                '+contains': `${
-                  alertClass === 'dedicated' ? 'dedicated' : 'shared'
-                }`,
-              },
-            },
-          ],
-        };
-      } else {
-        return {
-          and: [
-            {
-              platform: {
-                '+eq': 'rdbms-default',
-              },
-            },
-            {
-              type: {
-                '+contains': `${
-                  alertClass === 'dedicated' ? 'dedicated' : 'shared'
-                }`,
-              },
-            },
-          ],
-        };
-      }
-    }
+    // Apply type filter only for system alerts with a valid alertClass
+    const typeFilter: Filter = {
+      type: {
+        '+contains': alertClass === 'dedicated' ? 'dedicated' : 'shared',
+      },
+    };
 
-    return undefined;
+    // Combine platform and type filters
+    return platformFilter ? { ...platformFilter, ...typeFilter } : typeFilter;
   }, [alertClass, alertType, serviceType]);
 
   const {
@@ -151,9 +131,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isError: isResourcesError,
     isFetching: isResourcesFetching,
   } = useResourcesQuery(
-    Boolean(
-      serviceType && ((alertClass && xFilterToBeApplied) || alertClass === '')
-    ),
+    Boolean(serviceType),
     serviceType,
     {},
     xFilterToBeApplied
