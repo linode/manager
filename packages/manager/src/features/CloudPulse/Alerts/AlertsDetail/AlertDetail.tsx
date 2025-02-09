@@ -91,6 +91,7 @@ export const AlertDetail = () => {
     );
   }
   const {
+    class: alertClass,
     entity_ids: entityIds,
     service_type: serviceTypeObj,
     type,
@@ -128,10 +129,12 @@ export const AlertDetail = () => {
           data-qa-section="Resources"
         >
           <AlertResources
+            alertClass={
+              alertDetails ? (alertClass ? alertClass : '') : undefined
+            }
             alertResourceIds={entityIds}
             alertType={type}
             serviceType={serviceTypeObj}
-            alertClass={undefined}
           />
         </Box>
         <Box

@@ -81,6 +81,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
       url: '',
     },
   ],
+  class: 'dedicated',
   created: new Date().toISOString(),
   created_by: 'user1',
   description: 'Test description',

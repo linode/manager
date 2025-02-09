@@ -138,7 +138,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     }
 
     return undefined;
-  }, [alertClass, serviceType]);
+  }, [alertClass, alertType, serviceType]);
 
   const {
     data: regions,
