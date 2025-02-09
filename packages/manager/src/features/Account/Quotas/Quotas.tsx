@@ -9,9 +9,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useQuotasQuery } from 'src/queries/quotas/quotas';
 
-import { useGetRegionsForQuotaService } from './utils';
+import { useGetLocationsForQuotaService } from './utils';
 
-import type { QuotaType, Region } from '@linode/api-v4';
+import type { QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Theme } from '@mui/material';
 
@@ -24,22 +24,32 @@ export const Quotas = () => {
     label: 'Linodes',
     value: 'linode',
   });
+  const [selectedLocation, setSelectedLocation] = React.useState<null | string>(
+    null
+  );
+
   const serviceOptions = Object.entries(quotaTypes).map(([key, value]) => ({
     label: value,
     value: key as QuotaType,
   }));
-  const [selectedRegion, setSelectedRegion] = React.useState<
-    Region['id'] | null
-  >(null);
+
+  // Fetch locations for the selected service to populate the location selects
+  // This can be a region or a label + id for S3 endpoints
   const {
     isFetching: isFetchingRegions,
-    regionsForQuotaService,
-  } = useGetRegionsForQuotaService(selectedService.value);
+    locationsForQuotaService,
+    objectStorageQuotas,
+    service,
+  } = useGetLocationsForQuotaService(selectedService.value);
+
+  // fetch quotas for the selected service and region
   const { data: quotas } = useQuotasQuery(
     selectedService.value,
     {},
-    {},
-    selectedRegion !== null
+    {
+      region_applied: selectedLocation,
+    },
+    selectedLocation !== null && selectedService.value !== 'object-storage'
   );
 
   const onServiceChange = (
@@ -47,7 +57,7 @@ export const Quotas = () => {
     value: SelectOption<QuotaType>
   ) => {
     setSelectedService(value);
-    setSelectedRegion(null);
+    setSelectedLocation(null);
   };
 
   return (
@@ -67,21 +77,52 @@ export const Quotas = () => {
               options={serviceOptions}
               value={selectedService}
             />
-            <RegionSelect
-              placeholder={
-                isFetchingRegions
-                  ? `Loading ${selectedService.label} regions...`
-                  : `Select a region for ${selectedService.label}`
-              }
-              currentCapability={undefined}
-              disableClearable
-              disabled={isFetchingRegions}
-              loading={isFetchingRegions}
-              noOptionsText={`No resource found for ${selectedService.label}`}
-              onChange={(_event, value) => setSelectedRegion(value?.id ?? null)}
-              regions={regionsForQuotaService}
-              value={selectedRegion ?? ''}
-            />
+            {service === 'object-storage' ? (
+              <Select
+                onChange={(_event, value) =>
+                  setSelectedLocation(value?.value.toString() ?? null)
+                }
+                options={Array.from(
+                  new Map(
+                    locationsForQuotaService.map((loc) => [
+                      loc.id,
+                      { label: loc.label, value: loc.id },
+                    ])
+                  ).values()
+                )}
+                value={
+                  selectedLocation
+                    ? {
+                        label:
+                          locationsForQuotaService.find(
+                            (loc) => loc.id === selectedLocation
+                          )?.label ?? selectedLocation,
+                        value: selectedLocation,
+                      }
+                    : null
+                }
+                label="Object Storage Endpoint"
+                placeholder="Select an Object Storage S3 endpoint"
+              />
+            ) : (
+              <RegionSelect
+                onChange={(_event, value) =>
+                  setSelectedLocation(value?.id ?? null)
+                }
+                placeholder={
+                  isFetchingRegions
+                    ? `Loading ${selectedService.label} regions...`
+                    : `Select a region for ${selectedService.label}`
+                }
+                currentCapability={undefined}
+                disableClearable
+                disabled={isFetchingRegions}
+                loading={isFetchingRegions}
+                noOptionsText={`No resource found for ${selectedService.label}`}
+                regions={locationsForQuotaService}
+                value={selectedLocation ?? ''}
+              />
+            )}
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="h3">Quotas</Typography>
@@ -98,7 +139,7 @@ export const Quotas = () => {
             </Stack>
           </Stack>
           <Stack direction="row" spacing={2}>
-            {selectedRegion && quotas && (
+            {selectedLocation && (quotas || objectStorageQuotas) && (
               <pre
                 style={{
                   backgroundColor: '#f5f5f5',
@@ -108,7 +149,7 @@ export const Quotas = () => {
                   width: '100%',
                 }}
               >
-                {JSON.stringify(quotas, null, 2)}
+                {JSON.stringify(quotas || objectStorageQuotas, null, 2)}
               </pre>
             )}
           </Stack>
