@@ -2,20 +2,13 @@ import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 
-import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
-import type { AlertsRegionProps } from './AlertsRegionFilter';
 import type { AlertInstance } from './DisplayAlertResources';
-import type { AlertAdditionalFilterKey, ServiceFilterConfig } from './types';
+import type {
+  AlertAdditionalFilterKey,
+  ServiceColumns,
+  ServiceFilterConfig,
+} from './types';
 import type { AlertServiceType } from '@linode/api-v4';
-import type { MemoExoticComponent } from 'react';
-
-interface ColumnConfig<T> {
-  accessor: (data: T) => string;
-  label: string;
-  sortingKey?: keyof T;
-}
-
-type ServiceColumns<T> = Record<'' | AlertServiceType, ColumnConfig<T>[]>;
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   '': [
