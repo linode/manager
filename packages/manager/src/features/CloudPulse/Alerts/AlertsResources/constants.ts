@@ -1,9 +1,11 @@
-import { AlertServiceType } from '@linode/api-v4';
 import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
+import { AlertsRegionFilter } from './AlertsRegionFilter';
 
 import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
+import type { AlertsRegionProps } from './AlertsRegionFilter';
 import type { AlertInstance } from './DisplayAlertResources';
+import type { AlertServiceType } from '@linode/api-v4';
 import type { MemoExoticComponent } from 'react';
 
 interface ColumnConfig<T> {
@@ -12,10 +14,11 @@ interface ColumnConfig<T> {
   sortingKey?: keyof T;
 }
 
-type ServiceColumns<T> = Record<AlertServiceType | '', ColumnConfig<T>[]>;
+type ServiceColumns<T> = Record<'' | AlertServiceType, ColumnConfig<T>[]>;
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
-  '': [ // for empty case lets display resource and region
+  '': [
+    // for empty case lets display resource and region
     {
       accessor: ({ label }) => label,
       label: 'Resource',
@@ -60,10 +63,14 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
 };
 
 export const serviceToFiltersMap: Record<
-  string,
-  MemoExoticComponent<React.ComponentType<AlertsEngineOptionProps>>[]
+  '' | AlertServiceType,
+  MemoExoticComponent<
+    React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>
+  >[]
 > = {
-  dbaas: [AlertsEngineTypeFilter], // dbaas uses Engine filter
+  '': [], // default to empty
+  dbaas: [AlertsEngineTypeFilter, AlertsRegionFilter], // dbaas uses Engine filter
+  linode: [AlertsRegionFilter], // TODO: enhance with a tags filter
 };
 
 export type AlertFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
