@@ -20,13 +20,7 @@ import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
-import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
-import type { AlertsRegionProps } from './AlertsRegionFilter';
-import type {
-  AlertAdditionalFilterKey,
-  AlertFilterKey,
-  AlertFilterType,
-} from './constants';
+import type { AlertAdditionalFilterKey, AlertFilterType } from './constants';
 import type { AlertInstance } from './DisplayAlertResources';
 import type {
   AlertDefinitionType,

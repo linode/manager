@@ -270,6 +270,22 @@ export const isResourcesEqual = (
   return selectedResourceIds.every((id) => originalSet.has(id));
 };
 
+/**
+ * Generates the appropriate filter props based on the provided filter key.
+ *
+ * This function returns the necessary props for rendering either an engine type filter
+ * (`AlertsEngineOptionProps`) or a region filter (`AlertsRegionProps`), depending on the
+ * `filterKey` value. It ensures that the correct handler and options are passed for
+ * each filter type.
+ *
+ * @param {FilterRendererProps} props - The properties required to determine the filter behavior.
+ * @param {AlertFilterKey} props.filterKey - The key identifying the filter type (`'engineType'` or `'region'`).
+ * @param {(value: AlertFilterType, filterKey: AlertFilterKey) => void} props.handleFilterChange -
+ *        Callback function for updating the selected engine type.
+ * @param {(selectedRegions: string[]) => void} props.handleFilteredRegionsChange -
+ *        Callback function for updating the selected regions.
+ * @param {Region[]} props.regionOptions - The list of available regions for filtering.
+ */
 export const getFilterProps = ({
   filterKey,
   handleFilterChange,
