@@ -310,10 +310,10 @@ export interface EditAlertDefinitionPayload {
   status?: AlertStatusType;
 }
 
-export interface EditAlertDefinitionPayloadExtended
+export interface ExtendedEditAlertDefinitionPayload
   extends EditAlertDefinitionPayload {
   serviceType: string;
   alertId: string;
 }
 
-export type AlertStatusUpdateAction = 'Enable' | 'Disable';
+export type AlertStatusUpdateType = 'Enable' | 'Disable';

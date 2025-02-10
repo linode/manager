@@ -1,7 +1,4 @@
-import type {
-  AlertStatusType,
-  AlertStatusUpdateAction,
-} from '../../../../../../api-v4/lib/cloudpulse/types';
+import type { AlertStatusType, AlertStatusUpdateType } from '@linode/api-v4';
 
 export const AlertListingTableLabelMap = [
   {
@@ -28,7 +25,7 @@ export const AlertListingTableLabelMap = [
 
 export const statusToActionMap: Record<
   AlertStatusType,
-  AlertStatusUpdateAction
+  AlertStatusUpdateType
 > = {
   disabled: 'Enable',
   enabled: 'Disable',
