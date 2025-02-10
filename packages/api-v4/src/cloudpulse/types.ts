@@ -180,6 +180,15 @@ export interface CreateAlertDefinitionPayload {
   trigger_conditions: TriggerCondition;
   channel_ids: number[];
 }
+export interface EditAlertResourcesPayload {
+  entity_ids?: string[];
+  status?: 'disabled' | 'enabled';
+}
+
+export interface AlertStatusUpdatePayload {
+  status: 'disabled' | 'enabled';
+}
+
 export interface MetricCriteria {
   metric: string;
   aggregate_function: MetricAggregationType;
@@ -307,5 +316,6 @@ export type NotificationChannel =
   | NotificationChannelPagerDuty;
 
 export interface EditAlertDefinitionPayload {
-  entity_ids: string[];
+  entity_ids?: string[];
+  status?: 'enabled' | 'disabled';
 }

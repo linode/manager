@@ -51,6 +51,10 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const handleEdit = ({ id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/edit/${serviceType}/${id}`);
   };
+  const handleEnableDisable = (alert: Alert) => {
+    // This is just a pass-through function - actual implementation will be in AlertTableRow
+    // We keep this for consistency in how handlers are passed
+  };
 
   return (
     <OrderBy
@@ -103,6 +107,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                         handlers={{
                           handleDetails: () => handleDetails(alert),
                           handleEdit: () => handleEdit(alert),
+                          handleEnableDisable: () => handleEnableDisable(alert),
                         }}
                         alert={alert}
                         key={alert.id}
