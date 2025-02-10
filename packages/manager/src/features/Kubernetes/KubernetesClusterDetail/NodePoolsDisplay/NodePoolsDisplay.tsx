@@ -1,6 +1,6 @@
 import { Button, CircleProgress, Select, Stack, Typography } from '@linode/ui';
-import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
@@ -9,6 +9,7 @@ import { FormLabel } from 'src/components/FormLabel';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
+import { storage } from 'src/utilities/storage';
 
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
@@ -149,25 +150,35 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const [expandedAccordions, setExpandedAccordions] = useState<
     number[] | undefined
-  >(undefined);
+  >(storage.nodePoolsExpanded.get(clusterID) ?? undefined);
 
   const handleAccordionClick = (id: number) => {
+    let _expandedAccordions;
+
+    // Initial load with no saved local storage
     if (expandedAccordions === undefined) {
       if (defaultExpandedPools.includes(id)) {
-        return setExpandedAccordions(
-          defaultExpandedPools.filter((poolId) => poolId !== id)
+        _expandedAccordions = defaultExpandedPools.filter(
+          (poolId) => poolId !== id
         );
+        storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
+        return setExpandedAccordions(_expandedAccordions);
       } else {
+        storage.nodePoolsExpanded.set(clusterID, [id]);
         return setExpandedAccordions([id]);
       }
     }
 
     if (expandedAccordions.includes(id)) {
-      setExpandedAccordions(
-        expandedAccordions.filter((number) => number !== id)
+      _expandedAccordions = expandedAccordions.filter(
+        (number) => number !== id
       );
+      setExpandedAccordions(_expandedAccordions);
+      storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
     } else {
-      setExpandedAccordions([...expandedAccordions, id]);
+      _expandedAccordions = [...expandedAccordions, id];
+      setExpandedAccordions(_expandedAccordions);
+      storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
     }
   };
 
@@ -197,21 +208,28 @@ export const NodePoolsDisplay = (props: Props) => {
             defaultExpandedPools.length > 0) ||
           (expandedAccordions && expandedAccordions.length > 0) ? (
             <Button
+              onClick={() => {
+                storage.nodePoolsExpanded.set(clusterID, []);
+                setExpandedAccordions([]);
+              }}
               buttonType="secondary"
               compactX
-              onClick={() => setExpandedAccordions([])}
-              startIcon={<UnfoldLessIcon />}
-              sx={{ '& span': { marginRight: 0.5 } }}
+              endIcon={<ExpandLessIcon />}
+              sx={{ '& span': { marginLeft: 0.5 } }}
             >
               Collapse All Pools
             </Button>
           ) : (
             <Button
+              onClick={() => {
+                const expandedAccordions = _pools?.map(({ id }) => id) ?? [];
+                storage.nodePoolsExpanded.set(clusterID, expandedAccordions);
+                setExpandedAccordions(expandedAccordions);
+              }}
               buttonType="secondary"
               compactX
-              onClick={() => setExpandedAccordions(_pools?.map(({ id }) => id))}
-              startIcon={<UnfoldMoreIcon />}
-              sx={{ '& span': { marginRight: 0.5 } }}
+              endIcon={<ExpandMoreIcon />}
+              sx={{ '& span': { marginLeft: 0.5 } }}
             >
               Expand All Pools
             </Button>
