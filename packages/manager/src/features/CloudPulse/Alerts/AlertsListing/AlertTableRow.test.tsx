@@ -30,6 +30,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -46,6 +47,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -72,6 +74,7 @@ describe('Alert Row', () => {
           handlers={{
             handleDetails: vi.fn(),
             handleEdit: vi.fn(),
+            handleEnableDisable: vi.fn(),
           }}
           alert={alert}
           services={mockServices}
@@ -91,6 +94,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -101,5 +105,45 @@ describe('Alert Row', () => {
     )[0];
     await userEvent.click(firstActionMenu);
     expect(getByTestId('Show Details')).toBeInTheDocument();
+  });
+
+  it('should have enable action item present inside action menu if the user created alert is disabled', async () => {
+    const alert = alertFactory.build({ status: 'disabled' });
+    const { getAllByLabelText, getByText } = renderWithTheme(
+      <AlertTableRow
+        handlers={{
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
+        }}
+        alert={alert}
+        services={mockServices}
+      />
+    );
+    const firstActionMenu = getAllByLabelText(
+      `Action menu for Alert ${alert.label}`
+    )[0];
+    await userEvent.click(firstActionMenu);
+    expect(getByText('Enable')).toBeInTheDocument();
+  });
+
+  it('should have disable action item present inside action menu if the user created alert is enabled', async () => {
+    const alert = alertFactory.build();
+    const { getAllByLabelText, getByText } = renderWithTheme(
+      <AlertTableRow
+        handlers={{
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
+        }}
+        alert={alert}
+        services={mockServices}
+      />
+    );
+    const firstActionMenu = getAllByLabelText(
+      `Action menu for Alert ${alert.label}`
+    )[0];
+    await userEvent.click(firstActionMenu);
+    expect(getByText('Disable')).toBeInTheDocument();
   });
 });

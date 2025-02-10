@@ -12,6 +12,7 @@ import {
   AlertServiceType,
   CreateAlertDefinitionPayload,
   EditAlertDefinitionPayload,
+  EditAlertResourcesPayload,
   NotificationChannel,
 } from './types';
 import { Params, Filter, ResourcePage } from '../types';
@@ -93,4 +94,19 @@ export const getNotificationChannels = (params?: Params, filters?: Filter) =>
     setHeaders({
       Authorization: bearer,
     })
+  );
+
+export const editAlertDefinitionEntities = (
+  data: EditAlertResourcesPayload,
+  serviceType: string,
+  alertId: number
+) =>
+  Request<Alert>(
+    setURL(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/alert-definitions/${encodeURIComponent(alertId)}`
+    ),
+    setMethod('PUT'),
+    setData(data)
   );

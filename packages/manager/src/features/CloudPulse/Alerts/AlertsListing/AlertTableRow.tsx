@@ -14,6 +14,8 @@ import { AlertActionMenu } from './AlertActionMenu';
 import type { Item } from '../constants';
 import type { ActionHandlers } from './AlertActionMenu';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
+import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   /**
@@ -43,6 +45,50 @@ export const AlertTableRow = (props: Props) => {
   const { alert, handlers, services } = props;
   const location = useLocation();
   const { created_by, id, label, service_type, status, type, updated } = alert;
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const {
+    isError: isEditAlertError,
+    mutateAsync: editAlertDefinition,
+    reset: resetEditAlert,
+  } = useEditAlertDefinition(service_type, String(id));
+
+  const toggleStatus = alert.status === 'enabled' ? 'disabled' : 'enabled';
+
+  const handleEnableDisable = () => {
+    editAlertDefinition({ status: toggleStatus }).then(() => {
+      // Handle success
+      enqueueSnackbar(`Alert ${toggleStatus}`, {
+        anchorOrigin: {
+          horizontal: 'right',
+          vertical: 'bottom', // Show snackbar at the bottom
+        },
+        autoHideDuration: 5000,
+        style: {
+          marginTop: '150px',
+        },
+        variant: 'success',
+      });
+    });
+  };
+
+  if (isEditAlertError) {
+    const errorStatus = toggleStatus == 'disabled' ? 'Disabling' : 'Enabling';
+    enqueueSnackbar(`${errorStatus} alert failed`, {
+      anchorOrigin: {
+        horizontal: 'right',
+        vertical: 'bottom', // Show snackbar at the bottom
+      },
+      autoHideDuration: 5000,
+      style: {
+        marginTop: '150px',
+      },
+      variant: 'error',
+    });
+    resetEditAlert(); // reset the mutate use hook states
+  }
+
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>
@@ -68,8 +114,9 @@ export const AlertTableRow = (props: Props) => {
       <TableCell actionCell data-qa-alert-action-cell={`alert_${id}`}>
         <AlertActionMenu
           alertLabel={label}
+          alertStatus={status}
           alertType={type}
-          handlers={handlers}
+          handlers={{ ...handlers, handleEnableDisable }}
         />
       </TableCell>
     </TableRow>
