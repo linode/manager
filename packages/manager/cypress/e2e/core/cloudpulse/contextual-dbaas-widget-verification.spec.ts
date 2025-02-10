@@ -192,7 +192,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
-      .type('Primary {enter}');
+      .type('Primary{enter}');
 
     //Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
@@ -207,7 +207,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
   });
 
-  it.only('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
+  it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
