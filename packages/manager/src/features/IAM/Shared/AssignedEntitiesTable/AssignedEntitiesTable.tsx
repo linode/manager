@@ -77,7 +77,7 @@ export const AssignedEntitiesTable = () => {
     },
   ];
 
-  const memoizedTableItems = React.useMemo(() => {
+  const renderTableBody = () => {
     if (resourcesLoading || assignedRolesLoading) {
       return <TableRowLoading columns={3} rows={1} />;
     }
@@ -128,7 +128,7 @@ export const AssignedEntitiesTable = () => {
     }
 
     return null;
-  }, [roles, query, entityType]);
+  };
 
   return (
     <Grid>
@@ -195,7 +195,7 @@ export const AssignedEntitiesTable = () => {
             <TableCell />
           </TableRow>
         </TableHead>
-        <TableBody>{memoizedTableItems}</TableBody>
+        <TableBody>{renderTableBody()}</TableBody>
       </Table>
     </Grid>
   );
@@ -208,13 +208,11 @@ const addResourceNamesToRoles = (
   assignedRoles: IamUserPermissions,
   resources: IamAccountResource
 ): EntitiesRole[] => {
-  const result: EntitiesRole[] = [];
-
   const resourcesRoles = assignedRoles.resource_access;
 
   const resourcesArray: IamAccountResource[] = Object.values(resources);
 
-  resourcesRoles.forEach((resourceRole: ResourceAccess) => {
+  return resourcesRoles.flatMap((resourceRole: ResourceAccess) => {
     const resourceByType = resourcesArray.find(
       (r: IamAccountResource) => r.resource_type === resourceRole.resource_type
     );
@@ -225,20 +223,18 @@ const addResourceNamesToRoles = (
       );
 
       if (resource) {
-        result.push(
-          ...resourceRole.roles.map((r: RoleType) => ({
-            id: `${r}-${resourceRole.resource_id}`,
-            resource_id: resourceRole.resource_id,
-            resource_name: resource.name,
-            resource_type: resourceRole.resource_type,
-            role_name: r,
-          }))
-        );
+        return resourceRole.roles.map((r: RoleType) => ({
+          id: `${r}-${resourceRole.resource_id}`,
+          resource_id: resourceRole.resource_id,
+          resource_name: resource.name,
+          resource_type: resourceRole.resource_type,
+          role_name: r,
+        }));
       }
     }
-  });
 
-  return result;
+    return [];
+  });
 };
 
 const getSearchableFields = (role: EntitiesRole): string[] => [
