@@ -10,7 +10,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AlertTableRow } from './AlertTableRow';
@@ -52,34 +51,6 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const handleEdit = ({ id: _id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/edit/${serviceType}/${_id}`);
   };
-
-  const handleEnableDisable = (alert: Alert) => {
-    // This is just a pass-through function - actual implementation will be in AlertTableRow
-    // We keep this for consistency in how handlers are passed
-  };
-
-  // const handleEnableDisable = ({
-  //   id: _id,
-  //   service_type: serviceType,
-  //   status: alertStatus,
-  // }: Alert) => {
-  //   const { mutateAsync: editAlertDefinition } = useEditAlertDefinition(
-  //     serviceType,
-  //     String(_id)
-  //   );
-
-  //   const newStatus = alertStatus === 'enabled' ? 'disabled' : 'enabled';
-
-  //   editAlertDefinition({ status: newStatus })
-  //     .then(() => {
-  //     // Handle success (e.g., show a success message, refetch alerts, etc.)
-  //     })
-  //     .catch((error) => {
-  //     // Handle error (e.g., show an error message)
-  //     console.error('Error updating alert status:', error);
-  //     });
-  // }
-  
 
   return (
     <OrderBy data={alerts} order="asc" orderBy={'service'}>
@@ -126,7 +97,6 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                         handlers={{
                           handleDetails: () => handleDetails(alert),
                           handleEdit: () => handleEdit(alert),
-                          handleEnableDisable: () => handleEnableDisable(alert),
                         }}
                         alert={alert}
                         key={alert.id}
