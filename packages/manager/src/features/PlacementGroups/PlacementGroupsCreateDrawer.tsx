@@ -192,7 +192,7 @@ export const PlacementGroupsCreateDrawer = (
     <>
       {!isFromLinodeCreate && (
         <DocumentTitleSegment
-          segment={`${open ? 'Create a Placement Groups' : 'Placement Groups'}`}
+          segment={`${open ? 'Create a Placement Group' : 'Placement Groups'}`}
         />
       )}
       <Drawer
