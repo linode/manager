@@ -438,7 +438,7 @@ describe('Linode Config management', () => {
     });
   });
 
-  xdescribe('Mocked', () => {
+  describe('Mocked', () => {
     const region: Region = getRegionById('us-southeast');
     const mockKernel = kernelFactory.build();
     const mockVPC = vpcFactory.build({
