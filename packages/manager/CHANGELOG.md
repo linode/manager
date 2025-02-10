@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Buggy Copy Token behavior on LKE details page ([#11592](https://github.com/linode/manager/pull/11592))
 - Longview Detail id param not found (local only) ([#11599](https://github.com/linode/manager/pull/11599))
+- Database restore backup timezone inconsistency ([#11628](https://github.com/linode/manager/pull/11628))
 
 ### Tech Stories:
 
