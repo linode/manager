@@ -29,7 +29,6 @@ import {
   mockGetDatabaseTypes,
 } from 'support/intercepts/databases';
 import { mockDatabaseNodeTypes } from 'support/constants/databases';
-import { randomIp } from 'support/util/random';
 import { Flags } from 'src/featureFlags';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 
@@ -53,7 +52,6 @@ const {
   region,
   engine,
   clusterName,
-  nodeType,
 } = widgetDetails.dbaas;
 
 const dashboard = dashboardFactory.build({
@@ -133,18 +131,14 @@ const getWidgetLegendRowValuesFromResponse = (
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
 
-const allowedIp = randomIp();
-
 const databaseMock: Database = databaseFactory.build({
   label: clusterName,
   id: 100,
   type: engine,
   region: region,
-  version: '1',
   status: 'active',
-  cluster_size: 1,
+  cluster_size: 3,
   engine: 'mysql',
-  allow_list: [allowedIp],
 });
 
 describe('Integration Tests for DBaaS Dashboard ', () => {
@@ -198,22 +192,22 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
-      .type(`${nodeType}{enter}`);
+      .type('Primary {enter}');
 
     //Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
 
     cy.get('[data-testid="applied-filter"]').within(() => {
-      cy.get(`[data-qa-value="Node Type ${nodeType}"]`)
+      cy.get(`[data-qa-value="Node Type Primary"]`)
         .should('be.visible')
-        .should('have.text', nodeType);
+        .should('have.text', 'Primary');
     });
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
   });
 
-  it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
+  it.only('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;

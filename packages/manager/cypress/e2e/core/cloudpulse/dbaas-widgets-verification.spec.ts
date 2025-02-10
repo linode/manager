@@ -172,7 +172,7 @@ const databaseMock: Database = databaseFactory.build({
   region: mockRegion.label,
   version: '1',
   status: 'provisioning',
-  cluster_size: 1,
+  cluster_size: 2,
   engine: 'mysql',
   hosts: {
     primary: undefined,
@@ -259,6 +259,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
+
+    cy.get('body').click('topRight');
 
     // Select a Node from the autocomplete input.
     ui.autocomplete
