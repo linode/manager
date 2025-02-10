@@ -124,14 +124,14 @@ describe('ComponentRenderer component tests', () => {
     });
 
   it('it should render provided node type filter in props', () => {
-    const resourceProps = dbaasFilterConfig?.filters.find(
+    const nodeTypeProps = dbaasFilterConfig?.filters.find(
       (filter) => filter.configuration.filterKey === 'node_type'
     );
     const mockDashboard = dashboardFactory.build({
       service_type: 'dbaas',
     });
 
-    if (resourceProps === undefined) {
+    if (nodeTypeProps === undefined) {
       expect(true, 'resourceProps to be defined').toEqual(false); // fail test
       return;
     }
@@ -143,7 +143,7 @@ describe('ComponentRenderer component tests', () => {
           componentProps: {
             ...getNodeTypeProperties(
               {
-                config: resourceProps,
+                config: nodeTypeProps,
                 dashboard: mockDashboard,
                 dependentFilters: { resource_id: '1' },
                 isServiceAnalyticsIntegration: false,
