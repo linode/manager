@@ -287,7 +287,7 @@ export const isResourcesEqual = (
  *        Callback function for updating the selected regions.
  * @param {Region[]} props.regionOptions - The list of available regions for filtering.
  */
-export const getFilterProps = ({
+export const getAlertResourceFilterProps = ({
   filterKey,
   handleFilterChange,
   handleFilteredRegionsChange: handleSelectionChange,

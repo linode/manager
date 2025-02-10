@@ -9,7 +9,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
-  getFilterProps,
+  getAlertResourceFilterProps,
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
@@ -290,7 +290,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           ) => (
             <Grid item key={index} md={4} xs={12}>
               <AlertResourcesFilterRenderer
-                componentProps={getFilterProps({
+                componentProps={getAlertResourceFilterProps({
                   filterKey,
                   handleFilterChange,
                   handleFilteredRegionsChange,
