@@ -850,15 +850,11 @@ export const handlers = [
     const unencryptedPools = nodePoolFactory.buildList(5, {
       disk_encryption: 'disabled',
     });
-    const paginatedPool = nodePoolFactory.buildList(1, {
+    const paginatedPool = nodePoolFactory.build({
       nodes: kubeLinodeFactory.buildList(26),
     });
     return HttpResponse.json(
-      makeResourcePage([
-        ...encryptedPools,
-        ...unencryptedPools,
-        ...paginatedPool,
-      ])
+      makeResourcePage([...encryptedPools, ...unencryptedPools, paginatedPool])
     );
   }),
   http.get('*/lke/clusters/*/api-endpoints', async () => {
