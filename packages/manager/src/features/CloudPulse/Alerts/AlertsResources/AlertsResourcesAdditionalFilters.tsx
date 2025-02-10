@@ -19,15 +19,11 @@ interface AlertResourceFiltersProps {
   serviceType?: AlertServiceType;
 }
 
-/**
- * Dynamically renders filters based on serviceType using serviceFiltersMap.
- * Improves readability and reusability.
- */
 export const AlertResourceAdditionalFilters = ({
   handleFilterChange,
   serviceType,
 }: AlertResourceFiltersProps) => {
-  const filtersToRender = serviceToFiltersMap[serviceType ?? ''] ?? [];
+  const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
 
   if (!filtersToRender.length) {
     return <NullComponent />;

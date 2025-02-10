@@ -92,7 +92,7 @@ export const AlertDetail = () => {
   }
   const {
     entity_ids: entityIds,
-    service_type: serviceTypeObj,
+    service_type: alertServiceType,
     type,
   } = alertDetails;
   return (
@@ -130,7 +130,7 @@ export const AlertDetail = () => {
           <AlertResources
             alertResourceIds={entityIds}
             alertType={type}
-            serviceType={serviceTypeObj}
+            serviceType={alertServiceType}
           />
         </Box>
         <Box

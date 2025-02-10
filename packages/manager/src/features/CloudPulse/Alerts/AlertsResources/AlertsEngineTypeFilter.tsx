@@ -29,7 +29,7 @@ export const AlertsEngineTypeFilter = React.memo(
         }}
         autoHighlight
         clearOnBlur
-        label="Engine Type"
+        label="Database Engine"
         options={engineOptions}
         placeholder="Select a Database Engine"
       />
