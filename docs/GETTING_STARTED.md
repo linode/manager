@@ -35,7 +35,7 @@
 
 ## Serving a production build of Cloud Manager
 
-You can build a prduction bundle of Cloud Manager and serve it locally.
+You can build a production bundle of Cloud Manager and serve it locally.
 
 ```bash
 pnpm install
