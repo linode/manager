@@ -101,7 +101,7 @@ describe('Alert Row', () => {
   });
 
   it('should have the show details action item present inside action menu', async () => {
-    const alert = alertFactory.build({ type: 'user' });
+    const alert = alertFactory.build({ status: 'enabled' });
     const { getAllByLabelText, getByTestId } = renderWithTheme(
       <AlertTableRow
         handlers={{
