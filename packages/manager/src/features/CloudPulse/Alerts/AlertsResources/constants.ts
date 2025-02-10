@@ -5,6 +5,7 @@ import { AlertsRegionFilter } from './AlertsRegionFilter';
 import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
 import type { AlertsRegionProps } from './AlertsRegionFilter';
 import type { AlertInstance } from './DisplayAlertResources';
+import type { AlertAdditionalFilterKey, ServiceFilterConfig } from './types';
 import type { AlertServiceType } from '@linode/api-v4';
 import type { MemoExoticComponent } from 'react';
 
@@ -62,13 +63,6 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   ],
 };
 
-export interface ServiceFilterConfig {
-  component: MemoExoticComponent<
-    React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>
-  >;
-  filter: AlertFilterKey;
-}
-
 export const serviceToFiltersMap: Record<
   '' | AlertServiceType,
   ServiceFilterConfig[]
@@ -80,12 +74,6 @@ export const serviceToFiltersMap: Record<
   ],
   linode: [{ component: AlertsRegionFilter, filter: 'region' }], // TODO: Add 'tags' filter in the future
 };
-
-export type AlertFilterKey = 'engineType' | 'region';
-
-export type AlertAdditionalFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
-
-export type AlertFilterType = boolean | number | string | undefined;
 
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
   'engineType',

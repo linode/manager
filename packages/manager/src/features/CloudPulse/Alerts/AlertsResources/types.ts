@@ -1,4 +1,7 @@
+import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
+import type { AlertsRegionProps } from './AlertsRegionFilter';
 import type { AlertServiceType } from '@linode/api-v4';
+import type { MemoExoticComponent } from 'react';
 
 export interface ColumnConfig<T> {
   /**
@@ -37,13 +40,22 @@ export type ServiceColumns<T> = Record<
 >;
 
 /**
- * Defines the available filter keys that can be used to filter alerts.
- * This type will be extended in the future to include other attributes like tags, plan, etc.
- */
-export type AlertFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
-
-/**
  * Represents the possible types for alert filter values.
  * The filter value can be a boolean, number, string, or undefined.
  */
 export type AlertFilterType = boolean | number | string | string[] | undefined;
+
+/**
+ * Defines the available filter keys that can be used to filter alerts.
+ * This type will be extended in the future to include other attributes like tags, plan, etc.
+ */
+export type AlertFilterKey = 'engineType' | 'region';
+
+export type AlertAdditionalFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
+
+export interface ServiceFilterConfig {
+  component: MemoExoticComponent<
+    React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>
+  >;
+  filter: AlertFilterKey;
+}

@@ -7,12 +7,12 @@ import {
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 import type { AlertsEngineOptionProps } from '../AlertsResources/AlertsEngineTypeFilter';
 import type { AlertsRegionProps } from '../AlertsResources/AlertsRegionFilter';
+import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type {
   AlertAdditionalFilterKey,
   AlertFilterKey,
   AlertFilterType,
-} from '../AlertsResources/constants';
-import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
+} from '../AlertsResources/types';
 import type { Region } from '@linode/api-v4';
 
 interface FilterResourceProps {
