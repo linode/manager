@@ -1,6 +1,8 @@
+import React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { buildFilterComponent } from './AlertsResourcesFilterRenderer';
+import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { serviceToFiltersMap } from './constants';
 
 describe('AlertsResourcesFilterRenderer', () => {
@@ -8,12 +10,10 @@ describe('AlertsResourcesFilterRenderer', () => {
   it('renders the correct filter components based on properties passed', () => {
     const handleFilterChangeMock = vi.fn();
     const { getByPlaceholderText } = renderWithTheme(
-      buildFilterComponent({
-        component: filters[0].component, // db engine filter
-        componentProps: {
-          handleFilterChange: handleFilterChangeMock,
-        },
-      })
+      <AlertResourcesFilterRenderer
+        component={filters[0].component}
+        componentProps={{ handleFilterChange: handleFilterChangeMock }}
+      />
     );
 
     expect(
@@ -22,13 +22,13 @@ describe('AlertsResourcesFilterRenderer', () => {
 
     // check for region filter
     renderWithTheme(
-      buildFilterComponent({
-        component: filters[1].component, // region filter
-        componentProps: {
+      <AlertResourcesFilterRenderer
+        componentProps={{
           handleSelectionChange: handleFilterChangeMock,
           regionOptions: [],
-        },
-      })
+        }}
+        component={filters[1].component}
+      />
     );
 
     expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();

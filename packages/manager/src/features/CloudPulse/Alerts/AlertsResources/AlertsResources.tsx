@@ -15,7 +15,7 @@ import {
   getRegionsIdRegionMap,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { buildFilterComponent } from './AlertsResourcesFilterRenderer';
+import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
@@ -303,15 +303,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             index
           ) => (
             <Grid item key={`${index}_${filterKey}`} md={4} xs={12}>
-              {buildFilterComponent({
-                component,
-                componentProps: getFilterProps({
+              <AlertResourcesFilterRenderer
+                componentProps={getFilterProps({
                   filterKey,
                   handleFilterChange,
                   handleFilteredRegionsChange,
                   regionOptions,
-                }),
-              })}
+                })}
+                component={component}
+              />
             </Grid>
           ))}
           {isSelectionsNeeded && (
