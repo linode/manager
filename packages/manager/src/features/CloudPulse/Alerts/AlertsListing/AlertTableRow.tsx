@@ -1,4 +1,5 @@
 import { Box } from '@linode/ui';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -6,6 +7,7 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -14,8 +16,6 @@ import { AlertActionMenu } from './AlertActionMenu';
 import type { Item } from '../constants';
 import type { ActionHandlers } from './AlertActionMenu';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
-import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
-import { useSnackbar } from 'notistack';
 
 interface Props {
   /**
@@ -48,46 +48,29 @@ export const AlertTableRow = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    isError: isEditAlertError,
-    mutateAsync: editAlertDefinition,
-    reset: resetEditAlert,
-  } = useEditAlertDefinition(service_type, String(id));
+  const { mutateAsync: editAlertDefinition } = useEditAlertDefinition(
+    service_type,
+    String(id)
+  );
 
   const toggleStatus = alert.status === 'enabled' ? 'disabled' : 'enabled';
+  const errorStatus = toggleStatus == 'disabled' ? 'Disabling' : 'Enabling';
 
   const handleEnableDisable = () => {
-    editAlertDefinition({ status: toggleStatus }).then(() => {
-      // Handle success
-      enqueueSnackbar(`Alert ${toggleStatus}`, {
-        anchorOrigin: {
-          horizontal: 'right',
-          vertical: 'bottom', // Show snackbar at the bottom
-        },
-        autoHideDuration: 5000,
-        style: {
-          marginTop: '150px',
-        },
-        variant: 'success',
+    editAlertDefinition({ status: toggleStatus })
+      .then(() => {
+        // Handle success
+        enqueueSnackbar(`Alert ${toggleStatus}`, {
+          variant: 'success',
+        });
+      })
+      .catch(() => {
+        // Handle error
+        enqueueSnackbar(`${errorStatus} alert failed`, {
+          variant: 'error',
+        });
       });
-    });
   };
-
-  if (isEditAlertError) {
-    const errorStatus = toggleStatus == 'disabled' ? 'Disabling' : 'Enabling';
-    enqueueSnackbar(`${errorStatus} alert failed`, {
-      anchorOrigin: {
-        horizontal: 'right',
-        vertical: 'bottom', // Show snackbar at the bottom
-      },
-      autoHideDuration: 5000,
-      style: {
-        marginTop: '150px',
-      },
-      variant: 'error',
-    });
-    resetEditAlert(); // reset the mutate use hook states
-  }
 
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
