@@ -62,25 +62,37 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   ],
 };
 
+export interface ServiceFilterConfig {
+  component: MemoExoticComponent<
+    React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>
+  >;
+  filter: AlertFilterKey;
+}
+
 export const serviceToFiltersMap: Record<
   '' | AlertServiceType,
-  MemoExoticComponent<
-    React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>
-  >[]
+  ServiceFilterConfig[]
 > = {
   '': [], // default to empty
-  dbaas: [AlertsEngineTypeFilter, AlertsRegionFilter], // dbaas uses Engine filter
-  linode: [AlertsRegionFilter], // TODO: enhance with a tags filter
+  dbaas: [
+    { component: AlertsEngineTypeFilter, filter: 'engineType' },
+    { component: AlertsRegionFilter, filter: 'region' },
+  ],
+  linode: [{ component: AlertsRegionFilter, filter: 'region' }], // TODO: Add 'tags' filter in the future
 };
 
-export type AlertFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
+export type AlertFilterKey = 'engineType' | 'region';
+
+export type AlertAdditionalFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
 
 export type AlertFilterType = boolean | number | string | undefined;
 
-export const alertApplicableFilterKeys: AlertFilterKey[] = ['engineType'];
+export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
+  'engineType',
+];
 
 export const alertAdditionalFilterKeyMap: Record<
-  AlertFilterKey,
+  AlertAdditionalFilterKey,
   keyof AlertInstance
 > = {
   engineType: 'engineType',

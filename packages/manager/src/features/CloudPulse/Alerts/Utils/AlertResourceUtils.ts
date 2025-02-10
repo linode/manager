@@ -1,11 +1,14 @@
 import { deepEqual } from '../../Utils/FilterBuilder';
 import {
   alertAdditionalFilterKeyMap,
-  alertApplicableFilterKeys,
+  applicableAdditionalFilterKeys,
 } from '../AlertsResources/constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { AlertsEngineOptionProps } from '../AlertsResources/AlertsEngineTypeFilter';
+import type { AlertsRegionProps } from '../AlertsResources/AlertsRegionFilter';
 import type {
+  AlertAdditionalFilterKey,
   AlertFilterKey,
   AlertFilterType,
 } from '../AlertsResources/constants';
@@ -16,7 +19,10 @@ interface FilterResourceProps {
   /**
    * Additional filters for filtering the instances
    */
-  additionalFilters?: Record<AlertFilterKey, AlertFilterType | undefined>;
+  additionalFilters?: Record<
+    AlertAdditionalFilterKey,
+    AlertFilterType | undefined
+  >;
   /**
    * The data to be filtered
    */
@@ -53,6 +59,30 @@ interface FilterResourceProps {
    * This property helps to track the list of selected resources
    */
   selectedResources?: string[];
+}
+
+interface FilterRendererProps {
+  /**
+   * The filter to which the props needs to built for
+   */
+  filterKey: AlertFilterKey;
+
+  /**
+   * Callback to publish the selected engine type
+   */
+  handleFilterChange: (
+    engineType: string | undefined,
+    type: AlertAdditionalFilterKey
+  ) => void;
+  /**
+   * Callback for publishing the IDs of the selected regions.
+   */
+  handleFilteredRegionsChange: (regions: string[]) => void;
+
+  /**
+   * The regions to be displayed according to the resources associated with alerts
+   */
+  regionOptions: Region[];
 }
 
 /**
@@ -169,12 +199,15 @@ export const getFilteredResources = (
  */
 const applyAdditionalFilter = (
   resource: AlertInstance,
-  additionalFilters?: Record<AlertFilterKey, AlertFilterType | undefined>
+  additionalFilters?: Record<
+    AlertAdditionalFilterKey,
+    AlertFilterType | undefined
+  >
 ): boolean => {
   if (!additionalFilters) {
     return true;
   }
-  return alertApplicableFilterKeys.every((key) => {
+  return applicableAdditionalFilterKeys.every((key) => {
     const value = additionalFilters[key];
     if (value === undefined) {
       return true;
@@ -235,4 +268,22 @@ export const isResourcesEqual = (
 
   const originalSet = new Set(originalResourceIds);
   return selectedResourceIds.every((id) => originalSet.has(id));
+};
+
+export const getFilterProps = ({
+  filterKey,
+  handleFilterChange,
+  handleFilteredRegionsChange: handleSelectionChange,
+  regionOptions,
+}: FilterRendererProps): AlertsEngineOptionProps | AlertsRegionProps => {
+  if (filterKey === 'engineType') {
+    return {
+      handleFilterChange,
+    };
+  } else {
+    return {
+      handleSelectionChange,
+      regionOptions,
+    };
+  }
 };

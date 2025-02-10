@@ -1,7 +1,7 @@
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import type { AlertFilterKey } from './constants';
+import type { AlertAdditionalFilterKey } from './constants';
 
 export interface AlertsEngineOptionProps {
   /**
@@ -9,7 +9,7 @@ export interface AlertsEngineOptionProps {
    */
   handleFilterChange: (
     engineType: string | undefined,
-    type: AlertFilterKey
+    type: AlertAdditionalFilterKey
   ) => void;
 }
 

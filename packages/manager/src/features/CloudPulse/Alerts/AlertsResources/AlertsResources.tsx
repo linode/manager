@@ -9,6 +9,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
+  getFilterProps,
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
@@ -19,7 +20,13 @@ import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
-import type { AlertFilterKey, AlertFilterType } from './constants';
+import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
+import type { AlertsRegionProps } from './AlertsRegionFilter';
+import type {
+  AlertAdditionalFilterKey,
+  AlertFilterKey,
+  AlertFilterType,
+} from './constants';
 import type { AlertInstance } from './DisplayAlertResources';
 import type {
   AlertDefinitionType,
@@ -87,7 +94,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertResourceIds
   );
   const [additionalFilters, setAdditionalFilters] = React.useState<
-    Record<AlertFilterKey, AlertFilterType>
+    Record<AlertAdditionalFilterKey, AlertFilterType>
   >({ engineType: undefined });
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
@@ -158,7 +165,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const handleFilterChange = (
     value: AlertFilterType,
-    filterKey: AlertFilterKey
+    filterKey: AlertAdditionalFilterKey
   ) => {
     setAdditionalFilters((prev) => ({
       ...prev,
@@ -296,15 +303,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               value={searchText || ''}
             />
           </Grid>
-          {filtersToRender.map((filterComponent, index) => (
-            <Grid item key={index} md={4} xs={12}>
+          {filtersToRender.map(({ component, filter }, index) => (
+            <Grid item key={`${index}_${filter}`} md={4} xs={12}>
               {buildFilterComponent({
-                component: filterComponent,
-                componentProps: {
+                component,
+                componentProps: getFilterProps({
+                  filterKey: filter,
                   handleFilterChange,
-                  handleSelectionChange: handleFilteredRegionsChange,
+                  handleFilteredRegionsChange,
                   regionOptions,
-                },
+                }),
               })}
             </Grid>
           ))}
