@@ -66,7 +66,7 @@ export const NotificationCenterNotifications = React.memo(
             <StyledLinkButton
               sx={(theme) => ({
                 color: 'primary.main',
-                fontFamily: theme.font.bold,
+                font: theme.font.bold,
                 textDecoration: 'none !important',
               })}
               aria-label={`Display all ${content.length} items`}

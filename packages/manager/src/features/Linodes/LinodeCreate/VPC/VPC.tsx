@@ -286,7 +286,7 @@ export const VPC = () => {
                     />
                   </Stack>
                   <Divider />
-                  <Typography fontFamily={(theme) => theme.font.bold}>
+                  <Typography sx={(theme) => ({ font: theme.font.bold })}>
                     Assign additional IPv4 ranges
                   </Typography>
                   {formState.errors.interfaces?.[1] &&

@@ -72,8 +72,10 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
             >
               <Stack>
                 <Typography
+                  sx={(theme) => ({
+                    font: theme.font.bold,
+                  })}
                   color="inherit"
-                  fontFamily={(theme) => theme.font.bold}
                 >
                   {option.label}
                 </Typography>

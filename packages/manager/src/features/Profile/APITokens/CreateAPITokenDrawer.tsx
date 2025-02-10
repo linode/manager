@@ -263,13 +263,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
         </TableHead>
         <TableBody>
           <TableRow data-qa-row="Select All">
-            <StyledSelectCell padding="checkbox" parentColumn="Access">
-              Select All
-            </StyledSelectCell>
-            <StyledSelectAllPermissionsCell
-              padding="checkbox"
-              parentColumn="No Access"
-            >
+            <StyledSelectCell padding="checkbox">Select All</StyledSelectCell>
+            <StyledSelectAllPermissionsCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select no access for all',
@@ -282,10 +277,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
                 value="0"
               />
             </StyledSelectAllPermissionsCell>
-            <StyledSelectAllPermissionsCell
-              padding="checkbox"
-              parentColumn="Read Only"
-            >
+            <StyledSelectAllPermissionsCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select read-only for all',
@@ -298,10 +290,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
                 value="1"
               />
             </StyledSelectAllPermissionsCell>
-            <StyledSelectAllPermissionsCell
-              padding="checkbox"
-              parentColumn="Read/Write"
-            >
+            <StyledSelectAllPermissionsCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select read/write for all',
@@ -331,10 +320,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
                 data-qa-row={basePermNameMap[scopeTup[0]]}
                 key={scopeTup[0]}
               >
-                <StyledAccessCell padding="checkbox" parentColumn="Access">
+                <StyledAccessCell padding="checkbox">
                   {basePermNameMap[scopeTup[0]]}
                 </StyledAccessCell>
-                <StyledPermissionsCell padding="checkbox" parentColumn="None">
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 0}
                     disabled={false}
@@ -344,10 +333,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
                     viewOnly={false}
                   />
                 </StyledPermissionsCell>
-                <StyledPermissionsCell
-                  padding="checkbox"
-                  parentColumn="Read Only"
-                >
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     tooltipText={
                       scopeIsForVPC ? VPC_READ_ONLY_TOOLTIP : undefined
@@ -360,10 +346,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
                     viewOnly={false}
                   />
                 </StyledPermissionsCell>
-                <StyledPermissionsCell
-                  padding="checkbox"
-                  parentColumn="Read/Write"
-                >
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 2}
                     disabled={false}

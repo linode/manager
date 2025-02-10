@@ -66,7 +66,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
       borderLeft: '1px solid transparent',
     },
     input: {
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
       fontSize: '1.125rem',
       padding: 0,
       paddingLeft: 2,
