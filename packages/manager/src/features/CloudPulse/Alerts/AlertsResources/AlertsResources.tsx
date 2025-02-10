@@ -19,13 +19,23 @@ import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
-import type { AlertDefinitionType, Region } from '@linode/api-v4';
+import type {
+  AlertClass,
+  AlertDefinitionType,
+  Filter,
+  Region,
+} from '@linode/api-v4';
 
 export interface AlertResourcesProp {
+  /**
+   * Class of the alert (dedicated / shared)
+   */
+  alertClass?: AlertClass;
   /**
    * The label of the alert to be displayed
    */
   alertLabel?: string;
+
   /**
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
@@ -56,6 +66,7 @@ export type SelectUnselectAll = 'Select All' | 'Unselect All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
+    alertClass,
     alertLabel,
     alertResourceIds,
     alertType,
@@ -69,6 +80,31 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertResourceIds
   );
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
+
+  const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+    if (serviceType !== 'dbaas') {
+      return undefined;
+    }
+
+    // If the serviceType is 'dbaas', always include the platform filter
+    const platformFilter: Filter | undefined =
+      serviceType === 'dbaas' ? { platform: 'rdbms-default' } : undefined;
+
+    // If alertType is not 'system' or alertClass is not defined, return only the platform filter (if applicable)
+    if (alertType !== 'system' || !alertClass) {
+      return platformFilter;
+    }
+
+    // Apply type filter only for system alerts with a valid alertClass
+    const typeFilter: Filter = {
+      type: {
+        '+contains': alertClass,
+      },
+    };
+
+    // Combine platform and type filters
+    return platformFilter ? { ...platformFilter, ...typeFilter } : typeFilter;
+  }, [alertClass, alertType, serviceType]);
 
   const {
     data: regions,
@@ -84,7 +120,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     Boolean(serviceType),
     serviceType,
     {},
-    serviceType === 'dbaas' ? { platform: 'rdbms-default' } : {}
+    xFilterToBeApplied
   );
 
   const computedSelectedResources = React.useMemo(() => {
