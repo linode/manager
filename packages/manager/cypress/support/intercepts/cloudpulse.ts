@@ -52,7 +52,7 @@ export const mockGetCloudPulseServices = (
   serviceTypes: string[]
 ): Cypress.Chainable<null> => {
   const services = serviceTypes.map((serviceType) => ({
-    label: cloudPulseServicelMap.get(serviceType) || 'dbaas',
+    label: cloudPulseServicelMap[serviceType] || 'dbaas',
     service_type: serviceType,
   }));
   return cy.intercept(

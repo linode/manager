@@ -111,9 +111,10 @@ const validateAlertDetails = (alert: Alert) => {
   const { id, service_type, status, label, updated, created_by } = alert;
 
   cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
-    cy.findByText(service_type)
+    cy.findByText(service_type === 'dbaas' ? 'Databases' : 'Linode')
       .should('be.visible')
-      .and('have.text', service_type);
+      .and('have.text', service_type === 'dbaas' ? 'Databases' : 'Linode');
+
     cy.findByText(alertStatuses[status])
       .should('be.visible')
       .and('have.text', alertStatuses[status]);
@@ -163,10 +164,10 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     ];
 
     sortCases.forEach(({ column, descending, ascending }) => {
-      // Verify ascending order
+      // Verify descending order
       verifyTableSorting(column, 'descending', descending);
 
-      // Verify descending order
+      // Verify ascending order
       verifyTableSorting(column, 'ascending', ascending);
     });
   });
@@ -216,7 +217,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     // Filter by alert service and validate the results
     cy.findByPlaceholderText('Select a Service')
       .should('be.visible')
-      .type(`${mockAlerts[0].service_type}{enter}`);
+      .type('Databases{enter}');
 
     cy.focused().click();
 
