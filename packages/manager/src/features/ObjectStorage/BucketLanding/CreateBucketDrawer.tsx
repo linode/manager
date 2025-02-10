@@ -31,6 +31,7 @@ import ClusterSelect from './ClusterSelect';
 import { OveragePricing } from './OveragePricing';
 
 import type { CreateObjectStorageBucketPayload } from '@linode/api-v4';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 interface Props {
   isOpen: boolean;
@@ -143,79 +144,84 @@ export const CreateBucketDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
-      <form onSubmit={handleBucketFormSubmit}>
-        {isRestrictedUser && (
-          <Notice
-            data-qa-permissions-notice
-            text="You don't have permissions to create a Bucket. Please contact an account administrator for details."
-            variant="error"
-          />
-        )}
-        {errors.root?.message && (
-          <Notice text={errors.root?.message} variant="error" />
-        )}
-        <Controller
-          render={({ field, fieldState }) => (
-            <TextField
-              {...field}
-              data-qa-cluster-label
-              data-testid="label"
-              disabled={isRestrictedUser}
-              errorText={fieldState.error?.message}
-              label="Label"
-              required
+    <>
+      <DocumentTitleSegment segment="Create a Object Storage" />
+      <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
+        <form onSubmit={handleBucketFormSubmit}>
+          {isRestrictedUser && (
+            <Notice
+              data-qa-permissions-notice
+              text="You don't have permissions to create a Bucket. Please contact an account administrator for details."
+              variant="error"
             />
           )}
-          control={control}
-          name="label"
-          rules={{ required: 'Label is required' }}
-        />
-        <Controller
-          render={({ field, fieldState }) => (
-            <ClusterSelect
-              {...field}
-              data-qa-cluster-select
-              disabled={isRestrictedUser}
-              error={fieldState.error?.message}
-              onChange={(value) => field.onChange(value)}
-              required
-              selectedCluster={field.value ?? undefined}
+          {errors.root?.message && (
+            <Notice text={errors.root?.message} variant="error" />
+          )}
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                data-qa-cluster-label
+                data-testid="label"
+                disabled={isRestrictedUser}
+                errorText={fieldState.error?.message}
+                label="Label"
+                required
+              />
+            )}
+            control={control}
+            name="label"
+            rules={{ required: 'Label is required' }}
+          />
+          <Controller
+            render={({ field, fieldState }) => (
+              <ClusterSelect
+                {...field}
+                data-qa-cluster-select
+                disabled={isRestrictedUser}
+                error={fieldState.error?.message}
+                onChange={(value) => field.onChange(value)}
+                required
+                selectedCluster={field.value ?? undefined}
+              />
+            )}
+            control={control}
+            name="cluster"
+            rules={{ required: 'Cluster is required' }}
+          />
+          {clusterRegion?.id && <OveragePricing regionId={clusterRegion.id} />}
+          {showGDPRCheckbox && (
+            <StyledEUAgreementCheckbox
+              checked={hasSignedAgreement}
+              onChange={(e) => setHasSignedAgreement(e.target.checked)}
             />
           )}
-          control={control}
-          name="cluster"
-          rules={{ required: 'Cluster is required' }}
-        />
-        {clusterRegion?.id && <OveragePricing regionId={clusterRegion.id} />}
-        {showGDPRCheckbox && (
-          <StyledEUAgreementCheckbox
-            checked={hasSignedAgreement}
-            onChange={(e) => setHasSignedAgreement(e.target.checked)}
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'create-bucket-button',
+              disabled:
+                (showGDPRCheckbox && !hasSignedAgreement) || isErrorTypes,
+              label: 'Create Bucket',
+              loading:
+                isPending || Boolean(clusterRegion?.id && isLoadingTypes),
+              tooltipText:
+                !isLoadingTypes && isInvalidPrice
+                  ? PRICES_RELOAD_ERROR_NOTICE_TEXT
+                  : '',
+              type: 'submit',
+            }}
+            secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
           />
-        )}
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'create-bucket-button',
-            disabled: (showGDPRCheckbox && !hasSignedAgreement) || isErrorTypes,
-            label: 'Create Bucket',
-            loading: isPending || Boolean(clusterRegion?.id && isLoadingTypes),
-            tooltipText:
-              !isLoadingTypes && isInvalidPrice
-                ? PRICES_RELOAD_ERROR_NOTICE_TEXT
-                : '',
-            type: 'submit',
-          }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
-        />
-        <EnableObjectStorageModal
-          handleSubmit={handleSubmit(onSubmit)}
-          onClose={() => setIsEnableObjDialogOpen(false)}
-          open={isEnableObjDialogOpen}
-          regionId={clusterRegion?.id}
-        />
-      </form>
-    </Drawer>
+          <EnableObjectStorageModal
+            handleSubmit={handleSubmit(onSubmit)}
+            onClose={() => setIsEnableObjDialogOpen(false)}
+            open={isEnableObjDialogOpen}
+            regionId={clusterRegion?.id}
+          />
+        </form>
+      </Drawer>
+    </>
   );
 };
 

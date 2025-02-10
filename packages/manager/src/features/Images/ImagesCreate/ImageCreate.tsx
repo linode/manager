@@ -32,7 +32,7 @@ export const ImageCreate = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Create Image" />
+      <DocumentTitleSegment segment="Create a Image" />
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>

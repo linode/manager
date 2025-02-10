@@ -47,6 +47,7 @@ import type {
 } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 import type { DisableItemOption } from 'src/components/ListItemOption';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
@@ -188,115 +189,123 @@ export const PlacementGroupsCreateDrawer = (
   );
 
   return (
-    <Drawer
-      onClose={handleDrawerClose}
-      open={open}
-      title="Create Placement Group"
-    >
-      {disabledPlacementGroupCreateButton && (
-        <Notice
-          text={getRestrictedResourceText({
-            action: 'edit',
-            resourceType: 'Placement Groups',
-          })}
-          spacingTop={16}
-          variant="error"
+    <>
+      {!isFromLinodeCreate && (
+        <DocumentTitleSegment
+          segment={`${open ? 'Create a Placement Groups' : 'Placement Groups'}`}
         />
       )}
-      <form onSubmit={handleSubmit}>
-        <Stack spacing={1}>
-          {hasApiError && (
-            <Notice variant="error">
-              <List>
-                {error.map((e) => (
-                  <ListItem
-                    disablePadding={true}
-                    key={e.field}
-                    sx={{ my: 0.25 }}
-                  >
-                    - {e.reason}
-                  </ListItem>
-                ))}
-              </List>
-            </Notice>
-          )}
-          {selectedRegion && isFromLinodeCreate && (
-            <DescriptionList
-              items={[
-                {
-                  description: `${selectedRegion.label} (${selectedRegion.id})`,
-                  title: 'Region',
-                },
-              ]}
-              sx={{ my: 2 }}
-            />
-          )}
-          <Divider hidden={!selectedRegionId} />
-          <TextField
-            inputProps={{
-              autoFocus: true,
-            }}
-            aria-label="Label for the Placement Group"
-            disabled={disabledPlacementGroupCreateButton || false}
-            errorText={errors.label}
-            label="Label"
-            name="label"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            value={values.label}
+      <Drawer
+        onClose={handleDrawerClose}
+        open={open}
+        title="Create Placement Group"
+      >
+        {disabledPlacementGroupCreateButton && (
+          <Notice
+            text={getRestrictedResourceText({
+              action: 'edit',
+              resourceType: 'Placement Groups',
+            })}
+            spacingTop={16}
+            variant="error"
           />
-          {!selectedRegionId && (
-            <RegionSelect
-              disabled={
-                Boolean(selectedRegionId) || disabledPlacementGroupCreateButton
+        )}
+        <form onSubmit={handleSubmit}>
+          <Stack spacing={1}>
+            {hasApiError && (
+              <Notice variant="error">
+                <List>
+                  {error.map((e) => (
+                    <ListItem
+                      disablePadding={true}
+                      key={e.field}
+                      sx={{ my: 0.25 }}
+                    >
+                      - {e.reason}
+                    </ListItem>
+                  ))}
+                </List>
+              </Notice>
+            )}
+            {selectedRegion && isFromLinodeCreate && (
+              <DescriptionList
+                items={[
+                  {
+                    description: `${selectedRegion.label} (${selectedRegion.id})`,
+                    title: 'Region',
+                  },
+                ]}
+                sx={{ my: 2 }}
+              />
+            )}
+            <Divider hidden={!selectedRegionId} />
+            <TextField
+              inputProps={{
+                autoFocus: true,
+              }}
+              aria-label="Label for the Placement Group"
+              disabled={disabledPlacementGroupCreateButton || false}
+              errorText={errors.label}
+              label="Label"
+              name="label"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.label}
+            />
+            {!selectedRegionId && (
+              <RegionSelect
+                disabled={
+                  Boolean(selectedRegionId) ||
+                  disabledPlacementGroupCreateButton
+                }
+                currentCapability="Placement Group"
+                disableClearable
+                disabledRegions={disabledRegions}
+                helperText={values.region && pgRegionLimitHelperText}
+                onChange={(e, region) => handleRegionSelect(region.id)}
+                regions={regions ?? []}
+                tooltipText="Only Linode data center regions that support placement groups are listed."
+                value={selectedRegionId ?? values.region}
+              />
+            )}
+            <PlacementGroupTypeSelect
+              disabledPlacementGroupCreateButton={
+                disabledPlacementGroupCreateButton
               }
-              currentCapability="Placement Group"
-              disableClearable
-              disabledRegions={disabledRegions}
-              helperText={values.region && pgRegionLimitHelperText}
-              onChange={(e, region) => handleRegionSelect(region.id)}
-              regions={regions ?? []}
-              tooltipText="Only Linode data center regions that support placement groups are listed."
-              value={selectedRegionId ?? values.region}
+              error={errors.placement_group_type}
+              setFieldValue={setFieldValue}
             />
-          )}
-          <PlacementGroupTypeSelect
-            disabledPlacementGroupCreateButton={
-              disabledPlacementGroupCreateButton
-            }
-            error={errors.placement_group_type}
-            setFieldValue={setFieldValue}
-          />
-          <PlacementGroupPolicyRadioGroup
-            disabledPlacementGroupCreateButton={
-              disabledPlacementGroupCreateButton
-            }
-            handleChange={handleChange}
-            setFieldValue={setFieldValue}
-            value={values.placement_group_policy}
-          />
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              disabled:
-                isSubmitting ||
-                !values.region ||
-                !values.label ||
-                disabledPlacementGroupCreateButton,
-              label: 'Create Placement Group',
-              loading: isSubmitting,
-              onClick: () => setHasFormBeenSubmitted(true),
-              type: 'submit',
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: handleDrawerClose,
-            }}
-            sx={{ pt: 4 }}
-          />
-        </Stack>
-      </form>
-    </Drawer>
+            <PlacementGroupPolicyRadioGroup
+              disabledPlacementGroupCreateButton={
+                disabledPlacementGroupCreateButton
+              }
+              handleChange={handleChange}
+              setFieldValue={setFieldValue}
+              value={values.placement_group_policy}
+            />
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'submit',
+                disabled:
+                  isSubmitting ||
+                  !values.region ||
+                  !values.label ||
+                  disabledPlacementGroupCreateButton,
+                label: 'Create Placement Group',
+                loading: isSubmitting,
+                onClick: () => setHasFormBeenSubmitted(true),
+                type: 'submit',
+              }}
+              secondaryButtonProps={{
+                'data-testid': 'cancel',
+                label: 'Cancel',
+                onClick: handleDrawerClose,
+              }}
+              sx={{ pt: 4 }}
+            />
+          </Stack>
+        </form>
+      </Drawer>
+    </>
   );
 };
