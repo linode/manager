@@ -14,12 +14,12 @@ import { splitAt } from 'src/utilities/splitAt';
 import { StyledButton, StyledTypography } from './ResultGroup.styles';
 import { ResultRow } from './ResultRow';
 
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { ResultRowDataOption } from './types';
 
 interface ResultGroupProps {
   entity: string;
   groupSize: number;
-  results: Item[];
+  results: ResultRowDataOption[];
 }
 
 export const ResultGroup = (props: ResultGroupProps) => {
