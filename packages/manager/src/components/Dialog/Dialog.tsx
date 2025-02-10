@@ -124,6 +124,8 @@ export const Dialog = React.forwardRef(
           />
           <DialogContent
             sx={{
+              display: 'flex',
+              flexDirection: 'column',
               overflowX: 'hidden',
               paddingBottom: theme.spacing(3),
             }}
@@ -135,7 +137,9 @@ export const Dialog = React.forwardRef(
               </Box>
             ) : (
               <>
-                {error && <Notice text={error} variant="error" />}
+                {error && (
+                  <Notice spacingBottom={0} text={error} variant="error" />
+                )}
                 {lastChildrenRef.current}
               </>
             )}
