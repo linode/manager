@@ -164,7 +164,7 @@ export const getResourcesProperties = (
 export const getNodeTypeProperties = (
   props: CloudPulseFilterProperties,
   handleNodeTypeChange: (
-    nodeType: null | string | undefined,
+    nodeType: string | undefined,
     label: string[],
     savePref?: boolean
   ) => void
