@@ -69,14 +69,14 @@ export const serviceToFiltersMap: Record<
   linode: [{ component: AlertsRegionFilter, filterKey: 'region' }], // TODO: Add 'tags' filter in the future
 };
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
-  'engineType',
+  'engineType', // extendable for future filter keys like 'tags', 'plan', etc.
 ];
 
 export const alertAdditionalFilterKeyMap: Record<
   AlertAdditionalFilterKey,
   keyof AlertInstance
 > = {
-  engineType: 'engineType',
+  engineType: 'engineType', // engineType filter selected here, will map to engineType property on AlertInstance
 };
 
 export const engineOptions: EngineType[] = [

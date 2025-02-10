@@ -1,4 +1,3 @@
-import { deepEqual } from '../../Utils/FilterBuilder';
 import {
   alertAdditionalFilterKeyMap,
   applicableAdditionalFilterKeys,
@@ -216,7 +215,12 @@ const applyAdditionalFilter = (
     // Only apply filters that exist in `alertAdditionalFilterKeyMap`
     const mappedKey = alertAdditionalFilterKeyMap[key];
     const resourceValue = resource[mappedKey];
-    return deepEqual(resourceValue, value);
+
+    if (Array.isArray(resourceValue) && Array.isArray(value)) {
+      return value.some((obj) => resourceValue.includes(obj));
+    }
+
+    return resourceValue === value;
   });
 };
 
@@ -293,14 +297,13 @@ export const getAlertResourceFilterProps = ({
   handleFilteredRegionsChange: handleSelectionChange,
   regionOptions,
 }: FilterRendererProps): AlertsEngineOptionProps | AlertsRegionProps => {
-  if (filterKey === 'engineType') {
-    return {
-      handleFilterChange,
-    };
-  } else {
-    return {
-      handleSelectionChange,
-      regionOptions,
-    };
+  switch (filterKey) {
+    case 'engineType':
+      return { handleFilterChange };
+    case 'region':
+      return { handleSelectionChange, regionOptions };
+
+    default:
+      return { handleFilterChange };
   }
 };

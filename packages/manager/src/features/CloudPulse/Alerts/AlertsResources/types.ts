@@ -51,8 +51,15 @@ export type AlertFilterKey = 'engineType' | 'region'; // will be extended to hav
  */
 export type AlertFilterType = boolean | number | string | string[] | undefined;
 
+/**
+ * Defines additional filter keys that can be used beyond the primary ones.
+ * Future Extensions: Additional attributes like 'tags' and 'plan' can be added here.
+ */
 export type AlertAdditionalFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
 
+/**
+ * Configuration for dynamically rendering service-specific filters.
+ */
 export interface ServiceFilterConfig {
   component: MemoExoticComponent<
     React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>

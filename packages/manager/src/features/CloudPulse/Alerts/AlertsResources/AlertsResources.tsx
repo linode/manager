@@ -146,15 +146,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     );
   };
 
-  const handleFilterChange = (
-    value: AlertFilterType,
-    filterKey: AlertFilterKey
-  ) => {
-    setAdditionalFilters((prev) => ({
-      ...prev,
-      [filterKey]: value,
-    }));
-  };
+  const handleFilterChange = React.useCallback(
+    (value: AlertFilterType, filterKey: AlertFilterKey) => {
+      setAdditionalFilters((prev) => ({ ...prev, [filterKey]: value }));
+    },
+    []
+  );
 
   /**
    * Filters resources based on the provided resource IDs, search text, and filtered regions.
@@ -283,12 +280,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               value={searchText || ''}
             />
           </Grid>
-          {filtersToRender.map((
-            // render the filters needed based on service type
-            { component, filterKey },
-            index
-          ) => (
-            <Grid item key={index} md={4} xs={12}>
+          {/* Dynamically render service type based filters */}
+          {filtersToRender.map(({ component, filterKey }, index) => (
+            <Grid item key={`${index}_${filterKey}`} md={4} xs={12}>
               <AlertResourcesFilterRenderer
                 componentProps={getAlertResourceFilterProps({
                   filterKey,

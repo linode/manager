@@ -10,6 +10,7 @@ describe('AlertsResourcesFilterRenderer', () => {
   it('renders the correct filter components based on properties passed', () => {
     const handleFilterChangeMock = vi.fn();
     const { getByPlaceholderText } = renderWithTheme(
+      // check for database engine filter
       <AlertResourcesFilterRenderer
         component={filters[0].component}
         componentProps={{ handleFilterChange: handleFilterChangeMock }}
