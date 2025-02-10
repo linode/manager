@@ -11,8 +11,10 @@ import type {
   PlacementGroup,
   Region,
   RegionAvailability,
+  Subnet,
   SupportReply,
   SupportTicket,
+  VPC,
   Volume,
 } from '@linode/api-v4';
 import type { HttpHandler } from 'msw';
@@ -86,22 +88,24 @@ export type MockPresetCrudGroup = {
   id:
     | 'Domains'
     | 'Firewalls'
-    | 'Linodes'
     | 'IP Addresses'
+    | 'Linodes'
     | 'Placement Groups'
     | 'Quotas'
     | 'Support Tickets'
+    | 'VPCs'
     | 'Volumes';
 };
 export type MockPresetCrudId =
   | 'domains:crud'
   | 'firewalls:crud'
-  | 'linodes:crud'
   | 'ip-addresses:crud'
+  | 'linodes:crud'
   | 'placement-groups:crud'
   | 'quotas:crud'
   | 'support-tickets:crud'
-  | 'volumes:crud';
+  | 'volumes:crud'
+  | 'vpcs:crud';
 export interface MockPresetCrud extends MockPresetBase {
   canUpdateCount?: boolean;
   group: MockPresetCrudGroup;
@@ -126,9 +130,11 @@ export interface MockState {
   placementGroups: PlacementGroup[];
   regionAvailability: RegionAvailability[];
   regions: Region[];
+  subnets: [number, Subnet][];
   supportReplies: SupportReply[];
   supportTickets: SupportTicket[];
   volumes: Volume[];
+  vpcs: VPC[];
 }
 
 export interface MockSeeder extends Omit<MockPresetCrud, 'handlers'> {
