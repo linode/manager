@@ -66,21 +66,25 @@ describe('NodeBalancerConfigurations', () => {
     expect(getByLabelText('IP Address')).toBeInTheDocument();
     expect(getByLabelText('Weight')).toBeInTheDocument();
     expect(getByLabelText('Port')).toBeInTheDocument();
-    expect(getByText('Listen on this port.')).toBeInTheDocument();
+    expect(
+      getByText(
+        'The unique inbound port that this NodeBalancer configuration will listen on.'
+      )
+    ).toBeInTheDocument();
     expect(getByText('Active Health Checks')).toBeInTheDocument();
     expect(
       getByText(
-        'Route subsequent requests from the client to the same backend.'
+        'Routes subsequent requests from the client to the same backend.'
       )
     ).toBeInTheDocument();
     expect(
       getByText(
-        'Enable passive checks based on observing communication with back-end nodes.'
+        "When enabled, the NodeBalancer monitors requests to backends. If a request times out, returns a 5xx response (except 501/505), or fails to connect, the backend is marked 'down' and removed from rotation."
       )
     ).toBeInTheDocument();
     expect(
       getByText(
-        "Active health checks proactively check the health of back-end nodes. 'HTTP Valid Status' requires a 2xx or 3xx response from the backend node. 'HTTP Body Regex' uses a regex to match against an expected result body."
+        "Monitors backends to ensure they're 'up' and handling requests."
       )
     ).toBeInTheDocument();
     expect(getByText('Add a Node')).toBeInTheDocument();
