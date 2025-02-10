@@ -20,7 +20,7 @@ export interface ActionHandlers {
   /**
    * Callback for enable/disable toggle action
    */
-  handleEnableDisable?: () => void;
+  handleEnableDisable: () => void;
 }
 
 export interface AlertActionMenuProps {

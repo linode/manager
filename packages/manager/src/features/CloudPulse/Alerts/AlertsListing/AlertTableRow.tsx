@@ -1,5 +1,4 @@
 import { Box } from '@linode/ui';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -7,7 +6,6 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -46,32 +44,6 @@ export const AlertTableRow = (props: Props) => {
   const location = useLocation();
   const { created_by, id, label, service_type, status, type, updated } = alert;
 
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { mutateAsync: editAlertDefinition } = useEditAlertDefinition(
-    service_type,
-    String(id)
-  );
-
-  const toggleStatus = alert.status === 'enabled' ? 'disabled' : 'enabled';
-  const errorStatus = toggleStatus == 'disabled' ? 'Disabling' : 'Enabling';
-
-  const handleEnableDisable = () => {
-    editAlertDefinition({ status: toggleStatus })
-      .then(() => {
-        // Handle success
-        enqueueSnackbar(`Alert ${toggleStatus}`, {
-          variant: 'success',
-        });
-      })
-      .catch(() => {
-        // Handle error
-        enqueueSnackbar(`${errorStatus} alert failed`, {
-          variant: 'error',
-        });
-      });
-  };
-
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>
@@ -99,7 +71,7 @@ export const AlertTableRow = (props: Props) => {
           alertLabel={label}
           alertStatus={status}
           alertType={type}
-          handlers={{ ...handlers, handleEnableDisable }}
+          handlers={handlers}
         />
       </TableCell>
     </TableRow>

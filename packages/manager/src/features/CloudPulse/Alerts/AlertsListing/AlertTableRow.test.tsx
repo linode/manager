@@ -23,21 +23,6 @@ const mockServices: Item<string, AlertServiceType>[] = [
   },
 ];
 
-const queryMocks = vi.hoisted(() => ({
-  useEditAlertDefinition: vi.fn(),
-}));
-
-vi.mock('src/queries/cloudpulse/alerts', () => ({
-  ...vi.importActual('src/queries/cloudpulse/alerts'),
-  useEditAlertDefinition: queryMocks.useEditAlertDefinition,
-}));
-
-queryMocks.useEditAlertDefinition.mockReturnValue({
-  isError: false,
-  mutateAsync: vi.fn().mockResolvedValue({}),
-  reset: vi.fn(),
-});
-
 describe('Alert Row', () => {
   it('should render an alert row', async () => {
     const alert = alertFactory.build();
@@ -46,6 +31,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -62,6 +48,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -88,6 +75,7 @@ describe('Alert Row', () => {
           handlers={{
             handleDetails: vi.fn(),
             handleEdit: vi.fn(),
+            handleEnableDisable: vi.fn(),
           }}
           alert={alert}
           services={mockServices}
@@ -107,6 +95,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -126,6 +115,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -133,11 +123,7 @@ describe('Alert Row', () => {
     );
     const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(ActionMenu);
-    expect(getByText('Enable')).toBeInTheDocument(); // enable alert functionality is present in action items
-    await userEvent.click(getByText('Enable')); // click the enable button to enable alert
-    expect(
-      getByText('Alert enabled') // validate whether snackbar is displayed properly if alert is enabled successfully
-    ).toBeInTheDocument();
+    expect(getByText('Enable')).toBeInTheDocument();
   });
 
   it('should have disable action item present inside action menu if the user created alert is enabled', async () => {
@@ -156,34 +142,5 @@ describe('Alert Row', () => {
     const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(ActionMenu);
     expect(getByText('Disable')).toBeInTheDocument();
-    await userEvent.click(getByText('Disable'));
-    expect(getByText('Alert disabled')).toBeInTheDocument();
-  });
-
-  it('should show error message if enabling or disabling alert is failed', async () => {
-    queryMocks.useEditAlertDefinition.mockReturnValue({
-      isError: true,
-      mutateAsync: vi.fn().mockRejectedValue(Error('Disabling alert failed')),
-      reset: vi.fn(),
-    });
-    const alert = alertFactory.build({ type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
-      <AlertTableRow
-        handlers={{
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
-        }}
-        alert={alert}
-        services={mockServices}
-      />
-    );
-    const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
-    await userEvent.click(ActionMenu);
-    expect(getByText('Disable')).toBeInTheDocument();
-    await userEvent.click(getByText('Disable'));
-    expect(
-      getByText('Disabling alert failed') // validate whether snackbar is displayed properly if an error is encountered while disabling an alert
-    ).toBeInTheDocument();
   });
 });
