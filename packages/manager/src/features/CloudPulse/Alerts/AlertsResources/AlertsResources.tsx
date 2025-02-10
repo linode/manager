@@ -22,6 +22,7 @@ import { DisplayAlertResources } from './DisplayAlertResources';
 import type { AlertFilterKey, AlertFilterType } from './constants';
 import type { AlertInstance } from './DisplayAlertResources';
 import type {
+  AlertClass,
   AlertDefinitionType,
   AlertServiceType,
   Filter,
@@ -32,7 +33,7 @@ export interface AlertResourcesProp {
   /**
    * Class of the alert (dedicated / shared)
    */
-  alertClass?: string;
+  alertClass?: AlertClass;
   /**
    * The label of the alert to be displayed
    */
@@ -112,7 +113,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     // Apply type filter only for system alerts with a valid alertClass
     const typeFilter: Filter = {
       type: {
-        '+contains': alertClass === 'dedicated' ? 'dedicated' : 'shared',
+        '+contains': alertClass,
       },
     };
 
