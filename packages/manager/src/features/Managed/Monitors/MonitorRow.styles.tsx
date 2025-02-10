@@ -15,7 +15,7 @@ export const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })({
 export const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   width: '30%',
 }));
 

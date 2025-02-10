@@ -15,7 +15,7 @@ import type { Theme } from '@mui/material/styles';
 const useStyles = makeStyles()((theme: Theme) => ({
   appName: {
     color: `${theme.tokens.color.Neutrals.White} !important`,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '2.2rem',
     lineHeight: '2.5rem',
     textAlign: 'center',

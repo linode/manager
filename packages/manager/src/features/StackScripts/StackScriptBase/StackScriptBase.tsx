@@ -4,8 +4,9 @@ import { withRouter } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 
-import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Table } from 'src/components/Table';
 import { withProfile } from 'src/containers/profile.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -24,7 +25,6 @@ import {
   StyledEmptyStateDiv,
   StyledLoaderDiv,
   StyledPlaceholder,
-  StyledTable,
 } from './StackScriptBase.styles';
 import { StackScriptsEmptyLandingState } from './StackScriptsEmptyLandingPage';
 
@@ -229,11 +229,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           this.state.isSorting
         )
       );
-    };
-
-    goToCreateStackScript = () => {
-      const { history } = this.props;
-      history.push('/stackscripts/create');
     };
 
     handleClickTableHeader = (value: string) => {
@@ -488,7 +483,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             <StyledEmptyStateDiv data-qa-stackscript-empty-msg>
               {userCannotCreateStackScripts ? (
                 <StyledPlaceholder
-                  icon={StackScriptsIcon}
+                  icon={ComputeIcon}
                   isEntity
                   renderAsSecondary
                   title="StackScripts"
@@ -496,9 +491,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   You don&rsquo;t have any StackScripts to select from.
                 </StyledPlaceholder>
               ) : (
-                <StackScriptsEmptyLandingState
-                  goToCreateStackScript={this.goToCreateStackScript}
-                />
+                <StackScriptsEmptyLandingState />
               )}
             </StyledEmptyStateDiv>
           ) : (
@@ -521,7 +514,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   value={query ?? ''}
                 />
               </StyledContentDiv>
-              <StyledTable
+              <Table
                 aria-label="List of StackScripts"
                 colCount={isSelecting ? 1 : 4}
                 noOverflow={true}
@@ -541,7 +534,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   getDataAtPage={this.getDataAtPage}
                   getNext={this.getNext}
                 />
-              </StyledTable>
+              </Table>
 
               {/*
                * show loading indicator if we're getting more stackscripts

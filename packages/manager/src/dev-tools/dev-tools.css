@@ -11,7 +11,7 @@
   position: fixed;
   width: 100%;
   bottom: 0;
-  left: 0;
+  right: 0;
   z-index: 1;
   color: white;
   font-size: 11pt;
@@ -241,10 +241,12 @@
   width: 70px;
   height: 54px;
   border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
   position: absolute;
-  left: 0;
+  right: 0;
   bottom: 0;
   z-index: 1;
+  transform: translateX(-50%);
 }
 
 .dev-tools__toggle button {
@@ -305,7 +307,7 @@
     background: #1d1d1e;
     background-blend-mode: overlay;
     border: 0;
-    
+
     cursor: pointer;
     padding: 4px;
     position: relative;
@@ -316,7 +318,7 @@
 
   svg {
     color: white;
-   
+
   }
 }
 
@@ -353,7 +355,8 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-family: 'LatoWebBold', sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 700;
   }
 
   .dev-tools__modal-form__field {

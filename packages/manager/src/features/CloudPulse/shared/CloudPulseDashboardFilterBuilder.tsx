@@ -1,5 +1,5 @@
-import { Button } from '@linode/ui';
-import { Grid, Typography, useTheme } from '@mui/material';
+import { Button, Typography } from '@linode/ui';
+import { Grid, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardArrowDownIcon from 'src/assets/icons/arrow_down.svg';
@@ -138,6 +138,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           selectedTags,
           savePref,
           {
+            [RESOURCE_ID]: undefined,
             [TAGS]: selectedTags,
           }
         );
@@ -171,6 +172,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         const updatedPreferenceData = {
           [REGION]: region,
           [RESOURCES]: undefined,
+          [TAGS]: undefined,
         };
         emitFilterChangeByFilterKey(
           REGION,
@@ -209,6 +211,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             {
               config,
               dashboard,
+              dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
             },
