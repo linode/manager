@@ -309,3 +309,11 @@ export interface EditAlertDefinitionPayload {
   entity_ids?: string[];
   status?: AlertStatusType;
 }
+
+export interface EditAlertDefinitionPayloadExtended
+  extends EditAlertDefinitionPayload {
+  serviceType: string;
+  alertId: string;
+}
+
+export type AlertStatusUpdateAction = 'Enable' | 'Disable';

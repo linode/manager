@@ -1,3 +1,5 @@
+import { statusToActionMap } from '../AlertsListing/constants';
+
 import type { ActionHandlers } from '../AlertsListing/AlertActionMenu';
 import type { AlertDefinitionType, AlertStatusType } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -43,12 +45,12 @@ export const getAlertTypeToActionsList = (
       title: 'Show Details',
     },
     {
-      onClick: handleEnableDisable ?? (() => {}),
+      onClick: handleEnableDisable,
       title: getTitleForEnableDisable(alertStatus),
     },
   ],
 });
 
 export const getTitleForEnableDisable = (alertStatus: AlertStatusType) => {
-  return alertStatus == 'enabled' ? 'Disable' : 'Enable';
+  return statusToActionMap[alertStatus];
 };

@@ -1,3 +1,8 @@
+import type {
+  AlertStatusType,
+  AlertStatusUpdateAction,
+} from '../../../../../../api-v4/lib/cloudpulse/types';
+
 export const AlertListingTableLabelMap = [
   {
     colName: 'Alert Name',
@@ -20,3 +25,11 @@ export const AlertListingTableLabelMap = [
     label: 'updated',
   },
 ];
+
+export const statusToActionMap: Record<
+  AlertStatusType,
+  AlertStatusUpdateAction
+> = {
+  disabled: 'Enable',
+  enabled: 'Disable',
+};
