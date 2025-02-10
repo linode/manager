@@ -46,4 +46,4 @@ export type AlertFilterKey = 'engineType'; // will be extended to have tags, pla
  * Represents the possible types for alert filter values.
  * The filter value can be a boolean, number, string, or undefined.
  */
-export type AlertFilterType = boolean | number | string | undefined;
+export type AlertFilterType = boolean | number | string | string[] | undefined;

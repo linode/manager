@@ -157,21 +157,31 @@ export const getFilteredResources = (
         (!selectedOnly || checked) // if selected only, show only checked, else everything
       ); // match the search text and match the region selected
     })
-    .filter((resource: AlertInstance) => {
-      if (!additionalFilters) {
-        return true;
-      }
-      return alertApplicableFilterKeys.every((key) => {
-        const value = additionalFilters[key];
-        if (value === undefined) {
-          return true;
-        } // Skip if no filter value
-        // Only apply filters that exist in `alertAdditionalFilterKeyMap`
-        const mappedKey = alertAdditionalFilterKeyMap[key];
-        const resourceValue = resource[mappedKey];
-        return deepEqual(resourceValue, value); // Compare primitive values
-      });
-    });
+    .filter((resource) => applyAdditionalFilter(resource, additionalFilters));
+};
+
+/**
+ * Applies the additional filters on the instance that needs to be shown in the resources table
+ * @param resource The instance for which the filters needs to be applied
+ * @param additionalFilters The additional filters which are needed to be applied for the instances
+ */
+const applyAdditionalFilter = (
+  resource: AlertInstance,
+  additionalFilters?: Record<AlertFilterKey, AlertFilterType | undefined>
+): boolean => {
+  if (!additionalFilters) {
+    return true;
+  }
+  return alertApplicableFilterKeys.every((key) => {
+    const value = additionalFilters[key];
+    if (value === undefined) {
+      return true;
+    } // Skip if no filter value
+    // Only apply filters that exist in `alertAdditionalFilterKeyMap`
+    const mappedKey = alertAdditionalFilterKeyMap[key];
+    const resourceValue = resource[mappedKey];
+    return deepEqual(resourceValue, value);
+  });
 };
 
 /**

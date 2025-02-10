@@ -1,7 +1,9 @@
 import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
+import { AlertsRegionFilter } from './AlertsRegionFilter';
 
 import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
+import type { AlertsRegionProps } from './AlertsRegionFilter';
 import type { AlertInstance } from './DisplayAlertResources';
 import type { AlertFilterKey, EngineType, ServiceColumns } from './types';
 import type { AlertServiceType } from '@linode/api-v4';
@@ -55,11 +57,13 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
 
 export const serviceToFiltersMap: Record<
   '' | AlertServiceType,
-  MemoExoticComponent<React.ComponentType<AlertsEngineOptionProps>>[]
+  MemoExoticComponent<
+    React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>
+  >[]
 > = {
   '': [], // default to empty
-  dbaas: [AlertsEngineTypeFilter], // dbaas uses Engine filter
-  linode: [], // TODO: enhance with a tags filter
+  dbaas: [AlertsEngineTypeFilter, AlertsRegionFilter], // dbaas uses Engine filter
+  linode: [AlertsRegionFilter], // TODO: enhance with a tags filter
 };
 export const alertApplicableFilterKeys: AlertFilterKey[] = ['engineType'];
 

@@ -14,9 +14,9 @@ import {
   getRegionsIdRegionMap,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { AlertsRegionFilter } from './AlertsRegionFilter';
-import { AlertResourceAdditionalFilters } from './AlertsResourcesAdditionalFilters';
+import { buildFilterComponent } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
+import { serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
@@ -241,6 +241,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     );
   }
 
+  const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
+
   return (
     <Stack gap={2}>
       <Typography ref={titleRef} variant="h2">
@@ -276,16 +278,18 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               value={searchText || ''}
             />
           </Grid>
-          <Grid item md={4} xs={12}>
-            <AlertsRegionFilter
-              handleSelectionChange={handleFilteredRegionsChange}
-              regionOptions={regionOptions}
-            />
-          </Grid>
-          <AlertResourceAdditionalFilters
-            handleFilterChange={handleFilterChange}
-            serviceType={serviceType}
-          />
+          {filtersToRender.map((filterComponent, index) => (
+            <Grid item key={index} md={4} xs={12}>
+              {buildFilterComponent({
+                component: filterComponent,
+                componentProps: {
+                  handleFilterChange,
+                  handleSelectionChange: handleFilteredRegionsChange,
+                  regionOptions,
+                },
+              })}
+            </Grid>
+          ))}
           {isSelectionsNeeded && (
             <Grid item md={4} xs={12}>
               <Checkbox
