@@ -121,7 +121,7 @@ describe('Alert Row', () => {
 
   it('should have enable action item present inside action menu if the user created alert is disabled', async () => {
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const { getAllByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         handlers={{
           handleDetails: vi.fn(),
@@ -131,10 +131,8 @@ describe('Alert Row', () => {
         services={mockServices}
       />
     );
-    const firstActionMenu = getAllByLabelText(
-      `Action menu for Alert ${alert.label}`
-    )[0];
-    await userEvent.click(firstActionMenu);
+    const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
+    await userEvent.click(ActionMenu);
     expect(getByText('Enable')).toBeInTheDocument(); // enable alert functionality is present in action items
     await userEvent.click(getByText('Enable')); // click the enable button to enable alert
     expect(
