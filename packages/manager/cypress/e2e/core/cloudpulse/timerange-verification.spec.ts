@@ -307,7 +307,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     });
   });
 
-  it.only('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
+  it('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
+    
+    const { start, end } = getLastMonthRange();
+
     ui.autocomplete
       .findByLabel('Time Range')
       .scrollIntoView()
@@ -331,16 +334,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-        expect(requestPayload.absolute_time_duration.start).to.equal(
-          getLastMonthRange().start
+        expect(requestPayload.absolute_time_duration.start).to.equal(start
         );
-        expect(requestPayload.absolute_time_duration.end).to.equal(
-          getLastMonthRange().end
-        );
+        expect(requestPayload.absolute_time_duration.end).to.equal(end);
       });
   });
 
-  it.only('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
+  it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
 
     const { start, end } = getThisMonthRange();
 

@@ -10,24 +10,24 @@ const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
  * @returns {{start: string, end: string}} - The start and end dates of the current month in ISO 8601 format.
  */
 
-export const getThisMonthRange = (): DateTimeWithPreset => {
-  const now = DateTime.now().setZone('Asia/Kolkata');
+export const getThisMonthRange = (): { end: string; start: string } => {
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const month = now.getUTCMonth();
 
-  const expectedStartDateISO = now.startOf('month').toISO() ?? '';
-  const expectedEndDateISO = now.toISO() ?? '';
+  const startDate = new Date(Date.UTC(year, month, 1, 0, 0, 0));
+  const endDate = new Date(now.getTime() - 390 * 60000);
 
-  const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, {
-    zone: 'gmt',
-  });
-  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
-  const formattedStartDate = adjustedStartDate.toFormat(formatter);
-  const formattedEndDate = adjustedEndDate.toFormat(formatter);
+  // Convert to UTC by subtracting 5 hours and 30 minutes (330 minutes)
+  startDate.setUTCMinutes(startDate.getUTCMinutes() - 330);
+  endDate.setUTCMinutes(endDate.getUTCMinutes() - 330);
 
-  return {
-    end: formattedEndDate,
-    start: formattedStartDate,
-  };
+  const formattedStartDate = formatDate(startDate, formatter);
+  const formattedEndDate = formatDate(endDate, formatter);
+
+  return { end: formattedEndDate, start: formattedStartDate };
 };
+
 /**
  * This function calculates the start and end of the previous month,
  * adjusted by subtracting 5 hours and 30 minutes (IST offset),
@@ -41,27 +41,46 @@ export const getThisMonthRange = (): DateTimeWithPreset => {
  *   - `start`: The start date of the previous month in ISO 8601 format.
  *   - `end`: The end date of the previous month in ISO 8601 format.
  */
+export const getLastMonthRange = (
+): { end: string; start: string } => {
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const lastMonth = now.getUTCMonth() - 1; // Subtract 1 month
 
-export const getLastMonthRange = (): { end: string; start: string } => {
-  // Get the current UTC time
-  const now = DateTime.utc();
-  const lastMonth = now.minus({ months: 1 });
+  // Handle year change if the month goes below 0
+  const adjustedYear = lastMonth < 0 ? year - 1 : year;
+  const adjustedMonth = lastMonth < 0 ? 11 : lastMonth; // December if lastMonth is negative
 
-  // Get start and end of last month in UTC
-  const expectedStartDate = lastMonth.startOf('month').toUTC();
-  const expectedEndDate = lastMonth.endOf('month').toUTC();
+  // Start of the last month in UTC
+  const startDate = new Date(Date.UTC(adjustedYear, adjustedMonth, 1, 0, 0, 0));
+  // End of the last month in UTC (last day of the month)
+  const endDate = new Date(
+    Date.UTC(adjustedYear, adjustedMonth + 1, 0, 23, 59, 59)
+  );
 
-  // Adjust by -5 hours 30 minutes (IST Offset)
-  const adjustedStartDate = expectedStartDate.minus({ hours: 5, minutes: 30 });
-  const adjustedEndDate = expectedEndDate.minus({ hours: 5, minutes: 30 });
+  // Adjust both start and end dates by -5 hours and 30 minutes
+  startDate.setUTCMinutes(startDate.getUTCMinutes() - 330);
+  endDate.setUTCMinutes(endDate.getUTCMinutes() - 330);
 
-  // Format the output
-  const formattedStartDate = adjustedStartDate.toFormat(formatter);
-  const formattedEndDate = adjustedEndDate.toFormat(formatter);
-  return {
-    end: formattedEndDate,
-    start: formattedStartDate,
-  };
+  // Format the dates
+  const formattedStartDate = formatDate(startDate, formatter);
+  const formattedEndDate = formatDate(endDate, formatter);
+
+  return { end: formattedEndDate, start: formattedStartDate };
+};
+
+const formatDate = (date: Date, formatter: string): string => {
+  const pad = (num: number) => String(num).padStart(2, '0');
+
+  return formatter
+    .replace('yyyy', date.getUTCFullYear().toString())
+    .replace('MM', pad(date.getUTCMonth() + 1))
+    .replace('dd', pad(date.getUTCDate()))
+    .replace('HH', pad(date.getUTCHours()))
+    .replace('mm', pad(date.getUTCMinutes()))
+    .replace('ss', pad(date.getUTCSeconds()))
+    .replace("'T'", 'T')
+    .replace("'Z'", 'Z');
 };
 
 /**
