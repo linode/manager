@@ -1,3 +1,4 @@
+import { Typography as FontTypography } from '@linode/design-language-system';
 import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -14,13 +15,11 @@ interface Color {
 const useStyles = makeStyles()((theme: Theme) => ({
   alias: {
     color: theme.tokens.color.Neutrals[90],
-    fontFamily: '"UbuntuMono", monospace, sans-serif',
-    fontSize: '0.875rem',
+    font: FontTypography.Code,
   },
   color: {
     color: theme.tokens.color.Neutrals[60],
-    fontFamily: '"UbuntuMono", monospace, sans-serif',
-    fontSize: '0.875rem',
+    font: FontTypography.Code,
   },
   root: {
     '& h2': {
@@ -169,10 +168,7 @@ export const ColorPalette = () => {
   const createSwatch = (color: string, alias: string) => {
     return (
       <Grid className={classes.swatchWrapper} key={alias} md={4} sm={6} xs={12}>
-        <div
-          className={classes.swatch}
-          style={{ backgroundColor: color }}
-        ></div>
+        <div className={classes.swatch} style={{ backgroundColor: color }} />
         <Typography variant="body1">
           <span className={classes.alias}>{alias}</span>
           <br />

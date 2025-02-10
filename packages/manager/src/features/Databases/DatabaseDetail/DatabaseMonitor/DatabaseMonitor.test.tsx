@@ -1,7 +1,9 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
+
 import { databaseFactory } from 'src/factories';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+
 import { DatabaseMonitor } from './DatabaseMonitor';
 
 const loadingTestId = 'circle-progress';
@@ -24,6 +26,6 @@ describe('database monitor', () => {
     );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
-    expect(getByTestId('cloudpulse-time-duration')).toBeInTheDocument();
+    expect(getByTestId('preset-select')).toBeInTheDocument();
   });
 });

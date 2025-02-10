@@ -8,7 +8,7 @@ import type { Theme } from '@mui/material/styles';
 export const StyledNoticeTypography = styled(Typography, {
   label: 'StyledNoticeTypography',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
 }));
 
 export const StyledTextTooltip = styled(TextTooltip, {

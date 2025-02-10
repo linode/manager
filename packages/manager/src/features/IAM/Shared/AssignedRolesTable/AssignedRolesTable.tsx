@@ -376,10 +376,6 @@ const getResourceTypes = (data: RoleMap[]): ResourcesType[] => {
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
 })(({ theme }) => ({
-  color:
-    theme.name === 'light'
-      ? theme.tokens.color.Neutrals[90]
-      : theme.tokens.color.Neutrals.Black,
   fontFamily: theme.font.bold,
   marginBottom: 0,
 }));
