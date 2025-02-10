@@ -15,6 +15,12 @@ export interface DialogProps extends _DialogProps {
    */
   className?: string;
   /**
+   * Whether the dialog should close when the backdrop is clicked.
+   *
+   * @default false
+   */
+  enableCloseOnBackdropClick?: boolean;
+  /**
    * Error that will be shown in the dialog.
    */
   error?: string;
@@ -64,6 +70,7 @@ export const Dialog = React.forwardRef(
     const {
       children,
       className,
+      enableCloseOnBackdropClick = false,
       error,
       fullHeight,
       fullWidth,
@@ -92,7 +99,10 @@ export const Dialog = React.forwardRef(
     return (
       <StyledDialog
         onClose={(_, reason) => {
-          if (onClose && reason !== 'backdropClick') {
+          if (
+            onClose &&
+            (reason !== 'backdropClick' || enableCloseOnBackdropClick)
+          ) {
             onClose({}, 'escapeKeyDown');
           }
         }}
