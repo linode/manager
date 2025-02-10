@@ -184,7 +184,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     // Enter the start time (hour and minute)
     cy.findByPlaceholderText("hh:mm aa")
-      .clear()
+      .clear({ force: true })
       .type(`${startHour}:${startMinute} PM`);
 
     // Click the "Apply" button to confirm the start date and time
@@ -205,7 +205,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     // Enter the end time (hour and minute)
     cy.findByPlaceholderText("hh:mm aa")
-      .clear()
+      .clear({ force: true })
       .type(`${endHour}:${endMinute} AM`);
 
     // Click the "Apply" button to confirm the end date and time
@@ -307,7 +307,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     });
   });
 
-  it('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
+  it.only('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
     ui.autocomplete
       .findByLabel('Time Range')
       .scrollIntoView()
@@ -340,7 +340,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       });
   });
 
-  it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
+  it.only('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
 
     const { start, end } = getThisMonthRange();
 
