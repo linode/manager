@@ -2,6 +2,7 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
 export type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
 export type AlertServiceType = 'linode' | 'dbaas';
+export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'eq'
   | 'neq'
@@ -236,6 +237,7 @@ export interface Alert {
   updated_by: string;
   created: string;
   updated: string;
+  class?: AlertClass;
 }
 
 interface NotificationChannelAlerts {
