@@ -6,10 +6,10 @@ import { Waypoint } from 'react-waypoint';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormLabel } from 'src/components/FormLabel';
+import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { storage } from 'src/utilities/storage';
 
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
@@ -127,58 +127,12 @@ export const NodePoolsDisplay = (props: Props) => {
     setIsLabelsAndTaintsDrawerOpen(true);
   };
 
-  const defaultExpandedPools =
-    _pools
-      ?.filter((pool) => {
-        // If there's only one node pool, expand it no matter how many nodes there are
-        if (_pools.length === 1) {
-          return true;
-        }
-        // If there are more than 3 node pools, keep them all collapsed
-        if (_pools.length > 3) {
-          return false;
-        }
-        // Otherwise, if the user has between 1-3 node pools:
-        // If the node pool has 1-3 nodes, keep it expanded
-        if (pool.count <= 3) {
-          return true;
-        }
-        // Collapse everything else
-        return false;
-      })
-      .map(({ id }) => id) ?? [];
-
-  const [expandedAccordions, setExpandedAccordions] = useState<
-    number[] | undefined
-  >(storage.nodePoolsExpanded.get(clusterID) ?? undefined);
-
-  const handleAccordionClick = (id: number) => {
-    let _expandedAccordions;
-
-    // Initial load with no saved local storage
-    if (expandedAccordions === undefined) {
-      if (defaultExpandedPools.includes(id)) {
-        _expandedAccordions = defaultExpandedPools.filter(
-          (poolId) => poolId !== id
-        );
-      } else {
-        _expandedAccordions = [...defaultExpandedPools, id];
-      }
-      storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
-      return setExpandedAccordions(_expandedAccordions);
-    }
-
-    if (expandedAccordions.includes(id)) {
-      _expandedAccordions = expandedAccordions.filter(
-        (number) => number !== id
-      );
-    } else {
-      _expandedAccordions = [...expandedAccordions, id];
-    }
-
-    setExpandedAccordions(_expandedAccordions);
-    storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
-  };
+  const {
+    defaultExpandedPools,
+    expandedAccordions,
+    handleAccordionClick,
+    setExpandedAccordions,
+  } = useDefaultExpandedNodePools(clusterID, _pools);
 
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
@@ -206,13 +160,10 @@ export const NodePoolsDisplay = (props: Props) => {
             defaultExpandedPools.length > 0) ||
           (expandedAccordions && expandedAccordions.length > 0) ? (
             <Button
-              onClick={() => {
-                storage.nodePoolsExpanded.set(clusterID, []);
-                setExpandedAccordions([]);
-              }}
               buttonType="secondary"
               compactX
               endIcon={<ExpandLessIcon />}
+              onClick={() => setExpandedAccordions([])}
               sx={{ '& span': { marginLeft: 0.5 } }}
             >
               Collapse All Pools
@@ -221,7 +172,6 @@ export const NodePoolsDisplay = (props: Props) => {
             <Button
               onClick={() => {
                 const expandedAccordions = _pools?.map(({ id }) => id) ?? [];
-                storage.nodePoolsExpanded.set(clusterID, expandedAccordions);
                 setExpandedAccordions(expandedAccordions);
               }}
               buttonType="secondary"
