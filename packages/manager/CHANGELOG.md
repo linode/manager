@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Buggy Copy Token behavior on LKE details page ([#11592](https://github.com/linode/manager/pull/11592))
 - Longview Detail id param not found (local only) ([#11599](https://github.com/linode/manager/pull/11599))
+- Database restore backup timezone inconsistency ([#11628](https://github.com/linode/manager/pull/11628))
 
 ### Tech Stories:
 
@@ -104,7 +105,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Spacing for LKE cluster tags at desktop screen sizes ([#11507](https://github.com/linode/manager/pull/11507))
 - Zoom-in icon hover effect in CloudPulse ([#11526](https://github.com/linode/manager/pull/11526))
 - Linode Config Dialog misrepresenting primary interface ([#11542](https://github.com/linode/manager/pull/11542))
-- Database restore backup timezone inconsistency ([#11628](https://github.com/linode/manager/pull/11628))
 
 ### Tech Stories:
 
