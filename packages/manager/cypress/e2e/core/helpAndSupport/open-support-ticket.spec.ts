@@ -101,8 +101,14 @@ describe('open support tickets', () => {
         .click({ scrollBehavior: false })
         .type(ticketLabel);
       cy.findByLabelText('Severity').should('not.exist');
-      cy.get('[data-qa-ticket-entity-type]').click();
-      cy.contains('General/Account/Billing').should('be.visible');
+      ui.autocomplete
+        .findByLabel('What is this regarding?')
+        .type('General/Account/Billing');
+
+      ui.autocompletePopper
+        .findByTitle('General/Account/Billing')
+        .should('be.visible')
+        .click();
       cy.get('[data-qa-ticket-description="true"]')
         .click()
         .type(ticketDescription);
