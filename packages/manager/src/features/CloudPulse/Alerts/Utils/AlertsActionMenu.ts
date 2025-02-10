@@ -43,7 +43,7 @@ export const getAlertTypeToActionsList = (
       title: 'Show Details',
     },
     {
-      onClick: handleEnableDisable,
+      onClick: handleEnableDisable ?? (() => {}),
       title: getTitleForEnableDisable(alertStatus),
     },
   ],
