@@ -218,6 +218,7 @@ module.exports = {
     'comma-dangle': 'off', // Prettier and TS both handle and check for this one
     // radix: Codacy considers it as an error, i put it here to fix it before push
     curly: 'warn',
+    eqeqeq: 'warn',
     // See: https://www.w3.org/TR/graphics-aria-1.0/
     'jsx-a11y/aria-role': [
       'error',
@@ -257,7 +258,7 @@ module.exports = {
       },
     ],
     'no-restricted-syntax': [
-      'warn', // @todo: change it to 'error'
+      'error',
       {
         message:
           "The 'data-test-id' attribute is not allowed; use 'data-testid' instead.",
