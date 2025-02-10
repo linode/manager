@@ -101,6 +101,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
 
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+    if (serviceType !== 'dbaas') {
+      return undefined;
+    }
+
     // If the serviceType is 'dbaas', always include the platform filter
     const platformFilter: Filter | undefined =
       serviceType === 'dbaas' ? { platform: 'rdbms-default' } : undefined;
