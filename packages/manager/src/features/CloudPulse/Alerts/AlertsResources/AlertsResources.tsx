@@ -297,7 +297,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               value={searchText || ''}
             />
           </Grid>
-          {filtersToRender.map(({ component, filterKey }, index) => (
+          {filtersToRender.map((
+            // render the filters needed based on service type
+            { component, filterKey },
+            index
+          ) => (
             <Grid item key={`${index}_${filterKey}`} md={4} xs={12}>
               {buildFilterComponent({
                 component,
