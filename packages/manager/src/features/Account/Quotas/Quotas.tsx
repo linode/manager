@@ -82,26 +82,19 @@ export const Quotas = () => {
                 onChange={(_event, value) =>
                   setSelectedLocation(value?.value.toString() ?? null)
                 }
-                options={Array.from(
-                  new Map(
-                    locationsForQuotaService.map((loc) => [
-                      loc.id,
-                      { label: loc.label, value: loc.id },
-                    ])
-                  ).values()
-                )}
                 value={
                   selectedLocation
                     ? {
                         label:
                           locationsForQuotaService.find(
-                            (loc) => loc.id === selectedLocation
+                            (loc) => loc.value === selectedLocation
                           )?.label ?? selectedLocation,
                         value: selectedLocation,
                       }
                     : null
                 }
                 label="Object Storage Endpoint"
+                options={locationsForQuotaService}
                 placeholder="Select an Object Storage S3 endpoint"
               />
             ) : (

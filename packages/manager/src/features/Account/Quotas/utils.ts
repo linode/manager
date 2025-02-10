@@ -10,7 +10,7 @@ type UseGetLocationsForQuotaService = {
   isFetching: boolean;
 } & (
   | {
-      locationsForQuotaService: { id: string; label: string }[];
+      locationsForQuotaService: { label: string; value: string }[];
       objectStorageQuotas: Quota[];
       service: 'object-storage';
     }
@@ -49,14 +49,31 @@ export const useGetLocationsForQuotaService = (
   });
 
   if (service === 'object-storage') {
+    const uniqueEndpoints = Array.from(
+      (objectStorageQuotas?.data ?? [])
+        .reduce((map, quota) => {
+          const key = `${quota.s3_endpoint}-${quota.endpoint_type}`;
+          if (!map.has(key) && quota.s3_endpoint) {
+            map.set(key, {
+              endpoint: quota.s3_endpoint,
+              endpoint_type: quota.endpoint_type,
+            });
+          }
+          return map;
+        }, new Map<string, { endpoint: string; endpoint_type: string }>())
+        .values()
+    );
+
     return {
       isFetching: isFetchingRegions,
       locationsForQuotaService: [
-        globalOption,
-        ...(objectStorageQuotas?.data.map((quota) => ({
-          id: quota.s3_endpoint ?? '',
-          label: `${quota.s3_endpoint} (Standard ${quota.endpoint_type})`,
-        })) ?? []),
+        ...(uniqueEndpoints.length > 2
+          ? [{ label: 'Global (Account level)', value: 'global' }]
+          : []),
+        ...uniqueEndpoints.map((endpoint) => ({
+          label: `${endpoint.endpoint} (Standard ${endpoint.endpoint_type})`,
+          value: endpoint.endpoint,
+        })),
       ],
       objectStorageQuotas: objectStorageQuotas?.data ?? [],
       service: 'object-storage',
@@ -68,7 +85,9 @@ export const useGetLocationsForQuotaService = (
     return {
       isFetching: isFetchingRegions || isFetchingLinodes,
       locationsForQuotaService: [
-        globalOption,
+        ...(linodeRegions?.length && linodeRegions.length > 2
+          ? [globalOption]
+          : []),
         ...(regions?.filter((region) => linodeRegions?.includes(region.id)) ??
           []),
       ],
@@ -82,7 +101,9 @@ export const useGetLocationsForQuotaService = (
     return {
       isFetching: isFetchingRegions || isFetchingClusters,
       locationsForQuotaService: [
-        globalOption,
+        ...(clusterRegions?.length && clusterRegions.length > 2
+          ? [globalOption]
+          : []),
         ...(regions?.filter((region) => clusterRegions?.includes(region.id)) ??
           []),
       ],
