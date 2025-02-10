@@ -161,26 +161,23 @@ export const NodePoolsDisplay = (props: Props) => {
         _expandedAccordions = defaultExpandedPools.filter(
           (poolId) => poolId !== id
         );
-        storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
-        return setExpandedAccordions(_expandedAccordions);
       } else {
         _expandedAccordions = [...defaultExpandedPools, id];
-        storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
-        return setExpandedAccordions(_expandedAccordions);
       }
+      storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
+      return setExpandedAccordions(_expandedAccordions);
     }
 
     if (expandedAccordions.includes(id)) {
       _expandedAccordions = expandedAccordions.filter(
         (number) => number !== id
       );
-      setExpandedAccordions(_expandedAccordions);
-      storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
     } else {
       _expandedAccordions = [...expandedAccordions, id];
-      setExpandedAccordions(_expandedAccordions);
-      storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
     }
+
+    setExpandedAccordions(_expandedAccordions);
+    storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
   };
 
   if (isLoading || pools === undefined) {
