@@ -57,5 +57,5 @@ export interface ServiceFilterConfig {
   component: MemoExoticComponent<
     React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>
   >;
-  filter: AlertFilterKey;
+  filterKey: AlertFilterKey;
 }

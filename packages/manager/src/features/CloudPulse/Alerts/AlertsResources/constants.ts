@@ -60,12 +60,12 @@ export const serviceToFiltersMap: Record<
   '' | AlertServiceType,
   ServiceFilterConfig[]
 > = {
-  '': [{ component: AlertsRegionFilter, filter: 'region' }], // default to only region for better user experience
+  '': [{ component: AlertsRegionFilter, filterKey: 'region' }], // default to only region for better user experience
   dbaas: [
-    { component: AlertsEngineTypeFilter, filter: 'engineType' },
-    { component: AlertsRegionFilter, filter: 'region' },
+    { component: AlertsEngineTypeFilter, filterKey: 'engineType' },
+    { component: AlertsRegionFilter, filterKey: 'region' },
   ],
-  linode: [{ component: AlertsRegionFilter, filter: 'region' }], // TODO: Add 'tags' filter in the future
+  linode: [{ component: AlertsRegionFilter, filterKey: 'region' }], // TODO: Add 'tags' filter in the future
 };
 
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
