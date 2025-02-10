@@ -1,19 +1,28 @@
 import { deepEqual } from '../../Utils/FilterBuilder';
 import {
   alertAdditionalFilterKeyMap,
-  alertApplicableFilterKeys,
+  applicableAdditionalFilterKeys,
 } from '../AlertsResources/constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { AlertsEngineOptionProps } from '../AlertsResources/AlertsEngineTypeFilter';
+import type { AlertsRegionProps } from '../AlertsResources/AlertsRegionFilter';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
-import type { AlertFilterKey, AlertFilterType } from '../AlertsResources/types';
+import type {
+  AlertAdditionalFilterKey,
+  AlertFilterKey,
+  AlertFilterType,
+} from '../AlertsResources/types';
 import type { Region } from '@linode/api-v4';
 
 interface FilterResourceProps {
   /**
    * Additional filters for filtering the instances
    */
-  additionalFilters?: Record<AlertFilterKey, AlertFilterType | undefined>;
+  additionalFilters?: Record<
+    AlertAdditionalFilterKey,
+    AlertFilterType | undefined
+  >;
   /**
    * The data to be filtered
    */
@@ -51,6 +60,30 @@ interface FilterResourceProps {
    * This property helps to track the list of selected resources
    */
   selectedResources?: string[];
+}
+
+interface FilterRendererProps {
+  /**
+   * The filter to which the props needs to built for
+   */
+  filterKey: AlertFilterKey;
+
+  /**
+   * Callback to publish the selected engine type
+   */
+  handleFilterChange: (
+    engineType: string | undefined,
+    type: AlertAdditionalFilterKey
+  ) => void;
+  /**
+   * Callback for publishing the IDs of the selected regions.
+   */
+  handleFilteredRegionsChange: (regions: string[]) => void;
+
+  /**
+   * The regions to be displayed according to the resources associated with alerts
+   */
+  regionOptions: Region[];
 }
 
 /**
@@ -167,12 +200,15 @@ export const getFilteredResources = (
  */
 const applyAdditionalFilter = (
   resource: AlertInstance,
-  additionalFilters?: Record<AlertFilterKey, AlertFilterType | undefined>
+  additionalFilters?: Record<
+    AlertAdditionalFilterKey,
+    AlertFilterType | undefined
+  >
 ): boolean => {
   if (!additionalFilters) {
     return true;
   }
-  return alertApplicableFilterKeys.every((key) => {
+  return applicableAdditionalFilterKeys.every((key) => {
     const value = additionalFilters[key];
     if (value === undefined) {
       return true;
@@ -233,4 +269,38 @@ export const isResourcesEqual = (
 
   const originalSet = new Set(originalResourceIds);
   return selectedResourceIds.every((id) => originalSet.has(id));
+};
+
+/**
+ * Generates the appropriate filter props based on the provided filter key.
+ *
+ * This function returns the necessary props for rendering either an engine type filter
+ * (`AlertsEngineOptionProps`) or a region filter (`AlertsRegionProps`), depending on the
+ * `filterKey` value. It ensures that the correct handler and options are passed for
+ * each filter type.
+ *
+ * @param {FilterRendererProps} props - The properties required to determine the filter behavior.
+ * @param {AlertFilterKey} props.filterKey - The key identifying the filter type (`'engineType'` or `'region'`).
+ * @param {(value: AlertFilterType, filterKey: AlertFilterKey) => void} props.handleFilterChange -
+ *        Callback function for updating the selected engine type.
+ * @param {(selectedRegions: string[]) => void} props.handleFilteredRegionsChange -
+ *        Callback function for updating the selected regions.
+ * @param {Region[]} props.regionOptions - The list of available regions for filtering.
+ */
+export const getFilterProps = ({
+  filterKey,
+  handleFilterChange,
+  handleFilteredRegionsChange: handleSelectionChange,
+  regionOptions,
+}: FilterRendererProps): AlertsEngineOptionProps | AlertsRegionProps => {
+  if (filterKey === 'engineType') {
+    return {
+      handleFilterChange,
+    };
+  } else {
+    return {
+      handleSelectionChange,
+      regionOptions,
+    };
+  }
 };

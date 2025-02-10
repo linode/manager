@@ -9,18 +9,23 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
+  getFilterProps,
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { buildFilterComponent } from './AlertsResourcesFilterRenderer';
+import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
-import type { AlertFilterKey, AlertFilterType } from './types';
+import type {
+  AlertAdditionalFilterKey,
+  AlertFilterKey,
+  AlertFilterType,
+} from './types';
 import type {
   AlertDefinitionType,
   AlertServiceType,
@@ -76,7 +81,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const [additionalFilters, setAdditionalFilters] = React.useState<
-    Record<AlertFilterKey, AlertFilterType>
+    Record<AlertAdditionalFilterKey, AlertFilterType>
   >({ engineType: undefined });
 
   const {
@@ -278,16 +283,21 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               value={searchText || ''}
             />
           </Grid>
-          {filtersToRender.map((filterComponent, index) => (
+          {filtersToRender.map((
+            // render the filters needed based on service type
+            { component, filterKey },
+            index
+          ) => (
             <Grid item key={index} md={4} xs={12}>
-              {buildFilterComponent({
-                component: filterComponent,
-                componentProps: {
+              <AlertResourcesFilterRenderer
+                componentProps={getFilterProps({
+                  filterKey,
                   handleFilterChange,
-                  handleSelectionChange: handleFilteredRegionsChange,
+                  handleFilteredRegionsChange,
                   regionOptions,
-                },
-              })}
+                })}
+                component={component}
+              />
             </Grid>
           ))}
           {isSelectionsNeeded && (

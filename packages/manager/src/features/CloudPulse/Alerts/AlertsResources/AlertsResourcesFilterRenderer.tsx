@@ -15,7 +15,7 @@ export interface AlertResourcesFilterRendererProps {
   componentProps: AlertsEngineOptionProps | AlertsRegionProps;
 }
 
-export const buildFilterComponent = ({
+export const AlertResourcesFilterRenderer = ({
   component,
   componentProps,
 }: AlertResourcesFilterRendererProps) => {
