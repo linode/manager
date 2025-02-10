@@ -67,7 +67,7 @@ export const serviceToFiltersMap: Record<
   '' | AlertServiceType,
   ServiceFilterConfig[]
 > = {
-  '': [], // default to empty
+  '': [{ component: AlertsRegionFilter, filter: 'region' }], // default to only region for better user experience
   dbaas: [
     { component: AlertsEngineTypeFilter, filter: 'engineType' },
     { component: AlertsRegionFilter, filter: 'region' },
