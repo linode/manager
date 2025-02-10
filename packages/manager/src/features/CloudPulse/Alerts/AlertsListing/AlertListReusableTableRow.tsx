@@ -1,11 +1,11 @@
-import { Box, Toggle, Tooltip, Typography } from '@linode/ui';
+import { Box, FormControlLabel, Toggle, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
+import NullComponent from 'src/components/NullComponent';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import { FormControlLabel } from '../../../../../../ui/src/components/FormControlLabel';
 import { processMetricCriteria } from '../Utils/utils';
 
 import type { ProcessedCriteria } from '../Utils/utils';
@@ -51,15 +51,22 @@ export const AlertListReusableTableRow = (
           {label}
         </Link>
       </TableCell>
-      <TableCell>{generateMetricThreshold(metricThreshold)}</TableCell>
+      <TableCell>
+        <MetricThreshold metricThreshold={metricThreshold} />
+      </TableCell>
       <TableCell>{type}</TableCell>
     </TableRow>
   );
 };
 
-const generateMetricThreshold = (metricThreshold: ProcessedCriteria[]) => {
+export interface MetricThresholdProps {
+  metricThreshold: ProcessedCriteria[];
+}
+
+const MetricThreshold = (props: MetricThresholdProps) => {
+  const { metricThreshold } = props;
   if (metricThreshold.length === 0) {
-    return <></>;
+    return <NullComponent />;
   }
 
   const thresholdObject = metricThreshold[0];

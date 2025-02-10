@@ -37,7 +37,7 @@ interface AlertConfirmationDialogProps {
    * @param id id of the alert for the selected row
 
    */
-  handleClose: (id: number) => void;
+  handleConfirm: (id: number) => void;
 
   /**
    * current status of the toggle button whether active or not
@@ -63,7 +63,7 @@ export const AlertConfirmationDialog = React.memo(
       entityId,
       entityName,
       handleCancel,
-      handleClose,
+      handleConfirm,
       isActive,
       isOpen,
       serviceType,
@@ -85,7 +85,7 @@ export const AlertConfirmationDialog = React.memo(
             `The alert settings for ${entityName} saved successfully.`,
             { variant: 'success' }
           );
-          handleClose(alertId);
+          handleConfirm(alertId);
         })
         .catch(() => {
           enqueueSnackbar(
@@ -101,7 +101,7 @@ export const AlertConfirmationDialog = React.memo(
       enqueueSnackbar,
       entityName,
       handleCancel,
-      handleClose,
+      handleConfirm,
       updateEntity,
       alertId,
     ]);

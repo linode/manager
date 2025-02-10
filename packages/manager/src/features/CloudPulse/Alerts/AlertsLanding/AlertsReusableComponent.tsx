@@ -14,6 +14,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/alerts';
 
 import { AlertListReusableTable } from '../AlertsListing/AlertListReusableTable';
+import { AlertContextualViewTableHeaderMap } from '../AlertsListing/constants';
 import {
   convertAlertsToTypeSet,
   filterAlertsByStatusAndType,
@@ -49,11 +50,14 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     AlertDefinitionType | undefined
   >();
 
+  // Filter alerts based on serach text & selected type
   const filteredAlerts = React.useMemo(() => {
     return filterAlertsByStatusAndType(alerts, searchText, selectedType);
   }, [alerts, searchText, selectedType]);
+
   const history = useHistory();
 
+  // Filter unique alert types from alerts list
   const types = React.useMemo<{ label: AlertDefinitionType }[]>(() => {
     return convertAlertsToTypeSet(alerts);
   }, [alerts]);
@@ -98,12 +102,8 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             />
           </Box>
           <AlertListReusableTable
-            columns={[
-              { columnName: 'Alert Name', label: 'label' },
-              { columnName: 'Metric Threshold', label: 'id' },
-              { columnName: 'Alert Type', label: 'type' },
-            ]}
             alerts={filteredAlerts}
+            columns={AlertContextualViewTableHeaderMap}
             entityId={entityId}
             entityName={entityName}
             ordeByColumn="Alert Name"

@@ -62,6 +62,7 @@ export interface AlertStatusMap {
   [alertId: number]: boolean;
 }
 
+// generate the mapping of id to whether entity present in entity_ids list or not for quick access in table row toggles
 const generateStatusMap = (
   alerts: Alert[],
   entityId: string
@@ -88,7 +89,7 @@ export const AlertListReusableTable = (props: AlertListReusableTableProps) => {
     setIsDialogOpen(false);
   };
 
-  const handleClose = (id: number) => {
+  const handleConfirm = (id: number) => {
     setIsDialogOpen(false);
     setAlertStatusMap((previousValue) => {
       return {
@@ -177,7 +178,7 @@ export const AlertListReusableTable = (props: AlertListReusableTableProps) => {
         entityId={entityId}
         entityName={entityName}
         handleCancel={handleCancel}
-        handleClose={handleClose}
+        handleConfirm={handleConfirm}
         isActive={alertStatusMap[selectedAlert.id]}
         isOpen={isDialogOpen}
         serviceType={selectedAlert.service_type}
