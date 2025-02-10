@@ -14,6 +14,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { Alert } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { alertStatuses } from 'src/features/CloudPulse/Alerts/constants';
+import { cloudPulseServiceMap } from 'support/constants/cloudpulse';
 
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 const mockAccount = accountFactory.build();
@@ -111,9 +112,9 @@ const validateAlertDetails = (alert: Alert) => {
   const { id, service_type, status, label, updated, created_by } = alert;
 
   cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
-    cy.findByText(service_type === 'dbaas' ? 'Databases' : 'Linode')
+    cy.findByText(cloudPulseServiceMap[service_type])
       .should('be.visible')
-      .and('have.text', service_type === 'dbaas' ? 'Databases' : 'Linode');
+      .and('have.text', cloudPulseServiceMap[service_type]);
 
     cy.findByText(alertStatuses[status])
       .should('be.visible')

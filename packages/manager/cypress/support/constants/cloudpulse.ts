@@ -3,7 +3,7 @@
  * Used for mapping service type identifiers (e.g., 'linode', 'dbaas') to their display labels.
  */
 
-export const cloudPulseServicelMap: Record<string, string> = {
+export const cloudPulseServiceMap: Record<string, string> = {
   dbaas: 'Databases',
   linode: 'Linode',
 };
