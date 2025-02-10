@@ -338,9 +338,10 @@ describe('Linode Config management', () => {
             cy.findByLabelText('Label', { exact: false })
               .should('be.visible')
               .type(sharedConfigLabel);
-
-            cy.findByText('Select a Kernel').scrollIntoView();
-            cy.focused().click();
+            cy.findByText('Select a Kernel')
+              .as('qaSelectKernel')
+              .scrollIntoView();
+            cy.get('@qaSelectKernel').click();
             cy.focused().type('Latest 64 bit{enter}');
 
             ui.buttonGroup
@@ -350,7 +351,6 @@ describe('Linode Config management', () => {
           });
 
         // Confirm that new configuration is listed in table.
-        // TODO: findByLabelText for 'List of Configurations' not work
         cy.findByLabelText('List of Configurations').within(() => {
           cy.findByText(`${sharedConfigLabel} – ${kernel.label}`)
             .should('be.visible')
