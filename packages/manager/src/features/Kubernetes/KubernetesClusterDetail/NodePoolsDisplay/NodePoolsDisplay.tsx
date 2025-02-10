@@ -164,8 +164,9 @@ export const NodePoolsDisplay = (props: Props) => {
         storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
         return setExpandedAccordions(_expandedAccordions);
       } else {
-        storage.nodePoolsExpanded.set(clusterID, [id]);
-        return setExpandedAccordions([id]);
+        _expandedAccordions = [...defaultExpandedPools, id];
+        storage.nodePoolsExpanded.set(clusterID, _expandedAccordions);
+        return setExpandedAccordions(_expandedAccordions);
       }
     }
 
