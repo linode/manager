@@ -1,5 +1,5 @@
 import { quotaTypes } from '@linode/api-v4';
-import { Divider, Paper, Select, Stack, Typography } from '@linode/ui';
+import { Button, Divider, Paper, Select, Stack, Typography } from '@linode/ui';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
@@ -11,22 +11,24 @@ import { useQuotasQuery } from 'src/queries/quotas/quotas';
 
 import { useGetLocationsForQuotaService } from './utils';
 
-import type { QuotaType } from '@linode/api-v4';
+import type { QuotaType, Region } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Theme } from '@mui/material';
 
 export const Quotas = () => {
-  // @ts-expect-error TODO: this is a placeholder to be replaced with the actual query
-  const [lastUpdatedDate, setLastUpdatedDate] = React.useState(Date.now());
   const [selectedService, setSelectedService] = React.useState<
     SelectOption<QuotaType>
   >({
     label: 'Linodes',
     value: 'linode',
   });
-  const [selectedLocation, setSelectedLocation] = React.useState<null | string>(
-    null
-  );
+  const [selectedLocation, setSelectedLocation] = React.useState<
+    SelectOption<'global' | Region['id']>
+  >({
+    label: 'Global (Account level)',
+    value: 'global',
+  });
+  const [queryEnabled, setQueryEnabled] = React.useState(false);
 
   const serviceOptions = Object.entries(quotaTypes).map(([key, value]) => ({
     label: value,
@@ -43,22 +45,39 @@ export const Quotas = () => {
   } = useGetLocationsForQuotaService(selectedService.value);
 
   // fetch quotas for the selected service and region
-  const { data: quotas } = useQuotasQuery(
+  const { data: quotas, dataUpdatedAt } = useQuotasQuery(
     selectedService.value,
     {},
     {
-      region_applied: selectedLocation,
+      region_applied:
+        selectedService.value !== 'object-storage'
+          ? selectedLocation
+          : undefined,
+      s3_endpoint:
+        selectedService.value === 'object-storage'
+          ? selectedLocation
+          : undefined,
     },
-    selectedLocation !== null && selectedService.value !== 'object-storage'
+    queryEnabled
   );
 
   const onServiceChange = (
     _event: React.SyntheticEvent<Element, Event>,
     value: SelectOption<QuotaType>
   ) => {
+    setQueryEnabled(false);
     setSelectedService(value);
-    setSelectedLocation(null);
+    setSelectedLocation({
+      label: 'Global (Account level)',
+      value: 'global',
+    });
   };
+
+  const onClickViewQuotas = () => {
+    setQueryEnabled(true);
+  };
+
+  const noQuotaRegions = locationsForQuotaService.length <= 1;
 
   return (
     <>
@@ -77,45 +96,63 @@ export const Quotas = () => {
               options={serviceOptions}
               value={selectedService}
             />
-            {service === 'object-storage' ? (
-              <Select
-                onChange={(_event, value) =>
-                  setSelectedLocation(value?.value.toString() ?? null)
-                }
-                value={
-                  selectedLocation
-                    ? {
-                        label:
-                          locationsForQuotaService.find(
-                            (loc) => loc.value === selectedLocation
-                          )?.label ?? selectedLocation,
-                        value: selectedLocation,
-                      }
-                    : null
-                }
-                label="Object Storage Endpoint"
-                options={locationsForQuotaService}
-                placeholder="Select an Object Storage S3 endpoint"
-              />
-            ) : (
-              <RegionSelect
-                onChange={(_event, value) =>
-                  setSelectedLocation(value?.id ?? null)
-                }
-                placeholder={
-                  isFetchingRegions
-                    ? `Loading ${selectedService.label} regions...`
-                    : `Select a region for ${selectedService.label}`
-                }
-                currentCapability={undefined}
-                disableClearable
-                disabled={isFetchingRegions}
-                loading={isFetchingRegions}
-                noOptionsText={`No resource found for ${selectedService.label}`}
-                regions={locationsForQuotaService}
-                value={selectedLocation ?? ''}
-              />
-            )}
+            <Stack alignItems="flex-end" direction="row">
+              {service === 'object-storage' ? (
+                <Select
+                  onChange={(_event, value) => {
+                    setSelectedLocation({
+                      label: value?.label,
+                      value: value?.value,
+                    });
+                    setQueryEnabled(false);
+                  }}
+                  value={{
+                    label:
+                      locationsForQuotaService.find(
+                        (loc) => loc.value === selectedLocation.value
+                      )?.label ?? '',
+                    value: selectedLocation.value,
+                  }}
+                  label="Object Storage Endpoint"
+                  options={locationsForQuotaService}
+                  placeholder="Select an Object Storage S3 endpoint"
+                  searchable
+                  sx={{ flexGrow: 1, mr: 2 }}
+                />
+              ) : (
+                <RegionSelect
+                  disabled={
+                    isFetchingRegions || locationsForQuotaService.length <= 2
+                  }
+                  onChange={(_event, value) => {
+                    setSelectedLocation({
+                      label: value.label,
+                      value: value.id,
+                    });
+                    setQueryEnabled(false);
+                  }}
+                  placeholder={
+                    isFetchingRegions
+                      ? `Loading ${selectedService.label} regions...`
+                      : `Select a region for ${selectedService.label}`
+                  }
+                  currentCapability={undefined}
+                  disableClearable
+                  loading={isFetchingRegions}
+                  noOptionsText={`No resource found for ${selectedService.label}`}
+                  regions={locationsForQuotaService}
+                  sx={{ flexGrow: 1, mr: 2 }}
+                  value={noQuotaRegions ? undefined : selectedLocation.value}
+                />
+              )}
+              <Button
+                buttonType="primary"
+                disabled={isFetchingRegions || noQuotaRegions}
+                onClick={onClickViewQuotas}
+              >
+                View Quotas
+              </Button>
+            </Stack>
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="h3">Quotas</Typography>
@@ -123,7 +160,7 @@ export const Quotas = () => {
               <Typography variant="body1">
                 <strong>Last updated:</strong>{' '}
                 <DateTimeDisplay
-                  value={DateTime.fromMillis(lastUpdatedDate).toISO() ?? ''}
+                  value={DateTime.fromMillis(dataUpdatedAt).toISO() ?? ''}
                 />
               </Typography>
 
@@ -132,19 +169,21 @@ export const Quotas = () => {
             </Stack>
           </Stack>
           <Stack direction="row" spacing={2}>
-            {selectedLocation && (quotas || objectStorageQuotas) && (
-              <pre
-                style={{
-                  backgroundColor: '#f5f5f5',
-                  borderRadius: '4px',
-                  overflow: 'auto',
-                  padding: '1rem',
-                  width: '100%',
-                }}
-              >
-                {JSON.stringify(quotas || objectStorageQuotas, null, 2)}
-              </pre>
-            )}
+            {selectedLocation &&
+              (quotas || objectStorageQuotas) &&
+              queryEnabled && (
+                <pre
+                  style={{
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: '4px',
+                    overflow: 'auto',
+                    padding: '1rem',
+                    width: '100%',
+                  }}
+                >
+                  {JSON.stringify(quotas || objectStorageQuotas, null, 2)}
+                </pre>
+              )}
           </Stack>
         </Stack>
       </Paper>

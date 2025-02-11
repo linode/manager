@@ -67,7 +67,7 @@ export const useGetLocationsForQuotaService = (
     return {
       isFetching: isFetchingRegions,
       locationsForQuotaService: [
-        ...(uniqueEndpoints.length > 2
+        ...(uniqueEndpoints.length >= 2
           ? [{ label: 'Global (Account level)', value: 'global' }]
           : []),
         ...uniqueEndpoints.map((endpoint) => ({
@@ -85,9 +85,7 @@ export const useGetLocationsForQuotaService = (
     return {
       isFetching: isFetchingRegions || isFetchingLinodes,
       locationsForQuotaService: [
-        ...(linodeRegions?.length && linodeRegions.length > 2
-          ? [globalOption]
-          : []),
+        globalOption,
         ...(regions?.filter((region) => linodeRegions?.includes(region.id)) ??
           []),
       ],
@@ -101,9 +99,7 @@ export const useGetLocationsForQuotaService = (
     return {
       isFetching: isFetchingRegions || isFetchingClusters,
       locationsForQuotaService: [
-        ...(clusterRegions?.length && clusterRegions.length > 2
-          ? [globalOption]
-          : []),
+        globalOption,
         ...(regions?.filter((region) => clusterRegions?.includes(region.id)) ??
           []),
       ],

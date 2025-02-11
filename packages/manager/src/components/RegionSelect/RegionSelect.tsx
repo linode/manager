@@ -49,6 +49,7 @@ export const RegionSelect = <
     regionFilter,
     regions,
     required,
+    sx,
     tooltipText,
     value,
     width,
@@ -123,6 +124,7 @@ export const RegionSelect = <
           );
         }}
         sx={(theme) => ({
+          ...sx,
           [theme.breakpoints.up('md')]: {
             width: tooltipText ? '458px' : '416px',
           },
