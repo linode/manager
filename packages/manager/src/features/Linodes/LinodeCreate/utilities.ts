@@ -153,7 +153,10 @@ export const getLinodeCreatePayload = (
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
+    'interfaceType',
+    'interfacesV2',
   ]);
+
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
