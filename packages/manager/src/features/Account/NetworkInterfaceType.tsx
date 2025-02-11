@@ -54,12 +54,12 @@ export const NetworkInterfaceType = () => {
   const values = {
     interfaces_for_new_linodes:
       accountSettings?.interfaces_for_new_linodes ??
-      'legacy_config_default_but_linode_allowed',
+      'linode_default_but_legacy_config_allowed',
   };
 
   const {
     control,
-    formState: { isDirty, isSubmitting },
+    formState: { isSubmitting }, // { isDirty, isSubmitting }
     handleSubmit,
     setError,
   } = useForm<InterfaceSettingValues>({
@@ -124,7 +124,7 @@ export const NetworkInterfaceType = () => {
           >
             <Button
               buttonType="outlined"
-              disabled={!isDirty}
+              // disabled={!isDirty}
               loading={isSubmitting}
               type="submit"
             >
