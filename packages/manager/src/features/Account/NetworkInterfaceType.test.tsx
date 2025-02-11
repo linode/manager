@@ -1,31 +1,33 @@
-import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { accountSettingsFactory } from 'src/factories';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NetworkInterfaceType } from './NetworkInterfaceType';
 
-import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
-
-const props = {
-  interfacesSetting: 'legacy_config_only' as LinodeInterfaceAccountSetting,
-  updateInterfaceSettings: vi.fn(),
-};
 describe('NetworkInterfaces', () => {
   it('renders the NetworkInterfaces accordion', () => {
-    const { getByText } = renderWithTheme(<NetworkInterfaceType {...props} />);
+    const { getByText } = renderWithTheme(<NetworkInterfaceType />);
 
     expect(getByText('Network Interface Type')).toBeVisible();
     expect(getByText('Interfaces for new Linodes')).toBeVisible();
     expect(getByText('Save')).toBeVisible();
   });
 
-  it('confirms updateInterfaceSettings is called when clicking save', async () => {
-    const { getByText } = renderWithTheme(<NetworkInterfaceType {...props} />);
+  it('populates select with the returned interfaces_for_new_linodes value', async () => {
+    const accountSettings = accountSettingsFactory.build({
+      interfaces_for_new_linodes: 'linode_only',
+    });
 
-    const saveButton = getByText('Save');
-    await userEvent.click(saveButton);
+    server.use(
+      http.get('*/v4/account/settings', () =>
+        HttpResponse.json(accountSettings)
+      )
+    );
 
-    expect(props.updateInterfaceSettings).toHaveBeenCalled();
+    const { findByDisplayValue } = renderWithTheme(<NetworkInterfaceType />);
+
+    await findByDisplayValue('Linode Interfaces Only');
   });
 });

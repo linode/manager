@@ -8,18 +8,24 @@ import {
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
+import {
+  useAccountSettings,
+  useMutateAccountSettings,
+} from 'src/queries/account/settings';
 
-import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
+import type {
+  AccountSettings,
+  LinodeInterfaceAccountSetting,
+} from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 
-interface Props {
-  interfacesSetting: LinodeInterfaceAccountSetting;
-  updateInterfaceSettings: (
-    newInterfaceSettings: LinodeInterfaceAccountSetting
-  ) => void;
-}
+type InterfaceSettingValues = Pick<
+  AccountSettings,
+  'interfaces_for_new_linodes'
+>;
 
 const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting>[] = [
   {
@@ -40,12 +46,34 @@ const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting
   },
 ];
 
-export const NetworkInterfaceType = (props: Props) => {
-  const { interfacesSetting, updateInterfaceSettings } = props;
-  const [
-    selectedInterfaceSetting,
-    setSelectedInterfaceSetting,
-  ] = React.useState<LinodeInterfaceAccountSetting>(interfacesSetting);
+export const NetworkInterfaceType = () => {
+  const { data: accountSettings } = useAccountSettings();
+
+  const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
+
+  const values = {
+    interfaces_for_new_linodes:
+      accountSettings?.interfaces_for_new_linodes ??
+      'legacy_config_default_but_linode_allowed',
+  };
+
+  const {
+    control,
+    formState: { isDirty, isSubmitting },
+    handleSubmit,
+    setError,
+  } = useForm<InterfaceSettingValues>({
+    defaultValues: values,
+    values,
+  });
+
+  const onSubmit = async (values: InterfaceSettingValues) => {
+    try {
+      await updateAccountSettings(values);
+    } catch (error) {
+      setError('interfaces_for_new_linodes', { message: error[0].reason });
+    }
+  };
 
   return (
     <Accordion
@@ -53,43 +81,58 @@ export const NetworkInterfaceType = (props: Props) => {
       heading="Network Interface Type"
       headingChip={<BetaChip color="primary" />}
     >
-      <Stack>
-        <Typography variant="body1">
-          Set the network interface for your Linode instances to use during
-          creation. <Link to="/#">Learn more</Link>.
-        </Typography>
-        <Autocomplete
-          onChange={(_, item: SelectOption<LinodeInterfaceAccountSetting>) => {
-            setSelectedInterfaceSetting(item.value);
-          }}
-          sx={(theme) => ({
-            [theme.breakpoints.up('md')]: {
-              minWidth: '458px',
-            },
-          })}
-          textFieldProps={{
-            tooltipText: '@TODO Linode Interfaces - get copy for this tooltip',
-          }}
-          value={accountSettingInterfaceOptions.find(
-            (option) => option.value === selectedInterfaceSetting
-          )}
-          disableClearable
-          label="Interfaces for new Linodes"
-          options={accountSettingInterfaceOptions}
-        />
-        <Box
-          sx={(theme) => ({
-            marginTop: theme.spacing(2),
-          })}
-        >
-          <Button
-            buttonType="outlined"
-            onClick={() => updateInterfaceSettings(selectedInterfaceSetting)}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack>
+          <Typography variant="body1">
+            Set the network interface for your Linode instances to use during
+            creation. <Link to="/#">Learn more</Link>.
+          </Typography>
+          <Controller
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                onChange={(
+                  _,
+                  item: SelectOption<LinodeInterfaceAccountSetting>
+                ) => {
+                  field.onChange(item?.value);
+                }}
+                sx={(theme) => ({
+                  [theme.breakpoints.up('md')]: {
+                    minWidth: '458px',
+                  },
+                })}
+                textFieldProps={{
+                  tooltipText:
+                    '@TODO Linode Interfaces - get copy for this tooltip',
+                }}
+                value={accountSettingInterfaceOptions.find(
+                  (option) => option.value === field.value
+                )}
+                disableClearable
+                errorText={fieldState.error?.message}
+                label="Interfaces for new Linodes"
+                options={accountSettingInterfaceOptions}
+              />
+            )}
+            control={control}
+            name="interfaces_for_new_linodes"
+          />
+          <Box
+            sx={(theme) => ({
+              marginTop: theme.spacing(2),
+            })}
           >
-            Save
-          </Button>
-        </Box>
-      </Stack>
+            <Button
+              buttonType="outlined"
+              disabled={!isDirty}
+              loading={isSubmitting}
+              type="submit"
+            >
+              Save
+            </Button>
+          </Box>
+        </Stack>
+      </form>
     </Accordion>
   );
 };

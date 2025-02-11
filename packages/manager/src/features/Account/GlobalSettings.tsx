@@ -19,7 +19,7 @@ import NetworkHelper from './NetworkHelper';
 import { NetworkInterfaceType } from './NetworkInterfaceType';
 import { ObjectStorageSettings } from './ObjectStorageSettings';
 
-import type { APIError, LinodeInterfaceAccountSetting } from '@linode/api-v4';
+import type { APIError } from '@linode/api-v4';
 
 const GlobalSettings = () => {
   const [isBackupsDrawerOpen, setIsBackupsDrawerOpen] = React.useState(false);
@@ -70,12 +70,7 @@ const GlobalSettings = () => {
     return null;
   }
 
-  const {
-    backups_enabled,
-    interfaces_for_new_linodes,
-    managed,
-    network_helper,
-  } = accountSettings;
+  const { backups_enabled, managed, network_helper } = accountSettings;
 
   const toggleAutomaticBackups = () => {
     updateAccount({ backups_enabled: !backups_enabled }).catch(displayError);
@@ -85,22 +80,9 @@ const GlobalSettings = () => {
     updateAccount({ network_helper: !network_helper }).catch(displayError);
   };
 
-  const updateInterfaceSetting = (
-    newInterfaceSetting: LinodeInterfaceAccountSetting
-  ) => {
-    updateAccount({ interfaces_for_new_linodes: newInterfaceSetting }).catch(
-      displayError
-    );
-  };
-
   return (
     <div>
-      {linodeInterfacesFlag?.enabled && (
-        <NetworkInterfaceType
-          interfacesSetting={interfaces_for_new_linodes}
-          updateInterfaceSettings={updateInterfaceSetting}
-        />
-      )}
+      {linodeInterfacesFlag?.enabled && <NetworkInterfaceType />}
       <AutoBackups
         backups_enabled={backups_enabled}
         hasLinodesWithoutBackups={hasLinodesWithoutBackups}
