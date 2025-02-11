@@ -106,7 +106,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             disableClearable
             disabled={disabled}
             errorText={errorMap.check}
-            helperText="Monitors backends to ensure they're 'up' and handling requests."
+            helperText="Monitors backends to ensure they’re 'up' and handling requests."
             id={`type-${configIdx}`}
             label="Type"
             noMarginTop

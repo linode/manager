@@ -117,7 +117,7 @@ describe('NodeBalancerConfigPanel', () => {
     ).toBeVisible();
     expect(
       getByText(
-        "Monitors backends to ensure they're 'up' and handling requests."
+        "Monitors backends to ensure they’re 'up' and handling requests."
       )
     ).toBeVisible();
     expect(getByText('Add a Node')).toBeVisible();

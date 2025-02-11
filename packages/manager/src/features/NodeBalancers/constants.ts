@@ -31,7 +31,7 @@ export const ALGORITHM_OPTIONS: AlgorithmOption[] = [
   },
   {
     description:
-      "Repeated requests are directed to the same backend based on the client's IP.",
+      "Repeated requests are directed to the same backend based on the client’s IP.",
     label: 'Source',
     supportedProtocols: ['tcp', 'http', 'https'],
     value: 'source',
@@ -62,7 +62,7 @@ export const STICKINESS_OPTIONS: StickinessOption[] = [
   },
   {
     description:
-      "The client's source IP is used to route all packets from that client to the same backend.",
+      "The client’s source IP is used to route all packets from that client to the same backend.",
     label: 'Source IP',
     supportedProtocols: ['udp'],
     value: 'source_ip',

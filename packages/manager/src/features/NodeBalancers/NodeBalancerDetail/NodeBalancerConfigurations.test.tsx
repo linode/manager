@@ -84,7 +84,7 @@ describe('NodeBalancerConfigurations', () => {
     ).toBeInTheDocument();
     expect(
       getByText(
-        "Monitors backends to ensure they're 'up' and handling requests."
+        "Monitors backends to ensure they’re 'up' and handling requests."
       )
     ).toBeInTheDocument();
     expect(getByText('Add a Node')).toBeInTheDocument();
