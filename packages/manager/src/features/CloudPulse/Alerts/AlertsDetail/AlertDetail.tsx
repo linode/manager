@@ -90,7 +90,12 @@ export const AlertDetail = () => {
       </>
     );
   }
-  const { class: alertClass, entity_ids: entityIds, type } = alertDetails;
+  const {
+    class: alertClass,
+    entity_ids: entityIds,
+    service_type: alertServiceType,
+    type,
+  } = alertDetails;
   return (
     <>
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
@@ -127,7 +132,7 @@ export const AlertDetail = () => {
             alertClass={alertClass}
             alertResourceIds={entityIds}
             alertType={type}
-            serviceType={serviceType}
+            serviceType={alertServiceType}
           />
         </Box>
         <Box

@@ -9,19 +9,27 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
+  getAlertResourceFilterProps,
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
+import { serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
 import type {
+  AlertAdditionalFilterKey,
+  AlertFilterKey,
+  AlertFilterType,
+} from './types';
+import type {
   AlertClass,
   AlertDefinitionType,
+  AlertServiceType,
   Filter,
   Region,
 } from '@linode/api-v4';
@@ -59,7 +67,7 @@ export interface AlertResourcesProp {
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
-  serviceType: string;
+  serviceType?: AlertServiceType;
 }
 
 export type SelectUnselectAll = 'Select All' | 'Unselect All';
@@ -80,6 +88,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertResourceIds
   );
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
+  const [additionalFilters, setAdditionalFilters] = React.useState<
+    Record<AlertAdditionalFilterKey, AlertFilterType>
+  >({ engineType: undefined });
 
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     if (serviceType !== 'dbaas') {
@@ -167,11 +178,19 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     );
   };
 
+  const handleFilterChange = React.useCallback(
+    (value: AlertFilterType, filterKey: AlertFilterKey) => {
+      setAdditionalFilters((prev) => ({ ...prev, [filterKey]: value }));
+    },
+    []
+  );
+
   /**
    * Filters resources based on the provided resource IDs, search text, and filtered regions.
    */
   const filteredResources: AlertInstance[] = React.useMemo(() => {
     return getFilteredResources({
+      additionalFilters,
       data: resources,
       filteredRegions,
       isAdditionOrDeletionNeeded: isSelectionsNeeded,
@@ -190,6 +209,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     searchText,
     selectedOnly,
     selectedResources,
+    additionalFilters,
   ]);
 
   const handleSelection = React.useCallback(
@@ -255,6 +275,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     );
   }
 
+  const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
+
   return (
     <Stack gap={2}>
       <Typography ref={titleRef} variant="h2">
@@ -290,12 +312,20 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               value={searchText || ''}
             />
           </Grid>
-          <Grid item md={4} xs={12}>
-            <AlertsRegionFilter
-              handleSelectionChange={handleFilteredRegionsChange}
-              regionOptions={regionOptions}
-            />
-          </Grid>
+          {/* Dynamically render service type based filters */}
+          {filtersToRender.map(({ component, filterKey }, index) => (
+            <Grid item key={`${index}_${filterKey}`} md={4} xs={12}>
+              <AlertResourcesFilterRenderer
+                componentProps={getAlertResourceFilterProps({
+                  filterKey,
+                  handleFilterChange,
+                  handleFilteredRegionsChange,
+                  regionOptions,
+                })}
+                component={component}
+              />
+            </Grid>
+          ))}
           {isSelectionsNeeded && (
             <Grid item md={4} xs={12}>
               <Checkbox
@@ -329,6 +359,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
             scrollToElement={() => scrollToElement(titleRef.current)}
+            serviceType={serviceType}
           />
         </Grid>
       </Grid>
