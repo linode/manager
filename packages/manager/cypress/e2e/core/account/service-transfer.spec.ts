@@ -112,18 +112,6 @@ const assertReceiptError = (errorMessage: string) => {
     });
 };
 
-/**
- * Asserts that an error message is shown upon service transfer tables.
- *
- * @param errorMessage - Error message which is expected to be shown.
- */
-const assertServiceTransfersError = (errorMessage: string) => {
-  // Error Icon should shows up.
-  cy.findByTestId('ErrorOutlineIcon').should('be.visible');
-  // Error message should be visible.
-  cy.findByText(errorMessage, { exact: false }).should('be.visible');
-};
-
 authenticate();
 describe('Account service transfers', () => {
   before(() => {
@@ -538,7 +526,7 @@ describe('Account service transfers', () => {
   /*
    * - Confirms that an error message is displayed in both the Received and Sent tables when the requests to fetch service transfers fail.
    */
-  it('can display an error message when the request fails to fetch service transfer', () => {
+  it('should display an error message when the request fails to fetch service transfer', () => {
     mockGetEntityTransfersError().as('getTransfersError');
 
     cy.visitWithLogin(serviceTransferLandingUrl);
@@ -546,20 +534,21 @@ describe('Account service transfers', () => {
 
     cy.get('[data-qa-panel="Pending Service Transfers"]').should('not.exist');
 
-    // Confirm that an error message is displayed in "Received Service Transfers" panel.
-    cy.get('[data-qa-panel="Received Service Transfers"]')
-      .should('be.visible')
-      .within(() => {
-        cy.get('[data-testid="KeyboardArrowDownIcon"]').click();
-        assertServiceTransfersError(serviceTransferErrorMessage);
-      });
-
-    // Confirm that an error message is displayed is in "Sent Service Transfers" panel.
-    cy.get('[data-qa-panel="Sent Service Transfers"]')
-      .should('be.visible')
-      .within(() => {
-        cy.get('[data-testid="KeyboardArrowDownIcon"]').click();
-        assertServiceTransfersError(serviceTransferErrorMessage);
-      });
+    // Confirm that an error message is displayed in both "Received Service Transfers" and "Sent Service Transfers" panels.
+    ['Received Service Transfers', 'Sent Service Transfers'].forEach(
+      (transfer) => {
+        cy.get(`[data-qa-panel="${transfer}"]`)
+          .should('be.visible')
+          .within(() => {
+            cy.get(`[data-qa-panel-summary="${transfer}"]`).click();
+            // Error Icon should shows up.
+            cy.findByTestId('ErrorOutlineIcon').should('be.visible');
+            // Error message should be visible.
+            cy.findByText(serviceTransferErrorMessage, { exact: false }).should(
+              'be.visible'
+            );
+          });
+      }
+    );
   });
 });
