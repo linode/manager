@@ -1,4 +1,10 @@
-import { Box, CircleProgress, Stack, Typography } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  Stack,
+  Typography,
+  StyledLinkButton,
+} from '@linode/ui';
 import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -43,6 +49,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     '&:hover': {
       opacity: 0.7,
+      textDecoration: 'none',
+    },
+    '&:hover:not(:disabled)': {
+      textDecoration: 'none',
     },
     alignItems: 'center',
     borderLeft: `1px solid ${theme.tokens.color.Neutrals[40]}`,
@@ -69,7 +79,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: 14,
   },
   label: {
-    font: theme.font.bold,
+    fontFamily: theme.font.bold,
     marginBottom: `calc(${theme.spacing(1)} - 3px)`,
   },
 }));
@@ -189,7 +199,7 @@ export const KubeConfigDisplay = (props: Props) => {
           Kubeconfig:
         </Typography>
         <div className={classes.kubeconfigElements}>
-          <Box
+          <StyledLinkButton
             className={classes.kubeconfigElement}
             onClick={downloadKubeConfig}
           >
@@ -200,12 +210,18 @@ export const KubeConfigDisplay = (props: Props) => {
             <Typography className={classes.kubeconfigFileText}>
               {`${clusterLabel}-kubeconfig.yaml`}
             </Typography>
-          </Box>
-          <Box className={classes.kubeconfigElement} onClick={handleOpenDrawer}>
+          </StyledLinkButton>
+          <StyledLinkButton
+            className={classes.kubeconfigElement}
+            onClick={handleOpenDrawer}
+          >
             <DetailsIcon className={classes.kubeconfigIcons} />
             <Typography className={classes.kubeconfigFileText}>View</Typography>
-          </Box>
-          <Box className={classes.kubeconfigElement} onClick={onCopyToken}>
+          </StyledLinkButton>
+          <StyledLinkButton
+            className={classes.kubeconfigElement}
+            onClick={onCopyToken}
+          >
             {isCopyTokenLoading ? (
               <CircleProgress
                 className={classes.kubeconfigIcons}
@@ -216,8 +232,8 @@ export const KubeConfigDisplay = (props: Props) => {
               <CopyIcon className={classes.kubeconfigIcons} />
             )}
             <Box className={classes.kubeconfigFileText}>Copy Token</Box>
-          </Box>
-          <Box
+          </StyledLinkButton>
+          <StyledLinkButton
             className={classes.kubeconfigElement}
             onClick={() => setResetKubeConfigDialogOpen(true)}
           >
@@ -235,7 +251,7 @@ export const KubeConfigDisplay = (props: Props) => {
             >
               Reset
             </Typography>
-          </Box>
+          </StyledLinkButton>
         </div>
       </Box>
     </Stack>
