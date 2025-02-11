@@ -667,7 +667,7 @@ export const handlers = [
         '192.168.0.5',
       ],
       label: 'multiple-ips',
-      tags: ['test1', 'test2', 'test3'],
+      tags: ['test1', 'test2', 'test3', 'testvenkat'],
     });
     const linodes = [
       metadataLinodeWithCompatibleImage,

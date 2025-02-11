@@ -7,6 +7,7 @@ import {
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 import type { AlertsEngineOptionProps } from '../AlertsResources/AlertsEngineTypeFilter';
 import type { AlertsRegionProps } from '../AlertsResources/AlertsRegionFilter';
+import type { AlertsTagFilterProps } from '../AlertsResources/AlertsTagsFilter';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type {
   AlertAdditionalFilterKey,
@@ -83,6 +84,8 @@ interface FilterRendererProps {
    * The regions to be displayed according to the resources associated with alerts
    */
   regionOptions: Region[];
+
+  tagOptions: string[];
 }
 
 /**
@@ -161,7 +164,6 @@ export const getFilteredResources = (
       const regionObj = resource.region
         ? regionsIdToRegionMap.get(resource.region)
         : undefined;
-      const tags = resource.tags ? resource.tags.join(',') : '';
       return {
         ...resource,
         checked: selectedResources
@@ -172,7 +174,6 @@ export const getFilteredResources = (
             ? `${regionObj.label} (${regionObj.id})`
             : resource.region
           : '',
-        tags,
       };
     })
     .filter(({ checked, label, region }) => {
@@ -217,7 +218,12 @@ const applyAdditionalFilter = (
     // Only apply filters that exist in `alertAdditionalFilterKeyMap`
     const mappedKey = alertAdditionalFilterKeyMap[key];
     const resourceValue = resource[mappedKey];
-    return deepEqual(resourceValue, value);
+
+    if (Array.isArray(resourceValue) && Array.isArray(value)) {
+      return value.some((obj) => resourceValue.includes(obj));
+    }
+
+    return resourceValue === value;
   });
 };
 
@@ -293,10 +299,19 @@ export const getFilterProps = ({
   handleFilterChange,
   handleFilteredRegionsChange: handleSelectionChange,
   regionOptions,
-}: FilterRendererProps): AlertsEngineOptionProps | AlertsRegionProps => {
+  tagOptions,
+}: FilterRendererProps):
+  | AlertsEngineOptionProps
+  | AlertsRegionProps
+  | AlertsTagFilterProps => {
   if (filterKey === 'engineType') {
     return {
       handleFilterChange,
+    };
+  } else if (filterKey === 'tags') {
+    return {
+      handleFilterChange,
+      tagOptions,
     };
   } else {
     return {

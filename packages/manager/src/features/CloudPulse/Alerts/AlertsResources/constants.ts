@@ -1,6 +1,7 @@
 import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { AlertsTagFilter } from './AlertsTagsFilter';
 
 import type { AlertInstance } from './DisplayAlertResources';
 import type {
@@ -70,11 +71,15 @@ export const serviceToFiltersMap: Record<
     { component: AlertsEngineTypeFilter, filterKey: 'engineType' },
     { component: AlertsRegionFilter, filterKey: 'region' },
   ],
-  linode: [{ component: AlertsRegionFilter, filterKey: 'region' }], // TODO: Add 'tags' filter in the future
+  linode: [
+    { component: AlertsRegionFilter, filterKey: 'region' },
+    { component: AlertsTagFilter, filterKey: 'tags' },
+  ], // TODO: Add 'tags' filter in the future
 };
 
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
   'engineType',
+  'tags',
 ];
 
 export const alertAdditionalFilterKeyMap: Record<
@@ -82,4 +87,5 @@ export const alertAdditionalFilterKeyMap: Record<
   keyof AlertInstance
 > = {
   engineType: 'engineType',
+  tags: 'tags',
 };

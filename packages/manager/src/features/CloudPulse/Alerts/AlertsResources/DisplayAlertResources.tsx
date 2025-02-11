@@ -42,7 +42,7 @@ export interface AlertInstance {
    */
   region: string;
 
-  tags?: string;
+  tags?: string[];
 }
 
 export interface DisplayAlertResourceProp {
@@ -239,14 +239,14 @@ export const DisplayAlertResources = React.memo(
                           {label === 'Tags' && resource.tags?.length && (
                             <Box alignItems={'center'} display={'flex'} gap={1}>
                               <Typography variant="body2">
-                                {resource.tags.split(',')[0]}
+                                {resource.tags[0]}
                               </Typography>
-                              <Tooltip title={resource.tags}>
+                              <Tooltip title={resource.tags.join(',')}>
                                 <span>
                                   <Chip
                                     label={`+${
                                       resource.tags
-                                        ? resource.tags.split(',').length - 1
+                                        ? resource.tags.length - 1
                                         : ''
                                     }`}
                                   />

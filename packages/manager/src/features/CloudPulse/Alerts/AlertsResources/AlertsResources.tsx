@@ -97,7 +97,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
   const [additionalFilters, setAdditionalFilters] = React.useState<
     Record<AlertAdditionalFilterKey, AlertFilterType>
-  >({ engineType: undefined });
+  >({ engineType: undefined, tags: undefined });
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
 
@@ -342,6 +342,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   handleFilterChange,
                   handleFilteredRegionsChange,
                   regionOptions,
+                  tagOptions: Array.from(
+                    new Set(
+                      resources
+                        ? filteredResources.flatMap(
+                            (resource) => resource.tags ?? []
+                          )
+                        : []
+                    )
+                  ),
                 })}
                 component={component}
               />
