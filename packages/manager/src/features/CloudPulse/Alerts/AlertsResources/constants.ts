@@ -13,7 +13,7 @@ import type { AlertServiceType } from '@linode/api-v4';
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   '': [
-    // default fallback case when service type is empty, in the create flow, until we select a service type it will be empty
+    // Default fallback case when service type is empty, in the create flow, until we select a service type it will be empty
     {
       accessor: ({ label }) => label,
       label: 'Resource',
@@ -61,7 +61,7 @@ export const serviceToFiltersMap: Record<
   '' | AlertServiceType,
   ServiceFilterConfig[]
 > = {
-  '': [{ component: AlertsRegionFilter, filterKey: 'region' }], // default to only region for better user experience
+  '': [{ component: AlertsRegionFilter, filterKey: 'region' }], // Default to only region for better user experience in create alert flow
   dbaas: [
     { component: AlertsEngineTypeFilter, filterKey: 'engineType' },
     { component: AlertsRegionFilter, filterKey: 'region' },
@@ -69,7 +69,7 @@ export const serviceToFiltersMap: Record<
   linode: [{ component: AlertsRegionFilter, filterKey: 'region' }], // TODO: Add 'tags' filter in the future
 };
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
-  'engineType', // extendable for future filter keys like 'tags', 'plan', etc.
+  'engineType', // Extendable in future for filter keys like 'tags', 'plan', etc.
 ];
 
 export const alertAdditionalFilterKeyMap: Record<

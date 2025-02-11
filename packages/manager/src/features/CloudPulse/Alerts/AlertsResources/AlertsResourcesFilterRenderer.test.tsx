@@ -7,7 +7,7 @@ import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { serviceToFiltersMap } from './constants';
 
 describe('AlertsResourcesFilterRenderer', () => {
-  const filters = serviceToFiltersMap['dbaas']; // get filters for dbaas service type
+  const filters = serviceToFiltersMap['dbaas']; // Get filters for dbaas service type
   it('renders the correct filter components based on properties passed', () => {
     const handleFilterChangeMock = vi.fn();
     const engineProps = getAlertResourceFilterProps({
@@ -20,7 +20,7 @@ describe('AlertsResourcesFilterRenderer', () => {
     expect(enginePropKeys.includes('handleFilterChange')).toBeTruthy();
     expect(enginePropKeys.includes('handleSelectionChange')).toBeFalsy();
     const { getByPlaceholderText } = renderWithTheme(
-      // check for database engine filter
+      // Check for database engine filter
       <AlertResourcesFilterRenderer
         component={filters[0].component}
         componentProps={engineProps}
@@ -41,7 +41,7 @@ describe('AlertsResourcesFilterRenderer', () => {
     expect(regionPropKeys.includes('handleFilterChange')).toBeFalsy();
     expect(regionPropKeys.includes('handleSelectionChange')).toBeTruthy();
 
-    // check for region filter
+    // Check for region filter
     renderWithTheme(
       <AlertResourcesFilterRenderer
         component={filters[1].component}
