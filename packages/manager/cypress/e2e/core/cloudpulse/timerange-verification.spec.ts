@@ -270,9 +270,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .click();
 
-    // Enter the start time (hour and minute)
-    cy.findByPlaceholderText("hh:mm aa")
-      .clear({ force: true })
+      cy.get('[aria-label^="Choose time"]').click();
+
+      cy.get('input[placeholder="hh:mm aa"]').clear()
       .type(`${startHour}:${startMinute} PM`);
 
     // Click the "Apply" button to confirm the start date and time
@@ -291,9 +291,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .click();
 
-    // Enter the end time (hour and minute)
-    cy.findByPlaceholderText("hh:mm aa")
-      .clear({ force: true })
+      cy.get('[aria-label^="Choose time"]').click();
+
+      cy.get('input[placeholder="hh:mm aa"]').clear()
       .type(`${endHour}:${endMinute} AM`);
 
     // Click the "Apply" button to confirm the end date and time
