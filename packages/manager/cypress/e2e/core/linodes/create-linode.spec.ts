@@ -46,6 +46,9 @@ let username: string;
 authenticate();
 describe('Create Linode', () => {
   before(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
     cleanUp('linodes');
     cleanUp('ssh-keys');
   });
