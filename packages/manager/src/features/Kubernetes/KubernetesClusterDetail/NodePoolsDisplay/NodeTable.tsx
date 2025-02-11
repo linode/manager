@@ -241,6 +241,14 @@ export const NodeTable = React.memo((props: Props) => {
                   )}
                 </TableBody>
               </Table>
+              <PaginationFooter
+                count={count}
+                eventCategory="Node Table"
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+              />
               <StyledTableFooter>
                 <StyledPoolInfoBox>
                   {isDiskEncryptionFeatureEnabled &&
@@ -265,14 +273,6 @@ export const NodeTable = React.memo((props: Props) => {
                 </StyledPoolInfoBox>
                 <TagCell tags={tags} updateTags={updateTags} view="inline" />
               </StyledTableFooter>
-              <PaginationFooter
-                count={count}
-                eventCategory="Node Table"
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
-                page={page}
-                pageSize={pageSize}
-              />
             </>
           )}
         </Paginate>
