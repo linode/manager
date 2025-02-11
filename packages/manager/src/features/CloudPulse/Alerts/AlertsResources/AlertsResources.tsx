@@ -9,25 +9,37 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
+  getFilterProps,
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { AlertsRegionFilter } from './AlertsRegionFilter';
-import { AlertResourceAdditionalFilters } from './AlertsResourcesAdditionalFilters';
+import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
+import { serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
-import type { AlertFilterKey, AlertFilterType } from './constants';
 import type { AlertInstance } from './DisplayAlertResources';
-import type { AlertDefinitionType, Region } from '@linode/api-v4';
+import type { AlertAdditionalFilterKey, AlertFilterType } from './types';
+import type {
+  AlertClass,
+  AlertDefinitionType,
+  AlertServiceType,
+  Filter,
+  Region,
+} from '@linode/api-v4';
 
 export interface AlertResourcesProp {
+  /**
+   * Class of the alert (dedicated / shared)
+   */
+  alertClass?: AlertClass;
   /**
    * The label of the alert to be displayed
    */
   alertLabel?: string;
+
   /**
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
@@ -61,13 +73,14 @@ export interface AlertResourcesProp {
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
-  serviceType?: string;
+  serviceType?: AlertServiceType;
 }
 
 export type SelectUnselectAll = 'Select All' | 'Unselect All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
+    alertClass,
     alertLabel,
     alertResourceIds,
     alertType,
@@ -83,10 +96,35 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertResourceIds
   );
   const [additionalFilters, setAdditionalFilters] = React.useState<
-    Record<AlertFilterKey, AlertFilterType>
+    Record<AlertAdditionalFilterKey, AlertFilterType>
   >({ engineType: undefined });
 
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
+
+  const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+    if (serviceType !== 'dbaas') {
+      return undefined;
+    }
+
+    // If the serviceType is 'dbaas', always include the platform filter
+    const platformFilter: Filter | undefined =
+      serviceType === 'dbaas' ? { platform: 'rdbms-default' } : undefined;
+
+    // If alertType is not 'system' or alertClass is not defined, return only the platform filter (if applicable)
+    if (alertType !== 'system' || !alertClass) {
+      return platformFilter;
+    }
+
+    // Apply type filter only for system alerts with a valid alertClass
+    const typeFilter: Filter = {
+      type: {
+        '+contains': alertClass,
+      },
+    };
+
+    // Combine platform and type filters
+    return platformFilter ? { ...platformFilter, ...typeFilter } : typeFilter;
+  }, [alertClass, alertType, serviceType]);
 
   const {
     data: regions,
@@ -102,7 +140,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     Boolean(serviceType),
     serviceType,
     {},
-    serviceType === 'dbaas' ? { platform: 'rdbms-default' } : {}
+    xFilterToBeApplied
   );
 
   const theme = useTheme();
@@ -154,7 +192,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const handleFilterChange = (
     value: AlertFilterType,
-    filterKey: AlertFilterKey
+    filterKey: AlertAdditionalFilterKey
   ) => {
     setAdditionalFilters((prev) => ({
       ...prev,
@@ -253,6 +291,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     );
   }
 
+  const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
+
   return (
     <Stack gap={2}>
       {!hideLabel && (
@@ -290,16 +330,23 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               value={searchText || ''}
             />
           </Grid>
-          <Grid item md={4} xs={12}>
-            <AlertsRegionFilter
-              handleSelectionChange={handleFilteredRegionsChange}
-              regionOptions={regionOptions}
-            />
-          </Grid>
-          <AlertResourceAdditionalFilters
-            handleFilterChange={handleFilterChange}
-            serviceType={serviceType}
-          />
+          {filtersToRender.map((
+            // render the filters needed based on service type
+            { component, filterKey },
+            index
+          ) => (
+            <Grid item key={`${index}_${filterKey}`} md={4} xs={12}>
+              <AlertResourcesFilterRenderer
+                componentProps={getFilterProps({
+                  filterKey,
+                  handleFilterChange,
+                  handleFilteredRegionsChange,
+                  regionOptions,
+                })}
+                component={component}
+              />
+            </Grid>
+          ))}
           {isSelectionsNeeded && (
             <Grid item md={4} xs={12}>
               <Checkbox

@@ -10,7 +10,7 @@ export const RESOURCES = 'resources';
 
 export const INTERVAL = 'interval';
 
-export const TIME_DURATION = 'timeDuration';
+export const TIME_DURATION = 'dateTimeDuration';
 
 export const AGGREGATE_FUNCTION = 'aggregateFunction';
 

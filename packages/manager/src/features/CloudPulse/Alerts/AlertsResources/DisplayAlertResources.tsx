@@ -15,6 +15,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
 import { serviceTypeBasedColumns } from './constants';
 
+import type { AlertServiceType } from '@linode/api-v4';
 import type { Order } from 'src/hooks/useOrder';
 
 export interface AlertInstance {
@@ -70,7 +71,7 @@ export interface DisplayAlertResourceProp {
   /**
    * The service type associated with the alert
    */
-  serviceType?: string;
+  serviceType?: AlertServiceType;
 }
 
 export const DisplayAlertResources = React.memo(
@@ -143,6 +144,9 @@ export const DisplayAlertResources = React.memo(
       [handleSelection]
     );
     const columns = serviceTypeBasedColumns[serviceType ?? ''] ?? [];
+    const colSpanCount = isSelectionsNeeded
+      ? columns.length + 1
+      : columns.length;
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -184,6 +188,7 @@ export const DisplayAlertResources = React.memo(
                         handleSort(orderBy, order, handlePageChange)
                       }
                       active={sorting.orderBy === sortingKey}
+                      data-qa-header={label.toLowerCase()}
                       data-testid={label.toLowerCase()}
                       direction={sorting.order}
                       key={label}
@@ -223,7 +228,9 @@ export const DisplayAlertResources = React.memo(
                       )}
                       {columns.map(({ accessor, label }) => (
                         <TableCell
-                          data-qa-alert-cell={`${resource.id}_${label}`}
+                          data-qa-alert-cell={`${
+                            resource.id
+                          }_${label.toLowerCase()}`}
                           key={label}
                         >
                           {accessor(resource)}
@@ -233,7 +240,7 @@ export const DisplayAlertResources = React.memo(
                   ))}
                 {isDataLoadingError && (
                   <TableRowError
-                    colSpan={isSelectionsNeeded ? 3 : 2}
+                    colSpan={colSpanCount}
                     message="Table data is unavailable. Please try again later."
                   />
                 )}
@@ -241,7 +248,7 @@ export const DisplayAlertResources = React.memo(
                   <TableRow>
                     <TableCell
                       align="center"
-                      colSpan={isSelectionsNeeded ? 3 : 2}
+                      colSpan={colSpanCount}
                       height="40px"
                     >
                       No data to display.

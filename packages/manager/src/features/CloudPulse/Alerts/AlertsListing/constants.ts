@@ -1,5 +1,7 @@
 import type { TableColumnHeader } from './AlertListReusableTable';
 
+import type { AlertStatusType, AlertStatusUpdateType } from '@linode/api-v4';
+
 export const AlertListingTableLabelMap = [
   {
     colName: 'Alert Name',
@@ -28,3 +30,11 @@ export const AlertContextualViewTableHeaderMap: TableColumnHeader[] = [
   { columnName: 'Metric Threshold', label: 'id' },
   { columnName: 'Alert Type', label: 'type' },
 ];
+
+export const statusToActionMap: Record<
+  AlertStatusType,
+  AlertStatusUpdateType
+> = {
+  disabled: 'Enable',
+  enabled: 'Disable',
+};

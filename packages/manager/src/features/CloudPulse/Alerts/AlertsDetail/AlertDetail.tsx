@@ -90,7 +90,12 @@ export const AlertDetail = () => {
       </>
     );
   }
-  const { entity_ids: entityIds, type } = alertDetails;
+  const {
+    class: alertClass,
+    entity_ids: entityIds,
+    service_type: serviceTypeObj,
+    type,
+  } = alertDetails;
   return (
     <>
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
@@ -124,9 +129,10 @@ export const AlertDetail = () => {
           data-qa-section="Resources"
         >
           <AlertResources
+            alertClass={alertClass}
             alertResourceIds={entityIds}
             alertType={type}
-            serviceType={serviceType}
+            serviceType={serviceTypeObj}
           />
         </Box>
         <Box
