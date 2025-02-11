@@ -53,7 +53,7 @@ export const Firewall = () => {
           loading={isLoading}
           noMarginTop
           onBlur={field.onBlur}
-          onChange={(e, firewall) => field.onChange(firewall?.id)}
+          onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
           options={firewalls ?? []}
           placeholder="None"
           value={selectedFirewall}
