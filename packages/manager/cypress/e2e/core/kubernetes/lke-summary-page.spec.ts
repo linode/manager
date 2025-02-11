@@ -31,7 +31,7 @@ const mockNodePools = nodePoolFactory.buildList(2);
 const buildTags = (num: number) => {
   const tags: string[] = [];
   for (let i = 0; i < num; i++) {
-    tags.push(randomLabel());
+    tags.push(randomLabel(3));
   }
   return tags;
 };
