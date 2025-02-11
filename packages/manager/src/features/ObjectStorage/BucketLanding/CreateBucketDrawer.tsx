@@ -31,7 +31,6 @@ import ClusterSelect from './ClusterSelect';
 import { OveragePricing } from './OveragePricing';
 
 import type { CreateObjectStorageBucketPayload } from '@linode/api-v4';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 interface Props {
   isOpen: boolean;
