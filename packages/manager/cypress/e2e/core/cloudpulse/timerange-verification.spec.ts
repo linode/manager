@@ -270,12 +270,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .click();
 
-    // Enter the start time (hour and minute)
-    cy.findByPlaceholderText("hh:mm aa")
-      .clear({ force: true })
-      .type(`${startHour}:${startMinute} PM`);
+      cy.get('[data-testid="time-picker"]').type(`${startHour}:${startMinute}PM{enter}`);
 
-    // Click the "Apply" button to confirm the start date and time
+   // Click the "Apply" button to confirm the start date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
 
     // Assert that the start date and time is correctly displayed
@@ -292,9 +289,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .click();
 
     // Enter the end time (hour and minute)
-    cy.findByPlaceholderText("hh:mm aa")
-      .clear({ force: true })
-      .type(`${endHour}:${endMinute} AM`);
+    cy.get('[data-testid="time-picker"]').type(`${endHour}:${endMinute}PM{enter}`);
 
     // Click the "Apply" button to confirm the end date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
