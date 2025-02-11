@@ -117,7 +117,7 @@ describe('Tests for API error handling', () => {
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockCreateCloudPulseJWEToken(serviceType);
     mockGetCloudPulseDashboard(id, dashboard);
     mockGetRegions([mockRegion]);
@@ -258,7 +258,7 @@ describe('Tests for API error handling', () => {
   });
 
   it('displays error message when Dashboards API fails', () => {
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
 
     // Mocking an error response for the 'fetchDashboard' API request for a specific service type.
     mockGetCloudPulseDashboardsError(serviceType, 'Internal Server Error').as(
