@@ -18,8 +18,8 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
     allowedHosts: ['cloud.lindev.local'],
+    port: 3000,
   },
   test: {
     coverage: {

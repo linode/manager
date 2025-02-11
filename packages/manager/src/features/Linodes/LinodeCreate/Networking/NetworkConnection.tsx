@@ -1,16 +1,17 @@
 import { FormControl, FormControlLabel, Radio, RadioGroup } from '@linode/ui';
 import React from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
-
-import { getSelectedInterfaceType } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
 export const NetworkConnection = () => {
-  const { field } = useController<LinodeCreateFormValues, 'interfaces.0'>({
-    name: 'interfaces.0',
+  const { control } = useFormContext<LinodeCreateFormValues>();
+
+  const { field } = useController({
+    control,
+    name: 'interfaceType',
   });
 
   return (
@@ -18,8 +19,9 @@ export const NetworkConnection = () => {
       <FormLabel id="network-interface">Network Connection</FormLabel>
       <RadioGroup
         aria-labelledby="network-interface"
+        onChange={field.onChange}
         row
-        value={getSelectedInterfaceType(field.value)}
+        value={field.value}
       >
         <FormControlLabel
           control={<Radio />}

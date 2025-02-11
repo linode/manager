@@ -1,22 +1,22 @@
 import { Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 
+import { Firewall } from './Firewall';
 import { InterfaceGeneration } from './InterfaceGeneration';
 import { NetworkConnection } from './NetworkConnection';
-import { useWatch } from 'react-hook-form';
-import { LinodeCreateFormValues } from '../utilities';
-import { Firewall } from '../Firewall';
 
-/**
- * Linode Create UI for new Linode Interfaces
- */
+import type { LinodeCreateFormValues } from '../utilities';
+
 export const Networking = () => {
-  const interfaceGeneration = useWatch<
-    LinodeCreateFormValues,
-    'interface_generation'
-  >({ name: 'interface_generation' });
+  const { control } = useFormContext<LinodeCreateFormValues>();
+
+  const interfaceGeneration = useWatch({
+    control,
+    name: 'interface_generation',
+  });
 
   return (
     <Paper>
@@ -28,7 +28,7 @@ export const Networking = () => {
         </Typography>
         <NetworkConnection />
         <InterfaceGeneration />
-        {interfaceGeneration === 'legacy_config' ? <Firewall /> : <p>TODO</p>}
+        {interfaceGeneration === 'linode' ? <p>TODO</p> : <Firewall />}
       </Stack>
     </Paper>
   );

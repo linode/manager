@@ -166,11 +166,19 @@ export const getLinodeCreatePayload = (
     values.placement_group = undefined;
   }
 
-  // @TODO Linode Interfaces - need to handle case if interface is not legacy
-  if (getIsLegacyInterfaceArray(values.interfaces)) {
+  const useLegacyInterfaces =
+    !values.interface_generation ||
+    values.interface_generation === 'legacy_config';
+
+  if (useLegacyInterfaces && getIsLegacyInterfaceArray(values.interfaces)) {
     values.interfaces = getInterfacesPayload(
       values.interfaces,
       Boolean(values.private_ip)
+    );
+  } else if (!getIsLegacyInterfaceArray(values.interfaces)) {
+    values.interfaces = getLinodeInterfacesPayload(
+      values.interfaceType,
+      values.interfaces
     );
   }
 
@@ -194,12 +202,6 @@ export const getIsLegacyInterfaceArray = (
     interfaces.length === 0 ||
     interfaces.some((iface) => 'purpose' in iface)
   );
-};
-
-export const getIsLegacyInterface = (
-  networkInterface: CreateLinodeInterfacePayload | InterfacePayload
-): networkInterface is InterfacePayload => {
-  return 'purpose' in networkInterface;
 };
 
 /**
@@ -251,6 +253,25 @@ export const getInterfacesPayload = (
   return undefined;
 };
 
+const getLinodeInterfacesPayload = (
+  type: 'public' | 'vlan' | 'vpc' | undefined,
+  interfaces: CreateLinodeInterfacePayload[] | undefined
+) => {
+  if (!interfaces) {
+    return undefined;
+  }
+
+  for (const networkInterface of interfaces) {
+    for (const key of ['public', 'vlan', 'vpc'] as const) {
+      if (key !== type) {
+        networkInterface[key] = null;
+      }
+    }
+  }
+
+  return interfaces[0];
+};
+
 const defaultInterfaces: InterfacePayload[] = [
   {
     ipam_address: '',
@@ -267,6 +288,16 @@ const defaultInterfaces: InterfacePayload[] = [
     ipam_address: '',
     label: '',
     purpose: 'public',
+  },
+];
+
+const defaultLinodeInterfaces: CreateLinodeInterfacePayload[] = [
+  {
+    default_route: null,
+    firewall_id: null,
+    public: null,
+    vlan: null,
+    vpc: null,
   },
 ];
 
@@ -290,7 +321,15 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    */
   hasSignedEUAgreement?: boolean;
   /**
-   * The currently selected Linode
+   * The user's selected interface type
+   */
+  interfaceType?: 'public' | 'vlan' | 'vpc';
+  /**
+   * Form state for new Linode interfaces
+   */
+  interfacesV2: CreateLinodeInterfacePayload[];
+  /**
+   * The currently selected Linode (used for the Backups and Clone tabs)
    */
   linode?: Linode | null;
 }
@@ -336,6 +375,7 @@ export const defaultValues = async (
     backups_enabled: linode?.backups.enabled,
     image: getDefaultImageId(params),
     interfaces: defaultInterfaces,
+    interfacesV2: defaultLinodeInterfaces,
     linode,
     private_ip: privateIp,
     region: linode ? linode.region : '',
