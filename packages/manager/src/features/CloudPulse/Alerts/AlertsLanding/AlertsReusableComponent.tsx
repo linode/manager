@@ -85,7 +85,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               noMarginTop
               onSearch={setSearchText}
               placeholder="Search for Alerts"
-              sx={{ width: '250px' }}
+              sx={{ height: '34px', width: '250px' }}
               value={searchText}
             />
             <Autocomplete
