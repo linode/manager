@@ -25,6 +25,7 @@ import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
@@ -63,10 +64,12 @@ import type {
   LinodeCreateFormValues,
 } from './utilities';
 import type { SubmitHandler } from 'react-hook-form';
+import { Networking } from './Networking/Networking';
 
 export const LinodeCreate = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: profile } = useProfile();
 
   const queryClient = useQueryClient();
@@ -214,10 +217,13 @@ export const LinodeCreate = () => {
           <Plan />
           <Details />
           {params.type !== 'Clone Linode' && <Security />}
-          <VPC />
-          <Firewall />
-          {params.type !== 'Clone Linode' && <VLAN />}
+          {!isLinodeInterfacesEnabled && <VPC />}
+          {!isLinodeInterfacesEnabled && <Firewall />}
+          {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
+            <VLAN />
+          )}
           <UserData />
+          {isLinodeInterfacesEnabled && <Networking />}
           <Addons />
           <EUAgreement />
           <Summary />

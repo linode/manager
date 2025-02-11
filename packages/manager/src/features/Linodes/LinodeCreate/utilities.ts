@@ -196,6 +196,12 @@ export const getIsLegacyInterfaceArray = (
   );
 };
 
+export const getIsLegacyInterface = (
+  networkInterface: CreateLinodeInterfacePayload | InterfacePayload
+): networkInterface is InterfacePayload => {
+  return 'purpose' in networkInterface;
+};
+
 /**
  * Transforms and orders the Linode Create "interfaces" form data.
  *
