@@ -53,7 +53,7 @@ export interface CloudPulseNodeTypeFilterProps {
   ) => void;
 
   /**
-   * A required label for the Autocomplete to ensure accessibility.
+   * A required label for the Autocomplete to ensure accessibility
    **/
   label: string;
 
