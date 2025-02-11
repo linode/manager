@@ -88,9 +88,9 @@ const MetricThreshold = (props: MetricThresholdProps) => {
         <Typography
           sx={(theme) => {
             return {
-              backgroundColor: theme.color.grey10,
+              backgroundColor: theme.bg.offWhite,
               border: '1px solid',
-              borderColors: theme.color.grey3,
+              borderColors: theme.borderColors.borderFocus,
               borderRadius: '4px',
               px: 1,
               py: 0.5,
