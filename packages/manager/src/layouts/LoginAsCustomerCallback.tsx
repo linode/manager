@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { setAuthToken } from 'src/utilities/authentication';
+import { capitalize } from 'src/utilities/capitalize';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { BaseQueryParams } from 'src/utilities/queryParams';
@@ -21,7 +22,7 @@ interface QueryParams extends BaseQueryParams {
   token_type: string;
 }
 
-const LoginAsCustomerCallback = () => {
+export const LoginAsCustomerCallback = () => {
   /**
    * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
    * the data we need and should bounce.
@@ -61,7 +62,7 @@ const LoginAsCustomerCallback = () => {
     }
 
     /**
-     * We multiply the expiration time by 1000 ms because JavaSript returns time in ms, while
+     * We multiply the expiration time by 1000 ms because JavaScript returns time in ms, while
      * the API returns the expiry time in seconds
      */
     const expireDate = new Date();
@@ -73,7 +74,7 @@ const LoginAsCustomerCallback = () => {
     setAuthToken({
       expiration: expireDate.toString(),
       scopes: '*',
-      token: `${tokenType} ${accessToken}`,
+      token: `${capitalize(tokenType)} ${accessToken}`,
     });
 
     /**
@@ -85,5 +86,3 @@ const LoginAsCustomerCallback = () => {
 
   return null;
 };
-
-export default LoginAsCustomerCallback;

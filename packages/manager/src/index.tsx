@@ -33,10 +33,16 @@ const CancelLanding = React.lazy(() =>
   }))
 );
 
-const LoginAsCustomerCallback = React.lazy(
-  () => import('src/layouts/LoginAsCustomerCallback')
+const LoginAsCustomerCallback = React.lazy(() =>
+  import('src/layouts/LoginAsCustomerCallback').then((module) => ({
+    default: module.LoginAsCustomerCallback,
+  }))
 );
-const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuthCallback'));
+const OAuthCallback = React.lazy(() =>
+  import('src/layouts/OAuthCallback').then((module) => ({
+    default: module.OAuthCallback,
+  }))
+);
 
 const Main = () => {
   if (!navigator.cookieEnabled) {
@@ -51,11 +57,7 @@ const Main = () => {
           <React.Suspense fallback={<SplashScreen />}>
             <Router>
               <Switch>
-                <Route
-                  component={OAuthCallbackPage}
-                  exact
-                  path="/oauth/callback"
-                />
+                <Route component={OAuthCallback} exact path="/oauth/callback" />
                 <Route
                   component={LoginAsCustomerCallback}
                   exact

@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -8,11 +9,30 @@ import { getAuthToken } from 'src/utilities/authentication';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { OAuthCallbackPage } from './OAuthCallback';
+import { OAuthCallback } from './OAuthCallback';
 
-import type { CombinedProps } from './OAuthCallback';
 import type { OAuthQueryParams } from './OAuthCallback';
 import type { MemoryHistory } from 'history';
+
+const mockHistory = {
+  push: vi.fn(),
+  replace: vi.fn(),
+};
+
+const mockLocation = {
+  search:
+    '?returnTo=%2F&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127&code=bf952e05db75a45a51f5',
+};
+
+// Mock router
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useHistory: vi.fn(() => mockHistory),
+    useLocation: vi.fn(() => mockLocation),
+  };
+});
 
 describe('layouts/OAuth', () => {
   describe('parseQueryParams', () => {
@@ -20,27 +40,6 @@ describe('layouts/OAuth', () => {
     const CODE_VERIFIER_KEY = 'authentication/code-verifier';
     const history: MemoryHistory = createMemoryHistory();
     history.push = vi.fn();
-
-    const location = {
-      hash: '',
-      pathname: '/oauth/callback',
-      search:
-        '?returnTo=%2F&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127&code=bf952e05db75a45a51f5',
-      state: {},
-    };
-
-    const match = {
-      isExact: false,
-      params: {},
-      path: '',
-      url: '',
-    };
-
-    const mockProps: CombinedProps = {
-      history,
-      location,
-      match,
-    };
 
     const localStorageMock = (() => {
       let store: { [key: string]: string } = {};
@@ -110,11 +109,15 @@ describe('layouts/OAuth', () => {
         ok: false,
       });
 
-      await act(async () => {
-        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
-      });
+      renderWithTheme(<OAuthCallback />);
 
-      expect(getAuthToken()).toEqual({ expiration: '', scopes: '', token: '' });
+      await waitFor(() =>
+        expect(getAuthToken()).toEqual({
+          expiration: '',
+          scopes: '',
+          token: '',
+        })
+      );
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
@@ -134,7 +137,7 @@ describe('layouts/OAuth', () => {
       });
 
       await act(async () => {
-        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
+        renderWithTheme(<OAuthCallback />);
       });
 
       expect(getAuthToken()).toEqual({ expiration: '', scopes: '', token: '' });
@@ -157,7 +160,7 @@ describe('layouts/OAuth', () => {
       });
 
       await act(async () => {
-        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
+        renderWithTheme(<OAuthCallback />);
       });
 
       expect(getAuthToken()).toEqual({ expiration: '', scopes: '', token: '' });
@@ -168,7 +171,7 @@ describe('layouts/OAuth', () => {
 
     it('Should redirect to logout path when no code verifier in local storage', async () => {
       await act(async () => {
-        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
+        renderWithTheme(<OAuthCallback />);
       });
 
       expect(getAuthToken()).toEqual({ expiration: '', scopes: '', token: '' });
@@ -200,7 +203,7 @@ describe('layouts/OAuth', () => {
       });
 
       await act(async () => {
-        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
+        renderWithTheme(<OAuthCallback />);
       });
 
       expect(global.fetch).toHaveBeenCalledWith(
@@ -215,23 +218,23 @@ describe('layouts/OAuth', () => {
         expiration: expect.any(String),
         scopes: '*',
         token:
-          'bearer 198864fedc821dbb5941cd5b8c273b4e25309a08d31c77cbf65a38372fdfe5b5',
+          'Bearer 198864fedc821dbb5941cd5b8c273b4e25309a08d31c77cbf65a38372fdfe5b5',
       });
-      expect(mockProps.history.push).toHaveBeenCalledWith('/');
+      expect(mockHistory.push).toHaveBeenCalledWith('/');
     });
 
     it('Should redirect to login when no code parameter in URL', async () => {
-      mockProps.location.search =
+      mockLocation.search =
         '?returnTo=%2F&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127&code1=bf952e05db75a45a51f5';
       await act(async () => {
-        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
+        renderWithTheme(<OAuthCallback />);
       });
 
       expect(getAuthToken()).toEqual({ expiration: '', scopes: '', token: '' });
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
-      mockProps.location.search =
+      mockLocation.search =
         '?returnTo=%2F&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127&code=bf952e05db75a45a51f5';
     });
   });
