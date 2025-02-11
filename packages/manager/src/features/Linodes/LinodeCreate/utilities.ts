@@ -149,7 +149,7 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = omitProps(formValues, [
+  const values: CreateLinodeRequest = omitProps(formValues, [
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
@@ -166,19 +166,17 @@ export const getLinodeCreatePayload = (
     values.placement_group = undefined;
   }
 
-  const useLegacyInterfaces =
-    !values.interface_generation ||
-    values.interface_generation === 'legacy_config';
+  const shouldUseNewInterfaces = values.interface_generation === 'linode';
 
-  if (useLegacyInterfaces && getIsLegacyInterfaceArray(values.interfaces)) {
-    values.interfaces = getInterfacesPayload(
-      values.interfaces,
-      Boolean(values.private_ip)
-    );
-  } else if (!getIsLegacyInterfaceArray(values.interfacesV2)) {
+  if (shouldUseNewInterfaces) {
     values.interfaces = getLinodeInterfacesPayload(
-      values.interfaceType,
-      values.interfacesV2
+      formValues.interfaceType,
+      formValues.interfacesV2
+    );
+  } else {
+    values.interfaces = getInterfacesPayload(
+      formValues.interfaces,
+      Boolean(values.private_ip)
     );
   }
 
@@ -321,13 +319,17 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    */
   hasSignedEUAgreement?: boolean;
   /**
-   * The user's selected interface type
+   * The user's selected interface type (use for new Linode Interfaces)
    */
   interfaceType?: 'public' | 'vlan' | 'vpc';
   /**
+   * Override the interfaces type so that its type is legacy only.
+   */
+  interfaces?: InterfacePayload[];
+  /**
    * Form state for new Linode interfaces
    */
-  interfacesV2: CreateLinodeInterfacePayload[];
+  interfacesV2?: CreateLinodeInterfacePayload[];
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */

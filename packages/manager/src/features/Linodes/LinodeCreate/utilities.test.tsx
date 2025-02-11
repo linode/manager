@@ -1,7 +1,12 @@
 import {
-  createLinodeRequestFactory,
   LinodeConfigInterfaceFactory,
+  createLinodeRequestFactory,
 } from 'src/factories';
+import {
+  linodeInterfaceFactoryPublic,
+  linodeInterfaceFactoryVPC,
+  linodeInterfaceFactoryVlan,
+} from 'src/factories/linodeInterface';
 import { base64UserData, userData } from 'src/utilities/metadata.test';
 
 import {
@@ -12,11 +17,6 @@ import {
   getLinodeLabelFromLabelParts,
   getTabIndex,
 } from './utilities';
-import {
-  linodeInterfaceFactoryPublic,
-  linodeInterfaceFactoryVlan,
-  linodeInterfaceFactoryVPC,
-} from 'src/factories/linodeInterface';
 
 describe('getTabIndex', () => {
   it('should return 0 when there is no value specifying the tab', () => {

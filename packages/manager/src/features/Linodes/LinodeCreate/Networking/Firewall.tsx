@@ -10,18 +10,21 @@ import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import type { LinodeCreateFormValues } from '../utilities';
 
 export const Firewall = () => {
-  const { field, fieldState } = useController<
-    LinodeCreateFormValues,
-    'interfacesV2.0.firewall_id'
-  >({
-    name: 'interfacesV2.0.firewall_id',
-  });
-
   const [interfaceType, interfaceGeneration] = useWatch<
     LinodeCreateFormValues,
     ['interfaceType', 'interface_generation']
   >({
     name: ['interfaceType', 'interface_generation'],
+  });
+
+  const { field, fieldState } = useController<
+    LinodeCreateFormValues,
+    'firewall_id' | 'interfacesV2.0.firewall_id'
+  >({
+    name:
+      interfaceGeneration === 'legacy_config'
+        ? 'firewall_id'
+        : 'interfacesV2.0.firewall_id',
   });
 
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
