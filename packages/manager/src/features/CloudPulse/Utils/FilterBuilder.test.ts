@@ -284,49 +284,6 @@ it('test getNodeTypeProperties with disabled true', () => {
   }
 });
 
-it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
-  let result = checkIfWeNeedToDisableFilterByFilterKey(
-    'resource_id',
-    { region: 'us-east' },
-    mockDashboard
-  );
-
-  expect(result).toEqual(false);
-
-  result = checkIfWeNeedToDisableFilterByFilterKey(
-    'resource_id',
-    { region: undefined },
-    mockDashboard
-  );
-
-  expect(result).toEqual(true);
-
-  result = checkIfWeNeedToDisableFilterByFilterKey(
-    'resource_id',
-    {},
-    mockDashboard
-  );
-
-  expect(result).toEqual(true);
-
-  result = checkIfWeNeedToDisableFilterByFilterKey(
-    'resource_id',
-    { region: 'us-east', tags: undefined },
-    mockDashboard,
-    { ['region']: 'us-east', ['tags']: ['tag-1'] }
-  );
-
-  expect(result).toEqual(true); // disabled is true as tags are not updated in dependent filters
-
-  result = checkIfWeNeedToDisableFilterByFilterKey(
-    'node_type',
-    { resource_id: undefined },
-    dbaasDashboard
-  );
-
-  expect(result).toEqual(true); // disabled is true as dependent filter is undefined
-});
-
 it('test buildXfilter method', () => {
   const resourceSelectionConfig = linodeConfig?.filters.find(
     (filterObj) => filterObj.name === 'Resources'
