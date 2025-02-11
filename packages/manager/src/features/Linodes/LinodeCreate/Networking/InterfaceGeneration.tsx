@@ -13,7 +13,10 @@ export const InterfaceGeneration = () => {
   });
 
   return (
-    <RadioGroup onChange={field.onChange} value={field.value}>
+    <RadioGroup
+      onChange={field.onChange}
+      value={field.value ?? 'legacy_config'}
+    >
       <FormControlLabel
         control={<Radio />}
         label="Configuration Profile Interfaces (Legacy)"

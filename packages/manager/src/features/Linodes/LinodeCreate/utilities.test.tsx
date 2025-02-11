@@ -18,6 +18,8 @@ import {
   getTabIndex,
 } from './utilities';
 
+import type { LinodeCreateFormValues } from './utilities';
+
 describe('getTabIndex', () => {
   it('should return 0 when there is no value specifying the tab', () => {
     expect(getTabIndex(undefined)).toBe(0);
@@ -33,7 +35,7 @@ describe('getTabIndex', () => {
 
 describe('getLinodeCreatePayload', () => {
   it('should return a basic payload', () => {
-    const values = createLinodeRequestFactory.build();
+    const values = createLinodeRequestFactory.build() as LinodeCreateFormValues;
 
     expect(getLinodeCreatePayload(values)).toEqual(values);
   });
@@ -41,7 +43,7 @@ describe('getLinodeCreatePayload', () => {
   it('should base64 encode metadata', () => {
     const values = createLinodeRequestFactory.build({
       metadata: { user_data: userData },
-    });
+    }) as LinodeCreateFormValues;
 
     expect(getLinodeCreatePayload(values)).toEqual({
       ...values,
@@ -52,7 +54,7 @@ describe('getLinodeCreatePayload', () => {
   it('should remove placement_group from the payload if no id exists', () => {
     const values = createLinodeRequestFactory.build({
       placement_group: {},
-    });
+    }) as LinodeCreateFormValues;
 
     expect(getLinodeCreatePayload(values)).toEqual({
       ...values,

@@ -25,6 +25,7 @@ export const Firewall = () => {
       interfaceGeneration === 'legacy_config'
         ? 'firewall_id'
         : 'interfacesV2.0.firewall_id',
+    shouldUnregister: true,
   });
 
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();

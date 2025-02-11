@@ -110,8 +110,6 @@ export const LinodeCreate = () => {
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values);
 
-    console.log("Payload", payload);
-
     try {
       const linode =
         params.type === 'Clone Linode'
@@ -167,8 +165,6 @@ export const LinodeCreate = () => {
     }
     previousSubmitCount.current = form.formState.submitCount;
   }, [form.formState, handleLinodeCreateAnalyticsFormError]);
-
-  console.log("Errors", form.formState.errors);
 
   return (
     <FormProvider {...form}>
