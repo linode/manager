@@ -23,6 +23,10 @@ const nodeTypeOptionsList: CloudPulseNodeType[] = [
   },
 ];
 
+const nodeTypeMap = new Map<string, CloudPulseNodeType>(
+  nodeTypeOptionsList.map((type) => [type.id, type])
+);
+
 export interface CloudPulseNodeTypeFilterProps {
   /**
    * Selected database cluster ids
@@ -80,10 +84,6 @@ export const CloudPulseNodeTypeFilter = React.memo(
       isError,
       isLoading,
     } = useAllDatabasesQuery(); // fetch all databases
-
-    const nodeTypeMap = new Map<string, CloudPulseNodeType>(
-      nodeTypeOptionsList.map((type) => [type.id, type])
-    );
 
     const isClusterSizeGreaterThanOne = React.useMemo<
       boolean | undefined
