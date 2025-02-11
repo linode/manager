@@ -1,9 +1,8 @@
-import { quotaTypes } from '@linode/api-v4';
+import { getQuotaUsage, quotaTypes } from '@linode/api-v4';
 import { Button, Divider, Paper, Select, Stack, Typography } from '@linode/ui';
-import { DateTime } from 'luxon';
+import { useQueries } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -44,24 +43,28 @@ export const Quotas = () => {
     service,
   } = useGetLocationsForQuotaService(selectedService.value);
 
+  // Disable the select and view quotas button if there is no region for the selected service
+  // ("Global" is a default entry hence the <= 1 check)
+  const noQuotaRegions = locationsForQuotaService.length <= 1;
+
   // fetch quotas for the selected service and region
-  const { data: quotas, dataUpdatedAt } = useQuotasQuery(
+  const { data: quotas } = useQuotasQuery(
     selectedService.value,
     {},
     {
       region_applied:
         selectedService.value !== 'object-storage'
-          ? selectedLocation
+          ? selectedLocation.value
           : undefined,
       s3_endpoint:
         selectedService.value === 'object-storage'
-          ? selectedLocation
+          ? selectedLocation.value
           : undefined,
     },
     queryEnabled
   );
 
-  const onServiceChange = (
+  const onSelectServiceChange = (
     _event: React.SyntheticEvent<Element, Event>,
     value: SelectOption<QuotaType>
   ) => {
@@ -73,11 +76,33 @@ export const Quotas = () => {
     });
   };
 
+  // The CTA will enable running all quota queries
   const onClickViewQuotas = () => {
     setQueryEnabled(true);
   };
 
-  const noQuotaRegions = locationsForQuotaService.length <= 1;
+  // Fetch the usage for each quota
+  const quotaIds = quotas?.data.map((quota) => quota.quota_id) ?? [];
+  const quotaUsageQueries = useQueries({
+    queries: quotaIds.map((quotaId) => ({
+      enabled: queryEnabled && Boolean(quotas),
+      queryFn: () => getQuotaUsage(selectedService.value, quotaId),
+      queryKey: ['quota-usage', selectedService.value, quotaId],
+    })),
+  });
+
+  // Combine the quotas with their usage
+  // This may be different once we build the table to display the data
+  const quotasWithUsage = quotas?.data.map((quota, index) => ({
+    ...quota,
+    usage: quotaUsageQueries?.[index]?.data,
+  }));
+  const objectStorageQuotasWithUsage = objectStorageQuotas?.map(
+    (quota, index) => ({
+      ...quota,
+      usage: quotaUsageQueries?.[index]?.data,
+    })
+  );
 
   return (
     <>
@@ -92,7 +117,7 @@ export const Quotas = () => {
           <Stack spacing={1}>
             <Select
               label="Select a Service"
-              onChange={onServiceChange}
+              onChange={onSelectServiceChange}
               options={serviceOptions}
               value={selectedService}
             />
@@ -121,9 +146,6 @@ export const Quotas = () => {
                 />
               ) : (
                 <RegionSelect
-                  disabled={
-                    isFetchingRegions || locationsForQuotaService.length <= 2
-                  }
                   onChange={(_event, value) => {
                     setSelectedLocation({
                       label: value.label,
@@ -138,6 +160,7 @@ export const Quotas = () => {
                   }
                   currentCapability={undefined}
                   disableClearable
+                  disabled={isFetchingRegions || noQuotaRegions}
                   loading={isFetchingRegions}
                   noOptionsText={`No resource found for ${selectedService.label}`}
                   regions={locationsForQuotaService}
@@ -157,13 +180,6 @@ export const Quotas = () => {
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="h3">Quotas</Typography>
             <Stack alignItems="center" direction="row" spacing={3}>
-              <Typography variant="body1">
-                <strong>Last updated:</strong>{' '}
-                <DateTimeDisplay
-                  value={DateTime.fromMillis(dataUpdatedAt).toISO() ?? ''}
-                />
-              </Typography>
-
               {/* TODO LIMITS_M1: update once link is available */}
               <DocsLink href="#" label="Learn More About Quotas" />
             </Stack>
@@ -181,7 +197,11 @@ export const Quotas = () => {
                     width: '100%',
                   }}
                 >
-                  {JSON.stringify(quotas || objectStorageQuotas, null, 2)}
+                  {JSON.stringify(
+                    quotasWithUsage || objectStorageQuotasWithUsage,
+                    null,
+                    2
+                  )}
                 </pre>
               )}
           </Stack>
