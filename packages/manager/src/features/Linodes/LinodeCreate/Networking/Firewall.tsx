@@ -1,6 +1,6 @@
 import { Autocomplete, Box, Stack } from '@linode/ui';
 import React, { useState } from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useWatch } from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
@@ -8,13 +8,20 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 
 import type { LinodeCreateFormValues } from '../utilities';
-import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const Firewall = () => {
-  const { control } = useFormContext<LinodeCreateFormValues>();
-  const { field, fieldState } = useController<CreateLinodeRequest>({
-    control,
-    name: 'firewall_id',
+  const { field, fieldState } = useController<
+    LinodeCreateFormValues,
+    'interfacesV2.0.firewall_id'
+  >({
+    name: 'interfacesV2.0.firewall_id',
+  });
+
+  const [interfaceType, interfaceGeneration] = useWatch<
+    LinodeCreateFormValues,
+    ['interfaceType', 'interface_generation']
+  >({
+    name: ['interfaceType', 'interface_generation'],
   });
 
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
@@ -32,9 +39,13 @@ export const Firewall = () => {
     <Stack spacing={2}>
       <Stack spacing={1.5}>
         <Autocomplete
+          label={
+            interfaceGeneration === 'linode' && interfaceType
+              ? `${interfaceType} Interface Firewall`
+              : 'Firewall'
+          }
           disabled={isLinodeCreateRestricted}
           errorText={fieldState.error?.message ?? error?.[0].reason}
-          label="Firewall"
           loading={isLoading}
           noMarginTop
           onBlur={field.onBlur}

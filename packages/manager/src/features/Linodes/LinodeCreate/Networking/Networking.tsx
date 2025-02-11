@@ -1,6 +1,5 @@
 import { Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 
@@ -8,16 +7,7 @@ import { Firewall } from './Firewall';
 import { InterfaceGeneration } from './InterfaceGeneration';
 import { NetworkConnection } from './NetworkConnection';
 
-import type { LinodeCreateFormValues } from '../utilities';
-
 export const Networking = () => {
-  const { control } = useFormContext<LinodeCreateFormValues>();
-
-  const interfaceGeneration = useWatch({
-    control,
-    name: 'interface_generation',
-  });
-
   return (
     <Paper>
       <Stack spacing={2}>
@@ -28,7 +18,7 @@ export const Networking = () => {
         </Typography>
         <NetworkConnection />
         <InterfaceGeneration />
-        {interfaceGeneration === 'linode' ? <p>TODO</p> : <Firewall />}
+        <Firewall />
       </Stack>
     </Paper>
   );
