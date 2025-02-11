@@ -202,6 +202,7 @@ export const KubeConfigDisplay = (props: Props) => {
           <StyledLinkButton
             className={classes.kubeconfigElement}
             onClick={downloadKubeConfig}
+            aria-label={`Download kubeconfig for ${clusterLabel}`}
           >
             <DownloadIcon
               className={classes.kubeconfigIcons}
@@ -214,6 +215,7 @@ export const KubeConfigDisplay = (props: Props) => {
           <StyledLinkButton
             className={classes.kubeconfigElement}
             onClick={handleOpenDrawer}
+            aria-label="View kubeconfig details"
           >
             <DetailsIcon className={classes.kubeconfigIcons} />
             <Typography className={classes.kubeconfigFileText}>View</Typography>
@@ -221,6 +223,7 @@ export const KubeConfigDisplay = (props: Props) => {
           <StyledLinkButton
             className={classes.kubeconfigElement}
             onClick={onCopyToken}
+            aria-label="Copy kubeconfig token"
           >
             {isCopyTokenLoading ? (
               <CircleProgress
@@ -236,6 +239,7 @@ export const KubeConfigDisplay = (props: Props) => {
           <StyledLinkButton
             className={classes.kubeconfigElement}
             onClick={() => setResetKubeConfigDialogOpen(true)}
+            aria-label="Reset kubeconfig"
           >
             <ResetIcon
               className={cx({
