@@ -18,7 +18,7 @@ import { processMetricCriteria } from '../Utils/utils';
 import type { ProcessedCriteria } from '../Utils/utils';
 import type { Alert } from '@linode/api-v4';
 
-interface AlertListReusableTableRowProps {
+interface AlertInformationActionRowProps {
   /**
    * alert object which should be dispalyed in the row
    */
@@ -36,8 +36,8 @@ interface AlertListReusableTableRowProps {
   status?: boolean;
 }
 
-export const AlertListReusableTableRow = (
-  props: AlertListReusableTableRowProps
+export const AlertInformationActionRow = (
+  props: AlertInformationActionRowProps
 ) => {
   const { alert, handleToggle, status = false } = props;
   const { id, label, rule_criteria, service_type, type } = alert;

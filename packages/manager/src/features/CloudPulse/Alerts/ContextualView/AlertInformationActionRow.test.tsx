@@ -4,14 +4,14 @@ import { alertFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { processMetricCriteria } from '../Utils/utils';
-import { AlertListReusableTableRow } from './AlertInformationActionRow';
+import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 describe('Alert list table row', () => {
   it('Should display the data', () => {
     const alert = alertFactory.build();
 
     const { getByText } = renderWithTheme(
-      <AlertListReusableTableRow
+      <AlertInformationActionRow
         alert={alert}
         handleToggle={vi.fn()}
         status={true}
@@ -26,7 +26,7 @@ describe('Alert list table row', () => {
     const alert = alertFactory.build();
     const processCriteria = processMetricCriteria(alert.rule_criteria.rules)[0];
     const { getByText } = renderWithTheme(
-      <AlertListReusableTableRow
+      <AlertInformationActionRow
         alert={alert}
         handleToggle={vi.fn()}
         status={false}
@@ -42,7 +42,7 @@ describe('Alert list table row', () => {
   it('Should have toggle button disabled', () => {
     const alert = alertFactory.build();
     const { getByRole } = renderWithTheme(
-      <AlertListReusableTableRow
+      <AlertInformationActionRow
         alert={alert}
         handleToggle={vi.fn()}
         status={true}

@@ -17,11 +17,11 @@ import {
 } from 'src/queries/cloudpulse/alerts';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
-import { AlertListReusableTableRow } from './AlertInformationActionRow';
+import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type { Alert, EntityAlertUpdatePayload } from '@linode/api-v4';
 
-export interface AlertListReusableTableProps {
+export interface AlertInformationActionTableProps {
   /**
    * list of alerts to be displayed
    */
@@ -81,7 +81,9 @@ const generateStatusMap = (
   );
 };
 
-export const AlertListReusableTable = (props: AlertListReusableTableProps) => {
+export const AlertInformationActionTable = (
+  props: AlertInformationActionTableProps
+) => {
   const { alerts, columns, entityId, entityName, ordeByColumn } = props;
   const [alertStatusMap, setAlertStatusMap] = React.useState<AlertStatusMap>(
     generateStatusMap(alerts, entityId)
@@ -182,7 +184,7 @@ export const AlertListReusableTable = (props: AlertListReusableTableProps) => {
                         loading={false}
                       />
                       {paginatedAndOrderedAlerts?.map((alert) => (
-                        <AlertListReusableTableRow
+                        <AlertInformationActionRow
                           alert={alert}
                           handleToggle={handleToggle}
                           key={alert.id}

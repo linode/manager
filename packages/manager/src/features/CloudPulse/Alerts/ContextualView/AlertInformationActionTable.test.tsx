@@ -5,10 +5,10 @@ import React from 'react';
 import { alertFactory } from 'src/factories/cloudpulse/alerts';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AlertListReusableTable } from './AlertInformationActionTable';
+import { AlertInformationActionTable } from './AlertInformationActionTable';
 
 import type {
-  AlertListReusableTableProps,
+  AlertInformationActionTableProps,
   TableColumnHeader,
 } from './AlertInformationActionTable';
 
@@ -27,7 +27,7 @@ const columns: TableColumnHeader[] = [
   { columnName: 'Metric Threshold', label: 'id' },
   { columnName: 'Alert Type', label: 'type' },
 ];
-const props: AlertListReusableTableProps = {
+const props: AlertInformationActionTableProps = {
   alerts,
   columns,
   entityId,
@@ -38,7 +38,7 @@ const props: AlertListReusableTableProps = {
 describe('Alert Listing Reusable Table for contextual view', () => {
   it('Should render alert table', () => {
     const { getByText } = renderWithTheme(
-      <AlertListReusableTable {...props} />
+      <AlertInformationActionTable {...props} />
     );
 
     expect(getByText('Alert Name')).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe('Alert Listing Reusable Table for contextual view', () => {
 
   it('Should show message for empty table', () => {
     const { getByText } = renderWithTheme(
-      <AlertListReusableTable {...props} alerts={[]} />
+      <AlertInformationActionTable {...props} alerts={[]} />
     );
 
     expect(getByText('No data to display.')).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('Alert Listing Reusable Table for contextual view', () => {
 
   it('Shoud render table row toggle in table row', async () => {
     const { findByTestId } = renderWithTheme(
-      <AlertListReusableTable {...props} />
+      <AlertInformationActionTable {...props} />
     );
     const alert = alerts[0];
     const row = await findByTestId(alert.id);
@@ -68,7 +68,7 @@ describe('Alert Listing Reusable Table for contextual view', () => {
 
   it('Should show confirm dialog on checkbox click', async () => {
     const { findByTestId, findByText } = renderWithTheme(
-      <AlertListReusableTable {...props} />
+      <AlertInformationActionTable {...props} />
     );
     const alert = alerts[0];
     const row = await findByTestId(alert.id);

@@ -20,7 +20,7 @@ import {
   convertAlertsToTypeSet,
   filterAlertsByStatusAndType,
 } from '../Utils/utils';
-import { AlertListReusableTable } from './AlertInformationActionTable';
+import { AlertInformationActionTable } from './AlertInformationActionTable';
 
 import type { AlertDefinitionType } from '@linode/api-v4';
 
@@ -114,7 +114,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               sx={{ width: '250px' }}
             />
           </Box>
-          <AlertListReusableTable
+          <AlertInformationActionTable
             alerts={filteredAlerts}
             columns={AlertContextualViewTableHeaderMap}
             entityId={entityId}
