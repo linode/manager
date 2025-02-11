@@ -11,10 +11,7 @@ import {
 } from 'src/utilities/authentication';
 import { capitalize } from 'src/utilities/capitalize';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import {
-  authentication,
-  getEnvLocalStorageOverrides,
-} from 'src/utilities/storage';
+import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
 
 const localStorageOverrides = getEnvLocalStorageOverrides();
 const loginURL = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
@@ -35,7 +32,6 @@ export const OAuthCallback = () => {
      * If the search doesn't contain parameters, there's no point continuing as we don't have
      * the query params we need.
      */
-
     if (!location.search || location.search.length < 2) {
       clearStorageAndRedirectToLogout();
     }
@@ -62,26 +58,30 @@ export const OAuthCallback = () => {
 
 const exchangeAuthorizationCodeForToken = async (
   code: string,
-  nonce: string
+  nonceFromReceiver: string
 ) => {
   try {
-    const { codeVerifier } = getAuthCode();
+    const { codeVerifier, nonce: nonceFromInitiator } = getAuthCode();
 
     if (!codeVerifier) {
       throw new Error('No code verifier set');
     }
-
-    authentication.codeVerifier.set('');
 
     /**
      * We need to validate that the nonce returned (comes from the location query param as the state param)
      * matches the one we stored when authentication was started. This confirms the initiator
      * and receiver are the same.
      */
+    if (nonceFromReceiver !== nonceFromInitiator) {
+      throw new Error('Received incorrect nonce');
+    }
 
-    checkNonce(nonce);
-
-    const formData = createFormData(`${clientID}`, code, nonce, codeVerifier);
+    const formData = createFormData(
+      `${clientID}`,
+      code,
+      nonceFromReceiver,
+      codeVerifier
+    );
 
     const response = await fetch(`${loginURL}/oauth/token`, {
       body: formData,
@@ -110,15 +110,8 @@ const exchangeAuthorizationCodeForToken = async (
     });
   } catch (error) {
     clearStorageAndRedirectToLogout();
-  }
-};
-
-const checkNonce = (nonce: string) => {
-  // nonce should be set and equal to ours otherwise retry auth
-  const storedNonce = authentication.nonce.get();
-  authentication.nonce.set('');
-  if (!(nonce && storedNonce === nonce)) {
-    clearStorageAndRedirectToLogout();
+  } finally {
+    clearAuthCode();
   }
 };
 
@@ -138,11 +131,7 @@ const createFormData = (
 };
 
 const clearStorageAndRedirectToLogout = () => {
-  clearLocalStorage();
-  window.location.assign(loginURL + '/logout');
-};
-
-const clearLocalStorage = () => {
   clearAuthCode();
   clearAuthToken();
+  window.location.assign(loginURL + '/logout');
 };
