@@ -16,7 +16,7 @@ import type {
   Alert,
   AlertServiceType,
   CreateAlertDefinitionPayload,
-  EditAlertDefinitionPayloadWithServiceTypeAndAlertId,
+  EditAlertPayloadWithService,
   NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
@@ -64,11 +64,7 @@ export const useAllAlertNotificationChannelsQuery = (
 
 export const useEditAlertDefinition = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Alert,
-    APIError[],
-    EditAlertDefinitionPayloadWithServiceTypeAndAlertId
-  >({
+  return useMutation<Alert, APIError[], EditAlertPayloadWithService>({
     mutationFn: ({ alertId, serviceType, ...data }) =>
       editAlertDefinition(data, serviceType, alertId),
     onSuccess() {
