@@ -79,7 +79,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: 14,
   },
   label: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     marginBottom: `calc(${theme.spacing(1)} - 3px)`,
   },
 }));
