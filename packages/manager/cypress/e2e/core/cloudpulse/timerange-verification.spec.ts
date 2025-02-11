@@ -28,18 +28,16 @@ import {
   mockGetUserPreferences,
 } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
-import { Database } from '@linode/api-v4';
+import { Database, DateTimeWithPreset } from '@linode/api-v4';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 import { convertToGmt } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import {
-  getDateRangeInIST,
-  getLastMonthRange,
-  getThisMonthRange,
-} from 'support/constants/date-utils';
+import { DateTime } from 'luxon';
+
+const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 const timeRanges = [
   { label: 'Last 30 Minutes', unit: 'min', value: 30 },
@@ -117,8 +115,96 @@ const databaseMock: Database = databaseFactory.build({
   region: mockRegion.label,
 });
 const mockProfile = profileFactory.build({
-  timezone: 'Asia/Kolkata',
+  timezone: 'Etc/GMT',
 });
+
+/**
+ * This function calculates the start of the current month and the current date and time,
+ * adjusted by subtracting 5 hours and 30 minutes, and returns them in the ISO 8601 format (UTC).
+ *
+ * @returns {{start: string, end: string}} - The start and end dates of the current month in ISO 8601 format.
+ */
+
+export const getThisMonthRange = (): DateTimeWithPreset => {
+  const now = DateTime.now();
+
+  const expectedStartDateISO = now.startOf('month').toISO() ?? '';
+  const expectedEndDateISO = now.toISO() ?? '';
+
+  const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, {
+    zone: 'gmt',
+  });
+  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
+  const formattedStartDate = adjustedStartDate.toFormat(formatter);
+  const formattedEndDate = adjustedEndDate.toFormat(formatter);
+
+  return {
+    end: formattedEndDate,
+    start: formattedStartDate,
+  };
+};
+
+export const getLastMonthRange = (): { end: string; start: string } => {
+  // Get the current UTC time
+  const now = DateTime.utc();
+  const lastMonth = now.minus({ months: 1 });
+
+  // Get start and end of last month in UTC
+  const expectedStartDate = lastMonth.startOf('month').toUTC();
+  const expectedEndDate = lastMonth.endOf('month').toUTC();
+
+  // Adjust by -5 hours 30 minutes (IST Offset)
+  const adjustedStartDate = expectedStartDate.minus({ hours: 5, minutes: 30 });
+  const adjustedEndDate = expectedEndDate.minus({ hours: 5, minutes: 30 });
+
+  // Format the output
+  const formattedStartDate = adjustedStartDate.toFormat(formatter);
+  const formattedEndDate = adjustedEndDate.toFormat(formatter);
+  return {
+    end: formattedEndDate,
+    start: formattedStartDate,
+  };
+};
+
+
+/**
+ * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
+ * hour, and minute. The function also provides individual date components such as day, hour,
+ * minute, month, and AM/PM.
+ *
+ * @param {number} daysOffset - The number of days to adjust from the current date. Positive
+ *                               values give a future date, negative values give a past date.
+ * @param {number} hour - The hour to set for the resulting date (0-23).
+ * @param {number} [minute=0] - The minute to set for the resulting date (0-59). Defaults to 0.
+ *
+ * @returns {Object} - Returns an object containing:
+ *   - `actualDate`: The formatted date and time in IST (YYYY-MM-DD HH:mm).
+ *   - `day`: The day of the month as a number.
+ *   - `hour`: The hour in the 24-hour format as a number.
+ *   - `minute`: The minute of the hour as a number.
+ *   - `month`: The month of the year as a number.
+ *   - `ampm`: The AM/PM designation of the time (either 'AM' or 'PM').
+ */
+export const getDateRangeInIST = (
+  daysOffset: number,
+  hour: number,
+  minute: number = 0
+) => {
+  const now = DateTime.now();
+  const targetDate = now
+    .startOf('month')
+    .plus({ days: daysOffset })
+    .set({ hour, minute });
+
+  const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm');
+  return {
+    actualDate,
+    day: targetDate.day,
+    hour: targetDate.hour,
+    minute: targetDate.minute,
+    month: targetDate.month,
+  };
+};
 
 describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
   beforeEach(() => {
@@ -193,7 +279,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // Assert that the start date and time is correctly displayed
     cy.findByPlaceholderText('Select Start Date')
       .should('be.visible')
-      .and('have.value', `${startActualDate} PM (GMT+5:30)`);
+      .and('have.value', `${startActualDate} PM`);
       
     // Click on "Select End Date" input field
     cy.findByPlaceholderText('Select End Date').should('be.visible').click();
@@ -213,7 +299,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     // Assert that the end date and time is correctly displayed
     cy.findByPlaceholderText('Select End Date')
-      .should('have.value', `${endActualDate} AM (GMT+5:30)`);
+      .should('have.value', `${endActualDate} AM`);
 
     // Select the "Node Type" from the dropdown and submit
     ui.autocomplete
