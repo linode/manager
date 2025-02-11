@@ -310,6 +310,10 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    */
   interfaceType: 'public' | 'vlan' | 'vpc';
   /**
+   * Override the interfaces type of the Linode Create flow so it only has Legacy Interfaces
+   */
+  interfaces: InterfacePayload[];
+  /**
    * Form state for new Linode interfaces
    */
   interfacesV2: CreateLinodeInterfacePayload[];

@@ -21,7 +21,7 @@ export const NetworkConnection = () => {
         aria-labelledby="network-interface"
         onChange={field.onChange}
         row
-        value={field.value ?? 'public'}
+        value={field.value}
       >
         <FormControlLabel
           control={<Radio />}
