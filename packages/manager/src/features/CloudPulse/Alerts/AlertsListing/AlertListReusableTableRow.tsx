@@ -1,4 +1,11 @@
-import { Box, FormControlLabel, Toggle, Tooltip, Typography } from '@linode/ui';
+import {
+  Box,
+  Chip,
+  FormControlLabel,
+  Toggle,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -85,21 +92,21 @@ const MetricThreshold = (props: MetricThresholdProps) => {
     <Box alignItems="center" display="flex" gap={1.75}>
       <Typography variant="subtitle1">{metric}</Typography>
       <Tooltip title={<Box sx={{ whiteSpace: 'pre-line' }}>{rest}</Box>}>
-        <Typography
-          sx={(theme) => {
-            return {
-              backgroundColor: theme.bg.offWhite,
-              border: '1px solid',
-              borderColors: theme.borderColors.borderFocus,
-              borderRadius: '4px',
-              px: 1,
-              py: 0.5,
-            };
-          }}
-          variant="subtitle1"
-        >
-          +{total}
-        </Typography>
+        <span>
+          <Chip
+            sx={(theme) => {
+              return {
+                backgroundColor: theme.bg.offWhite,
+                border: '1px solid',
+                borderColors: theme.borderColors.borderFocus,
+                borderRadius: '4px',
+                px: 0.5,
+                py: 1.5,
+              };
+            }}
+            label={`+${total}`}
+          />
+        </span>
       </Tooltip>
     </Box>
   );
