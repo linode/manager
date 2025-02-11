@@ -1,4 +1,4 @@
-import { Notice, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -54,6 +54,7 @@ export const DetachVolumeDialog = (props: Props) => {
         primaryBtnText: 'Detach',
         type: 'Volume',
       }}
+      errors={error}
       expand
       isFetching={isFetching}
       label="Volume Label"
@@ -64,7 +65,6 @@ export const DetachVolumeDialog = (props: Props) => {
       title={`Detach Volume ${volume?.label}?`}
       typographyStyle={{ marginTop: '10px' }}
     >
-      {error && <Notice text={error?.[0].reason} variant="error" />}
       {!poweredOff && linode !== undefined && (
         <Typography
           sx={(theme) => ({
