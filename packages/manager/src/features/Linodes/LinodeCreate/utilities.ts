@@ -176,7 +176,7 @@ export const getLinodeCreatePayload = (
       formValues.interfaceType,
       formValues.interfacesV2
     );
-  } else {
+  } else if (getIsLegacyInterfaceArray(formValues.interfaces)) {
     values.interfaces = getInterfacesPayload(
       formValues.interfaces,
       Boolean(values.private_ip)
@@ -328,7 +328,7 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * Override the interfaces type so that its type is legacy only.
    */
-  interfaces?: InterfacePayload[];
+  // interfaces?: InterfacePayload[];
   /**
    * Form state for new Linode interfaces
    */
