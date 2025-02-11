@@ -329,8 +329,9 @@ export const NodeBalancerConfigPanel = (
                   Proxy Protocol preserves the initial TCP connection
                   information.{' '}
                   <Link to="https://techdocs.akamai.com/cloud-computing/docs/using-proxy-protocol-with-nodebalancers">
-                    Learn more.
+                    Learn more
                   </Link>
+                  .
                 </>
               }
               onChange={(_, selected) => {
