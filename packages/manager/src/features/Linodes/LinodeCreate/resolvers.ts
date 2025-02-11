@@ -31,6 +31,8 @@ export const getLinodeCreateResolver = (
   return async (values, context, options) => {
     const transformedValues = getLinodeCreatePayload(structuredClone(values));
 
+    console.log("Values", transformedValues)
+
     const { errors } = await yupResolver(
       schema as ObjectSchema<CreateLinodeRequest>,
       {},

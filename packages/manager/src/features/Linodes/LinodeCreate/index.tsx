@@ -35,6 +35,7 @@ import { Error } from './Error';
 import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { FirewallAuthorization } from './FirewallAuthorization';
+import { Networking } from './Networking/Networking';
 import { Plan } from './Plan';
 import { getLinodeCreateResolver } from './resolvers';
 import { Security } from './Security';
@@ -64,7 +65,6 @@ import type {
   LinodeCreateFormValues,
 } from './utilities';
 import type { SubmitHandler } from 'react-hook-form';
-import { Networking } from './Networking/Networking';
 
 export const LinodeCreate = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
@@ -109,6 +109,8 @@ export const LinodeCreate = () => {
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values);
+
+    console.log("Payload", payload);
 
     try {
       const linode =
@@ -165,6 +167,8 @@ export const LinodeCreate = () => {
     }
     previousSubmitCount.current = form.formState.submitCount;
   }, [form.formState, handleLinodeCreateAnalyticsFormError]);
+
+  console.log("Errors", form.formState.errors);
 
   return (
     <FormProvider {...form}>

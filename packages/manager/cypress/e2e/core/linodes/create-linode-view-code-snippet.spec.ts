@@ -6,8 +6,12 @@ import { ui } from 'support/ui';
 
 import { randomLabel, randomString } from 'support/util/random';
 import { linodeCreatePage } from 'support/ui/pages';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('Create Linode flow to validate code snippet modal', () => {
+  mockAppendFeatureFlags({
+    linodeInterfaces: { enabled: false },
+  });
   /*
    * tests for create Linode flow to validate code snippet modal.
    */

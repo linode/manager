@@ -175,10 +175,10 @@ export const getLinodeCreatePayload = (
       values.interfaces,
       Boolean(values.private_ip)
     );
-  } else if (!getIsLegacyInterfaceArray(values.interfaces)) {
+  } else if (!getIsLegacyInterfaceArray(values.interfacesV2)) {
     values.interfaces = getLinodeInterfacesPayload(
       values.interfaceType,
-      values.interfaces
+      values.interfacesV2
     );
   }
 
@@ -269,7 +269,7 @@ const getLinodeInterfacesPayload = (
     }
   }
 
-  return interfaces[0];
+  return interfaces;
 };
 
 const defaultInterfaces: InterfacePayload[] = [
@@ -295,7 +295,7 @@ const defaultLinodeInterfaces: CreateLinodeInterfacePayload[] = [
   {
     default_route: null,
     firewall_id: null,
-    public: null,
+    public: {},
     vlan: null,
     vpc: null,
   },
