@@ -1,6 +1,5 @@
 import {
   Autocomplete,
-  FormHelperText,
   InputAdornment,
   SelectedIcon,
   Stack,
@@ -173,7 +172,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_interval}
-                helperText="Seconds (2-3600) between health check probes."
+                helperText={`Seconds (${CHECK_INTERVAL.MIN}-${CHECK_INTERVAL.MAX}) between health check probes.`}
                 label="Interval"
                 max={CHECK_INTERVAL.MAX}
                 min={CHECK_INTERVAL.MIN}
@@ -194,7 +193,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_timeout}
-                helperText="Seconds to wait (1-30) before considering the probe a failure. Must be less than Interval."
+                helperText={`Seconds to wait (${CHECK_TIMEOUT.MIN}-${CHECK_TIMEOUT.MAX}) before considering the probe a failure. Must be less than Interval.`}
                 label="Timeout"
                 max={CHECK_TIMEOUT.MAX}
                 min={CHECK_TIMEOUT.MIN}
@@ -212,7 +211,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_attempts}
-                helperText="Number of failed probes (1-30) before taking a node out of rotation."
+                helperText={`Number of failed probes (${CHECK_ATTEMPTS.MIN}-${CHECK_ATTEMPTS.MAX}) before taking a node out of rotation.`}
                 label="Attempts"
                 max={CHECK_ATTEMPTS.MAX}
                 min={CHECK_ATTEMPTS.MIN}
