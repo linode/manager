@@ -12,6 +12,7 @@ import { utoa } from 'src/utilities/metadata';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { getLinodeInterfacePayload } from './Networking/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
@@ -172,10 +173,12 @@ export const getLinodeCreatePayload = (
   const shouldUseNewInterfaces = values.interface_generation === 'linode';
 
   if (shouldUseNewInterfaces) {
-    values.interfaces = getLinodeInterfacesPayload(
-      formValues.interfaceType,
-      formValues.interfacesV2
-    );
+    values.interfaces = [
+      getLinodeInterfacePayload(
+        formValues.interfaceType,
+        formValues.interfacesV2[0]
+      ),
+    ];
   } else if (getIsLegacyInterfaceArray(formValues.interfaces)) {
     values.interfaces = getInterfacesPayload(
       formValues.interfaces,
@@ -254,25 +257,6 @@ export const getInterfacesPayload = (
   return undefined;
 };
 
-const getLinodeInterfacesPayload = (
-  type: 'public' | 'vlan' | 'vpc' | undefined,
-  interfaces: CreateLinodeInterfacePayload[] | undefined
-) => {
-  if (!interfaces) {
-    return undefined;
-  }
-
-  for (const networkInterface of interfaces) {
-    for (const key of ['public', 'vlan', 'vpc'] as const) {
-      if (key !== type) {
-        networkInterface[key] = null;
-      }
-    }
-  }
-
-  return interfaces;
-};
-
 const defaultInterfaces: InterfacePayload[] = [
   {
     ipam_address: '',
@@ -324,15 +308,11 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * The user's selected interface type (use for new Linode Interfaces)
    */
-  interfaceType?: 'public' | 'vlan' | 'vpc';
-  /**
-   * Override the interfaces type so that its type is legacy only.
-   */
-  // interfaces?: InterfacePayload[];
+  interfaceType: 'public' | 'vlan' | 'vpc';
   /**
    * Form state for new Linode interfaces
    */
-  interfacesV2?: CreateLinodeInterfacePayload[];
+  interfacesV2: CreateLinodeInterfacePayload[];
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */
@@ -379,6 +359,7 @@ export const defaultValues = async (
     backup_id: params.backupID,
     backups_enabled: linode?.backups.enabled,
     image: getDefaultImageId(params),
+    interfaceType: 'public',
     interfaces: defaultInterfaces,
     interfacesV2: defaultLinodeInterfaces,
     linode,
