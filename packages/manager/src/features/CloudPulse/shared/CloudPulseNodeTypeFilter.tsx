@@ -12,6 +12,17 @@ export interface CloudPulseNodeType {
   label: string;
 }
 
+const nodeTypeOptionsList: CloudPulseNodeType[] = [
+  {
+    id: 'primary',
+    label: 'Primary',
+  },
+  {
+    id: 'secondary',
+    label: 'Secondary',
+  },
+];
+
 export interface CloudPulseNodeTypeFilterProps {
   /**
    * Selected database cluster ids
@@ -69,17 +80,6 @@ export const CloudPulseNodeTypeFilter = React.memo(
       isError,
       isLoading,
     } = useAllDatabasesQuery(); // fetch all databases
-
-    const nodeTypeOptionsList = [
-      {
-        id: 'primary',
-        label: 'Primary',
-      },
-      {
-        id: 'secondary',
-        label: 'Secondary',
-      },
-    ];
 
     const nodeTypeMap = new Map<string, CloudPulseNodeType>(
       nodeTypeOptionsList.map((type) => [type.id, type])
