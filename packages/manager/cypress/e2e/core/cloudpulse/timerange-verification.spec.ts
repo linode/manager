@@ -125,7 +125,7 @@ const mockProfile = profileFactory.build({
  * @returns {{start: string, end: string}} - The start and end dates of the current month in ISO 8601 format.
  */
 
-export const getThisMonthRange = (): DateTimeWithPreset => {
+ const getThisMonthRange = (): DateTimeWithPreset => {
   const now = DateTime.now();
 
   const expectedStartDateISO = now.startOf('month').toISO() ?? '';
@@ -144,22 +144,24 @@ export const getThisMonthRange = (): DateTimeWithPreset => {
   };
 };
 
-export const getLastMonthRange = (): { end: string; start: string } => {
-  // Get the current UTC time
-  const now = DateTime.utc();
+const getLastMonthRange = (): DateTimeWithPreset => {
+  const now = DateTime.now();
+  
+  // Get the last month by subtracting 1 month from the current date
   const lastMonth = now.minus({ months: 1 });
 
-  // Get start and end of last month in UTC
-  const expectedStartDate = lastMonth.startOf('month').toUTC();
-  const expectedEndDate = lastMonth.endOf('month').toUTC();
+  // Get the start and end of the last month in ISO format
+  const expectedStartDateISO = lastMonth.startOf('month').toISO() ?? '';
+  const expectedEndDateISO = lastMonth.endOf('month').toISO() ?? '';
 
-  // Adjust by -5 hours 30 minutes (IST Offset)
-  const adjustedStartDate = expectedStartDate.minus({ hours: 5, minutes: 30 });
-  const adjustedEndDate = expectedEndDate.minus({ hours: 5, minutes: 30 });
+  // Adjust the start and end dates to GMT
+  const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, { zone: 'gmt' });
+  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
 
-  // Format the output
+  // Format the dates according to the specified format
   const formattedStartDate = adjustedStartDate.toFormat(formatter);
   const formattedEndDate = adjustedEndDate.toFormat(formatter);
+
   return {
     end: formattedEndDate,
     start: formattedStartDate,
@@ -305,7 +307,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
-      .type(`${nodeType}{enter}`);
+      .type('Primary{enter}');
 
     // Wait for all API calls to complete before assertions
     cy.wait(Array(4).fill('@getMetrics'));
@@ -374,7 +376,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       ui.autocomplete
         .findByLabel('Node Type')
         .should('be.visible')
-        .type(`${nodeType}{enter}`);
+        .type('Primary{enter}');
 
       cy.wait(Array(4).fill('@getMetrics'));
 
@@ -411,7 +413,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
-      .type(`${nodeType}{enter}`);
+      .type('Primary{enter}');
 
     cy.wait(Array(4).fill('@getMetrics'));
 
@@ -444,7 +446,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
-      .type(`${nodeType}{enter}`);
+      .type('Primary{enter}');
 
     cy.wait(Array(4).fill('@getMetrics'));
     cy.get('@getMetrics.all')
