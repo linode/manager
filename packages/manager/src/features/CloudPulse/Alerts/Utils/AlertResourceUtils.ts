@@ -161,6 +161,7 @@ export const getFilteredResources = (
       const regionObj = resource.region
         ? regionsIdToRegionMap.get(resource.region)
         : undefined;
+      const tags = resource.tags ? resource.tags.join(',') : '';
       return {
         ...resource,
         checked: selectedResources
@@ -171,6 +172,7 @@ export const getFilteredResources = (
             ? `${regionObj.label} (${regionObj.id})`
             : resource.region
           : '',
+        tags,
       };
     })
     .filter(({ checked, label, region }) => {

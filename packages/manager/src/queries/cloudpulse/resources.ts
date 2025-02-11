@@ -22,6 +22,7 @@ export const useResourcesQuery = (
             id: String(resource.id),
             label: resource.label,
             region: resource.region,
+            tags: resource.tags,
           };
         }
       );

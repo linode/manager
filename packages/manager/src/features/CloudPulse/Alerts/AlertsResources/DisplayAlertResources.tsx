@@ -1,4 +1,4 @@
-import { Checkbox } from '@linode/ui';
+import { Box, Checkbox, Chip, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
@@ -41,6 +41,8 @@ export interface AlertInstance {
    * The region associated with the instance
    */
   region: string;
+
+  tags?: string;
 }
 
 export interface DisplayAlertResourceProp {
@@ -233,7 +235,25 @@ export const DisplayAlertResources = React.memo(
                           }_${label.toLowerCase()}`}
                           key={label}
                         >
-                          {accessor(resource)}
+                          {label !== 'Tags' && accessor(resource)}
+                          {label === 'Tags' && resource.tags?.length && (
+                            <Box alignItems={'center'} display={'flex'} gap={1}>
+                              <Typography variant="body2">
+                                {resource.tags.split(',')[0]}
+                              </Typography>
+                              <Tooltip title={resource.tags}>
+                                <span>
+                                  <Chip
+                                    label={`+${
+                                      resource.tags
+                                        ? resource.tags.split(',').length - 1
+                                        : ''
+                                    }`}
+                                  />
+                                </span>
+                              </Tooltip>
+                            </Box>
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>

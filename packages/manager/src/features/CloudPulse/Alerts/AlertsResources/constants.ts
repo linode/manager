@@ -53,6 +53,11 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       label: 'Region',
       sortingKey: 'region',
     },
+    {
+      accessor: ({ tags }) => tags ?? '',
+      label: 'Tags',
+      sortingKey: 'tags',
+    },
   ],
 };
 
