@@ -1,4 +1,3 @@
-import { deepEqual } from '../../Utils/FilterBuilder';
 import {
   alertAdditionalFilterKeyMap,
   applicableAdditionalFilterKeys,

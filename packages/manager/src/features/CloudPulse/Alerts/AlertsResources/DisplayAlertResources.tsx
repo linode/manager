@@ -1,11 +1,4 @@
-import {
-  Box,
-  Checkbox,
-  Chip,
-  StyledTagButton,
-  Tooltip,
-  Typography,
-} from '@linode/ui';
+import { Box, Checkbox, Chip, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';

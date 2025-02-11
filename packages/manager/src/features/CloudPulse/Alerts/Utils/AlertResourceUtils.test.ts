@@ -186,6 +186,7 @@ describe('getFilteredResources', () => {
     const result = getFilteredResources({
       additionalFilters: {
         engineType: 'postgresql',
+        tags: undefined,
       },
       data,
       filteredRegions: [],
@@ -198,6 +199,7 @@ describe('getFilteredResources', () => {
     const result = getFilteredResources({
       additionalFilters: {
         engineType: undefined,
+        tags: undefined,
       },
       data,
       filteredRegions: [],
