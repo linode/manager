@@ -10,6 +10,8 @@ type UDPStickiness = 'none' | 'session' | 'source_ip';
 
 export type Stickiness = TCPStickiness | UDPStickiness;
 
+type NodeBalancerType = 'common' | 'premium';
+
 export interface NodeBalancer {
   id: number;
   label: string;
@@ -27,6 +29,7 @@ export interface NodeBalancer {
    */
   client_udp_sess_throttle?: number;
   region: string;
+  type?: NodeBalancerType;
   ipv4: string;
   ipv6: null | string;
   created: string;

@@ -57,6 +57,14 @@ export const SummaryPanel = () => {
           <StyledTitle data-qa-title variant="h3">
             NodeBalancer Details
           </StyledTitle>
+          {nodebalancer.type === 'premium' && (
+            <StyledSection>
+              <Typography data-qa-ports variant="body1">
+                <strong>Type: </strong>
+                Premium
+              </Typography>
+            </StyledSection>
+          )}
           <StyledSection>
             <Typography data-qa-ports variant="body1">
               <strong>Ports: </strong>

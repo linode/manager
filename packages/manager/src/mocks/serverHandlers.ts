@@ -912,6 +912,13 @@ export const handlers = [
     });
     return HttpResponse.json(nodeBalancer);
   }),
+  http.get('*/v4beta/nodebalancers/:nodeBalancerID', ({ params }) => {
+    const nodeBalancer = nodeBalancerFactory.build({
+      id: Number(params.nodeBalancerID),
+      type: 'premium',
+    });
+    return HttpResponse.json(nodeBalancer);
+  }),
   http.get('*/nodebalancers/:nodeBalancerID/configs', ({ params }) => {
     const configs = nodeBalancerConfigFactory.buildList(2, {
       nodebalancer_id: Number(params.nodeBalancerID),
