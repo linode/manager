@@ -13,8 +13,6 @@ export const NetworkConnection = () => {
     name: 'interfaces.0',
   });
 
-  console.log(field);
-
   return (
     <FormControl>
       <FormLabel id="network-interface">Network Connection</FormLabel>
