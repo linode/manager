@@ -312,7 +312,7 @@ export interface EditAlertDefinitionPayload {
   status?: AlertStatusType;
 }
 
-export interface ExtendedEditAlertDefinitionPayload
+export interface EditAlertDefinitionPayloadWithServiceTypeAndAlertId
   extends EditAlertDefinitionPayload {
   serviceType: string;
   alertId: string;
