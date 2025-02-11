@@ -108,13 +108,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
     data: regions,
     isError: isRegionsError,
-    isLoading: isRegionsFetching,
+    isLoading: isRegionsLoading,
   } = useRegionsQuery();
 
   const {
     data: resources,
     isError: isResourcesError,
-    isLoading: isResourcesFetching,
+    isLoading: isResourcesLoading,
   } = useResourcesQuery(
     Boolean(serviceType),
     serviceType,
@@ -235,7 +235,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     !isDataLoadingError && !isSelectionsNeeded && alertResourceIds.length === 0;
   const showEditInformation = isSelectionsNeeded && alertType === 'system';
 
-  if (isResourcesFetching || isRegionsFetching) {
+  if (isResourcesLoading || isRegionsLoading) {
     return <CircleProgress />;
   }
 
