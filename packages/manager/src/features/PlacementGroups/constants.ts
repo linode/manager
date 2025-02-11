@@ -45,3 +45,11 @@ export const PLACEMENT_GROUP_MIGRATION_INBOUND_MESSAGE =
 
 export const PLACEMENT_GROUP_MIGRATION_OUTBOUND_MESSAGE =
   'This Linode is being migrated. It will be removed from this placement group after the migration completes.';
+
+export const PLACEMENT_GROUPS_LANDING_ROUTE = '/placement-groups';
+export const PLACEMENT_GROUPS_DETAILS_ROUTE = '/placement-groups/$id';
+// default order constants
+export const PG_LANDING_TABLE_DEFAULT_ORDER = 'asc';
+export const PG_LANDING_TABLE_DEFAULT_ORDER_BY = 'label';
+export const PG_LANDING_TABLE_PREFERENCE_KEY = 'placement-groups';
+export const PG_LINODES_TABLE_PREFERENCE_KEY = 'placement-groups-linodes';

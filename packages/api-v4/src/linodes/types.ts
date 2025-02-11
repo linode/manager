@@ -2,10 +2,19 @@ import type { Region, RegionSite } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { SSHKey } from '../profile/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
+import { InferType } from 'yup';
+import {
+  CreateLinodeInterfaceSchema,
+  ModifyLinodeInterfaceSchema,
+  UpdateLinodeInterfaceSettingsSchema,
+  UpgradeToLinodeInterfaceSchema,
+} from '@linode/validation';
 
 export type Hypervisor = 'kvm' | 'zen';
 
 export type EncryptionStatus = 'enabled' | 'disabled';
+
+export type InterfaceGenerationType = 'legacy_config' | 'linode';
 
 export interface LinodeSpecs {
   disk: number;
@@ -26,6 +35,7 @@ export interface Linode {
   region: string;
   image: string | null;
   group: string;
+  interface_generation: InterfaceGenerationType;
   ipv4: string[];
   ipv6: string | null;
   label: string;
@@ -162,6 +172,9 @@ export type LinodeStatus =
   | 'restoring'
   | 'stopped';
 
+// ---------------------------------------------------------------------
+// Types relating to legacy interfaces (Configuration profile Interfaces)
+// ----------------------------------------------------------------------
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
 export interface ConfigInterfaceIPv4 {
@@ -173,6 +186,7 @@ export interface ConfigInterfaceIPv6 {
   vpc?: string | null;
 }
 
+// The legacy interface type - for Configuration Profile Interfaces
 export interface Interface {
   id: number;
   label: string | null;
@@ -212,8 +226,121 @@ export interface Config {
   created: string;
   updated: string;
   initrd: string | null;
-  interfaces: Interface[];
+  // If a Linode is using the new Linode Interfaces, this field will no longer be present.
+  interfaces?: Interface[];
 }
+
+// ----------------------------------------------------------
+// Types relating to new interfaces - Linode Interfaces
+// ----------------------------------------------------------
+export interface DefaultRoute {
+  ipv4?: boolean;
+  ipv6?: boolean;
+}
+
+export type CreateLinodeInterfacePayload = InferType<
+  typeof CreateLinodeInterfaceSchema
+>;
+
+export type ModifyLinodeInterfacePayload = InferType<
+  typeof ModifyLinodeInterfaceSchema
+>;
+
+// GET related types
+
+// GET object
+export interface LinodeInterface {
+  id: number;
+  mac_address: string;
+  default_route: DefaultRoute;
+  version: number;
+  created: string;
+  updated: string;
+  vpc: VPCInterfaceData | null;
+  public: PublicInterfaceData | null;
+  vlan: {
+    vlan_label: string;
+    ipam_address: string;
+  } | null;
+}
+
+export interface LinodeInterfaces {
+  interfaces: LinodeInterface[];
+}
+
+export interface VPCInterfaceData {
+  vpc_id: number;
+  subnet_id: number;
+  ipv4: {
+    addresses: {
+      address: string;
+      primary: boolean;
+      nat_1_1_address?: string;
+    }[];
+    ranges: { range: string }[];
+  };
+}
+
+export interface PublicInterfaceData {
+  ipv4: {
+    addresses: {
+      address: string;
+      primary: boolean;
+    }[];
+    // shared: string[];
+  };
+  ipv6: {
+    addresses: {
+      address: string;
+      prefix: string;
+    }[];
+    // shared: string[];
+    ranges: {
+      range: string;
+      route_target: string;
+    }[];
+  };
+}
+
+// Other Linode Interface types
+export type LinodeInterfaceStatus = 'active' | 'inactive' | 'deleted';
+
+export interface LinodeInterfaceHistory {
+  interface_history_id: number;
+  interface_id: number;
+  linode_id: number;
+  event_id: number;
+  version: number;
+  interface_data: string; // will come in as JSON string object that we'll need to parse
+  status: LinodeInterfaceStatus;
+  created: string;
+}
+
+export interface LinodeInterfaceSettings {
+  network_helper: boolean;
+  default_route: {
+    ipv4_interface_id?: number | null;
+    ipv4_eligible_interface_ids: number[];
+    ipv6_interface_id?: number | null;
+    ipv6_eligible_interface_ids: number[];
+  };
+}
+
+export type LinodeInterfaceSettingsPayload = InferType<
+  typeof UpdateLinodeInterfaceSettingsSchema
+>;
+
+export type UpgradeInterfacePayload = InferType<
+  typeof UpgradeToLinodeInterfaceSchema
+>;
+
+export interface UpgradeInterfaceData {
+  config_id: number;
+  dry_run: boolean;
+  interfaces: LinodeInterface[];
+}
+
+// ----------------------------------------------------------
 
 export interface DiskDevice {
   disk_id: null | number;
@@ -423,7 +550,9 @@ export interface CreateLinodeRequest {
   stackscript_data?: any;
   /**
    * If it is deployed from an Image or a Backup and you wish it to remain offline after deployment, set this to false.
+   *
    * @default true if the Linode is created with an Image or from a Backup.
+   * @default false if using new Linode Interfaces and no interfaces are defined
    */
   booted?: boolean;
   /**
@@ -451,7 +580,29 @@ export interface CreateLinodeRequest {
   /**
    * An array of Network Interfaces to add to this Linode’s Configuration Profile.
    */
-  interfaces?: InterfacePayload[];
+  interfaces?: InterfacePayload[] | CreateLinodeInterfacePayload[];
+  /**
+   * When present, used by the API to determine what type of interface objects (legacy
+   * config interfaces or new Linode Interfaces) are in the above interfaces field.
+   * Can either be 'legacy_config' or 'linode'.
+   *
+   * If 'legacy_config', interfaces field must be type InterfacePayload[]
+   * If 'linode', interfaces field must be type CreateLinodeInterfacePayload[] and Linode
+   * must be created in a region that supports the new interfaces.
+   *
+   * Default value on depends on interfaces_for_new_linodes field in AccountSettings object.
+   */
+  interface_generation?: InterfaceGenerationType;
+  /**
+   * Default value mirrors network_helper in AccountSettings object. Should only be
+   * present when using Linode Interfaces.
+   */
+  network_helper?: boolean;
+  /**
+   * An array of IPv4 addresses for this Linode
+   * Must be empty if Linode is configured to use new Linode Interfaces.
+   */
+  ipv4?: string[];
   /**
    * An object containing user-defined data relevant to the creation of Linodes.
    */

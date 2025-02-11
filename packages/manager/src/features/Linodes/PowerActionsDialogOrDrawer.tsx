@@ -145,9 +145,7 @@ export const PowerActionsDialog = (props: Props) => {
       title={`${action} Linode ${linodeLabel ?? ''}?`}
     >
       {isRebootAction && (
-        <Typography>
-          Are you sure you want to reboot this Linode?
-        </Typography>
+        <Typography>Are you sure you want to reboot this Linode?</Typography>
       )}
       {isPowerOnAction && (
         <Typography
@@ -177,7 +175,7 @@ export const PowerActionsDialog = (props: Props) => {
           loading={configsLoading}
           onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
           options={configOptions}
-          helperText='If no value is selected, the last booted config will be used.'
+          helperText="If no value is selected, the last booted config will be used."
         />
       )}
       {props.action === 'Power Off' && (
