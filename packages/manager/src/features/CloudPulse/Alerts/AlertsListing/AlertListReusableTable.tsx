@@ -11,12 +11,15 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useUpdateEntityToAlert } from 'src/queries/cloudpulse/alerts';
+import {
+  useAddEntityToAlert,
+  useRemoveEntityFromAlert,
+} from 'src/queries/cloudpulse/alerts';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { AlertListReusableTableRow } from './AlertListReusableTableRow';
 
-import type { Alert } from '@linode/api-v4';
+import type { Alert, EntityAlertUpdatePayload } from '@linode/api-v4';
 
 export interface AlertListReusableTableProps {
   /**
@@ -87,19 +90,22 @@ export const AlertListReusableTable = (props: AlertListReusableTableProps) => {
   const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
-  const { mutateAsync: updateEntity } = useUpdateEntityToAlert();
+  const { mutateAsync: addEntity } = useAddEntityToAlert();
+
+  const { mutateAsync: removeEntity } = useRemoveEntityFromAlert();
+
   const handleCancel = () => {
     setIsDialogOpen(false);
   };
 
   const handleConfirm = React.useCallback(
     (alertId: number, serviceType: string, currentStatus: boolean) => {
-      updateEntity({
+      const payLoad: EntityAlertUpdatePayload = {
         alertId,
-        currentStatus,
         entityId,
         serviceType,
-      })
+      };
+      (currentStatus ? removeEntity(payLoad) : addEntity(payLoad))
         .then(() => {
           enqueueSnackbar(
             `The alert settings for ${entityName} saved successfully.`,
@@ -123,7 +129,7 @@ export const AlertListReusableTable = (props: AlertListReusableTableProps) => {
           setIsDialogOpen(false);
         });
     },
-    [enqueueSnackbar, entityId, entityName, updateEntity]
+    [addEntity, enqueueSnackbar, entityId, entityName, removeEntity]
   );
 
   const handleToggle = (alert: Alert) => {

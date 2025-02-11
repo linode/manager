@@ -324,5 +324,4 @@ export interface EntityAlertUpdatePayload {
   serviceType: string;
   entityId: string;
   alertId: number;
-  currentStatus: boolean;
 }

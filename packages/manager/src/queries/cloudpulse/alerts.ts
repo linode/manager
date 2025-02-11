@@ -82,15 +82,21 @@ export const useEditAlertDefinition = () => {
   });
 };
 
-export const useUpdateEntityToAlert = () => {
+export const useAddEntityToAlert = () => {
   return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
     mutationFn: (payload: EntityAlertUpdatePayload) => {
-      const { alertId, currentStatus, entityId, serviceType } = payload;
-      return currentStatus
-        ? deleteEntityFromAlert(serviceType, entityId, alertId)
-        : addEntityToAlert(serviceType, entityId, {
-            'alert-definition-id': alertId,
-          });
+      const { alertId, entityId, serviceType } = payload;
+      return addEntityToAlert(serviceType, entityId, {
+        'alert-definition-id': alertId,
+      });
+    },
+  });
+};
+export const useRemoveEntityFromAlert = () => {
+  return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
+    mutationFn: (payload: EntityAlertUpdatePayload) => {
+      const { alertId, entityId, serviceType } = payload;
+      return deleteEntityFromAlert(serviceType, entityId, alertId);
     },
   });
 };
