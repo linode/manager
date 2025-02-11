@@ -1697,14 +1697,14 @@ describe('LKE cluster updates', () => {
     });
     const mockNodePools = [
       nodePoolFactory.build({
-        nodes: kubeLinodeFactory.buildList(4),
-        count: 4,
+        nodes: kubeLinodeFactory.buildList(10),
+        count: 10,
       }),
       nodePoolFactory.build({
-        nodes: kubeLinodeFactory.buildList(3),
-        count: 3,
+        nodes: kubeLinodeFactory.buildList(5),
+        count: 5,
       }),
-      nodePoolFactory.build({ nodes: [kubeLinodeFactory.build()], count: 1 }),
+      nodePoolFactory.build({ nodes: [kubeLinodeFactory.build()] }),
     ];
     mockGetCluster(mockCluster).as('getCluster');
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
@@ -1713,7 +1713,7 @@ describe('LKE cluster updates', () => {
     cy.wait(['@getCluster', '@getNodePools']);
 
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
-      // Accordion should be collapsed by default since there are more than 3 nodes
+      // Accordion should be collapsed by default since there are more than 9 nodes
       cy.get(`[data-qa-panel-summary]`).should(
         'have.attr',
         'aria-expanded',
@@ -1722,7 +1722,7 @@ describe('LKE cluster updates', () => {
     });
 
     cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
-      // Accordion should be expanded by default since there are not more than 3 nodes
+      // Accordion should be expanded by default since there are not more than 9 nodes
       cy.get(`[data-qa-panel-summary]`).should(
         'have.attr',
         'aria-expanded',
@@ -1731,7 +1731,7 @@ describe('LKE cluster updates', () => {
     });
 
     cy.get(`[data-qa-node-pool-id="${mockNodePools[2].id}"]`).within(() => {
-      // Accordion should be expanded by default since there are not more than 3 nodes
+      // Accordion should be expanded by default since there are not more than 9 nodes
       cy.get(`[data-qa-panel-summary]`).should(
         'have.attr',
         'aria-expanded',

@@ -26,7 +26,7 @@ describe('useDefaultExpandedNodePools', () => {
     expect(result.current.defaultExpandedPools).toStrictEqual([100]);
   });
 
-  it('returns node pools with less than 4 nodes as the default expanded pools if the user has between 1-3 node pools', () => {
+  it('returns node pools with less than 10 nodes as the default expanded pools if the user has between 1-3 node pools', () => {
     const nodePools = [
       nodePoolFactory.build({
         count: 1,
@@ -34,14 +34,14 @@ describe('useDefaultExpandedNodePools', () => {
         nodes: [kubeLinodeFactory.build()],
       }),
       nodePoolFactory.build({
-        count: 5,
+        count: 10,
         id: 101,
-        nodes: kubeLinodeFactory.buildList(5),
+        nodes: kubeLinodeFactory.buildList(10),
       }),
       nodePoolFactory.build({
-        count: 3,
+        count: 6,
         id: 102,
-        nodes: kubeLinodeFactory.buildList(3),
+        nodes: kubeLinodeFactory.buildList(6),
       }),
     ];
 

@@ -156,32 +156,6 @@ export const NodePoolsDisplay = (props: Props) => {
           <Typography variant="h2">Node Pools</Typography>
         </Stack>
         <Stack alignItems="center" direction="row" spacing={1}>
-          {(expandedAccordions === undefined &&
-            defaultExpandedPools.length > 0) ||
-          (expandedAccordions && expandedAccordions.length > 0) ? (
-            <Button
-              buttonType="secondary"
-              compactX
-              endIcon={<ExpandLessIcon />}
-              onClick={() => setExpandedAccordions([])}
-              sx={{ '& span': { marginLeft: 0.5 } }}
-            >
-              Collapse All Pools
-            </Button>
-          ) : (
-            <Button
-              onClick={() => {
-                const expandedAccordions = _pools?.map(({ id }) => id) ?? [];
-                setExpandedAccordions(expandedAccordions);
-              }}
-              buttonType="secondary"
-              compactX
-              endIcon={<ExpandMoreIcon />}
-              sx={{ '& span': { marginLeft: 0.5 } }}
-            >
-              Expand All Pools
-            </Button>
-          )}
           <FormLabel htmlFor={ariaIdentifier}>
             <Typography ml={1} mr={1}>
               Status
@@ -201,6 +175,38 @@ export const NodePoolsDisplay = (props: Props) => {
             placeholder="Select a status"
             sx={{ width: 130 }}
           />
+          {(expandedAccordions === undefined &&
+            defaultExpandedPools.length > 0) ||
+          (expandedAccordions && expandedAccordions.length > 0) ? (
+            <Button
+              sx={{
+                '& span': { marginLeft: 0.5 },
+                paddingLeft: 0.5,
+                paddingRight: 0.5,
+              }}
+              buttonType="secondary"
+              endIcon={<ExpandLessIcon />}
+              onClick={() => setExpandedAccordions([])}
+            >
+              Collapse All Pools
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                const expandedAccordions = _pools?.map(({ id }) => id) ?? [];
+                setExpandedAccordions(expandedAccordions);
+              }}
+              sx={{
+                '& span': { marginLeft: 0.5 },
+                paddingLeft: 0.5,
+                paddingRight: 0.5,
+              }}
+              buttonType="secondary"
+              endIcon={<ExpandMoreIcon />}
+            >
+              Expand All Pools
+            </Button>
+          )}
           <Button
             buttonType="outlined"
             onClick={() => setIsRecycleClusterOpen(true)}

@@ -24,8 +24,8 @@ export const useDefaultExpandedNodePools = (
           return false;
         }
         // Otherwise, if the user has between 1-3 node pools:
-        // If the node pool has 1-3 nodes, keep it expanded
-        if (pool.count <= 3) {
+        // If the node pool has <10 nodes, keep it expanded
+        if (pool.count < 10) {
           return true;
         }
         // Collapse everything else
