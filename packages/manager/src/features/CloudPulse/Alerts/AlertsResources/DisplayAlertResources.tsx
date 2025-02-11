@@ -1,4 +1,11 @@
-import { Box, Checkbox, Chip, Tooltip, Typography } from '@linode/ui';
+import {
+  Box,
+  Checkbox,
+  Chip,
+  StyledTagButton,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
@@ -238,10 +245,35 @@ export const DisplayAlertResources = React.memo(
                           {label !== 'Tags' && accessor(resource)}
                           {label === 'Tags' && resource.tags?.length && (
                             <Box alignItems={'center'} display={'flex'} gap={1}>
-                              <Typography variant="body2">
-                                {resource.tags[0]}
-                              </Typography>
-                              <Tooltip title={resource.tags.join(',')}>
+                              <Chip
+                                sx={(theme) => ({
+                                  backgroundColor: theme.color.tagButtonBg,
+                                })}
+                                label={resource.tags[0]}
+                                // title="chip"
+                              />
+                              <Tooltip
+                                title={
+                                  <Box
+                                    alignItems={'center'}
+                                    display={'flex'}
+                                    flexDirection={'column'}
+                                    gap={1}
+                                  >
+                                    {resource.tags.map(
+                                      (tag, index) =>
+                                        index > 0 && (
+                                          <Typography
+                                            key={index}
+                                            variant="body2"
+                                          >
+                                            {tag}
+                                          </Typography>
+                                        )
+                                    )}
+                                  </Box>
+                                }
+                              >
                                 <span>
                                   <Chip
                                     label={`+${
@@ -249,6 +281,10 @@ export const DisplayAlertResources = React.memo(
                                         ? resource.tags.length - 1
                                         : ''
                                     }`}
+                                    sx={(theme) => ({
+                                      backgroundColor: theme.color.tagButtonBg,
+                                    })}
+                                    // title="chip"
                                   />
                                 </span>
                               </Tooltip>
