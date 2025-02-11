@@ -171,7 +171,10 @@ describe('Tests for API error handling', () => {
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
 
-    cy.get('body').click('topRight');
+    ui.button
+    .findByAttribute('aria-label', 'Close')
+    .should('be.visible')
+    .click();
 
     // Select a Node from the autocomplete input.
     ui.autocomplete
@@ -245,7 +248,10 @@ describe('Tests for API error handling', () => {
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
 
-    cy.get('body').click('topRight');
+    ui.button
+    .findByAttribute('aria-label', 'Close')
+    .should('be.visible')
+    .click();
 
     // Select a Node from the autocomplete input.
     ui.autocomplete
@@ -310,8 +316,6 @@ describe('Tests for API error handling', () => {
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
-    cy.get('body').click('topRight');
-
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();
     ui.regionSelect
@@ -327,7 +331,10 @@ describe('Tests for API error handling', () => {
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
 
-    cy.get('body').click('topRight');
+    ui.button
+    .findByAttribute('aria-label', 'Close')
+    .should('be.visible')
+    .click();
     
     //  Select a node type from the autocomplete input.
     ui.autocomplete
