@@ -1,6 +1,7 @@
 import { Box, Checkbox, Chip, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
+import NullComponent from 'src/components/NullComponent';
 import { sortData } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -236,7 +237,7 @@ export const DisplayAlertResources = React.memo(
                           key={label}
                         >
                           {label !== 'Tags' && accessor(resource)}
-                          {label === 'Tags' && resource.tags?.length && (
+                          {label === 'Tags' && (
                             <ShowExtraTags tags={resource.tags} />
                           )}
                         </TableCell>
@@ -286,10 +287,13 @@ export const DisplayAlertResources = React.memo(
 );
 
 interface TagsProp {
-  tags: string[];
+  tags?: string[];
 }
 
 export const ShowExtraTags = ({ tags }: TagsProp) => {
+  if (!tags?.length) {
+    return <NullComponent />;
+  }
   return (
     <Box alignItems="center" display="flex" gap={1}>
       <Chip
