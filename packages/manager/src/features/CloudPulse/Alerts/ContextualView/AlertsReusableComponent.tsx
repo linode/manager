@@ -15,12 +15,12 @@ import InfoIcon from 'src/assets/icons/info.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/alerts';
 
-import { AlertListReusableTable } from '../AlertsListing/AlertListReusableTable';
 import { AlertContextualViewTableHeaderMap } from '../AlertsListing/constants';
 import {
   convertAlertsToTypeSet,
   filterAlertsByStatusAndType,
 } from '../Utils/utils';
+import { AlertListReusableTable } from './AlertInformationActionTable';
 
 import type { AlertDefinitionType } from '@linode/api-v4';
 

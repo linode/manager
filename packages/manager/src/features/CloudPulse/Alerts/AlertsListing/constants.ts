@@ -1,5 +1,4 @@
-import type { TableColumnHeader } from './AlertListReusableTable';
-
+import type { TableColumnHeader } from '../ContextualView/AlertInformationActionTable';
 import type { AlertStatusType, AlertStatusUpdateType } from '@linode/api-v4';
 
 export const AlertListingTableLabelMap = [

@@ -4,7 +4,7 @@ import { alertFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { processMetricCriteria } from '../Utils/utils';
-import { AlertListReusableTableRow } from './AlertListReusableTableRow';
+import { AlertListReusableTableRow } from './AlertInformationActionRow';
 
 describe('Alert list table row', () => {
   it('Should display the data', () => {

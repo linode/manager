@@ -17,7 +17,7 @@ import {
 } from 'src/queries/cloudpulse/alerts';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
-import { AlertListReusableTableRow } from './AlertListReusableTableRow';
+import { AlertListReusableTableRow } from './AlertInformationActionRow';
 
 import type { Alert, EntityAlertUpdatePayload } from '@linode/api-v4';
 
