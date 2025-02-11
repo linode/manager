@@ -1,5 +1,6 @@
 import { Box } from '@linode/ui';
 import { Grid, TableBody, TableHead } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import OrderBy from 'src/components/OrderBy';
@@ -10,6 +11,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useUpdateEntityToAlert } from 'src/queries/cloudpulse/alerts';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { AlertListReusableTableRow } from './AlertListReusableTableRow';
@@ -81,23 +83,48 @@ export const AlertListReusableTable = (props: AlertListReusableTableProps) => {
   const [alertStatusMap, setAlertStatusMap] = React.useState<AlertStatusMap>(
     generateStatusMap(alerts, entityId)
   );
-
+  const { enqueueSnackbar } = useSnackbar();
   const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
+  const { mutateAsync: updateEntity } = useUpdateEntityToAlert();
   const handleCancel = () => {
     setIsDialogOpen(false);
   };
 
-  const handleConfirm = (id: number) => {
-    setIsDialogOpen(false);
-    setAlertStatusMap((previousValue) => {
-      return {
-        ...previousValue,
-        [id]: !previousValue[id],
-      };
-    });
-  };
+  const handleConfirm = React.useCallback(
+    (alertId: number, serviceType: string, currentStatus: boolean) => {
+      updateEntity({
+        alertId,
+        currentStatus,
+        entityId,
+        serviceType,
+      })
+        .then(() => {
+          enqueueSnackbar(
+            `The alert settings for ${entityName} saved successfully.`,
+            { variant: 'success' }
+          );
+          setIsDialogOpen(false);
+          setAlertStatusMap((previousValue) => {
+            return {
+              ...previousValue,
+              [alertId]: !previousValue[alertId],
+            };
+          });
+        })
+        .catch(() => {
+          enqueueSnackbar(
+            `${currentStatus ? 'Disabling' : 'Enabling'} alert failed`,
+            {
+              variant: 'error',
+            }
+          );
+          setIsDialogOpen(false);
+        });
+    },
+    [enqueueSnackbar, entityId, entityName, updateEntity]
+  );
 
   const handleToggle = (alert: Alert) => {
     setIsDialogOpen(true);
@@ -175,7 +202,6 @@ export const AlertListReusableTable = (props: AlertListReusableTableProps) => {
       <AlertConfirmationDialog
         alertId={selectedAlert.id}
         alertName={selectedAlert.label}
-        entityId={entityId}
         entityName={entityName}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}

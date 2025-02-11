@@ -19,6 +19,7 @@ import type {
   AlertServiceType,
   CreateAlertDefinitionPayload,
   EditAlertDefinitionPayload,
+  EntityAlertUpdatePayload,
   NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
@@ -83,18 +84,15 @@ export const useEditAlertDefinition = (
   });
 };
 
-export const useUpdateEntityToAlert = (
-  serviceType: string,
-  entityId: string,
-  alertId: number,
-  currentStatus: boolean
-) => {
-  return useMutation<{}, APIError[]>({
-    mutationFn: () =>
-      currentStatus
+export const useUpdateEntityToAlert = () => {
+  return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
+    mutationFn: (payload: EntityAlertUpdatePayload) => {
+      const { alertId, currentStatus, entityId, serviceType } = payload;
+      return currentStatus
         ? deleteEntityFromAlert(serviceType, entityId, alertId)
         : addEntityToAlert(serviceType, entityId, {
             'alert-definition-id': alertId,
-          }),
+          });
+    },
   });
 };

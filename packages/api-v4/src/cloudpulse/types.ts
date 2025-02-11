@@ -310,3 +310,10 @@ export type NotificationChannel =
 export interface EditAlertDefinitionPayload {
   entity_ids: string[];
 }
+
+export interface EntityAlertUpdatePayload {
+  serviceType: string;
+  entityId: string;
+  alertId: number;
+  currentStatus: boolean;
+}

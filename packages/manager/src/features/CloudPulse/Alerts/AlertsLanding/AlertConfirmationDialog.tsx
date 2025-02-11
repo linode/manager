@@ -1,10 +1,8 @@
 import { Typography } from '@linode/ui';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useUpdateEntityToAlert } from 'src/queries/cloudpulse/alerts';
 
 interface AlertConfirmationDialogProps {
   /**
@@ -18,11 +16,6 @@ interface AlertConfirmationDialogProps {
   alertName: string;
 
   /**
-   * id of the selected entity
-   */
-  entityId: string;
-
-  /**
    * name of the selected entity
    */
   entityName: string;
@@ -34,18 +27,23 @@ interface AlertConfirmationDialogProps {
 
   /**
    * handler function for enable/disable button
-   * @param id id of the alert for the selected row
-
+   * @param alertId id of the alert for the selected row
+   * @param serviceType service type of the selected entity
+   * @param currentStatus current state of the toggle button
    */
-  handleConfirm: (id: number) => void;
+  handleConfirm: (
+    alertId: number,
+    serviceType: string,
+    currentStatus: boolean
+  ) => void;
 
   /**
-   * current status of the toggle button whether active or not
+   * current state of the toggle button whether active or not
    */
   isActive: boolean;
 
   /**
-   * current status of the confirmation dialoge whether open or not
+   * current state of the confirmation dialoge whether open or not
    */
   isOpen: boolean;
 
@@ -60,7 +58,6 @@ export const AlertConfirmationDialog = React.memo(
     const {
       alertId,
       alertName,
-      entityId,
       entityName,
       handleCancel,
       handleConfirm,
@@ -69,49 +66,12 @@ export const AlertConfirmationDialog = React.memo(
       serviceType,
     } = props;
 
-    const { enqueueSnackbar } = useSnackbar();
-
-    const { mutateAsync: updateEntity } = useUpdateEntityToAlert(
-      serviceType,
-      entityId,
-      alertId,
-      isActive
-    );
-
-    const handleUpdate = React.useCallback(() => {
-      updateEntity()
-        .then(() => {
-          enqueueSnackbar(
-            `The alert settings for ${entityName} saved successfully.`,
-            { variant: 'success' }
-          );
-          handleConfirm(alertId);
-        })
-        .catch(() => {
-          enqueueSnackbar(
-            `${isActive ? 'Disabling' : 'Enabling'} alert failed`,
-            {
-              variant: 'error',
-            }
-          );
-          handleCancel();
-        });
-    }, [
-      isActive,
-      enqueueSnackbar,
-      entityName,
-      handleCancel,
-      handleConfirm,
-      updateEntity,
-      alertId,
-    ]);
-
     const actionsPanel = React.useCallback(() => {
       return (
         <ActionsPanel
           primaryButtonProps={{
             label: isActive ? 'Disable' : 'Enable',
-            onClick: handleUpdate,
+            onClick: () => handleConfirm(alertId, serviceType, isActive),
           }}
           secondaryButtonProps={{
             label: 'Cancel',
@@ -119,7 +79,7 @@ export const AlertConfirmationDialog = React.memo(
           }}
         />
       );
-    }, [handleCancel, handleUpdate, isActive]);
+    }, [alertId, handleCancel, handleConfirm, isActive, serviceType]);
     return (
       <ConfirmationDialog
         actions={actionsPanel}
