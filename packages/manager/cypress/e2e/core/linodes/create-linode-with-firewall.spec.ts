@@ -20,7 +20,7 @@ import { chooseRegion } from 'support/util/regions';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('Create Linode with Firewall', () => {
-  before(() => {
+  beforeEach(() => {
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: false },
     });

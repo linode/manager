@@ -14,7 +14,7 @@ import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('Create Linode with VLANs', () => {
-  before(() => {
+  beforeEach(() => {
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: false },
     });

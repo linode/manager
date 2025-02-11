@@ -9,8 +9,10 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('Create Linode flow to validate code snippet modal', () => {
-  mockAppendFeatureFlags({
-    linodeInterfaces: { enabled: false },
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
   });
   /*
    * tests for create Linode flow to validate code snippet modal.

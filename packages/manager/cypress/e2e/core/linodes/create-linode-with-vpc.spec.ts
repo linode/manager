@@ -33,7 +33,7 @@ import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('Create Linode with VPCs', () => {
-  before(() => {
+  beforeEach(() => {
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: false },
     });

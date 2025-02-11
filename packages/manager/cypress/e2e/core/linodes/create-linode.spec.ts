@@ -46,11 +46,13 @@ let username: string;
 authenticate();
 describe('Create Linode', () => {
   before(() => {
+    cleanUp('linodes');
+    cleanUp('ssh-keys');
+  });
+  beforeEach(() => {
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: false },
     });
-    cleanUp('linodes');
-    cleanUp('ssh-keys');
   });
 
   /*
