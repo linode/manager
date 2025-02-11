@@ -108,13 +108,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
     data: regions,
     isError: isRegionsError,
-    isFetching: isRegionsFetching,
+    isLoading: isRegionsFetching,
   } = useRegionsQuery();
 
   const {
     data: resources,
     isError: isResourcesError,
-    isFetching: isResourcesFetching,
+    isLoading: isResourcesFetching,
   } = useResourcesQuery(
     Boolean(serviceType),
     serviceType,
