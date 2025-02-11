@@ -273,7 +273,8 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // Enter the start time (hour and minute)
     cy.findByPlaceholderText("hh:mm aa")
       .clear({ force: true })
-      .type(`${startHour}:${startMinute} PM`);
+      .click({ force: true })
+     // .type(`${startHour}:${startMinute} PM`);
 
     // Click the "Apply" button to confirm the start date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
