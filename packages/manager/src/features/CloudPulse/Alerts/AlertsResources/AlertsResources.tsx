@@ -83,14 +83,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     if (serviceType !== 'dbaas') {
-      return undefined;
+      return undefined; // No x-filters needed for other serviceTypes
     }
 
-    // If the serviceType is 'dbaas', always include the platform filter
-    const platformFilter: Filter | undefined =
-      serviceType === 'dbaas' ? { platform: 'rdbms-default' } : undefined;
+    // Always include platform filter for 'dbaas'
+    const platformFilter: Filter = { platform: 'rdbms-default' };
 
-    // If alertType is not 'system' or alertClass is not defined, return only the platform filter (if applicable)
+    // If alertType is not 'system' or alertClass is not defined, return only platform filter
     if (alertType !== 'system' || !alertClass) {
       return platformFilter;
     }
@@ -102,8 +101,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       },
     };
 
-    // Combine platform and type filters
-    return platformFilter ? { ...platformFilter, ...typeFilter } : typeFilter;
+    // Combine both filters
+    return { ...platformFilter, ...typeFilter };
   }, [alertClass, alertType, serviceType]);
 
   const {
