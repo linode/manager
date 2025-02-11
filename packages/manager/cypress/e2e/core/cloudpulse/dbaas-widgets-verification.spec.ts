@@ -297,7 +297,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
   });
 
-  it.only('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
+  it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
