@@ -70,9 +70,9 @@ export const nbConfigPanelMockPropsForTest: NodeBalancerConfigPanelProps = {
 const activeHealthChecksFormInputs = ['Interval', 'Timeout', 'Attempts'];
 
 const activeHealthChecksHelperText = [
-  'Seconds between health check probes',
-  'Seconds to wait before considering the probe a failure. 1-30. Must be less than check_interval.',
-  'Number of failed probes before taking a node out of rotation. 1-30',
+  'Seconds (2-3600) between health check probes.',
+  'Seconds to wait (1-30) before considering the probe a failure. Must be less than Interval.',
+  'Number of failed probes (1-30) before taking a node out of rotation.',
 ];
 
 const sslCertificate = 'ssl-certificate';
