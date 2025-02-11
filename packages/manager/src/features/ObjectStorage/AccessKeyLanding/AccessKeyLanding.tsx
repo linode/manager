@@ -269,7 +269,7 @@ export const AccessKeyLanding = (props: Props) => {
   return (
     <div>
       <DocumentTitleSegment
-        segment={`${accessDrawerOpen ? `Create a Access Key` : `Access Keys`}`}
+        segment={`${accessDrawerOpen ? `Create an Access Key` : `Access Keys`}`}
       />
       <AccessKeyTable
         data={data?.data}

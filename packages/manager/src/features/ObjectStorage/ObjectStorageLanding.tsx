@@ -122,9 +122,7 @@ export const ObjectStorageLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment
-        segment={`${
-          isCreateBucketOpen ? 'Create a Object Storage' : 'Object Storage'
-        }`}
+        segment={`${isCreateBucketOpen ? 'Create a Bucket' : 'Object Storage'}`}
       />
       <LandingHeader
         breadcrumbProps={{ pathname: '/object-storage' }}
