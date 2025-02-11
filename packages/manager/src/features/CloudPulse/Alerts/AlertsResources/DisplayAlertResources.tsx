@@ -250,7 +250,6 @@ export const DisplayAlertResources = React.memo(
                                   backgroundColor: theme.color.tagButtonBg,
                                 })}
                                 label={resource.tags[0]}
-                                // title="chip"
                               />
                               <Tooltip
                                 title={
@@ -284,7 +283,6 @@ export const DisplayAlertResources = React.memo(
                                     sx={(theme) => ({
                                       backgroundColor: theme.color.tagButtonBg,
                                     })}
-                                    // title="chip"
                                   />
                                 </span>
                               </Tooltip>
