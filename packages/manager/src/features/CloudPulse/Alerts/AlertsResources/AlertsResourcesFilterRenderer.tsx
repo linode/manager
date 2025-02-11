@@ -10,11 +10,9 @@ export interface AlertResourcesFilterRendererProps {
   /**
    * The filter component to be rendered (e.g., `AlertsEngineTypeFilter`, `AlertsRegionFilter`).
    */
-  component?:
-    | MemoExoticComponent<
-        React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>
-      >
-    | undefined;
+  component?: MemoExoticComponent<
+    React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>
+  >;
   /**
    * Props that will be passed to the filter component.
    */

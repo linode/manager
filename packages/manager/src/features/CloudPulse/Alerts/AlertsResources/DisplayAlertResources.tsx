@@ -144,7 +144,7 @@ export const DisplayAlertResources = React.memo(
       },
       [handleSelection]
     );
-    const columns = serviceTypeBasedColumns[serviceType ?? ''] ?? [];
+    const columns = serviceTypeBasedColumns[serviceType ?? ''];
     const colSpanCount = isSelectionsNeeded
       ? columns.length + 1
       : columns.length;
