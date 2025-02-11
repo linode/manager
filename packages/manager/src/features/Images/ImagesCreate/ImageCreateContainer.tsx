@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 
-import ImageCreate from './ImageCreate';
+import { ImageCreate } from './ImageCreate';
 
 export const ImagesCreateContainer = () => {
   return (
@@ -21,5 +21,3 @@ export const ImagesCreateContainer = () => {
     </Grid>
   );
 };
-
-export default ImagesCreateContainer;

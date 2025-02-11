@@ -10,6 +10,7 @@ import * as entityHeader from './entity-header';
 import * as fileUpload from './file-upload';
 import * as heading from './heading';
 import * as landingPageEmptyStateResources from './landing-page-empty-state-resources';
+import * as mainSearch from './main-search';
 import * as nav from './nav';
 import * as pagination from './pagination';
 import * as select from './select';
@@ -32,6 +33,7 @@ export const ui = {
   ...fileUpload,
   ...heading,
   ...landingPageEmptyStateResources,
+  ...mainSearch,
   ...nav,
   ...pagination,
   ...select,

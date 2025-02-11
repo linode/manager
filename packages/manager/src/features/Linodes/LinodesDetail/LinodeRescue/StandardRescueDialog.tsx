@@ -1,7 +1,7 @@
 import { Button, Notice, Paper, clamp } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
-import { assoc, equals, pathOr } from 'ramda';
+import { assoc, equals } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -218,10 +218,12 @@ export const StandardRescueDialog = (props: Props) => {
             {isReadOnly && <LinodePermissionsError />}
             {linodeId ? <RescueDescription linodeId={linodeId} /> : null}
             <DeviceSelection
+              getSelected={(slot) =>
+                rescueDevices?.[slot as keyof DevicesAsStrings] ?? ''
+              }
               counter={counter}
               devices={devices}
               disabled={disabled}
-              getSelected={(slot) => pathOr('', [slot], rescueDevices)}
               onChange={onChange}
               rescue
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}

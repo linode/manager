@@ -1,5 +1,3 @@
-import { Interface } from 'src/linodes';
-
 export interface VPC {
   id: number;
   label: string;
@@ -39,9 +37,29 @@ export interface ModifySubnetPayload {
   label: string;
 }
 
-export type SubnetLinodeInterfaceData = Pick<Interface, 'active' | 'id'>;
+export interface SubnetLinodeInterfaceData {
+  id: number;
+  active: boolean;
+  config_id: number | null;
+}
 
 export interface SubnetAssignedLinodeData {
   id: number;
   interfaces: SubnetLinodeInterfaceData[];
+}
+
+export interface VPCIP {
+  active: boolean;
+  address: string | null;
+  address_range: string | null;
+  config_id: number | null;
+  gateway: string | null;
+  interface_id: number;
+  linode_id: number;
+  nat_1_1: string;
+  prefix: number | null;
+  region: string;
+  subnet_id: number;
+  subnet_mask: string;
+  vpc_id: number;
 }

@@ -1,6 +1,5 @@
 import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
@@ -38,11 +37,7 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
   const { clientLabel, isOpen, longviewClientData, onClose } = props;
   const theme = useTheme();
 
-  const lvPackages: LongviewPackage[] = pathOr(
-    [],
-    ['Packages'],
-    longviewClientData
-  );
+  const lvPackages: LongviewPackage[] = longviewClientData?.Packages ?? [];
 
   return (
     <Drawer

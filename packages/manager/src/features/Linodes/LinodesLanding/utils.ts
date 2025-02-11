@@ -1,6 +1,6 @@
-import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes';
-
 import { reportException } from 'src/exceptionReporting';
+
+import type { Config, LinodeStatus } from '@linode/api-v4/lib/linodes';
 
 export const parseMaintenanceStartTime = (startTime?: null | string) => {
   if (!startTime) {
@@ -56,9 +56,11 @@ export const getLinodeIconStatus = (status: LinodeStatus) => {
 export const getVPCsFromLinodeConfigs = (configs: Config[]): number[] => {
   const vpcIds = new Set<number>();
   for (const config of configs) {
-    for (const linodeInterface of config.interfaces) {
-      if (linodeInterface.purpose === 'vpc' && linodeInterface.vpc_id) {
-        vpcIds.add(linodeInterface.vpc_id);
+    if (config.interfaces) {
+      for (const linodeInterface of config.interfaces) {
+        if (linodeInterface.purpose === 'vpc' && linodeInterface.vpc_id) {
+          vpcIds.add(linodeInterface.vpc_id);
+        }
       }
     }
   }

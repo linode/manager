@@ -1,6 +1,8 @@
-import { clone, lensPath, pathOr, set } from 'ramda';
+import { clone, lensPath, set } from 'ramda';
 
-import { Stat, StatWithDummyPoint } from '../request.types';
+import { pathOr } from 'src/utilities/pathOr';
+
+import type { StatWithDummyPoint } from '../request.types';
 
 // This formatting is from Classic
 export const formatCPU = (n: number) => {
@@ -85,7 +87,7 @@ export const pathMaybeAddDataInThePast = <T extends {}>(
   let _data = clone(data);
 
   pathsToAddDataPointTo.forEach((eachPath) => {
-    const arrayOfStats = pathOr<Stat[]>([], eachPath, data);
+    const arrayOfStats = pathOr<StatWithDummyPoint[], T>([], eachPath, data);
     const updatedData = maybeAddPastData(
       arrayOfStats,
       selectedStartTimeInSeconds
@@ -101,7 +103,7 @@ export const maybeAddPastData = (
   startTime: number
 ): StatWithDummyPoint[] => {
   const _data = clone(arrayOfStats) as StatWithDummyPoint[];
-  if (pathOr(0, [0, 'x'], arrayOfStats) - startTime > 60 * 5) {
+  if ((arrayOfStats[0]?.x ?? 0) - startTime > 60 * 5) {
     _data.unshift({ x: startTime, y: null });
   }
   return _data;

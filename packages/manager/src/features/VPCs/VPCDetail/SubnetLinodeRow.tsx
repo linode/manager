@@ -138,7 +138,7 @@ export const SubnetLinodeRow = (props: Props) => {
   const isRebootNeeded =
     isRunning &&
     configs?.some((config) =>
-      config.interfaces.some(
+      config.interfaces?.some(
         (linodeInterface) =>
           linodeInterface.purpose === 'vpc' && !linodeInterface.active
       )

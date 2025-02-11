@@ -49,7 +49,7 @@ export const DisplayAlertDetailChips = React.memo(
       : [];
     const theme = useTheme();
     return (
-      <Grid container item spacing={1}>
+      <Grid container data-qa-item={label} item spacing={1}>
         {chipValues.map((value, index) => (
           <React.Fragment key={`${label}_${index}`}>
             <Grid item md={labelGridColumns} xs={12}>
@@ -78,6 +78,7 @@ export const DisplayAlertDetailChips = React.memo(
                         length: value.length,
                         mergeChips,
                       })}
+                      data-qa-chip={label}
                       label={label}
                       variant="outlined"
                     />

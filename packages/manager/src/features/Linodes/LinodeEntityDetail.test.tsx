@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import {
   accountFactory,
+  kubernetesClusterFactory,
   linodeFactory,
   subnetAssignedLinodeDataFactory,
   subnetFactory,
@@ -35,6 +36,7 @@ describe('Linode Entity Detail', () => {
 
   const vpcSectionTestId = 'vpc-section-title';
   const assignedVPCLabelTestId = 'assigned-vpc-label';
+  const assignedLKEClusterLabelTestId = 'assigned-lke-cluster-label';
 
   const mocks = vi.hoisted(() => {
     return {
@@ -117,6 +119,47 @@ describe('Linode Entity Detail', () => {
     await waitFor(() => {
       expect(getByTestId(vpcSectionTestId)).toBeInTheDocument();
       expect(getByTestId(assignedVPCLabelTestId).innerHTML).toEqual('test-vpc');
+    });
+  });
+
+  it('should not display the LKE section if the linode is not associated with an LKE cluster', async () => {
+    const { queryByTestId } = renderWithTheme(
+      <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
+    );
+
+    await waitFor(() => {
+      expect(
+        queryByTestId(assignedLKEClusterLabelTestId)
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it('should display the LKE section if the linode is associated with an LKE cluster', async () => {
+    const mockLKELinode = linodeFactory.build({ lke_cluster_id: 42 });
+
+    const mockCluster = kubernetesClusterFactory.build({
+      id: 42,
+      label: 'test-cluster',
+    });
+
+    server.use(
+      http.get('*/lke/clusters/:clusterId', () => {
+        return HttpResponse.json(mockCluster);
+      })
+    );
+
+    const { getByTestId } = renderWithTheme(
+      <LinodeEntityDetail handlers={handlers} id={10} linode={mockLKELinode} />,
+      {
+        queryClient,
+      }
+    );
+
+    await waitFor(() => {
+      expect(getByTestId(assignedLKEClusterLabelTestId)).toBeInTheDocument();
+      expect(getByTestId(assignedLKEClusterLabelTestId).innerHTML).toEqual(
+        'test-cluster'
+      );
     });
   });
 

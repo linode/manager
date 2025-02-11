@@ -3,6 +3,7 @@ import {
   mockGetCustomImages,
   mockGetRecoveryImages,
   mockUpdateImageRegions,
+  mockGetImage,
 } from 'support/intercepts/images';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
@@ -37,6 +38,7 @@ describe('Manage Image Replicas', () => {
     mockGetRegions([region1, region2, region3, region4]).as('getRegions');
     mockGetCustomImages([image]).as('getImages');
     mockGetRecoveryImages([]);
+    mockGetImage(image.id, image).as('getImage');
 
     cy.visitWithLogin('/images');
     cy.wait(['@getImages', '@getRegions']);
@@ -53,6 +55,8 @@ describe('Manage Image Replicas', () => {
           .should('be.enabled')
           .click();
       });
+
+    cy.wait('@getImage');
 
     // Verify the Manage Replicas drawer opens and contains basic content
     ui.drawer

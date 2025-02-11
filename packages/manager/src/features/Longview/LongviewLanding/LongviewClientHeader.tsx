@@ -1,6 +1,5 @@
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -21,7 +20,6 @@ import {
 } from './LongviewClientHeader.styles';
 import { RestrictedUserLabel } from './RestrictedUserLabel';
 
-import type { LongviewPackage } from '../request.types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { DispatchProps } from 'src/containers/longview.container';
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
@@ -74,19 +72,12 @@ export const LongviewClientHeader = enhanced(
         });
     };
 
-    const hostname = pathOr(
-      'Hostname not available',
-      ['SysInfo', 'hostname'],
-      longviewClientData
-    );
-    const uptime = pathOr<null | number>(null, ['Uptime'], longviewClientData);
+    const hostname =
+      longviewClientData.SysInfo?.hostname ?? 'Hostname not available';
+    const uptime = longviewClientData?.uptime ?? null;
     const formattedUptime =
       uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
-    const packages = pathOr<LongviewPackage[] | null>(
-      null,
-      ['Packages'],
-      longviewClientData
-    );
+    const packages = longviewClientData?.Packages ?? null;
     const numPackagesToUpdate = packages ? packages.length : 0;
     const packagesToUpdate = getPackageNoticeText(packages);
 

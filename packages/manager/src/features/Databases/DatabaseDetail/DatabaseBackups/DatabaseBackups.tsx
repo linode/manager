@@ -102,7 +102,7 @@ export const DatabaseBackups = (props: Props) => {
   const isDefaultDatabase = database?.platform === 'rdbms-default';
 
   const oldestBackup = database?.oldest_restore_time
-    ? DateTime.fromISO(database.oldest_restore_time)
+    ? DateTime.fromISO(`${database.oldest_restore_time}Z`)
     : null;
 
   const unableToRestoreCopy = !oldestBackup
@@ -206,6 +206,9 @@ export const DatabaseBackups = (props: Props) => {
             <FormControl style={{ marginTop: 0 }}>
               {/* TODO: Replace Time Select to the own custom date-time picker component when it's ready */}
               <Autocomplete
+                disabled={
+                  disabled || !selectedDate || versionOption === 'newest'
+                }
                 getOptionDisabled={(option) =>
                   isTimeOutsideBackup(
                     option.value,
@@ -231,9 +234,6 @@ export const DatabaseBackups = (props: Props) => {
                 }}
                 autoComplete={false}
                 className={classes.timeAutocomplete}
-                disabled={
-                  disabled || !selectedDate || versionOption === 'newest'
-                }
                 label=""
                 onChange={(_, newTime) => setSelectedTime(newTime)}
                 options={TIME_OPTIONS}

@@ -52,7 +52,7 @@ describe('Search Volumes', () => {
         cy.findByText(volume2.label).should('be.visible');
 
         // Use the main search bar to search and filter volumes
-        cy.get('[id="main-search"').type(volume2.label);
+        ui.mainSearch.find().type(volume2.label);
         ui.autocompletePopper.findByTitle(volume2.label).click();
 
         // Confirm that only the second volume is shown.

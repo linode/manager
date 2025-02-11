@@ -1,5 +1,4 @@
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Typography } from '@linode/ui';
 import {
   Box,
   Button,
@@ -17,7 +16,6 @@ import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
 
-import { Code } from 'src/components/Code/Code';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell/TableCell';
@@ -27,6 +25,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
 import { useOrder } from 'src/hooks/useOrder';
 import {
   useStackScriptQuery,
@@ -176,36 +175,12 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             </InputAdornment>
           ),
         }}
-        tooltipText={
-          <Stack spacing={1}>
-            <Typography>
-              You can search for a specific item by prepending your search term
-              with "username:", "label:", or "description:".
-            </Typography>
-            <Box>
-              <Typography fontFamily={(theme) => theme.font.bold}>
-                Examples
-              </Typography>
-              <Typography fontSize="0.8rem">
-                <Code>username: linode</Code>
-              </Typography>
-              <Typography fontSize="0.8rem">
-                <Code>label: sql</Code>
-              </Typography>
-              <Typography fontSize="0.8rem">
-                <Code>description: "ubuntu server"</Code>
-              </Typography>
-              <Typography fontSize="0.8rem">
-                <Code>label: sql or label: php</Code>
-              </Typography>
-            </Box>
-          </Stack>
-        }
         hideLabel
         label="Search"
         onChange={debounce(400, (e) => setQuery(e.target.value))}
         placeholder="Search StackScripts"
         spellCheck={false}
+        tooltipText={<StackScriptSearchHelperText />}
         tooltipWidth={300}
         value={query}
       />

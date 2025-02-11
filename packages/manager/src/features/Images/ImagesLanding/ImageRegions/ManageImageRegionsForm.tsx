@@ -116,6 +116,7 @@ export const ManageImageReplicasForm = (props: Props) => {
         currentCapability="Object Storage" // Images use Object Storage as the storage backend
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
+        ignoreAccountAvailability // Ignore the account capability because we are just using "Object Storage" for region compatibility
         label="Add Regions"
         placeholder="Select regions or type to search"
         regions={regions?.filter((r) => r.site_type === 'core') ?? []}

@@ -4,13 +4,17 @@ import { firewallQueries } from 'src/queries/firewalls';
 import { useCreateFirewall } from 'src/queries/firewalls';
 
 import type { DialogState } from './GenerateFirewallDialog';
-import type { CreateFirewallPayload, Firewall } from '@linode/api-v4';
+import type {
+  CreateFirewallPayload,
+  Firewall,
+  FirewallTemplateSlug,
+} from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 
 export const useCreateFirewallFromTemplate = (options: {
   onFirewallGenerated?: (firewall: Firewall) => void;
   setDialogState: (state: DialogState) => void;
-  templateSlug: string;
+  templateSlug: FirewallTemplateSlug;
 }) => {
   const { onFirewallGenerated, setDialogState, templateSlug } = options;
   const queryClient = useQueryClient();
@@ -44,7 +48,7 @@ export const useCreateFirewallFromTemplate = (options: {
 const createFirewallFromTemplate = async (options: {
   createFirewall: (firewall: CreateFirewallPayload) => Promise<Firewall>;
   queryClient: QueryClient;
-  templateSlug: string;
+  templateSlug: FirewallTemplateSlug;
   updateProgress: (progress: number | undefined) => void;
 }): Promise<Firewall> => {
   const { createFirewall, queryClient, templateSlug, updateProgress } = options;
@@ -66,7 +70,7 @@ const createFirewallFromTemplate = async (options: {
 };
 
 const getUniqueFirewallLabel = (
-  templateSlug: string,
+  templateSlug: FirewallTemplateSlug,
   firewalls: Firewall[]
 ) => {
   let iterator = 1;
@@ -79,7 +83,10 @@ const getUniqueFirewallLabel = (
   return firewallLabelFromSlug(templateSlug, iterator);
 };
 
-const firewallLabelFromSlug = (slug: string, iterator: number) => {
+const firewallLabelFromSlug = (
+  slug: FirewallTemplateSlug,
+  iterator: number
+) => {
   const MAX_LABEL_LENGTH = 32;
   const iteratorSuffix = `-${iterator}`;
   return (

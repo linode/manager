@@ -9,12 +9,12 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -45,19 +45,18 @@ import { uploadImageFile } from '../requests';
 import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
 import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 
-import type {
-  ImageUploadFormData,
-  ImageUploadNavigationState,
-} from './ImageUpload.utils';
+import type { ImageUploadFormData } from './ImageUpload.utils';
 import type { AxiosError, AxiosProgressEvent } from 'axios';
 import type { Dispatch } from 'src/hooks/types';
 
 export const ImageUpload = () => {
-  const { location } = useHistory<ImageUploadNavigationState | undefined>();
+  const { imageDescription, imageLabel } = useSearch({
+    strict: false,
+  });
+  const navigate = useNavigate();
 
   const dispatch = useDispatch<Dispatch>();
   const hasPendingUpload = usePendingUpload();
-  const { push } = useHistory();
   const flags = useFlags();
 
   const [uploadProgress, setUploadProgress] = useState<AxiosProgressEvent>();
@@ -74,8 +73,8 @@ export const ImageUpload = () => {
 
   const form = useForm<ImageUploadFormData>({
     defaultValues: {
-      description: location.state?.imageDescription,
-      label: location.state?.imageLabel,
+      description: imageDescription,
+      label: imageLabel,
     },
     mode: 'onBlur',
     resolver: yupResolver(ImageUploadSchema),
@@ -125,7 +124,7 @@ export const ImageUpload = () => {
           dispatch(setPendingUpload(false));
         });
 
-        push('/images');
+        navigate({ search: () => ({}), to: '/images' });
       } catch (error) {
         // Handle an Axios error for the actual image upload
         form.setError('root', { message: (error as AxiosError).message });
@@ -173,7 +172,7 @@ export const ImageUpload = () => {
 
     dispatch(setPendingUpload(false));
 
-    push(nextLocation);
+    navigate({ search: () => ({}), to: nextLocation });
   };
 
   return (
@@ -257,11 +256,6 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <RegionSelect
-                  currentCapability={
-                    flags.disallowImageUploadToNonObjRegions
-                      ? 'Object Storage'
-                      : undefined
-                  }
                   disabled={
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
@@ -269,6 +263,7 @@ export const ImageUpload = () => {
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
+                  currentCapability="Object Storage" // Images use Object Storage as their storage backend
                   disableClearable
                   errorText={fieldState.error?.message}
                   ignoreAccountAvailability

@@ -105,9 +105,8 @@ export const transformConfigsForRequest = (
         check_interval: !isNil(config.check_interval)
           ? +config.check_interval
           : undefined,
-        check_passive: shouldIncludePassiveCheck(config)
-          ? config.check_passive
-          : undefined,
+        // Passive checks must be false for UDP
+        check_passive: config.protocol === 'udp' ? false : config.check_passive,
         check_path: shouldIncludeCheckPath(config)
           ? config.check_path
           : undefined,
@@ -146,6 +145,7 @@ export const transformConfigsForRequest = (
             ? undefined
             : config.ssl_key || undefined,
         stickiness: config.stickiness || undefined,
+        udp_check_port: config.udp_check_port,
       }
     ) as unknown) as NodeBalancerConfigFields;
   });
@@ -160,11 +160,6 @@ export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
     (config.check === 'http' || config.check === 'http_body') &&
     config.check_path
   );
-};
-
-const shouldIncludePassiveCheck = (config: NodeBalancerConfigFields) => {
-  // UDP does not support passive checks
-  return config.protocol !== 'udp';
 };
 
 export const shouldIncludeCheckBody = (config: NodeBalancerConfigFields) => {
@@ -198,6 +193,7 @@ export const setErrorMap = (errors: APIError[]) =>
       'ssl_key',
       'stickiness',
       'nodes',
+      'udp_check_port',
     ],
     filteredErrors(errors)
   );
@@ -235,6 +231,12 @@ export const getStickinessOptions = (
       { label: 'None', value: 'none' },
       { label: 'Session', value: 'session' },
       { label: 'Source IP', value: 'source_ip' },
+    ];
+  }
+  if (protocol === 'tcp') {
+    return [
+      { label: 'None', value: 'none' },
+      { label: 'Table', value: 'table' },
     ];
   }
   return [

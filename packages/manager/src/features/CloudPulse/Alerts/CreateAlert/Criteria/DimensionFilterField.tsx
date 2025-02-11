@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { DimensionOperatorOptions } from '../../constants';
+import { dimensionOperatorOptions } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
 
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
@@ -126,7 +126,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 );
               }}
               value={
-                DimensionOperatorOptions.find(
+                dimensionOperatorOptions.find(
                   (option) => option.value === field.value
                 ) ?? null
               }
@@ -134,7 +134,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               errorText={fieldState.error?.message}
               label="Operator"
               onBlur={field.onBlur}
-              options={DimensionOperatorOptions}
+              options={dimensionOperatorOptions}
             />
           )}
           control={control}

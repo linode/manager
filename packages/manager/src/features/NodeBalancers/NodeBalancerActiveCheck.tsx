@@ -13,6 +13,8 @@ import {
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
@@ -32,6 +34,7 @@ const displayProtocolText = (p: string) => {
 };
 
 export const ActiveCheck = (props: ActiveCheckProps) => {
+  const flags = useFlags();
   const {
     checkBody,
     checkPath,
@@ -44,6 +47,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
     healthCheckTimeout,
     healthCheckType,
     protocol,
+    udpCheckPort,
   } = props;
 
   const errorMap = setErrorMap(errors || []);
@@ -94,7 +98,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
 
   return (
     <Grid md={6} xs={12}>
-      <Grid container spacing={2} sx={{ padding: 1 }}>
+      <Grid container spacing={1} sx={{ padding: 1 }}>
         <Grid xs={12}>
           <Typography data-qa-active-checks-header variant="h2">
             Active Health Checks
@@ -129,7 +133,50 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
         </Grid>
         {healthCheckType !== 'none' && (
           <Grid container>
-            <Grid xs={12}>
+            {['http', 'http_body'].includes(healthCheckType) && (
+              <Grid xs={12}>
+                <TextField
+                  data-testid="http-path"
+                  disabled={disabled}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
+                  errorText={errorMap.check_path}
+                  label="Check HTTP Path"
+                  onChange={onCheckPathChange}
+                  required={['http', 'http_body'].includes(healthCheckType)}
+                  value={checkPath || ''}
+                />
+              </Grid>
+            )}
+            {healthCheckType === 'http_body' && (
+              <Grid md={12} xs={12}>
+                <TextField
+                  data-testid="http-body"
+                  disabled={disabled}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
+                  errorText={errorMap.check_body}
+                  label="Expected HTTP Body"
+                  onChange={onCheckBodyChange}
+                  required={healthCheckType === 'http_body'}
+                  value={checkBody}
+                />
+              </Grid>
+            )}
+            {flags.udp && protocol === 'udp' && (
+              <Grid lg={6}>
+                <TextField
+                  disabled={disabled}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
+                  errorText={errorMap.udp_check_port}
+                  label="Health Check Port"
+                  max={65535}
+                  min={1}
+                  onChange={(e) => props.onUdpCheckPortChange(+e.target.value)}
+                  type="number"
+                  value={udpCheckPort}
+                />
+              </Grid>
+            )}
+            <Grid lg={6} xs={12}>
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Interval',
@@ -152,7 +199,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 Seconds between health check probes
               </FormHelperText>
             </Grid>
-            <Grid xs={12}>
+            <Grid lg={6} xs={12}>
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Timeout',
@@ -197,34 +244,6 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 1-30
               </FormHelperText>
             </Grid>
-            {['http', 'http_body'].includes(healthCheckType) && (
-              <Grid lg={6} xs={12}>
-                <TextField
-                  data-testid="http-path"
-                  disabled={disabled}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  errorText={errorMap.check_path}
-                  label="Check HTTP Path"
-                  onChange={onCheckPathChange}
-                  required={['http', 'http_body'].includes(healthCheckType)}
-                  value={checkPath || ''}
-                />
-              </Grid>
-            )}
-            {healthCheckType === 'http_body' && (
-              <Grid md={12} xs={12}>
-                <TextField
-                  data-testid="http-body"
-                  disabled={disabled}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  errorText={errorMap.check_body}
-                  label="Expected HTTP Body"
-                  onChange={onCheckBodyChange}
-                  required={healthCheckType === 'http_body'}
-                  value={checkBody}
-                />
-              </Grid>
-            )}
           </Grid>
         )}
       </Grid>

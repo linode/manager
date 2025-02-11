@@ -55,6 +55,7 @@ const CircleProgress = (props: CircleProgressProps) => {
   if (size) {
     return (
       <StyledCustomCircularProgress
+        {...rest}
         aria-label="Content is loading"
         data-qa-circle-progress
         data-testid="circle-progress"
