@@ -260,7 +260,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
 
-    cy.get('body').click('topRight'); // close the autocompletePopper of Database Clusters
+    ui.button
+    .findByAttribute('aria-label', 'Close')
+    .should('be.visible')
+    .click();
 
     // Select a Node from the autocomplete input.
     ui.autocomplete
