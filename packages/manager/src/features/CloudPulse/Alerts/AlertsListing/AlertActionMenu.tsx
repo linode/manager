@@ -4,7 +4,7 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 import { getAlertTypeToActionsList } from '../Utils/AlertsActionMenu';
 
-import type { AlertDefinitionType } from '@linode/api-v4';
+import type { AlertDefinitionType, AlertStatusType } from '@linode/api-v4';
 
 export interface ActionHandlers {
   /**
@@ -16,6 +16,11 @@ export interface ActionHandlers {
    * Callback for edit alerts action
    */
   handleEdit: () => void;
+
+  /**
+   * Callback for enable/disable toggle action
+   */
+  handleEnableDisable: () => void;
 }
 
 export interface AlertActionMenuProps {
@@ -23,6 +28,10 @@ export interface AlertActionMenuProps {
    * The label of the alert
    */
   alertLabel: string;
+  /**
+   * Status of the alert
+   */
+  alertStatus: AlertStatusType;
   /**
    * Type of the alert
    */
@@ -34,10 +43,10 @@ export interface AlertActionMenuProps {
 }
 
 export const AlertActionMenu = (props: AlertActionMenuProps) => {
-  const { alertLabel, alertType, handlers } = props;
+  const { alertLabel, alertStatus, alertType, handlers } = props;
   return (
     <ActionMenu
-      actionsList={getAlertTypeToActionsList(handlers)[alertType]}
+      actionsList={getAlertTypeToActionsList(handlers, alertStatus)[alertType]}
       ariaLabel={`Action menu for Alert ${alertLabel}`}
     />
   );
