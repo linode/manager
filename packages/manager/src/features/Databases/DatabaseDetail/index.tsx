@@ -43,7 +43,7 @@ const DatabaseMonitor = React.lazy(() =>
 );
 
 const DatabaseAlert = React.lazy(() =>
-  import('../../CloudPulse/Alerts/AlertsLanding/AlertsReusableComponent').then(
+  import('../../CloudPulse/Alerts/ContextualView/AlertsReusableComponent').then(
     ({ AlertReusableComponent }) => ({
       default: AlertReusableComponent,
     })
