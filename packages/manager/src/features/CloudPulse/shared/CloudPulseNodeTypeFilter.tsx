@@ -52,8 +52,14 @@ export interface CloudPulseNodeTypeFilterProps {
     savePref?: boolean
   ) => void;
 
+  /**
+   * A required label for the Autocomplete to ensure accessibility.
+   **/
   label: string;
 
+  /**
+   * Placeholder text for Node Type selection input
+   **/
   placeholder?: string;
 
   /**
