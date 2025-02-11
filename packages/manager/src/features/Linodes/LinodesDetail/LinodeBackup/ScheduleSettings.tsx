@@ -159,9 +159,6 @@ export const ScheduleSettings = (props: Props) => {
 
 const StyledFormControl = styled(FormControl, { label: 'StyledFormControl' })(
   ({ theme }) => ({
-    '& .react-select__menu-list': {
-      maxHeight: 'none',
-    },
     marginRight: theme.spacing(2),
     minWidth: 150,
   })

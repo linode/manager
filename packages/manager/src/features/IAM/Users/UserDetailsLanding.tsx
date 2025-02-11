@@ -11,7 +11,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
 import { IAM_LABEL } from '../Shared/constants';
 
@@ -37,8 +36,6 @@ export const UserDetailsLanding = () => {
   const { username } = useParams<{ username: string }>();
   const location = useLocation();
   const history = useHistory();
-
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
   const tabs = [
     {
@@ -97,7 +94,7 @@ export const UserDetailsLanding = () => {
             <UserRoles />
           </SafeTabPanel>
           <SafeTabPanel index={++idx}>
-            <UserEntities assignedRoles={assignedRoles} />
+            <UserEntities />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>

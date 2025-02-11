@@ -64,16 +64,16 @@ describe('Create Linode with Disk Encryption', () => {
 
     // "Encrypt Disk" checkbox should be disabled if a region that does not support LDE is selected
     ui.regionSelect.find().click();
-    ui.select
-      .findItemByText(
-        `${mockRegionWithoutDiskEncryption.label} (${mockRegionWithoutDiskEncryption.id})`
-      )
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegionWithoutDiskEncryption.label, mockRegions)
       .click();
 
     cy.get(`[data-testid="${checkboxTestId}"]`).should('be.disabled');
 
     ui.regionSelect.find().click();
-    ui.select.findItemByText(`${mockRegion.label} (${mockRegion.id})`).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegion.label, mockRegions)
+      .click();
 
     cy.get(`[data-testid="${checkboxTestId}"]`).should('be.enabled');
   });
