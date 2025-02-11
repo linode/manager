@@ -272,9 +272,27 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     // Enter the start time (hour and minute)
     cy.findByPlaceholderText("hh:mm aa")
-      .clear({ force: true })
-      .click({ force: true })
-     // .type(`${startHour}:${startMinute} PM`);
+      .click({ force: true });
+
+      cy.get('[aria-label="Select hours"]')
+      .scrollIntoView({ easing: 'linear' })
+      .within(() => {
+        cy.get(`[aria-label="${startHour} hours"]`).click();
+      });
+
+    cy.get('[aria-label="Select minutes"]')
+      .scrollIntoView({ easing: 'linear', duration: 500 })
+      .within(() => {
+        cy.get(`[aria-label="${startMinute} minutes"]`).click({
+          force: true,
+        });
+      });
+
+    cy.get('[aria-label="Select meridiem"]')
+      .scrollIntoView({ easing: 'linear' })
+      .within(() => {
+        cy.get('[aria-label="PM"]').click({ force: true });
+      });
 
     // Click the "Apply" button to confirm the start date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
