@@ -237,49 +237,7 @@ export const DisplayAlertResources = React.memo(
                         >
                           {label !== 'Tags' && accessor(resource)}
                           {label === 'Tags' && resource.tags?.length && (
-                            <Box alignItems={'center'} display={'flex'} gap={1}>
-                              <Chip
-                                sx={(theme) => ({
-                                  backgroundColor: theme.color.tagButtonBg,
-                                })}
-                                label={resource.tags[0]}
-                              />
-                              <Tooltip
-                                title={
-                                  <Box
-                                    alignItems={'center'}
-                                    display={'flex'}
-                                    flexDirection={'column'}
-                                    gap={1}
-                                  >
-                                    {resource.tags.map(
-                                      (tag, index) =>
-                                        index > 0 && (
-                                          <Typography
-                                            key={index}
-                                            variant="body2"
-                                          >
-                                            {tag}
-                                          </Typography>
-                                        )
-                                    )}
-                                  </Box>
-                                }
-                              >
-                                <span>
-                                  <Chip
-                                    label={`+${
-                                      resource.tags
-                                        ? resource.tags.length - 1
-                                        : ''
-                                    }`}
-                                    sx={(theme) => ({
-                                      backgroundColor: theme.color.tagButtonBg,
-                                    })}
-                                  />
-                                </span>
-                              </Tooltip>
-                            </Box>
+                            <ShowExtraTags tags={resource.tags} />
                           )}
                         </TableCell>
                       ))}
@@ -326,3 +284,48 @@ export const DisplayAlertResources = React.memo(
     );
   }
 );
+
+interface TagsProp {
+  tags: string[];
+}
+
+export const ShowExtraTags = ({ tags }: TagsProp) => {
+  return (
+    <Box alignItems="center" display="flex" gap={1}>
+      <Chip
+        sx={(theme) => ({
+          backgroundColor: theme.color.tagButtonBg,
+        })}
+        label={tags[0]}
+      />
+      <Tooltip
+        title={
+          <Box
+            alignItems="center"
+            display="flex"
+            flexDirection="column"
+            gap={1}
+          >
+            {tags.map(
+              (tag, index) =>
+                index > 0 && (
+                  <Typography key={index} variant="body2">
+                    {tag}
+                  </Typography>
+                )
+            )}
+          </Box>
+        }
+      >
+        <span>
+          <Chip
+            sx={(theme) => ({
+              backgroundColor: theme.color.tagButtonBg,
+            })}
+            label={`+${tags ? tags.length - 1 : ''}`}
+          />
+        </span>
+      </Tooltip>
+    </Box>
+  );
+};
