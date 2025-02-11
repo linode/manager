@@ -13,16 +13,37 @@ export interface CloudPulseNodeType {
 }
 
 export interface CloudPulseNodeTypeFilterProps {
+  /**
+   * Selected database cluster ids
+   */
   database_ids?: number[];
+
+  /**
+   * Last selected node type value from user preferences
+   */
   defaultValue?: FilterValue;
+
+  /**
+   * Boolean to check if the filter selection is to be disabled
+   */
   disabled?: boolean;
+
+  /**
+   * This will handle the change in node type filter selection
+   */
   handleNodeTypeChange: (
     nodeTypeId: string | undefined,
     labels: string[],
     savePref?: boolean
   ) => void;
+
   label: string;
+
   placeholder?: string;
+
+  /**
+   * Boolean to check if preferences need to be saved and applied
+   */
   savePreferences?: boolean;
 }
 
