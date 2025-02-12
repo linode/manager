@@ -59,7 +59,7 @@ export const NetworkInterfaceType = () => {
 
   const {
     control,
-    formState: { isSubmitting }, // { isDirty, isSubmitting }
+    formState: { isDirty, isSubmitting },
     handleSubmit,
     setError,
   } = useForm<InterfaceSettingValues>({
@@ -98,10 +98,14 @@ export const NetworkInterfaceType = () => {
                 }}
                 sx={(theme) => ({
                   [theme.breakpoints.up('md')]: {
-                    minWidth: '458px',
+                    minWidth: '480px',
                   },
                 })}
                 textFieldProps={{
+                  expand: true,
+                  sx: {
+                    width: '468px',
+                  },
                   tooltipText:
                     '@TODO Linode Interfaces - get copy for this tooltip',
                 }}
@@ -124,7 +128,7 @@ export const NetworkInterfaceType = () => {
           >
             <Button
               buttonType="outlined"
-              // disabled={!isDirty}
+              disabled={!isDirty}
               loading={isSubmitting}
               type="submit"
             >
