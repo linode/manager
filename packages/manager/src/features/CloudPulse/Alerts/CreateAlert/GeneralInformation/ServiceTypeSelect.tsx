@@ -11,7 +11,7 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 interface CloudPulseServiceSelectProps {
   /**
-   * boolean value used to disable it in the edit flow
+   * Boolean value to check if service select is disabled in the edit flow
    */
   isDisabled: boolean;
   /**
