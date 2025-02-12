@@ -49,6 +49,7 @@ const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
 const TYPE_TO_CONFIRM = 'typeToConfirm';
 const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
+const CODE_VERIFIER = 'authentication/code-verifier';
 const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
 const SUPPORT = 'support';
@@ -99,6 +100,7 @@ export interface Storage {
     set: (v: 'false' | 'true') => void;
   };
   authentication: {
+    codeVerifier: AuthGetAndSet;
     expire: AuthGetAndSet;
     nonce: AuthGetAndSet;
     scopes: AuthGetAndSet;
@@ -144,6 +146,10 @@ export const storage: Storage = {
     set: () => setStorage(BACKUPSCTA_DISMISSED, 'true'),
   },
   authentication: {
+    codeVerifier: {
+      get: () => getStorage(CODE_VERIFIER),
+      set: (v) => setStorage(CODE_VERIFIER, v),
+    },
     expire: {
       get: () => getStorage(EXPIRE),
       set: (v) => setStorage(EXPIRE, v),

@@ -1,5 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
 import Algolia from 'algoliasearch';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import {
@@ -48,32 +48,42 @@ export const convertDocsToItems = (
   highlight: boolean,
   hits: SearchHit[] = []
 ): ConvertedItems[] => {
-  return hits.map((hit: SearchHit, idx: number) => {
-    return {
-      data: {
-        href: DOCS_BASE_URL + hit.href,
-        source: 'Linode documentation',
-      },
-      label: getDocsResultLabel(hit, highlight),
-      value: idx,
-    };
+  const uniqueHits = new Map<string, ConvertedItems>();
+  hits.forEach((hit: SearchHit, idx: number) => {
+    const href = DOCS_BASE_URL + hit.href;
+    if (!uniqueHits.has(href)) {
+      uniqueHits.set(href, {
+        data: {
+          href,
+          source: 'Linode documentation',
+        },
+        label: getDocsResultLabel(hit, highlight),
+        value: idx,
+      });
+    }
   });
+  return Array.from(uniqueHits.values());
 };
 
 export const convertCommunityToItems = (
   highlight: boolean,
   hits: SearchHit[] = []
 ): ConvertedItems[] => {
-  return hits.map((hit: SearchHit, idx: number) => {
-    return {
-      data: {
-        href: getCommunityUrl(hit.objectID),
-        source: 'Linode Community Site',
-      },
-      label: getCommunityResultLabel(hit, highlight),
-      value: idx,
-    };
+  const uniqueItems = new Map<string, ConvertedItems>();
+  hits.forEach((hit: SearchHit, idx: number) => {
+    const href = getCommunityUrl(hit.objectID);
+    if (!uniqueItems.has(href)) {
+      uniqueItems.set(href, {
+        data: {
+          href,
+          source: 'Linode Community Site',
+        },
+        label: getCommunityResultLabel(hit, highlight),
+        value: idx,
+      });
+    }
   });
+  return Array.from(uniqueItems.values());
 };
 
 export const getCommunityUrl = (id: string) => {
@@ -118,23 +128,7 @@ export default (options: SearchOptions) => (
 ) => {
   const { highlight, hitsPerPage } = options;
   class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {
-    componentDidMount() {
-      this.mounted = true;
-      this.initializeSearchIndices();
-    }
-    componentWillUnmount() {
-      this.mounted = false;
-    }
-
-    render() {
-      return React.createElement(Component, {
-        ...this.props,
-        ...this.state,
-      });
-    }
-
     client: SearchClient;
-
     initializeSearchIndices = () => {
       try {
         const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
@@ -210,8 +204,14 @@ export default (options: SearchOptions) => (
       }
 
       /* If err is undefined, the shape of content is guaranteed, but better to be safe: */
-      const docs = pathOr([], ['results', 0, 'hits'], content);
-      const community = pathOr([], ['results', 1, 'hits'], content);
+      const docs: SearchHit[] =
+        (Array.isArray(content.results) &&
+          (content.results?.[0] as { hits: SearchHit[] })?.hits) ||
+        [];
+      const community: SearchHit[] =
+        (Array.isArray(content.results) &&
+          (content.results?.[1] as { hits: SearchHit[] })?.hits) ||
+        [];
       const docsResults = convertDocsToItems(highlight, docs);
       const commResults = convertCommunityToItems(highlight, community);
       this.setState({
@@ -226,6 +226,22 @@ export default (options: SearchOptions) => (
       searchError: undefined,
       searchResults: [[], []],
     };
+
+    componentDidMount() {
+      this.mounted = true;
+      this.initializeSearchIndices();
+    }
+
+    componentWillUnmount() {
+      this.mounted = false;
+    }
+
+    render() {
+      return React.createElement(Component, {
+        ...this.props,
+        ...this.state,
+      });
+    }
   }
 
   return WrappedComponent;

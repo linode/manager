@@ -161,13 +161,9 @@ export const TopProcessRow = React.memo((props: TopProcessRowProps) => {
 
   return (
     <TableRow data-testid="longview-top-process-row">
-      <TableCell data-qa-top-process-process parentColumn="Process">
-        {name}
-      </TableCell>
-      <TableCell data-qa-top-process-cpu parentColumn="CPU">
-        {formatCPU(cpu)}
-      </TableCell>
-      <TableCell data-qa-top-process-memory parentColumn="Memory">
+      <TableCell data-qa-top-process-process>{name}</TableCell>
+      <TableCell data-qa-top-process-cpu>{formatCPU(cpu)}</TableCell>
+      <TableCell data-qa-top-process-memory>
         {readableBytes(memInBytes, { round: 0 }).formatted}
       </TableCell>
     </TableRow>

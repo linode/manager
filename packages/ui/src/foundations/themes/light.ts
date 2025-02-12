@@ -11,21 +11,25 @@ import {
   Dropdown,
   Elevation,
   Font,
+  GlobalFooter,
+  GlobalHeader,
   Interaction,
   NotificationToast,
   Radius,
   Search,
   Select,
+  SideNavigation,
   Spacing,
+  Table,
   Typography,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
-import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
 const inputMaxWidth = 416;
+const topMenuHeight = 56;
 
 export const bg = {
   app: Color.Neutrals[5],
@@ -194,8 +198,7 @@ const genericStatusPillStyle = {
   },
   backgroundColor: 'transparent',
   color: textColors.tableStatic,
-  fontFamily: latoWeb.bold,
-  fontSize: '1rem',
+  font: Typography.Body.Bold,
   padding: 0,
 };
 
@@ -229,6 +232,33 @@ const visuallyHidden = {
 const graphTransparency = '0.7';
 
 const spacing = 8;
+
+const MuiTableHeadSvgStyles = {
+  svg: {
+    path: {
+      fill: Color.Brand[60],
+    },
+  },
+};
+
+const MuiTableZebraHoverStyles = {
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+    background: Table.Row.Background.Hover,
+  },
+};
+
+const MuiTableZebraStyles = {
+  background: Table.Row.Background.Zebra,
+  ...MuiTableZebraHoverStyles,
+};
+
+const typographyPropertiesReset = {
+  fontFamily: undefined,
+  fontSize: undefined,
+  fontWeight: undefined,
+  letterSpacing: undefined,
+  lineHeight: undefined,
+};
 
 export const lightTheme: ThemeOptions = {
   addCircleHoverEffect: {
@@ -288,7 +318,6 @@ export const lightTheme: ThemeOptions = {
           },
           '& svg': {
             fill: Color.Brand[80],
-            stroke: Color.Brand[80],
           },
           '&.Mui-expanded': {
             '& .caret': {
@@ -312,8 +341,9 @@ export const lightTheme: ThemeOptions = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: bg.bgPaper,
-          color: primaryColors.text,
+          backgroundColor: GlobalHeader.Background,
+          color: GlobalHeader.Text.Default,
+          paddingRight: `0 !important`, // Avoid MUI from applying right padding causing this to jump
           position: 'relative',
         },
       },
@@ -338,7 +368,7 @@ export const lightTheme: ThemeOptions = {
           },
         },
         groupLabel: {
-          fontFamily: latoWeb.bold,
+          font: Typography.Body.Bold,
           fontSize: '1rem',
           lineHeight: 'unset',
           padding: '8px',
@@ -461,8 +491,8 @@ export const lightTheme: ThemeOptions = {
             color: Button.Primary.Disabled.Text,
           },
           backgroundColor: Button.Primary.Default.Background,
+          border: `1px solid transparent`,
           color: Button.Primary.Default.Text,
-          padding: '2px 20px',
         },
         containedSecondary: {
           '&:active': {
@@ -499,20 +529,21 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: 'transparent',
           border: `1px solid ${primaryColors.main}`,
           color: textColors.linkActiveLight,
-          minHeight: 34,
         },
         root: {
           '&[aria-disabled="true"]': {
             cursor: 'not-allowed',
           },
+          '.MuiButton-startIcon': {
+            marginLeft: 0,
+            marginRight: Spacing[20],
+          },
           border: 'none',
           borderRadius: 1,
           cursor: 'pointer',
-          fontFamily: latoWeb.bold,
-          fontSize: '1rem',
-          lineHeight: 1,
-          minHeight: 34,
-          minWidth: 105,
+          font: Typography.Label.Semibold.S,
+          minWidth: 'initial',
+          padding: '8px 12px',
           textTransform: 'capitalize',
           transition: 'none',
         },
@@ -571,18 +602,30 @@ export const lightTheme: ThemeOptions = {
     },
     MuiChip: {
       styleOverrides: {
+        // TODO: This will need CDS guidance in future
         clickable: {
-          '&:focus': {
-            backgroundColor: Color.Brand[30], // TODO: This was the closest color according to our palette
+          '&:active': {
+            backgroundColor: Button.Primary.Pressed.Background,
           },
-          '&:hover': {
-            backgroundColor: Color.Brand[30], // TODO: This was the closest color according to our palette
+          '&:disabled': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
           },
-          backgroundColor: Color.Brand[10], // TODO: This was the closest color according to our palette
+          '&:hover, &:focus': {
+            backgroundColor: Button.Primary.Hover.Background,
+            color: Button.Primary.Default.Text,
+          },
+          '&[aria-disabled="true"]': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
+          },
+          backgroundColor: Button.Primary.Default.Background,
+          border: `1px solid transparent`,
+          color: Button.Primary.Default.Text,
         },
         colorError: {
-          background: Color.Red[70],
-          color: color.white,
+          backgroundColor: Color.Red[80],
+          color: Color.Neutrals.White,
         },
         colorPrimary: {
           color: color.white,
@@ -768,9 +811,10 @@ export const lightTheme: ThemeOptions = {
           '&$error': {
             color: Select.Error.HintText,
           },
-          fontSize: '0.875rem',
-          lineHeight: 1.25,
+          fontWeight: 400,
+          letterSpacing: 'inherit',
           maxWidth: 416,
+          textTransform: 'none',
         },
       },
     },
@@ -788,8 +832,7 @@ export const lightTheme: ThemeOptions = {
             color: Color.Neutrals[70],
           },
           color: Color.Neutrals[70],
-          fontFamily: latoWeb.bold,
-          fontSize: '.875rem',
+          font: Typography.Body.Bold,
           marginBottom: 8,
         },
       },
@@ -803,6 +846,13 @@ export const lightTheme: ThemeOptions = {
           marginRight: 0,
         },
         root: {
+          '&.MuiIconButton-isActive': {
+            svg: {
+              path: {
+                fill: Color.Brand[60],
+              },
+            },
+          },
           '&:hover': {
             backgroundColor: 'transparent',
             color: primaryColors.main,
@@ -831,7 +881,7 @@ export const lightTheme: ThemeOptions = {
           [breakpoints.only('xs')]: {
             fontSize: '1rem',
           },
-          fontSize: '0.9rem',
+          fontSize: Typography.Body.Regular,
           padding: 8,
         },
         inputMultiline: {
@@ -967,8 +1017,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&.selectHeader': {
             color: primaryColors.text,
-            fontFamily: latoWeb.bold,
-            fontSize: '1rem',
+            font: Typography.Body.Bold,
             opacity: 1,
           },
           color: primaryColors.text,
@@ -1059,7 +1108,7 @@ export const lightTheme: ThemeOptions = {
           '&::placeholder': {
             color: Color.Neutrals[50],
           },
-          // boxSizing: 'border-box',
+          boxSizing: 'border-box',
           [breakpoints.only('xs')]: {
             fontSize: '1rem',
           },
@@ -1067,19 +1116,51 @@ export const lightTheme: ThemeOptions = {
           padding: 8,
         },
         root: {
+          '& .MuiInputAdornment-root': {
+            margin: 0,
+          },
+          '& fieldset': {
+            border: 'none',
+          },
+          '& svg': {
+            '&:hover': {
+              color: Color.Brand[60],
+            },
+            color: primaryColors.main,
+            fontSize: 18,
+          },
+          '&.Mui-error': {
+            borderColor: Interaction.Border.Error,
+          },
           '&.Mui-error .MuiOutlinedInput-notchedOutline': {
             borderColor: Interaction.Border.Error,
+          },
+          '&.Mui-focused': {
+            '& .select-option-icon': {
+              paddingLeft: `30px !important`,
+            },
+            borderColor: primaryColors.main,
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderWidth: '1px',
             boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
           },
+          '&.affirmative': {
+            borderColor: Color.Green[70],
+          },
+          alignItems: 'center',
           backgroundColor: Color.Neutrals.White,
-          borderColor: Color.Neutrals[40],
+          border: `1px solid ${Color.Neutrals[40]}`,
           borderRadius: 0,
           boxSizing: 'border-box',
+          [breakpoints.down('xs')]: {
+            maxWidth: '100%',
+            width: '100%',
+          },
           color: primaryColors.text,
           lineHeight: 1,
+          maxWidth: inputMaxWidth,
           transition: 'border-color 225ms ease-in-out',
         },
       },
@@ -1103,6 +1184,7 @@ export const lightTheme: ThemeOptions = {
           [breakpoints.up('lg')]: {
             minWidth: 250,
           },
+          marginTop: Spacing[20],
           minWidth: 200,
         },
       },
@@ -1301,7 +1383,7 @@ export const lightTheme: ThemeOptions = {
         root: {
           '&$selected, &$selected:hover': {
             color: primaryColors.headline,
-            fontFamily: latoWeb.bold,
+            font: Typography.Body.Bold,
           },
           '&:hover': {
             color: primaryColors.main,
@@ -1338,83 +1420,151 @@ export const lightTheme: ThemeOptions = {
     MuiTable: {
       styleOverrides: {
         root: {
-          border: `1px solid ${borderColors.borderTable}`,
+          // Group by Tag
+          '&.MuiTable-groupByTag': {
+            '.MuiTableRow-root:last-child': {
+              '.MuiTableCell-root': {
+                borderBottom: 0,
+              },
+            },
+            border: 0,
+          },
+          // Zebra Striping
+          '&.MuiTable-zebra': {
+            // Linodes Group by Tag: First Row is the Title
+            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
+            // Default Striping
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
+          },
+          // Zebra Striping for Nested Tables
+          '&.MuiTable-zebra-nested': {
+            '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
+          },
+          // Nested Tables
+          '.MuiTable-root': {
+            '.MuiTableCell-head': {
+              color: Table.HeaderOutlined.Text,
+            },
+            '.MuiTableRow-head, .MuiTableRow-head.MuiTableRow-hover:hover': {
+              background: Background.Neutralsubtle,
+            },
+            '.MuiTableRow-root:last-child': {
+              '.MuiTableCell-root': {
+                borderBottom: 0,
+              },
+            },
+            border: 0,
+          },
+          // Collapsible Rows
+          '.MuiTableRow-root:not(:last-of-type) .MuiCollapse-root': {
+            borderBottom: `1px solid ${Border.Normal}`,
+          },
+          border: `1px solid ${Border.Normal}`,
           borderBottom: 0,
           borderCollapse: 'initial',
-          borderTop: 0,
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
-        body: {
-          fontSize: '.9rem',
-        },
         head: {
-          fontSize: '.9rem',
-          height: 40,
-          lineHeight: 1.1,
+          '&:last-of-type': {
+            borderRight: 'none',
+          },
+          // User Permissions Table
+          '.MuiFormControlLabel-label': {
+            color: Table.HeaderNested.Text,
+          },
+          // Icons in TH (i.e.: Summary View, Group by Tag)
+          '.MuiIconButton-root': {
+            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
+            ':hover': {
+              color: Color.Brand[60],
+              ...MuiTableHeadSvgStyles,
+            },
+          },
+          borderBottom: `1px solid ${Border.Normal}`,
+          color: Table.HeaderNested.Text,
+          fontWeight: Font.FontWeight.Bold,
+          lineHeight: Font.LineHeight.Xxxs,
+          whiteSpace: 'noWrap',
         },
         root: {
-          borderBottom: `1px solid ${primaryColors.divider}`,
-          borderTop: `1px solid ${primaryColors.divider}`,
-          padding: `0 15px`,
+          '&.MuiTableCell-nested': {
+            '.MuiCollapse-root': {
+              borderBottom: `1px solid ${Border.Normal}`,
+            },
+            border: 0,
+            height: 'inherit', // Override default height - hidden by default
+            padding: 0,
+          },
+          // Spacing for collapsible inner content
+          '.MuiCollapse-root': {
+            padding: Spacing[60],
+          },
+          borderBottom: `1px solid ${Table.Row.Border}`,
+          fontSize: Font.FontSize.Xs,
+          height: '40px',
+          lineHeight: Font.LineHeight.Xs,
+          padding: `0 ${Spacing[50]}`,
+        },
+        stickyHeader: {
+          // No idea where sticky cells are getting their background from
+          background: 'transparent',
         },
       },
     },
     MuiTableRow: {
       styleOverrides: {
         head: {
-          backgroundColor: Color.Neutrals[5],
-          height: 'auto',
-        },
-        hover: {
-          '& a': {
-            color: primaryColors.text,
-          },
-          '& a.secondaryLink': {
-            '&:hover': {
-              textDecoration: 'underline',
-            },
-            color: primaryColors.main,
-          },
-          cursor: 'pointer',
+          background: Table.HeaderNested.Background,
         },
         root: {
-          '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[5],
+          // Prevent needing `hover={false}` on header TableRows
+          '&.MuiTableRow-head.MuiTableRow-hover:hover': {
+            backgroundColor: Table.HeaderNested.Background,
           },
-          backfaceVisibility: 'hidden',
-          backgroundColor: primaryColors.white,
-          height: 40,
+          // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: Table.Row.Background.Hover,
+          },
+          // Disable hover for nested rows (VPC)
+          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover': {
+            backgroundColor: Table.Row.Background.Default,
+          },
+          '&.disabled-row .MuiTableCell-root': {
+            // TODO: Use design tokens in future when ready
+            backgroundColor: Interaction.Background.Disabled,
+            color: Content.Text.Primary.Disabled,
+          },
+          background: Table.Row.Background.Default,
           position: 'relative',
-          zIndex: 1,
         },
       },
     },
     MuiTableSortLabel: {
       styleOverrides: {
         icon: {
-          color: 'inherit !important',
-          marginTop: 2,
           opacity: 1,
         },
-        iconDirectionAsc: {
-          transform: 'rotate(0deg)',
-        },
-        iconDirectionDesc: {
-          transform: 'rotate(180deg)',
-        },
         root: {
-          '&:focus': {
-            outline: `1px dotted ${Color.Neutrals[60]}`,
+          '&.Mui-active': {
+            color: Table.HeaderNested.Text,
           },
-          '&:hover': {
-            color: primaryColors.main,
+          ':hover, :focus': {
+            ...MuiTableHeadSvgStyles,
+            color: Color.Brand[60],
+            cursor: 'pointer',
           },
-          fontSize: '.9rem',
-          lineHeight: '1.1rem',
-          transition: 'color 225ms ease-in-out',
+          fontSize: Font.FontSize.Xs,
+          svg: {
+            height: '16px',
+            margin: `0 ${Spacing[20]}`,
+            path: {
+              fill: Table.HeaderNested.Text,
+            },
+            width: '16px',
+          },
         },
       },
     },
@@ -1464,6 +1614,20 @@ export const lightTheme: ThemeOptions = {
         },
       },
     },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          [breakpoints.down('md')]: {
+            padding: `0 ${Spacing[40]}`,
+          },
+          [breakpoints.up('md')]: {
+            padding: `0 ${Spacing[60]}`, // To override default MUI breakpoint padding
+          },
+          height: topMenuHeight,
+          width: '100%',
+        },
+      },
+    },
     MuiTooltip: {
       styleOverrides: {
         popper: {
@@ -1484,6 +1648,17 @@ export const lightTheme: ThemeOptions = {
       },
     },
     MuiTypography: {
+      defaultProps: {
+        fontFamily: Font.FontFamily.Brand,
+        variantMapping: {
+          h1: 'h1',
+          h2: 'h2',
+          h3: 'h3',
+          h4: 'h4',
+          h5: 'h5',
+          h6: 'h6',
+        },
+      },
       styleOverrides: {
         button: {
           '&$colorSecondary': {
@@ -1514,8 +1689,7 @@ export const lightTheme: ThemeOptions = {
           },
           color: Color.Neutrals.White,
           cursor: 'pointer',
-          fontFamily: latoWeb.bold,
-          fontSize: '1rem',
+          font: Typography.Body.Bold,
           lineHeight: 1,
           maxHeight: 34,
           minHeight: `34px`,
@@ -1527,8 +1701,12 @@ export const lightTheme: ThemeOptions = {
     },
   },
   font: {
-    bold: latoWeb.bold,
-    normal: latoWeb.normal,
+    bold: Typography.Body.Bold,
+    extrabold: Typography.Body.Extrabold,
+    italic: Typography.Body.Italic,
+    list: Typography.Body.List,
+    normal: Typography.Body.Regular,
+    semibold: Typography.Body.Semibold,
   },
   graphs: {
     aborted: {
@@ -1704,53 +1882,57 @@ export const lightTheme: ThemeOptions = {
     chart: Chart,
     color: Color,
     content: Content,
+    dropdown: Dropdown,
     elevation: Elevation,
     font: Font,
+    footer: GlobalFooter,
+    header: GlobalHeader,
     interaction: Interaction,
     radius: Radius,
     search: Search,
+    sideNavigation: SideNavigation,
     spacing: Spacing,
+    table: Table,
     typography: Typography,
   },
   typography: {
     body1: {
+      ...typographyPropertiesReset,
       color: primaryColors.text,
-      fontSize: '0.875rem',
-      lineHeight: '1.125rem',
+      font: Typography.Body.Regular,
     },
     caption: {
+      ...typographyPropertiesReset,
       color: primaryColors.text,
-      fontSize: '0.625rem',
-      lineHeight: '0.625rem',
+      font: Typography.Heading.Overline,
+      letterSpacing: Typography.Heading.OverlineLetterSpacing,
+      textTransform: Typography.Heading.OverlineTextCase,
     },
-    fontFamily: latoWeb.normal,
-    fontSize: 16,
+    fontFamily: Font.FontFamily.Brand,
+    fontSize: undefined,
     h1: {
+      ...typographyPropertiesReset,
       [breakpoints.up('lg')]: {
-        fontSize: '1.5rem',
-        lineHeight: '1.875rem',
+        font: Typography.Heading.Xl,
       },
       color: primaryColors.headline,
-      fontFamily: latoWeb.bold,
-      fontSize: '1.25rem',
-      lineHeight: '1.75rem',
+      font: Typography.Heading.L,
     },
     h2: {
+      ...typographyPropertiesReset,
       color: primaryColors.headline,
-      fontFamily: latoWeb.bold,
-      fontSize: '1.125rem',
-      lineHeight: '1.5rem',
+      font: Typography.Heading.M,
     },
     h3: {
+      ...typographyPropertiesReset,
       color: primaryColors.headline,
-      fontFamily: latoWeb.bold,
-      fontSize: '1rem',
-      lineHeight: '1.4rem',
+      font: Typography.Heading.S,
     },
+    htmlFontSize: undefined,
     subtitle1: {
+      ...typographyPropertiesReset,
       color: primaryColors.text,
-      fontSize: '1.075rem',
-      lineHeight: '1.5rem',
+      font: Typography.Heading.Xs,
     },
   },
   visually: {

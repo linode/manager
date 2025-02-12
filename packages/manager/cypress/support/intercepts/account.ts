@@ -574,6 +574,23 @@ export const mockGetAccountAgreements = (
 };
 
 /**
+ * Intercepts POST request to update account agreements and mocks response.
+ *
+ * @param agreements - Agreements with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccountAgreements = (
+  agreements: Agreements
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/agreements`),
+    makeResponse(agreements)
+  );
+};
+
+/**
  * Intercepts GET request to fetch child accounts and mocks the response.
  *
  * @param childAccounts - Child account objects with which to mock response.

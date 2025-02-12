@@ -45,6 +45,7 @@ import {
   invoiceFactory,
   invoiceItemFactory,
   kubeEndpointFactory,
+  kubeLinodeFactory,
   kubernetesAPIResponse,
   kubernetesVersionFactory,
   linodeConfigFactory,
@@ -72,6 +73,7 @@ import {
   nodeBalancerFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
+  notificationChannelFactory,
   notificationFactory,
   objectStorageBucketFactoryGen2,
   objectStorageClusterFactory,
@@ -109,6 +111,9 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
+import { accountPermissionsFactory } from 'src/factories/accountPermissions';
+import { accountResourcesFactory } from 'src/factories/accountResources';
+import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { pickRandom } from 'src/utilities/random';
 
 import type {
@@ -130,9 +135,6 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
-import { accountResourcesFactory } from 'src/factories/accountResources';
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -531,80 +533,40 @@ export const handlers = [
     return HttpResponse.json(imageFactory.build());
   }),
   http.get('*/images', async ({ request }) => {
-    const privateImages = imageFactory.buildList(5, {
-      status: 'available',
-      type: 'manual',
-    });
-    const cloudinitCompatableDistro = imageFactory.build({
-      capabilities: ['cloud-init'],
-      id: 'metadata-test-distro',
-      is_public: true,
-      label: 'metadata-test-distro',
-      status: 'available',
-      type: 'manual',
-    });
-    const cloudinitCompatableImage = imageFactory.build({
-      capabilities: ['cloud-init'],
-      id: 'metadata-test-image',
-      label: 'metadata-test-image',
-      status: 'available',
-      type: 'manual',
-    });
-    const multiRegionsImage = imageFactory.build({
-      id: 'multi-regions-test-image',
-      label: 'multi-regions-test-image',
-      regions: [
-        { region: 'us-southeast', status: 'available' },
-        { region: 'us-east', status: 'pending' },
-      ],
-      status: 'available',
-      type: 'manual',
-    });
-    const creatingImages = imageFactory.buildList(2, {
-      status: 'creating',
-      type: 'manual',
-    });
-    const pendingImages = imageFactory.buildList(5, {
-      status: 'pending_upload',
-      type: 'manual',
-    });
-    const automaticImages = imageFactory.buildList(5, {
-      expiry: '2021-05-01',
-      type: 'automatic',
-    });
-    const publicImages = imageFactory.buildList(4, { is_public: true });
-    const distributedImage = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-sites'],
-      id: 'private/distributed-image',
-      label: 'distributed-image',
-      regions: [{ region: 'us-east', status: 'available' }],
-    });
-    const images = [
-      cloudinitCompatableDistro,
-      cloudinitCompatableImage,
-      multiRegionsImage,
-      distributedImage,
-      ...automaticImages,
-      ...privateImages,
-      ...publicImages,
-      ...pendingImages,
-      ...creatingImages,
-    ];
     const filter = request.headers.get('x-filter');
 
     if (filter?.includes('manual')) {
-      return HttpResponse.json(
-        makeResourcePage(images.filter((image) => image.type === 'manual'))
-      );
+      const images = [
+        imageFactory.build({
+          capabilities: ['distributed-sites'],
+          regions: [{ region: 'us-east', status: 'available' }],
+          type: 'manual',
+        }),
+        imageFactory.build({ capabilities: [], regions: [], type: 'manual' }),
+        imageFactory.build({
+          capabilities: ['distributed-sites', 'cloud-init'],
+          regions: [{ region: 'us-east', status: 'available' }],
+          type: 'manual',
+        }),
+        imageFactory.build({
+          capabilities: ['cloud-init'],
+          regions: [],
+          type: 'manual',
+        }),
+      ];
+      return HttpResponse.json(makeResourcePage(images));
     }
 
     if (filter?.includes('automatic')) {
-      return HttpResponse.json(
-        makeResourcePage(images.filter((image) => image.type === 'automatic'))
-      );
+      const images = imageFactory.buildList(5, {
+        capabilities: [],
+        regions: [],
+        type: 'automatic',
+      });
+      return HttpResponse.json(makeResourcePage(images));
     }
 
-    return HttpResponse.json(makeResourcePage(images));
+    return HttpResponse.json(makeResourcePage([]));
   }),
   http.post<any, UpdateImageRegionsPayload>(
     '*/v4/images/:id/regions',
@@ -727,6 +689,11 @@ export const handlers = [
         region: 'us-central',
       }),
       linodeFactory.build({
+        label: 'linode_with_tag_test4',
+        region: 'us-east',
+        tags: ['test4'],
+      }),
+      linodeFactory.build({
         label: 'eu-linode',
         region: 'eu-west',
       }),
@@ -743,6 +710,7 @@ export const handlers = [
       const headers = JSON.parse(request.headers.get('x-filter') || '{}');
       const orFilters = headers['+or'];
       const andFilters = headers['+and'];
+      const regionFilter = headers.region;
 
       let filteredLinodes = linodes; // Default to the original linodes in case no filters are applied
 
@@ -766,6 +734,12 @@ export const handlers = [
           return orFilters.some((filter: { tags: string }) =>
             linode.tags.includes(filter.tags)
           );
+        });
+      }
+
+      if (regionFilter) {
+        filteredLinodes = filteredLinodes.filter((linode) => {
+          return linode.region === regionFilter;
         });
       }
 
@@ -876,9 +850,11 @@ export const handlers = [
     const unencryptedPools = nodePoolFactory.buildList(5, {
       disk_encryption: 'disabled',
     });
-    nodePoolFactory.resetSequenceNumber();
+    const paginatedPool = nodePoolFactory.build({
+      nodes: kubeLinodeFactory.buildList(26),
+    });
     return HttpResponse.json(
-      makeResourcePage([...encryptedPools, ...unencryptedPools])
+      makeResourcePage([...encryptedPools, ...unencryptedPools, paginatedPool])
     );
   }),
   http.get('*/lke/clusters/*/api-endpoints', async () => {
@@ -1704,6 +1680,18 @@ export const handlers = [
         message: 'Low disk space.',
         status: 'notification',
       });
+      const dbMigrationEvents = eventFactory.buildList(1, {
+        action: 'database_migrate',
+        entity: { id: 11, label: 'database-11', type: 'database' },
+        message: 'Database migration started.',
+        status: 'started',
+      });
+      const dbMigrationFinishedEvents = eventFactory.buildList(1, {
+        action: 'database_migrate',
+        entity: { id: 11, label: 'database-11', type: 'database' },
+        message: 'Database migration finished.',
+        status: 'finished',
+      });
       const oldEvents = eventFactory.buildList(20, {
         action: 'account_update',
         percent_complete: 100,
@@ -1744,6 +1732,8 @@ export const handlers = [
       return HttpResponse.json(
         makeResourcePage([
           ...events,
+          ...dbMigrationEvents,
+          ...dbMigrationFinishedEvents,
           ...dbEvents,
           ...placementGroupAssignedEvent,
           ...placementGroupCreateEvent,
@@ -2430,25 +2420,32 @@ export const handlers = [
       return HttpResponse.json(response);
     }
   ),
-  http.get('*/monitor/alert-definitions', async ({ request }) => {
-    const customAlerts = alertFactory.buildList(2, {
+  http.get('*/monitor/alert-definitions', async () => {
+    const customAlerts = alertFactory.buildList(10, {
       severity: 0,
       type: 'user',
     });
-    const customAlertsWithServiceType = alertFactory.buildList(2, {
+    const customAlertsWithServiceType = alertFactory.buildList(10, {
       service_type: 'dbaas',
       severity: 1,
       type: 'user',
     });
-    const defaultAlerts = alertFactory.buildList(1, { type: 'system' });
-    const defaultAlertsWithServiceType = alertFactory.buildList(1, {
+    const defaultAlerts = alertFactory.buildList(15, {
+      created_by: 'System',
+      type: 'system',
+    });
+    const defaultAlertsWithServiceType = alertFactory.buildList(7, {
+      created_by: 'System',
       service_type: 'dbaas',
       severity: 3,
       type: 'system',
     });
     const alerts = [
       ...defaultAlerts,
-      ...alertFactory.buildList(3, { status: 'disabled' }),
+      ...alertFactory.buildList(8, {
+        service_type: 'linode',
+        status: 'disabled',
+      }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
       ...alertFactory.buildList(3),
@@ -2478,6 +2475,14 @@ export const handlers = [
       return HttpResponse.json({}, { status: 404 });
     }
   ),
+  http.get('*/monitor/alert-channels', () => {
+    return HttpResponse.json(
+      makeResourcePage(notificationChannelFactory.buildList(3))
+    );
+  }),
+  http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
+    return HttpResponse.json(alertFactory.build());
+  }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [

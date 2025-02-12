@@ -19,7 +19,8 @@ export type SearchableEntityType =
   | 'kubernetesCluster'
   | 'linode'
   | 'nodebalancer'
-  | 'volume';
+  | 'volume'
+  | null;
 
 // These are the properties on our entities we'd like to search
 export type SearchField = 'ips' | 'label' | 'tags' | 'type' | 'value';

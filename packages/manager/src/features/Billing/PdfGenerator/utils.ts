@@ -1,5 +1,4 @@
 import autoTable from 'jspdf-autotable';
-import { pathOr } from 'ramda';
 
 import { ADDRESSES } from 'src/constants';
 import { formatDate } from 'src/utilities/formatDate';
@@ -195,7 +194,7 @@ export const createInvoiceItemsTable = (
   });
 };
 
-const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
+export const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
   if (!taxSummary) {
     return [];
   }
@@ -304,11 +303,7 @@ export const createFooter = (
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
   const isInternational = !['CA', 'US'].includes(country);
 
-  const remitAddress = isAkamaiBilling
-    ? ['CA', 'US'].includes(country)
-      ? ADDRESSES.akamai.us
-      : ADDRESSES.akamai.international
-    : ADDRESSES.linode;
+  const remitAddress = getRemitAddress(country, isAkamaiBilling);
 
   const footerText = [];
 
@@ -392,11 +387,9 @@ const formatDescription = (desc?: string) => {
 
   if (isVolume) {
     const [volLabel, volID] = descChunks[1].split(' ');
-    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${pathOr(
-      '',
-      [2],
-      descChunks
-    )}\r\n${volID}`;
+    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${
+      descChunks?.[2] ?? ''
+    }\r\n${volID}`;
   }
 
   if (isBackup) {
@@ -446,4 +439,19 @@ export const invoiceCreatedAfterDCPricingLaunch = (_invoiceDate?: string) => {
   }
 
   return invoiceDate >= dcPricingDate;
+};
+
+export const getRemitAddress = (country: string, isAkamaiBilling: boolean) => {
+  if (!isAkamaiBilling) {
+    return ADDRESSES.linode;
+  }
+  // M3-6218: Temporarily change "Remit To" address for US customers back to the Philly address
+  if (country === 'US') {
+    ADDRESSES.linode.entity = 'Akamai Technologies, Inc.';
+    return ADDRESSES.linode;
+  }
+  if (['CA'].includes(country)) {
+    return ADDRESSES.akamai.us;
+  }
+  return ADDRESSES.akamai.international;
 };

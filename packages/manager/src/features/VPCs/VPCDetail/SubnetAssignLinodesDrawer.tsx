@@ -179,7 +179,7 @@ export const SubnetAssignLinodesDrawer = (
     try {
       // If the config has only an implicit public interface, make it explicit and
       // add it in eth0
-      if (configToBeModified?.interfaces.length === 0) {
+      if (configToBeModified?.interfaces?.length === 0) {
         appendConfigInterface(
           selectedLinode?.id ?? -1,
           configId,

@@ -9,16 +9,19 @@ import {
   Content,
   Dropdown,
   Elevation,
+  GlobalFooter,
+  GlobalHeader,
   Interaction,
   NotificationToast,
   Search,
   Select,
+  SideNavigation,
+  Table,
   TextField,
   Typography,
 } from '@linode/design-language-system/themes/dark';
 
 import { breakpoints } from '../breakpoints';
-import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
@@ -187,6 +190,25 @@ const genericTableHeaderStyle = {
   },
 };
 
+const MuiTableHeadSvgStyles = {
+  svg: {
+    path: {
+      fill: Color.Brand[60],
+    },
+  },
+};
+
+const MuiTableZebraHoverStyles = {
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+    background: Table.Row.Background.Hover,
+  },
+};
+
+const MuiTableZebraStyles = {
+  background: Table.Row.Background.Zebra,
+  ...MuiTableZebraHoverStyles,
+};
+
 export const darkTheme: ThemeOptions = {
   animateCircleIcon: {
     ...iconCircleAnimation,
@@ -208,8 +230,9 @@ export const darkTheme: ThemeOptions = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: tempReplacementforColorNeutralsBlack,
-          color: primaryColors.text,
+          backgroundColor: GlobalHeader.Background,
+          color: GlobalHeader.Text.Default,
+          zIndex: 1500, // To be above primary nav
         },
       },
     },
@@ -277,8 +300,8 @@ export const darkTheme: ThemeOptions = {
             color: Button.Primary.Disabled.Text,
           },
           backgroundColor: Button.Primary.Default.Background,
+          border: `1px solid transparent`,
           color: Button.Primary.Default.Text,
-          padding: '2px 20px',
         },
         containedSecondary: {
           '&:active': {
@@ -322,19 +345,7 @@ export const darkTheme: ThemeOptions = {
           minHeight: 34,
         },
         root: {
-          '&[aria-disabled="true"]': {
-            cursor: 'not-allowed',
-          },
-          border: 'none',
-          borderRadius: 1,
-          cursor: 'pointer',
-          fontFamily: latoWeb.bold,
-          fontSize: '1rem',
-          lineHeight: 1,
-          minHeight: 34,
-          minWidth: 105,
-          textTransform: 'capitalize',
-          transition: 'none',
+          font: Typography.Label.Semibold.S,
         },
       },
       variants: [
@@ -391,8 +402,26 @@ export const darkTheme: ThemeOptions = {
         color: 'primary',
       },
       styleOverrides: {
+        // TODO: This will need CDS guidance in future
         clickable: {
-          color: Color.Brand[100],
+          '&:active': {
+            backgroundColor: Button.Primary.Pressed.Background,
+          },
+          '&:disabled': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
+          },
+          '&:hover, &:focus': {
+            backgroundColor: Button.Primary.Hover.Background,
+            color: Button.Primary.Default.Text,
+          },
+          '&[aria-disabled="true"]': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
+          },
+          backgroundColor: Button.Primary.Default.Background,
+          border: `1px solid transparent`,
+          color: Button.Primary.Default.Text,
         },
         colorError: {
           backgroundColor: Badge.Negative.Background,
@@ -632,6 +661,9 @@ export const darkTheme: ThemeOptions = {
     MuiOutlinedInput: {
       styleOverrides: {
         input: {
+          '&.Mui-disabled': {
+            WebkitTextFillColor: 'unset !important',
+          },
           boxSizing: 'border-box',
           [breakpoints.only('xs')]: {
             fontSize: '1rem',
@@ -640,13 +672,49 @@ export const darkTheme: ThemeOptions = {
           padding: 8,
         },
         root: {
+          '& svg': {
+            color: TextField.Default.InfoIcon,
+          },
+          '&.Mui-disabled': {
+            '& svg': {
+              color: TextField.Disabled.InfoIcon,
+            },
+            backgroundColor: TextField.Disabled.Background,
+            borderColor: TextField.Disabled.Border,
+            color: TextField.Disabled.Text,
+          },
+          '&.Mui-error': {
+            '& svg': {
+              color: TextField.Error.Icon,
+            },
+            backgroundColor: TextField.Error.Background,
+            borderColor: TextField.Error.Border,
+            color: TextField.Error.Text,
+          },
           '&.Mui-error .MuiOutlinedInput-notchedOutline': {
             borderColor: TextField.Error.Border,
             color: TextField.Error.Text,
           },
+          '&.Mui-focused': {
+            '& svg': {
+              color: TextField.Focus.Icon,
+            },
+            backgroundColor: TextField.Focus.Background,
+            borderColor: TextField.Focus.Border,
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
+            color: TextField.Focus.Text,
+          },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderWidth: '1px',
             boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
+          },
+          '&.Mui-hover': {
+            '& svg': {
+              color: TextField.Hover.Icon,
+            },
+            backgroundColor: TextField.Hover.Background,
+            borderColor: TextField.Hover.Border,
+            color: TextField.Hover.Text,
           },
           backgroundColor: TextField.Default.Background,
           borderColor: TextField.Default.Border,
@@ -762,56 +830,109 @@ export const darkTheme: ThemeOptions = {
     MuiTable: {
       styleOverrides: {
         root: {
-          // For nested tables like VPC
-          '& table': {
+          // Zebra Striping
+          '&.MuiTable-zebra': {
+            // Linodes Group by Tag: First Row is the Title
+            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
+            // Default Striping
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
+          },
+          // Zebra Striping for Nested Tables
+          '&.MuiTable-zebra-nested': {
+            '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
+          },
+          // Nested Tables
+          '.MuiTable-root': {
+            '.MuiTableCell-head': {
+              color: Table.HeaderOutlined.Text,
+            },
+            '.MuiTableRow-head, .MuiTableRow-head.MuiTableRow-hover:hover': {
+              background: Background.Neutralsubtle,
+            },
             border: 0,
           },
-          border: `1px solid ${customDarkModeOptions.borderColors.borderTable}`,
-          borderBottom: 0,
-          borderTop: 0,
+          // Collapsible Rows
+          '.MuiTableRow-root:not(:last-of-type) .MuiCollapse-root': {
+            borderBottom: `1px solid ${Border.Normal}`,
+          },
+          border: `1px solid ${Border.Normal}`,
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
         head: {
-          backgroundColor: 'rgba(0, 0, 0, 0.15)',
-          color: primaryColors.text,
+          // User Permissions Table
+          '.MuiFormControlLabel-label': {
+            color: Table.HeaderNested.Text,
+          },
+          // Icons in TH (i.e.: Summary View, Group by Tag)
+          '.MuiIconButton-root': {
+            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
+            ':hover': {
+              color: Color.Brand[60],
+              ...MuiTableHeadSvgStyles,
+            },
+            svg: {
+              path: {
+                fill: Color.Neutrals.White,
+              },
+            },
+          },
+          color: Table.HeaderNested.Text,
         },
         root: {
-          '& a': {
-            color: Action.Primary.Default,
+          '&.MuiTableCell-nested': {
+            '.MuiCollapse-root': {
+              borderBottom: `1px solid ${Border.Normal}`,
+            },
           },
-          '& a:hover': {
-            color: Action.Primary.Hover,
-          },
-          borderBottom: `1px solid ${primaryColors.divider}`,
-          borderTop: `1px solid ${primaryColors.divider}`,
+          borderBottom: `1px solid ${Table.Row.Border}`,
         },
       },
     },
     MuiTableRow: {
       styleOverrides: {
         head: {
-          '&:before': {
-            backgroundColor: 'rgba(0, 0, 0, 0.15) !important',
-          },
-          backgroundColor: Color.Neutrals[100],
-        },
-        hover: {
-          '& a': {
-            color: primaryColors.text,
-          },
+          background: Table.HeaderNested.Background,
         },
         root: {
-          '&:before': {
-            borderLeftColor: Color.Neutrals[90],
+          // Prevent needing `hover={false}` on header TableRows
+          '&.MuiTableRow-head.MuiTableRow-hover:hover': {
+            backgroundColor: Table.HeaderNested.Background,
           },
-          '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[80],
+          // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: Table.Row.Background.Hover,
           },
-          backgroundColor: Color.Neutrals[90],
-          border: `1px solid ${Color.Neutrals[50]}`,
+          // Disable hover for nested rows (VPC)
+          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover': {
+            backgroundColor: Table.Row.Background.Default,
+          },
+          '&.disabled-row .MuiTableCell-root': {
+            // TODO: Use design tokens in future when ready
+            backgroundColor: Interaction.Background.Disabled,
+            color: Content.Text.Primary.Disabled,
+          },
+          background: Table.Row.Background.Default,
+        },
+      },
+    },
+    MuiTableSortLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-active': {
+            color: Table.HeaderNested.Text,
+          },
+          ':hover': {
+            ...MuiTableHeadSvgStyles,
+            color: Color.Brand[60],
+          },
+          svg: {
+            path: {
+              fill: Table.HeaderNested.Text,
+            },
+          },
         },
       },
     },
@@ -946,9 +1067,13 @@ export const darkTheme: ThemeOptions = {
     background: Background,
     border: Border,
     content: Content,
+    dropdown: Dropdown,
     elevation: Elevation,
+    footer: GlobalFooter,
     interaction: Interaction,
     search: Search,
+    sideNavigation: SideNavigation,
+    table: Table,
     typography: Typography,
   },
   typography: {

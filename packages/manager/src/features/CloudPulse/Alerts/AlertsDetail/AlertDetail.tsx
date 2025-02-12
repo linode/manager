@@ -12,9 +12,10 @@ import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 import { AlertResources } from '../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
+import { AlertDetailNotification } from './AlertDetailNotification';
 import { AlertDetailOverview } from './AlertDetailOverview';
 
-interface RouteParams {
+export interface AlertRouteParams {
   /**
    * The id of the alert for which the data needs to be shown
    */
@@ -26,10 +27,10 @@ interface RouteParams {
 }
 
 export const AlertDetail = () => {
-  const { alertId, serviceType } = useParams<RouteParams>();
+  const { alertId, serviceType } = useParams<AlertRouteParams>();
 
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
-    Number(alertId),
+    alertId,
     serviceType
   );
 
@@ -89,13 +90,18 @@ export const AlertDetail = () => {
       </>
     );
   }
-  const { entity_ids: entityIds } = alertDetails;
+  const {
+    entity_ids: entityIds,
+    service_type: alertServiceType,
+    type,
+  } = alertDetails;
   return (
     <>
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
       <Box display="flex" flexDirection="column" gap={2}>
         <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
           <Box
+            data-qa-section="Overview"
             flexBasis="50%"
             maxHeight={sectionMaxHeight}
             sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
@@ -107,6 +113,7 @@ export const AlertDetail = () => {
               ...getAlertBoxStyles(theme),
               overflow: 'auto',
             }}
+            data-qa-section="Criteria"
             flexBasis="50%"
             maxHeight={sectionMaxHeight}
           >
@@ -118,10 +125,23 @@ export const AlertDetail = () => {
             ...getAlertBoxStyles(theme),
             overflow: 'auto',
           }}
+          data-qa-section="Resources"
         >
           <AlertResources
             alertResourceIds={entityIds}
-            serviceType={serviceType}
+            alertType={type}
+            serviceType={alertServiceType}
+          />
+        </Box>
+        <Box
+          sx={{
+            ...getAlertBoxStyles(theme),
+            overflow: 'auto',
+          }}
+          data-qa-section="Notification Channels"
+        >
+          <AlertDetailNotification
+            channelIds={alertDetails.alert_channels.map(({ id }) => id)}
           />
         </Box>
       </Box>

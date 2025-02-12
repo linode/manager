@@ -11,15 +11,7 @@ import {
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { createLazyRoute } from '@tanstack/react-router';
-import {
-  append,
-  clone,
-  compose,
-  defaultTo,
-  lensPath,
-  over,
-  pathOr,
-} from 'ramda';
+import { append, clone, compose, defaultTo, lensPath, over } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -630,6 +622,9 @@ const NodeBalancerCreate = () => {
                   onChange('protocol')(value);
                   afterProtocolUpdate(idx);
                 }}
+                onUdpCheckPortChange={(value) =>
+                  onChange('udp_check_port')(value)
+                }
                 addNode={addNodeBalancerConfigNode(idx)}
                 algorithm={nodeBalancerFields.configs[idx].algorithm!}
                 checkBody={nodeBalancerFields.configs[idx].check_body!}
@@ -654,7 +649,6 @@ const NodeBalancerCreate = () => {
                 onProxyProtocolChange={onChange('proxy_protocol')}
                 onSessionStickinessChange={onChange('stickiness')}
                 onSslCertificateChange={onChange('ssl_cert')}
-                onUdpCheckPortChange={(value) => onChange('udp_check_port')(value)}
                 port={nodeBalancerFields.configs[idx].port!}
                 privateKey={nodeBalancerFields.configs[idx].ssl_key!}
                 protocol={nodeBalancerFields.configs[idx].protocol!}
@@ -789,7 +783,7 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
       }
   */
   return errors.reduce((acc: any, error: APIError) => {
-    const errorFields = pathOr('', ['field'], error).split('|');
+    const errorFields = error?.field?.split('|') ?? [''];
     const pathErrors: FieldAndPath[] = errorFields.map((field: string) =>
       getPathAndFieldFromFieldString(field)
     );

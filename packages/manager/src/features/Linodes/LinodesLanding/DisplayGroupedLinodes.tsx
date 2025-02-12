@@ -1,4 +1,5 @@
-import { Box, Paper, Tooltip, Typography } from '@linode/ui';
+import { IconButton } from '@linode/ui';
+import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { compose } from 'ramda';
 import * as React from 'react';
@@ -16,6 +17,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 
@@ -23,7 +25,6 @@ import {
   StyledControlHeader,
   StyledTagHeader,
   StyledTagHeaderRow,
-  StyledToggleButton,
 } from './DisplayLinodes.styles';
 import { RegionTypeFilter } from './RegionTypeFilter';
 import TableWrapper from './TableWrapper';
@@ -41,6 +42,7 @@ interface DisplayGroupedLinodesProps
   component: React.ComponentType<RenderLinodesProps>;
   data: LinodeWithMaintenance[];
   display: 'grid' | 'list';
+  filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
@@ -61,6 +63,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
     component: Component,
     data,
     display,
+    filteredLinodesLoading,
     handleOrderChange,
     handleRegionFilter,
     linodeViewPreference,
@@ -111,16 +114,15 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
             </div>
             <Box>
               <Tooltip placement="top" title="List view">
-                <StyledToggleButton
+                <IconButton
                   aria-describedby={displayViewDescriptionId}
                   aria-label="Toggle display"
+                  className={linodesAreGrouped ? 'MuiIconButton-isActive' : ''}
                   disableRipple
-                  isActive={linodesAreGrouped}
                   onClick={toggleLinodeView}
-                  size="large"
                 >
                   <GridView />
-                </StyledToggleButton>
+                </IconButton>
               </Tooltip>
 
               <div className="visually-hidden" id={groupByDescriptionId}>
@@ -129,21 +131,28 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                   : 'group by tag is currently disabled'}
               </div>
               <Tooltip placement="top-end" title="Ungroup by tag">
-                <StyledToggleButton
+                <IconButton
+                  sx={(theme) => ({
+                    ':hover': {
+                      color: theme.tokens.color.Brand[60],
+                    },
+                    color: theme.tokens.table.HeaderNested.Icon,
+                  })}
                   aria-describedby={groupByDescriptionId}
                   aria-label="Toggle group by tag"
+                  className={linodesAreGrouped ? 'MuiIconButton-isActive' : ''}
                   disableRipple
-                  isActive={linodesAreGrouped}
                   onClick={toggleGroupLinodes}
-                  size="large"
                 >
                   <GroupByTag />
-                </StyledToggleButton>
+                </IconButton>
               </Tooltip>
             </Box>
           </StyledControlHeader>
         </Grid>
-        {orderedGroupedLinodes.length === 0 ? (
+        {filteredLinodesLoading ? (
+          <CircleProgress />
+        ) : orderedGroupedLinodes.length === 0 ? (
           <Typography style={{ textAlign: 'center' }}>
             No items to display.
           </Typography>
@@ -194,6 +203,9 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                       <Component {...finalProps} />
                       <Grid xs={12}>
                         <PaginationFooter
+                          sx={{
+                            border: 0,
+                          }}
                           count={count}
                           eventCategory={'linodes landing'}
                           handlePageChange={handlePageChange}
@@ -229,7 +241,9 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
           toggleGroupLinodes={toggleGroupLinodes}
           toggleLinodeView={toggleLinodeView}
         >
-          {orderedGroupedLinodes.length === 0 ? (
+          {filteredLinodesLoading ? (
+            <TableRowLoading columns={7} />
+          ) : orderedGroupedLinodes.length === 0 ? (
             <TableBody>
               <TableRowEmpty colSpan={12} />
             </TableBody>
@@ -276,6 +290,10 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                           <TableRow>
                             <TableCell colSpan={7} sx={{ padding: 0 }}>
                               <PaginationFooter
+                                sx={{
+                                  borderLeft: 0,
+                                  borderRight: 0,
+                                }}
                                 count={count}
                                 eventCategory={'linodes landing'}
                                 handlePageChange={handlePageChange}

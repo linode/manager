@@ -46,7 +46,7 @@ export const AddLinodeDrawer = (props: Props) => {
   const {
     isPending: addDeviceIsLoading,
     mutateAsync: addDevice,
-  } = useAddFirewallDeviceMutation(Number(id));
+  } = useAddFirewallDeviceMutation();
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
 
@@ -60,7 +60,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
     const results = await Promise.allSettled(
       selectedLinodes.map((linode) =>
-        addDevice({ id: linode.id, type: 'linode' })
+        addDevice({ firewallId: Number(id), id: linode.id, type: 'linode' })
       )
     );
 
@@ -125,7 +125,7 @@ export const AddLinodeDrawer = (props: Props) => {
       return (
         <Notice
           sx={{
-            fontFamily: theme.font.bold,
+            font: theme.font.bold,
             fontSize: '1rem',
             lineHeight: '20px',
           }}

@@ -1,6 +1,5 @@
 import { Typography, clamp } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
@@ -16,7 +15,7 @@ import type { Props as LVDataProps } from 'src/containers/longview.stats.contain
 interface getFinalUsedCPUProps extends Props, LVDataProps {}
 
 export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
-  const numberOfCores = pathOr(0, ['SysInfo', 'cpu', 'cores'], data);
+  const numberOfCores = data?.SysInfo?.cpu?.cores ?? 0;
   const usedCPU = sumCPUUsage(data.CPU);
   return normalizeValue(usedCPU, numberOfCores);
 };
@@ -32,11 +31,7 @@ export const CPUGauge = withClientStats<Props>((ownProps) => ownProps.clientID)(
 
     const theme = useTheme();
 
-    const numberOfCores = pathOr(
-      0,
-      ['SysInfo', 'cpu', 'cores'],
-      longviewClientData
-    );
+    const numberOfCores = longviewClientData?.SysInfo?.cpu?.cores ?? 0;
     const usedCPU = sumCPUUsage(longviewClientData.CPU);
     const finalUsedCPU = normalizeValue(usedCPU, numberOfCores);
 
@@ -76,7 +71,7 @@ export const sumCPUUsage = (CPUData: Record<string, CPU> = {}) => {
   Object.keys(CPUData).forEach((key) => {
     const cpu = CPUData[key];
     Object.keys(cpu).forEach((entry) => {
-      const val = pathOr(0, [entry, 0, 'y'], cpu);
+      const val = cpu?.[entry as keyof CPU]?.[0]?.y ?? 0;
       sum += val;
     });
   });

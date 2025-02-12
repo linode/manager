@@ -14,10 +14,11 @@ import { makeStyles } from 'tss-react/mui';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { ScriptCode } from 'src/components/ScriptCode/ScriptCode';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
+
+import { CodeBlock } from '../CodeBlock/CodeBlock';
 
 import type { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
 import type { Theme } from '@mui/material/styles';
@@ -71,12 +72,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   idSection: {
     fontSize: '1rem',
     marginTop: theme.spacing(1),
-  },
-  root: {
-    '.detailsWrapper &': {
-      padding: theme.spacing(4),
-    },
-    backgroundColor: theme.bg.bgPaper,
   },
 }));
 
@@ -160,7 +155,7 @@ export const StackScript = React.memo((props: StackScriptProps) => {
       : `/stackscripts/community?${queryString}`;
 
   return (
-    <div className={classes.root}>
+    <div>
       <Box
         sx={{
           alignItems: 'flex-start',
@@ -277,7 +272,7 @@ export const StackScript = React.memo((props: StackScriptProps) => {
       <Typography className={classes.heading} variant="h3">
         Script
       </Typography>
-      <ScriptCode script={script} />
+      <CodeBlock code={script} language="shell" />
     </div>
   );
 });
