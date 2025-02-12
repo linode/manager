@@ -20,7 +20,7 @@
    ## v20.17.0
    ```
 
-9. Install pnpm v10. You can also use Volta to do this.
+9. Install pnpm v10 using Volta or view the [pnpm docs](https://pnpm.io/installation) for more installation methods
 
    ```bash
    volta install pnpm@10
