@@ -236,7 +236,6 @@ export interface Alert {
   updated_by: string;
   created: string;
   updated: string;
-  class?: AlertClass;
 }
 
 interface NotificationChannelAlerts {
