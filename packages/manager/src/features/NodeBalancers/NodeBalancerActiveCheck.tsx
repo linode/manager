@@ -1,7 +1,8 @@
 import {
   Autocomplete,
-  FormHelperText,
   InputAdornment,
+  SelectedIcon,
+  Stack,
   TextField,
   Typography,
 } from '@linode/ui';
@@ -15,6 +16,7 @@ import * as React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 
+import { HEALTHCHECK_TYPE_OPTIONS } from './constants';
 import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
@@ -22,16 +24,6 @@ import type { NodeBalancerConfigPanelProps } from './types';
 interface ActiveCheckProps extends NodeBalancerConfigPanelProps {
   errorMap: Record<string, string | undefined>;
 }
-
-const displayProtocolText = (p: string) => {
-  if (p === 'tcp') {
-    return `'TCP Connection' requires a successful TCP handshake.`;
-  }
-  if (p === 'http' || p === 'https') {
-    return `'HTTP Valid Status' requires a 2xx or 3xx response from the backend node. 'HTTP Body Regex' uses a regex to match against an expected result body.`;
-  }
-  return undefined;
-};
 
 export const ActiveCheck = (props: ActiveCheckProps) => {
   const flags = useFlags();
@@ -69,30 +61,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
   const onHealthCheckTimeoutChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onHealthCheckTimeoutChange(e.target.value);
 
-  const conditionalText = displayProtocolText(protocol);
-
-  const typeOptions = [
-    {
-      label: 'None',
-      value: 'none',
-    },
-    {
-      label: 'TCP Connection',
-      value: 'connection',
-    },
-    {
-      disabled: protocol === 'tcp',
-      label: 'HTTP Status',
-      value: 'http',
-    },
-    {
-      disabled: protocol === 'tcp',
-      label: 'HTTP Body',
-      value: 'http_body',
-    },
-  ];
-
-  const defaultType = typeOptions.find((eachType) => {
+  const defaultType = HEALTHCHECK_TYPE_OPTIONS.find((eachType) => {
     return eachType.value === healthCheckType;
   });
 
@@ -109,6 +78,23 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             onChange={(_, selected) =>
               props.onHealthCheckTypeChange(selected.value)
             }
+            renderOption={(props, option, state) => (
+              <li {...props}>
+                <Stack
+                  alignItems="center"
+                  direction="row"
+                  flexGrow={1}
+                  gap={1}
+                  justifyContent="space-between"
+                >
+                  <Stack>
+                    <b>{option.label}</b>
+                    {option.description}
+                  </Stack>
+                  {state.selected && <SelectedIcon visible />}
+                </Stack>
+              </li>
+            )}
             textFieldProps={{
               dataAttrs: {
                 'data-qa-active-check-select': true,
@@ -119,17 +105,14 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             disableClearable
             disabled={disabled}
             errorText={errorMap.check}
+            helperText="Monitors backends to ensure they’re 'up' and handling requests."
             id={`type-${configIdx}`}
             label="Type"
             noMarginTop
-            options={typeOptions}
+            options={HEALTHCHECK_TYPE_OPTIONS}
             size="small"
-            value={defaultType || typeOptions[0]}
+            value={defaultType || HEALTHCHECK_TYPE_OPTIONS[0]}
           />
-          <FormHelperText>
-            Active health checks proactively check the health of back-end nodes.{' '}
-            {conditionalText}
-          </FormHelperText>
         </Grid>
         {healthCheckType !== 'none' && (
           <Grid container>
@@ -167,6 +150,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                   disabled={disabled}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   errorText={errorMap.udp_check_port}
+                  helperText="You can specify the Health Check Port that the backend node listens to, which may differ from the UDP port used to serve traffic."
                   label="Health Check Port"
                   max={65535}
                   min={1}
@@ -188,6 +172,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_interval}
+                helperText={`Seconds (${CHECK_INTERVAL.MIN}-${CHECK_INTERVAL.MAX}) between health check probes.`}
                 label="Interval"
                 max={CHECK_INTERVAL.MAX}
                 min={CHECK_INTERVAL.MIN}
@@ -195,9 +180,6 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 type="number"
                 value={healthCheckInterval}
               />
-              <FormHelperText>
-                Seconds between health check probes
-              </FormHelperText>
             </Grid>
             <Grid lg={6} xs={12}>
               <TextField
@@ -211,6 +193,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_timeout}
+                helperText={`Seconds to wait (${CHECK_TIMEOUT.MIN}-${CHECK_TIMEOUT.MAX}) before considering the probe a failure. Must be less than Interval.`}
                 label="Timeout"
                 max={CHECK_TIMEOUT.MAX}
                 min={CHECK_TIMEOUT.MIN}
@@ -218,10 +201,6 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 type="number"
                 value={healthCheckTimeout}
               />
-              <FormHelperText>
-                Seconds to wait before considering the probe a failure. 1-30.
-                Must be less than check_interval.
-              </FormHelperText>
             </Grid>
             <Grid lg={6} xs={12}>
               <TextField
@@ -232,6 +211,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_attempts}
+                helperText={`Number of failed probes (${CHECK_ATTEMPTS.MIN}-${CHECK_ATTEMPTS.MAX}) before taking a node out of rotation.`}
                 label="Attempts"
                 max={CHECK_ATTEMPTS.MAX}
                 min={CHECK_ATTEMPTS.MIN}
@@ -239,10 +219,6 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 type="number"
                 value={healthCheckAttempts}
               />
-              <FormHelperText>
-                Number of failed probes before taking a node out of rotation.
-                1-30
-              </FormHelperText>
             </Grid>
           </Grid>
         )}

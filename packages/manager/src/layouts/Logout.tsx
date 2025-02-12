@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React from 'react';
 
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import { revokeToken } from 'src/session';
@@ -9,7 +9,7 @@ import {
 } from 'src/utilities/storage';
 
 export const Logout = () => {
-  useEffect(() => {
+  React.useEffect(() => {
     const clientId = getEnvLocalStorageOverrides()?.clientID ?? CLIENT_ID;
     const authToken = getAuthToken().token;
 

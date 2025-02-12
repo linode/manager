@@ -64,17 +64,17 @@ beforeEach(() => {
   queryMocks.useAlertDefinitionQuery.mockReturnValue({
     data: alertDetails,
     isError: false,
-    isFetching: false,
+    isLoading: false,
   });
   queryMocks.useResourcesQuery.mockReturnValue({
     data: cloudPulseResources,
     isError: false,
-    isFetching: false,
+    isLoading: false,
   });
   queryMocks.useRegionsQuery.mockReturnValue({
     data: regions,
     isError: false,
-    isFetching: false,
+    isLoading: false,
   });
   queryMocks.useEditAlertDefinition.mockReturnValue({
     mutateAsync: vi.fn().mockResolvedValue({}),
@@ -99,7 +99,7 @@ describe('EditAlertResources component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined,
       isError: true, // simulate error
-      isFetching: false,
+      isLoading: false,
     });
     const { getByText } = renderWithTheme(<EditAlertResources />);
     expect(
@@ -111,7 +111,7 @@ describe('EditAlertResources component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined,
       isError: false,
-      isFetching: true, // simulate loading
+      isLoading: true, // simulate loading
     });
     const { getByTestId } = renderWithTheme(<EditAlertResources />);
     expect(getByTestId('circle-progress')).toBeInTheDocument();
@@ -121,7 +121,7 @@ describe('EditAlertResources component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined, // simulate empty
       isError: false,
-      isFetching: false,
+      isLoading: false,
     });
     const { getByText } = renderWithTheme(<EditAlertResources />);
     expect(getByText('No Data to display.')).toBeInTheDocument();
