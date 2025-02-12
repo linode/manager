@@ -253,3 +253,18 @@ export const isDevToolsEnvValid = (value: any) => {
     typeof value?.label === 'string'
   );
 };
+
+// Clear saved drafts from local storage
+export const clearUserInput = () => {
+  supportTicket.set(supportTicketStorageDefaults);
+  ticketReply.set({ text: '', ticketId: -1 });
+  stackScriptInProgress.set({
+    description: '',
+    id: '',
+    images: [],
+    label: '',
+    rev_note: '',
+    script: '',
+    updated: '',
+  });
+};

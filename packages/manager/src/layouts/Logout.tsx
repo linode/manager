@@ -4,11 +4,8 @@ import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import { revokeToken } from 'src/session';
 import { clearAuthToken, getAuthToken } from 'src/utilities/authentication';
 import {
+  clearUserInput,
   getEnvLocalStorageOverrides,
-  stackScriptInProgress,
-  supportTicket,
-  supportTicketStorageDefaults,
-  ticketReply,
 } from 'src/utilities/storage';
 
 export const Logout = () => {
@@ -33,19 +30,4 @@ const getLoginUrl = () => {
   } catch (_) {
     return LOGIN_ROOT;
   }
-};
-
-// TODO -- find a better home for this util
-const clearUserInput = () => {
-  supportTicket.set(supportTicketStorageDefaults);
-  ticketReply.set({ text: '', ticketId: -1 });
-  stackScriptInProgress.set({
-    description: '',
-    id: '',
-    images: [],
-    label: '',
-    rev_note: '',
-    script: '',
-    updated: '',
-  });
 };
