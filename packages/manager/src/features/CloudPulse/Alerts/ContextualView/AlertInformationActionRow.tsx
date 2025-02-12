@@ -61,7 +61,9 @@ export const AlertInformationActionRow = (
       <TableCell>
         <MetricThreshold metricThreshold={metricThreshold} />
       </TableCell>
-      <TableCell>{type}</TableCell>
+      <TableCell>
+        <Typography variant="subtitle1">{type}</Typography>
+      </TableCell>
     </TableRow>
   );
 };
