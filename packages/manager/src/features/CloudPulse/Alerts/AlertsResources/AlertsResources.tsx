@@ -74,7 +74,7 @@ export interface AlertResourcesProp {
    */
   noSelectionErrorText?: string;
 
-  scrollElement: HTMLDivElement | null;
+  scrollElement?: HTMLDivElement | null;
 
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
@@ -387,7 +387,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         <Grid item xs={12}>
           <DisplayAlertResources
             scrollToElement={() =>
-              scrollToElement(titleRef.current ?? scrollElement)
+              scrollToElement(titleRef.current ?? scrollElement ?? null)
             }
             filteredResources={filteredResources}
             handleSelection={handleSelection}
