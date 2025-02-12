@@ -2504,7 +2504,7 @@ export const handlers = [
   http.put(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params, request }) => {
-      const body:any = request.json();
+      const body: any = request.json();
       return HttpResponse.json(
         alertFactory.build({
           id: Number(params.id),
