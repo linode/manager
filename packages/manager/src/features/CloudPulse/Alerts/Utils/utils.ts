@@ -11,10 +11,25 @@ import type {
 import type { Theme } from '@mui/material';
 
 export interface ProcessedCriteria {
+  /**
+   * Aggregation type for the metric criteria
+   */
   aggregationType: string;
+  /**
+   * Label for the metric criteria
+   */
   label: string;
+  /**
+   * Comparison operator for the metric criteria
+   */
   operator: string;
+  /**
+   * Threshold value for the metric criteria
+   */
   threshold: number;
+  /**
+   * Unit for the threshold value
+   */
   unit: string;
 }
 
@@ -173,12 +188,11 @@ export const filterAlertsByStatusAndType = (
   selectedType: string | undefined
 ): Alert[] => {
   return (
-    alerts?.filter((alert) => {
+    alerts?.filter(({ label, status, type }) => {
       return (
-        alert.status === 'enabled' &&
-        (!selectedType || alert.type === selectedType) &&
-        (!searchText ||
-          alert.label.toLowerCase().includes(searchText.toLowerCase()))
+        status === 'enabled' &&
+        (!selectedType || type === selectedType) &&
+        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
       );
     }) ?? []
   );
@@ -192,7 +206,7 @@ export const filterAlertsByStatusAndType = (
 export const convertAlertsToTypeSet = (
   alerts: Alert[] | undefined
 ): { label: AlertDefinitionType }[] => {
-  const types = new Set(alerts?.map((alert) => alert.type) ?? []);
+  const types = new Set(alerts?.map(({ type }) => type) ?? []);
 
   return Array.from(types).reduce(
     (previousValue, type) => [...previousValue, { label: type }],

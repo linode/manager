@@ -32,7 +32,7 @@ const props: AlertInformationActionTableProps = {
   columns,
   entityId,
   entityName,
-  ordeByColumn: 'Alert Name',
+  orderByColumn: 'Alert Name',
 };
 
 describe('Alert Listing Reusable Table for contextual view', () => {

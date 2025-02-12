@@ -45,7 +45,7 @@ export interface AlertInformationActionTableProps {
   /**
    * Column name by which columns will be ordered by default
    */
-  ordeByColumn: string;
+  orderByColumn: string;
 }
 
 export interface TableColumnHeader {
@@ -84,7 +84,7 @@ const generateStatusMap = (
 export const AlertInformationActionTable = (
   props: AlertInformationActionTableProps
 ) => {
-  const { alerts, columns, entityId, entityName, ordeByColumn } = props;
+  const { alerts, columns, entityId, entityName, orderByColumn } = props;
   const [alertStatusMap, setAlertStatusMap] = React.useState<AlertStatusMap>(
     generateStatusMap(alerts, entityId)
   );
@@ -140,7 +140,7 @@ export const AlertInformationActionTable = (
   };
   return (
     <>
-      <OrderBy data={alerts} order="asc" orderBy={ordeByColumn}>
+      <OrderBy data={alerts} order="asc" orderBy={orderByColumn}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({

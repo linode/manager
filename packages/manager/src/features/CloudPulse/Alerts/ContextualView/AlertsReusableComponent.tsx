@@ -72,11 +72,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
         <Box display="flex" justifyContent="space-between">
           <Box alignItems={'center'} display="flex" gap={0.5}>
             <Typography variant="h2">Alerts</Typography>
-            <Tooltip
-              title={
-                'The list contains only the alerts enabled in the Monitor centralized view.'
-              }
-            >
+            <Tooltip title="The list contains only the alerts enabled in the Monitor centralized view.">
               <span>
                 <InfoIcon />
               </span>
@@ -119,7 +115,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             columns={AlertContextualViewTableHeaderMap}
             entityId={entityId}
             entityName={entityName}
-            ordeByColumn="Alert Name"
+            orderByColumn="Alert Name"
           />
         </Stack>
       </Stack>
