@@ -33,28 +33,17 @@ export const Calendar = ({
   const startOfMonth = month.startOf('month');
   const endOfMonth = month.endOf('month');
   const startDay = startOfMonth.weekday % 7;
-
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
+  const totalDaysInMonth = endOfMonth.day;
+  const totalGridCells = 42; // Always 6 rows (6 × 7)
   const days = [];
+
+  // Fill leading empty slots before the first day of the month
   for (let i = 0; i < startDay; i++) {
     days.push(<Box key={`empty-${i}`} sx={{ height: 40, width: 40 }} />);
   }
 
-  for (let day = 1; day <= endOfMonth.day; day++) {
+  // Fill actual days of the month
+  for (let day = 1; day <= totalDaysInMonth; day++) {
     const currentDay = month.set({ day });
     const isSelected =
       startDate &&
@@ -78,52 +67,55 @@ export const Calendar = ({
       </DayBox>
     );
   }
-  const rightCalenderHeaderStyles = {
-    display: 'flex',
-    justifyContent: 'end',
-  };
+
+  // Fill trailing empty slots after the last day of the month
+  const remainingCells = totalGridCells - days.length;
+  for (let i = 0; i < remainingCells; i++) {
+    days.push(<Box key={`empty-after-${i}`} sx={{ height: 40, width: 40 }} />);
+  }
 
   return (
     <Box paddingBottom={2}>
+      {/* Header (Month & Year) */}
       <Stack
         alignItems="center"
         direction="row"
         display="flex"
         gap={1 / 2}
-        justifyContent="center"
+        justifyContent="space-between"
         marginBottom={3}
         paddingTop={2}
         spacing={1}
+        textAlign={direction}
       >
         {direction === 'left' && (
-          <Button
-            onClick={() => setMonth(month.minus({ months: 1 }))}
-            sx={{ flexGrow: 1, justifyContent: 'flex-start', minWidth: '60px' }}
-          >
-            <SvgIcon component={ChevronLeft} viewBox="0 0 25 25" />
-          </Button>
+          <Box sx={{ flexGrow: 1 }}>
+            <Button onClick={() => setMonth(month.minus({ months: 1 }))}>
+              <SvgIcon component={ChevronLeft} viewBox="0 0 25 25" />
+            </Button>
+          </Box>
         )}
-        {/* Display month and year as read-only text */}
-        <Typography
-          sx={{
-            ...(direction === 'right' ? rightCalenderHeaderStyles : {}),
-            flexGrow: 3,
-            fontWeight: 'bold',
-          }}
-        >
-          {months[month.month - 1]} {month.year}
+        {/* Display Month & Year */}
+
+        <Typography sx={{ flexGrow: 3, fontWeight: 'bold' }}>
+          {month.toFormat('MMMM yyyy')}
         </Typography>
 
         {direction === 'right' && (
-          <Button
-            onClick={() => setMonth(month.plus({ months: 1 }))}
-            sx={{ justifyContent: 'end' }}
-          >
-            <SvgIcon component={ChevronRight} viewBox="0 0 25 25" />
-          </Button>
+          <Box sx={{ flexGrow: 1 }}>
+            <Button
+              onClick={() => setMonth(month.plus({ months: 1 }))}
+              sx={{ justifyContent: 'end' }}
+            >
+              <SvgIcon component={ChevronRight} viewBox="0 0 25 25" />
+            </Button>
+          </Box>
         )}
       </Stack>
+
+      {/* Calendar Grid */}
       <Box display="grid" gridTemplateColumns="repeat(7, 40px)">
+        {/* Weekday Labels */}
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d, index) => (
           <Typography
             align="center"
