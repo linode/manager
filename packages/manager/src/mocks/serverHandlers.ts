@@ -2438,30 +2438,32 @@ export const handlers = [
   ),
   http.get('*/monitor/alert-definitions', async () => {
     const customAlerts = alertFactory.buildList(10, {
+      created_by: 'user1',
       severity: 0,
       type: 'user',
       updated: '2021-10-16T04:00:00',
+      updated_by: 'user1',
     });
     const customAlertsWithServiceType = alertFactory.buildList(10, {
+      created_by: 'user1',
       service_type: 'dbaas',
       severity: 1,
       type: 'user',
+      updated_by: 'user1',
     });
-    const defaultAlerts = alertFactory.buildList(15, {
-      created_by: 'System',
-      type: 'system',
-    });
+    const defaultAlerts = alertFactory.buildList(15);
     const defaultAlertsWithServiceType = alertFactory.buildList(7, {
-      created_by: 'System',
       service_type: 'dbaas',
       severity: 3,
-      type: 'system',
     });
     const alerts = [
       ...defaultAlerts,
       ...alertFactory.buildList(8, {
+        created_by: 'user1',
         service_type: 'linode',
         status: 'disabled',
+        type: 'user',
+        updated_by: 'user1',
       }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
