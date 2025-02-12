@@ -70,7 +70,7 @@ export const NotificationCenterNotifications = React.memo(
                 textDecoration: 'none !important',
               })}
               aria-label={`Display all ${content.length} items`}
-              data-test-id="showMoreButton"
+              data-testid="showMoreButton"
               onClick={() => setShowAll(!showAll)}
             >
               {showAll ? 'Collapse' : `${content.length - count} more`}

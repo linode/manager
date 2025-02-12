@@ -23,11 +23,11 @@ describe('verify notification types and icons', () => {
     cy.visitWithLogin('/linodes');
     cy.wait('@mockNotifications');
     cy.get('button[aria-label="Notifications"]').click();
-    cy.get('[data-test-id="showMoreButton"').click();
+    cy.get('[data-testid="showMoreButton"').click();
     notifications.forEach((notification) => {
-      cy.get(`[data-test-id="${notification.type}"]`).within(() => {
+      cy.get(`[data-testid="${notification.type}"]`).within(() => {
         if (notification.severity != 'minor') {
-          cy.get(`[data-test-id="${notification.severity + 'Icon'}"]`);
+          cy.get(`[data-testid="${notification.severity + 'Icon'}"]`);
         }
       });
     });
