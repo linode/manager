@@ -99,7 +99,7 @@ export const linodeInterfaceAccountSettings = [
   'legacy_config_default_but_linode_allowed',
   'linode_default_but_legacy_config_allowed',
   'linode_only',
-];
+] as const;
 
 export type LinodeInterfaceAccountSetting = typeof linodeInterfaceAccountSettings[number];
 
