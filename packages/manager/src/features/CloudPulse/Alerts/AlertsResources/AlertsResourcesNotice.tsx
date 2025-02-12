@@ -42,8 +42,6 @@ export const AlertsResourcesNotice = React.memo(
         {isSelectAll && (
           <LinkButton
             onClick={() => {
-              event?.stopPropagation();
-
               handleSelectionChange('Select All');
             }}
             aria-label="Select All Resources"
@@ -55,7 +53,6 @@ export const AlertsResourcesNotice = React.memo(
         {!isSelectAll && (
           <LinkButton
             onClick={() => {
-              event?.stopPropagation();
               handleSelectionChange('Unselect All');
             }}
             aria-label="Unselect All Resources"
