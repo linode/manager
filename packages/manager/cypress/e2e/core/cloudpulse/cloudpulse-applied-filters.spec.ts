@@ -96,7 +96,7 @@ const databaseMock: Database = databaseFactory.build({
   region: mockRegion.label,
   version: '1',
   status: 'provisioning',
-  cluster_size: 1,
+  cluster_size: 2,
   engine: 'mysql',
   hosts: {
     primary: undefined,
@@ -174,7 +174,10 @@ describe('Integration Tests for Applied Filters', () => {
       .should('be.visible')
       .type(`${databaseMock.label}{enter}`)
       .click();
+
     cy.findByText(databaseMock.label).should('be.visible');
+
+    cy.get('body').click('topRight');
 
     //Select a Node from the autocomplete input.
     ui.autocomplete
@@ -248,22 +251,6 @@ describe('Integration Tests for Applied Filters', () => {
     });
   });
 
-  it('apply only node type  and verify applied filters', () => {
-    //Select a Node from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Node Type')
-      .should('be.visible')
-      .type(`${nodeType}{enter}`);
-
-    //Collapse the Filters section
-    ui.button.findByTitle('Filters').should('be.visible').click();
-
-    cy.get('[data-testid="applied-filter"]').within(() => {
-      cy.get(`[data-qa-value="Node Type ${nodeType}"]`)
-        .should('be.visible')
-        .should('have.text', nodeType);
-    });
-  });
   it('should update and verify that the applied global filters are reflected in the filter section', () => {
     // Select a region from the dropdown.
     ui.regionSelect.find().click();
@@ -289,6 +276,8 @@ describe('Integration Tests for Applied Filters', () => {
       .should('be.visible')
       .type(`${'Select All'}{enter}`)
       .click();
+
+    cy.get('body').click('topRight');
 
     //Select a Node from the autocomplete input.
     ui.autocomplete

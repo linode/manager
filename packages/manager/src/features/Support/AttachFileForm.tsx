@@ -61,6 +61,8 @@ export const AttachFileForm = (props: Props) => {
       />
       <Button
         sx={(theme) => ({
+          display: 'flex',
+          justifyContent: 'flex-start',
           marginTop: theme.spacing(1),
         })}
         buttonType="secondary"
