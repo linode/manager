@@ -80,7 +80,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
   'object-storage': [
     quotaFactory.build({
       description: 'The total capacity of your Object Storage account',
-      endpoint_type: 'E3',
+      endpoint_type: 'E0',
       quota_limit: 1_000_000_000_000_000, // a petabyte
       quota_name: 'Total Capacity',
       resource_metric: 'byte',
@@ -89,11 +89,11 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
     quotaFactory.build({
       description:
         'The allowed number of buckets in your Object Storage account',
-      endpoint_type: 'E1',
+      endpoint_type: 'E0',
       quota_limit: 1000,
       quota_name: 'Number of Buckets',
       resource_metric: 'bucket',
-      s3_endpoint: 'foobar.us-east-1.linodeobjects.com',
+      s3_endpoint: 'us-east-1.linodeobjects.com',
     }),
     quotaFactory.build({
       description: 'The total number of objects in your Object Storage account',
@@ -101,7 +101,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quota_limit: 10_000_000,
       quota_name: 'Number of Objects',
       resource_metric: 'object',
-      s3_endpoint: 'us-east-1.linodeobjects.com',
+      s3_endpoint: 'br-gru-1.linodeobjects.com',
     }),
   ],
 };

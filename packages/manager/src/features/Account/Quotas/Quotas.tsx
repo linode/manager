@@ -17,7 +17,7 @@ import { useQuotasQuery } from 'src/queries/quotas/quotas';
 
 import { useGetLocationsForQuotaService } from './utils';
 
-import type { QuotaType, Region } from '@linode/api-v4';
+import type { Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Theme } from '@mui/material';
 
@@ -29,7 +29,7 @@ export const Quotas = () => {
     value: 'linode',
   });
   const [selectedLocation, setSelectedLocation] = React.useState<SelectOption<
-    'global' | Region['id']
+    Quota['region_applied']
   > | null>(null);
   const locationData = useGetLocationsForQuotaService(selectedService.value);
 
@@ -82,8 +82,8 @@ export const Quotas = () => {
   // Loading logic
   // - Locations
   const isFetchingLocations =
-    'isFetchingObjectStorageQuotas' in locationData
-      ? locationData.isFetchingObjectStorageQuotas
+    'isFetchingS3Endpoints' in locationData
+      ? locationData.isFetchingS3Endpoints
       : locationData.isFetchingRegions;
   // - Quotas
   const isLoadingQuotaUsage = quotaUsageQueries.some(
@@ -119,7 +119,6 @@ export const Quotas = () => {
               placeholder="Select a service"
               value={selectedService}
             />
-
             {selectedService.value === 'object-storage' ? (
               <Select
                 onChange={(_event, value) => {
@@ -140,14 +139,15 @@ export const Quotas = () => {
                     ? `Loading ${selectedService.label} S3 endpoints...`
                     : 'Select an Object Storage S3 endpoint'
                 }
-                value={{
-                  label:
-                    s3Endpoints?.find(
-                      (s3Endpoint) =>
-                        s3Endpoint.value === selectedLocation?.value
-                    )?.label ?? '',
-                  value: selectedLocation?.value ?? '',
-                }}
+                // value={{
+                //   label:
+                //     s3Endpoints?.find(
+                //       (s3Endpoint) =>
+                //         s3Endpoint.value === selectedLocation?.value
+                //     )?.label ?? '',
+                //   value: selectedLocation?.value ?? '',
+                // }}
+                disabled={isFetchingLocations}
                 label="Object Storage Endpoint"
                 loading={isFetchingLocations}
                 searchable
@@ -155,10 +155,10 @@ export const Quotas = () => {
               />
             ) : (
               <RegionSelect
-                onChange={(_event, value) => {
+                onChange={(_event, region) => {
                   setSelectedLocation({
-                    label: value.label,
-                    value: value.id,
+                    label: region.label,
+                    value: region.id,
                   });
                   refetch();
                 }}

@@ -1,21 +1,23 @@
 import { regionFactory } from 'src/factories';
-import { useQuotasQuery } from 'src/queries/quotas/quotas';
+import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+
+import { GLOBAL_QUOTA_LABEL, GLOBAL_QUOTA_VALUE } from './constants';
 
 import type { QuotaType, Region } from '@linode/api-v4';
 
 type UseGetLocationsForQuotaService =
   | {
-      isFetchingObjectStorageQuotas: boolean;
-      regions: null;
-      s3Endpoints: { label: string; value: string }[];
-      service: 'object-storage';
-    }
-  | {
       isFetchingRegions: boolean;
       regions: Region[];
       s3Endpoints: null;
       service: Exclude<QuotaType, 'object-storage'>;
+    }
+  | {
+      isFetchingS3Endpoints: boolean;
+      regions: null;
+      s3Endpoints: { label: string; value: string }[];
+      service: 'object-storage';
     };
 
 /**
@@ -28,41 +30,34 @@ export const useGetLocationsForQuotaService = (
 ): UseGetLocationsForQuotaService => {
   const { data: regions, isFetching: isFetchingRegions } = useRegionsQuery();
   const {
-    data: quotas,
-    isFetching: isFetchingObjectStorageQuotas,
-  } = useQuotasQuery(service, {}, {}, service === 'object-storage');
+    data: s3Endpoints,
+    isFetching: isFetchingS3Endpoints,
+  } = useObjectStorageEndpoints(service === 'object-storage');
 
   const globalOption = regionFactory.build({
     capabilities: [],
-    id: 'global',
-    label: 'Global (Account level)',
+    id: GLOBAL_QUOTA_VALUE,
+    label: GLOBAL_QUOTA_LABEL,
   });
 
   if (service === 'object-storage') {
-    const uniqueEndpoints = Array.from(
-      (quotas?.data ?? [])
-        .reduce((map, quota) => {
-          const key = `${quota.s3_endpoint}-${quota.endpoint_type}`;
-          if (!map.has(key) && quota.s3_endpoint) {
-            map.set(key, {
-              endpoint: quota.s3_endpoint,
-              endpoint_type: quota.endpoint_type,
-            });
-          }
-          return map;
-        }, new Map<string, { endpoint: string; endpoint_type: string }>())
-        .values()
-    );
-
     return {
-      isFetchingObjectStorageQuotas,
+      isFetchingS3Endpoints,
       regions: null,
       s3Endpoints: [
-        ...[{ label: 'Global (Account level)', value: 'global' }],
-        ...uniqueEndpoints.map((endpoint) => ({
-          label: `${endpoint.endpoint} (Standard ${endpoint.endpoint_type})`,
-          value: endpoint.endpoint,
-        })),
+        ...[{ label: GLOBAL_QUOTA_LABEL, value: GLOBAL_QUOTA_VALUE }],
+        ...(s3Endpoints ?? [])
+          ?.map((s3Endpoint) => {
+            if (!s3Endpoint.s3_endpoint) {
+              return null;
+            }
+
+            return {
+              label: `${s3Endpoint.s3_endpoint} (Standard ${s3Endpoint.endpoint_type})`,
+              value: s3Endpoint.s3_endpoint,
+            };
+          })
+          .filter((item) => item !== null),
       ],
       service: 'object-storage',
     };
