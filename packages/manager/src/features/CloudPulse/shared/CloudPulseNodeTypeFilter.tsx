@@ -27,6 +27,8 @@ const nodeTypeMap = new Map<string, CloudPulseNodeType>(
   nodeTypeOptionsList.map((type) => [type.id, type])
 );
 
+const primaryNode = nodeTypeMap.get(PRIMARY_NODE);
+
 export interface CloudPulseNodeTypeFilterProps {
   /**
    * Selected database cluster ids
@@ -115,17 +117,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
       setSelectedNodeType(selectedNode ?? null);
     };
 
-    const primaryNode = nodeTypeMap.get(PRIMARY_NODE);
-
-    // calculate available options based on cluster size, keep only primary as option if max cluster size is 1 for chosen clusters, else secondary
-    const availableOptions =
-      isClusterSizeGreaterThanOne === undefined
-        ? []
-        : isClusterSizeGreaterThanOne
-        ? nodeTypeOptionsList
-        : primaryNode
-        ? [primaryNode]
-        : [];
+    const availableOptions = getNodeTypeOptions(isClusterSizeGreaterThanOne);
 
     React.useEffect(() => {
       // when savePreferences is false, we retain the primary selection as default selected value
@@ -184,3 +176,23 @@ export const CloudPulseNodeTypeFilter = React.memo(
     );
   }
 );
+
+/**
+ * Calculates available node type options based on cluster size.
+ * Returns only primary as an option if max cluster size is 1 for chosen clusters,
+ * otherwise returns both primary and secondary options.
+ *
+ * @param isClusterSizeGreaterThanOne - Boolean indicating if any selected cluster has size > 1
+ * @returns Array of available node type options
+ */
+const getNodeTypeOptions = (
+  isClusterSizeGreaterThanOne: boolean | undefined
+): CloudPulseNodeType[] => {
+  return isClusterSizeGreaterThanOne === undefined
+    ? []
+    : isClusterSizeGreaterThanOne
+    ? nodeTypeOptionsList
+    : primaryNode
+    ? [primaryNode]
+    : [];
+};

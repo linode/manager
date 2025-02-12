@@ -7,7 +7,6 @@ import { RESOURCE_ID, RESOURCES } from './constants';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
-  checkIfWeNeedToDisableFilterByFilterKey,
   constructAdditionalRequestFilters,
   getCustomSelectProperties,
   getMetricsCallCustomFilters,
@@ -16,6 +15,7 @@ import {
   getResourcesProperties,
   getTagsProperties,
   getTimeDurationProperties,
+  shouldDisableFilterByFilterKey,
 } from './FilterBuilder';
 import { deepEqual, getFilters } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
@@ -181,10 +181,10 @@ it('test getResourceSelectionProperties method with disabled true', () => {
   }
 });
 
-describe('checkIfWeNeedToDisableFilterByFilterKey', () => {
+describe('shouldDisableFilterByFilterKey', () => {
   // resources filter has region as mandatory and tags as an optional filter, this should reflect in the dependent filters
   it('should enable filter when dependent filter region is provided', () => {
-    const result = checkIfWeNeedToDisableFilterByFilterKey(
+    const result = shouldDisableFilterByFilterKey(
       'resource_id',
       { region: 'us-east' },
       mockDashboard
@@ -193,7 +193,7 @@ describe('checkIfWeNeedToDisableFilterByFilterKey', () => {
   });
 
   it('should disable filter when dependent filter region is undefined', () => {
-    const result = checkIfWeNeedToDisableFilterByFilterKey(
+    const result = shouldDisableFilterByFilterKey(
       'resource_id',
       { region: undefined },
       mockDashboard
@@ -202,7 +202,7 @@ describe('checkIfWeNeedToDisableFilterByFilterKey', () => {
   });
 
   it('should disable filter when no dependent filters are provided', () => {
-    const result = checkIfWeNeedToDisableFilterByFilterKey(
+    const result = shouldDisableFilterByFilterKey(
       'resource_id',
       {},
       mockDashboard
@@ -211,7 +211,7 @@ describe('checkIfWeNeedToDisableFilterByFilterKey', () => {
   });
 
   it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
-    const result = checkIfWeNeedToDisableFilterByFilterKey(
+    const result = shouldDisableFilterByFilterKey(
       'resource_id',
       { region: 'us-east', tags: undefined },
       mockDashboard,
