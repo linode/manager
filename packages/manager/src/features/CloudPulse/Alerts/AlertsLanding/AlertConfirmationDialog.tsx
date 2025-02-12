@@ -83,6 +83,7 @@ export const AlertConfirmationDialog = React.memo(
     return (
       <ConfirmationDialog
         actions={actionsPanel}
+        data-testid="confirmation-dialog"
         onClose={handleCancel}
         open={isOpen}
         title={`${isActive ? 'Disable' : 'Enable'} ${alertName} Alert?`}
