@@ -15,23 +15,28 @@ import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
-import { CreateAlertDefinitionFormSchema } from '../CreateAlert/schemas';
-import {
-  convertAlertDefinitionValues,
-  omitEditAlertFormValues,
-} from '../Utils/utils';
+import { convertAlertDefinitionValues } from '../Utils/utils';
+import { EditAlertDefinitionFormSchema } from './schemas';
 
-import type { EditAlertDefinitionForm } from './types';
-import type { AlertServiceType } from '@linode/api-v4';
+import type {
+  AlertServiceType,
+  EditAlertDefinitionPayload,
+} from '@linode/api-v4';
 import type { Alert } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
-interface EditProps {
+export interface EditAlertProps {
+  /**
+   * The details of the alert being edited.
+   */
   alertDetails: Alert;
+  /**
+   * The type of service associated with the alert
+   */
   serviceType: AlertServiceType;
 }
 
-export const EditAlertDefinition = (props: EditProps) => {
+export const EditAlertDefinition = (props: EditAlertProps) => {
   const { alertDetails, serviceType } = props;
   const history = useHistory();
 
@@ -41,25 +46,22 @@ export const EditAlertDefinition = (props: EditProps) => {
     alertDetails,
     serviceType
   );
-  const formMethods = useForm<EditAlertDefinitionForm>({
+  const formMethods = useForm<EditAlertDefinitionPayload>({
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      CreateAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionForm>
+      EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
 
   const alertId = alertDetails.id;
-  const { mutateAsync: editAlert } = useEditAlertDefinition(
-    serviceType,
-    alertId
-  );
+  const { mutateAsync: editAlert } = useEditAlertDefinition();
   const { control, formState, handleSubmit, setError } = formMethods;
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await editAlert(omitEditAlertFormValues(values));
+      await editAlert({ alertId, serviceType, ...values });
       enqueueSnackbar('Alert successfully updated', {
         variant: 'success',
       });
@@ -136,7 +138,7 @@ export const EditAlertDefinition = (props: EditProps) => {
             control={control}
             name="description"
           />
-          <CloudPulseServiceSelect name="serviceType" />
+          <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
           <CloudPulseModifyAlertResources name="entity_ids" />
           <MetricCriteriaField

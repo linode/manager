@@ -56,6 +56,10 @@ export const getAlertTypeToActionsList = (
       onClick: handleEnableDisable,
       title: getTitleForEnableDisable(alertStatus),
     },
+    {
+      onClick: handleEdit,
+      title: 'Edit',
+    },
   ],
 });
 

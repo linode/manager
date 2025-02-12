@@ -1,14 +1,11 @@
-import { omitProps } from '@linode/ui';
-
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
-import type { EditAlertDefinitionForm } from '../EditAlert/types';
 import type {
   Alert,
   AlertDefinitionDimensionFilter,
   AlertDefinitionMetricCriteria,
   AlertServiceType,
   DimensionFilter,
-  EditAlertDefinitionPayload,
+  EditAlertPayloadWithService,
   MetricCriteria,
   NotificationChannel,
   ServiceTypesList,
@@ -137,7 +134,7 @@ export const getChipLabels = (
  * @param formValues The alert dimension filter values from the form.
  * @returns The filtered DimensionFilter object.
  */
-const convertAlertDefinitionDimensionFilterValues = (
+export const convertAlertDefinitionDimensionFilterValues = (
   formValues: AlertDefinitionDimensionFilter
 ): DimensionFilter => {
   return {
@@ -152,7 +149,7 @@ const convertAlertDefinitionDimensionFilterValues = (
  * @param formValue The alert's metric criteria values from the form.
  * @returns The filtered MetricCriteria object.
  */
-const convertAlertDefinitionMetricValues = (
+export const convertAlertDefinitionMetricValues = (
   formValue: AlertDefinitionMetricCriteria
 ): MetricCriteria => {
   return {
@@ -176,8 +173,9 @@ const convertAlertDefinitionMetricValues = (
 export const convertAlertDefinitionValues = (
   alert: Alert,
   serviceType: AlertServiceType
-): EditAlertDefinitionForm => {
+): EditAlertPayloadWithService => {
   return {
+    alertId: alert.id,
     channel_ids: alert.alert_channels.map((channel) => channel.id),
     description: alert.description || undefined,
     entity_ids: alert.entity_ids,
@@ -192,10 +190,4 @@ export const convertAlertDefinitionValues = (
     tags: alert.tags,
     trigger_conditions: alert.trigger_conditions,
   };
-};
-
-export const omitEditAlertFormValues = (
-  formValues: EditAlertDefinitionForm
-): EditAlertDefinitionPayload => {
-  return omitProps(formValues, ['serviceType']);
 };

@@ -1,7 +1,6 @@
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
 
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
@@ -12,6 +11,10 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 interface CloudPulseServiceSelectProps {
   /**
+   * boolean value used to disable it in the edit flow
+   */
+  isDisabled: boolean;
+  /**
    * name used for the component in the form
    */
   name: FieldPathByValue<CreateAlertDefinitionForm, AlertServiceType | null>;
@@ -20,7 +23,7 @@ interface CloudPulseServiceSelectProps {
 export const CloudPulseServiceSelect = (
   props: CloudPulseServiceSelectProps
 ) => {
-  const { name } = props;
+  const { isDisabled, name } = props;
   const {
     data: serviceOptions,
     error: serviceTypesError,
@@ -28,7 +31,6 @@ export const CloudPulseServiceSelect = (
   } = useCloudPulseServiceTypes(true);
   const { control } = useFormContext<CreateAlertDefinitionForm>();
 
-  const location = useLocation();
   const getServicesList = React.useMemo((): Item<
     string,
     AlertServiceType
@@ -41,7 +43,6 @@ export const CloudPulseServiceSelect = (
       : [];
   }, [serviceOptions]);
 
-  const isDisabled = location.pathname.includes('edit');
   return (
     <Controller
       render={({ field, fieldState }) => (

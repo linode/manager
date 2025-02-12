@@ -4,51 +4,25 @@ import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import {
-  useAlertDefinitionQuery,
-  useEditAlertDefinition,
-} from 'src/queries/cloudpulse/alerts';
 
 import { AlertResources } from '../AlertsResources/AlertsResources';
 import { isResourcesEqual } from '../Utils/AlertResourceUtils';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { EditAlertResourcesConfirmDialog } from './EditAlertResourcesConfirmationDialog';
 
-import type { AlertRouteParams } from '../AlertsDetail/AlertDetail';
-import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
+import type { EditAlertProps } from './EditAlertDefinition';
 
-interface EditAlertResourcesProps {
-  alertDetails: Alert;
-  serviceType: AlertServiceType;
-}
-export const EditAlertResources = (props: EditAlertResourcesProps) => {
-  const { alertDetails, serviceType } = props;
-export const EditAlertResources = () => {
-  const { alertId, serviceType } = useParams<AlertRouteParams>();
-
+export const EditAlertResources = (props: EditAlertProps) => {
   const theme = useTheme();
 
   const history = useHistory();
 
   const definitionLanding = '/monitor/alerts/definitions';
 
+  const { alertDetails, serviceType } = props;
   const alertId = alertDetails.id;
-  const {
-    isError: isEditAlertError,
-    mutateAsync: editAlert,
-    reset: resetEditAlert,
-  } = useEditAlertDefinition(serviceType, Number(alertId));
-  const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
-    alertId,
-    serviceType
-  );
-
   const { mutateAsync: editAlert } = useEditAlertDefinition();
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     []
@@ -80,26 +54,6 @@ export const EditAlertResources = () => {
     return { newPathname: '/Definitions/Edit', overrides };
   }, [serviceType, alertId]);
 
-  const [showConfirmation, setShowConfirmation] = React.useState<boolean>(
-    false
-  );
-
-  const [selectedResources, setSelectedResources] = React.useState<number[]>(
-    []
-  );
-
-  const isSameResourcesSelected = React.useMemo((): boolean => {
-    if (
-      !alertDetails ||
-      !alertDetails?.entity_ids ||
-      selectedResources.length !== alertDetails?.entity_ids.length
-    ) {
-      return false;
-    }
-    return selectedResources.every((resource) =>
-      alertDetails?.entity_ids.includes(String(resource))
-    );
-  }, [alertDetails, selectedResources]);
   const saveResources = () => {
     setShowConfirmation(false);
     editAlert({
@@ -123,30 +77,6 @@ export const EditAlertResources = () => {
     () => isResourcesEqual(alertDetails?.entity_ids, selectedResources),
     [alertDetails, selectedResources]
   );
-
-  if (isFetching) {
-    return getEditAlertMessage(<CircleProgress />, newPathname, overrides);
-  }
-
-  if (isError) {
-    return getEditAlertMessage(
-      <ErrorState
-        errorText={
-          'An error occurred while loading the alerts definitions and resources. Please try again later.'
-        }
-      />,
-      newPathname,
-      overrides
-    );
-  }
-
-  if (!alertDetails) {
-    return getEditAlertMessage(
-      <StyledPlaceholder icon={EntityIcon} title="No Data to display." />,
-      newPathname,
-      overrides
-    );
-  }
 
   const handleResourcesSelection = (resourceIds: string[]) => {
     setSelectedResources(resourceIds); // keep track of the selected resources and update it on save
@@ -210,27 +140,6 @@ export const EditAlertResources = () => {
           onConfirm={saveResources}
           openConfirmationDialog={showConfirmation}
         />
-      </Box>
-    </>
-  );
-};
-
-/**
- * Returns a common UI structure for loading, error, or empty states.
- * @param messageComponent - A React component to display (e.g., CircleProgress, ErrorState, or Placeholder).
- * @param pathName - The current pathname to be provided in breadcrumb
- * @param crumbOverrides - The overrides to be provided in breadcrumb
- */
-const getEditAlertMessage = (
-  messageComponent: React.ReactNode,
-  pathName: string,
-  crumbOverrides: CrumbOverridesProps[]
-) => {
-  return (
-    <>
-      <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathName} />
-      <Box alignContent="center" height="600px">
-        {messageComponent}
       </Box>
     </>
   );

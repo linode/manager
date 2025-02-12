@@ -5,10 +5,7 @@ import React from 'react';
 import { alertFactory, notificationChannelFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  convertAlertDefinitionValues,
-  omitEditAlertFormValues,
-} from '../Utils/utils';
+import { convertAlertDefinitionValues } from '../Utils/utils';
 import { EditAlertDefinition } from './EditAlertDefinition';
 
 const queryMocks = vi.hoisted(() => ({
@@ -105,7 +102,7 @@ describe('EditAlertDefinition component', () => {
     );
     await waitFor(() =>
       expect(mutateAsyncSpy).toHaveBeenCalledWith(
-        expect.objectContaining(omitEditAlertFormValues(alertPayload))
+        expect.objectContaining(alertPayload)
       )
     );
   });

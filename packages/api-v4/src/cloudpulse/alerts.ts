@@ -64,17 +64,6 @@ export const getAlertDefinitionByServiceTypeAndId = (
     })
   );
 
-export const getNotificationChannels = (params?: Params, filters?: Filter) =>
-  Request<ResourcePage<NotificationChannel>>(
-    setURL(`${hostedDomain}/monitor/alert-channels`),
-    setMethod('GET'),
-    setParams(params),
-    setXFilter(filters),
-    setHeaders({
-      Authorization: bearer,
-    })
-  );
-
 export const editAlertDefinition = (
   data: EditAlertDefinitionPayload,
   serviceType: string,
@@ -87,5 +76,18 @@ export const editAlertDefinition = (
       )}/alert-definitions/${encodeURIComponent(alertId)}`
     ),
     setMethod('PUT'),
-    setData(data)
+    setData(data),
+    setHeaders({
+      Authorization: bearer,
+    })
+  );
+export const getNotificationChannels = (params?: Params, filters?: Filter) =>
+  Request<ResourcePage<NotificationChannel>>(
+    setURL(`${hostedDomain}/monitor/alert-channels`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setHeaders({
+      Authorization: bearer,
+    })
   );

@@ -148,7 +148,7 @@ export const CreateAlertDefinition = () => {
             control={control}
             name="description"
           />
-          <CloudPulseServiceSelect name="serviceType" />
+          <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
           <CloudPulseModifyAlertResources name="entity_ids" />
           <MetricCriteriaField

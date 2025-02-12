@@ -21,12 +21,6 @@ export const AlertDefinitionLanding = () => {
         <AlertDetail />
       </Route>
       <Route
-        exact
-        path="/monitor/alerts/definitions/edit/:serviceType/:alertId"
-      >
-        <EditAlertResources />
-      </Route>
-      <Route
         component={CreateAlertDefinition}
         path="/monitor/alerts/definitions/create"
       />

@@ -155,7 +155,10 @@ describe('EditAlertResources component tests', () => {
 
     const { getByTestId, getByText } = renderWithTheme(
       <Router history={history}>
-        <EditAlertResources />
+        <EditAlertResources
+          alertDetails={alertDetails}
+          serviceType={'linode'}
+        />
       </Router>
     );
 
