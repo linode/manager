@@ -476,16 +476,26 @@ export const CreateCluster = () => {
                         if (!updatedACL.addresses) {
                           updatedACL.addresses = {};
                         }
-                        updatedACL.addresses.ipv4 = value;
-                        field.onChange(updatedACL);
+                        if (
+                          JSON.stringify(updatedACL.addresses.ipv4) !==
+                          JSON.stringify(value)
+                        ) {
+                          updatedACL.addresses.ipv4 = value;
+                          field.onChange(updatedACL);
+                        }
                       }}
                       handleIPv6Change={(value) => {
                         const updatedACL = { ...field.value };
                         if (!updatedACL.addresses) {
                           updatedACL.addresses = {};
                         }
-                        updatedACL.addresses.ipv6 = value;
-                        field.onChange(updatedACL);
+                        if (
+                          JSON.stringify(updatedACL.addresses.ipv6) !==
+                          JSON.stringify(value)
+                        ) {
+                          updatedACL.addresses.ipv6 = value;
+                          field.onChange(updatedACL);
+                        }
                       }}
                       updateFor={[
                         getValues('control_plane.acl.addresses.ipv4'),

@@ -60,14 +60,28 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
 
   React.useEffect(() => {
     if (enableControlPlaneACL) {
-      if (!ipv4Addresses || ipv4Addresses.length == 0) {
+      if (
+        (!ipv4Addresses || ipv4Addresses.length === 0) &&
+        !ipv4Fields.length
+      ) {
         appendIPv4('');
       }
-      if (!ipv6Addresses || ipv6Addresses.length == 0) {
+      if (
+        (!ipv6Addresses || ipv6Addresses.length === 0) &&
+        !ipv6Fields.length
+      ) {
         appendIPv6('');
       }
     }
-  }, [enableControlPlaneACL]);
+  }, [
+    enableControlPlaneACL,
+    ipv4Addresses,
+    ipv6Addresses,
+    ipv4Fields,
+    ipv6Fields,
+    appendIPv4,
+    appendIPv6,
+  ]);
 
   React.useEffect(() => {
     if (ipv4Addresses && ipv4Addresses.length) {
