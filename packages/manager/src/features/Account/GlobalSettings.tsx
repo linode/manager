@@ -2,6 +2,7 @@ import { CircleProgress } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAccountSettings,
@@ -82,6 +83,7 @@ const GlobalSettings = () => {
 
   return (
     <div>
+      <DocumentTitleSegment segment="Settings" />
       {linodeInterfacesFlag?.enabled && <NetworkInterfaceType />}
       <AutoBackups
         backups_enabled={backups_enabled}
