@@ -43,9 +43,11 @@ interface AlertReusableComponentProps {
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   const { entityId, entityName, serviceType } = props;
-  const { data: alerts, isLoading } = useAlertDefinitionByServiceTypeQuery(
-    serviceType
-  );
+  const {
+    data: alerts,
+    error,
+    isLoading,
+  } = useAlertDefinitionByServiceTypeQuery(serviceType);
 
   const [searchText, setSearchText] = React.useState<string>('');
   const [selectedType, setSelectedType] = React.useState<
@@ -115,6 +117,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             columns={AlertContextualViewTableHeaderMap}
             entityId={entityId}
             entityName={entityName}
+            error={error}
             orderByColumn="Alert Name"
           />
         </Stack>

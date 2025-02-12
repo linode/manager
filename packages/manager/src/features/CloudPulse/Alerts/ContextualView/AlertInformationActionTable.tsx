@@ -15,11 +15,12 @@ import {
   useAddEntityToAlert,
   useRemoveEntityFromAlert,
 } from 'src/queries/cloudpulse/alerts';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
-import type { Alert, EntityAlertUpdatePayload } from '@linode/api-v4';
+import type { APIError, Alert, EntityAlertUpdatePayload } from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -41,6 +42,11 @@ export interface AlertInformationActionTableProps {
    * Name of the selected entity
    */
   entityName: string;
+
+  /**
+   * Error received from API
+   */
+  error?: APIError[] | null;
 
   /**
    * Column name by which columns will be ordered by default
@@ -84,10 +90,14 @@ const generateStatusMap = (
 export const AlertInformationActionTable = (
   props: AlertInformationActionTableProps
 ) => {
-  const { alerts, columns, entityId, entityName, orderByColumn } = props;
+  const { alerts, columns, entityId, entityName, error, orderByColumn } = props;
   const [alertStatusMap, setAlertStatusMap] = React.useState<AlertStatusMap>(
     generateStatusMap(alerts, entityId)
   );
+
+  const _error = error
+    ? getAPIErrorOrDefault(error, 'Error while fetching the alerts')
+    : undefined;
   const { enqueueSnackbar } = useSnackbar();
   const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
@@ -180,6 +190,7 @@ export const AlertInformationActionTable = (
                     </TableHead>
                     <TableBody>
                       <TableContentWrapper
+                        error={_error}
                         length={paginatedAndOrderedAlerts.length}
                         loading={false}
                       />
