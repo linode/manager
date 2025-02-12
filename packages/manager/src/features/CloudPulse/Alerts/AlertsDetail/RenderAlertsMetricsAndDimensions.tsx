@@ -3,6 +3,7 @@ import { Grid } from '@mui/material';
 import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
+import { capitalize } from 'src/utilities/capitalize';
 
 import {
   aggregationTypeMap,
@@ -68,7 +69,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                   }) => [
                     dimensionLabel,
                     dimensionOperatorTypeMap[dimensionOperator],
-                    value,
+                    capitalize(value),
                   ]
                 )}
                 label="Dimension Filter"

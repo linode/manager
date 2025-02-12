@@ -29,6 +29,7 @@ import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricin
 
 import { getDisabledRegions } from './Region.utils';
 import { TwoStepRegion } from './TwoStepRegion';
+import { getIsLegacyInterfaceArray } from './utilities';
 import {
   getGeneratedLinodeLabel,
   useLinodeCreateQueryParams,
@@ -96,13 +97,21 @@ export const Region = React.memo(() => {
       setValue('hasSignedEUAgreement', false);
     }
 
-    if (values.interfaces?.[0].vpc_id) {
+    // @TODO Linode Interfaces - need to handle case if interface is not legacy
+    if (
+      getIsLegacyInterfaceArray(values.interfaces) &&
+      values.interfaces?.[0].vpc_id
+    ) {
       // If a VPC is selected, clear it because VPCs are region specific
       setValue('interfaces.0.vpc_id', null);
       setValue('interfaces.0.subnet_id', null);
     }
 
-    if (values.interfaces?.[1].label) {
+    // @TODO Linode Interfaces - need to handle case if interface is not legacy
+    if (
+      getIsLegacyInterfaceArray(values.interfaces) &&
+      values.interfaces?.[1].label
+    ) {
       // If a VLAN is selected, clear it because VLANs are region specific
       setValue('interfaces.1.label', null);
       setValue('interfaces.1.ipam_address', null);
@@ -218,7 +227,7 @@ export const Region = React.memo(() => {
       <RegionHelperText />
       {showCrossDataCenterCloneWarning && (
         <Notice spacingBottom={0} spacingTop={8} variant="warning">
-          <Typography fontFamily={(theme) => theme.font.bold}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             Cloning a powered off instance across data centers may cause long
             periods of down time.
           </Typography>
@@ -243,7 +252,7 @@ export const Region = React.memo(() => {
       />
       {showClonePriceWarning && (
         <Notice spacingBottom={0} spacingTop={12} variant="warning">
-          <Typography fontFamily={(theme) => theme.font.bold}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             {DIFFERENT_PRICE_STRUCTURE_WARNING}{' '}
             <Link to="https://www.linode.com/pricing">Learn more.</Link>
           </Typography>

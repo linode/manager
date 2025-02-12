@@ -8,7 +8,6 @@ import {
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
-import { pickBy } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -20,8 +19,7 @@ import type {
   ManagedServicePayload,
   ServiceType,
 } from '@linode/api-v4/lib/managed';
-import type { Item } from 'src/components/EnhancedSelect/Select';
-
+import type { SelectOption } from '@linode/ui';
 export interface MonitorDrawerProps {
   credentials: ManagedCredential[];
   groups: string[];
@@ -44,7 +42,7 @@ const titleMap = {
   [modes.EDITING]: 'Edit Monitor',
 };
 
-const typeOptions: Item<ServiceType>[] = [
+const typeOptions: SelectOption<ServiceType>[] = [
   {
     label: 'URL',
     value: 'url',
@@ -57,7 +55,7 @@ const typeOptions: Item<ServiceType>[] = [
 
 const getCredentialOptions = (
   credentials: ManagedCredential[]
-): Item<number>[] => {
+): SelectOption<number>[] => {
   return credentials.map((thisCredential) => {
     return {
       label: thisCredential.label,
@@ -66,7 +64,7 @@ const getCredentialOptions = (
   });
 };
 
-const getGroupsOptions = (groups: string[]): Item<string>[] => {
+const getGroupsOptions = (groups: string[]): SelectOption<string>[] => {
   return groups.map((thisGroup) => ({
     label: thisGroup,
     value: thisGroup,
@@ -82,11 +80,14 @@ const helperText = {
   url: 'The URL to request.',
 };
 
-const getValueFromItem = (value: string, options: Item<any>[]) => {
+const getValueFromItem = (value: string, options: SelectOption<string>[]) => {
   return options.find((thisOption) => thisOption.value === value) || null;
 };
 
-const getMultiValuesFromItems = (values: number[], options: Item<any>[]) => {
+const getMultiValuesFromItems = (
+  values: number[],
+  options: SelectOption<number>[]
+) => {
   return options.filter((thisOption) => values.includes(thisOption.value));
 };
 
@@ -112,10 +113,13 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
    * values such as `notes` come back from the API as null, so remove those
    * as well.
    */
-  const _monitor = pickBy(
-    (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
-    monitor
-  ) as ManagedServicePayload;
+  const _monitor = monitor
+    ? (Object.fromEntries(
+        Object.entries(monitor).filter(
+          ([key, value]) => value !== null && key in emptyInitialValues
+        )
+      ) as ManagedServicePayload)
+    : ({} as ManagedServicePayload);
 
   const initialValues = { ...emptyInitialValues, ..._monitor };
 
@@ -162,7 +166,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
               />
 
               <Select
-                onChange={(_, item: Item<ServiceType>) =>
+                onChange={(_, item: SelectOption<ServiceType>) =>
                   setFieldValue(
                     'consultation_group',
                     item === null ? '' : item.value
@@ -188,7 +192,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
               <Grid container spacing={2}>
                 <Grid sm={6} xs={12}>
                   <Select
-                    onChange={(_, item: Item<ServiceType>) =>
+                    onChange={(_, item: SelectOption<ServiceType>) =>
                       setFieldValue('service_type', item.value)
                     }
                     textFieldProps={{
@@ -258,7 +262,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 value={values.notes}
               />
               <Autocomplete
-                onChange={(_, items: Item<number>[] | null) => {
+                onChange={(_, items: SelectOption<number>[] | null) => {
                   setFieldValue(
                     'credentials',
                     items?.map((thisItem) => thisItem.value) || []

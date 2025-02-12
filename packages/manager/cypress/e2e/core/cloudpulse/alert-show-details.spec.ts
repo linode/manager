@@ -1,7 +1,7 @@
 /**
- * @file Integration Tests for the CloudPulse DBaaS Alerts Show Detail Page.
+ * @file Integration Tests for the CloudPulse Alerts Show Detail Page.
  *
- * This file contains Cypress tests that validate the display and content of the DBaaS Alerts Show Detail Page in the CloudPulse application.
+ * This file contains Cypress tests that validate the display and content of the  Alerts Show Detail Page in the CloudPulse application.
  * It ensures that all alert details, criteria, and resource information are displayed correctly.
  */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -89,10 +89,10 @@ const verifyRowOrder = (expectedIds: string[]) => {
   });
 };
 /**
- * Integration tests for the CloudPulse DBaaS Alerts Detail Page, ensuring that the alert details, criteria, and resource information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
+ * Integration tests for the CloudPulse Alerts Detail Page, ensuring that the alert details, criteria, and resource information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
  */
 
-describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
+describe('Integration Tests for Alert Show Detail Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
@@ -150,10 +150,9 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
       cy.findByText('Status:').should('be.visible');
       cy.findByText('Enabled').should('be.visible');
 
-      cy.get('[data-qa-item="Severity"]').within(() => {
-        cy.findByText('Severity:').should('be.visible');
-        cy.findByText(severityMap[severity]).should('be.visible');
-      });
+      cy.findByText('Severity:').should('be.visible');
+      cy.findByText(severityMap[severity]).should('be.visible');
+
       // Validate Service field
       cy.findByText('Service:').should('be.visible');
       cy.findByText('dbaas').should('be.visible');
@@ -287,29 +286,27 @@ describe('Integration Tests for Dbaas Alert Show Detail Page', () => {
 
       // Validate resource-region mapping for each row in the table
 
-      cy.get('[data-qa-alert-table="true"]').within(() => {
-        // Get the number of rows in the table
-        cy.get('[data-qa-alert-row]')
-          .should('have.length', 4)
-          .each((row, index) => {
-            const db = databases[index];
-            const rowNumber = index + 1;
+      const regionMap = new Map(regions.map((r) => [r.id, r.label]));
 
-            cy.wrap(row).within(() => {
-              cy.get(`[data-qa-alert-cell="${rowNumber}_resource"]`).should(
-                'have.text',
-                db.label
-              );
+      cy.get('[data-qa-alert-row]')
+        .should('have.length', 4)
+        .each((row, index) => {
+          const db = databases[index];
+          const rowNumber = index + 1;
+          const regionLabel = regionMap.get(db.region) || 'Unknown Region';
 
-              cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
-                'have.text',
-                `US, ${regions.find((r) => r.id === db.region)?.label} (${
-                  db.region
-                })`
-              );
-            });
+          cy.wrap(row).within(() => {
+            cy.get(`[data-qa-alert-cell="${rowNumber}_resource"]`).should(
+              'have.text',
+              db.label
+            );
+
+            cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
+              'have.text',
+              `US, ${regionLabel} (${db.region})`
+            );
           });
-      });
+        });
 
       // Sorting by Resource and Region columns
       ui.heading.findByText('resource').should('be.visible').click();

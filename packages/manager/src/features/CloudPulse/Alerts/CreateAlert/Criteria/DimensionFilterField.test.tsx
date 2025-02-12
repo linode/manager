@@ -2,6 +2,7 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { capitalize } from 'src/utilities/capitalize';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { dimensionOperatorOptions } from '../../constants';
@@ -147,11 +148,10 @@ describe('Dimension filter field component', () => {
       name: 'Open',
     });
     await user.click(dataFieldInput);
-    await user.click(
-      await container.findByRole('option', {
-        name: dimensionFieldMockData[1].label,
-      })
-    );
+    const option = await container.findByRole('option', {
+      name: dimensionFieldMockData[1].label,
+    });
+    await user.click(option);
     const operatorContainer = container.getByTestId('operator');
     const operatorInput = within(operatorContainer).getByRole('button', {
       name: 'Open',
@@ -202,6 +202,7 @@ describe('Dimension filter field component', () => {
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',
     });
+    const valueLabel = capitalize(dimensionFieldMockData[1].values[0]);
     await user.click(dataFieldInput);
     await user.click(
       await container.findByRole('option', {
@@ -216,25 +217,25 @@ describe('Dimension filter field component', () => {
     user.click(valueInput);
     expect(
       await container.findByRole('option', {
-        name: dimensionFieldMockData[1].values[0],
+        name: valueLabel,
       })
     );
 
     expect(
       await container.findByRole('option', {
-        name: dimensionFieldMockData[1].values[1],
+        name: valueLabel,
       })
     );
 
     await user.click(
       container.getByRole('option', {
-        name: dimensionFieldMockData[1].values[0],
+        name: valueLabel,
       })
     );
 
     expect(within(valueContainer).getByRole('combobox')).toHaveAttribute(
       'value',
-      dimensionFieldMockData[1].values[0]
+      valueLabel
     );
   });
 });

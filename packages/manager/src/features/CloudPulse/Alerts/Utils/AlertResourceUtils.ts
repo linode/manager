@@ -1,22 +1,28 @@
 import { deepEqual } from '../../Utils/FilterBuilder';
 import {
   alertAdditionalFilterKeyMap,
-  alertApplicableFilterKeys,
+  applicableAdditionalFilterKeys,
 } from '../AlertsResources/constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { AlertsEngineOptionProps } from '../AlertsResources/AlertsEngineTypeFilter';
+import type { AlertsRegionProps } from '../AlertsResources/AlertsRegionFilter';
+import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type {
+  AlertAdditionalFilterKey,
   AlertFilterKey,
   AlertFilterType,
-} from '../AlertsResources/constants';
-import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
+} from '../AlertsResources/types';
 import type { Region } from '@linode/api-v4';
 
 interface FilterResourceProps {
   /**
    * Additional filters for filtering the instances
    */
-  additionalFilters?: Record<AlertFilterKey, AlertFilterType | undefined>;
+  additionalFilters?: Record<
+    AlertAdditionalFilterKey,
+    AlertFilterType | undefined
+  >;
   /**
    * The data to be filtered
    */
@@ -29,7 +35,6 @@ interface FilterResourceProps {
    * Property to integrate and edit the resources associated with alerts
    */
   isAdditionOrDeletionNeeded?: boolean;
-
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
@@ -46,14 +51,38 @@ interface FilterResourceProps {
   searchText?: string;
 
   /**
-   * Property to filter out only selected resources
+   * Property to filter out only checked resources
    */
   selectedOnly?: boolean;
 
-  /*
+  /**
    * This property helps to track the list of selected resources
    */
   selectedResources?: string[];
+}
+
+interface FilterRendererProps {
+  /**
+   * The filter to which the props needs to built for
+   */
+  filterKey: AlertFilterKey;
+
+  /**
+   * Callback to publish the selected engine type
+   */
+  handleFilterChange: (
+    engineType: string | undefined,
+    type: AlertAdditionalFilterKey
+  ) => void;
+  /**
+   * Callback for publishing the IDs of the selected regions.
+   */
+  handleFilteredRegionsChange: (regions: string[]) => void;
+
+  /**
+   * The regions to be displayed according to the resources associated with alerts
+   */
+  regionOptions: Region[];
 }
 
 /**
@@ -82,11 +111,11 @@ export const getRegionOptions = (
     regionsIdToRegionMap,
     resourceIds,
   } = filterProps;
-  if (
+  const isEmpty =
     !data ||
     (!isAdditionOrDeletionNeeded && !resourceIds.length) ||
-    !regionsIdToRegionMap.size
-  ) {
+    !regionsIdToRegionMap.size;
+  if (isEmpty) {
     return [];
   }
   const uniqueRegions = new Set<Region>();
@@ -144,7 +173,7 @@ export const getFilteredResources = (
           : '',
       };
     })
-    .filter(({ label, region }) => {
+    .filter(({ checked, label, region }) => {
       const matchesSearchText =
         !searchText ||
         region.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()) ||
@@ -154,24 +183,40 @@ export const getFilteredResources = (
         !filteredRegions?.length ||
         (region.length && filteredRegions.includes(region)); // check with filtered region
 
-      return matchesSearchText && matchesFilteredRegions; // match the search text and match the region selected
+      return (
+        matchesSearchText && // match the search text and match the region selected
+        matchesFilteredRegions &&
+        (!selectedOnly || checked)
+      ); // if selected only, show only checked, else everything
     })
-    .filter((resource) => (selectedOnly ? resource.checked : true))
-    .filter((resource) => {
-      if (!additionalFilters) {
-        return true;
-      }
-      return alertApplicableFilterKeys.every((key) => {
-        const value = additionalFilters[key];
-        if (value === undefined) {
-          return true;
-        } // Skip if no filter value
-        // Only apply filters that exist in `alertAdditionalFilterKeyMap`
-        const mappedKey = alertAdditionalFilterKeyMap[key];
-        const resourceValue = resource[mappedKey];
-        return deepEqual(resourceValue, value); // Compare primitive values
-      });
-    });
+    .filter((resource) => applyAdditionalFilter(resource, additionalFilters));
+};
+
+/**
+ * Applies the additional filters on the instance that needs to be shown in the resources table
+ * @param resource The instance for which the filters needs to be applied
+ * @param additionalFilters The additional filters which are needed to be applied for the instances
+ */
+const applyAdditionalFilter = (
+  resource: AlertInstance,
+  additionalFilters?: Record<
+    AlertAdditionalFilterKey,
+    AlertFilterType | undefined
+  >
+): boolean => {
+  if (!additionalFilters) {
+    return true;
+  }
+  return applicableAdditionalFilterKeys.every((key) => {
+    const value = additionalFilters[key];
+    if (value === undefined) {
+      return true;
+    } // Skip if no filter value
+    // Only apply filters that exist in `alertAdditionalFilterKeyMap`
+    const mappedKey = alertAdditionalFilterKeyMap[key];
+    const resourceValue = resource[mappedKey];
+    return deepEqual(resourceValue, value);
+  });
 };
 
 /**
@@ -184,5 +229,77 @@ export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
       behavior: 'smooth',
       top: scrollToElement.getBoundingClientRect().top + window.scrollY - 40,
     });
+  }
+};
+
+/**
+ * @param data The list of alert instances displayed in the table.
+ * @returns True if, all instances are selected else false.
+ */
+export const isAllPageSelected = (data: AlertInstance[]): boolean => {
+  return Boolean(data?.length) && data.every(({ checked }) => checked);
+};
+
+/**
+ * @param data The list of alert instances displayed in the table.
+ * @returns True if, any one of instances is selected else false.
+ */
+export const isSomeSelected = (data: AlertInstance[]): boolean => {
+  return Boolean(data?.length) && data.some(({ checked }) => checked);
+};
+
+/**
+ * Checks if two sets of resource IDs contain the same elements, regardless of order.
+ * @param originalResourceIds - The initial list of resource IDs.
+ * @param selectedResourceIds - The updated list of resource IDs to compare.
+ * @returns {boolean} - True if both sets contain the same elements, otherwise false.
+ */
+export const isResourcesEqual = (
+  originalResourceIds: string[] | undefined,
+  selectedResourceIds: string[]
+): boolean => {
+  if (!originalResourceIds) {
+    return selectedResourceIds.length === 0;
+  }
+
+  if (originalResourceIds?.length !== selectedResourceIds.length) {
+    return false;
+  }
+
+  const originalSet = new Set(originalResourceIds);
+  return selectedResourceIds.every((id) => originalSet.has(id));
+};
+
+/**
+ * Generates the appropriate filter props based on the provided filter key.
+ *
+ * This function returns the necessary props for rendering either an engine type filter
+ * (`AlertsEngineOptionProps`) or a region filter (`AlertsRegionProps`), depending on the
+ * `filterKey` value. It ensures that the correct handler and options are passed for
+ * each filter type.
+ *
+ * @param {FilterRendererProps} props - The properties required to determine the filter behavior.
+ * @param {AlertFilterKey} props.filterKey - The key identifying the filter type (`'engineType'` or `'region'`).
+ * @param {(value: AlertFilterType, filterKey: AlertFilterKey) => void} props.handleFilterChange -
+ *        Callback function for updating the selected engine type.
+ * @param {(selectedRegions: string[]) => void} props.handleFilteredRegionsChange -
+ *        Callback function for updating the selected regions.
+ * @param {Region[]} props.regionOptions - The list of available regions for filtering.
+ */
+export const getFilterProps = ({
+  filterKey,
+  handleFilterChange,
+  handleFilteredRegionsChange: handleSelectionChange,
+  regionOptions,
+}: FilterRendererProps): AlertsEngineOptionProps | AlertsRegionProps => {
+  if (filterKey === 'engineType') {
+    return {
+      handleFilterChange,
+    };
+  } else {
+    return {
+      handleSelectionChange,
+      regionOptions,
+    };
   }
 };

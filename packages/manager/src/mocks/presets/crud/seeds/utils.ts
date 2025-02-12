@@ -16,6 +16,13 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
     case 'domains:crud':
       await mswDB.deleteAll('domains', mockState, 'seedState');
       break;
+    case 'firewalls:crud':
+      await mswDB.deleteAll('firewalls', mockState, 'seedState');
+      await mswDB.deleteAll('firewallDevices', mockState, 'seedState');
+      break;
+    case 'ip-addresses:crud':
+      await mswDB.deleteAll('ipAddresses', mockState, 'seedState');
+      break;
     case 'linodes:crud':
       await mswDB.deleteAll('linodes', mockState, 'seedState');
       await mswDB.deleteAll('linodeConfigs', mockState, 'seedState');
@@ -28,6 +35,10 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
       break;
     case 'support-tickets:crud':
       await mswDB.deleteAll('supportTickets', mockState, 'seedState');
+      break;
+    case 'vpcs:crud':
+      await mswDB.deleteAll('vpcs', mockState, 'seedState');
+      await mswDB.deleteAll('subnets', mockState, 'seedState');
       break;
     default:
       break;

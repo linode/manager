@@ -130,19 +130,13 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   enabled: 'active',
 };
 
-export const channelTypes: Record<ChannelType, string> = {
-  email: 'Email',
-  pagerduty: 'Pagerduty',
-  slack: 'Slack',
-  webhook: 'Webhook',
-};
+export const channelTypeOptions: Item<string, ChannelType>[] = [
+  {
+    label: 'Email',
+    value: 'email',
+  },
+];
 
-export const channelTypeOptions: Item<string, ChannelType>[] = Object.entries(
-  channelTypes
-).map(([key, label]) => ({
-  label,
-  value: key as ChannelType,
-}));
 export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   eq: '=',
   gt: '>',
@@ -166,7 +160,6 @@ export const dimensionOperatorTypeMap: Record<
   neq: 'not equals',
   startswith: 'starts with',
 };
-
 export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
@@ -183,4 +176,4 @@ export const alertStatusOptions: Item<
 export const engineTypeMap: Record<string, string> = {
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
-}
+};

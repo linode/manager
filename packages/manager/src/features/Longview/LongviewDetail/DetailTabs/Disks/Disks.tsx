@@ -105,7 +105,6 @@ const Disks = (props: Props) => {
           handleStatsChange={handleStatsChange}
           hideLabel
           label="Select Time Range"
-          small
         />
       </StyledBox>
       {renderContent()}

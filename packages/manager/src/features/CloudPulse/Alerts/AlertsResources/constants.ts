@@ -1,20 +1,18 @@
 import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
+import { AlertsRegionFilter } from './AlertsRegionFilter';
 
-import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
 import type { AlertInstance } from './DisplayAlertResources';
-import type { MemoExoticComponent } from 'react';
-
-interface ColumnConfig<T> {
-  accessor: (data: T) => string;
-  label: string;
-  sortingKey?: keyof T;
-}
-
-type ServiceColumns<T> = Record<string, ColumnConfig<T>[]>;
+import type {
+  AlertAdditionalFilterKey,
+  ServiceColumns,
+  ServiceFilterConfig,
+} from './types';
+import type { AlertServiceType } from '@linode/api-v4';
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
-  dbaas: [
+  '': [
+    // for empty case lets display resource and region
     {
       accessor: ({ label }) => label,
       label: 'Resource',
@@ -25,11 +23,23 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       label: 'Region',
       sortingKey: 'region',
     },
+  ],
+  dbaas: [
+    {
+      accessor: ({ label }) => label,
+      label: 'Resource',
+      sortingKey: 'label',
+    },
     {
       accessor: ({ engineType }) =>
         engineTypeMap[engineType ?? ''] ?? engineType,
       label: 'Database Engine',
       sortingKey: 'engineType',
+    },
+    {
+      accessor: ({ region }) => region,
+      label: 'Region',
+      sortingKey: 'region',
     },
   ],
   linode: [
@@ -47,20 +57,23 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
 };
 
 export const serviceToFiltersMap: Record<
-  string,
-  MemoExoticComponent<React.ComponentType<AlertsEngineOptionProps>>[]
+  '' | AlertServiceType,
+  ServiceFilterConfig[]
 > = {
-  dbaas: [AlertsEngineTypeFilter], // dbaas uses Engine filter
+  '': [{ component: AlertsRegionFilter, filterKey: 'region' }], // default to only region for better user experience
+  dbaas: [
+    { component: AlertsEngineTypeFilter, filterKey: 'engineType' },
+    { component: AlertsRegionFilter, filterKey: 'region' },
+  ],
+  linode: [{ component: AlertsRegionFilter, filterKey: 'region' }], // TODO: Add 'tags' filter in the future
 };
 
-export type AlertFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
-
-export type AlertFilterType = boolean | number | string | undefined;
-
-export const alertApplicableFilterKeys: AlertFilterKey[] = ['engineType'];
+export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
+  'engineType',
+];
 
 export const alertAdditionalFilterKeyMap: Record<
-  AlertFilterKey,
+  AlertAdditionalFilterKey,
   keyof AlertInstance
 > = {
   engineType: 'engineType',

@@ -262,8 +262,8 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
               handlePresetSelection(selection.value as DatePresetType);
             }
           }}
-          data-qa-preset="preset-select"
           data-testid="preset-select"
+          data-qa-preset="preset-select"
           disableClearable
           fullWidth
           label={presetsLabel}

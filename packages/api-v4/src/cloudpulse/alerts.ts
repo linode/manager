@@ -14,7 +14,6 @@ import {
   EditAlertDefinitionPayload,
   NotificationChannel,
 } from './types';
-import { BETA_API_ROOT as API_ROOT } from '../constants';
 import { Params, Filter, ResourcePage } from '../types';
 
 const bearer = 'Bearer vagrant';
@@ -50,7 +49,7 @@ export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
 
 export const getAlertDefinitionByServiceTypeAndId = (
   serviceType: string,
-  alertId: number
+  alertId: string
 ) =>
   Request<Alert>(
     setURL(

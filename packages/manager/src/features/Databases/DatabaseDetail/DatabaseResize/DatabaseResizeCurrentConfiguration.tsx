@@ -82,13 +82,13 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
       >
         <Box key={'status-version'} paddingRight={6}>
           <StyledSummaryTextBox>
-            <span style={{ fontFamily: theme.font.bold }}>Status</span>{' '}
+            <span style={{ font: theme.font.bold }}>Status</span>{' '}
             <StyledStatusBox>
               <DatabaseStatusDisplay database={database} events={events} />
             </StyledStatusBox>
           </StyledSummaryTextBox>
           <StyledSummaryTextTypography>
-            <span style={{ fontFamily: theme.font.bold }}>Version</span>{' '}
+            <span style={{ font: theme.font.bold }}>Version</span>{' '}
             <DatabaseEngineVersion
               databaseEngine={database.engine}
               databaseID={database.id}
@@ -98,38 +98,34 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
             />
           </StyledSummaryTextTypography>
           <StyledSummaryTextTypography>
-            <span style={{ fontFamily: theme.font.bold }}>Nodes</span>{' '}
-            {configuration}
+            <span style={{ font: theme.font.bold }}>Nodes</span> {configuration}
           </StyledSummaryTextTypography>
         </Box>
         <Box key={'region-plan'} paddingRight={6}>
           <StyledSummaryTextTypography>
-            <span style={{ fontFamily: theme.font.bold }}>Region</span>{' '}
+            <span style={{ font: theme.font.bold }}>Region</span>{' '}
             {region?.label ?? database.region}
           </StyledSummaryTextTypography>
           <StyledSummaryTextTypography>
-            <span style={{ fontFamily: theme.font.bold }}>Plan</span>{' '}
+            <span style={{ font: theme.font.bold }}>Plan</span>{' '}
             {formatStorageUnits(type.label)}
           </StyledSummaryTextTypography>
         </Box>
 
         <Box key={'ram-cpu'} paddingRight={6}>
           <StyledSummaryTextTypography>
-            <span style={{ fontFamily: theme.font.bold }}>RAM</span>{' '}
+            <span style={{ font: theme.font.bold }}>RAM</span>{' '}
             {type.memory / 1024} GB
           </StyledSummaryTextTypography>
           <StyledSummaryTextTypography>
-            <span style={{ fontFamily: theme.font.bold }}>CPUs</span>{' '}
-            {type.vcpus}
+            <span style={{ font: theme.font.bold }}>CPUs</span> {type.vcpus}
           </StyledSummaryTextTypography>
         </Box>
         <Box key={'disk'} paddingRight={6}>
           {database.total_disk_size_gb ? (
             <>
               <StyledSummaryTextTypography>
-                <span style={{ fontFamily: theme.font.bold }}>
-                  Total Disk Size
-                </span>{' '}
+                <span style={{ font: theme.font.bold }}>Total Disk Size</span>{' '}
                 {database.total_disk_size_gb} GB
                 <TooltipIcon
                   status="help"
@@ -138,7 +134,7 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
                 />
               </StyledSummaryTextTypography>
               <StyledSummaryTextTypography>
-                <span style={{ fontFamily: theme.font.bold }}>Used</span>{' '}
+                <span style={{ font: theme.font.bold }}>Used</span>{' '}
                 {database.used_disk_size_gb !== null
                   ? `${database.used_disk_size_gb} GB`
                   : 'N/A'}
@@ -146,7 +142,7 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
             </>
           ) : (
             <StyledSummaryTextTypography>
-              <span style={{ fontFamily: theme.font.bold }}>Storage</span>{' '}
+              <span style={{ font: theme.font.bold }}>Storage</span>{' '}
               {convertMegabytesTo(type.disk, true)}
             </StyledSummaryTextTypography>
           )}

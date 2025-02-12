@@ -2,6 +2,7 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
 export type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
 export type AlertServiceType = 'linode' | 'dbaas';
+export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'eq'
   | 'neq'
@@ -179,18 +180,6 @@ export interface CreateAlertDefinitionPayload {
   trigger_conditions: TriggerCondition;
   channel_ids: number[];
 }
-export interface EditAlertDefinitionPayload {
-  label?: string;
-  tags?: string[];
-  description?: string;
-  entity_ids?: string[];
-  severity?: AlertSeverityType;
-  rule_criteria?: {
-    rules: MetricCriteria[];
-  };
-  trigger_conditions?: TriggerCondition;
-  channel_ids?: number[];
-}
 export interface MetricCriteria {
   metric: string;
   aggregate_function: MetricAggregationType;
@@ -245,6 +234,7 @@ export interface Alert {
   updated_by: string;
   created: string;
   updated: string;
+  class?: AlertClass;
 }
 
 interface NotificationChannelAlerts {
@@ -315,3 +305,25 @@ export type NotificationChannel =
   | NotificationChannelSlack
   | NotificationChannelWebHook
   | NotificationChannelPagerDuty;
+
+export interface EditAlertDefinitionPayload {
+  label?: string;
+  tags?: string[];
+  description?: string;
+  entity_ids?: string[];
+  severity?: AlertSeverityType;
+  rule_criteria?: {
+    rules: MetricCriteria[];
+  };
+  trigger_conditions?: TriggerCondition;
+  channel_ids?: number[];
+  status?: AlertStatusType;
+}
+
+export interface EditAlertPayloadWithService
+  extends EditAlertDefinitionPayload {
+  serviceType: string;
+  alertId: string;
+}
+
+export type AlertStatusUpdateType = 'Enable' | 'Disable';

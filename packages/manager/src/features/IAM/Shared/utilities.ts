@@ -1,10 +1,16 @@
 import { useFlags } from 'src/hooks/useFlags';
+import { capitalize } from 'src/utilities/capitalize';
 
 import type {
   AccountAccessType,
+  IamAccess,
+  IamAccessType,
+  IamAccountPermissions,
   PermissionType,
+  ResourceType,
   ResourceTypePermissions,
   RoleType,
+  Roles,
 } from '@linode/api-v4';
 
 /**
@@ -38,12 +44,6 @@ export const placeholderMap: Record<string, string> = {
   vpc: 'Select VPCs',
 };
 
-interface FilteredRolesOptions {
-  query: string;
-  resourceType?: string;
-  roles: RoleMap[];
-}
-
 export interface RoleMap {
   access: 'account' | 'resource';
   description: string;
@@ -57,23 +57,30 @@ export interface ExtendedRoleMap extends RoleMap {
   resource_names?: string[];
 }
 
+interface FilteredRolesOptions {
+  entityType?: ResourceType | ResourceTypePermissions;
+  getSearchableFields: (role: EntitiesRole | ExtendedRoleMap) => string[];
+  query: string;
+  roles: EntitiesRole[] | RoleMap[];
+}
+
 export const getFilteredRoles = (options: FilteredRolesOptions) => {
-  const { query, resourceType, roles } = options;
+  const { entityType, getSearchableFields, query, roles } = options;
 
   return roles.filter((role: ExtendedRoleMap) => {
-    if (query && resourceType) {
+    if (query && entityType) {
       return (
-        getDoesRolesMatchQuery(query, role) &&
-        getDoesRolesMatchType(resourceType, role)
+        getDoesRolesMatchQuery(query, role, getSearchableFields) &&
+        getDoesRolesMatchType(entityType, role)
       );
     }
 
     if (query) {
-      return getDoesRolesMatchQuery(query, role);
+      return getDoesRolesMatchQuery(query, role, getSearchableFields);
     }
 
-    if (resourceType) {
-      return getDoesRolesMatchType(resourceType, role);
+    if (entityType) {
+      return getDoesRolesMatchType(entityType, role);
     }
 
     return true;
@@ -87,7 +94,10 @@ export const getFilteredRoles = (options: FilteredRolesOptions) => {
  * @param role The role to compare against
  * @returns true if the given role has the given type
  */
-const getDoesRolesMatchType = (resourceType: string, role: ExtendedRoleMap) => {
+const getDoesRolesMatchType = (
+  resourceType: ResourceType | ResourceTypePermissions,
+  role: ExtendedRoleMap
+) => {
   return role.resource_type === resourceType;
 };
 
@@ -96,27 +106,93 @@ const getDoesRolesMatchType = (resourceType: string, role: ExtendedRoleMap) => {
  *
  * @param query the current search query
  * @param role the Role to compare aginst
+ * @param getSearchableFields the current searchableFields
  * @returns true if the Role matches the given query
  */
-const getDoesRolesMatchQuery = (query: string, role: ExtendedRoleMap) => {
-  const queryWords = query
-    .replace(/[,.-]/g, '')
-    .trim()
-    .toLocaleLowerCase()
-    .split(' ');
-  const resourceNames = role.resource_names || [];
+const getDoesRolesMatchQuery = (
+  query: string,
+  role: ExtendedRoleMap,
+  getSearchableFields: (role: EntitiesRole | ExtendedRoleMap) => string[]
+) => {
+  const queryWords = query.trim().toLocaleLowerCase().split(' ');
 
-  const searchableFields = [
-    String(role.id),
-    role.resource_type,
-    role.name,
-    role.access,
-    role.description,
-    ...resourceNames,
-    ...role.permissions,
-  ];
+  const searchableFields = getSearchableFields(role);
 
   return searchableFields.some((field) =>
     queryWords.some((queryWord) => field.toLowerCase().includes(queryWord))
   );
+};
+
+export interface RolesType {
+  label: string;
+  value: string;
+}
+
+interface ExtendedRole extends Roles {
+  access: IamAccessType;
+  resource_type: ResourceTypePermissions;
+}
+
+export const getAllRoles = (
+  permissions: IamAccountPermissions
+): RolesType[] => {
+  const accessTypes: IamAccessType[] = ['account_access', 'resource_access'];
+
+  return accessTypes.flatMap((accessType: IamAccessType) =>
+    permissions[accessType].flatMap((resource: IamAccess) =>
+      resource.roles.map((role: Roles) => ({
+        label: role.name,
+        value: role.name,
+      }))
+    )
+  );
+};
+
+export const getRoleByName = (
+  accountPermissions: IamAccountPermissions,
+  roleName: string
+): ExtendedRole | null => {
+  const accessTypes: IamAccessType[] = ['account_access', 'resource_access'];
+
+  for (const permissionType of accessTypes) {
+    const resources = accountPermissions[permissionType];
+    for (const resource of resources) {
+      const role = resource.roles.find((role: Roles) => role.name === roleName);
+      if (role) {
+        return {
+          ...role,
+          access: permissionType, // Include access type (account or resource)
+          resource_type: resource.resource_type,
+        };
+      }
+    }
+  }
+  return null;
+};
+
+export interface EntitiesRole {
+  id: string;
+  resource_id: number;
+  resource_name: string;
+  resource_type: ResourceType | ResourceTypePermissions;
+  role_name: RoleType;
+}
+
+export interface EntitiesType {
+  label: string;
+  rawValue: ResourceType | ResourceTypePermissions;
+  value?: string;
+}
+
+export const mapEntityTypes = (
+  data: EntitiesRole[] | RoleMap[],
+  suffix: string
+): EntitiesType[] => {
+  const resourceTypes = Array.from(new Set(data.map((el) => el.resource_type)));
+
+  return resourceTypes.map((resource) => ({
+    label: capitalize(resource) + suffix,
+    rawValue: resource,
+    value: capitalize(resource) + suffix,
+  }));
 };

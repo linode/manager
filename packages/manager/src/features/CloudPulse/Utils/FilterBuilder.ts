@@ -164,7 +164,7 @@ export const getResourcesProperties = (
 export const getNodeTypeProperties = (
   props: CloudPulseFilterProperties,
   handleNodeTypeChange: (
-    nodeType: null | string | undefined,
+    nodeType: string | undefined,
     label: string[],
     savePref?: boolean
   ) => void
@@ -359,7 +359,7 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
           (!dependentFilter ||
             (Array.isArray(dependentFilter) && dependentFilter.length === 0))
         ) {
-          return true; // Since filters are set one by one, disabled will be true until the values present inside the dependent filter don't exactly match with the values stored in the preference key
+          return true; // Since filters are set one by one, disabled will be true until the values that are defined inside the preferences are populated in the dependent filters as well
         }
 
         return (

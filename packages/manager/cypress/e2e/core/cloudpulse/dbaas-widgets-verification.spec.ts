@@ -28,12 +28,12 @@ import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
-import { Interception } from 'cypress/types/net-stubbing';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import type { Flags } from 'src/featureFlags';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
+import type { Interception } from 'support/cypress-exports';
 
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
@@ -172,7 +172,7 @@ const databaseMock: Database = databaseFactory.build({
   region: mockRegion.label,
   version: '1',
   status: 'provisioning',
-  cluster_size: 1,
+  cluster_size: 2,
   engine: 'mysql',
   hosts: {
     primary: undefined,
@@ -259,6 +259,11 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
+
+    ui.button
+    .findByAttribute('aria-label', 'Close')
+    .should('be.visible')
+    .click();
 
     // Select a Node from the autocomplete input.
     ui.autocomplete

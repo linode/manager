@@ -12,8 +12,10 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
+import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
 import { serviceTypeBasedColumns } from './constants';
 
+import type { AlertServiceType } from '@linode/api-v4';
 import type { Order } from 'src/hooks/useOrder';
 
 export interface AlertInstance {
@@ -61,11 +63,6 @@ export interface DisplayAlertResourceProp {
    * This controls whether to show the selection check box or not
    */
   isSelectionsNeeded?: boolean;
-
-  /**
-   * The size of the page needed in the table
-   */
-  pageSize: number;
   /**
    * Callback to scroll till the element required on page change change or sorting change
    */
@@ -74,7 +71,7 @@ export interface DisplayAlertResourceProp {
   /**
    * The service type associated with the alert
    */
-  serviceType?: string;
+  serviceType?: AlertServiceType;
 }
 
 export const DisplayAlertResources = React.memo(
@@ -84,10 +81,10 @@ export const DisplayAlertResources = React.memo(
       handleSelection,
       isDataLoadingError,
       isSelectionsNeeded,
-      pageSize,
       scrollToElement,
       serviceType,
     } = props;
+    const pageSize = 25;
 
     const [sorting, setSorting] = React.useState<{
       order: Order;
@@ -146,23 +143,10 @@ export const DisplayAlertResources = React.memo(
       },
       [handleSelection]
     );
-
-    const isAllPageSelected = (paginatedData: AlertInstance[]): boolean => {
-      return (
-        Boolean(paginatedData?.length) &&
-        paginatedData.every((resource) => resource.checked)
-      );
-    };
-
-    const isSomeSelected = (paginatedData: AlertInstance[]): boolean => {
-      return (
-        Boolean(paginatedData?.length) &&
-        paginatedData.some((resource) => resource.checked)
-      );
-    };
-
     const columns = serviceTypeBasedColumns[serviceType ?? ''] ?? [];
-
+    const colSpanCount = isSelectionsNeeded
+      ? columns.length + 1
+      : columns.length;
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -186,12 +170,12 @@ export const DisplayAlertResources = React.memo(
                         }
                         onClick={() =>
                           handleSelectionChange(
-                            paginatedData.map((resource) => resource.id),
+                            paginatedData.map(({ id }) => id),
                             !isAllPageSelected(paginatedData)
                           )
                         }
                         sx={{
-                          padding: 0,
+                          p: 0,
                         }}
                         checked={isAllPageSelected(paginatedData)}
                         data-testid={`select_all_in_page_${page}`}
@@ -204,6 +188,7 @@ export const DisplayAlertResources = React.memo(
                         handleSort(orderBy, order, handlePageChange)
                       }
                       active={sorting.orderBy === sortingKey}
+                      data-qa-header={label.toLowerCase()}
                       data-testid={label.toLowerCase()}
                       direction={sorting.order}
                       key={label}
@@ -243,7 +228,9 @@ export const DisplayAlertResources = React.memo(
                       )}
                       {columns.map(({ accessor, label }) => (
                         <TableCell
-                          data-qa-alert-cell={`${resource.id}_${label}`}
+                          data-qa-alert-cell={`${
+                            resource.id
+                          }_${label.toLowerCase()}`}
                           key={label}
                         >
                           {accessor(resource)}
@@ -253,13 +240,17 @@ export const DisplayAlertResources = React.memo(
                   ))}
                 {isDataLoadingError && (
                   <TableRowError
-                    colSpan={3}
+                    colSpan={colSpanCount}
                     message="Table data is unavailable. Please try again later."
                   />
                 )}
                 {paginatedData.length === 0 && (
                   <TableRow>
-                    <TableCell align="center" colSpan={3} height="40px">
+                    <TableCell
+                      align="center"
+                      colSpan={colSpanCount}
+                      height="40px"
+                    >
                       No data to display.
                     </TableCell>
                   </TableRow>

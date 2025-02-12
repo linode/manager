@@ -12,7 +12,7 @@ export const SummaryItem = ({ details, title }: Props) => {
         <>
           <Typography
             sx={(theme) => ({
-              fontFamily: theme.font.bold,
+              font: theme.font.bold,
             })}
             component="span"
           >

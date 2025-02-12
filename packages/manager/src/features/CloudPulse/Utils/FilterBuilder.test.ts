@@ -4,6 +4,7 @@ import { dashboardFactory } from 'src/factories';
 import { databaseQueries } from 'src/queries/databases/databases';
 
 import { RESOURCE_ID, RESOURCES } from './constants';
+import { deepEqual, getFilters } from './FilterBuilder';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -17,7 +18,6 @@ import {
   getTagsProperties,
   getTimeDurationProperties,
 } from './FilterBuilder';
-import { deepEqual, getFilters } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseSelectTypes } from './models';
 
@@ -180,7 +180,6 @@ it('test getResourceSelectionProperties method with disabled true', () => {
     expect(label).toEqual(name);
   }
 });
-
 it('test getNodeTypeProperties', () => {
   const nodeTypeSelectionConfig = dbaasConfig?.filters.find(
     (filterObj) => filterObj.name === 'Node Type'
@@ -244,6 +243,46 @@ it('test getNodeTypeProperties with disabled true', () => {
   }
 });
 
+describe('checkIfWeNeedToDisableFilterByFilterKey', () => {
+  // resources filter has region as mandatory and tags as an optional filter, this should reflect in the dependent filters
+  it('should enable filter when dependent filter region is provided', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: 'us-east' },
+      mockDashboard
+    );
+    expect(result).toEqual(false);
+  });
+
+  it('should disable filter when dependent filter region is undefined', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: undefined },
+      mockDashboard
+    );
+    expect(result).toEqual(true);
+  });
+
+  it('should disable filter when no dependent filters are provided', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      {},
+      mockDashboard
+    );
+    expect(result).toEqual(true);
+  });
+
+  it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
+    const result = checkIfWeNeedToDisableFilterByFilterKey(
+      'resource_id',
+      { region: 'us-east', tags: undefined },
+      mockDashboard,
+      { region: 'us-east', tags: ['tag-1'] } // tags are defined in preferences which confirms that this optional filter was selected
+    );
+    expect(result).toEqual(true);
+  });
+});
+
 it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
   let result = checkIfWeNeedToDisableFilterByFilterKey(
     'resource_id',
@@ -264,6 +303,23 @@ it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
   result = checkIfWeNeedToDisableFilterByFilterKey(
     'resource_id',
     {},
+    mockDashboard
+  );
+
+  expect(result).toEqual(true);
+
+  result = checkIfWeNeedToDisableFilterByFilterKey(
+    'resource_id',
+    { region: 'us-east', tags: undefined },
+    mockDashboard,
+    { ['region']: 'us-east', ['tags']: ['tag-1'] }
+  );
+
+  expect(result).toEqual(true); // disabled is true as tags are not updated in dependent filters
+
+  result = checkIfWeNeedToDisableFilterByFilterKey(
+    'tags',
+    { region: undefined },
     mockDashboard
   );
 

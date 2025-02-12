@@ -30,9 +30,9 @@ export const CloudPulseDateTimeRangePicker = React.memo(
 
     const handleDateChange = (params: {
       end: null | string;
-      preset?: string | undefined;
+      preset?: string;
       start: null | string;
-      timezone?: null | string | undefined;
+      timezone?: null | string;
     }) => {
       const { end, preset, start } = params;
       if (!end || !start || !preset) {

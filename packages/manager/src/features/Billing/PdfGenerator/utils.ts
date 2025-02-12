@@ -194,7 +194,7 @@ export const createInvoiceItemsTable = (
   });
 };
 
-const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
+export const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
   if (!taxSummary) {
     return [];
   }
@@ -303,11 +303,7 @@ export const createFooter = (
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
   const isInternational = !['CA', 'US'].includes(country);
 
-  const remitAddress = isAkamaiBilling
-    ? ['CA', 'US'].includes(country)
-      ? ADDRESSES.akamai.us
-      : ADDRESSES.akamai.international
-    : ADDRESSES.linode;
+  const remitAddress = getRemitAddress(country, isAkamaiBilling);
 
   const footerText = [];
 
@@ -443,4 +439,19 @@ export const invoiceCreatedAfterDCPricingLaunch = (_invoiceDate?: string) => {
   }
 
   return invoiceDate >= dcPricingDate;
+};
+
+export const getRemitAddress = (country: string, isAkamaiBilling: boolean) => {
+  if (!isAkamaiBilling) {
+    return ADDRESSES.linode;
+  }
+  // M3-6218: Temporarily change "Remit To" address for US customers back to the Philly address
+  if (country === 'US') {
+    ADDRESSES.linode.entity = 'Akamai Technologies, Inc.';
+    return ADDRESSES.linode;
+  }
+  if (['CA'].includes(country)) {
+    return ADDRESSES.akamai.us;
+  }
+  return ADDRESSES.akamai.international;
 };

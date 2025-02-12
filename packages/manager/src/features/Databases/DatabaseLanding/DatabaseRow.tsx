@@ -1,8 +1,8 @@
 import { Chip } from '@linode/ui';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
@@ -63,7 +63,10 @@ export const DatabaseRow = ({
   const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);
   const isLinkInactive =
-    status === 'suspended' || status === 'suspending' || status === 'resuming';
+    status === 'suspended' ||
+    status === 'suspending' ||
+    status === 'resuming' ||
+    status === 'migrated';
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const configuration =
@@ -120,10 +123,10 @@ export const DatabaseRow = ({
       {isDatabasesV2GA && isNewDatabase && (
         <TableCell actionCell>
           <DatabaseActionMenu
-            databaseStatus={status}
             databaseEngine={engine}
             databaseId={id}
             databaseLabel={label}
+            databaseStatus={status}
             handlers={handlers!}
           />
         </TableCell>

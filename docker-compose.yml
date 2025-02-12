@@ -1,5 +1,4 @@
 ---
-version: '3.4'
 
 # Environment variables that will be exposed to every Cypress runner.
 x-e2e-env:

@@ -2,7 +2,6 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
 
-import { ADDRESSES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -15,6 +14,7 @@ import {
   createPaymentsTable,
   createPaymentsTotalsTable,
   dateConversion,
+  getRemitAddress,
   invoiceCreatedAfterDCPricingLaunch,
   pageMargin,
 } from './utils';
@@ -64,22 +64,7 @@ const addLeftHeader = (
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
   const isInternational = !['CA', 'US'].includes(country);
 
-  const getRemitAddress = (isAkamaiBilling: boolean) => {
-    if (!isAkamaiBilling) {
-      return ADDRESSES.linode;
-    }
-    // M3-6218: Temporarily change "Remit To" address for US customers back to the Philly address
-    if (country === 'US') {
-      ADDRESSES.linode.entity = 'Akamai Technologies, Inc.';
-      return ADDRESSES.linode;
-    }
-    if (['CA'].includes(country)) {
-      return ADDRESSES.akamai.us;
-    }
-    return ADDRESSES.akamai.international;
-  };
-
-  const remitAddress = getRemitAddress(isAkamaiBilling);
+  const remitAddress = getRemitAddress(country, isAkamaiBilling);
 
   addLine(remitAddress.entity);
   addLine(remitAddress.address1);

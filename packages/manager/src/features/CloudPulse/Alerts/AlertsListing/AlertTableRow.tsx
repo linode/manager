@@ -43,6 +43,7 @@ export const AlertTableRow = (props: Props) => {
   const { alert, handlers, services } = props;
   const location = useLocation();
   const { created_by, id, label, service_type, status, type, updated } = alert;
+
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>
@@ -57,8 +58,7 @@ export const AlertTableRow = (props: Props) => {
         </Box>
       </TableCell>
       <TableCell>
-        {services.find((service) => service.value === service_type)?.label ??
-          service_type}
+        {services.find((service) => service.value === service_type)?.label}
       </TableCell>
       <TableCell>{created_by}</TableCell>
       <TableCell>
@@ -66,9 +66,10 @@ export const AlertTableRow = (props: Props) => {
           format: 'MMM dd, yyyy, h:mm a',
         })}
       </TableCell>
-      <TableCell actionCell>
+      <TableCell actionCell data-qa-alert-action-cell={`alert_${id}`}>
         <AlertActionMenu
           alertLabel={label}
+          alertStatus={status}
           alertType={type}
           handlers={handlers}
         />

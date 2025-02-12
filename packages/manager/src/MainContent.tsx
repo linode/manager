@@ -1,4 +1,5 @@
 import { Box } from '@linode/ui';
+import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
@@ -9,8 +10,11 @@ import { makeStyles } from 'tss-react/mui';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
+import {
+  SIDEBAR_COLLAPSED_WIDTH,
+  SIDEBAR_WIDTH,
+} from 'src/components/PrimaryNav/constants';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
-import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
@@ -25,12 +29,14 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
+import { useIsPageScrollable } from './components/PrimaryNav/utils';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
+import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
 import { useProfile } from './queries/profile/profile';
@@ -62,33 +68,15 @@ const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'center',
     minHeight: '100vh',
   },
-  cmrWrapper: {
-    maxWidth: `${theme.breakpoints.values.lg}px !important`,
-    padding: `${theme.spacing(3)} 0`,
-    paddingTop: 12,
-    [theme.breakpoints.between('md', 'xl')]: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: 0,
-      paddingRight: 0,
-      paddingTop: theme.spacing(2),
-    },
-    transition: theme.transitions.create('opacity'),
-  },
   content: {
+    display: 'flex',
     flex: 1,
-    [theme.breakpoints.up('md')]: {
-      marginLeft: SIDEBAR_WIDTH,
-    },
+    flexDirection: 'column',
     transition: 'margin-left .1s linear',
+    width: '100%',
   },
   fullWidthContent: {
     marginLeft: 0,
-    [theme.breakpoints.up('md')]: {
-      marginLeft: 52,
-    },
   },
   grid: {
     marginLeft: 0,
@@ -129,7 +117,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() =>
   import('src/features/Kubernetes').then((module) => ({
     default: module.Kubernetes,
@@ -191,6 +178,7 @@ const IAM = React.lazy(() =>
 );
 
 export const MainContent = () => {
+  const contentRef = React.useRef<HTMLDivElement>(null);
   const { classes, cx } = useStyles();
   const { data: isDesktopSidebarOpenPreference } = usePreferences(
     (preferences) => preferences?.desktop_sidebar_open
@@ -227,6 +215,12 @@ export const MainContent = () => {
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
   const { isIAMEnabled } = useIsIAMEnabled();
+
+  const isNarrowViewport = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down(960)
+  );
+
+  const { isPageScrollable } = useIsPageScrollable(contentRef);
 
   /**
    * this is the case where the user has successfully completed signup
@@ -287,90 +281,136 @@ export const MainContent = () => {
         <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
-              <SideMenu
-                closeMenu={() => toggleMenu(false)}
-                collapse={desktopMenuIsOpen || false}
-                open={menuIsOpen}
+              <MainContentBanner />
+              <TopMenu
+                desktopMenuToggle={desktopMenuToggle}
+                openSideMenu={() => toggleMenu(true)}
+                username={username}
               />
-              <div
-                className={cx(classes.content, {
-                  [classes.fullWidthContent]:
-                    desktopMenuIsOpen ||
-                    (desktopMenuIsOpen && desktopMenuIsOpen === true),
-                })}
-              >
-                <MainContentBanner />
-                <TopMenu
-                  desktopMenuToggle={desktopMenuToggle}
-                  isSideMenuOpen={!desktopMenuIsOpen}
-                  openSideMenu={() => toggleMenu(true)}
-                  username={username}
-                />
-                <main
-                  className={classes.cmrWrapper}
-                  id="main-content"
-                  role="main"
+              <Box display="flex" flex={1} position="relative" zIndex={1}>
+                <Box
+                  height={
+                    isNarrowViewport
+                      ? '100%'
+                      : isPageScrollable
+                      ? '100vh'
+                      : `calc(100vh - ${TOPMENU_HEIGHT}px)`
+                  }
+                  position="sticky"
+                  top={0}
+                  zIndex={1400}
                 >
-                  <Grid className={classes.grid} container spacing={0}>
-                    <Grid className={cx(classes.switchWrapper, 'p0')}>
-                      <GlobalNotifications />
-                      <React.Suspense fallback={<SuspenseLoader />}>
-                        <Switch>
-                          <Route component={LinodesRoutes} path="/linodes" />
-                          <Route
-                            component={NodeBalancers}
-                            path="/nodebalancers"
-                          />
-                          <Route component={Managed} path="/managed" />
-                          <Route component={Images} path="/images" />
-                          <Route
-                            component={StackScripts}
-                            path="/stackscripts"
-                          />
-                          <Route
-                            component={ObjectStorage}
-                            path="/object-storage"
-                          />
-                          <Route component={Kubernetes} path="/kubernetes" />
-                          {isIAMEnabled && (
-                            <Route component={IAM} path="/iam" />
-                          )}
-                          <Route component={Account} path="/account" />
-                          <Route component={Profile} path="/profile" />
-                          <Route component={Help} path="/support" />
-                          <Route component={SearchLanding} path="/search" />
-                          <Route component={EventsLanding} path="/events" />
-                          <Route component={Firewalls} path="/firewalls" />
-                          {isDatabasesEnabled && (
-                            <Route component={Databases} path="/databases" />
-                          )}
-                          <Route component={VPC} path="/vpcs" />
-                          {/* {isACLPEnabled && ( */}
-                          <Route component={CloudPulse} path="/monitor" />
-                          {/* )} */}
-                          <Redirect exact from="/" to={defaultRoot} />
-                          {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                          <Redirect from="/dashboard" to={defaultRoot} />
-                          {/**
-                           * This is the catch all routes that allows TanStack Router to take over.
-                           * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
-                           * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
-                           * This is a temporary solution until we are ready to fully migrate to TanStack Router.
-                           */}
-                          <Route path="*">
-                            <RouterProvider
-                              context={{ queryClient }}
-                              router={migrationRouter as AnyRouter}
+                  <SideMenu
+                    closeMenu={() => toggleMenu(false)}
+                    collapse={desktopMenuIsOpen || false}
+                    desktopMenuToggle={desktopMenuToggle}
+                    open={menuIsOpen}
+                  />
+                </Box>
+                <div
+                  className={cx(classes.content, {
+                    [classes.fullWidthContent]: desktopMenuIsOpen === true,
+                  })}
+                  style={{
+                    marginLeft: isNarrowViewport
+                      ? 0
+                      : desktopMenuIsOpen ||
+                        (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                      ? SIDEBAR_COLLAPSED_WIDTH
+                      : SIDEBAR_WIDTH,
+                  }}
+                >
+                  <MainContentBanner />
+                  <Box
+                    sx={(theme) => ({
+                      flex: 1,
+                      margin: '0 auto',
+                      maxWidth: `${theme.breakpoints.values.lg}px !important`,
+                      pt: {
+                        md: 1.5,
+                        xs: theme.spacing(2),
+                      },
+                      px: {
+                        md: theme.spacing(2),
+                        xs: 0,
+                      },
+                      py: 1.5,
+                      transition: theme.transitions.create('opacity'),
+                      width: isNarrowViewport
+                        ? '100%'
+                        : `calc(100vw - ${
+                            desktopMenuIsOpen
+                              ? SIDEBAR_COLLAPSED_WIDTH
+                              : SIDEBAR_WIDTH
+                          }px)`,
+                    })}
+                    component="main"
+                    id="main-content"
+                    role="main"
+                  >
+                    <Grid
+                      className={classes.grid}
+                      container
+                      ref={contentRef}
+                      spacing={0}
+                    >
+                      <Grid className={cx(classes.switchWrapper, 'p0')}>
+                        <GlobalNotifications />
+                        <React.Suspense fallback={<SuspenseLoader />}>
+                          <Switch>
+                            <Route component={LinodesRoutes} path="/linodes" />
+                            <Route
+                              component={NodeBalancers}
+                              path="/nodebalancers"
                             />
-                          </Route>
-                        </Switch>
-                      </React.Suspense>
+                            <Route component={Managed} path="/managed" />
+                            <Route
+                              component={StackScripts}
+                              path="/stackscripts"
+                            />
+                            <Route
+                              component={ObjectStorage}
+                              path="/object-storage"
+                            />
+                            <Route component={Kubernetes} path="/kubernetes" />
+                            {isIAMEnabled && (
+                              <Route component={IAM} path="/iam" />
+                            )}
+                            <Route component={Account} path="/account" />
+                            <Route component={Profile} path="/profile" />
+                            <Route component={Help} path="/support" />
+                            <Route component={SearchLanding} path="/search" />
+                            <Route component={EventsLanding} path="/events" />
+                            <Route component={Firewalls} path="/firewalls" />
+                            {isDatabasesEnabled && (
+                              <Route component={Databases} path="/databases" />
+                            )}
+                            <Route component={VPC} path="/vpcs" />
+                            <Route component={CloudPulse} path="/monitor" />
+                            <Redirect exact from="/" to={defaultRoot} />
+                            {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                            <Redirect from="/dashboard" to={defaultRoot} />
+                            {/**
+                             * This is the catch all routes that allows TanStack Router to take over.
+                             * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
+                             * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
+                             * This is a temporary solution until we are ready to fully migrate to TanStack Router.
+                             */}
+                            <Route path="*">
+                              <RouterProvider
+                                context={{ queryClient }}
+                                router={migrationRouter as AnyRouter}
+                              />
+                            </Route>
+                          </Switch>
+                        </React.Suspense>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </main>
-              </div>
+                  </Box>
+                  <Footer />
+                </div>
+              </Box>
             </NotificationProvider>
-            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
           </ComplianceUpdateProvider>
         </SwitchAccountSessionProvider>
       </SessionExpirationProvider>

@@ -320,11 +320,11 @@ describe('DateTimeRangePicker Component', () => {
     // Verify the input fields display the correct values
     expect(
       screen.getByRole('textbox', { name: 'Start Date and Time' })
-    ).toHaveValue(`${start.toFormat(format)} (${timezone})`);
+    ).toHaveValue(`${start.toFormat(format)} (GMT+5:30)`);
 
     expect(
       screen.getByRole('textbox', { name: 'End Date and Time' })
-    ).toHaveValue(`${now.toFormat(format)} (${timezone})`);
+    ).toHaveValue(`${now.toFormat(format)} (GMT+5:30)`);
     expect(screen.getByRole('button', { name: 'Presets' })).toBeInTheDocument();
 
     // Set start date-time to the 15th
