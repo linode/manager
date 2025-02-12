@@ -1,3 +1,22 @@
+## [2025-02-11] - v0.60.0
+
+
+### Added:
+
+- Taint and label schemas for Node Pool Labels and Taints ([#11553](https://github.com/linode/manager/pull/11553))
+
+### Changed:
+
+- Rename old `LinodeInterfaceSchema` to `ConfigProfileInterfaceSchema` ([#11527](https://github.com/linode/manager/pull/11527))
+
+### Upcoming Features:
+
+- Add new validation schemas for Linode Interfaces project:  `CreateLinodeInterfaceSchema` and `ModifyLinodeInterfaceSchema` ([#11527](https://github.com/linode/manager/pull/11527))
+- Revised validation error messages for the CreateAlertDefinition schema ([#11543](https://github.com/linode/manager/pull/11543))
+- Add `UpdateFirewallSettingsSchema`for Linode Interfaces project ([#11559](https://github.com/linode/manager/pull/11559))
+- Update `CreateLinodeSchema` for Linode Interfaces project ([#11566](https://github.com/linode/manager/pull/11566))
+- Update `UpdateAccountSettingsSchema` validation schema for Linode Interfaces project ([#11562](https://github.com/linode/manager/pull/11562))
+
 ## [2025-01-28] - v0.59.0
 
 

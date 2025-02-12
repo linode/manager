@@ -40,19 +40,26 @@ export type ServiceColumns<T> = Record<
 >;
 
 /**
+ * Defines the available filter keys that can be used to filter alerts.
+ * This type will be extended in the future to include other attributes like tags, plan, etc.
+ */
+export type AlertFilterKey = 'engineType' | 'region'; // will be extended to have tags, plan etc.,
+
+/**
  * Represents the possible types for alert filter values.
  * The filter value can be a boolean, number, string, or undefined.
  */
 export type AlertFilterType = boolean | number | string | string[] | undefined;
 
 /**
- * Defines the available filter keys that can be used to filter alerts.
- * This type will be extended in the future to include other attributes like tags, plan, etc.
+ * Defines additional filter keys that can be used beyond the primary ones.
+ * Future Extensions: Additional attributes like 'tags' and 'plan' can be added here.
  */
-export type AlertFilterKey = 'engineType' | 'region';
-
 export type AlertAdditionalFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
 
+/**
+ * Configuration for dynamically rendering service-specific filters.
+ */
 export interface ServiceFilterConfig {
   component: MemoExoticComponent<
     React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>

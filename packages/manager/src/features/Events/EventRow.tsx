@@ -45,7 +45,7 @@ export const EventRow = (props: EventRowProps) => {
   } = formatProgressEvent(event);
 
   return (
-    <TableRow data-qa-event-row data-test-id={action}>
+    <TableRow data-qa-event-row data-testid={action}>
       <TableCell data-qa-event-message-cell>
         <Box sx={{ mt: showProgress ? 0.5 : 0 }}>{message}</Box>
         {showProgress && (

@@ -4,7 +4,7 @@
  * @returns Cypress chainable.
  */
 
-import { cloudPulseServicelMap } from 'support/constants/cloudpulse';
+import { cloudPulseServiceMap } from 'support/constants/cloudpulse';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
@@ -52,11 +52,9 @@ export const mockGetCloudPulseServices = (
   serviceTypes: string[]
 ): Cypress.Chainable<null> => {
   const services = serviceTypes.map((serviceType) => ({
-    label: cloudPulseServicelMap.get(serviceType) || 'dbaas',
+    label: cloudPulseServiceMap[serviceType] || 'dbaas',
     service_type: serviceType,
   }));
-
-  // Intercept the API call and return the mocked response
   return cy.intercept(
     'GET',
     apiMatcher('/monitor/services'),

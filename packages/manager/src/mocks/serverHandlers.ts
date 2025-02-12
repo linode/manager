@@ -45,6 +45,7 @@ import {
   invoiceFactory,
   invoiceItemFactory,
   kubeEndpointFactory,
+  kubeLinodeFactory,
   kubernetesAPIResponse,
   kubernetesVersionFactory,
   linodeConfigFactory,
@@ -865,9 +866,11 @@ export const handlers = [
     const unencryptedPools = nodePoolFactory.buildList(5, {
       disk_encryption: 'disabled',
     });
-    nodePoolFactory.resetSequenceNumber();
+    const paginatedPool = nodePoolFactory.build({
+      nodes: kubeLinodeFactory.buildList(26),
+    });
     return HttpResponse.json(
-      makeResourcePage([...encryptedPools, ...unencryptedPools])
+      makeResourcePage([...encryptedPools, ...unencryptedPools, paginatedPool])
     );
   }),
   http.get('*/lke/clusters/*/api-endpoints', async () => {

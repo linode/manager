@@ -64,12 +64,12 @@ beforeEach(() => {
   queryMocks.useResourcesQuery.mockReturnValue({
     data: cloudPulseResources,
     isError: false,
-    isFetching: false,
+    isLoading: false,
   });
   queryMocks.useRegionsQuery.mockReturnValue({
     data: regions,
     isError: false,
-    isFetching: false,
+    isLoading: false,
   });
   queryMocks.useEditAlertDefinition.mockReturnValue({
     mutateAsync: vi.fn().mockResolvedValue({}),
