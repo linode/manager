@@ -13,7 +13,6 @@ import {
 } from 'src/queries/entityTransfers';
 import { useProfile } from 'src/queries/profile/profile';
 import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
@@ -31,6 +30,7 @@ import {
 
 import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
 import type { APIError } from '@linode/api-v4/lib/types';
+import { capitalize } from '@linode/utilities';
 
 export interface ConfirmTransferDialogProps {
   onClose: () => void;

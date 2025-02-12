@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
-import { capitalize } from 'src/utilities/capitalize';
 
 import {
   formValueToIPs,
@@ -26,6 +25,7 @@ import type {
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { capitalize } from '@linode/utilities';
 
 // =============================================================================
 // <FirewallRuleDrawer />

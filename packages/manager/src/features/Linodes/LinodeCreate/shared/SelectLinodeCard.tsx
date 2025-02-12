@@ -8,13 +8,13 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 import { getLinodeIconStatus } from '../../LinodesLanding/utils';
 
 import type { Linode } from '@linode/api-v4';
+import { capitalizeAllWords } from '@linode/utilities';
 
 interface Props {
   disabled?: boolean;

@@ -1,0 +1,34 @@
+{
+  "name": "@linode/utilities",
+  "version": "0.0.1",
+  "description": "Linode Utility functions library",
+  "main": "src/index.js",
+  "module": "src/index.ts",
+  "types": "src/index.ts",
+  "author": "Linode",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linode/manager/tree/develop/packages/utilities"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "start": "tsc -w --preserveWatchOutput",
+    "lint": "eslint . --quiet --ext .js,.ts,.tsx",
+    "typecheck": "tsc",
+    "precommit": "lint-staged",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:debug": "node --inspect-brk scripts/test.js --runInBand",
+    "coverage": "vitest run --coverage && open coverage/index.html",
+    "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js}": [
+      "prettier --write",
+      "eslint --ext .js,.ts,.tsx --quiet"
+    ]
+  }
+}

@@ -18,7 +18,6 @@ import {
   portPresets,
   protocolOptions,
 } from 'src/features/Firewalls/shared';
-import { capitalize } from 'src/utilities/capitalize';
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
 import { enforceIPMasks } from './FirewallRuleDrawer.utils';
@@ -30,6 +29,7 @@ import type {
   FirewallPreset,
 } from 'src/features/Firewalls/shared';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { capitalize } from '@linode/utilities';
 
 const ipNetmaskTooltipText =
   'If you do not specify a mask, /32 will be assumed for IPv4 addresses and /128 will be assumed for IPv6 addresses.';

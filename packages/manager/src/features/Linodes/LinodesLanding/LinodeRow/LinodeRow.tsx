@@ -17,7 +17,6 @@ import {
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useTypeQuery } from 'src/queries/types';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { IPAddress } from '../IPAddress';
@@ -32,6 +31,7 @@ import {
 import type { LinodeHandlers } from '../LinodesLanding';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
+import { capitalizeAllWords } from '@linode/utilities';
 
 interface Props extends LinodeWithMaintenance {
   handlers: LinodeHandlers;

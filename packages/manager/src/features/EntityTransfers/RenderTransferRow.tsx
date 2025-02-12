@@ -5,7 +5,6 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
-import { capitalize } from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
 
 import {
@@ -20,6 +19,7 @@ import {
 import { TransfersPendingActionMenu } from './TransfersPendingActionMenu';
 
 import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
+import { capitalize } from '@linode/utilities';
 
 interface Props {
   created: string;
