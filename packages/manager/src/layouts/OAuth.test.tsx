@@ -36,8 +36,20 @@ describe('layouts/OAuth', () => {
 
     const mockProps: CombinedProps = {
       dispatchStartSession: vi.fn(),
-      history,
-      location,
+      history: {
+        ...history,
+        location: {
+          ...location,
+          search:
+            '?code=test-code&returnTo=/&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127',
+        },
+        push: vi.fn(),
+      },
+      location: {
+        ...location,
+        search:
+          '?code=test-code&returnTo=/&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127',
+      },
       match,
     };
 
