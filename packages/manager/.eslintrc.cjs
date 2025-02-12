@@ -142,6 +142,14 @@ module.exports = {
         ],
       },
     },
+    // turn off no-createLinode rule for src files. this rule should be applied only to cypress test files
+    // use "@linode/eslint-plugin-cloud-manager": "file:/Users/dmcintyr/Documents/dev/eslint-plugin-cloud-manager", to import into prj
+    {
+      "files": ["src/**"],
+      "rules": {
+        "@linode/cloud-manager/no-createLinode": "off"
+      }
+    }
   ],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
@@ -174,6 +182,7 @@ module.exports = {
   rules: {
     '@linode/cloud-manager/deprecate-formik': 'warn',
     '@linode/cloud-manager/no-custom-fontWeight': 'error',
+    '@linode/cloud-manager/no-createLinode': 'error',
     '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
