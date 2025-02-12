@@ -64,6 +64,5 @@
   "version": "0.0.0",
   "volta": {
     "node": "20.17.0"
-  },
-  "dependencies": {}
+  }
 }
