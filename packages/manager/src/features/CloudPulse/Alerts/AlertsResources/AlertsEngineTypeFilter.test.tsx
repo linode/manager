@@ -17,7 +17,7 @@ describe('AlertsEngineOptionFilter', () => {
 
     await userEvent.click(getByRole('button', { name: 'Open' }));
     expect(getByRole('option', { name: 'MySQL' })).toBeInTheDocument();
-    // select an option
+    // Select an option
     await userEvent.click(getByRole('option', { name: 'MySQL' }));
 
     // Assert that the handleSelection function is called with the expected arguments
@@ -25,7 +25,7 @@ describe('AlertsEngineOptionFilter', () => {
 
     await userEvent.click(getByRole('button', { name: 'Open' }));
     expect(getByRole('option', { name: 'PostgreSQL' })).toBeInTheDocument();
-    // select an option
+    // Select an option
     await userEvent.click(getByRole('option', { name: 'PostgreSQL' }));
     expect(handleSelection).toHaveBeenCalledWith('mysql', 'engineType');
   });
