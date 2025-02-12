@@ -22,6 +22,8 @@ import {
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { DatabaseAdvancedConfiguration } from './DatabaseAdvancedConfiguration/DatabaseAdvancedConfiguration';
+
 import type { Engine } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Tab } from 'src/components/Tabs/TabLinkList';
@@ -91,6 +93,7 @@ export const DatabaseDetail = () => {
 
   const isDefault = database.platform === 'rdbms-default';
   const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
+  const isAdvancedConfigEnabled = isDefault && flags.databaseAdvancedConfig;
 
   const tabs: Tab[] = [
     {
@@ -122,6 +125,13 @@ export const DatabaseDetail = () => {
     tabs.splice(resizeIndex, 0, {
       routeName: `/databases/${engine}/${id}/resize`,
       title: 'Resize',
+    });
+  }
+
+  if (isAdvancedConfigEnabled) {
+    tabs.splice(5, 0, {
+      routeName: `/databases/${engine}/${id}/configs`,
+      title: 'Advanced Configuration',
     });
   }
 
@@ -226,12 +236,17 @@ export const DatabaseDetail = () => {
               />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel index={tabs.length - 1}>
+          <SafeTabPanel index={tabs.length - 2}>
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
             />
           </SafeTabPanel>
+          {isAdvancedConfigEnabled && (
+            <SafeTabPanel index={tabs.length - 1}>
+              <DatabaseAdvancedConfiguration database={database} />
+            </SafeTabPanel>
+          )}
         </TabPanels>
       </Tabs>
       {isDefault && <DatabaseLogo />}
