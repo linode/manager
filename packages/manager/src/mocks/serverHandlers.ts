@@ -2478,13 +2478,26 @@ export const handlers = [
       return HttpResponse.json({}, { status: 404 });
     }
   ),
+  http.put(
+    '*/monitor/services/:serviceType/alert-definitions/:id',
+    ({ params, request }) => {
+      const body:any = request.json();
+      return HttpResponse.json(
+        alertFactory.build({
+          id: Number(params.id),
+          label: `Alert-${params.id}`,
+          status: body.status === 'enabled' ? 'disabled' : 'enabled',
+        }),
+        {
+          status: 200,
+        }
+      );
+    }
+  ),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
       makeResourcePage(notificationChannelFactory.buildList(3))
     );
-  }),
-  http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
-    return HttpResponse.json(alertFactory.build());
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
