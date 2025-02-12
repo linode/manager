@@ -27,9 +27,11 @@ import type {
   InterfacePayload,
   Linode,
   Profile,
+  StackScript,
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors } from 'react-hook-form';
+import { enqueueSnackbar } from 'notistack';
 
 /**
  * This is the ID of the Image of the default OS.
@@ -363,15 +365,33 @@ export const defaultValues = async (
 ): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
-  const stackscript = stackscriptId
-    ? await queryClient.ensureQueryData(
-        stackscriptQueries.stackscript(stackscriptId)
-      )
-    : null;
+  let stackscript: StackScript | null = null;
 
-  const linode = params.linodeID
-    ? await queryClient.ensureQueryData(linodeQueries.linode(params.linodeID))
-    : null;
+  if (stackscriptId) {
+    try {
+      stackscript = await queryClient.ensureQueryData(
+        stackscriptQueries.stackscript(stackscriptId)
+      );
+    } catch (error) {
+      enqueueSnackbar('Unable to initialize StackScript user defined field.', {
+        variant: 'error',
+      });
+    }
+  }
+
+  let linode: Linode | null = null;
+
+  if (params.linodeID) {
+    try {
+      linode = await queryClient.ensureQueryData(
+        linodeQueries.linode(params.linodeID)
+      );
+    } catch (error) {
+      enqueueSnackbar('Unable to initialize pre-selected Linode.', {
+        variant: 'error',
+      });
+    }
+  }
 
   const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
 
@@ -392,11 +412,15 @@ export const defaultValues = async (
     type: linode?.type ? linode.type : '',
   };
 
-  values.label = await getGeneratedLinodeLabel({
-    queryClient,
-    tab: params.type,
-    values,
-  });
+  try {
+    values.label = await getGeneratedLinodeLabel({
+      queryClient,
+      tab: params.type,
+      values,
+    });
+  } catch (error) {
+    enqueueSnackbar('Unable to generate a Linode label.', { variant: 'error' });
+  }
 
   return values;
 };
