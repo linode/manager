@@ -11,7 +11,7 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 export interface CloudPulseModifyAlertResourcesProp {
   /**
-   * name used for the component in the form
+   * Name used for the component in the form
    */
   name: FieldPathByValue<CreateAlertDefinitionForm, string[]>;
 }
