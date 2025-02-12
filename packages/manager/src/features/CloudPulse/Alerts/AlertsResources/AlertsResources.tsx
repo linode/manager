@@ -60,9 +60,24 @@ export interface AlertResourcesProp {
   handleResourcesSelection?: (resources: string[]) => void;
 
   /**
+   * Property to control the visibility of the title
+   */
+  hideLabel?: boolean;
+
+  /**
    * This controls whether we need to show the checkbox in case of editing the resources
    */
   isSelectionsNeeded?: boolean;
+
+  /**
+   * The error text that needs to be displayed when no selections are made
+   */
+  noSelectionErrorText?: string;
+
+  /**
+   * The element until which we need to scroll on pagination and order change
+   */
+  scrollElement?: HTMLDivElement | null;
 
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
@@ -79,7 +94,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertResourceIds,
     alertType,
     handleResourcesSelection,
+    hideLabel,
     isSelectionsNeeded,
+    noSelectionErrorText,
+    scrollElement,
     serviceType,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
@@ -262,10 +280,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   if (isNoResources) {
     return (
       <Stack gap={2}>
-        <Typography ref={titleRef} variant="h2">
-          {alertLabel || 'Resources'}
-          {/* It can be either the passed alert label or just Resources */}
-        </Typography>
+        {!hideLabel && (
+          <Typography ref={titleRef} variant="h2">
+            {alertLabel || 'Resources'}
+            {/* It can be either the passed alert label or just Resources */}
+          </Typography>
+        )}
         <StyledPlaceholder
           icon={EntityIcon}
           subtitle="You can assign alerts during the resource creation process."
@@ -279,10 +299,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   return (
     <Stack gap={2}>
-      <Typography ref={titleRef} variant="h2">
-        {alertLabel || 'Resources'}
-        {/* It can be either the passed alert label or just Resources */}
-      </Typography>
+      {!hideLabel && (
+        <Typography ref={titleRef} variant="h2">
+          {alertLabel || 'Resources'}
+          {/* It can be either the passed alert label or just Resources */}
+        </Typography>
+      )}
       {showEditInformation && (
         <Typography ref={titleRef} variant="body1">
           You can enable or disable this system alert for each resource you have
@@ -343,6 +365,18 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             </Grid>
           )}
         </Grid>
+        {noSelectionErrorText && (
+          <Grid item xs={12}>
+            <Typography
+              sx={(theme) => ({
+                color: theme.tokens.content.Text.Negative,
+              })}
+              variant="body2"
+            >
+              {noSelectionErrorText}
+            </Typography>
+          </Grid>
+        )}
         {isSelectionsNeeded && !isDataLoadingError && (
           <Grid item xs={12}>
             <AlertsResourcesNotice
@@ -354,11 +388,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         )}
         <Grid item xs={12}>
           <DisplayAlertResources
+            scrollToElement={() =>
+              scrollToElement(titleRef.current ?? scrollElement ?? null)
+            }
             filteredResources={filteredResources}
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
-            scrollToElement={() => scrollToElement(titleRef.current)}
             serviceType={serviceType}
           />
         </Grid>
