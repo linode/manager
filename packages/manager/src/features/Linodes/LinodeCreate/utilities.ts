@@ -12,9 +12,13 @@ import { utoa } from 'src/utilities/metadata';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { getLinodeInterfacePayload } from './Networking/utilities';
+import {
+  getLegacyInterfaceFromLinodeInterface,
+  getLinodeInterfacePayload,
+} from './Networking/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
+import type { LinodeCreateInterface } from './Networking/utilities';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { LinodeCreateType } from './types';
 import type {
@@ -148,14 +152,15 @@ export const tabs: LinodeCreateType[] = [
  * @returns final Linode Create payload to be sent to the API
  */
 export const getLinodeCreatePayload = (
-  formValues: LinodeCreateFormValues
+  formValues: LinodeCreateFormValues,
+  isShowingNewNetworkingUI: boolean
 ): CreateLinodeRequest => {
   const values: CreateLinodeRequest = omitProps(formValues, [
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
     'interfaceType',
-    'interfacesV2',
+    'networkInterface',
   ]);
 
   if (values.metadata?.user_data) {
@@ -170,15 +175,24 @@ export const getLinodeCreatePayload = (
     values.placement_group = undefined;
   }
 
-  const shouldUseNewInterfaces = values.interface_generation === 'linode';
+  if (isShowingNewNetworkingUI) {
+    const shouldUseNewInterfaces = values.interface_generation === 'linode';
 
-  if (shouldUseNewInterfaces) {
-    values.interfaces = [
-      getLinodeInterfacePayload(
-        formValues.interfaceType,
-        formValues.interfacesV2[0]
-      ),
-    ];
+    const linodeInterface = getLinodeInterfacePayload(
+      formValues.interfaceType,
+      formValues.networkInterface
+    );
+
+    if (shouldUseNewInterfaces) {
+      values.interfaces = [linodeInterface];
+    } else {
+      values.interfaces = [
+        getLegacyInterfaceFromLinodeInterface(
+          formValues.interfaceType,
+          linodeInterface
+        ),
+      ];
+    }
   } else {
     values.interfaces = getInterfacesPayload(
       formValues.interfaces,
@@ -276,15 +290,13 @@ const defaultInterfaces: InterfacePayload[] = [
   },
 ];
 
-const defaultLinodeInterfaces: CreateLinodeInterfacePayload[] = [
-  {
-    default_route: null,
-    firewall_id: null,
-    public: {},
-    vlan: null,
-    vpc: null,
-  },
-];
+const defaultLinodeInterface: LinodeCreateInterface = {
+  default_route: null,
+  firewall_id: null,
+  public: {},
+  vlan: null,
+  vpc: null,
+};
 
 /**
  * We extend the API's payload type so that we can hold some extra state
@@ -314,16 +326,20 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    */
   interfaces: InterfacePayload[];
   /**
-   * Form state for new Linode interfaces
-   */
-  interfacesV2: CreateLinodeInterfacePayload[];
-  /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */
   linode?: Linode | null;
+  /**
+   * Form state for the new Linode interface
+   */
+  networkInterface: LinodeCreateInterface;
 }
 
 export interface LinodeCreateFormContext {
+  /**
+   * Is the form using the new Interfaces UI?
+   */
+  isLinodeInterfacesEnabled: boolean;
   /**
    * Profile data is used in the Linode Create resolver because
    * restricted users are subject to different validation.
@@ -365,8 +381,8 @@ export const defaultValues = async (
     image: getDefaultImageId(params),
     interfaceType: 'public',
     interfaces: defaultInterfaces,
-    interfacesV2: defaultLinodeInterfaces,
     linode,
+    networkInterface: defaultLinodeInterface,
     private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields

@@ -1,4 +1,23 @@
-import type { CreateLinodeInterfacePayload } from '@linode/api-v4';
+import type {
+  CreateLinodeInterfacePayload,
+  InterfacePayload,
+  InterfacePurpose,
+} from '@linode/api-v4';
+
+/**
+ * Extend the API's new interface type with a vpc_id so that state managment is easier for us
+ * The new endpoint only uses subnet_id and I guess it dervies the VPC from that?
+ */
+interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
+  vpc_id: number;
+}
+
+/**
+ * We extend the new `CreateLinodeInterfacePayload` to add extra state we need to track
+ */
+export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
+  vpc?: VPC | null;
+}
 
 /**
  * Because the new Linode Create Networking UI only allows one interface to be configured,
@@ -8,7 +27,7 @@ import type { CreateLinodeInterfacePayload } from '@linode/api-v4';
  */
 export const getLinodeInterfacePayload = (
   type: 'public' | 'vlan' | 'vpc',
-  networkInterface: CreateLinodeInterfacePayload
+  networkInterface: LinodeCreateInterface
 ) => {
   for (const key of ['public', 'vlan', 'vpc'] as const) {
     if (key !== type) {
@@ -17,4 +36,30 @@ export const getLinodeInterfacePayload = (
   }
 
   return networkInterface;
+};
+
+/**
+ * The UX for new Interface requires us to enable the user to toggle between Legacy and New Interfaces.
+ * To make this possible, we will make our form's state be in the shape of `LinodeCreateInterface` and
+ * we will convert these new interfaces to legacy interface onSubmit.
+ */
+export const getLegacyInterfaceFromLinodeInterface = (
+  purpose: InterfacePurpose,
+  linodeInterface: LinodeCreateInterface
+): InterfacePayload => {
+  return {
+    ip_ranges: linodeInterface.vpc?.ipv4?.ranges?.map(({ range }) => range),
+    ipam_address: linodeInterface.vlan?.ipam_address ?? null,
+    ipv4:
+      purpose === 'vpc'
+        ? {
+            nat_1_1: linodeInterface.vpc?.ipv4?.addresses?.[0].nat_1_1_address,
+            vpc: linodeInterface.vpc?.ipv4?.addresses?.[0].address,
+          }
+        : undefined,
+    label: linodeInterface.vlan?.vlan_label ?? null,
+    purpose,
+    subnet_id: linodeInterface.vpc?.subnet_id,
+    vpc_id: linodeInterface.vpc?.vpc_id,
+  };
 };

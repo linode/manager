@@ -19,12 +19,12 @@ export const Firewall = () => {
 
   const { field, fieldState } = useController<
     LinodeCreateFormValues,
-    'firewall_id' | 'interfacesV2.0.firewall_id'
+    'firewall_id' | 'networkInterface.firewall_id'
   >({
     name:
       interfaceGeneration === 'legacy_config'
         ? 'firewall_id'
-        : 'interfacesV2.0.firewall_id',
+        : 'networkInterface.firewall_id',
     shouldUnregister: true,
   });
 
