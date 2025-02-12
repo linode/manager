@@ -428,7 +428,6 @@ export const ImagesLanding = () => {
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Images" />
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Images',

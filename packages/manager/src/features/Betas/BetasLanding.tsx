@@ -10,6 +10,7 @@ import { useBetasQuery } from 'src/queries/betas';
 import { categorizeBetasByStatus } from 'src/utilities/betaUtils';
 
 import type { AccountBeta, Beta } from '@linode/api-v4';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export const BetasLanding = () => {
   const {
@@ -45,6 +46,7 @@ export const BetasLanding = () => {
 
   return (
     <>
+      <DocumentTitleSegment segment="Betas" />
       <ProductInformationBanner bannerLocation="Betas" />
       <LandingHeader title="Betas" />
       <Stack spacing={2}>

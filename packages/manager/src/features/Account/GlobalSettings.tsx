@@ -18,6 +18,7 @@ import NetworkHelper from './NetworkHelper';
 import { ObjectStorageSettings } from './ObjectStorageSettings';
 
 import type { APIError } from '@linode/api-v4';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const GlobalSettings = () => {
   const [isBackupsDrawerOpen, setIsBackupsDrawerOpen] = React.useState(false);
@@ -79,6 +80,7 @@ const GlobalSettings = () => {
 
   return (
     <div>
+      <DocumentTitleSegment segment="Settings" />
       <AutoBackups
         backups_enabled={backups_enabled}
         hasLinodesWithoutBackups={hasLinodesWithoutBackups}
