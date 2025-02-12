@@ -1,8 +1,9 @@
-import { Typography } from '@linode/ui';
+import { Divider, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
+import { Link } from 'src/components/Link';
 
 import {
   StyledButton,
@@ -12,6 +13,10 @@ import {
 } from './styles';
 
 export interface CheckoutBarProps {
+  /**
+   * Additional pricing text displayed after the calculated total
+   */
+  additionalPriceText?: string;
   /**
    * JSX element to be displayed as an agreement section.
    */
@@ -61,6 +66,7 @@ export interface CheckoutBarProps {
 
 const CheckoutBar = (props: CheckoutBarProps) => {
   const {
+    additionalPriceText,
     agreement,
     calculatedPrice,
     children,
@@ -95,7 +101,16 @@ const CheckoutBar = (props: CheckoutBarProps) => {
       {
         <StyledCheckoutSection data-qa-total-price>
           {(price >= 0 && !disabled) || price ? (
-            <DisplayPrice interval="mo" price={price} />
+            <>
+              <DisplayPrice interval="mo" price={price} />
+              {additionalPriceText && (
+                <>
+                  <Divider dark spacingBottom={16} spacingTop={16} />
+                  <Typography>{additionalPriceText}</Typography>
+                  <Link to="#">See pricing</Link>.
+                </>
+              )}
+            </>
           ) : (
             <Typography>{priceSelectionText}</Typography>
           )}

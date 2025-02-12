@@ -9,6 +9,7 @@ import { useProfile } from 'src/queries/profile/profile';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
+import { LKE_ADDITIONAL_PRICING } from 'src/utilities/pricing/constants';
 import {
   LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
   LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
@@ -119,6 +120,7 @@ export const KubeCheckoutBar = (props: Props) => {
           ? LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE
           : LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE
       }
+      additionalPriceText={LKE_ADDITIONAL_PRICING}
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"
