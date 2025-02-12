@@ -69,11 +69,20 @@ export const SummaryPanel = () => {
             <StyledSection>
               <Typography data-qa-ports variant="body1">
                 <strong>Cluster: </strong>
-                <Link
-                  to={`/kubernetes/clusters/${nodebalancer.cluster.id}/summary`}
-                >
-                  {nodebalancer.cluster.label}
-                </Link>{' '}
+                {nodebalancer.cluster.id === null ? (
+                  <>
+                    <span style={{ textDecoration: 'line-through' }}>
+                      {nodebalancer.cluster.label}
+                    </span>
+                    <span style={{ fontStyle: 'italic' }}> (deleted)</span>
+                  </>
+                ) : (
+                  <Link
+                    to={`/kubernetes/clusters/${nodebalancer.cluster.id}/summary`}
+                  >
+                    {nodebalancer.cluster.label}
+                  </Link>
+                )}
               </Typography>
             </StyledSection>
           )}
