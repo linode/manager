@@ -27,16 +27,23 @@ import type {
   AlertFilterType,
 } from './types';
 import type {
+  AlertClass,
   AlertDefinitionType,
   AlertServiceType,
+  Filter,
   Region,
 } from '@linode/api-v4';
 
 export interface AlertResourcesProp {
   /**
+   * Class of the alert (dedicated / shared)
+   */
+  alertClass?: AlertClass;
+  /**
    * The label of the alert to be displayed
    */
   alertLabel?: string;
+
   /**
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
@@ -67,6 +74,7 @@ export type SelectUnselectAll = 'Select All' | 'Unselect All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
+    alertClass,
     alertLabel,
     alertResourceIds,
     alertType,
@@ -84,21 +92,45 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     Record<AlertAdditionalFilterKey, AlertFilterType>
   >({ engineType: undefined });
 
+  const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+    if (serviceType !== 'dbaas') {
+      return undefined; // No x-filters needed for other serviceTypes
+    }
+
+    // Always include platform filter for 'dbaas'
+    const platformFilter: Filter = { platform: 'rdbms-default' };
+
+    // If alertType is not 'system' or alertClass is not defined, return only platform filter
+    if (alertType !== 'system' || !alertClass) {
+      return platformFilter;
+    }
+
+    // Apply type filter only for system alerts with a valid alertClass
+    const typeFilter: Filter = {
+      type: {
+        '+contains': alertClass,
+      },
+    };
+
+    // Combine both filters
+    return { ...platformFilter, ...typeFilter };
+  }, [alertClass, alertType, serviceType]);
+
   const {
     data: regions,
     isError: isRegionsError,
-    isFetching: isRegionsFetching,
+    isLoading: isRegionsLoading,
   } = useRegionsQuery();
 
   const {
     data: resources,
     isError: isResourcesError,
-    isFetching: isResourcesFetching,
+    isLoading: isResourcesLoading,
   } = useResourcesQuery(
     Boolean(serviceType),
     serviceType,
     {},
-    serviceType === 'dbaas' ? { platform: 'rdbms-default' } : {}
+    xFilterToBeApplied
   );
 
   const computedSelectedResources = React.useMemo(() => {
@@ -223,7 +255,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     !isDataLoadingError && !isSelectionsNeeded && alertResourceIds.length === 0;
   const showEditInformation = isSelectionsNeeded && alertType === 'system';
 
-  if (isResourcesFetching || isRegionsFetching) {
+  if (isResourcesLoading || isRegionsLoading) {
     return <CircleProgress />;
   }
 

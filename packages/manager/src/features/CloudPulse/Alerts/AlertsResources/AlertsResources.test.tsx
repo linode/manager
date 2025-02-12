@@ -60,12 +60,12 @@ beforeEach(() => {
   queryMocks.useResourcesQuery.mockReturnValue({
     data: cloudPulseResources,
     isError: false,
-    isFetching: false,
+    isLoading: false,
   });
   queryMocks.useRegionsQuery.mockReturnValue({
     data: regions,
     isError: false,
-    isFetching: false,
+    isLoading: false,
   });
 });
 
@@ -81,7 +81,7 @@ describe('AlertResources component tests', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodes,
       isError: false,
-      isFetching: true,
+      isLoading: true,
     });
     const { getByTestId, queryByText } = renderWithTheme(
       <AlertResources {...alertResourcesProp} />
@@ -95,7 +95,7 @@ describe('AlertResources component tests', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodes,
       isError: true,
-      isFetching: false,
+      isLoading: false,
     });
     const { getByText } = renderWithTheme(
       <AlertResources {...alertResourcesProp} />
