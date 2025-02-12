@@ -24,7 +24,7 @@ export interface AlertInstance {
    */
   checked?: boolean;
   /**
-   * The engine associated with the instance in case of databases
+   * The region associated with the instance
    */
   engineType?: string;
   /**
@@ -143,7 +143,7 @@ export const DisplayAlertResources = React.memo(
       },
       [handleSelection]
     );
-    const columns = serviceTypeBasedColumns[serviceType ?? ''] ?? [];
+    const columns = serviceTypeBasedColumns[serviceType ?? ''];
     const colSpanCount = isSelectionsNeeded
       ? columns.length + 1
       : columns.length;
@@ -204,40 +204,35 @@ export const DisplayAlertResources = React.memo(
                 data-testid="alert_resources_content"
               >
                 {!isDataLoadingError &&
-                  paginatedData.map((resource, index) => (
-                    <TableRow
-                      data-qa-alert-row={resource.id}
-                      key={`${index}_${resource.id}`}
-                    >
-                      {isSelectionsNeeded && (
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            onClick={() => {
-                              handleSelectionChange(
-                                [resource.id],
-                                !resource.checked
-                              );
-                            }}
-                            sx={{
-                              padding: 0,
-                            }}
-                            checked={resource.checked}
-                            data-testid={`select_item_${resource.id}`}
-                          />
-                        </TableCell>
-                      )}
-                      {columns.map(({ accessor, label }) => (
-                        <TableCell
-                          data-qa-alert-cell={`${
-                            resource.id
-                          }_${label.toLowerCase()}`}
-                          key={label}
-                        >
-                          {accessor(resource)}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
+                  paginatedData.map((resource, index) => {
+                    const { checked, id } = resource;
+                    return (
+                      <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
+                        {isSelectionsNeeded && (
+                          <TableCell>
+                            <Checkbox
+                              onClick={() => {
+                                handleSelectionChange([id], !checked);
+                              }}
+                              sx={{
+                                p: 0,
+                              }}
+                              checked={checked}
+                              data-testid={`select_item_${id}`}
+                            />
+                          </TableCell>
+                        )}
+                        {columns.map(({ accessor, label }) => (
+                          <TableCell
+                            data-qa-alert-cell={`${id}_${label.toLowerCase()}`}
+                            key={label}
+                          >
+                            {accessor(resource)}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    );
+                  })}
                 {isDataLoadingError && (
                   <TableRowError
                     colSpan={colSpanCount}

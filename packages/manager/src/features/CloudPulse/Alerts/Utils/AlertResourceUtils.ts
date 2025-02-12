@@ -1,4 +1,3 @@
-import { deepEqual } from '../../Utils/FilterBuilder';
 import {
   alertAdditionalFilterKeyMap,
   applicableAdditionalFilterKeys,
@@ -35,6 +34,7 @@ interface FilterResourceProps {
    * Property to integrate and edit the resources associated with alerts
    */
   isAdditionOrDeletionNeeded?: boolean;
+
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
@@ -186,8 +186,8 @@ export const getFilteredResources = (
       return (
         matchesSearchText && // match the search text and match the region selected
         matchesFilteredRegions &&
-        (!selectedOnly || checked)
-      ); // if selected only, show only checked, else everything
+        (!selectedOnly || checked) // if selected only, show only checked, else everything
+      ); // match the search text and match the region selected
     })
     .filter((resource) => applyAdditionalFilter(resource, additionalFilters));
 };
@@ -215,7 +215,12 @@ const applyAdditionalFilter = (
     // Only apply filters that exist in `alertAdditionalFilterKeyMap`
     const mappedKey = alertAdditionalFilterKeyMap[key];
     const resourceValue = resource[mappedKey];
-    return deepEqual(resourceValue, value);
+
+    if (Array.isArray(resourceValue) && Array.isArray(value)) {
+      return value.some((obj) => resourceValue.includes(obj));
+    }
+
+    return resourceValue === value;
   });
 };
 
@@ -286,20 +291,19 @@ export const isResourcesEqual = (
  *        Callback function for updating the selected regions.
  * @param {Region[]} props.regionOptions - The list of available regions for filtering.
  */
-export const getFilterProps = ({
+export const getAlertResourceFilterProps = ({
   filterKey,
   handleFilterChange,
   handleFilteredRegionsChange: handleSelectionChange,
   regionOptions,
 }: FilterRendererProps): AlertsEngineOptionProps | AlertsRegionProps => {
-  if (filterKey === 'engineType') {
-    return {
-      handleFilterChange,
-    };
-  } else {
-    return {
-      handleSelectionChange,
-      regionOptions,
-    };
+  switch (filterKey) {
+    case 'engineType':
+      return { handleFilterChange };
+    case 'region':
+      return { handleSelectionChange, regionOptions };
+
+    default:
+      return { handleFilterChange };
   }
 };
