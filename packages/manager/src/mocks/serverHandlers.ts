@@ -914,6 +914,11 @@ export const handlers = [
   }),
   http.get('*/v4beta/nodebalancers/:nodeBalancerID', ({ params }) => {
     const nodeBalancer = nodeBalancerFactory.build({
+      cluster: {
+        id: 1,
+        label: 'lke-e-123',
+        tier: 'enterprise',
+      },
       id: Number(params.nodeBalancerID),
       type: 'premium',
     });

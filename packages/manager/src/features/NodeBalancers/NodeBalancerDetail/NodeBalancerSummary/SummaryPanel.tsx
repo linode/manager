@@ -65,6 +65,18 @@ export const SummaryPanel = () => {
               </Typography>
             </StyledSection>
           )}
+          {nodebalancer.cluster && (
+            <StyledSection>
+              <Typography data-qa-ports variant="body1">
+                <strong>Cluster: </strong>
+                <Link
+                  to={`/kubernetes/clusters/${nodebalancer.cluster.id}/summary`}
+                >
+                  {nodebalancer.cluster.label}
+                </Link>{' '}
+              </Typography>
+            </StyledSection>
+          )}
           <StyledSection>
             <Typography data-qa-ports variant="body1">
               <strong>Ports: </strong>
