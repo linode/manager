@@ -215,6 +215,7 @@ export interface Alert {
   label: string;
   tags: string[];
   description: string;
+  class?: AlertClass;
   has_more_resources: boolean;
   status: AlertStatusType;
   type: AlertDefinitionType;
@@ -235,7 +236,6 @@ export interface Alert {
   updated_by: string;
   created: string;
   updated: string;
-  class?: AlertClass;
 }
 
 interface NotificationChannelAlerts {
