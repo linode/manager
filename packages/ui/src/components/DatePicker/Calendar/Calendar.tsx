@@ -1,14 +1,14 @@
 import { SvgIcon } from '@mui/material';
 import * as React from 'react';
 
-import { chevronLeft } from '../../../assets/icons/index';
-import { chevronRight } from '../../../assets/icons/index';
+import { ChevronLeft } from '../../../assets/icons/index';
+import { ChevronRight } from '../../../assets/icons/index';
 import { Box } from '../../Box/Box';
 import { Button } from '../../Button/Button';
 import { Stack } from '../../Stack/Stack';
 import { Typography } from '../../Typography/Typography';
+import { DayBox } from './Calendar.styles';
 
-import type { Theme } from '@mui/material/styles';
 import type { DateTime } from 'luxon';
 
 interface CalendarProps {
@@ -68,35 +68,14 @@ export const Calendar = ({
       (endDate && endDate.isValid && currentDay.equals(endDate));
 
     days.push(
-      <Box
-        sx={(theme: Theme) => ({
-          '&:hover': {
-            bgcolor: !isStartOrEnd ? theme.bg.app : theme.palette.primary.main,
-            border: `1px solid ${theme.borderColors.divider}`,
-            borderRadius: '50%',
-            color: !isStartOrEnd ? theme.color.black : theme.color.white,
-          },
-          alignItems: 'center',
-          bgcolor: isStartOrEnd
-            ? theme.palette.primary.main
-            : isSelected
-            ? theme.palette.primary.light
-            : 'transparent',
-          borderRadius: '50%',
-          color:
-            isStartOrEnd || isSelected ? 'white' : theme.palette.text.primary,
-          cursor: 'pointer',
-          display: 'flex',
-          height: 40,
-          justifyContent: 'center',
-          transition: 'background-color 0.2s ease',
-          width: 40,
-        })}
+      <DayBox
+        isSelected={isSelected}
+        isStartOrEnd={isStartOrEnd}
         key={day}
         onClick={() => onDateClick(currentDay, focusedField)}
       >
         {day}
-      </Box>
+      </DayBox>
     );
   }
   const rightCalenderHeaderStyles = {
@@ -121,7 +100,7 @@ export const Calendar = ({
             onClick={() => setMonth(month.minus({ months: 1 }))}
             sx={{ flexGrow: 1, justifyContent: 'flex-start', minWidth: '60px' }}
           >
-            <SvgIcon component={chevronLeft} viewBox="0 0 25 25" />
+            <SvgIcon component={ChevronLeft} viewBox="0 0 25 25" />
           </Button>
         )}
         {/* Display month and year as read-only text */}
@@ -140,7 +119,7 @@ export const Calendar = ({
             onClick={() => setMonth(month.plus({ months: 1 }))}
             sx={{ justifyContent: 'end' }}
           >
-            <SvgIcon component={chevronRight} viewBox="0 0 25 25" />
+            <SvgIcon component={ChevronRight} viewBox="0 0 25 25" />
           </Button>
         )}
       </Stack>
