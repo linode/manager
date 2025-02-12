@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
@@ -42,7 +41,6 @@ export const OAuthCallbackPage = ({
   dispatchStartSession,
   history,
 }: CombinedProps) => {
-  const [isLoading, setIsLoading] = React.useState(false);
   const { location } = history;
 
   const checkNonce = (nonce: string) => {
@@ -95,14 +93,10 @@ export const OAuthCallbackPage = ({
           codeVerifier
         );
 
-        setIsLoading(true);
-
         const response = await fetch(`${loginURL}/oauth/token`, {
           body: formData,
           method: 'POST',
         });
-
-        setIsLoading(false);
 
         if (response.ok) {
           const tokenParams = await response.json();
@@ -155,9 +149,9 @@ export const OAuthCallbackPage = ({
 
     exchangeAuthorizationCodeForToken(code, returnTo, nonce);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search, dispatchStartSession, history]);
+  }, []);
 
-  return isLoading ? <SplashScreen /> : null;
+  return <SplashScreen />;
 };
 
 const clearStorageAndRedirectToLogout = () => {
@@ -185,4 +179,4 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
 
 const connected = connect(undefined, mapDispatchToProps);
 
-export default connected(withRouter(OAuthCallbackPage));
+export default connected(OAuthCallbackPage);
