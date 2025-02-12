@@ -94,7 +94,6 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
         return (
           <StyledActionButton
             onClick={() => {
-              // handlePresetSelect(preset.label);
               onPresetSelect(startDate, endDate, preset.label);
             }}
             sx={(theme: Theme) => ({
