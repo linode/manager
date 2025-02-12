@@ -1,9 +1,9 @@
 import {
   Accordion,
-  Autocomplete,
   BetaChip,
   Box,
   Button,
+  Select,
   Stack,
   Typography,
 } from '@linode/ui';
@@ -89,7 +89,7 @@ export const NetworkInterfaceType = () => {
           </Typography>
           <Controller
             render={({ field, fieldState }) => (
-              <Autocomplete
+              <Select
                 onChange={(
                   _,
                   item: SelectOption<LinodeInterfaceAccountSetting>
@@ -112,7 +112,6 @@ export const NetworkInterfaceType = () => {
                 value={accountSettingInterfaceOptions.find(
                   (option) => option.value === field.value
                 )}
-                disableClearable
                 errorText={fieldState.error?.message}
                 label="Interfaces for new Linodes"
                 options={accountSettingInterfaceOptions}
