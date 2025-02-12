@@ -1,10 +1,12 @@
-import { Item } from 'src/components/EnhancedSelect/Select';
+import type { SelectOption } from '@linode/ui';
 
-export const tagsToItems = (tags: string[]): Item<string>[] =>
-  tags.reduce((accum: Item<string>[], thisTag: string) => {
+export const tagsToItems = (tags: string[]): SelectOption<string>[] =>
+  tags.reduce((accum: SelectOption<string>[], thisTag: string) => {
     return [...accum, { label: thisTag, value: thisTag }];
   }, []);
 
-export const getTagsAsStrings = (tagItems: Item<string>[]): string[] => {
+export const getTagsAsStrings = (
+  tagItems: SelectOption<string>[]
+): string[] => {
   return tagItems.map((thisTag) => thisTag.label);
 };

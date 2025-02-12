@@ -23,6 +23,7 @@ export type RoleType =
   | 'linode_viewer'
   | 'firewall_admin'
   | 'linode_creator'
+  | 'update_firewall'
   | 'firewall_creator';
 
 export interface IamUserPermissions {

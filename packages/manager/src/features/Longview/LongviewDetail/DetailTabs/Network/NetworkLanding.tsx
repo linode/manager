@@ -63,7 +63,6 @@ export const NetworkLanding = (props: Props) => {
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
-            small
           />
         </StyledBox>
       </StyledItemGrid>
