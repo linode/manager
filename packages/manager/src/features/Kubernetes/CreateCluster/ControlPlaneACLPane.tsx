@@ -18,13 +18,12 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LinkButton } from 'src/components/LinkButton';
 import { stringToExtendedIP, validateIPs } from 'src/utilities/ipUtils';
 
-export interface ControlPlaneACLProps {
+import type { RenderGuardProps } from 'src/components/RenderGuard';
+export interface ControlPlaneACLProps extends RenderGuardProps {
   enableControlPlaneACL: boolean;
   errorText: string | undefined;
   handleIPv4Change: (ips: string[]) => void;
   handleIPv6Change: (ips: string[]) => void;
-  ipV4Addr: null | string[] | undefined;
-  ipV6Addr: null | string[] | undefined;
   setControlPlaneACL: (enabled: boolean) => void;
 }
 
@@ -68,7 +67,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         appendIPv6('');
       }
     }
-  });
+  }, [enableControlPlaneACL]);
 
   React.useEffect(() => {
     if (ipv4Addresses && ipv4Addresses.length) {

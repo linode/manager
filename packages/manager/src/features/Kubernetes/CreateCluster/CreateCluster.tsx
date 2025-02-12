@@ -487,10 +487,15 @@ export const CreateCluster = () => {
                         updatedACL.addresses.ipv6 = value;
                         field.onChange(updatedACL);
                       }}
+                      updateFor={[
+                        getValues('control_plane.acl.addresses.ipv4'),
+                        getValues('control_plane.acl.addresses.ipv6'),
+                        setControlPlaneACL,
+                        errorMap,
+                        controlPlaneACL,
+                      ]}
                       enableControlPlaneACL={controlPlaneACL}
                       errorText={errorMap.control_plane}
-                      ipV4Addr={getValues('control_plane.acl.addresses.ipv4')}
-                      ipV6Addr={getValues('control_plane.acl.addresses.ipv6')}
                       setControlPlaneACL={setControlPlaneACL}
                     />
                   )}
