@@ -6,27 +6,27 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 
 interface AlertConfirmationDialogProps {
   /**
-   * id of the selected alert row
+   * Id of the selected alert row
    */
   alertId: number;
 
   /**
-   * name of the selected alert row
+   * Name of the selected alert row
    */
   alertName: string;
 
   /**
-   * name of the selected entity
+   * Name of the selected entity
    */
   entityName: string;
 
   /**
-   * handler function for cancel button
+   * Handler function for cancel button
    */
   handleCancel: () => void;
 
   /**
-   * handler function for enable/disable button
+   * Handler function for enable/disable button
    * @param alertId id of the alert for the selected row
    * @param serviceType service type of the selected entity
    * @param currentStatus current state of the toggle button
@@ -38,17 +38,17 @@ interface AlertConfirmationDialogProps {
   ) => void;
 
   /**
-   * current state of the toggle button whether active or not
+   * Current state of the toggle button whether active or not
    */
   isActive: boolean;
 
   /**
-   * current state of the confirmation dialoge whether open or not
+   * Current state of the confirmation dialoge whether open or not
    */
   isOpen: boolean;
 
   /**
-   * service type of the selected entity
+   * Service type of the selected entity
    */
   serviceType: string;
 }

@@ -26,17 +26,17 @@ import type { AlertDefinitionType } from '@linode/api-v4';
 
 interface AlertReusableComponentProps {
   /**
-   * id for the selected entity
+   * Id for the selected entity
    */
   entityId: string;
 
   /**
-   * name of the selected entity
+   * Name of the selected entity
    */
   entityName: string;
 
   /**
-   * service type of selected entity
+   * Service type of selected entity
    */
   serviceType: string;
 }

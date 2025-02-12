@@ -10,6 +10,14 @@ import type {
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
+export interface ProcessedCriteria {
+  aggregationType: string;
+  label: string;
+  operator: string;
+  threshold: number;
+  unit: string;
+}
+
 interface AlertChipBorderProps {
   /**
    * The radius needed for the border
@@ -127,14 +135,11 @@ export const getChipLabels = (
   }
 };
 
-export interface ProcessedCriteria {
-  aggregationType: string;
-  label: string;
-  operator: string;
-  threshold: number;
-  unit: string;
-}
-
+/**
+ *
+ * @param criterias list of metric criterias to be processed
+ * @returns list of metric criterias in processed form
+ */
 export const processMetricCriteria = (
   criterias: AlertDefinitionMetricCriteria[]
 ): ProcessedCriteria[] => {
@@ -155,6 +160,13 @@ export const processMetricCriteria = (
     }, []);
 };
 
+/**
+ *
+ * @param alerts list of alerts to be filtered
+ * @param searchText text to be searched in alert name
+ * @param selectedType selecte alert type
+ * @returns list of filtered alerts based on searchText & selectedType
+ */
 export const filterAlertsByStatusAndType = (
   alerts: Alert[] | undefined,
   searchText: string,
@@ -172,6 +184,11 @@ export const filterAlertsByStatusAndType = (
   );
 };
 
+/**
+ *
+ * @param alerts list of alerts
+ * @returns list of unique alert types in the alerts list in the form of json object
+ */
 export const convertAlertsToTypeSet = (
   alerts: Alert[] | undefined
 ): { label: AlertDefinitionType }[] => {

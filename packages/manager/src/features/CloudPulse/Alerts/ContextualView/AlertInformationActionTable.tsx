@@ -23,27 +23,27 @@ import type { Alert, EntityAlertUpdatePayload } from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
-   * list of alerts to be displayed
+   * List of alerts to be displayed
    */
   alerts: Alert[];
 
   /**
-   * list of table headers for each column
+   * List of table headers for each column
    */
   columns: TableColumnHeader[];
 
   /**
-   * id of the selected entity
+   * Id of the selected entity
    */
   entityId: string;
 
   /**
-   * name of the selected entity
+   * Name of the selected entity
    */
   entityName: string;
 
   /**
-   * column name by which columns will be ordered by default
+   * Column name by which columns will be ordered by default
    */
   ordeByColumn: string;
 }
@@ -55,14 +55,14 @@ export interface TableColumnHeader {
   columnName: string;
 
   /**
-   * corresponding key name in the alert object for which this column is
+   * Corresponding key name in the alert object for which this column is
    */
   label: string;
 }
 
 export interface AlertStatusMap {
   /**
-   * alert id to boolean mapping to hold whether that alert id is enabled or not
+   * Alert id to boolean mapping to hold whether that alert id is enabled or not
    */
   [alertId: number]: boolean;
 }
