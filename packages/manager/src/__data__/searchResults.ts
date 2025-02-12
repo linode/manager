@@ -34,9 +34,11 @@ export const docs_result = {
 
 export const searchbarResult1 = {
   data: {
+    created: '2021-01-01',
     description: 'Description',
     icon: 'LinodeIcon',
     path: `/nodebalancers/nodebalID`,
+    region: 'us-east',
     searchText: 'result',
     tags: [],
   },
@@ -47,9 +49,11 @@ export const searchbarResult1 = {
 
 export const searchbarResult2 = {
   data: {
+    created: '2021-01-01',
     description: 'Description',
     icon: 'NodebalIcon',
     path: `/nodebalancers/nodebalID`,
+    region: 'us-east',
     searchText: 'result',
     tags: ['tag1', 'tag2'],
   },
