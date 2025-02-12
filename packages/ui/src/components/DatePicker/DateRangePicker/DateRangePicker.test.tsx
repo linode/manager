@@ -71,7 +71,7 @@ describe('DateRangePicker', () => {
     const mockDate = DateTime.fromISO('2025-02-04T14:11:14.933-06:00');
 
     // Mock the `DateTime.now()` function globally
-    vi.spyOn(DateTime, 'now').mockReturnValue(mockDate);
+    vi.spyOn(DateTime, 'now').mockReturnValue(mockDate as DateTime<true>);
 
     renderWithTheme(<DateRangePicker {...defaultProps} />);
     await userEvent.click(screen.getByRole('textbox', { name: 'Start Date' }));
