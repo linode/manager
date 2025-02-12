@@ -30,7 +30,7 @@ export const useGetLocationsForQuotaService = (
   const {
     data: quotas,
     isFetching: isFetchingObjectStorageQuotas,
-  } = useQuotasQuery(service, {}, {}, true);
+  } = useQuotasQuery(service, {}, {}, service === 'object-storage');
 
   const globalOption = regionFactory.build({
     capabilities: [],
@@ -58,9 +58,7 @@ export const useGetLocationsForQuotaService = (
       isFetchingObjectStorageQuotas,
       regions: null,
       s3Endpoints: [
-        ...(uniqueEndpoints.length >= 2
-          ? [{ label: 'Global (Account level)', value: 'global' }]
-          : []),
+        ...[{ label: 'Global (Account level)', value: 'global' }],
         ...uniqueEndpoints.map((endpoint) => ({
           label: `${endpoint.endpoint} (Standard ${endpoint.endpoint_type})`,
           value: endpoint.endpoint,

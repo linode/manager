@@ -78,8 +78,10 @@ export interface QuotaUsage {
   /**
    * The current account usage, measured in units specified by the
    * `resource_metric` field.
+   *
+   * This can be null if the user does not have resources for the given Quota Name.
    */
-  used: number;
+  used: number | null;
 }
 
 export const quotaTypes = {

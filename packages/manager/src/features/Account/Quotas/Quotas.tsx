@@ -13,7 +13,6 @@ import * as React from 'react';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { regionFactory } from 'src/factories';
 import { useQuotasQuery } from 'src/queries/quotas/quotas';
 
 import { useGetLocationsForQuotaService } from './utils';
@@ -60,19 +59,10 @@ export const Quotas = () => {
     value: key as QuotaType,
   }));
 
-  // Build Location options
-
+  // Destructure Locations for both the regions and s3 endpoints controls
   const { regions, s3Endpoints } = locationData;
-  const globalOption = regionFactory.build({
-    capabilities: [],
-    id: 'global',
-    label: 'Global (Account level)',
-  });
-  const memoizedLocationOptions = React.useMemo(() => {
-    return [globalOption, ...(regions ?? [])];
-  }, [regions, globalOption]);
 
-  // Fetch the usage for each quota
+  // Fetch the usage for each quota, depending on the service
   const quotaIds = quotas?.data.map((quota) => quota.quota_id) ?? [];
   const quotaUsageQueries = useQueries({
     queries: quotaIds.map((quotaId) => ({
@@ -109,7 +99,6 @@ export const Quotas = () => {
   ) => {
     setSelectedService(value);
     setSelectedLocation(null);
-    refetch();
   };
 
   return (
@@ -138,11 +127,12 @@ export const Quotas = () => {
                     label: value?.label,
                     value: value?.value,
                   });
+                  refetch();
                 }}
                 options={
-                  memoizedLocationOptions.map((location) => ({
+                  s3Endpoints?.map((location) => ({
                     label: location.label,
-                    value: location.label,
+                    value: location.value,
                   })) ?? []
                 }
                 placeholder={
@@ -153,7 +143,8 @@ export const Quotas = () => {
                 value={{
                   label:
                     s3Endpoints?.find(
-                      (loc) => loc.label === selectedLocation?.value
+                      (s3Endpoint) =>
+                        s3Endpoint.value === selectedLocation?.value
                     )?.label ?? '',
                   value: selectedLocation?.value ?? '',
                 }}
@@ -169,6 +160,7 @@ export const Quotas = () => {
                     label: value.label,
                     value: value.id,
                   });
+                  refetch();
                 }}
                 placeholder={
                   isFetchingLocations
@@ -180,7 +172,7 @@ export const Quotas = () => {
                 disabled={isFetchingLocations}
                 loading={isFetchingLocations}
                 noOptionsText={`No resource found for ${selectedService.label}`}
-                regions={memoizedLocationOptions}
+                regions={regions ?? []}
                 sx={{ flexGrow: 1, mr: 2 }}
                 value={selectedLocation?.value}
               />
@@ -201,7 +193,7 @@ export const Quotas = () => {
                 <pre
                   style={{
                     backgroundColor: '#f5f5f5',
-                    borderRadius: '4px',
+                    borderRadius: '8px',
                     overflow: 'auto',
                     padding: '1rem',
                     width: '100%',

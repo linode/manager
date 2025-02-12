@@ -8,16 +8,6 @@ export const pickRandom = <T>(items: T[]): T => {
 };
 
 /**
- * Picks random elements from an array
- * @param items { T[] } an array of any kind
- * @param count { number } the number of elements to pick
- * @returns {T[]} an array of the given type
- */
-export const pickXRandomFromArray = <T>(items: T[], count: number): T[] => {
-  return items.sort(() => Math.random() - 0.5).slice(0, count);
-};
-
-/**
  * Generates a random date between two dates
  * @param start {Date} the start date
  * @param end {Date} the end date

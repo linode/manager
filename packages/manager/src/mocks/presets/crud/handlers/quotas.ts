@@ -7,7 +7,7 @@ import {
   makePaginatedResponse,
   makeResponse,
 } from 'src/mocks/utilities/response';
-import { pickRandom, pickXRandomFromArray } from 'src/utilities/random';
+import { pickRandom } from 'src/utilities/random';
 
 import type { Quota, QuotaType, QuotaUsage } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
@@ -18,7 +18,7 @@ import type {
 
 const mockQuotas: Record<QuotaType, Quota[]> = {
   linode: [
-    ...pickXRandomFromArray(regions, 3).map((region) =>
+    ...regions.map((region) =>
       quotaFactory.build({
         description:
           'Max number of vCPUs assigned to Linodes with Dedicated plans',
@@ -28,7 +28,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
         resource_metric: 'CPU',
       })
     ),
-    ...pickXRandomFromArray(regions, 3).map((region) =>
+    ...regions.map((region) =>
       quotaFactory.build({
         description:
           'Max number of vCPUs assigned to Linodes with Shared plans',
@@ -38,7 +38,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
         resource_metric: 'CPU',
       })
     ),
-    ...pickXRandomFromArray(regions, 3).map((region) =>
+    ...regions.map((region) =>
       quotaFactory.build({
         description: 'Max number of GPUs assigned to Linodes with GPU plans',
         quota_limit: pickRandom([5, 6, 7, 8, 9, 10]),
@@ -47,7 +47,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
         resource_metric: 'GPU',
       })
     ),
-    ...pickXRandomFromArray(regions, 3).map((region) =>
+    ...regions.map((region) =>
       quotaFactory.build({
         description: 'Max number of VPUs assigned to Linodes with VPU plans',
         quota_limit: pickRandom([10, 20, 30, 40, 50]),
@@ -56,7 +56,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
         resource_metric: 'VPU',
       })
     ),
-    ...pickXRandomFromArray(regions, 3).map((region) =>
+    ...regions.map((region) =>
       quotaFactory.build({
         description:
           'Max number of vCPUs assigned to Linodes with High Memory plans',
@@ -68,7 +68,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
     ),
   ],
   lke: [
-    ...pickXRandomFromArray(regions, 3).map((region) =>
+    ...regions.map((region) =>
       quotaFactory.build({
         quota_limit: pickRandom([10, 20, 30, 40, 50]),
         quota_name: 'Total number of Clusters',
@@ -156,14 +156,14 @@ export const getQuotas = () => [
           return makeResponse(
             quotaUsageFactory.build({
               quota_limit: quota.quota_limit,
-              used: pickRandom([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+              used: pickRandom([5, 6, 7, 8, 9, 10, null]),
             })
           );
         case 'lke':
           return makeResponse(
             quotaUsageFactory.build({
               quota_limit: quota.quota_limit,
-              used: pickRandom([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+              used: pickRandom([0, 1, 2, 3, 4, 5, null]),
             })
           );
         case 'object-storage':
@@ -178,8 +178,9 @@ export const getQuotas = () => [
                       200_000_000,
                       300_000_000,
                       400_000_000,
+                      null,
                     ])
-                  : pickRandom([100, 200, 300, 400, 500]),
+                  : pickRandom([100, 200, 300, 400, 500, null]),
             })
           );
         default:
