@@ -36,13 +36,18 @@ import type {
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
+interface Props {
+  isCreateBucketDrawerOpen?: boolean;
+}
+
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(),
   },
 }));
 
-export const BucketLanding = () => {
+export const BucketLanding = (props: Props) => {
+  const { isCreateBucketDrawerOpen } = props;
   const { data: profile } = useProfile();
 
   const isRestrictedUser = profile?.restricted;
@@ -155,7 +160,9 @@ export const BucketLanding = () => {
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Buckets" />
+      <DocumentTitleSegment
+        segment={`${isCreateBucketDrawerOpen ? 'Create a Bucket' : 'Buckets'}`}
+      />
       {unavailableClusters.length > 0 && (
         <UnavailableClustersDisplay unavailableClusters={unavailableClusters} />
       )}

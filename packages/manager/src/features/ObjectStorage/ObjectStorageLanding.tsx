@@ -122,7 +122,11 @@ export const ObjectStorageLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment
-        segment={`${isCreateBucketOpen ? 'Create a Bucket' : 'Object Storage'}`}
+        segment={`${
+          isCreateBucketOpen && !objectStorageBucketsResponse?.buckets.length
+            ? 'Create a Bucket'
+            : 'Object Storage'
+        }`}
       />
       <LandingHeader
         breadcrumbProps={{ pathname: '/object-storage' }}
@@ -149,9 +153,11 @@ export const ObjectStorageLanding = () => {
           <TabPanels>
             <SafeTabPanel index={0}>
               {isObjMultiClusterEnabled ? (
-                <OMC_BucketLanding />
+                <OMC_BucketLanding
+                  isCreateBucketDrawerOpen={isCreateBucketOpen}
+                />
               ) : (
-                <BucketLanding />
+                <BucketLanding isCreateBucketDrawerOpen={isCreateBucketOpen} />
               )}
             </SafeTabPanel>
             <SafeTabPanel index={1}>
