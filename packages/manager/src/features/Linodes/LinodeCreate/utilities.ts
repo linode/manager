@@ -179,7 +179,7 @@ export const getLinodeCreatePayload = (
         formValues.interfacesV2[0]
       ),
     ];
-  } else if (getIsLegacyInterfaceArray(formValues.interfaces)) {
+  } else {
     values.interfaces = getInterfacesPayload(
       formValues.interfaces,
       Boolean(values.private_ip)
