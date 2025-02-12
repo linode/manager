@@ -33,7 +33,7 @@ export interface EnhancedAutocompleteProps<
   /** Provides a hint with error styling to assist users. */
   errorText?: string;
   /** Provides a hint with normal styling to assist users. */
-  helperText?: string;
+  helperText?: TextFieldProps['helperText'];
   /** A required label for the Autocomplete to ensure accessibility. */
   label: string;
   /** Removes the top margin from the input label, if desired. */
