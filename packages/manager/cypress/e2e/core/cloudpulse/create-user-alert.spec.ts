@@ -23,33 +23,37 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
-import { randomString } from 'support/util/random';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   accountFactory,
   alertDefinitionFactory,
   alertFactory,
   dashboardMetricFactory,
-  linodeFactory,
+  databaseFactory,
   notificationChannelFactory,
   regionFactory,
 } from 'src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetLinodes } from 'support/intercepts/linodes';
 import { widgetDetails } from 'support/constants/widgets';
+import { mockGetDatabases } from 'support/intercepts/databases';
 
-// Define feature flags
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 
 // Create mock data
 const mockAccount = accountFactory.build();
 const mockRegion = regionFactory.build({
-  capabilities: ['Linodes'],
+  capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
 });
-const { metrics } = widgetDetails.linode;
-const mockResource = linodeFactory.buildList(5);
+const { metrics, serviceType } = widgetDetails.dbaas;
+const databaseMock = databaseFactory.buildList(10, {
+  region: 'us-ord',
+  engine: 'mysql',
+  cluster_size: 3,
+  platform: 'rdbms-default',
+});
+
 const notificationChannels = [
   notificationChannelFactory.build({
     channel_type: 'email',
@@ -57,6 +61,7 @@ const notificationChannels = [
     label: 'channel-1',
   }),
 ];
+
 const customAlertDefinition = alertDefinitionFactory.build({
   channel_ids: [1],
   label: 'Custom Alert Label',
@@ -70,14 +75,7 @@ const metricDefinitions = metrics.map(({ title, name, unit }) =>
     unit,
   })
 );
-const mockAlerts = [
-  alertFactory.build({
-    service_type: 'linode',
-  }),
-  alertFactory.build({
-    service_type: 'linode',
-  }),
-];
+const mockAlerts = [alertFactory.build({ service_type: 'dbaas' })];
 
 /**
  * Fills metric details in the form.
@@ -100,6 +98,7 @@ const fillMetricDetailsForSpecificRule = (
       .should('be.visible')
       .clear()
       .type(dataField);
+
     cy.findByText(dataField).should('be.visible').click();
 
     // Fill Aggregation Type
@@ -126,13 +125,13 @@ describe('Create Alert', () => {
     // Mock API responses
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
-    mockGetCloudPulseServices(['linode', 'dbaas']);
+    mockGetCloudPulseServices([serviceType]);
     mockGetRegions([mockRegion]);
-    mockGetLinodes(mockResource);
-    mockGetCloudPulseMetricDefinitions('linode', metricDefinitions);
+    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
+    mockGetDatabases(databaseMock);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
     mockGetAlertChannels(notificationChannels);
-    mockCreateAlertDefinition('linode', customAlertDefinition).as(
+    mockCreateAlertDefinition(serviceType, customAlertDefinition).as(
       'createAlertDefinition'
     );
   });
@@ -160,35 +159,41 @@ describe('Create Alert', () => {
     // Enter Name and Description
     cy.findByPlaceholderText('Enter Name')
       .should('be.visible')
-      .type(`My Alert - ${randomString(5)}`);
+      .type(mockAlerts[0].label);
+
     cy.findByPlaceholderText('Enter Description')
       .should('be.visible')
       .type('My Description');
 
     // Select Service
-    ui.autocomplete.findByLabel('Service').should('be.visible').type('linode');
-    ui.autocompletePopper.findByTitle('linode').should('be.visible').click();
+    ui.autocomplete.findByLabel('Service').should('be.visible').type('dbaas');
 
-    // Select Region
-    ui.regionSelect.find().click();
-    ui.regionSelect.find().type('Chicago, IL{enter}');
+    ui.autocompletePopper.findByTitle('dbaas').should('be.visible').click();
 
-    // Select Resources
-    ui.autocomplete
-      .findByLabel('Resources')
+    // Search for Resource
+    cy.findByPlaceholderText('Search for a Region or Resource')
       .should('be.visible')
-      .type('Select All {enter}');
-    cy.get('body').click();
+      .type('database-2');
+
+    // Find the table and locate the resource cell containing 'database-2', then check the corresponding checkbox
+    cy.get('[data-qa-alert-table="true"]') // Find the table
+      .contains('[data-qa-alert-cell*="resource"]', 'database-2') // Find resource cell
+      .parents('tr')
+      .find('[type="checkbox"]')
+      .check();
+
+    // Assert resource selection notice
+    cy.get('[data-qa-notice="true"]')
+      .find('p')
+      .should('have.text', '1 of 10 resources are selected.');
+
+    cy.get('[data-qa-notice="true"]').should('be.visible').should('be.enabled');
 
     // Select Severity
     ui.autocomplete.findByLabel('Severity').should('be.visible').type('Severe');
     ui.autocompletePopper.findByTitle('Severe').should('be.visible').click();
 
-    // Add metrics
-    cy.findByRole('button', { name: 'Add metric' })
-      .should('be.visible')
-      .click();
-
+    // Fill metric details for the first rule
     fillMetricDetailsForSpecificRule(
       0,
       'CPU Utilization',
@@ -196,21 +201,55 @@ describe('Create Alert', () => {
       '>=',
       '1000'
     );
-    fillMetricDetailsForSpecificRule(1, 'Memory Usage', 'Minimum', '==', '100');
+
+    // Add metrics
+    cy.findByRole('button', { name: 'Add metric' })
+      .should('be.visible')
+      .click();
+
+    ui.buttonGroup
+      .findButtonByTitle('Add dimension filter')
+      .should('be.visible')
+      .click();
+
+    ui.autocomplete
+      .findByLabel('Data Field')
+      .eq(1)
+      .should('be.visible')
+      .clear()
+      .type('State of CPU');
+
+    cy.findByText('State of CPU').should('be.visible').click();
+
+    ui.autocomplete
+      .findByLabel('Operator')
+      .eq(1)
+      .should('be.visible')
+      .clear()
+      .type('Equal');
+
+    cy.findByText('Equal').should('be.visible').click();
+
+    ui.autocomplete.findByLabel('Value').should('be.visible').type('User');
+
+    cy.findByText('User').should('be.visible').click();
+
+    // Fill metric details for the second rule
+    fillMetricDetailsForSpecificRule(1, 'Memory Usage', 'Minimum', '==', '800');
 
     // Set evaluation period
     ui.autocomplete
       .findByLabel('Evaluation Period')
       .should('be.visible')
-      .type('1 min');
-    ui.autocompletePopper.findByTitle('1 min').should('be.visible').click();
+      .type('5 min');
+    ui.autocompletePopper.findByTitle('5 min').should('be.visible').click();
 
     // Set polling interval
     ui.autocomplete
       .findByLabel('Polling Interval')
       .should('be.visible')
-      .type('1 min');
-    ui.autocompletePopper.findByTitle('1 min').should('be.visible').click();
+      .type('5 min');
+    ui.autocompletePopper.findByTitle('5 min').should('be.visible').click();
 
     // Set trigger occurrences
     cy.get('[data-qa-trigger_occurences]')
@@ -219,9 +258,10 @@ describe('Create Alert', () => {
       .type('5');
 
     // Add notification channel
-    ui.buttonGroup
-      .findButtonByTitle('Add notification channel')
+    cy.get('[data-qa-buttons="true"]')
       .should('be.visible')
+      .should('be.enabled')
+      .contains('Add notification channel')
       .click();
 
     ui.autocomplete.findByLabel('Type').should('be.visible').type('Email');
@@ -231,8 +271,10 @@ describe('Create Alert', () => {
       .findByLabel('Channel')
       .should('be.visible')
       .type('channel-1');
+
     ui.autocompletePopper.findByTitle('channel-1').should('be.visible').click();
 
+    // Add channel
     ui.drawer
       .findByTitle('Add Notification Channel')
       .should('be.visible')
@@ -243,8 +285,7 @@ describe('Create Alert', () => {
           .click();
       });
 
-    // Submit the form
-    cy.get('[data-qa-cancel="true"]').should('be.visible').should('be.enabled');
+    // Ensure the cancel button is enabled and can be interacted with
     cy.get('[data-qa-buttons="true"]')
       .find('button')
       .filter('[type="submit"]')
@@ -255,6 +296,44 @@ describe('Create Alert', () => {
     // Wait for the create alert API call to complete and verify the response
     cy.wait('@createAlertDefinition').then(({ request, response }) => {
       expect(response).to.have.property('statusCode', 200);
+
+      // Validate top-level properties
+      expect(request.body.label).to.equal(mockAlerts[0].label);
+      expect(request.body.description).to.equal('My Description');
+      expect(request.body.severity).to.equal(0);
+
+      // Validate rule criteria
+      expect(request.body.rule_criteria).to.have.property('rules');
+      expect(request.body.rule_criteria.rules).to.be.an('array').with.length(2);
+
+      // Validate first rule
+      const firstRule = request.body.rule_criteria.rules[0];
+      expect(firstRule.aggregate_function).to.equal('avg');
+      expect(firstRule.metric).to.equal('system_cpu_utilization_percent');
+      expect(firstRule.operator).to.equal('gte');
+      expect(firstRule.threshold).to.equal(1000);
+      expect(firstRule.dimension_filters[0].dimension_label).to.equal('state');
+      expect(firstRule.dimension_filters[0].operator).to.equal('eq');
+      expect(firstRule.dimension_filters[0].value).to.equal('user');
+
+      // Validate second rule
+      const secondRule = request.body.rule_criteria.rules[1];
+      expect(secondRule.aggregate_function).to.equal('min');
+      expect(secondRule.metric).to.equal('system_memory_usage_by_resource');
+      expect(secondRule.operator).to.equal('eq');
+      expect(secondRule.threshold).to.equal(800);
+      expect(secondRule.dimension_filters).to.be.an('array').that.is.empty;
+
+      // Validate trigger conditions
+      const triggerConditions = request.body.trigger_conditions;
+      expect(triggerConditions.trigger_occurrences).to.equal(5);
+      expect(triggerConditions.evaluation_period_seconds).to.equal(300);
+      expect(triggerConditions.polling_interval_seconds).to.equal(300);
+      expect(triggerConditions.criteria_condition).to.equal('ALL');
+
+      // Validate entity IDs and channels
+      expect(request.body.entity_ids).to.include('2');
+      expect(request.body.channel_ids).to.include(1);
     });
 
     // Verify URL redirection and toast notification
