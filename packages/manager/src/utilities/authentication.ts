@@ -45,5 +45,7 @@ export const setAuthToken = ({ expiration, scopes, token }: AuthToken) => {
 export const clearAuthToken = () =>
   setAuthToken({ expiration: '', scopes: '', token: '' });
 
+export const isLoggedIn = () => !!getAuthToken().token;
+
 export const loggedInAsCustomer = () =>
   getAuthToken().token.toLowerCase().includes('admin');

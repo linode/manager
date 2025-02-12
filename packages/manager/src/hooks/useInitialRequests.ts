@@ -1,9 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
+import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { accountQueries } from 'src/queries/account/queries';
 import { profileQueries } from 'src/queries/profile/profile';
-import { getAuthToken } from 'src/utilities/authentication';
+import { redirectToLogin } from 'src/session';
+import { isLoggedIn } from 'src/utilities/authentication';
 
 /**
  * This hook is responsible for making Cloud Manager's initial requests.
@@ -12,19 +14,28 @@ import { getAuthToken } from 'src/utilities/authentication';
  */
 export const useInitialRequests = () => {
   const queryClient = useQueryClient();
+  const pendingUpload = usePendingUpload();
 
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
+    if (
+      !isLoggedIn() &&
+      // Do not redirect to Login if there is a pending image upload.
+      !pendingUpload
+    ) {
+      redirectToLogin(location.pathname, location.search);
+    }
+
     /**
      * this is the case where we've just come back from login and need
      * to show the children onMount
      */
-    if (getAuthToken().token) {
+    if (isLoggedIn()) {
       makeInitialRequests();
     }
-    // We only want this to run once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // We only want this useEffect running when `isAuthenticated` changes.
   }, []);
 
   /**
