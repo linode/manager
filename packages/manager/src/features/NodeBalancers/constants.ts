@@ -31,7 +31,7 @@ export const ALGORITHM_OPTIONS: AlgorithmOption[] = [
   },
   {
     description:
-      "Repeated requests are directed to the same backend based on the client’s IP.",
+      'Repeated requests are directed to the same backend based on the client’s IP.',
     label: 'Source',
     supportedProtocols: ['tcp', 'http', 'https'],
     value: 'source',
@@ -62,7 +62,7 @@ export const STICKINESS_OPTIONS: StickinessOption[] = [
   },
   {
     description:
-      "The client’s source IP is used to route all packets from that client to the same backend.",
+      'The client’s source IP is used to route all packets from that client to the same backend.',
     label: 'Source IP',
     supportedProtocols: ['udp'],
     value: 'source_ip',
@@ -83,27 +83,28 @@ export const STICKINESS_OPTIONS: StickinessOption[] = [
   },
 ];
 
-
 export const HEALTHCHECK_TYPE_OPTIONS = [
   {
     description: 'No active health check is performed.',
     label: 'None',
-    value: 'none'
+    value: 'none',
   },
   {
     description: 'Checks for a successful TCP handshake with a backend node.',
     label: 'TCP Connection',
-    value: 'connection'
+    value: 'connection',
   },
   {
-    description: 'Performs an HTTP request and checks for a 2xx or 3xx response from the backend node.',
+    description:
+      'Performs an HTTP request and checks for a 2xx or 3xx response from the backend node.',
     label: 'HTTP Status',
-    value: 'http'
+    value: 'http',
   },
   {
-    description: 'Performs an HTTP request and checks if the regular expression matches the response body.',
+    description:
+      'Performs an HTTP request and checks if the regular expression matches the response body.',
     label: 'HTTP Body',
-    value: 'http_body'
+    value: 'http_body',
   },
 ];
 
