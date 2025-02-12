@@ -43,7 +43,7 @@ export const getQuotas = (
  * @param type { QuotaType } retrieve a quota within this service type.
  * @param id { number } the quota ID to look up.
  */
-export const getQuotaUsage = (type: QuotaType, id: number) =>
+export const getQuotaUsage = (type?: QuotaType, id?: number) =>
   Request<QuotaUsage>(
     setURL(`${API_ROOT}/${type}/quotas/${id}/usage`),
     setMethod('GET')

@@ -1,25 +1,22 @@
 import { regionFactory } from 'src/factories';
-import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { useQuotasQuery } from 'src/queries/quotas/quotas';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import type { Quota, QuotaType, Region } from '@linode/api-v4';
+import type { QuotaType, Region } from '@linode/api-v4';
 
-type UseGetLocationsForQuotaService = {
-  isFetching: boolean;
-} & (
+type UseGetLocationsForQuotaService =
   | {
-      locationsForQuotaService: { label: string; value: string }[];
-      objectStorageQuotas: Quota[];
+      isFetchingObjectStorageQuotas: boolean;
+      regions: null;
+      s3Endpoints: { label: string; value: string }[];
       service: 'object-storage';
     }
   | {
-      locationsForQuotaService: Region[];
-      objectStorageQuotas: undefined;
+      isFetchingRegions: boolean;
+      regions: Region[];
+      s3Endpoints: null;
       service: Exclude<QuotaType, 'object-storage'>;
-    }
-);
+    };
 
 /**
  * Function to get either:
@@ -30,17 +27,10 @@ export const useGetLocationsForQuotaService = (
   service: QuotaType
 ): UseGetLocationsForQuotaService => {
   const { data: regions, isFetching: isFetchingRegions } = useRegionsQuery();
-  const { data: linodes, isFetching: isFetchingLinodes } = useLinodesQuery();
   const {
-    data: clusters,
-    isFetching: isFetchingClusters,
-  } = useKubernetesClustersQuery({}, {});
-  const { data: objectStorageQuotas } = useQuotasQuery(
-    service,
-    {},
-    {},
-    service === 'object-storage'
-  );
+    data: quotas,
+    isFetching: isFetchingObjectStorageQuotas,
+  } = useQuotasQuery(service, {}, {}, true);
 
   const globalOption = regionFactory.build({
     capabilities: [],
@@ -50,7 +40,7 @@ export const useGetLocationsForQuotaService = (
 
   if (service === 'object-storage') {
     const uniqueEndpoints = Array.from(
-      (objectStorageQuotas?.data ?? [])
+      (quotas?.data ?? [])
         .reduce((map, quota) => {
           const key = `${quota.s3_endpoint}-${quota.endpoint_type}`;
           if (!map.has(key) && quota.s3_endpoint) {
@@ -65,8 +55,9 @@ export const useGetLocationsForQuotaService = (
     );
 
     return {
-      isFetching: isFetchingRegions,
-      locationsForQuotaService: [
+      isFetchingObjectStorageQuotas,
+      regions: null,
+      s3Endpoints: [
         ...(uniqueEndpoints.length >= 2
           ? [{ label: 'Global (Account level)', value: 'global' }]
           : []),
@@ -75,43 +66,14 @@ export const useGetLocationsForQuotaService = (
           value: endpoint.endpoint,
         })),
       ],
-      objectStorageQuotas: objectStorageQuotas?.data ?? [],
       service: 'object-storage',
     };
   }
 
-  if (service === 'linode') {
-    const linodeRegions = linodes?.data.map((linode) => linode.region);
-    return {
-      isFetching: isFetchingRegions || isFetchingLinodes,
-      locationsForQuotaService: [
-        globalOption,
-        ...(regions?.filter((region) => linodeRegions?.includes(region.id)) ??
-          []),
-      ],
-      objectStorageQuotas: undefined,
-      service,
-    };
-  }
-
-  if (service === 'lke') {
-    const clusterRegions = clusters?.data.map((cluster) => cluster.region);
-    return {
-      isFetching: isFetchingRegions || isFetchingClusters,
-      locationsForQuotaService: [
-        globalOption,
-        ...(regions?.filter((region) => clusterRegions?.includes(region.id)) ??
-          []),
-      ],
-      objectStorageQuotas: undefined,
-      service,
-    };
-  }
-
   return {
-    isFetching: isFetchingRegions,
-    locationsForQuotaService: [globalOption, ...(regions ?? [])],
-    objectStorageQuotas: undefined,
+    isFetchingRegions,
+    regions: [globalOption, ...(regions ?? [])],
+    s3Endpoints: null,
     service,
   };
 };

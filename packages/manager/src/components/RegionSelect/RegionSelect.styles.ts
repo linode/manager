@@ -20,7 +20,8 @@ export const StyledAutocompleteContainer = styled(Box, {
   '& .MuiAutocomplete-root .MuiAutocomplete-inputRoot': {
     paddingRight: 8,
   },
-  // if subheader is empty, hide it
+  // If the subheader is empty, hide it to avoid empty padded space
+  // This can happen for options that do not belong to a region (e.g. "Global")
   '& .MuiListSubheader-root:empty': {
     display: 'none',
   },

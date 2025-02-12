@@ -23,6 +23,7 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
   }
 
   // The global option should not be grouped
+  // An empty string here makes sense to avoid bigger refactors to an already complicated Component
   if (region.id === 'global') {
     return '';
   }

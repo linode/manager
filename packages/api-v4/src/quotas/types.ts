@@ -45,6 +45,7 @@ export interface Quota {
    * The region slug to which this limit applies.
    *
    * OBJ limits are applied by endpoint, not region.
+   * This below really just is a `string` type but being verbose helps with reading comprehension.
    */
   region_applied?: Region['id'] | 'global';
 
