@@ -48,7 +48,6 @@ export const AlertsResourcesNotice = React.memo(
             }}
             aria-label="Select All Resources"
             data-testid="select_all_notice"
-            style={{ display: 'inline-block' }}
           >
             Select All
           </LinkButton>
@@ -61,7 +60,6 @@ export const AlertsResourcesNotice = React.memo(
             }}
             aria-label="Unselect All Resources"
             data-testid="unselect_all_notice"
-            style={{ display: 'inline-block' }}
           >
             Unselect All
           </LinkButton>
