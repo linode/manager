@@ -94,7 +94,9 @@ const MetricThreshold = (props: MetricThresholdProps) => {
   return (
     <Box alignItems="center" display="flex" gap={1.75}>
       <Typography variant="subtitle1">{metric}</Typography>
-      <Tooltip title={<Box sx={{ whiteSpace: 'pre-line' }}>{rest}</Box>}>
+      <Tooltip
+        title={<Typography sx={{ whiteSpace: 'pre-line' }}>{rest}</Typography>}
+      >
         <span>
           <Chip
             sx={(theme) => {
