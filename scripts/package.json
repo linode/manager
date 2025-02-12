@@ -12,13 +12,14 @@
     "junit:summary": "tsx junit-summary/index.ts",
     "generate-tod": "tsx tod-payload/index.ts"
   },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^20.17.0",
     "chalk": "^5.2.0",
     "commander": "^6.2.1",
-    "inquirer": "^12.2.0",
     "junit2json": "^3.1.4",
     "simple-git": "^3.19.0",
-    "tsx": "^4.19.1"
+    "tsx": "^4.19.1",
+    "inquirer": "^12.2.0" 
   }
 }
