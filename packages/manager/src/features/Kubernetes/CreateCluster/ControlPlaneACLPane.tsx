@@ -168,13 +168,15 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                   control={control}
                   name={`ipv4Addresses[${index}]`}
                 />
-                <IconButton
-                  aria-label={`Remove IPv4 Address ${index}`}
-                  onClick={() => removeIPv4(index)}
-                  sx={{ padding: 0.75 }}
-                >
-                  <CloseIcon />
-                </IconButton>
+                {index > 0 && (
+                  <IconButton
+                    aria-label={`Remove IPv4 Address ${index}`}
+                    onClick={() => removeIPv4(index)}
+                    sx={{ padding: 0.75 }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                )}
               </Stack>
             ))}
             <LinkButton onClick={() => appendIPv4('')}>
@@ -225,13 +227,15 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                   control={control}
                   name={`ipv6Addresses[${index}]`}
                 />
-                <IconButton
-                  aria-label={`Remove IPv6 Address ${index}`}
-                  onClick={() => removeIPv6(index)}
-                  sx={{ padding: 0.75 }}
-                >
-                  <CloseIcon />
-                </IconButton>
+                {index > 0 && (
+                  <IconButton
+                    aria-label={`Remove IPv6 Address ${index}`}
+                    onClick={() => removeIPv6(index)}
+                    sx={{ padding: 0.75 }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                )}
               </Stack>
             ))}
             <LinkButton onClick={() => appendIPv6('')}>
