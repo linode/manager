@@ -30,5 +30,26 @@
       "prettier --write",
       "eslint --ext .js,.ts,.tsx --quiet"
     ]
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@linode/eslint-plugin-cloud-manager": "^0.0.5",
+    "@testing-library/dom": "^10.1.0",
+    "@testing-library/jest-dom": "~6.4.2",
+    "@testing-library/react": "~16.0.0",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitest/ui": "^2.1.1",
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "~8.1.0",
+    "eslint-plugin-prettier": "~3.3.1",
+    "eslint-plugin-sonarjs": "^0.5.0",
+    "lint-staged": "^15.2.9",
+    "prettier": "~2.2.1"
   }
 }
