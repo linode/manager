@@ -10,7 +10,7 @@ import { LinodeIPAddresses } from './LinodeIPAddresses';
 import { LinodeNetworkingSummaryPanel } from './NetworkingSummaryPanel/NetworkingSummaryPanel';
 
 export const LinodeNetworking = () => {
-  const isLinodeInterfaceEnabled = useIsLinodeInterfacesEnabled();
+  const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
   const { linodeId } = useParams<{ linodeId: string }>();
   const _linodeId = Number(linodeId);
 
