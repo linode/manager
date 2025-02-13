@@ -5,6 +5,7 @@ import {
   accountFactory,
   invoiceFactory,
   invoiceItemFactory,
+  paymentFactory,
   regionFactory,
 } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
@@ -12,13 +13,14 @@ import { formatDate } from 'src/utilities/formatDate';
 import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utilities/pricing/constants';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
-import { printInvoice } from './PdfGenerator';
+import { printInvoice, printPayment } from './PdfGenerator';
 import { dateConversion, getRemitAddress, getTaxSummaryBody } from './utils';
 
 import type { Account, Invoice } from '@linode/api-v4/lib/account/types';
-import type { FlagSet } from 'src/featureFlags';
+import type { FlagSet, TaxDetail } from 'src/featureFlags';
 
 type Taxes = FlagSet['taxBanner'] | FlagSet['taxes'];
+type CountryTax = TaxDetail | undefined;
 
 const getExpectedRemitAddressText = (
   country: string,
@@ -154,6 +156,103 @@ const extractPdfText = (pdfDataBuffer: Buffer): Promise<string> => {
 };
 
 describe('PdfGenerator', () => {
+  const timezone = 'UTC';
+
+  // Mock International, US and CA accounts
+  const accountInternational1 = accountFactory.build({
+    city: 'Mumbai',
+    country: 'IN',
+    state: 'MH',
+    zip: '400001',
+  });
+  const accountInternational2 = accountFactory.build({
+    country: 'AE',
+  });
+  const accountUS = accountFactory.build({ country: 'US' });
+  const accountCA = accountFactory.build({
+    city: 'Vancouver',
+    country: 'CA',
+    state: 'BC',
+    zip: 'V0R 1L1',
+  });
+
+  // Mock International, US and CA taxes
+  const taxesInternational1: Taxes = {
+    country_tax: {
+      tax_id: '9922CHE29001OSR',
+      tax_name: 'India GST',
+    },
+    provincial_tax_ids: {},
+  };
+  const taxesInternational2: Taxes = {
+    country_tax: {
+      tax_id: '104038424800003',
+      tax_name: 'United Arab Emirates',
+    },
+    provincial_tax_ids: {},
+  };
+  const taxesUS: Taxes = {
+    country_tax: {
+      tax_id: '04-3432319',
+      tax_name: 'United States EIN',
+    },
+    provincial_tax_ids: {},
+  };
+  const taxesCA: Taxes = {
+    country_tax: {
+      tax_id: '871275582RT0001',
+      tax_name: 'Canadian GST',
+    },
+    provincial_tax_ids: {
+      BC: {
+        tax_id: '1471-1731',
+        tax_name: 'British Columbia PST',
+      },
+      MB: {
+        tax_id: '141763-3',
+        tax_name: 'Manitoba RST',
+      },
+      QC: {
+        tax_id: '1229976512TQ0001',
+        tax_name: 'Quebec QST',
+      },
+      SK: {
+        tax_id: '7648249',
+        tax_name: 'Saskatchewan PST',
+      },
+    },
+  };
+  const taxesCAWithAllDetails: Taxes = {
+    country_tax: {
+      qi_registration: 'QI-12345678',
+      tax_id: '871275582RT0001',
+      tax_ids: {
+        B2B: { tax_id: 'B2B-12345678', tax_name: 'B2B-example' },
+        B2C: { tax_id: 'B2C-12345678', tax_name: 'B2C-example' },
+      },
+      tax_info: 'tax-info-example',
+      tax_name: 'Canadian GST',
+    },
+    provincial_tax_ids: {
+      BC: {
+        tax_id: '1471-1731',
+        tax_name: 'British Columbia PST',
+      },
+      MB: {
+        tax_id: '141763-3',
+        tax_name: 'Manitoba RST',
+      },
+      QC: {
+        tax_id: '1229976512TQ0001',
+        tax_name: 'Quebec QST',
+      },
+      SK: {
+        tax_id: '7648249',
+        tax_name: 'Saskatchewan PST',
+      },
+    },
+  };
+
   describe('printInvoice', () => {
     // Mock invoices
     const invoice = invoiceFactory.build({ label: 'invoice-test-1' });
@@ -173,102 +272,6 @@ describe('PdfGenerator', () => {
     const regions = regionFactory.buildList(1, {
       id: 'id-cgk',
     });
-    const timezone = 'UTC';
-
-    // Mock International, US and CA accounts
-    const accountInternational1 = accountFactory.build({
-      city: 'Mumbai',
-      country: 'IN',
-      state: 'MH',
-      zip: '400001',
-    });
-    const accountInternational2 = accountFactory.build({
-      country: 'AE',
-    });
-    const accountUS = accountFactory.build({ country: 'US' });
-    const accountCA = accountFactory.build({
-      city: 'Vancouver',
-      country: 'CA',
-      state: 'BC',
-      zip: 'V0R 1L1',
-    });
-
-    // Mock International, US and CA taxes
-    const taxesInternational1: Taxes = {
-      country_tax: {
-        tax_id: '9922CHE29001OSR',
-        tax_name: 'India GST',
-      },
-      provincial_tax_ids: {},
-    };
-    const taxesInternational2: Taxes = {
-      country_tax: {
-        tax_id: '104038424800003',
-        tax_name: 'United Arab Emirates',
-      },
-      provincial_tax_ids: {},
-    };
-    const taxesUS: Taxes = {
-      country_tax: {
-        tax_id: '04-3432319',
-        tax_name: 'United States EIN',
-      },
-      provincial_tax_ids: {},
-    };
-    const taxesCA: Taxes = {
-      country_tax: {
-        tax_id: '871275582RT0001',
-        tax_name: 'Canadian GST',
-      },
-      provincial_tax_ids: {
-        BC: {
-          tax_id: '1471-1731',
-          tax_name: 'British Columbia PST',
-        },
-        MB: {
-          tax_id: '141763-3',
-          tax_name: 'Manitoba RST',
-        },
-        QC: {
-          tax_id: '1229976512TQ0001',
-          tax_name: 'Quebec QST',
-        },
-        SK: {
-          tax_id: '7648249',
-          tax_name: 'Saskatchewan PST',
-        },
-      },
-    };
-    const taxesCAWithAllDetails: Taxes = {
-      country_tax: {
-        qi_registration: 'QI-12345678',
-        tax_id: '871275582RT0001',
-        tax_ids: {
-          B2B: { tax_id: 'B2B-12345678', tax_name: 'B2B-example' },
-          B2C: { tax_id: 'B2C-12345678', tax_name: 'B2C-example' },
-        },
-        tax_info: 'tax-info-example',
-        tax_name: 'Canadian GST',
-      },
-      provincial_tax_ids: {
-        BC: {
-          tax_id: '1471-1731',
-          tax_name: 'British Columbia PST',
-        },
-        MB: {
-          tax_id: '141763-3',
-          tax_name: 'Manitoba RST',
-        },
-        QC: {
-          tax_id: '1229976512TQ0001',
-          tax_name: 'Quebec QST',
-        },
-        SK: {
-          tax_id: '7648249',
-          tax_name: 'Saskatchewan PST',
-        },
-      },
-    };
 
     // Test cases
     const tests: [string, [Account, Taxes, Invoice]][] = [
@@ -424,6 +427,101 @@ describe('PdfGenerator', () => {
 
         // Cleanup: Delete the generated PDF file after testing
         fs.unlinkSync(`invoice-${formatedDate}.pdf`);
+      }
+    );
+  });
+
+  describe('printPayment', () => {
+    // Mock payment
+    const payment = paymentFactory.build();
+
+    // Test cases
+    const tests: [string, [Account, CountryTax]][] = [
+      [
+        'International accounts',
+        [accountInternational1, taxesInternational1.country_tax],
+      ],
+      [
+        'International accounts with no taxes',
+        [accountInternational1, undefined],
+      ],
+      [
+        'International (AE) accounts',
+        [accountInternational2, taxesInternational2.country_tax],
+      ],
+      ['US accounts', [accountUS, taxesUS.country_tax]],
+      ['CA accounts', [accountCA, taxesCA.country_tax]],
+    ];
+
+    it.each(tests)(
+      'generates a valid PDF for %s',
+      async (_, [account, countryTax]) => {
+        server.use(
+          http.get('/src/features/Billing/PdfGenerator/akamai-logo.png', () => {
+            return HttpResponse.json({});
+          })
+        );
+
+        const isInternational = !['CA', 'US'].includes(account.country);
+        const isAkamaiBilling = getShouldUseAkamaiBilling(payment.date);
+        const formatedDate = formatDate(payment.date, {
+          displayTime: true,
+          timezone,
+        });
+
+        // Call the printPayment function
+        const pdfResult = printPayment(account, payment, countryTax, timezone);
+
+        // Expect the PDF generation to be successful
+        expect(pdfResult.status).toEqual('success');
+
+        // Load the generated PDF content
+        const pdfDataBuffer = fs.readFileSync(`payment-${formatedDate}.pdf`);
+        const pdfText = await extractPdfText(pdfDataBuffer);
+
+        // Check the content of the PDF
+        expect(pdfText).toContain('Page 1 of 1');
+        expect(pdfText).toContain(`Payment Date: ${payment.date}`);
+
+        expect(pdfText).toContain(
+          `Invoice To: ${getExpectedInvoiceAddressText(account)}`
+        );
+        expect(pdfText).toContain(
+          `Remit to: ${getExpectedRemitAddressText(
+            account.country,
+            isAkamaiBilling,
+            isInternational
+          )}`
+        );
+        expect(pdfText).toContain(`Receipt for Payment #${payment.id}`);
+
+        // Verify table header
+        const colHeaders = ['Description', 'Date', 'Amount'];
+        colHeaders.forEach((header) => {
+          expect(pdfText).toContain(header);
+        });
+
+        // Verify table rows
+        expect(pdfText).toContain('Payment: Thank You');
+        expect(pdfText).toContain(formatedDate);
+        expect(pdfText).toContain(`$${Number(payment.usd).toFixed(2)}`);
+
+        // Verify amount section
+        expect(pdfText).toContain(
+          `Payment Total (USD)         $${Number(payment.usd).toFixed(2)}`
+        );
+
+        // Verify pdf footer text
+        expect(pdfText).toContain(
+          getExpectedPdfFooterText(
+            account.country,
+            isAkamaiBilling,
+            isInternational
+          )
+        );
+
+        // Cleanup: Delete the generated PDF file after testing
+        fs.unlinkSync(`payment-${formatedDate}.pdf`);
       }
     );
   });
