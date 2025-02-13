@@ -240,22 +240,18 @@ const getDateRangeInGMT = (
     meridian: endDateMeridian, // Add AM/PM as a separate value
   };
 };
-const convertTo24HourFormat = (dateString12Hour: string) => {
-  const date = DateTime.fromFormat(dateString12Hour, 'yyyy-LL-dd hh:mm a').toUTC(); // Parse and convert to UTC
-  return date.toFormat("yyyy-LL-dd'T'HH'Z'"); // Convert to desired 24-hour format with UTC 'Z' suffix
-};
 
-  it.only('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
+  it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
     const currentHour = currentDate.getHours()-1;
     const currentMinute = currentDate.getMinutes() -1; 
     const endDateMeridian = currentHour < 12 ? 'AM' : 'PM';
 
-   const displayHour = currentHour % 12 || 12;  // If currentHour is 0, display 12 instead of 0
-   const displayMinute = currentMinute < 10 ? `0${currentMinute}` : currentMinute;  // Add leading zero for minutes if needed
+   const displayHour = currentHour % 12 || 12;  
+   const displayMinute = currentMinute < 10 ? `0${currentMinute}` : currentMinute;  
   
-    const { actualDate: startActualDate, day: startDay } = getDateRangeInGMT( 0, 12,15);
+    const { actualDate: startActualDate, day: startDay } = getDateRangeInGMT( 0, currentHour,currentMinute);
  
-    const { actualDate: endActualDate, day: endDay } = getDateRangeInGMT(9, currentHour, currentMinute);
+    const { actualDate: endActualDate, day: endDay } = getDateRangeInGMT(currentDate.getDate(), currentHour, currentMinute);
  
     // Select "Custom" from the "Time Range" dropdown
     ui.autocomplete
@@ -277,7 +273,7 @@ const convertTo24HourFormat = (dateString12Hour: string) => {
  
     cy.get('[aria-label^="Choose time"]').click();
  
-    cy.findByPlaceholderText('hh:mm aa').clear().type('12:15 PM');
+    cy.findByPlaceholderText('hh:mm aa').clear().type(`${displayHour}:${displayMinute} ${endDateMeridian}`);
  
     // Click the "Apply" button to confirm the start date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
