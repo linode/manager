@@ -117,10 +117,8 @@ describe('OneClick Apps (OCA)', () => {
         label: 'Debian 11',
       }),
     ];
-    // get a randomly selected app
-    const candidateStackScriptId = getRandomOCAId();
     const stackscript = stackScriptFactory.build({
-      id: candidateStackScriptId,
+      id: getRandomOCAId(),
       username: 'linode',
       user_gravatar_id: '9d4d301385af69ceb7ad658aad09c142',
       label: 'E2E Test App',
