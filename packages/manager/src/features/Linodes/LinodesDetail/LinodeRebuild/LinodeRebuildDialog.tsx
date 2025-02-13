@@ -17,7 +17,7 @@ export const LinodeRebuildDialog = (props: Props) => {
 
   const { data: linode, error, isLoading } = useLinodeQuery(
     linodeId ?? -1,
-    Boolean(linodeId)
+    linodeId !== undefined
   );
 
   return (
