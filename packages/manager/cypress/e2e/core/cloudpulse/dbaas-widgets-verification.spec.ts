@@ -264,7 +264,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .findByAttribute('aria-label', 'Close')
       .should('be.visible')
       .click();
-    
+
     // Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
