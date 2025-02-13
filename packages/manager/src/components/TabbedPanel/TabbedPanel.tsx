@@ -67,7 +67,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
   };
 
   useEffect(() => {
-    if (tabIndex !== initTab) {
+    if (tabIndex === undefined && initTab !== undefined) {
       setTabIndex(initTab);
     }
   }, [initTab]);
