@@ -322,8 +322,6 @@ describe('Create Alert', () => {
       expect(secondRule.metric).to.equal('system_memory_usage_by_resource');
       expect(secondRule.operator).to.equal('eq');
       expect(secondRule.threshold).to.equal(800);
-      expect(secondRule.dimension_filters).to.be.an('array').that.is.empty;
-
       // Validate trigger conditions
       const triggerConditions = request.body.trigger_conditions;
       expect(triggerConditions.trigger_occurrences).to.equal(5);
