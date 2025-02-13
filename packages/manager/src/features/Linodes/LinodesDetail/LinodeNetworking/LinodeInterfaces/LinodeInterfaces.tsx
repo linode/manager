@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Typography } from '@linode/ui';
+import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Table } from 'src/components/Table';
@@ -27,7 +27,10 @@ export const LinodeInterfaces = (props: Props) => {
         }}
       >
         <Typography variant="h3">Network Interfaces</Typography>
-        <Button buttonType="primary">Add Network Interface</Button>
+        <Stack direction="row" spacing={1}>
+          <Button buttonType="secondary">Interface History</Button>
+          <Button buttonType="primary">Add Network Interface</Button>
+        </Stack>
       </Paper>
       <Table>
         <TableHead>
@@ -38,6 +41,7 @@ export const LinodeInterfaces = (props: Props) => {
             <TableCell>Version</TableCell>
             <TableCell>Updated</TableCell>
             <TableCell>Created</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
