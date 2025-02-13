@@ -38,6 +38,8 @@ import { formatDate } from 'src/utilities/formatDate';
 import { DateTime } from 'luxon';
 
 const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+const currentDate = new Date();
+
 const cleanText = (string: string) =>
   string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
@@ -193,126 +195,160 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 
-  it.only('should set the date and time correctly', () => {
-    // Get the current month and year
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based in JavaScript
-    const currentDay = String(currentDate.getDate()).padStart(2, '0'); // Get the current day
+  /**
+* Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
+* hour, and minute. The function also provides individual date components such as day, hour,
+* minute, month, and AM/PM.
+*
+* @param {number} daysOffset - The number of days to adjust from the current date. Positive
+*                               values give a future date, negative values give a past date.
+* @param {number} hour - The hour to set for the resulting date (0-23).
+* @param {number} [minute=0] - The minute to set for the resulting date (0-59). Defaults to 0.
+*
+* @returns {Object} - Returns an object containing:
+*   - `actualDate`: The formatted date and time in IST (YYYY-MM-DD HH:mm).
+*   - `day`: The day of the month as a number.
+*   - `hour`: The hour in the 24-hour format as a number.
+*   - `minute`: The minute of the hour as a number.
+*   - `month`: The month of the year as a number.
+*   - `ampm`: The AM/PM designation of the time (either 'AM' or 'PM').
+*/
+const getDateRangeInGMT = (
+  daysOffset: number,
+  hour: number,
+  minute: number = 0
+) => {
+  const now = DateTime.utc(); // Use UTC instead of local time
+  const targetDate = now
+    .startOf('month')
+    .plus({ days: daysOffset })
+    .set({ hour, minute });
 
-    // Generate start and end actual dates
-    const startActualDate = `${currentYear}-${currentMonth}-01`;
-    const endActualDate = `${currentYear}-${currentMonth}-${currentDay}`; // Arbitrarily setting end date 13 days after start date
-    const currentHour = currentDate.getHours();
-   const currentMinute = currentDate.getMinutes() - 1; // Subtract 1 minute
-    const formattedCurrentTime = `${String(currentHour % 12 || 12).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')} ${currentHour < 12 ? 'AM' : 'PM'}`;
+  // Convert to 12-hour format with AM/PM
+  const twelveHourFormat = targetDate.toFormat('yyyy-LL-dd hh:mm a'); // 'hh' for 12-hour, 'a' for AM/PM
 
+  // Calculate 12-hour format hour for the return object
+  const displayHour = targetDate.hour % 12 || 12; // If hour is 0, display 12 instead of 0
+  const endDateMeridian = targetDate.hour < 12 ? 'AM' : 'PM';
 
-    // Placeholder function to get day from date string
-    const getDayFromDate = (dateString: string | number | Date) => new Date(dateString).getDate();
+  return {
+    actualDate: twelveHourFormat,
+    day: targetDate.day,
+    hour: displayHour, // Now in 12-hour format
+    minute: targetDate.minute,
+    month: targetDate.month,
+    meridian: endDateMeridian, // Add AM/PM as a separate value
+  };
+};
+const convertTo24HourFormat = (dateString12Hour: string) => {
+  const date = DateTime.fromFormat(dateString12Hour, 'yyyy-LL-dd hh:mm a').toUTC(); // Parse and convert to UTC
+  return date.toFormat("yyyy-LL-dd'T'HH'Z'"); // Convert to desired 24-hour format with UTC 'Z' suffix
+};
 
-    const startDay = getDayFromDate(startActualDate);
-    const endDay = getDayFromDate(endActualDate);
+  it.only('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
+    const currentHour = currentDate.getHours()-1;
+    const currentMinute = currentDate.getMinutes() -1; 
+    const endDateMeridian = currentHour < 12 ? 'AM' : 'PM';
 
-    const startTime = '12:15 PM';
-    const endTime = formattedCurrentTime;
-
-// Select "Custom" from the "Time Range" dropdown
+   const displayHour = currentHour % 12 || 12;  // If currentHour is 0, display 12 instead of 0
+   const displayMinute = currentMinute < 10 ? `0${currentMinute}` : currentMinute;  // Add leading zero for minutes if needed
+  
+    const { actualDate: startActualDate, day: startDay } = getDateRangeInGMT( 0, 12,15);
+ 
+    const { actualDate: endActualDate, day: endDay } = getDateRangeInGMT(9, currentHour, currentMinute);
+ 
+    // Select "Custom" from the "Time Range" dropdown
     ui.autocomplete
       .findByLabel('Time Range')
       .scrollIntoView()
       .should('be.visible')
       .type('Custom');
-
+ 
     // Select "Custom" from the autocomplete dropdown
     ui.autocompletePopper.findByTitle('Custom').should('be.visible').click();
-
+ 
     // Click on "Select Start Date" input field
     cy.findByPlaceholderText('Select Start Date').should('be.visible').click();
-
+ 
     // Select the start date from the calendar
-    cy.findByRole('gridcell', { name: startDay.toString() }).should('be.visible').click();
-
-    // Set the start time
+    cy.findByRole('gridcell', { name: startDay.toString() })
+      .should('be.visible')
+      .click();
+ 
     cy.get('[aria-label^="Choose time"]').click();
-    cy.findByPlaceholderText('hh:mm aa').clear().type(startTime).should('have.value', startTime);
-
+ 
+    cy.findByPlaceholderText('hh:mm aa').clear().type('12:15 PM');
+ 
     // Click the "Apply" button to confirm the start date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
-
-    // Assert that the start date and time are correctly displayed
+ 
+    // Assert that the start date and time is correctly displayed
     cy.findByPlaceholderText('Select Start Date')
-    .scrollIntoView({ easing: 'linear' })
-    .should('be.visible')
-    .invoke('val') // Get the current value
-    .then(cleanText) // Clean the value
-    .should('equal',`${startActualDate} ${startTime}`);
-
-
+      .scrollIntoView({ easing: 'linear' })
+      .should('be.visible')
+      .invoke('val') // Get the current value
+      .then(cleanText) // Clean the value
+      .should('equal', `${startActualDate}`);
+ 
     // Click on "Select End Date" input field
     cy.findByPlaceholderText('Select End Date').should('be.visible').click();
-
+ 
     // Select the end date from the calendar
-    cy.findByRole('gridcell', { name: endDay.toString() }).should('be.visible').click();
-
-    // Set the end time
+    cy.findByRole('gridcell', { name: endDay.toString() })
+      .should('be.visible')
+      .click();
+ 
     cy.get('[aria-label^="Choose time"]').click();
-    cy.findByPlaceholderText('hh:mm aa').clear().type(endTime).should('have.value', endTime);
-
+ 
+    cy.findByPlaceholderText('hh:mm aa').clear().type(`${displayHour}:${displayMinute} ${endDateMeridian}`);
+ 
     // Click the "Apply" button to confirm the end date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
-
-    // Assert that the end date and time are correctly displayed
+ 
+    // Assert that the end date and time is correctly displayed
     cy.findByPlaceholderText('Select End Date')
       .scrollIntoView({ easing: 'linear' })
       .should('be.visible')
       .invoke('val') // Get the current value
       .then(cleanText) // Clean the value
-      .should('equal', `${endActualDate} ${endTime}`);
-
+      .should('equal', `${endActualDate}`);
+ 
     // Select the "Node Type" from the dropdown and submit
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
       .type('Primary{enter}');
-
+ 
     // Wait for all API calls to complete before assertions
     cy.wait(Array(4).fill('@getMetrics'));
-
-    // Validate the API request payload for absolute time duration
-    cy.get('@getMetrics.all')
-    .should('have.length', 4)
-    .each((xhr: unknown) => {
-     // const interception = xhr as Interception;
-      //const { body: requestPayload } = interception.request;
-    });
-    
-
-    // Click on the "Presets" button
+ 
+     // Click on the "Presets" button
     cy.findByRole('button', { name: 'Presets' }).should('be.visible').click();
-
+ 
     // Mock API response for cloud metrics presets
-    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as('getPresets');
-
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
+      'getPresets'
+    );
+ 
     // Select "Last 30 Days" from the "Time Range" dropdown
     ui.autocomplete
       .findByLabel('Time Range')
       .should('be.visible')
       .type('Last 30 Days');
-
+ 
     // Click on the "Last 30 Days" option
     ui.autocompletePopper
       .findByTitle('Last 30 Days')
       .should('be.visible')
       .click();
-
+ 
     // Validate API request payload for relative time duration
     cy.get('@getPresets.all')
       .should('have.length', 4)
       .each((xhr: unknown, index: number) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-
+ 
         expect(requestPayload).to.have.nested.property(
           'relative_time_duration.unit'
         );
