@@ -28,7 +28,7 @@ import {
   mockGetUserPreferences,
 } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
-import { Database, DateTimeWithPreset } from '@linode/api-v4';
+import { Database, DateTimeWithPreset, startMutation } from '@linode/api-v4';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import type { Flags } from 'src/featureFlags';
@@ -213,45 +213,34 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 *   - `month`: The month of the year as a number.
 *   - `ampm`: The AM/PM designation of the time (either 'AM' or 'PM').
 */
-const getDateRangeInGMT = (
+ const getDateRangeInGMT = (
   daysOffset: number,
   hour: number,
   minute: number = 0
 ) => {
-  const now = DateTime.utc(); // Use UTC instead of local time
+  const now = DateTime.now().setZone('GMT');  // Set the timezone to GMT
   const targetDate = now
     .startOf('month')
     .plus({ days: daysOffset })
     .set({ hour, minute });
 
-  // Convert to 12-hour format with AM/PM
-  const twelveHourFormat = targetDate.toFormat('yyyy-LL-dd hh:mm a'); // 'hh' for 12-hour, 'a' for AM/PM
-
-  // Calculate 12-hour format hour for the return object
-  const displayHour = targetDate.hour % 12 || 12; // If hour is 0, display 12 instead of 0
-  const endDateMeridian = targetDate.hour < 12 ? 'AM' : 'PM';
-
+  const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm');  // Format in GMT
   return {
-    actualDate: twelveHourFormat,
+    actualDate,
     day: targetDate.day,
-    hour: displayHour, // Now in 12-hour format
+    hour: targetDate.hour,
     minute: targetDate.minute,
     month: targetDate.month,
-    meridian: endDateMeridian, // Add AM/PM as a separate value
   };
 };
 
   it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
-    const currentHour = currentDate.getHours()-1;
-    const currentMinute = currentDate.getMinutes() -1; 
-    const endDateMeridian = currentHour < 12 ? 'AM' : 'PM';
+   
 
-   const displayHour = currentHour % 12 || 12;  
-   const displayMinute = currentMinute < 10 ? `0${currentMinute}` : currentMinute;  
-  
-    const { actualDate: startActualDate, day: startDay } = getDateRangeInGMT( 0, currentHour,currentMinute);
+   
+    const { actualDate: startActualDate, day: startDay, hour:startHour,minute:startMinute } = getDateRangeInGMT( 0, 12,15);
  
-    const { actualDate: endActualDate, day: endDay } = getDateRangeInGMT(currentDate.getDate(), currentHour, currentMinute);
+    const { actualDate: endActualDate, day: endDay, hour:endHour,minute:endMinute } = getDateRangeInGMT(currentDate.getDate(), 12, 15);
  
     // Select "Custom" from the "Time Range" dropdown
     ui.autocomplete
@@ -271,11 +260,28 @@ const getDateRangeInGMT = (
       .should('be.visible')
       .click();
  
-    cy.get('[aria-label^="Choose time"]').click();
+      cy.get('[data-testid="ClockIcon"]').closest('button').click({ force: true });
+
+      cy.get('[aria-label="Select hours"]')
+      .scrollIntoView({ easing: 'linear' })
+      .within(() => {
+        cy.get(`[aria-label="${startHour} hours"]`).click({ force: true });
+      });
  
-    cy.findByPlaceholderText('hh:mm aa').clear().type(`${displayHour}:${displayMinute} ${endDateMeridian}`);
+    cy.get('[aria-label="Select minutes"]')
+      .scrollIntoView({ easing: 'linear', duration: 500 })
+      .within(() => {
+        cy.get(`[aria-label="${startMinute} minutes"]`).click({ force: true });
+      });
+      
+    
+      cy.get('[aria-label="Select meridiem"]')
+      .scrollIntoView({ easing: 'linear', duration: 500 })
+      .within(() => {
+        cy.get(`[aria-label="PM"]`).click({ force: true });
+      });
  
-    // Click the "Apply" button to confirm the start date and time
+  // Click the "Apply" button to confirm the start date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
  
     // Assert that the start date and time is correctly displayed
@@ -284,7 +290,7 @@ const getDateRangeInGMT = (
       .should('be.visible')
       .invoke('val') // Get the current value
       .then(cleanText) // Clean the value
-      .should('equal', `${startActualDate}`);
+      .should('equal', `${startActualDate} PM`);
  
     // Click on "Select End Date" input field
     cy.findByPlaceholderText('Select End Date').should('be.visible').click();
@@ -294,9 +300,25 @@ const getDateRangeInGMT = (
       .should('be.visible')
       .click();
  
-    cy.get('[aria-label^="Choose time"]').click();
+      cy.get('[data-testid="ClockIcon"]').closest('button').click({ force: true });
+
+      cy.get('[aria-label="Select hours"]')
+      .scrollIntoView({ easing: 'linear', duration: 500 })
+      .within(() => {
+        cy.get(`[aria-label="${endHour} hours"]`).click();
+      });
  
-    cy.findByPlaceholderText('hh:mm aa').clear().type(`${displayHour}:${displayMinute} ${endDateMeridian}`);
+    cy.get('[aria-label="Select minutes"]')
+      .scrollIntoView({ easing: 'linear', duration: 500 })
+      .within(() => {
+        cy.get(`[aria-label="${endMinute} minutes"]`).click({ force: true });
+      });
+ 
+      cy.get('[aria-label="Select meridiem"]')
+      .scrollIntoView({ easing: 'linear', duration: 500 })
+      .within(() => {
+        cy.get(`[aria-label="PM"]`).click({ force: true });
+      });
  
     // Click the "Apply" button to confirm the end date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
@@ -307,7 +329,7 @@ const getDateRangeInGMT = (
       .should('be.visible')
       .invoke('val') // Get the current value
       .then(cleanText) // Clean the value
-      .should('equal', `${endActualDate}`);
+      .should('equal', `${endActualDate} PM`);
  
     // Select the "Node Type" from the dropdown and submit
     ui.autocomplete
@@ -317,6 +339,18 @@ const getDateRangeInGMT = (
  
     // Wait for all API calls to complete before assertions
     cy.wait(Array(4).fill('@getMetrics'));
+    cy.get('@getMetrics.all')
+    .should('have.length', 4)
+    .each((xhr: unknown) => {
+      const interception = xhr as Interception;
+      const { body: requestPayload } = interception.request;
+      expect(requestPayload.absolute_time_duration.start).to.equal(
+        convertToGmt(startActualDate.replace(' ', 'T'))
+      );
+      expect(requestPayload.absolute_time_duration.end).to.equal(
+        convertToGmt(endActualDate.replace(' ', 'T'))
+      );
+    });
  
      // Click on the "Presets" button
     cy.findByRole('button', { name: 'Presets' }).should('be.visible').click();
