@@ -82,7 +82,7 @@ export const LoginAsCustomerCallback = () => {
      * NOTE: the param does not include a leading slash
      */
     history.push(`/${destination}`);
-  });
+  }, []);
 
   return null;
 };
