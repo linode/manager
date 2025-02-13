@@ -230,8 +230,18 @@ const databases = [
       id: 3,
       label: 'database-instance-3',
     });
+    const database4 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 4,
+      label: 'database-instance-4',
+    });
+    const database5 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 5,
+      label: 'database-instance-5',
+    });
 
-    const databases = [database1, database2, database3];
+    const databases = [database1, database2, database3, database4, database5];
     return HttpResponse.json(makeResourcePage(databases));
   }),
 
