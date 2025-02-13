@@ -389,6 +389,10 @@ export const lightTheme: ThemeOptions = {
           },
         },
         inputRoot: {
+          '& .MuiInput-input': {
+            position: 'relative',
+            top: 1,
+          },
           paddingLeft: 8,
         },
         listbox: {
@@ -882,7 +886,7 @@ export const lightTheme: ThemeOptions = {
             fontSize: '1rem',
           },
           fontSize: Typography.Body.Regular,
-          padding: 8,
+          padding: `0 ${spacing}px`,
         },
         inputMultiline: {
           lineHeight: 1.4,
