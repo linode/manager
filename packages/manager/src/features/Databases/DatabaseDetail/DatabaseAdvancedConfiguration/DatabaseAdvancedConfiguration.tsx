@@ -10,6 +10,7 @@ import {
   StyledLabelTypography,
 } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import { StyledConfigValue } from './DatabaseAdvancedConfiguration.style';
+import { DatabaseAdvancedConfigurationDrawer } from './DatabaseAdvancedConfigurationDrawer';
 
 import type { Database } from '@linode/api-v4';
 
@@ -19,15 +20,13 @@ interface Props {
 }
 
 export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
-  // const [
-  //   advancedConfigurationDrawerOpen,
-  //   setAdvancedConfigurationDrawerOpen,
-  // ] = React.useState<boolean>(false);
+  const [
+    advancedConfigurationDrawerOpen,
+    setAdvancedConfigurationDrawerOpen,
+  ] = React.useState<boolean>(false);
 
   const engine = database.engine;
   const engineConfigs = database.engine_config;
-
-  // const engineConfigs = undefined;
 
   return (
     <Paper sx={{ marginTop: 2, pb: 5 }}>
@@ -41,7 +40,7 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
         </Grid>
         <Button
           buttonType="outlined"
-          // onClick={() => setAdvancedConfigurationDrawerOpen(true)}
+          onClick={() => setAdvancedConfigurationDrawerOpen(true)}
           sx={{ height: 1 }}
         >
           Configure
@@ -88,11 +87,11 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
         </Box>
       )}
 
-      {/* <DatabaseAdvancedConfigurationDrawer
+      <DatabaseAdvancedConfigurationDrawer
         database={database}
         onClose={() => setAdvancedConfigurationDrawerOpen(false)}
         open={advancedConfigurationDrawerOpen}
-      /> */}
+      />
     </Paper>
   );
 };
