@@ -18,11 +18,7 @@ export interface CloudPulseModifyAlertResourcesProp {
 export const CloudPulseModifyAlertResources = React.memo(
   (props: CloudPulseModifyAlertResourcesProp) => {
     const { name } = props;
-    const {
-      control,
-      formState,
-      setValue,
-    } = useFormContext<CreateAlertDefinitionForm>();
+    const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
     const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
 
     const handleResourcesSelection = (resourceIds: string[]) => {
@@ -40,7 +36,7 @@ export const CloudPulseModifyAlertResources = React.memo(
 
     return (
       <Controller
-        render={({ field, fieldState }) => (
+        render={({ field }) => (
           <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
             <Typography ref={titleRef} variant="h2">
               2. Resources
@@ -52,12 +48,6 @@ export const CloudPulseModifyAlertResources = React.memo(
               })}
             >
               <AlertResources
-                noSelectionErrorText={
-                  (formState.isSubmitted || fieldState.isTouched) &&
-                  fieldState.error
-                    ? fieldState.error.message
-                    : undefined
-                }
                 alertResourceIds={field.value}
                 alertType="user"
                 handleResourcesSelection={handleResourcesSelection}

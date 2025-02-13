@@ -85,9 +85,6 @@ describe('AlertDefinition Create', () => {
     container.getAllByText(errorMessage).forEach((element) => {
       expect(element).toBeVisible();
     });
-    expect(
-      container.getByText('At least one resource is required.')
-    ).toBeVisible();
 
     await user.clear(input);
     await user.type(input, '-3');

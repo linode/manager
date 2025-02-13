@@ -70,11 +70,6 @@ export interface AlertResourcesProp {
   isSelectionsNeeded?: boolean;
 
   /**
-   * The error text that needs to be displayed when no selections are made
-   */
-  noSelectionErrorText?: string;
-
-  /**
    * The element until which we need to scroll on pagination and order change
    */
   scrollElement?: HTMLDivElement | null;
@@ -96,7 +91,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     handleResourcesSelection,
     hideLabel,
     isSelectionsNeeded,
-    noSelectionErrorText,
     scrollElement,
     serviceType,
   } = props;
@@ -363,18 +357,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               text="Show Selected Only"
               value="Show Selected"
             />
-          </Grid>
-        )}
-        {noSelectionErrorText && (
-          <Grid item xs={12}>
-            <Typography
-              sx={(theme) => ({
-                color: theme.tokens.content.Text.Negative,
-              })}
-              variant="body2"
-            >
-              {noSelectionErrorText}
-            </Typography>
           </Grid>
         )}
         {isSelectionsNeeded && !isDataLoadingError && resources?.length && (
