@@ -4,10 +4,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  localStorageWarning,
-  nodesDeletionWarning,
-} from 'src/features/Kubernetes/kubeUtils';
+import { localStorageWarning } from 'src/features/Kubernetes/kubeUtils';
 import { useRecycleClusterMutation } from 'src/queries/kubernetes';
 
 interface Props {
@@ -59,8 +56,8 @@ export const RecycleClusterDialog = (props: Props) => {
       title="Recycle all nodes in cluster?"
     >
       <Typography>
-        {nodesDeletionWarning} {localStorageWarning} This may take several
-        minutes, as nodes will be replaced on a rolling basis.
+        Redeploy all nodes in the cluster. {localStorageWarning} This may take
+        several minutes, as nodes will be replaced on a rolling basis.
       </Typography>
     </ConfirmationDialog>
   );
