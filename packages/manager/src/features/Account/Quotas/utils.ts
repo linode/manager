@@ -17,7 +17,7 @@ type UseGetLocationsForQuotaService =
       isFetchingS3Endpoints: boolean;
       regions: null;
       s3Endpoints: { label: string; value: string }[];
-      service: 'object-storage';
+      service: Extract<QuotaType, 'object-storage'>;
     };
 
 /**
@@ -29,6 +29,8 @@ export const useGetLocationsForQuotaService = (
   service: QuotaType
 ): UseGetLocationsForQuotaService => {
   const { data: regions, isFetching: isFetchingRegions } = useRegionsQuery();
+  // In order to get the s3 endpoints, we need to query the object storage service
+  // It will only show quotas for assigned endpoints (endpoints relevant to a region a user ever created a resource in).
   const {
     data: s3Endpoints,
     isFetching: isFetchingS3Endpoints,
