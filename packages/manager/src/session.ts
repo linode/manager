@@ -43,7 +43,7 @@ export const redirectToLogin = async (
 export const revokeToken = (clientId: string, token: string) => {
   return Axios({
     baseURL: loginRoot,
-    data: new URLSearchParams({ clientId, token }).toString(),
+    data: new URLSearchParams({ client_id: clientId, token }).toString(),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     },
