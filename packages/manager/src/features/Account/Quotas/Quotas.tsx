@@ -139,14 +139,6 @@ export const Quotas = () => {
                     ? `Loading ${selectedService.label} S3 endpoints...`
                     : 'Select an Object Storage S3 endpoint'
                 }
-                // value={{
-                //   label:
-                //     s3Endpoints?.find(
-                //       (s3Endpoint) =>
-                //         s3Endpoint.value === selectedLocation?.value
-                //     )?.label ?? '',
-                //   value: selectedLocation?.value ?? '',
-                // }}
                 disabled={isFetchingLocations}
                 label="Object Storage Endpoint"
                 loading={isFetchingLocations}
