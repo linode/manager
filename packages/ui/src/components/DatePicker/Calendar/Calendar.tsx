@@ -1,10 +1,9 @@
-import { SvgIcon } from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import * as React from 'react';
 
-import { ChevronLeft } from '../../../assets/icons/index';
-import { ChevronRight } from '../../../assets/icons/index';
 import { Box } from '../../Box/Box';
-import { Button } from '../../Button/Button';
+import { IconButton } from '../../IconButton';
 import { Stack } from '../../Stack/Stack';
 import { Typography } from '../../Typography/Typography';
 import { DayBox } from './Calendar.styles';
@@ -90,9 +89,13 @@ export const Calendar = ({
       >
         {direction === 'left' && (
           <Box sx={{ flexGrow: 1 }}>
-            <Button onClick={() => setMonth(month.minus({ months: 1 }))}>
-              <SvgIcon component={ChevronLeft} viewBox="0 0 25 25" />
-            </Button>
+            <IconButton
+              disableRipple
+              onClick={() => setMonth(month.minus({ months: 1 }))}
+              size="medium"
+            >
+              <ChevronLeftIcon />
+            </IconButton>
           </Box>
         )}
         {/* Display Month & Year */}
@@ -103,12 +106,13 @@ export const Calendar = ({
 
         {direction === 'right' && (
           <Box sx={{ flexGrow: 1 }}>
-            <Button
+            <IconButton
+              disableRipple
               onClick={() => setMonth(month.plus({ months: 1 }))}
-              sx={{ justifyContent: 'end' }}
+              size="medium"
             >
-              <SvgIcon component={ChevronRight} viewBox="0 0 25 25" />
-            </Button>
+              <ChevronRightIcon />
+            </IconButton>
           </Box>
         )}
       </Stack>
