@@ -138,9 +138,6 @@ export const KubeCheckoutBar = (props: Props) => {
           <StyledBox>
             <Divider dark spacingBottom={16} spacingTop={16} />
             <StyledHeader>LKE Enterprise</StyledHeader>
-            <Typography sx={{ width: '80%' }}>
-              HA control plane, Dedicated control plane
-            </Typography>
             <Typography mt={1}>{`$${enterprisePrice?.toFixed(
               2
             )}/month`}</Typography>
