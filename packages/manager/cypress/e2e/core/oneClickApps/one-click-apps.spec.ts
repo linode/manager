@@ -5,6 +5,7 @@ import {
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { mockCreateLinode } from 'support/intercepts/linodes';
+import { getRandomOCAId } from 'support/util/one-click-apps';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { stackScriptFactory } from 'src/factories/stackscripts';
@@ -61,10 +62,7 @@ describe('OneClick Apps (OCA)', () => {
 
     cy.wait('@getStackScripts').then((xhr) => {
       const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
-
-      // For the sake of this test, use the first marketplace app defined in Cloud Manager
-      const candidateStackScriptId = +Object.keys(oneClickApps)[0];
-
+      const candidateStackScriptId = getRandomOCAId();
       const candidateApp = oneClickApps[candidateStackScriptId];
 
       if (!candidateApp) {
@@ -98,7 +96,7 @@ describe('OneClick Apps (OCA)', () => {
         .findByTitle(getMarketplaceAppLabel(candidateStackScript.label))
         .should('be.visible')
         .within(() => {
-          cy.findByText(candidateApp.description).should('be.visible');
+          // compare summary instead of description bc latter contains too many special characters and line breaks
           cy.findByText(candidateApp.summary).should('be.visible');
           cy.findByText(candidateApp.website!).should('be.visible');
         });
@@ -119,12 +117,8 @@ describe('OneClick Apps (OCA)', () => {
         label: 'Debian 11',
       }),
     ];
-
-    // For the sake of this test, use the first marketplace app defined in Cloud Manager
-    const candidateStackScriptId = +Object.keys(oneClickApps)[0];
-
     const stackscript = stackScriptFactory.build({
-      id: candidateStackScriptId,
+      id: getRandomOCAId(),
       username: 'linode',
       user_gravatar_id: '9d4d301385af69ceb7ad658aad09c142',
       label: 'E2E Test App',
@@ -255,5 +249,54 @@ describe('OneClick Apps (OCA)', () => {
     cy.wait('@createLinode');
 
     ui.toast.assertMessage(`Your Linode ${linode.label} is being created.`);
+  });
+
+  // leave test disabled by default
+  xit('Validate the summaries of all the OneClick Apps', () => {
+    cy.tag('method:e2e');
+
+    interceptGetStackScripts().as('getStackScripts');
+    cy.visitWithLogin(`/linodes/create?type=One-Click`);
+
+    cy.wait('@getStackScripts').then((xhr) => {
+      // Check the content of the app list
+      cy.findByTestId('one-click-apps-container').within(() => {
+        const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
+        for (const stackscriptId in oneClickApps) {
+          // expected data of the app in the selected tile
+          const candidateApp = oneClickApps[stackscriptId];
+          const candidateStackScript = stackScripts.find(
+            (s) => s.id === +stackscriptId
+          );
+
+          if (!candidateStackScript) {
+            console.log(
+              'missing stackscript from UI ',
+              stackscriptId,
+              candidateApp.description
+            );
+            throw new Error(
+              'No StackScript returned by the API for the candidate app.'
+            );
+          } else {
+            cy.findAllByLabelText(
+              `Info for "${getMarketplaceAppLabel(candidateStackScript.label)}"`
+            )
+              .first()
+              .scrollIntoView()
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            ui.drawer.find().within(() => {
+              // compare summary instead of description bc latter contains too many special characters and line breaks
+              cy.findByText(candidateApp.summary).should('be.visible');
+            });
+
+            ui.drawerCloseButton.find().click();
+          }
+        }
+      });
+    });
   });
 });
