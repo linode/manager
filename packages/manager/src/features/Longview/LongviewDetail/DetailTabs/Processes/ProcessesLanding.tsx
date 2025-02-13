@@ -1,6 +1,5 @@
 import { TextField } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -101,7 +100,9 @@ export const ProcessesLanding = React.memo((props: Props) => {
       return;
     }
 
-    const sortedByName = sortByName(memoizedFilteredData);
+    const sortedByName = memoizedFilteredData.sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
     if (sortedByName.length > 0) {
       const { name, user } = sortedByName[0];
       setSelectedProcess({
@@ -199,5 +200,3 @@ export const extendData = (
 
   return extendedData;
 };
-
-const sortByName = sortBy(prop('name'));
