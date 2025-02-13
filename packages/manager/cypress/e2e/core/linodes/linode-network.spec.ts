@@ -18,6 +18,7 @@ import {
   mockAddFirewallDevice,
   mockGetFirewalls,
 } from 'support/intercepts/firewalls';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('IP Addresses', () => {
   const mockLinode = linodeFactory.build();
@@ -45,6 +46,9 @@ describe('IP Addresses', () => {
   });
 
   beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
     mockGetLinodeFirewalls(mockLinode.id, []).as('getLinodeFirewalls');
     mockGetLinodeIPAddresses(mockLinode.id, {
