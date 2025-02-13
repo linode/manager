@@ -232,7 +232,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 
-  it.only('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
+  it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
     // Generate start and end date-time values in IST
     const { actualDate: startActualDate, day: startDay } = getDateRangeInIST(
       0,
