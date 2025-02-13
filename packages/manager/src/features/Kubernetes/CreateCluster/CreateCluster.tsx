@@ -45,7 +45,7 @@ import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
-import { ClusterTypePanel } from './ClusterTypePanel';
+import { ClusterTierPanel } from './ClusterTierPanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
@@ -340,7 +340,7 @@ export const CreateCluster = () => {
           {isLkeEnterpriseLAFlagEnabled && (
             <>
               <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
-              <ClusterTypePanel
+              <ClusterTierPanel
                 handleClusterTypeSelection={handleClusterTypeSelection}
                 selectedTier={selectedTier}
               />

@@ -16,7 +16,7 @@ interface Props {
   selectedTier: KubernetesTier;
 }
 
-export const ClusterTypePanel = (props: Props) => {
+export const ClusterTierPanel = (props: Props) => {
   const { handleClusterTypeSelection, selectedTier } = props;
 
   const { data: account } = useAccount();
@@ -38,12 +38,17 @@ export const ClusterTypePanel = (props: Props) => {
         <Stack>
           <Typography variant="h3">Cluster Tier</Typography>
           <Typography sx={{ marginTop: 1, maxWidth: 700 }}>
-            Choose from a managed solution for smaller deployments or enterprise
-            grade clusters with enhanced ingress, networking, and security.
+            Select the cluster tier appropriate for your intended workloads.
+            Choose LKE for smaller deployments and a standard array of cluster
+            management features or LKE Enterprise for a more robust, scalable,
+            and enterprise-grade solution.
           </Typography>
         </Stack>
         <StyledDocsLinkContainer>
-          <DocsLink href="/" label="Full Cluster Features" />
+          <DocsLink
+            href="https://techdocs.akamai.com/cloud-computing/docs/linode-kubernetes-engine"
+            label="Compare Cluster Tiers"
+          />
         </StyledDocsLinkContainer>
       </Stack>
 
@@ -54,9 +59,9 @@ export const ClusterTypePanel = (props: Props) => {
       >
         <SelectionCard
           subheadings={[
+            'Small to medium deployments with standard features',
             'Up to 250 nodes, 1000 pods',
-            'Shared control plane',
-            'HA control plane (optional)',
+            SharedControlPlaneCopy,
           ]}
           checked={selectedTier === 'standard'}
           heading="LKE"
@@ -64,13 +69,13 @@ export const ClusterTypePanel = (props: Props) => {
         />
         <SelectionCard
           subheadings={[
+            'Large deployments with enterprise-grade features',
             'Up to 500 nodes, 5000 pods',
-            'Dedicated control plane',
-            'HA control plane (included)',
+            DedicatedControlPlaneCopy,
           ]}
           tooltip={
             isLkeEnterpriseSelectionDisabled
-              ? 'LKE Enterprise is not currently enabled on this contract. To inquire, fill out the Cloud Computing Sales form or email sales@linode.com.'
+              ? 'LKE Enterprise is not currently enabled on this account. Please contact your account manager or Cloud Computing Sales using the request form or sales@linode.com.'
               : undefined
           }
           checked={selectedTier === 'enterprise'}
@@ -83,3 +88,25 @@ export const ClusterTypePanel = (props: Props) => {
     </Stack>
   );
 };
+
+const SharedControlPlaneCopy = (
+  <>
+    <Typography>
+      Shared control plane<span>*</span>
+    </Typography>
+    <Typography fontSize={12} fontStyle="italic">
+      *HA control plane can be optionally added
+    </Typography>
+  </>
+);
+
+const DedicatedControlPlaneCopy = (
+  <>
+    <Typography>
+      Dedicated control plane<span>*</span>
+    </Typography>
+    <Typography fontSize={12} fontStyle="italic">
+      *HA control plane is included
+    </Typography>
+  </>
+);
