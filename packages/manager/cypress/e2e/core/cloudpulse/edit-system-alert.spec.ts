@@ -2,7 +2,7 @@
  * @file Integration Tests for the CloudPulse Edit Alert Page.
  *
  * This file contains Cypress tests for the Edit Alert page of the CloudPulse application.
- * are correctly displayed and interactive on the Edit page. It ensures that users can navigate
+ * It ensures that users can navigate to the Edit Alert Page and that alerts are correctly displayed and interactive on the Edit page.
  */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -34,7 +34,6 @@ const alertDetails = alertFactory.build({
   severity: 1,
   status: 'enabled',
   type: 'system',
-  class: 'dedicated',
 });
 const { service_type, id, label } = alertDetails;
 const regions = [
@@ -61,6 +60,15 @@ const databases: Database[] = databaseFactory
 const pages = [1, 2];
 
 describe('Integration Tests for Edit Alert', () => {
+  /*
+ * - Confirms navigation from the Alert Definitions List page to the Edit Alert page.
+ * - Confirms alert creation is successful using mock API data.
+ * - Confirms that UI handles API interactions and displays correct data.
+ * - Confirms that UI redirects back to the Alert Definitions List page after saving updates.
+ * - Confirms that a toast notification appears upon successful alert update.
+ * - Confirms that UI redirects to the alert listing page after creating an alert.
+ * - Confirms that after submitting, the data matches with the API response.
+ */
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
@@ -231,7 +239,6 @@ describe('Integration Tests for Edit Alert', () => {
       expect(alertResponse).to.have.property('service_type', service_type);
       expect(alertResponse).to.have.property('severity', severity);
       expect(alertResponse).to.have.property('description', description);
-      expect(alertResponse).to.have.property('class', 'dedicated');
       expect(alertResponse).to.have.property('created_by', created_by);
       expect(alertResponse).to.have.property('updated_by', updated_by);
 
