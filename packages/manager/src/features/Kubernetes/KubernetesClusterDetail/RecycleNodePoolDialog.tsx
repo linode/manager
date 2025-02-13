@@ -59,7 +59,7 @@ export const RecycleNodePoolDialog = (props: Props) => {
       title="Recycle node pool?"
     >
       <Typography>
-        Redeploy all nodes in the cluster. {localStorageWarning} This may take
+        Redeploy all nodes in the node pool. {localStorageWarning} This may take
         several minutes, as nodes will be replaced on a rolling basis.
       </Typography>
     </ConfirmationDialog>
