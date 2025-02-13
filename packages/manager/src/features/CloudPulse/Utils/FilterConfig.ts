@@ -1,3 +1,4 @@
+import { RESOURCE_ID } from './constants';
 import { CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
@@ -141,7 +142,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        dependency: ['resource_id'],
+        dependency: [RESOURCE_ID],
         filterKey: 'node_type',
         filterType: 'string',
         isFilterable: true, // isFilterable -- this determines whether you need to pass it metrics api
