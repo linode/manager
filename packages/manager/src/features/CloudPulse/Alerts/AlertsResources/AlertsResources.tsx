@@ -348,23 +348,23 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               />
             </Grid>
           ))}
-          {isSelectionsNeeded && (
-            <Grid item md={4} xs={12}>
-              <Checkbox
-                sx={(theme) => ({
-                  svg: {
-                    backgroundColor: theme.tokens.color.Neutrals.White,
-                  },
-                })}
-                data-testid="show_selected_only"
-                disabled={!(selectedResources.length || selectedOnly)}
-                onClick={() => setSelectedOnly(!selectedOnly)}
-                text="Show Selected Only"
-                value="Show Selected"
-              />
-            </Grid>
-          )}
         </Grid>
+        {isSelectionsNeeded && (
+          <Grid item md={4} xs={12}>
+            <Checkbox
+              sx={(theme) => ({
+                svg: {
+                  backgroundColor: theme.tokens.color.Neutrals.White,
+                },
+              })}
+              data-testid="show_selected_only"
+              disabled={!(selectedResources.length || selectedOnly)}
+              onClick={() => setSelectedOnly(!selectedOnly)}
+              text="Show Selected Only"
+              value="Show Selected"
+            />
+          </Grid>
+        )}
         {noSelectionErrorText && (
           <Grid item xs={12}>
             <Typography
@@ -377,7 +377,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             </Typography>
           </Grid>
         )}
-        {isSelectionsNeeded && !isDataLoadingError && (
+        {isSelectionsNeeded && !isDataLoadingError && resources?.length && (
           <Grid item xs={12}>
             <AlertsResourcesNotice
               handleSelectionChange={handleAllSelection}
