@@ -89,7 +89,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
           </Button>
         </Box>
         <Stack gap={2}>
-          <Box display="flex" gap={2}>
+          <Box display="flex" flexWrap="wrap" gap={2}>
             <DebouncedSearchTextField
               data-testid="search-alert"
               label=""

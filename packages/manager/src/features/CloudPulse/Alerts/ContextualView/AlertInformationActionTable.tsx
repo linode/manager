@@ -167,6 +167,7 @@ export const AlertInformationActionTable = (
                     colCount={columns.length + 1}
                     data-testid="alert-table"
                     size="small"
+                    sx={{ overflowX: 'auto' }}
                   >
                     <TableHead>
                       <TableRow>
