@@ -286,7 +286,7 @@ export const CreateDomain = () => {
 
   return (
     <Grid container>
-      <DocumentTitleSegment segment="Create Domain" />
+      <DocumentTitleSegment segment="Create a Domain" />
       <LandingHeader
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"

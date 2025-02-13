@@ -31,10 +31,13 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
         emitFilterChange={vi.fn()}
         handleToggleAppliedFilter={vi.fn()}
         isServiceAnalyticsIntegration={false}
+        resource_ids={[1, 2]}
       />
     );
 
     expect(getByPlaceholderText('Select a Database Engine')).toBeDefined();
     expect(getByPlaceholderText('Select a Region')).toBeDefined();
+    expect(getByPlaceholderText('Select Database Clusters')).toBeDefined();
+    expect(getByPlaceholderText('Select a Node Type')).toBeDefined();
   });
 });
