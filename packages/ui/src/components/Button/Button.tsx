@@ -90,15 +90,6 @@ const StyledButton = styled(_Button, {
   }),
 }));
 
-const Span = styled('span')({
-  '@supports (-moz-appearance: none)': {
-    /* Fix text alignment for Firefox */
-    marginTop: 2,
-  },
-  alignItems: 'center',
-  display: 'flex',
-});
-
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -155,7 +146,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         compactX={compactX}
         compactY={compactY}
         data-testid={rest['data-testid'] || 'button'}
-        disableRipple={disabled}
+        disableRipple={disabled || rest.disableRipple}
         disabled={loading}
         loading={loading}
         onClick={disabled ? (e) => e.preventDefault() : rest.onClick}
@@ -164,9 +155,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         sx={sx}
         variant={buttonTypeToVariant[buttonType] || 'text'}
       >
-        <Span data-testid="loadingIcon">
-          {loading ? <ReloadIcon /> : children}
-        </Span>
+        {loading ? <ReloadIcon data-testid="loadingIcon" /> : children}
       </StyledButton>
     );
 

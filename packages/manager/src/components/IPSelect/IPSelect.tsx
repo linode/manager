@@ -33,7 +33,7 @@ export const IPSelect = (props: Props) => {
     }
   }
 
-  // Create React-Select-friendly options.
+  // Create Select-friendly options.
   let options = ips.map((ip) => ({ label: ip, value: ip }));
 
   // If a customizeOptions function was provided, apply it here.

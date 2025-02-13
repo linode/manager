@@ -39,6 +39,7 @@ describe('LinodeRow', () => {
         hypervisor={linode.hypervisor}
         id={linode.id}
         image={linode.image}
+        interface_generation="legacy_config"
         ipv4={linode.ipv4}
         ipv6={linode.ipv6 || ''}
         key={`linode-row-${1}`}

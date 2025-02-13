@@ -2,22 +2,32 @@ import React from 'react';
 
 import { CodeBlock } from './CodeBlock';
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
+
+const code = `/**
+  * Given a user's preference (light | dark | system), get the name of the actual
+  * theme we should use
+  */
+export const getThemeFromPreferenceValue = (
+  value: unknown,
+  isSystemInDarkMode: boolean
+): ThemeName => {
+  const systemTheme = isSystemInDarkMode ? 'dark' : 'light';
+  if (value === 'system') {
+    return systemTheme;
+  }
+  if (isValidTheme(value)) {
+    return value as ThemeName;
+  }
+  return systemTheme;
+};`;
 
 const meta: Meta<typeof CodeBlock> = {
   args: {
-    command: 'echo "Hello World"',
-    commandType: 'Test label',
-    language: 'bash',
+    code,
+    language: 'typescript',
   },
   component: CodeBlock,
-  decorators: [
-    (Story: StoryFn) => (
-      <div style={{ margin: '1em' }}>
-        <Story />
-      </div>
-    ),
-  ],
   title: 'Components/CodeBlock',
 };
 

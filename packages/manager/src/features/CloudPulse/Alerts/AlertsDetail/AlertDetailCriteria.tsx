@@ -33,7 +33,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
         <Grid item sm={4} xs={12}>
           <StyledAlertTypography
             data-qa-item="Trigger Alert When"
-            fontFamily={theme.font.bold}
+            sx={{ font: theme.font.bold }}
           >
             Trigger Alert When:
           </StyledAlertTypography>

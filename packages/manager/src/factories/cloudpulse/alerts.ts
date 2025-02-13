@@ -17,7 +17,7 @@ export const alertDimensionsFactory = Factory.Sync.makeFactory<AlertDefinitionDi
 
 export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>(
   {
-    aggregation_type: 'avg',
+    aggregate_function: 'avg',
     dimension_filters: alertDimensionsFactory.buildList(1),
     label: 'CPU Usage',
     metric: 'cpu_usage',
@@ -28,24 +28,25 @@ export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricC
 );
 
 export const alertFactory = Factory.Sync.makeFactory<Alert>({
-  channels: [
+  alert_channels: [
     {
-      id: '1',
+      id: 1,
       label: 'sample1',
-      type: 'channel',
+      type: 'alert-channel',
       url: '',
     },
     {
-      id: '2',
+      id: 2,
       label: 'sample2',
-      type: 'channel',
+      type: 'alert-channel',
       url: '',
     },
   ],
+  class: 'dedicated',
   created: new Date().toISOString(),
   created_by: 'user1',
   description: 'Test description',
-  entity_ids: ['0', '1', '2', '3'],
+  entity_ids: ['1', '2', '3'],
   has_more_resources: true,
   id: Factory.each((i) => i),
   label: Factory.each((id) => `Alert-${id}`),
@@ -62,7 +63,8 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
     polling_interval_seconds: 120,
     trigger_occurrences: 3,
   },
-  type: 'user',
+
+  type: 'system',
   updated: new Date().toISOString(),
   updated_by: 'user1',
 });

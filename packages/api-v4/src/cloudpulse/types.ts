@@ -2,6 +2,7 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
 export type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
 export type AlertServiceType = 'linode' | 'dbaas';
+export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'eq'
   | 'neq'
@@ -48,6 +49,12 @@ export interface TimeDuration {
   value: number;
 }
 
+export interface DateTimeWithPreset {
+  end: string;
+  start: string;
+  preset?: string;
+}
+
 export interface Widgets {
   label: string;
   metric: string;
@@ -80,6 +87,7 @@ export type FilterValue =
   | string[]
   | number[]
   | WidgetFilterValue
+  | DateTimeWithPreset
   | undefined;
 
 type WidgetFilterValue = { [key: string]: AclpWidget };
@@ -104,6 +112,7 @@ export interface MetricDefinition {
   scrape_interval: string;
   available_aggregate_functions: string[];
   dimensions: Dimension[];
+  is_alertable: boolean;
 }
 
 export interface Dimension {
@@ -125,7 +134,8 @@ export interface CloudPulseMetricsRequest {
   filters?: Filters[];
   aggregate_function: string;
   group_by: string;
-  relative_time_duration: TimeDuration;
+  relative_time_duration: TimeDuration | undefined;
+  absolute_time_duration: DateTimeWithPreset | undefined;
   time_granularity: TimeGranularity | undefined;
   entity_ids: number[];
 }
@@ -172,7 +182,7 @@ export interface CreateAlertDefinitionPayload {
 }
 export interface MetricCriteria {
   metric: string;
-  aggregation_type: MetricAggregationType;
+  aggregate_function: MetricAggregationType;
   operator: MetricOperatorType;
   threshold: number;
   dimension_filters?: DimensionFilter[];
@@ -204,6 +214,7 @@ export interface Alert {
   label: string;
   tags: string[];
   description: string;
+  class?: AlertClass;
   has_more_resources: boolean;
   status: AlertStatusType;
   type: AlertDefinitionType;
@@ -214,11 +225,11 @@ export interface Alert {
     rules: AlertDefinitionMetricCriteria[];
   };
   trigger_conditions: TriggerCondition;
-  channels: {
-    id: string;
+  alert_channels: {
+    id: number;
     label: string;
     url: string;
-    type: 'channel';
+    type: 'alert-channel';
   }[];
   created_by: string;
   updated_by: string;

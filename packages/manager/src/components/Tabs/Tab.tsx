@@ -33,7 +33,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
       borderBottom: `3px solid ${theme.textColors.linkActiveLight}`,
       color: theme.textColors.headlineStatic,
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
     },
   },
 }));

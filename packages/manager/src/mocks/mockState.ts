@@ -25,16 +25,20 @@ export const emptyStore: MockState = {
   domainRecords: [],
   domains: [],
   eventQueue: [],
+  firewallDevices: [],
   firewalls: [],
+  ipAddresses: [],
   linodeConfigs: [],
   linodes: [],
   notificationQueue: [],
   placementGroups: [],
   regionAvailability: [],
   regions: [],
+  subnets: [],
   supportReplies: [],
   supportTickets: [],
   volumes: [],
+  vpcs: [],
 };
 
 /**

@@ -1,4 +1,4 @@
-import { Divider } from '@linode/ui';
+import { Box, Divider } from '@linode/ui';
 import { IconButton, useTheme } from '@mui/material';
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -8,13 +8,14 @@ import Reload from 'src/assets/icons/refresh.svg';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
-import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
+import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
 import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { AclpConfig, Dashboard, TimeDuration } from '@linode/api-v4';
+import type { AclpConfig, Dashboard, DateTimeWithPreset } from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(
@@ -23,7 +24,7 @@ export interface GlobalFilterProperties {
     labels: string[]
   ): void;
   handleDashboardChange(dashboard: Dashboard | undefined): void;
-  handleTimeDurationChange(timeDuration: TimeDuration): void;
+  handleTimeDurationChange(timeDuration: DateTimeWithPreset): void;
   handleToggleAppliedFilter(isVisible: boolean): void;
 }
 
@@ -44,15 +45,15 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   >();
 
   const handleTimeRangeChange = React.useCallback(
-    (
-      timerDuration: TimeDuration,
-      timeDurationValue: string = 'Auto',
-      savePref: boolean = false
-    ) => {
+    (timeDuration: DateTimeWithPreset, savePref: boolean = false) => {
       if (savePref) {
-        updatePreferences({ [TIME_DURATION]: timeDurationValue });
+        updatePreferences({ [TIME_DURATION]: timeDuration });
       }
-      handleTimeDurationChange(timerDuration);
+      handleTimeDurationChange({
+        ...timeDuration,
+        end: convertToGmt(timeDuration.end),
+        start: convertToGmt(timeDuration.start),
+      });
     },
     []
   );
@@ -94,45 +95,50 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   return (
     <Grid container>
-      <Grid container item m={3} rowGap={1} xs={12}>
-        <Grid
-          columnSpacing={2}
-          container
-          item
-          justifyContent="space-between"
-          rowSpacing={2}
-        >
-          <Grid display={'flex'} item md={4} sm={5} xs={12}>
-            <CloudPulseDashboardSelect
-              defaultValue={preferences?.dashboardId}
-              handleDashboardChange={onDashboardChange}
-              savePreferences
-            />
-          </Grid>
-          <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
-            <CloudPulseTimeRangeSelect
-              defaultValue={preferences?.timeDuration}
-              handleStatsChange={handleTimeRangeChange}
-              label="Time Range"
-              savePreferences
-            />
-            <CloudPulseTooltip placement="bottom-end" title="Refresh">
-              <IconButton
-                sx={{
-                  marginBlockEnd: 'auto',
-                  marginTop: theme.spacing(3.5),
-                }}
-                aria-label="Refresh Dashboard Metrics"
-                data-testid="global-refresh"
-                disabled={!selectedDashboard}
-                onClick={handleGlobalRefresh}
-                size="small"
-              >
-                <StyledReload />
-              </IconButton>
-            </CloudPulseTooltip>
-          </Grid>
+      <Grid
+        container
+        display="flex"
+        flexWrap="wrap"
+        item
+        justifyContent="space-between"
+        m={3}
+        rowGap={2}
+        xs={12}
+      >
+        <Grid item lg={4} xs={12}>
+          <CloudPulseDashboardSelect
+            defaultValue={preferences?.dashboardId}
+            handleDashboardChange={onDashboardChange}
+            savePreferences
+          />
         </Grid>
+        <Box
+          display="flex"
+          flexDirection={{ md: 'row', xs: 'column' }}
+          flexWrap="wrap"
+          gap={2}
+        >
+          <CloudPulseDateTimeRangePicker
+            defaultValue={preferences?.timeRange}
+            handleStatsChange={handleTimeRangeChange}
+            savePreferences
+          />
+          <CloudPulseTooltip placement="bottom-end" title="Refresh">
+            <IconButton
+              sx={{
+                marginBlockEnd: 'auto',
+                marginTop: { md: theme.spacing(3.5) },
+              }}
+              aria-label="Refresh Dashboard Metrics"
+              data-testid="global-refresh"
+              disabled={!selectedDashboard}
+              onClick={handleGlobalRefresh}
+              size="small"
+            >
+              <StyledReload />
+            </IconButton>
+          </CloudPulseTooltip>
+        </Box>
       </Grid>
       {selectedDashboard && (
         <Grid item xs={12}>

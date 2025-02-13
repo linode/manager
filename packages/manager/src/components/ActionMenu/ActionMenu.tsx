@@ -147,6 +147,9 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
                 handleClose(e);
                 a.onClick();
               }
+              if (stopClickPropagation) {
+                e.stopPropagation();
+              }
             }}
             data-qa-action-menu-item={a.title}
             data-testid={a.title}

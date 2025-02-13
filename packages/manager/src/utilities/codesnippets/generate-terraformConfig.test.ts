@@ -1,6 +1,6 @@
 import { generateTerraformConfig } from './generate-terraformConfig';
 
-import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 describe('generateTerraformConfig', () => {
   it('should generate correct configuration with all properties', () => {
@@ -71,7 +71,7 @@ describe('generateTerraformConfig', () => {
       `  tags = ["production", "web"]\n` +
       `  swap_size = 512\n` +
       `  private_ip = true\n` +
-      `}\n`;
+      `}`;
 
     expect(generateTerraformConfig(config)).toEqual(expectedOutput);
   });
@@ -88,7 +88,7 @@ describe('generateTerraformConfig', () => {
       `  image = "linode/ubuntu18.04"\n` +
       `  region = "us-west"\n` +
       `  type = "g6-standard-2"\n` +
-      `}\n`;
+      `}`;
 
     expect(generateTerraformConfig(config)).toEqual(expectedOutput);
   });
@@ -107,7 +107,7 @@ describe('generateTerraformConfig', () => {
       `  region = "us-west"\n` +
       `  type = "g6-standard-2"\n` +
       `  root_pass = "pass\\"word"\n` +
-      `}\n`;
+      `}`;
 
     expect(generateTerraformConfig(config)).toEqual(expectedOutput);
   });

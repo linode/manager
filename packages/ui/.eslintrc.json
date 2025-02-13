@@ -35,6 +35,14 @@
     "camelcase": ["warn", { "properties": "always" }],
     "comma-dangle": "off",
     "curly": "warn",
+    "eqeqeq": "warn",
+    "no-restricted-syntax": [
+      "error",
+      {
+        "message": "The 'data-test-id' attribute is not allowed; use 'data-testid' instead.",
+        "selector": "JSXAttribute[name.name='data-test-id']"
+      }
+    ],
     "no-unused-vars": [
       "warn",
       {

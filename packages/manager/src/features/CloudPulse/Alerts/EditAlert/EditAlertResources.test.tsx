@@ -1,4 +1,8 @@
+import { waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
 import React from 'react';
+import { Router } from 'react-router-dom';
 
 import { alertFactory, linodeFactory, regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -24,16 +28,21 @@ const cloudPulseResources: CloudPulseResources[] = linodes.map((linode) => {
     region: linode.region,
   };
 });
+const saveResources = 'save-resources';
+const editConfirmation = 'edit-confirmation';
+const cancelEdit = 'cancel-save-resources';
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
+  useEditAlertDefinition: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
 }));
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
+  useEditAlertDefinition: queryMocks.useEditAlertDefinition,
 }));
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
@@ -55,17 +64,21 @@ beforeEach(() => {
   queryMocks.useAlertDefinitionQuery.mockReturnValue({
     data: alertDetails,
     isError: false,
-    isFetching: false,
+    isLoading: false,
   });
   queryMocks.useResourcesQuery.mockReturnValue({
     data: cloudPulseResources,
     isError: false,
-    isFetching: false,
+    isLoading: false,
   });
   queryMocks.useRegionsQuery.mockReturnValue({
     data: regions,
     isError: false,
-    isFetching: false,
+    isLoading: false,
+  });
+  queryMocks.useEditAlertDefinition.mockReturnValue({
+    mutateAsync: vi.fn().mockResolvedValue({}),
+    reset: vi.fn(),
   });
 });
 
@@ -86,7 +99,7 @@ describe('EditAlertResources component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined,
       isError: true, // simulate error
-      isFetching: false,
+      isLoading: false,
     });
     const { getByText } = renderWithTheme(<EditAlertResources />);
     expect(
@@ -98,7 +111,7 @@ describe('EditAlertResources component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined,
       isError: false,
-      isFetching: true, // simulate loading
+      isLoading: true, // simulate loading
     });
     const { getByTestId } = renderWithTheme(<EditAlertResources />);
     expect(getByTestId('circle-progress')).toBeInTheDocument();
@@ -108,9 +121,98 @@ describe('EditAlertResources component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined, // simulate empty
       isError: false,
-      isFetching: false,
+      isLoading: false,
     });
     const { getByText } = renderWithTheme(<EditAlertResources />);
     expect(getByText('No Data to display.')).toBeInTheDocument();
+  });
+
+  it('Edit alert resources successful edit', async () => {
+    const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
+
+    const push = vi.fn();
+    const history = createMemoryHistory(); // Create a memory history for testing
+    history.push = push;
+    history.push('/monitor/alerts/definitions/edit/linode/1');
+
+    const { getByTestId, getByText } = renderWithTheme(
+      <Router history={history}>
+        <EditAlertResources />
+      </Router>
+    );
+
+    expect(getByTestId(saveResources)).toBeInTheDocument();
+
+    expect(getByTestId('select_item_4')).toBeInTheDocument();
+
+    await userEvent.click(getByTestId('select_item_4'));
+
+    // click and save
+    await userEvent.click(getByTestId(saveResources));
+
+    expect(getByTestId(editConfirmation)).toBeInTheDocument();
+
+    // click confirmation
+    await userEvent.click(getByTestId(editConfirmation));
+
+    expect(mutateAsyncSpy).toHaveBeenCalledTimes(1); // check if edit is called
+
+    expect(push).toHaveBeenLastCalledWith('/monitor/alerts/definitions'); // after confirmation history updates to list page
+
+    await waitFor(() => {
+      expect(
+        getByText('Alert resources successfully updated.') // validate whether snackbar is displayed properly
+      ).toBeInTheDocument();
+    });
+
+    // click on cancel
+    await userEvent.click(getByTestId(cancelEdit));
+
+    expect(push).toHaveBeenLastCalledWith(
+      // after cancel click history updates to list page
+      '/monitor/alerts/definitions'
+    );
+  });
+
+  it('Edit alert resources error case', async () => {
+    const mockMutateAsync = vi.fn().mockRejectedValue(new Error('API Error'));
+    queryMocks.useEditAlertDefinition.mockReturnValue({
+      isError: true,
+      mutateAsync: mockMutateAsync,
+      reset: vi.fn(),
+    });
+
+    const push = vi.fn();
+    const history = createMemoryHistory(); // Create a memory history for testing
+    history.push = push;
+    history.push('/monitor/alerts/definitions/edit/linode/1');
+
+    const { getByTestId, getByText } = renderWithTheme(
+      <Router history={history}>
+        <EditAlertResources />
+      </Router>
+    );
+
+    expect(getByTestId(saveResources)).toBeInTheDocument();
+
+    expect(getByTestId('select_item_4')).toBeInTheDocument();
+
+    await userEvent.click(getByTestId('select_item_4'));
+
+    // click and save
+    await userEvent.click(getByTestId(saveResources));
+
+    expect(getByTestId(editConfirmation)).toBeInTheDocument();
+
+    // click confirmation
+    await userEvent.click(getByTestId(editConfirmation));
+
+    expect(mockMutateAsync).toHaveBeenCalledTimes(1);
+
+    await waitFor(() => {
+      expect(
+        getByText('Error while updating the resources. Try again later.') // validate whether snackbar is displayed properly
+      ).toBeInTheDocument();
+    });
   });
 });

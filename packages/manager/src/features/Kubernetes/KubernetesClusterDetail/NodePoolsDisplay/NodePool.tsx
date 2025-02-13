@@ -188,6 +188,7 @@ export const NodePool = (props: Props) => {
                 disableFocusListener={!isOnlyNodePool}
                 disableHoverListener={!isOnlyNodePool}
                 disableTouchListener={!isOnlyNodePool}
+                onClick={(e) => e.stopPropagation()}
                 title="Clusters must contain at least one node pool."
               >
                 <div>

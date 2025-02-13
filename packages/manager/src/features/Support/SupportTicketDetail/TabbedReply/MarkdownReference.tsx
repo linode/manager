@@ -1,8 +1,8 @@
 import { Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Link } from 'src/components/Link';
+import { Markdown } from 'src/components/Markdown/Markdown';
 
 interface Props {
   isReply?: boolean;
@@ -18,7 +18,9 @@ export const MarkdownReference = (props: Props) => {
           Markdown cheatsheet
         </Link>
       </Typography>
-      <Typography fontFamily={(theme) => theme.font.bold}>Examples</Typography>
+      <Typography sx={(theme) => ({ font: theme.font.bold })}>
+        Examples
+      </Typography>
       <Paper
         sx={(theme) => ({
           backgroundColor: theme.palette.background.default,
@@ -41,12 +43,12 @@ export const MarkdownReference = (props: Props) => {
         <Typography>
           ```js
           <br />
-          const someCode = 'hello world';
+          const someCode = "hello world";
           <br />
           ```
         </Typography>
-        <HighlightedMarkdown
-          textOrMarkdown={'```ts\nconst someCode = "hello world"\n```'}
+        <Markdown
+          textOrMarkdown={'```ts\nconst someCode = "hello world";\n```'}
         />
       </Paper>
     </Stack>
