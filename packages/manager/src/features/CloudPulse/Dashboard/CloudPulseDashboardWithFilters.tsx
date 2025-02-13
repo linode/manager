@@ -171,6 +171,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 emitFilterChange={onFilterChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
                 isServiceAnalyticsIntegration
+                resource_ids={[resource]}
               />
             )}
             <Grid item mb={3} mt={-3} xs={12}>
