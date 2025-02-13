@@ -28,7 +28,7 @@ export interface DateRangePickerProps {
   };
 
   /** Format for displaying the date-time */
-  format?: 'DD-MM-YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD';
+  format?: 'dd-MM-yyyy' | 'MM/dd/yyyy' | 'yyyy-MM-dd';
 
   /** Callback when the date-time range changes,
    * this returns start date, end date in ISO formate,
@@ -194,7 +194,6 @@ export const DateRangePicker = ({
           label={startDateProps?.label ?? 'Start Date'}
           onClick={() => handleOpen('start')}
           // otherFieldRef={endDateInputRef}
-          placeholder={startDateProps?.placeholder ?? 'MM-DD-YYYY'}
           value={startDate}
         />
         <DateTimeField
@@ -208,7 +207,6 @@ export const DateRangePicker = ({
           label={endDateProps?.label ?? 'End Date'}
           onClick={() => handleOpen('end')}
           // otherFieldRef={startDateInputRef}
-          placeholder={endDateProps?.placeholder ?? 'MM-DD-YYYY'}
           value={endDate}
         />
       </Stack>

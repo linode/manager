@@ -13,25 +13,23 @@ import type { DateTime } from 'luxon';
 
 interface DateTimeFieldProps {
   errorText?: string;
-  format?: 'DD-MM-YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD';
+  format?: 'dd-MM-yyyy' | 'MM/dd/yyyy' | 'yyyy-MM-dd';
   handleClose: () => void;
   inputRef?: React.RefObject<HTMLInputElement>;
   label: string;
   onChange: (date: DateTime | null) => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   //   otherFieldRef: React.RefObject<HTMLInputElement>;
-  placeholder?: string;
   value: DateTime | null;
 }
 
 export const DateTimeField = ({
   errorText,
-  format,
+  format = 'yyyy-MM-dd',
   inputRef,
   label,
   onChange,
   onClick,
-  placeholder,
   value,
 }: DateTimeFieldProps) => {
   const fallbackId = React.useId();
@@ -41,7 +39,7 @@ export const DateTimeField = ({
 
   const handleChange = (newValue: DateTime | null) => {
     if (newValue?.isValid) {
-      onChange(newValue.startOf('day'));
+      onChange(newValue);
     }
   };
 
@@ -64,7 +62,7 @@ export const DateTimeField = ({
             'aria-labelledby': validInputId,
             id: validInputId,
             onClick,
-            placeholder,
+            // placeholder,
           }}
           slotProps={{
             textField: {
@@ -73,7 +71,7 @@ export const DateTimeField = ({
               helperText: '',
             },
           }}
-          format={format ?? 'MM/dd/yyyy'}
+          format={format}
           inputRef={inputRef}
           onChange={handleChange}
           sx={{ marginTop: 1 }}
