@@ -59,7 +59,7 @@ export const Calendar = ({
       <DayBox
         isSelected={isSelected}
         isStartOrEnd={isStartOrEnd}
-        key={day}
+        key={`${month.month} ${day}`}
         onClick={() => onDateClick(currentDay, focusedField)}
       >
         {day}
