@@ -12,7 +12,6 @@ import type { DateRangePickerProps } from './DateRangePicker';
 const defaultProps: DateRangePickerProps = {
   endDateProps: {
     label: 'End Date',
-    placeholder: 'YYYY-MM-DD',
   },
   onApply: vi.fn() as DateRangePickerProps['onApply'],
   presetsProps: {
@@ -20,7 +19,6 @@ const defaultProps: DateRangePickerProps = {
   },
   startDateProps: {
     label: 'Start Date',
-    placeholder: 'YYYY-MM-DD',
   },
 };
 
@@ -100,5 +98,56 @@ describe('DateRangePicker', () => {
     };
     renderWithTheme(<DateRangePicker {...props} />);
     expect(screen.getByRole('alert')).toBeVisible();
+  });
+});
+describe('DateRangePicker - Format Validation', () => {
+  const formats = ['dd-MM-yyyy', 'MM/dd/yyyy', 'yyyy-MM-dd'];
+
+  formats.forEach((format) => {
+    it(`should accept and display dates correctly in ${format} format`, async () => {
+      renderWithTheme(<DateRangePicker {...defaultProps} format={format} />);
+
+      expect(
+        screen.getByRole('textbox', { name: 'Start Date' })
+      ).toHaveAttribute('placeholder', format.toLocaleUpperCase());
+      expect(screen.getByRole('textbox', { name: 'End Date' })).toHaveAttribute(
+        'placeholder',
+        format.toLocaleUpperCase()
+      );
+
+      // Define the expected values for each format
+      const expectedValues: Record<string, string> = {
+        'MM/dd/yyyy': '02/04/2025',
+        'dd-MM-yyyy': '04-02-2025',
+        'yyyy-MM-dd': '2025-02-04',
+      };
+
+      const formattedTestDate = expectedValues[format];
+
+      const startDateField = screen.getByRole('textbox', {
+        name: 'Start Date',
+      });
+      const endDateField = screen.getByRole('textbox', { name: 'End Date' });
+
+      // Simulate user input
+      await userEvent.type(startDateField, formattedTestDate);
+
+      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      await userEvent.type(endDateField, formattedTestDate);
+
+      expect(startDateField).toHaveValue(formattedTestDate);
+      expect(endDateField).toHaveValue(formattedTestDate);
+    });
+  });
+
+  it('should prevent invalid date input for each format', async () => {
+    renderWithTheme(<DateRangePicker {...defaultProps} format="yyyy-MM-dd" />);
+
+    const startDateField = screen.getByRole('textbox', { name: 'Start Date' });
+
+    await userEvent.type(startDateField, 'invalid-date');
+
+    expect(startDateField).not.toHaveValue('invalid-date'); // Should not accept incorrect formats
   });
 });
