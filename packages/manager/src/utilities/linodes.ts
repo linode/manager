@@ -45,5 +45,5 @@ export const useIsLinodeInterfacesEnabled = () => {
 
   // @TODO Linode Interfaces - check for customer tag when it exists
 
-  return flags.linodeInterfaces;
+  return flags.linodeInterfaces?.enabled;
 };

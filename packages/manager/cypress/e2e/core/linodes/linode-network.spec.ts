@@ -147,6 +147,12 @@ describe('IP Addresses', () => {
 });
 
 describe('Firewalls', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
+  });
+
   it('allows the user to assign a Firewall from the Linode details page', () => {
     const linode = linodeFactory.build();
     const firewalls = firewallFactory.buildList(3);
