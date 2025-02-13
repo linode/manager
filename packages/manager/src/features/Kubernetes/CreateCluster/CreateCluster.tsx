@@ -363,7 +363,7 @@ export const CreateCluster = () => {
                 tooltipText={
                   isLkeEnterpriseLAFeatureEnabled &&
                   selectedTier === 'enterprise'
-                    ? 'Only regions that support Kubernetes Enterprise are listed.'
+                    ? 'Only regions that support LKE Enterprise clusters are listed.'
                     : undefined
                 }
                 disableClearable
@@ -383,18 +383,31 @@ export const CreateCluster = () => {
             </StyledDocsLinkContainer>
           </StyledFieldWithDocsStack>
           <Divider sx={{ marginTop: 4 }} />
-          <Autocomplete
-            onChange={(_, selected) => {
-              setVersion(selected?.value);
-            }}
-            disableClearable={!!version}
-            errorText={errorMap.k8s_version}
-            label="Kubernetes Version"
-            loading={isLoadingVersions}
-            options={versions}
-            placeholder={' '}
-            value={versions.find((v) => v.value === version) ?? null}
-          />
+          <StyledFieldWithDocsStack>
+            <Stack>
+              <Autocomplete
+                onChange={(_, selected) => {
+                  setVersion(selected?.value);
+                }}
+                disableClearable={!!version}
+                errorText={errorMap.k8s_version}
+                label="Kubernetes Version"
+                loading={isLoadingVersions}
+                options={versions}
+                placeholder={' '}
+                sx={{ minWidth: 416 }}
+                value={versions.find((v) => v.value === version) ?? null}
+              />
+            </Stack>
+            <StyledDocsLinkContainer
+              sx={(theme) => ({ marginTop: theme.spacing(2) })}
+            >
+              <DocsLink
+                href="https://techdocs.akamai.com/cloud-computing/docs/lke-versioning-and-life-cycle-policy"
+                label="Kubernetes Versions"
+              />
+            </StyledDocsLinkContainer>
+          </StyledFieldWithDocsStack>
           {showAPL && (
             <>
               <Divider sx={{ marginTop: 4 }} />
