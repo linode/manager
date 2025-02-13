@@ -45,6 +45,7 @@ import {
   invoiceFactory,
   invoiceItemFactory,
   kubeEndpointFactory,
+  kubeLinodeFactory,
   kubernetesAPIResponse,
   kubernetesVersionFactory,
   linodeConfigFactory,
@@ -849,9 +850,11 @@ export const handlers = [
     const unencryptedPools = nodePoolFactory.buildList(5, {
       disk_encryption: 'disabled',
     });
-    nodePoolFactory.resetSequenceNumber();
+    const paginatedPool = nodePoolFactory.build({
+      nodes: kubeLinodeFactory.buildList(26),
+    });
     return HttpResponse.json(
-      makeResourcePage([...encryptedPools, ...unencryptedPools])
+      makeResourcePage([...encryptedPools, ...unencryptedPools, paginatedPool])
     );
   }),
   http.get('*/lke/clusters/*/api-endpoints', async () => {
@@ -2476,6 +2479,9 @@ export const handlers = [
     return HttpResponse.json(
       makeResourcePage(notificationChannelFactory.buildList(3))
     );
+  }),
+  http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
+    return HttpResponse.json(alertFactory.build());
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {

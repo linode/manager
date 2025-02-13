@@ -108,7 +108,7 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
     terraformConfig += `  backups_enabled = ${config.backups_enabled}\n`;
   }
 
-  terraformConfig += `}\n`;
+  terraformConfig += `}`;
 
   return terraformConfig;
 }
