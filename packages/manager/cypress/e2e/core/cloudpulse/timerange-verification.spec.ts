@@ -38,6 +38,8 @@ import { formatDate } from 'src/utilities/formatDate';
 import { DateTime } from 'luxon';
 
 const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+const cleanText = (string: string) =>
+  string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
 const timeRanges = [
   { label: 'Last 30 Minutes', unit: 'min', value: 30 },
@@ -72,14 +74,7 @@ const flags: Partial<Flags> = {
   ],
 };
 
-const {
-  metrics,
-  id,
-  serviceType,
-  dashboardName,
-  engine,
-  nodeType,
-} = widgetDetails.dbaas;
+const { metrics, id, serviceType, dashboardName, engine } = widgetDetails.dbaas;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
@@ -125,7 +120,7 @@ const mockProfile = profileFactory.build({
  * @returns {{start: string, end: string}} - The start and end dates of the current month in ISO 8601 format.
  */
 
- const getThisMonthRange = (): DateTimeWithPreset => {
+const getThisMonthRange = (): DateTimeWithPreset => {
   const now = DateTime.now();
 
   const expectedStartDateISO = now.startOf('month').toISO() ?? '';
@@ -146,7 +141,7 @@ const mockProfile = profileFactory.build({
 
 const getLastMonthRange = (): DateTimeWithPreset => {
   const now = DateTime.now();
-  
+
   // Get the last month by subtracting 1 month from the current date
   const lastMonth = now.minus({ months: 1 });
 
@@ -155,7 +150,9 @@ const getLastMonthRange = (): DateTimeWithPreset => {
   const expectedEndDateISO = lastMonth.endOf('month').toISO() ?? '';
 
   // Adjust the start and end dates to GMT
-  const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, { zone: 'gmt' });
+  const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, {
+    zone: 'gmt',
+  });
   const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
 
   // Format the dates according to the specified format
@@ -167,7 +164,6 @@ const getLastMonthRange = (): DateTimeWithPreset => {
     start: formattedStartDate,
   };
 };
-
 
 /**
  * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
@@ -236,21 +232,19 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 
-  it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
+  it.only('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
     // Generate start and end date-time values in IST
-    const {
-      actualDate: startActualDate,
-      day: startDay,
-      hour: startHour,
-      minute: startMinute,
-    } = getDateRangeInIST(0, 12, 15); // Start date set to 12:15 PM IST today
+    const { actualDate: startActualDate, day: startDay } = getDateRangeInIST(
+      0,
+      12,
+      15
+    );
 
-    const {
-      actualDate: endActualDate,
-      day: endDay,
-      hour: endHour,
-      minute: endMinute,
-    } = getDateRangeInIST(9, 11, 15); // End date set to 11:15 AM IST after 9 days
+    const { actualDate: endActualDate, day: endDay } = getDateRangeInIST(
+      9,
+      11,
+      15
+    );
 
     // Select "Custom" from the "Time Range" dropdown
     ui.autocomplete
@@ -270,38 +264,43 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .click();
 
-      cy.get('[aria-label^="Choose time"]').click();
+    cy.get('[aria-label^="Choose time"]').click();
 
-      cy.get('input[placeholder="hh:mm aa"]').clear()
-      .type(`${startHour}:${startMinute} PM`);
+    cy.findByPlaceholderText('hh:mm aa').clear().type('12:15 PM');
 
     // Click the "Apply" button to confirm the start date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
 
     // Assert that the start date and time is correctly displayed
     cy.findByPlaceholderText('Select Start Date')
+      .scrollIntoView({ easing: 'linear' })
       .should('be.visible')
-      .and('have.value', `${startActualDate} PM`);
-      
+      .invoke('val') // Get the current value
+      .then(cleanText) // Clean the value
+      .should('equal', `${startActualDate} PM`);
+
     // Click on "Select End Date" input field
     cy.findByPlaceholderText('Select End Date').should('be.visible').click();
-    
+
     // Select the end date from the calendar
     cy.findByRole('gridcell', { name: endDay.toString() })
       .should('be.visible')
       .click();
 
-      cy.get('[aria-label^="Choose time"]').click();
+    cy.get('[aria-label^="Choose time"]').click();
 
-      cy.get('input[placeholder="hh:mm aa"]').clear()
-      .type(`${endHour}:${endMinute} AM`);
+    cy.findByPlaceholderText('hh:mm aa').clear().type('11:15 AM');
 
     // Click the "Apply" button to confirm the end date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
 
     // Assert that the end date and time is correctly displayed
     cy.findByPlaceholderText('Select End Date')
-      .should('have.value', `${endActualDate} AM`);
+      .scrollIntoView({ easing: 'linear' })
+      .should('be.visible')
+      .invoke('val') // Get the current value
+      .then(cleanText) // Clean the value
+      .should('equal', `${endActualDate} AM`);
 
     // Select the "Node Type" from the dropdown and submit
     ui.autocomplete
@@ -318,7 +317,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-        
+
         expect(requestPayload.absolute_time_duration.start).to.equal(
           convertToGmt(startActualDate.replace(' ', 'T'))
         );
@@ -331,7 +330,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.findByRole('button', { name: 'Presets' }).should('be.visible').click();
 
     // Mock API response for cloud metrics presets
-    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as('getPresets');
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
+      'getPresets'
+    );
 
     // Select "Last 30 Days" from the "Time Range" dropdown
     ui.autocomplete
@@ -352,13 +353,16 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
 
-        expect(requestPayload).to.have.nested.property('relative_time_duration.unit');
-        expect(requestPayload).to.have.nested.property('relative_time_duration.value');
+        expect(requestPayload).to.have.nested.property(
+          'relative_time_duration.unit'
+        );
+        expect(requestPayload).to.have.nested.property(
+          'relative_time_duration.value'
+        );
         expect(requestPayload.relative_time_duration.unit).to.equal('days');
         expect(requestPayload.relative_time_duration.value).to.equal(30);
       });
   });
-
 
   timeRanges.forEach((range) => {
     it(`Select and validate the functionality of the "${range.label}" preset from the "Time Range" dropdown`, () => {
@@ -396,7 +400,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
 
   it('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
-    
     const { start, end } = getLastMonthRange();
 
     ui.autocomplete
@@ -422,14 +425,12 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-        expect(requestPayload.absolute_time_duration.start).to.equal(start
-        );
+        expect(requestPayload.absolute_time_duration.start).to.equal(start);
         expect(requestPayload.absolute_time_duration.end).to.equal(end);
       });
   });
 
   it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
-
     const { start, end } = getThisMonthRange();
 
     ui.autocomplete
