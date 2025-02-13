@@ -10,6 +10,7 @@ export const StyledChip = styled(Chip, {
     '&:hover': {
       borderBottomRightRadius: props.onDelete && 0,
       borderTopRightRadius: props.onDelete && 0,
+      color: `${theme.color.white} !important`,
     },
     borderRadius: 4,
     font: theme.font.normal,
@@ -23,16 +24,12 @@ export const StyledChip = styled(Chip, {
     borderTopRightRadius: 0,
     padding: '7px 10px',
   },
-  '&:focus': {
-    ['& .StyledDeleteButton']: {
+  '&:focus, &:hover': {
+    ['& .MuiChip-deleteIcon']: {
       color: theme.color.tagIcon,
     },
-    backgroundColor: theme.color.tagButtonBg,
-  },
-  // Overrides MUI chip default styles so these appear as separate elements.
-  '&:hover': {
-    ['& .StyledDeleteButton']: {
-      color: theme.color.tagIcon,
+    ['& .MuiChip-label']: {
+      color: theme.color.tagButtonText,
     },
     backgroundColor: theme.color.tagButtonBg,
   },
@@ -76,15 +73,11 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
     height: 15,
     width: 15,
   },
-  '&:focus': {
-    backgroundColor: theme.bg.lightBlue1,
-    color: theme.color.black,
-  },
-  '&:hover': {
+  '&:focus, &:hover': {
     '& svg': {
-      color: theme.color.tagIconHover,
+      color: theme.color.white,
     },
-    backgroundColor: theme.color.buttonPrimaryHover,
+    backgroundColor: `${theme.color.buttonPrimaryHover} !important`,
   },
   borderBottomRightRadius: 3,
   borderLeft: `1px solid ${

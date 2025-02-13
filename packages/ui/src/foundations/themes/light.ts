@@ -88,7 +88,7 @@ export const color = {
   // TODO: `tagButton*` should be moved to component level.
   tagButtonBg: Color.Brand[10],
   tagButtonBgHover: Button.Primary.Hover.Background,
-  tagButtonText: Color.Brand[60],
+  tagButtonText: Color.Brand[90],
   tagButtonTextHover: Color.Neutrals.White,
   tagIcon: Color.Brand[60],
   tagIconHover: Button.Primary.Default.Text,
