@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
