@@ -112,7 +112,9 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
     );
 
-    expect(screen.getByTestId(circleProgress)).toBeDefined(); // the dashboards started to render
+    expect(screen.getAllByTestId(circleProgress)).toBeDefined(); // the dashboards started to render
+    expect(screen.getByTestId('preset-select')).toBeInTheDocument();
+    expect(screen.getByTestId('node-type-select')).toBeInTheDocument();
   });
 
   it('renders a CloudPulseDashboardWithFilters component with mandatory filter error for dbaas', () => {
