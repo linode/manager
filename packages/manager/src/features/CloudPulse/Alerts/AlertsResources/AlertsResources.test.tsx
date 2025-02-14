@@ -192,7 +192,7 @@ describe('AlertResources component tests', () => {
   it('should handle selection correctly and publish', async () => {
     const handleResourcesSelection = vi.fn();
 
-    const { getByTestId, queryByTestId } = renderWithTheme(
+    const { getByTestId, queryByTestId, getByText } = renderWithTheme(
       <AlertResources
         {...alertResourcesProp}
         alertResourceIds={['1', '2']}
@@ -251,11 +251,11 @@ describe('AlertResources component tests', () => {
     expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
 
     // click select all in notice and test
-    await userEvent.click(getByTestId('select_all_notice'));
+    await userEvent.click(getByText('Select All'));
     expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2', '3']);
 
     // click unselect all in notice and test
-    await userEvent.click(getByTestId('unselect_all_notice'));
+    await userEvent.click(getByText('Unselect All'));
     expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
   });
 });

@@ -1,6 +1,8 @@
-import { Notice, StyledLinkButton, Typography } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
+
+import { LinkButton } from 'src/components/LinkButton';
 
 import type { SelectUnselectAll } from './AlertsResources';
 
@@ -38,22 +40,26 @@ export const AlertsResourcesNotice = React.memo(
           {selectedResources} of {totalResources} resources are selected.
         </Typography>
         {isSelectAll && (
-          <StyledLinkButton
+          <LinkButton
+            onClick={() => {
+              handleSelectionChange('Select All');
+            }}
             aria-label="Select All Resources"
             data-testid="select_all_notice"
-            onClick={() => handleSelectionChange('Select All')}
           >
             Select All
-          </StyledLinkButton>
+          </LinkButton>
         )}
         {!isSelectAll && (
-          <StyledLinkButton
+          <LinkButton
+            onClick={() => {
+              handleSelectionChange('Unselect All');
+            }}
             aria-label="Unselect All Resources"
             data-testid="unselect_all_notice"
-            onClick={() => handleSelectionChange('Unselect All')}
           >
             Unselect All
-          </StyledLinkButton>
+          </LinkButton>
         )}
       </StyledNotice>
     );

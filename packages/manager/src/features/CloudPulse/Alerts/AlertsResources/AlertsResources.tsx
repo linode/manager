@@ -60,9 +60,19 @@ export interface AlertResourcesProp {
   handleResourcesSelection?: (resources: string[]) => void;
 
   /**
+   * Property to control the visibility of the title
+   */
+  hideLabel?: boolean;
+
+  /**
    * This controls whether we need to show the checkbox in case of editing the resources
    */
   isSelectionsNeeded?: boolean;
+
+  /**
+   * The element until which we need to scroll on pagination and order change
+   */
+  scrollElement?: HTMLDivElement | null;
 
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
@@ -79,7 +89,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertResourceIds,
     alertType,
     handleResourcesSelection,
+    hideLabel,
     isSelectionsNeeded,
+    scrollElement,
     serviceType,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
@@ -262,10 +274,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   if (isNoResources) {
     return (
       <Stack gap={2}>
-        <Typography ref={titleRef} variant="h2">
-          {alertLabel || 'Resources'}
-          {/* It can be either the passed alert label or just Resources */}
-        </Typography>
+        {!hideLabel && (
+          <Typography ref={titleRef} variant="h2">
+            {alertLabel || 'Resources'}
+            {/* It can be either the passed alert label or just Resources */}
+          </Typography>
+        )}
         <StyledPlaceholder
           icon={EntityIcon}
           subtitle="You can assign alerts during the resource creation process."
@@ -279,10 +293,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   return (
     <Stack gap={2}>
-      <Typography ref={titleRef} variant="h2">
-        {alertLabel || 'Resources'}
-        {/* It can be either the passed alert label or just Resources */}
-      </Typography>
+      {!hideLabel && (
+        <Typography ref={titleRef} variant="h2">
+          {alertLabel || 'Resources'}
+          {/* It can be either the passed alert label or just Resources */}
+        </Typography>
+      )}
       {showEditInformation && (
         <Typography ref={titleRef} variant="body1">
           You can enable or disable this system alert for each resource you have
@@ -326,24 +342,24 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               />
             </Grid>
           ))}
-          {isSelectionsNeeded && (
-            <Grid item md={4} xs={12}>
-              <Checkbox
-                sx={(theme) => ({
-                  svg: {
-                    backgroundColor: theme.tokens.color.Neutrals.White,
-                  },
-                })}
-                data-testid="show_selected_only"
-                disabled={!(selectedResources.length || selectedOnly)}
-                onClick={() => setSelectedOnly(!selectedOnly)}
-                text="Show Selected Only"
-                value="Show Selected"
-              />
-            </Grid>
-          )}
         </Grid>
-        {isSelectionsNeeded && !isDataLoadingError && (
+        {isSelectionsNeeded && (
+          <Grid item md={4} xs={12}>
+            <Checkbox
+              sx={(theme) => ({
+                svg: {
+                  backgroundColor: theme.tokens.color.Neutrals.White,
+                },
+              })}
+              data-testid="show_selected_only"
+              disabled={!(selectedResources.length || selectedOnly)}
+              onClick={() => setSelectedOnly(!selectedOnly)}
+              text="Show Selected Only"
+              value="Show Selected"
+            />
+          </Grid>
+        )}
+        {isSelectionsNeeded && !isDataLoadingError && resources?.length && (
           <Grid item xs={12}>
             <AlertsResourcesNotice
               handleSelectionChange={handleAllSelection}
@@ -354,11 +370,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         )}
         <Grid item xs={12}>
           <DisplayAlertResources
+            scrollToElement={() =>
+              scrollToElement(titleRef.current ?? scrollElement ?? null)
+            }
             filteredResources={filteredResources}
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
-            scrollToElement={() => scrollToElement(titleRef.current)}
             serviceType={serviceType}
           />
         </Grid>

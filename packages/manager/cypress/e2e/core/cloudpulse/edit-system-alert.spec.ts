@@ -128,13 +128,13 @@ describe('Integration Tests for Edit Alert', () => {
     // Select all resources
     cy.get('[data-qa-notice="true"]').within(() => {
       ui.button
-        .findByAttribute('aria-label', 'Select All Resources')
+        .findByTitle('Select All')
         .should('be.visible')
         .click();
 
       // Unselect button should be visible after clicking on Select All button
       ui.button
-        .findByAttribute('aria-label', 'Unselect All Resources')
+        .findByTitle('Unselect All')
         .should('be.visible')
         .should('be.enabled');
     });

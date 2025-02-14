@@ -12,11 +12,9 @@ import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
-import { EngineOption } from './GeneralInformation/EngineOption';
-import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
-import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
+import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
@@ -151,15 +149,8 @@ export const CreateAlertDefinition = () => {
             name="description"
           />
           <CloudPulseServiceSelect name="serviceType" />
-          {serviceTypeWatcher === 'dbaas' && <EngineOption name="engineType" />}
-          <CloudPulseRegionSelect name="region" />
-          <CloudPulseMultiResourceSelect
-            engine={useWatch({ control, name: 'engineType' })}
-            name="entity_ids"
-            region={useWatch({ control, name: 'region' })}
-            serviceType={serviceTypeWatcher}
-          />
           <CloudPulseAlertSeveritySelect name="severity" />
+          <CloudPulseModifyAlertResources name="entity_ids" />
           <MetricCriteriaField
             setMaxInterval={(interval: number) =>
               setMaxScrapeInterval(interval)

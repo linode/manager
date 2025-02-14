@@ -72,7 +72,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
         justifyContent="space-between"
         sx={{ marginBottom: 1 }}
       >
-        <Typography variant="h2">2. Criteria</Typography>
+        <Typography variant="h2">3. Criteria</Typography>
       </Box>
       <Stack spacing={2} sx={(theme) => ({ marginTop: theme.spacing(3) })}>
         {fields !== null &&
