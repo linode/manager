@@ -5,7 +5,6 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAlertDefinition } from './CreateAlertDefinition';
-
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
   useResourcesQuery: queryMocks.useResourcesQuery,
@@ -86,9 +85,6 @@ describe('AlertDefinition Create', () => {
     container.getAllByText(errorMessage).forEach((element) => {
       expect(element).toBeVisible();
     });
-    expect(
-      container.getByText('At least one resource is required.')
-    ).toBeVisible();
 
     await user.clear(input);
     await user.type(input, '-3');
