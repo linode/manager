@@ -335,7 +335,7 @@ describe('Tests for API error handling', () => {
       .findByAttribute('aria-label', 'Close')
       .should('be.visible')
       .click();
-    
+
     //  Select a node type from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')

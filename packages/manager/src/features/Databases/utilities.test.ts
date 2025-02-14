@@ -390,7 +390,13 @@ describe('toFormatedDate', () => {
   it('should handle newest full backup plus incremental option correctly in UTC', () => {
     const selectedDate = null;
     const today = DateTime.utc();
-    const mockTodayWithHours = `${today.toISODate()} ${today.hour}:00`;
+    const mockTodayWithHours = DateTime.fromObject({
+      day: today.day,
+      month: today.month,
+      year: today.year,
+      hour: today.hour,
+      minute: 0,
+    }).toFormat('yyyy-MM-dd HH:mm');
     const result = toFormatedDate(selectedDate, undefined);
     expect(result).toContain(mockTodayWithHours);
   });
