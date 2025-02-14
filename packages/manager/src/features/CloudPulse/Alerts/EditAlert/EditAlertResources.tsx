@@ -30,7 +30,7 @@ export const EditAlertResources = () => {
 
   const definitionLanding = '/monitor/alerts/definitions';
 
-  const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
+  const { data: alertDetails, isError, isLoading } = useAlertDefinitionQuery(
     alertId,
     serviceType
   );
@@ -90,7 +90,7 @@ export const EditAlertResources = () => {
     [alertDetails, selectedResources]
   );
 
-  if (isFetching) {
+  if (isLoading) {
     return getEditAlertMessage(<CircleProgress />, newPathname, overrides);
   }
 

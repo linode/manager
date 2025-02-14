@@ -6,6 +6,7 @@ import { AlertsTagFilter } from './AlertsTagsFilter';
 import type { AlertInstance } from './DisplayAlertResources';
 import type {
   AlertAdditionalFilterKey,
+  EngineType,
   ServiceColumns,
   ServiceFilterConfig,
 } from './types';
@@ -13,7 +14,7 @@ import type { AlertServiceType } from '@linode/api-v4';
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   '': [
-    // for empty case lets display resource and region
+    // Default fallback case when service type is empty, in the create flow, until we select a service type it will be empty
     {
       accessor: ({ label }) => label,
       label: 'Resource',
@@ -66,7 +67,7 @@ export const serviceToFiltersMap: Record<
   '' | AlertServiceType,
   ServiceFilterConfig[]
 > = {
-  '': [{ component: AlertsRegionFilter, filterKey: 'region' }], // default to only region for better user experience
+  '': [{ component: AlertsRegionFilter, filterKey: 'region' }], // Default to only region for better user experience in create alert flow
   dbaas: [
     { component: AlertsEngineTypeFilter, filterKey: 'engineType' },
     { component: AlertsRegionFilter, filterKey: 'region' },
@@ -76,7 +77,6 @@ export const serviceToFiltersMap: Record<
     { component: AlertsTagFilter, filterKey: 'tags' },
   ], // TODO: Add 'tags' filter in the future
 };
-
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
   'engineType',
   'tags',
@@ -89,3 +89,14 @@ export const alertAdditionalFilterKeyMap: Record<
   engineType: 'engineType',
   tags: 'tags',
 };
+
+export const engineOptions: EngineType[] = [
+  {
+    id: 'mysql',
+    label: 'MySQL',
+  },
+  {
+    id: 'postgresql',
+    label: 'PostgreSQL',
+  },
+];

@@ -25,7 +25,7 @@ export interface AlertInstance {
    */
   checked?: boolean;
   /**
-   * The engine associated with the instance in case of databases
+   * The region associated with the instance
    */
   engineType?: string;
   /**
@@ -146,7 +146,7 @@ export const DisplayAlertResources = React.memo(
       },
       [handleSelection]
     );
-    const columns = serviceTypeBasedColumns[serviceType ?? ''] ?? [];
+    const columns = serviceTypeBasedColumns[serviceType ?? ''];
     const colSpanCount = isSelectionsNeeded
       ? columns.length + 1
       : columns.length;

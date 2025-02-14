@@ -9,7 +9,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
-  getFilterProps,
+  getAlertResourceFilterProps,
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
@@ -21,7 +21,11 @@ import { serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
-import type { AlertAdditionalFilterKey, AlertFilterType } from './types';
+import type {
+  AlertAdditionalFilterKey,
+  AlertFilterKey,
+  AlertFilterType,
+} from './types';
 import type {
   AlertClass,
   AlertDefinitionType,
@@ -70,6 +74,8 @@ export interface AlertResourcesProp {
    */
   noSelectionErrorText?: string;
 
+  scrollElement?: HTMLDivElement | null;
+
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
@@ -88,6 +94,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     hideLabel,
     isSelectionsNeeded,
     noSelectionErrorText,
+    scrollElement,
     serviceType,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
@@ -95,22 +102,21 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     alertResourceIds
   );
+
+  const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const [additionalFilters, setAdditionalFilters] = React.useState<
     Record<AlertAdditionalFilterKey, AlertFilterType>
   >({ engineType: undefined, tags: undefined });
 
-  const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
-
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     if (serviceType !== 'dbaas') {
-      return undefined;
+      return undefined; // No x-filters needed for other serviceTypes
     }
 
-    // If the serviceType is 'dbaas', always include the platform filter
-    const platformFilter: Filter | undefined =
-      serviceType === 'dbaas' ? { platform: 'rdbms-default' } : undefined;
+    // Always include platform filter for 'dbaas'
+    const platformFilter: Filter = { platform: 'rdbms-default' };
 
-    // If alertType is not 'system' or alertClass is not defined, return only the platform filter (if applicable)
+    // If alertType is not 'system' or alertClass is not defined, return only platform filter
     if (alertType !== 'system' || !alertClass) {
       return platformFilter;
     }
@@ -122,20 +128,20 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       },
     };
 
-    // Combine platform and type filters
-    return platformFilter ? { ...platformFilter, ...typeFilter } : typeFilter;
+    // Combine both filters
+    return { ...platformFilter, ...typeFilter };
   }, [alertClass, alertType, serviceType]);
 
   const {
     data: regions,
     isError: isRegionsError,
-    isFetching: isRegionsFetching,
+    isLoading: isRegionsLoading,
   } = useRegionsQuery();
 
   const {
     data: resources,
     isError: isResourcesError,
-    isFetching: isResourcesFetching,
+    isLoading: isResourcesLoading,
   } = useResourcesQuery(
     Boolean(serviceType),
     serviceType,
@@ -190,15 +196,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     );
   };
 
-  const handleFilterChange = (
-    value: AlertFilterType,
-    filterKey: AlertAdditionalFilterKey
-  ) => {
-    setAdditionalFilters((prev) => ({
-      ...prev,
-      [filterKey]: value,
-    }));
-  };
+  const handleFilterChange = React.useCallback(
+    (value: AlertFilterType, filterKey: AlertFilterKey) => {
+      setAdditionalFilters((prev) => ({ ...prev, [filterKey]: value }));
+    },
+    []
+  );
+
   /**
    * Filters resources based on the provided resource IDs, search text, and filtered regions.
    */
@@ -269,7 +273,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     !isDataLoadingError && !isSelectionsNeeded && alertResourceIds.length === 0;
   const showEditInformation = isSelectionsNeeded && alertType === 'system';
 
-  if (isResourcesFetching || isRegionsFetching) {
+  if (isResourcesLoading || isRegionsLoading) {
     return <CircleProgress />;
   }
 
@@ -330,14 +334,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               value={searchText || ''}
             />
           </Grid>
-          {filtersToRender.map((
-            // render the filters needed based on service type
-            { component, filterKey },
-            index
-          ) => (
+          {/* Dynamically render service type based filters */}
+          {filtersToRender.map(({ component, filterKey }, index) => (
             <Grid item key={`${index}_${filterKey}`} md={4} xs={12}>
               <AlertResourcesFilterRenderer
-                componentProps={getFilterProps({
+                componentProps={getAlertResourceFilterProps({
                   filterKey,
                   handleFilterChange,
                   handleFilteredRegionsChange,
@@ -394,11 +395,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         )}
         <Grid item xs={12}>
           <DisplayAlertResources
+            scrollToElement={() =>
+              scrollToElement(titleRef.current ?? scrollElement ?? null)
+            }
             filteredResources={filteredResources}
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
-            scrollToElement={() => scrollToElement(titleRef.current)}
             serviceType={serviceType}
           />
         </Grid>

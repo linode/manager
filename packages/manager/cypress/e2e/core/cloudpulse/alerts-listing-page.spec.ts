@@ -2,7 +2,6 @@
  * @file Integration Tests for the CloudPulse Alerts Listing Page.
  * This file verifies the UI, functionality, and sorting/filtering of the CloudPulse Alerts Listing Page.
  */
-
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { accountFactory, alertFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -14,7 +13,8 @@ import {
 import { formatDate } from 'src/utilities/formatDate';
 import { Alert } from '@linode/api-v4';
 import { ui } from 'support/ui';
-import { statusMap } from 'support/constants/alert';
+import { alertStatuses } from 'src/features/CloudPulse/Alerts/constants';
+import { cloudPulseServiceMap } from 'support/constants/cloudpulse';
 
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 const mockAccount = accountFactory.build();
@@ -26,7 +26,7 @@ const mockAlerts = [
     status: 'enabled',
     type: 'system',
     created_by: 'user1',
-    updated: new Date(now.getTime() - 1 * 86400).toISOString(),
+    updated: new Date(now.getTime() - 86400).toISOString(),
   }),
   alertFactory.build({
     service_type: 'dbaas',
@@ -52,6 +52,21 @@ const mockAlerts = [
   }),
 ];
 
+/**
+ * @description
+ * This code validates the presence and correct text of the table headers
+ * inside the alert table. It checks if each header matches the expected
+ * values as defined in the `expectedHeaders` array.
+ *
+ * For each header, the code performs the following actions:
+ * 1. Locates the table with the `data-qa="alert-table"` attribute.
+ * 2. Iterates through the `expectedHeaders` array.
+ * 3. For each header, it ensures the table contains a column with the exact header text.
+ *
+ * @usage
+ * This check is typically used in UI tests to ensure that the table headers
+ * match the expected structure when displayed in the application.
+ */
 const expectedHeaders = [
   'Alert Name',
   'Service',
@@ -62,7 +77,6 @@ const expectedHeaders = [
 
 /**
  * Verifies sorting of a column in the alerts table.
- *
  * @param {string} header - The `data-qa-header` attribute of the column to sort.
  * @param {'ascending' | 'descending'} sortOrder - Expected sorting order.
  * @param {number[]} expectedValues - Expected values in sorted order.
@@ -76,30 +90,35 @@ const verifyTableSorting = (
     .findByText(header)
     .click()
     .should('have.attr', 'aria-sort', sortOrder);
+
   cy.get('[data-qa="alert-table"]').within(() => {
     cy.get('[data-qa-alert-cell]').should(($cells) => {
-      const actualValues = $cells
-        .toArray()
-        .map((cell) => parseInt(cell.getAttribute('data-qa-alert-cell')!, 10));
-      expect(actualValues).to.eql(expectedValues);
+      const actualOrder = $cells
+        .map((_, cell) =>
+          parseInt(cell.getAttribute('data-qa-alert-cell')!, 10)
+        )
+        .get();
+      expectedValues.forEach((value, index) => {
+        expect(actualOrder[index]).to.equal(value);
+      });
     });
   });
 };
+
 /**
- * Utility function to validate an alert's details.
- *
  * @param {Alert} alert - The alert object to validate.
  */
 const validateAlertDetails = (alert: Alert) => {
   const { id, service_type, status, label, updated, created_by } = alert;
 
   cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
-    cy.findByText(service_type)
+    cy.findByText(cloudPulseServiceMap[service_type])
       .should('be.visible')
-      .and('have.text', service_type);
-    cy.findByText(statusMap[status])
+      .and('have.text', cloudPulseServiceMap[service_type]);
+
+    cy.findByText(alertStatuses[status])
       .should('be.visible')
-      .and('have.text', statusMap[status]);
+      .and('have.text', alertStatuses[status]);
     cy.findByText(label)
       .should('be.visible')
       .and('have.text', label)
@@ -146,15 +165,15 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     ];
 
     sortCases.forEach(({ column, descending, ascending }) => {
-      // Verify ascending order
+      // Verify descending order
       verifyTableSorting(column, 'descending', descending);
 
-      // Verify descending order
+      // Verify ascending order
       verifyTableSorting(column, 'ascending', ascending);
     });
   });
 
-  it('should validate alert details on the listing page.', () => {
+  it('should validate UI elements and alert details', () => {
     // Validate navigation links and buttons
     cy.findByText('Alerts')
       .should('be.visible')
@@ -193,13 +212,13 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
 
     // Clear the previous search by alert name
     cy.get('[data-qa-filter="alert-search"]').within(() => {
-      cy.get('input[data-testid="textfield-input"]').clear();
+      cy.findByTestId('textfield-input').clear();
     });
 
     // Filter by alert service and validate the results
     cy.findByPlaceholderText('Select a Service')
       .should('be.visible')
-      .type(`${mockAlerts[0].service_type}{enter}`);
+      .type('Databases{enter}');
 
     cy.focused().click();
 

@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { CLIENT_ID } from 'src/constants';
@@ -13,8 +13,8 @@ import type { ApplicationState } from 'src/store';
 
 interface LogoutProps extends DispatchProps, StateProps {}
 
-export class Logout extends Component<LogoutProps> {
-  componentDidMount() {
+export const Logout = ({ dispatchLogout, token }: LogoutProps) => {
+  React.useEffect(() => {
     // Clear any user input (in the Support Drawer) since the user is manually logging out.
     clearUserInput();
 
@@ -23,13 +23,11 @@ export class Logout extends Component<LogoutProps> {
     const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
 
     // Split the token so we can get the token portion of the "<prefix> <token>" pair
-    this.props.dispatchLogout(clientID || '', this.props.token.split(' ')[1]);
-  }
+    dispatchLogout(clientID || '', token.split(' ')[1]);
+  }, [dispatchLogout, token]);
 
-  render() {
-    return null;
-  }
-}
+  return null;
+};
 
 interface StateProps {
   token: string;

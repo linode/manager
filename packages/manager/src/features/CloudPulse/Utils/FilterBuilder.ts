@@ -74,7 +74,7 @@ export const getTagsProperties = (
   } = props;
   return {
     defaultValue: preferences?.[TAGS],
-    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+    disabled: shouldDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
       dashboard,
@@ -146,7 +146,7 @@ export const getResourcesProperties = (
   } = props;
   return {
     defaultValue: preferences?.[RESOURCES],
-    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+    disabled: shouldDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
       dashboard,
@@ -180,7 +180,7 @@ export const getNodeTypeProperties = (
   return {
     database_ids: resource_ids,
     defaultValue: preferences?.[NODE_TYPE],
-    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+    disabled: shouldDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
       dashboard
@@ -234,7 +234,7 @@ export const getCustomSelectProperties = (
       dashboard
     ),
     defaultValue: preferences?.[filterKey],
-    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+    disabled: shouldDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
       dashboard
@@ -325,7 +325,7 @@ export const buildXFilter = (
  * @param dashboard - the actual selected dashboard
  * @returns boolean | undefined
  */
-export const checkIfWeNeedToDisableFilterByFilterKey = (
+export const shouldDisableFilterByFilterKey = (
   filterKey: string,
   dependentFilters: {
     [key: string]: FilterValueType | TimeDuration;

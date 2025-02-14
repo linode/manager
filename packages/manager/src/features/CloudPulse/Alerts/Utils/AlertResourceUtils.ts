@@ -35,6 +35,7 @@ interface FilterResourceProps {
    * Property to integrate and edit the resources associated with alerts
    */
   isAdditionOrDeletionNeeded?: boolean;
+
   /**
    * The map that holds the id of the region to Region object, helps in building the alert resources
    */
@@ -188,8 +189,8 @@ export const getFilteredResources = (
       return (
         matchesSearchText && // match the search text and match the region selected
         matchesFilteredRegions &&
-        (!selectedOnly || checked)
-      ); // if selected only, show only checked, else everything
+        (!selectedOnly || checked) // if selected only, show only checked, else everything
+      ); // match the search text and match the region selected
     })
     .filter((resource) => applyAdditionalFilter(resource, additionalFilters));
 };
@@ -293,7 +294,7 @@ export const isResourcesEqual = (
  *        Callback function for updating the selected regions.
  * @param {Region[]} props.regionOptions - The list of available regions for filtering.
  */
-export const getFilterProps = ({
+export const getAlertResourceFilterProps = ({
   filterKey,
   handleFilterChange,
   handleFilteredRegionsChange: handleSelectionChange,

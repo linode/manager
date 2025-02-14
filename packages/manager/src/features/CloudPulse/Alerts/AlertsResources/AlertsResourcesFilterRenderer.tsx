@@ -25,10 +25,9 @@ export const AlertResourcesFilterRenderer = ({
   component,
   componentProps,
 }: AlertResourcesFilterRendererProps) => {
-  if (!component) {
-    return <NullComponent />;
-  }
-  return React.createElement(component, {
-    ...componentProps,
-  });
+  return component ? (
+    React.createElement(component, componentProps)
+  ) : (
+    <NullComponent />
+  );
 };
