@@ -15,6 +15,7 @@ describe('AlertsResourcesFilterRenderer', () => {
       handleFilterChange: handleFilterChangeMock,
       handleFilteredRegionsChange: handleFilterChangeMock,
       regionOptions: [],
+      tagOptions: [],
     });
     const enginePropKeys = Object.keys(engineProps);
     expect(enginePropKeys.includes('handleFilterChange')).toBeTruthy();
@@ -36,6 +37,7 @@ describe('AlertsResourcesFilterRenderer', () => {
       handleFilterChange: handleFilterChangeMock,
       handleFilteredRegionsChange: handleFilterChangeMock,
       regionOptions: [],
+      tagOptions: [],
     });
     const regionPropKeys = Object.keys(regionProps);
     expect(regionPropKeys.includes('handleFilterChange')).toBeFalsy();
