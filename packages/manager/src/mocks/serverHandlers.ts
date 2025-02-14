@@ -2547,7 +2547,7 @@ export const handlers = [
     const response: ServiceTypesList = {
       data: [
         serviceTypesFactory.build({
-          label: 'Linode',
+          label: 'Linodes',
           service_type: 'linode',
         }),
         serviceTypesFactory.build({

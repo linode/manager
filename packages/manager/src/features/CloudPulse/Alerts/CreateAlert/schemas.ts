@@ -5,7 +5,7 @@ const fieldErrorMessage = 'This field is required.';
 
 export const CreateAlertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
-    serviceType: string().required(fieldErrorMessage), // HERE, i have removed region and engine type filter, upon confirmation and updated design from UX , will add and implement
+    serviceType: string().required(fieldErrorMessage),
   })
 );
 

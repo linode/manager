@@ -316,7 +316,7 @@ describe('Tests for API error handling', () => {
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
-     //  Select a region from the dropdown.
+    //  Select a region from the dropdown.
     ui.regionSelect.find().click();
     ui.regionSelect
       .findItemByRegionId(mockRegion.id, [mockRegion])
@@ -335,7 +335,7 @@ describe('Tests for API error handling', () => {
       .findByAttribute('aria-label', 'Close')
       .should('be.visible')
       .click();
-    
+
     //  Select a node type from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
