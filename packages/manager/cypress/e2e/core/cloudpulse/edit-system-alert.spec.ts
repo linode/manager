@@ -132,7 +132,7 @@ describe('Integration Tests for Edit Alert', () => {
         .should('be.visible')
         .click();
 
-      // Unselect button should be visible after clicking on Select All buttom
+      // Unselect button should be visible after clicking on Select All button
       ui.button
         .findByAttribute('aria-label', 'Unselect All Resources')
         .should('be.visible')
