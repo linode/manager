@@ -1,5 +1,4 @@
 import { Box, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -11,7 +10,7 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 export interface CloudPulseModifyAlertResourcesProp {
   /**
-   * name used for the component in the form
+   * Name used for the component in the form
    */
   name: FieldPathByValue<CreateAlertDefinitionForm, string[]>;
 }
@@ -19,45 +18,36 @@ export interface CloudPulseModifyAlertResourcesProp {
 export const CloudPulseModifyAlertResources = React.memo(
   (props: CloudPulseModifyAlertResourcesProp) => {
     const { name } = props;
-
-    const theme = useTheme();
-    const {
-      control,
-      formState,
-      setValue,
-    } = useFormContext<CreateAlertDefinitionForm>();
+    const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
     const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
 
     const handleResourcesSelection = (resourceIds: string[]) => {
-      setValue('entity_ids', resourceIds, {
+      setValue(name, resourceIds, {
         shouldTouch: true,
         shouldValidate: true,
       });
     };
 
     React.useEffect(() => {
-      if (!serviceTypeWatcher) {
-        setValue('entity_ids', [], { shouldValidate: true });
-      }
-    }, [serviceTypeWatcher, setValue]);
+      setValue(name, [], { shouldValidate: true });
+    }, [name, serviceTypeWatcher, setValue]);
 
     const titleRef = React.useRef<HTMLDivElement>(null);
 
     return (
       <Controller
-        render={({ field, fieldState }) => (
-          <Box mt={3}>
-            <Typography mb={3} ref={titleRef} variant="h2">
+        render={({ field }) => (
+          <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
+            <Typography ref={titleRef} variant="h2">
               2. Resources
             </Typography>
-            <Box sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}>
+            <Box
+              sx={(theme) => ({
+                ...getAlertBoxStyles(theme),
+                overflow: 'auto',
+              })}
+            >
               <AlertResources
-                noSelectionErrorText={
-                  (formState.isSubmitted || fieldState.isTouched) &&
-                  fieldState.error
-                    ? fieldState.error.message
-                    : undefined
-                }
                 alertResourceIds={field.value}
                 alertType="user"
                 handleResourcesSelection={handleResourcesSelection}

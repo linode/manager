@@ -32,10 +32,6 @@ export const createAlertDefinitionSchema = object({
   label: string().required(fieldErrorMessage),
   description: string().optional(),
   severity: number().oneOf([0, 1, 2, 3]).required(fieldErrorMessage),
-  entity_ids: array()
-    .of(string().required())
-    .min(1, 'At least one resource is required.')
-    .required(),
   rule_criteria: object({
     rules: array()
       .of(metricCriteria)
