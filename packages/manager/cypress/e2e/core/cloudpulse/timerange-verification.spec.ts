@@ -248,7 +248,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
   it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
     // Calculates start and end dates in GMT using `getDateRangeInGMT` for testing date and time ranges.
-      const {
+    const {
       actualDate: startActualDate,
       day: startDay,
       hour: startHour,
