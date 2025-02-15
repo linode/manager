@@ -28,14 +28,20 @@ import {
   accountFactory,
   alertDefinitionFactory,
   alertFactory,
+  cpuRulesFactory,
   dashboardMetricFactory,
   databaseFactory,
+  memoryRulesFactory,
   notificationChannelFactory,
   regionFactory,
+  triggerConditionFactory,
 } from 'src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetDatabases } from 'support/intercepts/databases';
+import {
+  CreateAlertDefinitionPayload,
+} from '@linode/api-v4';
 
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 
@@ -54,18 +60,24 @@ const databaseMock = databaseFactory.buildList(10, {
   platform: 'rdbms-default',
 });
 
-const notificationChannels = [
-  notificationChannelFactory.build({
-    channel_type: 'email',
-    type: 'custom',
-    label: 'channel-1',
-  }),
-];
+const notificationChannels = notificationChannelFactory.build({
+  channel_type: 'email',
+  type: 'custom',
+  label: 'channel-1',
+  id: 1,
+});
 
 const customAlertDefinition = alertDefinitionFactory.build({
   channel_ids: [1],
-  label: 'Custom Alert Label',
-  severity: 1,
+  label: 'Alert-1',
+  severity: 0,
+  description: 'My Custom Description',
+  entity_ids: ['2'],
+  tags: [''],
+  rule_criteria: {
+    rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
+  },
+  trigger_conditions: triggerConditionFactory.build(),
 });
 
 const metricDefinitions = metrics.map(({ title, name, unit }) =>
@@ -75,7 +87,19 @@ const metricDefinitions = metrics.map(({ title, name, unit }) =>
     unit,
   })
 );
-const mockAlerts = [alertFactory.build({ service_type: 'dbaas' })];
+const mockAlerts = alertFactory.build({
+  service_type: 'dbaas',
+  alert_channels: [{ id: 1 }],
+  label: 'Alert-1',
+  severity: 0,
+  description: 'My Custom Description',
+  entity_ids: ['2'],
+  rule_criteria: {
+    rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
+  },
+  trigger_conditions: triggerConditionFactory.build(),
+  tags: [''],
+});
 
 /**
  * Fills metric details in the form.
@@ -120,17 +144,59 @@ const fillMetricDetailsForSpecificRule = (
   });
 };
 
+/**
+ * Converts an object into a sorted JSON string for comparison.
+ *
+ * This function ensures that:
+ * - Object keys are sorted alphabetically.
+ * - Array elements are sorted in a consistent order.
+ * - Nested objects and arrays are recursively sorted.
+ * - `null` values remain unchanged.
+ *
+ * This is useful when comparing API request payloads, as it removes ordering inconsistencies.
+ *
+ * @param obj - The object to be sorted and converted to a string.
+ * @returns A JSON string representation of the sorted object.
+ */
+
+const sortAndStringify = (obj: CreateAlertDefinitionPayload): string => {
+  const sort = (input: unknown): unknown => {
+    if (input === null || typeof input !== 'object') return input;
+
+    if (Array.isArray(input)) {
+      return input
+        .map(sort)
+        .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
+    }
+
+    return Object.fromEntries(
+      Object.entries(input as Record<string, unknown>)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([key, value]) => [key, sort(value)])
+    );
+  };
+
+  return JSON.stringify(sort(obj));
+};
+
 describe('Create Alert', () => {
+  /*
+   * - Confirms that users can navigate from the Alert Listings page to the Create Alert page.
+   * - Confirms that users can enter alert details, select resources, and configure conditions.
+   * - Confirms that the UI allows adding notification channels and setting thresholds.
+   * - Confirms client-side validation when entering invalid metric values.
+   * - Confirms that API interactions work correctly and return the expected responses.
+   * - Confirms that the UI displays a success message after creating an alert.
+   */
   beforeEach(() => {
-    // Mock API responses
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
     mockGetCloudPulseServices([serviceType]);
     mockGetRegions([mockRegion]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetDatabases(databaseMock);
-    mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
-    mockGetAlertChannels(notificationChannels);
+    mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
+    mockGetAlertChannels([notificationChannels]);
     mockCreateAlertDefinition(serviceType, customAlertDefinition).as(
       'createAlertDefinition'
     );
@@ -154,16 +220,17 @@ describe('Create Alert', () => {
   });
 
   it('should successfully create a new alert', () => {
+
     cy.visitWithLogin('monitor/alerts/definitions/create');
 
     // Enter Name and Description
     cy.findByPlaceholderText('Enter Name')
       .should('be.visible')
-      .type(mockAlerts[0].label);
+      .type(customAlertDefinition.label);
 
     cy.findByPlaceholderText('Enter Description')
       .should('be.visible')
-      .type('My Description');
+      .type(customAlertDefinition.description ?? '');
 
     // Select Service
     ui.autocomplete.findByLabel('Service').should('be.visible').type('dbaas');
@@ -198,7 +265,7 @@ describe('Create Alert', () => {
       0,
       'CPU Utilization',
       'Average',
-      '>=',
+      '==',
       '1000'
     );
 
@@ -235,7 +302,13 @@ describe('Create Alert', () => {
     cy.findByText('User').should('be.visible').click();
 
     // Fill metric details for the second rule
-    fillMetricDetailsForSpecificRule(1, 'Memory Usage', 'Minimum', '==', '800');
+    fillMetricDetailsForSpecificRule(
+      1,
+      'Memory Usage',
+      'Average',
+      '==',
+      '1000'
+    );
 
     // Set evaluation period
     ui.autocomplete
@@ -293,49 +366,14 @@ describe('Create Alert', () => {
       .should('be.enabled')
       .click();
 
-    // Wait for the create alert API call to complete and verify the response
     cy.wait('@createAlertDefinition').then(({ request, response }) => {
       expect(response).to.have.property('statusCode', 200);
-
-      // Validate top-level properties
-      expect(request.body.label).to.equal(mockAlerts[0].label);
-      expect(request.body.description).to.equal('My Description');
-      expect(request.body.severity).to.equal(0);
-
-      // Validate rule criteria
-      expect(request.body.rule_criteria).to.have.property('rules');
-      expect(request.body.rule_criteria.rules).to.be.an('array').with.length(2);
-
-      // Validate first rule
-      const firstRule = request.body.rule_criteria.rules[0];
-      expect(firstRule.aggregate_function).to.equal('avg');
-      expect(firstRule.metric).to.equal('system_cpu_utilization_percent');
-      expect(firstRule.operator).to.equal('gte');
-      expect(firstRule.threshold).to.equal(1000);
-      expect(firstRule.dimension_filters[0].dimension_label).to.equal('state');
-      expect(firstRule.dimension_filters[0].operator).to.equal('eq');
-      expect(firstRule.dimension_filters[0].value).to.equal('user');
-
-      // Validate second rule
-      const secondRule = request.body.rule_criteria.rules[1];
-      expect(secondRule.aggregate_function).to.equal('min');
-      expect(secondRule.metric).to.equal('system_memory_usage_by_resource');
-      expect(secondRule.operator).to.equal('eq');
-      expect(secondRule.threshold).to.equal(800);
-      // Validate trigger conditions
-      const triggerConditions = request.body.trigger_conditions;
-      expect(triggerConditions.trigger_occurrences).to.equal(5);
-      expect(triggerConditions.evaluation_period_seconds).to.equal(300);
-      expect(triggerConditions.polling_interval_seconds).to.equal(300);
-      expect(triggerConditions.criteria_condition).to.equal('ALL');
-
-      // Validate entity IDs and channels
-      expect(request.body.entity_ids).to.include('2');
-      expect(request.body.channel_ids).to.include(1);
+      expect(sortAndStringify(request.body)).to.equal(
+        sortAndStringify(customAlertDefinition)
+      );
+      // Verify URL redirection and toast notification
+      cy.url().should('endWith', 'monitor/alerts/definitions');
+      ui.toast.assertMessage('Alert successfully created');
     });
-
-    // Verify URL redirection and toast notification
-    cy.url().should('endWith', 'monitor/alerts/definitions');
-    ui.toast.assertMessage('Alert successfully created');
   });
 });
