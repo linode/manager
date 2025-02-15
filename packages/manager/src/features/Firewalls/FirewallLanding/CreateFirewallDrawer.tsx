@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Box,
   FormControlLabel,
@@ -9,14 +10,13 @@ import {
   Typography,
 } from '@linode/ui';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
-import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Link } from 'src/components/Link';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
@@ -28,11 +28,6 @@ import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormStepEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
-import { getErrorMap } from 'src/utilities/errorUtils';
-import {
-  handleFieldErrors,
-  handleGeneralErrors,
-} from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
@@ -80,7 +75,7 @@ export const CreateFirewallDrawer = React.memo(
     const { createFlow, onClose, onFirewallCreated, open } = props;
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
-    const { mutateAsync } = useCreateFirewall();
+    const { mutateAsync: createFirewall } = useCreateFirewall();
     const { data } = useAllFirewallsQuery(open);
 
     const { enqueueSnackbar } = useSnackbar();
@@ -99,100 +94,54 @@ export const CreateFirewallDrawer = React.memo(
     };
 
     const {
-      errors,
-      handleBlur,
-      handleChange,
+      control,
+      formState: { errors, isDirty, isSubmitting },
       handleSubmit,
-      isSubmitting,
-      resetForm,
-      setFieldValue,
-      status,
-      values,
-    } = useFormik({
-      initialValues,
-      onSubmit(
-        values: CreateFirewallPayload,
-        { setErrors, setStatus, setSubmitting }
-      ) {
-        // Clear drawer error state
-        setStatus(undefined);
-        setErrors({});
-        const payload = { ...values };
-
-        if (
-          Array.isArray(payload.rules.inbound) &&
-          payload.rules.inbound.length === 0
-        ) {
-          payload.rules.inbound = undefined;
-        }
-
-        if (
-          Array.isArray(payload.rules.outbound) &&
-          payload.rules.outbound.length === 0
-        ) {
-          payload.rules.outbound = undefined;
-        }
-
-        mutateAsync(payload)
-          .then((response) => {
-            setSubmitting(false);
-            enqueueSnackbar(`Firewall ${payload.label} successfully created`, {
-              variant: 'success',
-            });
-
-            if (onFirewallCreated) {
-              onFirewallCreated(response);
-            }
-            onClose();
-
-            // Fire analytics form submit upon successful firewall creation from Linode Create flow.
-            if (isFromLinodeCreate) {
-              sendLinodeCreateFormStepEvent({
-                ...firewallFormEventOptions,
-                label: 'Create Firewall',
-              });
-            }
-          })
-          .catch((err) => {
-            const mapErrorToStatus = () =>
-              setStatus({ generalError: getErrorMap([], err).none });
-
-            setSubmitting(false);
-            handleFieldErrors(setErrors, err);
-            handleGeneralErrors(
-              mapErrorToStatus,
-              err,
-              'Error creating Firewall.'
-            );
-          });
-      },
-      validateOnBlur: false,
-      validateOnChange: false,
-      validationSchema: CreateFirewallSchema,
+      reset,
+      setError,
+    } = useForm<CreateFirewallPayload>({
+      defaultValues: initialValues,
+      mode: 'onBlur',
+      resolver: yupResolver<CreateFirewallPayload>(CreateFirewallSchema),
+      values: initialValues,
     });
+
+    const handleClose = () => {
+      onClose();
+      reset();
+    };
+
+    const createCustomFirewall = async (values: CreateFirewallPayload) => {
+      try {
+        const firewall = await createFirewall(values);
+        enqueueSnackbar(`Firewall ${values.label} successfully created`, {
+          variant: 'success',
+        });
+
+        if (onFirewallCreated) {
+          onFirewallCreated(firewall);
+        }
+        handleClose();
+        // Fire analytics form submit upon successful firewall creation from Linode Create flow.
+        if (isFromLinodeCreate) {
+          sendLinodeCreateFormStepEvent({
+            ...firewallFormEventOptions,
+            label: 'Create Firewall',
+          });
+        }
+      } catch (errors) {
+        for (const error of errors) {
+          if (error?.field === 'rules') {
+            setError('root', { message: error.reason });
+          } else {
+            setError(error?.field ?? 'root', { message: error.reason });
+          }
+        }
+      }
+    };
 
     const FirewallLabelText = `Assign services to the Firewall`;
     const FirewallHelperText = `Assign one or more services to this firewall. You can add services later if you want to customize your rules first.`;
-
-    React.useEffect(() => {
-      if (open) {
-        resetForm();
-      }
-    }, [open, resetForm]);
-
-    const handleInboundPolicyChange = React.useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
-        setFieldValue('rules.inbound_policy', value);
-      },
-      [setFieldValue]
-    );
-
-    const handleOutboundPolicyChange = React.useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
-        setFieldValue('rules.outbound_policy', value);
-      },
-      [setFieldValue]
-    );
 
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
@@ -253,82 +202,94 @@ export const CreateFirewallDrawer = React.memo(
       </Link>
     );
 
-    const generalError =
-      status?.generalError ||
-      // @ts-expect-error this form intentionally breaks Formik's error type
-      errors['rules.inbound'] ||
-      // @ts-expect-error this form intentionally breaks Formik's error type
-      errors['rules.outbound'] ||
-      errors.rules;
-
     return (
-      <Drawer onClose={onClose} open={open} title="Create Firewall">
-        <form onSubmit={handleSubmit}>
+      <Drawer onClose={handleClose} open={open} title="Create Firewall">
+        <form onSubmit={handleSubmit(createCustomFirewall)}>
           {userCannotAddFirewall ? (
             <Notice
               text="You don't have permissions to create a new Firewall. Please contact an account administrator for details."
               variant="error"
             />
           ) : null}
-          {generalError && (
-            <Notice data-qa-error key={status} variant="error">
-              <ErrorMessage
-                entity={{ type: 'firewall_id' }}
-                message={generalError ?? 'An unexpected error occurred'}
-              />
+          {errors.root?.message && (
+            <Notice spacingTop={8} variant="error">
+              {errors.root.message}
             </Notice>
           )}
-          <TextField
-            inputProps={{
-              autoFocus: true,
-            }}
-            aria-label="Label for your new Firewall"
-            disabled={userCannotAddFirewall}
-            errorText={errors.label}
-            label="Label"
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                inputProps={{
+                  autoFocus: true,
+                }}
+                aria-label="Label for your new Firewall"
+                disabled={userCannotAddFirewall}
+                errorText={fieldState.error?.message}
+                label="Label"
+                name="label"
+                onBlur={field.onBlur}
+                onChange={field.onChange}
+                required
+                value={field.value}
+              />
+            )}
+            control={control}
             name="label"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            required
-            value={values.label}
           />
-
           <Typography style={{ marginTop: 24 }}>
             <strong>Default Inbound Policy</strong>
           </Typography>
-          <RadioGroup
-            aria-label="default inbound policy "
-            data-testid="default-inbound-policy"
-            onChange={handleInboundPolicyChange}
-            row
-            value={values.rules.inbound_policy}
-          >
-            <FormControlLabel
-              control={<Radio />}
-              label="Accept"
-              value="ACCEPT"
-            />
-            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
-          </RadioGroup>
-
+          <Controller
+            render={({ field }) => (
+              <RadioGroup
+                aria-label="default inbound policy "
+                data-testid="default-inbound-policy"
+                onChange={field.onChange}
+                row
+                value={field.value}
+              >
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Accept"
+                  value="ACCEPT"
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Drop"
+                  value="DROP"
+                />
+              </RadioGroup>
+            )}
+            control={control}
+            name="rules.inbound_policy"
+          />
           <Typography style={{ marginTop: 16 }}>
             <strong>Default Outbound Policy</strong>
           </Typography>
-          <RadioGroup
-            aria-label="default outbound policy"
-            data-testid="default-outbound-policy"
-            onChange={handleOutboundPolicyChange}
-            row
-            value={values.rules.outbound_policy}
-          >
-            <FormControlLabel
-              control={<Radio />}
-              label="Accept"
-              value="ACCEPT"
-            />
-            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
-          </RadioGroup>
-
+          <Controller
+            render={({ field }) => (
+              <RadioGroup
+                aria-label="default outbound policy "
+                data-testid="default-outbound-policy"
+                onChange={field.onChange}
+                row
+                value={field.value}
+              >
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Accept"
+                  value="ACCEPT"
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Drop"
+                  value="DROP"
+                />
+              </RadioGroup>
+            )}
+            control={control}
+            name="rules.outbound_policy"
+          />
           <Box>
             <Typography
               sx={(theme) => ({
@@ -340,7 +301,7 @@ export const CreateFirewallDrawer = React.memo(
             </Typography>
             <Typography>
               {FirewallHelperText}
-              {deviceSelectGuidance ? ` ${deviceSelectGuidance}` : null}
+              {deviceSelectGuidance && ` ${deviceSelectGuidance}`}
             </Typography>
             <Typography
               sx={(theme) => ({
@@ -352,49 +313,55 @@ export const CreateFirewallDrawer = React.memo(
               {learnMoreLink}.
             </Typography>
           </Box>
-          <LinodeSelect
-            label={
-              createFlow === 'linode' ? LINODE_CREATE_FLOW_TEXT : 'Linodes'
-            }
-            onSelectionChange={(linodes) => {
-              setFieldValue(
-                'devices.linodes',
-                linodes.map((linode) => linode.id)
-              );
-            }}
-            // @ts-expect-error this form intentionally breaks Formik's error type
-            errorText={errors['devices.linodes']}
-            helperText={deviceSelectGuidance}
-            multiple
-            optionsFilter={linodeOptionsFilter}
-            value={values.devices?.linodes ?? null}
+          <Controller
+            render={({ field, fieldState }) => (
+              <LinodeSelect
+                label={
+                  createFlow === 'linode' ? LINODE_CREATE_FLOW_TEXT : 'Linodes'
+                }
+                onSelectionChange={(linodes) => {
+                  field.onChange(linodes.map((linode) => linode.id));
+                }}
+                errorText={fieldState.error?.message}
+                helperText={deviceSelectGuidance}
+                multiple
+                optionsFilter={linodeOptionsFilter}
+                value={field.value ?? null}
+              />
+            )}
+            control={control}
+            name="devices.linodes"
           />
-          <NodeBalancerSelect
-            label={
-              createFlow === 'nodebalancer'
-                ? NODEBALANCER_CREATE_FLOW_TEXT
-                : 'NodeBalancers'
-            }
-            onSelectionChange={(nodebalancers) => {
-              setFieldValue(
-                'devices.nodebalancers',
-                nodebalancers.map((nodebalancer) => nodebalancer.id)
-              );
-            }}
-            // @ts-expect-error this form intentionally breaks Formik's error type
-            errorText={errors['devices.nodebalancers']}
-            helperText={deviceSelectGuidance}
-            multiple
-            optionsFilter={nodebalancerOptionsFilter}
-            value={values.devices?.nodebalancers ?? null}
+          <Controller
+            render={({ field, fieldState }) => (
+              <NodeBalancerSelect
+                label={
+                  createFlow === 'nodebalancer'
+                    ? NODEBALANCER_CREATE_FLOW_TEXT
+                    : 'NodeBalancers'
+                }
+                onSelectionChange={(nodebalancers) => {
+                  field.onChange(
+                    nodebalancers.map((nodebalancer) => nodebalancer.id)
+                  );
+                }}
+                errorText={fieldState.error?.message}
+                helperText={deviceSelectGuidance}
+                multiple
+                optionsFilter={nodebalancerOptionsFilter}
+                value={field.value ?? null}
+              />
+            )}
+            control={control}
+            name="devices.nodebalancers"
           />
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              disabled: userCannotAddFirewall,
+              disabled: userCannotAddFirewall || !isDirty,
               label: 'Create Firewall',
               loading: isSubmitting,
-              type: 'submit',
+              onClick: handleSubmit(createCustomFirewall),
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
