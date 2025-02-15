@@ -39,9 +39,7 @@ import {
 import { mockGetRegions } from 'support/intercepts/regions';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetDatabases } from 'support/intercepts/databases';
-import {
-  CreateAlertDefinitionPayload,
-} from '@linode/api-v4';
+import { CreateAlertDefinitionPayload } from '@linode/api-v4';
 
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 
@@ -220,7 +218,6 @@ describe('Create Alert', () => {
   });
 
   it('should successfully create a new alert', () => {
-
     cy.visitWithLogin('monitor/alerts/definitions/create');
 
     // Enter Name and Description
