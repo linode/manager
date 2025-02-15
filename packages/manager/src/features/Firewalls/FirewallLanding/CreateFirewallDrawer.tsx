@@ -17,6 +17,7 @@ import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Link } from 'src/components/Link';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
@@ -213,7 +214,10 @@ export const CreateFirewallDrawer = React.memo(
           ) : null}
           {errors.root?.message && (
             <Notice spacingTop={8} variant="error">
-              {errors.root.message}
+              <ErrorMessage
+                entity={{ type: 'firewall_id' }}
+                message={errors.root.message}
+              />
             </Notice>
           )}
           <Controller
