@@ -10,7 +10,7 @@ export interface ColumnConfig<T> {
    * @param data - The data object of type T.
    * @returns The string representation of the column value.
    */
-  accessor: (data: T) => string | string[];
+  accessor: (data: T) => React.ReactNode;
 
   /**
    * The label or title of the column to be displayed in the table header.

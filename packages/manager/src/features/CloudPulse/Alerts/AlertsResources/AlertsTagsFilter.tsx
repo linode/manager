@@ -5,7 +5,7 @@ import type { AlertAdditionalFilterKey } from './types';
 
 export interface AlertsTagFilterProps {
   /**
-   * Callback to publish the selected engine type
+   * Callback to publish the selected tags
    */
   handleFilterChange: (
     tags: string[] | undefined,
@@ -13,7 +13,7 @@ export interface AlertsTagFilterProps {
   ) => void;
 
   /**
-   * Tag options
+   * The unique set of tags that needs to be displayed
    */
   tagOptions: string[];
 }
@@ -28,7 +28,7 @@ export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
 
   return (
     <Autocomplete
-      onChange={(e, tags) =>
+      onChange={(_e, tags) =>
         handleSelection(
           tags.length ? tags.map(({ id }) => id) : undefined,
           'tags'
