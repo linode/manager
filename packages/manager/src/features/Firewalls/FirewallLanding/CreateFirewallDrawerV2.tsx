@@ -10,6 +10,7 @@ import {
 } from '@linode/ui';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
+import { useForm, Controller} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -50,6 +51,7 @@ import type {
 } from '@linode/api-v4';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -97,6 +99,13 @@ export const CreateFirewallDrawer = React.memo(
       interaction: 'click',
       label: '',
     };
+
+    const form = useForm<CreateFirewallPayload>({
+      defaultValues: initialValues,
+      mode: 'onBlur',
+      resolver: yupResolver<CreateFirewallPayload>(CreateFirewallSchema),
+      values: initialValues,
+    });
 
     const {
       errors,
