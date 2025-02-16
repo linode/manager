@@ -42,6 +42,9 @@ export interface AlertInstance {
    */
   region: string;
 
+  /**
+   * The list of tags associated with the instance
+   */
   tags?: string[];
 }
 
