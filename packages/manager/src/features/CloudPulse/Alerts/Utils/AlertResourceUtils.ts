@@ -12,6 +12,7 @@ import type {
   AlertAdditionalFilterKey,
   AlertFilterKey,
   AlertFilterType,
+  AlertResourceFilterOptionProps,
 } from '../AlertsResources/types';
 import type { Region } from '@linode/api-v4';
 
@@ -85,6 +86,9 @@ interface FilterRendererProps {
    */
   regionOptions: Region[];
 
+  /**
+   * The tags to be displayed according to the resources associated with alerts
+   */
   tagOptions: string[];
 }
 
@@ -300,10 +304,7 @@ export const getAlertResourceFilterProps = ({
   handleFilteredRegionsChange: handleSelectionChange,
   regionOptions,
   tagOptions,
-}: FilterRendererProps):
-  | AlertsEngineOptionProps
-  | AlertsRegionProps
-  | AlertsTagFilterProps => {
+}: FilterRendererProps): AlertResourceFilterOptionProps => {
   if (filterKey === 'engineType') {
     return {
       handleFilterChange,
