@@ -305,19 +305,14 @@ export const getAlertResourceFilterProps = ({
   regionOptions,
   tagOptions,
 }: FilterRendererProps): AlertResourceFilterOptionProps => {
-  if (filterKey === 'engineType') {
-    return {
-      handleFilterChange,
-    };
-  } else if (filterKey === 'tags') {
-    return {
-      handleFilterChange,
-      tagOptions,
-    };
-  } else {
-    return {
-      handleSelectionChange,
-      regionOptions,
-    };
+  switch (filterKey) {
+    case 'engineType':
+      return { handleFilterChange };
+    case 'region':
+      return { handleSelectionChange, regionOptions };
+    case 'tags':
+      return { handleFilterChange, tagOptions };
+    default:
+      return { handleFilterChange };
   }
 };
