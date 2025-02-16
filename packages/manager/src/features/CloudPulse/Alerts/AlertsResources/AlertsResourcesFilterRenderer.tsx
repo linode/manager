@@ -2,14 +2,14 @@ import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
-import type { AlertResourceFilterOptionProps } from './types';
+import type { AlertResourceFiltersProps } from './types';
 import type { MemoExoticComponent } from 'react';
 
 export interface AlertResourcesFilterRendererProps {
   component?: MemoExoticComponent<
-    React.ComponentType<AlertResourceFilterOptionProps>
+    React.ComponentType<AlertResourceFiltersProps>
   >;
-  componentProps: AlertResourceFilterOptionProps;
+  componentProps: AlertResourceFiltersProps;
 }
 
 export const AlertResourcesFilterRenderer = ({

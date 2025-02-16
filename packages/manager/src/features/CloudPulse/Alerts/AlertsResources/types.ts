@@ -53,7 +53,7 @@ export type AlertFilterKey = 'engineType' | 'region' | 'tags';
 
 export type AlertAdditionalFilterKey = 'engineType' | 'tags'; // will be extended to have tags, plan etc.,
 
-export type AlertResourceFilterOptionProps =
+export type AlertResourceFiltersProps =
   | AlertsEngineOptionProps
   | AlertsRegionProps
   | AlertsTagFilterProps;
@@ -63,7 +63,7 @@ export type AlertResourceFilterOptionProps =
  */
 export interface ServiceFilterConfig {
   component: MemoExoticComponent<
-    React.ComponentType<AlertResourceFilterOptionProps>
+    React.ComponentType<AlertResourceFiltersProps>
   >;
   filterKey: AlertFilterKey;
 }
