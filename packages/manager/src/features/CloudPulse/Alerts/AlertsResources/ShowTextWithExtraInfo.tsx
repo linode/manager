@@ -4,6 +4,9 @@ import React from 'react';
 import NullComponent from 'src/components/NullComponent';
 
 export interface TextWithInfoProp {
+  /**
+   * The list of texts that needs to be displayed with chip and tooltip setup
+   */
   values?: string[];
 }
 

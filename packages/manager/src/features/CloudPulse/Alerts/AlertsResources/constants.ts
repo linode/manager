@@ -4,10 +4,10 @@ import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { AlertsTagFilter } from './AlertsTagsFilter';
-import { ShowTextWithExtraInfo } from './ShowExtraTagsInfo';
+import { ShowTextWithExtraInfo } from './ShowTextWithExtraInfo';
 
 import type { AlertInstance } from './DisplayAlertResources';
-import type { TextWithInfoProp } from './ShowExtraTagsInfo';
+import type { TextWithInfoProp } from './ShowTextWithExtraInfo';
 import type {
   AlertAdditionalFilterKey,
   EngineType,

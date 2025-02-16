@@ -39,7 +39,7 @@ export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
       }}
       autoHighlight
       clearOnBlur
-      label="Engine Type"
+      label="Tags"
       multiple
       options={builtTagOptions}
       placeholder="Select Tags"
