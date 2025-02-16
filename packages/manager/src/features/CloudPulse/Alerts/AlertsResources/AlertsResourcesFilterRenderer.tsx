@@ -8,13 +8,11 @@ import type { AlertsTagFilterProps } from './AlertsTagsFilter';
 import type { MemoExoticComponent } from 'react';
 
 export interface AlertResourcesFilterRendererProps {
-  component:
-    | MemoExoticComponent<
-        React.ComponentType<
-          AlertsEngineOptionProps | AlertsRegionProps | AlertsTagFilterProps
-        >
-      >
-    | undefined;
+  component?: MemoExoticComponent<
+    React.ComponentType<
+      AlertsEngineOptionProps | AlertsRegionProps | AlertsTagFilterProps
+    >
+  >;
   componentProps:
     | AlertsEngineOptionProps
     | AlertsRegionProps
