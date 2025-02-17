@@ -30,12 +30,12 @@ const triggerConditionValidation = object({
 const specialStartEndRegex = /^[^a-zA-Z0-9]/;
 export const createAlertDefinitionSchema = object({
   label: string()
+    .required(fieldErrorMessage)
     .matches(
       /^[^*#&+:<>"?@%{}\\\/]+$/,
       'Label cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
     )
-    .max(100, 'Label must be 100 characters or less.')
-    .required(fieldErrorMessage),
+    .max(100, 'Label must be 100 characters or less.'),
   description: string()
     .max(100, 'Description must be 100 characters or less.')
     .test(
