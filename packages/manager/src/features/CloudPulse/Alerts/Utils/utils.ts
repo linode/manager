@@ -5,12 +5,11 @@ import type {
   Alert,
   AlertDefinitionDimensionFilter,
   AlertDefinitionMetricCriteria,
+  AlertDefinitionType,
   AlertServiceType,
   DimensionFilter,
   EditAlertPayloadWithService,
   MetricCriteria,
-  AlertDefinitionMetricCriteria,
-  AlertDefinitionType,
   NotificationChannel,
   ServiceTypesList,
 } from '@linode/api-v4';
@@ -217,8 +216,10 @@ export const convertAlertDefinitionValues = (
     tags: alert.tags,
     trigger_conditions: alert.trigger_conditions,
   };
+};
 
- /**
+/**
+ *
  * @param criterias list of metric criterias to be processed
  * @returns list of metric criterias in processed form
  */
