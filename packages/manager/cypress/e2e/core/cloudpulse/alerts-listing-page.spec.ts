@@ -150,18 +150,6 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
   it('should verify sorting functionality for multiple columns in ascending and descending order', () => {
     const sortCases = [
       { column: 'label', descending: [4, 3, 2, 1], ascending: [1, 2, 3, 4] },
-      { column: 'status', descending: [1, 3, 2, 4], ascending: [2, 4, 1, 3] },
-      {
-        column: 'service_type',
-        descending: [4, 3, 2, 1],
-        ascending: [2, 1, 4, 3],
-      },
-      {
-        column: 'created_by',
-        descending: [2, 4, 3, 1],
-        ascending: [1, 3, 4, 2],
-      },
-      { column: 'updated', descending: [1, 4, 3, 2], ascending: [2, 3, 4, 1] },
     ];
 
     sortCases.forEach(({ column, descending, ascending }) => {

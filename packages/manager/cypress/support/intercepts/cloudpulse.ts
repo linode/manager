@@ -351,7 +351,6 @@ export const mockGetAlertChannels = (
  *
  * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted request.
  */
-
 export const mockCreateAlertDefinition = (
   serviceType: string,
   createAlertRequest: CreateAlertDefinitionPayload
@@ -389,5 +388,105 @@ export const mockUpdateAlertDefinitions = (
     'PUT',
     apiMatcher(`/monitor/services/${serviceType}/alert-definitions/${id}`),
     makeResponse(alert)
+  );
+};
+/**
+ * Mocks the API response for retrieving alert definitions in the monitoring service.
+ * This function intercepts a `GET` request to fetch a list of alert definitions for a specific
+ * service type and returns a mock response, simulating the behavior of the real API.
+ *
+ * The mock response allows the test to simulate the scenario where the system is retrieving
+ * the alert definitions without actually calling the backend API.
+ *
+ * @param {string} serviceType - The type of service (e.g., "dbaas", "web") for which the alert
+ *                               definitions are being retrieved. This value is part of the URL in the request.
+ * @param {Alert[]} alert - An array of `Alert` objects that will be returned as the mock response.
+ *                          These objects represent the alert definitions being fetched.
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted
+ *                                      `GET` request and the mock response, allowing subsequent
+ *                                      Cypress commands to be chained.
+ */
+
+export const mockGetAlertDefinition = (
+  serviceType: string,
+  alert: Alert[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/monitor/services/${serviceType}/alert-definitions`),
+    paginateResponse(alert)
+  );
+};
+
+/**
+ * Mocks the API response for adding an entity to an alert definition in the monitoring service.
+ * This function intercepts a 'POST' request to associate a specific entity with an alert definition
+ * and returns a mock response, simulating the behavior of the real API.
+ *
+ * The mock response simulates the scenario where the system is successfully associating the
+ * entity with the alert definition without actually calling the backend API.
+ *
+ * @param {string} serviceType - The type of service (e.g., "dbaas", "Linocde") where the alert
+ *                               definition is being added. This value is part of the URL in the request.
+ * @param {string} entityId - The unique identifier of the entity being associated with the alert
+ *                            definition. This ID is part of the URL in the request.
+ * @param {Object} data - The data object containing the `alert-definition-id` being added to the entity.
+ *                        This object contains the alert definition that will be associated with the entity.
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted
+ *                                      'POST' request and the mock response, allowing subsequent
+ *                                      Cypress commands to be chained.
+ */
+
+export const mockAddEntityToAlert = (
+  serviceType: string,
+  entityId: string,
+  data: { 'alert-definition-id': number }
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(
+      `/monitor/service/${serviceType}/entity/${entityId}/alert-definition`
+    ),
+    paginateResponse(data)
+  );
+};
+
+/**
+ * Mocks the API response for adding an entity to an alert definition in the monitoring service.
+ * This function intercepts a 'DELETE' request to associate a specific entity with an alert definition
+ * and returns a mock response, simulating the behavior of the real API.
+ *
+ * The mock response simulates the scenario where the system is successfully associating the
+ * entity with the alert definition without actually calling the backend API.
+ *
+ * @param {string} serviceType - The type of service (e.g., "dbaas", "Linode") where the alert
+ *                               definition is being added. This value is part of the URL in the request.
+ * @param {string} entityId - The unique identifier of the entity being associated with the alert
+ *                            definition. This ID is part of the URL in the request.
+ *
+ * @param {number} alertId - The unique identifier of the alert definition from which the entity
+ *                           is being removed. This ID is part of the URL in the request.
+ *
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object that represents the intercepted
+ *                                      'DELETE' request and the mock response, allowing subsequent
+ *                                      Cypress commands to be chained.
+ */
+
+export const mockDeleteEntityFromAlert = (
+  serviceType: string,
+  entityId: string,
+  id: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(
+      `/monitor/service/${serviceType}/entity/${entityId}/alert-definition/${id}`
+    ),
+    {
+      statusCode: 200,
+    }
   );
 };
