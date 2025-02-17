@@ -27,10 +27,25 @@ const triggerConditionValidation = object({
     .positive("The value can't be 0.")
     .typeError(fieldErrorMessage),
 });
-
+const specialStartEndRegex = /^[^a-zA-Z0-9]/;
 export const createAlertDefinitionSchema = object({
-  label: string().required(fieldErrorMessage),
-  description: string().optional(),
+  label: string()
+    .matches(
+      /^[^*#&+:<>"?@%{}\\\/]+$/,
+      'Label cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
+    )
+    .max(100, 'Label must be 100 characters or less.')
+    .required(fieldErrorMessage),
+  description: string()
+    .max(100, 'Description must be 100 characters or less.')
+    .test(
+      'no-special-start-end',
+      'Description cannot start or end with a special character.',
+      (value) => {
+        return !specialStartEndRegex.test(value!);
+      }
+    )
+    .optional(),
   severity: number().oneOf([0, 1, 2, 3]).required(fieldErrorMessage),
   entity_ids: array()
     .of(string().required())
