@@ -15,8 +15,8 @@ export const DatabaseMigrationInfoBanner = () => {
         Legacy clusters decommission
       </Typography>
       <Typography lineHeight="20px">
-        Legacy database clusters will only be available until the end of 2025.
-        At that time, we’ll migrate your clusters to the new solution. For
+        Legacy database clusters will only be available until the end of June
+        2025. At that time, we’ll migrate your clusters to the new solution. For
         questions regarding the new database clusters or the migration,{' '}
         <SupportLink entity={{ type: 'database_id' }} text="contact support" />.
       </Typography>

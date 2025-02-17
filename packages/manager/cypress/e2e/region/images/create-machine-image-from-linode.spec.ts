@@ -42,16 +42,16 @@ describe('Capture Machine Images', () => {
       ui.autocompletePopper.findByTitle(linode.label).click();
 
       // Select the Linode's disk.
-      cy.contains('Select a Disk').click().type(disk.label);
+      cy.contains('Select a Disk').click();
+      cy.focused().type(disk.label);
       ui.autocompletePopper.findByTitle(disk.label).click();
 
       // Specify a label and description for the captured image, click submit.
-      cy.findByLabelText('Label').should('be.visible').click().type(imageLabel);
+      cy.findByLabelText('Label').should('be.visible').click();
+      cy.focused().type(imageLabel);
 
-      cy.findByLabelText('Description')
-        .should('be.visible')
-        .click()
-        .type(imageDescription);
+      cy.findByLabelText('Description').should('be.visible').click();
+      cy.focused().type(imageDescription);
 
       ui.button
         .findByTitle('Create Image')

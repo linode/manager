@@ -1,6 +1,5 @@
 import { getActiveLongviewPlan } from '@linode/api-v4/lib/longview';
 import { Select } from '@linode/ui';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import {
@@ -38,7 +37,7 @@ export const TimeRangeSelect = React.memo((props: Props) => {
   React.useEffect(() => {
     getActiveLongviewPlan()
       .then((response) => {
-        setLongviewPro(!isEmpty(response));
+        setLongviewPro(Object.keys(response).length > 0);
       })
       .catch(); // Swallow errors, default to free tier time select options.
   }, []);

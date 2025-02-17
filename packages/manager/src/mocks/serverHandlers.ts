@@ -45,6 +45,7 @@ import {
   invoiceFactory,
   invoiceItemFactory,
   kubeEndpointFactory,
+  kubeLinodeFactory,
   kubernetesAPIResponse,
   kubernetesVersionFactory,
   linodeConfigFactory,
@@ -214,7 +215,33 @@ const entityTransfers = [
 
 const databases = [
   http.get('*/databases/instances', () => {
-    const databases = databaseInstanceFactory.buildList(9);
+    const database1 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 1,
+      label: 'database-instance-1',
+    });
+    const database2 = databaseInstanceFactory.build({
+      cluster_size: 2,
+      id: 2,
+      label: 'database-instance-2',
+    });
+    const database3 = databaseInstanceFactory.build({
+      cluster_size: 3,
+      id: 3,
+      label: 'database-instance-3',
+    });
+    const database4 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 4,
+      label: 'database-instance-4',
+    });
+    const database5 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 5,
+      label: 'database-instance-5',
+    });
+
+    const databases = [database1, database2, database3, database4, database5];
     return HttpResponse.json(makeResourcePage(databases));
   }),
 
@@ -849,9 +876,11 @@ export const handlers = [
     const unencryptedPools = nodePoolFactory.buildList(5, {
       disk_encryption: 'disabled',
     });
-    nodePoolFactory.resetSequenceNumber();
+    const paginatedPool = nodePoolFactory.build({
+      nodes: kubeLinodeFactory.buildList(26),
+    });
     return HttpResponse.json(
-      makeResourcePage([...encryptedPools, ...unencryptedPools])
+      makeResourcePage([...encryptedPools, ...unencryptedPools, paginatedPool])
     );
   }),
   http.get('*/lke/clusters/*/api-endpoints', async () => {
@@ -2484,7 +2513,7 @@ export const handlers = [
     const response: ServiceTypesList = {
       data: [
         serviceTypesFactory.build({
-          label: 'Linode',
+          label: 'Linodes',
           service_type: 'linode',
         }),
         serviceTypesFactory.build({
