@@ -1,8 +1,4 @@
-import { clone, lensPath, set } from 'ramda';
-
-import { pathOr } from 'src/utilities/pathOr';
-
-import type { StatWithDummyPoint } from '../request.types';
+import type { CPU, StatWithDummyPoint } from '../request.types';
 
 // This formatting is from Classic
 export const formatCPU = (n: number) => {
@@ -75,24 +71,24 @@ export const formatCPU = (n: number) => {
  *    ]
  * )
  */
-export const pathMaybeAddDataInThePast = <T extends {}>(
+export const pathMaybeAddDataInThePast = <T extends CPU<'' | 'yAsNull'>>(
   data: T,
   selectedStartTimeInSeconds: number,
-  pathsToAddDataPointTo: (number | string)[][]
+  pathsToAddDataPointTo: Array<keyof T>
 ): T => {
   /*
-    iterate over all the paths and maybe add a dummy data point to the
-    data set specified
+  iterate over all the paths and maybe add a dummy data point to the
+  data set specified
   */
-  let _data = clone(data);
+  const _data = structuredClone(data);
 
-  pathsToAddDataPointTo.forEach((eachPath) => {
-    const arrayOfStats = pathOr<StatWithDummyPoint[], T>([], eachPath, data);
+  pathsToAddDataPointTo.forEach((eachPath: keyof CPU) => {
+    const arrayOfStats = data[eachPath] ?? [];
     const updatedData = maybeAddPastData(
       arrayOfStats,
       selectedStartTimeInSeconds
     );
-    _data = set(lensPath(eachPath), updatedData, _data);
+    _data[eachPath] = updatedData;
   });
 
   return _data;
@@ -102,7 +98,7 @@ export const maybeAddPastData = (
   arrayOfStats: StatWithDummyPoint[],
   startTime: number
 ): StatWithDummyPoint[] => {
-  const _data = clone(arrayOfStats) as StatWithDummyPoint[];
+  const _data = structuredClone(arrayOfStats) as StatWithDummyPoint[];
   if ((arrayOfStats[0]?.x ?? 0) - startTime > 60 * 5) {
     _data.unshift({ x: startTime, y: null });
   }

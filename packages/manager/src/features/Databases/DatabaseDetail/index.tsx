@@ -41,6 +41,14 @@ const DatabaseMonitor = React.lazy(() =>
     default: DatabaseMonitor,
   }))
 );
+
+const DatabaseAlert = React.lazy(() =>
+  import('../../CloudPulse/Alerts/ContextualView/AlertsReusableComponent').then(
+    ({ AlertReusableComponent }) => ({
+      default: AlertReusableComponent,
+    })
+  )
+);
 export const DatabaseDetail = () => {
   const history = useHistory();
   const flags = useFlags();
@@ -104,6 +112,10 @@ export const DatabaseDetail = () => {
     {
       routeName: `/databases/${engine}/${id}/settings`,
       title: 'Settings',
+    },
+    {
+      routeName: `/databases/${engine}/${id}/alerts`,
+      title: `Alerts`,
     },
   ];
 
@@ -215,6 +227,7 @@ export const DatabaseDetail = () => {
               <DatabaseMonitor database={database} />
             </SafeTabPanel>
           ) : null}
+
           <SafeTabPanel index={backupsIndex}>
             <DatabaseBackups disabled={isDatabasesGrantReadOnly} />
           </SafeTabPanel>
@@ -226,10 +239,17 @@ export const DatabaseDetail = () => {
               />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel index={tabs.length - 1}>
+          <SafeTabPanel index={tabs.length - 2}>
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
+            />
+          </SafeTabPanel>
+          <SafeTabPanel index={5}>
+            <DatabaseAlert
+              entityId={String(database.id)}
+              entityName={database.label}
+              serviceType="dbaas"
             />
           </SafeTabPanel>
         </TabPanels>

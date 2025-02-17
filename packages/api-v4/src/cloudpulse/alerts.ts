@@ -15,6 +15,7 @@ import {
   NotificationChannel,
 } from './types';
 import { Params, Filter, ResourcePage } from '../types';
+import { API_ROOT } from 'src/constants';
 
 const bearer = 'Bearer vagrant';
 
@@ -64,6 +65,19 @@ export const getAlertDefinitionByServiceTypeAndId = (
     })
   );
 
+export const getAlertDefinitionByServiceType = (serviceType: string) =>
+  Request<ResourcePage<Alert>>(
+    setURL(
+      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/alert-definitions`
+    ),
+    setMethod('GET'),
+    setHeaders({
+      Authorization: bearer,
+    })
+  );
+
 export const editAlertDefinition = (
   data: EditAlertDefinitionPayload,
   serviceType: string,
@@ -90,4 +104,35 @@ export const getNotificationChannels = (params?: Params, filters?: Filter) =>
     setHeaders({
       Authorization: bearer,
     })
+  );
+
+export const addEntityToAlert = (
+  serviceType: string,
+  entityId: string,
+  data: { 'alert-definition-id': number }
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/monitor/service/${encodeURIComponent(
+        serviceType
+      )}/entity/${encodeURIComponent(entityId)}/alert-definition`
+    ),
+    setMethod('POST'),
+    setData(data)
+  );
+
+export const deleteEntityFromAlert = (
+  serviceType: string,
+  entityId: string,
+  alertId: number
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/monitor/service/${encodeURIComponent(
+        serviceType
+      )}/entity/${encodeURIComponent(
+        entityId
+      )}/alert-definition/${encodeURIComponent(alertId)}`
+    ),
+    setMethod('DELETE')
   );

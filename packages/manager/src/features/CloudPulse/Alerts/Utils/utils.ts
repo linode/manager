@@ -1,3 +1,5 @@
+import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
+
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type {
   Alert,
@@ -7,10 +9,35 @@ import type {
   DimensionFilter,
   EditAlertPayloadWithService,
   MetricCriteria,
+  AlertDefinitionMetricCriteria,
+  AlertDefinitionType,
   NotificationChannel,
   ServiceTypesList,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+
+export interface ProcessedCriteria {
+  /**
+   * Aggregation type for the metric criteria
+   */
+  aggregationType: string;
+  /**
+   * Label for the metric criteria
+   */
+  label: string;
+  /**
+   * Comparison operator for the metric criteria
+   */
+  operator: string;
+  /**
+   * Threshold value for the metric criteria
+   */
+  threshold: number;
+  /**
+   * Unit for the threshold value
+   */
+  unit: string;
+}
 
 interface AlertChipBorderProps {
   /**
@@ -190,4 +217,66 @@ export const convertAlertDefinitionValues = (
     tags: alert.tags,
     trigger_conditions: alert.trigger_conditions,
   };
+=======
+ *
+ * @param criterias list of metric criterias to be processed
+ * @returns list of metric criterias in processed form
+ */
+export const processMetricCriteria = (
+  criterias: AlertDefinitionMetricCriteria[]
+): ProcessedCriteria[] => {
+  return criterias
+    .map((criteria) => {
+      const { aggregate_function, label, operator, threshold, unit } = criteria;
+      return {
+        aggregationType: aggregationTypeMap[aggregate_function],
+        label,
+        operator: metricOperatorTypeMap[operator],
+        threshold,
+        unit,
+      };
+    })
+    .reduce<ProcessedCriteria[]>((previousValue, currentValue) => {
+      previousValue.push(currentValue);
+      return previousValue;
+    }, []);
+};
+
+/**
+ *
+ * @param alerts list of alerts to be filtered
+ * @param searchText text to be searched in alert name
+ * @param selectedType selecte alert type
+ * @returns list of filtered alerts based on searchText & selectedType
+ */
+export const filterAlertsByStatusAndType = (
+  alerts: Alert[] | undefined,
+  searchText: string,
+  selectedType: string | undefined
+): Alert[] => {
+  return (
+    alerts?.filter(({ label, status, type }) => {
+      return (
+        status === 'enabled' &&
+        (!selectedType || type === selectedType) &&
+        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
+      );
+    }) ?? []
+  );
+};
+
+/**
+ *
+ * @param alerts list of alerts
+ * @returns list of unique alert types in the alerts list in the form of json object
+ */
+export const convertAlertsToTypeSet = (
+  alerts: Alert[] | undefined
+): { label: AlertDefinitionType }[] => {
+  const types = new Set(alerts?.map(({ type }) => type) ?? []);
+
+  return Array.from(types).reduce(
+    (previousValue, type) => [...previousValue, { label: type }],
+    []
+  );
 };

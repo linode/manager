@@ -12,8 +12,6 @@ export const emptyLinodePage = {
 export const nonEmptyLinodePage = {
   /** Non-Empty Linode landing page Docs link. */
   docsLink: 'a[aria-label="Docs - link opens in a new tab"]',
-  /** Non-Empty Linode landing page Download CSV button. */
-  downloadCsvButton: 'span[data-testid="loadingIcon"]',
   /** Non-Empty Linode landing page Linodes label header. */
   linodesLabel: 'h1[data-qa-header="Linodes"]',
   /** Non-Empty Linode landing page Linodes table. */
