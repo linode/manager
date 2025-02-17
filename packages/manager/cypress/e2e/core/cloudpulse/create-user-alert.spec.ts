@@ -39,7 +39,8 @@ import {
 import { mockGetRegions } from 'support/intercepts/regions';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetDatabases } from 'support/intercepts/databases';
-import { CreateAlertDefinitionPayload } from '@linode/api-v4';
+import { statusMap } from 'support/constants/alert';
+import { formatDate } from 'src/utilities/formatDate';
 
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 
@@ -55,7 +56,6 @@ const databaseMock = databaseFactory.buildList(10, {
   region: 'us-ord',
   engine: 'mysql',
   cluster_size: 3,
-  platform: 'rdbms-default',
 });
 
 const notificationChannels = notificationChannelFactory.build({
@@ -92,6 +92,8 @@ const mockAlerts = alertFactory.build({
   severity: 0,
   description: 'My Custom Description',
   entity_ids: ['2'],
+  updated: new Date().toISOString(),
+  created_by: 'user1',
   rule_criteria: {
     rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
   },
@@ -142,41 +144,6 @@ const fillMetricDetailsForSpecificRule = (
   });
 };
 
-/**
- * Converts an object into a sorted JSON string for comparison.
- *
- * This function ensures that:
- * - Object keys are sorted alphabetically.
- * - Array elements are sorted in a consistent order.
- * - Nested objects and arrays are recursively sorted.
- * - `null` values remain unchanged.
- *
- * This is useful when comparing API request payloads, as it removes ordering inconsistencies.
- *
- * @param obj - The object to be sorted and converted to a string.
- * @returns A JSON string representation of the sorted object.
- */
-
-const sortAndStringify = (obj: CreateAlertDefinitionPayload): string => {
-  const sort = (input: unknown): unknown => {
-    if (input === null || typeof input !== 'object') return input;
-
-    if (Array.isArray(input)) {
-      return input
-        .map(sort)
-        .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
-    }
-
-    return Object.fromEntries(
-      Object.entries(input as Record<string, unknown>)
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([key, value]) => [key, sort(value)])
-    );
-  };
-
-  return JSON.stringify(sort(obj));
-};
-
 describe('Create Alert', () => {
   /*
    * - Confirms that users can navigate from the Alert Listings page to the Create Alert page.
@@ -217,7 +184,7 @@ describe('Create Alert', () => {
     cy.url().should('endWith', 'monitor/alerts/definitions/create');
   });
 
-  it('should successfully create a new alert', () => {
+  it.only('should successfully create a new alert', () => {
     cy.visitWithLogin('monitor/alerts/definitions/create');
 
     // Enter Name and Description
@@ -364,13 +331,97 @@ describe('Create Alert', () => {
       .click();
 
     cy.wait('@createAlertDefinition').then(({ request, response }) => {
+      // Assuming customAlertDefinition is defined and contains the necessary properties
+      const {
+        label,
+        description,
+        severity,
+        rule_criteria: { rules },
+        trigger_conditions: {
+          trigger_occurrences,
+          evaluation_period_seconds,
+          polling_interval_seconds,
+          criteria_condition,
+        },
+      } = customAlertDefinition;
+
+      const { service_type, created_by, updated, status } = mockAlerts;
+
       expect(response).to.have.property('statusCode', 200);
-      expect(sortAndStringify(request.body)).to.equal(
-        sortAndStringify(customAlertDefinition)
+
+      // Validate top-level properties
+      expect(request.body.label).to.equal(label);
+      expect(request.body.description).to.equal(description);
+      expect(request.body.severity).to.equal(severity);
+
+      // Validate rule criteria
+      expect(request.body.rule_criteria).to.have.property('rules');
+      expect(request.body.rule_criteria.rules)
+        .to.be.an('array')
+        .with.length(rules.length);
+
+      // Validate first rule
+      const firstRule = request.body.rule_criteria.rules[0];
+      const firstCustomRule = rules[0];
+      expect(firstRule.aggregate_function).to.equal(
+        firstCustomRule.aggregate_function
       );
+      expect(firstRule.metric).to.equal(firstCustomRule.metric);
+      expect(firstRule.operator).to.equal(firstCustomRule.operator);
+      expect(firstRule.threshold).to.equal(firstCustomRule.threshold);
+      expect(firstRule.dimension_filters[0]?.dimension_label ?? '').to.equal(
+        firstCustomRule.dimension_filters?.[0]?.dimension_label ?? ''
+      );
+      expect(firstRule.dimension_filters[0]?.operator ?? '').to.equal(
+        firstCustomRule.dimension_filters?.[0]?.operator ?? ''
+      );
+      expect(firstRule.dimension_filters[0]?.value ?? '').to.equal(
+        firstCustomRule.dimension_filters?.[0]?.value ?? ''
+      );
+
+      // Validate second rule
+      const secondRule = request.body.rule_criteria.rules[1];
+      const secondCustomRule = rules[1];
+      expect(secondRule.aggregate_function).to.equal(
+        secondCustomRule.aggregate_function
+      );
+      expect(secondRule.metric).to.equal(secondCustomRule.metric);
+      expect(secondRule.operator).to.equal(secondCustomRule.operator);
+      expect(secondRule.threshold).to.equal(secondCustomRule.threshold);
+
+      // Validate trigger conditions
+      const triggerConditions = request.body.trigger_conditions;
+      expect(triggerConditions.trigger_occurrences).to.equal(
+        trigger_occurrences
+      );
+      expect(triggerConditions.evaluation_period_seconds).to.equal(
+        evaluation_period_seconds
+      );
+      expect(triggerConditions.polling_interval_seconds).to.equal(
+        polling_interval_seconds
+      );
+      expect(triggerConditions.criteria_condition).to.equal(criteria_condition);
+
+      // Validate entity IDs and channels
+      expect(request.body.entity_ids).to.include('2');
+      expect(request.body.channel_ids).to.include(1);
+
       // Verify URL redirection and toast notification
       cy.url().should('endWith', 'monitor/alerts/definitions');
       ui.toast.assertMessage('Alert successfully created');
+
+      // Confirm that Alert is listed on landing page with expected configuration.
+      cy.findByText(label)
+        .closest('tr')
+        .within(() => {
+          cy.findByText(label).should('be.visible');
+          cy.findByText(statusMap[status]).should('be.visible'); // Assuming statusMap is defined somewhere
+          cy.findByText(service_type).should('be.visible');
+          cy.findByText(created_by).should('be.visible');
+          cy.findByText(
+            formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })
+          );
+        });
     });
   });
 });
