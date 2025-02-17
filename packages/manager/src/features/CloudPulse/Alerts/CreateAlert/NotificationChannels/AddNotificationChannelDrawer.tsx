@@ -90,12 +90,13 @@ export const AddNotificationChannelDrawer = (
     (template) => template.label === channelLabelWatcher
   );
 
+  const resetDrawer = () => {
+    handleCloseDrawer();
+    reset();
+  };
+
   return (
-    <Drawer
-      onClose={handleCloseDrawer}
-      open={open}
-      title="AddNotificationChannel"
-    >
+    <Drawer onClose={resetDrawer} open={open} title="AddNotificationChannel">
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
           <Box
@@ -204,7 +205,7 @@ export const AddNotificationChannelDrawer = (
             }}
             secondaryButtonProps={{
               label: 'Cancel',
-              onClick: handleCloseDrawer,
+              onClick: resetDrawer,
             }}
           />
         </form>

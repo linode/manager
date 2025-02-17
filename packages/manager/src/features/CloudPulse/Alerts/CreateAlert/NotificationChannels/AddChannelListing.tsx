@@ -35,11 +35,7 @@ interface NotificationChannelsProps {
 }
 export const AddChannelListing = (props: AddChannelListingProps) => {
   const { name } = props;
-  const {
-    control,
-    formState,
-    setValue,
-  } = useFormContext<CreateAlertDefinitionForm>();
+  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
   const [openAddNotification, setOpenAddNotification] = React.useState(false);
 
   const theme = useTheme();
@@ -73,7 +69,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
 
   const handleRemove = (index: number) => {
     const newList = notificationChannelWatcher.filter((_, i) => i !== index);
-    setValue(name, newList);
+    setValue(name, newList, { shouldValidate: true });
   };
 
   const handleOpenDrawer = () => {
@@ -85,7 +81,9 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
   };
 
   const handleAddNotification = (notificationId: number) => {
-    setValue(name, [...notificationChannelWatcher, notificationId]);
+    setValue(name, [...notificationChannelWatcher, notificationId], {
+      shouldValidate: true,
+    });
     handleCloseDrawer();
   };
 
@@ -134,7 +132,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
 
   return (
     <Controller
-      render={({ fieldState }) => (
+      render={({ fieldState, formState }) => (
         <>
           <Typography marginBottom={1} marginTop={3} variant="h2">
             4. Notification Channels
