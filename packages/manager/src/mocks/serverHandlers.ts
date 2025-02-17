@@ -2495,6 +2495,7 @@ export const handlers = [
               ],
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
+            type: pickRandom(['system', 'user']),
           })
         );
       }

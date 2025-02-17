@@ -8,10 +8,10 @@ import type { Alert } from '@linode/api-v4';
 
 export const alertDimensionsFactory = Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>(
   {
-    dimension_label: 'operating_system',
-    label: 'Operating System',
+    dimension_label: 'state',
+    label: 'State of memory',
     operator: 'eq',
-    value: 'Linux',
+    value: 'used',
   }
 );
 
@@ -19,11 +19,11 @@ export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricC
   {
     aggregate_function: 'avg',
     dimension_filters: alertDimensionsFactory.buildList(1),
-    label: 'CPU Usage',
-    metric: 'cpu_usage',
+    label: 'Memory Usage',
+    metric: 'system_memory_usage_by_resource',
     operator: 'eq',
     threshold: 60,
-    unit: 'Bytes',
+    unit: 'byte',
   }
 );
 
@@ -59,8 +59,8 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   tags: ['tag1', 'tag2'],
   trigger_conditions: {
     criteria_condition: 'ALL',
-    evaluation_period_seconds: 240,
-    polling_interval_seconds: 120,
+    evaluation_period_seconds: 900,
+    polling_interval_seconds: 300,
     trigger_occurrences: 3,
   },
 

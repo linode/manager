@@ -307,5 +307,21 @@ export type NotificationChannel =
   | NotificationChannelPagerDuty;
 
 export interface EditAlertDefinitionPayload {
-  entity_ids: string[];
+  label?: string;
+  tags?: string[];
+  description?: string;
+  entity_ids?: string[];
+  severity?: AlertSeverityType;
+  rule_criteria?: {
+    rules: MetricCriteria[];
+  };
+  trigger_conditions?: TriggerCondition;
+  channel_ids?: number[];
+  status?: AlertStatusType;
+}
+
+export interface EditAlertPayloadWithService
+  extends EditAlertDefinitionPayload {
+  serviceType: string;
+  alertId: number;
 }

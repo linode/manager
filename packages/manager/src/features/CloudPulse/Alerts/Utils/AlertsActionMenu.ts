@@ -26,5 +26,9 @@ export const getAlertTypeToActionsList = ({
       onClick: handleDetails,
       title: 'Show Details',
     },
+    {
+      onClick: handleEdit,
+      title: 'Edit',
+    },
   ],
 });
