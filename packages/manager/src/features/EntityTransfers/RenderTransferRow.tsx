@@ -1,4 +1,5 @@
 import { StyledLinkButton } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -19,7 +20,6 @@ import {
 import { TransfersPendingActionMenu } from './TransfersPendingActionMenu';
 
 import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
-import { capitalize } from '@linode/utilities';
 
 interface Props {
   created: string;

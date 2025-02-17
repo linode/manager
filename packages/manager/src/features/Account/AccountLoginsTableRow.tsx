@@ -24,6 +24,7 @@ const accessIconMap: Record<AccountLoginStatus, Status> = {
 const AccountLoginsTableRow = (props: AccountLogin) => {
   const { datetime, id, ip, restricted, status, username } = props;
   const { data: profile } = useProfile();
+
   return (
     <TableRow key={id}>
       <TableCell>

@@ -1,4 +1,5 @@
 import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import * as React from 'react';
 
 import Flag from 'src/assets/icons/flag.svg';
@@ -31,7 +32,6 @@ import {
 import type { LinodeHandlers } from '../LinodesLanding';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
-import { capitalizeAllWords } from '@linode/utilities';
 
 interface Props extends LinodeWithMaintenance {
   handlers: LinodeHandlers;

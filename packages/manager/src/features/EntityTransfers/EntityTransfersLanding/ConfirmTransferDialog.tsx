@@ -1,5 +1,6 @@
 import { acceptEntityTransfer } from '@linode/api-v4/lib/entity-transfers';
 import { Checkbox, CircleProgress, Notice } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -30,7 +31,6 @@ import {
 
 import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
 import type { APIError } from '@linode/api-v4/lib/types';
-import { capitalize } from '@linode/utilities';
 
 export interface ConfirmTransferDialogProps {
   onClose: () => void;

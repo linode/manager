@@ -1,4 +1,5 @@
 import { Button, Stack } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
@@ -14,7 +15,6 @@ import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getLinodeIconStatus } from '../../LinodesLanding/utils';
 
 import type { Linode } from '@linode/api-v4';
-import { capitalizeAllWords } from '@linode/utilities';
 
 interface Props {
   disabled?: boolean;
