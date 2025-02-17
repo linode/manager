@@ -44,7 +44,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
             </Link>
           </Typography>
         ) : (
-          <span>no roles assigned</span>
+          <span>No Roles Assigned</span>
         ),
     },
     {
@@ -110,15 +110,28 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
       <Grid columns={{ md: 6, sm: 4, xs: 2 }} container spacing={2}>
         {items.map((item) => (
           <Grid
-            key={item.label}
             size={{
               md: 2,
               sm: 2,
               xs: 2,
             }}
+            key={item.label}
           >
-            <Stack direction="row" spacing={1}>
-              <Typography sx={(theme) => ({ font: theme.font.bold })}>
+            <Stack
+              sx={{
+                '& > p:nth-of-type(2)': {
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                },
+              }}
+              direction="row"
+              spacing={1}
+            >
+              <Typography
+                sx={(theme) => ({
+                  font: theme.font.bold,
+                })}
+              >
                 {item.label}
               </Typography>
               {item.value}
