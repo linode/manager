@@ -62,7 +62,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await editAlert({ alertId, serviceType, ...values });
-      enqueueSnackbar('Alert successfully updated', {
+      enqueueSnackbar('Alert successfully updated.', {
         variant: 'success',
       });
       history.push(definitionLanding);

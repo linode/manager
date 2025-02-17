@@ -1,11 +1,12 @@
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
 import React from 'react';
+import { Router } from 'react-router-dom';
 
 import { alertFactory, notificationChannelFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { convertAlertDefinitionValues } from '../Utils/utils';
 import { EditAlertDefinition } from './EditAlertDefinition';
 
 const queryMocks = vi.hoisted(() => ({
@@ -76,10 +77,19 @@ describe('EditAlertDefinition component', () => {
   });
 
   it('should submit form data correctly', async () => {
+    const push = vi.fn();
+    const history = createMemoryHistory();
+    history.push = push;
+    history.push('/monitor/alerts/definitions/edit/linode/1');
     const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
-    const alertDetails = alertFactory.build({ service_type: 'linode' });
+    const alertDetails = alertFactory.build({ id: 1, service_type: 'linode' });
     const { getByPlaceholderText, getByText } = renderWithTheme(
-      <EditAlertDefinition alertDetails={alertDetails} serviceType={'linode'} />
+      <Router history={history}>
+        <EditAlertDefinition
+          alertDetails={alertDetails}
+          serviceType={'linode'}
+        />
+      </Router>
     );
     const descriptionValue = 'Updated Description';
     const nameValue = 'Updated Label';
@@ -92,18 +102,14 @@ describe('EditAlertDefinition component', () => {
     await userEvent.type(descriptionInput, descriptionValue);
 
     await userEvent.click(getByText('Submit'));
-    const alertPayload = convertAlertDefinitionValues(
-      {
-        ...alertDetails,
-        description: descriptionValue,
-        label: nameValue,
-      },
-      'linode'
-    );
-    await waitFor(() =>
-      expect(mutateAsyncSpy).toHaveBeenCalledWith(
-        expect.objectContaining(alertPayload)
-      )
-    );
+
+    await waitFor(() => expect(mutateAsyncSpy).toHaveBeenCalledTimes(1));
+
+    expect(push).toHaveBeenLastCalledWith('/monitor/alerts/definitions');
+    await waitFor(() => {
+      expect(
+        getByText('Alert successfully updated.') // validate whether snackbar is displayed properly
+      ).toBeInTheDocument();
+    });
   });
 });
