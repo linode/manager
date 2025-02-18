@@ -8,19 +8,37 @@ import type {
 } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
 
+export type CreateFirewallType = 'custom' | 'template';
+
 export interface CreateFirewallFormValues extends CreateFirewallPayload {
-  templateSlug?: '' | FirewallTemplateSlug;
+  createFirewallFrom?: CreateFirewallType;
+  templateSlug?: FirewallTemplateSlug;
 }
 
 export const createFirewallResolver = (): Resolver<CreateFirewallFormValues> => {
   const schema = CreateFirewallSchema;
   return async (values, _, options) => {
-    if (values.templateSlug) {
-      return { errors: {}, values };
+    // resolver for creating a firewall from a template
+    if (values.createFirewallFrom === 'template') {
+      if (!values.templateSlug) {
+        return {
+          errors: {
+            templateSlug: {
+              message: 'Please select a template to create a firewall from.',
+              type: 'validate',
+            },
+          },
+          values,
+        };
+      } else {
+        return { errors: {}, values };
+      }
     }
 
+    // resolver for creating a custom firewall
     const firewallPayload: CreateFirewallPayload = omitProps(values, [
       'templateSlug',
+      'createFirewallFrom',
     ]);
     const { errors } = await yupResolver(
       schema,

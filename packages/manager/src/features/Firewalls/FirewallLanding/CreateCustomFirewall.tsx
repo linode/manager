@@ -115,9 +115,6 @@ export const CreateCustomFirewall = (props: CustomFirewallProps) => {
       <Controller
         render={({ field, fieldState }) => (
           <TextField
-            inputProps={{
-              autoFocus: true,
-            }}
             aria-label="Label for your new Firewall"
             disabled={userCannotAddFirewall}
             errorText={fieldState.error?.message}

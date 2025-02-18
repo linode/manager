@@ -6,7 +6,7 @@ import type { CreateFirewallFormValues } from './formUtilities';
 import type { FirewallTemplateSlug } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 
-export interface TemplateFirewallProps {
+interface TemplateFirewallProps {
   userCannotAddFirewall: boolean;
 }
 
@@ -33,7 +33,7 @@ export const CreateTemplateFirewall = (props: TemplateFirewallProps) => {
         edited.
       </Typography>
       <Controller
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <Select
             onChange={(_, item) => {
               field.onChange(item.value);
@@ -44,6 +44,7 @@ export const CreateTemplateFirewall = (props: TemplateFirewallProps) => {
               ) ?? null
             }
             disabled={userCannotAddFirewall}
+            errorText={fieldState.error?.message}
             label="Firewall Template"
             options={firewallTemplateOptions}
             placeholder="Select a Template"
