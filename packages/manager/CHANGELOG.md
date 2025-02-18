@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 
 - Uptime not displaying in Longview ([#11667](https://github.com/linode/manager/pull/11667))
+- Inability to add LKE Node Pool Labels with underscore in key ([#11682](https://github.com/linode/manager/pull/11682))
 
 ## [2025-02-11] - v1.136.0
 
