@@ -9,4 +9,6 @@ export { default as RadioIconRadioed } from './radioRadioed.svg';
 export { default as ReloadIcon } from './reload.svg';
 export { default as ToggleOffIcon } from './toggleOff.svg';
 export { default as ToggleOnIcon } from './toggleOn.svg';
+export { default as VisibilityHideIcon } from './visibilityHide.svg';
+export { default as VisibilityShowIcon } from './visibilityShow.svg';
 export { default as WarningIcon } from './warning.svg';

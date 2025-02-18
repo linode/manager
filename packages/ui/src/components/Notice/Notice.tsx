@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { InfoIcon } from '../../assets/icons';
-
 import {
   CheckIcon,
   AlertIcon as ErrorIcon,
