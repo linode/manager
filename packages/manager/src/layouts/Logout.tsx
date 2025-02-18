@@ -14,9 +14,9 @@ export const Logout = () => {
     const authToken = getAuthToken().token;
 
     clearUserInput();
+    clearAuthToken();
     if (clientId && authToken) {
       revokeToken(clientId, authToken.split(' ')[1]);
-      clearAuthToken();
     }
     window.location.assign(getLoginUrl() + '/logout');
   }, []);
