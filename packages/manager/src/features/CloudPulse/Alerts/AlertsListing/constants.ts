@@ -1,3 +1,5 @@
+import type { AlertStatusType, AlertStatusUpdateType } from '@linode/api-v4';
+
 export const AlertListingTableLabelMap = [
   {
     colName: 'Alert Name',
@@ -20,3 +22,11 @@ export const AlertListingTableLabelMap = [
     label: 'updated',
   },
 ];
+
+export const statusToActionMap: Record<
+  AlertStatusType,
+  AlertStatusUpdateType
+> = {
+  disabled: 'Enable',
+  enabled: 'Disable',
+};
