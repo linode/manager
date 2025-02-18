@@ -156,16 +156,33 @@ export const KubeConfigDisplay = (props: Props) => {
 
   const downloadKubeConfig = async () => {
     try {
-      const { data } = await getKubeConfig();
-
-      if (data) {
-        downloadFile(`${clusterLabel}-kubeconfig.yaml`, data);
+      const queryResult = await getKubeConfig();
+      if (
+        ((queryResult.error as unknown) as Error)?.message ===
+        'KUBECONFIG_NOT_READY'
+      ) {
+        enqueueSnackbar(
+          'Your cluster is still provisioning. Please try again in a few minutes.',
+          { variant: 'info' }
+        );
+        return;
       }
+
+      if (queryResult.isError) {
+        throw queryResult.error;
+      }
+
+      if (!queryResult.data) {
+        throw new Error('No kubeconfig data available');
+      }
+
+      downloadFile(`${clusterLabel}-kubeconfig.yaml`, queryResult.data);
     } catch (error) {
-      const errorText = getAPIErrorOrDefault(
-        error,
-        'Unable to download your kubeconfig'
-      )[0].reason;
+      const errorText =
+        error instanceof Error
+          ? error.message
+          : getAPIErrorOrDefault(error, 'Unable to download your kubeconfig')[0]
+              .reason;
 
       enqueueSnackbar(errorText, { variant: 'error' });
     }
