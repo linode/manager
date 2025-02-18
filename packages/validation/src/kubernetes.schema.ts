@@ -93,7 +93,7 @@ export const kubernetesControlPlaneACLPayloadSchema = object().shape({
 const alphaNumericValidCharactersRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
 
 // DNS subdomain key (example.com/my-app)
-const dnsKeyRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-./]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
+const dnsKeyRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._/]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
 
 const MAX_DNS_KEY_TOTAL_LENGTH = 128;
 const MAX_DNS_KEY_SUFFIX_LENGTH = 62;

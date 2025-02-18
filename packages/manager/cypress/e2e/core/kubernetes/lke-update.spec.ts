@@ -1291,16 +1291,16 @@ describe('LKE cluster updates', () => {
     });
 
     it('can add labels and taints', () => {
-      const mockNewSimpleLabel = 'my-label-key: my-label-value';
-      const mockNewDNSLabel = 'my-label-key.io/app: my-label-value';
+      const mockNewSimpleLabel = 'my_label.-key: my_label.-value';
+      const mockNewDNSLabel = 'my_label-key.io/app: my_label.-value';
       const mockNewTaint: Taint = {
-        key: 'my-taint-key',
-        value: 'my-taint-value',
+        key: 'my_taint.-key',
+        value: 'my_taint.-value',
         effect: 'NoSchedule',
       };
       const mockNewDNSTaint: Taint = {
-        key: 'my-taint-key.io/app',
-        value: 'my-taint-value',
+        key: 'my_taint-key.io/app',
+        value: 'my_taint.-value',
         effect: 'NoSchedule',
       };
       const mockNodePoolUpdated = nodePoolFactory.build({
@@ -1309,8 +1309,8 @@ describe('LKE cluster updates', () => {
         nodes: mockNodes,
         taints: [mockNewTaint, mockNewDNSTaint],
         labels: {
-          'my-label-key': 'my-label-value',
-          'my-label-key.io/app': 'my-label-value',
+          'my_label-key': 'my_label.-value',
+          'my_label-key.io/app': 'my_label.-value',
         },
       });
 
