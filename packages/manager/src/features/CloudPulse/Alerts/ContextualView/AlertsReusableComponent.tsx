@@ -8,12 +8,14 @@ import {
   Tooltip,
   Typography,
 } from '@linode/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import InfoIcon from 'src/assets/icons/info.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/alerts';
+import { queryFactory } from 'src/queries/cloudpulse/queries';
 
 import { AlertContextualViewTableHeaderMap } from '../AlertsListing/constants';
 import {
@@ -42,6 +44,7 @@ interface AlertReusableComponentProps {
 }
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
+  const queryClient = useQueryClient();
   const { entityId, entityName, serviceType } = props;
   const {
     data: alerts,
@@ -58,6 +61,16 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   const filteredAlerts = React.useMemo(() => {
     return filterAlertsByStatusAndType(alerts, searchText, selectedType);
   }, [alerts, searchText, selectedType]);
+
+  // To remove the query key when the component is unmounted
+  React.useEffect(() => {
+    return () => {
+      queryClient.removeQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
+          .queryKey,
+      });
+    };
+  }, []);
 
   const history = useHistory();
 
