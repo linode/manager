@@ -9,9 +9,9 @@ import type { Alert } from '@linode/api-v4';
 export const alertDimensionsFactory = Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>(
   {
     dimension_label: 'state',
-    label: 'State of memory',
+    label: 'State of CPU',
     operator: 'eq',
-    value: 'used',
+    value: 'idle',
   }
 );
 
@@ -19,11 +19,11 @@ export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricC
   {
     aggregate_function: 'avg',
     dimension_filters: alertDimensionsFactory.buildList(1),
-    label: 'Memory Usage',
-    metric: 'system_memory_usage_by_resource',
+    label: 'CPU Usage',
+    metric: 'system_cpu_utilization_percent',
     operator: 'eq',
     threshold: 60,
-    unit: 'byte',
+    unit: 'Bytes',
   }
 );
 
@@ -44,14 +44,14 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   ],
   class: 'dedicated',
   created: new Date().toISOString(),
-  created_by: 'user1',
+  created_by: 'system',
   description: 'Test description',
   entity_ids: ['1', '2', '3'],
   has_more_resources: true,
   id: Factory.each((i) => i),
   label: Factory.each((id) => `Alert-${id}`),
   rule_criteria: {
-    rules: [],
+    rules: [alertRulesFactory.build({ dimension_filters: [] })],
   },
   service_type: 'linode',
   severity: 0,
@@ -59,12 +59,11 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   tags: ['tag1', 'tag2'],
   trigger_conditions: {
     criteria_condition: 'ALL',
-    evaluation_period_seconds: 900,
-    polling_interval_seconds: 300,
+    evaluation_period_seconds: 300,
+    polling_interval_seconds: 600,
     trigger_occurrences: 3,
   },
-
-  type: 'system',
+  type: 'user',
   updated: new Date().toISOString(),
   updated_by: 'user1',
 });

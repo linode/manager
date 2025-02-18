@@ -2448,10 +2448,12 @@ export const handlers = [
   ),
   http.get('*/monitor/alert-definitions', async () => {
     const customAlerts = alertFactory.buildList(10, {
+      created_by: 'user1',
       severity: 0,
       type: 'user',
     });
     const customAlertsWithServiceType = alertFactory.buildList(10, {
+      created_by: 'user1',
       service_type: 'dbaas',
       severity: 1,
       type: 'user',
@@ -2495,7 +2497,6 @@ export const handlers = [
               ],
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
-            type: pickRandom(['system', 'user']),
           })
         );
       }

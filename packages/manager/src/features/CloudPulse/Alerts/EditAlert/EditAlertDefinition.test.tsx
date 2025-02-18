@@ -33,17 +33,7 @@ beforeEach(() => {
 });
 
 const alertDetails = alertFactory.build({
-  rule_criteria: {
-    rules: [
-      {
-        aggregate_function: 'avg',
-        dimension_filters: [],
-        metric: 'cpu_utilization',
-        operator: 'gte',
-        unit: 'percent',
-      },
-    ],
-  },
+  id: 1,
   service_type: 'linode',
 });
 describe('EditAlertDefinition component', () => {
@@ -82,7 +72,6 @@ describe('EditAlertDefinition component', () => {
     history.push = push;
     history.push('/monitor/alerts/definitions/edit/linode/1');
     const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
-    const alertDetails = alertFactory.build({ id: 1, service_type: 'linode' });
     const { getByPlaceholderText, getByText } = renderWithTheme(
       <Router history={history}>
         <EditAlertDefinition
