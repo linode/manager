@@ -125,73 +125,47 @@ describe('Billing Contact', () => {
       .findByTitle('Edit Billing Contact Info')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('First Name')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['first_name']);
-        cy.findByLabelText('Last Name')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['last_name']);
-        cy.findByLabelText('Company Name')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['company']);
-        cy.findByLabelText('Address')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['address_1']);
-        cy.findByLabelText('Address 2')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['address_2']);
-        cy.findByLabelText('Email (required)')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['email']);
-        cy.findByLabelText('City')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['city']);
-        cy.findByLabelText('Postal Code')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['zip']);
-        cy.findByLabelText('Phone')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['phone']);
-        ui.autocomplete
-          .findByLabel('State')
-          .should('be.visible')
-          .click()
-          .type(`${newAccountData['state']}`);
-        ui.autocompletePopper
-          .findByTitle(newAccountData['state'])
+        cy.findByLabelText('First Name').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['first_name']);
+        cy.findByLabelText('Last Name').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['last_name']);
+        cy.findByLabelText('Company Name').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['company']);
+        cy.findByLabelText('Address').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['address_1']);
+        cy.findByLabelText('Address 2').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['address_2']);
+        cy.findByLabelText('Email (required)').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['email']);
+        cy.findByLabelText('City').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['city']);
+        cy.findByLabelText('Postal Code').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['zip']);
+        cy.findByLabelText('Phone').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['phone']);
+        // need alias to be able to switch focus to modal popup
+        cy.get('[data-qa-contact-state-province]')
+          .as('qaState')
           .should('be.visible')
           .click();
-        cy.findByLabelText('Tax ID')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['tax_id']);
+        cy.get('@qaState').type(`${newAccountData['state']}{enter}`);
+        cy.findByLabelText('Tax ID').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['tax_id']);
         cy.findByText(TAX_ID_HELPER_TEXT).should('not.exist');
-        cy.get('[data-qa-save-contact-info="true"]')
-          .click()
-          .then(() => {
-            cy.wait('@updateAccount').then((xhr) => {
-              expect(xhr.response?.body).to.eql(newAccountData);
-            });
-          });
+        cy.get('[data-qa-save-contact-info="true"]').click();
+        cy.wait('@updateAccount').then((xhr) => {
+          expect(xhr.response?.body).to.eql(newAccountData);
+        });
       });
 
     // check the page updates to reflect the edits
@@ -222,48 +196,32 @@ describe('Billing Contact', () => {
       .findByTitle('Edit Billing Contact Info')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('City')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['city']);
-        cy.findByLabelText('Postal Code')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['zip']);
-        ui.autocomplete
-          .findByLabel('Country')
-          .should('be.visible')
-          .click()
-          .type('Afghanistan');
-        ui.autocompletePopper
-          .findByTitle('Afghanistan')
-          .should('be.visible')
-          .click();
-        cy.findByLabelText('Tax ID')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newAccountData['tax_id']);
+        cy.findByLabelText('City').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['city']);
+        cy.findByLabelText('Postal Code').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['zip']);
+        cy.get('[data-qa-contact-country]').as('qaCountry').click();
+        cy.get('@qaCountry').type('Afghanistan{enter}');
+        cy.findByLabelText('Tax ID').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newAccountData['tax_id']);
         cy.findByText(TAX_ID_HELPER_TEXT).should('be.visible');
-        cy.findByText(TAX_ID_AGREEMENT_TEXT)
-          .scrollIntoView()
-          .should('be.visible');
+        cy.findByText(TAX_ID_AGREEMENT_TEXT).scrollIntoView();
+        cy.should('be.visible');
         cy.findByText('Akamai Privacy Statement.').should('be.visible');
         cy.get('[data-qa-save-contact-info="true"]').should('be.disabled');
         cy.get('[data-testid="tax-id-checkbox"]').click();
         cy.get('[data-qa-save-contact-info="true"]')
           .should('be.enabled')
-          .click()
-          .then(() => {
-            cy.wait('@updateAccount').then((xhr) => {
-              expect(xhr.response?.body).to.eql(newAccountData);
-            });
-            cy.wait('@updateAccountAgreements').then((xhr) => {
-              expect(xhr.response?.body).to.eql(newAccountAgreement);
-            });
-          });
+          .click();
+        cy.wait('@updateAccount').then((xhr) => {
+          expect(xhr.response?.body).to.eql(newAccountData);
+        });
+        cy.wait('@updateAccountAgreements').then((xhr) => {
+          expect(xhr.response?.body).to.eql(newAccountAgreement);
+        });
       });
 
     // check the page updates to reflect the edits

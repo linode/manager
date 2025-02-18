@@ -246,7 +246,9 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       ).should('not.exist');
     });
 
-    ui.regionSelect.find().click().clear();
+    ui.regionSelect.find().click();
+    ui.regionSelect.find().clear();
+    cy.focused().clear();
     ui.regionSelect
       .findItemByRegionId(mockRegion.id, [mockRegion])
       .should('be.visible')
@@ -259,11 +261,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
-
-    ui.button
-      .findByAttribute('aria-label', 'Close')
-      .should('be.visible')
-      .click();
 
     // Select a Node from the autocomplete input.
     ui.autocomplete
