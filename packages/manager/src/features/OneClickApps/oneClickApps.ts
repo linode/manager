@@ -1944,8 +1944,7 @@ export const oneClickApps: Record<number, OCA> = {
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
-        title:
-          'Deploy Redis&reg; Sentinel Cluster through the Linode Marketplace',
+        title: 'Deploy Redis® Sentinel Cluster through the Linode Marketplace',
       },
     ],
     summary:
