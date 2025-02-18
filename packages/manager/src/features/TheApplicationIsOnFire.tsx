@@ -1,8 +1,6 @@
-import { Typography } from '@linode/ui';
+import { Dialog, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-
-import { Dialog } from 'src/components/Dialog/Dialog';
 
 import type { Theme } from '@mui/material/styles';
 
