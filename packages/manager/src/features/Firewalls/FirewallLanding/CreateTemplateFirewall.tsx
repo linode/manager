@@ -16,7 +16,7 @@ const firewallTemplateOptions: SelectOption<FirewallTemplateSlug>[] = [
     value: 'public',
   },
   {
-    label: 'VPC Fireall Template',
+    label: 'VPC Firewall Template',
     value: 'vpc',
   },
 ];

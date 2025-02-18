@@ -80,7 +80,7 @@ export const CreateFirewallDrawer = React.memo(
 
     const form = useForm<CreateFirewallFormValues>({
       defaultValues: initialValues,
-      mode: 'onBlur',
+      mode: 'onSubmit',
       resolver: createFirewallResolver(),
       values: initialValues,
     });

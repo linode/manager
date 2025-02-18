@@ -15,6 +15,10 @@ export interface CreateFirewallFormValues extends CreateFirewallPayload {
 export const createFirewallResolver = (): Resolver<CreateFirewallFormValues> => {
   const schema = CreateFirewallSchema;
   return async (values, _, options) => {
+    if (values.templateSlug) {
+      return { errors: {}, values };
+    }
+
     const firewallPayload: CreateFirewallPayload = omitProps(values, [
       'templateSlug',
     ]);
