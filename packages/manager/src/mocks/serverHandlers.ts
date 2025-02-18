@@ -2451,28 +2451,29 @@ export const handlers = [
       created_by: 'user1',
       severity: 0,
       type: 'user',
+      updated: '2021-10-16T04:00:00',
+      updated_by: 'user1',
     });
     const customAlertsWithServiceType = alertFactory.buildList(10, {
       created_by: 'user1',
       service_type: 'dbaas',
       severity: 1,
       type: 'user',
+      updated_by: 'user1',
     });
-    const defaultAlerts = alertFactory.buildList(15, {
-      created_by: 'System',
-      type: 'system',
-    });
+    const defaultAlerts = alertFactory.buildList(15);
     const defaultAlertsWithServiceType = alertFactory.buildList(7, {
-      created_by: 'System',
       service_type: 'dbaas',
       severity: 3,
-      type: 'system',
     });
     const alerts = [
       ...defaultAlerts,
       ...alertFactory.buildList(8, {
+        created_by: 'user1',
         service_type: 'linode',
         status: 'disabled',
+        type: 'user',
+        updated_by: 'user1',
       }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
@@ -2503,13 +2504,26 @@ export const handlers = [
       return HttpResponse.json({}, { status: 404 });
     }
   ),
+  http.put(
+    '*/monitor/services/:serviceType/alert-definitions/:id',
+    ({ params, request }) => {
+      const body: any = request.json();
+      return HttpResponse.json(
+        alertFactory.build({
+          id: Number(params.id),
+          label: `Alert-${params.id}`,
+          status: body.status === 'enabled' ? 'disabled' : 'enabled',
+        }),
+        {
+          status: 200,
+        }
+      );
+    }
+  ),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
       makeResourcePage(notificationChannelFactory.buildList(3))
     );
-  }),
-  http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
-    return HttpResponse.json(alertFactory.build());
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {

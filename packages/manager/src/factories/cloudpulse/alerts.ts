@@ -65,5 +65,5 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   },
   type: 'user',
   updated: new Date().toISOString(),
-  updated_by: 'user1',
+  updated_by: 'system',
 });
