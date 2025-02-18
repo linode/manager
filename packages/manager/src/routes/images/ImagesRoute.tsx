@@ -3,6 +3,7 @@ import { Outlet } from '@tanstack/react-router';
 import React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -25,6 +26,7 @@ export const ImagesRoute = () => {
           the image.
         </Typography>
       </DismissibleBanner>
+      <DocumentTitleSegment segment="Images" />
       <ProductInformationBanner bannerLocation="Images" />
       <Outlet />
     </React.Suspense>

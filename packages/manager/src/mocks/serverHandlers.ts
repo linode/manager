@@ -230,8 +230,18 @@ const databases = [
       id: 3,
       label: 'database-instance-3',
     });
+    const database4 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 4,
+      label: 'database-instance-4',
+    });
+    const database5 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 5,
+      label: 'database-instance-5',
+    });
 
-    const databases = [database1, database2, database3];
+    const databases = [database1, database2, database3, database4, database5];
     return HttpResponse.json(makeResourcePage(databases));
   }),
 
@@ -2436,6 +2446,17 @@ export const handlers = [
       return HttpResponse.json(response);
     }
   ),
+  http.get(
+    '*/monitor/services/:serviceType/alert-definitions',
+    async ({ params }) => {
+      const serviceType = params.serviceType;
+      return HttpResponse.json({
+        data: alertFactory.buildList(20, {
+          service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+        }),
+      });
+    }
+  ),
   http.get('*/monitor/alert-definitions', async () => {
     const customAlerts = alertFactory.buildList(10, {
       created_by: 'user1',
@@ -2501,22 +2522,32 @@ export const handlers = [
       return HttpResponse.json({}, { status: 404 });
     }
   ),
-  http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
-    return HttpResponse.json({}, { status: 200 });
-  }),
+  http.put(
+    '*/monitor/services/:serviceType/alert-definitions/:id',
+    ({ params, request }) => {
+      const body: any = request.json();
+      return HttpResponse.json(
+        alertFactory.build({
+          id: Number(params.id),
+          label: `Alert-${params.id}`,
+          status: body.status === 'enabled' ? 'disabled' : 'enabled',
+        }),
+        {
+          status: 200,
+        }
+      );
+    }
+  ),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
       makeResourcePage(notificationChannelFactory.buildList(3))
     );
   }),
-  http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
-    return HttpResponse.json(alertFactory.build());
-  }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [
         serviceTypesFactory.build({
-          label: 'Linode',
+          label: 'Linodes',
           service_type: 'linode',
         }),
         serviceTypesFactory.build({

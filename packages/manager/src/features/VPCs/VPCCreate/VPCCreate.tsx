@@ -32,7 +32,7 @@ const VPCCreate = () => {
 
   return (
     <FormProvider {...form}>
-      <DocumentTitleSegment segment="Create VPC" />
+      <DocumentTitleSegment segment="Create a VPC" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

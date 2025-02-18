@@ -12,17 +12,61 @@ export interface CloudPulseNodeType {
   label: string;
 }
 
+const nodeTypeOptionsList: CloudPulseNodeType[] = [
+  {
+    id: 'primary',
+    label: 'Primary',
+  },
+  {
+    id: 'secondary',
+    label: 'Secondary',
+  },
+];
+
+const nodeTypeMap = new Map<string, CloudPulseNodeType>(
+  nodeTypeOptionsList.map((type) => [type.id, type])
+);
+
+const primaryNode = nodeTypeMap.get(PRIMARY_NODE);
+
 export interface CloudPulseNodeTypeFilterProps {
+  /**
+   * Selected database cluster ids
+   */
   database_ids?: number[];
+
+  /**
+   * Last selected node type value from user preferences
+   */
   defaultValue?: FilterValue;
+
+  /**
+   * Boolean to check if the filter selection is to be disabled
+   */
   disabled?: boolean;
+
+  /**
+   * This will handle the change in node type filter selection
+   */
   handleNodeTypeChange: (
     nodeTypeId: string | undefined,
     labels: string[],
     savePref?: boolean
   ) => void;
+
+  /**
+   * A required label for the Autocomplete to ensure accessibility
+   **/
   label: string;
+
+  /**
+   * Placeholder text for Node Type selection input
+   **/
   placeholder?: string;
+
+  /**
+   * Boolean to check if preferences need to be saved and applied
+   */
   savePreferences?: boolean;
 }
 
@@ -49,21 +93,6 @@ export const CloudPulseNodeTypeFilter = React.memo(
       isLoading,
     } = useAllDatabasesQuery(); // fetch all databases
 
-    const nodeTypeOptionsList = [
-      {
-        id: 'primary',
-        label: 'Primary',
-      },
-      {
-        id: 'secondary',
-        label: 'Secondary',
-      },
-    ];
-
-    const nodeTypeMap = new Map<string, CloudPulseNodeType>(
-      nodeTypeOptionsList.map((type) => [type.id, type])
-    );
-
     const isClusterSizeGreaterThanOne = React.useMemo<
       boolean | undefined
     >(() => {
@@ -88,17 +117,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
       setSelectedNodeType(selectedNode ?? null);
     };
 
-    const primaryNode = nodeTypeMap.get(PRIMARY_NODE);
-
-    // calculate available options based on cluster size, keep only primary as option if max cluster size is 1 for chosen clusters, else secondary
-    const availableOptions =
-      isClusterSizeGreaterThanOne === undefined
-        ? []
-        : isClusterSizeGreaterThanOne
-        ? nodeTypeOptionsList
-        : primaryNode
-        ? [primaryNode]
-        : [];
+    const availableOptions = getNodeTypeOptions(isClusterSizeGreaterThanOne);
 
     React.useEffect(() => {
       // when savePreferences is false, we retain the primary selection as default selected value
@@ -157,3 +176,23 @@ export const CloudPulseNodeTypeFilter = React.memo(
     );
   }
 );
+
+/**
+ * Calculates available node type options based on cluster size.
+ * Returns only primary as an option if max cluster size is 1 for chosen clusters,
+ * otherwise returns both primary and secondary options.
+ *
+ * @param isClusterSizeGreaterThanOne - Boolean indicating if any selected cluster has size > 1
+ * @returns Array of available node type options
+ */
+const getNodeTypeOptions = (
+  isClusterSizeGreaterThanOne: boolean | undefined
+): CloudPulseNodeType[] => {
+  return isClusterSizeGreaterThanOne === undefined
+    ? []
+    : isClusterSizeGreaterThanOne
+    ? nodeTypeOptionsList
+    : primaryNode
+    ? [primaryNode]
+    : [];
+};
