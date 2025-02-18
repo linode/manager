@@ -3,7 +3,7 @@ import { default as TableCell } from '@mui/material/TableCell';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import * as React from 'react';
 
-import SortUp from 'src/assets/icons/sort-up.svg';
+import ArrowDown from 'src/assets/icons/arrow-down.svg';
 import Sort from 'src/assets/icons/unsorted.svg';
 
 import type { TableCellProps as _TableCellProps } from '@mui/material/TableCell';
@@ -47,7 +47,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
       sortDirection={direction}
     >
       <TableSortLabel
-        IconComponent={SortUp}
+        IconComponent={ArrowDown}
         active={active}
         aria-label={`Sort by ${label}`}
         direction={direction}

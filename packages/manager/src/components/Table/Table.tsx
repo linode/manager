@@ -100,11 +100,7 @@ export const Table = (props: TableProps) => {
     >
       <_Table
         className={`${tableClass} ${
-          isTableStripingEnabled && !nested
-            ? 'MuiTable-zebra'
-            : nested
-            ? 'MuiTable-zebra-nested'
-            : ''
+          isTableStripingEnabled && !nested ? 'MuiTable-zebra' : ''
         }`}
         {...rest}
         aria-colcount={colCount}
