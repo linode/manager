@@ -66,6 +66,15 @@ describe('KubeCheckoutBar', () => {
     expect(queryAllByText(/minimum of 3 nodes/i)).toHaveLength(0);
   });
 
+  it('should render additional pricing text', async () => {
+    const { findByText } = renderComponent(props);
+    expect(
+      await findByText(
+        /Additional services added to the cluster may incur charges./i
+      )
+    ).toBeVisible();
+  });
+
   it('should show a warning if any pool has fewer than 3 nodes', async () => {
     const poolsWithSmallNode = [...pools, nodePoolFactory.build({ count: 2 })];
     const { findByText } = renderComponent({

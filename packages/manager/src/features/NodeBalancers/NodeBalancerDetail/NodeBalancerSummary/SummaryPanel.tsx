@@ -72,7 +72,7 @@ export const SummaryPanel = () => {
           </StyledTitle>
           {nodebalancer.type === 'premium' && (
             <StyledSection>
-              <Typography data-qa-ports variant="body1">
+              <Typography data-qa-type variant="body1">
                 <strong>Type: </strong>
                 Premium
               </Typography>
@@ -80,7 +80,7 @@ export const SummaryPanel = () => {
           )}
           {nodebalancer.lke_cluster && (
             <StyledSection>
-              <Typography data-qa-ports variant="body1">
+              <Typography data-qa-cluster variant="body1">
                 <strong>Cluster: </strong>
                 {clusterStatus === 'error' ? (
                   <>
