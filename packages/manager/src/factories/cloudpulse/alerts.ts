@@ -34,23 +34,32 @@ export const triggerConditionFactory = Factory.Sync.makeFactory<TriggerCondition
   {
     criteria_condition: 'ALL',
     evaluation_period_seconds: 300,
-    polling_interval_seconds: 60,
-    trigger_occurrences: 3,
+    polling_interval_seconds: 300,
+    trigger_occurrences: 5,
   }
 );
-export const rulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
+export const cpuRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
   aggregate_function: 'avg',
   dimension_filters: [
     {
-      dimension_label: 'region',
+      dimension_label: 'state',
       operator: 'eq',
-      value: 'us-ord',
+      value: 'user',
     },
   ],
-  metric: 'cpu_usage',
-  operator: 'gte',
+  metric: 'system_cpu_utilization_percent',
+  operator: 'eq',
   threshold: 1000,
 });
+
+export const memoryRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
+  aggregate_function: 'avg',
+  dimension_filters: [],
+  metric: 'system_memory_usage_by_resource',
+  operator: 'eq',
+  threshold: 1000,
+});
+
 export const alertDefinitionFactory = Factory.Sync.makeFactory<CreateAlertDefinitionPayload>(
   {
     channel_ids: [1, 2, 3],
@@ -58,7 +67,7 @@ export const alertDefinitionFactory = Factory.Sync.makeFactory<CreateAlertDefini
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Default Alert Label',
     rule_criteria: {
-      rules: [rulesFactory.build()],
+      rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
     },
     severity: 1,
     tags: ['tag1', 'tag2'],

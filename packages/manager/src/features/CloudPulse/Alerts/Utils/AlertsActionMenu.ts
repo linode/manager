@@ -17,6 +17,10 @@ export const getAlertTypeToActionsList = (
       onClick: handleDetails,
       title: 'Show Details',
     },
+    {
+      onClick: handleEdit,
+      title: 'Edit',
+    },
   ],
   default: [
     {
@@ -43,6 +47,10 @@ export const getAlertTypeToActionsList = (
     {
       onClick: handleDetails,
       title: 'Show Details',
+    },
+    {
+      onClick: handleEdit,
+      title: 'Edit',
     },
     {
       onClick: handleEnableDisable,

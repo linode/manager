@@ -1,5 +1,5 @@
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid, useTheme } from '@mui/material';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
@@ -70,9 +70,9 @@ export interface AlertResourcesProp {
   isSelectionsNeeded?: boolean;
 
   /**
-   * The error text that needs to be displayed when no selections are made
+   * The element until which we need to scroll on pagination and order change
    */
-  noSelectionErrorText?: string;
+  scrollElement?: HTMLDivElement | null;
 
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
@@ -91,7 +91,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     handleResourcesSelection,
     hideLabel,
     isSelectionsNeeded,
-    noSelectionErrorText,
+    scrollElement,
     serviceType,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
@@ -145,8 +145,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     {},
     xFilterToBeApplied
   );
-
-  const theme = useTheme();
 
   const computedSelectedResources = React.useMemo(() => {
     if (!isSelectionsNeeded || !resources) {
@@ -345,34 +343,24 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               />
             </Grid>
           ))}
-          {isSelectionsNeeded && (
-            <Grid item md={4} xs={12}>
-              <Checkbox
-                sx={(theme) => ({
-                  svg: {
-                    backgroundColor: theme.tokens.color.Neutrals.White,
-                  },
-                })}
-                data-testid="show_selected_only"
-                disabled={!(selectedResources.length || selectedOnly)}
-                onClick={() => setSelectedOnly(!selectedOnly)}
-                text="Show Selected Only"
-                value="Show Selected"
-              />
-            </Grid>
-          )}
         </Grid>
-        {noSelectionErrorText && (
-          <Grid item xs={12}>
-            <Typography
-              color={theme.tokens.content.Text.Negative}
-              variant="body2"
-            >
-              {noSelectionErrorText}
-            </Typography>
+        {isSelectionsNeeded && (
+          <Grid item md={4} xs={12}>
+            <Checkbox
+              sx={(theme) => ({
+                svg: {
+                  backgroundColor: theme.tokens.color.Neutrals.White,
+                },
+              })}
+              data-testid="show_selected_only"
+              disabled={!(selectedResources.length || selectedOnly)}
+              onClick={() => setSelectedOnly(!selectedOnly)}
+              text="Show Selected Only"
+              value="Show Selected"
+            />
           </Grid>
         )}
-        {isSelectionsNeeded && !isDataLoadingError && (
+        {isSelectionsNeeded && !isDataLoadingError && resources?.length && (
           <Grid item xs={12}>
             <AlertsResourcesNotice
               handleSelectionChange={handleAllSelection}
@@ -383,11 +371,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         )}
         <Grid item xs={12}>
           <DisplayAlertResources
+            scrollToElement={() =>
+              scrollToElement(titleRef.current ?? scrollElement ?? null)
+            }
             filteredResources={filteredResources}
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
-            scrollToElement={() => scrollToElement(titleRef.current)}
             serviceType={serviceType}
           />
         </Grid>
