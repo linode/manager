@@ -1,4 +1,5 @@
 import { Grid, TableBody, TableHead } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AlertTableRow } from './AlertTableRow';
@@ -43,6 +45,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     ? getAPIErrorOrDefault(error, 'Error in fetching the alerts.')
     : undefined;
   const history = useHistory();
+  const { mutateAsync: editAlertDefinition } = useEditAlertDefinition(); // put call to update alert status
 
   const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/detail/${serviceType}/${_id}`);
@@ -51,6 +54,32 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const handleEdit = ({ id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/edit/${serviceType}/${id}`);
   };
+
+  const handleEnableDisable = React.useCallback(
+    (alert: Alert) => {
+      const toggleStatus = alert.status === 'enabled' ? 'disabled' : 'enabled';
+      const errorStatus =
+        toggleStatus === 'disabled' ? 'Disabling' : 'Enabling';
+      editAlertDefinition({
+        alertId: String(alert.id),
+        serviceType: alert.service_type,
+        status: toggleStatus,
+      })
+        .then(() => {
+          // Handle success
+          enqueueSnackbar(`Alert ${toggleStatus}`, {
+            variant: 'success',
+          });
+        })
+        .catch(() => {
+          // Handle error
+          enqueueSnackbar(`${errorStatus} alert failed`, {
+            variant: 'error',
+          });
+        });
+    },
+    [editAlertDefinition]
+  );
 
   return (
     <OrderBy
@@ -103,6 +132,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                         handlers={{
                           handleDetails: () => handleDetails(alert),
                           handleEdit: () => handleEdit(alert),
+                          handleEnableDisable: () => handleEnableDisable(alert),
                         }}
                         alert={alert}
                         key={alert.id}
