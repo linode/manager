@@ -143,7 +143,6 @@ module.exports = {
       },
     },
     // turn off no-createLinode rule for src files. this rule should be applied only to cypress test files
-    // use "@linode/eslint-plugin-cloud-manager": "file:/Users/dmcintyr/Documents/dev/eslint-plugin-cloud-manager", to import into prj
     {
       "files": ["src/**"],
       "rules": {
