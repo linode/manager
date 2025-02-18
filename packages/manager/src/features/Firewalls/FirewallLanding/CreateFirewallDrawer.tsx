@@ -96,7 +96,7 @@ export const CreateFirewallDrawer = React.memo(
 
     const {
       control,
-      formState: { errors, isDirty, isSubmitting },
+      formState: { errors, isSubmitting },
       handleSubmit,
       reset,
       setError,
@@ -362,15 +362,16 @@ export const CreateFirewallDrawer = React.memo(
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              disabled: userCannotAddFirewall || !isDirty,
+              disabled: userCannotAddFirewall,
               label: 'Create Firewall',
               loading: isSubmitting,
               onClick: handleSubmit(createCustomFirewall),
+              type: 'submit',
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
               label: 'Cancel',
-              onClick: onClose,
+              onClick: handleClose,
             }}
           />
         </form>
