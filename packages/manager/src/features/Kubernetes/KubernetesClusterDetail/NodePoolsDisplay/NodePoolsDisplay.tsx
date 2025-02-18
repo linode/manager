@@ -1,9 +1,18 @@
-import { Button, CircleProgress, Select, Stack, Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  Select,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Hidden } from '@mui/material';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormLabel } from 'src/components/FormLabel';
 import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
@@ -150,7 +159,7 @@ export const NodePoolsDisplay = (props: Props) => {
         direction="row"
         flexWrap="wrap"
         justifyContent="space-between"
-        spacing={2}
+        sx={{ paddingLeft: { md: 0, sm: 1, xs: 1 }, paddingTop: 3 }}
       >
         <Stack alignItems="center" direction="row" spacing={2}>
           <Typography variant="h2">Node Pools</Typography>
@@ -207,15 +216,34 @@ export const NodePoolsDisplay = (props: Props) => {
               Expand All Pools
             </Button>
           )}
-          <Button
-            buttonType="outlined"
-            onClick={() => setIsRecycleClusterOpen(true)}
-          >
-            Recycle All Nodes
-          </Button>
-          <Button buttonType="primary" onClick={handleOpenAddDrawer}>
-            Add a Node Pool
-          </Button>
+          <Hidden smUp>
+            <Box sx={{ ml: 0.5 }}>
+              <ActionMenu
+                actionsList={[
+                  {
+                    onClick: () => setIsRecycleClusterOpen(true),
+                    title: 'Recycle All Nodes',
+                  },
+                  {
+                    onClick: handleOpenAddDrawer,
+                    title: 'Add a Node Pool',
+                  },
+                ]}
+                ariaLabel={`Action menu for Node Pools header`}
+              />
+            </Box>
+          </Hidden>
+          <Hidden smDown>
+            <Button
+              buttonType="secondary"
+              onClick={() => setIsRecycleClusterOpen(true)}
+            >
+              Recycle All Nodes
+            </Button>
+            <Button buttonType="primary" onClick={handleOpenAddDrawer}>
+              Add a Node Pool
+            </Button>
+          </Hidden>
         </Stack>
       </Stack>
       {poolsError && <ErrorState errorText={poolsError[0].reason} />}
