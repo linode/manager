@@ -139,7 +139,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 
 export const useKubernetesClusterQuery = (
   id: number,
-  enabled = false,
+  enabled = true,
   options = {}
 ) => {
   const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
@@ -148,7 +148,7 @@ export const useKubernetesClusterQuery = (
 
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.cluster(useBetaEndpoint),
-    enabled: enabled || !isAPLAvailabilityLoading,
+    enabled: enabled && !isAPLAvailabilityLoading,
     ...options,
   });
 };
