@@ -1,5 +1,4 @@
-import { Box, Button, Stack, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material';
+import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -38,7 +37,6 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
   const [openAddNotification, setOpenAddNotification] = React.useState(false);
 
-  const theme = useTheme();
   const notificationChannelWatcher = useWatch({
     control,
     name,
@@ -138,12 +136,9 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
             4. Notification Channels
           </Typography>
           {(formState.isSubmitted || fieldState.isTouched) && fieldState.error && (
-            <Typography
-              color={theme.tokens.content.Text.Negative}
-              variant="body2"
-            >
+            <Notice spacingBottom={0} spacingTop={12} variant="error">
               {fieldState.error.message}
-            </Typography>
+            </Notice>
           )}
           <Stack spacing={1}>
             {selectedNotifications.length > 0 &&
