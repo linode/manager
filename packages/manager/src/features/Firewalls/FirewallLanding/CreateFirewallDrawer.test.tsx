@@ -54,4 +54,30 @@ describe('Create Firewall Drawer', () => {
     );
     expect(error).toBeInTheDocument();
   });
+
+  it('shows custom firewall radio group if Linode Interfaces flag is enabled and can toggle radio group', async () => {
+    const { getByLabelText, getByTestId } = renderWithTheme(
+      <CreateFirewallDrawer {...props} />,
+      {
+        flags: { linodeInterfaces: { enabled: true } },
+      }
+    );
+
+    expect(getByTestId('create-firewall-from')).toBeVisible();
+
+    const templateRadio = getByLabelText('From a Template');
+    await userEvent.click(templateRadio);
+    expect(getByLabelText('Firewall Template')).toBeVisible();
+  });
+
+  it('should not show the custom firewall radio group if Linode Interfaces flag is not enabled', () => {
+    const { queryByTestId } = renderWithTheme(
+      <CreateFirewallDrawer {...props} />,
+      {
+        flags: { linodeInterfaces: { enabled: false } },
+      }
+    );
+
+    expect(queryByTestId('create-firewall-from')).not.toBeInTheDocument();
+  });
 });

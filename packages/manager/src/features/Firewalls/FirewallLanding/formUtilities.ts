@@ -11,14 +11,20 @@ import type { Resolver } from 'react-hook-form';
 export type CreateFirewallType = 'custom' | 'template';
 
 export interface CreateFirewallFormValues extends CreateFirewallPayload {
+  /**
+   * Determines whether a custom firewall or a firewall from a template will be created
+   */
   createFirewallFrom?: CreateFirewallType;
+  /**
+   * The template slug to create a firewall from
+   */
   templateSlug?: FirewallTemplateSlug;
 }
 
 export const createFirewallResolver = (): Resolver<CreateFirewallFormValues> => {
   const schema = CreateFirewallSchema;
   return async (values, _, options) => {
-    // resolver for creating a firewall from a template
+    // if creating a firewall from a template, we only care if no template has been selected
     if (values.createFirewallFrom === 'template') {
       if (!values.templateSlug) {
         return {
@@ -35,7 +41,7 @@ export const createFirewallResolver = (): Resolver<CreateFirewallFormValues> => 
       }
     }
 
-    // resolver for creating a custom firewall
+    // otherwise, we need to validate the form based on the CreateFirewallSchema
     const firewallPayload: CreateFirewallPayload = omitProps(values, [
       'templateSlug',
       'createFirewallFrom',
