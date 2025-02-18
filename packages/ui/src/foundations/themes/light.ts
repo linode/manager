@@ -511,7 +511,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover, &:focus': {
             backgroundColor: 'transparent',
-            color: Button.Secondary.Hover.Text,
+            color: Color.Brand[70],
           },
           '&[aria-disabled="true"]': {
             color: Color.Neutrals[40],
