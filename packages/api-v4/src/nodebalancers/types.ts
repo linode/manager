@@ -1,5 +1,3 @@
-import { KubernetesTier } from 'src/kubernetes/types';
-
 type TCPAlgorithm = 'roundrobin' | 'leastconn' | 'source';
 type UDPAlgorithm = 'roundrobin' | 'leastconn' | 'ring_hash';
 
@@ -14,10 +12,11 @@ export type Stickiness = TCPStickiness | UDPStickiness;
 
 type NodeBalancerType = 'common' | 'premium';
 
-interface ClusterInfo {
+export interface LKEClusterInfo {
   label: string;
-  id: number | null;
-  tier: KubernetesTier;
+  id: number;
+  url: string;
+  type: 'lkecluster';
 }
 
 export interface NodeBalancer {
@@ -39,7 +38,7 @@ export interface NodeBalancer {
   region: string;
   type?: NodeBalancerType;
   // Cluster info if the NB is associated with LKE/LKE-E
-  cluster?: ClusterInfo;
+  lke_cluster?: LKEClusterInfo | null;
   ipv4: string;
   ipv6: null | string;
   created: string;
