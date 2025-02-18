@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import { AxiosHeaders } from 'axios';
 
 import { profileFactory } from './factories';
@@ -46,21 +47,29 @@ const error401: AxiosError<LinodeError> = {
 };
 
 describe('Expiring Tokens', () => {
-  it('should properly expire tokens if given a 401 error', () => {
-    setAuthToken({ expiration: 'never', scopes: '*', token: 'helloworld' });
-    const expireToken = handleError(error401, store);
+  beforeEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
 
-    /**
-     * the redux state should nulled out and the function should return
-     * our original error
-     */
-    expect(getAuthToken()).toEqual({
-      expiration: '',
-      scopes: '',
-      token: '',
+  it('should properly expire tokens if given a 401 error', async () => {
+    setAuthToken({ expiration: 'never', scopes: '*', token: 'helloworld' });
+
+    vi.stubGlobal('location', {
+      assign: vi.fn(),
     });
-    expireToken.catch((e: APIError[]) =>
+    vi.mock('src/constants', async (importOriginal) => ({
+      ...(await importOriginal()),
+      CLIENT_ID: '00000000000000000000',
+    }));
+
+    await handleError(error401, store).catch((e: APIError[]) =>
       expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)
+    );
+    await waitFor(() =>
+      expect(location.assign).toHaveBeenCalledWith(
+        expect.stringContaining('login.linode.com')
+      )
     );
   });
 
