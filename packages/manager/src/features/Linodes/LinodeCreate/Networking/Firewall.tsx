@@ -45,7 +45,7 @@ export const Firewall = () => {
         <Autocomplete
           label={
             interfaceGeneration === 'linode' && interfaceType
-              ? `${interfaceType} Interface Firewall`
+              ? `${labelMap[interfaceType]} Interface Firewall`
               : 'Firewall'
           }
           disabled={isLinodeCreateRestricted}
@@ -75,4 +75,10 @@ export const Firewall = () => {
       />
     </Stack>
   );
+};
+
+const labelMap: Record<'vpc' | 'vlan' | 'public', string> = {
+  public: 'Public',
+  vlan: 'VLAN',
+  vpc: 'VPC',
 };
