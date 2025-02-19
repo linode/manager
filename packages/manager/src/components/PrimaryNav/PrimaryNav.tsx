@@ -77,6 +77,9 @@ export interface PrimaryNavProps {
 
 export const PrimaryNav = (props: PrimaryNavProps) => {
   const { closeMenu, desktopMenuToggle, isCollapsed } = props;
+  const navItemsRef = React.useRef<HTMLDivElement>(null);
+  const primaryNavRef = React.useRef<HTMLDivElement>(null);
+  const [navItemsOverflowing, setNavItemsOverflowing] = React.useState(false);
 
   const flags = useFlags();
   const location = useLocation();
@@ -280,6 +283,52 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     }
   };
 
+  const checkOverflow = React.useCallback(() => {
+    if (navItemsRef.current && primaryNavRef.current) {
+      const navItemsHeight = navItemsRef.current.scrollHeight;
+      const primaryNavHeight = primaryNavRef.current.scrollHeight;
+      setNavItemsOverflowing(navItemsHeight > primaryNavHeight);
+    }
+  }, []);
+
+  // Effects to determine if we need to show a visual overflow indicator
+  // if the nav items are taller than the primary nav
+  React.useEffect(() => {
+    if (!navItemsRef.current || !primaryNavRef.current) {
+      return;
+    }
+
+    // MutationObserver for DOM changes
+    const observer = new MutationObserver(() => {
+      checkOverflow();
+    });
+
+    // Observe both elements for any changes to their subtrees
+    observer.observe(navItemsRef.current, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    });
+    observer.observe(primaryNavRef.current, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    });
+
+    // ResizeObserver for size changes
+    const resizeObserver = new ResizeObserver(() => {
+      checkOverflow();
+    });
+    resizeObserver.observe(document.body);
+
+    // Initial check
+    checkOverflow();
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [checkOverflow]);
+
   // This effect will only run if the collapsedSideNavPreference is not set
   // When a user lands on a page and does not have any preference set,
   // we want to expand the accordion that contains the active link for convenience and discoverability
@@ -333,6 +382,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       height={`calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`}
       id="main-navigation"
       justifyContent="flex-start"
+      ref={primaryNavRef}
       role="navigation"
     >
       <Box
@@ -344,6 +394,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         })}
         display="flex"
         flexDirection="column"
+        ref={navItemsRef}
         width="100%"
       >
         {productFamilyLinkGroups.map((productFamily, idx) => {
@@ -408,6 +459,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       <PrimaryNavToggle
         desktopMenuToggle={desktopMenuToggle}
         isCollapsed={isCollapsed}
+        areNavItemsOverflowing={navItemsOverflowing}
       />
     </Box>
   );
