@@ -12,9 +12,6 @@ const props: SupportTicketDialogProps = {
   open: true,
 };
 
-// Mock React-Select
-vi.mock('src/components/EnhancedSelect/Select');
-
 describe('Support Ticket Drawer', () => {
   it('should render', () => {
     const { getByText } = renderWithTheme(<SupportTicketDialog {...props} />);

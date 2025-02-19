@@ -42,8 +42,9 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
       url: '',
     },
   ],
+  class: 'dedicated',
   created: new Date().toISOString(),
-  created_by: 'user1',
+  created_by: 'system',
   description: 'Test description',
   entity_ids: ['1', '2', '3'],
   has_more_resources: true,
@@ -62,7 +63,8 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
     polling_interval_seconds: 120,
     trigger_occurrences: 3,
   },
-  type: 'user',
+
+  type: 'system',
   updated: new Date().toISOString(),
-  updated_by: 'user1',
+  updated_by: 'system',
 });

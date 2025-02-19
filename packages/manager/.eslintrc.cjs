@@ -22,7 +22,7 @@ module.exports = {
     'build',
     'storybook-static',
     '.storybook',
-    'e2e',
+    'e2e/core',
     'public',
     '!.eslintrc.js',
   ],
@@ -218,6 +218,7 @@ module.exports = {
     'comma-dangle': 'off', // Prettier and TS both handle and check for this one
     // radix: Codacy considers it as an error, i put it here to fix it before push
     curly: 'warn',
+    eqeqeq: 'warn',
     // See: https://www.w3.org/TR/graphics-aria-1.0/
     'jsx-a11y/aria-role': [
       'error',
@@ -254,6 +255,14 @@ module.exports = {
         message:
           'Please use Typography component from @linode/ui instead of @mui/material',
         name: '@mui/material',
+      },
+    ],
+    'no-restricted-syntax': [
+      'error',
+      {
+        message:
+          "The 'data-test-id' attribute is not allowed; use 'data-testid' instead.",
+        selector: "JSXAttribute[name.name='data-test-id']",
       },
     ],
     'no-throw-literal': 'warn',

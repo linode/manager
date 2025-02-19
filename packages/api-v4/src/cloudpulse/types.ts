@@ -2,6 +2,7 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
 export type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
 export type AlertServiceType = 'linode' | 'dbaas';
+export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'eq'
   | 'neq'
@@ -179,6 +180,7 @@ export interface CreateAlertDefinitionPayload {
   trigger_conditions: TriggerCondition;
   channel_ids: number[];
 }
+
 export interface MetricCriteria {
   metric: string;
   aggregate_function: MetricAggregationType;
@@ -213,6 +215,7 @@ export interface Alert {
   label: string;
   tags: string[];
   description: string;
+  class?: AlertClass;
   has_more_resources: boolean;
   status: AlertStatusType;
   type: AlertDefinitionType;
@@ -305,5 +308,14 @@ export type NotificationChannel =
   | NotificationChannelPagerDuty;
 
 export interface EditAlertDefinitionPayload {
-  entity_ids: string[];
+  entity_ids?: string[];
+  status?: AlertStatusType;
 }
+
+export interface EditAlertPayloadWithService
+  extends EditAlertDefinitionPayload {
+  serviceType: string;
+  alertId: string;
+}
+
+export type AlertStatusUpdateType = 'Enable' | 'Disable';
