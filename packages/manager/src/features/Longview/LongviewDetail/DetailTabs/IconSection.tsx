@@ -48,7 +48,7 @@ export const IconSection = React.memo((props: Props) => {
     props.longviewClientData?.SysInfo?.cpu?.type ??
     'CPU information not available';
 
-  const uptime = props.longviewClientData?.uptime ?? null;
+  const uptime = props.longviewClientData?.Uptime ?? null;
   const formattedUptime =
     uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
 
