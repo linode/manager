@@ -1,4 +1,3 @@
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -19,32 +18,16 @@ export const NodeBalancerSummary = () => {
     <div>
       <DocumentTitleSegment segment={`${nodebalancer?.label} - Summary`} />
       <Grid container spacing={2}>
-        <StyledMainGridItem lg={9} md={8} xs={12}>
+        <Grid size={{ lg: 9, md: 8, xs: 12 }}>
           <TablesPanel />
-        </StyledMainGridItem>
-        <StyledSidebarGridItem lg={3} md={4} xs={12}>
+        </Grid>
+        <Grid size={{ lg: 3, md: 4, xs: 12 }}>
           <SummaryPanel />
-        </StyledSidebarGridItem>
+        </Grid>
       </Grid>
     </div>
   );
 };
-
-const StyledMainGridItem = styled(Grid, {
-  label: 'StyledMainGridItem',
-})(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    order: 1,
-  },
-}));
-
-const StyledSidebarGridItem = styled(Grid, {
-  label: 'StyledSidebarGridItem',
-})(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    order: 2,
-  },
-}));
 
 export const nodeBalancerSummaryLazyRoute = createLazyRoute(
   '/nodebalancers/$nodeBalancerId'

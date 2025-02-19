@@ -102,7 +102,7 @@ const LinodePubKey = () => {
             managed Linodes so we can access them and diagnose issues.
           </Typography>
         </Grid>
-        <StyledSSHKeyContainerGrid md={6} sm={7} xs={12}>
+        <StyledSSHKeyContainerGrid size={{ md: 6, sm: 7, xs: 12 }}>
           <StyledTypography sx={{ fontSize: 14 }}>
             {preferences?.maskSensitiveData && isSSHKeyMasked ? (
               <MaskableTextAreaCopy />
@@ -113,7 +113,7 @@ const LinodePubKey = () => {
             {/* pubKey.slice(0, 160)} . . . */}
           </StyledTypography>
         </StyledSSHKeyContainerGrid>
-        <StyledCopyToClipboardGrid lg={2} md={3} sm={4} xs={12}>
+        <StyledCopyToClipboardGrid size={{ lg: 2, md: 3, sm: 4, xs: 12 }}>
           <Stack
             flexDirection={matchesSmDownBreakpoint ? 'row' : 'column'}
             marginLeft={matchesSmDownBreakpoint ? 'auto' : undefined}
