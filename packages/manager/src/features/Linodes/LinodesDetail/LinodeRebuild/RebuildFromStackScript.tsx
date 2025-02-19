@@ -4,7 +4,6 @@ import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
@@ -254,7 +253,10 @@ export const RebuildFromStackScript = (props: Props) => {
             setUdfErrors(maybeUDFErrors);
 
             // If there aren't any errors, we can proceed.
-            if (isEmpty(maybeErrors) && maybeUDFErrors.length === 0) {
+            if (
+              Object.keys(maybeErrors).length === 0 &&
+              maybeUDFErrors.length === 0
+            ) {
               handleSubmit();
               // The form receives the errors automatically, and we scroll them into view.
             } else {

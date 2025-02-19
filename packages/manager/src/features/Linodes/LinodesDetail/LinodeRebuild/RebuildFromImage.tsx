@@ -4,7 +4,6 @@ import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -213,7 +212,7 @@ export const RebuildFromImage = (props: Props) => {
           // Validate stackscript_id, image, & root_pass
           validateForm().then((maybeErrors) => {
             // If there aren't any errors, we can submit the form.
-            if (isEmpty(maybeErrors)) {
+            if (Object.keys(maybeErrors).length === 0) {
               handleSubmit();
               // The form receives the errors automatically, and we scroll them into view.
             } else {

@@ -3,7 +3,6 @@ import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { castDraft } from 'immer';
-import { intersection } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
@@ -342,10 +341,10 @@ export const CloneLanding = () => {
                 return (
                   // This disk has been individually selected ...
                   state.diskSelection[disk.id].isSelected && // ... AND it's associated configs are NOT selected
-                  intersection(
-                    state.diskSelection?.[disk.id]?.associatedConfigIds ?? [],
-                    selectedConfigIds
-                  ).length === 0
+                  (
+                    state.diskSelection?.[disk.id]?.associatedConfigIds ?? []
+                  ).filter((num) => selectedConfigIds.includes(num)).length ===
+                    0
                 );
               })}
               // If a selected disk is associated with a selected config, we
