@@ -93,10 +93,24 @@ export const useAddEntityToAlert = () => {
   });
 };
 export const useRemoveEntityFromAlert = () => {
+  const queryClient = useQueryClient();
   return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
     mutationFn: (payload: EntityAlertUpdatePayload) => {
       const { alertId, entityId, serviceType } = payload;
       return deleteEntityFromAlert(serviceType, entityId, alertId);
+    },
+    onSuccess(_data, variables, _context) {
+      const { alertId, serviceType } = variables;
+      queryClient.removeQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+
+      queryClient.removeQueries({
+        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          serviceType,
+          String(alertId)
+        ).queryKey,
+      });
     },
   });
 };
