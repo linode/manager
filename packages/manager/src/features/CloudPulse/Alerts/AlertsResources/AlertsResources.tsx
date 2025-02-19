@@ -13,6 +13,7 @@ import {
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
+  getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
@@ -33,6 +34,7 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
+import { useFlags } from 'src/hooks/useFlags';
 
 export interface AlertResourcesProp {
   /**
@@ -104,9 +106,32 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     Record<AlertAdditionalFilterKey, AlertFilterType>
   >({ engineType: undefined });
 
+  const {
+    data: regions,
+    isError: isRegionsError,
+    isLoading: isRegionsLoading,
+  } = useRegionsQuery();
+
+  const flags = useFlags();
+
+  // Validate launchDarkly region ids with the ids from regionOptions prop
+  const supportedRegionIds = getSupportedRegionIds(
+    flags.aclpResourceTypeMap,
+    serviceType
+  );
+
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+    const regionFilter: Filter = supportedRegionIds
+      ? {
+          '+or': supportedRegionIds.map((regionId) => ({
+            region: regionId,
+          })),
+        }
+      : {};
+
+    // if service type is other than dbaas, return only region filter
     if (serviceType !== 'dbaas') {
-      return undefined; // No x-filters needed for other serviceTypes
+      return regionFilter;
     }
 
     // Always include platform filter for 'dbaas'
@@ -124,15 +149,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       },
     };
 
-    // Combine both filters
-    return { ...platformFilter, ...typeFilter };
-  }, [alertClass, alertType, serviceType]);
-
-  const {
-    data: regions,
-    isError: isRegionsError,
-    isLoading: isRegionsLoading,
-  } = useRegionsQuery();
+    // Combine all the filters
+    return { ...platformFilter, ...typeFilter, ...regionFilter };
+  }, [alertClass, alertType, serviceType, supportedRegionIds]);
 
   const {
     data: resources,
