@@ -66,7 +66,7 @@ describe('SummaryPanel', () => {
   });
 
   it('renders the panel if there is data to render', () => {
-    const { getByText } = renderWithTheme(<SummaryPanel />);
+    const { getByText, queryByText } = renderWithTheme(<SummaryPanel />);
 
     // Main summary panel
     expect(getByText(nodeBalancerDetails)).toBeVisible();
@@ -79,9 +79,9 @@ describe('SummaryPanel', () => {
     expect(getByText('example.com')).toBeVisible();
     expect(getByText('Region:')).toBeVisible();
     // Type should not display for non-premium NBs
-    expect(getByText('Type:')).not.toBeVisible();
+    expect(queryByText('Type:')).not.toBeInTheDocument();
     // Cluster should not display for if the NB is not associated with LKE or LKE-E
-    expect(getByText('Cluster:')).not.toBeVisible();
+    expect(queryByText('Cluster:')).not.toBeInTheDocument();
 
     // Firewall panel
     expect(getByText('Firewall')).toBeVisible();
