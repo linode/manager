@@ -74,7 +74,7 @@ export const LongviewClientHeader = enhanced(
 
     const hostname =
       longviewClientData.SysInfo?.hostname ?? 'Hostname not available';
-    const uptime = longviewClientData?.uptime ?? null;
+    const uptime = longviewClientData?.Uptime ?? null;
     const formattedUptime =
       uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
     const packages = longviewClientData?.Packages ?? null;
