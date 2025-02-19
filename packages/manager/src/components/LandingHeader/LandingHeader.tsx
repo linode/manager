@@ -75,13 +75,14 @@ export const LandingHeader = ({
     : `${title} Landing`;
 
   return (
-    <Grid
-      alignItems="center"
+    (<Grid
       container
       data-qa-entity-header
-      justifyContent="space-between"
-      sx={{ width: '100%' }}
-    >
+      sx={{
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: '100%'
+      }}>
       <Grid>
         <Breadcrumb
           data-qa-title
@@ -98,19 +99,19 @@ export const LandingHeader = ({
         <Grid>
           <Grid
             sx={{
+              alignItems: "center",
+              display: "flex",
+              flexWrap: xsDown ? 'wrap' : 'nowrap',
+              gap: 3,
+              justifyContent: "flex-end",
               flex: '1 1 auto',
+
               marginLeft: customSmMdBetweenBreakpoint
                 ? theme.spacing(2)
                 : customXsDownBreakpoint
                 ? theme.spacing(1)
-                : undefined,
-            }}
-            alignItems="center"
-            display="flex"
-            flexWrap={xsDown ? 'wrap' : 'nowrap'}
-            gap={3}
-            justifyContent="flex-end"
-          >
+                : undefined
+            }}>
             {betaFeedbackLink && (
               <span
                 style={{
@@ -153,7 +154,7 @@ export const LandingHeader = ({
           </Grid>
         </Grid>
       )}
-    </Grid>
+    </Grid>)
   );
 };
 

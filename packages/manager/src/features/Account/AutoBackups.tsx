@@ -49,7 +49,7 @@ const AutoBackups = (props: Props) => {
   const { classes } = useStyles();
 
   return (
-    <Accordion defaultExpanded={true} heading="Backup Auto Enrollment">
+    (<Accordion defaultExpanded={true} heading="Backup Auto Enrollment">
       <Grid container direction="column" spacing={2}>
         <Grid>
           {!!isManagedCustomer ? (
@@ -72,7 +72,9 @@ const AutoBackups = (props: Props) => {
             .
           </Typography>
         </Grid>
-        <Grid alignItems="center" container direction="row">
+        <Grid container direction="row" sx={{
+          alignItems: "center"
+        }}>
           <Grid>
             <FormControlLabel
               control={
@@ -107,7 +109,7 @@ const AutoBackups = (props: Props) => {
           </Grid>
         )}
       </Grid>
-    </Accordion>
+    </Accordion>)
   );
 };
 

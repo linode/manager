@@ -137,11 +137,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     <StyledBodyGrid container spacing={2} sx={{ mb: 0 }}>
       <Grid
         container
-        flexDirection={matchesLgUp ? 'row' : 'column'}
         spacing={0}
         size={{
           sm: isDisplayingEncryptedStatus ? 4 : 3,
           xs: 12
+        }}
+        sx={{
+          flexDirection: matchesLgUp ? 'row' : 'column'
         }}>
         <StyledColumnLabelGrid
           mb={matchesLgUp && !isDisplayingEncryptedStatus ? 0 : 2}
@@ -151,24 +153,28 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         </StyledColumnLabelGrid>
         <StyledSummaryGrid container spacing={1}>
           <Grid
-            alignItems="center"
-            display="flex"
             size={{
               lg: 6,
               sm: 12,
               xs: 6
+            }}
+            sx={{
+              alignItems: "center",
+              display: "flex"
             }}>
             <Typography>
               {pluralize('CPU Core', 'CPU Cores', numCPUs)}
             </Typography>
           </Grid>
           <Grid
-            alignItems="center"
-            display="flex"
             size={{
               lg: 6,
               sm: 12,
               xs: 6
+            }}
+            sx={{
+              alignItems: "center",
+              display: "flex"
             }}>
             <Typography>{gbStorage} GB Storage</Typography>
           </Grid>
@@ -304,21 +310,21 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           VPC
         </StyledColumnLabelGrid>
         <Grid
+          container
+          direction="row"
+          spacing={2}
           sx={{
+            alignItems: "center",
             margin: 0,
             padding: '0 0 8px 0',
+
             [theme.breakpoints.down('md')]: {
               alignItems: 'start',
               display: 'flex',
               flexDirection: 'column',
               paddingLeft: '8px',
-            },
-          }}
-          alignItems="center"
-          container
-          direction="row"
-          spacing={2}
-        >
+            }
+          }}>
           <StyledVPCBox>
             <StyledListItem>
               <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}

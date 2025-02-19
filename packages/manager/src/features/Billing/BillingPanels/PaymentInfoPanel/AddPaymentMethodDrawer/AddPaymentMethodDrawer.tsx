@@ -135,12 +135,14 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
             {!isReadOnly && (
               <Grid
-                alignContent="center"
                 container
-                justifyContent="flex-end"
                 size={{
                   md: 3,
                   xs: 4
+                }}
+                sx={{
+                  alignContent: "center",
+                  justifyContent: "flex-end"
                 }}>
                 <GooglePayChip
                   disabled={disabled}
@@ -168,12 +170,14 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
             {!isReadOnly && (
               <Grid
-                alignContent="center"
                 container
-                justifyContent="flex-end"
                 size={{
                   md: 3,
                   xs: 4
+                }}
+                sx={{
+                  alignContent: "center",
+                  justifyContent: "flex-end"
                 }}>
                 <PayPalErrorBoundary renderError={renderError}>
                   <PayPalChip

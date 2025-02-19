@@ -53,13 +53,15 @@ export const StrengthIndicator = (props: Props) => {
 
   return (
     (<Grid
-      alignItems="flex-end"
       className={classes.root}
       container
       data-qa-strength={strength}
       spacing={1}
-      sx={{ paddingLeft: 0, paddingRight: 0 }}
-    >
+      sx={{
+        alignItems: "flex-end",
+        paddingLeft: 0,
+        paddingRight: 0
+      }}>
       {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
         <Grid className={classes.blockOuter} key={idx} size={3}>
           <div

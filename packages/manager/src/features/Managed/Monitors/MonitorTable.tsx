@@ -171,123 +171,128 @@ export const MonitorTable = () => {
           .catch(_error);
   };
 
-  return (
-    <>
-      <DocumentTitleSegment segment="Monitors" />
-      <Grid alignItems="flex-end" container justifyContent="flex-end">
-        <Grid>
-          <Grid alignItems="flex-end" container>
-            <StyledGrid>
-              <Button
-                buttonType="primary"
-                onClick={() => setMonitorDrawerOpen(true)}
-              >
-                Add Monitor
-              </Button>
-            </StyledGrid>
-          </Grid>
+  return (<>
+    <DocumentTitleSegment segment="Monitors" />
+    <Grid
+      container
+      sx={{
+        alignItems: "flex-end",
+        justifyContent: "flex-end"
+      }}>
+      <Grid>
+        <Grid container sx={{
+          alignItems: "flex-end"
+        }}>
+          <StyledGrid>
+            <Button
+              buttonType="primary"
+              onClick={() => setMonitorDrawerOpen(true)}
+            >
+              Add Monitor
+            </Button>
+          </StyledGrid>
         </Grid>
       </Grid>
-      <OrderBy data={monitors} order={'asc'} orderBy={'label'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
-            {({
-              count,
-              data,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize,
-            }) => (
-              <>
-                <Table aria-label="List of Your Managed Service Monitors">
-                  <TableHead>
-                    <TableRow>
-                      <TableSortCell
-                        active={orderBy === 'label'}
-                        data-qa-monitor-label-header
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        label={'label'}
-                      >
-                        Monitor
-                      </TableSortCell>
-                      <TableSortCell
-                        active={orderBy === 'status'}
-                        data-qa-monitor-status-header
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        label={'status'}
-                      >
-                        Status
-                      </TableSortCell>
-                      <TableSortCell
-                        active={orderBy === 'address'}
-                        data-qa-monitor-resource-header
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        label={'address'}
-                      >
-                        Resource
-                      </TableSortCell>
-                      <TableCell />
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <MonitorTableContent
-                      error={error}
-                      issues={issues || []}
-                      loading={isLoading}
-                      monitors={data}
-                      openDialog={openDialog}
-                      openHistoryDrawer={handleHistoryDrawerOpen}
-                      openMonitorDrawer={handleMonitorDrawerOpen}
-                    />
-                  </TableBody>
-                </Table>
-                <PaginationFooter
-                  count={count}
-                  eventCategory="managed service monitor table"
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                />
-              </>
-            )}
-          </Paginate>
-        )}
-      </OrderBy>
-      <DeletionDialog
-        entity="monitor"
-        error={dialog.error}
-        label={dialog.entityLabel || ''}
-        loading={dialog.isLoading}
-        onClose={closeDialog}
-        onDelete={handleDelete}
-        open={dialog.isOpen}
-      />
-      <MonitorDrawer
-        credentials={credentials || []}
-        groups={groups}
-        mode={drawerMode}
-        monitor={monitors.find((m) => m.id === editID)}
-        onClose={handleDrawerClose}
-        onSubmit={submitMonitorForm}
-        open={monitorDrawerOpen}
-      />
-      <HistoryDrawer
-        issues={issues?.filter((thisIssue) =>
-          thisIssue.services.includes(editID)
-        )}
-        error={failureReason}
-        isFetching={areIssuesFetching}
-        monitorLabel={editLabel}
-        onClose={() => setHistoryDrawerOpen(false)}
-        open={historyDrawerOpen}
-      />
-    </>
-  );
+    </Grid>
+    <OrderBy data={monitors} order={'asc'} orderBy={'label'}>
+      {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+        <Paginate data={orderedData}>
+          {({
+            count,
+            data,
+            handlePageChange,
+            handlePageSizeChange,
+            page,
+            pageSize,
+          }) => (
+            <>
+              <Table aria-label="List of Your Managed Service Monitors">
+                <TableHead>
+                  <TableRow>
+                    <TableSortCell
+                      active={orderBy === 'label'}
+                      data-qa-monitor-label-header
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label={'label'}
+                    >
+                      Monitor
+                    </TableSortCell>
+                    <TableSortCell
+                      active={orderBy === 'status'}
+                      data-qa-monitor-status-header
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label={'status'}
+                    >
+                      Status
+                    </TableSortCell>
+                    <TableSortCell
+                      active={orderBy === 'address'}
+                      data-qa-monitor-resource-header
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label={'address'}
+                    >
+                      Resource
+                    </TableSortCell>
+                    <TableCell />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <MonitorTableContent
+                    error={error}
+                    issues={issues || []}
+                    loading={isLoading}
+                    monitors={data}
+                    openDialog={openDialog}
+                    openHistoryDrawer={handleHistoryDrawerOpen}
+                    openMonitorDrawer={handleMonitorDrawerOpen}
+                  />
+                </TableBody>
+              </Table>
+              <PaginationFooter
+                count={count}
+                eventCategory="managed service monitor table"
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+              />
+            </>
+          )}
+        </Paginate>
+      )}
+    </OrderBy>
+    <DeletionDialog
+      entity="monitor"
+      error={dialog.error}
+      label={dialog.entityLabel || ''}
+      loading={dialog.isLoading}
+      onClose={closeDialog}
+      onDelete={handleDelete}
+      open={dialog.isOpen}
+    />
+    <MonitorDrawer
+      credentials={credentials || []}
+      groups={groups}
+      mode={drawerMode}
+      monitor={monitors.find((m) => m.id === editID)}
+      onClose={handleDrawerClose}
+      onSubmit={submitMonitorForm}
+      open={monitorDrawerOpen}
+    />
+    <HistoryDrawer
+      issues={issues?.filter((thisIssue) =>
+        thisIssue.services.includes(editID)
+      )}
+      error={failureReason}
+      isFetching={areIssuesFetching}
+      monitorLabel={editLabel}
+      onClose={() => setHistoryDrawerOpen(false)}
+      open={historyDrawerOpen}
+    />
+  </>);
 };
 
 export default MonitorTable;

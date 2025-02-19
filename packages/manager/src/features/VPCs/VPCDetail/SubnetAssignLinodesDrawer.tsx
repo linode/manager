@@ -145,8 +145,8 @@ export const SubnetAssignLinodesDrawer = (
   function getConfigId(linodeConfigs: Config[], selectedConfig: Config | null) {
     return (
       // Use the first configuration's id or -1 if no configurations
-      ((// Use selected configuration's id if available
-      linodeConfigs.length > 1 ? selectedConfig?.id : linodeConfigs[0]?.id) ?? -1)
+      // Use selected configuration's id if available
+      ((linodeConfigs.length > 1 ? selectedConfig?.id : linodeConfigs[0]?.id) ?? -1)
     );
   }
 

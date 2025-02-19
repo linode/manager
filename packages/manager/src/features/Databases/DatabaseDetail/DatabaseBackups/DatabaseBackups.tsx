@@ -137,7 +137,7 @@ export const DatabaseBackups = (props: Props) => {
 
   if (isDefaultDatabase) {
     return (
-      <Paper style={{ marginTop: 16 }}>
+      (<Paper style={{ marginTop: 16 }}>
         <Typography variant="h2">Summary</Typography>
         <StyledTypography>
           Databases are automatically backed-up with full daily backups for the
@@ -187,7 +187,12 @@ export const DatabaseBackups = (props: Props) => {
             />
           </RadioGroup>
         )}
-        <Grid container justifyContent="flex-start" mt={2}>
+        <Grid
+          container
+          sx={{
+            justifyContent: "flex-start",
+            mt: 2
+          }}>
           <Grid item lg={3} md={4} xs={12}>
             <Typography variant="h3">Date</Typography>
             <LocalizationProvider dateAdapter={AdapterLuxon}>
@@ -266,7 +271,7 @@ export const DatabaseBackups = (props: Props) => {
             selectedTime={selectedTime?.value}
           />
         )}
-      </Paper>
+      </Paper>)
     );
   }
 

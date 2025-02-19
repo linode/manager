@@ -72,11 +72,13 @@ export const TransferContent = (props: ContentProps) => {
 
   if (loading) {
     return (
-      <Grid container justifyContent="center">
+      (<Grid container sx={{
+        justifyContent: "center"
+      }}>
         <Grid>
           <CircleProgress size="sm" />
         </Grid>
-      </Grid>
+      </Grid>)
     );
   }
 

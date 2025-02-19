@@ -27,9 +27,11 @@ export const FolderTableRow = (props: FolderTableRowProps) => {
   } = props;
 
   return (
-    <TableRow key={folderName} {...tableRowProps}>
+    (<TableRow key={folderName} {...tableRowProps}>
       <TableCell>
-        <Grid alignItems="center" container spacing={2} wrap="nowrap">
+        <Grid container spacing={2} wrap="nowrap" sx={{
+          alignItems: "center"
+        }}>
           <StyledIconWrapper>
             <FolderIcon size={22} />
           </StyledIconWrapper>
@@ -54,7 +56,7 @@ export const FolderTableRow = (props: FolderTableRowProps) => {
           objectName={folderName}
         />
       </TableCell>
-    </TableRow>
+    </TableRow>)
   );
 };
 

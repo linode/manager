@@ -41,7 +41,10 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
 
   return (
     (<Grid
-      sx={(theme) => ({
+      container
+      sx={[{
+        justifyContent: "flex-start"
+      }, (theme) => ({
         marginLeft: theme.spacing(6),
         marginTop: theme.spacing(),
         maxWidth: 600,
@@ -49,10 +52,7 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
           marginLeft: theme.spacing(5),
           width: 'calc(100% - 32px)',
         },
-      })}
-      container
-      justifyContent="flex-start"
-    >
+      })]}>
       <Grid
         sx={{
           overflowX: 'auto',

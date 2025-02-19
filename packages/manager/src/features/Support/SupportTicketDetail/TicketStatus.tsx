@@ -47,11 +47,13 @@ export const TicketStatus = (props: Props) => {
 
   return (
     (<Paper
-      data-qa-ticket-status
-      sx={(theme) => ({ p: `${theme.spacing()} ${theme.spacing(2)}` })}
-    >
+        data-qa-ticket-status
+        sx={(theme) => ({ p: `${theme.spacing()} ${theme.spacing(2)}` })}
+      >
       <Stack direction="row">
-        <Grid alignItems="center" container direction="row" size="grow">
+        <Grid container direction="row" size="grow" sx={{
+          alignItems: "center"
+        }}>
           <StyledStatusIcon
             ariaLabel={`Ticket status is ${status}`}
             status={status === 'closed' ? 'inactive' : 'active'}

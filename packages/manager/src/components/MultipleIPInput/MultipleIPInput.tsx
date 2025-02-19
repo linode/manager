@@ -252,11 +252,12 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
           container
           data-testid="domain-transfer-input"
           direction="row"
-          justifyContent="center"
           key={`domain-transfer-ip-${idx}`}
-          maxWidth={forVPCIPv4Ranges ? '415px' : undefined}
           spacing={2}
-        >
+          sx={{
+            justifyContent: "center",
+            maxWidth: forVPCIPv4Ranges ? '415px' : undefined
+          }}>
           <Grid size={11}>
             <TextField
               InputProps={{

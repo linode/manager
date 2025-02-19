@@ -59,7 +59,12 @@ export const EnvironmentToggleTool = () => {
 
   return (
     (<Grid container>
-      <Grid display="flex" flexWrap="nowrap" size={12}>
+      <Grid
+        size={12}
+        sx={{
+          display: "flex",
+          flexWrap: "nowrap"
+        }}>
         <DevToolSelect
           onChange={(e) => {
             const selectedIndex = options.findIndex(

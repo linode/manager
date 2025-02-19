@@ -48,16 +48,15 @@ export const EditableEntityLabel = (props: EditableEntityLabelProps) => {
 
   return (
     (<Grid
-      sx={{
-        margin: 0,
-        minHeight: '40px',
-      }}
-      alignItems="center"
       container
       direction="row"
-      justifyContent="flex-start"
       wrap="nowrap"
-    >
+      sx={{
+        alignItems: "center",
+        justifyContent: "flex-start",
+        margin: 0,
+        minHeight: '40px'
+      }}>
       {!isEditing && iconVariant && (
         <Grid className="py0 px0">
           <EntityIcon

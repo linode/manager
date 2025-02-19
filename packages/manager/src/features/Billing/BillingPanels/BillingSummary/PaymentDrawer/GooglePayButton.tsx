@@ -145,14 +145,15 @@ export const GooglePayButton = (props: Props) => {
 
   if (isLoading) {
     return (
-      <Grid
-        alignContent="center"
+      (<Grid
         className={classes.loading}
         container
-        justifyContent="center"
-      >
+        sx={{
+          alignContent: "center",
+          justifyContent: "center"
+        }}>
         <CircleProgress size="sm" />
-      </Grid>
+      </Grid>)
     );
   }
 

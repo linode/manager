@@ -273,9 +273,10 @@ export const CloneLanding = () => {
       <Paper sx={{ padding: theme.spacing(2) }}>
         <Grid
           container
-          justifyContent="space-between"
-          sx={{ marginTop: theme.spacing(1) }}
-        >
+          sx={{
+            justifyContent: "space-between",
+            marginTop: theme.spacing(1)
+          }}>
           <Grid
             size={{
               md: 7,
@@ -349,8 +350,8 @@ export const CloneLanding = () => {
               selectedDisks={disksInState.filter((disk) => {
                 return (
                   // This disk has been individually selected ...
-                  (// ... AND it's associated configs are NOT selected
-                  state.diskSelection[disk.id].isSelected && intersection(
+                  // ... AND it's associated configs are NOT selected
+                  (state.diskSelection[disk.id].isSelected && intersection(
                     state.diskSelection?.[disk.id]?.associatedConfigIds ?? [],
                     selectedConfigIds
                   ).length === 0)

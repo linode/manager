@@ -99,91 +99,90 @@ export const FirewallDeviceLanding = React.memo(
 
     const formattedType = formattedTypes[type];
 
-    return (
-      <>
-        {disabled ? (
-          <Notice
-            text={
-              "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
-            }
-            important
-            variant="error"
-          />
-        ) : null}
+    return (<>
+      {disabled ? (
+        <Notice
+          text={
+            "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
+          }
+          important
+          variant="error"
+        />
+      ) : null}
+      <Grid
+        container
+        direction="column"
+        sx={{ marginBottom: theme.spacing(2) }}
+      >
+        <StyledTypography>
+          The following {formattedType}s have been assigned to this Firewall.
+          A {formattedType} can only be assigned to a single Firewall.
+        </StyledTypography>
         <Grid
           container
-          direction="column"
-          sx={{ marginBottom: theme.spacing(2) }}
-        >
-          <StyledTypography>
-            The following {formattedType}s have been assigned to this Firewall.
-            A {formattedType} can only be assigned to a single Firewall.
-          </StyledTypography>
-          <Grid
-            alignItems="center"
-            container
-            direction="row"
-            justifyContent="space-between"
-          >
-            <Grid sx={{ width: '30%' }}>
-              <DebouncedSearchTextField
-                onSearch={(val) => {
-                  filter(val);
-                }}
-                debounceTime={250}
-                expand={true}
-                hideLabel
-                label=""
-                placeholder={`Search ${formattedType}s`}
-                value={searchText}
-              />
-            </Grid>
-            <Grid>
-              <Button
-                buttonType="primary"
-                data-testid="add-device-button"
-                disabled={disabled}
-                onClick={handleOpen}
-              >
-                Add {formattedType}s to Firewall
-              </Button>
-            </Grid>
+          direction="row"
+          sx={{
+            alignItems: "center",
+            justifyContent: "space-between"
+          }}>
+          <Grid sx={{ width: '30%' }}>
+            <DebouncedSearchTextField
+              onSearch={(val) => {
+                filter(val);
+              }}
+              debounceTime={250}
+              expand={true}
+              hideLabel
+              label=""
+              placeholder={`Search ${formattedType}s`}
+              value={searchText}
+            />
+          </Grid>
+          <Grid>
+            <Button
+              buttonType="primary"
+              data-testid="add-device-button"
+              disabled={disabled}
+              onClick={handleOpen}
+            >
+              Add {formattedType}s to Firewall
+            </Button>
           </Grid>
         </Grid>
-        <FirewallDeviceTable
-          triggerRemoveDevice={(id) => {
-            setSelectedDeviceId(id);
-            setIsRemoveDeviceDialogOpen(true);
-          }}
-          deviceType={type}
-          devices={filteredDevices ?? []}
-          disabled={disabled}
-          error={error ?? undefined}
-          loading={isLoading}
+      </Grid>
+      <FirewallDeviceTable
+        triggerRemoveDevice={(id) => {
+          setSelectedDeviceId(id);
+          setIsRemoveDeviceDialogOpen(true);
+        }}
+        deviceType={type}
+        devices={filteredDevices ?? []}
+        disabled={disabled}
+        error={error ?? undefined}
+        loading={isLoading}
+      />
+      {type === 'linode' ? (
+        <AddLinodeDrawer
+          helperText={helperText}
+          onClose={handleClose}
+          open={addDeviceDrawerOpen}
         />
-        {type === 'linode' ? (
-          <AddLinodeDrawer
-            helperText={helperText}
-            onClose={handleClose}
-            open={addDeviceDrawerOpen}
-          />
-        ) : (
-          <AddNodebalancerDrawer
-            helperText={helperText}
-            onClose={handleClose}
-            open={addDeviceDrawerOpen}
-          />
-        )}
-        <RemoveDeviceDialog
-          device={selectedDevice}
-          firewallId={firewallId}
-          firewallLabel={firewallLabel}
-          onClose={() => setIsRemoveDeviceDialogOpen(false)}
-          onService={undefined}
-          open={isRemoveDeviceDialogOpen}
+      ) : (
+        <AddNodebalancerDrawer
+          helperText={helperText}
+          onClose={handleClose}
+          open={addDeviceDrawerOpen}
         />
-      </>
-    );
+      )}
+      <RemoveDeviceDialog
+        device={selectedDevice}
+        firewallId={firewallId}
+        firewallLabel={firewallLabel}
+        onClose={() => setIsRemoveDeviceDialogOpen(false)}
+        onService={undefined}
+        open={isRemoveDeviceDialogOpen}
+      />
+    </>);
   }
 );
 

@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2/Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
@@ -72,7 +72,12 @@ export const IconSection = React.memo((props: Props) => {
   const storageInBytes = sumStorage(props.longviewClientData.Disk);
 
   return (
-    <Grid lg={3} md={6} xs={12}>
+    (<Grid
+      size={{
+        lg: 3,
+        md: 6,
+        xs: 12
+      }}>
       <StyledHeaderGrid container spacing={2}>
         <Grid>
           <Typography sx={{ wordBreak: 'break-all' }} variant="h3">
@@ -86,7 +91,7 @@ export const IconSection = React.memo((props: Props) => {
         <StyledIconGrid md={2} sm={1} xs={2}>
           <ServerIcon />
         </StyledIconGrid>
-        <Grid xs={10}>
+        <Grid size={10}>
           <Typography>
             {osDist} {osDistVersion} {kernel && `(${kernel})`}
           </Typography>
@@ -96,7 +101,7 @@ export const IconSection = React.memo((props: Props) => {
         <StyledIconGrid md={2} sm={1} xs={2}>
           <CPUIcon />
         </StyledIconGrid>
-        <Grid xs={10}>
+        <Grid size={10}>
           <Typography>{cpuType}</Typography>
           {cpuCoreCount && (
             <Typography>{`${cpuCoreCount} ${coreCountDisplay}`}</Typography>
@@ -108,7 +113,7 @@ export const IconSection = React.memo((props: Props) => {
           <RamIcon />
         </StyledIconGrid>
         {convertedTotalMemory.value !== 0 && convertedTotalSwap.value !== 0 ? (
-          <Grid xs={10}>
+          <Grid size={10}>
             <Typography>
               {`${convertedTotalMemory.value} ${convertedTotalMemory.unit} RAM`}
             </Typography>
@@ -117,7 +122,7 @@ export const IconSection = React.memo((props: Props) => {
             </Typography>
           </Grid>
         ) : (
-          <Grid xs={10}>
+          <Grid size={10}>
             <Typography>RAM information not available</Typography>
           </Grid>
         )}
@@ -128,7 +133,7 @@ export const IconSection = React.memo((props: Props) => {
         </StyledIconGrid>
 
         {storageInBytes.total !== 0 ? (
-          <Grid xs={10}>
+          <Grid size={10}>
             <Typography>
               {`${
                 readableBytes(storageInBytes.total, { unit: 'GB' }).formatted
@@ -141,7 +146,7 @@ export const IconSection = React.memo((props: Props) => {
             </Typography>
           </Grid>
         ) : (
-          <Grid xs={10}>
+          <Grid size={10}>
             <Typography>Storage information not available</Typography>
           </Grid>
         )}
@@ -164,11 +169,11 @@ export const IconSection = React.memo((props: Props) => {
           <StyledIconGrid md={2} sm={1} xs={2}>
             <PackageIcon />
           </StyledIconGrid>
-          <Grid xs={10}>
+          <Grid size={10}>
             <Typography>{packagesToUpdate}</Typography>
           </Grid>
         </StyledIconContainerGrid>
       )}
-    </Grid>
+    </Grid>)
   );
 });

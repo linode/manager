@@ -62,7 +62,9 @@ export const SelectLinodeCard = ({
     linode.region;
 
   const renderVariant = () => (
-    <Grid paddingTop={0} size={12}>
+    <Grid size={12} sx={{
+      paddingTop: 0
+    }}>
       <Stack direction="row" justifyContent="space-between" marginBottom={1}>
         <Stack alignItems="center" direction="row" height={34}>
           <StatusIcon

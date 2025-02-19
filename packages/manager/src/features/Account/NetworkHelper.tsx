@@ -9,7 +9,7 @@ interface Props {
 
 const NetworkHelper = ({ networkHelperEnabled, onChange }: Props) => {
   return (
-    <Accordion defaultExpanded={true} heading="Network Helper">
+    (<Accordion defaultExpanded={true} heading="Network Helper">
       <Grid container direction="column" spacing={2}>
         <Grid>
           <Typography variant="body1">
@@ -17,7 +17,9 @@ const NetworkHelper = ({ networkHelperEnabled, onChange }: Props) => {
             configuration into your Linode at boot.
           </Typography>
         </Grid>
-        <Grid alignItems="center" container direction="row">
+        <Grid container direction="row" sx={{
+          alignItems: "center"
+        }}>
           <Grid>
             <FormControlLabel
               control={
@@ -34,7 +36,7 @@ const NetworkHelper = ({ networkHelperEnabled, onChange }: Props) => {
           </Grid>
         </Grid>
       </Grid>
-    </Accordion>
+    </Accordion>)
   );
 };
 

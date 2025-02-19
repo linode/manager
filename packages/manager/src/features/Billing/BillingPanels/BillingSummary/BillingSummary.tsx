@@ -155,7 +155,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
       : 'Our billing cycle ends on the last day of the month. You may be invoiced before the end of the cycle if your balance exceeds your credit limit.';
 
   return (<>
-    <Grid container margin={0} spacing={2} size={12}>
+    <Grid container spacing={2} size={12} sx={{
+      margin: 0
+    }}>
       <Grid {...gridDimensions} size={{
         sm: 6
       }}>

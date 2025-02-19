@@ -219,14 +219,15 @@ export const PayPalButton = (props: Props) => {
 
   if (clientTokenLoading || isPending || !options['data-client-token']) {
     return (
-      <Grid
-        alignContent="center"
+      (<Grid
         className={classes.loading}
         container
-        justifyContent="center"
-      >
+        sx={{
+          alignContent: "center",
+          justifyContent: "center"
+        }}>
         <CircleProgress size="sm" />
-      </Grid>
+      </Grid>)
     );
   }
 

@@ -361,7 +361,9 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     (<Grid container>
       {fromAddonsPanel ? null : (
         <>
-          <Grid width={'100%'}>
+          <Grid sx={{
+            width: '100%'
+          }}>
             {errors.primaryError && (
               <Notice text={errors.primaryError} variant="error" />
             )}

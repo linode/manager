@@ -1,6 +1,6 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { Button, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2/Grid2';
+import Grid from '@mui/material/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -176,118 +176,144 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     </>
   );
 
-  return (
-    <>
-      <Typography className={classes.header} variant="h3">
-        Connection Details
-      </Typography>
-      <StyledGridContainer container lg={7} md={10} spacing={0}>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>Username</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid md={8} xs={9}>
-          {username}
-        </StyledValueGrid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>Password</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid md={8} xs={9}>
-          {password}
-          {showCredentials && credentialsLoading ? (
-            <div className={classes.progressCtn}>
-              <CircleProgress noPadding size="xs" />
-            </div>
-          ) : credentialsError ? (
-            <>
-              <span className={classes.error}>
-                Error retrieving credentials.
-              </span>
-              {credentialsBtn(() => getDatabaseCredentials(), 'Retry')}
-            </>
-          ) : (
-            credentialsBtn(
-              handleShowPasswordClick,
-              showCredentials && credentials ? 'Hide' : 'Show'
-            )
-          )}
-          {disableShowBtn && (
-            <TooltipIcon
-              text={
-                database.status === 'provisioning'
-                  ? 'Your Database Cluster is currently provisioning.'
-                  : 'Your root password is unavailable when your Database Cluster has failed.'
-              }
-              status="help"
-              sxTooltipIcon={sxTooltipIcon}
-            />
-          )}
-          {showCredentials && credentials && (
+  return (<>
+    <Typography className={classes.header} variant="h3">
+      Connection Details
+    </Typography>
+    <StyledGridContainer container lg={7} md={10} spacing={0}>
+      <Grid
+        size={{
+          md: 4,
+          xs: 3
+        }}>
+        <StyledLabelTypography>Username</StyledLabelTypography>
+      </Grid>
+      <StyledValueGrid md={8} xs={9}>
+        {username}
+      </StyledValueGrid>
+      <Grid
+        size={{
+          md: 4,
+          xs: 3
+        }}>
+        <StyledLabelTypography>Password</StyledLabelTypography>
+      </Grid>
+      <StyledValueGrid md={8} xs={9}>
+        {password}
+        {showCredentials && credentialsLoading ? (
+          <div className={classes.progressCtn}>
+            <CircleProgress noPadding size="xs" />
+          </div>
+        ) : credentialsError ? (
+          <>
+            <span className={classes.error}>
+              Error retrieving credentials.
+            </span>
+            {credentialsBtn(() => getDatabaseCredentials(), 'Retry')}
+          </>
+        ) : (
+          credentialsBtn(
+            handleShowPasswordClick,
+            showCredentials && credentials ? 'Hide' : 'Show'
+          )
+        )}
+        {disableShowBtn && (
+          <TooltipIcon
+            text={
+              database.status === 'provisioning'
+                ? 'Your Database Cluster is currently provisioning.'
+                : 'Your root password is unavailable when your Database Cluster has failed.'
+            }
+            status="help"
+            sxTooltipIcon={sxTooltipIcon}
+          />
+        )}
+        {showCredentials && credentials && (
+          <CopyTooltip
+            className={classes.inlineCopyToolTip}
+            text={password}
+          />
+        )}
+      </StyledValueGrid>
+      <Grid
+        size={{
+          md: 4,
+          xs: 3
+        }}>
+        <StyledLabelTypography>Database name</StyledLabelTypography>
+      </Grid>
+      <StyledValueGrid md={8} xs={9}>
+        {isLegacy ? database.engine : 'defaultdb'}
+      </StyledValueGrid>
+      <Grid
+        size={{
+          md: 4,
+          xs: 3
+        }}>
+        <StyledLabelTypography>Host</StyledLabelTypography>
+      </Grid>
+      <StyledValueGrid md={8} xs={9}>
+        {database.hosts?.primary ? (
+          <>
+            {database.hosts?.primary}
             <CopyTooltip
               className={classes.inlineCopyToolTip}
-              text={password}
+              text={database.hosts?.primary}
             />
-          )}
-        </StyledValueGrid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>Database name</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid md={8} xs={9}>
-          {isLegacy ? database.engine : 'defaultdb'}
-        </StyledValueGrid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>Host</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid md={8} xs={9}>
-          {database.hosts?.primary ? (
-            <>
-              {database.hosts?.primary}
-              <CopyTooltip
-                className={classes.inlineCopyToolTip}
-                text={database.hosts?.primary}
+            {!isLegacy && (
+              <TooltipIcon
+                componentsProps={hostTooltipComponentProps}
+                status="help"
+                sxTooltipIcon={sxTooltipIcon}
+                text={HOST_TOOLTIP_COPY}
               />
-              {!isLegacy && (
-                <TooltipIcon
-                  componentsProps={hostTooltipComponentProps}
-                  status="help"
-                  sxTooltipIcon={sxTooltipIcon}
-                  text={HOST_TOOLTIP_COPY}
-                />
-              )}
-            </>
-          ) : (
-            <Typography>
-              <span className={classes.provisioningText}>
-                Your hostname will appear here once it is available.
-              </span>
-            </Typography>
-          )}
-        </StyledValueGrid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>
-            {isLegacy ? 'Private Network Host' : 'Read-only Host'}
-          </StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid md={8} xs={9}>
-          {readOnlyHost()}
-        </StyledValueGrid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>Port</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid md={8} xs={9}>
-          {database.port}
-        </StyledValueGrid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>SSL</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid md={8} xs={9}>
-          {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
-        </StyledValueGrid>
-      </StyledGridContainer>
-      <div className={classes.actionBtnsCtn}>
-        {database.ssl_connection ? caCertificateJSX : null}
-      </div>
-    </>
-  );
+            )}
+          </>
+        ) : (
+          <Typography>
+            <span className={classes.provisioningText}>
+              Your hostname will appear here once it is available.
+            </span>
+          </Typography>
+        )}
+      </StyledValueGrid>
+      <Grid
+        size={{
+          md: 4,
+          xs: 3
+        }}>
+        <StyledLabelTypography>
+          {isLegacy ? 'Private Network Host' : 'Read-only Host'}
+        </StyledLabelTypography>
+      </Grid>
+      <StyledValueGrid md={8} xs={9}>
+        {readOnlyHost()}
+      </StyledValueGrid>
+      <Grid
+        size={{
+          md: 4,
+          xs: 3
+        }}>
+        <StyledLabelTypography>Port</StyledLabelTypography>
+      </Grid>
+      <StyledValueGrid md={8} xs={9}>
+        {database.port}
+      </StyledValueGrid>
+      <Grid
+        size={{
+          md: 4,
+          xs: 3
+        }}>
+        <StyledLabelTypography>SSL</StyledLabelTypography>
+      </Grid>
+      <StyledValueGrid md={8} xs={9}>
+        {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
+      </StyledValueGrid>
+    </StyledGridContainer>
+    <div className={classes.actionBtnsCtn}>
+      {database.ssl_connection ? caCertificateJSX : null}
+    </div>
+  </>);
 };
 
 export default DatabaseSummaryConnectionDetails;

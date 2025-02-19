@@ -270,33 +270,37 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const hours = end.diff(start, 'hours').hours;
   const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
   return (
-    <Grid container item lg={widget.size} xs={12}>
-      <Stack flexGrow={1} spacing={2}>
+    (<Grid container item lg={widget.size} xs={12}>
+      <Stack spacing={2} sx={{
+        flexGrow: 1
+      }}>
         <Paper
           data-qa-widget={convertStringToCamelCasesWithSpaces(widget.label)}
           sx={{ flexGrow: 1 }}
         >
           <Stack
-            alignItems={'center'}
             direction={{ sm: 'row' }}
-            gap={{ sm: 0, xs: 2 }}
-            justifyContent={{ sm: 'space-between' }}
-            marginBottom={1}
-            padding={1}
-          >
+            sx={{
+              alignItems: 'center',
+              gap: { sm: 0, xs: 2 },
+              justifyContent: { sm: 'space-between' },
+              marginBottom: 1,
+              padding: 1
+            }}>
             <Typography marginLeft={1} variant="h2">
               {convertStringToCamelCasesWithSpaces(widget.label)} (
               {scaledWidgetUnit.current}
               {unit.endsWith('ps') ? '/s' : ''})
             </Typography>
             <Stack
-              alignItems={'center'}
               direction={{ sm: 'row' }}
-              gap={2}
-              maxHeight={`calc(${theme.spacing(10)} + 5px)`}
-              overflow="auto"
-              width={{ sm: 'inherit', xs: '100%' }}
-            >
+              sx={{
+                alignItems: 'center',
+                gap: 2,
+                maxHeight: `calc(${theme.spacing(10)} + 5px)`,
+                overflow: "auto",
+                width: { sm: 'inherit', xs: '100%' }
+              }}>
               {availableMetrics?.scrape_interval && (
                 <CloudPulseIntervalSelect
                   defaultInterval={widgetProp?.time_granularity}
@@ -349,6 +353,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
           />
         </Paper>
       </Stack>
-    </Grid>
+    </Grid>)
   );
 };

@@ -28,10 +28,12 @@ export const TransferDisplayUsage = React.memo(
       )}
       <Grid
         container
-        justifyContent="space-between"
         spacing={2}
-        sx={{ marginBottom: 0, marginTop: (theme) => theme.spacing(0.5) }}
-      >
+        sx={{
+          justifyContent: "space-between",
+          marginBottom: 0,
+          marginTop: (theme) => theme.spacing(0.5)
+        }}>
         <Grid style={{ marginRight: 10 }}>
           {!isEmptyPool ? (
             <Typography fontSize={theme.typography.h3.fontSize}>

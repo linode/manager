@@ -573,7 +573,9 @@ export const IPTransfer = (props: Props) => {
           </>
         )}
       </Grid>
-      <Grid container justifyContent="flex-end" size={12}>
+      <Grid container size={12} sx={{
+        justifyContent: "flex-end"
+      }}>
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'ip-transfer-save',

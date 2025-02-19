@@ -19,31 +19,33 @@ export const CollapsibleRow = (props: Props) => {
 
   const [open, setOpen] = React.useState(false);
 
-  return (
-    <>
-      <TableRow>
-        <TableCell scope="row">
-          <Box alignItems="center" display="flex">
-            <IconButton
-              aria-label={`expand ${label} row`}
-              onClick={() => setOpen(!open)}
-              size="small"
-              sx={{ marginRight: 0.5, padding: 0 }}
-            >
-              {open ? <KeyboardCaretDownIcon /> : <KeyboardCaretRightIcon />}
-            </IconButton>
-            {label}
-          </Box>
-        </TableCell>
-        {OuterTableCells}
-      </TableRow>
-      <TableRow className="MuiTableRow-nested">
-        <TableCell className="MuiTableCell-nested" colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box>{InnerTable}</Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
-  );
+  return (<>
+    <TableRow>
+      <TableCell scope="row">
+        <Box
+          sx={{
+            alignItems: "center",
+            display: "flex"
+          }}>
+          <IconButton
+            aria-label={`expand ${label} row`}
+            onClick={() => setOpen(!open)}
+            size="small"
+            sx={{ marginRight: 0.5, padding: 0 }}
+          >
+            {open ? <KeyboardCaretDownIcon /> : <KeyboardCaretRightIcon />}
+          </IconButton>
+          {label}
+        </Box>
+      </TableCell>
+      {OuterTableCells}
+    </TableRow>
+    <TableRow className="MuiTableRow-nested">
+      <TableCell className="MuiTableCell-nested" colSpan={6}>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <Box>{InnerTable}</Box>
+        </Collapse>
+      </TableCell>
+    </TableRow>
+  </>);
 };

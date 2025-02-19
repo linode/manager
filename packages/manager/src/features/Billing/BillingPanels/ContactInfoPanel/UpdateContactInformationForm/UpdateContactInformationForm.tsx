@@ -444,11 +444,12 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         </Grid>
         {nonUSCountry && (
           <Grid
-            alignItems="flex-start"
-            display="flex"
-            marginTop={(theme) => theme.tokens.spacing[60]}
             size={12}
-          >
+            sx={{
+              alignItems: "flex-start",
+              display: "flex",
+              marginTop: (theme) => theme.tokens.spacing[60]
+            }}>
             <Checkbox
               onChange={() =>
                 setBillingAgreementChecked(!billingAgreementChecked)

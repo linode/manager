@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2/Grid2';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -50,20 +50,24 @@ export const LongviewClientInstructions = (props: Props) => {
   };
 
   return (
-    <Paper
-      sx={{
-        marginBottom: theme.spacing(4),
-        padding: theme.spacing(3),
-      }}
-      data-testid={clientID}
-    >
+    (<Paper
+        sx={{
+          marginBottom: theme.spacing(4),
+          padding: theme.spacing(3),
+        }}
+        data-testid={clientID}
+      >
       <Grid
         aria-label="Installation instructions for the Longview agent"
         container
         data-testid="installation"
       >
-        <Grid xs={11} container>
-          <Grid md={3} xs={12}>
+        <Grid container size={11}>
+          <Grid
+            size={{
+              md: 3,
+              xs: 12
+            }}>
             {userCanModifyClient ? (
               <EditableEntityLabel
                 loading={updating}
@@ -78,15 +82,21 @@ export const LongviewClientInstructions = (props: Props) => {
               />
             )}
           </Grid>
-          <Grid md={9} xs={12}>
+          <Grid
+            size={{
+              md: 9,
+              xs: 12
+            }}>
             <InstallationInstructions
               APIKey={clientAPIKey}
               installationKey={installCode}
             />
           </Grid>
         </Grid>
-        <Grid xs={1}>
-          <Grid container justifyContent="flex-end" spacing={2}>
+        <Grid size={1}>
+          <Grid container spacing={2} sx={{
+            justifyContent: "flex-end"
+          }}>
             <Grid>
               <LongviewActionMenu
                 longviewClientID={clientID}
@@ -98,6 +108,6 @@ export const LongviewClientInstructions = (props: Props) => {
           </Grid>
         </Grid>
       </Grid>
-    </Paper>
+    </Paper>)
   );
 };

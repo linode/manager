@@ -75,9 +75,11 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   const displayIP = ip ?? '';
 
   return (
-    <TableRow data-qa-node-row={nodeId}>
+    (<TableRow data-qa-node-row={nodeId}>
       <TableCell>
-        <Grid alignItems="center" container wrap="nowrap">
+        <Grid container wrap="nowrap" sx={{
+          alignItems: "center"
+        }}>
           <Grid>
             <Typography>
               {linodeLink ? (
@@ -140,6 +142,6 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           openRecycleNodeDialog={openRecycleNodeDialog}
         />
       </TableCell>
-    </TableRow>
+    </TableRow>)
   );
 });

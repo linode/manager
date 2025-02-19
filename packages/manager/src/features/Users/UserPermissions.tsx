@@ -404,17 +404,19 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const isProxyUser = this.state.userType === 'proxy';
 
     return (
-      <Box>
+      (<Box>
         {generalError && (
           <Notice spacingTop={8} text={generalError} variant="error" />
         )}
         <StyledPaper>
           <Grid
-            alignItems="center"
             container
             spacing={2}
-            sx={{ margin: 0, width: 'auto' }}
-          >
+            sx={{
+              alignItems: "center",
+              margin: 0,
+              width: 'auto'
+            }}>
             <StyledHeaderGrid>
               <Typography
                 sx={{
@@ -460,7 +462,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           </Grid>
         </StyledPaper>
         {restricted ? this.renderPermissions() : this.renderUnrestricted()}
-      </Box>
+      </Box>)
     );
   };
 
@@ -588,13 +590,18 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <StyledPermPaper
+      (<StyledPermPaper
         sx={(theme) => ({
           marginTop: theme.spacing(2),
         })}
         data-qa-entity-section
       >
-        <Grid alignItems="center" container justifyContent="space-between">
+        <Grid
+          container
+          sx={{
+            alignItems: "center",
+            justifyContent: "space-between"
+          }}>
           <Grid>
             <Typography
               data-qa-permissions-header="Specific Permissions"
@@ -668,7 +675,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.cancelPermsType('entity'),
           isSavingEntity
         )}
-      </StyledPermPaper>
+      </StyledPermPaper>)
     );
   };
 

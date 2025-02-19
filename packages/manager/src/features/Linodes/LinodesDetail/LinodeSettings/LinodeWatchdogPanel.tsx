@@ -33,11 +33,13 @@ export const LinodeWatchdogPanel = (props: Props) => {
 
   return (
     (<Accordion
-      data-qa-watchdog-panel
-      defaultExpanded
-      heading="Shutdown Watchdog"
-    >
-      <Grid alignItems="center" container spacing={2}>
+        data-qa-watchdog-panel
+        defaultExpanded
+        heading="Shutdown Watchdog"
+      >
+      <Grid container spacing={2} sx={{
+        alignItems: "center"
+      }}>
         {Boolean(error) && (
           <Grid size={12}>
             <Notice text={error?.[0].reason} variant="error" />

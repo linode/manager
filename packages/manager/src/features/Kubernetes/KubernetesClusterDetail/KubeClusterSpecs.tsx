@@ -131,28 +131,32 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
 
   const kubeSpecItem = (spec: string, idx: number) => {
     return (
-      <Grid
-        alignItems="center"
+      (<Grid
         className={classes.item}
         key={`spec-${idx}`}
         wrap="nowrap"
+        sx={{
+          alignItems: "center"
+        }}
       >
         <Grid className={classes.iconTextOuter}>
           <Typography>{spec}</Typography>
         </Grid>
-      </Grid>
+      </Grid>)
     );
   };
 
   return (
     (<Grid
-      columnGap={matchesColGapBreakpointDown ? 2 : 0}
-      container
-      direction="row"
-      size={{
-        lg: 3,
-        xs: 12
-      }}>
+        container
+        direction="row"
+        size={{
+          lg: 3,
+          xs: 12
+        }}
+        sx={{
+          columnGap: matchesColGapBreakpointDown ? 2 : 0
+        }}>
       <Grid size={{
         lg: 6
       }}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>

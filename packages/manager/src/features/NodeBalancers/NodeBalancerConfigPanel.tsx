@@ -494,11 +494,12 @@ export const NodeBalancerConfigPanel = (
           <Divider />
         </Grid>
         <Grid
-          alignItems="center"
           container
-          justifyContent="flex-end"
           spacing={2}
-        >
+          sx={{
+            alignItems: "center",
+            justifyContent: "flex-end"
+          }}>
           <StyledActionsPanel
             primaryButtonProps={
               forEdit

@@ -49,7 +49,7 @@ export const DisplayAlertDetailChips = React.memo(
       : [];
     const theme = useTheme();
     return (
-      <Grid container data-qa-item={label} item spacing={1}>
+      (<Grid container data-qa-item={label} item spacing={1}>
         {chipValues.map((value, index) => (
           <React.Fragment key={`${label}_${index}`}>
             <Grid item md={labelGridColumns} xs={12}>
@@ -62,14 +62,17 @@ export const DisplayAlertDetailChips = React.memo(
             <Grid item md={valueGridColumns} xs={12}>
               <Grid
                 container
-                flexWrap={mergeChips ? 'nowrap' : 'wrap'}
-                gap={mergeChips ? 0 : 1}
-              >
+                sx={{
+                  flexWrap: mergeChips ? 'nowrap' : 'wrap',
+                  gap: mergeChips ? 0 : 1
+                }}>
                 {value.map((label, index) => (
                   <Grid
                     item
                     key={index}
-                    marginLeft={mergeChips && index > 0 ? -1 : 0}
+                    sx={{
+                      marginLeft: mergeChips && index > 0 ? -1 : 0
+                    }}
                   >
                     <StyledAlertChip
                       borderRadius={getAlertChipBorderRadius({
@@ -88,7 +91,7 @@ export const DisplayAlertDetailChips = React.memo(
             </Grid>
           </React.Fragment>
         ))}
-      </Grid>
+      </Grid>)
     );
   }
 );

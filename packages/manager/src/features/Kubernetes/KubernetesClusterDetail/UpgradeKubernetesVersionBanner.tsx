@@ -32,38 +32,37 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
     </Button>
   );
 
-  return (
-    <>
-      {nextVersion ? (
-        <DismissibleBanner
-          actionButton={actionButton}
-          preferenceKey={`${clusterID}-${currentVersion}`}
-          variant="info"
-        >
-          <Grid
-            alignItems="center"
-            container
-            direction="row"
-            justifyContent="space-between"
-          >
-            <Grid>
-              <Typography>
-                A new version of Kubernetes is available ({nextVersion}).
-              </Typography>
-            </Grid>
+  return (<>
+    {nextVersion ? (
+      <DismissibleBanner
+        actionButton={actionButton}
+        preferenceKey={`${clusterID}-${currentVersion}`}
+        variant="info"
+      >
+        <Grid
+          container
+          direction="row"
+          sx={{
+            alignItems: "center",
+            justifyContent: "space-between"
+          }}>
+          <Grid>
+            <Typography>
+              A new version of Kubernetes is available ({nextVersion}).
+            </Typography>
           </Grid>
-        </DismissibleBanner>
-      ) : null}
-      <UpgradeVersionModal
-        clusterID={clusterID}
-        clusterLabel={clusterLabel}
-        clusterTier={clusterTier}
-        currentVersion={currentVersion}
-        isOpen={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-      />
-    </>
-  );
+        </Grid>
+      </DismissibleBanner>
+    ) : null}
+    <UpgradeVersionModal
+      clusterID={clusterID}
+      clusterLabel={clusterLabel}
+      clusterTier={clusterTier}
+      currentVersion={currentVersion}
+      isOpen={dialogOpen}
+      onClose={() => setDialogOpen(false)}
+    />
+  </>);
 };
 
 export default React.memo(UpgradeKubernetesVersionBanner);

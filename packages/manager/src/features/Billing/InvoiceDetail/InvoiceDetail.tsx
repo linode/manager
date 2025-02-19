@@ -124,7 +124,9 @@ export const InvoiceDetail = () => {
         padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
       }}
     >
-      <Grid container rowGap={2}>
+      <Grid container sx={{
+        rowGap: 2
+      }}>
         <Grid size={12}>
           <Grid container data-qa-invoice-header spacing={2} sx={sxGrid}>
             <Grid
