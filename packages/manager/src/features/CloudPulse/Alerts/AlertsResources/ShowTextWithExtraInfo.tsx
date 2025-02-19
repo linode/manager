@@ -22,34 +22,36 @@ export const ShowTextWithExtraInfo = ({ values }: TextWithInfoProp) => {
         })}
         label={values[0]}
       />
-      <Tooltip
-        title={
-          <Box
-            alignItems="center"
-            display="flex"
-            flexDirection="column"
-            gap={1}
-          >
-            {values.map(
-              (value, index) =>
-                index > 0 && (
-                  <Typography key={index} variant="body2">
-                    {value}
-                  </Typography>
-                )
-            )}
-          </Box>
-        }
-      >
-        <span>
-          <Chip
-            sx={(theme) => ({
-              backgroundColor: theme.color.tagButtonBg,
-            })}
-            label={`+${values ? values.length - 1 : ''}`}
-          />
-        </span>
-      </Tooltip>
+      {values.length > 1 && (
+        <Tooltip
+          title={
+            <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="column"
+              gap={1}
+            >
+              {values.map(
+                (value, index) =>
+                  index > 0 && (
+                    <Typography key={index} variant="body2">
+                      {value}
+                    </Typography>
+                  )
+              )}
+            </Box>
+          }
+        >
+          <span>
+            <Chip
+              sx={(theme) => ({
+                backgroundColor: theme.color.tagButtonBg,
+              })}
+              label={`+${values ? values.length - 1 : ''}`}
+            />
+          </span>
+        </Tooltip>
+      )}
     </Box>
   );
 };
