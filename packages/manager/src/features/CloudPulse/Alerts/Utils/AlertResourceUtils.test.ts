@@ -194,7 +194,7 @@ describe('getSupportedRegionIds', () => {
       mockResourceTypeMap,
       'linode'
     ) as string[];
-    expect(result.length).toBe(3);
+    expect(result.length).toBe(4);
   });
   it('should return undefined if no supported region ids are defined in resource type map for the given service type', () => {
     const mockResourceTypeMap = [
