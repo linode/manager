@@ -120,7 +120,7 @@
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
-    "@linode/eslint-plugin-cloud-manager": "^0.0.5",
+    "@linode/eslint-plugin-cloud-manager": "^0.0.7",
     "@storybook/addon-a11y": "^8.4.7",
     "@storybook/addon-actions": "^8.4.7",
     "@storybook/addon-controls": "^8.4.7",
