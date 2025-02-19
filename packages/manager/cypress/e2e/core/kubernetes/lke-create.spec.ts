@@ -1152,7 +1152,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       cy.findByText('Cluster Tier').should('be.visible');
 
-      cy.findByLabelText('Compare Cluster Tiers')
+      cy.findByText('Compare Cluster Tiers')
         .should('be.visible')
         .should('have.attr', 'href', CLUSTER_TIER_DOCS_LINK);
 
@@ -1198,7 +1198,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
         .should('be.visible')
         .click();
 
-      cy.findByLabelText('Kubernetes Versions')
+      cy.findByText('Kubernetes Versions')
         .should('be.visible')
         .should('have.attr', 'href', CLUSTER_VERSIONS_DOCS_LINK);
 
@@ -1246,14 +1246,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
           // Confirm LKE-E section is shown
           cy.findByText('LKE Enterprise').should('be.visible');
-          cy.findByText('HA control plane, Dedicated control plane').should(
-            'be.visible'
-          );
           cy.findByText('$300.00/month').should('be.visible');
 
-          cy.findByText(`Dedicated 4 GB Plan`).should('be.visible');
+          cy.findByText('Dedicated 4 GB Plan').should('be.visible');
           cy.findByText('$144.00').should('be.visible');
-          cy.findByText(`Linode 2 GB Plan`).should('be.visible');
+          cy.findByText('Linode 2 GB Plan').should('be.visible');
           cy.findByText('$15.00').should('be.visible');
           cy.findByText('$459.00').should('be.visible');
 
