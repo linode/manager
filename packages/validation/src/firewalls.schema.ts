@@ -139,7 +139,6 @@ const validateFirewallPorts = string().test({
   },
 });
 
-// const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP', 'IPENCAP'];
 export const FirewallRuleTypeSchema = object().shape({
   action: string().oneOf(['ACCEPT', 'DROP']).required('Action is required'),
   description: string().nullable(),

@@ -33,8 +33,12 @@ import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import {
+  FIREWALL_HELPER_TEXT,
+  FIREWALL_LABEL_TEXT,
   LINODE_CREATE_FLOW_TEXT,
   NODEBALANCER_CREATE_FLOW_TEXT,
+  NODEBALANCER_HELPER_TEXT,
+  READ_ONLY_DEVICES_HIDDEN_MESSAGE,
 } from './constants';
 
 import type {
@@ -46,10 +50,6 @@ import type {
 } from '@linode/api-v4';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
-
-export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
-  'Only services you have permission to modify are shown.';
-const NODEBALANCER_HELPER_TEXT = `Only the firewall's inbound rules apply to NodeBalancers.`;
 
 export interface CreateFirewallDrawerProps {
   createFlow: FirewallDeviceEntityType | undefined;
@@ -132,17 +132,10 @@ export const CreateFirewallDrawer = React.memo(
         }
       } catch (errors) {
         for (const error of errors) {
-          if (error?.field === 'rules') {
-            setError('root', { message: error.reason });
-          } else {
-            setError(error?.field ?? 'root', { message: error.reason });
-          }
+          setError(error?.field ?? 'root', { message: error.reason });
         }
       }
     };
-
-    const FirewallLabelText = `Assign services to the Firewall`;
-    const FirewallHelperText = `Assign one or more services to this firewall. You can add services later if you want to customize your rules first.`;
 
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
@@ -301,10 +294,10 @@ export const CreateFirewallDrawer = React.memo(
               })}
               variant="h3"
             >
-              {FirewallLabelText}
+              {FIREWALL_LABEL_TEXT}
             </Typography>
             <Typography>
-              {FirewallHelperText}
+              {FIREWALL_HELPER_TEXT}
               {deviceSelectGuidance && ` ${deviceSelectGuidance}`}
             </Typography>
             <Typography
