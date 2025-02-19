@@ -819,10 +819,6 @@ export const darkTheme: ThemeOptions = {
             // Default Striping
             '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
           },
-          // Zebra Striping for Nested Tables
-          '&.MuiTable-zebra-nested': {
-            '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
-          },
           // Nested Tables
           '.MuiTable-root': {
             '.MuiTableCell-head': {

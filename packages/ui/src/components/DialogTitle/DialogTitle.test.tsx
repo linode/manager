@@ -1,8 +1,8 @@
 import userEvent from '@testing-library/user-event';
 import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithTheme } from '../../utilities/testHelpers';
 import { DialogTitle } from './DialogTitle';
 
 import type { DialogTitleProps } from './DialogTitle';

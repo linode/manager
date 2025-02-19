@@ -5,8 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ChevronDown from 'src/assets/icons/chevron-down.svg';
-
+import { ChevronDownIcon } from '../../assets';
 import { Notice } from '../Notice';
 import { Typography } from '../Typography';
 
@@ -56,6 +55,10 @@ export interface AccordionProps extends _AccordionProps {
    */
   heading: React.ReactNode | string;
   /**
+   * A chip to render in the heading
+   */
+  headingChip?: React.JSX.Element;
+  /**
    * A number to display in the Accordion's heading
    */
   headingNumberCount?: number;
@@ -100,6 +103,7 @@ export const Accordion = (props: AccordionProps) => {
     error,
     expandIconClassNames,
     heading,
+    headingChip,
     headingNumberCount,
     headingProps,
     success,
@@ -123,13 +127,16 @@ export const Accordion = (props: AccordionProps) => {
       data-qa-panel={heading}
     >
       <AccordionSummary
-        expandIcon={<ChevronDown className={`caret ${expandIconClassNames}`} />}
+        expandIcon={
+          <ChevronDownIcon className={`caret ${expandIconClassNames}`} />
+        }
         onClick={handleClick}
         {...summaryProps}
         data-qa-panel-summary={heading}
       >
         <Typography {...headingProps} data-qa-panel-subheading variant="h3">
           {heading}
+          {headingChip}
         </Typography>
         {headingNumberCount && headingNumberCount > 0 ? (
           <span className={classes.itemCount}>{headingNumberCount}</span>
