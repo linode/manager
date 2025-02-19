@@ -139,16 +139,6 @@ export const ResizeNodePoolDrawer = (props: Props) => {
             handleSubmit();
           }}
         >
-          <div className={classes.section}>
-            <Typography className={classes.summary}>
-              Current pool: $
-              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
-              /month ({pluralize('node', 'nodes', nodePool.count)} at $
-              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-              /month)
-            </Typography>
-          </div>
-
           {resizeNodePoolError && (
             <Notice variant="error">
               <ErrorMessage
@@ -160,7 +150,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
           <div className={classes.section}>
             <Typography className={classes.helperText}>
-              Enter the number of nodes you'd like in this pool:
+              Adjust the total number of nodes to resize this node pool.
             </Typography>
             <EnhancedNumberInput
               min={1}
@@ -170,14 +160,23 @@ export const ResizeNodePoolDrawer = (props: Props) => {
           </div>
 
           <div className={classes.section}>
+            <Typography className={classes.summary}>
+              Current price: $
+              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
+              /month ({pluralize('node', 'nodes', nodePool.count)} at $
+              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+              /month each)
+            </Typography>
+          </div>
+          <div className={classes.section}>
             {/* Renders total pool price/month for N nodes at price per node/month. */}
             <Typography className={classes.summary}>
-              {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
+              {`Resized price: $${renderMonthlyPriceToCorrectDecimalPlace(
                 isNumber(pricePerNode) ? updatedCount * pricePerNode : undefined
               )}/month`}{' '}
               ({pluralize('node', 'nodes', updatedCount)} at $
               {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-              /month)
+              /month each)
             </Typography>
           </div>
 

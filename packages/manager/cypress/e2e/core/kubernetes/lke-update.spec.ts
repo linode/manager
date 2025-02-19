@@ -716,9 +716,12 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.disabled');
 
-          cy.findByText('Resized pool: $12/month (1 node at $12/month)').should(
-            'be.visible'
-          );
+          cy.findByText(
+            'Current price: $12/month (1 node at $12/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $12/month (1 node at $12/month each)'
+          ).should('be.visible');
 
           cy.findByLabelText('Add 1')
             .should('be.visible')
@@ -728,7 +731,7 @@ describe('LKE cluster updates', () => {
 
           cy.findByLabelText('Edit Quantity').should('have.value', '3');
           cy.findByText(
-            'Resized pool: $36/month (3 nodes at $12/month)'
+            'Resized price: $36/month (3 nodes at $12/month each)'
           ).should('be.visible');
 
           ui.button
