@@ -13,18 +13,22 @@ import {
 } from './constants';
 
 interface PrimaryNavToggleProps {
+  areNavItemsOverflowing: boolean;
   desktopMenuToggle: () => void;
   isCollapsed: boolean;
 }
 
 export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
-  const { desktopMenuToggle, isCollapsed } = props;
+  const { areNavItemsOverflowing, desktopMenuToggle, isCollapsed } = props;
 
   return (
     <Hidden mdDown>
       <Box
         sx={() => ({
           backgroundColor: Global.Color.Neutrals[90],
+          boxShadow: areNavItemsOverflowing
+            ? '0px -4px 8px -2px rgba(30, 30, 30, 0.5)'
+            : 'none',
           transition: 'width 100ms linear',
           width: isCollapsed
             ? `${SIDEBAR_COLLAPSED_WIDTH}px`
