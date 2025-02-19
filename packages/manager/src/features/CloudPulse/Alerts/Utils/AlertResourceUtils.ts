@@ -4,9 +4,6 @@ import {
 } from '../AlertsResources/constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
-import type { AlertsEngineOptionProps } from '../AlertsResources/AlertsEngineTypeFilter';
-import type { AlertsRegionProps } from '../AlertsResources/AlertsRegionFilter';
-import type { AlertsTagFilterProps } from '../AlertsResources/AlertsTagsFilter';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type {
   AlertAdditionalFilterKey,
