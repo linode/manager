@@ -2516,6 +2516,7 @@ export const handlers = [
               ],
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
+            type: 'user',
           })
         );
       }
@@ -2531,6 +2532,7 @@ export const handlers = [
           id: Number(params.id),
           label: `Alert-${params.id}`,
           status: body.status === 'enabled' ? 'disabled' : 'enabled',
+          type: 'user',
         }),
         {
           status: 200,

@@ -103,6 +103,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   (option) => option.value === field.value
                 ) ?? null
               }
+              data-qa-dimension-filter={`${name}-data-field`}
+              data-qa-id="data-field"
               data-testid="data-field"
               disabled={dataFieldDisabled}
               errorText={fieldState.error?.message}
@@ -134,6 +136,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   (option) => option.value === field.value
                 ) ?? null
               }
+              data-qa-dimension-filter={`${name}-operator`}
               data-testid="operator"
               disabled={!dimensionFieldWatcher}
               errorText={fieldState.error?.message}
@@ -168,6 +171,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                     (option) => option.value === field.value
                   ) ?? null
                 }
+                data-qa-dimension-filter={`${name}-value`}
                 data-testid="value"
                 disabled={!dimensionFieldWatcher}
                 errorText={fieldState.error?.message}
