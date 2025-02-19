@@ -280,40 +280,39 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .click();
 
     // Clicks the button closest to the Clock Icon, bypassing any visible state with `force: true`.
-    cy.get('[data-testid="ClockIcon"]')
+    cy.findByLabelText('Choose time, selected time is', { exact: false })
       .closest('button')
-      .click({ force: true });
+      .click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
 
-    cy.get('[aria-label="Select hours"]')
+    cy.findByLabelText('Select hours')
       .scrollIntoView({ easing: 'linear' })
       .within(() => {
-        cy.get(`[aria-label="${startHour} hours"]`).click({ force: true });
+        cy.get(`[aria-label="${startHour} hours"]`).click();
       });
 
-    cy.get('[aria-label="Select minutes"]')
+    cy.findByLabelText('Select minutes')
       .scrollIntoView({ easing: 'linear', duration: 500 })
       .within(() => {
-        cy.get(`[aria-label="${startMinute} minutes"]`).click({ force: true });
+        cy.get(`[aria-label="${startMinute} minutes"]`).click();
       });
 
-    cy.get('[aria-label="Select meridiem"]')
+    cy.findByLabelText('Select meridiem')
       .scrollIntoView({ easing: 'linear', duration: 500 })
       .within(() => {
-        cy.get(`[aria-label="PM"]`).click({ force: true });
+        cy.get(`[aria-label="PM"]`).click();
       });
 
     // Click the "Apply" button to confirm the start date and time
     cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
+    // ui.buttonGroup.findButtonByTitle('Apply').should('be.visible').click();
 
     // Assert that the start date and time is correctly displayed
     cy.findByPlaceholderText('Select Start Date')
       .scrollIntoView({ easing: 'linear' })
       .should('be.visible')
-      .invoke('val') // Get the current value
-      .then(cleanText) // Clean the value
-      .should('equal', `${startActualDate} PM`);
+      .should('have.value', `${cleanText(startActualDate)} PM`);
 
     // Click on "Select End Date" input field
     cy.findByPlaceholderText('Select End Date').should('be.visible').click();
@@ -323,27 +322,27 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .click();
 
-    cy.get('[data-testid="ClockIcon"]')
+    cy.findByLabelText('Choose time, selected time is', { exact: false })
       .closest('button')
-      .click({ force: true });
+      .click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
-    cy.get('[aria-label="Select hours"]')
+    cy.findByLabelText('Select hours')
       .scrollIntoView({ easing: 'linear', duration: 500 })
       .within(() => {
         cy.get(`[aria-label="${endHour} hours"]`).click();
       });
 
-    cy.get('[aria-label="Select minutes"]')
+    cy.findByLabelText('Select minutes')
       .scrollIntoView({ easing: 'linear', duration: 500 })
       .within(() => {
-        cy.get(`[aria-label="${endMinute} minutes"]`).click({ force: true });
+        cy.get(`[aria-label="${endMinute} minutes"]`).click();
       });
 
-    cy.get('[aria-label="Select meridiem"]')
+    cy.findByLabelText('Select meridiem')
       .scrollIntoView({ easing: 'linear', duration: 500 })
       .within(() => {
-        cy.get(`[aria-label="PM"]`).click({ force: true });
+        cy.get(`[aria-label="PM"]`).click();
       });
 
     // Click the "Apply" button to confirm the end date and time
@@ -353,9 +352,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.findByPlaceholderText('Select End Date')
       .scrollIntoView({ easing: 'linear' })
       .should('be.visible')
-      .invoke('val') // Get the current value
-      .then(cleanText) // Clean the value
-      .should('equal', `${endActualDate} PM`);
+      .should('have.value', `${cleanText(endActualDate)} PM`);
 
     // Select the "Node Type" from the dropdown and submit
     ui.autocomplete
@@ -379,7 +376,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       });
 
     // Click on the "Presets" button
-    cy.findByRole('button', { name: 'Presets' }).should('be.visible').click();
+    ui.buttonGroup.findButtonByTitle('Presets').should('be.visible').click();
 
     // Mock API response for cloud metrics presets
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
