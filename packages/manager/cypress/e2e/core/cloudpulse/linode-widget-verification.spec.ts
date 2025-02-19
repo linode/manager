@@ -230,7 +230,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .findByLabel('Resources')
       .should('be.visible')
       .type(`${resource}{enter}`);
-    ui.autocomplete.findByLabel('Resources').should('be.visible').click();
+    ui.autocomplete.findByLabel('Resources').click();
 
     cy.findByText(resource).should('be.visible');
 
