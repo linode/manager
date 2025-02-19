@@ -159,12 +159,17 @@ export const NodePoolsDisplay = (props: Props) => {
         direction="row"
         flexWrap="wrap"
         justifyContent="space-between"
-        sx={{ paddingLeft: { md: 0, sm: 1, xs: 1 }, paddingTop: 3 }}
       >
         <Stack alignItems="center" direction="row" spacing={2}>
           <Typography variant="h2">Node Pools</Typography>
         </Stack>
-        <Stack alignItems="center" direction="row" spacing={1}>
+        <Stack
+          alignItems="center"
+          direction="row"
+          marginLeft="auto"
+          paddingTop="8px"
+          spacing={1}
+        >
           <FormLabel htmlFor={ariaIdentifier}>
             <Typography ml={1} mr={1}>
               Status
@@ -216,7 +221,7 @@ export const NodePoolsDisplay = (props: Props) => {
               Expand All Pools
             </Button>
           )}
-          <Hidden smUp>
+          <Hidden mdUp>
             <Box sx={{ ml: 0.5 }}>
               <ActionMenu
                 actionsList={[
@@ -233,7 +238,7 @@ export const NodePoolsDisplay = (props: Props) => {
               />
             </Box>
           </Hidden>
-          <Hidden smDown>
+          <Hidden mdDown>
             <Button
               buttonType="secondary"
               onClick={() => setIsRecycleClusterOpen(true)}
