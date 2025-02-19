@@ -1604,7 +1604,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '326690',
     },
     description: `PostgreSQL is a popular open source relational database system that provides many advanced configuration options that can help optimize your database’s performance in a production environment.`,
-    logo_url: 'postgresqlmarketplaceocc.svg',
+    logo_url: 'postgresql.svg',
     related_guides: [
       {
         href:
@@ -1768,13 +1768,12 @@ export const oneClickApps: Record<number, OCA> = {
       start: '222222',
     },
     description: `Redis&reg; is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis&reg; features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.<br/><br/>*Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Akamai Technologies is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Akamai Technologies.`,
-    logo_url: 'redissentinelmarketplaceocc.svg',
+    logo_url: 'redis.svg',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
-        title:
-          'Deploy Redis&reg; Sentinel Cluster through the Linode Marketplace',
+        title: 'Deploy Redis® Sentinel Cluster through the Linode Marketplace',
       },
     ],
     summary:
