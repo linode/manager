@@ -42,6 +42,7 @@ module.exports = {
     'e2e/core/stackscripts',
     'e2e/core/volumes',
     'e2e/core/vpc',
+    'e2e/core/cloudpulse/timerange-verification.spec.ts',
     'public',
     '!.eslintrc.js',
   ],

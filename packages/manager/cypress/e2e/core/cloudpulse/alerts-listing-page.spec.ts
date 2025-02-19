@@ -9,6 +9,7 @@ import type { Flags } from 'src/featureFlags';
 import {
   mockGetAllAlertDefinitions,
   mockGetCloudPulseServices,
+  mockUpdateAlertDefinitions,
 } from 'support/intercepts/cloudpulse';
 import { formatDate } from 'src/utilities/formatDate';
 import { Alert } from '@linode/api-v4';
@@ -24,23 +25,28 @@ const mockAlerts = [
     service_type: 'dbaas',
     severity: 1,
     status: 'enabled',
-    type: 'system',
+    type: 'user',
     created_by: 'user1',
     updated: new Date(now.getTime() - 86400).toISOString(),
+    label: 'Alert-1',
   }),
   alertFactory.build({
     service_type: 'dbaas',
+    type: 'user',
     severity: 0,
     status: 'disabled',
     updated: new Date(now.getTime() - 10 * 86400).toISOString(),
     created_by: 'user4',
+    label: 'Alert-2',
   }),
   alertFactory.build({
     service_type: 'linode',
+    type: 'user',
     severity: 2,
     status: 'enabled',
     updated: new Date(now.getTime() - 6 * 86400).toISOString(),
     created_by: 'user2',
+    label: 'Alert-3',
   }),
   alertFactory.build({
     service_type: 'linode',
@@ -49,6 +55,7 @@ const mockAlerts = [
     type: 'user',
     updated: new Date(now.getTime() - 4 * 86400).toISOString(),
     created_by: 'user3',
+    label: 'Alert-4',
   }),
 ];
 
@@ -86,10 +93,8 @@ const verifyTableSorting = (
   sortOrder: 'ascending' | 'descending',
   expectedValues: number[]
 ) => {
-  ui.heading
-    .findByText(header)
-    .click()
-    .should('have.attr', 'aria-sort', sortOrder);
+  ui.heading.findByText(header).click();
+  ui.heading.findByText(header).should('have.attr', 'aria-sort', sortOrder);
 
   cy.get('[data-qa="alert-table"]').within(() => {
     cy.get('[data-qa-alert-cell]').should(($cells) => {
@@ -138,11 +143,25 @@ const validateAlertDetails = (alert: Alert) => {
 };
 
 describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
+  /*
+   * - Verifies UI elements, navigation, and alert details in the listing page.
+   * - Confirms sorting functionality for multiple columns (Alert Name, Service, Status, Last Modified, Created By).
+   * - Validates filtering and search functionality for alerts by name, service, and status.
+   * - Ensures users can disable and enable alerts successfully.
+   * - Confirms UI properly updates alert statuses after enabling or disabling alerts.
+   * - Ensures API calls return correct responses and status codes.
+   */
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
     mockGetCloudPulseServices(['linode', 'dbaas']);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
+    mockUpdateAlertDefinitions('dbaas', 1, mockAlerts[0]).as(
+      'getFirstAlertDefinitions'
+    );
+    mockUpdateAlertDefinitions('dbaas', 2, mockAlerts[1]).as(
+      'getSecondAlertDefinitions'
+    );
     cy.visitWithLogin('/monitor/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
   });
@@ -242,7 +261,6 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       ui.button
         .findByAttribute('aria-label', 'Clear')
         .should('be.visible')
-        .as('qaBUtton')
         .scrollIntoView();
       ui.button.findByAttribute('aria-label', 'Clear').click();
     });
@@ -268,5 +286,59 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         'not.exist'
       );
     });
+  });
+
+  it('should disable and enable user alerts successfully', () => {
+    // Function to search for an alert
+    const searchAlert = (alertName: string) => {
+      cy.findByPlaceholderText('Search for Alerts')
+        .should('be.visible')
+        .and('not.be.disabled')
+        .clear();
+      cy.findByPlaceholderText('Search for Alerts').type(alertName);
+
+      cy.focused().click();
+    };
+
+    // Function to toggle an alert's status
+    const toggleAlertStatus = (
+      alertName: string,
+      action: 'Enable' | 'Disable',
+      alias: string,
+      successMessage: string
+    ) => {
+      cy.findByText(alertName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          ui.actionMenu
+            .findByTitle(`Action menu for Alert ${alertName}`)
+            .should('be.visible')
+            .click();
+        });
+
+      ui.actionMenuItem.findByTitle(action).should('be.visible').click();
+
+      cy.wait(alias).then(({ response }) => {
+        ui.toast.assertMessage(successMessage);
+      });
+    };
+    // Disable "Alert-1"
+    searchAlert('Alert-1');
+    toggleAlertStatus(
+      'Alert-1',
+      'Disable',
+      '@getFirstAlertDefinitions',
+      'Alert disabled'
+    );
+
+    // Enable "Alert-2"
+    searchAlert('Alert-2');
+    toggleAlertStatus(
+      'Alert-2',
+      'Enable',
+      '@getSecondAlertDefinitions',
+      'Alert enabled'
+    );
   });
 });
