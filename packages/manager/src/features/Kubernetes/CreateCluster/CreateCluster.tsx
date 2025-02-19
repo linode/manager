@@ -21,6 +21,7 @@ import {
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import {
   reportAgreementSigningError,
@@ -98,6 +99,10 @@ export const CreateCluster = () => {
   const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
     'standard'
   );
+
+  const isCreateClusterRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_kubernetes',
+  });
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -304,7 +309,11 @@ export const CreateCluster = () => {
     selectedRegionID: selectedRegion?.id,
   });
 
-  if (typesError || regionsError || versionsError) {
+  if (
+    typesError ||
+    regionsError ||
+    (versionsError && versionsError[0].reason !== 'Unauthorized')
+  ) {
     // This information is necessary to create a Cluster. Otherwise, show an error state.
     return <ErrorState errorText="An unexpected error occurred." />;
   }
@@ -333,11 +342,12 @@ export const CreateCluster = () => {
               updateLabel(e.target.value)
             }
             data-qa-label-input
+            disabled={isCreateClusterRestricted}
             errorText={errorMap.label}
             label="Cluster Label"
             value={label || ''}
           />
-          {isLkeEnterpriseLAFlagEnabled && (
+          {isLkeEnterpriseLAFlagEnabled && !isCreateClusterRestricted && (
             <>
               <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
               <ClusterTypePanel
@@ -367,6 +377,7 @@ export const CreateCluster = () => {
                     : undefined
                 }
                 disableClearable
+                disabled={isCreateClusterRestricted}
                 errorText={errorMap.region}
                 onChange={(e, region) => setSelectedRegion(region)}
                 regions={regionsData}
@@ -388,6 +399,7 @@ export const CreateCluster = () => {
               setVersion(selected?.value);
             }}
             disableClearable={!!version}
+            disabled={isCreateClusterRestricted}
             errorText={errorMap.k8s_version}
             label="Kubernetes Version"
             loading={isLoadingVersions}
