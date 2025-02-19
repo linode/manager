@@ -107,7 +107,7 @@ const CheckoutBar = (props: CheckoutBarProps) => {
                 <>
                   <Divider dark spacingBottom={16} spacingTop={16} />
                   <Typography>{additionalPriceText}</Typography>
-                  <Link to="#">See pricing</Link>.
+                  <Link to="https://www.linode.com/pricing/">See pricing</Link>.
                 </>
               )}
             </>
