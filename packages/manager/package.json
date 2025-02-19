@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.136.0",
+  "version": "1.136.1",
   "private": true,
   "type": "module",
   "bugs": {
@@ -45,7 +45,7 @@
     "chart.js": "~2.9.4",
     "copy-to-clipboard": "^3.0.8",
     "country-region-data": "^3.0.0",
-    "dompurify": "^3.1.6",
+    "dompurify": "^3.2.4",
     "flag-icons": "^6.6.5",
     "font-logos": "^0.18.0",
     "formik": "~2.1.3",
