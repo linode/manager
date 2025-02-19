@@ -132,7 +132,7 @@ export const CreateCluster = () => {
   );
 
   const isCreateClusterRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_linodes',
+    globalGrantType: 'add_kubernetes',
   });
 
   const {

@@ -35,6 +35,7 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
     add_domains: true,
     add_firewalls: true,
     add_images: true,
+    add_kubernetes: true,
     add_linodes: true,
     add_longview: true,
     add_nodebalancers: true,
