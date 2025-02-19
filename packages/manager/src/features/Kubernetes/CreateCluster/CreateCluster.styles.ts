@@ -41,8 +41,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const StyledFieldWithDocsStack = styled(Stack, {
-  label: 'StyledFieldWithDocsStack',
+export const StyledStackWithTabletBreakpoint = styled(Stack, {
+  label: 'StyledStackWithTabletBreakpoint',
 })(({ theme }) => ({
   flexDirection: 'row',
   [theme.breakpoints.down('md')]: {
@@ -56,15 +56,6 @@ export const StyledDocsLinkContainer = styled(Box, {
   alignSelf: 'flex-start',
   marginLeft: 'auto',
   [theme.breakpoints.down('md')]: {
-    marginLeft: 'unset',
-    marginTop: theme.spacing(2),
-  },
-}));
-
-export const StyledTiersDocsLinkContainer = styled(StyledDocsLinkContainer, {
-  label: 'StyledTiersDocsLinkContainer',
-})(({ theme }) => ({
-  [theme.breakpoints.down(995)]: {
     marginLeft: 'unset',
     marginTop: theme.spacing(2),
   },

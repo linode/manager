@@ -6,14 +6,15 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { useAccount } from 'src/queries/account/account';
 
+import { CLUSTER_TIER_DOCS_LINK } from '../constants';
 import {
+  StyledDocsLinkContainer,
   StyledSelectionCardHAControlPlaneCopy,
-  StyledTiersDocsLinkContainer,
+  StyledStackWithTabletBreakpoint,
 } from './CreateCluster.styles';
 
 import type { KubernetesTier } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import { CLUSTER_TIER_DOCS_LINK } from '../constants';
 
 interface Props {
   handleClusterTypeSelection: (tier: KubernetesTier) => void;
@@ -28,9 +29,6 @@ export const ClusterTierPanel = (props: Props) => {
   const lgUpBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up('lg')
   );
-  const stackColumnBreakpoint = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down(995)
-  );
   const smDownBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
@@ -41,7 +39,7 @@ export const ClusterTierPanel = (props: Props) => {
 
   return (
     <Stack>
-      <Stack flexDirection={stackColumnBreakpoint ? 'column' : 'row'}>
+      <StyledStackWithTabletBreakpoint>
         <Stack>
           <Typography variant="h3">Cluster Tier</Typography>
           <Typography sx={{ marginTop: 1, maxWidth: 700 }}>
@@ -51,13 +49,13 @@ export const ClusterTierPanel = (props: Props) => {
             and enterprise-grade solution.
           </Typography>
         </Stack>
-        <StyledTiersDocsLinkContainer>
+        <StyledDocsLinkContainer>
           <DocsLink
             href={CLUSTER_TIER_DOCS_LINK}
             label="Compare Cluster Tiers"
           />
-        </StyledTiersDocsLinkContainer>
-      </Stack>
+        </StyledDocsLinkContainer>
+      </StyledStackWithTabletBreakpoint>
 
       <Stack
         flexDirection={smDownBreakpoint ? 'column' : 'row'}

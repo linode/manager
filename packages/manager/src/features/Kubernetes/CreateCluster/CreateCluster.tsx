@@ -38,18 +38,19 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
+import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
 import { ClusterTierPanel } from './ClusterTierPanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
-  StyledFieldWithDocsStack,
+  StyledStackWithTabletBreakpoint,
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
@@ -64,7 +65,6 @@ import type {
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -348,7 +348,7 @@ export const CreateCluster = () => {
             </>
           )}
           <Divider sx={{ marginTop: 4 }} />
-          <StyledFieldWithDocsStack>
+          <StyledStackWithTabletBreakpoint>
             <Stack>
               <RegionSelect
                 currentCapability={
@@ -382,9 +382,9 @@ export const CreateCluster = () => {
                 label={DOCS_LINK_LABEL_DC_PRICING}
               />
             </StyledDocsLinkContainer>
-          </StyledFieldWithDocsStack>
+          </StyledStackWithTabletBreakpoint>
           <Divider sx={{ marginTop: 4 }} />
-          <StyledFieldWithDocsStack>
+          <StyledStackWithTabletBreakpoint>
             <Stack>
               <Autocomplete
                 onChange={(_, selected) => {
@@ -408,18 +408,18 @@ export const CreateCluster = () => {
                 label="Kubernetes Versions"
               />
             </StyledDocsLinkContainer>
-          </StyledFieldWithDocsStack>
+          </StyledStackWithTabletBreakpoint>
           {showAPL && (
             <>
               <Divider sx={{ marginTop: 4 }} />
-              <StyledFieldWithDocsStack>
+              <StyledStackWithTabletBreakpoint>
                 <Stack>
                   <ApplicationPlatform
                     setAPL={setApl_enabled}
                     setHighAvailability={setHighAvailability}
                   />
                 </Stack>
-              </StyledFieldWithDocsStack>
+              </StyledStackWithTabletBreakpoint>
             </>
           )}
           <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
