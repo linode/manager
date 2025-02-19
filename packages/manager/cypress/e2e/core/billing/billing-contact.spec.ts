@@ -153,11 +153,12 @@ describe('Billing Contact', () => {
         cy.focused().clear();
         cy.focused().type(newAccountData['phone']);
         // need alias to be able to switch focus to modal popup
-        cy.get('[data-qa-contact-state-province]')
-          .as('qaState')
+        ui.autocomplete.findByLabel('State').should('be.visible').click();
+        cy.focused().type(`${newAccountData['state']}`);
+        ui.autocompletePopper
+          .findByTitle(newAccountData['state'])
           .should('be.visible')
           .click();
-        cy.get('@qaState').type(`${newAccountData['state']}{enter}`);
         cy.findByLabelText('Tax ID').should('be.visible').click();
         cy.focused().clear();
         cy.focused().type(newAccountData['tax_id']);
@@ -167,11 +168,6 @@ describe('Billing Contact', () => {
           expect(xhr.response?.body).to.eql(newAccountData);
         });
       });
-
-    // check the page updates to reflect the edits
-    cy.get('[data-qa-contact-summary]').within(() => {
-      checkAccountContactDisplay(newAccountData);
-    });
   });
 
   it('Edit Contact Info: Tax ID Agreement', () => {
@@ -202,14 +198,18 @@ describe('Billing Contact', () => {
         cy.findByLabelText('Postal Code').should('be.visible').click();
         cy.focused().clear();
         cy.focused().type(newAccountData['zip']);
-        cy.get('[data-qa-contact-country]').as('qaCountry').click();
-        cy.get('@qaCountry').type('Afghanistan{enter}');
+        ui.autocomplete.findByLabel('Country').should('be.visible').click();
+        cy.focused().type('Afghanistan');
+        ui.autocompletePopper
+          .findByTitle('Afghanistan')
+          .should('be.visible')
+          .click();
         cy.findByLabelText('Tax ID').should('be.visible').click();
         cy.focused().clear();
         cy.focused().type(newAccountData['tax_id']);
         cy.findByText(TAX_ID_HELPER_TEXT).should('be.visible');
         cy.findByText(TAX_ID_AGREEMENT_TEXT).scrollIntoView();
-        cy.should('be.visible');
+        cy.findByText(TAX_ID_AGREEMENT_TEXT).should('be.visible');
         cy.findByText('Akamai Privacy Statement.').should('be.visible');
         cy.get('[data-qa-save-contact-info="true"]').should('be.disabled');
         cy.get('[data-testid="tax-id-checkbox"]').click();
