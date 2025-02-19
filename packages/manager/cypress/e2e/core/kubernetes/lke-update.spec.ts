@@ -390,8 +390,6 @@ describe('LKE cluster updates', () => {
       });
 
       const recycleWarningSubstrings = [
-        'will be deleted',
-        'will be created',
         'local storage (such as ’hostPath’ volumes) will be erased',
         'may take several minutes',
       ];
@@ -418,6 +416,9 @@ describe('LKE cluster updates', () => {
         .findByTitle(`Recycle ${mockKubeLinode.id}?`)
         .should('be.visible')
         .within(() => {
+          cy.findByText('Redeploy this node in the node pool.', {
+            exact: false,
+          }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
             cy.findByText(warning, { exact: false }).should('be.visible');
           });
@@ -445,6 +446,13 @@ describe('LKE cluster updates', () => {
         .findByTitle('Recycle node pool?')
         .should('be.visible')
         .within(() => {
+          cy.findByText('Redeploy all nodes in the node pool.', {
+            exact: false,
+          }).should('be.visible');
+          recycleWarningSubstrings.forEach((warning: string) => {
+            cy.findByText(warning, { exact: false }).should('be.visible');
+          });
+
           ui.button
             .findByTitle('Recycle Pool Nodes')
             .should('be.visible')
@@ -468,6 +476,9 @@ describe('LKE cluster updates', () => {
         .findByTitle('Recycle all nodes in cluster?')
         .should('be.visible')
         .within(() => {
+          cy.findByText('Redeploy all nodes in the cluster.', {
+            exact: false,
+          }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
             cy.findByText(warning, { exact: false }).should('be.visible');
           });
