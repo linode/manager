@@ -31,6 +31,14 @@ import { mockGetDatabases } from 'support/intercepts/databases';
 import { statusMap } from 'support/constants/alert';
 import { formatDate } from 'src/utilities/formatDate';
 
+export interface MetricDetails {
+  ruleIndex: number;
+  dataField: string;
+  aggregationType: string;
+  operator: string;
+  threshold: string;
+}
+
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 
 // Create mock data
@@ -98,15 +106,15 @@ const mockAlerts = alertFactory.build({
  * @param operator - The operator (e.g., ">=", "==").
  * @param threshold - The threshold value for the metric.
  */
-const fillMetricDetailsForSpecificRule = (
-  ruleIndex: number,
-  dataField: string,
-  aggregationType: string,
-  operator: string,
-  threshold: string
-) => {
+const fillMetricDetailsForSpecificRule = ({
+  ruleIndex,
+  dataField,
+  aggregationType,
+  operator,
+  threshold
+}: MetricDetails) => {
   cy.get(`[data-testid="rule_criteria.rules.${ruleIndex}-id"]`).within(() => {
-    
+
     // Fill Data Field
     ui.autocomplete.findByLabel('Data Field')
       .should('be.visible')
@@ -226,13 +234,15 @@ describe('Create Alert', () => {
     cy.get('[data-qa-notice="true"]').should('be.visible').should('be.enabled');
 
     // Fill metric details for the first rule
-    fillMetricDetailsForSpecificRule(
-      0,
-      'CPU Utilization',
-      'Average',
-      '==',
-      '1000'
-    );
+    const cpuUsageMetricDetails = {
+      ruleIndex: 0,
+      dataField: 'CPU Utilization',
+      aggregationType: 'Average',
+      operator: '==',
+      threshold: '1000'
+    };
+    
+    fillMetricDetailsForSpecificRule(cpuUsageMetricDetails);
 
     // Add metrics
     cy.findByRole('button', { name: 'Add metric' })
@@ -267,14 +277,16 @@ describe('Create Alert', () => {
     cy.findByText('User').should('be.visible').click();
 
     // Fill metric details for the second rule
-    fillMetricDetailsForSpecificRule(
-      1,
-      'Memory Usage',
-      'Average',
-      '==',
-      '1000'
-    );
-
+    
+    const memoryUsageMetricDetails = {
+      ruleIndex: 1,
+      dataField: 'Memory Usage',
+      aggregationType: 'Average',
+      operator: '==',
+      threshold: '1000'
+    };
+    
+    fillMetricDetailsForSpecificRule(memoryUsageMetricDetails);
     // Set evaluation period
     ui.autocomplete
       .findByLabel('Evaluation Period')
