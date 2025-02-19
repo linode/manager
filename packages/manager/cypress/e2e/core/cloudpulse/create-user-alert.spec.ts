@@ -106,27 +106,38 @@ const fillMetricDetailsForSpecificRule = (
   threshold: string
 ) => {
   cy.get(`[data-testid="rule_criteria.rules.${ruleIndex}-id"]`).within(() => {
+    
     // Fill Data Field
-    cy.findByPlaceholderText('Select a Data Field')
+    ui.autocomplete.findByLabel('Data Field')
       .should('be.visible')
-      .clear()
       .type(dataField);
 
-    cy.findByText(dataField).should('be.visible').click();
-
-    // Fill Aggregation Type
-    cy.findByPlaceholderText('Select an Aggregation Type')
+      ui.autocompletePopper
+      .findByTitle(dataField)
       .should('be.visible')
-      .clear()
+      .click();
+
+     // Validate Aggregation Type
+     ui.autocomplete
+     .findByLabel('Aggregation Type')
+      .should('be.visible')
       .type(aggregationType);
-    cy.findByText(aggregationType).should('be.visible').click();
+
+      ui.autocompletePopper
+      .findByTitle(aggregationType)
+      .should('be.visible')
+      .click();
 
     // Fill Operator
-    cy.findByPlaceholderText('Select an Operator')
+    ui.autocomplete.findByLabel('Operator')
       .should('be.visible')
-      .clear()
       .type(operator);
-    cy.findByText(operator).should('be.visible').click();
+
+      ui.autocompletePopper
+      .findByTitle(operator)
+      .should('be.visible')
+      .click();
+
 
     // Fill Threshold
     cy.get('[data-qa-threshold]').should('be.visible').clear().type(threshold);
@@ -173,7 +184,7 @@ describe('Create Alert', () => {
     cy.url().should('endWith', 'monitor/alerts/definitions/create');
   });
 
-  it.only('should successfully create a new alert', () => {
+  it('should successfully create a new alert', () => {
     cy.visitWithLogin('monitor/alerts/definitions/create');
 
     // Enter Name and Description
@@ -279,7 +290,7 @@ describe('Create Alert', () => {
     ui.autocompletePopper.findByTitle('5 min').should('be.visible').click();
 
     // Set trigger occurrences
-    cy.get('[data-qa-trigger_occurences]')
+    cy.get('[data-qa-trigger-occurrences]')
       .should('be.visible')
       .clear()
       .type('5');
