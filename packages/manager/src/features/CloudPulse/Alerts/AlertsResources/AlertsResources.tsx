@@ -151,7 +151,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     };
 
     // Combine all the filters
-    return { ...platformFilter, ...typeFilter, ...regionFilter };
+    return { ...platformFilter, '+and': [typeFilter, regionFilter] };
   }, [alertClass, alertType, serviceType, supportedRegionIds]);
 
   const {
