@@ -163,20 +163,25 @@ describe('Account service transfers', () => {
     cy.get('[data-qa-panel="Pending Service Transfers"]').should('not.exist');
 
     // Confirm that text "No data to display" is in "Received Service Transfers" panel.
-    cy.get('[data-qa-panel="Received Service Transfers"]')
+    cy.findByText('Received Service Transfers')
       .should('be.visible')
+      .click();
+
+    cy.get('[data-qa-panel="Received Service Transfers"]')
       .within(() => {
-        cy.get('[role="button"]').click();
         cy.findByText(serviceTransferEmptyState, { exact: false }).should(
           'be.visible'
         );
       });
 
     // Confirm that text "No data to display" is in "Sent Service Transfers" panel.
+    cy.findByText('Sent Service Transfers')
+      .should('be.visible')
+      .click();
+
     cy.get('[data-qa-panel="Sent Service Transfers"]')
       .should('be.visible')
       .within(() => {
-        cy.get('[role="button"]').click();
         cy.findByText(serviceTransferEmptyState, { exact: false }).should(
           'be.visible'
         );
