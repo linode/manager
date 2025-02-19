@@ -106,7 +106,7 @@ const databaseMock: Database = databaseFactory.build({
   region: mockRegion.id,
   version: '1',
   status: 'provisioning',
-  cluster_size: 1,
+  cluster_size: 3,
   engine: 'mysql',
 });
 const mockAccount = accountFactory.build();
@@ -117,7 +117,7 @@ describe('Tests for API error handling', () => {
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockCreateCloudPulseJWEToken(serviceType);
     mockGetCloudPulseDashboard(id, dashboard);
     mockGetRegions([mockRegion]);
@@ -170,6 +170,11 @@ describe('Tests for API error handling', () => {
       .type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
+
+    ui.button
+      .findByAttribute('aria-label', 'Close')
+      .should('be.visible')
+      .click();
 
     // Select a Node from the autocomplete input.
     ui.autocomplete
@@ -243,6 +248,11 @@ describe('Tests for API error handling', () => {
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
 
+    ui.button
+      .findByAttribute('aria-label', 'Close')
+      .should('be.visible')
+      .click();
+
     // Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
@@ -258,7 +268,7 @@ describe('Tests for API error handling', () => {
   });
 
   it('displays error message when Dashboards API fails', () => {
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
 
     // Mocking an error response for the 'fetchDashboard' API request for a specific service type.
     mockGetCloudPulseDashboardsError(serviceType, 'Internal Server Error').as(
@@ -320,6 +330,11 @@ describe('Tests for API error handling', () => {
       .type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
+
+    ui.button
+      .findByAttribute('aria-label', 'Close')
+      .should('be.visible')
+      .click();
 
     //  Select a node type from the autocomplete input.
     ui.autocomplete

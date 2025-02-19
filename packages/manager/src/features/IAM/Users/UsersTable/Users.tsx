@@ -5,7 +5,6 @@ import { useTheme } from '@mui/material/styles';
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -74,7 +73,6 @@ export const UsersLanding = () => {
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Users & Grants" />
       {isProxyUser && (
         <ProxyUserTable
           handleDelete={handleDelete}

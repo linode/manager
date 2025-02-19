@@ -1,5 +1,4 @@
-import { Autocomplete, Box, Notice } from '@linode/ui';
-import { Stack, Typography } from '@mui/material';
+import { Autocomplete, Box, Notice, Stack, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as React from 'react';

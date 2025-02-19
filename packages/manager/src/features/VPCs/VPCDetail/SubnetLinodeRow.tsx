@@ -23,13 +23,7 @@ import {
   hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration,
   getSubnetInterfaceFromConfigs,
 } from '../utils';
-import {
-  StyledActionTableCell,
-  StyledTableCell,
-  StyledTableHeadCell,
-  StyledTableRow,
-  StyledWarningIcon,
-} from './SubnetLinodeRow.styles';
+import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 
 import type { APIError, Firewall, Linode } from '@linode/api-v4';
 import type { Config, Interface } from '@linode/api-v4/lib/linodes/types';
@@ -39,6 +33,7 @@ import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 interface Props {
   handlePowerActionsLinode: (linode: Linode, action: Action) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
+  hover?: boolean;
   linodeId: number;
   subnet?: Subnet;
   subnetId: number;
@@ -48,6 +43,7 @@ export const SubnetLinodeRow = (props: Props) => {
   const {
     handlePowerActionsLinode,
     handleUnassignLinode,
+    hover = false,
     linodeId,
     subnet,
     subnetId,
@@ -78,7 +74,7 @@ export const SubnetLinodeRow = (props: Props) => {
 
   if (linodeLoading || !linode) {
     return (
-      <TableRow>
+      <TableRow hover={hover}>
         <TableCell colSpan={6}>
           <CircleProgress size="sm" />
         </TableCell>
@@ -88,7 +84,7 @@ export const SubnetLinodeRow = (props: Props) => {
 
   if (linodeError) {
     return (
-      <TableRow data-testid="subnet-linode-row-error">
+      <TableRow data-testid="subnet-linode-row-error" hover={hover}>
         <TableCell colSpan={5} style={{ paddingLeft: 24 }}>
           <Box alignItems="center" display="flex">
             <ErrorOutline
@@ -147,11 +143,11 @@ export const SubnetLinodeRow = (props: Props) => {
   const showPowerButton = !isRebootNeeded && (isRunning || isOffline);
 
   return (
-    <StyledTableRow>
-      <StyledTableCell component="th" scope="row" sx={{ paddingLeft: 6 }}>
+    <TableRow>
+      <TableCell component="th" scope="row">
         {labelCell}
-      </StyledTableCell>
-      <StyledTableCell statusCell>
+      </TableCell>
+      <TableCell statusCell>
         <StatusIcon
           aria-label={`Linode status ${linode?.status ?? iconStatus}`}
           status={iconStatus}
@@ -168,37 +164,37 @@ export const SubnetLinodeRow = (props: Props) => {
         ) : (
           capitalizeAllWords(linode.status.replace('_', ' '))
         )}
-      </StyledTableCell>
+      </TableCell>
       <Hidden smDown>
-        <StyledTableCell>
+        <TableCell>
           {getSubnetLinodeIPv4CellString(
             configs ?? [],
             configsLoading,
             subnetId,
             configsError ?? undefined
           )}
-        </StyledTableCell>
+        </TableCell>
       </Hidden>
       <Hidden smDown>
-        <StyledTableCell>
+        <TableCell>
           {getIPRangesCellContents(
             configs ?? [],
             configsLoading,
             subnetId,
             configsError ?? undefined
           )}
-        </StyledTableCell>
+        </TableCell>
       </Hidden>
       <Hidden smDown>
-        <StyledTableCell>
+        <TableCell>
           {getFirewallsCellString(
             attachedFirewalls?.data ?? [],
             firewallsLoading,
             firewallsError ?? undefined
           )}
-        </StyledTableCell>
+        </TableCell>
       </Hidden>
-      <StyledActionTableCell actionCell>
+      <TableCell actionCell>
         {isRebootNeeded && (
           <InlineMenuAction
             onClick={() => {
@@ -222,8 +218,8 @@ export const SubnetLinodeRow = (props: Props) => {
           actionText="Unassign Linode"
           onClick={() => handleUnassignLinode(linode, subnet)}
         />
-      </StyledActionTableCell>
-    </StyledTableRow>
+      </TableCell>
+    </TableRow>
   );
 };
 
@@ -329,17 +325,17 @@ const getFirewallLinks = (data: Firewall[]): JSX.Element => {
 
 export const SubnetLinodeTableRowHead = (
   <TableRow>
-    <StyledTableHeadCell>Linode Label</StyledTableHeadCell>
-    <StyledTableHeadCell sx={{ width: '14%' }}>Status</StyledTableHeadCell>
+    <TableCell>Linode Label</TableCell>
+    <TableCell sx={{ width: '14%' }}>Status</TableCell>
     <Hidden smDown>
-      <StyledTableHeadCell>VPC IPv4</StyledTableHeadCell>
+      <TableCell>VPC IPv4</TableCell>
     </Hidden>
     <Hidden smDown>
-      <StyledTableHeadCell>VPC IPv4 Ranges</StyledTableHeadCell>
+      <TableCell>VPC IPv4 Ranges</TableCell>
     </Hidden>
     <Hidden smDown>
-      <StyledTableHeadCell>Firewalls</StyledTableHeadCell>
+      <TableCell>Firewalls</TableCell>
     </Hidden>
-    <StyledTableHeadCell />
+    <TableCell />
   </TableRow>
 );

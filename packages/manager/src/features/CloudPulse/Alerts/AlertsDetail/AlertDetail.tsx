@@ -30,7 +30,7 @@ export const AlertDetail = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
 
   const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
-    Number(alertId),
+    alertId,
     serviceType
   );
 
@@ -90,7 +90,12 @@ export const AlertDetail = () => {
       </>
     );
   }
-  const { entity_ids: entityIds } = alertDetails;
+  const {
+    class: alertClass,
+    entity_ids: entityIds,
+    service_type: alertServiceType,
+    type,
+  } = alertDetails;
   return (
     <>
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
@@ -124,8 +129,10 @@ export const AlertDetail = () => {
           data-qa-section="Resources"
         >
           <AlertResources
+            alertClass={alertClass}
             alertResourceIds={entityIds}
-            serviceType={serviceType}
+            alertType={type}
+            serviceType={alertServiceType}
           />
         </Box>
         <Box
@@ -136,7 +143,7 @@ export const AlertDetail = () => {
           data-qa-section="Notification Channels"
         >
           <AlertDetailNotification
-            channelIds={alertDetails.channels.map(({ id }) => id)}
+            channelIds={alertDetails.alert_channels.map(({ id }) => id)}
           />
         </Box>
       </Box>
