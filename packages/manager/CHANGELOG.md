@@ -4,6 +4,82 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-02-25] - v1.137.0
+
+
+### Added:
+
+- Improved Node Pool Collapsing UX ([#11619](https://github.com/linode/manager/pull/11619))
+- Improved copy and helper text for NodeBalancer configurations ([#11636](https://github.com/linode/manager/pull/11636))
+- Backstage Marketplace app ([#11652](https://github.com/linode/manager/pull/11652))
+
+### Changed:
+
+- Introduce 2025 CDS redesign ([#11465](https://github.com/linode/manager/pull/11465)) 
+- Improve Syntax Highlighting ([#11611](https://github.com/linode/manager/pull/11611))
+- Clarify OAuth setup instructions in Getting Started README ([#11622](https://github.com/linode/manager/pull/11622))
+- Replace `Box` elements with `<StyledLinkButton>` for better accessibility and add `aria-label`s in the KubeConfigDisplay ([#11648](https://github.com/linode/manager/pull/11648))
+
+### Fixed:
+
+- Duplicate options from Help and Support search ([#11604](https://github.com/linode/manager/pull/11604))
+- Document titles with incorrect keywords ([#11635](https://github.com/linode/manager/pull/11635))
+- Order of footers for paginated LKE Node Pools ([#11639](https://github.com/linode/manager/pull/11639))
+- TabIndex reset issue and incorrect enhanced number input minus sign SVG color ([#11651](https://github.com/linode/manager/pull/11654))
+
+### Removed:
+
+- `ramda` from `Longview` ([#11606](https://github.com/linode/manager/pull/11606))
+- `span` from Button Component ([#11627](https://github.com/linode/manager/pull/11627))
+- Several old, unused Marketplace apps ([#11652](https://github.com/linode/manager/pull/11652))
+- Migrate `Dialog`, `DialogTitle` components, and `visibilityHide.svg`, `visibilityShow.svg`, and `chevron-down.svg` icons to the `@linode/ui` package ([#11673](https://github.com/linode/manager/pull/11673))
+- `react-select` from the codebase ([#11601](https://github.com/linode/manager/pull/11601))
+
+
+### Tech Stories:
+
+- Improve consistency of Notice error states ([#11404](https://github.com/linode/manager/pull/11404))
+- Remove individual product entity icons and update storybook accordingly ([#11537](https://github.com/linode/manager/pull/11537))
+- Add MSW crud operations for VPCs ([#11600](https://github.com/linode/manager/pull/11600))
+- Convert Logout and OAuth to functional components ([#11620](https://github.com/linode/manager/pull/11620))
+- Replace `data-test-id` attributes with `data-testid` and add eslint rules ([#11634](https://github.com/linode/manager/pull/11634))
+- Update `TIME_DURATION` constant from `timeDuration` to `timeRange` ([#11631](https://github.com/linode/manager/pull/11631))
+
+### Tests:
+
+- Add integration test for LKE cluster add/remove tags ([#11545](https://github.com/linode/manager/pull/11545))
+- Add component test for ImageSelect ([#11570](https://github.com/linode/manager/pull/11570))
+- Add E2E test coverage for creating linode in a core region ([#11580](https://github.com/linode/manager/pull/11580))
+- Refactor OCA tests ([#11591](https://github.com/linode/manager/pull/11591))
+- Use DOM locators for Linode landing page tests ([#11594](https://github.com/linode/manager/pull/11594))
+- Add Cypress test coverage for CloudPulse alert details page ([#11596](https://github.com/linode/manager/pull/11596))
+- Upgrade Cypress to v14.0.1 ([#11608](https://github.com/linode/manager/pull/11608))
+- Add Cypress tests for the CloudPulse alert listing page ([#11624](https://github.com/linode/manager/pull/11624))
+- Add Cypress test for CloudPulse custom DateTimeRangePicker configuration ([#11626](https://github.com/linode/manager/pull/11626))
+- Add unit tests for `payment` PDF generator ([#11644](https://github.com/linode/manager/pull/11644))
+- Add Cypress tests for editing system alerts ([#11657](https://github.com/linode/manager/pull/11657))
+- Fix DBaaS Backups unit test ([#11660](https://github.com/linode/manager/pull/11660))
+- Add Cypress test for CloudPulse enabling/disabling alerts ([#11671](https://github.com/linode/manager/pull/11671))
+- Add unit tests for `invoice` PDF generator and `getRemitAddress` util ([#11625](https://github.com/linode/manager/pull/11625))
+
+### Upcoming Features:
+
+- Replace `CloudPulseTimeRangeSelect` with `CloudPulseDateTimeRangePicker` ([#11573](https://github.com/linode/manager/pull/11573))
+- Change metric request body to use `absolute_time_duration` for custom date and `relative_time_duration` for presets ([#11573](https://github.com/linode/manager/pull/11573))
+- Add `1hr` preset option in `DateTimeRangePicker` and change time select input field to `read-only` in `DateTimePicker ([#11573](https://github.com/linode/manager/pull/11573))
+- Add new table component for the assigned entities in the IAM ([#11588](https://github.com/linode/manager/pull/11588))
+- Add new assign panel component for IAM ([#11605](https://github.com/linode/manager/pull/11605))
+- Modify setValue method for the `DimensionFilterField`, `Metric` components and capitalize the Dimension Filter values in ShowDetails and Create features ([#11610](https://github.com/linode/manager/pull/11610))
+- Enhance Alert Resources to display only selected resources and enhance EditAlertResources to save added/removed resources in CloudPulse Alerting section ([#11613](https://github.com/linode/manager/pull/11613))
+- Update Tags dependency and filtering based on Region in CloudPulse ([#11615](https://github.com/linode/manager/pull/11615))
+- Add new engineType filter in CloudPulse alerts resources section and enhance to build filters based on service type ([#11630](https://github.com/linode/manager/pull/11630))
+- Add NetworkInterfaceType accordion to Account Settings ([#11640](https://github.com/linode/manager/pull/11640))
+- Add implicit type filter for DBaaS resources fetch call in CloudPulse alerts resources section ([#11642](https://github.com/linode/manager/pull/11642))
+- Update Node-Type filter from static to dynamic in CloudPulse ([#11643](https://github.com/linode/manager/pull/11643))
+- Add Resources section in the create alert page in CloudPulse alerts ([#11649](https://github.com/linode/manager/pull/11649))
+- Handle enable/disable action item for user created alerts in CloudPulse ([#11656](https://github.com/linode/manager/pull/11656))
+- Correct table directional arrows; improve table striping at theme level ([#11661](https://github.com/linode/manager/pull/11661))
+
 ## [2025-02-19] - v1.136.1
 
 ### Fixed:
