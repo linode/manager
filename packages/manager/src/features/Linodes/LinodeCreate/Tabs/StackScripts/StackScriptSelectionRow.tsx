@@ -61,8 +61,13 @@ export const StackScriptSelectionRow = (props: Props) => {
         </label>
       </TableCell>
       <TableCell
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          minWidth: 120,
+          paddingRight: 0,
+        }}
         actionCell
-        sx={{ display: 'flex', justifyContent: 'flex-end', minWidth: 120 }}
       >
         <InlineMenuAction actionText="Show Details" onClick={onOpenDetails} />
       </TableCell>

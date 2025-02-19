@@ -24,7 +24,7 @@ export const StyledChip = styled(Chip, {
     borderTopRightRadius: 0,
     padding: '7px 10px',
   },
-  '&:focus, &:hover': {
+  '&:focus, &:hover, &.Mui-focusVisible': {
     ['& .MuiChip-deleteIcon']: {
       color: theme.color.tagIcon,
     },

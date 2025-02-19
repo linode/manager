@@ -89,14 +89,7 @@ const MetricRow = ({
 };
 
 export const MetricsDisplay = ({ hiddenRows = [], rows }: Props) => (
-  <Table
-    sx={(theme) => ({
-      marginTop: theme.spacing(),
-    })}
-    aria-label="Stats and metrics"
-    noOverflow
-    stickyHeader
-  >
+  <Table aria-label="Stats and metrics" noOverflow stickyHeader>
     <HeaderRow />
     <TableBody>
       {rows.map((row) => (

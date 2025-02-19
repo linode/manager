@@ -287,7 +287,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     if (navItemsRef.current && primaryNavRef.current) {
       const navItemsHeight = navItemsRef.current.scrollHeight;
       const primaryNavHeight = primaryNavRef.current.scrollHeight;
-      // console.log('Heights:', { navItemsHeight, primaryNavHeight });
       setNavItemsOverflowing(navItemsHeight > primaryNavHeight);
     }
   }, []);

@@ -236,7 +236,7 @@ const spacing = 8;
 const MuiTableHeadSvgStyles = {
   svg: {
     path: {
-      fill: Color.Brand[80],
+      fill: Color.Brand[90],
     },
   },
 };
@@ -328,7 +328,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover': {
             '& h3': {
-              color: primaryColors.light,
+              color: Color.Brand[80],
             },
           },
           backgroundColor: 'transparent',
@@ -1560,7 +1560,7 @@ export const lightTheme: ThemeOptions = {
           },
           ':hover, :focus': {
             ...MuiTableHeadSvgStyles,
-            color: Color.Brand[80],
+            color: Color.Brand[90],
             cursor: 'pointer',
           },
           fontSize: Font.FontSize.Xs,
