@@ -33,9 +33,9 @@ export const createAlertDefinitionSchema = object({
     .required(fieldErrorMessage)
     .matches(
       /^[^*#&+:<>"?@%{}\\\/]+$/,
-      'Label cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
     )
-    .max(100, 'Label must be 100 characters or less.'),
+    .max(100, 'Name must be 100 characters or less.'),
   description: string()
     .max(100, 'Description must be 100 characters or less.')
     .test(
