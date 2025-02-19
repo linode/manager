@@ -162,10 +162,8 @@ export const AutoscalePoolDialog = (props: Props) => {
         </Notice>
       ) : null}
       <Typography>
-        Enable the built-in autoscaler (and define the minimum and maximum node
-        constraints) to automatically add and remove nodes based on resource
-        demand and usage.
-        <br />
+        Enable the built-in autoscaler to automatically add and remove nodes
+        based on resource demand and usage.{' '}
         <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools#autoscale-automatically-resize-node-pools">
           Learn more
         </Link>
@@ -181,9 +179,12 @@ export const AutoscalePoolDialog = (props: Props) => {
               onChange={handleChange}
             />
           }
-          label="Autoscaler"
+          label="Autoscale"
           style={{ marginTop: 12 }}
         />
+        <Typography marginTop={1}>
+          Define the minimum and maximum node constraints:
+        </Typography>
         <Grid className={classes.inputContainer} container spacing={2}>
           <Grid>
             <TextField
