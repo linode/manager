@@ -115,7 +115,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
                 name="label"
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
-                placeholder="Enter Name"
+                placeholder="Enter a Name"
                 value={field.value ?? ''}
               />
             )}
@@ -131,7 +131,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
                 optional
-                placeholder="Enter Description"
+                placeholder="Enter a Description"
                 value={field.value ?? ''}
               />
             )}

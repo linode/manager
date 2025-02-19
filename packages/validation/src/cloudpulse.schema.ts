@@ -3,7 +3,7 @@ import { array, number, object, string } from 'yup';
 const fieldErrorMessage = 'This field is required.';
 
 const dimensionFilters = object({
-  dimension_label: string().required('Label for the filter is required.'),
+  dimension_label: string().required(fieldErrorMessage),
   operator: string().required(fieldErrorMessage),
   value: string().required(fieldErrorMessage),
 });

@@ -94,7 +94,7 @@ export const AddNotificationChannelDrawer = (
     <Drawer
       onClose={handleCloseDrawer}
       open={open}
-      title="AddNotificationChannel"
+      title="Add Notification Channel"
     >
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
@@ -163,6 +163,11 @@ export const AddNotificationChannelDrawer = (
                       field.onChange(
                         reason === 'selectOption' ? selected.label : null
                       );
+                    }}
+                    slotProps={{
+                      popper: {
+                        placement: 'bottom',
+                      },
                     }}
                     value={
                       selectedChannelTypeTemplate?.find(

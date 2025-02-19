@@ -121,7 +121,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 label="Polling Interval"
                 onBlur={field.onBlur}
                 options={getPollingIntervalOptions()}
-                placeholder="Select a Polling"
+                placeholder="Select a Polling Interval"
               />
             )}
             control={control}

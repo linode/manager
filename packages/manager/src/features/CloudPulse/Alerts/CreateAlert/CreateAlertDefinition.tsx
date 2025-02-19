@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { isEmpty } from '@linode/api-v4';
 import { Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -8,6 +9,8 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
@@ -68,6 +71,7 @@ const overrides = [
 export const CreateAlertDefinition = () => {
   const history = useHistory();
   const alertCreateExit = () => history.push('/monitor/alerts/definitions');
+  const formRef = React.useRef<HTMLFormElement>(null);
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
@@ -77,7 +81,14 @@ export const CreateAlertDefinition = () => {
     ),
   });
 
-  const { control, formState, getValues, handleSubmit, setError } = formMethods;
+  const {
+    control,
+    formState: { errors, isSubmitting },
+    getValues,
+    handleSubmit,
+    setError,
+  } = formMethods;
+
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
     getValues('serviceType')!
@@ -96,6 +107,7 @@ export const CreateAlertDefinition = () => {
       alertCreateExit();
     } catch (errors) {
       for (const error of errors) {
+        scrollErrorIntoViewV2(formRef);
         if (error.field) {
           setError(error.field, { message: error.reason });
         } else {
@@ -108,11 +120,17 @@ export const CreateAlertDefinition = () => {
     }
   });
 
+  React.useEffect(() => {
+    if (!isEmpty(errors)) {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
+    }
+  }, [errors]);
+
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb crumbOverrides={overrides} pathname="/Definitions/Create" />
       <FormProvider {...formMethods}>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} ref={formRef}>
           <Typography marginTop={2} variant="h2">
             1. General Information
           </Typography>
@@ -125,7 +143,7 @@ export const CreateAlertDefinition = () => {
                 name="label"
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
-                placeholder="Enter Name"
+                placeholder="Enter a Name"
                 value={field.value ?? ''}
               />
             )}
@@ -141,7 +159,7 @@ export const CreateAlertDefinition = () => {
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
                 optional
-                placeholder="Enter Description"
+                placeholder="Enter a Description"
                 value={field.value ?? ''}
               />
             )}
@@ -150,7 +168,7 @@ export const CreateAlertDefinition = () => {
           />
           <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <CloudPulseModifyAlertResources name="entity_ids" />
+          <CloudPulseModifyAlertResources isCreate name="entity_ids" />
           <MetricCriteriaField
             setMaxInterval={(interval: number) =>
               setMaxScrapeInterval(interval)
@@ -166,7 +184,7 @@ export const CreateAlertDefinition = () => {
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
-              loading: formState.isSubmitting,
+              loading: isSubmitting,
               type: 'submit',
             }}
             secondaryButtonProps={{
