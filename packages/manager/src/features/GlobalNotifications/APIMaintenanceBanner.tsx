@@ -92,10 +92,10 @@ export const APIMaintenanceBanner = React.memo((props: Props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {scheduledAPIMaintenances.map((scheduledAPIMaintenance) =>
         renderBanner(scheduledAPIMaintenance)
       )}
-    </>
+    </>)
   );
 });

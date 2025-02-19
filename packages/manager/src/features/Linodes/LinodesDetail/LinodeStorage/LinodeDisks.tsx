@@ -1,5 +1,5 @@
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -102,7 +102,7 @@ export const LinodeDisks = () => {
   };
 
   return (
-    <Box>
+    (<Box>
       <Paper
         sx={{
           alignItems: 'center',
@@ -151,8 +151,8 @@ export const LinodeDisks = () => {
               pageSize,
             }) => {
               return (
-                <React.Fragment>
-                  <Grid xs={12}>
+                (<React.Fragment>
+                  <Grid size={12}>
                     <Table aria-label="List of Disks">
                       <TableHead>
                         <TableRow>
@@ -204,7 +204,7 @@ export const LinodeDisks = () => {
                     page={page}
                     pageSize={pageSize}
                   />
-                </React.Fragment>
+                </React.Fragment>)
               );
             }}
           </Paginate>
@@ -233,7 +233,7 @@ export const LinodeDisks = () => {
         onClose={() => setIsResizeDrawerOpen(false)}
         open={isResizeDrawerOpen}
       />
-    </Box>
+    </Box>)
   );
 };
 

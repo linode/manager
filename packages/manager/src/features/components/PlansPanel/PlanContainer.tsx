@@ -1,5 +1,5 @@
 import { Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -146,7 +146,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
   );
 
   return (
-    <Grid container spacing={2}>
+    (<Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         {isCreate && isDatabaseGA && (
           <Typography
@@ -178,7 +178,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
                     : plans;
                   return [
                     filteredPlans.length > 0 && (
-                      <Grid key={table.header} xs={12}>
+                      <Grid key={table.header} size={12}>
                         <Typography variant="h3">{table.header}</Typography>
                       </Grid>
                     ),
@@ -192,7 +192,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
         )}
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
-        <Grid xs={12}>
+        <Grid size={12}>
           {planSelectionDividers.map((planSelectionDivider) =>
             planType === planSelectionDivider.planType &&
             planSelectionDivider.flag ? (
@@ -240,6 +240,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
           )}
         </Grid>
       </Hidden>
-    </Grid>
+    </Grid>)
   );
 };

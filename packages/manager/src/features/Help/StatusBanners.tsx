@@ -22,7 +22,7 @@ export const StatusBanners = () => {
 
   return (
     // eslint-disable-next-line
-    <>
+    (<>
       {incidents.map((thisIncident) => {
         const mostRecentUpdate = thisIncident.incident_updates.filter(
           (thisUpdate) => thisUpdate.status !== 'postmortem'
@@ -38,7 +38,7 @@ export const StatusBanners = () => {
           />
         );
       })}
-    </>
+    </>)
   );
 };
 

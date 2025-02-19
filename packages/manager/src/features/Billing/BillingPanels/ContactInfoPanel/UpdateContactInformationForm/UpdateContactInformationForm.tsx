@@ -5,7 +5,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { allCountries } from 'country-region-data';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -214,7 +214,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const nonUSCountry = isTaxIdEnabled && formik.values.country !== 'US';
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    (<form onSubmit={formik.handleSubmit}>
       <Grid
         className={classes.mainFormContainer}
         columnSpacing={2}
@@ -223,7 +223,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         spacing={0}
       >
         {isReadOnly && (
-          <Grid xs={12}>
+          <Grid size={12}>
             <Notice
               text={getRestrictedResourceText({
                 isChildUser,
@@ -234,11 +234,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           </Grid>
         )}
         {generalError && (
-          <Grid xs={12}>
+          <Grid size={12}>
             <Notice text={generalError} variant="error" />
           </Grid>
         )}
-        <Grid xs={12}>
+        <Grid size={12}>
           <TextField
             data-qa-contact-email
             disabled={isReadOnly}
@@ -254,7 +254,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             value={formik.values.email}
           />
         </Grid>
-        <Grid sm={6} xs={12}>
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12
+          }}>
           <TextField
             data-qa-contact-first-name
             disabled={isReadOnly}
@@ -265,7 +269,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             value={formik.values.first_name}
           />
         </Grid>
-        <Grid sm={6} xs={12}>
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12
+          }}>
           <TextField
             data-qa-contact-last-name
             disabled={isReadOnly}
@@ -276,7 +284,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             value={formik.values.last_name}
           />
         </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           <TextField
             data-qa-company
             disabled={isReadOnly || isParentUser}
@@ -287,7 +295,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             value={formik.values.company}
           />
         </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           <TextField
             data-qa-contact-address-1
             disabled={isReadOnly}
@@ -298,7 +306,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             value={formik.values.address_1}
           />
         </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           <TextField
             data-qa-contact-address-2
             disabled={isReadOnly}
@@ -310,7 +318,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           />
         </Grid>
 
-        <Grid sm={6} xs={12}>
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12
+          }}>
           <Autocomplete
             textFieldProps={{
               dataAttrs: {
@@ -330,7 +342,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             placeholder="Select a Country"
           />
         </Grid>
-        <Grid sm={6} xs={12}>
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12
+          }}>
           {formik.values.country === 'US' || formik.values.country == 'CA' ? (
             <Autocomplete
               onChange={(_event, value) =>
@@ -372,7 +388,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             />
           )}
         </Grid>
-        <Grid sm={6} xs={12}>
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12
+          }}>
           <TextField
             data-qa-contact-city
             disabled={isReadOnly}
@@ -383,7 +403,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             value={formik.values.city}
           />
         </Grid>
-        <Grid sm={6} xs={12}>
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12
+          }}>
           <TextField
             data-qa-contact-post-code
             disabled={isReadOnly}
@@ -394,7 +418,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             value={formik.values.zip}
           />
         </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           <TextField
             data-qa-contact-phone
             disabled={isReadOnly}
@@ -406,7 +430,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             value={formik.values.phone}
           />
         </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           <TextField
             data-qa-contact-tax-id
             disabled={isReadOnly}
@@ -423,7 +447,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             alignItems="flex-start"
             display="flex"
             marginTop={(theme) => theme.tokens.spacing[60]}
-            xs={12}
+            size={12}
           >
             <Checkbox
               onChange={() =>
@@ -464,7 +488,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         }}
         className={classes.actions}
       />
-    </form>
+    </form>)
   );
 };
 

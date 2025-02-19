@@ -1,5 +1,5 @@
 import { Button } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 

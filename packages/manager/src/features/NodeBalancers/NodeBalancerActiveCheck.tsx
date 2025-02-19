@@ -11,7 +11,7 @@ import {
   CHECK_INTERVAL,
   CHECK_TIMEOUT,
 } from '@linode/validation';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -66,14 +66,18 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
   });
 
   return (
-    <Grid md={6} xs={12}>
+    (<Grid
+      size={{
+        md: 6,
+        xs: 12
+      }}>
       <Grid container spacing={1} sx={{ padding: 1 }}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Typography data-qa-active-checks-header variant="h2">
             Active Health Checks
           </Typography>
         </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Autocomplete
             onChange={(_, selected) =>
               props.onHealthCheckTypeChange(selected.value)
@@ -117,7 +121,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
         {healthCheckType !== 'none' && (
           <Grid container>
             {['http', 'http_body'].includes(healthCheckType) && (
-              <Grid xs={12}>
+              <Grid size={12}>
                 <TextField
                   data-testid="http-path"
                   disabled={disabled}
@@ -131,7 +135,11 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               </Grid>
             )}
             {healthCheckType === 'http_body' && (
-              <Grid md={12} xs={12}>
+              <Grid
+                size={{
+                  md: 12,
+                  xs: 12
+                }}>
                 <TextField
                   data-testid="http-body"
                   disabled={disabled}
@@ -145,7 +153,9 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               </Grid>
             )}
             {flags.udp && protocol === 'udp' && (
-              <Grid lg={6}>
+              <Grid size={{
+                lg: 6
+              }}>
                 <TextField
                   disabled={disabled}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -160,7 +170,11 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 />
               </Grid>
             )}
-            <Grid lg={6} xs={12}>
+            <Grid
+              size={{
+                lg: 6,
+                xs: 12
+              }}>
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Interval',
@@ -181,7 +195,11 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 value={healthCheckInterval}
               />
             </Grid>
-            <Grid lg={6} xs={12}>
+            <Grid
+              size={{
+                lg: 6,
+                xs: 12
+              }}>
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Timeout',
@@ -202,7 +220,11 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 value={healthCheckTimeout}
               />
             </Grid>
-            <Grid lg={6} xs={12}>
+            <Grid
+              size={{
+                lg: 6,
+                xs: 12
+              }}>
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Attempts',
@@ -223,6 +245,6 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
           </Grid>
         )}
       </Grid>
-    </Grid>
+    </Grid>)
   );
 };

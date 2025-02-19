@@ -1,7 +1,7 @@
 import { default as _Accordion } from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -122,7 +122,7 @@ export const Accordion = (props: AccordionProps) => {
   const notice = success || warning || error || null;
 
   return (
-    <_Accordion
+    (<_Accordion
       defaultExpanded={defaultExpanded}
       {...accordionProps}
       data-qa-panel={heading}
@@ -144,7 +144,7 @@ export const Accordion = (props: AccordionProps) => {
       <AccordionDetails {...detailProps} data-qa-panel-details>
         <Grid container>
           {notice ? (
-            <Grid xs={12}>
+            <Grid size={12}>
               <Notice
                 data-qa-notice
                 text={notice}
@@ -155,12 +155,12 @@ export const Accordion = (props: AccordionProps) => {
               />
             </Grid>
           ) : null}
-          <Grid data-qa-grid-item xs={12}>
+          <Grid data-qa-grid-item size={12}>
             {props.children}
           </Grid>
         </Grid>
       </AccordionDetails>
       {actions ? actions(accordionProps) : null}
-    </_Accordion>
+    </_Accordion>)
   );
 };

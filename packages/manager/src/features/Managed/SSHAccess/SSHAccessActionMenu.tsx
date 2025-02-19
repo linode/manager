@@ -76,7 +76,7 @@ export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -93,7 +93,7 @@ export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
           );
         })
       )}
-    </>
+    </>)
   );
 };
 

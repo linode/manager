@@ -1,5 +1,5 @@
 import { Grant } from '@linode/api-v4/lib/account';
-import { default as Grid } from '@mui/material/Unstable_Grid2/Grid2';
+import { default as Grid } from '@mui/material/Grid2/Grid2';
 import * as React from 'react';
 import { compose } from 'recompose';
 

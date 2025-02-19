@@ -1,5 +1,5 @@
 import { FormControlLabel, Notice, TextField, Toggle } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 

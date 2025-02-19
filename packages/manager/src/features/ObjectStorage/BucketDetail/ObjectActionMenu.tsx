@@ -38,7 +38,7 @@ export const ObjectActionMenu: React.FC<Props> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -55,7 +55,7 @@ export const ObjectActionMenu: React.FC<Props> = (props) => {
           );
         })
       )}
-    </>
+    </>)
   );
 };
 

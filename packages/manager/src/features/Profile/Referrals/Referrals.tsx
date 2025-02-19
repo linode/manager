@@ -1,5 +1,5 @@
 import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -51,7 +51,7 @@ export const Referrals = () => {
   const allowReferral = Boolean(url);
 
   return (
-    <Paper>
+    (<Paper>
       <DocumentTitleSegment segment="Referrals" />
       <Grid container spacing={2} sx={{ maxWidth: 920 }}>
         <Grid>
@@ -72,7 +72,7 @@ export const Referrals = () => {
           </Typography>
         </Grid>
         <>
-          <Grid xs={12}>
+          <Grid size={12}>
             {allowReferral ? (
               <CopyableTextField
                 expand
@@ -157,7 +157,7 @@ export const Referrals = () => {
           </StyledImagesGridContainer>
         </>
       </Grid>
-    </Paper>
+    </Paper>)
   );
 };
 

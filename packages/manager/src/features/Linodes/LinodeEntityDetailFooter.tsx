@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -67,7 +67,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
   );
 
   return (
-    <Grid
+    (<Grid
       sx={{
         flex: 1,
         paddingX: 1,
@@ -92,9 +92,10 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
           },
         }}
         alignItems="flex-start"
-        lg={8}
-        xs={12}
-      >
+        size={{
+          lg: 8,
+          xs: 12
+        }}>
         <StyledBox>
           {linodePlan && (
             <StyledListItem
@@ -140,9 +141,10 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
             justifyContent: 'flex-start',
           },
         }}
-        lg={4}
-        xs={12}
-      >
+        size={{
+          lg: 4,
+          xs: 12
+        }}>
         <TagCell
           sx={{
             width: '100%',
@@ -154,6 +156,6 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
           view="inline"
         />
       </Grid>
-    </Grid>
+    </Grid>)
   );
 });

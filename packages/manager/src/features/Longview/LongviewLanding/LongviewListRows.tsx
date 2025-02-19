@@ -21,7 +21,7 @@ export const LongviewListRows = React.memo((props: Props) => {
 
   return (
     // eslint-disable-next-line
-    <React.Fragment>
+    (<React.Fragment>
       {longviewClientsData.map((eachClient) => {
         return (
           <div
@@ -41,6 +41,6 @@ export const LongviewListRows = React.memo((props: Props) => {
           </div>
         );
       })}
-    </React.Fragment>
+    </React.Fragment>)
   );
 });

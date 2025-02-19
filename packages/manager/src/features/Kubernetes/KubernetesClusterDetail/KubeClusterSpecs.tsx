@@ -1,7 +1,7 @@
 import { CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -145,15 +145,20 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   };
 
   return (
-    <Grid
+    (<Grid
       columnGap={matchesColGapBreakpointDown ? 2 : 0}
       container
       direction="row"
-      lg={3}
-      xs={12}
-    >
-      <Grid lg={6}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>
-      <Grid lg={6}>{kubeSpecsRight.map(kubeSpecItem)}</Grid>
-    </Grid>
+      size={{
+        lg: 3,
+        xs: 12
+      }}>
+      <Grid size={{
+        lg: 6
+      }}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>
+      <Grid size={{
+        lg: 6
+      }}>{kubeSpecsRight.map(kubeSpecItem)}</Grid>
+    </Grid>)
   );
 });

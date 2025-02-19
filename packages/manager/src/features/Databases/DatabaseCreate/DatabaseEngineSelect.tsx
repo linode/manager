@@ -1,5 +1,5 @@
 import { Autocomplete, Box } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { getEngineOptions } from 'src/features/Databases/DatabaseCreate/utilities';
@@ -32,7 +32,7 @@ export const DatabaseEngineSelect = (props: Props) => {
   }, [value, engineOptions]);
 
   return (
-    <Autocomplete
+    (<Autocomplete
       groupBy={(option) => {
         if (option.engine.match(/mysql/i)) {
           return 'MySQL';
@@ -84,6 +84,6 @@ export const DatabaseEngineSelect = (props: Props) => {
       options={engineOptions ?? []}
       placeholder="Select a Database Engine"
       value={selectedEngine}
-    />
+    />)
   );
 };

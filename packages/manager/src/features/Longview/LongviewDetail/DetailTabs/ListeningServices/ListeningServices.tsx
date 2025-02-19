@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import Paginate from 'src/components/Paginate';
@@ -28,7 +28,11 @@ export const ListeningServices = (props: TableProps) => {
   const { services, servicesError, servicesLoading } = props;
 
   return (
-    <Grid md={8} xs={12}>
+    (<Grid
+      size={{
+        md: 8,
+        xs: 12
+      }}>
       <Typography
         sx={(theme) => ({
           [theme.breakpoints.down('lg')]: {
@@ -44,7 +48,7 @@ export const ListeningServices = (props: TableProps) => {
         servicesError={servicesError}
         servicesLoading={servicesLoading}
       />
-    </Grid>
+    </Grid>)
   );
 };
 

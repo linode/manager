@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -201,7 +201,7 @@ export const NodeBalancerConfigPanel = (
   const tcpSelected = protocol === 'tcp';
 
   return (
-    <Grid data-qa-label-header xs={12}>
+    (<Grid data-qa-label-header size={12}>
       {globalFormError && (
         <Notice
           className={`error-for-scroll-${configIdx}`}
@@ -210,7 +210,11 @@ export const NodeBalancerConfigPanel = (
         />
       )}
       <Grid container spacing={2}>
-        <Grid md={3} xs={6}>
+        <Grid
+          size={{
+            md: 3,
+            xs: 6
+          }}>
           <TextField
             InputProps={{ id: `port-${configIdx}` }}
             data-qa-port
@@ -226,7 +230,11 @@ export const NodeBalancerConfigPanel = (
             value={port || ''}
           />
         </Grid>
-        <Grid md={3} xs={6}>
+        <Grid
+          size={{
+            md: 3,
+            xs: 6
+          }}>
           <Autocomplete
             textFieldProps={{
               dataAttrs: {
@@ -249,7 +257,11 @@ export const NodeBalancerConfigPanel = (
           />
         </Grid>
 
-        <Grid md={3} xs={6}>
+        <Grid
+          size={{
+            md: 3,
+            xs: 6
+          }}>
           <Autocomplete
             onChange={(_, selected) => {
               props.onAlgorithmChange(selected.value);
@@ -285,7 +297,11 @@ export const NodeBalancerConfigPanel = (
           />
         </Grid>
 
-        <Grid md={3} xs={6}>
+        <Grid
+          size={{
+            md: 3,
+            xs: 6
+          }}>
           <Autocomplete
             onChange={(_, selected) => {
               props.onSessionStickinessChange(selected.value);
@@ -322,7 +338,11 @@ export const NodeBalancerConfigPanel = (
         </Grid>
 
         {tcpSelected && (
-          <Grid md={6} xs={12}>
+          <Grid
+            size={{
+              md: 6,
+              xs: 12
+            }}>
             <Autocomplete
               helperText={
                 <>
@@ -358,8 +378,12 @@ export const NodeBalancerConfigPanel = (
         )}
 
         {protocol === 'https' && (
-          <Grid container spacing={2} xs={12}>
-            <Grid md={6} xs={12}>
+          <Grid container spacing={2} size={12}>
+            <Grid
+              size={{
+                md: 6,
+                xs: 12
+              }}>
               <TextField
                 data-qa-cert-field
                 data-testid="ssl-certificate"
@@ -375,7 +399,11 @@ export const NodeBalancerConfigPanel = (
                 value={sslCertificate || ''}
               />
             </Grid>
-            <Grid md={6} xs={12}>
+            <Grid
+              size={{
+                md: 6,
+                xs: 12
+              }}>
               <TextField
                 data-qa-private-key-field
                 data-testid="private-key"
@@ -394,24 +422,24 @@ export const NodeBalancerConfigPanel = (
           </Grid>
         )}
 
-        <Grid xs={12}>
+        <Grid size={12}>
           <Divider />
         </Grid>
       </Grid>
       <Grid container spacing={2}>
         <ActiveCheck errorMap={errorMap} {...props} />
         {protocol !== 'udp' && <PassiveCheck {...props} />}
-        <Grid xs={12}>
+        <Grid size={12}>
           <Divider />
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Typography data-qa-backend-ip-header variant="h2">
             Backend Nodes
           </Typography>
           {nodeMessage && (
-            <Grid xs={12}>
+            <Grid size={12}>
               <Notice
                 spacingBottom={0}
                 spacingTop={8}
@@ -428,7 +456,7 @@ export const NodeBalancerConfigPanel = (
           sx={{
             paddingBottom: '24px',
           }}
-          xs={12}
+          size={12}
         >
           <Grid container spacing={2} sx={{ padding: 0 }}>
             {nodes?.map((node, nodeIdx) => (
@@ -449,7 +477,7 @@ export const NodeBalancerConfigPanel = (
                 removeNode={removeNode}
               />
             ))}
-            <Grid xs={12}>
+            <Grid size={12}>
               <Button
                 buttonType="outlined"
                 disabled={disabled}
@@ -462,7 +490,7 @@ export const NodeBalancerConfigPanel = (
         </Grid>
       </Grid>
       <React.Fragment>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Divider />
         </Grid>
         <Grid
@@ -492,7 +520,7 @@ export const NodeBalancerConfigPanel = (
           />
         </Grid>
       </React.Fragment>
-    </Grid>
+    </Grid>)
   );
 };
 

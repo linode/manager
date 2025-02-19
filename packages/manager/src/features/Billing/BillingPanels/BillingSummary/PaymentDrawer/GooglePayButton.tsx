@@ -1,5 +1,5 @@
 import { CircleProgress, Tooltip } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';

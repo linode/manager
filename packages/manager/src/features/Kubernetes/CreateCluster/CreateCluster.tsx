@@ -1,6 +1,6 @@
 import { Autocomplete, Box, Notice, Paper, Stack, TextField } from '@linode/ui';
 import { Divider } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';

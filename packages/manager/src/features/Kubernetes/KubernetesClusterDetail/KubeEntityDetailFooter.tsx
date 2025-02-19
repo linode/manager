@@ -1,6 +1,6 @@
 import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -82,7 +82,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
   );
 
   return (
-    <Grid
+    (<Grid
       sx={{
         flex: 1,
         padding: 0,
@@ -108,9 +108,10 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
           },
         }}
         alignItems="flex-start"
-        lg="auto"
-        xs={12}
-      >
+        size={{
+          lg: "auto",
+          xs: 12
+        }}>
         <StyledBox>
           <StyledListItem sx={{ ...sxListItemFirstChild }}>
             <StyledLabelBox component="span">Cluster ID:</StyledLabelBox>{' '}
@@ -166,10 +167,11 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
             justifyContent: 'flex-start',
           },
         }}
-        lg={3.5}
         marginLeft="auto"
-        xs={12}
-      >
+        size={{
+          lg: 3.5,
+          xs: 12
+        }}>
         <TagCell
           sx={{
             width: '100%',
@@ -181,6 +183,6 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
           view="inline"
         />
       </Grid>
-    </Grid>
+    </Grid>)
   );
 });

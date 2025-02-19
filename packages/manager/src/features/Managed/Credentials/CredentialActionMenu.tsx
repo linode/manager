@@ -42,7 +42,7 @@ const CredentialActionMenu = (props: CredentialActionMenuProps) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -59,7 +59,7 @@ const CredentialActionMenu = (props: CredentialActionMenuProps) => {
           );
         })
       )}
-    </>
+    </>)
   );
 };
 

@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
 import { keyframes, styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';

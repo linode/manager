@@ -13,7 +13,7 @@ const DisplaySectionList = ({ displaySections }: DisplaySectionListProps) => {
   }
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {displaySections.map(({ details, title }, idx) => (
         <React.Fragment key={`fragment-${title}-${idx}`}>
           {idx !== 0 && <Divider light spacingBottom={0} spacingTop={0} />}
@@ -24,7 +24,7 @@ const DisplaySectionList = ({ displaySections }: DisplaySectionListProps) => {
           />
         </React.Fragment>
       ))}
-    </>
+    </>)
   );
 };
 

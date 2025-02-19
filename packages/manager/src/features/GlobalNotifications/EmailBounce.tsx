@@ -1,6 +1,6 @@
 import { Button, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -128,9 +128,14 @@ const EmailBounceNotification = React.memo((props: Props) => {
   }
 
   return (
-    <Notice important variant="warning">
+    (<Notice important variant="warning">
       <Grid alignItems="center" container spacing={2}>
-        <Grid lg={8} md={6} xs={12}>
+        <Grid
+          size={{
+            lg: 8,
+            md: 6,
+            xs: 12
+          }}>
           {text}
         </Grid>
         <StyledGrid container lg={4} md={6} xs={12}>
@@ -154,6 +159,6 @@ const EmailBounceNotification = React.memo((props: Props) => {
           </Button>
         </StyledGrid>
       </Grid>
-    </Notice>
+    </Notice>)
   );
 });

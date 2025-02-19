@@ -1,6 +1,6 @@
 import { Notice, Select, TextField } from '@linode/ui';
 import { createContactSchema } from '@linode/validation/lib/managed.schema';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
@@ -108,7 +108,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
   };
 
   return (
-    <Drawer
+    (<Drawer
       onClose={closeDrawer}
       open={isOpen}
       title={`${isEditing ? 'Edit' : 'Add'} Contact`}
@@ -137,100 +137,105 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
           // prettier-ignore
           const secondaryPhoneError = errors?.phone ?? '';
 
-          return (
-            <>
-              {status && (
-                <Notice
-                  key={status}
-                  text={status.generalError}
-                  variant="error"
-                />
-              )}
+          return (<>
+            {status && (
+              <Notice
+                key={status}
+                text={status.generalError}
+                variant="error"
+              />
+            )}
+            <form onSubmit={handleSubmit}>
+              <TextField
+                error={!!errors.name}
+                errorText={errors.name}
+                label="Name"
+                name="name"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                required
+                value={values.name}
+              />
 
-              <form onSubmit={handleSubmit}>
-                <TextField
-                  error={!!errors.name}
-                  errorText={errors.name}
-                  label="Name"
-                  name="name"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  required
-                  value={values.name}
-                />
+              <TextField
+                error={!!errors.email}
+                errorText={errors.email}
+                label="E-mail"
+                name="email"
+                onBlur={(e) => handleFormikBlur(e, formikProps)}
+                onChange={handleChange}
+                required
+                type="email"
+                value={values.email}
+              />
 
-                <TextField
-                  error={!!errors.email}
-                  errorText={errors.email}
-                  label="E-mail"
-                  name="email"
-                  onBlur={(e) => handleFormikBlur(e, formikProps)}
-                  onChange={handleChange}
-                  required
-                  type="email"
-                  value={values.email}
-                />
-
-                <Grid container spacing={2}>
-                  <Grid md={6} xs={12}>
-                    <TextField
-                      error={!!primaryPhoneError}
-                      errorText={primaryPhoneError}
-                      label="Primary Phone"
-                      name="phone.primary"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values?.phone?.primary ?? ''}
-                    />
-                  </Grid>
-                  <Grid md={6} xs={12}>
-                    <TextField
-                      error={!!secondaryPhoneError}
-                      errorText={secondaryPhoneError}
-                      label="Secondary Phone"
-                      name="phone.secondary"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values?.phone?.secondary ?? ''}
-                    />
-                  </Grid>
+              <Grid container spacing={2}>
+                <Grid
+                  size={{
+                    md: 6,
+                    xs: 12
+                  }}>
+                  <TextField
+                    error={!!primaryPhoneError}
+                    errorText={primaryPhoneError}
+                    label="Primary Phone"
+                    name="phone.primary"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values?.phone?.primary ?? ''}
+                  />
                 </Grid>
+                <Grid
+                  size={{
+                    md: 6,
+                    xs: 12
+                  }}>
+                  <TextField
+                    error={!!secondaryPhoneError}
+                    errorText={secondaryPhoneError}
+                    label="Secondary Phone"
+                    name="phone.secondary"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values?.phone?.secondary ?? ''}
+                  />
+                </Grid>
+              </Grid>
 
-                <Select
-                  onChange={(_, selectedGroup) =>
-                    setFieldValue('group', selectedGroup?.value)
-                  }
-                  options={groups.map((group) => ({
-                    label: group.groupName,
-                    value: group.groupName,
-                  }))}
-                  value={
-                    values.group
-                      ? {
-                          label: values.group,
-                          value: values.group,
-                        }
-                      : null
-                  }
-                  creatable
-                  errorText={errors.group}
-                  label="Group"
-                  placeholder="Create or Select a Group"
-                />
+              <Select
+                onChange={(_, selectedGroup) =>
+                  setFieldValue('group', selectedGroup?.value)
+                }
+                options={groups.map((group) => ({
+                  label: group.groupName,
+                  value: group.groupName,
+                }))}
+                value={
+                  values.group
+                    ? {
+                        label: values.group,
+                        value: values.group,
+                      }
+                    : null
+                }
+                creatable
+                errorText={errors.group}
+                label="Group"
+                placeholder="Create or Select a Group"
+              />
 
-                <ActionsPanel
-                  primaryButtonProps={{
-                    label: isEditing ? 'Save Changes' : 'Add Contact',
-                    loading: isSubmitting,
-                    onClick: () => handleSubmit(),
-                  }}
-                />
-              </form>
-            </>
-          );
+              <ActionsPanel
+                primaryButtonProps={{
+                  label: isEditing ? 'Save Changes' : 'Add Contact',
+                  loading: isSubmitting,
+                  onClick: () => handleSubmit(),
+                }}
+              />
+            </form>
+          </>);
         }}
       </Formik>
-    </Drawer>
+    </Drawer>)
   );
 };
 

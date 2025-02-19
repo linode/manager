@@ -1,7 +1,7 @@
 import { Button, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -40,11 +40,11 @@ export const SubnetNode = (props: Props) => {
   const showRemoveButton = !(isCreateVPCDrawer && idx === 0);
 
   return (
-    <Grid key={idx} sx={{ maxWidth: 460 }}>
+    (<Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
         <Grid
           sx={{ ...(!showRemoveButton && { width: '100%' }), flexGrow: 1 }}
-          xs={showRemoveButton ? 11 : 12}
+          size={showRemoveButton ? 11 : 12}
         >
           <Controller
             render={({ field, fieldState }) => (
@@ -82,7 +82,7 @@ export const SubnetNode = (props: Props) => {
           />
         </Grid>
         {showRemoveButton && (
-          <Grid xs={1}>
+          <Grid size={1}>
             <StyledButton
               aria-label={`Remove Subnet ${label !== '' ? label : idx}`}
               onClick={() => remove(idx)}
@@ -92,7 +92,7 @@ export const SubnetNode = (props: Props) => {
           </Grid>
         )}
       </Grid>
-    </Grid>
+    </Grid>)
   );
 };
 

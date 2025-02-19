@@ -14,7 +14,7 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
@@ -487,7 +487,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <Grid className="py0" key={perm} sm={6} xs={12}>
+      (<Grid
+        className="py0"
+        key={perm}
+        size={{
+          sm: 6,
+          xs: 12
+        }}>
         <FormControlLabel
           control={
             <Toggle
@@ -501,7 +507,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           })}
           label={permDescriptionMap[perm]}
         />
-      </Grid>
+      </Grid>)
     );
   };
 

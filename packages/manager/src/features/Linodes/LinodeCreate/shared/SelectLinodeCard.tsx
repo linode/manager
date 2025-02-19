@@ -1,5 +1,5 @@
 import { Button, Stack } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
@@ -62,7 +62,7 @@ export const SelectLinodeCard = ({
     linode.region;
 
   const renderVariant = () => (
-    <Grid paddingTop={0} xs={12}>
+    <Grid paddingTop={0} size={12}>
       <Stack direction="row" justifyContent="space-between" marginBottom={1}>
         <Stack alignItems="center" direction="row" height={34}>
           <StatusIcon

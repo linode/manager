@@ -1,7 +1,7 @@
 import { Box, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
@@ -133,229 +133,257 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const { data: cluster } = useKubernetesClusterQuery(linodeLkeClusterId ?? -1);
 
-  return (
-    <>
-      <StyledBodyGrid container spacing={2} sx={{ mb: 0 }}>
-        <Grid
-          container
-          flexDirection={matchesLgUp ? 'row' : 'column'}
-          sm={isDisplayingEncryptedStatus ? 4 : 3}
-          spacing={0}
+  return (<>
+    <StyledBodyGrid container spacing={2} sx={{ mb: 0 }}>
+      <Grid
+        container
+        flexDirection={matchesLgUp ? 'row' : 'column'}
+        spacing={0}
+        size={{
+          sm: isDisplayingEncryptedStatus ? 4 : 3,
+          xs: 12
+        }}>
+        <StyledColumnLabelGrid
+          mb={matchesLgUp && !isDisplayingEncryptedStatus ? 0 : 2}
           xs={12}
         >
-          <StyledColumnLabelGrid
-            mb={matchesLgUp && !isDisplayingEncryptedStatus ? 0 : 2}
-            xs={12}
-          >
-            Summary
-          </StyledColumnLabelGrid>
-          <StyledSummaryGrid container spacing={1}>
-            <Grid alignItems="center" display="flex" lg={6} sm={12} xs={6}>
+          Summary
+        </StyledColumnLabelGrid>
+        <StyledSummaryGrid container spacing={1}>
+          <Grid
+            alignItems="center"
+            display="flex"
+            size={{
+              lg: 6,
+              sm: 12,
+              xs: 6
+            }}>
+            <Typography>
+              {pluralize('CPU Core', 'CPU Cores', numCPUs)}
+            </Typography>
+          </Grid>
+          <Grid
+            alignItems="center"
+            display="flex"
+            size={{
+              lg: 6,
+              sm: 12,
+              xs: 6
+            }}>
+            <Typography>{gbStorage} GB Storage</Typography>
+          </Grid>
+          <Grid
+            size={{
+              lg: 6,
+              sm: 12,
+              xs: 6
+            }}>
+            <Typography>{gbRAM} GB RAM</Typography>
+          </Grid>
+          <Grid
+            size={{
+              lg: 6,
+              sm: 12,
+              xs: 6
+            }}>
+            <Box
+              sx={(theme) => ({
+                alignItems: 'center',
+                display: 'flex',
+                gap: theme.spacing(),
+              })}
+            >
               <Typography>
-                {pluralize('CPU Core', 'CPU Cores', numCPUs)}
+                {pluralize('Volume', 'Volumes', numVolumes)}
               </Typography>
-            </Grid>
-            <Grid alignItems="center" display="flex" lg={6} sm={12} xs={6}>
-              <Typography>{gbStorage} GB Storage</Typography>
-            </Grid>
-            <Grid lg={6} sm={12} xs={6}>
-              <Typography>{gbRAM} GB RAM</Typography>
-            </Grid>
-            <Grid lg={6} sm={12} xs={6}>
-              <Box
-                sx={(theme) => ({
-                  alignItems: 'center',
-                  display: 'flex',
-                  gap: theme.spacing(),
-                })}
-              >
-                <Typography>
-                  {pluralize('Volume', 'Volumes', numVolumes)}
-                </Typography>
 
-                {numVolumes > 0 && (
-                  <HighPerformanceVolumeIcon
-                    linodeCapabilities={linodeCapabilities}
-                  />
-                )}
+              {numVolumes > 0 && (
+                <HighPerformanceVolumeIcon
+                  linodeCapabilities={linodeCapabilities}
+                />
+              )}
+            </Box>
+          </Grid>
+          {isDiskEncryptionFeatureEnabled && encryptionStatus && (
+            <Grid>
+              <Box
+                alignItems="center"
+                data-testid={encryptionStatusTestId}
+                display="flex"
+                flexDirection="row"
+              >
+                <EncryptedStatus
+                  tooltipText={
+                    isLKELinode
+                      ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
+                      : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
+                  }
+                  encryptionStatus={encryptionStatus}
+                />
               </Box>
             </Grid>
-            {isDiskEncryptionFeatureEnabled && encryptionStatus && (
-              <Grid>
-                <Box
-                  alignItems="center"
-                  data-testid={encryptionStatusTestId}
-                  display="flex"
-                  flexDirection="row"
-                >
-                  <EncryptedStatus
-                    tooltipText={
-                      isLKELinode
-                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
-                        : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
-                    }
-                    encryptionStatus={encryptionStatus}
-                  />
-                </Box>
-              </Grid>
-            )}
-          </StyledSummaryGrid>
-        </Grid>
+          )}
+        </StyledSummaryGrid>
+      </Grid>
 
-        <Grid container sm={isDisplayingEncryptedStatus ? 8 : 9} xs={12}>
-          <Grid container xs={12}>
-            <AccessTable
-              footer={
-                numIPAddresses > 2 ? (
-                  <Typography
-                    sx={{ position: matchesLgUp ? 'absolute' : 'relative' }}
-                    variant="body1"
-                  >
-                    <HashLink
-                      to={`/linodes/${linodeId}/networking#${ipv4TableID}`}
-                    >
-                      View all IP Addresses
-                    </HashLink>
-                  </Typography>
-                ) : undefined
-              }
-              rows={[
-                {
-                  isMasked: maskSensitiveDataPreference,
-                  maskedTextLength: 'ipv4',
-                  text: firstAddress,
-                },
-                {
-                  isMasked: maskSensitiveDataPreference,
-                  maskedTextLength: 'ipv6',
-                  text: secondAddress,
-                },
-              ]}
-              gridSize={{ lg: 5, xs: 12 }}
-              isVPCOnlyLinode={isVPCOnlyLinode}
-              sx={{ padding: 0 }}
-              title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
-            />
-            <AccessTable
-              rows={[
-                {
-                  heading: 'SSH Access',
-                  isMasked: maskSensitiveDataPreference,
-                  text: sshLink(ipv4[0]),
-                },
-                {
-                  heading: 'LISH Console via SSH',
-                  isMasked: !linodeIsInDistributedRegion
-                    ? maskSensitiveDataPreference
-                    : false,
-                  text: linodeIsInDistributedRegion
-                    ? 'N/A'
-                    : lishLink(username, region, linodeLabel),
-                },
-              ]}
-              gridSize={{ lg: 7, xs: 12 }}
-              isVPCOnlyLinode={isVPCOnlyLinode}
-              sx={{ padding: 0, pt: matchesLgUp ? 0 : 2 }}
-              title="Access"
-            />
-          </Grid>
-        </Grid>
-      </StyledBodyGrid>
-      {vpcLinodeIsAssignedTo && (
-        <Grid
-          sx={{
-            borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
-          }}
-          container
-          direction="column"
-          spacing={2}
-        >
-          <StyledColumnLabelGrid data-testid="vpc-section-title">
-            VPC
-          </StyledColumnLabelGrid>
-          <Grid
-            sx={{
-              margin: 0,
-              padding: '0 0 8px 0',
-              [theme.breakpoints.down('md')]: {
-                alignItems: 'start',
-                display: 'flex',
-                flexDirection: 'column',
-                paddingLeft: '8px',
-              },
-            }}
-            alignItems="center"
-            container
-            direction="row"
-            spacing={2}
-          >
-            <StyledVPCBox>
-              <StyledListItem>
-                <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
-                <Link
-                  data-testid="assigned-vpc-label"
-                  to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
+      <Grid
+        container
+        size={{
+          sm: isDisplayingEncryptedStatus ? 8 : 9,
+          xs: 12
+        }}>
+        <Grid container size={12}>
+          <AccessTable
+            footer={
+              numIPAddresses > 2 ? (
+                <Typography
+                  sx={{ position: matchesLgUp ? 'absolute' : 'relative' }}
+                  variant="body1"
                 >
-                  {vpcLinodeIsAssignedTo.label}
-                </Link>
-              </StyledListItem>
-            </StyledVPCBox>
-            <StyledVPCBox>
-              <StyledListItem sx={{ ...sxLastListItem }}>
-                <StyledLabelBox component="span" data-testid="subnets-string">
-                  Subnet:
-                </StyledLabelBox>{' '}
-                {getSubnetsString(linodeAssociatedSubnets ?? [])}
-              </StyledListItem>
-            </StyledVPCBox>
-            {configInterfaceWithVPC?.ipv4?.vpc && (
-              <StyledIPv4Box>
-                <StyledIPv4Label data-testid="vpc-ipv4">
-                  VPC IPv4
-                </StyledIPv4Label>
-                <StyledIPv4Item component="span" data-testid="vpc-ipv4">
-                  <CopyTooltip
-                    copyableText
-                    text={configInterfaceWithVPC.ipv4.vpc}
-                  />
-                  <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
-                    <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
-                  </Box>
-                </StyledIPv4Item>
-              </StyledIPv4Box>
-            )}
-          </Grid>
+                  <HashLink
+                    to={`/linodes/${linodeId}/networking#${ipv4TableID}`}
+                  >
+                    View all IP Addresses
+                  </HashLink>
+                </Typography>
+              ) : undefined
+            }
+            rows={[
+              {
+                isMasked: maskSensitiveDataPreference,
+                maskedTextLength: 'ipv4',
+                text: firstAddress,
+              },
+              {
+                isMasked: maskSensitiveDataPreference,
+                maskedTextLength: 'ipv6',
+                text: secondAddress,
+              },
+            ]}
+            gridSize={{ lg: 5, xs: 12 }}
+            isVPCOnlyLinode={isVPCOnlyLinode}
+            sx={{ padding: 0 }}
+            title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
+          />
+          <AccessTable
+            rows={[
+              {
+                heading: 'SSH Access',
+                isMasked: maskSensitiveDataPreference,
+                text: sshLink(ipv4[0]),
+              },
+              {
+                heading: 'LISH Console via SSH',
+                isMasked: !linodeIsInDistributedRegion
+                  ? maskSensitiveDataPreference
+                  : false,
+                text: linodeIsInDistributedRegion
+                  ? 'N/A'
+                  : lishLink(username, region, linodeLabel),
+              },
+            ]}
+            gridSize={{ lg: 7, xs: 12 }}
+            isVPCOnlyLinode={isVPCOnlyLinode}
+            sx={{ padding: 0, pt: matchesLgUp ? 0 : 2 }}
+            title="Access"
+          />
         </Grid>
-      )}
-      {linodeLkeClusterId && (
+      </Grid>
+    </StyledBodyGrid>
+    {vpcLinodeIsAssignedTo && (
+      <Grid
+        sx={{
+          borderTop: `1px solid ${theme.borderColors.borderTable}`,
+          padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+        }}
+        container
+        direction="column"
+        spacing={2}
+      >
+        <StyledColumnLabelGrid data-testid="vpc-section-title">
+          VPC
+        </StyledColumnLabelGrid>
         <Grid
           sx={{
-            borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(2)} ${theme.spacing(2)}`,
+            margin: 0,
+            padding: '0 0 8px 0',
             [theme.breakpoints.down('md')]: {
-              paddingLeft: 3,
+              alignItems: 'start',
+              display: 'flex',
+              flexDirection: 'column',
+              paddingLeft: '8px',
             },
           }}
+          alignItems="center"
           container
-          direction="column"
+          direction="row"
           spacing={2}
         >
-          <StyledListItem sx={{ borderRight: 'unset' }}>
-            <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
-            <Link
-              data-testid="assigned-lke-cluster-label"
-              to={`/kubernetes/clusters/${linodeLkeClusterId}`}
-            >
-              {cluster?.label ?? `${linodeLkeClusterId}`}
-            </Link>
-            &nbsp;
-            {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
-          </StyledListItem>
+          <StyledVPCBox>
+            <StyledListItem>
+              <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
+              <Link
+                data-testid="assigned-vpc-label"
+                to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
+              >
+                {vpcLinodeIsAssignedTo.label}
+              </Link>
+            </StyledListItem>
+          </StyledVPCBox>
+          <StyledVPCBox>
+            <StyledListItem sx={{ ...sxLastListItem }}>
+              <StyledLabelBox component="span" data-testid="subnets-string">
+                Subnet:
+              </StyledLabelBox>{' '}
+              {getSubnetsString(linodeAssociatedSubnets ?? [])}
+            </StyledListItem>
+          </StyledVPCBox>
+          {configInterfaceWithVPC?.ipv4?.vpc && (
+            <StyledIPv4Box>
+              <StyledIPv4Label data-testid="vpc-ipv4">
+                VPC IPv4
+              </StyledIPv4Label>
+              <StyledIPv4Item component="span" data-testid="vpc-ipv4">
+                <CopyTooltip
+                  copyableText
+                  text={configInterfaceWithVPC.ipv4.vpc}
+                />
+                <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
+                  <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
+                </Box>
+              </StyledIPv4Item>
+            </StyledIPv4Box>
+          )}
         </Grid>
-      )}
-    </>
-  );
+      </Grid>
+    )}
+    {linodeLkeClusterId && (
+      <Grid
+        sx={{
+          borderTop: `1px solid ${theme.borderColors.borderTable}`,
+          padding: `${theme.spacing(2)} ${theme.spacing(2)}`,
+          [theme.breakpoints.down('md')]: {
+            paddingLeft: 3,
+          },
+        }}
+        container
+        direction="column"
+        spacing={2}
+      >
+        <StyledListItem sx={{ borderRight: 'unset' }}>
+          <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
+          <Link
+            data-testid="assigned-lke-cluster-label"
+            to={`/kubernetes/clusters/${linodeLkeClusterId}`}
+          >
+            {cluster?.label ?? `${linodeLkeClusterId}`}
+          </Link>
+          &nbsp;
+          {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
+        </StyledListItem>
+      </Grid>
+    )}
+  </>);
 });
 
 export const getSubnetsString = (data: Subnet[]) => {

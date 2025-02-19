@@ -30,7 +30,7 @@ export const SupportTicketGeneralError = (
   const isAccountLimitSupportTicket = accountLimitRegex.test(generalError);
 
   return (
-    <Typography
+    (<Typography
       sx={{
         font: theme.font.bold,
         fontSize: '1rem',
@@ -42,7 +42,7 @@ export const SupportTicketGeneralError = (
 
         if (openTicket) {
           return (
-            <SupportLink
+            (<SupportLink
               text={
                 substring.match(/^[A-Z]/)
                   ? capitalize(openTicket[0])
@@ -54,12 +54,12 @@ export const SupportTicketGeneralError = (
               entity={entity}
               formPayloadValues={formPayloadValues}
               key={`${substring}-${idx}`}
-            />
+            />)
           );
         } else {
           return substring;
         }
       })}
-    </Typography>
+    </Typography>)
   );
 };

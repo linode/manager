@@ -1,6 +1,6 @@
 import { Button, Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
@@ -83,9 +83,14 @@ const LinodePubKey = () => {
   }
 
   return (
-    <StyledRootPaper>
+    (<StyledRootPaper>
       <Grid container justifyContent="space-between" spacing={2}>
-        <Grid lg={4} md={3} xs={12}>
+        <Grid
+          size={{
+            lg: 4,
+            md: 3,
+            xs: 12
+          }}>
           <Stack flexDirection="row">
             <StyledSSHKeyIcon />
             <Typography variant="h3">Linode Public Key</Typography>
@@ -127,7 +132,7 @@ const LinodePubKey = () => {
           </Stack>
         </StyledCopyToClipboardGrid>
       </Grid>
-    </StyledRootPaper>
+    </StyledRootPaper>)
   );
 };
 

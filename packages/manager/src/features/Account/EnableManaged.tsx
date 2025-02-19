@@ -1,6 +1,6 @@
 import { enableManaged } from '@linode/api-v4/lib/managed';
 import { Accordion, Button, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 

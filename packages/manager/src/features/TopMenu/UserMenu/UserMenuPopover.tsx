@@ -2,7 +2,7 @@ import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -126,7 +126,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     }
 
     return (
-      <Grid key={link.display} xs={12}>
+      (<Grid key={link.display} size={12}>
         <Link
           data-testid={`menu-item-${link.display}`}
           onClick={onClose}
@@ -135,7 +135,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         >
           {link.display}
         </Link>
-      </Grid>
+      </Grid>)
     );
   };
 
@@ -150,7 +150,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   };
 
   return (
-    <Popover
+    (<Popover
       anchorOrigin={{
         horizontal: 'right',
         vertical: 'bottom',
@@ -205,10 +205,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           <Heading>My Profile</Heading>
           <Divider />
           <Grid columnSpacing={2} container rowSpacing={1}>
-            <Grid container direction="column" wrap="nowrap" xs={6}>
+            <Grid container direction="column" wrap="nowrap" size={6}>
               {profileLinks.slice(0, 4).map(renderLink)}
             </Grid>
-            <Grid container direction="column" wrap="nowrap" xs={6}>
+            <Grid container direction="column" wrap="nowrap" size={6}>
               {profileLinks.slice(4).map(renderLink)}
             </Grid>
           </Grid>
@@ -238,7 +238,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           </Box>
         )}
       </Stack>
-    </Popover>
+    </Popover>)
   );
 };
 
