@@ -75,7 +75,7 @@ export const UsersLanding = () => {
   const queryParams = new URLSearchParams(location.search);
 
   const handleSearch = (value: string) => {
-    queryParams.delete('page');
+    queryParams.set('page', '1');
 
     history.push({ search: queryParams.toString() });
     setQuery(value);

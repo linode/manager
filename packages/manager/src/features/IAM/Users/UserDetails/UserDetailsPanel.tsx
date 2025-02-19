@@ -4,6 +4,7 @@ import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 
@@ -26,11 +27,11 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
   const items = [
     {
       label: 'Username',
-      value: <Typography>{user.username}</Typography>,
+      value: <MaskableText isToggleable text={user.username} />,
     },
     {
       label: 'Email',
-      value: <Typography>{user.email}</Typography>,
+      value: <MaskableText isToggleable text={user.email} />,
     },
     {
       label: 'Access',
@@ -88,7 +89,12 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
     },
     {
       label: 'Verified Phone Number',
-      value: <Typography>{user.verified_phone_number ?? 'None'}</Typography>,
+      value: (
+        <MaskableText
+          isToggleable
+          text={user.verified_phone_number ?? 'None'}
+        />
+      ),
     },
     {
       label: 'SSH Keys',

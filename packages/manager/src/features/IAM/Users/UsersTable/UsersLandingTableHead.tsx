@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
@@ -35,17 +34,16 @@ export const UsersLandingTableHead = ({ order }: Props) => {
         >
           Username
         </TableSortCell>
-        <Hidden smDown>
-          <TableSortCell
-            active={order.orderBy === 'email'}
-            direction={order.order}
-            handleClick={order.handleOrderChange}
-            label="email"
-            style={{ width: '40%' }}
-          >
-            Email Address
-          </TableSortCell>
-        </Hidden>
+        <TableSortCell
+          active={order.orderBy === 'email'}
+          direction={order.order}
+          handleClick={order.handleOrderChange}
+          label="email"
+          style={{ width: '40%' }}
+          sx={{ display: { sm: 'table-cell', xs: 'none' } }}
+        >
+          Email Address
+        </TableSortCell>
         <TableCell
           style={{ width: '20%' }}
           sx={{ display: { lg: 'table-cell', xs: 'none' } }}
