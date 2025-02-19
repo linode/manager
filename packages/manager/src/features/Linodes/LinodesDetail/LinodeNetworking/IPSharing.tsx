@@ -1,6 +1,7 @@
 import {
   Button,
   CircleProgress,
+  Dialog,
   Divider,
   Notice,
   Select,
@@ -13,7 +14,6 @@ import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -206,14 +206,14 @@ const IPSharingPanel = (props: Props) => {
         // make note in groupedUnsharedRanges so that we can first share that IP to
         // the Linode it is statically routed to, then to the current Linode
         if (isStaticv6) {
-          const linode_id = ipToLinodeID[currentValue][0];
-          if (groupedUnsharedRanges.hasOwnProperty(linode_id)) {
-            groupedUnsharedRanges[linode_id] = [
-              ...groupedUnsharedRanges[linode_id],
+          const linodeId = ipToLinodeID[currentValue][0];
+          if (groupedUnsharedRanges.hasOwnProperty(linodeId)) {
+            groupedUnsharedRanges[linodeId] = [
+              ...groupedUnsharedRanges[linodeId],
               strippedIP,
             ];
           } else {
-            groupedUnsharedRanges[linode_id] = [strippedIP];
+            groupedUnsharedRanges[linodeId] = [strippedIP];
           }
         }
 
@@ -241,11 +241,11 @@ const IPSharingPanel = (props: Props) => {
 
     if (flags.ipv6Sharing) {
       // share unshared ranges first to their staticly routed Linode, then later we can share to the current Linode
-      Object.keys(groupedUnsharedRanges).forEach((linode_id) => {
+      Object.keys(groupedUnsharedRanges).forEach((linodeId) => {
         promises.push(
           shareAddresses({
-            ips: groupedUnsharedRanges[linode_id],
-            linode_id: parseInt(linode_id, 10),
+            ips: groupedUnsharedRanges[linodeId],
+            linode_id: parseInt(linodeId, 10),
           }).catch((errorResponse) => {
             const errors = getAPIErrorOrDefault(
               errorResponse,

@@ -4,6 +4,7 @@ import {
   Accordion,
   Autocomplete,
   Box,
+  Dialog,
   Notice,
   TextField,
   Typography,
@@ -15,7 +16,6 @@ import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -357,9 +357,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
     let requestPayload;
     if (entityType === 'bucket') {
-      const bucket_label = values.entityInputValue;
+      const bucketLabel = values.entityInputValue;
       requestPayload = {
-        bucket: bucket_label,
+        bucket: bucketLabel,
         region: _entityId,
         ...baseRequestPayload,
       };
@@ -404,7 +404,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const selectedSeverityLabel =
     selectedSeverity && SEVERITY_LABEL_MAP.get(selectedSeverity);
   const selectedSeverityOption =
-    selectedSeverity != undefined && selectedSeverityLabel != undefined
+    selectedSeverity !== undefined && selectedSeverityLabel !== undefined
       ? {
           label: selectedSeverityLabel,
           value: selectedSeverity,
@@ -448,7 +448,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                     <Autocomplete
                       onChange={(e, severity) =>
                         field.onChange(
-                          severity != null ? severity.value : undefined
+                          severity !== null ? severity.value : undefined
                         )
                       }
                       textFieldProps={{

@@ -1,10 +1,8 @@
-import { Stack } from '@linode/ui';
+import { Dialog, Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
-
-import type { DialogProps } from 'src/components/Dialog/Dialog';
+import type { DialogProps } from '@linode/ui';
 
 export interface ConfirmationDialogProps extends DialogProps {
   /**

@@ -7,6 +7,8 @@ export * from './Chip';
 export * from './Checkbox';
 export * from './CircleProgress';
 export * from './ClickAwayListener';
+export * from './Dialog';
+export * from './DialogTitle';
 export * from './Divider';
 export * from './EditableText';
 export * from './FormControl';

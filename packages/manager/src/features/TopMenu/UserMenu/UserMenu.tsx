@@ -1,10 +1,16 @@
-import { Button, Stack, Tooltip, Typography, omittedProps } from '@linode/ui';
+import {
+  Button,
+  ChevronDownIcon,
+  Stack,
+  Tooltip,
+  Typography,
+  omittedProps,
+} from '@linode/ui';
 import { styled, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ChevronDown from 'src/assets/icons/chevron-down.svg';
 import ChevronUp from 'src/assets/icons/chevron-up.svg';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForProxy } from 'src/components/AvatarForProxy';
@@ -78,7 +84,7 @@ export const UserMenu = React.memo(() => {
     return open ? (
       <ChevronUp color={theme.tokens.header.Text.Hover} />
     ) : (
-      <ChevronDown color={theme.tokens.header.Text.Default} />
+      <ChevronDownIcon color={theme.tokens.header.Text.Default} />
     );
   };
 

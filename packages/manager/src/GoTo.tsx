@@ -1,8 +1,6 @@
-import { Select } from '@linode/ui';
+import { Dialog, Select } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { Dialog } from 'src/components/Dialog/Dialog';
 
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';

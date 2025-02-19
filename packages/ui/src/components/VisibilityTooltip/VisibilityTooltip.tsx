@@ -1,9 +1,7 @@
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import VisibilityHideIcon from 'src/assets/icons/visibilityHide.svg';
-import VisibilityShowIcon from 'src/assets/icons/visibilityShow.svg';
-
+import { VisibilityHideIcon, VisibilityShowIcon } from '../../assets/icons';
 import { IconButton } from '../IconButton';
 import { Tooltip } from '../Tooltip';
 
