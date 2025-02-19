@@ -42,7 +42,7 @@ export const createAlertDefinitionSchema = object({
       'no-special-start-end',
       'Description cannot start or end with a special character.',
       (value) => {
-        return !specialStartEndRegex.test(value!);
+        return !specialStartEndRegex.test(value ?? '');
       }
     )
     .optional(),
