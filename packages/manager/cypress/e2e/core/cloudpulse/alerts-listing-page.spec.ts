@@ -242,8 +242,9 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       ui.button
         .findByAttribute('aria-label', 'Clear')
         .should('be.visible')
-        .scrollIntoView()
-        .click();
+        .as('qaBUtton')
+        .scrollIntoView();
+      ui.button.findByAttribute('aria-label', 'Clear').click();
     });
 
     // Filter by alert status and validate the results
