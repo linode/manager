@@ -42,10 +42,8 @@ export const CardBaseGrid = styled(Grid, {
   minHeight: 60,
   padding: `0 ${theme.spacing(1)} !important`,
   position: 'relative',
-
   transition:
     'background-color 225ms ease-in-out, border-color 225ms ease-in-out',
-
   width: '100%',
 }));
 
@@ -90,7 +88,9 @@ export const CardBaseHeading = styled('div', {
 
 export const CardBaseSubheading = styled('div', {
   label: 'CardBaseSubheading',
-})(({ theme }) => ({
-  color: theme.palette.text.primary,
+})<Partial<CardBaseProps>>(({ theme, ...props }) => ({
+  color: props.checked
+    ? theme.tokens.content.Text.Primary.Default
+    : theme.palette.text.primary,
   fontSize: '0.875rem',
 }));

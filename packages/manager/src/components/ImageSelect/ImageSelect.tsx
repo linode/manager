@@ -183,7 +183,9 @@ export const ImageSelect = (props: Props) => {
                   height="24px"
                   os={value.vendor ?? ''}
                   pl={1}
+                  position="relative"
                   pr={2}
+                  top={1}
                 />
               ) : null,
           },

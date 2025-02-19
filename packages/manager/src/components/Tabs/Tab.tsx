@@ -1,7 +1,9 @@
-import { Theme } from '@mui/material/styles';
-import { Tab as ReachTab, TabProps } from '@reach/tabs';
+import { Tab as ReachTab } from '@reach/tabs';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
+
+import type { Theme } from '@mui/material/styles';
+import type { TabProps } from '@reach/tabs';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   tab: {
@@ -11,7 +13,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
       '&:hover': {
         backgroundColor: theme.color.grey7,
-        color: theme.textColors.linkHover,
       },
       alignItems: 'center',
       borderBottom: '2px solid transparent',
@@ -28,9 +29,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       textDecoration: 'none',
     },
     '&[data-reach-tab][data-selected]': {
-      '&:hover': {
-        color: theme.textColors.linkHover,
-      },
       borderBottom: `3px solid ${theme.textColors.linkActiveLight}`,
       color: theme.textColors.headlineStatic,
       font: theme.font.bold,
