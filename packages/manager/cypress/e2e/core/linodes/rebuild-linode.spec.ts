@@ -3,7 +3,7 @@ import { ui } from 'support/ui';
 import { randomString, randomLabel } from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
 import { createStackScript } from '@linode/api-v4/lib';
-import { interceptGetStackScripts } from 'support/intercepts/stackscripts';
+import { interceptGetStackScript, interceptGetStackScripts } from 'support/intercepts/stackscripts';
 import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
 import { cleanUp } from 'support/util/cleanup';
 import { chooseRegion } from 'support/util/regions';
@@ -167,7 +167,7 @@ describe('rebuild linode', () => {
    */
   it('rebuilds a linode from Community StackScript', () => {
     cy.tag('method:e2e');
-    const stackScriptId = '443929';
+    const stackScriptId = 443929;
     const stackScriptName = 'OpenLiteSpeed-WordPress';
     const image = 'AlmaLinux 9';
 
@@ -182,6 +182,7 @@ describe('rebuild linode', () => {
     ).then((linode: Linode) => {
       interceptRebuildLinode(linode.id).as('linodeRebuild');
       interceptGetStackScripts().as('getStackScripts');
+      interceptGetStackScript(stackScriptId).as('getStackScript');
       cy.visitWithLogin(`/linodes/${linode.id}`);
       cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
         'be.visible'
@@ -202,11 +203,13 @@ describe('rebuild linode', () => {
         cy.findByPlaceholderText('Search StackScripts')
           .scrollIntoView()
           .should('be.visible')
-          .type(`${stackScriptName}`);
+          .type(stackScriptName);
 
         cy.wait('@getStackScripts');
 
         cy.get(`[id="stackscript-${stackScriptId}"]`).click();
+        
+        cy.wait('@getStackScript')
 
         ui.autocomplete.findByLabel('Image').should('be.visible').click();
         ui.autocompletePopper.findByTitle(image).should('be.visible').click();
