@@ -108,6 +108,43 @@ const databaseMock: Database = databaseFactory.build({
 const mockProfile = profileFactory.build({
   timezone: 'Etc/GMT',
 });
+/**
+ * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
+ * hour, and minute. The function also provides individual date components such as day, hour,
+ * minute, month, and AM/PM.
+ *
+ * @param {number} daysOffset - The number of days to adjust from the current date. Positive
+ *                               values give a future date, negative values give a past date.
+ * @param {number} hour - The hour to set for the resulting date (0-23).
+ * @param {number} [minute=0] - The minute to set for the resulting date (0-59). Defaults to 0.
+ *
+ * @returns {Object} - Returns an object containing:
+ *   - `actualDate`: The formatted date and time in IST (YYYY-MM-DD HH:mm).
+ *   - `day`: The day of the month as a number.
+ *   - `hour`: The hour in the 24-hour format as a number.
+ *   - `minute`: The minute of the hour as a number.
+ *   - `month`: The month of the year as a number.
+ */
+const getDateRangeInGMT = (
+  daysOffset: number,
+  hour: number,
+  minute: number = 0
+) => {
+  const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
+  const targetDate = now
+    .startOf('month')
+    .plus({ days: daysOffset })
+    .set({ hour, minute });
+
+  const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm'); // Format in GMT
+  return {
+    actualDate,
+    day: targetDate.day,
+    hour: targetDate.hour,
+    minute: targetDate.minute,
+    month: targetDate.month,
+  };
+};
 
 /**
  * This function calculates the start of the current month and the current date and time,
@@ -208,44 +245,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 
-  /**
-   * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
-   * hour, and minute. The function also provides individual date components such as day, hour,
-   * minute, month, and AM/PM.
-   *
-   * @param {number} daysOffset - The number of days to adjust from the current date. Positive
-   *                               values give a future date, negative values give a past date.
-   * @param {number} hour - The hour to set for the resulting date (0-23).
-   * @param {number} [minute=0] - The minute to set for the resulting date (0-59). Defaults to 0.
-   *
-   * @returns {Object} - Returns an object containing:
-   *   - `actualDate`: The formatted date and time in IST (YYYY-MM-DD HH:mm).
-   *   - `day`: The day of the month as a number.
-   *   - `hour`: The hour in the 24-hour format as a number.
-   *   - `minute`: The minute of the hour as a number.
-   *   - `month`: The month of the year as a number.
-   */
-  const getDateRangeInGMT = (
-    daysOffset: number,
-    hour: number,
-    minute: number = 0
-  ) => {
-    const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
-    const targetDate = now
-      .startOf('month')
-      .plus({ days: daysOffset })
-      .set({ hour, minute });
-
-    const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm'); // Format in GMT
-    return {
-      actualDate,
-      day: targetDate.day,
-      hour: targetDate.hour,
-      minute: targetDate.minute,
-      month: targetDate.month,
-    };
-  };
-
   it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
     // Calculates start and end dates in GMT using `getDateRangeInGMT` for testing date and time ranges.
     const {
@@ -305,8 +304,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       });
 
     // Click the "Apply" button to confirm the start date and time
-    cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
-    // ui.buttonGroup.findButtonByTitle('Apply').should('be.visible').click();
+    ui.button
+      .findByAttribute('label', 'Apply')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
 
     // Assert that the start date and time is correctly displayed
     cy.findByPlaceholderText('Select Start Date')
@@ -346,7 +348,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       });
 
     // Click the "Apply" button to confirm the end date and time
-    cy.findByRole('button', { name: 'Apply' }).should('be.visible').click();
+    ui.button
+      .findByAttribute('label', 'Apply')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
 
     // Assert that the end date and time is correctly displayed
     cy.findByPlaceholderText('Select End Date')
