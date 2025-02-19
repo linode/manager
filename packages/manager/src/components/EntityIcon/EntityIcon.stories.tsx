@@ -35,9 +35,14 @@ const sxGridItem = {
 
 export const Default: Story = {
   render: (args) => (
-    <Grid container direction="column" spacing={2} sx={{
-      display: "flex"
-    }}>
+    <Grid
+      container
+      direction="column"
+      spacing={2}
+      sx={{
+        display: 'flex',
+      }}
+    >
       <Grid sx={{ ...sxGridItem }} size="auto">
         <EntityIcon {...args} />
         <StyledLabel fontSize="0.875rem">{args.variant}</StyledLabel>

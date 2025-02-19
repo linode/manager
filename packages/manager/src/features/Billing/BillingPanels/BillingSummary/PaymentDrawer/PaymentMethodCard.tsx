@@ -94,15 +94,16 @@ export const PaymentMethodCard = (props: Props) => {
         sx={sxVariant}
         size={{
           md: 2,
-          xs: 3
-        }}>
+          xs: 3,
+        }}
+      >
         <Chip component="span" label="DEFAULT" size="small" />
       </Grid>
     ) : null;
   };
 
   return (
-    (<Grid size={12}>
+    <Grid size={12}>
       <SelectionCard
         sxCardBase={{
           flexWrap: 'nowrap',
@@ -130,7 +131,7 @@ export const PaymentMethodCard = (props: Props) => {
         renderVariant={renderVariant}
         subheadings={[subHeading]}
       />
-    </Grid>)
+    </Grid>
   );
 };
 

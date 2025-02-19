@@ -239,7 +239,7 @@ export const PaymentDrawer = (props: Props) => {
   }
 
   return (
-    (<Drawer onClose={onClose} open={open} title="Make a Payment">
+    <Drawer onClose={onClose} open={open} title="Make a Payment">
       <Stack spacing={2}>
         {isReadOnly && (
           <Notice
@@ -346,8 +346,9 @@ export const PaymentDrawer = (props: Props) => {
               <Grid
                 size={{
                   sm: 6,
-                  xs: 9
-                }}>
+                  xs: 9,
+                }}
+              >
                 <PayPalErrorBoundary renderError={renderError}>
                   <PayPalButton
                     disabled={isProcessing}
@@ -362,8 +363,9 @@ export const PaymentDrawer = (props: Props) => {
               <Grid
                 size={{
                   sm: 6,
-                  xs: 9
-                }}>
+                  xs: 9,
+                }}
+              >
                 <GooglePayButton
                   transactionInfo={{
                     countryCode: 'US',
@@ -390,7 +392,7 @@ export const PaymentDrawer = (props: Props) => {
         open={dialogOpen}
         usd={usd}
       />
-    </Drawer>)
+    </Drawer>
   );
 };
 

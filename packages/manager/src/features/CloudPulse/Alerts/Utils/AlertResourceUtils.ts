@@ -185,8 +185,9 @@ export const getFilteredResources = (
 
       return (
         // if selected only, show only checked, else everything
-        (matchesSearchText &&
-        matchesFilteredRegions && (!selectedOnly || checked))
+        matchesSearchText &&
+        matchesFilteredRegions &&
+        (!selectedOnly || checked)
       ); // match the search text and match the region selected
     })
     .filter((resource) => applyAdditionalFilter(resource, additionalFilters));

@@ -159,7 +159,7 @@ export const BucketLanding = (props: Props) => {
   const bucketLabel = selectedBucket ? selectedBucket.label : '';
 
   return (
-    (<React.Fragment>
+    <React.Fragment>
       <DocumentTitleSegment
         segment={`${isCreateBucketDrawerOpen ? 'Create a Bucket' : 'Buckets'}`}
       />
@@ -244,7 +244,7 @@ export const BucketLanding = (props: Props) => {
         open={bucketDetailDrawerOpen}
         selectedBucket={selectedBucket}
       />
-    </React.Fragment>)
+    </React.Fragment>
   );
 };
 

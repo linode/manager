@@ -30,11 +30,12 @@ export const ActiveConnections = (props: TableProps) => {
   const theme = useTheme();
 
   return (
-    (<Grid
+    <Grid
       size={{
         md: 4,
-        xs: 12
-      }}>
+        xs: 12,
+      }}
+    >
       <Typography
         sx={{
           [theme.breakpoints.down('lg')]: {
@@ -51,7 +52,7 @@ export const ActiveConnections = (props: TableProps) => {
         connectionsError={connectionsError}
         connectionsLoading={connectionsLoading}
       />
-    </Grid>)
+    </Grid>
   );
 };
 

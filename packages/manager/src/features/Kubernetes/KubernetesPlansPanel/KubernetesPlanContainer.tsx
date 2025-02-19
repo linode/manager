@@ -109,7 +109,7 @@ export const KubernetesPlanContainer = (
   );
 
   return (
-    (<Grid container spacing={2}>
+    <Grid container spacing={2}>
       <Hidden mdUp>
         {shouldDisplayNoRegionSelectedMessage ? (
           <Notice
@@ -146,8 +146,9 @@ export const KubernetesPlanContainer = (
         <Grid
           size={{
             lg: 12,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           {planSelectionDividers.map((planSelectionDivider) =>
             planType === planSelectionDivider.planType &&
             planSelectionDivider.flag ? (
@@ -185,6 +186,6 @@ export const KubernetesPlanContainer = (
           )}
         </Grid>
       </Hidden>
-    </Grid>)
+    </Grid>
   );
 };

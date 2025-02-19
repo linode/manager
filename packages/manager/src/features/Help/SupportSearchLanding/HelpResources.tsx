@@ -55,55 +55,59 @@ export const HelpResources = () => {
     setDrawerOpen(false);
   };
 
-  return (<>
-    <Grid className={classes.wrapper} container spacing={2}>
-      <Grid size={12}>
-        <Typography className={classes.heading} variant="h2">
-          Didn&rsquo;t find what you need? Get help.
-        </Typography>
-      </Grid>
-      <Grid
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-        container
-      >
-        <Grid
-          size={{
-            md: 4,
-            sm: 6,
-            xs: 12
-          }}>
-          <Tile
-            description="Find help from other Linode users in the Community Find help from other Linode "
-            icon={<Community />}
-            link="https://linode.com/community/"
-            title="Create a Community Post"
-          />
+  return (
+    <>
+      <Grid className={classes.wrapper} container spacing={2}>
+        <Grid size={12}>
+          <Typography className={classes.heading} variant="h2">
+            Didn&rsquo;t find what you need? Get help.
+          </Typography>
         </Grid>
         <Grid
-          size={{
-            md: 4,
-            sm: 6,
-            xs: 12
-          }}>
-          <Tile
-            description="If you are not able to solve an issue with the resources listed above,
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+          container
+        >
+          <Grid
+            size={{
+              md: 4,
+              sm: 6,
+              xs: 12,
+            }}
+          >
+            <Tile
+              description="Find help from other Linode users in the Community Find help from other Linode "
+              icon={<Community />}
+              link="https://linode.com/community/"
+              title="Create a Community Post"
+            />
+          </Grid>
+          <Grid
+            size={{
+              md: 4,
+              sm: 6,
+              xs: 12,
+            }}
+          >
+            <Tile
+              description="If you are not able to solve an issue with the resources listed above,
               you can contact Linode Support"
-            icon={<Support />}
-            link={openTicketDrawer}
-            title="Open a ticket"
-          />
+              icon={<Support />}
+              link={openTicketDrawer}
+              title="Open a ticket"
+            />
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
-    <SupportTicketDialog
-      onClose={closeTicketDrawer}
-      onSuccess={onTicketCreated}
-      open={drawerOpen}
-    />
-  </>);
+      <SupportTicketDialog
+        onClose={closeTicketDrawer}
+        onSuccess={onTicketCreated}
+        open={drawerOpen}
+      />
+    </>
+  );
 };
 
 export default HelpResources;

@@ -52,7 +52,7 @@ export const MonitorTableContent = (props: MonitorTableContentProps) => {
 
   return (
     // eslint-disable-next-line
-    (<>
+    <>
       {monitors.map((monitor: ManagedServiceMonitor, idx: number) => (
         <MonitorRow
           issues={issues.filter((i) => i.services.includes(monitor.id))}
@@ -63,7 +63,7 @@ export const MonitorTableContent = (props: MonitorTableContentProps) => {
           openMonitorDrawer={openMonitorDrawer}
         />
       ))}
-    </>)
+    </>
   );
 };
 

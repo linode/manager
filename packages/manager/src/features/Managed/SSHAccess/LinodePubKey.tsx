@@ -83,16 +83,21 @@ const LinodePubKey = () => {
   }
 
   return (
-    (<StyledRootPaper>
-      <Grid container spacing={2} sx={{
-        justifyContent: "space-between"
-      }}>
+    <StyledRootPaper>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          justifyContent: 'space-between',
+        }}
+      >
         <Grid
           size={{
             lg: 4,
             md: 3,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Stack flexDirection="row">
             <StyledSSHKeyIcon />
             <Typography variant="h3">Linode Public Key</Typography>
@@ -134,7 +139,7 @@ const LinodePubKey = () => {
           </Stack>
         </StyledCopyToClipboardGrid>
       </Grid>
-    </StyledRootPaper>)
+    </StyledRootPaper>
   );
 };
 

@@ -201,7 +201,7 @@ export const NodeBalancerConfigPanel = (
   const tcpSelected = protocol === 'tcp';
 
   return (
-    (<Grid data-qa-label-header size={12}>
+    <Grid data-qa-label-header size={12}>
       {globalFormError && (
         <Notice
           className={`error-for-scroll-${configIdx}`}
@@ -213,8 +213,9 @@ export const NodeBalancerConfigPanel = (
         <Grid
           size={{
             md: 3,
-            xs: 6
-          }}>
+            xs: 6,
+          }}
+        >
           <TextField
             InputProps={{ id: `port-${configIdx}` }}
             data-qa-port
@@ -233,8 +234,9 @@ export const NodeBalancerConfigPanel = (
         <Grid
           size={{
             md: 3,
-            xs: 6
-          }}>
+            xs: 6,
+          }}
+        >
           <Autocomplete
             textFieldProps={{
               dataAttrs: {
@@ -260,8 +262,9 @@ export const NodeBalancerConfigPanel = (
         <Grid
           size={{
             md: 3,
-            xs: 6
-          }}>
+            xs: 6,
+          }}
+        >
           <Autocomplete
             onChange={(_, selected) => {
               props.onAlgorithmChange(selected.value);
@@ -300,8 +303,9 @@ export const NodeBalancerConfigPanel = (
         <Grid
           size={{
             md: 3,
-            xs: 6
-          }}>
+            xs: 6,
+          }}
+        >
           <Autocomplete
             onChange={(_, selected) => {
               props.onSessionStickinessChange(selected.value);
@@ -341,8 +345,9 @@ export const NodeBalancerConfigPanel = (
           <Grid
             size={{
               md: 6,
-              xs: 12
-            }}>
+              xs: 12,
+            }}
+          >
             <Autocomplete
               helperText={
                 <>
@@ -382,8 +387,9 @@ export const NodeBalancerConfigPanel = (
             <Grid
               size={{
                 md: 6,
-                xs: 12
-              }}>
+                xs: 12,
+              }}
+            >
               <TextField
                 data-qa-cert-field
                 data-testid="ssl-certificate"
@@ -402,8 +408,9 @@ export const NodeBalancerConfigPanel = (
             <Grid
               size={{
                 md: 6,
-                xs: 12
-              }}>
+                xs: 12,
+              }}
+            >
               <TextField
                 data-qa-private-key-field
                 data-testid="private-key"
@@ -497,9 +504,10 @@ export const NodeBalancerConfigPanel = (
           container
           spacing={2}
           sx={{
-            alignItems: "center",
-            justifyContent: "flex-end"
-          }}>
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
           <StyledActionsPanel
             primaryButtonProps={
               forEdit
@@ -521,7 +529,7 @@ export const NodeBalancerConfigPanel = (
           />
         </Grid>
       </React.Fragment>
-    </Grid>)
+    </Grid>
   );
 };
 

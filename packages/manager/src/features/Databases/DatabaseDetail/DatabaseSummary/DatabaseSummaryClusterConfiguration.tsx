@@ -188,7 +188,8 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
           ) : (
             convertMegabytesTo(type.disk, true)
           )}
-        </StyledValueGrid>s
+        </StyledValueGrid>
+        s
       </StyledGridContainer>
     </>
   );

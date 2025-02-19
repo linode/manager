@@ -110,64 +110,66 @@ const LinodesDetailNavigation = () => {
     return <CircleProgress />;
   }
 
-  return (<>
-    <DocumentTitleSegment
-      segment={`${linode?.label} - ${
-        tabs[getIndex()]?.title ?? 'Detail View'
-      }`}
-    />
-    <SMTPRestrictionText
-      linode={linode}
-      supportLink={{ id, label: linode?.label }}
-    >
-      {({ text }) =>
-        text !== null ? (
-          <DismissibleBanner
-            preferenceKey={`smtp-restriction-notice-${linode?.label}`}
-            spacingTop={32}
-            variant="warning"
-          >
-            <Grid size={12}>{text}</Grid>
-          </DismissibleBanner>
-        ) : null
-      }
-    </SMTPRestrictionText>
-    <div style={{ marginTop: 8 }}>
-      <Tabs index={getIndex()} onChange={navToURL}>
-        <TabLinkList tabs={tabs} />
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={idx++}>
-              <LinodeSummary linodeCreated={linode?.created} />
-            </SafeTabPanel>
-            <SafeTabPanel index={idx++}>
-              <LinodeNetwork />
-            </SafeTabPanel>
-            {isBareMetalInstance ? null : (
-              <>
-                <SafeTabPanel index={idx++}>
-                  <LinodeStorage />
-                </SafeTabPanel>
-                <SafeTabPanel index={idx++}>
-                  <LinodeConfigurations />
-                </SafeTabPanel>
+  return (
+    <>
+      <DocumentTitleSegment
+        segment={`${linode?.label} - ${
+          tabs[getIndex()]?.title ?? 'Detail View'
+        }`}
+      />
+      <SMTPRestrictionText
+        linode={linode}
+        supportLink={{ id, label: linode?.label }}
+      >
+        {({ text }) =>
+          text !== null ? (
+            <DismissibleBanner
+              preferenceKey={`smtp-restriction-notice-${linode?.label}`}
+              spacingTop={32}
+              variant="warning"
+            >
+              <Grid size={12}>{text}</Grid>
+            </DismissibleBanner>
+          ) : null
+        }
+      </SMTPRestrictionText>
+      <div style={{ marginTop: 8 }}>
+        <Tabs index={getIndex()} onChange={navToURL}>
+          <TabLinkList tabs={tabs} />
+          <React.Suspense fallback={<SuspenseLoader />}>
+            <TabPanels>
+              <SafeTabPanel index={idx++}>
+                <LinodeSummary linodeCreated={linode?.created} />
+              </SafeTabPanel>
+              <SafeTabPanel index={idx++}>
+                <LinodeNetwork />
+              </SafeTabPanel>
+              {isBareMetalInstance ? null : (
+                <>
+                  <SafeTabPanel index={idx++}>
+                    <LinodeStorage />
+                  </SafeTabPanel>
+                  <SafeTabPanel index={idx++}>
+                    <LinodeConfigurations />
+                  </SafeTabPanel>
 
-                <SafeTabPanel index={idx++}>
-                  <LinodeBackup />
-                </SafeTabPanel>
-              </>
-            )}
-            <SafeTabPanel index={idx++}>
-              <LinodeActivity />
-            </SafeTabPanel>
-            <SafeTabPanel index={idx++}>
-              <LinodeSettings />
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
-      </Tabs>
-    </div>
-  </>);
+                  <SafeTabPanel index={idx++}>
+                    <LinodeBackup />
+                  </SafeTabPanel>
+                </>
+              )}
+              <SafeTabPanel index={idx++}>
+                <LinodeActivity />
+              </SafeTabPanel>
+              <SafeTabPanel index={idx++}>
+                <LinodeSettings />
+              </SafeTabPanel>
+            </TabPanels>
+          </React.Suspense>
+        </Tabs>
+      </div>
+    </>
+  );
 };
 
 export default LinodesDetailNavigation;

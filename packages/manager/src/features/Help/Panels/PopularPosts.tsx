@@ -76,14 +76,15 @@ export const PopularPosts = () => {
   };
 
   return (
-    (<Paper className={classes.root} variant="outlined">
+    <Paper className={classes.root} variant="outlined">
       <Grid container>
         <Grid
           data-qa-documentation-link
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Typography className={classes.postTitle} variant="h3">
             Most Popular Documentation:
           </Typography>
@@ -94,14 +95,15 @@ export const PopularPosts = () => {
           data-qa-community-link
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Typography className={classes.postTitle} variant="h3">
             Most Popular Community Posts:
           </Typography>
           {renderPopularForumPosts()}
         </Grid>
       </Grid>
-    </Paper>)
+    </Paper>
   );
 };

@@ -173,9 +173,11 @@ export const KubeConfigDisplay = (props: Props) => {
 
   const getEndpointToDisplay = (endpoints: string[]) => {
     // We are returning the endpoint with port 443 to be the most user-friendly, but if it doesn't exist, return the first endpoint available
-    return (endpoints.find((thisResponse) =>
-      thisResponse.match(/linodelke\.net:443$/i)
-    ) ?? endpoints[0]);
+    return (
+      endpoints.find((thisResponse) =>
+        thisResponse.match(/linodelke\.net:443$/i)
+      ) ?? endpoints[0]
+    );
   };
 
   return (

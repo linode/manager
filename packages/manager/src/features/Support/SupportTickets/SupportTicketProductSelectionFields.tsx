@@ -218,7 +218,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    (<>
+    <>
       {ticketType === 'accountLimit' ? (
         <Controller
           render={({ field, fieldState }) => (
@@ -303,6 +303,6 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
           )}
         </>
       )}
-    </>)
+    </>
   );
 };

@@ -67,24 +67,25 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
   );
 
   return (
-    (<Grid
+    <Grid
       container
       direction="row"
       spacing={2}
       sx={{
-        alignItems: "center",
-        justifyContent: "space-between",
+        alignItems: 'center',
+        justifyContent: 'space-between',
         flex: 1,
         paddingX: 1,
-        paddingY: 0
-      }}>
+        paddingY: 0,
+      }}
+    >
       <Grid
         size={{
           lg: 8,
-          xs: 12
+          xs: 12,
         }}
         sx={{
-          alignItems: "flex-start",
+          alignItems: 'flex-start',
           display: 'flex',
           padding: 0,
 
@@ -95,8 +96,9 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
           [theme.breakpoints.down('md')]: {
             display: 'grid',
             gridTemplateColumns: '50% 2fr',
-          }
-        }}>
+          },
+        }}
+      >
         <StyledBox>
           {linodePlan && (
             <StyledListItem
@@ -144,8 +146,9 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
         }}
         size={{
           lg: 4,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <TagCell
           sx={{
             width: '100%',
@@ -157,6 +160,6 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
           view="inline"
         />
       </Grid>
-    </Grid>)
+    </Grid>
   );
 });

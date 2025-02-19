@@ -292,7 +292,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
 
   return (
-    (<Stack gap={2}>
+    <Stack gap={2}>
       {!hideLabel && (
         <Typography ref={titleRef} variant="h2">
           {alertLabel || 'Resources'}
@@ -314,7 +314,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           rowSpacing={3}
           xs={12}
           sx={{
-            alignItems: "center"
+            alignItems: 'center',
           }}
         >
           <Grid item md={3} xs={12}>
@@ -383,6 +383,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           />
         </Grid>
       </Grid>
-    </Stack>)
+    </Stack>
   );
 });

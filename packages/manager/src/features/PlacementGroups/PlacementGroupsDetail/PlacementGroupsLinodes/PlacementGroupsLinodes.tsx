@@ -143,19 +143,23 @@ export const PlacementGroupsLinodes = (props: Props) => {
   };
 
   return (
-    (<Stack spacing={2}>
-      <Grid container sx={{
-        justifyContent: "space-between"
-      }}>
+    <Stack spacing={2}>
+      <Grid
+        container
+        sx={{
+          justifyContent: 'space-between',
+        }}
+      >
         <Grid
           sx={{
             flexGrow: 1,
-            mb: 1
+            mb: 1,
           }}
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <DebouncedSearchTextField
             clearable
             debounceTime={250}
@@ -208,6 +212,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
         open={params.action === 'unassign'}
         selectedLinode={selectedLinode}
       />
-    </Stack>)
+    </Stack>
   );
 };

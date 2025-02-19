@@ -32,7 +32,7 @@ const DashboardCard = (props: DashboardCardProps) => {
     : Typography;
 
   return (
-    (<StyledRootGrid container data-qa-card={title} spacing={2}>
+    <StyledRootGrid container data-qa-card={title} spacing={2}>
       {(title || headerAction) && (
         <Grid size={12}>
           <StyledHeaderGrid
@@ -57,7 +57,7 @@ const DashboardCard = (props: DashboardCardProps) => {
         </Grid>
       )}
       <Grid size={12}>{props.children}</Grid>
-    </StyledRootGrid>)
+    </StyledRootGrid>
   );
 };
 

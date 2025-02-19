@@ -102,7 +102,7 @@ export const LinodeDisks = () => {
   };
 
   return (
-    (<Box>
+    <Box>
       <Paper
         sx={{
           alignItems: 'center',
@@ -151,7 +151,7 @@ export const LinodeDisks = () => {
               pageSize,
             }) => {
               return (
-                (<React.Fragment>
+                <React.Fragment>
                   <Grid size={12}>
                     <Table aria-label="List of Disks">
                       <TableHead>
@@ -204,7 +204,7 @@ export const LinodeDisks = () => {
                     page={page}
                     pageSize={pageSize}
                   />
-                </React.Fragment>)
+                </React.Fragment>
               );
             }}
           </Paginate>
@@ -233,7 +233,7 @@ export const LinodeDisks = () => {
         onClose={() => setIsResizeDrawerOpen(false)}
         open={isResizeDrawerOpen}
       />
-    </Box>)
+    </Box>
   );
 };
 

@@ -107,7 +107,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   return (
-    (<Paginate
+    <Paginate
       data={data}
       page={queryPage}
       // If there are more Linodes with maintenance than the current page size, show the minimum
@@ -140,7 +140,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
           someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
         };
         return (
-          (<React.Fragment>
+          <React.Fragment>
             {display === 'list' && (
               <>
                 {isGeckoLAEnabled && (
@@ -254,9 +254,9 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                 />
               }
             </Grid>
-          </React.Fragment>)
+          </React.Fragment>
         );
       }}
-    </Paginate>)
+    </Paginate>
   );
 });

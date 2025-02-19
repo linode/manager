@@ -214,7 +214,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const nonUSCountry = isTaxIdEnabled && formik.values.country !== 'US';
 
   return (
-    (<form onSubmit={formik.handleSubmit}>
+    <form onSubmit={formik.handleSubmit}>
       <Grid
         className={classes.mainFormContainer}
         columnSpacing={2}
@@ -257,8 +257,9 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <TextField
             data-qa-contact-first-name
             disabled={isReadOnly}
@@ -272,8 +273,9 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <TextField
             data-qa-contact-last-name
             disabled={isReadOnly}
@@ -321,8 +323,9 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Autocomplete
             textFieldProps={{
               dataAttrs: {
@@ -345,8 +348,9 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           {formik.values.country === 'US' || formik.values.country == 'CA' ? (
             <Autocomplete
               onChange={(_event, value) =>
@@ -391,8 +395,9 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <TextField
             data-qa-contact-city
             disabled={isReadOnly}
@@ -406,8 +411,9 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <TextField
             data-qa-contact-post-code
             disabled={isReadOnly}
@@ -446,10 +452,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           <Grid
             size={12}
             sx={{
-              alignItems: "flex-start",
-              display: "flex",
-              marginTop: (theme) => theme.tokens.spacing[60]
-            }}>
+              alignItems: 'flex-start',
+              display: 'flex',
+              marginTop: (theme) => theme.tokens.spacing[60],
+            }}
+          >
             <Checkbox
               onChange={() =>
                 setBillingAgreementChecked(!billingAgreementChecked)
@@ -489,7 +496,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         }}
         className={classes.actions}
       />
-    </form>)
+    </form>
   );
 };
 

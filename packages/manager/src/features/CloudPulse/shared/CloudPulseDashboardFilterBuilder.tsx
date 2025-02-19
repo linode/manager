@@ -352,14 +352,15 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }
 
     return (
-      (<Grid
+      <Grid
         container
         item
         xs={12}
         sx={{
           m: 3,
-          paddingBottom: isServiceAnalyticsIntegration ? 3 : 0
-        }}>
+          paddingBottom: isServiceAnalyticsIntegration ? 3 : 0,
+        }}
+      >
         <Grid
           sx={{
             m: 0,
@@ -403,11 +404,12 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             maxHeight: theme.spacing(23),
             overflow: 'auto',
             pr: { sm: 0, xs: 2 },
-            rowGap: theme.spacing(2)
-          }}>
+            rowGap: theme.spacing(2),
+          }}
+        >
           <RenderFilters />
         </Grid>
-      </Grid>)
+      </Grid>
     );
   },
   compareProps

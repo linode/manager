@@ -26,7 +26,7 @@ export const Disks = (props: DisksProps) => {
   const { diskSelection, disks, handleSelect, selectedConfigIds } = props;
 
   return (
-    (<Paginate data={disks}>
+    <Paginate data={disks}>
       {({
         count,
         data: paginatedData,
@@ -36,13 +36,14 @@ export const Disks = (props: DisksProps) => {
         pageSize,
       }) => {
         return (
-          (<React.Fragment>
+          <React.Fragment>
             <Grid container>
               <Grid
                 size={{
                   md: 9,
-                  xs: 12
-                }}>
+                  xs: 12,
+                }}
+              >
                 <Table aria-label="List of Disks">
                   <TableHead>
                     <TableRow>
@@ -95,10 +96,10 @@ export const Disks = (props: DisksProps) => {
               page={page}
               pageSize={pageSize}
             />
-          </React.Fragment>)
+          </React.Fragment>
         );
       }}
-    </Paginate>)
+    </Paginate>
   );
 };
 

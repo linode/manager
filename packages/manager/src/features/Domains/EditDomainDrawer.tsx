@@ -122,7 +122,7 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
   const disabled = !canEdit;
 
   return (
-    (<Drawer
+    <Drawer
       isFetching={isFetching}
       onClose={onClose}
       open={open}
@@ -187,13 +187,13 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
             />
             {isEditingSecondaryDomain && (
               // Only when editing
-              (<MultipleIPInput
+              <MultipleIPInput
                 error={errorMap.axfr_ips}
                 helperText={helperText}
                 ips={formik.values?.axfr_ips?.map(stringToExtendedIP) ?? []}
                 onChange={handleTransferInput}
                 title="Domain Transfer IPs"
-              />)
+              />
             )}
           </React.Fragment>
         )}
@@ -226,6 +226,6 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
           }}
         />
       </form>
-    </Drawer>)
+    </Drawer>
   );
 };

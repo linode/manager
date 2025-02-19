@@ -110,7 +110,7 @@ export const LongviewList = React.memo((props: Props) => {
   return (
     // Don't use the value from local storage for this case,
     // since displaying a large number of client rows has performance impacts.
-    (<Paginate data={filteredData} pageSize={pageSize}>
+    <Paginate data={filteredData} pageSize={pageSize}>
       {({
         count,
         data: paginatedAndOrderedData,
@@ -140,6 +140,6 @@ export const LongviewList = React.memo((props: Props) => {
           ) : null}
         </>
       )}
-    </Paginate>)
+    </Paginate>
   );
 });

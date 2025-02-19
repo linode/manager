@@ -51,7 +51,7 @@ export const Referrals = () => {
   const allowReferral = Boolean(url);
 
   return (
-    (<Paper>
+    <Paper>
       <DocumentTitleSegment segment="Referrals" />
       <Grid container spacing={2} sx={{ maxWidth: 920 }}>
         <Grid>
@@ -157,7 +157,7 @@ export const Referrals = () => {
           </StyledImagesGridContainer>
         </>
       </Grid>
-    </Paper>)
+    </Paper>
   );
 };
 

@@ -404,7 +404,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const isProxyUser = this.state.userType === 'proxy';
 
     return (
-      (<Box>
+      <Box>
         {generalError && (
           <Notice spacingTop={8} text={generalError} variant="error" />
         )}
@@ -413,10 +413,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             container
             spacing={2}
             sx={{
-              alignItems: "center",
+              alignItems: 'center',
               margin: 0,
-              width: 'auto'
-            }}>
+              width: 'auto',
+            }}
+          >
             <StyledHeaderGrid>
               <Typography
                 sx={{
@@ -462,7 +463,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           </Grid>
         </StyledPaper>
         {restricted ? this.renderPermissions() : this.renderUnrestricted()}
-      </Box>)
+      </Box>
     );
   };
 
@@ -489,13 +490,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     return (
-      (<Grid
+      <Grid
         className="py0"
         key={perm}
         size={{
           sm: 6,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <FormControlLabel
           control={
             <Toggle
@@ -509,7 +511,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           })}
           label={permDescriptionMap[perm]}
         />
-      </Grid>)
+      </Grid>
     );
   };
 
@@ -590,7 +592,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     });
 
     return (
-      (<StyledPermPaper
+      <StyledPermPaper
         sx={(theme) => ({
           marginTop: theme.spacing(2),
         })}
@@ -599,9 +601,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         <Grid
           container
           sx={{
-            alignItems: "center",
-            justifyContent: "space-between"
-          }}>
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <Grid>
             <Typography
               data-qa-permissions-header="Specific Permissions"
@@ -675,7 +678,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.cancelPermsType('entity'),
           isSavingEntity
         )}
-      </StyledPermPaper>)
+      </StyledPermPaper>
     );
   };
 

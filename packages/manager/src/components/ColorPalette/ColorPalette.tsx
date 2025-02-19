@@ -167,31 +167,34 @@ export const ColorPalette = () => {
 
   const createSwatch = (color: string, alias: string) => {
     return (
-      (<Grid
+      <Grid
         className={classes.swatchWrapper}
         key={alias}
         size={{
           md: 4,
           sm: 6,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <div className={classes.swatch} style={{ backgroundColor: color }} />
         <Typography variant="body1">
           <span className={classes.alias}>{alias}</span>
           <br />
           <span className={classes.color}>{color}</span>
         </Typography>
-      </Grid>)
+      </Grid>
     );
   };
 
   const renderColor = (heading: string, colors: Color[]) => {
-    return (<>
-      <Grid size={12}>
-        <Typography variant="h2">{heading}</Typography>
-      </Grid>
-      {colors.map((color) => createSwatch(color.color, color.alias))}
-    </>);
+    return (
+      <>
+        <Grid size={12}>
+          <Typography variant="h2">{heading}</Typography>
+        </Grid>
+        {colors.map((color) => createSwatch(color.color, color.alias))}
+      </>
+    );
   };
 
   return (

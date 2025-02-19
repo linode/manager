@@ -31,11 +31,12 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
 
   const noDataMessage = 'No data to display';
   return (
-    (<Box
+    <Box
       sx={{
         p: 2,
-        position: "relative"
-      }}>
+        position: 'relative',
+      }}
+    >
       {error ? (
         <Box sx={{ height: '100%' }}>
           <ErrorState errorText={error} />
@@ -70,6 +71,6 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           <Typography variant="body2">{noDataMessage}</Typography>
         </Box>
       )}
-    </Box>)
+    </Box>
   );
 });

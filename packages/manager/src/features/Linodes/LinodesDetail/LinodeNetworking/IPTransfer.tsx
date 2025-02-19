@@ -262,7 +262,7 @@ export const IPTransfer = (props: Props) => {
     ];
 
     return (
-      (<Grid
+      <Grid
         sx={{
           [theme.breakpoints.down('md')]: {
             backgroundColor: theme.color.grey5,
@@ -281,8 +281,9 @@ export const IPTransfer = (props: Props) => {
           }}
           size={{
             md: 3,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Typography>
             <Typography
               sx={(theme) => ({
@@ -298,7 +299,7 @@ export const IPTransfer = (props: Props) => {
             {state.sourceIP}
           </Typography>
         </Grid>
-        <StyledAutoGrid size={{ md: 3, xs: 12}}>
+        <StyledAutoGrid size={{ md: 3, xs: 12 }}>
           <Autocomplete
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
@@ -329,7 +330,7 @@ export const IPTransfer = (props: Props) => {
         </StyledAutoGrid>
         {renderLinodeSelect && renderLinodeSelect(state as Move)}
         {renderIPSelect && renderIPSelect(state as Swap)}
-      </Grid>)
+      </Grid>
     );
   };
 
@@ -480,7 +481,7 @@ export const IPTransfer = (props: Props) => {
   };
 
   return (
-    (<Dialog fullWidth onClose={onClose} open={open} title="IP Transfer">
+    <Dialog fullWidth onClose={onClose} open={open} title="IP Transfer">
       {error && (
         <Grid size={12}>
           {error.map(({ reason }, idx) => (
@@ -497,8 +498,9 @@ export const IPTransfer = (props: Props) => {
         size={{
           lg: 8,
           sm: 12,
-          xl: 6
-        }}>
+          xl: 6,
+        }}
+      >
         <Typography sx={{ marginBottom: theme.spacing(2) }}>
           If you have two Linodes in the same data center, you can use the IP
           transfer feature to switch their IP addresses. This could be useful in
@@ -530,8 +532,9 @@ export const IPTransfer = (props: Props) => {
                 data-qa-transfer-ip-label
                 size={{
                   sm: 3,
-                  xs: 12
-                }}>
+                  xs: 12,
+                }}
+              >
                 <Typography>IP Address</Typography>
               </Grid>
               <Grid
@@ -573,9 +576,13 @@ export const IPTransfer = (props: Props) => {
           </>
         )}
       </Grid>
-      <Grid container size={12} sx={{
-        justifyContent: "flex-end"
-      }}>
+      <Grid
+        container
+        size={12}
+        sx={{
+          justifyContent: 'flex-end',
+        }}
+      >
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'ip-transfer-save',
@@ -592,7 +599,7 @@ export const IPTransfer = (props: Props) => {
           }}
         />
       </Grid>
-    </Dialog>)
+    </Dialog>
   );
 };
 

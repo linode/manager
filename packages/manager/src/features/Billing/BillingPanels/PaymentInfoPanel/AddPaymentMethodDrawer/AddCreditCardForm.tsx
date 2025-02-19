@@ -163,7 +163,7 @@ const AddCreditCardForm = (props: Props) => {
     disabled || !values.card_number || !values.cvv || !values.expiry_month;
 
   return (
-    (<form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       {error && (
         <Grid className={classes.error} size={12}>
           <Notice text={error} variant="error" />
@@ -187,8 +187,9 @@ const AddCreditCardForm = (props: Props) => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <TextField
             error={
               (touched.expiry_month || touched.expiry_year) &&
@@ -210,8 +211,9 @@ const AddCreditCardForm = (props: Props) => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <TextField
             disabled={disableInput}
             error={touched.cvv && Boolean(errors.cvv)}
@@ -237,7 +239,7 @@ const AddCreditCardForm = (props: Props) => {
         }}
         style={{ marginTop: 0 }}
       />
-    </form>)
+    </form>
   );
 };
 

@@ -40,7 +40,7 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
   const lvPackages: LongviewPackage[] = longviewClientData?.Packages ?? [];
 
   return (
-    (<Drawer
+    <Drawer
       onClose={onClose}
       open={isOpen}
       title={`${clientLabel}: Package Updates`}
@@ -77,10 +77,10 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
              * not be open-able, so no explicit logic
              * is included here.
              */
-            (<TableRowEmpty colSpan={12} />)
+            <TableRowEmpty colSpan={12} />
           )}
         </TableBody>
       </Table>
-    </Drawer>)
+    </Drawer>
   );
 });

@@ -100,11 +100,12 @@ const PaymentInformation = (props: Props) => {
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
   return (
-    (<Grid
+    <Grid
       size={{
         md: 6,
-        xs: 12
-      }}>
+        xs: 12,
+      }}
+    >
       <BillingPaper data-qa-billing-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Payment Methods</Typography>
@@ -157,7 +158,7 @@ const PaymentInformation = (props: Props) => {
           paymentMethod={deletePaymentMethodSelection}
         />
       </BillingPaper>
-    </Grid>)
+    </Grid>
   );
 };
 

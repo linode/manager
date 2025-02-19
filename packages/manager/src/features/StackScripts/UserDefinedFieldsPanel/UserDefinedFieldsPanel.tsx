@@ -44,27 +44,29 @@ const renderField = (
 
   if (getIsUDFHeader(field)) {
     return (
-      (<Grid
+      <Grid
         key={field.name}
         style={{ marginTop: 24 }}
         size={{
           lg: 5,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <Divider />
         <Typography variant="h2">{field.label}</Typography>
-      </Grid>)
+      </Grid>
     );
   }
 
   if (getIsUDFMultiSelect(field)) {
     return (
-      (<Grid
+      <Grid
         key={field.name}
         size={{
           lg: 5,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <UserDefinedMultiSelect
           error={error}
           field={field}
@@ -74,17 +76,18 @@ const renderField = (
           updateFormState={handleChange}
           value={udf_data[field.name] || ''}
         />
-      </Grid>)
+      </Grid>
     );
   }
   if (getIsUDFSingleSelect(field)) {
     return (
-      (<Grid
+      <Grid
         key={field.name}
         size={{
           lg: 5,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <UserDefinedSelect
           error={error}
           field={field}
@@ -93,18 +96,19 @@ const renderField = (
           updateFormState={handleChange}
           value={udf_data[field.name] || ''}
         />{' '}
-      </Grid>)
+      </Grid>
     );
   }
   if (getIsUDFPasswordField(field)) {
     const isTokenPassword = field.name === 'token_password';
     return (
-      (<Grid
+      <Grid
         key={field.name}
         size={{
           lg: 5,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <UserDefinedText
           tooltip={
             isTokenPassword ? (
@@ -142,16 +146,17 @@ const renderField = (
            */
           value={udf_data[field.name] || ''}
         />
-      </Grid>)
+      </Grid>
     );
   }
   return (
-    (<Grid
+    <Grid
       key={field.name}
       size={{
         lg: 5,
-        xs: 12
-      }}>
+        xs: 12,
+      }}
+    >
       <UserDefinedText
         error={error}
         field={field}
@@ -162,7 +167,7 @@ const renderField = (
         /** see comment above for why we're passing the value prop */
         value={udf_data[field.name] || ''}
       />
-    </Grid>)
+    </Grid>
   );
 };
 

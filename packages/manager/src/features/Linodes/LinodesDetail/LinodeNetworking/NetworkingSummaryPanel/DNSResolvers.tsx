@@ -33,7 +33,7 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
   };
 
   return (
-    (<Grid
+    <Grid
       sx={{
         display: 'grid',
         gridTemplateAreas: `
@@ -79,6 +79,6 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
       >
         {renderIPResolvers(v6Resolvers)}
       </Grid>
-    </Grid>)
+    </Grid>
   );
 });

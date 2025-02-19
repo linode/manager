@@ -22,7 +22,7 @@ export const InstallationInstructions = React.memo((props: Props) => {
   const theme = useTheme();
 
   return (
-    (<Grid container spacing={2}>
+    <Grid container spacing={2}>
       <Grid>
         <Typography>
           Before this client can gather data, you need to install the Longview
@@ -100,6 +100,6 @@ export const InstallationInstructions = React.memo((props: Props) => {
           </StyledInstructionGrid>
         </Grid>
       </Grid>
-    </Grid>)
+    </Grid>
   );
 });

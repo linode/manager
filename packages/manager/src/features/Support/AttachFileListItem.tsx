@@ -54,7 +54,7 @@ export const AttachFileListItem = (props: Props) => {
     file.errors && file.errors.length ? file.errors[0].reason : undefined;
 
   return (
-    (<Grid container spacing={2}>
+    <Grid container spacing={2}>
       <Grid>
         <TextField
           InputProps={{
@@ -92,6 +92,6 @@ export const AttachFileListItem = (props: Props) => {
           />
         </Grid>
       )}
-    </Grid>)
+    </Grid>
   );
 };

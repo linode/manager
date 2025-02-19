@@ -38,9 +38,15 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
             Trigger Alert When:
           </StyledAlertTypography>
         </Grid>
-        <Grid container item md={8} xs={12} sx={{
-          alignItems: "center"
-        }}>
+        <Grid
+          container
+          item
+          md={8}
+          xs={12}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <StyledAlertChip
             borderRadius={theme.spacing(0.3)}
             data-qa-chip="All"
@@ -67,25 +73,31 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
     ),
     [theme, triggerOccurrences]
   );
-  return (<>
-    <Typography marginBottom={2} variant="h2">
-      Criteria
-    </Typography>
-    <Grid container spacing={1} sx={{
-      alignItems: "center"
-    }}>
-      <RenderAlertMetricsAndDimensions ruleCriteria={ruleCriteria} />
-      <DisplayAlertDetailChips // label chip for polling interval
-        label="Polling Interval"
-        mergeChips
-        values={[convertSecondsToMinutes(pollingIntervalSeconds)]}
-      />
-      <DisplayAlertDetailChips // label chip for evaluation period
-        label="Evaluation Period"
-        mergeChips
-        values={[convertSecondsToMinutes(evaluationPeriod)]}
-      />
-      {renderTriggerCriteria} {/** Render the trigger criteria */}
-    </Grid>
-  </>);
+  return (
+    <>
+      <Typography marginBottom={2} variant="h2">
+        Criteria
+      </Typography>
+      <Grid
+        container
+        spacing={1}
+        sx={{
+          alignItems: 'center',
+        }}
+      >
+        <RenderAlertMetricsAndDimensions ruleCriteria={ruleCriteria} />
+        <DisplayAlertDetailChips // label chip for polling interval
+          label="Polling Interval"
+          mergeChips
+          values={[convertSecondsToMinutes(pollingIntervalSeconds)]}
+        />
+        <DisplayAlertDetailChips // label chip for evaluation period
+          label="Evaluation Period"
+          mergeChips
+          values={[convertSecondsToMinutes(evaluationPeriod)]}
+        />
+        {renderTriggerCriteria} {/** Render the trigger criteria */}
+      </Grid>
+    </>
+  );
 });

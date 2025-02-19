@@ -86,7 +86,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
   const disabled = isProcessing || hasMaxPaymentMethods || isReadOnly;
 
   return (
-    (<Drawer onClose={onClose} open={open} title="Add Payment Method">
+    <Drawer onClose={onClose} open={open} title="Add Payment Method">
       {isProcessing ? (
         <LinearProgress
           sx={{
@@ -126,8 +126,9 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             <Grid
               size={{
                 md: 9,
-                xs: 8
-              }}>
+                xs: 8,
+              }}
+            >
               <Typography variant="h3">Google Pay</Typography>
               <Typography>
                 You&rsquo;ll be taken to Google Pay to complete sign up.
@@ -138,12 +139,13 @@ export const AddPaymentMethodDrawer = (props: Props) => {
                 container
                 size={{
                   md: 3,
-                  xs: 4
+                  xs: 4,
                 }}
                 sx={{
-                  alignContent: "center",
-                  justifyContent: "flex-end"
-                }}>
+                  alignContent: 'center',
+                  justifyContent: 'flex-end',
+                }}
+              >
                 <GooglePayChip
                   disabled={disabled}
                   onClose={onClose}
@@ -161,8 +163,9 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             <Grid
               size={{
                 md: 9,
-                xs: 8
-              }}>
+                xs: 8,
+              }}
+            >
               <Typography variant="h3">PayPal</Typography>
               <Typography>
                 You&rsquo;ll be taken to PayPal to complete sign up.
@@ -173,12 +176,13 @@ export const AddPaymentMethodDrawer = (props: Props) => {
                 container
                 size={{
                   md: 3,
-                  xs: 4
+                  xs: 4,
                 }}
                 sx={{
-                  alignContent: "center",
-                  justifyContent: "flex-end"
-                }}>
+                  alignContent: 'center',
+                  justifyContent: 'flex-end',
+                }}
+              >
                 <PayPalErrorBoundary renderError={renderError}>
                   <PayPalChip
                     disabled={disabled}
@@ -196,7 +200,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
         <Typography variant="h3">Credit Card</Typography>
         <AddCreditCardForm disabled={disabled} onClose={onClose} />
       </>
-    </Drawer>)
+    </Drawer>
   );
 };
 

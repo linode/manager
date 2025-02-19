@@ -13,7 +13,7 @@ export const OtherWays = () => {
   const theme = useTheme();
 
   return (
-    (<React.Fragment>
+    <React.Fragment>
       <Typography
         sx={{
           marginBottom: theme.spacing(4),
@@ -27,8 +27,9 @@ export const OtherWays = () => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Tile
             description="View Linode and Linux guides and tutorials for all experience levels."
             icon={<Documentation />}
@@ -39,8 +40,9 @@ export const OtherWays = () => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Tile
             description="Ask questions, find answers, and connect with other members of the Linode Community."
             icon={<Community />}
@@ -51,8 +53,9 @@ export const OtherWays = () => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Tile
             description="Get updates on Linode incidents and maintenance"
             icon={<Status />}
@@ -63,8 +66,9 @@ export const OtherWays = () => {
         <Grid
           size={{
             sm: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Tile
             description="View or open Linode Support tickets."
             icon={<Support />}
@@ -73,6 +77,6 @@ export const OtherWays = () => {
           />
         </Grid>
       </Grid>
-    </React.Fragment>)
+    </React.Fragment>
   );
 };

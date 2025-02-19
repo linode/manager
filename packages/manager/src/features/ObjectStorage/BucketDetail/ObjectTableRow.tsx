@@ -32,11 +32,16 @@ export const ObjectTableRow = (props: Props) => {
   } = props;
 
   return (
-    (<TableRow>
+    <TableRow>
       <TableCell>
-        <Grid container spacing={2} wrap="nowrap" sx={{
-          alignItems: "center"
-        }}>
+        <Grid
+          container
+          spacing={2}
+          wrap="nowrap"
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <Grid className="py0">
             <ObjectIcon size={20} />
           </Grid>
@@ -67,6 +72,6 @@ export const ObjectTableRow = (props: Props) => {
           objectName={fullName}
         />
       </TableCell>
-    </TableRow>)
+    </TableRow>
   );
 };

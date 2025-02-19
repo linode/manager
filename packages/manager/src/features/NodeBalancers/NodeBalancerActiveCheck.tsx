@@ -66,11 +66,12 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
   });
 
   return (
-    (<Grid
+    <Grid
       size={{
         md: 6,
-        xs: 12
-      }}>
+        xs: 12,
+      }}
+    >
       <Grid container spacing={1} sx={{ padding: 1 }}>
         <Grid size={12}>
           <Typography data-qa-active-checks-header variant="h2">
@@ -138,8 +139,9 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               <Grid
                 size={{
                   md: 12,
-                  xs: 12
-                }}>
+                  xs: 12,
+                }}
+              >
                 <TextField
                   data-testid="http-body"
                   disabled={disabled}
@@ -153,9 +155,11 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               </Grid>
             )}
             {flags.udp && protocol === 'udp' && (
-              <Grid size={{
-                lg: 6
-              }}>
+              <Grid
+                size={{
+                  lg: 6,
+                }}
+              >
                 <TextField
                   disabled={disabled}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -173,8 +177,9 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             <Grid
               size={{
                 lg: 6,
-                xs: 12
-              }}>
+                xs: 12,
+              }}
+            >
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Interval',
@@ -198,8 +203,9 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             <Grid
               size={{
                 lg: 6,
-                xs: 12
-              }}>
+                xs: 12,
+              }}
+            >
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Timeout',
@@ -223,8 +229,9 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             <Grid
               size={{
                 lg: 6,
-                xs: 12
-              }}>
+                xs: 12,
+              }}
+            >
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Attempts',
@@ -245,6 +252,6 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
           </Grid>
         )}
       </Grid>
-    </Grid>)
+    </Grid>
   );
 };

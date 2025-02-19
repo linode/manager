@@ -234,7 +234,7 @@ const LinodeSummary = (props: Props) => {
   };
 
   return (
-    (<Grid container spacing={2}>
+    <Grid container spacing={2}>
       <Grid sx={{ display: 'flex', justifyContent: 'flex-end' }} size={12}>
         <Autocomplete
           textFieldProps={{
@@ -253,8 +253,9 @@ const LinodeSummary = (props: Props) => {
       <Grid
         size={{
           md: 6,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <Paper sx={{ height: 370 }} variant="outlined">
           <StatsPanel
             renderBody={renderCPUChart}
@@ -266,8 +267,9 @@ const LinodeSummary = (props: Props) => {
       <Grid
         size={{
           md: 6,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <Paper sx={{ height: 370 }} variant="outlined">
           <StatsPanel
             renderBody={renderDiskIOChart}
@@ -281,7 +283,7 @@ const LinodeSummary = (props: Props) => {
         xAxisTickFormat={xAxisTickFormat}
         {...chartProps}
       />
-    </Grid>)
+    </Grid>
   );
 };
 

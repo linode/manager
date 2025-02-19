@@ -80,7 +80,7 @@ export const NodeBalancerConfigNode = React.memo(
     );
 
     return (
-      (<React.Fragment>
+      <React.Fragment>
         <Grid data-qa-node sx={{ padding: 1 }} size={12}>
           {idx !== 0 && (
             <Grid size={12}>
@@ -102,8 +102,9 @@ export const NodeBalancerConfigNode = React.memo(
               size={{
                 lg: 4,
                 sm: 6,
-                xs: 12
-              }}>
+                xs: 12,
+              }}
+            >
               <TextField
                 data-qa-backend-ip-label
                 disabled={disabled}
@@ -122,8 +123,9 @@ export const NodeBalancerConfigNode = React.memo(
                 size={{
                   lg: 2,
                   sm: 4,
-                  xs: 6
-                }}>
+                  xs: 6,
+                }}
+              >
                 <StyledStatusHeader data-qa-active-checks-header variant="h3">
                   Status
                 </StyledStatusHeader>
@@ -142,8 +144,9 @@ export const NodeBalancerConfigNode = React.memo(
               size={{
                 lg: 3,
                 sm: 4,
-                xs: 12
-              }}>
+                xs: 12,
+              }}
+            >
               <ConfigNodeIPSelect
                 disabled={disabled}
                 errorText={nodesErrorMap.address}
@@ -158,8 +161,9 @@ export const NodeBalancerConfigNode = React.memo(
               size={{
                 lg: 2,
                 sm: 3,
-                xs: 6
-              }}>
+                xs: 6,
+              }}
+            >
               <TextField
                 data-qa-backend-ip-port
                 disabled={disabled}
@@ -177,8 +181,9 @@ export const NodeBalancerConfigNode = React.memo(
               size={{
                 lg: 2,
                 sm: 3,
-                xs: 6
-              }}>
+                xs: 6,
+              }}
+            >
               <TextField
                 data-qa-backend-ip-weight
                 disabled={disabled}
@@ -197,8 +202,9 @@ export const NodeBalancerConfigNode = React.memo(
                 size={{
                   lg: 2,
                   sm: 3,
-                  xs: 6
-                }}>
+                  xs: 6,
+                }}
+              >
                 <Autocomplete
                   value={
                     modeOptions.find((option) => option.value === node.mode) ??
@@ -223,7 +229,7 @@ export const NodeBalancerConfigNode = React.memo(
             )}
           </Grid>
         </Grid>
-      </React.Fragment>)
+      </React.Fragment>
     );
   }
 );

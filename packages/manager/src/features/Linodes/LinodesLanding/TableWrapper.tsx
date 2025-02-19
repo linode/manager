@@ -39,7 +39,7 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
   );
 
   return (
-    (<Grid className="m0" container spacing={0} style={{ width: '100%' }}>
+    <Grid className="m0" container spacing={0} style={{ width: '100%' }}>
       <Grid className="p0" size={12}>
         <Table
           aria-label="List of Linodes"
@@ -62,7 +62,7 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
           {props.children}
         </Table>
       </Grid>
-    </Grid>)
+    </Grid>
   );
 };
 

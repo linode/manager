@@ -36,7 +36,7 @@ export const AbuseTicketBanner = () => {
   const isViewingTicket = location.pathname.match(href);
 
   return (
-    (<Grid size={12}>
+    <Grid size={12}>
       <DismissibleBanner
         options={{
           expiry: DateTime.utc().plus({ days: 7 }).toISO(),
@@ -61,7 +61,7 @@ export const AbuseTicketBanner = () => {
           ) : null}
         </Typography>
       </DismissibleBanner>
-    </Grid>)
+    </Grid>
   );
 };
 

@@ -44,12 +44,13 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
   const isDisabled = isVPCOnlyLinode && title.includes('Public IP Address');
 
   return (
-    (<Grid
+    <Grid
       sx={sx}
       size={{
         lg: gridSize.lg,
-        xs: gridSize.xs
-      }}>
+        xs: gridSize.xs,
+      }}
+    >
       <StyledColumnLabelGrid>
         {title} {isDisabled && PublicIPAddressesTooltip}
       </StyledColumnLabelGrid>
@@ -86,6 +87,6 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
         </StyledTable>
         {footer ? <Grid sx={{ padding: 0 }}>{footer}</Grid> : null}
       </StyledTableGrid>
-    </Grid>)
+    </Grid>
   );
 });

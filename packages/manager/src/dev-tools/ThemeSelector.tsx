@@ -26,7 +26,7 @@ export const ThemeSelector = () => {
   };
 
   return (
-    (<Grid container>
+    <Grid container>
       <Grid size={12}>
         <h4 style={{ marginBottom: 0 }}>MSW Theme Selector</h4>
         <p style={{ marginBottom: 8, marginTop: 0 }}>
@@ -40,6 +40,6 @@ export const ThemeSelector = () => {
           <option value="dark">Dark</option>
         </select>
       </Grid>
-    </Grid>)
+    </Grid>
   );
 };

@@ -37,7 +37,7 @@ export const ContactsActionMenu = (props: ContactsActionMenuProps) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    (<>
+    <>
       {matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -54,7 +54,7 @@ export const ContactsActionMenu = (props: ContactsActionMenuProps) => {
           );
         })
       )}
-    </>)
+    </>
   );
 };
 

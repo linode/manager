@@ -47,7 +47,7 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
     label.toLowerCase() === orderBy.toLowerCase();
 
   return (
-    (<TableHead data-qa-table-head role="rowgroup">
+    <TableHead data-qa-table-head role="rowgroup">
       <TableRow>
         <TableSortCell
           sx={{
@@ -144,13 +144,14 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
         <TableCell sx={{ padding: '0 !important' }}>
           <Box
             sx={{
-              alignItems: "center",
-              display: "flex",
+              alignItems: 'center',
+              display: 'flex',
               gap: 3,
-              justifyContent: "flex-end",
+              justifyContent: 'flex-end',
               paddingRight: 1.5,
-              backgroundColor: theme.tokens.table.HeaderNested.Background
-            }}>
+              backgroundColor: theme.tokens.table.HeaderNested.Background,
+            }}
+          >
             <div className="visually-hidden" id={displayViewDescriptionId}>
               Currently in {linodeViewPreference} view
             </div>
@@ -179,6 +180,6 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
           </Box>
         </TableCell>
       </TableRow>
-    </TableHead>)
+    </TableHead>
   );
 };

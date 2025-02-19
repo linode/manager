@@ -71,7 +71,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     }
 
     return (
-      (<_Drawer
+      <_Drawer
         classes={{
           paper: cx(classes.common, {
             [classes.default]: !wide,
@@ -97,10 +97,11 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           container
           wrap="nowrap"
           sx={{
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            position: 'relative'
-          }}>
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            position: 'relative',
+          }}
+        >
           <Grid>
             {isFetching ? null : (
               <Typography
@@ -146,7 +147,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         ) : (
           children
         )}
-      </_Drawer>)
+      </_Drawer>
     );
   }
 );

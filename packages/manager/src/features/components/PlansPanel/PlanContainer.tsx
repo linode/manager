@@ -146,7 +146,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
   );
 
   return (
-    (<Grid container spacing={2}>
+    <Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         {isCreate && isDatabaseGA && (
           <Typography
@@ -240,6 +240,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
           )}
         </Grid>
       </Hidden>
-    </Grid>)
+    </Grid>
   );
 };

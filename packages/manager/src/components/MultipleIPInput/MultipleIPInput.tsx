@@ -221,7 +221,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
     );
 
   return (
-    (<div className={cx(classes.root, className)}>
+    <div className={cx(classes.root, className)}>
       {tooltip ? (
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
@@ -255,9 +255,10 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
           key={`domain-transfer-ip-${idx}`}
           spacing={2}
           sx={{
-            justifyContent: "center",
-            maxWidth: forVPCIPv4Ranges ? '415px' : undefined
-          }}>
+            justifyContent: 'center',
+            maxWidth: forVPCIPv4Ranges ? '415px' : undefined,
+          }}
+        >
           <Grid size={11}>
             <TextField
               InputProps={{
@@ -295,6 +296,6 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
         </Grid>
       ))}
       {addIPButton}
-    </div>)
+    </div>
   );
 });

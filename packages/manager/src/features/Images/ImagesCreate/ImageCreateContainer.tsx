@@ -7,7 +7,7 @@ import { ImageCreate } from './ImageCreate';
 
 export const ImagesCreateContainer = () => {
   return (
-    (<Grid container>
+    <Grid container>
       <LandingHeader
         breadcrumbDataAttrs={{ 'data-qa-create-image-header': true }}
         docsLabel="Docs"
@@ -18,6 +18,6 @@ export const ImagesCreateContainer = () => {
       <Grid className="p0" size={12}>
         <ImageCreate />
       </Grid>
-    </Grid>)
+    </Grid>
   );
 };

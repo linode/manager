@@ -44,15 +44,20 @@ export const MonitorRow = (props: MonitorRowProps) => {
     monitor.status === 'problem' ? StyledTypography : Typography;
 
   return (
-    (<StyledTableRow
+    <StyledTableRow
       data-qa-monitor-cell={monitor.id}
       data-testid={'monitor-row'}
       key={monitor.id}
     >
       <StyledTableCell data-qa-monitor-label>
-        <Grid container spacing={2} wrap="nowrap" sx={{
-          alignItems: "center"
-        }}>
+        <Grid
+          container
+          spacing={2}
+          wrap="nowrap"
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <StyledGrid>
             <Icon height={30} width={30} />
           </StyledGrid>
@@ -60,9 +65,14 @@ export const MonitorRow = (props: MonitorRowProps) => {
         </Grid>
       </StyledTableCell>
       <TableCell data-qa-monitor-status>
-        <Grid container direction="row" spacing={1} sx={{
-          alignItems: "center"
-        }}>
+        <Grid
+          container
+          direction="row"
+          spacing={1}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <Grid>
             <ConditionalTypography>
               {statusTextMap[monitor.status]}
@@ -98,7 +108,7 @@ export const MonitorRow = (props: MonitorRowProps) => {
           status={monitor.status}
         />
       </TableCell>
-    </StyledTableRow>)
+    </StyledTableRow>
   );
 };
 

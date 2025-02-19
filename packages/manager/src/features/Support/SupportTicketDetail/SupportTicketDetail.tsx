@@ -70,7 +70,7 @@ export const SupportTicketDetail = () => {
   }).toString();
 
   return (
-    (<StyledStack spacing={2}>
+    <StyledStack spacing={2}>
       <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
       <LandingHeader
         breadcrumbProps={{
@@ -141,7 +141,7 @@ export const SupportTicketDetail = () => {
           )}
         </Grid>
       </Grid>
-    </StyledStack>)
+    </StyledStack>
   );
 };
 

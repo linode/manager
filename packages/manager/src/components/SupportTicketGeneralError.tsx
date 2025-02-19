@@ -30,36 +30,36 @@ export const SupportTicketGeneralError = (
   const isAccountLimitSupportTicket = accountLimitRegex.test(generalError);
 
   return (
-    (<Typography
-            sx={{
-              font: theme.font.bold,
-              fontSize: '1rem',
-              lineHeight: '20px',
-            }}
-          >
+    <Typography
+      sx={{
+        font: theme.font.bold,
+        fontSize: '1rem',
+        lineHeight: '20px',
+      }}
+    >
       {limitError.map((substring: string, idx: number) => {
         const openTicket = substring.match(supportTextRegex);
 
         if (openTicket) {
           return (
-            (<SupportLink
-                    text={
-                      substring.match(/^[A-Z]/)
-                        ? capitalize(openTicket[0])
-                        : openTicket[0]
-                    }
-                    ticketType={
-                      isAccountLimitSupportTicket ? 'accountLimit' : 'general'
-                    }
-                    entity={entity}
-                    formPayloadValues={formPayloadValues}
-                    key={`${substring}-${idx}`}
-                  />)
+            <SupportLink
+              text={
+                substring.match(/^[A-Z]/)
+                  ? capitalize(openTicket[0])
+                  : openTicket[0]
+              }
+              ticketType={
+                isAccountLimitSupportTicket ? 'accountLimit' : 'general'
+              }
+              entity={entity}
+              formPayloadValues={formPayloadValues}
+              key={`${substring}-${idx}`}
+            />
           );
         } else {
           return substring;
         }
       })}
-    </Typography>)
+    </Typography>
   );
 };

@@ -47,16 +47,17 @@ export const EditableEntityLabel = (props: EditableEntityLabelProps) => {
   };
 
   return (
-    (<Grid
+    <Grid
       container
       direction="row"
       wrap="nowrap"
       sx={{
-        alignItems: "center",
-        justifyContent: "flex-start",
+        alignItems: 'center',
+        justifyContent: 'flex-start',
         margin: 0,
-        minHeight: '40px'
-      }}>
+        minHeight: '40px',
+      }}
+    >
       {!isEditing && iconVariant && (
         <Grid className="py0 px0">
           <EntityIcon
@@ -91,7 +92,7 @@ export const EditableEntityLabel = (props: EditableEntityLabelProps) => {
           )}
         </Grid>
       </Grid>
-    </Grid>)
+    </Grid>
   );
 };
 

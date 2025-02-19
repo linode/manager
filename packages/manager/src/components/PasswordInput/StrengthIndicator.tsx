@@ -52,16 +52,17 @@ export const StrengthIndicator = (props: Props) => {
   const { hideStrengthLabel, strength } = props;
 
   return (
-    (<Grid
+    <Grid
       className={classes.root}
       container
       data-qa-strength={strength}
       spacing={1}
       sx={{
-        alignItems: "flex-end",
+        alignItems: 'flex-end',
         paddingLeft: 0,
-        paddingRight: 0
-      }}>
+        paddingRight: 0,
+      }}
+    >
       {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
         <Grid className={classes.blockOuter} key={idx} size={3}>
           <div
@@ -87,7 +88,7 @@ export const StrengthIndicator = (props: Props) => {
           {convertStrengthScore(strength)}
         </Typography>
       </Grid>
-    </Grid>)
+    </Grid>
   );
 };
 

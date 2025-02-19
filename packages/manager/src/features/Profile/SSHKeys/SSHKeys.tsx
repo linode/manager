@@ -94,63 +94,66 @@ export const SSHKeys = () => {
     ));
   }, [data, error, isLoading]);
 
-  return (<>
-    <DocumentTitleSegment segment="SSH Keys" />
-    <Grid
-      container
-      spacing={2}
-      sx={{
-        alignItems: "flex-end",
-        justifyContent: "flex-end",
-        margin: 0,
-        width: '100%'
-      }}>
-      <StyledAddNewWrapperGridItem>
-        <Button
-          buttonType="primary"
-          onClick={() => setIsCreateDrawerOpen(true)}
-        >
-          Add an SSH Key
-        </Button>
-      </StyledAddNewWrapperGridItem>
-    </Grid>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Label</TableCell>
-          <TableCell>Key</TableCell>
-          <Hidden smDown>
-            <TableCell>Created</TableCell>
-          </Hidden>
-          <TableCell />
-        </TableRow>
-      </TableHead>
-      <TableBody>{renderTableBody()}</TableBody>
-    </Table>
-    <PaginationFooter
-      count={data?.results ?? 0}
-      eventCategory="ssh keys"
-      handlePageChange={pagination.handlePageChange}
-      handleSizeChange={pagination.handlePageSizeChange}
-      page={pagination.page}
-      pageSize={pagination.pageSize}
-    />
-    <DeleteSSHKeyDialog
-      id={selectedKeyId}
-      label={selectedKey?.label}
-      onClose={() => setIsDeleteDialogOpen(false)}
-      open={isDeleteDialogOpen}
-    />
-    <EditSSHKeyDrawer
-      onClose={() => setIsEditDrawerOpen(false)}
-      open={isEditDrawerOpen}
-      sshKey={selectedKey}
-    />
-    <CreateSSHKeyDrawer
-      onClose={() => setIsCreateDrawerOpen(false)}
-      open={isCreateDrawerOpen}
-    />
-  </>);
+  return (
+    <>
+      <DocumentTitleSegment segment="SSH Keys" />
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          alignItems: 'flex-end',
+          justifyContent: 'flex-end',
+          margin: 0,
+          width: '100%',
+        }}
+      >
+        <StyledAddNewWrapperGridItem>
+          <Button
+            buttonType="primary"
+            onClick={() => setIsCreateDrawerOpen(true)}
+          >
+            Add an SSH Key
+          </Button>
+        </StyledAddNewWrapperGridItem>
+      </Grid>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Label</TableCell>
+            <TableCell>Key</TableCell>
+            <Hidden smDown>
+              <TableCell>Created</TableCell>
+            </Hidden>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderTableBody()}</TableBody>
+      </Table>
+      <PaginationFooter
+        count={data?.results ?? 0}
+        eventCategory="ssh keys"
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+      />
+      <DeleteSSHKeyDialog
+        id={selectedKeyId}
+        label={selectedKey?.label}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
+      />
+      <EditSSHKeyDrawer
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
+        sshKey={selectedKey}
+      />
+      <CreateSSHKeyDrawer
+        onClose={() => setIsCreateDrawerOpen(false)}
+        open={isCreateDrawerOpen}
+      />
+    </>
+  );
 };
 
 const StyledAddNewWrapperGridItem = styled(Grid)(({ theme }) => ({

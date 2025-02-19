@@ -38,36 +38,42 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
     return <CircleProgress />;
   }
 
-  return (<>
-    <Typography marginBottom={2} variant="h2">
-      Overview
-    </Typography>
-    <Grid container spacing={2} sx={{
-      alignItems: "center"
-    }}>
-      <AlertDetailRow label="Name" value={label} />
-      <AlertDetailRow label="Description" value={description} />
-      <AlertDetailRow
-        label="Status"
-        status={alertStatusToIconStatusMap[status]}
-        value={convertStringToCamelCasesWithSpaces(status)}
-      />
-      <AlertDetailRow label="Severity" value={severityMap[severity]} />
-      <AlertDetailRow
-        label="Service"
-        value={getServiceTypeLabel(serviceType, serviceTypeList)}
-      />
-      <AlertDetailRow
-        label="Type"
-        value={convertStringToCamelCasesWithSpaces(type)}
-      />
-      <AlertDetailRow label="Created By" value={createdBy} />
-      <AlertDetailRow
-        value={formatDate(updated, {
-          format: 'MMM dd, yyyy, h:mm a',
-        })}
-        label="Last Modified"
-      />
-    </Grid>
-  </>);
+  return (
+    <>
+      <Typography marginBottom={2} variant="h2">
+        Overview
+      </Typography>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          alignItems: 'center',
+        }}
+      >
+        <AlertDetailRow label="Name" value={label} />
+        <AlertDetailRow label="Description" value={description} />
+        <AlertDetailRow
+          label="Status"
+          status={alertStatusToIconStatusMap[status]}
+          value={convertStringToCamelCasesWithSpaces(status)}
+        />
+        <AlertDetailRow label="Severity" value={severityMap[severity]} />
+        <AlertDetailRow
+          label="Service"
+          value={getServiceTypeLabel(serviceType, serviceTypeList)}
+        />
+        <AlertDetailRow
+          label="Type"
+          value={convertStringToCamelCasesWithSpaces(type)}
+        />
+        <AlertDetailRow label="Created By" value={createdBy} />
+        <AlertDetailRow
+          value={formatDate(updated, {
+            format: 'MMM dd, yyyy, h:mm a',
+          })}
+          label="Last Modified"
+        />
+      </Grid>
+    </>
+  );
 });

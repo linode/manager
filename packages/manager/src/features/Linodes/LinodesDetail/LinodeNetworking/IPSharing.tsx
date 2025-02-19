@@ -296,7 +296,7 @@ const IPSharingPanel = (props: Props) => {
   const errorMap = getErrorMap([], errors);
   const generalError = errorMap.none;
   return (
-    (<Dialog fullWidth onClose={handleClose} open={open} title="IP Sharing">
+    <Dialog fullWidth onClose={handleClose} open={open} title="IP Sharing">
       <DialogContent loading={isLoading}>
         <>
           {generalError && (
@@ -314,8 +314,9 @@ const IPSharingPanel = (props: Props) => {
               size={{
                 lg: 8,
                 sm: 12,
-                xl: 6
-              }}>
+                xl: 6,
+              }}
+            >
               {flags.ipv6Sharing ? (
                 <Notice variant="warning">
                   <Typography sx={{ fontSize: '0.875rem' }}>
@@ -412,7 +413,7 @@ const IPSharingPanel = (props: Props) => {
           onClick: onReset,
         }}
       />
-    </Dialog>)
+    </Dialog>
   );
 };
 
@@ -454,7 +455,7 @@ interface RowProps {
 export const IPRow: React.FC<RowProps> = React.memo((props) => {
   const { ip } = props;
   return (
-    (<Grid container key={ip} spacing={2}>
+    <Grid container key={ip} spacing={2}>
       <Grid size={12}>
         <Divider spacingBottom={0} />
       </Grid>
@@ -467,7 +468,7 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
           value={ip}
         />
       </Grid>
-    </Grid>)
+    </Grid>
   );
 });
 
@@ -505,15 +506,16 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
   });
 
   return (
-    (<Grid container key={idx} spacing={2}>
+    <Grid container key={idx} spacing={2}>
       <Grid size={12}>
         <Divider spacingBottom={0} />
       </Grid>
       <Grid
         size={{
           sm: 10,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <Select
           textFieldProps={{
             dataAttrs: {
@@ -538,7 +540,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
             },
           }}
           size={{
-            sm: 2
+            sm: 2,
           }}
         >
           <Button
@@ -556,7 +558,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
           </Button>
         </Grid>
       ) : null}
-    </Grid>)
+    </Grid>
   );
 });
 

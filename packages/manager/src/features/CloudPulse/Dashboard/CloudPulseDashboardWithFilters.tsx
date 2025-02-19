@@ -126,7 +126,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
     });
 
     return (
-      (<Box display="flex" flexDirection="column" gap={2.5}>
+      <Box display="flex" flexDirection="column" gap={2.5}>
         <Paper
           sx={{
             padding: 0,
@@ -177,8 +177,9 @@ export const CloudPulseDashboardWithFilters = React.memo(
               xs={12}
               sx={{
                 mb: 3,
-                mt: -3
-              }}>
+                mt: -3,
+              }}
+            >
               {showAppliedFilters && (
                 <CloudPulseAppliedFilterRenderer
                   filters={filterData.label}
@@ -200,7 +201,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
         ) : (
           renderPlaceHolder('Select filters to visualize metrics.')
         )}
-      </Box>)
+      </Box>
     );
   }
 );

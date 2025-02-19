@@ -100,128 +100,130 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
   const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   if (display === 'grid') {
-    return (<>
-      <Grid className={'px0'} size={12}>
-        {isGeckoLAEnabled && (
-          <Paper sx={{ padding: 1 }}>
-            <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
-          </Paper>
-        )}
-        <StyledControlHeader>
-          <div className="visually-hidden" id={displayViewDescriptionId}>
-            Currently in {linodeViewPreference} view
-          </div>
-          <Box>
-            <Tooltip placement="top" title="List view">
-              <IconButton
-                aria-describedby={displayViewDescriptionId}
-                aria-label="Toggle display"
-                className={linodesAreGrouped ? 'MuiIconButton-isActive' : ''}
-                disableRipple
-                onClick={toggleLinodeView}
-              >
-                <GridView />
-              </IconButton>
-            </Tooltip>
-
-            <div className="visually-hidden" id={groupByDescriptionId}>
-              {linodesAreGrouped
-                ? 'group by tag is currently enabled'
-                : 'group by tag is currently disabled'}
+    return (
+      <>
+        <Grid className={'px0'} size={12}>
+          {isGeckoLAEnabled && (
+            <Paper sx={{ padding: 1 }}>
+              <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
+            </Paper>
+          )}
+          <StyledControlHeader>
+            <div className="visually-hidden" id={displayViewDescriptionId}>
+              Currently in {linodeViewPreference} view
             </div>
-            <Tooltip placement="top-end" title="Ungroup by tag">
-              <IconButton
-                sx={(theme) => ({
-                  ':hover': {
-                    color: theme.tokens.color.Brand[60],
-                  },
-                  color: theme.tokens.table.HeaderNested.Icon,
-                })}
-                aria-describedby={groupByDescriptionId}
-                aria-label="Toggle group by tag"
-                className={linodesAreGrouped ? 'MuiIconButton-isActive' : ''}
-                disableRipple
-                onClick={toggleGroupLinodes}
-              >
-                <GroupByTag />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </StyledControlHeader>
-      </Grid>
-      {filteredLinodesLoading ? (
-        <CircleProgress />
-      ) : orderedGroupedLinodes.length === 0 ? (
-        <Typography style={{ textAlign: 'center' }}>
-          No items to display.
-        </Typography>
-      ) : null}
-      {orderedGroupedLinodes.map(([tag, linodes]) => {
-        return (
-          (<Box data-qa-tag-header={tag} key={tag} sx={{ marginBottom: 2 }}>
-            <Grid container>
-              <Grid size={12}>
-                <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
+            <Box>
+              <Tooltip placement="top" title="List view">
+                <IconButton
+                  aria-describedby={displayViewDescriptionId}
+                  aria-label="Toggle display"
+                  className={linodesAreGrouped ? 'MuiIconButton-isActive' : ''}
+                  disableRipple
+                  onClick={toggleLinodeView}
+                >
+                  <GridView />
+                </IconButton>
+              </Tooltip>
+
+              <div className="visually-hidden" id={groupByDescriptionId}>
+                {linodesAreGrouped
+                  ? 'group by tag is currently enabled'
+                  : 'group by tag is currently disabled'}
+              </div>
+              <Tooltip placement="top-end" title="Ungroup by tag">
+                <IconButton
+                  sx={(theme) => ({
+                    ':hover': {
+                      color: theme.tokens.color.Brand[60],
+                    },
+                    color: theme.tokens.table.HeaderNested.Icon,
+                  })}
+                  aria-describedby={groupByDescriptionId}
+                  aria-label="Toggle group by tag"
+                  className={linodesAreGrouped ? 'MuiIconButton-isActive' : ''}
+                  disableRipple
+                  onClick={toggleGroupLinodes}
+                >
+                  <GroupByTag />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </StyledControlHeader>
+        </Grid>
+        {filteredLinodesLoading ? (
+          <CircleProgress />
+        ) : orderedGroupedLinodes.length === 0 ? (
+          <Typography style={{ textAlign: 'center' }}>
+            No items to display.
+          </Typography>
+        ) : null}
+        {orderedGroupedLinodes.map(([tag, linodes]) => {
+          return (
+            <Box data-qa-tag-header={tag} key={tag} sx={{ marginBottom: 2 }}>
+              <Grid container>
+                <Grid size={12}>
+                  <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
+                </Grid>
               </Grid>
-            </Grid>
-            <Paginate
-              // page size needed to show ALL Linodes with maintenance.
-              pageSize={
-                numberOfLinodesWithMaintenance > infinitePageSize
-                  ? getMinimumPageSizeForNumberOfItems(
-                      numberOfLinodesWithMaintenance
-                    )
-                  : infinitePageSize
-              }
-              // If there are more Linodes with maintenance than the current page size, show the minimum
-              data={linodes}
-              pageSizeSetter={setInfinitePageSize}
-            >
-              {({
-                count,
-                data: paginatedData,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize,
-              }) => {
-                const finalProps = {
-                  ...rest,
+              <Paginate
+                // page size needed to show ALL Linodes with maintenance.
+                pageSize={
+                  numberOfLinodesWithMaintenance > infinitePageSize
+                    ? getMinimumPageSizeForNumberOfItems(
+                        numberOfLinodesWithMaintenance
+                      )
+                    : infinitePageSize
+                }
+                // If there are more Linodes with maintenance than the current page size, show the minimum
+                data={linodes}
+                pageSizeSetter={setInfinitePageSize}
+              >
+                {({
                   count,
                   data: paginatedData,
-                  handleOrderChange,
                   handlePageChange,
                   handlePageSizeChange,
-                  order,
-                  orderBy,
                   page,
                   pageSize,
-                };
-                return (
-                  (<React.Fragment>
-                    <Component {...finalProps} />
-                    <Grid size={12}>
-                      <PaginationFooter
-                        sx={{
-                          border: 0,
-                        }}
-                        count={count}
-                        eventCategory={'linodes landing'}
-                        handlePageChange={handlePageChange}
-                        handleSizeChange={handlePageSizeChange}
-                        page={page}
-                        pageSize={pageSize}
-                        showAll
-                      />
-                    </Grid>
-                  </React.Fragment>)
-                );
-              }}
-            </Paginate>
-          </Box>)
-        );
-      })}
-    </>);
+                }) => {
+                  const finalProps = {
+                    ...rest,
+                    count,
+                    data: paginatedData,
+                    handleOrderChange,
+                    handlePageChange,
+                    handlePageSizeChange,
+                    order,
+                    orderBy,
+                    page,
+                    pageSize,
+                  };
+                  return (
+                    <React.Fragment>
+                      <Component {...finalProps} />
+                      <Grid size={12}>
+                        <PaginationFooter
+                          sx={{
+                            border: 0,
+                          }}
+                          count={count}
+                          eventCategory={'linodes landing'}
+                          handlePageChange={handlePageChange}
+                          handleSizeChange={handlePageSizeChange}
+                          page={page}
+                          pageSize={pageSize}
+                          showAll
+                        />
+                      </Grid>
+                    </React.Fragment>
+                  );
+                }}
+              </Paginate>
+            </Box>
+          );
+        })}
+      </>
+    );
   }
 
   if (display === 'list') {

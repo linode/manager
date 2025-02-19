@@ -106,7 +106,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
   ];
 
   return (
-    (<Paper>
+    <Paper>
       <Grid columns={{ md: 6, sm: 4, xs: 2 }} container spacing={2}>
         {items.map((item) => (
           <Grid
@@ -114,8 +114,9 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
             size={{
               md: 2,
               sm: 2,
-              xs: 2
-            }}>
+              xs: 2,
+            }}
+          >
             <Stack direction="row" spacing={1}>
               <Typography sx={(theme) => ({ font: theme.font.bold })}>
                 {item.label}
@@ -125,7 +126,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
           </Grid>
         ))}
       </Grid>
-    </Paper>)
+    </Paper>
   );
 };
 

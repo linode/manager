@@ -91,7 +91,7 @@ export const AddNotificationChannelDrawer = (
   );
 
   return (
-    (<Drawer
+    <Drawer
       onClose={handleCloseDrawer}
       open={open}
       title="AddNotificationChannel"
@@ -194,9 +194,10 @@ export const AddNotificationChannelDrawer = (
                     md="auto"
                     xs={12}
                     sx={{
-                      overflow: "auto",
-                      paddingRight: 1
-                    }}>
+                      overflow: 'auto',
+                      paddingRight: 1,
+                    }}
+                  >
                     <RenderChannelDetails template={selectedTemplate} />
                   </Grid>
                 </Grid>
@@ -216,6 +217,6 @@ export const AddNotificationChannelDrawer = (
           />
         </form>
       </FormProvider>
-    </Drawer>)
+    </Drawer>
   );
 };

@@ -265,7 +265,7 @@ export const CloneLanding = () => {
   );
   const selectedLinodeRegion = selectedLinode && selectedLinode.region;
   return (
-    (<React.Fragment>
+    <React.Fragment>
       <DocumentTitleSegment segment="Clone" />
       <MutationNotification linodeId={linodeId} />
       <Notifications />
@@ -274,14 +274,16 @@ export const CloneLanding = () => {
         <Grid
           container
           sx={{
-            justifyContent: "space-between",
-            marginTop: theme.spacing(1)
-          }}>
+            justifyContent: 'space-between',
+            marginTop: theme.spacing(1),
+          }}
+        >
           <Grid
             size={{
               md: 7,
-              xs: 12
-            }}>
+              xs: 12,
+            }}
+          >
             <Paper sx={{ padding: 0 }}>
               <Typography
                 aria-level={2}
@@ -339,8 +341,9 @@ export const CloneLanding = () => {
           <Grid
             size={{
               md: 4,
-              xs: 12
-            }}>
+              xs: 12,
+            }}
+          >
             <Details
               selectedConfigs={attachAssociatedDisksToConfigs(
                 selectedConfigs,
@@ -351,10 +354,11 @@ export const CloneLanding = () => {
                 return (
                   // This disk has been individually selected ...
                   // ... AND it's associated configs are NOT selected
-                  (state.diskSelection[disk.id].isSelected && intersection(
+                  state.diskSelection[disk.id].isSelected &&
+                  intersection(
                     state.diskSelection?.[disk.id]?.associatedConfigIds ?? [],
                     selectedConfigIds
-                  ).length === 0)
+                  ).length === 0
                 );
               })}
               // If a selected disk is associated with a selected config, we
@@ -375,6 +379,6 @@ export const CloneLanding = () => {
           </Grid>
         </Grid>
       </Paper>
-    </React.Fragment>)
+    </React.Fragment>
   );
 };

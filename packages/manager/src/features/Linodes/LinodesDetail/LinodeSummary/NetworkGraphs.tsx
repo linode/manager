@@ -110,50 +110,54 @@ export const NetworkGraphs = (props: Props) => {
     xAxisTickFormat,
   };
 
-  return (<>
-    <Grid
-      size={{
-        md: 6,
-        xs: 12
-      }}>
-      <Paper variant="outlined" sx={{ height: 500 }}>
-        <StatsPanel
-          renderBody={() => (
-            <Graph
-              ariaLabel="IPv4 Network Traffic Graph"
-              data={v4Data}
-              metrics={v4Metrics}
-              unit={v4Unit}
-              {...commonGraphProps}
-            />
-          )}
-          title={`Network — IPv4 (${v4Unit}/s)`}
-          {...rest}
-        />
-      </Paper>
-    </Grid>
-    <Grid
-      size={{
-        md: 6,
-        xs: 12
-      }}>
-      <Paper variant="outlined" sx={{ height: 500 }}>
-        <StatsPanel
-          renderBody={() => (
-            <Graph
-              ariaLabel="IPv6 Network Traffic Graph"
-              data={v6Data}
-              metrics={v6Metrics}
-              unit={v6Unit}
-              {...commonGraphProps}
-            />
-          )}
-          title={`Network — IPv6 (${v6Unit}/s)`}
-          {...rest}
-        />
-      </Paper>
-    </Grid>
-  </>);
+  return (
+    <>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
+        <Paper variant="outlined" sx={{ height: 500 }}>
+          <StatsPanel
+            renderBody={() => (
+              <Graph
+                ariaLabel="IPv4 Network Traffic Graph"
+                data={v4Data}
+                metrics={v4Metrics}
+                unit={v4Unit}
+                {...commonGraphProps}
+              />
+            )}
+            title={`Network — IPv4 (${v4Unit}/s)`}
+            {...rest}
+          />
+        </Paper>
+      </Grid>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
+        <Paper variant="outlined" sx={{ height: 500 }}>
+          <StatsPanel
+            renderBody={() => (
+              <Graph
+                ariaLabel="IPv6 Network Traffic Graph"
+                data={v6Data}
+                metrics={v6Metrics}
+                unit={v6Unit}
+                {...commonGraphProps}
+              />
+            )}
+            title={`Network — IPv6 (${v6Unit}/s)`}
+            {...rest}
+          />
+        </Paper>
+      </Grid>
+    </>
+  );
 };
 
 interface GraphProps {

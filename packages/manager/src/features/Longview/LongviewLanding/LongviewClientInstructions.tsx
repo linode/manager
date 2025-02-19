@@ -50,13 +50,13 @@ export const LongviewClientInstructions = (props: Props) => {
   };
 
   return (
-    (<Paper
-        sx={{
-          marginBottom: theme.spacing(4),
-          padding: theme.spacing(3),
-        }}
-        data-testid={clientID}
-      >
+    <Paper
+      sx={{
+        marginBottom: theme.spacing(4),
+        padding: theme.spacing(3),
+      }}
+      data-testid={clientID}
+    >
       <Grid
         aria-label="Installation instructions for the Longview agent"
         container
@@ -66,8 +66,9 @@ export const LongviewClientInstructions = (props: Props) => {
           <Grid
             size={{
               md: 3,
-              xs: 12
-            }}>
+              xs: 12,
+            }}
+          >
             {userCanModifyClient ? (
               <EditableEntityLabel
                 loading={updating}
@@ -85,8 +86,9 @@ export const LongviewClientInstructions = (props: Props) => {
           <Grid
             size={{
               md: 9,
-              xs: 12
-            }}>
+              xs: 12,
+            }}
+          >
             <InstallationInstructions
               APIKey={clientAPIKey}
               installationKey={installCode}
@@ -94,9 +96,13 @@ export const LongviewClientInstructions = (props: Props) => {
           </Grid>
         </Grid>
         <Grid size={1}>
-          <Grid container spacing={2} sx={{
-            justifyContent: "flex-end"
-          }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              justifyContent: 'flex-end',
+            }}
+          >
             <Grid>
               <LongviewActionMenu
                 longviewClientID={clientID}
@@ -108,6 +114,6 @@ export const LongviewClientInstructions = (props: Props) => {
           </Grid>
         </Grid>
       </Grid>
-    </Paper>)
+    </Paper>
   );
 };

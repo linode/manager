@@ -313,15 +313,17 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
           <Grid
             size={{
               sm: 6,
-              xs: 12
-            }}>
+              xs: 12,
+            }}
+          >
             {jsxSelectVLAN}
           </Grid>
           <Grid
             size={{
               sm: 6,
-              xs: 12
-            }}>
+              xs: 12,
+            }}
+          >
             {jsxIPAMForVLAN}
           </Grid>
         </Grid>
@@ -330,8 +332,9 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
       <Grid
         size={{
           sm: 6,
-          xs: 12
-        }}>
+          xs: 12,
+        }}
+      >
         <Stack>
           {jsxSelectVLAN}
           {jsxIPAMForVLAN}
@@ -358,12 +361,14 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     );
 
   return (
-    (<Grid container>
+    <Grid container>
       {fromAddonsPanel ? null : (
         <>
-          <Grid sx={{
-            width: '100%'
-          }}>
+          <Grid
+            sx={{
+              width: '100%',
+            }}
+          >
             {errors.primaryError && (
               <Notice text={errors.primaryError} variant="error" />
             )}
@@ -437,7 +442,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
           }}
         />
       )}
-    </Grid>)
+    </Grid>
   );
 };
 

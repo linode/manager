@@ -153,11 +153,12 @@ export const ContactInformation = React.memo((props: Props) => {
   };
 
   return (
-    (<Grid
+    <Grid
       size={{
         md: 6,
-        xs: 12
-      }}>
+        xs: 12,
+      }}
+    >
       <BillingPaper data-qa-contact-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Billing Contact</Typography>
@@ -289,6 +290,6 @@ export const ContactInformation = React.memo((props: Props) => {
         focusEmail={focusEmail}
         open={editContactDrawerOpen}
       />
-    </Grid>)
+    </Grid>
   );
 });

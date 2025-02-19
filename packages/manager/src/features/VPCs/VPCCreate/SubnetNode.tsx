@@ -40,7 +40,7 @@ export const SubnetNode = (props: Props) => {
   const showRemoveButton = !(isCreateVPCDrawer && idx === 0);
 
   return (
-    (<Grid key={idx} sx={{ maxWidth: 460 }}>
+    <Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
         <Grid
           sx={{ ...(!showRemoveButton && { width: '100%' }), flexGrow: 1 }}
@@ -92,7 +92,7 @@ export const SubnetNode = (props: Props) => {
           </Grid>
         )}
       </Grid>
-    </Grid>)
+    </Grid>
   );
 };
 

@@ -126,7 +126,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     }
 
     return (
-      (<Grid key={link.display} size={12}>
+      <Grid key={link.display} size={12}>
         <Link
           data-testid={`menu-item-${link.display}`}
           onClick={onClose}
@@ -135,7 +135,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         >
           {link.display}
         </Link>
-      </Grid>)
+      </Grid>
     );
   };
 
@@ -150,7 +150,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   };
 
   return (
-    (<Popover
+    <Popover
       anchorOrigin={{
         horizontal: 'right',
         vertical: 'bottom',
@@ -238,7 +238,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           </Box>
         )}
       </Stack>
-    </Popover>)
+    </Popover>
   );
 };
 

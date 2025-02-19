@@ -58,13 +58,14 @@ export const EnvironmentToggleTool = () => {
   const selectedOptionLabel = options[selectedOption]?.label;
 
   return (
-    (<Grid container>
+    <Grid container>
       <Grid
         size={12}
         sx={{
-          display: "flex",
-          flexWrap: "nowrap"
-        }}>
+          display: 'flex',
+          flexWrap: 'nowrap',
+        }}
+      >
         <DevToolSelect
           onChange={(e) => {
             const selectedIndex = options.findIndex(
@@ -101,6 +102,6 @@ export const EnvironmentToggleTool = () => {
           Refresh
         </button>
       </Grid>
-    </Grid>)
+    </Grid>
   );
 };

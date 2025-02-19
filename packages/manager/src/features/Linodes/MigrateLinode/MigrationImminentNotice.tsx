@@ -14,8 +14,11 @@ interface Props {
 export const MigrationImminentNotice = React.memo((props: Props) => {
   const migrationScheduledForThisLinode = !!props.notifications.find(
     (eachNotification) => {
-      return (eachNotification.label.match(/migrat/i) &&
-      eachNotification.entity && eachNotification.entity.id === props.linodeID);
+      return (
+        eachNotification.label.match(/migrat/i) &&
+        eachNotification.entity &&
+        eachNotification.entity.id === props.linodeID
+      );
     }
   );
 

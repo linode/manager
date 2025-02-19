@@ -32,14 +32,18 @@ export const LinodeWatchdogPanel = (props: Props) => {
   } = useLinodeUpdateMutation(linodeId);
 
   return (
-    (<Accordion
-        data-qa-watchdog-panel
-        defaultExpanded
-        heading="Shutdown Watchdog"
+    <Accordion
+      data-qa-watchdog-panel
+      defaultExpanded
+      heading="Shutdown Watchdog"
+    >
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          alignItems: 'center',
+        }}
       >
-      <Grid container spacing={2} sx={{
-        alignItems: "center"
-      }}>
         {Boolean(error) && (
           <Grid size={12}>
             <Notice text={error?.[0].reason} variant="error" />
@@ -48,8 +52,9 @@ export const LinodeWatchdogPanel = (props: Props) => {
         <Grid
           size={{
             md: 2,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <FormControlLabel
             aria-label={
               linode?.watchdog_enabled
@@ -79,8 +84,9 @@ export const LinodeWatchdogPanel = (props: Props) => {
             lg: 8,
             md: 10,
             xl: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           <Typography data-qa-watchdog-desc>
             Shutdown Watchdog, also known as Lassie, is a Linode Manager feature
             capable of automatically rebooting your Linode if it powers off
@@ -90,6 +96,6 @@ export const LinodeWatchdogPanel = (props: Props) => {
           </Typography>
         </Grid>
       </Grid>
-    </Accordion>)
+    </Accordion>
   );
 };

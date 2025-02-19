@@ -39,32 +39,34 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
   );
 
   return (
-    (<Paper>
+    <Paper>
       <Grid container spacing={2}>
         <Grid
           size={{
             md: isDatabasesV2GA ? 12 : 4,
-            sm: 12
-          }}>
+            sm: 12,
+          }}
+        >
           {isDatabasesV2GA ? (
             <ClusterConfiguration database={database} />
           ) : (
             // Deprecated @since DBaaS V2 GA. Will be removed remove post GA release ~ Dec 2024
             // TODO (UIE-8214) remove POST GA
-            (<ClusterConfigurationLegacy database={database} />)
+            <ClusterConfigurationLegacy database={database} />
           )}
         </Grid>
         <Grid
           size={{
             md: isDatabasesV2GA ? 12 : 8,
-            sm: 12
-          }}>
+            sm: 12,
+          }}
+        >
           {isDatabasesV2GA ? (
             <ConnectionDetails database={database} />
           ) : (
             // Deprecated @since DBaaS V2 GA. Will be removed remove post GA release ~ Dec 2024
             // TODO (UIE-8214) remove POST GA
-            (<ConnectionDetailsLegacy database={database} />)
+            <ConnectionDetailsLegacy database={database} />
           )}
         </Grid>
       </Grid>
@@ -72,16 +74,16 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
         // Deprecated @since DBaaS V2 GA. Will be removed remove post GA release ~ Dec 2024
         // AccessControls accessible through dropdown menu on landing page table and on settings tab
         // TODO (UIE-8214) remove POST GA
-        (<>
+        <>
           <Divider spacingBottom={16} spacingTop={28} />
           <AccessControls
             database={database}
             description={description}
             disabled={disabled}
           />
-        </>)
+        </>
       )}
-    </Paper>)
+    </Paper>
   );
 };
 

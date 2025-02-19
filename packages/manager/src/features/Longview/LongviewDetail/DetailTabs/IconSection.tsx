@@ -72,12 +72,13 @@ export const IconSection = React.memo((props: Props) => {
   const storageInBytes = sumStorage(props.longviewClientData.Disk);
 
   return (
-    (<Grid
+    <Grid
       size={{
         lg: 3,
         md: 6,
-        xs: 12
-      }}>
+        xs: 12,
+      }}
+    >
       <StyledHeaderGrid container spacing={2}>
         <Grid>
           <Typography sx={{ wordBreak: 'break-all' }} variant="h3">
@@ -109,7 +110,7 @@ export const IconSection = React.memo((props: Props) => {
         </Grid>
       </StyledIconContainerGrid>
       <StyledIconContainerGrid container spacing={2}>
-        <StyledIconGrid size={{ md: 2, sm: 1, xs: 2}}>
+        <StyledIconGrid size={{ md: 2, sm: 1, xs: 2 }}>
           <RamIcon />
         </StyledIconGrid>
         {convertedTotalMemory.value !== 0 && convertedTotalSwap.value !== 0 ? (
@@ -128,7 +129,7 @@ export const IconSection = React.memo((props: Props) => {
         )}
       </StyledIconContainerGrid>
       <StyledIconContainerGrid container spacing={2}>
-        <StyledIconGrid size={{ md: 2, sm: 1, xs: 2}}>
+        <StyledIconGrid size={{ md: 2, sm: 1, xs: 2 }}>
           <DiskIcon />
         </StyledIconGrid>
 
@@ -174,6 +175,6 @@ export const IconSection = React.memo((props: Props) => {
           </Grid>
         </StyledIconContainerGrid>
       )}
-    </Grid>)
+    </Grid>
   );
 });

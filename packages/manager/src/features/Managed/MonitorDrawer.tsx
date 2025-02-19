@@ -124,7 +124,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
   const initialValues = { ...emptyInitialValues, ..._monitor };
 
   return (
-    (<Drawer onClose={onClose} open={open} title={titleMap[mode]}>
+    <Drawer onClose={onClose} open={open} title={titleMap[mode]}>
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}
@@ -193,8 +193,9 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 <Grid
                   size={{
                     sm: 6,
-                    xs: 12
-                  }}>
+                    xs: 12,
+                  }}
+                >
                   <Select
                     onChange={(_, item: SelectOption<ServiceType>) =>
                       setFieldValue('service_type', item.value)
@@ -213,8 +214,9 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 <Grid
                   size={{
                     sm: 6,
-                    xs: 12
-                  }}>
+                    xs: 12,
+                  }}
+                >
                   <TextField
                     InputProps={{
                       endAdornment: (
@@ -310,7 +312,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
           </>
         )}
       </Formik>
-    </Drawer>)
+    </Drawer>
   );
 };
 

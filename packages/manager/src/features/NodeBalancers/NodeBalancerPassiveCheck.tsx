@@ -18,12 +18,13 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
   ) => props.onCheckPassiveChange(value);
 
   return (
-    (<Grid
+    <Grid
       sx={{ padding: 1 }}
       size={{
         md: 6,
-        xs: 12
-      }}>
+        xs: 12,
+      }}
+    >
       <Grid container spacing={2}>
         <Grid size={12}>
           <Typography data-qa-passive-checks-header variant="h2">
@@ -49,6 +50,6 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
           </FormHelperText>
         </Grid>
       </Grid>
-    </Grid>)
+    </Grid>
   );
 };

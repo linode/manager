@@ -673,7 +673,7 @@ export const LinodeConfigDialog = (props: Props) => {
   );
 
   return (
-    (<Dialog
+    <Dialog
       fullHeight
       fullWidth
       onClose={onClose}
@@ -1181,7 +1181,7 @@ export const LinodeConfigDialog = (props: Props) => {
         secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
         sx={{ display: 'flex', justifySelf: 'flex-end' }}
       />
-    </Dialog>)
+    </Dialog>
   );
 };
 
