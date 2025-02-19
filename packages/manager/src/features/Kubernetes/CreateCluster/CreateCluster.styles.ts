@@ -72,7 +72,7 @@ export const StyledTiersDocsLinkContainer = styled(StyledDocsLinkContainer, {
 
 export const StyledSelectionCardHAControlPlaneCopy = styled(Typography, {
   label: 'StyledSelectionCardHAControlPlaneCopy',
-})(({ theme }) => ({
+})(() => ({
   fontSize: '0.75rem',
-  fontStyle: theme.tokens.typography.Body.Italic,
+  fontStyle: 'italic',
 }));

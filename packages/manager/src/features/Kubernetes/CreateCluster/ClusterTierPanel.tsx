@@ -90,8 +90,8 @@ export const ClusterTierPanel = (props: Props) => {
           disabled={isLkeEnterpriseSelectionDisabled}
           heading="LKE Enterprise"
           onClick={() => handleClusterTypeSelection('enterprise')}
-          tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
           sxGrid={{ width: lgUpBreakpoint ? '380px !important' : 'inherit' }}
+          tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
       </Stack>
     </Stack>
