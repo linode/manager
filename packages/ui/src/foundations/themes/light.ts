@@ -1437,10 +1437,11 @@ export const lightTheme: ThemeOptions = {
             '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
             // Default Striping
             '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
-          },
-          // Zebra Striping for Nested Tables
-          '&.MuiTable-zebra-nested': {
-            '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
+            '.MuiTableRow-root:not(:last-of-type)': {
+              '.MuiTableCell-root': {
+                borderBottom: 0,
+              },
+            },
           },
           // Nested Tables
           '.MuiTable-root': {
