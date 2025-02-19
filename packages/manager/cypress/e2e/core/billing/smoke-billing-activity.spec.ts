@@ -166,8 +166,10 @@ describe('Billing Activity Feed', () => {
       const timezone = profile.timezone;
       cy.visitWithLogin('/account/billing');
       cy.wait(['@getInvoices', '@getPayments']);
-      cy.findByText('Billing & Payment History').scrollIntoView();
-      cy.should('be.visible');
+      cy.findByText('Billing & Payment History')
+        .as('qaBilling')
+        .scrollIntoView();
+      cy.get('@qaBilling').should('be.visible');
 
       // Confirm that payments and invoices from the past 6 months are displayed,
       // and that payments and invoices beyond 6 months are not displayed.

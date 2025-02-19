@@ -70,7 +70,10 @@ describe('Personal access tokens', () => {
 
         // Confirm submit button is disabled without specifying scopes.
         ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
-        cy.should('be.visible').should('be.disabled');
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
+          .should('be.visible')
+          .should('be.disabled');
 
         // Select just one scope.
         cy.get('[data-qa-row="Account"]').within(() => {
@@ -79,7 +82,10 @@ describe('Personal access tokens', () => {
 
         // Confirm submit button is still disabled without specifying ALL scopes.
         ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
-        cy.should('be.visible').should('be.disabled');
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
+          .should('be.visible')
+          .should('be.disabled');
 
         // Specify ALL scopes by selecting the "No Access" Select All radio button.
         cy.get('[data-qa-perm-no-access-radio]').click();
@@ -91,7 +97,11 @@ describe('Personal access tokens', () => {
 
         // Confirm submit button is enabled; attempt to submit form without specifying a label.
         ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
-        cy.should('be.visible').should('be.enabled').click();
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
 
         // Confirm validation error.
         cy.findByText(
@@ -105,7 +115,11 @@ describe('Personal access tokens', () => {
         cy.focused().type(token.label);
 
         ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
-        cy.should('be.visible').should('be.enabled').click();
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
 
     // Confirm that PAT secret dialog is shown and close it.
