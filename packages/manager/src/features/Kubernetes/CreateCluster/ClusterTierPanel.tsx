@@ -6,7 +6,10 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { useAccount } from 'src/queries/account/account';
 
-import { StyledDocsLinkContainer } from './CreateCluster.styles';
+import {
+  StyledSelectionCardHAControlPlaneCopy,
+  StyledTiersDocsLinkContainer,
+} from './CreateCluster.styles';
 
 import type { KubernetesTier } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
@@ -22,8 +25,11 @@ export const ClusterTierPanel = (props: Props) => {
 
   const { data: account } = useAccount();
 
-  const mdDownBreakpoint = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down('md')
+  const lgUpBreakpoint = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('lg')
+  );
+  const stackColumnBreakpoint = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down(995)
   );
   const smDownBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -35,7 +41,7 @@ export const ClusterTierPanel = (props: Props) => {
 
   return (
     <Stack>
-      <Stack flexDirection={mdDownBreakpoint ? 'column' : 'row'}>
+      <Stack flexDirection={stackColumnBreakpoint ? 'column' : 'row'}>
         <Stack>
           <Typography variant="h3">Cluster Tier</Typography>
           <Typography sx={{ marginTop: 1, maxWidth: 700 }}>
@@ -45,12 +51,12 @@ export const ClusterTierPanel = (props: Props) => {
             and enterprise-grade solution.
           </Typography>
         </Stack>
-        <StyledDocsLinkContainer>
+        <StyledTiersDocsLinkContainer>
           <DocsLink
             href={CLUSTER_TIER_DOCS_LINK}
             label="Compare Cluster Tiers"
           />
-        </StyledDocsLinkContainer>
+        </StyledTiersDocsLinkContainer>
       </Stack>
 
       <Stack
@@ -67,6 +73,7 @@ export const ClusterTierPanel = (props: Props) => {
           checked={selectedTier === 'standard'}
           heading="LKE"
           onClick={() => handleClusterTypeSelection('standard')}
+          sxGrid={{ width: lgUpBreakpoint ? '380px !important' : 'inherit' }}
         />
         <SelectionCard
           subheadings={[
@@ -84,6 +91,7 @@ export const ClusterTierPanel = (props: Props) => {
           heading="LKE Enterprise"
           onClick={() => handleClusterTypeSelection('enterprise')}
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
+          sxGrid={{ width: lgUpBreakpoint ? '380px !important' : 'inherit' }}
         />
       </Stack>
     </Stack>
@@ -95,9 +103,9 @@ const SharedControlPlaneCopy = (
     <Typography>
       Shared control plane<span>*</span>
     </Typography>
-    <Typography fontSize={12} fontStyle="italic">
+    <StyledSelectionCardHAControlPlaneCopy>
       *HA control plane can be optionally added
-    </Typography>
+    </StyledSelectionCardHAControlPlaneCopy>
   </>
 );
 
@@ -106,8 +114,8 @@ const DedicatedControlPlaneCopy = (
     <Typography>
       Dedicated control plane<span>*</span>
     </Typography>
-    <Typography fontSize={12} fontStyle="italic">
+    <StyledSelectionCardHAControlPlaneCopy>
       *HA control plane is included
-    </Typography>
+    </StyledSelectionCardHAControlPlaneCopy>
   </>
 );

@@ -1,4 +1,4 @@
-import { Box, Stack } from '@linode/ui';
+import { Box, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
@@ -59,4 +59,20 @@ export const StyledDocsLinkContainer = styled(Box, {
     marginLeft: 'unset',
     marginTop: theme.spacing(2),
   },
+}));
+
+export const StyledTiersDocsLinkContainer = styled(StyledDocsLinkContainer, {
+  label: 'StyledTiersDocsLinkContainer',
+})(({ theme }) => ({
+  [theme.breakpoints.down(995)]: {
+    marginLeft: 'unset',
+    marginTop: theme.spacing(2),
+  },
+}));
+
+export const StyledSelectionCardHAControlPlaneCopy = styled(Typography, {
+  label: 'StyledSelectionCardHAControlPlaneCopy',
+})(({ theme }) => ({
+  fontSize: '0.75rem',
+  fontStyle: theme.tokens.typography.Body.Italic,
 }));
