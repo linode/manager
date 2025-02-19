@@ -126,7 +126,7 @@ const defaultInterface = {
  * they are only used as placeholders presented to the user as empty selects.
  */
 export const padList = <T,>(list: T[], filler: T, size: number = 3): T[] => {
-  return [...list, ...Array(size - list.length).fill(filler)];
+  return [...list, ...Array(Math.max(0, size - list.length)).fill(filler)];
 };
 
 const padInterfaceList = (interfaces: ExtendedInterface[]) => {
