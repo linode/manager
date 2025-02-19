@@ -9,7 +9,7 @@ import { titlecase } from 'src/features/Linodes/presentation';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { capitalize } from 'src/utilities/capitalize';
 
-import type { DialogProps } from '../Dialog/Dialog';
+import type { DialogProps } from '@linode/ui';
 
 export interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   entity: string;

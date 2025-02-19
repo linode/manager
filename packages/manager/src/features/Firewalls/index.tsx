@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
@@ -21,7 +20,6 @@ const Firewall = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <React.Fragment>
-        <DocumentTitleSegment segment="Firewalls" />
         <ProductInformationBanner bannerLocation="Firewalls" />
         <Switch>
           <Route component={FirewallLanding} exact path={`${path}/create`} />
