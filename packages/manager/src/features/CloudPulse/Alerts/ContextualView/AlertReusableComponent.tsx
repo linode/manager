@@ -1,5 +1,3 @@
-// Todo: This comment will be removed as part of next PR when table will be added
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Autocomplete,
   Box,
@@ -17,10 +15,7 @@ import InfoIcon from 'src/assets/icons/info.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/alerts';
 
-import {
-  convertAlertsToTypeSet,
-  filterAlertsByStatusAndType,
-} from '../Utils/utils';
+import { convertAlertsToTypeSet } from '../Utils/utils';
 
 import type { AlertDefinitionType } from '@linode/api-v4';
 
@@ -42,21 +37,16 @@ interface AlertReusableComponentProps {
 }
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
-  const { entityId, entityName, serviceType } = props;
-  const {
-    data: alerts,
-    error,
-    isLoading,
-  } = useAlertDefinitionByServiceTypeQuery(serviceType);
+  const { serviceType } = props;
+  const { data: alerts, isLoading } = useAlertDefinitionByServiceTypeQuery(
+    serviceType
+  );
 
   const [searchText, setSearchText] = React.useState<string>('');
-  const [selectedType, setSelectedType] = React.useState<
+  // This will be replaced with a variable in next PR
+  const [_, setSelectedType] = React.useState<
     AlertDefinitionType | undefined
   >();
-  // Filter alerts based on serach text & selected type
-  const filteredAlerts = React.useMemo(() => {
-    return filterAlertsByStatusAndType(alerts, searchText, selectedType);
-  }, [alerts, searchText, selectedType]);
 
   const history = useHistory();
 
