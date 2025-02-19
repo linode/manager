@@ -83,7 +83,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
         >
           <StyledLabelTypography>Status</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid lg={2} md={4} xs={8}>
+        <StyledValueGrid size={{ lg: 2, md: 4, xs: 8 }}>
           <DatabaseStatusDisplay database={database} events={events} />
         </StyledValueGrid>
         <Grid

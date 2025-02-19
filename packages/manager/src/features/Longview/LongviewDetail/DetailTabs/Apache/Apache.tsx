@@ -4,12 +4,10 @@ import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
+import { TimeRangeSelect } from 'src/features/Longview/shared/TimeRangeSelect';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
-import {
-  StyledTimeRangeSelect,
-  StyledTypography,
-} from '../CommonStyles.styles';
+import { StyledTypography } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { ApacheGraphs } from './ApacheGraphs';
 
@@ -94,19 +92,16 @@ export const Apache = React.memo((props: Props) => {
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
 
-          <StyledTimeRangeSelect
+          <TimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
+            sx={{ width: 250 }}
           />
         </Box>
       </Grid>
-      <Grid
-        className="py0"
-        sx={{ boxSizing: 'border-box', margin: '0' }}
-        size={12}
-      >
+      <Grid size={12} sx={{ boxSizing: 'border-box', margin: '0', py: 0 }}>
         <ApacheGraphs
           data={data?.Applications?.Apache}
           end={time.end}

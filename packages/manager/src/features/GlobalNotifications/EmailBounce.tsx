@@ -128,19 +128,24 @@ const EmailBounceNotification = React.memo((props: Props) => {
   }
 
   return (
-    (<Notice important variant="warning">
-      <Grid container spacing={2} sx={{
-        alignItems: "center"
-      }}>
+    <Notice important variant="warning">
+      <Grid
+        sx={{
+          alignItems: 'center',
+        }}
+        container
+        spacing={2}
+      >
         <Grid
           size={{
             lg: 8,
             md: 6,
-            xs: 12
-          }}>
+            xs: 12,
+          }}
+        >
           {text}
         </Grid>
-        <StyledGrid container lg={4} md={6} xs={12}>
+        <StyledGrid container size={{ lg: 4, md: 6, xs: 12 }}>
           <Button
             buttonType="primary"
             data-testid="confirmButton"
@@ -161,6 +166,6 @@ const EmailBounceNotification = React.memo((props: Props) => {
           </Button>
         </StyledGrid>
       </Grid>
-    </Notice>)
+    </Notice>
   );
 });

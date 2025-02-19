@@ -298,7 +298,7 @@ export const IPTransfer = (props: Props) => {
             {state.sourceIP}
           </Typography>
         </Grid>
-        <StyledAutoGrid md={3} xs={12}>
+        <StyledAutoGrid size={{ md: 3, xs: 12}}>
           <Autocomplete
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
@@ -343,7 +343,7 @@ export const IPTransfer = (props: Props) => {
     });
 
     return (
-      <StyledAutoGrid md={3} xs={12}>
+      <StyledAutoGrid size={{ md: 3, xs: 12 }}>
         <Autocomplete
           textFieldProps={{
             dataAttrs: {
@@ -377,7 +377,7 @@ export const IPTransfer = (props: Props) => {
     });
 
     return (
-      <StyledAutoGrid md={3} xs={12}>
+      <StyledAutoGrid size={{ md: 3, xs: 12 }}>
         <Autocomplete
           textFieldProps={{
             dataAttrs: {

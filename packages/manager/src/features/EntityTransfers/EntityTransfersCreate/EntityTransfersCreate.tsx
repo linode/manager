@@ -78,54 +78,57 @@ export const EntityTransfersCreate = () => {
     }).catch((_) => null);
   };
 
-  return (<>
-    <DocumentTitleSegment segment="Make a Service Transfer" />
-    <LandingHeader
-      breadcrumbProps={{
-        crumbOverrides: [
-          {
-            label: 'Service Transfers',
-            position: 2,
-          },
-        ],
-        labelOptions: { noCap: true },
-        pathname: location.pathname,
-      }}
-      title="Make a Service Transfer"
-    />
-    {error ? (
-      <StyledNotice
-        text={getAPIErrorOrDefault(error)[0].reason}
-        variant="error"
+  return (
+    <>
+      <DocumentTitleSegment segment="Make a Service Transfer" />
+      <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Service Transfers',
+              position: 2,
+            },
+          ],
+          labelOptions: { noCap: true },
+          pathname: location.pathname,
+        }}
+        title="Make a Service Transfer"
       />
-    ) : null}
-    <StyledRootGrid container direction="row" spacing={3} wrap="wrap">
-      <Grid
-        size={{
-          lg: 9,
-          md: 8,
-          xs: 12
-        }}>
-        <TransferHeader />
-        <LinodeTransferTable
-          handleRemove={removeEntitiesFromTransfer('linodes')}
-          handleSelect={addEntitiesToTransfer('linodes')}
-          handleToggle={toggleEntity('linodes')}
-          selectedLinodes={state.linodes}
+      {error ? (
+        <StyledNotice
+          text={getAPIErrorOrDefault(error)[0].reason}
+          variant="error"
         />
-      </Grid>
-      <StyledSidebarGrid lg={3} md={4} xs={12}>
-        <TransferCheckoutBar
-          handleSubmit={(payload) =>
-            handleCreateTransfer(payload, queryClient)
-          }
-          isCreating={isPending}
-          removeEntities={removeEntitiesFromTransfer}
-          selectedEntities={state}
-        />
-      </StyledSidebarGrid>
-    </StyledRootGrid>
-  </>);
+      ) : null}
+      <StyledRootGrid container direction="row" spacing={3} wrap="wrap">
+        <Grid
+          size={{
+            lg: 9,
+            md: 8,
+            xs: 12,
+          }}
+        >
+          <TransferHeader />
+          <LinodeTransferTable
+            handleRemove={removeEntitiesFromTransfer('linodes')}
+            handleSelect={addEntitiesToTransfer('linodes')}
+            handleToggle={toggleEntity('linodes')}
+            selectedLinodes={state.linodes}
+          />
+        </Grid>
+        <StyledSidebarGrid size={{ lg: 3, md: 4, xs: 12 }}>
+          <TransferCheckoutBar
+            handleSubmit={(payload) =>
+              handleCreateTransfer(payload, queryClient)
+            }
+            isCreating={isPending}
+            removeEntities={removeEntitiesFromTransfer}
+            selectedEntities={state}
+          />
+        </StyledSidebarGrid>
+      </StyledRootGrid>
+    </>
+  );
 };
 
 export const entityTransfersCreateLazyRoute = createLazyRoute(

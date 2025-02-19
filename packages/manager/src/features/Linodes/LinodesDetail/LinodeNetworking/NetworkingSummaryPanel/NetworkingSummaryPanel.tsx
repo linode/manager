@@ -1,8 +1,8 @@
-import { styled, useTheme } from '@mui/material/styles';
+import { Paper } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Paper } from '@linode/ui';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
@@ -28,34 +28,36 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
     isGeckoLAEnabled && linode.site_type === 'distributed';
 
   return (
-    (<Paper>
+    <Paper>
       <Grid container spacing={4} sx={{ flexGrow: 1 }}>
         {hideNetworkTransfer ? null : ( // Distributed compute instances have no transfer pool
-          (<Grid
+          <Grid
             size={{
               md: 2.5,
               sm: 6,
-              xs: 12
-            }}>
+              xs: 12,
+            }}
+          >
             <NetworkTransfer
               linodeId={linode.id}
               linodeLabel={linode.label}
               linodeRegionId={linode.region}
               linodeType={linode.type}
             />
-          </Grid>)
+          </Grid>
         )}
         <Grid
+          size={{
+            md: 'grow',
+            sm: 'grow',
+            xs: 12,
+          }}
           sx={{
             [theme.breakpoints.down('md')]: {
               order: 3,
             },
           }}
-          size={{
-            md: "grow",
-            sm: "grow",
-            xs: 12
-          }}>
+        >
           <TransferHistory
             linodeCreated={linode.created}
             linodeID={linode.id}
@@ -65,14 +67,12 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
           sx={{
             paddingBottom: 0,
           }}
-          md={3.5}
-          sm={hideNetworkTransfer ? 12 : 6}
-          xs={12}
+          size={{ md: 3.5, sm: hideNetworkTransfer ? 12 : 6, xs: 12 }}
         >
           <DNSResolvers region={linode.region} />
         </StyledDnsResolverGrid>
       </Grid>
-    </Paper>)
+    </Paper>
   );
 });
 

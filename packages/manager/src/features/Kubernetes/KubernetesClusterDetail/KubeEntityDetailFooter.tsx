@@ -1,6 +1,6 @@
 import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -82,24 +82,24 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
   );
 
   return (
-    (<Grid
+    <Grid
+      sx={{
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flex: 1,
+        padding: 0,
+      }}
       container
       data-qa-kube-entity-footer
       direction="row"
       spacing={2}
-      sx={{
-        alignItems: "center",
-        justifyContent: "space-between",
-        flex: 1,
-        padding: 0
-      }}>
+    >
       <Grid
         size={{
-          lg: "auto",
-          xs: 12
+          lg: 'auto',
+          xs: 12,
         }}
         sx={{
-          alignItems: "flex-start",
           alignItems: 'center',
           display: 'flex',
           padding: 0,
@@ -111,8 +111,9 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
           [theme.breakpoints.down('md')]: {
             display: 'grid',
             gridTemplateColumns: '50% 2fr',
-          }
-        }}>
+          },
+        }}
+      >
         <StyledBox>
           <StyledListItem sx={{ ...sxListItemFirstChild }}>
             <StyledLabelBox component="span">Cluster ID:</StyledLabelBox>{' '}
@@ -164,16 +165,17 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
       <Grid
         size={{
           lg: 3.5,
-          xs: 12
+          xs: 12,
         }}
         sx={{
-          marginLeft: "auto",
+          marginLeft: 'auto',
 
           [theme.breakpoints.down('lg')]: {
             display: 'flex',
             justifyContent: 'flex-start',
-          }
-        }}>
+          },
+        }}
+      >
         <TagCell
           sx={{
             width: '100%',
@@ -185,6 +187,6 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
           view="inline"
         />
       </Grid>
-    </Grid>)
+    </Grid>
   );
 });

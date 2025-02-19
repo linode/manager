@@ -115,7 +115,7 @@ export const AutoscalePoolDialog = (props: Props) => {
       : undefined;
 
   return (
-    (<ConfirmationDialog
+    <ConfirmationDialog
       actions={
         <ActionsPanel
           primaryButtonProps={{
@@ -215,20 +215,20 @@ export const AutoscalePoolDialog = (props: Props) => {
               value={values.max}
             />
           </Grid>
-          <Grid style={{ padding: '0 8px' }} size={12}>
+          <Grid size={12} style={{ padding: '0 8px' }}>
             {errors.min && (
-              <Typography color={(theme) => theme.palette.error.dark}>
+              <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
                 {errors.min}
               </Typography>
             )}
             {errors.max && (
-              <Typography color={(theme) => theme.palette.error.dark}>
+              <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
                 {errors.max}
               </Typography>
             )}
           </Grid>
         </Grid>
       </form>
-    </ConfirmationDialog>)
+    </ConfirmationDialog>
   );
 };

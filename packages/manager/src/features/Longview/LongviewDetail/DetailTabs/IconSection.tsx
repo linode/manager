@@ -88,7 +88,7 @@ export const IconSection = React.memo((props: Props) => {
         </Grid>
       </StyledHeaderGrid>
       <StyledIconContainerGrid container spacing={2}>
-        <StyledIconGrid md={2} sm={1} xs={2}>
+        <StyledIconGrid size={{ md: 2, sm: 1, xs: 2 }}>
           <ServerIcon />
         </StyledIconGrid>
         <Grid size={10}>
@@ -98,7 +98,7 @@ export const IconSection = React.memo((props: Props) => {
         </Grid>
       </StyledIconContainerGrid>
       <StyledIconContainerGrid container spacing={2}>
-        <StyledIconGrid md={2} sm={1} xs={2}>
+        <StyledIconGrid size={{ md: 2, sm: 1, xs: 2 }}>
           <CPUIcon />
         </StyledIconGrid>
         <Grid size={10}>
@@ -109,7 +109,7 @@ export const IconSection = React.memo((props: Props) => {
         </Grid>
       </StyledIconContainerGrid>
       <StyledIconContainerGrid container spacing={2}>
-        <StyledIconGrid md={2} sm={1} xs={2}>
+        <StyledIconGrid size={{ md: 2, sm: 1, xs: 2}}>
           <RamIcon />
         </StyledIconGrid>
         {convertedTotalMemory.value !== 0 && convertedTotalSwap.value !== 0 ? (
@@ -128,7 +128,7 @@ export const IconSection = React.memo((props: Props) => {
         )}
       </StyledIconContainerGrid>
       <StyledIconContainerGrid container spacing={2}>
-        <StyledIconGrid md={2} sm={1} xs={2}>
+        <StyledIconGrid size={{ md: 2, sm: 1, xs: 2}}>
           <DiskIcon />
         </StyledIconGrid>
 
@@ -153,7 +153,7 @@ export const IconSection = React.memo((props: Props) => {
       </StyledIconContainerGrid>
       {packages && packages.length > 0 ? (
         <StyledIconContainerGrid container spacing={2}>
-          <StyledPackageGrid md={2} sm={1} xs={2}>
+          <StyledPackageGrid size={{ md: 2, sm: 1, xs: 2 }}>
             <StyledIconTextLink
               SideIcon={PackageIcon}
               onClick={props.openPackageDrawer}
@@ -166,7 +166,7 @@ export const IconSection = React.memo((props: Props) => {
         </StyledIconContainerGrid>
       ) : (
         <StyledIconContainerGrid container spacing={2}>
-          <StyledIconGrid md={2} sm={1} xs={2}>
+          <StyledIconGrid size={{ md: 2, sm: 1, xs: 2 }}>
             <PackageIcon />
           </StyledIconGrid>
           <Grid size={10}>
