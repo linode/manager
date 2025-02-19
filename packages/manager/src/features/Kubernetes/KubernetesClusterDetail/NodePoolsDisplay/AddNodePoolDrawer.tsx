@@ -173,9 +173,6 @@ export const AddNodePoolDrawer = (props: Props) => {
           />
         </Notice>
       )}
-      <Typography>
-        Adjust the total number of nodes to resize this node pool.
-      </Typography>
       <form className={classes.plans}>
         <KubernetesPlansPanel
           onSelect={(newType: string) => {
