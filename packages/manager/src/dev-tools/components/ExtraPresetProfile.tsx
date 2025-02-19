@@ -1,3 +1,4 @@
+import { Dialog } from '@linode/ui';
 import * as React from 'react';
 
 import { profileFactory } from 'src/factories';
@@ -8,7 +9,6 @@ import { saveCustomProfileData } from '../utils';
 import { JsonTextArea } from './JsonTextArea';
 
 import type { Profile } from '@linode/api-v4';
-import { Dialog } from '@linode/ui';
 
 const profilePreset = extraMockPresets.find((p) => p.id === 'profile:custom');
 
