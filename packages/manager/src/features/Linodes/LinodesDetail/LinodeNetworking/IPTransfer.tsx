@@ -1,6 +1,7 @@
 import {
   Autocomplete,
   CircleProgress,
+  Dialog,
   Divider,
   Notice,
   Typography,
@@ -10,7 +11,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { usePrevious } from 'src/hooks/usePrevious';
 import {
   useAllLinodesQuery,
