@@ -18,7 +18,7 @@ import {
   getTotalClusterPrice,
 } from 'src/utilities/pricing/kubernetes';
 
-import { nodeWarning } from '../kubeUtils';
+import { nodeWarning } from '../constants';
 import { StyledBox, StyledHeader } from './KubeCheckoutSummary.styles';
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 

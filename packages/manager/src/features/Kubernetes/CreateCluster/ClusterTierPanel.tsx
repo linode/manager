@@ -10,6 +10,7 @@ import { StyledDocsLinkContainer } from './CreateCluster.styles';
 
 import type { KubernetesTier } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
+import { CLUSTER_TIER_DOCS_LINK } from '../constants';
 
 interface Props {
   handleClusterTypeSelection: (tier: KubernetesTier) => void;
@@ -46,7 +47,7 @@ export const ClusterTierPanel = (props: Props) => {
         </Stack>
         <StyledDocsLinkContainer>
           <DocsLink
-            href="https://techdocs.akamai.com/cloud-computing/docs/linode-kubernetes-engine"
+            href={CLUSTER_TIER_DOCS_LINK}
             label="Compare Cluster Tiers"
           />
         </StyledDocsLinkContainer>

@@ -16,7 +16,7 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
-import { nodeWarning } from '../../kubeUtils';
+import { nodeWarning } from '../../constants';
 import { hasInvalidNodePoolPrice } from './utils';
 
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4';

@@ -64,6 +64,7 @@ import type {
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -403,7 +404,7 @@ export const CreateCluster = () => {
               sx={(theme) => ({ marginTop: theme.spacing(2) })}
             >
               <DocsLink
-                href="https://techdocs.akamai.com/cloud-computing/docs/lke-versioning-and-life-cycle-policy"
+                href={CLUSTER_VERSIONS_DOCS_LINK}
                 label="Kubernetes Versions"
               />
             </StyledDocsLinkContainer>

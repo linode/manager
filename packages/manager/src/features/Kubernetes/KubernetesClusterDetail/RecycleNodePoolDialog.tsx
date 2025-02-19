@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { localStorageWarning } from 'src/features/Kubernetes/kubeUtils';
+import { localStorageWarning } from 'src/features/Kubernetes/constants';
 import { useRecycleNodePoolMutation } from 'src/queries/kubernetes';
 
 interface Props {
