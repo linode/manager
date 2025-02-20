@@ -58,7 +58,7 @@ type Story = StoryObj<typeof TimeZoneSelect>;
 export const Default: Story = {
   args: {
     label: 'Select Timezone',
-    onChange: {},
+    onChange: () => {},
     value: null,
   },
 };
@@ -66,7 +66,7 @@ export const Default: Story = {
 export const WithSelectedTimezone: Story = {
   args: {
     label: 'Select Timezone',
-    onChange: {},
+    onChange: () => {},
     value: 'America/New_York',
   },
 };
@@ -75,7 +75,7 @@ export const Disabled: Story = {
   args: {
     disabled: true,
     label: 'Disabled Timezone Select',
-    onChange: {},
+    onChange: () => {},
     value: null,
   },
 };
@@ -84,7 +84,7 @@ export const WithError: Story = {
   args: {
     errorText: 'Invalid timezone selection',
     label: 'Select Timezone',
-    onChange: {},
+    onChange: () => {},
     value: null,
   },
 };
