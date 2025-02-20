@@ -12,8 +12,15 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
   if (!values?.length) {
     return <Typography variant="body2">-</Typography>;
   }
+  const plusNumberOfValues = `+${values ? values.length - 1 : ''}`;
   return (
-    <Box alignItems="center" display="flex" gap={1}>
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        gap: 1,
+      }}
+    >
       <Chip
         sx={(theme) => ({
           backgroundColor: theme.color.tagButtonBg,
@@ -25,12 +32,14 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
         <Tooltip
           title={
             <Box
-              alignItems="center"
-              display="flex"
-              flexDirection="column"
-              gap={1}
-              maxHeight="280px"
-              overflow="auto"
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                maxHeight: '280px',
+                overflow: 'auto',
+              }}
             >
               {values.map(
                 (value, index) =>
@@ -49,7 +58,7 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
                 backgroundColor: theme.color.tagButtonBg,
                 color: theme.color.tagButtonText,
               })}
-              label={`+${values ? values.length - 1 : ''}`}
+              label={plusNumberOfValues}
             />
           </span>
         </Tooltip>

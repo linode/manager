@@ -340,7 +340,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   tagOptions: Array.from(
                     new Set(
                       resources
-                        ? resources.flatMap((resource) => resource.tags ?? [])
+                        ? resources.flatMap(({ tags }) => tags ?? [])
                         : []
                     )
                   ),

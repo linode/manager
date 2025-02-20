@@ -26,7 +26,7 @@ interface AlertTags {
 }
 
 export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
-  const { handleFilterChange: handleSelection, tagOptions } = props;
+  const { handleFilterChange, tagOptions } = props;
   const [selectedTags, setSelectedTags] = React.useState<AlertTags[]>([]);
 
   const builtTagOptions: AlertTags[] = tagOptions.map((option) => ({
@@ -36,12 +36,12 @@ export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
   const handleFilterSelection = React.useCallback(
     (_e: React.ChangeEvent, tags: AlertTags[]) => {
       setSelectedTags(tags);
-      handleSelection(
+      handleFilterChange(
         tags.length ? tags.map(({ label }) => label) : undefined,
         'tags'
       );
     },
-    [handleSelection]
+    [handleFilterChange]
   );
 
   return (
