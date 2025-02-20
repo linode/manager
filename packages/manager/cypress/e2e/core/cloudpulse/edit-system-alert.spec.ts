@@ -34,6 +34,7 @@ const alertDetails = alertFactory.build({
   severity: 1,
   status: 'enabled',
   type: 'system',
+  entity_ids: ['1', '2', '3'],
 });
 const { service_type, id, label } = alertDetails;
 const regions = [
@@ -123,7 +124,7 @@ describe('Integration Tests for Edit Alert', () => {
     // Verify the initial selection of resources
     cy.get('[data-qa-notice="true"]').should(
       'contain.text',
-      '5 of 50 resources are selected'
+      '3 of 50 resources are selected'
     );
     // Select all resources
     cy.get('[data-qa-notice="true"]').within(() => {

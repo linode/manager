@@ -12,7 +12,6 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
   if (!values?.length) {
     return <Typography variant="body2">-</Typography>;
   }
-  const plusNumberOfValues = `+${values ? values.length - 1 : ''}`;
   return (
     <Box
       sx={{
@@ -41,26 +40,23 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
                 overflow: 'auto',
               }}
             >
-              {values.map(
-                (value, index) =>
-                  index > 0 && (
-                    <Typography key={index} variant="body2">
-                      {value}
-                    </Typography>
-                  )
-              )}
+              {values.slice(1).map((value, index) => (
+                <Typography key={index} variant="body2">
+                  {value}
+                </Typography>
+              ))}
             </Box>
           }
         >
-          <span>
+          <Box>
             <Chip
               sx={(theme) => ({
                 backgroundColor: theme.color.tagButtonBg,
                 color: theme.color.tagButtonText,
               })}
-              label={plusNumberOfValues}
+              label={`+${values.length - 1}`}
             />
-          </span>
+          </Box>
         </Tooltip>
       )}
     </Box>
