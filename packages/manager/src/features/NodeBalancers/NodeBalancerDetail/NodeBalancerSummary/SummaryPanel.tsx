@@ -35,10 +35,10 @@ export const SummaryPanel = () => {
     id: nodebalancer?.id,
   });
 
-  // check if the cluster has been deleted
+  // If we can't get the cluster (status === 'error'), we can assume it's been deleted
   const { status: clusterStatus } = useKubernetesClusterQuery(
     nodebalancer?.lke_cluster?.id ?? -1,
-    nodebalancer && nodebalancer.lke_cluster !== null,
+    nodebalancer && Boolean(nodebalancer.lke_cluster),
     {
       refetchOnMount: false,
       refetchOnReconnect: false,

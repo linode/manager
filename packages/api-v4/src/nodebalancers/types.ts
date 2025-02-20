@@ -37,7 +37,10 @@ export interface NodeBalancer {
   client_udp_sess_throttle?: number;
   region: string;
   type?: NodeBalancerType;
-  // Cluster info if the NB is associated with LKE/LKE-E
+  /**
+   * If the NB is associated with a cluster (active or deleted), return its info
+   * If the NB is not associated with a cluster, return null
+   */
   lke_cluster?: LKEClusterInfo | null;
   ipv4: string;
   ipv6: null | string;
