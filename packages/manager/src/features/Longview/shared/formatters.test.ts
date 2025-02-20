@@ -1,5 +1,6 @@
-import { LongviewCPU } from '../request.types';
 import { formatCPU, pathMaybeAddDataInThePast } from './formatters';
+
+import type { CPU } from '../request.types';
 
 describe('formatCPU', () => {
   it('should round values >= 1 to the nearest whole number', () => {
@@ -27,139 +28,107 @@ describe('pathMaybeAddDataInThePast', () => {
     const oct29GMTInSeconds = 1572357800;
     const oct29GMTInSecondsMinus2Mins = oct29GMTInSeconds - 100;
 
-    const dummyCPU: LongviewCPU = {
-      CPU: {
-        cpu1: {
-          system: [
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
-          user: [
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
-          wait: [
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
+    const dummyCPU: CPU = {
+      system: [
+        {
+          x: oct29GMTInSeconds,
+          y: 123,
         },
-      },
+      ],
+      user: [
+        {
+          x: oct29GMTInSeconds,
+          y: 123,
+        },
+      ],
+      wait: [
+        {
+          x: oct29GMTInSeconds,
+          y: 123,
+        },
+      ],
     };
 
-    const result = pathMaybeAddDataInThePast<LongviewCPU>(
-      dummyCPU,
-      oct18GMTInSeconds,
-      [
-        ['CPU', 'cpu1', 'user'],
-        ['CPU', 'cpu1', 'wait'],
-        ['CPU', 'cpu1', 'system'],
-      ]
-    );
+    const result = pathMaybeAddDataInThePast<CPU>(dummyCPU, oct18GMTInSeconds, [
+      'user',
+      'wait',
+      'system',
+    ]);
 
     expect(result).toEqual({
-      CPU: {
-        cpu1: {
-          system: [
-            {
-              x: oct18GMTInSeconds,
-              y: null,
-            },
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
-          user: [
-            {
-              x: oct18GMTInSeconds,
-              y: null,
-            },
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
-          wait: [
-            {
-              x: oct18GMTInSeconds,
-              y: null,
-            },
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
+      system: [
+        {
+          x: oct18GMTInSeconds,
+          y: null,
         },
-      },
+        {
+          x: oct29GMTInSeconds,
+          y: 123,
+        },
+      ],
+      user: [
+        {
+          x: oct18GMTInSeconds,
+          y: null,
+        },
+        {
+          x: oct29GMTInSeconds,
+          y: 123,
+        },
+      ],
+      wait: [
+        {
+          x: oct18GMTInSeconds,
+          y: null,
+        },
+        {
+          x: oct29GMTInSeconds,
+          y: 123,
+        },
+      ],
     });
 
-    const result2 = pathMaybeAddDataInThePast<LongviewCPU>(
+    const result2 = pathMaybeAddDataInThePast<CPU>(
       dummyCPU,
       oct29GMTInSecondsMinus2Mins,
-      [
-        ['CPU', 'cpu1', 'user'],
-        ['CPU', 'cpu1', 'wait'],
-        ['CPU', 'cpu1', 'system'],
-      ]
+      ['user', 'wait', 'system']
     );
 
     expect(result2).toEqual({
-      CPU: {
-        cpu1: {
-          system: [
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
-          user: [
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
-          wait: [
-            {
-              x: oct29GMTInSeconds,
-              y: 123,
-            },
-          ],
+      system: [
+        {
+          x: oct29GMTInSeconds,
+          y: 123,
         },
-      },
+      ],
+      user: [
+        {
+          x: oct29GMTInSeconds,
+          y: 123,
+        },
+      ],
+      wait: [
+        {
+          x: oct29GMTInSeconds,
+          y: 123,
+        },
+      ],
     });
 
-    const result3 = pathMaybeAddDataInThePast<LongviewCPU>(
+    const result3 = pathMaybeAddDataInThePast<CPU>(
       {
-        CPU: {
-          cpu1: {
-            system: [],
-            user: [],
-            wait: [],
-          },
-        },
+        system: [],
+        user: [],
+        wait: [],
       },
       oct18GMTInSeconds,
-      [
-        ['CPU', 'cpu1', 'user'],
-        ['CPU', 'cpu1', 'wait'],
-        ['CPU', 'cpu1', 'system'],
-      ]
+      ['user', 'wait', 'system']
     );
 
     expect(result3).toEqual({
-      CPU: {
-        cpu1: {
-          system: [],
-          user: [],
-          wait: [],
-        },
-      },
+      system: [],
+      user: [],
+      wait: [],
     });
   });
 });

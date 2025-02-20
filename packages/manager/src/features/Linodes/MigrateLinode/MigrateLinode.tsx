@@ -1,9 +1,15 @@
-import { Box, Button, Notice, TooltipIcon, Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  Dialog,
+  Notice,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { MBpsInterDC } from 'src/constants';

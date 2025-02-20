@@ -2,7 +2,11 @@ import { filter, isNil } from 'ramda';
 
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import { SESSION_STICKINESS_DEFAULTS } from './constants';
+import {
+  ALGORITHM_OPTIONS,
+  SESSION_STICKINESS_DEFAULTS,
+  STICKINESS_OPTIONS,
+} from './constants';
 
 import type {
   NodeBalancerConfigFields,
@@ -11,10 +15,8 @@ import type {
 } from './types';
 import type {
   APIError,
-  Algorithm,
   NodeBalancerConfigNode,
   Protocol,
-  Stickiness,
 } from '@linode/api-v4';
 
 export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
@@ -198,50 +200,14 @@ export const setErrorMap = (errors: APIError[]) =>
     filteredErrors(errors)
   );
 
-interface AlgorithmOption {
-  label: string;
-  value: Algorithm;
-}
-
-export const getAlgorithmOptions = (protocol: Protocol): AlgorithmOption[] => {
-  if (protocol === 'udp') {
-    return [
-      { label: 'Round Robin', value: 'roundrobin' },
-      { label: 'Least Connections', value: 'leastconn' },
-      { label: 'Ring Hash', value: 'ring_hash' },
-    ];
-  }
-  return [
-    { label: 'Round Robin', value: 'roundrobin' },
-    { label: 'Least Connections', value: 'leastconn' },
-    { label: 'Source', value: 'source' },
-  ];
+export const getAlgorithmOptions = (protocol: Protocol) => {
+  return ALGORITHM_OPTIONS.filter((option) =>
+    option.supportedProtocols.includes(protocol)
+  );
 };
 
-interface StickinessOption {
-  label: string;
-  value: Stickiness;
-}
-
-export const getStickinessOptions = (
-  protocol: Protocol
-): StickinessOption[] => {
-  if (protocol === 'udp') {
-    return [
-      { label: 'None', value: 'none' },
-      { label: 'Session', value: 'session' },
-      { label: 'Source IP', value: 'source_ip' },
-    ];
-  }
-  if (protocol === 'tcp') {
-    return [
-      { label: 'None', value: 'none' },
-      { label: 'Table', value: 'table' },
-    ];
-  }
-  return [
-    { label: 'None', value: 'none' },
-    { label: 'Table', value: 'table' },
-    { label: 'HTTP Cookie', value: 'http_cookie' },
-  ];
+export const getStickinessOptions = (protocol: Protocol) => {
+  return STICKINESS_OPTIONS.filter((option) =>
+    option.supportedProtocols.includes(protocol)
+  );
 };

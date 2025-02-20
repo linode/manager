@@ -59,7 +59,7 @@ export const StackScriptCreate = () => {
 
   return (
     <FormProvider {...form}>
-      <DocumentTitleSegment segment="Create StackScript" />
+      <DocumentTitleSegment segment="Create a StackScript" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [{ label: 'StackScripts', position: 1 }],

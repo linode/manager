@@ -170,8 +170,8 @@ importers:
         specifier: ^3.0.0
         version: 3.1.0
       dompurify:
-        specifier: ^3.1.6
-        version: 3.2.1
+        specifier: ^3.2.4
+        version: 3.2.4
       flag-icons:
         specifier: ^6.6.5
         version: 6.15.0
@@ -300,8 +300,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0(cypress@14.0.1)
       '@linode/eslint-plugin-cloud-manager':
-        specifier: ^0.0.5
-        version: 0.0.5(eslint@7.32.0)
+        specifier: ^0.0.7
+        version: 0.0.7(eslint@7.32.0)
       '@storybook/addon-a11y':
         specifier: ^8.4.7
         version: 8.5.0(storybook@8.5.0(prettier@2.2.1))(vitest@3.0.5)
@@ -610,8 +610,8 @@ importers:
         version: 4.9.13(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@mui/material@5.16.7(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.5(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@linode/eslint-plugin-cloud-manager':
-        specifier: ^0.0.5
-        version: 0.0.5(eslint@7.32.0)
+        specifier: ^0.0.7
+        version: 0.0.7(eslint@7.32.0)
       '@storybook/addon-actions':
         specifier: ^8.3.0
         version: 8.4.5(storybook@8.5.0(prettier@2.2.1))
@@ -2562,8 +2562,8 @@ packages:
   '@linode/design-language-system@3.0.0':
     resolution: {integrity: sha512-LbrDgN0YbwDa1qsbPBV+BreFjk06R/CbcPCvWM4BvU6zrxqCkPVdErwfqJvdtDxRColXbIfn6NeFgq0sJaQ+sw==}
 
-  '@linode/eslint-plugin-cloud-manager@0.0.5':
-    resolution: {integrity: sha512-zOT3iFnFTG5h4ylczvA3fUk8xiJPKzmzNTVsszjfyTDqFr6FiCDhGzUgj7znToW6J3Mr3CATobid2GCR2Ls19Q==}
+  '@linode/eslint-plugin-cloud-manager@0.0.7':
+    resolution: {integrity: sha512-83ZDbDQGsXCKxagX6CWszFZbsuX/fHSFn/i+P1FGYDm/0qnIo2XypB/lTdJhHJwvq1j2z+0VDZIMP7YLF5U6Sg==}
     peerDependencies:
       eslint: ^6.8.0
 
@@ -5400,8 +5400,8 @@ packages:
   dompurify@2.5.7:
     resolution: {integrity: sha512-2q4bEI+coQM8f5ez7kt2xclg1XsecaV9ASJk/54vwlfRRNQfDqJz2pzQ8t0Ix/ToBpXlVjrRIx7pFC/o8itG2Q==}
 
-  dompurify@3.2.1:
-    resolution: {integrity: sha512-NBHEsc0/kzRYQd+AY6HR6B/IgsqzBABrqJbpCDQII/OK6h7B7LXzweZTDsqSW2LkTRpoxf18YUP+YjGySk6B3w==}
+  dompurify@3.2.4:
+    resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
 
   domutils@1.7.0:
     resolution: {integrity: sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==}
@@ -12360,7 +12360,7 @@ snapshots:
 
   '@linode/design-language-system@3.0.0': {}
 
-  '@linode/eslint-plugin-cloud-manager@0.0.5(eslint@7.32.0)':
+  '@linode/eslint-plugin-cloud-manager@0.0.7(eslint@7.32.0)':
     dependencies:
       eslint: 7.32.0
 
@@ -15506,7 +15506,7 @@ snapshots:
   dompurify@2.5.7:
     optional: true
 
-  dompurify@3.2.1:
+  dompurify@3.2.4:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 

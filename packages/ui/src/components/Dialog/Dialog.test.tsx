@@ -1,8 +1,8 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithTheme } from '../../utilities/testHelpers';
 import { Dialog } from './Dialog';
 
 import type { DialogProps } from './Dialog';
