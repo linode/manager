@@ -164,9 +164,13 @@ export const NodePoolsDisplay = (props: Props) => {
           <Typography variant="h2">Node Pools</Typography>
         </Stack>
         <Stack
+          sx={(theme) => ({
+            [theme.breakpoints.down('md')]: {
+              width: '100%',
+            },
+          })}
           alignItems="center"
           direction="row"
-          marginLeft="auto"
           paddingTop="8px"
           spacing={1}
         >
@@ -222,20 +226,22 @@ export const NodePoolsDisplay = (props: Props) => {
             </Button>
           )}
           <Hidden mdUp>
-            <Box sx={{ ml: 0.5 }}>
-              <ActionMenu
-                actionsList={[
-                  {
-                    onClick: () => setIsRecycleClusterOpen(true),
-                    title: 'Recycle All Nodes',
-                  },
-                  {
-                    onClick: handleOpenAddDrawer,
-                    title: 'Add a Node Pool',
-                  },
-                ]}
-                ariaLabel={`Action menu for Node Pools header`}
-              />
+            <Box sx={{ ml: 'auto !important' }}>
+              <Box sx={{ ml: 1 }}>
+                <ActionMenu
+                  actionsList={[
+                    {
+                      onClick: () => setIsRecycleClusterOpen(true),
+                      title: 'Recycle All Nodes',
+                    },
+                    {
+                      onClick: handleOpenAddDrawer,
+                      title: 'Add a Node Pool',
+                    },
+                  ]}
+                  ariaLabel={`Action menu for Node Pools header`}
+                />
+              </Box>
             </Box>
           </Hidden>
           <Hidden mdDown>
