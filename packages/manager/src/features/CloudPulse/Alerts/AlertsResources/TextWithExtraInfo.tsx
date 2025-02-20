@@ -1,8 +1,6 @@
 import { Box, Chip, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
-import NullComponent from 'src/components/NullComponent';
-
 export interface TextWithInfoProp {
   /**
    * The list of texts that needs to be displayed with chip and tooltip setup
@@ -12,7 +10,7 @@ export interface TextWithInfoProp {
 
 export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
   if (!values?.length) {
-    return <NullComponent />;
+    return <Typography variant="body2">-</Typography>;
   }
   return (
     <Box alignItems="center" display="flex" gap={1}>
