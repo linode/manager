@@ -24,8 +24,8 @@ const triggerConditionValidation = object({
   evaluation_period_seconds: number().required(fieldErrorMessage),
   trigger_occurrences: number()
     .required(fieldErrorMessage)
-    .positive("The value can't be 0.")
-    .typeError(fieldErrorMessage),
+    .positive('Enter a positive value.')
+    .typeError('The value should be a number.'),
 });
 
 export const createAlertDefinitionSchema = object({
