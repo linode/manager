@@ -168,7 +168,7 @@ export const CreateAlertDefinition = () => {
           />
           <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <CloudPulseModifyAlertResources isCreate name="entity_ids" />
+          <CloudPulseModifyAlertResources name="entity_ids" />
           <MetricCriteriaField
             setMaxInterval={(interval: number) =>
               setMaxScrapeInterval(interval)
