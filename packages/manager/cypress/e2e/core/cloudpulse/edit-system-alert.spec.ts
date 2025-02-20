@@ -123,7 +123,7 @@ describe('Integration Tests for Edit Alert', () => {
     // Verify the initial selection of resources
     cy.get('[data-qa-notice="true"]').should(
       'contain.text',
-      '3 of 50 resources are selected'
+      '5 of 50 resources are selected'
     );
     // Select all resources
     cy.get('[data-qa-notice="true"]').within(() => {
