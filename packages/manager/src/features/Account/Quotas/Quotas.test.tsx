@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -9,6 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { Quotas } from './Quotas';
 
 const queryMocks = vi.hoisted(() => ({
+  getQuotasFilters: vi.fn().mockReturnValue({}),
   useFlags: vi.fn().mockReturnValue({}),
   useGetLocationsForQuotaService: vi.fn().mockReturnValue({}),
   useGetRegionsQuery: vi.fn().mockReturnValue({}),
@@ -32,6 +33,7 @@ vi.mock('src/queries/quotas/quotas', () => ({
 }));
 
 vi.mock('./utils', () => ({
+  getQuotasFilters: queryMocks.getQuotasFilters,
   useGetLocationsForQuotaService: queryMocks.useGetLocationsForQuotaService,
 }));
 
@@ -92,8 +94,7 @@ describe('Quotas', () => {
       ).toBeInTheDocument();
     });
 
-    fireEvent.focus(serviceSelect);
-    fireEvent.change(serviceSelect, { target: { value: 'Kubernetes' } });
+    userEvent.click(serviceSelect);
     await waitFor(() => {
       const kubernetesOption = getByRole('option', { name: 'Kubernetes' });
       userEvent.click(kubernetesOption);
@@ -106,8 +107,7 @@ describe('Quotas', () => {
       ).toBeInTheDocument();
     });
 
-    fireEvent.focus(serviceSelect);
-    fireEvent.change(serviceSelect, { target: { value: 'Object Storage' } });
+    userEvent.click(serviceSelect);
     await waitFor(() => {
       const objectStorageOption = getByRole('option', {
         name: 'Object Storage',
@@ -145,20 +145,23 @@ describe('Quotas', () => {
   });
 
   it('shows a global option for regions', async () => {
-    const { getByPlaceholderText, getByText } = renderWithTheme(<Quotas />, {
+    const { getByPlaceholderText, getByRole } = renderWithTheme(<Quotas />, {
       queryClient,
     });
 
     const regionSelect = getByPlaceholderText('Select a region for Linodes');
     expect(regionSelect).toHaveValue('');
 
-    fireEvent.focus(regionSelect);
-    fireEvent.change(regionSelect, { target: { value: 'global' } });
+    userEvent.click(regionSelect);
     await waitFor(() => {
-      const globalOption = getByText('Global (Account level) (global)');
+      const globalOption = getByRole('option', {
+        name: 'Global (Account level) (global)',
+      });
       userEvent.click(globalOption);
     });
 
-    expect(regionSelect).toHaveValue('global');
+    await waitFor(() => {
+      expect(regionSelect).toHaveValue('Global (Account level) (global)');
+    });
   });
 });
