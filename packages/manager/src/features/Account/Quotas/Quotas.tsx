@@ -15,7 +15,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useQuotasQuery } from 'src/queries/quotas/quotas';
 
-import { useGetLocationsForQuotaService } from './utils';
+import { getQuotasFilters, useGetLocationsForQuotaService } from './utils';
 
 import type { Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
@@ -32,24 +32,15 @@ export const Quotas = () => {
     Quota['region_applied']
   > | null>(null);
   const locationData = useGetLocationsForQuotaService(selectedService.value);
+  const filters = getQuotasFilters({
+    location: selectedLocation,
+    service: selectedService,
+  });
 
-  const {
-    data: quotas,
-    isFetching: isFetchingQuotas,
-    refetch,
-  } = useQuotasQuery(
+  const { data: quotas, isFetching: isFetchingQuotas } = useQuotasQuery(
     selectedService.value,
     {},
-    {
-      region_applied:
-        selectedService.value !== 'object-storage'
-          ? selectedLocation?.value
-          : undefined,
-      s3_endpoint:
-        selectedService.value === 'object-storage'
-          ? selectedLocation?.value
-          : undefined,
-    },
+    filters,
     Boolean(selectedLocation?.value)
   );
 
@@ -126,7 +117,6 @@ export const Quotas = () => {
                     label: value?.label,
                     value: value?.value,
                   });
-                  refetch();
                 }}
                 options={
                   s3Endpoints?.map((location) => ({
@@ -152,7 +142,6 @@ export const Quotas = () => {
                     label: region.label,
                     value: region.id,
                   });
-                  refetch();
                 }}
                 placeholder={
                   isFetchingLocations

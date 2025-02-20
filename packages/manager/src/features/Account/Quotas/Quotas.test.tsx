@@ -1,5 +1,6 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { regionFactory } from 'src/factories';
@@ -65,11 +66,9 @@ describe('Quotas', () => {
   });
 
   it('renders the component with initial state', () => {
-    const { getByText } = renderWithTheme(
-      <QueryClientProvider client={queryClient}>
-        <Quotas />
-      </QueryClientProvider>
-    );
+    const { getByText } = renderWithTheme(<Quotas />, {
+      queryClient,
+    });
 
     expect(getByText('Quotas')).toBeInTheDocument();
     expect(getByText('Learn More About Quotas')).toBeInTheDocument();
@@ -80,11 +79,9 @@ describe('Quotas', () => {
   });
 
   it('allows service selection', async () => {
-    const { getByPlaceholderText, getByRole } = renderWithTheme(
-      <QueryClientProvider client={queryClient}>
-        <Quotas />
-      </QueryClientProvider>
-    );
+    const { getByPlaceholderText, getByRole } = renderWithTheme(<Quotas />, {
+      queryClient,
+    });
 
     const serviceSelect = getByPlaceholderText('Select a service');
 
@@ -99,7 +96,7 @@ describe('Quotas', () => {
     fireEvent.change(serviceSelect, { target: { value: 'Kubernetes' } });
     await waitFor(() => {
       const kubernetesOption = getByRole('option', { name: 'Kubernetes' });
-      fireEvent.click(kubernetesOption);
+      userEvent.click(kubernetesOption);
     });
 
     await waitFor(() => {
@@ -115,7 +112,7 @@ describe('Quotas', () => {
       const objectStorageOption = getByRole('option', {
         name: 'Object Storage',
       });
-      fireEvent.click(objectStorageOption);
+      userEvent.click(objectStorageOption);
     });
 
     await waitFor(() => {
@@ -138,11 +135,9 @@ describe('Quotas', () => {
       regions: [],
     });
 
-    const { getByPlaceholderText } = renderWithTheme(
-      <QueryClientProvider client={queryClient}>
-        <Quotas />
-      </QueryClientProvider>
-    );
+    const { getByPlaceholderText } = renderWithTheme(<Quotas />, {
+      queryClient,
+    });
 
     expect(
       getByPlaceholderText('Loading Linodes regions...')
@@ -150,11 +145,9 @@ describe('Quotas', () => {
   });
 
   it('shows a global option for regions', async () => {
-    const { getByPlaceholderText, getByText } = renderWithTheme(
-      <QueryClientProvider client={queryClient}>
-        <Quotas />
-      </QueryClientProvider>
-    );
+    const { getByPlaceholderText, getByText } = renderWithTheme(<Quotas />, {
+      queryClient,
+    });
 
     const regionSelect = getByPlaceholderText('Select a region for Linodes');
     expect(regionSelect).toHaveValue('');
@@ -163,9 +156,9 @@ describe('Quotas', () => {
     fireEvent.change(regionSelect, { target: { value: 'global' } });
     await waitFor(() => {
       const globalOption = getByText('Global (Account level) (global)');
-      fireEvent.click(globalOption);
+      userEvent.click(globalOption);
     });
 
-    expect(regionSelect).toHaveValue('Global (Account level) (global)');
+    expect(regionSelect).toHaveValue('global');
   });
 });

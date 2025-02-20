@@ -59,10 +59,10 @@ export const getRegionOptions = ({
       const region2Group = getRegionCountryGroup(region2);
 
       // Global group comes first
-      if (region1Group === '') {
+      if (region1Group === 'global') {
         return -1;
       }
-      if (region2Group === '') {
+      if (region2Group === 'global') {
         return 1;
       }
 

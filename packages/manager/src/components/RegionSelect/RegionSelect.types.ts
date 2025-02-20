@@ -52,6 +52,11 @@ export interface RegionSelectProps<
   ignoreAccountAvailability?: boolean;
   label?: string;
   regionFilter?: RegionFilterValue;
+  /**
+   * The regions to display in the RegionSelect dropdown.
+   *
+   * Note: if the `region.id` is "global", an additional "Global (Account level)" option will be displayed first in the dropdown, outside of any region grouping.
+   */
   regions: Region[];
   required?: boolean;
   tooltipText?: string;

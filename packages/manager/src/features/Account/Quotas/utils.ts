@@ -1,10 +1,13 @@
-import { regionFactory } from 'src/factories';
+import {
+  GLOBAL_QUOTA_LABEL,
+  GLOBAL_QUOTA_VALUE,
+} from 'src/components/RegionSelect/constants';
+import { regionSelectGlobalOption } from 'src/components/RegionSelect/constants';
 import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import { GLOBAL_QUOTA_LABEL, GLOBAL_QUOTA_VALUE } from './constants';
-
-import type { QuotaType, Region } from '@linode/api-v4';
+import type { Filter, Quota, QuotaType, Region } from '@linode/api-v4';
+import type { SelectOption } from '@linode/ui';
 
 type UseGetLocationsForQuotaService =
   | {
@@ -36,12 +39,6 @@ export const useGetLocationsForQuotaService = (
     isFetching: isFetchingS3Endpoints,
   } = useObjectStorageEndpoints(service === 'object-storage');
 
-  const globalOption = regionFactory.build({
-    capabilities: [],
-    id: GLOBAL_QUOTA_VALUE,
-    label: GLOBAL_QUOTA_LABEL,
-  });
-
   if (service === 'object-storage') {
     return {
       isFetchingS3Endpoints,
@@ -67,8 +64,28 @@ export const useGetLocationsForQuotaService = (
 
   return {
     isFetchingRegions,
-    regions: [globalOption, ...(regions ?? [])],
+    regions: [regionSelectGlobalOption, ...(regions ?? [])],
     s3Endpoints: null,
     service,
+  };
+};
+
+interface GetQuotasFiltersProps {
+  location: SelectOption<Quota['region_applied']> | null;
+  service: SelectOption<QuotaType>;
+}
+
+/**
+ * Function to get the filters for the quotas query
+ */
+export const getQuotasFilters = ({
+  location,
+  service,
+}: GetQuotasFiltersProps): Filter => {
+  return {
+    region_applied:
+      service.value !== 'object-storage' ? location?.value : undefined,
+    s3_endpoint:
+      service.value === 'object-storage' ? location?.value : undefined,
   };
 };
