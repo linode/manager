@@ -75,9 +75,10 @@ describe('DateRangePicker', () => {
     await userEvent.click(screen.getByRole('textbox', { name: 'Start Date' }));
     await userEvent.click(screen.getByRole('button', { name: 'Last day' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-    // Normalize values before assertion
-    const expectedStartDate = mockDate.minus({ days: 1 }).toISO();
-    const expectedEndDate = mockDate.toISO();
+
+    // Normalize values before assertion (use toISODate() instead of toISO())
+    const expectedStartDate = mockDate.minus({ days: 1 }).toISODate();
+    const expectedEndDate = mockDate.toISODate();
 
     expect(defaultProps.onApply).toHaveBeenCalledWith({
       endDate: expectedEndDate,
@@ -100,12 +101,21 @@ describe('DateRangePicker', () => {
     expect(screen.getByRole('alert')).toBeVisible();
   });
 });
+
 describe('DateRangePicker - Format Validation', () => {
-  const formats = ['dd-MM-yyyy', 'MM/dd/yyyy', 'yyyy-MM-dd'];
+  const formats: ReadonlyArray<NonNullable<DateRangePickerProps['format']>> = [
+    'dd-MM-yyyy',
+    'MM/dd/yyyy',
+    'yyyy-MM-dd',
+  ];
 
   formats.forEach((format) => {
     it(`should accept and display dates correctly in ${format} format`, async () => {
-      renderWithTheme(<DateRangePicker {...defaultProps} format={format} />);
+      const Props = {
+        ...defaultProps,
+        format,
+      };
+      renderWithTheme(<DateRangePicker {...Props} />);
 
       expect(
         screen.getByRole('textbox', { name: 'Start Date' })
@@ -131,9 +141,7 @@ describe('DateRangePicker - Format Validation', () => {
 
       // Simulate user input
       await userEvent.type(startDateField, formattedTestDate);
-
       await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
-
       await userEvent.type(endDateField, formattedTestDate);
 
       expect(startDateField).toHaveValue(formattedTestDate);
