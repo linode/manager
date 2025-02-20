@@ -38,8 +38,14 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
           placement: 'bottom',
         },
       }}
+      sx={{
+        width: '100%',
+      }}
       textFieldProps={{
         hideLabel: true,
+        sx: {
+          textOverflow: 'ellipsis',
+        },
       }}
       currentCapability={undefined} // this is a required property, no specific capability required here
       disableSelectAll

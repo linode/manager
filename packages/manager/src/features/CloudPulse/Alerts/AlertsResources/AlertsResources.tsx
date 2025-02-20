@@ -102,7 +102,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const [additionalFilters, setAdditionalFilters] = React.useState<
     Record<AlertAdditionalFilterKey, AlertFilterType>
-  >({ engineType: undefined });
+  >({ engineType: undefined, tags: undefined });
 
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     if (serviceType !== 'dbaas') {
@@ -337,6 +337,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   handleFilterChange,
                   handleFilteredRegionsChange,
                   regionOptions,
+                  tagOptions: Array.from(
+                    new Set(
+                      resources
+                        ? resources.flatMap((resource) => resource.tags ?? [])
+                        : []
+                    )
+                  ),
                 })}
                 component={component}
               />
