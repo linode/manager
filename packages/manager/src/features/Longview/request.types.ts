@@ -118,7 +118,7 @@ export interface LastUpdated {
 }
 
 export interface Uptime {
-  uptime: number;
+  Uptime: number;
 }
 
 export interface LongviewPackage {
