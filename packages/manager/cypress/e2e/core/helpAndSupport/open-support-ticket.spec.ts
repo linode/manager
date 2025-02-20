@@ -1,24 +1,9 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable sonarjs/no-duplicate-string */
 import 'cypress-file-upload';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetDomains } from 'support/intercepts/domains';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {
-  mockCreateLinodeAccountLimitError,
-  mockGetLinodeDetails,
-  mockGetLinodes,
-} from 'support/intercepts/linodes';
-import { mockGetClusters } from 'support/intercepts/lke';
 import { interceptGetProfile } from 'support/intercepts/profile';
-import {
-  mockAttachSupportTicketFile,
-  mockCreateSupportTicket,
-  mockGetSupportTicket,
-  mockGetSupportTicketReplies,
-  mockGetSupportTickets,
-} from 'support/intercepts/support';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
-import { linodeCreatePage } from 'support/ui/pages';
 import {
   randomItem,
   randomLabel,
@@ -26,14 +11,19 @@ import {
   randomPhrase,
   randomString,
 } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
-
 import {
   accountFactory,
   domainFactory,
   linodeFactory,
   supportTicketFactory,
 } from 'src/factories';
+import {
+  mockAttachSupportTicketFile,
+  mockCreateSupportTicket,
+  mockGetSupportTicket,
+  mockGetSupportTickets,
+  mockGetSupportTicketReplies,
+} from 'support/intercepts/support';
 import {
   ACCOUNT_LIMIT_DIALOG_TITLE,
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
@@ -44,11 +34,20 @@ import {
   SMTP_HELPER_TEXT,
 } from 'src/features/Support/SupportTickets/constants';
 import { formatDescription } from 'src/features/Support/SupportTickets/ticketUtils';
-
-import type {
+import { mockGetAccount } from 'support/intercepts/account';
+import {
   EntityType,
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
+import {
+  mockCreateLinodeAccountLimitError,
+  mockGetLinodeDetails,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
+import { mockGetDomains } from 'support/intercepts/domains';
+import { mockGetClusters } from 'support/intercepts/lke';
+import { linodeCreatePage } from 'support/ui/pages';
+import { chooseRegion } from 'support/util/regions';
 
 describe('open support tickets', () => {
   /*
@@ -135,11 +134,11 @@ describe('open support tickets', () => {
   it('can create a ticket with a severity level specified', () => {
     // TODO Integrate this test with the above test when feature flag goes away.
     const mockTicket = supportTicketFactory.build({
-      description: randomPhrase(),
       id: randomNumber(),
+      summary: randomLabel(),
+      description: randomPhrase(),
       severity: randomItem([1, 2, 3]),
       status: 'new',
-      summary: randomLabel(),
     });
 
     // Get severity label for numeric severity level.
@@ -191,8 +190,8 @@ describe('open support tickets', () => {
         ui.button
           .findByTitle('Open Ticket')
           .should('be.visible')
-          .should('be.enabled');
-        cy.focused().click();
+          .should('be.enabled')
+          .click();
       });
 
     // Confirm that ticket create payload contains the expected data.
@@ -218,38 +217,38 @@ describe('open support tickets', () => {
    */
   it('can create an SMTP support ticket', () => {
     const mockAccount = accountFactory.build({
-      company: 'Acme Co.',
       first_name: 'Jane',
       last_name: 'Doe',
+      company: 'Acme Co.',
     });
 
     const mockFormFields = {
-      companyName: mockAccount.company,
-      customerName: `${mockAccount.first_name} ${mockAccount.last_name}`,
       description: '',
-      emailDomains: randomString(),
       entityId: '',
       entityInputValue: '',
       entityType: 'general' as EntityType,
-      publicInfo: randomString(),
       selectedSeverity: undefined,
       summary: 'SMTP Restriction Removal on ',
       ticketType: 'smtp' as TicketType,
+      companyName: mockAccount.company,
+      customerName: `${mockAccount.first_name} ${mockAccount.last_name}`,
       useCase: randomString(),
+      emailDomains: randomString(),
+      publicInfo: randomString(),
     };
 
     const mockSMTPTicket = supportTicketFactory.build({
-      description: formatDescription(mockFormFields, 'smtp'),
-      id: randomNumber(),
-      status: 'new',
       summary: mockFormFields.summary,
+      id: randomNumber(),
+      description: formatDescription(mockFormFields, 'smtp'),
+      status: 'new',
     });
 
     // Mock a Linode instance that is lacking the `SMTP Enabled` capability.
     const mockLinode = linodeFactory.build({
-      capabilities: [],
       id: randomNumber(),
       label: randomLabel(),
+      capabilities: [],
     });
 
     mockGetAccount(mockAccount);
@@ -342,39 +341,39 @@ describe('open support tickets', () => {
    */
   it('can create an Account Limit support ticket', () => {
     const mockAccount = accountFactory.build({
-      company: 'Acme Co.',
       first_name: 'Jane',
       last_name: 'Doe',
+      company: 'Acme Co.',
     });
 
     const mockFormFields = {
-      companyName: mockAccount.company,
-      customerName: `${mockAccount.first_name} ${mockAccount.last_name}`,
       description: '',
       entityId: '',
       entityInputValue: '',
       entityType: 'linode_id' as EntityType,
-      linodePlan: 'Nanode 1GB',
-      numberOfEntities: '2',
-      publicInfo: randomString(),
       selectedSeverity: undefined,
       summary: 'Account Limit Increase',
       ticketType: 'accountLimit' as TicketType,
+      customerName: `${mockAccount.first_name} ${mockAccount.last_name}`,
+      companyName: mockAccount.company,
+      numberOfEntities: '2',
+      linodePlan: 'Nanode 1GB',
       useCase: randomString(),
+      publicInfo: randomString(),
     };
 
     const mockAccountLimitTicket = supportTicketFactory.build({
-      description: formatDescription(mockFormFields, 'accountLimit'),
-      id: randomNumber(),
-      status: 'new',
       summary: mockFormFields.summary,
+      id: randomNumber(),
+      description: formatDescription(mockFormFields, 'accountLimit'),
+      status: 'new',
     });
 
     const mockRegion = chooseRegion();
     const mockPlan = {
-      planId: 'g6-nanode-1',
-      planLabel: 'Nanode 1 GB',
       planType: 'Shared CPU',
+      planLabel: 'Nanode 1 GB',
+      planId: 'g6-nanode-1',
     };
 
     const mockLinode = linodeFactory.build();
@@ -515,10 +514,10 @@ describe('open support tickets', () => {
     const mockDomain = domainFactory.build();
 
     const mockTicket = supportTicketFactory.build({
-      description: randomPhrase(),
       id: randomNumber(),
-      status: 'new',
       summary: randomLabel(),
+      description: randomPhrase(),
+      status: 'new',
     });
 
     mockCreateSupportTicket(mockTicket).as('createTicket');
