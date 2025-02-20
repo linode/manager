@@ -23,7 +23,7 @@
     "start:all:expose": "concurrently -n api-v4,validation,ui,utilities,manager -c blue,yellow,magenta,cyan,green \"yarn workspace @linode/api-v4 start\" \"yarn workspace @linode/validation start\" \"yarn workspace @linode/ui start\" \"yarn workspace @linode/utilities start\" \"yarn workspace linode-manager start:expose\"",
     "start:manager": "yarn workspace linode-manager start",
     "start:manager:ci": "yarn workspace linode-manager start:ci",
-    "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/@linode/validation/node_modules",
+    "clean": "rm -rf node_modules && rm -rf packages/manager/node_modules && rm -rf packages/api-v4/node_modules && rm -rf packages/validation/node_modules && rm -rf packages/search/node_modules && rm -rf packages/ui/node_modules && rm -rf packages/utilities/node_modules",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:manager": "yarn workspace linode-manager test",
