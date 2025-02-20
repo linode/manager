@@ -4,6 +4,7 @@ import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -34,7 +35,6 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
-import { useFlags } from 'src/hooks/useFlags';
 
 export interface AlertResourcesProp {
   /**
@@ -360,9 +360,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   tagOptions: Array.from(
                     new Set(
                       resources
-                        ? filteredResources.flatMap(
-                            (resource) => resource.tags ?? []
-                          )
+                        ? resources.flatMap((resource) => resource.tags ?? [])
                         : []
                     )
                   ),
