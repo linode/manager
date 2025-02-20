@@ -43,7 +43,7 @@ interface CustomFirewallProps {
   open: boolean;
   userCannotAddFirewall: boolean;
 }
-export const CreateCustomFirewall = (props: CustomFirewallProps) => {
+export const CustomFirewallFields = (props: CustomFirewallProps) => {
   const {
     createFlow,
     firewallFormEventOptions,

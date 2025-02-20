@@ -22,9 +22,9 @@ import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEvent
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { CreateCustomFirewall } from './CreateCustomFirewall';
-import { CreateTemplateFirewall } from './CreateTemplateFirewall';
+import { CustomFirewallFields } from './CustomFirewallFields';
 import { createFirewallResolver } from './formUtilities';
+import { TemplateFirewallFields } from './TemplateFirewallFields';
 
 import type { CreateFirewallFormValues } from './formUtilities';
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
@@ -197,11 +197,11 @@ export const CreateFirewallDrawer = React.memo(
             )}
             {createFirewallFrom === 'template' &&
             linodeInterfacesFlag?.enabled ? (
-              <CreateTemplateFirewall
+              <TemplateFirewallFields
                 userCannotAddFirewall={userCannotAddFirewall}
               />
             ) : (
-              <CreateCustomFirewall
+              <CustomFirewallFields
                 createFlow={createFlow}
                 firewallFormEventOptions={firewallFormEventOptions}
                 isFromLinodeCreate={isFromLinodeCreate}

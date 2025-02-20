@@ -21,7 +21,7 @@ const firewallTemplateOptions: SelectOption<FirewallTemplateSlug>[] = [
   },
 ];
 
-export const CreateTemplateFirewall = (props: TemplateFirewallProps) => {
+export const TemplateFirewallFields = (props: TemplateFirewallProps) => {
   const { userCannotAddFirewall } = props;
   const { control } = useFormContext<CreateFirewallFormValues>();
 

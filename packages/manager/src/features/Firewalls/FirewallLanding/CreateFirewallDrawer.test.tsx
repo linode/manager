@@ -71,7 +71,7 @@ describe('Create Firewall Drawer', () => {
   });
 
   it('should not show the custom firewall radio group if Linode Interfaces flag is not enabled', () => {
-    const { queryByTestId } = renderWithTheme(
+    const { queryByLabelText, queryByTestId } = renderWithTheme(
       <CreateFirewallDrawer {...props} />,
       {
         flags: { linodeInterfaces: { enabled: false } },
@@ -79,5 +79,6 @@ describe('Create Firewall Drawer', () => {
     );
 
     expect(queryByTestId('create-firewall-from')).not.toBeInTheDocument();
+    expect(queryByLabelText('Firewall Template')).not.toBeInTheDocument();
   });
 });
