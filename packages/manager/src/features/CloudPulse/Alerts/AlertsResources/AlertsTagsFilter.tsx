@@ -47,6 +47,17 @@ export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
   return (
     <Autocomplete
       textFieldProps={{
+        InputProps: {
+          sx: {
+            '::-webkit-scrollbar': {
+              display: 'none',
+            },
+            maxHeight: '55px',
+            msOverflowStyle: 'none',
+            overflow: 'auto',
+            scrollbarWidth: 'none',
+          },
+        },
         hideLabel: true,
       }}
       autoHighlight
