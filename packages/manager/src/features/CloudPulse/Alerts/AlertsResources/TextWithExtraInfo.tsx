@@ -17,6 +17,7 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
       <Chip
         sx={(theme) => ({
           backgroundColor: theme.color.tagButtonBg,
+          color: theme.color.tagButtonText,
         })}
         label={values[0]}
       />
@@ -46,6 +47,7 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
             <Chip
               sx={(theme) => ({
                 backgroundColor: theme.color.tagButtonBg,
+                color: theme.color.tagButtonText,
               })}
               label={`+${values ? values.length - 1 : ''}`}
             />

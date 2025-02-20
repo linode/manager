@@ -46,7 +46,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   created: new Date().toISOString(),
   created_by: 'system',
   description: 'Test description',
-  entity_ids: ['1', '2', '3'],
+  entity_ids: ['1', '2', '3', '48', '50', '51'],
   has_more_resources: true,
   id: Factory.each((i) => i),
   label: Factory.each((id) => `Alert-${id}`),
