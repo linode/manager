@@ -22,10 +22,16 @@ queryMocks.useEditAlertDefinition.mockReturnValue({
   reset: vi.fn(),
 });
 
+const mockScroll = vi.fn();
 describe('Alert List Table test', () => {
   it('should render the alert landing table ', async () => {
     const { getByText } = renderWithTheme(
-      <AlertsListTable alerts={[]} isLoading={false} services={[]} />
+      <AlertsListTable
+        alerts={[]}
+        isLoading={false}
+        scrollToElement={mockScroll}
+        services={[]}
+      />
     );
     expect(getByText('Alert Name')).toBeVisible();
     expect(getByText('Service')).toBeVisible();
@@ -40,6 +46,7 @@ describe('Alert List Table test', () => {
         alerts={[]}
         error={[{ reason: 'Error in fetching the alerts' }]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[]}
       />
     );
@@ -60,6 +67,7 @@ describe('Alert List Table test', () => {
           }),
         ]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
       />
     );
@@ -82,6 +90,7 @@ describe('Alert List Table test', () => {
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
       />
     );
@@ -98,6 +107,7 @@ describe('Alert List Table test', () => {
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
       />
     );
@@ -118,6 +128,7 @@ describe('Alert List Table test', () => {
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
       />
     );
@@ -139,6 +150,7 @@ describe('Alert List Table test', () => {
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
       />
     );

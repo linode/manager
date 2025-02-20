@@ -14,6 +14,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+// import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertTableRow } from './AlertTableRow';
 import { AlertListingTableLabelMap } from './constants';
 
@@ -34,13 +35,17 @@ export interface AlertsListTableProps {
    */
   isLoading: boolean;
   /**
+   * Callback to scroll till the button element on page change
+   */
+  scrollToElement: () => void;
+  /**
    * The list of services to display in the table
    */
   services: Item<string, AlertServiceType>[];
 }
 
 export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
-  const { alerts, error, isLoading, services } = props;
+  const { alerts, error, isLoading, scrollToElement, services } = props;
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error in fetching the alerts.')
     : undefined;
@@ -58,7 +63,8 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const handleEnableDisable = React.useCallback(
     (alert: Alert) => {
       const toggleStatus = alert.status === 'enabled' ? 'disabled' : 'enabled';
-      const errorStatus = toggleStatus == 'disabled' ? 'Disabling' : 'Enabling';
+      const errorStatus =
+        toggleStatus === 'disabled' ? 'Disabling' : 'Enabling';
       editAlertDefinition({
         alertId: alert.id,
         serviceType: alert.service_type,
@@ -104,11 +110,14 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                     <TableRow>
                       {AlertListingTableLabelMap.map((value) => (
                         <TableSortCell
+                          handleClick={() => {
+                            handleOrderChange(orderBy, order);
+                            handlePageChange(1);
+                          }}
                           active={orderBy === value.label}
                           data-qa-header={value.label}
                           data-qa-sorting={value.label}
                           direction={order}
-                          handleClick={handleOrderChange}
                           key={value.label}
                           label={value.label}
                           noWrap
@@ -142,10 +151,16 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                 </Table>
               </Grid>
               <PaginationFooter
+                handleSizeChange={(pageSize) => {
+                  handlePageSizeChange(pageSize);
+                  handlePageChange(1);
+                  requestAnimationFrame(() => {
+                    scrollToElement();
+                  });
+                }}
                 count={count}
                 eventCategory="Alert Definitions Table"
                 handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
                 page={page}
                 pageSize={pageSize}
               />

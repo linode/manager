@@ -169,6 +169,11 @@ export const AddNotificationChannelDrawer = (
                         reason === 'selectOption' ? selected.label : null
                       );
                     }}
+                    slotProps={{
+                      popper: {
+                        placement: 'bottom',
+                      },
+                    }}
                     value={
                       selectedChannelTypeTemplate?.find(
                         (option) => option.label === field.value

@@ -196,7 +196,7 @@ describe('Metric component tests', () => {
     expect(
       await container.findByRole('option', { name: '>' })
     ).toBeInTheDocument();
-    expect(container.getByRole('option', { name: '==' })).toBeInTheDocument();
+    expect(container.getByRole('option', { name: '=' })).toBeInTheDocument();
     expect(container.getByRole('option', { name: '<' })).toBeInTheDocument();
     const option = await container.findByRole('option', { name: '>' });
     await user.click(option);

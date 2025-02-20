@@ -121,7 +121,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 label="Polling Interval"
                 onBlur={field.onBlur}
                 options={getPollingIntervalOptions()}
-                placeholder="Select a Polling"
+                placeholder="Select a Polling Interval"
               />
             )}
             control={control}
@@ -129,16 +129,22 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           />
         </Grid>
         <Grid
-          alignItems="center"
+          alignItems="start"
           display="flex"
+          flexDirection={{ sm: 'row', xs: 'column' }}
           gap={1}
           item
+          justifyContent={{ xs: 'center' }}
           md="auto"
           mt={{ lg: 3.5, xs: 0 }}
           sm={12}
           xs={12}
         >
-          <Typography mt={3} variant="body1">
+          <Typography
+            marginTop={{ sm: '32px', xs: '0px' }}
+            mt={3}
+            variant="body1"
+          >
             Trigger alert when all criteria are met for
           </Typography>
 
@@ -150,6 +156,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 }
                 sx={{
                   height: '30px',
+                  marginTop: { sm: '16px', xs: '0px' },
                   width: '30px',
                 }}
                 data-qa-trigger_occurences
@@ -158,6 +165,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 label=""
                 min={0}
                 name={`${name}.trigger_occurrences`}
+                noMarginTop
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
                 type="number"
@@ -168,7 +176,12 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
             name={`${name}.trigger_occurrences`}
           />
 
-          <Typography mt={3} textAlign="start" variant="body1">
+          <Typography
+            marginTop={{ sm: '32px', xs: '0px' }}
+            mt={3}
+            textAlign="start"
+            variant="body1"
+          >
             consecutive occurrence(s).
           </Typography>
         </Grid>
