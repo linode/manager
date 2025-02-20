@@ -1,8 +1,8 @@
 import { getAPIFilterFromQuery } from '@linode/search';
 import { Box, Button, Paper, Typography } from '@linode/ui';
-import { Grid, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -31,8 +31,6 @@ export const UsersLanding = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
 
-  const [query, setQuery] = useState<string>();
-
   const { data: profile } = useProfile();
   const theme = useTheme();
   const pagination = usePagination(1, 'account-users');
@@ -43,6 +41,9 @@ export const UsersLanding = () => {
 
   const isProxyUser =
     profile?.user_type === 'child' || profile?.user_type === 'proxy';
+
+  const queryParams = new URLSearchParams(location.search);
+  const query = queryParams.get('query') ?? '';
 
   const { error: searchError, filter } = getAPIFilterFromQuery(query, {
     searchableFieldsWithoutOperator: ['username', 'email'],
@@ -72,13 +73,14 @@ export const UsersLanding = () => {
 
   const numCols = isSmDown ? 2 : numColsLg;
 
-  const queryParams = new URLSearchParams(location.search);
-
   const handleSearch = (value: string) => {
     queryParams.set('page', '1');
-
+    if (value) {
+      queryParams.set('query', value);
+    } else {
+      queryParams.delete('query');
+    }
     history.push({ search: queryParams.toString() });
-    setQuery(value);
   };
 
   const handleDelete = (username: string) => {
@@ -121,33 +123,22 @@ export const UsersLanding = () => {
               User Settings
             </Typography>
           ) : (
-            <Grid
-              sx={(theme) => ({
-                '& > div': {
-                  width: '320px',
+            <DebouncedSearchTextField
+              containerProps={{
+                sx: {
+                  width: { md: '320px', xs: '100%' },
                 },
-                [theme.breakpoints.down('sm')]: {
-                  width: '100%',
-                },
-                [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
-                  '& > div': {
-                    width: '100%',
-                  },
-                },
-              })}
-            >
-              <DebouncedSearchTextField
-                clearable
-                debounceTime={250}
-                errorText={searchError?.message}
-                hideLabel
-                isSearching={isFetching}
-                label="Filter"
-                onSearch={handleSearch}
-                placeholder="Filter"
-                value=""
-              />
-            </Grid>
+              }}
+              clearable
+              debounceTime={250}
+              errorText={searchError?.message}
+              hideLabel
+              isSearching={isFetching}
+              label="Filter"
+              onSearch={handleSearch}
+              placeholder="Filter"
+              value={query}
+            />
           )}
           <Button
             sx={(theme) => ({
