@@ -1,3 +1,14 @@
+## [2025-02-25] - v0.135.0
+
+
+### Upcoming Features:
+
+- Add `DateTimeWithPreset` type in CloudPulse types ([#11573](https://github.com/linode/manager/pull/11573))
+- Add `update_firewall` RoleType for IAM ([#11588](https://github.com/linode/manager/pull/11588))
+- Change attribute names in NotificationChannel and MetricCriteria types to reflect the latest API specification ([#11610](https://github.com/linode/manager/pull/11610))
+- Change type of the alertId in `editAlertDefinition` and `getAlertDefinitionByServiceTypeAndId` endpoints in CloudPulse alerts to string ([#11613](https://github.com/linode/manager/pull/11613))
+- Add new `class` type in alerts object ([#11642](https://github.com/linode/manager/pull/11642))
+
 ## [2025-02-11] - v0.134.0
 
 

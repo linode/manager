@@ -1,10 +1,11 @@
-import {
+import Factory from 'src/factories/factoryProxy';
+
+import type {
   Profile,
   SSHKey,
   SecurityQuestionsData,
   UserPreferences,
 } from '@linode/api-v4/lib/profile';
-import Factory from 'src/factories/factoryProxy';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
   authentication_type: 'password',
@@ -131,6 +132,7 @@ export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestio
 
 export const userPreferencesFactory = Factory.Sync.makeFactory<UserPreferences>(
   {
+    collapsedSideNavProductFamilies: [],
     desktop_sidebar_open: true,
     sortKeys: {
       'database-order': {

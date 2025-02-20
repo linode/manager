@@ -76,7 +76,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     color: theme.tokens.color.Neutrals.White,
   },
   backgroundColor: theme.bg.lightBlue1,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   lineHeight: 1,
   marginLeft: theme.spacing(0.5),
   paddingLeft: 2,

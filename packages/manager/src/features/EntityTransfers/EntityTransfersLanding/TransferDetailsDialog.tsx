@@ -1,8 +1,6 @@
-import { Typography } from '@linode/ui';
+import { Dialog, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { Dialog } from 'src/components/Dialog/Dialog';
 
 import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers/types';
 
@@ -51,7 +49,7 @@ export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
 })(({ theme }) => ({
   color: theme.textColors.headlineStatic,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
 }));
 
 export const StyledTokenDiv = styled('div', {

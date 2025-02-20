@@ -9,7 +9,7 @@ import { titlecase } from 'src/features/Linodes/presentation';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { capitalize } from 'src/utilities/capitalize';
 
-import type { DialogProps } from '../Dialog/Dialog';
+import type { DialogProps } from '@linode/ui';
 
 export interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   entity: string;
@@ -69,12 +69,12 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   return (
     <ConfirmationDialog
       actions={renderActions}
+      error={error}
       onClose={onClose}
       open={open}
       title={`Delete ${titlecase(entity)} ${label}?`}
       {...rest}
     >
-      {error && <Notice text={error} variant="error" />}
       <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting this {entity} is permanent and
