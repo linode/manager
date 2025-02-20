@@ -34,7 +34,7 @@ export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
   }));
 
   const handleFilterSelection = React.useCallback(
-    (_e: React.ChangeEvent<{}>, tags: AlertTags[]) => {
+    (_e: React.ChangeEvent, tags: AlertTags[]) => {
       setSelectedTags(tags);
       handleSelection(
         tags.length ? tags.map(({ label }) => label) : undefined,
