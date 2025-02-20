@@ -116,9 +116,9 @@ export const DateRangePicker = ({
 
   const handleApply = () => {
     onApply?.({
-      endDate: endDate ? endDate.toISO() : null,
+      endDate: endDate ? endDate.toISODate() : null,
       selectedPreset,
-      startDate: startDate ? startDate.toISO() : null,
+      startDate: startDate ? startDate.toISODate() : null,
     });
     handleClose();
   };
