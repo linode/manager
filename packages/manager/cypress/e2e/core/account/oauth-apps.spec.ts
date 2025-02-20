@@ -96,8 +96,8 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
         .click()
         .clear()
         .type(oauthApp.redirect_uri);
-      // Check the 'public' checkbox
-      if (oauthApp.public) {
+      // Uncheck the 'public' checkbox
+      if (!oauthApp.public) {
         cy.get('[data-qa-checked]').should('be.visible').click();
       }
       mockCreateOAuthApp(oauthApp).as('createOauthApp');
