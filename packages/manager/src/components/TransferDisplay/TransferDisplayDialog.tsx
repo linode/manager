@@ -1,9 +1,8 @@
-import { Box, Divider, Typography } from '@linode/ui';
+import { Box, Dialog, Divider, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 
 import { useIsGeckoEnabled } from '../RegionSelect/RegionSelect.utils';
@@ -111,9 +110,9 @@ export const TransferDisplayDialog = React.memo(
                 marginTop={theme.spacing(2)}
               >
                 <Typography
-                  sx={{ font: theme.font.bold }}
                   fontSize={theme.typography.h3.fontSize}
                   marginBottom={theme.spacing()}
+                  sx={{ font: theme.font.bold }}
                 >
                   {pool.regionName}{' '}
                   <Typography

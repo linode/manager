@@ -35,10 +35,7 @@ export const EditAlertResources = () => {
     serviceType
   );
 
-  const { mutateAsync: editAlert } = useEditAlertDefinition(
-    serviceType,
-    alertId
-  );
+  const { mutateAsync: editAlert } = useEditAlertDefinition();
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     []
   );
@@ -72,7 +69,9 @@ export const EditAlertResources = () => {
   const saveResources = () => {
     setShowConfirmation(false);
     editAlert({
+      alertId,
       entity_ids: selectedResources,
+      serviceType,
     })
       .then(() => {
         // on success land on the alert definition list page and show a success snackbar

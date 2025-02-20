@@ -2448,29 +2448,32 @@ export const handlers = [
   ),
   http.get('*/monitor/alert-definitions', async () => {
     const customAlerts = alertFactory.buildList(10, {
+      created_by: 'user1',
       severity: 0,
       type: 'user',
+      updated: '2021-10-16T04:00:00',
+      updated_by: 'user1',
     });
     const customAlertsWithServiceType = alertFactory.buildList(10, {
+      created_by: 'user1',
       service_type: 'dbaas',
       severity: 1,
       type: 'user',
+      updated_by: 'user1',
     });
-    const defaultAlerts = alertFactory.buildList(15, {
-      created_by: 'System',
-      type: 'system',
-    });
+    const defaultAlerts = alertFactory.buildList(15);
     const defaultAlertsWithServiceType = alertFactory.buildList(7, {
-      created_by: 'System',
       service_type: 'dbaas',
       severity: 3,
-      type: 'system',
     });
     const alerts = [
       ...defaultAlerts,
       ...alertFactory.buildList(8, {
+        created_by: 'user1',
         service_type: 'linode',
         status: 'disabled',
+        type: 'user',
+        updated_by: 'user1',
       }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
@@ -2501,19 +2504,32 @@ export const handlers = [
       return HttpResponse.json({}, { status: 404 });
     }
   ),
+  http.put(
+    '*/monitor/services/:serviceType/alert-definitions/:id',
+    ({ params, request }) => {
+      const body: any = request.json();
+      return HttpResponse.json(
+        alertFactory.build({
+          id: Number(params.id),
+          label: `Alert-${params.id}`,
+          status: body.status === 'enabled' ? 'disabled' : 'enabled',
+        }),
+        {
+          status: 200,
+        }
+      );
+    }
+  ),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
       makeResourcePage(notificationChannelFactory.buildList(3))
     );
   }),
-  http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
-    return HttpResponse.json(alertFactory.build());
-  }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [
         serviceTypesFactory.build({
-          label: 'Linode',
+          label: 'Linodes',
           service_type: 'linode',
         }),
         serviceTypesFactory.build({
@@ -2753,6 +2769,27 @@ export const handlers = [
               [1721897579, '0.26164641539434685'],
             ],
           },
+          // Uncomment this to add more metrics and see a scrollable legend if legendHeight is set (ex: CloudPulse)
+          // ...Array.from({ length: 10 }, (_, i) => ({
+          //   metric: {
+          //     test: `Test${i + 2}`,
+          //   },
+          //   values: [
+          //     [1721854379, '0.2744841110560275'],
+          //     [1721857979, '0.2980357104166823'],
+          //     [1721861579, '0.3290476561287732'],
+          //     [1721865179, '0.32148793964961897'],
+          //     [1721868779, '0.3269247326830727'],
+          //     [1721872379, '0.3393055885526987'],
+          //     [1721875979, '0.3237102833940027'],
+          //     [1721879579, '0.3153372503472701'],
+          //     [1721883179, '0.26811506053820466'],
+          //     [1721886779, '0.25839295774934357'],
+          //     [1721890379, '0.26863082415681144'],
+          //     [1721893979, '0.26126998689934394'],
+          //     [1721897579, '0.26164641539434685'],
+          //   ],
+          // })),
           {
             metric: {
               test2: 'Test2',
