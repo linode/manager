@@ -93,22 +93,32 @@ it('should correctly convert an alert definition metric value', () => {
 it('should correctly convert an alert definition values to the required format', () => {
   const alert: Alert = alertFactory.build();
   const serviceType = 'linode';
-
+  const {
+    alert_channels,
+    description,
+    entity_ids,
+    id,
+    label,
+    rule_criteria,
+    severity,
+    tags,
+    trigger_conditions,
+  } = alert;
   const expected: EditAlertPayloadWithService = {
-    alertId: alert.id,
-    channel_ids: alert.alert_channels.map((channel) => channel.id),
-    description: alert.description || undefined,
-    entity_ids: alert.entity_ids,
-    label: alert.label,
+    alertId: id,
+    channel_ids: alert_channels.map((channel) => channel.id),
+    description: description || undefined,
+    entity_ids,
+    label,
     rule_criteria: {
-      rules: alert.rule_criteria.rules.map((rule) =>
+      rules: rule_criteria.rules.map((rule) =>
         convertAlertDefinitionMetricValues(rule)
       ),
     },
     serviceType,
-    severity: alert.severity,
-    tags: alert.tags,
-    trigger_conditions: alert.trigger_conditions,
+    severity,
+    tags,
+    trigger_conditions,
   };
 
   expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);

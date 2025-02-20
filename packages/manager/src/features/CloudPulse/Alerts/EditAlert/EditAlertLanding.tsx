@@ -42,9 +42,8 @@ export const EditAlertLanding = () => {
   if (isError) {
     return getEditAlertMessage(
       <ErrorState
-        errorText={
-          'An error occurred while loading the alerts definitions and resources. Please try again later.'
-        }
+        errorText="
+          An error occurred while loading the alerts definitions and resources. Please try again later."
       />,
       newPathname,
       overrides

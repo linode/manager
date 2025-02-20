@@ -43,7 +43,7 @@ describe('EditAlertDefinition component', () => {
       getByLabelText,
       getByText,
     } = renderWithTheme(
-      <EditAlertDefinition alertDetails={alertDetails} serviceType={'linode'} />
+      <EditAlertDefinition alertDetails={alertDetails} serviceType="linode" />
     );
     expect(getByText('1. General Information')).toBeVisible();
     expect(getByLabelText('Name')).toBeVisible();
@@ -74,10 +74,7 @@ describe('EditAlertDefinition component', () => {
     const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
     const { getByPlaceholderText, getByText } = renderWithTheme(
       <Router history={history}>
-        <EditAlertDefinition
-          alertDetails={alertDetails}
-          serviceType={'linode'}
-        />
+        <EditAlertDefinition alertDetails={alertDetails} serviceType="linode" />
       </Router>
     );
     const descriptionValue = 'Updated Description';

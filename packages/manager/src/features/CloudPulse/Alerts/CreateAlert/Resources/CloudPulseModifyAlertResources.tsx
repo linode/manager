@@ -33,7 +33,7 @@ export const CloudPulseModifyAlertResources = React.memo(
     };
 
     React.useEffect(() => {
-      if (isServiceTypeDisabled === false) {
+      if (!isServiceTypeDisabled) {
         setValue(name, [], { shouldValidate: true });
       }
     }, [name, serviceTypeWatcher, setValue, isServiceTypeDisabled]);

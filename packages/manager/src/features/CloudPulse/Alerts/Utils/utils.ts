@@ -133,13 +133,15 @@ export const getChipLabels = (
  * @param formValues The alert dimension filter values from the form.
  * @returns The filtered DimensionFilter object.
  */
-export const convertAlertDefinitionDimensionFilterValues = (
-  formValues: AlertDefinitionDimensionFilter
-): DimensionFilter => {
+export const convertAlertDefinitionDimensionFilterValues = ({
+  dimension_label,
+  operator,
+  value,
+}: AlertDefinitionDimensionFilter): DimensionFilter => {
   return {
-    dimension_label: formValues.dimension_label,
-    operator: formValues.operator,
-    value: formValues.value,
+    dimension_label,
+    operator,
+    value,
   };
 };
 
@@ -148,18 +150,22 @@ export const convertAlertDefinitionDimensionFilterValues = (
  * @param formValue The alert's metric criteria values from the form.
  * @returns The filtered MetricCriteria object.
  */
-export const convertAlertDefinitionMetricValues = (
-  formValue: AlertDefinitionMetricCriteria
-): MetricCriteria => {
+export const convertAlertDefinitionMetricValues = ({
+  aggregate_function,
+  dimension_filters,
+  metric,
+  operator,
+  threshold,
+}: AlertDefinitionMetricCriteria): MetricCriteria => {
   return {
-    aggregate_function: formValue.aggregate_function,
+    aggregate_function,
     dimension_filters:
-      formValue.dimension_filters?.map((filter) => {
+      dimension_filters?.map((filter) => {
         return convertAlertDefinitionDimensionFilterValues(filter);
       }) ?? [],
-    metric: formValue.metric,
-    operator: formValue.operator,
-    threshold: formValue.threshold,
+    metric,
+    operator,
+    threshold,
   };
 };
 
@@ -170,23 +176,33 @@ export const convertAlertDefinitionMetricValues = (
  * @returns The formatted alert values suitable for the form.
  */
 export const convertAlertDefinitionValues = (
-  alert: Alert,
+  {
+    alert_channels,
+    description,
+    entity_ids,
+    id,
+    label,
+    rule_criteria,
+    severity,
+    tags,
+    trigger_conditions,
+  }: Alert,
   serviceType: AlertServiceType
 ): EditAlertPayloadWithService => {
   return {
-    alertId: alert.id,
-    channel_ids: alert.alert_channels.map((channel) => channel.id),
-    description: alert.description || undefined,
-    entity_ids: alert.entity_ids,
-    label: alert.label,
+    alertId: id,
+    channel_ids: alert_channels.map((channel) => channel.id),
+    description: description || undefined,
+    entity_ids,
+    label,
     rule_criteria: {
-      rules: alert.rule_criteria.rules.map((rule) =>
+      rules: rule_criteria.rules.map((rule) =>
         convertAlertDefinitionMetricValues(rule)
       ),
     },
     serviceType,
-    severity: alert.severity,
-    tags: alert.tags,
-    trigger_conditions: alert.trigger_conditions,
+    severity,
+    tags,
+    trigger_conditions,
   };
 };

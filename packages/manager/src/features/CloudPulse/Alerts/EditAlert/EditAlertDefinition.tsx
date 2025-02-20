@@ -138,10 +138,10 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
             control={control}
             name="description"
           />
-          <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
+          <CloudPulseServiceSelect isDisabled name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
           <CloudPulseModifyAlertResources
-            isServiceTypeDisabled={true}
+            isServiceTypeDisabled
             name="entity_ids"
           />
           <MetricCriteriaField
@@ -151,9 +151,9 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <TriggerConditions
             maxScrapingInterval={maxScrapeInterval}
-            name={'trigger_conditions'}
+            name="trigger_conditions"
           />
-          <AddChannelListing name={'channel_ids'} />
+          <AddChannelListing name="channel_ids" />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
