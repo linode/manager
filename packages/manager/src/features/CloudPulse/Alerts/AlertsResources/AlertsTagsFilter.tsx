@@ -29,7 +29,7 @@ export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
   const { handleFilterChange: handleSelection, tagOptions } = props;
   const [selectedTags, setSelectedTags] = React.useState<AlertTags[]>([]);
 
-  const builtTagOptions = tagOptions.map((option) => ({
+  const builtTagOptions: AlertTags[] = tagOptions.map((option) => ({
     label: option,
   }));
 
@@ -51,6 +51,7 @@ export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
       }}
       autoHighlight
       clearOnBlur
+      isOptionEqualToValue={(option, value) => option.label === value.label}
       label="Tags"
       limitTags={1}
       multiple
