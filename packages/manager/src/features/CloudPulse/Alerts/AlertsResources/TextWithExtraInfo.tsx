@@ -10,7 +10,7 @@ export interface TextWithInfoProp {
   values?: string[];
 }
 
-export const ShowTextWithExtraInfo = ({ values }: TextWithInfoProp) => {
+export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
   if (!values?.length) {
     return <NullComponent />;
   }
