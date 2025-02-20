@@ -6,6 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
@@ -34,6 +35,18 @@ export const SummaryPanel = () => {
     id: nodebalancer?.id,
   });
 
+  // If we can't get the cluster (status === 'error'), we can assume it's been deleted
+  const { status: clusterStatus } = useKubernetesClusterQuery(
+    nodebalancer?.lke_cluster?.id ?? -1,
+    nodebalancer && Boolean(nodebalancer.lke_cluster),
+    {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: false,
+    }
+  );
+
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];
   }, []);
@@ -57,6 +70,35 @@ export const SummaryPanel = () => {
           <StyledTitle data-qa-title variant="h3">
             NodeBalancer Details
           </StyledTitle>
+          {nodebalancer.type === 'premium' && (
+            <StyledSection>
+              <Typography data-qa-type variant="body1">
+                <strong>Type: </strong>
+                Premium
+              </Typography>
+            </StyledSection>
+          )}
+          {nodebalancer.lke_cluster && (
+            <StyledSection>
+              <Typography data-qa-cluster variant="body1">
+                <strong>Cluster: </strong>
+                {clusterStatus === 'error' ? (
+                  <>
+                    <span style={{ textDecoration: 'line-through' }}>
+                      {nodebalancer.lke_cluster.label}
+                    </span>
+                    <span style={{ fontStyle: 'italic' }}> (deleted)</span>
+                  </>
+                ) : (
+                  <Link
+                    to={`/kubernetes/clusters/${nodebalancer.lke_cluster.id}/summary`}
+                  >
+                    {nodebalancer.lke_cluster.label}
+                  </Link>
+                )}
+              </Typography>
+            </StyledSection>
+          )}
           <StyledSection>
             <Typography data-qa-ports variant="body1">
               <strong>Ports: </strong>

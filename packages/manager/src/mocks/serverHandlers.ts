@@ -861,6 +861,7 @@ export const handlers = [
     const id = Number(params.clusterId);
     const cluster = kubernetesAPIResponse.build({ id, k8s_version: '1.16' });
     return HttpResponse.json(cluster);
+    // return HttpResponse.json({}, { status: 404 });
   }),
   http.put('*/lke/clusters/:clusterId', async ({ params }) => {
     const id = Number(params.clusterId);
@@ -935,6 +936,19 @@ export const handlers = [
   http.get('*/v4/nodebalancers/:nodeBalancerID', ({ params }) => {
     const nodeBalancer = nodeBalancerFactory.build({
       id: Number(params.nodeBalancerID),
+    });
+    return HttpResponse.json(nodeBalancer);
+  }),
+  http.get('*/v4beta/nodebalancers/:nodeBalancerID', ({ params }) => {
+    const nodeBalancer = nodeBalancerFactory.build({
+      id: Number(params.nodeBalancerID),
+      lke_cluster: {
+        id: 1,
+        label: 'lke-e-123',
+        type: 'lkecluster',
+        url: 'v4/lke/clusters/1',
+      },
+      type: 'premium',
     });
     return HttpResponse.json(nodeBalancer);
   }),

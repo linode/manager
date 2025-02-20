@@ -2,7 +2,7 @@ import {
   NodeBalancerSchema,
   UpdateNodeBalancerSchema,
 } from '@linode/validation/lib/nodebalancers.schema';
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -42,6 +42,21 @@ export const getNodeBalancers = (params?: Params, filters?: Filter) =>
 export const getNodeBalancer = (nodeBalancerId: number) =>
   Request<NodeBalancer>(
     setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`),
+    setMethod('GET')
+  );
+
+/**
+ * getNodeBalancerBeta
+ *
+ * Returns detailed information about a single NodeBalancer including type (only available for LKE-E).
+ *
+ * @param nodeBalancerId { number } The ID of the NodeBalancer to retrieve.
+ */
+export const getNodeBalancerBeta = (nodeBalancerId: number) =>
+  Request<NodeBalancer>(
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`
+    ),
     setMethod('GET')
   );
 
