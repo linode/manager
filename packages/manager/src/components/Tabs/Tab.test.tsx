@@ -20,7 +20,7 @@ describe('Tab Component', () => {
 
     expect(tabElement).toHaveStyle(`
       display: inline-flex;
-      color: rgb(0, 156, 222);
+      color: rgb(1, 116, 188);
     `);
   });
 

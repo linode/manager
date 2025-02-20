@@ -17,7 +17,6 @@ export const GraphCard = (props: Props) => {
           '& > strong': {
             color: theme.color.headline,
           },
-          color: theme.color.grey1,
         },
         marginBottom: theme.spacing(2),
         padding: theme.spacing(2),
