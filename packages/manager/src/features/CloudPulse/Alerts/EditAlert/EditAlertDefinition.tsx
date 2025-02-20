@@ -81,26 +81,22 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   });
   const definitionLanding = '/monitor/alerts/definitions';
 
-  const { newPathname, overrides } = React.useMemo(() => {
-    const overrides = [
-      {
-        label: 'Definitions',
-        linkTo: definitionLanding,
-        position: 1,
-      },
-      {
-        label: 'Edit',
-        linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
-        position: 2,
-      },
-    ];
-
-    return { newPathname: '/Definitions/Edit', overrides };
-  }, [serviceType, alertId]);
+  const overrides = [
+    {
+      label: 'Definitions',
+      linkTo: definitionLanding,
+      position: 1,
+    },
+    {
+      label: 'Edit',
+      linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
+      position: 2,
+    },
+  ];
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
-      <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
+      <Breadcrumb crumbOverrides={overrides} pathname={'/Definitions/Edit'} />
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
           <Typography marginTop={2} variant="h2">
@@ -140,10 +136,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <CloudPulseServiceSelect isDisabled name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <CloudPulseModifyAlertResources
-            isServiceTypeDisabled
-            name="entity_ids"
-          />
+          <CloudPulseModifyAlertResources name="entity_ids" />
           <MetricCriteriaField
             name="rule_criteria.rules"
             serviceType={serviceType}

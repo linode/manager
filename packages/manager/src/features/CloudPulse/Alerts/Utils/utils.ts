@@ -128,46 +128,6 @@ export const getChipLabels = (
     };
   }
 };
-/**
- * Filters the given alert's dimension filter values and returns a DimensionFilter object.
- * @param formValues The alert dimension filter values from the form.
- * @returns The filtered DimensionFilter object.
- */
-export const convertAlertDefinitionDimensionFilterValues = ({
-  dimension_label,
-  operator,
-  value,
-}: AlertDefinitionDimensionFilter): DimensionFilter => {
-  return {
-    dimension_label,
-    operator,
-    value,
-  };
-};
-
-/**
- * Filters the alert's metric values from the form and returns a MetricCriteria object.
- * @param formValue The alert's metric criteria values from the form.
- * @returns The filtered MetricCriteria object.
- */
-export const convertAlertDefinitionMetricValues = ({
-  aggregate_function,
-  dimension_filters,
-  metric,
-  operator,
-  threshold,
-}: AlertDefinitionMetricCriteria): MetricCriteria => {
-  return {
-    aggregate_function,
-    dimension_filters:
-      dimension_filters?.map((filter) => {
-        return convertAlertDefinitionDimensionFilterValues(filter);
-      }) ?? [],
-    metric,
-    operator,
-    threshold,
-  };
-};
 
 /**
  * Filters and maps the alert data to match the form structure.
@@ -196,9 +156,11 @@ export const convertAlertDefinitionValues = (
     entity_ids,
     label,
     rule_criteria: {
-      rules: rule_criteria.rules.map((rule) =>
-        convertAlertDefinitionMetricValues(rule)
-      ),
+      rules: rule_criteria.rules.map((rule) => ({
+        ...rule,
+        dimension_filters:
+          rule.dimension_filters?.map(({ label, ...filter }) => filter) ?? [],
+      })),
     },
     serviceType,
     severity,
