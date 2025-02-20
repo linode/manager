@@ -1,4 +1,3 @@
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { default as _Accordion } from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -6,6 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { ChevronDownIcon } from '../../assets';
 import { Notice } from '../Notice';
 import { Typography } from '../Typography';
 
@@ -22,7 +22,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     borderRadius: '50%',
     color: theme.tokens.color.Neutrals.White,
     display: 'flex',
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '0.875rem',
     height: 30,
     justifyContent: 'center',
@@ -54,6 +54,10 @@ export interface AccordionProps extends _AccordionProps {
    * A header placed at the top of the Accordion
    */
   heading: React.ReactNode | string;
+  /**
+   * A chip to render in the heading
+   */
+  headingChip?: React.JSX.Element;
   /**
    * A number to display in the Accordion's heading
    */
@@ -99,6 +103,7 @@ export const Accordion = (props: AccordionProps) => {
     error,
     expandIconClassNames,
     heading,
+    headingChip,
     headingNumberCount,
     headingProps,
     success,
@@ -123,7 +128,7 @@ export const Accordion = (props: AccordionProps) => {
     >
       <AccordionSummary
         expandIcon={
-          <KeyboardArrowDown className={`caret ${expandIconClassNames}`} />
+          <ChevronDownIcon className={`caret ${expandIconClassNames}`} />
         }
         onClick={handleClick}
         {...summaryProps}
@@ -131,6 +136,7 @@ export const Accordion = (props: AccordionProps) => {
       >
         <Typography {...headingProps} data-qa-panel-subheading variant="h3">
           {heading}
+          {headingChip}
         </Typography>
         {headingNumberCount && headingNumberCount > 0 ? (
           <span className={classes.itemCount}>{headingNumberCount}</span>

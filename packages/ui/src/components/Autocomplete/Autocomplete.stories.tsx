@@ -130,7 +130,7 @@ type Story = StoryObj<typeof Autocomplete>;
 // Styled Components =================================================
 
 const CustomValue = styled('span')(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '1rem',
   wordBreak: 'break-word',
 }));
@@ -147,13 +147,13 @@ const StyledListItem = styled('li')(() => ({
 
 const StyledLabel = styled('span')(({ theme }) => ({
   color: theme.color.label,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '14px',
 }));
 
 const SelectedOptionsHeader = styled('h4')(({ theme }) => ({
   color: theme.color.headline,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '14px',
   textTransform: 'initial',
 }));

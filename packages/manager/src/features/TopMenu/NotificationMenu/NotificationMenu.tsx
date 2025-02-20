@@ -89,28 +89,33 @@ export const NotificationMenu = () => {
           sx={(theme) => ({
             ...topMenuIconButtonSx(theme),
             color: notificationContext.menuOpen
-              ? theme.tokens.color.Neutrals[70]
-              : theme.tokens.color.Neutrals[40],
+              ? theme.tokens.header.Icon.Active
+              : theme.tokens.header.Icon.Default,
           })}
           aria-describedby={id}
           aria-haspopup="true"
           aria-label="Notifications"
+          disableRipple
           id={menuButtonId}
           onClick={handleNotificationMenuToggle}
           ref={anchorRef}
         >
-          <Bell height="20px" width="20px" />
+          <Bell height="24px" width="24px" />
           {numNotifications > 0 && (
             <StyledChip
-              color="primary"
+              adjustBorderRadius={
+                numNotifications > 9 || showInProgressEventIcon
+              }
+              icon={
+                Boolean(showInProgressEventIcon) ? (
+                  <StyledAutorenewIcon data-testid="in-progress-event-icon" />
+                ) : undefined
+              }
+              color="error"
               data-testid="events-count-notification"
               label={numNotifications > 9 ? '9+' : numNotifications}
-              showPlus={numNotifications > 9}
               size="small"
             />
-          )}
-          {showInProgressEventIcon && (
-            <StyledAutorenewIcon data-testid="in-progress-event-icon" />
           )}
         </IconButton>
       </TopMenuTooltip>
@@ -177,29 +182,30 @@ export const NotificationMenu = () => {
 
 const StyledChip = styled(Chip, {
   label: 'StyledEventNotificationChip',
-  shouldForwardProp: (prop) => prop !== 'showPlus',
-})<{ showPlus: boolean }>(({ theme, ...props }) => ({
-  '& .MuiChip-label': {
-    paddingLeft: 2,
-    paddingRight: 2,
+  shouldForwardProp: (prop) => prop !== 'adjustBorderRadius',
+})<{ adjustBorderRadius: boolean }>(({ theme, ...props }) => ({
+  '& .MuiChip-icon': {
+    margin: 0,
+    marginLeft: theme.tokens.spacing[10],
   },
-  borderRadius: props.showPlus ? 12 : '50%',
-  fontFamily: theme.font.bold,
-  fontSize: '0.72rem',
-  height: 18,
+  '& .MuiChip-label': {
+    padding: 0,
+  },
+  backgroundColor: theme.tokens.header.Badge.Background,
+  borderRadius: props.adjustBorderRadius ? theme.tokens.spacing[50] : '50%',
+  color: theme.tokens.header.Badge.Text,
+  flexDirection: 'row-reverse',
+  font: theme.tokens.typography.Label.Bold.Xs,
   justifyContent: 'center',
   left: 20,
-  padding: 0,
+  padding: `${theme.tokens.spacing[20]} ${theme.tokens.spacing[30]}`,
   position: 'absolute',
-  top: 0,
-  width: props.showPlus ? 22 : 18,
+  top: '-3px',
 }));
 
 export const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
-  bottom: 4,
-  color: theme.palette.primary.main,
-  fontSize: 18,
-  position: 'absolute',
-  right: 2,
+  fill: theme.tokens.header.Badge.Icon,
+  height: '12px',
+  width: '12px',
 }));

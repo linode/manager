@@ -53,6 +53,7 @@ const mockData: ResourcePage<MetricDefinition> = {
           values: [],
         },
       ],
+      is_alertable: true,
       label: 'CPU utilization',
       metric: 'system_cpu_utilization_percent',
       metric_type: 'gauge',
@@ -80,6 +81,7 @@ const mockData: ResourcePage<MetricDefinition> = {
           values: [],
         },
       ],
+      is_alertable: true,
       label: 'Memory Usage',
       metric: 'system_memory_usage_by_resource',
       metric_type: 'gauge',
@@ -118,7 +120,7 @@ describe('MetricCriteriaField', () => {
         },
       },
     });
-    expect(screen.getByText('2. Criteria')).toBeVisible();
+    expect(screen.getByText('3. Criteria')).toBeVisible();
     expect(screen.getByText('Metric Threshold')).toBeVisible();
     expect(screen.getByLabelText('Data Field')).toBeVisible();
     expect(screen.getByLabelText('Aggregation Type')).toBeVisible();

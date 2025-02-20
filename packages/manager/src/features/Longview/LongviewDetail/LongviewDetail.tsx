@@ -301,10 +301,10 @@ type LongviewDetailParams = {
 const EnhancedLongviewDetail = compose<CombinedProps, {}>(
   React.memo,
 
-  withClientStats<{ params: LongviewDetailParams }>((ownProps) => {
-    return +(ownProps?.params?.id ?? '');
+  withClientStats<{ match: { params: LongviewDetailParams } }>((ownProps) => {
+    return +(ownProps?.match?.params?.id ?? '');
   }),
-  withLongviewClients<Props, { params: LongviewDetailParams }>(
+  withLongviewClients<Props, { match: { params: LongviewDetailParams } }>(
     (
       own,
       {
@@ -317,7 +317,7 @@ const EnhancedLongviewDetail = compose<CombinedProps, {}>(
       // This is explicitly typed, otherwise `client` would be typed as
       // `LongviewClient`, even though there's a chance it could be undefined.
       const client: LongviewClient | undefined =
-        longviewClientsData[own.params.id ?? ''];
+        longviewClientsData[own?.match.params.id ?? ''];
 
       return {
         client,

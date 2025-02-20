@@ -125,7 +125,7 @@ const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(
         fontSize: '0.875rem',
         marginBottom: theme.spacing(),
       },
-      fontFamily: theme.font.normal,
+      font: theme.font.normal,
     },
     backgroundColor: theme.bg.bgPaper,
     borderLeft: `5px solid ${theme.palette.warning.dark}`,
@@ -138,7 +138,7 @@ const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(
 const StyledVolumeUl = styled('ul', { label: 'StyledVolumeUl' })(
   ({ theme }) => ({
     '& li': {
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
     },
     marginTop: theme.spacing(),
   })

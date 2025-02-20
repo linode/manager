@@ -36,12 +36,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   strengthText: {
-    fontSize: '.85rem',
     position: 'relative',
     textAlign: 'right',
+    textTransform: 'none',
     [theme.breakpoints.down('sm')]: {
       textAlign: 'center',
     },
+    top: 2,
   },
 }));
 

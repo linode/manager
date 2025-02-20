@@ -61,7 +61,6 @@ export const DomainRecordTable = (props: DomainRecordTableProps) => {
                         <StyledTableCell
                           data-qa-column={title}
                           key={columnIndex}
-                          parentColumn={title}
                         >
                           {render(data)}
                         </StyledTableCell>

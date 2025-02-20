@@ -5,7 +5,6 @@ export const StyledButton = styled(Button, {
   label: 'StyledButton',
 })(({ theme }) => ({
   marginTop: theme.spacing(),
-  width: '10%',
 }));
 
 export const StyledTypography = styled(Typography, {

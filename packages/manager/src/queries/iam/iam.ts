@@ -1,17 +1,21 @@
-import {
-  APIError,
-  IamUserPermissions,
-  IamAccountPermissions,
-} from '@linode/api-v4';
-import { iamQueries } from './queries';
 import { useQuery } from '@tanstack/react-query';
-import { useProfile } from 'src/queries/profile/profile';
-import { queryPresets } from '../base';
 
-export const useAccountUserPermissions = (username: string) => {
-  return useQuery<IamUserPermissions, APIError[]>(
-    iamQueries.user(username)._ctx.permissions
-  );
+import { useProfile } from 'src/queries/profile/profile';
+
+import { queryPresets } from '../base';
+import { iamQueries } from './queries';
+
+import type {
+  APIError,
+  IamAccountPermissions,
+  IamUserPermissions,
+} from '@linode/api-v4';
+
+export const useAccountUserPermissions = (username?: string) => {
+  return useQuery<IamUserPermissions, APIError[]>({
+    ...iamQueries.user(username ?? '')._ctx.permissions,
+    enabled: Boolean(username),
+  });
 };
 
 export const useAccountPermissions = () => {

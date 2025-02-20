@@ -56,7 +56,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   userName: {
     color: theme.color.headline,
-    fontFamily: 'LatoWebBold', // we keep this bold at all times
+    font: theme.font.bold,
     marginRight: 4,
     whiteSpace: 'nowrap',
   },

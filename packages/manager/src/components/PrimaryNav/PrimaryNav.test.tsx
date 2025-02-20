@@ -8,9 +8,11 @@ import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import PrimaryNav from './PrimaryNav';
 
 import type { Flags } from 'src/featureFlags';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 const props = {
   closeMenu: vi.fn(),
+  desktopMenuToggle: vi.fn(),
   isCollapsed: false,
   toggleSpacing: vi.fn(),
   toggleTheme: vi.fn(),
@@ -20,6 +22,20 @@ const queryClient = queryClientFactory();
 const queryString = 'menu-item-Managed';
 
 describe('PrimaryNav', () => {
+  const preference: ManagerPreferences['collapsedSideNavProductFamilies'] = [];
+
+  const queryMocks = vi.hoisted(() => ({
+    usePreferences: vi.fn().mockReturnValue({}),
+  }));
+
+  vi.mock('src/queries/profile/preferences', async () => {
+    const actual = await vi.importActual('src/queries/profile/preferences');
+    return {
+      ...actual,
+      usePreferences: queryMocks.usePreferences,
+    };
+  });
+
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
     server.use(
       http.get('*/account/maintenance', () => {
@@ -57,6 +73,10 @@ describe('PrimaryNav', () => {
   });
 
   it('should show Databases menu item if the user has the account capability V1', async () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
+
     const account = accountFactory.build({
       capabilities: ['Managed Databases'],
     });
@@ -88,6 +108,10 @@ describe('PrimaryNav', () => {
   });
 
   it('should show Databases menu item if the user has the account capability V2 Beta', async () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
+
     const account = accountFactory.build({
       capabilities: ['Managed Databases Beta'],
     });
@@ -117,6 +141,10 @@ describe('PrimaryNav', () => {
   });
 
   it('should show Databases menu item if the user has the account capability V2', async () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
+
     const account = accountFactory.build({
       capabilities: ['Managed Databases'],
     });
@@ -148,6 +176,10 @@ describe('PrimaryNav', () => {
   });
 
   it('should show Databases menu item if the user has the account capability V2', async () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
+
     const account = accountFactory.build({
       capabilities: ['Managed Databases Beta'],
     });

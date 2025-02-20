@@ -129,7 +129,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
       return (
         <Notice
           sx={{
-            fontFamily: theme.font.bold,
+            font: theme.font.bold,
             fontSize: '1rem',
             lineHeight: '20px',
           }}

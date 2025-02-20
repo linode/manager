@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { Skeleton } from 'src/components/Skeleton';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

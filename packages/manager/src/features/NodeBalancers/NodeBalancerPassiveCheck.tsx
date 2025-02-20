@@ -38,8 +38,9 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
             label="Passive Checks"
           />
           <FormHelperText>
-            Enable passive checks based on observing communication with back-end
-            nodes.
+            When enabled, the NodeBalancer monitors requests to backends. If a
+            request times out, returns a 5xx response (except 501/505), or fails
+            to connect, the backend is marked 'down' and removed from rotation.
           </FormHelperText>
         </Grid>
       </Grid>

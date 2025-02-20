@@ -12,6 +12,7 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useDialog } from 'src/hooks/useDialog';
 import {
@@ -31,7 +32,7 @@ import {
 
 import MonitorDrawer from '../MonitorDrawer';
 import { HistoryDrawer } from './HistoryDrawer';
-import { StyledGrid, StyledTableRow } from './MonitorTable.styles';
+import { StyledGrid } from './MonitorTable.styles';
 import MonitorTableContent from './MonitorTableContent';
 
 import type { ManagedServicePayload } from '@linode/api-v4/lib/managed';
@@ -201,7 +202,7 @@ export const MonitorTable = () => {
               <>
                 <Table aria-label="List of Your Managed Service Monitors">
                   <TableHead>
-                    <StyledTableRow>
+                    <TableRow>
                       <TableSortCell
                         active={orderBy === 'label'}
                         data-qa-monitor-label-header
@@ -230,7 +231,7 @@ export const MonitorTable = () => {
                         Resource
                       </TableSortCell>
                       <TableCell />
-                    </StyledTableRow>
+                    </TableRow>
                   </TableHead>
                   <TableBody>
                     <MonitorTableContent

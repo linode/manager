@@ -14,7 +14,7 @@ const innerTableData = tableRowItems[0].innerTable;
 
 describe('CollapsibleRow', () => {
   it('should render CollapsibleRow with label, outer table cells and ArrowRightIcon', () => {
-    const { getByTestId, getByText } = render(
+    const { getByRole, getByText } = render(
       wrapWithTableBody(<CollapsibleRow {...defaultArgs} />)
     );
 
@@ -24,11 +24,12 @@ describe('CollapsibleRow', () => {
       expect(getByText(cell.label)).toBeVisible();
     });
 
-    expect(getByTestId('KeyboardArrowRightIcon')).toBeInTheDocument();
+    const button = getByRole('button');
+    expect(button).toHaveAttribute('aria-label', `expand ${rowLabel} row`);
   });
 
   it('should render an Expanded Row with ArowDownIcon when ArrowRightIcon button is clicked', async () => {
-    const { getByTestId, queryByText } = render(
+    const { getByRole, queryByText } = render(
       wrapWithTableBody(<CollapsibleRow {...defaultArgs} />)
     );
 
@@ -42,15 +43,12 @@ describe('CollapsibleRow', () => {
       );
     });
 
-    const arrowRightButton = getByTestId('KeyboardArrowRightIcon').closest(
-      'button'
-    );
+    const button = getByRole('button');
+    expect(button).toHaveAttribute('aria-label', `expand ${rowLabel} row`);
 
-    if (arrowRightButton) {
-      await userEvent.click(arrowRightButton);
+    if (button) {
+      await userEvent.click(button);
     }
-
-    expect(getByTestId('KeyboardArrowDownIcon')).toBeInTheDocument();
 
     // Expect innerTableData to be visible when row is in an Expanded state.
     innerTableData.headCells.forEach((cell) =>

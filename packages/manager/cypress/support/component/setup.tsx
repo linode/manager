@@ -17,7 +17,7 @@ import { queryClientFactory } from '@src/queries/base';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/cypress/add-commands';
 import 'cypress-axe';
-import { mount } from 'cypress/react18';
+import { mount } from 'cypress/react';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
 import * as React from 'react';

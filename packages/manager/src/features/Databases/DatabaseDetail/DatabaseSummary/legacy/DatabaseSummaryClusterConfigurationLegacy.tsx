@@ -26,7 +26,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   label: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     lineHeight: '22px',
     width: theme.spacing(13),
   },

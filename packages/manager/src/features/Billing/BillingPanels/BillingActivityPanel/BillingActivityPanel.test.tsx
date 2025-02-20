@@ -47,7 +47,6 @@ vi.mock('@linode/api-v4/lib/account', async () => {
     }),
   };
 });
-vi.mock('src/components/EnhancedSelect/Select');
 
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {

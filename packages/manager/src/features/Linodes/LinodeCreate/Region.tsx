@@ -227,7 +227,7 @@ export const Region = React.memo(() => {
       <RegionHelperText />
       {showCrossDataCenterCloneWarning && (
         <Notice spacingBottom={0} spacingTop={8} variant="warning">
-          <Typography fontFamily={(theme) => theme.font.bold}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             Cloning a powered off instance across data centers may cause long
             periods of down time.
           </Typography>
@@ -252,7 +252,7 @@ export const Region = React.memo(() => {
       />
       {showClonePriceWarning && (
         <Notice spacingBottom={0} spacingTop={12} variant="warning">
-          <Typography fontFamily={(theme) => theme.font.bold}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             {DIFFERENT_PRICE_STRUCTURE_WARNING}{' '}
             <Link to="https://www.linode.com/pricing">Learn more.</Link>
           </Typography>

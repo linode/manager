@@ -41,10 +41,9 @@ describe('Close Account Settings', () => {
 
     const { getByTestId } = renderWithTheme(<CloseAccountSetting />);
     const button = getByTestId('close-account-button');
-    const span = button.querySelector('span');
     expect(button).toBeInTheDocument();
     expect(button).toBeEnabled();
-    expect(span).toHaveTextContent('Close Account');
+    expect(button).toHaveTextContent('Close Account');
   });
 
   it('should render a disabled Close Account button with tooltip for a parent account user', async () => {

@@ -43,7 +43,7 @@ export const Entities = ({ access, type }: Props) => {
     return (
       <>
         <FormLabel>
-          <Typography marginBottom={1} marginTop={2} variant="inherit">
+          <Typography marginBottom={0.5} marginTop={0} variant="inherit">
             Entities
           </Typography>
         </FormLabel>
@@ -64,10 +64,11 @@ export const Entities = ({ access, type }: Props) => {
       ListboxProps={{ sx: { overflowX: 'hidden' } }}
       label="Entities"
       multiple
+      noMarginTop
       onChange={(_, value) => setSelectedEntities(value)}
       options={memoizedEntities}
       placeholder={selectedEntities.length ? ' ' : getPlaceholder(type)}
-      sx={{ marginTop: 1 }}
+      value={selectedEntities}
     />
   );
 };

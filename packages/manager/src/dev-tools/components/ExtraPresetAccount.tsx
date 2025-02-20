@@ -1,7 +1,7 @@
 import { accountCapabilities } from '@linode/api-v4';
+import { Dialog } from '@linode/ui';
 import * as React from 'react';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { accountFactory } from 'src/factories';
 import { extraMockPresets } from 'src/mocks/presets';
 import { setCustomAccountData } from 'src/mocks/presets/extra/account/customAccount';

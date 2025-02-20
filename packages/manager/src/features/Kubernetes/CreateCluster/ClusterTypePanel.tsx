@@ -1,5 +1,5 @@
-import { Stack } from '@linode/ui';
-import { Typography, useMediaQuery } from '@mui/material';
+import { Stack, Typography } from '@linode/ui';
+import { useMediaQuery } from '@mui/material';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';

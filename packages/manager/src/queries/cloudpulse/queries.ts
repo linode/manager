@@ -30,7 +30,7 @@ export const queryFactory = createQueryKeys(key, {
         // This query key is a placeholder , it will be updated once the relevant queries are added
         queryKey: null,
       },
-      alertByServiceTypeAndId: (serviceType: string, alertId: number) => ({
+      alertByServiceTypeAndId: (serviceType: string, alertId: string) => ({
         queryFn: () =>
           getAlertDefinitionByServiceTypeAndId(serviceType, alertId),
         queryKey: [alertId, serviceType],
@@ -71,8 +71,13 @@ export const queryFactory = createQueryKeys(key, {
       fetchCloudPulseMetrics(token, readApiEndpoint, serviceType, requestData),
     queryKey: [requestData, timeStamp, label],
   }),
-  metricsDefinitons: (serviceType: string | undefined) => ({
-    queryFn: () => getMetricDefinitionsByServiceType(serviceType!),
+  metricsDefinitons: (
+    serviceType: string | undefined,
+    params?: Params,
+    filter?: Filter
+  ) => ({
+    queryFn: () =>
+      getMetricDefinitionsByServiceType(serviceType!, params, filter),
     queryKey: [serviceType],
   }),
   notificationChannels: {

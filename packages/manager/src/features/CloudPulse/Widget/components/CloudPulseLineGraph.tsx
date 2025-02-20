@@ -1,5 +1,5 @@
-import { CircleProgress } from '@linode/ui';
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { CircleProgress, Typography } from '@linode/ui';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
@@ -52,7 +52,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
             tickFormat: (value: number) => `${roundTo(value, 3)}`,
           }}
           fillOpacity={0.5}
-          legendHeight="150px"
+          legendHeight="165px"
         />
       )}
       {rest.data.length === 0 && (

@@ -110,7 +110,6 @@ export const NGINX = React.memo((props: Props) => {
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
-            small
           />
         </Box>
       </StyledItemGrid>

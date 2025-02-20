@@ -34,9 +34,11 @@ export const emptyStore: MockState = {
   placementGroups: [],
   regionAvailability: [],
   regions: [],
+  subnets: [],
   supportReplies: [],
   supportTickets: [],
   volumes: [],
+  vpcs: [],
 };
 
 /**

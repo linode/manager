@@ -50,7 +50,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       cursor: 'default',
     },
     color: theme.palette.primary.main,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '0.875rem',
     lineHeight: '1.125rem',
     marginLeft: theme.spacing(),
@@ -63,7 +63,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       lineHeight: '1.5rem',
     },
     '& span': {
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
     },
     background: theme.bg.bgAccessRowTransparentGradient,
     border: `1px solid ${
@@ -108,7 +108,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginLeft: 22,
   },
   provisioningText: {
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
     fontStyle: 'italic',
   },
   showBtn: {
@@ -295,7 +295,7 @@ export const DatabaseSummaryConnectionDetailsLegacy = (props: Props) => {
               <>
                 <Typography>
                   <span>host</span> ={' '}
-                  <span style={{ fontFamily: theme.font.normal }}>
+                  <span style={{ font: theme.font.normal }}>
                     {database.hosts?.primary}
                   </span>{' '}
                 </Typography>

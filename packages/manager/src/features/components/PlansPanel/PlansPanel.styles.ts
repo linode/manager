@@ -11,7 +11,7 @@ export const StyledTypography = styled(Typography, {
     color: theme.tokens.color.Ultramarine[70],
   },
   '& p': {
-    fontFamily: '"LatoWebBold", sans-serif',
+    font: theme.font.bold,
   },
   fontSize: '0.9em',
 }));

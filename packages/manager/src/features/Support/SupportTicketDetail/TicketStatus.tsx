@@ -56,7 +56,7 @@ export const TicketStatus = (props: Props) => {
             ariaLabel={`Ticket status is ${status}`}
             status={status === 'closed' ? 'inactive' : 'active'}
           />
-          <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             {capitalize(status)}
           </Typography>
           <Hidden smDown>

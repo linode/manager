@@ -28,7 +28,13 @@ export const ImageOption = ({
       selected={selected}
     >
       <Stack alignItems="center" direction="row" gap={1} width="100%">
-        {item?.id !== 'any/all' && <OSIcon fontSize="1.8em" os={item.vendor} />}
+        {item?.id !== 'any/all' && (
+          <OSIcon
+            fontSize="1.8em"
+            os={item.vendor}
+            sx={{ position: 'relative', top: 2 }}
+          />
+        )}
         <Typography color="inherit">
           {item.label} {isImageDeprecated(item) && '(deprecated)'}
         </Typography>

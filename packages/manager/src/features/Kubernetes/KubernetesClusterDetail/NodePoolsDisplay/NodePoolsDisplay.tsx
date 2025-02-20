@@ -1,9 +1,12 @@
 import { Button, CircleProgress, Select, Stack, Typography } from '@linode/ui';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormLabel } from 'src/components/FormLabel';
+import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -124,6 +127,13 @@ export const NodePoolsDisplay = (props: Props) => {
     setIsLabelsAndTaintsDrawerOpen(true);
   };
 
+  const {
+    defaultExpandedPools,
+    expandedAccordions,
+    handleAccordionClick,
+    setExpandedAccordions,
+  } = useDefaultExpandedNodePools(clusterID, _pools);
+
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
   }
@@ -131,39 +141,74 @@ export const NodePoolsDisplay = (props: Props) => {
   return (
     <>
       <Stack
+        sx={{
+          paddingBottom: 1,
+          paddingLeft: { md: 0, sm: 1, xs: 1 },
+          paddingTop: 3,
+        }}
         alignItems="center"
         direction="row"
         flexWrap="wrap"
         justifyContent="space-between"
         spacing={2}
-        sx={{ paddingLeft: { md: 0, sm: 1, xs: 1 }, paddingTop: 3 }}
       >
-        <Typography variant="h2">Node Pools</Typography>
-        <Stack direction="row" spacing={1}>
-          <Stack alignItems="end" direction="row">
-            <FormLabel htmlFor={ariaIdentifier}>
-              <Typography ml={1} mr={1}>
-                Status
-              </Typography>
-            </FormLabel>
-            <Select
-              value={
-                statusOptions?.find(
-                  (option) => option.value === statusFilter
-                ) ?? null
-              }
-              data-qa-status-filter
-              hideLabel
-              id={ariaIdentifier}
-              label="Status"
-              onChange={(_, item) => setStatusFilter(item?.value)}
-              options={statusOptions ?? []}
-              placeholder="Select a status"
-              sx={{ width: 130 }}
-            />
-          </Stack>
+        <Stack alignItems="center" direction="row" spacing={2}>
+          <Typography variant="h2">Node Pools</Typography>
+        </Stack>
+        <Stack alignItems="center" direction="row" spacing={1}>
+          <FormLabel htmlFor={ariaIdentifier}>
+            <Typography ml={1} mr={1}>
+              Status
+            </Typography>
+          </FormLabel>
+          <Select
+            value={
+              statusOptions?.find((option) => option.value === statusFilter) ??
+              null
+            }
+            data-qa-status-filter
+            hideLabel
+            id={ariaIdentifier}
+            label="Status"
+            onChange={(_, item) => setStatusFilter(item?.value)}
+            options={statusOptions ?? []}
+            placeholder="Select a status"
+            sx={{ width: 130 }}
+          />
+          {(expandedAccordions === undefined &&
+            defaultExpandedPools.length > 0) ||
+          (expandedAccordions && expandedAccordions.length > 0) ? (
+            <Button
+              sx={{
+                '& span': { marginLeft: 0.5 },
+                paddingLeft: 0.5,
+                paddingRight: 0.5,
+              }}
+              buttonType="secondary"
+              endIcon={<ExpandLessIcon />}
+              onClick={() => setExpandedAccordions([])}
+            >
+              Collapse All Pools
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                const expandedAccordions = _pools?.map(({ id }) => id) ?? [];
+                setExpandedAccordions(expandedAccordions);
+              }}
+              sx={{
+                '& span': { marginLeft: 0.5 },
+                paddingLeft: 0.5,
+                paddingRight: 0.5,
+              }}
+              buttonType="secondary"
+              endIcon={<ExpandMoreIcon />}
+            >
+              Expand All Pools
+            </Button>
+          )}
           <Button
-            buttonType="secondary"
+            buttonType="outlined"
             onClick={() => setIsRecycleClusterOpen(true)}
           >
             Recycle All Nodes
@@ -186,6 +231,11 @@ export const NodePoolsDisplay = (props: Props) => {
 
           return (
             <NodePool
+              accordionExpanded={
+                expandedAccordions === undefined
+                  ? defaultExpandedPools.includes(id)
+                  : expandedAccordions.includes(id)
+              }
               openAutoscalePoolDialog={(poolId) => {
                 setSelectedPoolId(poolId);
                 setIsAutoscaleDialogOpen(true);
@@ -208,6 +258,7 @@ export const NodePoolsDisplay = (props: Props) => {
               clusterTier={clusterTier}
               count={count}
               encryptionStatus={disk_encryption}
+              handleAccordionClick={() => handleAccordionClick(id)}
               handleClickLabelsAndTaints={handleOpenLabelsAndTaintsDrawer}
               handleClickResize={handleOpenResizeDrawer}
               isOnlyNodePool={pools?.length === 1}

@@ -1,3 +1,4 @@
+import { CssBaseline } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import {
   RouterProvider,
@@ -109,6 +110,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
             flags={options.flags ?? {}}
             options={{ bootstrap: options.flags }}
           >
+            <CssBaseline enableColorScheme />
             <SnackbarProvider>
               {/**
                * TODO Tanstack Router - remove amy routing  routing wrapWithTheme
@@ -205,6 +207,7 @@ export const wrapWithThemeAndRouter = (
             flags={options.flags ?? {}}
             options={{ bootstrap: options.flags }}
           >
+            <CssBaseline enableColorScheme />
             <SnackbarProvider>
               <BrowserRouter>
                 <RouterProvider router={router} />

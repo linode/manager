@@ -39,7 +39,7 @@ beforeEach(() => {
 describe('AlertDetailNotification component tests', () => {
   it('should render the alert detail notification channels successfully', () => {
     const { getAllByText, getByText } = renderWithTheme(
-      <AlertDetailNotification channelIds={['1', '2', '3']} />
+      <AlertDetailNotification channelIds={[1, 2, 3]} />
     );
 
     expect(getByText(notificationChannel)).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe('AlertDetailNotification component tests', () => {
       isFetching: false,
     });
     const { getByText } = renderWithTheme(
-      <AlertDetailNotification channelIds={['1', '2', '3']} />
+      <AlertDetailNotification channelIds={[1, 2, 3]} />
     );
 
     expect(getByText(notificationChannel)).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('AlertDetailNotification component tests', () => {
       isFetching: false,
     });
     const { getByText } = renderWithTheme(
-      <AlertDetailNotification channelIds={['1', '2', '3']} />
+      <AlertDetailNotification channelIds={[1, 2, 3]} />
     );
 
     expect(getByText(notificationChannel)).toBeInTheDocument();

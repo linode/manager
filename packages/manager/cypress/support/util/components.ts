@@ -3,7 +3,7 @@
  */
 
 import type { ThemeName } from '@linode/ui';
-import type { MountReturn } from 'cypress/react18';
+import type { MountReturn } from 'cypress/react';
 
 /**
  * Array of themes for which to test components.

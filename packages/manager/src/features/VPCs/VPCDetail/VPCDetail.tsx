@@ -1,5 +1,5 @@
 import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -113,7 +113,7 @@ const VPCDetail = () => {
           <Typography
             sx={(theme) => ({
               color: theme.textColors.headlineStatic,
-              fontFamily: theme.font.bold,
+              font: theme.font.bold,
               fontSize: '1rem',
               padding: '6px 16px',
             })}
@@ -136,15 +136,11 @@ const VPCDetail = () => {
             return (
               <Box key={col[0].label} paddingRight={6}>
                 <StyledSummaryTextTypography>
-                  <span style={{ fontFamily: theme.font.bold }}>
-                    {col[0].label}
-                  </span>{' '}
+                  <span style={{ font: theme.font.bold }}>{col[0].label}</span>{' '}
                   {col[0].value}
                 </StyledSummaryTextTypography>
                 <StyledSummaryTextTypography>
-                  <span style={{ fontFamily: theme.font.bold }}>
-                    {col[1].label}
-                  </span>{' '}
+                  <span style={{ font: theme.font.bold }}>{col[1].label}</span>{' '}
                   {col[1].value}
                 </StyledSummaryTextTypography>
               </Box>
@@ -154,7 +150,7 @@ const VPCDetail = () => {
         {vpc.description.length > 0 && (
           <StyledDescriptionBox display="flex" flex={1}>
             <Typography>
-              <span style={{ fontFamily: theme.font.bold, paddingRight: 8 }}>
+              <span style={{ font: theme.font.bold, paddingRight: 8 }}>
                 Description
               </span>{' '}
             </Typography>

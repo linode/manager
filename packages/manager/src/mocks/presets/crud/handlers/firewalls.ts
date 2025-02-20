@@ -229,6 +229,21 @@ export const deleteFirewall = (mockState: MockState) => [
         return makeNotFoundResponse();
       }
 
+      const firewallDevices = await mswDB.getAll('firewallDevices');
+      const deleteDevicePromises = [];
+
+      if (firewallDevices) {
+        const devices = firewallDevices
+          .filter((deviceTuple) => deviceTuple[0] === id)
+          .map((deviceTuple) => deviceTuple[1]);
+        for (const device of devices) {
+          deleteDevicePromises.push(
+            mswDB.delete('firewallDevices', device.id, mockState)
+          );
+        }
+      }
+
+      await Promise.all(deleteDevicePromises);
       await mswDB.delete('firewalls', id, mockState);
 
       queueEvents({

@@ -19,7 +19,7 @@ interface NotificationChannelProps {
    * List of channel IDs associated with the alert.
    * These IDs are used to fetch and display notification channels.
    */
-  channelIds: string[];
+  channelIds: number[];
 }
 export const AlertDetailNotification = React.memo(
   (props: NotificationChannelProps) => {

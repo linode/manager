@@ -6,6 +6,8 @@ import { MenuItem } from 'src/components/MenuItem';
 
 import { PaginationControls } from '../PaginationControls/PaginationControls';
 
+import type { SxProps } from '@mui/material/styles';
+
 export const MIN_PAGE_SIZE = 25;
 
 export interface PaginationProps {
@@ -15,6 +17,7 @@ export interface PaginationProps {
   page: number;
   pageSize: number;
   showAll?: boolean;
+  sx?: SxProps;
 }
 
 interface Props extends PaginationProps {
@@ -41,6 +44,7 @@ export const PaginationFooter = (props: Props) => {
     page,
     pageSize,
     showAll,
+    sx,
   } = props;
 
   if (count <= MIN_PAGE_SIZE && !fixedSize) {
@@ -65,6 +69,9 @@ export const PaginationFooter = (props: Props) => {
     <Box
       sx={{
         background: theme.bg.bgPaper,
+        border: `1px solid ${theme.tokens.table.Row.Border}`,
+        borderTop: 0,
+        ...sx,
       }}
       alignItems="center"
       data-qa-table-pagination

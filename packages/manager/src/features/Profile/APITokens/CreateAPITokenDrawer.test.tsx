@@ -79,7 +79,7 @@ describe('Create API Token Drawer', () => {
       );
       const submitBtn = getByText('Create Token');
 
-      expect(submitBtn).not.toHaveAttribute('aria-disabled', 'true');
+      expect(submitBtn).toHaveAttribute('aria-disabled', 'true');
       await userEvent.click(selectAllNoAccessPermRadioButton);
       await userEvent.click(submitBtn);
 

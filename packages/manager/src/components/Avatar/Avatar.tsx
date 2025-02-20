@@ -1,4 +1,5 @@
-import { Typography, useTheme } from '@mui/material';
+import { Typography } from '@linode/ui';
+import { useTheme } from '@mui/material';
 import { default as _Avatar } from '@mui/material/Avatar';
 import * as React from 'react';
 
@@ -59,10 +60,11 @@ export const Avatar = (props: AvatarProps) => {
   const isAkamai =
     _username === 'Akamai' || _username.startsWith('lke-service-account');
 
-  const savedAvatarColor =
-    isAkamai || !avatarColorPreference
-      ? theme.palette.primary.dark
-      : avatarColorPreference;
+  const savedAvatarColor = isAkamai
+    ? theme.palette.primary.dark
+    : !avatarColorPreference
+    ? theme.tokens.color.Neutrals[30]
+    : avatarColorPreference;
 
   const avatarLetter = _username[0]?.toUpperCase() ?? '';
 

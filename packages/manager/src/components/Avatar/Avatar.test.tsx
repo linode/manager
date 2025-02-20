@@ -31,7 +31,7 @@ describe('Avatar', () => {
     const avatarStyles = getComputedStyle(avatar);
 
     expect(getByTestId('avatar-letter')).toHaveTextContent('M');
-    expect(avatarStyles.backgroundColor).toBe('rgb(1, 116, 188)'); // theme.color.primary.dark (#0174bc)
+    expect(avatarStyles.backgroundColor).toBe('rgb(214, 214, 221)');
   });
 
   it('should render a background color from props', () => {

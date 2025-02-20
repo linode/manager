@@ -89,6 +89,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
       }}
       alignItems="center"
       container
+      data-qa-kube-entity-footer
       direction="row"
       justifyContent="space-between"
       spacing={2}

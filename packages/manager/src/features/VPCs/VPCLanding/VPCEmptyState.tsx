@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { gettingStartedGuides } from 'src/features/VPCs/VPCLanding/VPCLandingEmptyStateData';
@@ -40,7 +40,7 @@ export const VPCEmptyState = () => {
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={NodeBalancerIcon}
+      icon={NetworkIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       wide
     />
