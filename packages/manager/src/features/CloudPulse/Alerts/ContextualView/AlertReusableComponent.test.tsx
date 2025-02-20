@@ -63,14 +63,26 @@ mockQuery.useRemoveEntityFromAlert.mockReturnValue({
   mutateAsync: vi.fn(),
 });
 
+const mockHistory = {
+  push: vi.fn(),
+  replace: vi.fn(),
+};
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useHistory: vi.fn(() => mockHistory),
+  };
+});
+
 describe('Alert Resuable Component for contextual view', () => {
   it('Should go to alerts definition page on clicking manage alerts button', async () => {
-    const history = createMemoryHistory();
-    const { getByTestId } = renderWithTheme(
-      <Router history={history}>{component}</Router>
-    );
+    const { getByTestId } = renderWithTheme(component);
     await userEvent.click(getByTestId('manage-alerts'));
 
-    expect(history.location.pathname).toBe('/monitor/alerts/definitions');
+    expect(mockHistory.push).toHaveBeenCalledWith(
+      '/monitor/alerts/definitions'
+    );
   });
 });
