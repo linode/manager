@@ -1,3 +1,4 @@
+export { default as CheckboxIndeterminateIcon } from '../../assets/icons/checkboxIndeterminate.svg';
 export { default as AlertIcon } from './alert.svg';
 export { default as CheckIcon } from './check.svg';
 export { default as CheckboxIcon } from './checkbox.svg';
