@@ -94,7 +94,7 @@ export const AddNotificationChannelDrawer = (
     <Drawer
       onClose={handleCloseDrawer}
       open={open}
-      title="AddNotificationChannel"
+      title="Add Notification Channel"
     >
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>

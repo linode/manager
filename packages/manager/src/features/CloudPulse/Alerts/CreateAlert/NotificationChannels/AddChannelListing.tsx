@@ -151,6 +151,7 @@ export const AddChannelListing = React.memo((props: AddChannelListingProps) => {
       </Stack>
       <Button
         buttonType="outlined"
+        data-qa-buttons="true"
         onClick={handleOpenDrawer}
         size="medium"
         sx={(theme) => ({ marginTop: theme.spacing(2) })}
