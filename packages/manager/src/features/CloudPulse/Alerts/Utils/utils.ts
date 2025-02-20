@@ -4,7 +4,7 @@ import type {
   AlertServiceType,
   EditAlertPayloadWithService,
   NotificationChannel,
-  ServiceTypesList,,
+  ServiceTypesList,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
