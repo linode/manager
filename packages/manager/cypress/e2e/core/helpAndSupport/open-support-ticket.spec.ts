@@ -1,9 +1,26 @@
-/* eslint-disable prettier/prettier */
+// must turn off sort-objects rule in this file bc mockTicket.description is set by formatDescription fn in which attribute order is nonalphabetical and affects test result
+/* eslint-disable perfectionist/sort-objects */
 /* eslint-disable sonarjs/no-duplicate-string */
 import 'cypress-file-upload';
-import { interceptGetProfile } from 'support/intercepts/profile';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetDomains } from 'support/intercepts/domains';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockCreateLinodeAccountLimitError,
+  mockGetLinodeDetails,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
+import { mockGetClusters } from 'support/intercepts/lke';
+import { interceptGetProfile } from 'support/intercepts/profile';
+import {
+  mockAttachSupportTicketFile,
+  mockCreateSupportTicket,
+  mockGetSupportTicket,
+  mockGetSupportTicketReplies,
+  mockGetSupportTickets,
+} from 'support/intercepts/support';
 import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
 import {
   randomItem,
   randomLabel,
@@ -11,19 +28,14 @@ import {
   randomPhrase,
   randomString,
 } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
 import {
   accountFactory,
   domainFactory,
   linodeFactory,
   supportTicketFactory,
 } from 'src/factories';
-import {
-  mockAttachSupportTicketFile,
-  mockCreateSupportTicket,
-  mockGetSupportTicket,
-  mockGetSupportTickets,
-  mockGetSupportTicketReplies,
-} from 'support/intercepts/support';
 import {
   ACCOUNT_LIMIT_DIALOG_TITLE,
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
@@ -34,20 +46,11 @@ import {
   SMTP_HELPER_TEXT,
 } from 'src/features/Support/SupportTickets/constants';
 import { formatDescription } from 'src/features/Support/SupportTickets/ticketUtils';
-import { mockGetAccount } from 'support/intercepts/account';
-import {
+
+import type {
   EntityType,
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
-import {
-  mockCreateLinodeAccountLimitError,
-  mockGetLinodeDetails,
-  mockGetLinodes,
-} from 'support/intercepts/linodes';
-import { mockGetDomains } from 'support/intercepts/domains';
-import { mockGetClusters } from 'support/intercepts/lke';
-import { linodeCreatePage } from 'support/ui/pages';
-import { chooseRegion } from 'support/util/regions';
 
 describe('open support tickets', () => {
   /*
