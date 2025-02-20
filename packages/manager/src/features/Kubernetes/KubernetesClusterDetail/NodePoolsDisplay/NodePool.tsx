@@ -216,6 +216,8 @@ export const NodePool = (props: Props) => {
       data-qa-node-pool-section
       expanded={accordionExpanded}
       onChange={handleAccordionClick}
+      // This improves performance for large components and also addresses table in accordion overflow-y issue
+      slotProps={{ transition: { unmountOnExit: true } }}
     >
       <NodeTable
         clusterCreated={clusterCreated}
