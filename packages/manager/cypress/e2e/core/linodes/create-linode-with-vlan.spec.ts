@@ -11,8 +11,15 @@ import {
 } from 'support/util/random';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockCreateLinode } from 'support/intercepts/linodes';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('Create Linode with VLANs', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
+  });
+
   /*
    * - Uses mock API data to confirm VLAN attachment UI flow during Linode create.
    * - Confirms that outgoing Linode create API request contains expected data for VLAN.
