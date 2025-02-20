@@ -221,14 +221,16 @@ describe('Integration Tests for Linode Dashboard ', () => {
     });
 
     // Select a region from the dropdown.
-    ui.regionSelect.find().click().clear().type(`${region}{enter}`);
+    ui.regionSelect.find().click();
+    ui.regionSelect.find().clear();
+    ui.regionSelect.find().type(`${region}{enter}`);
 
     // Select a resource from the autocomplete input.
     ui.autocomplete
       .findByLabel('Resources')
       .should('be.visible')
-      .type(`${resource}{enter}`)
-      .click();
+      .type(`${resource}{enter}`);
+    ui.autocomplete.findByLabel('Resources').click();
 
     cy.findByText(resource).should('be.visible');
 
