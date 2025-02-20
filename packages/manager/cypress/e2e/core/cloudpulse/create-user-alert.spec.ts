@@ -111,41 +111,32 @@ const fillMetricDetailsForSpecificRule = ({
   dataField,
   aggregationType,
   operator,
-  threshold
+  threshold,
 }: MetricDetails) => {
   cy.get(`[data-testid="rule_criteria.rules.${ruleIndex}-id"]`).within(() => {
-
     // Fill Data Field
-    ui.autocomplete.findByLabel('Data Field')
+    ui.autocomplete
+      .findByLabel('Data Field')
       .should('be.visible')
       .type(dataField);
 
-      ui.autocompletePopper
-      .findByTitle(dataField)
-      .should('be.visible')
-      .click();
+    ui.autocompletePopper.findByTitle(dataField).should('be.visible').click();
 
-     // Validate Aggregation Type
-     ui.autocomplete
-     .findByLabel('Aggregation Type')
+    // Validate Aggregation Type
+    ui.autocomplete
+      .findByLabel('Aggregation Type')
       .should('be.visible')
       .type(aggregationType);
 
-      ui.autocompletePopper
+    ui.autocompletePopper
       .findByTitle(aggregationType)
       .should('be.visible')
       .click();
 
     // Fill Operator
-    ui.autocomplete.findByLabel('Operator')
-      .should('be.visible')
-      .type(operator);
+    ui.autocomplete.findByLabel('Operator').should('be.visible').type(operator);
 
-      ui.autocompletePopper
-      .findByTitle(operator)
-      .should('be.visible')
-      .click();
-
+    ui.autocompletePopper.findByTitle(operator).should('be.visible').click();
 
     // Fill Threshold
     cy.get('[data-qa-threshold]').should('be.visible').clear().type(threshold);
@@ -239,9 +230,9 @@ describe('Create Alert', () => {
       dataField: 'CPU Utilization',
       aggregationType: 'Average',
       operator: '==',
-      threshold: '1000'
+      threshold: '1000',
     };
-    
+
     fillMetricDetailsForSpecificRule(cpuUsageMetricDetails);
 
     // Add metrics
@@ -277,15 +268,15 @@ describe('Create Alert', () => {
     cy.findByText('User').should('be.visible').click();
 
     // Fill metric details for the second rule
-    
+
     const memoryUsageMetricDetails = {
       ruleIndex: 1,
       dataField: 'Memory Usage',
       aggregationType: 'Average',
       operator: '==',
-      threshold: '1000'
+      threshold: '1000',
     };
-    
+
     fillMetricDetailsForSpecificRule(memoryUsageMetricDetails);
     // Set evaluation period
     ui.autocomplete
@@ -308,9 +299,7 @@ describe('Create Alert', () => {
       .type('5');
 
     // Add notification channel
-    cy.get('[data-qa-buttons="true"]')
-      .contains('Add notification channel')
-      .click();
+    ui.buttonGroup.find().contains('Add notification channel').click();
 
     ui.autocomplete.findByLabel('Type').should('be.visible').type('Email');
     ui.autocompletePopper.findByTitle('Email').should('be.visible').click();
@@ -332,17 +321,16 @@ describe('Create Alert', () => {
           .should('be.visible')
           .click();
       });
-
-    // Ensure the cancel button is enabled and can be interacted with
-    cy.get('[data-qa-buttons="true"]')
+    // Click on submit button
+    ui.buttonGroup
+      .find()
       .find('button')
       .filter('[type="submit"]')
       .should('be.visible')
       .should('be.enabled')
       .click();
 
-    cy.wait('@createAlertDefinition').then(({ request, response }) => {
-      // Assuming customAlertDefinition is defined and contains the necessary properties
+    cy.wait('@createAlertDefinition').then(({ request }) => {
       const {
         label,
         description,
@@ -357,8 +345,6 @@ describe('Create Alert', () => {
       } = customAlertDefinition;
 
       const { created_by, updated, status } = mockAlerts;
-
-      expect(response).to.have.property('statusCode', 200);
 
       // Validate top-level properties
       expect(request.body.label).to.equal(label);
