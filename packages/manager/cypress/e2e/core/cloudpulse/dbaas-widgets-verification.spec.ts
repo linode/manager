@@ -246,7 +246,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       ).should('not.exist');
     });
 
-    ui.regionSelect.find().click().clear();
+    ui.regionSelect.find().click();
+    ui.regionSelect.find().clear();
     ui.regionSelect
       .findItemByRegionId(mockRegion.id, [mockRegion])
       .should('be.visible')

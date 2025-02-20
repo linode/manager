@@ -61,14 +61,14 @@ const pages = [1, 2];
 
 describe('Integration Tests for Edit Alert', () => {
   /*
- * - Confirms navigation from the Alert Definitions List page to the Edit Alert page.
- * - Confirms alert creation is successful using mock API data.
- * - Confirms that UI handles API interactions and displays correct data.
- * - Confirms that UI redirects back to the Alert Definitions List page after saving updates.
- * - Confirms that a toast notification appears upon successful alert update.
- * - Confirms that UI redirects to the alert listing page after creating an alert.
- * - Confirms that after submitting, the data matches with the API response.
- */
+   * - Confirms navigation from the Alert Definitions List page to the Edit Alert page.
+   * - Confirms alert creation is successful using mock API data.
+   * - Confirms that UI handles API interactions and displays correct data.
+   * - Confirms that UI redirects back to the Alert Definitions List page after saving updates.
+   * - Confirms that a toast notification appears upon successful alert update.
+   * - Confirms that UI redirects to the alert listing page after creating an alert.
+   * - Confirms that after submitting, the data matches with the API response.
+   */
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
@@ -127,10 +127,7 @@ describe('Integration Tests for Edit Alert', () => {
     );
     // Select all resources
     cy.get('[data-qa-notice="true"]').within(() => {
-      ui.button
-        .findByTitle('Select All')
-        .should('be.visible')
-        .click();
+      ui.button.findByTitle('Select All').should('be.visible').click();
 
       // Unselect button should be visible after clicking on Select All button
       ui.button
