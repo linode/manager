@@ -22,7 +22,6 @@ module.exports = {
     'build',
     'storybook-static',
     '.storybook',
-    'e2e/core/helpAndSupport',
     'e2e/core/images',
     'e2e/core/kubernetes',
     'e2e/core/linodes',
