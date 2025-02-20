@@ -1,105 +1,77 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import React from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { MetricCriteriaField } from './Criteria/MetricCriteria';
-import { TriggerConditions } from './Criteria/TriggerConditions';
-import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
-import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
-import { AddChannelListing } from './NotificationChannels/AddChannelListing';
-import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
-import { CreateAlertDefinitionFormSchema } from './schemas';
-import { filterFormValues } from './utilities';
+import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
+import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
+import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
+import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
+import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
+import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
+import { convertAlertDefinitionValues } from '../Utils/utils';
+import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
-  CreateAlertDefinitionForm,
-  MetricCriteriaForm,
-  TriggerConditionForm,
-} from './types';
+  AlertServiceType,
+  EditAlertDefinitionPayload,
+} from '@linode/api-v4';
+import type { Alert } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
-const triggerConditionInitialValues: TriggerConditionForm = {
-  criteria_condition: 'ALL',
-  evaluation_period_seconds: null,
-  polling_interval_seconds: null,
-  trigger_occurrences: 0,
-};
-const criteriaInitialValues: MetricCriteriaForm = {
-  aggregate_function: null,
-  dimension_filters: [],
-  metric: null,
-  operator: null,
-  threshold: 0,
-};
-const initialValues: CreateAlertDefinitionForm = {
-  channel_ids: [],
-  engineType: null,
-  entity_ids: [],
-  label: '',
-  region: '',
-  rule_criteria: {
-    rules: [criteriaInitialValues],
-  },
-  serviceType: null,
-  severity: null,
-  tags: [''],
-  trigger_conditions: triggerConditionInitialValues,
-};
+export interface EditAlertProps {
+  /**
+   * The details of the alert being edited.
+   */
+  alertDetails: Alert;
+  /**
+   * The type of service associated with the alert
+   */
+  serviceType: AlertServiceType;
+}
 
-const overrides = [
-  {
-    label: 'Definitions',
-    linkTo: '/monitor/alerts/definitions',
-    position: 1,
-  },
-  {
-    label: 'Details',
-    linkTo: `/monitor/alerts/definitions/create`,
-    position: 2,
-  },
-];
-export const CreateAlertDefinition = () => {
+export const EditAlertDefinition = (props: EditAlertProps) => {
+  const { alertDetails, serviceType } = props;
   const history = useHistory();
-  const alertCreateExit = () => history.push('/monitor/alerts/definitions');
 
-  const formMethods = useForm<CreateAlertDefinitionForm>({
-    defaultValues: initialValues,
+  const { enqueueSnackbar } = useSnackbar();
+
+  const filteredAlertDefinitionValues = convertAlertDefinitionValues(
+    alertDetails,
+    serviceType
+  );
+  const formMethods = useForm<EditAlertDefinitionPayload>({
+    defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>
+      EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
 
-  const { control, formState, getValues, handleSubmit, setError } = formMethods;
-  const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: createAlert } = useCreateAlertDefinition(
-    getValues('serviceType')!
-  );
-
-  const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
-
+  const alertId = alertDetails.id;
+  const { mutateAsync: editAlert } = useEditAlertDefinition();
+  const { control, formState, handleSubmit, setError } = formMethods;
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await createAlert(filterFormValues(values));
-      enqueueSnackbar('Alert successfully created', {
+      await editAlert({ alertId, serviceType, ...values });
+      enqueueSnackbar('Alert successfully updated.', {
         variant: 'success',
       });
-      alertCreateExit();
+      history.push(definitionLanding);
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
           setError(error.field, { message: error.reason });
         } else {
-          enqueueSnackbar(`Alert failed: ${error.reason}`, {
+          enqueueSnackbar(`Alert update failed: ${error.reason}`, {
             variant: 'error',
           });
           setError('root', { message: error.reason });
@@ -107,10 +79,28 @@ export const CreateAlertDefinition = () => {
       }
     }
   });
+  const definitionLanding = '/monitor/alerts/definitions';
+
+  const { newPathname, overrides } = React.useMemo(() => {
+    const overrides = [
+      {
+        label: 'Definitions',
+        linkTo: definitionLanding,
+        position: 1,
+      },
+      {
+        label: 'Edit',
+        linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
+        position: 2,
+      },
+    ];
+
+    return { newPathname: '/Definitions/Edit', overrides };
+  }, [serviceType, alertId]);
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
-      <Breadcrumb crumbOverrides={overrides} pathname="/Definitions/Create" />
+      <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
           <Typography marginTop={2} variant="h2">
@@ -148,21 +138,19 @@ export const CreateAlertDefinition = () => {
             control={control}
             name="description"
           />
-          <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
+          <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
           <CloudPulseModifyAlertResources name="entity_ids" />
           <MetricCriteriaField
-            setMaxInterval={(interval: number) =>
-              setMaxScrapeInterval(interval)
-            }
             name="rule_criteria.rules"
-            serviceType={serviceTypeWatcher!}
+            serviceType={serviceType}
+            setMaxInterval={setMaxScrapeInterval}
           />
           <TriggerConditions
             maxScrapingInterval={maxScrapeInterval}
-            name="trigger_conditions"
+            name={'trigger_conditions'}
           />
-          <AddChannelListing name="channel_ids" />
+          <AddChannelListing name={'channel_ids'} />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
@@ -171,7 +159,7 @@ export const CreateAlertDefinition = () => {
             }}
             secondaryButtonProps={{
               label: 'Cancel',
-              onClick: alertCreateExit,
+              onClick: () => history.push(definitionLanding),
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />

@@ -11,7 +11,8 @@ import type {
   AlertFilterType,
   AlertResourceFiltersProps,
 } from '../AlertsResources/types';
-import type { Region } from '@linode/api-v4';
+import type { AlertServiceType, Region } from '@linode/api-v4';
+import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 interface FilterResourceProps {
   /**
@@ -134,6 +135,31 @@ export const getRegionOptions = (
     }
   });
   return Array.from(uniqueRegions);
+};
+
+/**
+ * @param aclpResourceTypeMap The launch darkly flag where supported region ids are listed
+ * @param serviceType The service type associated with the alerts
+ * @returns Array of supported regions associated with the resource ids of the alert
+ */
+export const getSupportedRegionIds = (
+  aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[] | undefined,
+  serviceType: AlertServiceType | undefined
+): string[] | undefined => {
+  const resourceTypeFlag = aclpResourceTypeMap?.find(
+    (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
+  );
+
+  if (
+    resourceTypeFlag?.supportedRegionIds === null ||
+    resourceTypeFlag?.supportedRegionIds === undefined
+  ) {
+    return undefined;
+  }
+
+  return resourceTypeFlag.supportedRegionIds
+    .split(',')
+    .map((regionId: string) => regionId.trim());
 };
 
 /**

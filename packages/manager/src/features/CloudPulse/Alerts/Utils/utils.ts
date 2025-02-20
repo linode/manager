@@ -3,8 +3,13 @@ import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type {
   Alert,
+  AlertDefinitionDimensionFilter,
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
+  AlertServiceType,
+  DimensionFilter,
+  EditAlertPayloadWithService,
+  MetricCriteria,
   NotificationChannel,
   ServiceTypesList,
 } from '@linode/api-v4';
@@ -148,6 +153,69 @@ export const getChipLabels = (
       values: [value.content.webhook.webhook_url],
     };
   }
+};
+
+/**
+ * Filters the given alert's dimension filter values and returns a DimensionFilter object.
+ * @param formValues The alert dimension filter values from the form.
+ * @returns The filtered DimensionFilter object.
+ */
+export const convertAlertDefinitionDimensionFilterValues = (
+  formValues: AlertDefinitionDimensionFilter
+): DimensionFilter => {
+  return {
+    dimension_label: formValues.dimension_label,
+    operator: formValues.operator,
+    value: formValues.value,
+  };
+};
+
+/**
+ * Filters the alert's metric values from the form and returns a MetricCriteria object.
+ * @param formValue The alert's metric criteria values from the form.
+ * @returns The filtered MetricCriteria object.
+ */
+export const convertAlertDefinitionMetricValues = (
+  formValue: AlertDefinitionMetricCriteria
+): MetricCriteria => {
+  return {
+    aggregate_function: formValue.aggregate_function,
+    dimension_filters:
+      formValue.dimension_filters?.map((filter) => {
+        return convertAlertDefinitionDimensionFilterValues(filter);
+      }) ?? [],
+    metric: formValue.metric,
+    operator: formValue.operator,
+    threshold: formValue.threshold,
+  };
+};
+
+/**
+ * Filters and maps the alert data to match the form structure.
+ * @param alert The alert object to be mapped.
+ * @param serviceType The service type for the alert.
+ * @returns The formatted alert values suitable for the form.
+ */
+export const convertAlertDefinitionValues = (
+  alert: Alert,
+  serviceType: AlertServiceType
+): EditAlertPayloadWithService => {
+  return {
+    alertId: alert.id,
+    channel_ids: alert.alert_channels.map((channel) => channel.id),
+    description: alert.description || undefined,
+    entity_ids: alert.entity_ids,
+    label: alert.label,
+    rule_criteria: {
+      rules: alert.rule_criteria.rules.map((rule) =>
+        convertAlertDefinitionMetricValues(rule)
+      ),
+    },
+    serviceType,
+    severity: alert.severity,
+    tags: alert.tags,
+    trigger_conditions: alert.trigger_conditions,
+  };
 };
 
 /**

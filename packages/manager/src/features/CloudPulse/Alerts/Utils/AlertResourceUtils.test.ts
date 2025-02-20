@@ -4,6 +4,7 @@ import {
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
+  getSupportedRegionIds,
 } from './AlertResourceUtils';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
@@ -207,5 +208,34 @@ describe('getFilteredResources', () => {
       resourceIds: ['1', '2', '3'],
     });
     expect(result.length).toBe(3);
+  });
+});
+
+describe('getSupportedRegionIds', () => {
+  const mockResourceTypeMap = [
+    {
+      dimensionKey: 'LINODE_ID',
+      serviceType: 'linode',
+      supportedRegionIds: 'us-east,us-west,us-central,us-southeast',
+    },
+  ];
+
+  it('should return supported region ids', () => {
+    const result = getSupportedRegionIds(
+      mockResourceTypeMap,
+      'linode'
+    ) as string[];
+    expect(result.length).toBe(4);
+  });
+  it('should return undefined if no supported region ids are defined in resource type map for the given service type', () => {
+    const mockResourceTypeMap = [
+      {
+        dimensionKey: 'LINODE_ID',
+        serviceType: 'linode',
+      },
+    ];
+
+    const result = getSupportedRegionIds(mockResourceTypeMap, 'linode');
+    expect(result).toBeUndefined();
   });
 });

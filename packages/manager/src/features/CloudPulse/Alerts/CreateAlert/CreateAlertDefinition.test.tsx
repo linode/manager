@@ -101,5 +101,32 @@ describe('AlertDefinition Create', () => {
     expect(
       await container.findByText('The value should be a number.')
     ).toBeInTheDocument();
+
+    expect(
+      await container.findByText(
+        'At least one notification channel is required.'
+      )
+    );
+  });
+
+  it('should validate the checks of Alert Name and Description', async () => {
+    const user = userEvent.setup();
+    const container = renderWithTheme(<CreateAlertDefinition />);
+    const nameInput = container.getByLabelText('Name');
+    const descriptionInput = container.getByLabelText('Description (optional)');
+    await user.type(nameInput, '*#&+:<>"?@%');
+    await user.type(
+      descriptionInput,
+      'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    );
+    await user.click(container.getByText('Submit'));
+    expect(
+      await container.findByText(
+        'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
+      )
+    ).toBeVisible();
+    expect(
+      await container.findByText('Description must be 100 characters or less.')
+    ).toBeVisible();
   });
 });
