@@ -2516,6 +2516,7 @@ export const handlers = [
               ],
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
+            type: 'user',
           })
         );
       }
