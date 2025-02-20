@@ -3,6 +3,9 @@ import Factory from 'src/factories/factoryProxy';
 import type {
   AlertDefinitionDimensionFilter,
   AlertDefinitionMetricCriteria,
+  CreateAlertDefinitionPayload,
+  MetricCriteria,
+  TriggerCondition,
 } from '@linode/api-v4';
 import type { Alert } from '@linode/api-v4';
 
@@ -24,6 +27,51 @@ export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricC
     operator: 'eq',
     threshold: 60,
     unit: 'Bytes',
+  }
+);
+
+export const triggerConditionFactory = Factory.Sync.makeFactory<TriggerCondition>(
+  {
+    criteria_condition: 'ALL',
+    evaluation_period_seconds: 300,
+    polling_interval_seconds: 300,
+    trigger_occurrences: 5,
+  }
+);
+export const cpuRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
+  aggregate_function: 'avg',
+  dimension_filters: [
+    {
+      dimension_label: 'state',
+      operator: 'eq',
+      value: 'user',
+    },
+  ],
+  metric: 'system_cpu_utilization_percent',
+  operator: 'eq',
+  threshold: 1000,
+});
+
+export const memoryRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
+  aggregate_function: 'avg',
+  dimension_filters: [],
+  metric: 'system_memory_usage_by_resource',
+  operator: 'eq',
+  threshold: 1000,
+});
+
+export const alertDefinitionFactory = Factory.Sync.makeFactory<CreateAlertDefinitionPayload>(
+  {
+    channel_ids: [1, 2, 3],
+    description: 'This is a default alert description.',
+    entity_ids: ['1', '2', '3', '4', '5'],
+    label: 'Default Alert Label',
+    rule_criteria: {
+      rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
+    },
+    severity: 1,
+    tags: ['tag1', 'tag2'],
+    trigger_conditions: triggerConditionFactory.build(),
   }
 );
 
