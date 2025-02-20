@@ -16,7 +16,7 @@
     "build": "pnpm build:validation && pnpm build:sdk && pnpm --filter linode-manager build",
     "build:analyze": "pnpm run --filter linode-manager build:analyze",
     "bootstrap": "pnpm install:all && pnpm build:validation && pnpm build:sdk",
-    "up:expose": "pnpm install:all && pnpm build:validation && pnpm build:sdk && pnpm start:all:expose",
+    "up:expose": "npm_config_package_import_method=clone-or-copy pnpm install:all && pnpm build:validation && pnpm build:sdk && pnpm start:all:expose",
     "dev": "concurrently -n api-v4,validation,ui,manager -c blue,yellow,magenta,green \"pnpm run --filter @linode/api-v4 start\" \"pnpm run --filter @linode/validation start\" \"pnpm run --filter @linode/ui start\" \"pnpm run --filter linode-manager start\"",
     "start:all:expose": "concurrently -n api-v4,validation,ui,manager -c blue,yellow,magenta,green \"pnpm run --filter @linode/api-v4 start\" \"pnpm run --filter @linode/validation start\" \"pnpm run --filter @linode/ui start\" \"pnpm run --filter linode-manager start:expose\"",
     "start:manager": "pnpm --filter linode-manager start",
