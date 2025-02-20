@@ -1,14 +1,10 @@
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type {
   Alert,
-  AlertDefinitionDimensionFilter,
-  AlertDefinitionMetricCriteria,
   AlertServiceType,
-  DimensionFilter,
   EditAlertPayloadWithService,
-  MetricCriteria,
   NotificationChannel,
-  ServiceTypesList,
+  ServiceTypesList,,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
