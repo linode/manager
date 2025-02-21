@@ -1,8 +1,8 @@
 import { Notice } from '@linode/ui';
 import { useTheme } from '@mui/material';
+import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -29,7 +29,7 @@ interface Props {
 export const AddLinodeDrawer = (props: Props) => {
   const { helperText, onClose, open } = props;
 
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams({ from: '/firewalls/$id/linodes' });
 
   const { enqueueSnackbar } = useSnackbar();
 

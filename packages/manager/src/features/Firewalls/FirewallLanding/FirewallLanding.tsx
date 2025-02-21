@@ -1,8 +1,8 @@
 import { Button, CircleProgress } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { Hidden } from 'src/components/Hidden';
@@ -30,13 +30,12 @@ import { FirewallRow } from './FirewallRow';
 
 import type { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import type { Mode } from './FirewallDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const preferenceKey = 'firewalls';
 
 const FirewallLanding = () => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -98,11 +97,11 @@ const FirewallLanding = () => {
   };
 
   const onOpenCreateDrawer = () => {
-    history.replace('/firewalls/create');
+    navigate({ to: '/firewalls/create' });
   };
 
   const onCloseCreateDrawer = () => {
-    history.replace('/firewalls');
+    navigate({ to: '/firewalls' });
   };
 
   const handlers: FirewallHandlers = {
@@ -193,7 +192,7 @@ const FirewallLanding = () => {
               <TableCell>Rules</TableCell>
               <TableCell>Services</TableCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -230,9 +229,5 @@ const FirewallLanding = () => {
     </React.Fragment>
   );
 };
-
-export const firewallLandingLazyRoute = createLazyRoute('/firewalls')({
-  component: FirewallLanding,
-});
 
 export default React.memo(FirewallLanding);

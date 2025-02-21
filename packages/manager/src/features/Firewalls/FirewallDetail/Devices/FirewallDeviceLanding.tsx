@@ -1,9 +1,9 @@
 import { Button, Notice, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
@@ -38,10 +38,8 @@ export const FirewallDeviceLanding = React.memo(
 
     const theme = useTheme();
 
-    const history = useHistory();
-    const routeMatch = useRouteMatch();
     const location = useLocation();
-
+    const navigate = useNavigate();
     const helperText =
       'Assign one or more services to this firewall. You can add services later if you want to customize your rules first.';
 
@@ -79,12 +77,12 @@ export const FirewallDeviceLanding = React.memo(
 
     const handleClose = () => {
       setDeviceDrawerOpen(false);
-      history.push(routeMatch.url);
+      navigate({ to: location.pathname });
     };
 
     const handleOpen = () => {
       setDeviceDrawerOpen(true);
-      history.push(routeMatch.url + '/add');
+      navigate({ to: location.pathname + '/add' });
     };
 
     const [searchText, setSearchText] = React.useState('');
@@ -120,12 +118,12 @@ export const FirewallDeviceLanding = React.memo(
             A {formattedType} can only be assigned to a single Firewall.
           </StyledTypography>
           <Grid
-            container
-            direction="row"
             sx={{
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
+            container
+            direction="row"
           >
             <Grid sx={{ width: '30%' }}>
               <DebouncedSearchTextField
