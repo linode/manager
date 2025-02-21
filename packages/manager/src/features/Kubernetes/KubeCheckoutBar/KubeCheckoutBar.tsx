@@ -2,6 +2,7 @@ import { CircleProgress, Divider, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
+import { Link } from 'src/components/Link';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { useAccountAgreements } from 'src/queries/account/agreements';
@@ -13,6 +14,7 @@ import {
   LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
   LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
 } from 'src/utilities/pricing/constants';
+import { LKE_ADDITIONAL_PRICING } from 'src/utilities/pricing/constants';
 import {
   getKubernetesMonthlyPrice,
   getTotalClusterPrice,
@@ -120,6 +122,7 @@ export const KubeCheckoutBar = (props: Props) => {
           ? LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE
           : LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE
       }
+      additionalPricing={AdditionalPricing}
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"
@@ -184,5 +187,19 @@ export const KubeCheckoutBar = (props: Props) => {
     </CheckoutBar>
   );
 };
+
+const AdditionalPricing = (
+  <>
+    <Divider dark spacingBottom={16} spacingTop={16} />
+    <Typography>{LKE_ADDITIONAL_PRICING}</Typography>
+    <Link
+      data-testid="additional-pricing-link"
+      to="https://www.linode.com/pricing/"
+    >
+      See pricing
+    </Link>
+    .
+  </>
+);
 
 export default RenderGuard(KubeCheckoutBar);

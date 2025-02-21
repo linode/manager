@@ -13,6 +13,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,
@@ -21,6 +22,7 @@ import {
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import {
   reportAgreementSigningError,
@@ -146,6 +148,10 @@ export const CreateCluster = () => {
   const lkeEnterpriseType = kubernetesHighAvailabilityTypesData?.find(
     (type) => type.id === 'lke-e'
   );
+
+  const isCreateClusterRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_kubernetes',
+  });
 
   const {
     data: allTypes,
@@ -312,6 +318,18 @@ export const CreateCluster = () => {
                   message={generalError}
                 />
               </Notice>
+            )}
+            {isCreateClusterRestricted && (
+              <Notice
+                text={getRestrictedResourceText({
+                  action: 'create',
+                  isSingular: false,
+                  resourceType: 'LKE Clusters',
+                })}
+                important
+                sx={{ marginBottom: 2 }}
+                variant="error"
+              />
             )}
             <Paper data-qa-label-header>
               <Controller
