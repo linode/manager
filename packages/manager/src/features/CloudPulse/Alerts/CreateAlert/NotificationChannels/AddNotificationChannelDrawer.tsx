@@ -90,6 +90,11 @@ export const AddNotificationChannelDrawer = (
     (template) => template.label === channelLabelWatcher
   );
 
+  const resetDrawer = () => {
+    handleCloseDrawer();
+    reset();
+  };
+
   return (
     <Drawer
       onClose={handleCloseDrawer}
@@ -164,6 +169,11 @@ export const AddNotificationChannelDrawer = (
                         reason === 'selectOption' ? selected.label : null
                       );
                     }}
+                    slotProps={{
+                      popper: {
+                        placement: 'bottom',
+                      },
+                    }}
                     value={
                       selectedChannelTypeTemplate?.find(
                         (option) => option.label === field.value
@@ -204,7 +214,7 @@ export const AddNotificationChannelDrawer = (
             }}
             secondaryButtonProps={{
               label: 'Cancel',
-              onClick: handleCloseDrawer,
+              onClick: resetDrawer,
             }}
           />
         </form>

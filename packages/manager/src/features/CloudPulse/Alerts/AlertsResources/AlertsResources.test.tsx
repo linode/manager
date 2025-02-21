@@ -127,7 +127,7 @@ describe('AlertResources component tests', () => {
     });
     // search with invalid text and a region
     await userEvent.type(searchInput, 'dummy');
-    await userEvent.click(getByRole('button', { name: 'Open' }));
+    await userEvent.click(getByPlaceholderText('Select Regions'));
     await userEvent.click(getByTestId(regions[0].id));
     await userEvent.click(getByRole('button', { name: 'Close' }));
     await waitFor(() => {
@@ -191,7 +191,7 @@ describe('AlertResources component tests', () => {
   it('should handle selection correctly and publish', async () => {
     const handleResourcesSelection = vi.fn();
 
-    const { getByTestId, queryByTestId, getByText } = renderWithTheme(
+    const { getByTestId, getByText, queryByTestId } = renderWithTheme(
       <AlertResources
         {...alertResourcesProp}
         alertResourceIds={['1', '2']}

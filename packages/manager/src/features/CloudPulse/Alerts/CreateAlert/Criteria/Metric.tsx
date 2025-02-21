@@ -277,6 +277,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   alignItems: 'flex-end',
                   display: 'flex',
                   height: '56px',
+                  marginTop: { lg: '5px', md: '5px', sm: '5px' },
                 }}
                 variant="body1"
               >

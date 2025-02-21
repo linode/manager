@@ -111,7 +111,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               label="Data Field"
               onBlur={field.onBlur}
               options={dataFieldOptions}
-              placeholder="Select a Data field"
+              placeholder="Select a Data Field"
             />
           )}
           control={control}
@@ -143,6 +143,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               label="Operator"
               onBlur={field.onBlur}
               options={dimensionOperatorOptions}
+              placeholder="Select an Operator"
             />
           )}
           control={control}
