@@ -2,6 +2,8 @@ import { Select, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { VPCTemplateRules } from './VPCTemplateRules';
+
 import type { CreateFirewallFormValues } from './formUtilities';
 import type { FirewallTemplateSlug } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
@@ -23,15 +25,19 @@ const firewallTemplateOptions: SelectOption<FirewallTemplateSlug>[] = [
 
 export const TemplateFirewallFields = (props: TemplateFirewallProps) => {
   const { userCannotAddFirewall } = props;
-  const { control } = useFormContext<CreateFirewallFormValues>();
+  const { control, watch } = useFormContext<CreateFirewallFormValues>();
+
+  const selectedTemplate = watch('templateSlug');
 
   return (
     <>
-      <Typography>
-        Firewall templates enable you to quickly create firewalls with
-        reasonable firewall rules for Public and VPC interfaces that can be
-        edited.
-      </Typography>
+      {!selectedTemplate && (
+        <Typography>
+          Firewall templates enable you to quickly create firewalls with
+          reasonable firewall rules for Public and VPC interfaces that can be
+          edited.
+        </Typography>
+      )}
       <Controller
         render={({ field, fieldState }) => (
           <Select
@@ -53,6 +59,7 @@ export const TemplateFirewallFields = (props: TemplateFirewallProps) => {
         control={control}
         name="templateSlug"
       />
+      {selectedTemplate === 'vpc' && <VPCTemplateRules />}
     </>
   );
 };
