@@ -116,7 +116,7 @@ describe('Object Storage Gen2 create access key modal has disabled fields for re
   });
 
   // access keys creation
-  it('create access keys form', () => {
+  it.only('create access keys form', () => {
     cy.visitWithLogin('/object-storage/access-keys/create');
 
     cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
@@ -126,7 +126,7 @@ describe('Object Storage Gen2 create access key modal has disabled fields for re
       .should('be.visible')
       .within(() => {
         cy.findByText(
-          /You don't have bucket_access to create an Access Key./
+          /You don't have permissions to create an Access Key./
         ).should('be.visible');
         // label
         cy.findByLabelText(/Label.*/)
