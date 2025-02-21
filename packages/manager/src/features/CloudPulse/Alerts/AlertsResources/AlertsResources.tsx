@@ -137,7 +137,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     // Always include platform filter for 'dbaas'
     const platformFilter: Filter = { platform: 'rdbms-default' };
 
-    // If alertType is not 'system' or alertClass is not defined or alertClass is shared, return only platform filter
+    // If alertType is not 'system' or alertClass is not defined, return only platform filter
     if (alertType !== 'system' || !alertClass) {
       return platformFilter;
     }
