@@ -138,7 +138,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     const platformFilter: Filter = { platform: 'rdbms-default' };
 
     // If alertType is not 'system' or alertClass is not defined or alertClass is shared, return only platform filter
-    if (alertType !== 'system' || !alertClass || alertClass === 'shared') {
+    if (alertType !== 'system' || !alertClass) {
       return platformFilter;
     }
 
