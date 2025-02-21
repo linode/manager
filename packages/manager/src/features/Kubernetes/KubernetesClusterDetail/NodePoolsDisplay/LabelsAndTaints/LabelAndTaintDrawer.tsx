@@ -1,4 +1,5 @@
 import { Button, Divider, Notice, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -7,7 +8,6 @@ import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
-import { capitalize } from 'src/utilities/capitalize';
 import { extendType } from 'src/utilities/extendType';
 
 import { LabelInput } from './LabelInput';

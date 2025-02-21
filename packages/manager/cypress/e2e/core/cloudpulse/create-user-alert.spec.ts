@@ -2,7 +2,9 @@
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
  */
 
-import { Flags } from 'src/featureFlags';
+import { statusMap } from 'support/constants/alert';
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateAlertDefinition,
   mockGetAlertChannels,
@@ -10,9 +12,11 @@ import {
   mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { mockGetAccount } from 'support/intercepts/account';
+
 import {
   accountFactory,
   alertDefinitionFactory,
@@ -25,21 +29,19 @@ import {
   regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { widgetDetails } from 'support/constants/widgets';
-import { mockGetDatabases } from 'support/intercepts/databases';
-import { statusMap } from 'support/constants/alert';
 import { formatDate } from 'src/utilities/formatDate';
 
+import type { Flags } from 'src/featureFlags';
+
 export interface MetricDetails {
-  ruleIndex: number;
-  dataField: string;
   aggregationType: string;
+  dataField: string;
   operator: string;
+  ruleIndex: number;
   threshold: string;
 }
 
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 
 // Create mock data
 const mockAccount = accountFactory.build();
@@ -50,32 +52,32 @@ const mockRegion = regionFactory.build({
 });
 const { metrics, serviceType } = widgetDetails.dbaas;
 const databaseMock = databaseFactory.buildList(10, {
-  region: 'us-ord',
-  engine: 'mysql',
   cluster_size: 3,
+  engine: 'mysql',
+  region: 'us-ord',
 });
 
 const notificationChannels = notificationChannelFactory.build({
   channel_type: 'email',
-  type: 'custom',
-  label: 'channel-1',
   id: 1,
+  label: 'channel-1',
+  type: 'custom',
 });
 
 const customAlertDefinition = alertDefinitionFactory.build({
   channel_ids: [1],
-  label: 'Alert-1',
-  severity: 0,
   description: 'My Custom Description',
   entity_ids: ['2'],
-  tags: [''],
+  label: 'Alert-1',
   rule_criteria: {
     rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
   },
+  severity: 0,
+  tags: [''],
   trigger_conditions: triggerConditionFactory.build(),
 });
 
-const metricDefinitions = metrics.map(({ title, name, unit }) =>
+const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
     label: title,
     metric: name,
@@ -83,19 +85,19 @@ const metricDefinitions = metrics.map(({ title, name, unit }) =>
   })
 );
 const mockAlerts = alertFactory.build({
-  service_type: 'dbaas',
   alert_channels: [{ id: 1 }],
-  label: 'Alert-1',
-  severity: 0,
+  created_by: 'user1',
   description: 'My Custom Description',
   entity_ids: ['2'],
-  updated: new Date().toISOString(),
-  created_by: 'user1',
+  label: 'Alert-1',
   rule_criteria: {
     rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
   },
-  trigger_conditions: triggerConditionFactory.build(),
+  service_type: 'dbaas',
+  severity: 0,
   tags: [''],
+  trigger_conditions: triggerConditionFactory.build(),
+  updated: new Date().toISOString(),
 });
 
 /**
@@ -107,10 +109,10 @@ const mockAlerts = alertFactory.build({
  * @param threshold - The threshold value for the metric.
  */
 const fillMetricDetailsForSpecificRule = ({
-  ruleIndex,
-  dataField,
   aggregationType,
+  dataField,
   operator,
+  ruleIndex,
   threshold,
 }: MetricDetails) => {
   cy.get(`[data-testid="rule_criteria.rules.${ruleIndex}-id"]`).within(() => {
@@ -139,7 +141,8 @@ const fillMetricDetailsForSpecificRule = ({
     ui.autocompletePopper.findByTitle(operator).should('be.visible').click();
 
     // Fill Threshold
-    cy.get('[data-qa-threshold]').should('be.visible').clear().type(threshold);
+    cy.get('[data-qa-threshold]').should('be.visible').clear();
+    cy.get('[data-qa-threshold]').should('be.visible').type(threshold);
   });
 };
 
@@ -226,10 +229,10 @@ describe('Create Alert', () => {
 
     // Fill metric details for the first rule
     const cpuUsageMetricDetails = {
-      ruleIndex: 0,
-      dataField: 'CPU Utilization',
       aggregationType: 'Average',
+      dataField: 'CPU Utilization',
       operator: '==',
+      ruleIndex: 0,
       threshold: '1000',
     };
 
@@ -249,17 +252,19 @@ describe('Create Alert', () => {
       .findByLabel('Data Field')
       .eq(1)
       .should('be.visible')
-      .clear()
+      .clear();
+
+    ui.autocomplete
+      .findByLabel('Data Field')
+      .eq(1)
+      .should('be.visible')
       .type('State of CPU');
 
     cy.findByText('State of CPU').should('be.visible').click();
 
-    ui.autocomplete
-      .findByLabel('Operator')
-      .eq(1)
-      .should('be.visible')
-      .clear()
-      .type('Equal');
+    ui.autocomplete.findByLabel('Operator').eq(1).should('be.visible').clear();
+
+    ui.autocomplete.findByLabel('Operator').eq(1).type('Equal');
 
     cy.findByText('Equal').should('be.visible').click();
 
@@ -270,10 +275,10 @@ describe('Create Alert', () => {
     // Fill metric details for the second rule
 
     const memoryUsageMetricDetails = {
-      ruleIndex: 1,
-      dataField: 'Memory Usage',
       aggregationType: 'Average',
+      dataField: 'Memory Usage',
       operator: '==',
+      ruleIndex: 1,
       threshold: '1000',
     };
 
@@ -293,10 +298,9 @@ describe('Create Alert', () => {
     ui.autocompletePopper.findByTitle('5 min').should('be.visible').click();
 
     // Set trigger occurrences
-    cy.get('[data-qa-trigger-occurrences]')
-      .should('be.visible')
-      .clear()
-      .type('5');
+    cy.get('[data-qa-trigger-occurrences]').should('be.visible').clear();
+
+    cy.get('[data-qa-trigger-occurrences]').should('be.visible').type('5');
 
     // Add notification channel
     ui.buttonGroup.find().contains('Add notification channel').click();
@@ -332,19 +336,19 @@ describe('Create Alert', () => {
 
     cy.wait('@createAlertDefinition').then(({ request }) => {
       const {
-        label,
         description,
-        severity,
+        label,
         rule_criteria: { rules },
+        severity,
         trigger_conditions: {
-          trigger_occurrences,
+          criteria_condition,
           evaluation_period_seconds,
           polling_interval_seconds,
-          criteria_condition,
+          trigger_occurrences,
         },
       } = customAlertDefinition;
 
-      const { created_by, updated, status } = mockAlerts;
+      const { created_by, status, updated } = mockAlerts;
 
       // Validate top-level properties
       expect(request.body.label).to.equal(label);
