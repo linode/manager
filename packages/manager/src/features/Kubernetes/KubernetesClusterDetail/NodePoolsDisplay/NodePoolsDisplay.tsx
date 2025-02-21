@@ -165,8 +165,8 @@ export const NodePoolsDisplay = (props: Props) => {
         </Stack>
         <Stack
           sx={(theme) => ({
-            paddingTop: theme.spacing(1),
             [theme.breakpoints.down('md')]: {
+              paddingTop: theme.spacing(1),
               width: '100%',
             },
           })}
