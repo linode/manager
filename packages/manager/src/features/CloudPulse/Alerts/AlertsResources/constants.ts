@@ -14,7 +14,7 @@ import type {
   ServiceColumns,
   ServiceFilterConfig,
 } from './types';
-import type { AlertServiceType } from '@linode/api-v4';
+import type { AlertServiceType, DatabaseTypeClass } from '@linode/api-v4';
 
 export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   '': [
@@ -107,3 +107,10 @@ export const engineOptions: EngineType[] = [
     label: 'PostgreSQL',
   },
 ];
+
+export const databaseTypeClassMap: Record<DatabaseTypeClass, string> = {
+  dedicated: 'dedicated',
+  nanode: 'nanode',
+  premium: 'premium',
+  standard: 'standard',
+};
