@@ -763,6 +763,15 @@ export const handlers = [
         });
       }
 
+      // filter the linodes based on supported regions
+      if (orFilters?.length) {
+        filteredLinodes = linodes.filter((linode) => {
+          return orFilters.some(
+            (filter: { region: string }) => linode.region === filter.region
+          );
+        });
+      }
+
       if (regionFilter) {
         filteredLinodes = filteredLinodes.filter((linode) => {
           return linode.region === regionFilter;
