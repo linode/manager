@@ -57,7 +57,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
             tickFormat: (value: number) => `${roundTo(value, 3)}`,
           }}
           fillOpacity={0.5}
-          legendHeight="150px"
+          legendHeight="165px"
         />
       )}
       {rest.data.length === 0 && (

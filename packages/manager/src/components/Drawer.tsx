@@ -1,11 +1,15 @@
-import { Box, CircleProgress, IconButton, Typography } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  IconButton,
+  Typography,
+  convertForAria,
+} from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-
-import { convertForAria } from 'src/utilities/stringUtils';
 
 import { ErrorState } from './ErrorState/ErrorState';
 import { NotFound } from './NotFound';

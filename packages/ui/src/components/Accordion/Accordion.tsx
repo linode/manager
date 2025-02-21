@@ -5,8 +5,7 @@ import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ChevronDown from 'src/assets/icons/chevron-down.svg';
-
+import { ChevronDownIcon } from '../../assets';
 import { Notice } from '../Notice';
 import { Typography } from '../Typography';
 
@@ -122,13 +121,15 @@ export const Accordion = (props: AccordionProps) => {
   const notice = success || warning || error || null;
 
   return (
-    (<_Accordion
+    <_Accordion
       defaultExpanded={defaultExpanded}
       {...accordionProps}
       data-qa-panel={heading}
     >
       <AccordionSummary
-        expandIcon={<ChevronDown className={`caret ${expandIconClassNames}`} />}
+        expandIcon={
+          <ChevronDownIcon className={`caret ${expandIconClassNames}`} />
+        }
         onClick={handleClick}
         {...summaryProps}
         data-qa-panel-summary={heading}
@@ -161,6 +162,6 @@ export const Accordion = (props: AccordionProps) => {
         </Grid>
       </AccordionDetails>
       {actions ? actions(accordionProps) : null}
-    </_Accordion>)
+    </_Accordion>
   );
 };

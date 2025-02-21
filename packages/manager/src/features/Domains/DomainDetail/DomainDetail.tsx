@@ -194,6 +194,7 @@ const StyledTagSectionGrid = styled(Grid, { label: 'StyledTagGrid' })(
       paddingLeft: 0,
       paddingRight: 0,
     },
+    marginBottom: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing(2),
       order: 2,

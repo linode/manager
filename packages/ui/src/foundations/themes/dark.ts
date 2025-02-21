@@ -314,7 +314,6 @@ export const darkTheme: ThemeOptions = {
           },
           '&:hover, &:focus': {
             backgroundColor: 'transparent',
-            color: Button.Secondary.Hover.Text,
           },
           '&[aria-disabled="true"]': {
             backgroundColor: 'transparent',

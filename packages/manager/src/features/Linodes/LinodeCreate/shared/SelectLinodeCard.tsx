@@ -1,4 +1,5 @@
 import { Button, Stack } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import React from 'react';
 
@@ -8,7 +9,6 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
@@ -58,15 +58,15 @@ export const SelectLinodeCard = ({
   const type = linodeType ? formatStorageUnits(linodeType?.label) : linode.type;
   const image = linodeImage?.label ?? linode.image;
   const region =
-    regions?.find((region) => region.id == linode.region)?.label ??
+    regions?.find((region) => region.id === linode.region)?.label ??
     linode.region;
 
   const renderVariant = () => (
     <Grid
-      size={12}
       sx={{
         paddingTop: 0,
       }}
+      size={12}
     >
       <Stack direction="row" justifyContent="space-between" marginBottom={1}>
         <Stack alignItems="center" direction="row" height={34}>

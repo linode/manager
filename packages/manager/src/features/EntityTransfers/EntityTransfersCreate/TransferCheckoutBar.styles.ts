@@ -40,15 +40,6 @@ export const StyledTypography = styled(Typography, {
   marginTop: theme.spacing(3),
 }));
 
-export const StyledHeaderTypography = styled(Typography, {
-  label: 'StyledHeaderTypography',
-})(({ theme }) => ({
-  color: theme.color.green,
-  font: theme.font.bold,
-  fontSize: '1.25rem',
-  lineHeight: '1.5rem',
-}));
-
 export const StyledRowDiv = styled('div', {
   label: 'StyledRowDiv',
 })(({ theme }) => ({
