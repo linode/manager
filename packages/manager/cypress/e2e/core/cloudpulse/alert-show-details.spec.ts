@@ -32,6 +32,7 @@ import {
 import { ui } from 'support/ui';
 import { Database } from '@linode/api-v4';
 import { mockGetDatabases } from 'support/intercepts/databases';
+import { capitalize } from 'src/utilities/capitalize';
 
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 const mockAccount = accountFactory.build();
@@ -225,10 +226,10 @@ describe('Integration Tests for Alert Show Detail Page', () => {
                   );
                 });
               // Validate the filter value
-              cy.get(`[data-qa-chip="${filter.value}"]`)
+              cy.get(`[data-qa-chip="${capitalize(filter.value)}"]`)
                 .should('be.visible')
                 .each(($chip) => {
-                  expect($chip).to.have.text(filter.value);
+                  expect($chip).to.have.text(capitalize(filter.value));
                 });
             });
           });
@@ -238,22 +239,22 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       cy.get('[data-qa-item="Polling Interval"]')
         .find('[data-qa-chip]')
         .should('be.visible')
-        .should('have.text', '2 minutes');
+        .should('have.text', '10 minutes');
 
       // Validating contents of Evaluation Periods
       cy.get('[data-qa-item="Evaluation Period"]')
         .find('[data-qa-chip]')
         .should('be.visible')
-        .should('have.text', '4 minutes');
+        .should('have.text', '5 minutes');
 
       // Validating contents of Trigger Alert
       cy.get('[data-qa-chip="All"]')
         .should('be.visible')
         .should('have.text', 'All');
 
-      cy.get('[data-qa-chip="4 minutes"]')
+      cy.get('[data-qa-chip="5 minutes"]')
         .should('be.visible')
-        .should('have.text', '4 minutes');
+        .should('have.text', '5 minutes');
 
       cy.get('[data-qa-item="criteria are met for"]')
         .should('be.visible')
