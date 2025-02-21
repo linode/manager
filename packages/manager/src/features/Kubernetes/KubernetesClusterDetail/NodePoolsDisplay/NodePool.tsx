@@ -216,8 +216,8 @@ export const NodePool = (props: Props) => {
       data-qa-node-pool-section
       expanded={accordionExpanded}
       onChange={handleAccordionClick}
-      // This improves performance for large components and also addresses table in accordion overflow-y issue
-      slotProps={{ transition: { unmountOnExit: true } }}
+      // Improve performance by unmounting large content from the DOM when collapsed
+      slotProps={{ transition: { unmountOnExit: nodes.length > 25 } }}
     >
       <NodeTable
         clusterCreated={clusterCreated}

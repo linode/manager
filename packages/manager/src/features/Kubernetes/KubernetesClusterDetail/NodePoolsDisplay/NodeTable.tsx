@@ -248,6 +248,7 @@ export const NodeTable = React.memo((props: Props) => {
                 handleSizeChange={handlePageSizeChange}
                 page={page}
                 pageSize={pageSize}
+                sx={{ position: 'relative' }}
               />
               <StyledTableFooter>
                 <StyledPoolInfoBox>
