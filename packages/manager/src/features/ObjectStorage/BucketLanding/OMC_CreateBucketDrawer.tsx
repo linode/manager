@@ -36,6 +36,7 @@ import type {
   ObjectStorageEndpoint,
   ObjectStorageEndpointTypes,
 } from '@linode/api-v4';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 interface Props {
   isOpen: boolean;
@@ -224,6 +225,10 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
 
   const hasSingleEndpointType = filteredEndpointOptions?.length === 1;
 
+  const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_buckets',
+  });
+
   const selectedEndpointOption = React.useMemo(() => {
     const currentEndpointType = watch('endpoint_type');
     const currentS3Endpoint = watch('s3_endpoint');
@@ -391,7 +396,9 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
             disabled:
-              (showGDPRCheckbox && !state.hasSignedAgreement) || isErrorTypes,
+              (showGDPRCheckbox && !state.hasSignedAgreement) ||
+              isErrorTypes ||
+              isBucketCreationRestricted,
             label: 'Create Bucket',
             loading: isPending || Boolean(selectedRegion?.id && isLoadingTypes),
             tooltipText:
