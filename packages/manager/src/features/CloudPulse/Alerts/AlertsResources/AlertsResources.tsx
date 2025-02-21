@@ -141,12 +141,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       return platformFilter;
     }
 
-    const databaseTypes = Object.values(databaseTypeClassMap);
-
     // Dynamically exclude 'dedicated' if alertClass is 'shared'
     const filteredTypes =
       alertClass === 'shared'
-        ? databaseTypes.filter((type) => type !== 'dedicated')
+        ? Object.keys(databaseTypeClassMap).filter(
+            (type) => type !== 'dedicated'
+          )
         : [alertClass];
 
     // Apply type filter only for system alerts with a valid alertClass
