@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { FirewallsRoute } from './FirewallsRoute';
@@ -29,6 +29,12 @@ const firewallCreateRoute = createRoute({
 );
 
 const firewallDetailRoute = createRoute({
+  beforeLoad: async ({ params }) => {
+    throw redirect({
+      params: { id: String(params.id) },
+      to: '/firewalls/$id/rules',
+    });
+  },
   getParentRoute: () => firewallsRoute,
   params: {
     parse: ({ id }: { id: string }) => ({
@@ -51,9 +57,37 @@ const firewallDetailRulesRoute = createRoute({
   import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
 );
 
+const firewallDetailRulesAddRuleRoute = createRoute({
+  getParentRoute: () => firewallDetailRulesRoute,
+  path: 'add',
+}).lazy(() =>
+  import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
+);
+
+const firewallDetailRulesAddInboundRuleRoute = createRoute({
+  getParentRoute: () => firewallDetailRulesAddRuleRoute,
+  path: 'inbound',
+}).lazy(() =>
+  import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
+);
+
+const firewallDetailRulesAddOutboundRuleRoute = createRoute({
+  getParentRoute: () => firewallDetailRulesAddRuleRoute,
+  path: 'outbound',
+}).lazy(() =>
+  import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
+);
+
 const firewallDetailLinodesRoute = createRoute({
   getParentRoute: () => firewallsRoute,
   path: '$id/linodes',
+}).lazy(() =>
+  import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
+);
+
+const firewallDetailLinodesAddLinodeRoute = createRoute({
+  getParentRoute: () => firewallDetailLinodesRoute,
+  path: 'add',
 }).lazy(() =>
   import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
 );
@@ -65,12 +99,26 @@ const firewallDetailNodebalancersRoute = createRoute({
   import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
 );
 
+const firewallDetailNodebalancersAddNodebalancerRoute = createRoute({
+  getParentRoute: () => firewallDetailNodebalancersRoute,
+  path: 'add',
+}).lazy(() =>
+  import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
+);
 export const firewallsRouteTree = firewallsRoute.addChildren([
   firewallsIndexRoute,
   firewallDetailRoute.addChildren([
-    firewallDetailLinodesRoute,
-    firewallDetailRulesRoute,
-    firewallDetailNodebalancersRoute,
+    firewallDetailLinodesRoute.addChildren([
+      firewallDetailLinodesAddLinodeRoute,
+    ]),
+    firewallDetailRulesRoute.addChildren([
+      firewallDetailRulesAddRuleRoute,
+      firewallDetailRulesAddInboundRuleRoute,
+      firewallDetailRulesAddOutboundRuleRoute,
+    ]),
+    firewallDetailNodebalancersRoute.addChildren([
+      firewallDetailNodebalancersAddNodebalancerRoute,
+    ]),
   ]),
   firewallCreateRoute,
 ]);

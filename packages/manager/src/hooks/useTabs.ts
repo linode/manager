@@ -44,7 +44,14 @@ export function useTabs<T extends Tab>(tabs: T[]) {
 
   // Calculate current index based on route
   const tabIndex = React.useMemo(() => {
-    const index = visibleTabs.findIndex((tab) => matchRoute({ to: tab.to }));
+    const index = visibleTabs.findIndex((tab) => {
+      const tabPath = String(tab.to);
+      // Check if current route starts with the tab's base path
+      return matchRoute({
+        fuzzy: true, // Allows to match parent routes
+        to: tabPath,
+      });
+    });
     return index === -1 ? 0 : index;
   }, [visibleTabs, matchRoute]);
 
