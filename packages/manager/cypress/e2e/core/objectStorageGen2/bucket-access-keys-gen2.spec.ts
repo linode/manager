@@ -116,7 +116,7 @@ describe('Object Storage Gen2 create access key modal has disabled fields for re
   });
 
   // access keys creation
-  it.only('create access keys form', () => {
+  it('create access keys form', () => {
     cy.visitWithLogin('/object-storage/access-keys/create');
 
     cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
