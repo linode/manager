@@ -22,10 +22,6 @@ interface Props {
    */
   hiddenRows?: string[];
   /**
-   * Sets the height of the legend. Overflow scroll if the content exceeds the height.
-   */
-  legendHeight?: string;
-  /**
    * Array of rows to display. Each row should contain the data to display, the format function to use, the legend color, and the legend title.
    */
   rows: MetricsDisplayRow[];
@@ -41,7 +37,7 @@ export interface MetricsDisplayRow {
 
 const HeaderRow = () => {
   return (
-    <TableHead sx={{ position: 'relative', zIndex: 2 }}>
+    <TableHead sx={{ position: 'sticky', top: 0, zIndex: 2 }}>
       <TableRow>
         <TableCell />
         {ROW_HEADERS.map((header) => (
@@ -92,19 +88,8 @@ const MetricRow = ({
   );
 };
 
-export const MetricsDisplay = ({
-  hiddenRows = [],
-  legendHeight = '100%',
-  rows,
-}: Props) => (
-  <Table
-    sx={{
-      height: legendHeight,
-      overflowY: 'auto',
-    }}
-    aria-label="Stats and metrics"
-    stickyHeader
-  >
+export const MetricsDisplay = ({ hiddenRows = [], rows }: Props) => (
+  <Table aria-label="Stats and metrics" noOverflow stickyHeader>
     <HeaderRow />
     <TableBody>
       {rows.map((row) => (
