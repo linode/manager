@@ -345,7 +345,7 @@ describe('Create Alert', () => {
         },
       } = customAlertDefinition;
 
-      const { service_type, created_by, updated, status } = mockAlerts;
+      const { created_by, updated, status } = mockAlerts;
 
       expect(response).to.have.property('statusCode', 200);
 
