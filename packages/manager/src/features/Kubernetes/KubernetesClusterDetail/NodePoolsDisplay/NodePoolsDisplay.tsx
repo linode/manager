@@ -165,13 +165,13 @@ export const NodePoolsDisplay = (props: Props) => {
         </Stack>
         <Stack
           sx={(theme) => ({
+            paddingTop: theme.spacing(1),
             [theme.breakpoints.down('md')]: {
               width: '100%',
             },
           })}
           alignItems="center"
           direction="row"
-          paddingTop="8px"
           spacing={1}
         >
           <FormLabel htmlFor={ariaIdentifier}>
@@ -246,7 +246,7 @@ export const NodePoolsDisplay = (props: Props) => {
           </Hidden>
           <Hidden mdDown>
             <Button
-              buttonType="secondary"
+              buttonType="outlined"
               onClick={() => setIsRecycleClusterOpen(true)}
             >
               Recycle All Nodes
