@@ -1,9 +1,8 @@
 import { Autocomplete, Box } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
-
-import { capitalize } from 'src/utilities/capitalize';
 
 import { dimensionOperatorOptions } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
