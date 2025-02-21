@@ -2,6 +2,7 @@ import { Select, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { PublicTemplateRules } from './PublicTemplateRules';
 import { VPCTemplateRules } from './VPCTemplateRules';
 
 import type { CreateFirewallFormValues } from './formUtilities';
@@ -59,6 +60,7 @@ export const TemplateFirewallFields = (props: TemplateFirewallProps) => {
         control={control}
         name="templateSlug"
       />
+      {selectedTemplate === 'public' && <PublicTemplateRules />}
       {selectedTemplate === 'vpc' && <VPCTemplateRules />}
     </>
   );

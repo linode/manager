@@ -26,7 +26,7 @@ const formOptions = {
 
 describe('CustomFirewallFields', () => {
   it('renders the custom firewall fields', () => {
-    const { getByText } = renderWithThemeAndHookFormContext({
+    const { getByText, queryByTestId } = renderWithThemeAndHookFormContext({
       component: <TemplateFirewallFields {...props} />,
       useFormOptions: formOptions,
     });
@@ -37,5 +37,38 @@ describe('CustomFirewallFields', () => {
       )
     ).toBeVisible();
     expect(getByText('Firewall Template')).toBeVisible();
+
+    expect(queryByTestId('vpc-template-info')).not.toBeInTheDocument();
+    expect(queryByTestId('public-template-info')).not.toBeInTheDocument();
+  });
+
+  it('renders information for public templates if public is selected', () => {
+    const { queryByTestId } = renderWithThemeAndHookFormContext({
+      component: <TemplateFirewallFields {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          ...formOptions.defaultValues,
+          templateSlug: 'public',
+        },
+      },
+    });
+
+    expect(queryByTestId('public-template-info')).toBeVisible();
+    expect(queryByTestId('vpc-template-info')).not.toBeInTheDocument();
+  });
+
+  it('renders information for vpc templates if vpc is selected', () => {
+    const { queryByTestId } = renderWithThemeAndHookFormContext({
+      component: <TemplateFirewallFields {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          ...formOptions.defaultValues,
+          templateSlug: 'vpc',
+        },
+      },
+    });
+
+    expect(queryByTestId('vpc-template-info')).toBeVisible();
+    expect(queryByTestId('public-template-info')).not.toBeInTheDocument();
   });
 });
