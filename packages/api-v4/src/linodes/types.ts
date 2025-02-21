@@ -287,17 +287,23 @@ export interface PublicInterfaceData {
       address: string;
       primary: boolean;
     }[];
-    // shared: string[];
+    shared: {
+      address: string;
+      linode_id: number;
+    }[];
   };
   ipv6: {
-    addresses: {
+    slaac: {
       address: string;
       prefix: string;
     }[];
-    // shared: string[];
+    shared: {
+      range: string;
+      route_target: string | null;
+    }[];
     ranges: {
       range: string;
-      route_target: string;
+      route_target: string | null;
     }[];
   };
 }
