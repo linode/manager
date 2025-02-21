@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { AlertDetail } from '../AlertsDetail/AlertDetail';
 import { AlertListing } from '../AlertsListing/AlertListing';
 import { CreateAlertDefinition } from '../CreateAlert/CreateAlertDefinition';
-import { EditAlertResources } from '../EditAlert/EditAlertResources';
+import { EditAlertLanding } from '../EditAlert/EditAlertLanding';
 
 export const AlertDefinitionLanding = () => {
   return (
@@ -24,7 +24,7 @@ export const AlertDefinitionLanding = () => {
         exact
         path="/monitor/alerts/definitions/edit/:serviceType/:alertId"
       >
-        <EditAlertResources />
+        <EditAlertLanding />
       </Route>
       <Route
         component={CreateAlertDefinition}

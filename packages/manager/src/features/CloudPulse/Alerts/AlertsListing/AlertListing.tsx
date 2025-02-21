@@ -117,7 +117,7 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  if (alerts && alerts.length == 0) {
+  if (alerts && alerts.length === 0) {
     return (
       <StyledPlaceholder
         buttonProps={[

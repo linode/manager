@@ -61,7 +61,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
       const errorStatus =
         toggleStatus === 'disabled' ? 'Disabling' : 'Enabling';
       editAlertDefinition({
-        alertId: String(alert.id),
+        alertId: alert.id,
         serviceType: alert.service_type,
         status: toggleStatus,
       })

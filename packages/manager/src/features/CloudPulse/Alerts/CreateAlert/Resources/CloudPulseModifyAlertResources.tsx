@@ -28,10 +28,6 @@ export const CloudPulseModifyAlertResources = React.memo(
       });
     };
 
-    React.useEffect(() => {
-      setValue(name, [], { shouldValidate: true });
-    }, [name, serviceTypeWatcher, setValue]);
-
     const titleRef = React.useRef<HTMLDivElement>(null);
 
     return (
