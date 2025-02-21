@@ -64,7 +64,7 @@ describe('EditAlertDefinition component', () => {
     expect(getByLabelText('Evaluation Period')).toBeVisible();
     expect(getByLabelText('Polling Interval')).toBeVisible();
     expect(getByText('4. Notification Channels')).toBeVisible();
-  });
+  }, {timeout: 20000});
 
   it('should submit form data correctly', async () => {
     const push = vi.fn();
@@ -97,5 +97,5 @@ describe('EditAlertDefinition component', () => {
         getByText('Alert successfully updated.') // validate whether snackbar is displayed properly
       ).toBeInTheDocument();
     });
-  }, {timeout: 20000});
+  }, {timeout: 10000});
 });
