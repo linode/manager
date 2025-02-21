@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Document titles with incorrect keywords ([#11635](https://github.com/linode/manager/pull/11635))
 - Order of footers for paginated LKE Node Pools ([#11639](https://github.com/linode/manager/pull/11639))
 - TabIndex reset issue and incorrect enhanced number input minus sign SVG color ([#11651](https://github.com/linode/manager/pull/11654))
+- Collapsible Node Pool overflow bug ([#11699](https://github.com/linode/manager/pull/11699))
 
 ### Removed:
 
