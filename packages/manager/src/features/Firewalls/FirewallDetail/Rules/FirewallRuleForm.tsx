@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -18,7 +19,6 @@ import {
   portPresets,
   protocolOptions,
 } from 'src/features/Firewalls/shared';
-import { capitalize } from 'src/utilities/capitalize';
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
 import { enforceIPMasks } from './FirewallRuleDrawer.utils';

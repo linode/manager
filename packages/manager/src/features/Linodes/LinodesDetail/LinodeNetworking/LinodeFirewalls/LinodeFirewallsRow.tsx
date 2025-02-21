@@ -1,4 +1,4 @@
-import { Firewall, FirewallDevice } from '@linode/api-v4';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,9 +10,10 @@ import {
   getRuleString,
 } from 'src/features/Firewalls/FirewallLanding/FirewallRow';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
-import { capitalize } from 'src/utilities/capitalize';
 
 import { LinodeFirewallsActionMenu } from './LinodeFirewallsActionMenu';
+
+import type { Firewall, FirewallDevice } from '@linode/api-v4';
 
 interface LinodeFirewallsRowProps {
   firewall: Firewall;

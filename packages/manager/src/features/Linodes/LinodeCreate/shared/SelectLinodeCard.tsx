@@ -1,4 +1,5 @@
 import { Button, Stack } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
@@ -8,7 +9,6 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 

@@ -26,6 +26,7 @@
     "@linode/design-language-system": "^3.0.0",
     "@linode/search": "*",
     "@linode/ui": "*",
+    "@linode/utilities": "*",
     "@linode/validation": "*",
     "@lukemorales/query-key-factory": "^1.3.4",
     "@mui/icons-material": "^5.14.7",

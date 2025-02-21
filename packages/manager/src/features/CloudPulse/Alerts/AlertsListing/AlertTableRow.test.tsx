@@ -1,10 +1,10 @@
+import { capitalize } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Router } from 'react-router-dom';
 
 import { alertFactory } from 'src/factories/cloudpulse/alerts';
-import { capitalize } from 'src/utilities/capitalize';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { AlertTableRow } from './AlertTableRow';

@@ -1,4 +1,5 @@
 import { Autocomplete, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -17,7 +18,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 import { useAccountResources } from 'src/queries/resources/resources';
-import { capitalize } from 'src/utilities/capitalize';
 
 import { getFilteredRoles, mapEntityTypes } from '../utilities';
 
