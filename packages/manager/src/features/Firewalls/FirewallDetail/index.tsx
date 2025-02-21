@@ -1,5 +1,5 @@
 import { CircleProgress } from '@linode/ui';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
@@ -36,7 +36,6 @@ const FirewallDeviceLanding = React.lazy(() =>
 );
 
 export const FirewallDetail = () => {
-  const navigate = useNavigate();
   const { id } = useParams({
     strict: false,
   });
@@ -71,7 +70,7 @@ export const FirewallDetail = () => {
     { linodeCount: 0, nodebalancerCount: 0 }
   ) || { linodeCount: 0, nodebalancerCount: 0 };
 
-  const { tabIndex, tabs } = useTabs([
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
       title: 'Rules',
       to: `/firewalls/$id/rules`,
@@ -151,12 +150,7 @@ export const FirewallDetail = () => {
           {...secureVMFirewallBanner.firewallDetails}
         />
       )}
-      <Tabs
-        onChange={(i) =>
-          navigate({ params: { id: String(firewallId) }, to: tabs[i].to })
-        }
-        index={tabIndex === -1 ? 0 : tabIndex}
-      >
+      <Tabs index={tabIndex === -1 ? 0 : tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>

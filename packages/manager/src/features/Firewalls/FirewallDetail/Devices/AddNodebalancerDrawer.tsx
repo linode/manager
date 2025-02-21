@@ -30,7 +30,7 @@ interface Props {
 export const AddNodebalancerDrawer = (props: Props) => {
   const { helperText, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { id } = useParams({ from: '/firewalls/$id/nodebalancers' });
+  const { id } = useParams({ strict: false });
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);

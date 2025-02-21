@@ -29,7 +29,7 @@ interface Props {
 export const AddLinodeDrawer = (props: Props) => {
   const { helperText, onClose, open } = props;
 
-  const { id } = useParams({ from: '/firewalls/$id/linodes' });
+  const { id } = useParams({ strict: false });
 
   const { enqueueSnackbar } = useSnackbar();
 

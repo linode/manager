@@ -38,16 +38,10 @@ export const FirewallDeviceLanding = React.memo(
 
     const theme = useTheme();
 
-    const location = useLocation();
     const navigate = useNavigate();
+    const location = useLocation();
     const helperText =
       'Assign one or more services to this firewall. You can add services later if you want to customize your rules first.';
-
-    React.useEffect(() => {
-      if (location.pathname.endsWith('add')) {
-        setDeviceDrawerOpen(true);
-      }
-    }, [location.pathname]);
 
     const devices =
       allDevices?.filter((device) => device.entity.type === type) || [];
@@ -71,18 +65,24 @@ export const FirewallDeviceLanding = React.memo(
       (device) => device.id === selectedDeviceId
     );
 
-    const [addDeviceDrawerOpen, setDeviceDrawerOpen] = React.useState<boolean>(
-      false
-    );
-
     const handleClose = () => {
-      setDeviceDrawerOpen(false);
-      navigate({ to: location.pathname });
+      navigate({
+        params: { id: String(firewallId) },
+        to:
+          type === 'linode'
+            ? '/firewalls/$id/linodes'
+            : '/firewalls/$id/nodebalancers',
+      });
     };
 
     const handleOpen = () => {
-      setDeviceDrawerOpen(true);
-      navigate({ to: location.pathname + '/add' });
+      navigate({
+        params: { id: String(firewallId) },
+        to:
+          type === 'linode'
+            ? '/firewalls/$id/linodes/add'
+            : '/firewalls/$id/nodebalancers/add',
+      });
     };
 
     const [searchText, setSearchText] = React.useState('');
@@ -165,13 +165,13 @@ export const FirewallDeviceLanding = React.memo(
           <AddLinodeDrawer
             helperText={helperText}
             onClose={handleClose}
-            open={addDeviceDrawerOpen}
+            open={location.pathname.endsWith('add')}
           />
         ) : (
           <AddNodebalancerDrawer
             helperText={helperText}
             onClose={handleClose}
-            open={addDeviceDrawerOpen}
+            open={location.pathname.endsWith('add')}
           />
         )}
         <RemoveDeviceDialog

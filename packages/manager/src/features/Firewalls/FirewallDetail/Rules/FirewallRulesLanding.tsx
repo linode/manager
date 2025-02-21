@@ -1,6 +1,7 @@
 import { Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -44,7 +45,6 @@ interface Props {
 
 interface Drawer {
   category: Category;
-  isOpen: boolean;
   mode: FirewallRuleDrawerMode;
   ruleIdx?: number;
 }
@@ -58,7 +58,8 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   );
   const { data: devices } = useAllFirewallDevicesQuery(firewallID);
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
+  const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
 
   /**
@@ -87,7 +88,6 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
    */
   const [ruleDrawer, setRuleDrawer] = React.useState<Drawer>({
     category: 'inbound',
-    isOpen: false,
     mode: 'create',
   });
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -104,15 +104,28 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     category: Category,
     mode: FirewallRuleDrawerMode,
     idx?: number
-  ) =>
+  ) => {
     setRuleDrawer({
       category,
-      isOpen: true,
       mode,
       ruleIdx: idx,
     });
+    navigate({
+      params: { id: String(firewallID) },
+      to:
+        category === 'inbound'
+          ? '/firewalls/$id/rules/add/inbound'
+          : '/firewalls/$id/rules/add/outbound',
+    });
+  };
 
-  const closeRuleDrawer = () => setRuleDrawer({ ...ruleDrawer, isOpen: false });
+  const closeRuleDrawer = () => {
+    setRuleDrawer({ ...ruleDrawer });
+    navigate({
+      params: { id: String(firewallID) },
+      to: '/firewalls/$id/rules',
+    });
+  };
 
   /**
    * Rule Editor state hand handlers
@@ -372,8 +385,11 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         />
       </StyledDiv>
       <FirewallRuleDrawer
+        isOpen={
+          location.pathname.endsWith('inbound') ||
+          location.pathname.endsWith('outbound')
+        }
         category={ruleDrawer.category}
-        isOpen={ruleDrawer.isOpen}
         mode={ruleDrawer.mode}
         onClose={closeRuleDrawer}
         onSubmit={ruleDrawer.mode === 'create' ? handleAddRule : handleEditRule}
