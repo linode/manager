@@ -248,6 +248,10 @@ export const NodeTable = React.memo((props: Props) => {
                 handleSizeChange={handlePageSizeChange}
                 page={page}
                 pageSize={pageSize}
+                /**
+                 * M3-9360: Since this table is in an accordion, the position needs to be relative
+                 * to prevent an overflow-y issue with the absolutely positioned visually-hidden footer label
+                 **/
                 sx={{ position: 'relative' }}
               />
               <StyledTableFooter>
