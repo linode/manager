@@ -55,6 +55,7 @@ export const CardBase = (props: CardBaseProps) => {
 
     return (
       <CardBaseSubheading
+        checked={checked}
         className={subHeadingIsString ? 'cardSubheadingItem' : ''}
         data-qa-select-card-subheading={`subheading-${idx + 1}`}
         key={idx}
