@@ -378,7 +378,6 @@ export const VolumeCreate = () => {
               tooltipPosition="right"
               value={values.label}
             />
-            {/* This component may potentially be required to me moved to a different part of the form. Awaiting confirmation. */}
             <Box className={classes.select}>
               <TagsInput
                 onChange={(items) =>
