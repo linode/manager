@@ -51,9 +51,8 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   const history = useHistory();
 
   // Filter unique alert types from alerts list
-  const types = React.useMemo<{ label: AlertDefinitionType }[]>(() => {
-    return convertAlertsToTypeSet(alerts);
-  }, [alerts]);
+  const types = convertAlertsToTypeSet(alerts);
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -61,7 +60,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     <Paper>
       <Stack gap={3}>
         <Box display="flex" justifyContent="space-between">
-          <Box alignItems={'center'} display="flex" gap={0.5}>
+          <Box alignItems="center" display="flex" gap={0.5}>
             <Typography variant="h2">Alerts</Typography>
             <Tooltip title="The list contains only the alerts enabled in the Monitor centralized view.">
               <span>
@@ -85,7 +84,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               noMarginTop
               onSearch={setSearchText}
               placeholder="Search for Alerts"
-              sx={{ height: '34px', width: '250px' }}
+              sx={{ width: '250px' }}
               value={searchText}
             />
             <Autocomplete
