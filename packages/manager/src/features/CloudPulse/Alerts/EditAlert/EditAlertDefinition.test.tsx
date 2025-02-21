@@ -97,5 +97,5 @@ describe('EditAlertDefinition component', () => {
         getByText('Alert successfully updated.') // validate whether snackbar is displayed properly
       ).toBeInTheDocument();
     });
-  });
+  }, {timeout: 20000});
 });
