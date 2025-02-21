@@ -155,7 +155,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
       // Validate Service field
       cy.findByText('Service:').should('be.visible');
-      cy.findByText('dbaas').should('be.visible');
+      cy.findByText('Databases').should('be.visible');
 
       // Validate Type field
       cy.findByText('Type:').should('be.visible');

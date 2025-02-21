@@ -188,18 +188,18 @@ describe('Create Alert', () => {
     cy.visitWithLogin('monitor/alerts/definitions/create');
 
     // Enter Name and Description
-    cy.findByPlaceholderText('Enter Name')
+    cy.findByPlaceholderText('Enter a Name')
       .should('be.visible')
       .type(customAlertDefinition.label);
 
-    cy.findByPlaceholderText('Enter Description')
+    cy.findByPlaceholderText('Enter a Description')
       .should('be.visible')
       .type(customAlertDefinition.description ?? '');
 
     // Select Service
-    ui.autocomplete.findByLabel('Service').should('be.visible').type('dbaas');
+    ui.autocomplete.findByLabel('Service').should('be.visible').type('Databases');
 
-    ui.autocompletePopper.findByTitle('dbaas').should('be.visible').click();
+    ui.autocompletePopper.findByTitle('Databases').should('be.visible').click();
 
     // Search for Resource
     cy.findByPlaceholderText('Search for a Region or Resource')
@@ -229,7 +229,7 @@ describe('Create Alert', () => {
       0,
       'CPU Utilization',
       'Average',
-      '==',
+      '=',
       '1000'
     );
 
@@ -270,7 +270,7 @@ describe('Create Alert', () => {
       1,
       'Memory Usage',
       'Average',
-      '==',
+      '=',
       '1000'
     );
 
@@ -416,7 +416,7 @@ describe('Create Alert', () => {
         .within(() => {
           cy.findByText(label).should('be.visible');
           cy.findByText(statusMap[status]).should('be.visible'); // Assuming statusMap is defined somewhere
-          cy.findByText(service_type).should('be.visible');
+          cy.findByText('Databases').should('be.visible');
           cy.findByText(created_by).should('be.visible');
           cy.findByText(
             formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })

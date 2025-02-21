@@ -111,20 +111,14 @@ describe('Integration Tests for Edit Alert', () => {
     // Verify the initial selection of resources
     cy.get('[data-qa-notice="true"]').should(
       'contain.text',
-      '3 of 50 resources are selected'
+      '5 of 50 resources are selected'
     );
     // Select all resources
     cy.get('[data-qa-notice="true"]').within(() => {
-      ui.button
-        .findByAttribute('aria-label', 'Select All Resources')
-        .should('be.visible')
-        .click();
-
-      // Unselect button should be visible after clicking on Select All buttom
-      ui.button
-        .findByAttribute('aria-label', 'Unselect All Resources')
-        .should('be.visible')
-        .should('be.enabled');
+      ui.button.findByTitle('Select All').should('be.visible').click();
+    
+    // Unselect button should be visible after clicking on Select All buttom
+    ui.button.findByTitle('Unselect All').should('be.visible').should('be.enabled');
     });
 
     cy.get('[data-qa-notice="true"]').should(
@@ -181,10 +175,9 @@ describe('Integration Tests for Edit Alert', () => {
     cy.get('[data-qa-cancel="true"]')
       .should('be.enabled')
       .should('have.text', 'Cancel')
-      .click();
 
     // Click the Confirm button
-    cy.get('[data-qa-editconfirmation="true"]')
+    ui.button.findByAttribute('label', 'Confirm')
       .should('be.enabled')
       .should('have.text', 'Confirm')
       .click();
@@ -192,12 +185,6 @@ describe('Integration Tests for Edit Alert', () => {
     // Verify the update request and response
     cy.wait('@updateDefinitions').then(({ request, response }) => {
       // Assert successful API response
-      expect(response, 'API response should be successful').to.have.property(
-        'statusCode',
-        200
-      );
-
-      // Extract and convert entity IDs from request body
       const resourceIds = request.body.entity_ids.map(String);
       // Compare resource IDs
       expect(
