@@ -1,4 +1,4 @@
-import { IconButton, useTheme } from '@mui/material';
+import { IconButton } from '@mui/material';
 import * as React from 'react';
 
 import ZoomInMap from 'src/assets/icons/zoomin.svg';
@@ -13,8 +13,6 @@ export interface ZoomIconProperties {
 }
 
 export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
-  const theme = useTheme();
-
   const handleClick = (needZoomIn: boolean) => {
     props.handleZoomToggle(needZoomIn);
   };
@@ -24,11 +22,11 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
       return (
         <CloudPulseTooltip placement="bottom-end" title="Minimize">
           <IconButton
-            sx={{
-              color: theme.color.grey1,
+            sx={(theme) => ({
+              color: theme.color.black,
               fontSize: 'x-large',
               padding: 0,
-            }}
+            })}
             aria-label="Zoom Out"
             data-testid="zoom-out"
             onClick={() => handleClick(false)}
@@ -42,11 +40,11 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
     return (
       <CloudPulseTooltip placement="bottom-end" title="Maximize">
         <IconButton
-          sx={{
-            color: theme.color.grey1,
+          sx={(theme) => ({
+            color: theme.color.black,
             fontSize: 'x-large',
             padding: 0,
-          }}
+          })}
           aria-label="Zoom In"
           data-testid="zoom-in"
           onClick={() => handleClick(true)}
