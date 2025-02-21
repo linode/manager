@@ -280,6 +280,7 @@ describe('User permission management', () => {
         account_access: 'read_only',
         cancel_account: true,
         child_account_access: true,
+        add_buckets: true,
         add_domains: true,
         add_databases: true,
         add_firewalls: true,
