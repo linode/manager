@@ -1,7 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
 
 import { alertFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
