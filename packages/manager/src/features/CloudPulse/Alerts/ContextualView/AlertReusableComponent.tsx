@@ -80,7 +80,8 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
           <Box display="flex" gap={2}>
             <DebouncedSearchTextField
               data-testid="search-alert"
-              label=""
+              hideLabel
+              label="Search Alerts"
               noMarginTop
               onSearch={setSearchText}
               placeholder="Search for Alerts"
@@ -91,9 +92,12 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               onChange={(_, selectedValue) => {
                 setSelectedType(selectedValue?.label);
               }}
+              textFieldProps={{
+                hideLabel: true,
+              }}
               autoHighlight
               data-testid="alert-type-select"
-              label=""
+              label="Select Type"
               noMarginTop
               options={types}
               placeholder="Select Alert Type"
