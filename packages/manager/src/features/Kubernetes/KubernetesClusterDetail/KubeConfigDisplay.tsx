@@ -163,7 +163,7 @@ export const KubeConfigDisplay = (props: Props) => {
       ) {
         enqueueSnackbar(
           'Your cluster is still provisioning. Please try again in a few minutes.',
-          { variant: 'info' }
+          { variant: 'error' }
         );
         return;
       }
