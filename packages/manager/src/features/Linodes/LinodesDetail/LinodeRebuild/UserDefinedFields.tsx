@@ -13,9 +13,9 @@ import type { CreateLinodeRequest } from '@linode/api-v4';
 export const UserDefinedFields = () => {
   const { control, formState } = useFormContext<CreateLinodeRequest>();
 
-  const [stackscriptId] = useWatch({
+  const stackscriptId = useWatch({
     control,
-    name: ['stackscript_id', 'stackscript_data'],
+    name: 'stackscript_id',
   });
 
   const hasStackscriptSelected =
