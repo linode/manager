@@ -1,5 +1,8 @@
 ## [2025-02-25] - v0.135.0
 
+### Changed:
+
+- Update LKE Tiered Version endpoints ([#11703](https://github.com/linode/manager/pull/11703))
 
 ### Upcoming Features:
 
