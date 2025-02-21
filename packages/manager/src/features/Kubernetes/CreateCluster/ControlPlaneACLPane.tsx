@@ -12,7 +12,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LinkButton } from 'src/components/LinkButton';
@@ -36,7 +36,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     setControlPlaneACL,
   } = props;
 
-  const { clearErrors, control, setError, watch } = useForm();
+  const { clearErrors, control, setError, watch } = useFormContext();
   const {
     append: appendIPv4,
     fields: ipv4Fields,
@@ -57,31 +57,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
 
   const ipv4Addresses = watch('ipv4Addresses');
   const ipv6Addresses = watch('ipv6Addresses');
-
-  React.useEffect(() => {
-    if (enableControlPlaneACL) {
-      if (
-        (!ipv4Addresses || ipv4Addresses.length === 0) &&
-        !ipv4Fields.length
-      ) {
-        appendIPv4('');
-      }
-      if (
-        (!ipv6Addresses || ipv6Addresses.length === 0) &&
-        !ipv6Fields.length
-      ) {
-        appendIPv6('');
-      }
-    }
-  }, [
-    enableControlPlaneACL,
-    ipv4Addresses,
-    ipv6Addresses,
-    ipv4Fields,
-    ipv6Fields,
-    appendIPv4,
-    appendIPv6,
-  ]);
 
   React.useEffect(() => {
     if (ipv4Addresses && ipv4Addresses.length) {
@@ -143,7 +118,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                     <TextField
                       {...controllerField}
                       onBlur={() => {
-                        const _ips = stringToExtendedIP(controllerField.value);
+                        const _ips = stringToExtendedIP(controllerField?.value);
                         const validatedIPs = validateIPs([_ips], {
                           allowEmptyAddress: true,
                           errorMessage: 'Must be a valid IPv4 address.',
@@ -163,6 +138,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                       label={`IPv4 Addresses or CIDRs ip-address-${index}`}
                       ref={null}
                       sx={{ minWidth: 350 }}
+                      value={''}
                     />
                   )}
                   control={control}
@@ -179,7 +155,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 )}
               </Stack>
             ))}
-            <LinkButton onClick={() => appendIPv4('')}>
+            <LinkButton onClick={() => appendIPv4(' ')}>
               Add IPv4 Address
             </LinkButton>
           </Box>
@@ -202,7 +178,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                     <TextField
                       {...controllerField}
                       onBlur={() => {
-                        const _ips = stringToExtendedIP(controllerField.value);
+                        const _ips = stringToExtendedIP(controllerField?.value);
                         const validatedIPs = validateIPs([_ips], {
                           allowEmptyAddress: true,
                           errorMessage: 'Must be a valid IPv6 address.',
@@ -222,6 +198,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                       label={`IPv6 Addresses or CIDRs ip-address-${index}`}
                       ref={null}
                       sx={{ minWidth: 350 }}
+                      value={''}
                     />
                   )}
                   control={control}
@@ -238,7 +215,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 )}
               </Stack>
             ))}
-            <LinkButton onClick={() => appendIPv6('')}>
+            <LinkButton onClick={() => appendIPv6(' ')}>
               Add IPv6 Address
             </LinkButton>
           </Box>
