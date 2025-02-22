@@ -1,5 +1,5 @@
 import { Box, Divider, Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -44,7 +44,14 @@ const renderField = (
 
   if (getIsUDFHeader(field)) {
     return (
-      <Grid key={field.name} lg={5} style={{ marginTop: 24 }} xs={12}>
+      <Grid
+        key={field.name}
+        style={{ marginTop: 24 }}
+        size={{
+          lg: 5,
+          xs: 12,
+        }}
+      >
         <Divider />
         <Typography variant="h2">{field.label}</Typography>
       </Grid>
@@ -53,7 +60,13 @@ const renderField = (
 
   if (getIsUDFMultiSelect(field)) {
     return (
-      <Grid key={field.name} lg={5} xs={12}>
+      <Grid
+        key={field.name}
+        size={{
+          lg: 5,
+          xs: 12,
+        }}
+      >
         <UserDefinedMultiSelect
           error={error}
           field={field}
@@ -68,7 +81,13 @@ const renderField = (
   }
   if (getIsUDFSingleSelect(field)) {
     return (
-      <Grid key={field.name} lg={5} xs={12}>
+      <Grid
+        key={field.name}
+        size={{
+          lg: 5,
+          xs: 12,
+        }}
+      >
         <UserDefinedSelect
           error={error}
           field={field}
@@ -83,7 +102,13 @@ const renderField = (
   if (getIsUDFPasswordField(field)) {
     const isTokenPassword = field.name === 'token_password';
     return (
-      <Grid key={field.name} lg={5} xs={12}>
+      <Grid
+        key={field.name}
+        size={{
+          lg: 5,
+          xs: 12,
+        }}
+      >
         <UserDefinedText
           tooltip={
             isTokenPassword ? (
@@ -125,7 +150,13 @@ const renderField = (
     );
   }
   return (
-    <Grid key={field.name} lg={5} xs={12}>
+    <Grid
+      key={field.name}
+      size={{
+        lg: 5,
+        xs: 12,
+      }}
+    >
       <UserDefinedText
         error={error}
         field={field}

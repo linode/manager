@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -29,7 +29,14 @@ export const FolderTableRow = (props: FolderTableRowProps) => {
   return (
     <TableRow key={folderName} {...tableRowProps}>
       <TableCell>
-        <Grid alignItems="center" container spacing={2} wrap="nowrap">
+        <Grid
+          container
+          spacing={2}
+          wrap="nowrap"
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <StyledIconWrapper>
             <FolderIcon size={22} />
           </StyledIconWrapper>

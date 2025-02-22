@@ -1,6 +1,6 @@
 import { Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { CardBase } from './CardBase';
@@ -159,14 +159,11 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
       data-testid="selection-card"
       disabled={disabled}
       id={id}
-      lg={4}
       onClick={handleClick}
       onKeyPress={handleKeyPress}
-      sm={6}
+      size={{ lg: 4, sm: 6, xl: 3, xs: 12 }}
       sx={sxGrid}
       tabIndex={0}
-      xl={3}
-      xs={12}
     >
       {content}
     </StyledGrid>

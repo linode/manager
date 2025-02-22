@@ -1,6 +1,6 @@
 import { Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
@@ -112,7 +112,12 @@ export const NetworkGraphs = (props: Props) => {
 
   return (
     <>
-      <Grid md={6} xs={12}>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
         <Paper variant="outlined" sx={{ height: 500 }}>
           <StatsPanel
             renderBody={() => (
@@ -129,7 +134,12 @@ export const NetworkGraphs = (props: Props) => {
           />
         </Paper>
       </Grid>
-      <Grid md={6} xs={12}>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
         <Paper variant="outlined" sx={{ height: 500 }}>
           <StatsPanel
             renderBody={() => (

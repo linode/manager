@@ -1,5 +1,5 @@
 import { Checkbox } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { intersection } from 'ramda';
 import * as React from 'react';
 
@@ -38,7 +38,12 @@ export const Disks = (props: DisksProps) => {
         return (
           <React.Fragment>
             <Grid container>
-              <Grid md={9} xs={12}>
+              <Grid
+                size={{
+                  md: 9,
+                  xs: 12,
+                }}
+              >
                 <Table aria-label="List of Disks">
                   <TableHead>
                     <TableRow>

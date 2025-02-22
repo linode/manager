@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 

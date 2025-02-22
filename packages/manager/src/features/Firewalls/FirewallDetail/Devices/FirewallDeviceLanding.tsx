@@ -1,7 +1,7 @@
 import { Button, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -120,10 +120,12 @@ export const FirewallDeviceLanding = React.memo(
             A {formattedType} can only be assigned to a single Firewall.
           </StyledTypography>
           <Grid
-            alignItems="center"
             container
             direction="row"
-            justifyContent="space-between"
+            sx={{
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
           >
             <Grid sx={{ width: '30%' }}>
               <DebouncedSearchTextField

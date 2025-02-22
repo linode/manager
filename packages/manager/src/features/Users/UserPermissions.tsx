@@ -14,7 +14,7 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
@@ -410,10 +410,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         )}
         <StyledPaper>
           <Grid
-            alignItems="center"
             container
             spacing={2}
-            sx={{ margin: 0, width: 'auto' }}
+            sx={{
+              alignItems: 'center',
+              margin: 0,
+              width: 'auto',
+            }}
           >
             <StyledHeaderGrid>
               <Typography
@@ -487,7 +490,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <Grid className="py0" key={perm} sm={6} xs={12}>
+      <Grid
+        className="py0"
+        key={perm}
+        size={{
+          sm: 6,
+          xs: 12,
+        }}
+      >
         <FormControlLabel
           control={
             <Toggle
@@ -588,7 +598,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         })}
         data-qa-entity-section
       >
-        <Grid alignItems="center" container justifyContent="space-between">
+        <Grid
+          container
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <Grid>
             <Typography
               data-qa-permissions-header="Specific Permissions"

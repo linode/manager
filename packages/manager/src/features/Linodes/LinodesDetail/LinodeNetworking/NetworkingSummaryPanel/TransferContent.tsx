@@ -1,6 +1,6 @@
 import { CircleProgress, Notice } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
@@ -72,7 +72,12 @@ export const TransferContent = (props: ContentProps) => {
 
   if (loading) {
     return (
-      <Grid container justifyContent="center">
+      <Grid
+        container
+        sx={{
+          justifyContent: 'center',
+        }}
+      >
         <Grid>
           <CircleProgress size="sm" />
         </Grid>

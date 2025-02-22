@@ -1,14 +1,6 @@
 import { Paper, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
-
-import { TimeRangeSelect } from '../../shared/TimeRangeSelect';
-
-export const StyledTimeRangeSelect = styled(TimeRangeSelect, {
-  label: 'StyledTimeRangeSelect',
-})({
-  width: 250,
-});
 
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
@@ -18,11 +10,6 @@ export const StyledTypography = styled(Typography, {
     marginRight: theme.spacing(),
   },
 }));
-
-export const StyledItemGrid = styled(Grid, { label: 'StyledItemGrid' })({
-  boxSizing: 'border-box',
-  margin: '0',
-});
 
 export const StyledSmallGraphGrid = styled(Grid, {
   label: 'StyledSmallGraphGrid',

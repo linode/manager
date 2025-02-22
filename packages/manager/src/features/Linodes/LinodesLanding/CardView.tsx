@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { keyframes, styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
@@ -29,7 +29,7 @@ export const CardView = (props: RenderLinodesProps) => {
     <Grid className="m0" container style={{ width: '100%' }}>
       {data.map((linode, idx: number) => (
         <React.Fragment key={`linode-card-${idx}`}>
-          <StyledSummaryGrid data-qa-linode-card={linode.id} xs={12}>
+          <StyledSummaryGrid data-qa-linode-card={linode.id} size={{ xs: 12 }}>
             <LinodeEntityDetail
               handlers={{
                 onOpenDeleteDialog: () =>

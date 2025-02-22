@@ -1,6 +1,6 @@
 import { Box, H1Header, InputAdornment, Notice, TextField } from '@linode/ui';
 import Search from '@mui/icons-material/Search';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';

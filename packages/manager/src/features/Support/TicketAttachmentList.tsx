@@ -1,7 +1,7 @@
 import { Typography } from '@linode/ui';
 import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 
@@ -41,17 +41,21 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
 
   return (
     <Grid
-      sx={(theme) => ({
-        marginLeft: theme.spacing(6),
-        marginTop: theme.spacing(),
-        maxWidth: 600,
-        [theme.breakpoints.down('sm')]: {
-          marginLeft: theme.spacing(5),
-          width: 'calc(100% - 32px)',
-        },
-      })}
       container
-      justifyContent="flex-start"
+      sx={[
+        {
+          justifyContent: 'flex-start',
+        },
+        (theme) => ({
+          marginLeft: theme.spacing(6),
+          marginTop: theme.spacing(),
+          maxWidth: 600,
+          [theme.breakpoints.down('sm')]: {
+            marginLeft: theme.spacing(5),
+            width: 'calc(100% - 32px)',
+          },
+        }),
+      ]}
     >
       <Grid
         sx={{

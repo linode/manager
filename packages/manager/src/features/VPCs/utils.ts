@@ -65,8 +65,7 @@ export const hasUnrecommendedConfiguration = (
 
       return (
         // if there exists an active VPC interface not explicitly marked as primary,
-        nonExplicitPrimaryVPCInterfaceIndex !== -1 &&
-        // check if it actually is the (implicit) primary interface
+        nonExplicitPrimaryVPCInterfaceIndex !== -1 && // check if it actually is the (implicit) primary interface
         primaryInterfaceIndex !== nonExplicitPrimaryVPCInterfaceIndex
       );
     }

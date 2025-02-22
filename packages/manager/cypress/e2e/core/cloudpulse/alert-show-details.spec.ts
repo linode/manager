@@ -34,7 +34,6 @@ import { Database } from '@linode/api-v4';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { capitalize } from '@linode/utilities';
 
-
 const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 const mockAccount = accountFactory.build();
 const regions = [

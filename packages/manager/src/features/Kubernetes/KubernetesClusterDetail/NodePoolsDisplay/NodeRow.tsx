@@ -1,5 +1,5 @@
 import { Box, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -77,7 +77,13 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   return (
     <TableRow data-qa-node-row={nodeId}>
       <TableCell>
-        <Grid alignItems="center" container wrap="nowrap">
+        <Grid
+          container
+          wrap="nowrap"
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <Grid>
             <Typography>
               {linodeLink ? (

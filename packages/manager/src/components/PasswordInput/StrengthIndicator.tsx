@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -53,15 +53,18 @@ export const StrengthIndicator = (props: Props) => {
 
   return (
     <Grid
-      alignItems="flex-end"
       className={classes.root}
       container
       data-qa-strength={strength}
       spacing={1}
-      sx={{ paddingLeft: 0, paddingRight: 0 }}
+      sx={{
+        alignItems: 'flex-end',
+        paddingLeft: 0,
+        paddingRight: 0,
+      }}
     >
       {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
-        <Grid className={classes.blockOuter} key={idx} xs={3}>
+        <Grid className={classes.blockOuter} key={idx} size={3}>
           <div
             className={cx({
               [`strength-${strength}`]:
@@ -73,7 +76,7 @@ export const StrengthIndicator = (props: Props) => {
           />
         </Grid>
       ))}
-      <Grid className="py0" xs={3}>
+      <Grid className="py0" size={3}>
         <Typography
           className={classes.strengthText}
           data-qa-password-strength

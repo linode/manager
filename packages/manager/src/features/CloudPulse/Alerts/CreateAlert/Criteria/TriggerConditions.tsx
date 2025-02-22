@@ -57,7 +57,13 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
       })}
     >
       <Typography variant="h3"> Trigger Conditions</Typography>
-      <Grid alignItems="flex-start" container spacing={2}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          alignItems: 'flex-start',
+        }}
+      >
         <Grid item md={3} sm={6} xs={12}>
           <Controller
             render={({ field, fieldState }) => (
@@ -129,14 +135,16 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           />
         </Grid>
         <Grid
-          alignItems="center"
-          display="flex"
-          gap={1}
           item
           md="auto"
-          mt={{ lg: 3.5, xs: 0 }}
           sm={12}
           xs={12}
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            mt: { lg: 3.5, xs: 0 },
+          }}
         >
           <Typography mt={3} variant="body1">
             Trigger alert when all criteria are met for

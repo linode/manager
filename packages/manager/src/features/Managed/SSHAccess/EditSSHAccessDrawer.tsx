@@ -1,5 +1,11 @@
-import { FormControlLabel, Notice, TextField, Toggle } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import {
+  FormControlLabel,
+  Notice,
+  TextField,
+  Toggle,
+  Typography,
+} from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
@@ -14,11 +20,6 @@ import {
 import { isPrivateIP, removePrefixLength } from 'src/utilities/ipUtils';
 
 import { DEFAULTS } from './common';
-import {
-  StyledIPGrid,
-  StyledPortGrid,
-  StyledTypography,
-} from './EditSSHAccessDrawer.styles';
 
 import type { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import type { FormikHelpers } from 'formik';
@@ -128,11 +129,11 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                   )}
 
                   <form>
-                    <StyledTypography variant="body1">
+                    <Typography variant="body1">
                       We’ll use the default settings for User Account (
                       {DEFAULTS.user}) and Port ({DEFAULTS.port}) if you leave
                       those fields empty.
-                    </StyledTypography>
+                    </Typography>
 
                     <FormControlLabel
                       control={
@@ -156,8 +157,8 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                       value={user}
                     />
 
-                    <Grid container spacing={2}>
-                      <StyledIPGrid md={8} xs={12}>
+                    <Grid container mt={2} spacing={2}>
+                      <Grid size={{ md: 8, xs: 12 }}>
                         <IPSelect
                           customizeOptions={(options) => [
                             // The first option should always be "Any".
@@ -184,10 +185,11 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                           errorText={ipError}
                           linodeId={linodeSetting.id}
                         />
-                      </StyledIPGrid>
+                      </Grid>
 
-                      <StyledPortGrid md={4} xs={12}>
+                      <Grid size={{ md: 4, xs: 12 }}>
                         <TextField
+                          noMarginTop
                           error={!!portError}
                           errorText={portError}
                           label="Port"
@@ -198,7 +200,7 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                           type="number"
                           value={port}
                         />
-                      </StyledPortGrid>
+                      </Grid>
                     </Grid>
                     <ActionsPanel
                       primaryButtonProps={{

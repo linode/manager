@@ -56,6 +56,7 @@ export const IPSelect = (props: Props) => {
       errorText={errorText}
       label="IP Address"
       loading={isLoading}
+      noMarginTop
       onChange={(_, selected) => handleChange(selected.value)}
       options={options}
       placeholder="Select an IP Address..."

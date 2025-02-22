@@ -40,10 +40,12 @@ import type { ApplicationState, ApplicationStore } from 'src/store';
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = vi.fn().mockImplementation((query) => {
     return {
+      addEventListener: () => vi.fn(),
       addListener: vi.fn(),
       matches,
       media: query,
       onchange: null,
+      removeEventListener: () => vi.fn(),
       removeListener: vi.fn(),
     };
   });

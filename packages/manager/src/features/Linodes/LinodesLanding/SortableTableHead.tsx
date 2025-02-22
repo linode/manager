@@ -144,13 +144,13 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
         <TableCell sx={{ padding: '0 !important' }}>
           <Box
             sx={{
+              alignItems: 'center',
+              display: 'flex',
+              gap: 3,
+              justifyContent: 'flex-end',
+              paddingRight: 1.5,
               backgroundColor: theme.tokens.table.HeaderNested.Background,
             }}
-            alignItems="center"
-            display="flex"
-            gap={3}
-            justifyContent="flex-end"
-            paddingRight={1.5}
           >
             <div className="visually-hidden" id={displayViewDescriptionId}>
               Currently in {linodeViewPreference} view

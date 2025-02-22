@@ -1,6 +1,6 @@
 import { Notice, Select, TextField } from '@linode/ui';
 import { createContactSchema } from '@linode/validation/lib/managed.schema';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
@@ -146,7 +146,6 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                   variant="error"
                 />
               )}
-
               <form onSubmit={handleSubmit}>
                 <TextField
                   error={!!errors.name}
@@ -172,7 +171,12 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                 />
 
                 <Grid container spacing={2}>
-                  <Grid md={6} xs={12}>
+                  <Grid
+                    size={{
+                      md: 6,
+                      xs: 12,
+                    }}
+                  >
                     <TextField
                       error={!!primaryPhoneError}
                       errorText={primaryPhoneError}
@@ -183,7 +187,12 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                       value={values?.phone?.primary ?? ''}
                     />
                   </Grid>
-                  <Grid md={6} xs={12}>
+                  <Grid
+                    size={{
+                      md: 6,
+                      xs: 12,
+                    }}
+                  >
                     <TextField
                       error={!!secondaryPhoneError}
                       errorText={secondaryPhoneError}

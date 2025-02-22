@@ -1,6 +1,6 @@
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -156,8 +156,20 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   return (
     <>
-      <Grid container margin={0} spacing={2} xs={12}>
-        <Grid {...gridDimensions} sm={6}>
+      <Grid
+        container
+        spacing={2}
+        size={12}
+        sx={{
+          margin: 0,
+        }}
+      >
+        <Grid
+          {...gridDimensions}
+          size={{
+            sm: 6,
+          }}
+        >
           <BillingPaper variant="outlined">
             <Typography variant="h3">Account Balance</Typography>
             <Divider />
@@ -202,7 +214,13 @@ export const BillingSummary = (props: BillingSummaryProps) => {
           </BillingPaper>
         </Grid>
         {promotions && promotions?.length > 0 ? (
-          <Grid md={4} sm={6} xs={12}>
+          <Grid
+            size={{
+              md: 4,
+              sm: 6,
+              xs: 12,
+            }}
+          >
             <BillingPaper variant="outlined">
               <Typography variant="h3">Promotions</Typography>
 
