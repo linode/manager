@@ -12,7 +12,14 @@ jobs:
   lint:
     strategy:
       matrix:
-        package: ["linode-manager", "@linode/api-v4", "@linode/validation", "@linode/ui"]
+        package:
+          [
+            "linode-manager",
+            "@linode/api-v4",
+            "@linode/validation",
+            "@linode/ui",
+            "@linode/utilities",
+          ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -214,6 +221,21 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/ui test
 
+  test-utilities:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run --filter @linode/utilities test
+
   typecheck-ui:
     runs-on: ubuntu-latest
     needs: build-sdk
@@ -229,6 +251,22 @@ jobs:
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/ui typecheck
+
+  typecheck-utilities:
+    runs-on: ubuntu-latest
+    needs: build-sdk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run --filter @linode/utilities typecheck
 
   typecheck-manager:
     runs-on: ubuntu-latest

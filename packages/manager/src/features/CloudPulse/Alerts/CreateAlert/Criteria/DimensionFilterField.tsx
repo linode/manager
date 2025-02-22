@@ -1,9 +1,8 @@
 import { Autocomplete, Box } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
-
-import { capitalize } from 'src/utilities/capitalize';
 
 import { dimensionOperatorOptions } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
@@ -86,7 +85,13 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   };
 
   return (
-    <Grid container data-testid={`${name}-id`} gap={2}>
+    <Grid
+      container
+      data-testid={`${name}-id`}
+      sx={{
+        gap: 2,
+      }}
+    >
       <Grid item md={3} xs={12}>
         <Controller
           render={({ field, fieldState }) => (
