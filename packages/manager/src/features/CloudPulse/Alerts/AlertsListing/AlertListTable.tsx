@@ -99,7 +99,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
             pageSize,
           }) => (
             <>
-              <Grid marginTop={2}>
+              <Grid
+                sx={{
+                  marginTop: 2,
+                }}
+              >
                 <Table colCount={7} data-qa="alert-table" size="small">
                   <TableHead>
                     <TableRow>

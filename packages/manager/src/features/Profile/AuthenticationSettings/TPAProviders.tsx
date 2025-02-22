@@ -1,6 +1,6 @@
 import { Box, Divider, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
@@ -79,7 +79,14 @@ export const TPAProviders = (props: Props) => {
             const isProviderEnabled = props.authType === thisProvider.name;
 
             return (
-              <Grid key={thisProvider.displayName} md={4} sm={6} xs={12}>
+              <Grid
+                key={thisProvider.displayName}
+                size={{
+                  md: 4,
+                  sm: 6,
+                  xs: 12,
+                }}
+              >
                 <StyledButton
                   onClick={() => {
                     handleProviderChange(thisProvider.name);

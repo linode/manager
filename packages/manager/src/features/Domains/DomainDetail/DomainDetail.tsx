@@ -1,6 +1,6 @@
 import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -118,7 +118,7 @@ export const DomainDetail = () => {
         <StyledNotice text={locationState.recordError} variant="error" />
       )}
       <StyledRootGrid container>
-        <StyledMainGrid xs={12}>
+        <StyledMainGrid size={{ xs: 12 }}>
           <DomainRecords
             domain={domain}
             domainRecords={records}
@@ -126,7 +126,7 @@ export const DomainDetail = () => {
             updateRecords={refetchRecords}
           />
         </StyledMainGrid>
-        <StyledTagSectionGrid xs={12}>
+        <StyledTagSectionGrid size={{ xs: 12 }}>
           <StyledPaper>
             <StyledTypography data-qa-title variant="h3">
               Tags
