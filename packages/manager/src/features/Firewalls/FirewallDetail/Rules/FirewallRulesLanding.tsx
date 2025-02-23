@@ -113,9 +113,13 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     navigate({
       params: { id: String(firewallID) },
       to:
-        category === 'inbound'
+        category === 'inbound' && mode === 'create'
           ? '/firewalls/$id/rules/add/inbound'
-          : '/firewalls/$id/rules/add/outbound',
+          : category === 'inbound' && mode === 'edit'
+          ? `/firewalls/$id/rules/edit/inbound/${idx}`
+          : category === 'outbound' && mode === 'create'
+          ? '/firewalls/$id/rules/add/outbound'
+          : `/firewalls/$id/rules/edit/outbound/${idx}`,
     });
   };
 
@@ -344,50 +348,52 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
 
       <StyledDiv>
         <FirewallRuleTable
-          triggerCloneFirewallRule={(idx: number) =>
+          handleCloneFirewallRule={(idx: number) =>
             handleCloneRule('inbound', idx)
           }
-          triggerOpenRuleDrawerForEditing={(idx: number) =>
+          handleOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('inbound', 'edit', idx)
           }
-          triggerReorder={(startIdx: number, endIdx: number) =>
+          handleReorder={(startIdx: number, endIdx: number) =>
             handleReorder('inbound', startIdx, endIdx)
           }
           category="inbound"
           disabled={disabled}
+          handleDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
           handlePolicyChange={handlePolicyChange}
+          handleUndo={(idx) => handleUndo('inbound', idx)}
           openRuleDrawer={openRuleDrawer}
           policy={policy.inbound}
           rulesWithStatus={inboundRules}
-          triggerDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
-          triggerUndo={(idx) => handleUndo('inbound', idx)}
         />
       </StyledDiv>
       <StyledDiv>
         <FirewallRuleTable
-          triggerCloneFirewallRule={(idx: number) =>
+          handleCloneFirewallRule={(idx: number) =>
             handleCloneRule('outbound', idx)
           }
-          triggerOpenRuleDrawerForEditing={(idx: number) =>
+          handleOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('outbound', 'edit', idx)
           }
-          triggerReorder={(startIdx: number, endIdx: number) =>
+          handleReorder={(startIdx: number, endIdx: number) =>
             handleReorder('outbound', startIdx, endIdx)
           }
           category="outbound"
           disabled={disabled}
+          handleDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
           handlePolicyChange={handlePolicyChange}
+          handleUndo={(idx) => handleUndo('outbound', idx)}
           openRuleDrawer={openRuleDrawer}
           policy={policy.outbound}
           rulesWithStatus={outboundRules}
-          triggerDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
-          triggerUndo={(idx) => handleUndo('outbound', idx)}
         />
       </StyledDiv>
       <FirewallRuleDrawer
         isOpen={
-          location.pathname.endsWith('inbound') ||
-          location.pathname.endsWith('outbound')
+          location.pathname.endsWith('add/inbound') ||
+          location.pathname.endsWith('add/outbound') ||
+          location.pathname.endsWith(`edit/inbound/${ruleDrawer.ruleIdx}`) ||
+          location.pathname.endsWith(`edit/outbound/${ruleDrawer.ruleIdx}`)
         }
         category={ruleDrawer.category}
         mode={ruleDrawer.mode}
