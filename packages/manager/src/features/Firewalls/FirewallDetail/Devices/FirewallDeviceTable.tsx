@@ -50,7 +50,12 @@ export const FirewallDeviceTable = React.memo(
 
     const ariaLabel = `List of ${formattedTypes[deviceType]}s attached to this firewall`;
 
-    const { handleOrderChange, order, orderBy } = useOrderV2({
+    const {
+      handleOrderChange,
+      order,
+      orderBy,
+      sortedData: sortedDevices,
+    } = useOrderV2({
       data: devices,
       initialRoute: {
         defaultOrder: {
@@ -93,10 +98,10 @@ export const FirewallDeviceTable = React.memo(
           <TableBody>
             <TableContentWrapper
               error={_error}
-              length={devices.length}
+              length={sortedDevices?.length ?? 0}
               loading={isLoading}
             >
-              {devices.map((thisDevice) => (
+              {sortedDevices?.map((thisDevice) => (
                 <FirewallDeviceRow
                   device={thisDevice}
                   disabled={disabled}
@@ -108,7 +113,7 @@ export const FirewallDeviceTable = React.memo(
           </TableBody>
         </Table>
         <PaginationFooter
-          count={devices.length}
+          count={sortedDevices?.length ?? 0}
           eventCategory="Firewall Devices Table"
           handlePageChange={pagination.handlePageChange}
           handleSizeChange={pagination.handlePageSizeChange}
