@@ -9,34 +9,37 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { formattedTypes } from './FirewallDeviceLanding';
+import { formattedTypes } from './constants';
 import { FirewallDeviceRow } from './FirewallDeviceRow';
 
-import type { FirewallDeviceEntityType } from '@linode/api-v4';
-import type { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { FirewallDevice, FirewallDeviceEntityType } from '@linode/api-v4';
 
 export interface FirewallDeviceTableProps {
   deviceType: FirewallDeviceEntityType;
-  devices: FirewallDevice[];
   disabled: boolean;
-  error?: APIError[];
-  loading: boolean;
-  triggerRemoveDevice: (deviceID: number) => void;
+  firewallId: number;
+  handleRemoveDevice: (device: FirewallDevice) => void;
+  type: FirewallDeviceEntityType;
 }
 
 export const FirewallDeviceTable = React.memo(
   (props: FirewallDeviceTableProps) => {
     const {
       deviceType,
-      devices,
       disabled,
-      error,
-      loading,
-      triggerRemoveDevice,
+      firewallId,
+      handleRemoveDevice,
+      type,
     } = props;
+
+    const { data: allDevices, error, isLoading } = useAllFirewallDevicesQuery(
+      firewallId
+    );
+    const devices =
+      allDevices?.filter((device) => device.entity.type === type) || [];
 
     const _error = error
       ? getAPIErrorOrDefault(
@@ -91,17 +94,14 @@ export const FirewallDeviceTable = React.memo(
             <TableContentWrapper
               error={_error}
               length={devices.length}
-              loading={loading}
+              loading={isLoading}
             >
               {devices.map((thisDevice) => (
                 <FirewallDeviceRow
-                  deviceEntityID={thisDevice.entity.id}
-                  deviceID={thisDevice.id}
-                  deviceLabel={thisDevice.entity.label}
-                  deviceType={deviceType}
+                  device={thisDevice}
                   disabled={disabled}
+                  handleRemoveDevice={handleRemoveDevice}
                   key={`device-row-${thisDevice.id}`}
-                  triggerRemoveDevice={triggerRemoveDevice}
                 />
               ))}
             </TableContentWrapper>
