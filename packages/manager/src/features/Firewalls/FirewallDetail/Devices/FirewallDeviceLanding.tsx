@@ -25,20 +25,11 @@ export interface FirewallDeviceLandingProps {
 export const FirewallDeviceLanding = React.memo(
   (props: FirewallDeviceLandingProps) => {
     const { disabled, firewallId, firewallLabel, type } = props;
-
-    // const { data: allDevices, error, isLoading } = useAllFirewallDevicesQuery(
-    //   firewallId
-    // );
-
     const theme = useTheme();
-
     const navigate = useNavigate();
     const location = useLocation();
     const helperText =
       'Assign one or more services to this firewall. You can add services later if you want to customize your rules first.';
-
-    // const devices =
-    //   allDevices?.filter((device) => device.entity.type === type) || [];
 
     const handleClose = () => {
       navigate({
