@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { firewallDeviceFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { FirewallDeviceTable } from './FirewallDeviceTable';
@@ -12,11 +11,10 @@ const devices = ['linode', 'nodebalancer'];
 
 const props = (type: FirewallDeviceEntityType): FirewallDeviceTableProps => ({
   deviceType: type,
-  devices: firewallDeviceFactory.buildList(2),
   disabled: false,
-  error: undefined,
-  loading: false,
-  triggerRemoveDevice: vi.fn(),
+  firewallId: 1,
+  handleRemoveDevice: vi.fn(),
+  type,
 });
 
 devices.forEach((device: FirewallDeviceEntityType) => {
