@@ -1,12 +1,5 @@
 import { getQuotaUsage, quotaTypes } from '@linode/api-v4';
-import {
-  CircleProgress,
-  Divider,
-  Paper,
-  Select,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { Divider, Paper, Select, Stack, Typography } from '@linode/ui';
 import { useQueries } from '@tanstack/react-query';
 import * as React from 'react';
 
@@ -15,6 +8,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useQuotasQuery } from 'src/queries/quotas/quotas';
 
+import { QuotasTable } from './QuotasTable';
 import { getQuotasFilters, useGetLocationsForQuotaService } from './utils';
 
 import type { Quota, QuotaType } from '@linode/api-v4';
@@ -101,7 +95,7 @@ export const Quotas = () => {
         })}
         variant="outlined"
       >
-        <Stack divider={<Divider spacingBottom={20} spacingTop={40} />}>
+        <Stack>
           <Stack spacing={1}>
             <Select
               label="Select a Service"
@@ -159,35 +153,36 @@ export const Quotas = () => {
               />
             )}
           </Stack>
-          <Stack direction="row" justifyContent="space-between">
+          <Divider spacingBottom={40} spacingTop={40} />
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            marginBottom={2}
+          >
             <Typography variant="h3">Quotas</Typography>
-            <Stack alignItems="center" direction="row" spacing={3}>
+            <Stack
+              sx={(theme) => ({
+                position: 'relative',
+                top: `-${theme.spacing(2)}`,
+              })}
+              alignItems="center"
+              direction="row"
+              spacing={3}
+            >
               {/* TODO LIMITS_M1: update once link is available */}
               <DocsLink href="#" label="Learn More About Quotas" />
             </Stack>
           </Stack>
-          <Stack direction="row" spacing={2}>
-            {selectedLocation ? (
-              isLoadingQuotasTable ? (
-                <CircleProgress />
-              ) : (
-                <pre
-                  style={{
-                    backgroundColor: '#f5f5f5',
-                    borderRadius: '8px',
-                    overflow: 'auto',
-                    padding: '1rem',
-                    width: '100%',
-                  }}
-                >
-                  {JSON.stringify(quotasWithUsage, null, 2)}
-                </pre>
-              )
-            ) : (
-              <Typography>
-                Select a service and region to view quotas
-              </Typography>
-            )}
+          <Typography>
+            This table shows quotas and usage. If you need to increase a quota,
+            select Request an Increase from the Actions menu.
+          </Typography>
+          <Stack direction="column" spacing={2}>
+            <QuotasTable
+              hasSelectedLocation={Boolean(selectedLocation)}
+              isLoading={isLoadingQuotasTable}
+              quotasWithUsage={quotasWithUsage ?? []}
+            />
           </Stack>
         </Stack>
       </Paper>
