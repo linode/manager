@@ -16,7 +16,11 @@ import type { FirewallDeviceEntityType } from '@linode/api-v4';
 const queryMocks = vi.hoisted(() => ({
   useLocation: vi.fn().mockReturnValue({}),
   useNavigate: vi.fn(() => vi.fn()),
+  useOrderV2: vi.fn().mockReturnValue({
+    handleOrderChange: vi.fn(),
+  }),
   useParams: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -26,6 +30,15 @@ vi.mock('@tanstack/react-router', async () => {
     useLocation: queryMocks.useLocation,
     useNavigate: queryMocks.useNavigate,
     useParams: queryMocks.useParams,
+    useSearch: queryMocks.useSearch,
+  };
+});
+
+vi.mock('src/hooks/useOrderV2', async () => {
+  const actual = await vi.importActual('src/hooks/useOrderV2');
+  return {
+    ...actual,
+    useOrderV2: queryMocks.useOrderV2,
   };
 });
 

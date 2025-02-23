@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { firewallDeviceFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { FirewallDeviceTable } from './FirewallDeviceTable';
@@ -17,6 +18,29 @@ const props = (type: FirewallDeviceEntityType): FirewallDeviceTableProps => ({
   type,
 });
 
+const queryMocks = vi.hoisted(() => ({
+  useAllFirewallDevicesQuery: vi.fn().mockReturnValue({}),
+  useNavigate: vi.fn(() => vi.fn()),
+  useSearch: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+  };
+});
+
+vi.mock('src/queries/firewalls', async () => {
+  const actual = await vi.importActual('src/queries/firewalls');
+  return {
+    ...actual,
+    useAllFirewallDevicesQuery: queryMocks.useAllFirewallDevicesQuery,
+  };
+});
+
 devices.forEach((device: FirewallDeviceEntityType) => {
   describe(`Firewall ${device} table`, () => {
     it('should render', () => {
@@ -26,13 +50,24 @@ devices.forEach((device: FirewallDeviceEntityType) => {
       const table = getByRole('table');
       expect(table).toBeInTheDocument();
     });
-  });
 
-  it('should contain two rows', () => {
-    const { getAllByRole } = renderWithTheme(
-      <FirewallDeviceTable {...props(device)} />
-    );
-    const rows = getAllByRole('row');
-    expect(rows.length - 1).toBe(2);
+    it('should contain two rows', () => {
+      queryMocks.useAllFirewallDevicesQuery.mockReturnValue({
+        data: firewallDeviceFactory.buildList(2, {
+          entity: {
+            id: 1,
+            label: `test-${device}`,
+            type: device,
+          },
+        }),
+        error: null,
+        isLoading: false,
+      });
+      const { getAllByRole } = renderWithTheme(
+        <FirewallDeviceTable {...props(device)} />
+      );
+      const rows = getAllByRole('row');
+      expect(rows.length - 1).toBe(2);
+    });
   });
 });
