@@ -64,6 +64,13 @@ const firewallDetailRulesAddRuleRoute = createRoute({
   import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
 );
 
+const firewallDetailRulesEditRuleRoute = createRoute({
+  getParentRoute: () => firewallDetailRulesRoute,
+  path: 'edit',
+}).lazy(() =>
+  import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
+);
+
 const firewallDetailRulesAddInboundRuleRoute = createRoute({
   getParentRoute: () => firewallDetailRulesAddRuleRoute,
   path: 'inbound',
@@ -129,6 +136,7 @@ export const firewallsRouteTree = firewallsRoute.addChildren([
     ]),
     firewallDetailRulesRoute.addChildren([
       firewallDetailRulesAddRuleRoute,
+      firewallDetailRulesEditRuleRoute,
       firewallDetailRulesAddInboundRuleRoute,
       firewallDetailRulesAddOutboundRuleRoute,
     ]),
