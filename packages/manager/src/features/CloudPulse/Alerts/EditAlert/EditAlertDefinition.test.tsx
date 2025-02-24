@@ -30,6 +30,7 @@ beforeEach(() => {
   queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue(
     notificationChannelFactory.build()
   );
+  HTMLElement.prototype.scrollIntoView = vi.fn();
 });
 
 const alertDetails = alertFactory.build({
@@ -88,8 +89,8 @@ describe('EditAlertDefinition component', () => {
       );
       const descriptionValue = 'Updated Description';
       const nameValue = 'Updated Label';
-      const nameInput = getByPlaceholderText('Enter Name');
-      const descriptionInput = getByPlaceholderText('Enter Description');
+      const nameInput = getByPlaceholderText('Enter a Name');
+      const descriptionInput = getByPlaceholderText('Enter a Description');
       await userEvent.clear(nameInput);
       await userEvent.clear(descriptionInput);
       await userEvent.type(nameInput, nameValue);
