@@ -210,6 +210,7 @@ export type GlobalGrantTypes =
   | 'add_vpcs'
   | 'cancel_account'
   | 'child_account_access'
+  | 'add_buckets'
   | 'longview_subscription';
 
 export interface GlobalGrants {
