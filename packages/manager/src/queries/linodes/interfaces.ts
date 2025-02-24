@@ -5,6 +5,7 @@ import { linodeQueries } from './linodes';
 import type {
   APIError,
   Firewall,
+  LinodeInterfaceHistory,
   LinodeInterfaces,
   ResourcePage,
 } from '@linode/api-v4';
@@ -22,5 +23,11 @@ export const useLinodeInterfaceFirewallsQuery = (
   return useQuery<ResourcePage<Firewall>, APIError[]>(
     linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interface(interfaceId)
       ._ctx.firewalls
+  );
+};
+
+export const useLinodeInterfacesHistory = (linodeId: number) => {
+  return useQuery<ResourcePage<LinodeInterfaceHistory>, APIError[]>(
+    linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interfacesHistory
   );
 };

@@ -10,6 +10,7 @@ import {
   getLinodeInterface,
   getLinodeInterfaceFirewalls,
   getLinodeInterfaces,
+  getLinodeInterfacesHistory,
   getLinodeKernel,
   getLinodeLish,
   getLinodeStats,
@@ -112,6 +113,10 @@ export const linodeQueries = createQueryKeys('linodes', {
           }),
           interfaces: {
             queryFn: () => getLinodeInterfaces(id),
+            queryKey: null,
+          },
+          interfacesHistory: {
+            queryFn: () => getLinodeInterfacesHistory(id),
             queryKey: null,
           },
         },
