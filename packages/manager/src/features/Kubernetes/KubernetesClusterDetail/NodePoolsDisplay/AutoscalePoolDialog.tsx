@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -218,14 +218,14 @@ export const AutoscalePoolDialog = (props: Props) => {
               value={values.max}
             />
           </Grid>
-          <Grid style={{ padding: '0 8px' }} xs={12}>
+          <Grid size={12} style={{ padding: '0 8px' }}>
             {errors.min && (
-              <Typography color={(theme) => theme.palette.error.dark}>
+              <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
                 {errors.min}
               </Typography>
             )}
             {errors.max && (
-              <Typography color={(theme) => theme.palette.error.dark}>
+              <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
                 {errors.max}
               </Typography>
             )}

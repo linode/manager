@@ -101,8 +101,8 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
       cy.findByLabelText('Callback URL').click();
       cy.focused().clear();
       cy.focused().type(oauthApp.redirect_uri);
-      // Check the 'public' checkbox
-      if (oauthApp.public) {
+      // Uncheck the 'public' checkbox
+      if (!oauthApp.public) {
         cy.get('[data-qa-checked]').should('be.visible').click();
       }
       mockCreateOAuthApp(oauthApp).as('createOauthApp');

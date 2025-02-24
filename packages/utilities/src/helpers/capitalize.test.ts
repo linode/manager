@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { capitalize, capitalizeAllWords } from './capitalize';
 
 describe('capitalize', () => {

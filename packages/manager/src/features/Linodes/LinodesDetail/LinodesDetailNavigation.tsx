@@ -1,5 +1,5 @@
 import { CircleProgress } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import {
   matchPath,
@@ -128,7 +128,7 @@ const LinodesDetailNavigation = () => {
               spacingTop={32}
               variant="warning"
             >
-              <Grid xs={12}>{text}</Grid>
+              <Grid size={12}>{text}</Grid>
             </DismissibleBanner>
           ) : null
         }

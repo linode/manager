@@ -1,4 +1,5 @@
 import { Box, Chip, Stack, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
@@ -11,7 +12,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useAccountUserGrants } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile/profile';
-import { capitalize } from 'src/utilities/capitalize';
 
 import { UsersActionMenu } from './UsersActionMenu';
 

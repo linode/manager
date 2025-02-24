@@ -1,6 +1,6 @@
 import { Autocomplete, Box, Notice, Paper, Stack, TextField } from '@linode/ui';
 import { Divider } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
@@ -65,6 +65,8 @@ import type {
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -129,6 +131,10 @@ export const CreateCluster = () => {
   const lkeEnterpriseType = kubernetesHighAvailabilityTypesData?.find(
     (type) => type.id === 'lke-e'
   );
+
+  const isCreateClusterRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_kubernetes',
+  });
 
   const {
     data: allTypes,
@@ -327,6 +333,18 @@ export const CreateCluster = () => {
               message={generalError}
             />
           </Notice>
+        )}
+        {isCreateClusterRestricted && (
+          <Notice
+            text={getRestrictedResourceText({
+              action: 'create',
+              isSingular: false,
+              resourceType: 'LKE Clusters',
+            })}
+            important
+            sx={{ marginBottom: 2 }}
+            variant="error"
+          />
         )}
         <Paper data-qa-label-header>
           <TextField
