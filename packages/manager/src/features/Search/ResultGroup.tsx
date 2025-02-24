@@ -1,5 +1,5 @@
 import { capitalize } from '@linode/utilities';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 

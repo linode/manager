@@ -62,14 +62,18 @@ export const DisplayAlertDetailChips = React.memo(
             <Grid item md={valueGridColumns} xs={12}>
               <Grid
                 container
-                flexWrap={mergeChips ? 'nowrap' : 'wrap'}
-                gap={mergeChips ? 0 : 1}
+                sx={{
+                  flexWrap: mergeChips ? 'nowrap' : 'wrap',
+                  gap: mergeChips ? 0 : 1,
+                }}
               >
                 {value.map((label, index) => (
                   <Grid
                     item
                     key={index}
-                    marginLeft={mergeChips && index > 0 ? -1 : 0}
+                    sx={{
+                      marginLeft: mergeChips && index > 0 ? -1 : 0,
+                    }}
                   >
                     <StyledAlertChip
                       borderRadius={getAlertChipBorderRadius({
