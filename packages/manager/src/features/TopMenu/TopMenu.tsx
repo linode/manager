@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { AppBar } from 'src/components/AppBar';
 import { StyledAkamaiLogo } from 'src/components/PrimaryNav/PrimaryNav.styles';
 import { Toolbar } from 'src/components/Toolbar';
-import { loggedInAsCustomer } from 'src/utilities/authentication';
+import { isLoggedInAsCustomer } from 'src/utilities/authentication';
 
 import { Community } from './Community';
 import { CreateMenu } from './CreateMenu/CreateMenu';
@@ -45,7 +45,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
 
   return (
     <>
-      {loggedInAsCustomer() && <InternalAdminBanner username={username} />}
+      {isLoggedInAsCustomer() && <InternalAdminBanner username={username} />}
       <AppBar data-qa-appbar>
         <Toolbar variant="dense">
           {isNarrowViewport && (

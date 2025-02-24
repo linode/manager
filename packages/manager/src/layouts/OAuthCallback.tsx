@@ -1,3 +1,4 @@
+import { capitalize } from '@linode/utilities';
 import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -9,7 +10,6 @@ import {
   getAuthCode,
   setAuthToken,
 } from 'src/utilities/authentication';
-import { capitalize } from 'src/utilities/capitalize';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
 

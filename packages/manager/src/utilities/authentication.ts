@@ -47,5 +47,5 @@ export const clearAuthToken = () =>
 
 export const isLoggedIn = () => !!getAuthToken().token;
 
-export const loggedInAsCustomer = () =>
+export const isLoggedInAsCustomer = () =>
   getAuthToken().token.toLowerCase().includes('admin');
