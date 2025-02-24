@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
@@ -29,9 +29,12 @@ export const TransferDisplayUsage = React.memo(
         )}
         <Grid
           container
-          justifyContent="space-between"
           spacing={2}
-          sx={{ marginBottom: 0, marginTop: (theme) => theme.spacing(0.5) }}
+          sx={{
+            justifyContent: 'space-between',
+            marginBottom: 0,
+            marginTop: (theme) => theme.spacing(0.5),
+          }}
         >
           <Grid style={{ marginRight: 10 }}>
             {!isEmptyPool ? (
