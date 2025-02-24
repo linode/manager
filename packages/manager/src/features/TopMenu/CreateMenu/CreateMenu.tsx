@@ -158,6 +158,7 @@ export const CreateMenu = () => {
         buttonType="primary"
         data-qa-add-new-menu-button
         disableRipple
+        loading
         id="create-menu"
         onClick={handleClick}
         startIcon={<StyledAddIcon />}

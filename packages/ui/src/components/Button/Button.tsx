@@ -3,8 +3,6 @@ import _Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ReloadIcon } from '../../assets';
-import { rotate360 } from '../../foundations';
 import { omittedProps } from '../../utilities';
 import { Tooltip } from '../Tooltip';
 
@@ -63,13 +61,8 @@ export interface ButtonProps extends _ButtonProps {
 }
 
 const StyledButton = styled(_Button, {
-  shouldForwardProp: omittedProps([
-    'compactX',
-    'compactY',
-    'loading',
-    'buttonType',
-  ]),
-})<ButtonProps>(({ theme, ...props }) => ({
+  shouldForwardProp: omittedProps(['compactX', 'compactY', 'buttonType']),
+})<ButtonProps>(({ ...props }) => ({
   ...(props.compactX && {
     minWidth: 50,
     paddingLeft: 0,
@@ -79,14 +72,6 @@ const StyledButton = styled(_Button, {
     minHeight: 20,
     paddingBottom: 0,
     paddingTop: 0,
-  }),
-  ...(props.loading && {
-    '& svg': {
-      animation: `${rotate360} 2s linear infinite`,
-      height: `${theme.spacing(2)}`,
-      margin: '0 auto',
-      width: `${theme.spacing(2)}`,
-    },
   }),
 }));
 
@@ -103,7 +88,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       compactX,
       compactY,
       disabled,
-      loading,
       sx,
       sxEndIcon,
       tooltipAnalyticsEvent,
@@ -147,15 +131,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         compactY={compactY}
         data-testid={rest['data-testid'] || 'button'}
         disableRipple={disabled || rest.disableRipple}
-        disabled={loading}
-        loading={loading}
         onClick={disabled ? (e) => e.preventDefault() : rest.onClick}
         onKeyDown={disabled ? handleDisabledKeyDown : rest.onKeyDown}
         ref={ref}
         sx={sx}
         variant={buttonTypeToVariant[buttonType] || 'text'}
       >
-        {loading ? <ReloadIcon data-testid="loadingIcon" /> : children}
+        {children}
       </StyledButton>
     );
 
