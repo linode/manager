@@ -10,4 +10,4 @@ export const getLinodeInterfaceType = (networkInterface: LinodeInterface) => {
   return 'public';
 };
 
-export type InterfaceType = ReturnType<typeof getLinodeInterfaceType>;
+export type LinodeInterfaceType = ReturnType<typeof getLinodeInterfaceType>;

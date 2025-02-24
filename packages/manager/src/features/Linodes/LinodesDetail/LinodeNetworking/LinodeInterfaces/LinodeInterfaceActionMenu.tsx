@@ -2,11 +2,11 @@ import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
-import type { InterfaceType } from './utilities';
+import type { LinodeInterfaceType } from './utilities';
 
 interface Props {
   id: number;
-  type: InterfaceType;
+  type: LinodeInterfaceType;
 }
 
 export const LinodeInterfaceActionMenu = (props: Props) => {
