@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { storage } from 'src/utilities/storage';
@@ -59,7 +59,13 @@ export const EnvironmentToggleTool = () => {
 
   return (
     <Grid container>
-      <Grid display="flex" flexWrap="nowrap" xs={12}>
+      <Grid
+        size={12}
+        sx={{
+          display: 'flex',
+          flexWrap: 'nowrap',
+        }}
+      >
         <DevToolSelect
           onChange={(e) => {
             const selectedIndex = options.findIndex(

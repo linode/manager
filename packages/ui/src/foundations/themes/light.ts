@@ -88,7 +88,7 @@ export const color = {
   // TODO: `tagButton*` should be moved to component level.
   tagButtonBg: Color.Brand[10],
   tagButtonBgHover: Button.Primary.Hover.Background,
-  tagButtonText: Color.Brand[60],
+  tagButtonText: Color.Brand[90],
   tagButtonTextHover: Color.Neutrals.White,
   tagIcon: Color.Brand[60],
   tagIconHover: Button.Primary.Default.Text,
@@ -236,7 +236,7 @@ const spacing = 8;
 const MuiTableHeadSvgStyles = {
   svg: {
     path: {
-      fill: Color.Brand[60],
+      fill: Color.Brand[90],
     },
   },
 };
@@ -328,7 +328,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover': {
             '& h3': {
-              color: primaryColors.light,
+              color: Color.Brand[80],
             },
           },
           backgroundColor: 'transparent',
@@ -389,6 +389,10 @@ export const lightTheme: ThemeOptions = {
           },
         },
         inputRoot: {
+          '& .MuiInput-input': {
+            position: 'relative',
+            top: 1,
+          },
           paddingLeft: 8,
         },
         listbox: {
@@ -507,7 +511,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover, &:focus': {
             backgroundColor: 'transparent',
-            color: Button.Secondary.Hover.Text,
+            color: Color.Brand[70],
           },
           '&[aria-disabled="true"]': {
             color: Color.Neutrals[40],
@@ -882,7 +886,7 @@ export const lightTheme: ThemeOptions = {
             fontSize: '1rem',
           },
           fontSize: Typography.Body.Regular,
-          padding: 8,
+          padding: `0 ${spacing}px`,
         },
         inputMultiline: {
           lineHeight: 1.4,
@@ -1006,7 +1010,6 @@ export const lightTheme: ThemeOptions = {
     },
     MuiListItem: {
       styleOverrides: {
-        disabled: {},
         root: {
           '&$disabled': {
             opacity: 0.5,
@@ -1022,7 +1025,6 @@ export const lightTheme: ThemeOptions = {
           },
           color: primaryColors.text,
         },
-        selected: {},
       },
     },
     MuiListItemText: {
@@ -1435,10 +1437,11 @@ export const lightTheme: ThemeOptions = {
             '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
             // Default Striping
             '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
-          },
-          // Zebra Striping for Nested Tables
-          '&.MuiTable-zebra-nested': {
-            '.MuiTableRow-root:nth-of-type(4n-1)': MuiTableZebraStyles,
+            '.MuiTableRow-root:not(:last-of-type)': {
+              '.MuiTableCell-root': {
+                borderBottom: 0,
+              },
+            },
           },
           // Nested Tables
           '.MuiTable-root': {
@@ -1553,7 +1556,7 @@ export const lightTheme: ThemeOptions = {
           },
           ':hover, :focus': {
             ...MuiTableHeadSvgStyles,
-            color: Color.Brand[60],
+            color: Color.Brand[90],
             cursor: 'pointer',
           },
           fontSize: Font.FontSize.Xs,

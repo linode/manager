@@ -1,4 +1,5 @@
 import { Box } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -6,7 +7,6 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { AlertActionMenu } from './AlertActionMenu';
@@ -43,6 +43,7 @@ export const AlertTableRow = (props: Props) => {
   const { alert, handlers, services } = props;
   const location = useLocation();
   const { created_by, id, label, service_type, status, type, updated } = alert;
+
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>
@@ -68,6 +69,7 @@ export const AlertTableRow = (props: Props) => {
       <TableCell actionCell data-qa-alert-action-cell={`alert_${id}`}>
         <AlertActionMenu
           alertLabel={label}
+          alertStatus={status}
           alertType={type}
           handlers={handlers}
         />

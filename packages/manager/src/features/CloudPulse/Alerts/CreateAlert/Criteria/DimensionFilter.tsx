@@ -60,6 +60,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
         }
         buttonType="secondary"
         compactX
+        data-qa-buttons="true"
         size="small"
         sx={{ justifyContent: 'start' }}
       >

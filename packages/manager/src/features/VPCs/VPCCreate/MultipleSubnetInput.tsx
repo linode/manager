@@ -1,5 +1,5 @@
 import { Button, Divider } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 

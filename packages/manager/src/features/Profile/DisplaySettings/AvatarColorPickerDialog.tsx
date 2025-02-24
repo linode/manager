@@ -1,12 +1,10 @@
-import { Stack } from '@linode/ui';
-import { Typography } from '@linode/ui';
+import { Dialog, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { ColorPicker } from 'src/components/ColorPicker/ColorPicker';
-import { Dialog } from 'src/components/Dialog/Dialog';
 import {
   useMutatePreferences,
   usePreferences,

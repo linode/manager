@@ -1,4 +1,5 @@
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 
@@ -12,7 +13,6 @@ import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import {
@@ -267,6 +267,7 @@ const getSubnetLinodeIPv4CellString = (
 
 const getIPv4Link = (configInterface: Interface | undefined): JSX.Element => {
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {configInterface && (
         <span key={configInterface.id}>{configInterface.ipv4?.vpc}</span>
