@@ -132,6 +132,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                           clearErrors(controllerField.name);
                         }
                       }}
+                      data-testid={`ipv4-addresses-or-cidrs-ip-address-${index}`}
                       error={!!fieldState.error}
                       errorText={fieldState.error?.message}
                       hideLabel
@@ -192,6 +193,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                           clearErrors(controllerField.name);
                         }
                       }}
+                      data-testid={`ipv6-addresses-or-cidrs-ip-address-${index}`}
                       error={!!fieldState.error}
                       errorText={fieldState.error?.message}
                       hideLabel

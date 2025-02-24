@@ -454,7 +454,7 @@ describe('displays specific kubernetes plans for GPU', () => {
       }).within(() => {
         cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
         cy.findAllByRole('row').should('have.length', 2);
-        cy.get('[data-qa-plan-row="gpu-1"]').should('be.visible');
+        cy.get('[data-qa-plan-row="gpu-1"]').should('have.attr', 'disabled');
       });
     });
   });

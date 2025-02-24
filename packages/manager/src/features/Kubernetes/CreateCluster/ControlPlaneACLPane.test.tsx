@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 
@@ -17,7 +17,15 @@ const props: ControlPlaneACLProps = {
 
 describe('ControlPlaneACLPane', () => {
   it('renders all fields when enableControlPlaneACL is true', () => {
-    const { getByText } = renderWithTheme(<ControlPlaneACLPane {...props} />);
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <ControlPlaneACLPane {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          ipv4Addresses: [{ address: '', id: 1 }],
+          ipv6Addresses: [{ address: '', id: 1 }],
+        },
+      },
+    });
 
     expect(getByText('Control Plane ACL')).toBeVisible();
     expect(
@@ -33,9 +41,11 @@ describe('ControlPlaneACLPane', () => {
   });
 
   it('hides IP fields when enableControlPlaneACL is false', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <ControlPlaneACLPane {...props} enableControlPlaneACL={false} />
-    );
+    const { getByText, queryByText } = renderWithThemeAndHookFormContext({
+      component: (
+        <ControlPlaneACLPane {...props} enableControlPlaneACL={false} />
+      ),
+    });
 
     expect(getByText('Control Plane ACL')).toBeVisible();
     expect(
@@ -51,7 +61,9 @@ describe('ControlPlaneACLPane', () => {
   });
 
   it('calls setControlPlaneACL when clicking the toggle', async () => {
-    const { getByText } = renderWithTheme(<ControlPlaneACLPane {...props} />);
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <ControlPlaneACLPane {...props} />,
+    });
 
     const toggle = getByText('Enable Control Plane ACL');
     await userEvent.click(toggle);
@@ -60,16 +72,22 @@ describe('ControlPlaneACLPane', () => {
   });
 
   it('handles IP changes', async () => {
-    const { getByLabelText } = renderWithTheme(
-      <ControlPlaneACLPane {...props} />
-    );
+    const { getByTestId } = renderWithThemeAndHookFormContext({
+      component: <ControlPlaneACLPane {...props} />,
+      useFormOptions: {
+        defaultValues: {
+          ipv4Addresses: [{ address: '', id: 1 }],
+          ipv6Addresses: [{ address: '', id: 1 }],
+        },
+      },
+    });
 
-    const ipv4 = getByLabelText('IPv4 Addresses or CIDRs ip-address-0');
+    const ipv4 = getByTestId('ipv4-addresses-or-cidrs-ip-address-0');
     await userEvent.type(ipv4, 'test');
 
     expect(props.handleIPv4Change).toHaveBeenCalled();
 
-    const ipv6 = getByLabelText('IPv6 Addresses or CIDRs ip-address-0');
+    const ipv6 = getByTestId('ipv6-addresses-or-cidrs-ip-address-0');
     await userEvent.type(ipv6, 'test');
 
     expect(props.handleIPv6Change).toHaveBeenCalled();
