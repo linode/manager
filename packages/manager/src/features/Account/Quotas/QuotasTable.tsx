@@ -1,5 +1,6 @@
 import { getQuotaUsage } from '@linode/api-v4';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import { useQueries } from '@tanstack/react-query';
 import * as React from 'react';
 
@@ -36,7 +37,7 @@ const requestIncreaseAction: Action = {
 
 export const QuotasTable = (props: QuotasTableProps) => {
   const { hasSelectedLocation, selectedLocation, selectedService } = props;
-
+  const theme = useTheme();
   const pagination = usePagination(1, 'quotas-table');
 
   const filters: Filter = getQuotasFilters({
@@ -140,6 +141,20 @@ export const QuotasTable = (props: QuotasTableProps) => {
                     ) : (
                       <>
                         <BarPercent
+                          customColors={[
+                            {
+                              color: theme.tokens.color.Red[80],
+                              percentage: 81,
+                            },
+                            {
+                              color: theme.tokens.color.Orange[80],
+                              percentage: 61,
+                            },
+                            {
+                              color: theme.tokens.color.Brand[80],
+                              percentage: 1,
+                            },
+                          ]}
                           max={quota.quota_limit}
                           rounded
                           sx={{ mb: 1, mt: 2, padding: '3px' }}
@@ -156,7 +171,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
                     )}
                   </Box>
                 </TableCell>
-                <TableCell sx={{ textAlign: 'right', paddingRight: 0 }}>
+                <TableCell sx={{ paddingRight: 0, textAlign: 'right' }}>
                   <ActionMenu
                     actionsList={[requestIncreaseAction]}
                     ariaLabel={`Action menu for quota ${quota.quota_name}`}
