@@ -34,32 +34,33 @@ export const EditAlertLanding = () => {
     alertId,
     serviceType
   );
-  const newPathname = '/Definition/Edit';
+  const pathname = '/Definition/Edit';
+
   if (isFetching) {
-    return getEditAlertMessage(<CircleProgress />, newPathname, overrides);
+    return (
+      <EditAlertLoadingState overrides={overrides} pathname={pathname}>
+        <CircleProgress />
+      </EditAlertLoadingState>
+    );
   }
 
   if (isError) {
-    return getEditAlertMessage(
-      <ErrorState
-        errorText={
-          'An error occurred while loading the alerts definitions and resources. Please try again later.'
-        }
-      />,
-      newPathname,
-      overrides
+    return (
+      <EditAlertLoadingState overrides={overrides} pathname={pathname}>
+        <ErrorState errorText="An error occurred while loading the alerts definitions and resources. Please try again later." />
+      </EditAlertLoadingState>
     );
   }
 
   if (!alertDetails) {
-    return getEditAlertMessage(
-      <StyledPlaceholder icon={EntityIcon} title="No Data to display." />,
-      newPathname,
-      overrides
+    return (
+      <EditAlertLoadingState overrides={overrides} pathname={pathname}>
+        <StyledPlaceholder icon={EntityIcon} title="No Data to display." />
+      </EditAlertLoadingState>
     );
   }
 
-  if (alertDetails.type === 'system' || alertDetails.type === 'default') {
+  if (alertDetails.type === 'system') {
     return (
       <EditAlertResources
         alertDetails={alertDetails}
@@ -77,21 +78,25 @@ export const EditAlertLanding = () => {
 };
 
 /**
- * Returns a common UI structure for loading, error, or empty states.
- * @param messageComponent - A React component to display (e.g., CircleProgress, ErrorState, or Placeholder).
- * @param pathName - The current pathname to be provided in breadcrumb
+ * A component that renders a common UI structure for loading, error, or empty states.
+ * @param pathname - The current pathname to be provided in breadcrumb
  * @param crumbOverrides - The overrides to be provided in breadcrumb
+ * @param children - The message component (e.g., CircleProgress, ErrorState, or Placeholder)
  */
-const getEditAlertMessage = (
-  messageComponent: React.ReactNode,
-  pathName: string,
-  crumbOverrides: CrumbOverridesProps[]
-) => {
+const EditAlertLoadingState = ({
+  children,
+  overrides,
+  pathname,
+}: {
+  children: React.ReactNode;
+  overrides: CrumbOverridesProps[];
+  pathname: string;
+}) => {
   return (
     <>
-      <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathName} />
+      <Breadcrumb crumbOverrides={overrides} pathname={pathname} />
       <Box alignContent="center" height="600px">
-        {messageComponent}
+        {children}
       </Box>
     </>
   );

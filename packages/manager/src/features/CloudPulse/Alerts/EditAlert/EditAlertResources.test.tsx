@@ -80,7 +80,7 @@ beforeEach(() => {
 describe('EditAlertResources component tests', () => {
   it('Edit alert resources happy path', () => {
     const { getByPlaceholderText, getByTestId } = renderWithTheme(
-      <EditAlertResources alertDetails={alertDetails} serviceType={'linode'} />
+      <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
     );
 
     expect(
@@ -100,10 +100,7 @@ describe('EditAlertResources component tests', () => {
 
     const { getByTestId, getByText } = renderWithTheme(
       <Router history={history}>
-        <EditAlertResources
-          alertDetails={alertDetails}
-          serviceType={'linode'}
-        />
+        <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
       </Router>
     );
 
@@ -155,10 +152,7 @@ describe('EditAlertResources component tests', () => {
 
     const { getByTestId, getByText } = renderWithTheme(
       <Router history={history}>
-        <EditAlertResources
-          alertDetails={alertDetails}
-          serviceType={'linode'}
-        />
+        <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
       </Router>
     );
 

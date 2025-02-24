@@ -57,7 +57,13 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
       })}
     >
       <Typography variant="h3"> Trigger Conditions</Typography>
-      <Grid alignItems="flex-start" container spacing={2}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          alignItems: 'flex-start',
+        }}
+      >
         <Grid item md={3} sm={6} xs={12}>
           <Controller
             render={({ field, fieldState }) => (
@@ -136,9 +142,14 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           item
           justifyContent={{ xs: 'center' }}
           md="auto"
-          mt={{ lg: 3.5, xs: 0 }}
           sm={12}
           xs={12}
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            mt: { lg: 3.5, xs: 0 },
+          }}
         >
           <Typography
             marginTop={{ sm: '32px', xs: '0px' }}
@@ -159,7 +170,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                   marginTop: { sm: '16px', xs: '0px' },
                   width: '30px',
                 }}
-                data-qa-trigger_occurences
+                data-qa-trigger-occurrences
                 data-testid="trigger-occurences"
                 errorText={fieldState.error?.message}
                 label=""

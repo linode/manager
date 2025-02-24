@@ -2,8 +2,8 @@ import { Button, Typography } from '@linode/ui';
 import { Grid, useTheme } from '@mui/material';
 import * as React from 'react';
 
-import KeyboardArrowDownIcon from 'src/assets/icons/arrow_down.svg';
-import KeyboardArrowRightIcon from 'src/assets/icons/arrow_right.svg';
+import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
+import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';
 import InfoIcon from 'src/assets/icons/info.svg';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import NullComponent from 'src/components/NullComponent';
@@ -355,9 +355,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       <Grid
         container
         item
-        m={3}
-        paddingBottom={isServiceAnalyticsIntegration ? 3 : 0}
         xs={12}
+        sx={{
+          m: 3,
+          paddingBottom: isServiceAnalyticsIntegration ? 3 : 0,
+        }}
       >
         <Grid
           sx={{
@@ -371,9 +373,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           <Button
             startIcon={
               showFilter ? (
-                <KeyboardArrowDownIcon />
+                <KeyboardCaretDownIcon />
               ) : (
-                <KeyboardArrowRightIcon />
+                <KeyboardCaretRightIcon />
               )
             }
             sx={{
@@ -395,13 +397,15 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         <Grid
           columnSpacing={theme.spacing(2)}
           container
-          display={showFilter ? 'flex' : 'none'}
           item
-          maxHeight={theme.spacing(23)}
-          overflow={'auto'}
-          pr={{ sm: 0, xs: 2 }}
-          rowGap={theme.spacing(2)}
           xs={12}
+          sx={{
+            display: showFilter ? 'flex' : 'none',
+            maxHeight: theme.spacing(23),
+            overflow: 'auto',
+            pr: { sm: 0, xs: 2 },
+            rowGap: theme.spacing(2),
+          }}
         >
           <RenderFilters />
         </Grid>

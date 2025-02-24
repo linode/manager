@@ -1,17 +1,23 @@
 /**
  * @file Integration Tests for CloudPulse Dbass Dashboard.
  */
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateCloudPulseJWEToken,
-  mockGetCloudPulseDashboard,
   mockCreateCloudPulseMetrics,
+  mockGetCloudPulseDashboard,
   mockGetCloudPulseDashboards,
   mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { widgetDetails } from 'support/constants/widgets';
+import { generateRandomMetricsData } from 'support/util/cloudpulse';
+
 import {
   accountFactory,
   cloudPulseMetricsResponseFactory,
@@ -21,18 +27,14 @@ import {
   regionFactory,
   widgetFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { Database } from '@linode/api-v4';
-import { generateRandomMetricsData } from 'support/util/cloudpulse';
-import { mockGetDatabases } from 'support/intercepts/databases';
+
+import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
 const timeDurationToSelect = 'Last 24 Hours';
 
 const flags: Partial<Flags> = {
-  aclp: { enabled: true, beta: true },
+  aclp: { beta: true, enabled: true },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'LINODE_ID',
@@ -50,30 +52,30 @@ const flags: Partial<Flags> = {
 };
 
 const {
-  metrics,
-  id,
-  serviceType,
+  clusterName,
   dashboardName,
   engine,
-  clusterName,
+  id,
+  metrics,
   nodeType,
+  serviceType,
 } = widgetDetails.dbaas;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
-  widgets: metrics.map(({ title, yLabel, name, unit }) => {
+  widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
       label: title,
-      y_label: yLabel,
       metric: name,
       unit,
+      y_label: yLabel,
     });
   }),
 });
 
 const metricDefinitions = {
-  data: metrics.map(({ title, name, unit }) =>
+  data: metrics.map(({ name, title, unit }) =>
     dashboardMetricFactory.build({
       label: title,
       metric: name,
@@ -91,37 +93,37 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
 const databaseMock: Database = databaseFactory.build({
-  label: clusterName,
-  type: engine,
-  region: mockRegion.label,
-  version: '1',
-  status: 'provisioning',
   cluster_size: 2,
   engine: 'mysql',
   hosts: {
     primary: undefined,
     secondary: undefined,
   },
+  label: clusterName,
+  region: mockRegion.label,
+  status: 'provisioning',
+  type: engine,
+  version: '1',
 });
 const extendDatabaseMock: Database = databaseFactory.build({
-  label: 'updated-dbass-mock',
-  type: engine,
-  region: mockRegion.label,
-  version: '1',
-  status: 'provisioning',
   cluster_size: 1,
   engine: 'mysql',
   hosts: {
     primary: undefined,
     secondary: undefined,
   },
+  label: 'updated-dbass-mock',
+  region: mockRegion.label,
+  status: 'provisioning',
+  type: engine,
+  version: '1',
 });
 
 describe('Integration Tests for Applied Filters', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
-    //mockGetLinodes([mockLinode]);
+    // mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
@@ -153,7 +155,7 @@ describe('Integration Tests for Applied Filters', () => {
   });
 
   it('should verify that the applied global filters are reflected in the filter section', () => {
-    //Select a Database Engine from the autocomplete input.
+    // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
@@ -179,7 +181,7 @@ describe('Integration Tests for Applied Filters', () => {
 
     cy.get('body').click('topRight');
 
-    //Select a Node from the autocomplete input.
+    // Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
@@ -187,7 +189,7 @@ describe('Integration Tests for Applied Filters', () => {
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
-    //Collapse the Filters section
+    // Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
 
     cy.get('[data-testid="applied-filter"]').within(() => {
@@ -210,7 +212,7 @@ describe('Integration Tests for Applied Filters', () => {
   });
 
   it('dont create any global filter and check the applied filters', () => {
-    //Collapse the Filters section
+    // Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
     cy.get('[data-testid="applied-filter"]').within(() => {
       cy.get('h3').should('not.exist');
@@ -218,14 +220,14 @@ describe('Integration Tests for Applied Filters', () => {
   });
 
   it('apply only database engine and verify applied filters', () => {
-    //Select a Database Engine from the autocomplete input.
+    // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
       .type(engine);
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
-    //Collapse the Filters section
+    // Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
     cy.get('[data-testid="applied-filter"]').within(() => {
       cy.get(`[data-qa-value="Database Engine ${engine}"]`)
@@ -242,7 +244,7 @@ describe('Integration Tests for Applied Filters', () => {
       .should('be.visible')
       .click();
 
-    //Collapse the Filters section
+    // Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
     cy.get('[data-testid="applied-filter"]').within(() => {
       cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
@@ -259,7 +261,7 @@ describe('Integration Tests for Applied Filters', () => {
       .should('be.visible')
       .click();
 
-    //Select a Database Engine from the autocomplete input.
+    // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
@@ -279,7 +281,7 @@ describe('Integration Tests for Applied Filters', () => {
 
     cy.get('body').click('topRight');
 
-    //Select a Node from the autocomplete input.
+    // Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
@@ -287,7 +289,7 @@ describe('Integration Tests for Applied Filters', () => {
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
-    //Collapse the Filters section
+    // Collapse the Filters section
     ui.button.findByTitle('Filters').should('be.visible').click();
     cy.get('[data-testid="applied-filter"]').within(() => {
       cy.get(`[data-qa-value="Database Engine ${'PostgreSQL'}"]`)

@@ -2,17 +2,23 @@
  * @file Integration Tests for CloudPulse Linode Dashboard with Dynamic Mocking.
  */
 
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateCloudPulseJWEToken,
-  mockGetCloudPulseDashboard,
   mockCreateCloudPulseMetrics,
+  mockGetCloudPulseDashboard,
   mockGetCloudPulseDashboards,
   mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { widgetDetails } from 'support/constants/widgets';
+import { generateRandomMetricsData } from 'support/util/cloudpulse';
+
 import {
   accountFactory,
   cloudPulseMetricsResponseFactory,
@@ -22,17 +28,13 @@ import {
   regionFactory,
   widgetFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetLinodes } from 'support/intercepts/linodes';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { generateRandomMetricsData } from 'support/util/cloudpulse';
-import { Flags } from 'src/featureFlags';
+
+import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
 const timeDurationToSelect = 'Last 24 Hours';
 const flags: Partial<Flags> = {
-  aclp: { enabled: true, beta: true },
+  aclp: { beta: true, enabled: true },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'LINODE_ID',
@@ -49,23 +51,23 @@ const flags: Partial<Flags> = {
   ],
 };
 
-const { metrics, id, serviceType, dashboardName } = widgetDetails.linode;
+const { dashboardName, id, metrics, serviceType } = widgetDetails.linode;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
-  widgets: metrics.map(({ title, yLabel, name, unit }) =>
+  widgets: metrics.map(({ name, title, unit, yLabel }) =>
     widgetFactory.build({
       label: title,
-      y_label: yLabel,
       metric: name,
       unit,
+      y_label: yLabel,
     })
   ),
 });
 
 const metricDefinitions = {
-  data: metrics.map(({ title, name, unit }) =>
+  data: metrics.map(({ name, title, unit }) =>
     dashboardMetricFactory.build({
       label: title,
       metric: name,
@@ -76,20 +78,20 @@ const metricDefinitions = {
 
 const linodes = [
   linodeFactory.build({
-    tags: ['tag-2', 'tag-3'],
-    label: 'linodeWithTagsTag2AndTag3',
     id: 1,
+    label: 'linodeWithTagsTag2AndTag3',
     region: 'us-ord',
+    tags: ['tag-2', 'tag-3'],
   }),
   linodeFactory.build({
-    tags: ['tag-3', 'tag-4'],
-    label: 'linodeWithTagsTag3AndTag4',
     id: 2,
+    label: 'linodeWithTagsTag3AndTag4',
     region: 'us-ord',
+    tags: ['tag-3', 'tag-4'],
   }),
   linodeFactory.build({
-    label: 'linodeNoTags',
     id: 3,
+    label: 'linodeNoTags',
     region: 'us-ord',
   }),
 ];
@@ -121,12 +123,12 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
     );
     mockGetRegions([mockRegion]);
     mockGetUserPreferences({
-      theme: 'dark',
       aclpPreference: {
         dashboardId: 1,
-        widgets: {},
         region: 'us-ord',
+        widgets: {},
       },
+      theme: 'dark',
     }).as('fetchpreferences');
   });
 
@@ -158,14 +160,14 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
 
   it('Verify the users tag preferences are correctly applied and reflected in the system', () => {
     mockGetUserPreferences({
-      theme: 'dark',
       aclpPreference: {
         dashboardId: 1,
-        widgets: {},
-        tags: ['tag-4', 'tag-2'],
         region: 'us-ord',
         resources: ['1', '2'],
+        tags: ['tag-4', 'tag-2'],
+        widgets: {},
       },
+      theme: 'dark',
     }).as('fetchPutPreferences');
 
     cy.visitWithLogin('monitor');

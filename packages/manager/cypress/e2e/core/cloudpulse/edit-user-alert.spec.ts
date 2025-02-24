@@ -5,7 +5,22 @@
  * It verifies that alert details are correctly displayed, interactive, and editable.
  */
 
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
+import {
+  mockCreateAlertDefinition,
+  mockGetAlertChannels,
+  mockGetAlertDefinitions,
+  mockGetAllAlertDefinitions,
+  mockGetCloudPulseMetricDefinitions,
+  mockGetCloudPulseServices,
+  mockUpdateAlertDefinitions,
+} from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+
 import {
   accountFactory,
   alertDefinitionFactory,
@@ -18,61 +33,48 @@ import {
   regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import type { Flags } from 'src/featureFlags';
-import {
-  mockCreateAlertDefinition,
-  mockGetAlertChannels,
-  mockGetAlertDefinitions,
-  mockGetAllAlertDefinitions,
-  mockGetCloudPulseMetricDefinitions,
-  mockGetCloudPulseServices,
-  mockUpdateAlertDefinitions,
-} from 'support/intercepts/cloudpulse';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { Database } from '@linode/api-v4';
-import { mockGetDatabases } from 'support/intercepts/databases';
-import { widgetDetails } from 'support/constants/widgets';
-import { ui } from 'support/ui';
 import { formatDate } from 'src/utilities/formatDate';
 
+import type { Database } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
+
 // Feature flag setup
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
 
 // Mock alert definition
 const customAlertDefinition = alertDefinitionFactory.build({
   channel_ids: [1],
-  label: 'Alert-1',
-  severity: 0,
   description: 'update-description',
   entity_ids: ['1', '2', '3', '4', '5'],
-  tags: [''],
+  label: 'Alert-1',
   rule_criteria: {
     rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
   },
+  severity: 0,
+  tags: [''],
   trigger_conditions: triggerConditionFactory.build(),
 });
 
 // Mock alert details
 const alertDetails = alertFactory.build({
-  service_type: 'dbaas',
   alert_channels: [{ id: 1 }],
-  label: 'Alert-2',
-  type: 'user',
-  severity: 0,
+  created_by: 'user1',
   description: 'My Custom Description',
   entity_ids: ['2'],
-  updated: new Date().toISOString(),
-  created_by: 'user1',
-  tags: [''],
+  label: 'Alert-2',
   rule_criteria: {
     rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
   },
+  service_type: 'dbaas',
+  severity: 0,
+  tags: [''],
   trigger_conditions: triggerConditionFactory.build(),
+  type: 'user',
+  updated: new Date().toISOString(),
 });
 
-const { service_type, id, label, description, updated } = alertDetails;
+const { description, id, label, service_type, updated } = alertDetails;
 
 // Mock regions
 const regions = [
@@ -91,25 +93,25 @@ const regions = [
 // Mock databases
 const databases: Database[] = databaseFactory.buildList(5).map((db, index) => ({
   ...db,
-  type: 'MySQL',
-  region: regions[index % regions.length].id,
-  status: 'active',
   engine: 'mysql',
   id: index,
+  region: regions[index % regions.length].id,
+  status: 'active',
+  type: 'MySQL',
 }));
 
 // Mock metric definitions
 const { metrics } = widgetDetails.dbaas;
-const metricDefinitions = metrics.map(({ title, name, unit }) =>
+const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({ label: title, metric: name, unit })
 );
 
 // Mock notification channels
 const notificationChannels = notificationChannelFactory.build({
   channel_type: 'email',
-  type: 'custom',
-  label: 'Channel-1',
   id: 1,
+  label: 'Channel-1',
+  type: 'custom',
 });
 
 const METRIC_DESCRIPTION_DATA_FIELD =
@@ -159,16 +161,16 @@ describe('Integration Tests for Edit Alert', () => {
 
   // Define an interface for rule values
   interface RuleCriteria {
-    dataField: string;
     aggregationType: string;
+    dataField: string;
     operator: string;
     threshold: string;
   }
 
   // Mapping of interface keys to data attributes
   const fieldSelectors: Record<keyof RuleCriteria, string> = {
-    dataField: 'data-field',
     aggregationType: 'aggregation-type',
+    dataField: 'data-field',
     operator: 'operator',
     threshold: 'threshold',
   };
@@ -216,16 +218,16 @@ describe('Integration Tests for Edit Alert', () => {
 
     // Assert rule values 1
     assertRuleValues(0, {
-      dataField: 'CPU Utilization',
       aggregationType: 'Average',
+      dataField: 'CPU Utilization',
       operator: '=',
       threshold: '1000',
     });
 
     // Assert rule values 2
     assertRuleValues(1, {
-      dataField: 'Memory Usage',
       aggregationType: 'Average',
+      dataField: 'Memory Usage',
       operator: '=',
       threshold: '1000',
     });

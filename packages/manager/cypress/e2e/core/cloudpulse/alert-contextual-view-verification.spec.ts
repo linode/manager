@@ -1,93 +1,95 @@
 /**
  * @file Integration Tests for contextual view of Entity Listing.
  */
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockDatabaseNodeTypes } from 'support/constants/databases';
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockAddEntityToAlert,
   mockDeleteEntityFromAlert,
   mockGetAlertDefinition,
 } from 'support/intercepts/cloudpulse';
-import { widgetDetails } from 'support/constants/widgets';
-import { accountFactory, alertFactory, databaseFactory } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import {
-  AlertDefinitionType,
-  Database,
-  MetricAggregationType,
-} from '@linode/api-v4';
 import {
   mockGetDatabase,
   mockGetDatabaseTypes,
 } from 'support/intercepts/databases';
-import { mockDatabaseNodeTypes } from 'support/constants/databases';
-import { RecPartial } from 'factory.ts';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
+
+import { accountFactory, alertFactory, databaseFactory } from 'src/factories';
+
+import type {
+  AlertDefinitionType,
+  Database,
+  MetricAggregationType,
+} from '@linode/api-v4';
+import type { RecPartial } from 'factory.ts';
 
 const DBaaS = 'dbaas';
 const ALERT_TYPE = 'alert-definition-id';
 
 // Mock data
-const { region, engine, clusterName } = widgetDetails.dbaas;
+const { clusterName, engine, region } = widgetDetails.dbaas;
 const mockAccount = accountFactory.build();
 const databaseMock: Database = databaseFactory.build({
-  label: clusterName,
-  id: 100,
-  type: engine,
-  region: region,
-  status: 'active',
   cluster_size: 3,
   engine: 'mysql',
+  id: 100,
+  label: clusterName,
+  region,
+  status: 'active',
+  type: engine,
 });
 
 const alertConfigs = [
   {
-    type: 'system',
+    aggregate_function: 'avg' as RecPartial<MetricAggregationType>,
     created_by: 'user1',
     metric: 'CPU Usage',
-    aggregate_function: 'avg' as RecPartial<MetricAggregationType>,
     threshold: 55,
+    type: 'system',
   },
   {
-    type: 'user',
+    aggregate_function: 'min' as RecPartial<MetricAggregationType>,
     created_by: 'user2',
     metric: 'Memory Usage',
-    aggregate_function: 'min' as RecPartial<MetricAggregationType>,
     threshold: 100,
+    type: 'user',
   },
   {
-    type: 'system',
+    aggregate_function: 'sum' as RecPartial<MetricAggregationType>,
     created_by: 'user3',
     metric: 'Disk Usage',
-    aggregate_function: 'sum' as RecPartial<MetricAggregationType>,
     threshold: 75,
+    type: 'system',
   },
   {
-    type: 'user',
+    aggregate_function: 'max' as RecPartial<MetricAggregationType>,
     created_by: 'user4',
     metric: 'Network Usage',
-    aggregate_function: 'max' as RecPartial<MetricAggregationType>,
     threshold: 90,
+    type: 'user',
   },
 ];
 const alerts = alertConfigs.flatMap((config) =>
   alertFactory.build({
-    service_type: DBaaS,
-    severity: 1,
-    status: 'enabled',
-    type: config.type as AlertDefinitionType,
     created_by: config.created_by,
     rule_criteria: {
       rules: [
         {
           aggregate_function: config.aggregate_function,
-          metric: config.metric,
           label: config.metric,
+          metric: config.metric,
           operator: 'gt',
           threshold: config.threshold,
           unit: 'Bytes',
         },
       ],
     },
+    service_type: DBaaS,
+    severity: 1,
+    status: 'enabled',
+    type: config.type as AlertDefinitionType,
   })
 );
 
@@ -115,9 +117,9 @@ const verifyTableSorting = (
 
 // Sorting cloums and expected values
 const sortCases = [
-  { column: 'label', descending: [4, 3, 2, 1], ascending: [1, 2, 3, 4] },
-  { column: 'id', descending: [4, 3, 2, 1], ascending: [1, 2, 3, 4] },
-  { column: 'type', descending: [2, 4, 1, 3], ascending: [1, 3, 2, 4] },
+  { ascending: [1, 2, 3, 4], column: 'label', descending: [4, 3, 2, 1] },
+  { ascending: [1, 2, 3, 4], column: 'id', descending: [4, 3, 2, 1] },
+  { ascending: [1, 3, 2, 4], column: 'type', descending: [2, 4, 1, 3] },
 ];
 
 /*
@@ -154,7 +156,7 @@ it('should verify sorting, alert management, and search functionality for contex
   cy.wait('@getDBaaSAlertDefinitions');
 
   // Test sorting
-  sortCases.forEach(({ column, descending, ascending }) => {
+  sortCases.forEach(({ ascending, column, descending }) => {
     verifyTableSorting(column, 'descending', descending);
     verifyTableSorting(column, 'ascending', ascending);
   });

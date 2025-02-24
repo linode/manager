@@ -255,7 +255,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                       event.target instanceof HTMLElement && event.target.blur()
                     }
                     data-qa-metric-threshold={`${name}-threshold`}
-                    data-qa-threshold
+                    data-qa-threshold="threshold"
                     data-testid="threshold"
                     errorText={fieldState.error?.message}
                     label="Threshold"

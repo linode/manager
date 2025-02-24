@@ -10,10 +10,6 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 export interface CloudPulseModifyAlertResourcesProp {
   /**
-   * Boolean value to check if serviceType is disabled (edit flow)
-   */
-  isServiceTypeDisabled?: boolean;
-  /**
    * Name used for the component in the form
    */
   name: FieldPathByValue<CreateAlertDefinitionForm, string[]>;
@@ -21,7 +17,7 @@ export interface CloudPulseModifyAlertResourcesProp {
 
 export const CloudPulseModifyAlertResources = React.memo(
   (props: CloudPulseModifyAlertResourcesProp) => {
-    const { isServiceTypeDisabled, name } = props;
+    const { name } = props;
     const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
     const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
 
@@ -31,12 +27,6 @@ export const CloudPulseModifyAlertResources = React.memo(
         shouldValidate: true,
       });
     };
-
-    React.useEffect(() => {
-      if (isServiceTypeDisabled === false) {
-        setValue(name, [], { shouldValidate: true });
-      }
-    }, [name, serviceTypeWatcher, setValue, isServiceTypeDisabled]);
 
     const titleRef = React.useRef<HTMLDivElement>(null);
 
@@ -70,4 +60,4 @@ export const CloudPulseModifyAlertResources = React.memo(
       />
     );
   }
-); 
+);

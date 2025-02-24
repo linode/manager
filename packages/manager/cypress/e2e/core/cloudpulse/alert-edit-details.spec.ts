@@ -4,26 +4,28 @@
  * This file contains Cypress tests for the Edit Alert page of the CloudPulse application.
  * are correctly displayed and interactive on the Edit page. It ensures that users can navigate
  */
+import { mockGetAccount } from 'support/intercepts/account';
+import {
+  mockGetAlertDefinitions,
+  mockGetAllAlertDefinitions,
+  mockUpdateAlertDefinitions,
+} from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+
 import {
   accountFactory,
   alertFactory,
   databaseFactory,
   regionFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import type { Flags } from 'src/featureFlags';
-import {
-  mockGetAlertDefinitions,
-  mockGetAllAlertDefinitions,
-  mockUpdateAlertDefinitions,
-} from 'support/intercepts/cloudpulse';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { ui } from 'support/ui';
-import { Database } from '@linode/api-v4';
-import { mockGetDatabases } from 'support/intercepts/databases';
 
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+import type { Database } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
+
+const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
 const alertDetails = alertFactory.build({
   service_type: 'dbaas',
@@ -31,7 +33,7 @@ const alertDetails = alertFactory.build({
   status: 'enabled',
   type: 'system',
 });
-const { service_type, id, label } = alertDetails;
+const { id, label, service_type } = alertDetails;
 const regions = [
   regionFactory.build({
     capabilities: ['Managed Databases'],
@@ -48,10 +50,10 @@ const databases: Database[] = databaseFactory
   .buildList(50)
   .map((db, index) => ({
     ...db,
-    type: 'MySQL',
+    engine: 'mysql',
     region: regions[index % regions.length].id,
     status: 'active',
-    engine: 'mysql',
+    type: 'MySQL',
   }));
 const pages = [1, 2];
 const expectedResourceIds = Array.from({ length: 50 }, (_, i) => String(i + 1));
@@ -116,9 +118,12 @@ describe('Integration Tests for Edit Alert', () => {
     // Select all resources
     cy.get('[data-qa-notice="true"]').within(() => {
       ui.button.findByTitle('Select All').should('be.visible').click();
-    
-    // Unselect button should be visible after clicking on Select All buttom
-    ui.button.findByTitle('Unselect All').should('be.visible').should('be.enabled');
+
+      // Unselect button should be visible after clicking on Select All buttom
+      ui.button
+        .findByTitle('Unselect All')
+        .should('be.visible')
+        .should('be.enabled');
     });
 
     cy.get('[data-qa-notice="true"]').should(
@@ -174,10 +179,11 @@ describe('Integration Tests for Edit Alert', () => {
     // Click the Cancel button
     cy.get('[data-qa-cancel="true"]')
       .should('be.enabled')
-      .should('have.text', 'Cancel')
+      .should('have.text', 'Cancel');
 
     // Click the Confirm button
-    ui.button.findByAttribute('label', 'Confirm')
+    ui.button
+      .findByAttribute('label', 'Confirm')
       .should('be.enabled')
       .should('have.text', 'Confirm')
       .click();

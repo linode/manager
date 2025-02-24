@@ -337,7 +337,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       )}
       <Grid container spacing={3}>
         <Grid
-          alignItems="center"
+          sx={{
+            alignItems: 'center',
+          }}
           columnSpacing={2}
           container
           item

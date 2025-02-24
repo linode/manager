@@ -12,26 +12,6 @@ export const getAlertTypeToActionsList = (
   { handleDetails, handleEdit, handleEnableDisable }: ActionHandlers,
   alertStatus: AlertStatusType
 ): Record<AlertDefinitionType, Action[]> => ({
-  custom: [
-    {
-      onClick: handleDetails,
-      title: 'Show Details',
-    },
-    {
-      onClick: handleEdit,
-      title: 'Edit',
-    },
-  ],
-  default: [
-    {
-      onClick: handleDetails,
-      title: 'Show Details',
-    },
-    {
-      onClick: handleEdit,
-      title: 'Edit',
-    },
-  ],
   // for now there is system and user alert types, in future more alert types can be added and action items will differ according to alert types
   system: [
     {

@@ -13,7 +13,7 @@ interface CloudPulseServiceSelectProps {
   /**
    * Boolean value to check if service select is disabled in the edit flow
    */
-  isDisabled: boolean;
+  isDisabled?: boolean;
   /**
    * name used for the component in the form
    */
