@@ -1,4 +1,5 @@
 import { Typography } from '@linode/ui';
+import { useInterval } from '@linode/utilities';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -7,7 +8,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { sessionExpirationContext as _sessionExpirationContext } from 'src/context/sessionExpirationContext';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
-import { useInterval } from 'src/hooks/useInterval';
 import { useAccount } from 'src/queries/account/account';
 import { parseAPIDate } from 'src/utilities/date';
 import { pluralize } from 'src/utilities/pluralize';

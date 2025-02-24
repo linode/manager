@@ -1,6 +1,12 @@
-import { serviceTypesFactory } from 'src/factories';
+import { alertFactory, serviceTypesFactory } from 'src/factories';
 
-import { convertSecondsToMinutes, getServiceTypeLabel } from './utils';
+import {
+  convertAlertDefinitionValues,
+  convertSecondsToMinutes,
+  getServiceTypeLabel,
+} from './utils';
+
+import type { Alert, EditAlertPayloadWithService } from '@linode/api-v4';
 
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
@@ -20,4 +26,40 @@ it('test convertSecondsToMinutes method', () => {
   expect(convertSecondsToMinutes(65)).toBe('1 minute and 5 seconds');
   expect(convertSecondsToMinutes(1)).toBe('1 second');
   expect(convertSecondsToMinutes(59)).toBe('59 seconds');
+});
+
+it('should correctly convert an alert definition values to the required format', () => {
+  const alert: Alert = alertFactory.build();
+  const serviceType = 'linode';
+  const {
+    alert_channels,
+    description,
+    entity_ids,
+    id,
+    label,
+    rule_criteria,
+    severity,
+    tags,
+    trigger_conditions,
+  } = alert;
+  const expected: EditAlertPayloadWithService = {
+    alertId: id,
+    channel_ids: alert_channels.map((channel) => channel.id),
+    description: description || undefined,
+    entity_ids,
+    label,
+    rule_criteria: {
+      rules: rule_criteria.rules.map((rule) => ({
+        ...rule,
+        dimension_filters:
+          rule.dimension_filters?.map(({ label, ...filter }) => filter) ?? [],
+      })),
+    },
+    serviceType,
+    severity,
+    tags,
+    trigger_conditions,
+  };
+
+  expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);
 });

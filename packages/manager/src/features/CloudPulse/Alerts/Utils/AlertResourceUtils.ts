@@ -12,7 +12,8 @@ import type {
   AlertFilterKey,
   AlertFilterType,
 } from '../AlertsResources/types';
-import type { Region } from '@linode/api-v4';
+import type { AlertServiceType, Region } from '@linode/api-v4';
+import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 interface FilterResourceProps {
   /**
@@ -133,6 +134,31 @@ export const getRegionOptions = (
 };
 
 /**
+ * @param aclpResourceTypeMap The launch darkly flag where supported region ids are listed
+ * @param serviceType The service type associated with the alerts
+ * @returns Array of supported regions associated with the resource ids of the alert
+ */
+export const getSupportedRegionIds = (
+  aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[] | undefined,
+  serviceType: AlertServiceType | undefined
+): string[] | undefined => {
+  const resourceTypeFlag = aclpResourceTypeMap?.find(
+    (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
+  );
+
+  if (
+    resourceTypeFlag?.supportedRegionIds === null ||
+    resourceTypeFlag?.supportedRegionIds === undefined
+  ) {
+    return undefined;
+  }
+
+  return resourceTypeFlag.supportedRegionIds
+    .split(',')
+    .map((regionId: string) => regionId.trim());
+};
+
+/**
  * @param filterProps Props required to filter the resources on the table
  * @returns Filtered instances to be displayed on the table
  */
@@ -184,9 +210,10 @@ export const getFilteredResources = (
         (region.length && filteredRegions.includes(region)); // check with filtered region
 
       return (
+        // if selected only, show only checked, else everything
         matchesSearchText &&
         matchesFilteredRegions &&
-        (!selectedOnly || checked) // if selected only, show only checked, else everything
+        (!selectedOnly || checked)
       ); // match the search text and match the region selected
     })
     .filter((resource) => applyAdditionalFilter(resource, additionalFilters));

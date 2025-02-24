@@ -1,5 +1,6 @@
+import { capitalize } from '@linode/utilities';
+
 import { useFlags } from 'src/hooks/useFlags';
-import { capitalize } from 'src/utilities/capitalize';
 
 import type {
   AccountAccessType,
