@@ -1,6 +1,7 @@
 import { Dialog } from '@linode/ui';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -14,18 +15,16 @@ interface Props {
   onClose: () => void;
   open: boolean;
 }
-export const LinodeInterfacesHistory = (props: Props) => {
+
+export const LinodeInterfacesHistoryDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
 
-  const { data: interfaceHistory, isFetching } = useLinodeInterfacesHistory(
-    linodeId
-  );
+  const { data: interfaceHistory } = useLinodeInterfacesHistory(linodeId, open);
 
   return (
     <Dialog
       fullHeight
       fullWidth
-      isFetching={isFetching}
       onClose={onClose}
       open={open}
       title="Network Interfaces History"
@@ -57,6 +56,12 @@ export const LinodeInterfacesHistory = (props: Props) => {
           ))}
         </TableBody>
       </Table>
+      <ActionsPanel
+        secondaryButtonProps={{
+          label: 'Close',
+          onClick: onClose,
+        }}
+      />
     </Dialog>
   );
 };

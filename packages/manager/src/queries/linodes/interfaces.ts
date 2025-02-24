@@ -26,8 +26,12 @@ export const useLinodeInterfaceFirewallsQuery = (
   );
 };
 
-export const useLinodeInterfacesHistory = (linodeId: number) => {
-  return useQuery<ResourcePage<LinodeInterfaceHistory>, APIError[]>(
-    linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interfacesHistory
-  );
+export const useLinodeInterfacesHistory = (
+  linodeId: number,
+  enabled = true
+) => {
+  return useQuery<ResourcePage<LinodeInterfaceHistory>, APIError[]>({
+    ...linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interfacesHistory,
+    enabled,
+  });
 };
