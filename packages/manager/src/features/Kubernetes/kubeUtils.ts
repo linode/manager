@@ -243,7 +243,7 @@ export const useIsLkeEnterpriseEnabled = () => {
  * @returns The list of either standard or enterprise k8 versions and query loading or error state
  */
 export const useLkeStandardOrEnterpriseVersions = (
-  clusterTier: KubernetesTier
+  clusterTier: KubernetesTier | undefined
 ) => {
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 

@@ -1,6 +1,7 @@
 import { Autocomplete, Box, Notice, Paper, Stack, TextField } from '@linode/ui';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -17,7 +18,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,
-  getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
@@ -29,6 +29,7 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import {
+  kubernetesQueries,
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
@@ -65,7 +66,6 @@ import type { APIError } from '@linode/api-v4/lib/types';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
-  const [version, setVersion] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const formContainerRef = React.useRef<HTMLDivElement>(null);
@@ -79,9 +79,36 @@ export const CreateCluster = () => {
   const { showAPL } = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
-  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
-    'standard'
-  );
+
+  const formValues = React.useMemo(() => {
+    return {
+      apl_enabled: false,
+      ipv4Addresses: [' '],
+      ipv6Addresses: [' '],
+      node_pools: [],
+      tier: 'standard' as KubernetesTier,
+    };
+  }, []);
+
+  const queryClient = useQueryClient();
+
+  const formMethods = useForm<CreateKubeClusterPayload>({
+    defaultValues: async () => {
+      const myversions = await queryClient.ensureQueryData(
+        kubernetesQueries.versions
+      );
+      return {
+        ...formValues,
+        k8s_version: myversions[0].id,
+      };
+    },
+  });
+
+  const { control, getValues, handleSubmit, setValue, watch } = formMethods;
+  const selectedRegion = watch('region');
+  const nodePool = watch('node_pools');
+  const aplEnabled = watch('apl_enabled');
+  const selectedTier = watch('tier');
 
   const {
     isLoadingVersions,
@@ -94,40 +121,14 @@ export const CreateCluster = () => {
     value: thisVersion.id,
   }));
 
-  const formValues = React.useMemo(() => {
-    return {
-      apl_enabled: false,
-      hasAgreed,
-      ipv4Addresses: [' '],
-      ipv6Addresses: [' '],
-      tier: 'standard' as KubernetesTier,
-    };
-  }, [hasAgreed]);
-
-  const formMethods = useForm<CreateKubeClusterPayload>({
-    defaultValues: formValues,
-  });
-
-  const { control, getValues, handleSubmit, setValue, watch } = formMethods;
-
-  const selectedRegion = watch('region');
-  const nodePool = watch('node_pools');
-  const aplEnabled = watch('apl_enabled');
-
   const {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
-  React.useEffect(() => {
-    if (versions.length > 0) {
-      setVersion(getLatestVersion(versions).value);
-    }
-  }, [versionData]);
-
   const handleClusterTypeSelection = (tier: KubernetesTier) => {
-    setSelectedTier(tier);
+    setValue('tier', tier);
     // HA is enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setValue('control_plane.high_availability', true);
@@ -175,7 +176,14 @@ export const CreateCluster = () => {
   } = useIsLkeEnterpriseEnabled();
 
   const createCluster = (formData: CreateKubeClusterPayload) => {
-    const { apl_enabled, control_plane, label, node_pools, region } = formData;
+    const {
+      apl_enabled,
+      control_plane,
+      k8s_version,
+      label,
+      node_pools,
+      region,
+    } = formData;
 
     const { push } = history;
     setSubmitting(true);
@@ -205,7 +213,7 @@ export const CreateCluster = () => {
         },
         high_availability: control_plane?.high_availability ?? false,
       },
-      k8s_version: version,
+      k8s_version,
       label,
       node_pools,
       region,
@@ -414,15 +422,19 @@ export const CreateCluster = () => {
                 render={() => (
                   <Autocomplete
                     onChange={(_, selected) => {
-                      setVersion(selected?.value);
+                      setValue('k8s_version', selected?.value);
                     }}
-                    disableClearable={!!version}
+                    value={
+                      versions.find(
+                        (v) => v.value === getValues('k8s_version')
+                      ) ?? null
+                    }
+                    disableClearable={!!getValues('k8s_version')}
                     errorText={errorMap.k8s_version}
                     label="Kubernetes Version"
                     loading={isLoadingVersions}
                     options={versions}
                     placeholder={' '}
-                    value={versions.find((v) => v.value === version) ?? null}
                   />
                 )}
                 control={control}
