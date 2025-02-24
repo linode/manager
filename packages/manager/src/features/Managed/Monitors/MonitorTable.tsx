@@ -1,5 +1,5 @@
 import { Button } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -174,9 +174,20 @@ export const MonitorTable = () => {
   return (
     <>
       <DocumentTitleSegment segment="Monitors" />
-      <Grid alignItems="flex-end" container justifyContent="flex-end">
+      <Grid
+        container
+        sx={{
+          alignItems: 'flex-end',
+          justifyContent: 'flex-end',
+        }}
+      >
         <Grid>
-          <Grid alignItems="flex-end" container>
+          <Grid
+            container
+            sx={{
+              alignItems: 'flex-end',
+            }}
+          >
             <StyledGrid>
               <Button
                 buttonType="primary"
