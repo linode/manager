@@ -100,7 +100,7 @@ export const Calendar = ({
         )}
         {/* Display Month & Year */}
 
-        <Typography sx={{ flexGrow: 3, fontWeight: 'bold' }}>
+        <Typography sx={{ flexGrow: 3 }}>
           {month.toFormat('MMMM yyyy')}
         </Typography>
 
@@ -121,11 +121,7 @@ export const Calendar = ({
       <Box display="grid" gridTemplateColumns="repeat(7, 40px)">
         {/* Weekday Labels */}
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d, index) => (
-          <Typography
-            align="center"
-            key={`weekday-${index}`}
-            sx={{ fontWeight: '400' }}
-          >
+          <Typography align="center" key={`weekday-${index}`}>
             {d}
           </Typography>
         ))}

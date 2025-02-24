@@ -71,8 +71,8 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
   return (
     <Stack
       sx={(theme: Theme) => ({
-        backgroundColor: theme.bg.app,
-        borderRight: `1px solid ${theme.borderColors.divider}`,
+        backgroundColor: theme.tokens.calendar.PresetArea.Background,
+        borderRight: `1px solid ${theme.tokens.calendar.Border}`,
         width: '134px',
       })}
       paddingLeft={1}
@@ -81,7 +81,6 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
     >
       <Typography
         sx={(theme: Theme) => ({
-          fontWeight: 'bold',
           marginBottom: theme.spacing(1),
           paddingLeft: theme.spacing(1),
         })}
@@ -97,14 +96,23 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
               onPresetSelect(startDate, endDate, preset.label);
             }}
             sx={(theme: Theme) => ({
-              '&:active': { backgroundColor: theme.palette.primary.light },
+              '&:active': {
+                backgroundColor:
+                  theme.tokens.calendar.PresetArea.ActivePeriod.Background,
+                color: theme.tokens.calendar.PresetArea.ActivePeriod.Text,
+              },
               '&:hover': {
-                backgroundColor: !isSelected ? theme.palette.primary.main : '',
+                backgroundColor: !isSelected
+                  ? theme.tokens.calendar.PresetArea.HoverPeriod.Background
+                  : '',
+                color: theme.tokens.calendar.DateRange.Text,
               },
               backgroundColor: isSelected
-                ? theme.palette.primary.light
-                : 'transparent',
-              color: isSelected ? 'white' : theme.palette.text.primary,
+                ? theme.tokens.calendar.PresetArea.ActivePeriod.Background
+                : theme.tokens.calendar.PresetArea.Background,
+              color: isSelected
+                ? theme.tokens.calendar.PresetArea.ActivePeriod.Text
+                : theme.tokens.calendar.DateRange.Text,
               justifyContent: 'flex-start',
               padding: theme.spacing(),
             })}
