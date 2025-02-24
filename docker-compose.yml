@@ -164,7 +164,7 @@ services:
     entrypoint:
       - "/bin/sh"
       - "-c"
-      - "caddy reverse-proxy --from $${CYPRESS_BASE_URL} --to $${REVERSE_PROXY_URL} & pnpm $0 $@"
+      - "caddy reverse-proxy --from $${CYPRESS_BASE_URL} --to $${REVERSE_PROXY_URL} > /dev/null 2>&1 & pnpm $0 $@"
 
   # Cypress component test runner service.
   #
