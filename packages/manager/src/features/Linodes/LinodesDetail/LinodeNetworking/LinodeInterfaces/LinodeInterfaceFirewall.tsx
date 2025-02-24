@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Link } from 'src/components/Link';
 import { Skeleton } from 'src/components/Skeleton';
 import { useLinodeInterfaceFirewallsQuery } from 'src/queries/linodes/interfaces';
 
@@ -28,5 +29,5 @@ export const LinodeInterfaceFirewall = ({ interfaceId, linodeId }: Props) => {
 
   const firewall = data.data[0];
 
-  return firewall.label;
+  return <Link to={`/firewalls/${firewall.id}`}>${firewall.label}</Link>;
 };
