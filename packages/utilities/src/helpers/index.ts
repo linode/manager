@@ -10,3 +10,4 @@ export * from './env';
 export * from './escapeRegExp';
 export * from './evenizeNumber';
 export * from './formatStorageUnits';
+export * from './groupByTags';
