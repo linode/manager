@@ -13,6 +13,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,
@@ -65,8 +66,6 @@ import type {
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -101,10 +100,6 @@ export const CreateCluster = () => {
   const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
     'standard'
   );
-
-  const isCreateClusterRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_kubernetes',
-  });
 
   const {
     data: kubernetesHighAvailabilityTypesData,
