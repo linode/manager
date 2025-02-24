@@ -1,6 +1,7 @@
 import { createLinode, getLinodeConfigs } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
+import { findOrCreateDependencyVlan } from 'support/api/vlans';
 import { pageSize } from 'support/constants/api';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
@@ -15,7 +16,6 @@ import type {
   InterfacePayload,
   Linode,
 } from '@linode/api-v4';
-import { findOrCreateDependencyVlan } from 'support/api/vlans';
 
 /**
  * Linode create interface to configure a Linode with no public internet access.
@@ -101,10 +101,8 @@ export const createTestLinode = async (
 
       case 'vlan_no_internet':
         const vlanConfig = linodeVlanNoInternetConfig;
-        const vlan = await findOrCreateDependencyVlan(regionId);
-        if (vlan && vlan.label) {
-          vlanConfig[0].label = vlan.label;
-        }
+        const vlanLabel = await findOrCreateDependencyVlan(regionId);
+        vlanConfig[0].label = vlanLabel;
         return {
           interfaces: vlanConfig,
         };
@@ -122,7 +120,6 @@ export const createTestLinode = async (
       image: 'linode/ubuntu24.04',
       label: randomLabel(),
       region: regionId,
-      booted: false,
     }),
     ...(createRequestPayload || {}),
     ...securityMethodPayload,
@@ -150,7 +147,7 @@ export const createTestLinode = async (
     );
   }
 
-  // eslint-disable-next-line @linode/cloud-manager/no-createLinode
+  // eslint-disable-next-line
   const linode = await createLinode(resolvedCreatePayload);
 
   // Wait for disks to become available if `waitForDisks` option is set.
