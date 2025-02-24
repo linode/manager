@@ -21,15 +21,15 @@ export const AlertDefinitionLanding = () => {
         <AlertDetail />
       </Route>
       <Route
-        component={CreateAlertDefinition}
-        path="/monitor/alerts/definitions/create"
-      />
-      <Route
         exact
         path="/monitor/alerts/definitions/edit/:serviceType/:alertId"
       >
         <EditAlertLanding />
       </Route>
+      <Route
+        component={CreateAlertDefinition}
+        path="/monitor/alerts/definitions/create"
+      />
     </Switch>
   );
 };

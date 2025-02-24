@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 module.exports = {
   env: {
     browser: true,
@@ -22,7 +23,27 @@ module.exports = {
     'build',
     'storybook-static',
     '.storybook',
-    'e2e/core',
+    'e2e/core/domains',
+    'e2e/core/firewalls',
+    'e2e/core/general',
+    'e2e/core/helpAndSupport',
+    'e2e/core/images',
+    'e2e/core/kubernetes',
+    'e2e/core/linodes',
+    'e2e/core/longview',
+    'e2e/core/managed',
+    'e2e/core/nodebalancers',
+    'e2e/core/notificationsAndEvents',
+    'e2e/core/objectStorage',
+    'e2e/core/objectStorageGen2',
+    'e2e/core/objectStorageMulticluster',
+    'e2e/core/oneClickApps',
+    'e2e/core/parentChild',
+    'e2e/core/placementGroups',
+    'e2e/core/stackscripts',
+    'e2e/core/volumes',
+    'e2e/core/vpc',
+    'e2e/core/cloudpulse/timerange-verification.spec.ts',
     'public',
     '!.eslintrc.js',
   ],
@@ -142,6 +163,13 @@ module.exports = {
         ],
       },
     },
+    // Apply `no-createLinode` rule to `cypress` related files only.
+    {
+      files: ['cypress/**'],
+      rules: {
+        '@linode/cloud-manager/no-createLinode': 'error',
+      },
+    },
   ],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
@@ -173,6 +201,7 @@ module.exports = {
   ],
   rules: {
     '@linode/cloud-manager/deprecate-formik': 'warn',
+    '@linode/cloud-manager/no-createLinode': 'off',
     '@linode/cloud-manager/no-custom-fontWeight': 'error',
     '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',

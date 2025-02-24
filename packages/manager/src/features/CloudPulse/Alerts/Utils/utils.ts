@@ -3,13 +3,10 @@ import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type {
   Alert,
-  AlertDefinitionDimensionFilter,
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
-  DimensionFilter,
   EditAlertPayloadWithService,
-  MetricCriteria,
   NotificationChannel,
   ServiceTypesList,
 } from '@linode/api-v4';
@@ -156,103 +153,102 @@ export const getChipLabels = (
 };
 
 /**
- * Filters the given alert's dimension filter values and returns a DimensionFilter object.
- * @param formValues The alert dimension filter values from the form.
- * @returns The filtered DimensionFilter object.
- */
-export const convertAlertDefinitionDimensionFilterValues = (
-  formValues: AlertDefinitionDimensionFilter
-): DimensionFilter => {
-  return {
-    dimension_label: formValues.dimension_label,
-    operator: formValues.operator,
-    value: formValues.value,
-  };
-};
-
-/**
- * Filters the alert's metric values from the form and returns a MetricCriteria object.
- * @param formValue The alert's metric criteria values from the form.
- * @returns The filtered MetricCriteria object.
- */
-export const convertAlertDefinitionMetricValues = (
-  formValue: AlertDefinitionMetricCriteria
-): MetricCriteria => {
-  return {
-    aggregate_function: formValue.aggregate_function,
-    dimension_filters:
-      formValue.dimension_filters?.map((filter) => {
-        return convertAlertDefinitionDimensionFilterValues(filter);
-      }) ?? [],
-    metric: formValue.metric,
-    operator: formValue.operator,
-    threshold: formValue.threshold,
-  };
-};
-
-/**
  * Filters and maps the alert data to match the form structure.
  * @param alert The alert object to be mapped.
  * @param serviceType The service type for the alert.
  * @returns The formatted alert values suitable for the form.
  */
 export const convertAlertDefinitionValues = (
-  alert: Alert,
+  {
+    alert_channels,
+    description,
+    entity_ids,
+    id,
+    label,
+    rule_criteria,
+    severity,
+    tags,
+    trigger_conditions,
+  }: Alert,
   serviceType: AlertServiceType
 ): EditAlertPayloadWithService => {
   return {
-    alertId: alert.id,
-    channel_ids: alert.alert_channels.map((channel) => channel.id),
-    description: alert.description || undefined,
-    entity_ids: alert.entity_ids,
-    label: alert.label,
+    alertId: id,
+    channel_ids: alert_channels.map((channel) => channel.id),
+    description: description || undefined,
+    entity_ids,
+    label,
     rule_criteria: {
-      rules: alert.rule_criteria.rules.map((rule) =>
-        convertAlertDefinitionMetricValues(rule)
-      ),
+      rules: rule_criteria.rules.map((rule) => ({
+        ...rule,
+        dimension_filters:
+          rule.dimension_filters?.map(({ label, ...filter }) => filter) ?? [],
+      })),
     },
     serviceType,
-    severity: alert.severity,
-    tags: alert.tags,
-    trigger_conditions: alert.trigger_conditions,
+    severity,
+    tags,
+    trigger_conditions,
   };
 };
 
 /**
+
  *
+
  * @param criterias list of metric criterias to be processed
+
  * @returns list of metric criterias in processed form
+
  */
+
 export const processMetricCriteria = (
   criterias: AlertDefinitionMetricCriteria[]
 ): ProcessedCriteria[] => {
   return criterias
+
     .map((criteria) => {
       const { aggregate_function, label, operator, threshold, unit } = criteria;
+
       return {
         aggregationType: aggregationTypeMap[aggregate_function],
+
         label,
+
         operator: metricOperatorTypeMap[operator],
+
         threshold,
+
         unit,
       };
     })
+
     .reduce<ProcessedCriteria[]>((previousValue, currentValue) => {
       previousValue.push(currentValue);
+
       return previousValue;
     }, []);
 };
 
 /**
+
  *
+
  * @param alerts list of alerts to be filtered
+
  * @param searchText text to be searched in alert name
+
  * @param selectedType selecte alert type
+
  * @returns list of filtered alerts based on searchText & selectedType
+
  */
+
 export const filterAlertsByStatusAndType = (
   alerts: Alert[] | undefined,
+
   searchText: string,
+
   selectedType: string | undefined
 ): Alert[] => {
   return (
@@ -267,10 +263,15 @@ export const filterAlertsByStatusAndType = (
 };
 
 /**
+
  *
+
  * @param alerts list of alerts
+
  * @returns list of unique alert types in the alerts list in the form of json object
+
  */
+
 export const convertAlertsToTypeSet = (
   alerts: Alert[] | undefined
 ): { label: AlertDefinitionType }[] => {
@@ -278,6 +279,7 @@ export const convertAlertsToTypeSet = (
 
   return Array.from(types).reduce(
     (previousValue, type) => [...previousValue, { label: type }],
+
     []
   );
 };

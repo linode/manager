@@ -1,6 +1,6 @@
 import { Button, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -98,14 +98,14 @@ export const SSHKeys = () => {
     <>
       <DocumentTitleSegment segment="SSH Keys" />
       <Grid
+        container
+        spacing={2}
         sx={{
+          alignItems: 'flex-end',
+          justifyContent: 'flex-end',
           margin: 0,
           width: '100%',
         }}
-        alignItems="flex-end"
-        container
-        justifyContent="flex-end"
-        spacing={2}
       >
         <StyledAddNewWrapperGridItem>
           <Button
