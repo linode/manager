@@ -1,6 +1,6 @@
+import { Dialog } from '@linode/ui';
 import * as React from 'react';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { profileFactory } from 'src/factories';
 import { extraMockPresets } from 'src/mocks/presets';
 import { setCustomProfileData } from 'src/mocks/presets/extra/account/customProfile';

@@ -1,5 +1,11 @@
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
-import type { NotificationChannel, ServiceTypesList } from '@linode/api-v4';
+import type {
+  Alert,
+  AlertServiceType,
+  EditAlertPayloadWithService,
+  NotificationChannel,
+  ServiceTypesList,
+} from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
 interface AlertChipBorderProps {
@@ -117,4 +123,44 @@ export const getChipLabels = (
       values: [value.content.webhook.webhook_url],
     };
   }
+};
+
+/**
+ * Filters and maps the alert data to match the form structure.
+ * @param alert The alert object to be mapped.
+ * @param serviceType The service type for the alert.
+ * @returns The formatted alert values suitable for the form.
+ */
+export const convertAlertDefinitionValues = (
+  {
+    alert_channels,
+    description,
+    entity_ids,
+    id,
+    label,
+    rule_criteria,
+    severity,
+    tags,
+    trigger_conditions,
+  }: Alert,
+  serviceType: AlertServiceType
+): EditAlertPayloadWithService => {
+  return {
+    alertId: id,
+    channel_ids: alert_channels.map((channel) => channel.id),
+    description: description || undefined,
+    entity_ids,
+    label,
+    rule_criteria: {
+      rules: rule_criteria.rules.map((rule) => ({
+        ...rule,
+        dimension_filters:
+          rule.dimension_filters?.map(({ label, ...filter }) => filter) ?? [],
+      })),
+    },
+    serviceType,
+    severity,
+    tags,
+    trigger_conditions,
+  };
 };

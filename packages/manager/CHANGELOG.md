@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-02-19] - v1.136.1
+
+### Fixed:
+
+- Uptime not displaying in Longview ([#11667](https://github.com/linode/manager/pull/11667))
+
 ## [2025-02-11] - v1.136.0
 
 

@@ -8,6 +8,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -56,6 +57,10 @@ export const CreateBucketDrawer = (props: Props) => {
     isError: isErrorTransferTypes,
     isInitialLoading: isLoadingTransferTypes,
   } = useNetworkTransferPricesQuery(isOpen);
+
+  const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_buckets',
+  });
 
   const isErrorTypes = isErrorTransferTypes || isErrorObjTypes;
   const isLoadingTypes = isLoadingTransferTypes || isLoadingObjTypes;
@@ -197,7 +202,10 @@ export const CreateBucketDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
-            disabled: (showGDPRCheckbox && !hasSignedAgreement) || isErrorTypes,
+            disabled:
+              (showGDPRCheckbox && !hasSignedAgreement) ||
+              isErrorTypes ||
+              isBucketCreationRestricted,
             label: 'Create Bucket',
             loading: isPending || Boolean(clusterRegion?.id && isLoadingTypes),
             tooltipText:

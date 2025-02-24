@@ -1,11 +1,15 @@
-import { Box, CircleProgress, IconButton, Typography } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  IconButton,
+  Typography,
+  convertForAria,
+} from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import _Drawer from '@mui/material/Drawer';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-
-import { convertForAria } from 'src/utilities/stringUtils';
 
 import { ErrorState } from './ErrorState/ErrorState';
 import { NotFound } from './NotFound';
@@ -93,14 +97,14 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         role="dialog"
       >
         <Grid
-          sx={{
-            position: 'relative',
-          }}
-          alignItems="flex-start"
           className={classes.drawerHeader}
           container
-          justifyContent="space-between"
           wrap="nowrap"
+          sx={{
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            position: 'relative',
+          }}
         >
           <Grid>
             {isFetching ? null : (
