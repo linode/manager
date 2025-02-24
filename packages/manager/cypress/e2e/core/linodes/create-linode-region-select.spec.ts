@@ -1,6 +1,6 @@
-import { ui } from 'support/ui';
 import { regionFactory } from '@src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui';
 import { extendRegion } from 'support/util/regions';
 
 import type { ExtendedRegion } from 'support/util/regions';

@@ -71,7 +71,6 @@ export const mockApiRequestWithError = (
   errorReason: string
 ): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('*'), {
-    statusCode: errorCode,
     body: {
       errors: [
         {
@@ -79,5 +78,6 @@ export const mockApiRequestWithError = (
         },
       ],
     },
+    statusCode: errorCode,
   });
 };

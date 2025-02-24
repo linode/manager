@@ -7,17 +7,6 @@ import { ui } from 'support/ui';
  */
 export const vpcCreateDrawer = {
   /**
-   * Sets the VPC create form's label field.
-   *
-   * @param vpcLabel - VPC label to set.
-   */
-  setLabel: (vpcLabel: string) => {
-    cy.findByLabelText('VPC Label')
-      .should('be.visible')
-      .type(`{selectall}{del}${vpcLabel}`);
-  },
-
-  /**
    * Sets the VPC create form's description field.
    *
    * @param vpcDescription - VPC description to set.
@@ -29,22 +18,14 @@ export const vpcCreateDrawer = {
   },
 
   /**
-   * Sets the VPC create form's subnet label.
+   * Sets the VPC create form's label field.
    *
-   * When handling more than one subnet, an index can be provided to control
-   * which field is being modified.
-   *
-   * @param subnetLabel - Label to set.
-   * @param subnetIndex - Optional index of subnet for which to update label.
+   * @param vpcLabel - VPC label to set.
    */
-  setSubnetLabel: (subnetLabel: string, subnetIndex: number = 0) => {
-    cy.findByText('Subnet Label', {
-      selector: `label[for="subnet-label-${subnetIndex}"]`,
-    })
+  setLabel: (vpcLabel: string) => {
+    cy.findByLabelText('VPC Label')
       .should('be.visible')
-      .click();
-
-    cy.focused().type(`{selectall}{del}${subnetLabel}`);
+      .type(`{selectall}{del}${vpcLabel}`);
   },
 
   /**
@@ -64,6 +45,25 @@ export const vpcCreateDrawer = {
       .click();
 
     cy.focused().type(`{selectall}{del}${subnetIpRange}`);
+  },
+
+  /**
+   * Sets the VPC create form's subnet label.
+   *
+   * When handling more than one subnet, an index can be provided to control
+   * which field is being modified.
+   *
+   * @param subnetLabel - Label to set.
+   * @param subnetIndex - Optional index of subnet for which to update label.
+   */
+  setSubnetLabel: (subnetLabel: string, subnetIndex: number = 0) => {
+    cy.findByText('Subnet Label', {
+      selector: `label[for="subnet-label-${subnetIndex}"]`,
+    })
+      .should('be.visible')
+      .click();
+
+    cy.focused().type(`{selectall}{del}${subnetLabel}`);
   },
 
   /**

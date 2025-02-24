@@ -1,7 +1,8 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
-import { LongviewClient, ActiveLongviewPlan } from '@linode/api-v4';
+
+import type { ActiveLongviewPlan, LongviewClient } from '@linode/api-v4';
 import type {
   LongviewAction,
   LongviewResponse,
@@ -32,8 +33,8 @@ export const mockFetchLongviewStatus = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     {
-      url: 'https://longview.linode.com/fetch',
       method: 'POST',
+      url: 'https://longview.linode.com/fetch',
     },
     async (req) => {
       const payload = req.body;

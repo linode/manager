@@ -3,9 +3,8 @@
  */
 
 import { ui } from 'support/ui';
-
-import { randomLabel, randomString } from 'support/util/random';
 import { linodeCreatePage } from 'support/ui/pages';
+import { randomLabel, randomString } from 'support/util/random';
 
 describe('Create Linode flow to validate code snippet modal', () => {
   /*

@@ -5,8 +5,10 @@ import { depaginate } from 'support/util/paginate';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { isTestLabel } from './common';
 import { nodeBalancerFactory } from 'src/factories';
+
+import { isTestLabel } from './common';
+
 import type { NodeBalancer } from '@linode/api-v4';
 
 export const makeNodeBalCreateReq = (nodeBal: NodeBalancer) => {

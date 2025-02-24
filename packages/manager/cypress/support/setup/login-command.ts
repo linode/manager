@@ -1,7 +1,8 @@
-import type { UserPreferences } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { oauthToken } from 'support/constants/api';
 import { apiMatcher } from 'support/util/intercepts';
+
+import type { UserPreferences } from '@linode/api-v4';
 
 const overrideLocalStorage = (
   window: Window,
@@ -66,6 +67,7 @@ Cypress.Commands.add(
     Cypress.on('uncaught:exception', (_err, _runnable) => false);
 
     const opt = {
+      failOnStatusCode: false,
       onBeforeLoad: (win: Window) => {
         _loginWithToken(win);
         if (resolvedLinodeOptions.localStorageOverrides) {
@@ -75,7 +77,6 @@ Cypress.Commands.add(
           );
         }
       },
-      failOnStatusCode: false,
     };
 
     if (resolvedLinodeOptions.preferenceOverrides) {

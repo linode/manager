@@ -24,14 +24,14 @@ export interface SpecWeights {
     datetime: string;
 
     /**
-     * Total test weight.
-     */
-    totalWeight: number;
-
-    /**
      * Total test run duration in milliseconds.
      */
     totalDuration: number;
+
+    /**
+     * Total test weight.
+     */
+    totalWeight: number;
   };
   /**
    * Array of spec weights.
@@ -55,13 +55,13 @@ export interface SpecWeight extends SpecResult {
 export const specWeightsSchema: ObjectSchema<SpecWeights> = object({
   meta: object({
     datetime: string().required(),
-    totalWeight: number().required(),
     totalDuration: number().required(),
+    totalWeight: number().required(),
   }).required(),
   weights: array(
     object({
-      filepath: string().required(),
       duration: number().required(),
+      filepath: string().required(),
       weight: number().required(),
     })
   ).required(),
@@ -74,14 +74,14 @@ export const specWeightsSchema: ObjectSchema<SpecWeights> = object({
  */
 interface SpecResult {
   /**
-   * Relative path to spec file.
-   */
-  filepath: string;
-
-  /**
    * Spec run duration in milliseconds.
    */
   duration: number;
+
+  /**
+   * Relative path to spec file.
+   */
+  filepath: string;
 }
 
 /**
@@ -100,8 +100,8 @@ export const generateTestWeights: CypressPlugin = (on, config) => {
       const duration = results.stats.duration;
       if (duration) {
         specResults.push({
-          filepath: spec.relative,
           duration,
+          filepath: spec.relative,
         });
       } else {
         console.warn(
@@ -115,15 +115,15 @@ export const generateTestWeights: CypressPlugin = (on, config) => {
       'after:run',
       (
         results:
-          | CypressCommandLine.CypressRunResult
           | CypressCommandLine.CypressFailedRunResult
+          | CypressCommandLine.CypressRunResult
       ) => {
         // Determine whether this is a failed run. "Failed" in this context means
         // that Cypress itself failed to run, not that the test results contained failures.
         const isFailedResult = (
           results:
-            | CypressCommandLine.CypressRunResult
             | CypressCommandLine.CypressFailedRunResult
+            | CypressCommandLine.CypressRunResult
         ): results is CypressCommandLine.CypressFailedRunResult => {
           return 'failures' in results;
         };
@@ -134,14 +134,14 @@ export const generateTestWeights: CypressPlugin = (on, config) => {
           const weights: SpecWeights = {
             meta: {
               datetime: DateTime.now().toISO(),
-              totalWeight,
               totalDuration,
+              totalWeight,
             },
             weights: specResults.map(
               (specResult: SpecResult): SpecWeight => {
                 return {
-                  filepath: specResult.filepath,
                   duration: specResult.duration,
+                  filepath: specResult.filepath,
                   weight: (specResult.duration / totalDuration) * totalWeight,
                 };
               }

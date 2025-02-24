@@ -2,11 +2,6 @@
  * @file Integration tests for Managed SSH access.
  */
 
-import type { ManagedLinodeSetting } from '@linode/api-v4';
-import {
-  managedLinodeSettingFactory,
-  managedSSHSettingFactory,
-} from 'src/factories/managed';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   mockGetLinodeSettings,
@@ -21,6 +16,13 @@ import {
   randomString,
 } from 'support/util/random';
 
+import {
+  managedLinodeSettingFactory,
+  managedSSHSettingFactory,
+} from 'src/factories/managed';
+
+import type { ManagedLinodeSetting } from '@linode/api-v4';
+
 // Message that is shown when no Linodes are listed.
 const noLinodesMessage = "You don't have any Linodes on your account.";
 
@@ -31,11 +33,11 @@ const noLinodesMessage = "You don't have any Linodes on your account.";
  */
 const randomPublicSshKey = (): string => {
   const randomKey = randomString(400, {
-    uppercase: true,
     lowercase: true,
     numbers: true,
     spaces: false,
     symbols: false,
+    uppercase: true,
   });
 
   return `ssh-rsa e2etestkey${randomKey} managedservices@linode`;
@@ -96,9 +98,9 @@ describe('Managed SSH Access tab', () => {
       ...originalLinodeSettings,
       ssh: {
         ...originalLinodeSettings.ssh,
-        user: newUser,
-        port: newPort,
         ip: 'any',
+        port: newPort,
+        user: newUser,
       },
     };
 

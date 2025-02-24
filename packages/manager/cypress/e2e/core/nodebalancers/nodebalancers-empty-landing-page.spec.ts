@@ -1,5 +1,5 @@
-import { ui } from 'support/ui';
 import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
+import { ui } from 'support/ui';
 
 describe('NodeBalancers empty landing page', () => {
   /**

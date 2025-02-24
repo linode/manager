@@ -1,13 +1,14 @@
-import type {
-  ClusterSize,
-  Engine,
-  Region,
-  DatabaseEngine,
-  DatabaseType,
-} from '@linode/api-v4';
+import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
+
+import type {
+  ClusterSize,
+  DatabaseEngine,
+  DatabaseType,
+  Engine,
+  Region,
+} from '@linode/api-v4';
 
 export interface databaseClusterConfiguration {
   clusterSize: ClusterSize;
@@ -24,19 +25,19 @@ export interface databaseClusterConfiguration {
  */
 export const mockDatabaseEngineTypes: DatabaseEngine[] = [
   databaseEngineFactory.build({
+    deprecated: false,
     engine: 'mysql',
     version: '5',
-    deprecated: false,
   }),
   databaseEngineFactory.build({
+    deprecated: false,
     engine: 'mysql',
     version: '8',
-    deprecated: false,
   }),
   databaseEngineFactory.build({
+    deprecated: false,
     engine: 'postgresql',
     version: '13',
-    deprecated: false,
   }),
 ];
 
@@ -45,7 +46,7 @@ export const mockDatabaseEngineTypes: DatabaseEngine[] = [
 export const mockDatabaseNodeTypes: DatabaseType[] = [
   databaseTypeFactory.build({
     class: 'nanode',
-    id: 'g6-nanode-1',
+    disk: 25600,
     engines: {
       mysql: [
         {
@@ -58,14 +59,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    memory: 1024,
-    disk: 25600,
-    vcpus: 1,
+    id: 'g6-nanode-1',
     label: 'Nanode 1 GB',
+    memory: 1024,
+    vcpus: 1,
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
-    id: 'g6-dedicated-2',
+    disk: 81920,
     engines: {
       mysql: [
         {
@@ -78,14 +79,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    memory: 4096,
-    disk: 81920,
-    vcpus: 2,
+    id: 'g6-dedicated-2',
     label: 'Dedicated 4 GB',
+    memory: 4096,
+    vcpus: 2,
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
-    id: 'g6-dedicated-4',
+    disk: 163840,
     engines: {
       mysql: [
         {
@@ -98,14 +99,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    memory: 8192,
-    disk: 163840,
-    vcpus: 4,
+    id: 'g6-dedicated-4',
     label: 'Dedicated 8 GB',
+    memory: 8192,
+    vcpus: 4,
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
-    id: 'g6-dedicated-8',
+    disk: 327680,
     engines: {
       mysql: [
         {
@@ -118,14 +119,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    memory: 16384,
-    disk: 327680,
-    vcpus: 6,
+    id: 'g6-dedicated-8',
     label: 'Dedicated 16 GB',
+    memory: 16384,
+    vcpus: 6,
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
-    id: 'g6-dedicated-16',
+    disk: 655360,
     engines: {
       mysql: [
         {
@@ -137,14 +138,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    memory: 32768,
-    disk: 655360,
-    vcpus: 8,
+    id: 'g6-dedicated-16',
     label: 'Dedicated 32 GB',
+    memory: 32768,
+    vcpus: 8,
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
-    id: 'g6-dedicated-32',
+    disk: 1310720,
     engines: {
       mysql: [
         {
@@ -157,14 +158,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    memory: 65536,
-    disk: 1310720,
-    vcpus: 16,
+    id: 'g6-dedicated-32',
     label: 'Dedicated 64 GB',
+    memory: 65536,
+    vcpus: 16,
   }),
   databaseTypeFactory.build({
     class: 'dedicated',
-    id: 'g6-dedicated-48',
+    disk: 1966080,
     engines: {
       mysql: [
         {
@@ -177,14 +178,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    memory: 98304,
-    disk: 1966080,
-    vcpus: 20,
+    id: 'g6-dedicated-48',
     label: 'Dedicated 96 GB',
+    memory: 98304,
+    vcpus: 20,
   }),
   databaseTypeFactory.build({
     class: 'standard',
-    id: 'g6-standard-1',
+    disk: 51200,
     engines: {
       mysql: [
         {
@@ -197,14 +198,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    disk: 51200,
+    id: 'g6-standard-1',
     label: 'Linode 2 GB',
     memory: 2048,
     vcpus: 1,
   }),
   databaseTypeFactory.build({
     class: 'standard',
-    id: 'g6-standard-2',
+    disk: 81920,
     engines: {
       mysql: [
         {
@@ -217,14 +218,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    disk: 81920,
+    id: 'g6-standard-2',
     label: 'Linode 4 GB',
     memory: 4096,
     vcpus: 2,
   }),
   databaseTypeFactory.build({
     class: 'standard',
-    id: 'g6-standard-4',
+    disk: 163840,
     engines: {
       mysql: [
         {
@@ -237,14 +238,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    disk: 163840,
+    id: 'g6-standard-4',
     label: 'Linode 8 GB',
     memory: 8192,
     vcpus: 4,
   }),
   databaseTypeFactory.build({
     class: 'standard',
-    id: 'g6-standard-6',
+    disk: 327680,
     engines: {
       mysql: [
         {
@@ -257,14 +258,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    disk: 327680,
+    id: 'g6-standard-6',
     label: 'Linode 16 GB',
     memory: 16384,
     vcpus: 6,
   }),
   databaseTypeFactory.build({
     class: 'standard',
-    id: 'g6-standard-8',
+    disk: 655360,
     engines: {
       mysql: [
         {
@@ -277,14 +278,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    disk: 655360,
+    id: 'g6-standard-8',
     label: 'Linode 32 GB',
     memory: 32768,
     vcpus: 8,
   }),
   databaseTypeFactory.build({
     class: 'standard',
-    id: 'g6-standard-16',
+    disk: 1310720,
     engines: {
       mysql: [
         {
@@ -297,14 +298,14 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    disk: 1310720,
+    id: 'g6-standard-16',
     label: 'Linode 64 GB',
     memory: 65536,
     vcpus: 16,
   }),
   databaseTypeFactory.build({
     class: 'standard',
-    id: 'g6-standard-20',
+    disk: 1966080,
     engines: {
       mysql: [
         {
@@ -317,7 +318,7 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
         },
       ],
     },
-    disk: 1966080,
+    id: 'g6-standard-20',
     label: 'Linode 96 GB',
     memory: 98304,
     vcpus: 20,

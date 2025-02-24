@@ -1,7 +1,7 @@
 import { getRegions } from '@linode/api-v4';
 
 import type { CypressPlugin } from './plugin';
-import type { ResourcePage, Region } from '@linode/api-v4';
+import type { Region, ResourcePage } from '@linode/api-v4';
 
 // TODO Clean up.
 /**
@@ -34,8 +34,8 @@ export const fetchLinodeRegions: CypressPlugin = async (on, config) => {
   const extendedRegions = regions.data.map((apiRegion: Region) => {
     return {
       ...apiRegion,
-      label: getCloudManagerLabel(apiRegion),
       apiLabel: apiRegion.label,
+      label: getCloudManagerLabel(apiRegion),
     };
   });
 

@@ -1,4 +1,3 @@
-import type { Region } from '@linode/api-v4';
 import 'cypress-file-upload';
 import { authenticate } from 'support/api/authentication';
 import { imageUploadProcessingTimeout } from 'support/constants/images';
@@ -7,6 +6,8 @@ import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { testRegions } from 'support/util/regions';
+
+import type { Region } from '@linode/api-v4';
 
 authenticate();
 describe('Upload Machine Images', () => {

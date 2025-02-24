@@ -1,7 +1,7 @@
 import { kubernetesClusterFactory } from '@src/factories';
-import { randomLabel, randomNumber } from 'support/util/random';
 import { mockCreateCluster } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
+import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 /**
@@ -54,8 +54,8 @@ const minimumNodeNotice =
 describe('LKE Create Cluster', () => {
   it('Simple Page Check', () => {
     const mockCluster = kubernetesClusterFactory.build({
-      label: randomLabel(),
       id: randomNumber(10000, 99999),
+      label: randomLabel(),
     });
     mockCreateCluster(mockCluster).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');

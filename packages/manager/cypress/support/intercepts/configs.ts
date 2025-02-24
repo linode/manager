@@ -4,8 +4,9 @@
 
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
-import { Config } from '@linode/api-v4';
 import { makeResponse } from 'support/util/response';
+
+import type { Config } from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch all configs for a given linode.

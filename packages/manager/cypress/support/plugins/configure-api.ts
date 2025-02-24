@@ -1,7 +1,9 @@
-import { Profile, getProfile } from '@linode/api-v4';
+import { getProfile } from '@linode/api-v4';
 
 import { configureLinodeApi, defaultApiRoot } from '../util/api';
-import { CypressPlugin } from './plugin';
+
+import type { CypressPlugin } from './plugin';
+import type { Profile } from '@linode/api-v4';
 
 /**
  * Configures API requests to use configure access token and API root.
@@ -39,10 +41,10 @@ export const configureApi: CypressPlugin = async (
     // information to all environments (e.g. public GitHub Actions runs).
     const showUserInfo = !!config.env?.['CY_TEST_USER_REPORT'];
     const userInfo = {
-      'Test User Name': profile.username,
       'Test User Email': profile.email,
-      'Test User UID': profile.uid,
+      'Test User Name': profile.username,
       'Test User Timezone': profile.timezone,
+      'Test User UID': profile.uid,
     };
 
     console.table({

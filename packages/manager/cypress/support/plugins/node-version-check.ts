@@ -1,4 +1,4 @@
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 
 // Supported major versions of Node.js.
 // Running Cypress using other versions will cause a warning to be displayed.

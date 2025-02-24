@@ -1,12 +1,12 @@
 import { createImage } from '@linode/api-v4/lib/images';
-import { createTestLinode } from 'support/util/linodes';
-import { ui } from 'support/ui';
-
 import { authenticate } from 'support/api/authentication';
-import { randomLabel } from 'support/util/random';
-import { cleanUp } from 'support/util/cleanup';
-import type { Image, Linode } from '@linode/api-v4';
 import { interceptGetLinodeDisks } from 'support/intercepts/linodes';
+import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+import { randomLabel } from 'support/util/random';
+
+import type { Image, Linode } from '@linode/api-v4';
 
 authenticate();
 describe('Search Images', () => {

@@ -1,17 +1,17 @@
+import { EventActionKeys } from '@linode/api-v4';
 import { eventFactory } from '@src/factories/events';
 import { mockGetEvents } from 'support/intercepts/events';
-import { EventActionKeys } from '@linode/api-v4';
 
 import type { Event } from '@linode/api-v4';
 
 const events: Event[] = EventActionKeys.map((action) => {
   return eventFactory.build({
     action,
-    message: `${action + ' message'}`,
-    seen: false,
-    read: false,
-    percent_complete: null,
     entity: { id: 0, label: 'linode-0' },
+    message: `${action + ' message'}`,
+    percent_complete: null,
+    read: false,
+    seen: false,
   });
 });
 

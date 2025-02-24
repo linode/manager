@@ -1,7 +1,7 @@
-import { testRegions } from 'support/util/regions';
+import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
-import { interceptCreateLinode } from 'support/intercepts/linodes';
+import { testRegions } from 'support/util/regions';
 
 import type { Region } from '@linode/api-v4';
 

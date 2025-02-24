@@ -11,11 +11,11 @@ import type {
   Grants,
   OAuthClient,
   Profile,
+  SSHKey,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
   Token,
   UserPreferences,
-  SSHKey,
 } from '@linode/api-v4';
 
 /**

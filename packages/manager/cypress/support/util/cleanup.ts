@@ -10,10 +10,10 @@ import {
   deleteAllTestAccessKeys,
   deleteAllTestBuckets,
 } from 'support/api/objectStorage';
+import { deleteAllTestSSHKeys } from 'support/api/profile';
 import { deleteAllTestStackScripts } from 'support/api/stackscripts';
 import { deleteAllTestTags } from 'support/api/tags';
 import { deleteAllTestVolumes } from 'support/api/volumes';
-import { deleteAllTestSSHKeys } from 'support/api/profile';
 
 /** Types of resources that can be cleaned up. */
 export type CleanUpResource =
@@ -27,8 +27,8 @@ export type CleanUpResource =
   | 'obj-access-keys'
   | 'obj-buckets'
   | 'service-transfers'
-  | 'stackscripts'
   | 'ssh-keys'
+  | 'stackscripts'
   | 'tags'
   | 'volumes';
 
@@ -49,8 +49,8 @@ const cleanUpMap: CleanUpMap = {
   'obj-access-keys': () => deleteAllTestAccessKeys(),
   'obj-buckets': () => deleteAllTestBuckets(),
   'service-transfers': () => cancelAllTestEntityTransfers(),
-  stackscripts: () => deleteAllTestStackScripts(),
   'ssh-keys': () => deleteAllTestSSHKeys(),
+  stackscripts: () => deleteAllTestStackScripts(),
   tags: () => deleteAllTestTags(),
   volumes: () => deleteAllTestVolumes(),
 };

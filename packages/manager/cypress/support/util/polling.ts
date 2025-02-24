@@ -2,31 +2,31 @@
  * @file Utilities for polling APIs and other resources.
  */
 
+import {
+  getImage,
+  getLinode,
+  getLinodeDisk,
+  getLinodeDisks,
+  getVolume,
+} from '@linode/api-v4';
+import { pageSize } from 'support/constants/api';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+
+import {
+  BackoffMethod,
+  FibonacciBackoffMethod,
+  SimpleBackoffMethod,
+  attemptWithBackoff,
+} from './backoff';
+import { depaginate } from './paginate';
+
+import type { BackoffOptions } from './backoff';
 import type {
   Disk,
   ImageStatus,
   LinodeStatus,
   VolumeStatus,
 } from '@linode/api-v4';
-
-import { pageSize } from 'support/constants/api';
-import {
-  getImage,
-  getLinode,
-  getLinodeDisk,
-  getVolume,
-  getLinodeDisks,
-} from '@linode/api-v4';
-
-import {
-  BackoffMethod,
-  BackoffOptions,
-  FibonacciBackoffMethod,
-  SimpleBackoffMethod,
-  attemptWithBackoff,
-} from './backoff';
-import { depaginate } from './paginate';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 /**
  * Describes a backoff configuration for a poll. This may be a partial BackoffOptions object,

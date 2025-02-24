@@ -1,10 +1,11 @@
+import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   mockGetIssues,
   mockGetServiceMonitors,
   mockGetStats,
 } from 'support/intercepts/managed';
+
 import { managedIssueFactory, monitorFactory } from 'src/factories/managed';
-import { visitUrlWithManagedEnabled } from 'support/api/managed';
 
 describe('Managed Summary tab', () => {
   /**

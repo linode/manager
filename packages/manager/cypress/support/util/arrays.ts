@@ -28,7 +28,7 @@ export const buildArray = <T>(
  */
 export const shuffleArray = <T>(unsortedArray: T[]): T[] => {
   return unsortedArray
-    .map((value: T) => ({ value, sort: Math.random() }))
+    .map((value: T) => ({ sort: Math.random(), value }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
 };

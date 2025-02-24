@@ -1,34 +1,35 @@
-import { eventFactory, linodeFactory } from 'src/factories';
-import { linodeDiskFactory } from 'src/factories/disk';
-import { imageFactory } from 'src/factories/images';
 import { mockGetEvents } from 'support/intercepts/events';
 import { mockCreateImage } from 'support/intercepts/images';
 import { mockGetLinodeDisks, mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
 
+import { eventFactory, linodeFactory } from 'src/factories';
+import { linodeDiskFactory } from 'src/factories/disk';
+import { imageFactory } from 'src/factories/images';
+
 describe('create image (using mocks)', () => {
   it('create image from a linode', () => {
     const mockDisks = [
-      linodeDiskFactory.build({ label: 'Debian 12 Disk', filesystem: 'ext4' }),
+      linodeDiskFactory.build({ filesystem: 'ext4', label: 'Debian 12 Disk' }),
       linodeDiskFactory.build({
-        label: '512 MB Swap Image',
         filesystem: 'swap',
+        label: '512 MB Swap Image',
       }),
     ];
 
     const mockLinode = linodeFactory.build();
 
     const mockNewImage = imageFactory.build({
-      id: `private/${randomNumber(1000, 99999)}`,
-      label: randomLabel(),
       description: randomPhrase(),
-      type: 'manual',
-      is_public: false,
-      vendor: null,
-      expiry: null,
       eol: null,
+      expiry: null,
+      id: `private/${randomNumber(1000, 99999)}`,
+      is_public: false,
+      label: randomLabel(),
       status: 'creating',
+      type: 'manual',
+      vendor: null,
     });
 
     mockGetLinodes([mockLinode]).as('getLinodes');

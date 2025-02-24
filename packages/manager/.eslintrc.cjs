@@ -151,9 +151,7 @@ module.exports = {
     },
     // TODO: disable chaining rule temporarily
     {
-      files: [
-      'cypress/**'
-      ],
+      files: ['cypress/**'],
       rules: {
         'cypress/unsafe-to-chain-command': 'warn'
       }

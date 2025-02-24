@@ -1,16 +1,17 @@
 import { createLinodeRequestFactory } from '@src/factories';
-import { describeRegions } from 'support/util/regions';
-import { randomLabel, randomString } from 'support/util/random';
-import { Region } from '@linode/api-v4';
-import type { Linode } from '@linode/api-v4';
-import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
 import {
   interceptGetLinodeDetails,
   interceptGetLinodes,
 } from 'support/intercepts/linodes';
+import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
+import { randomLabel, randomString } from 'support/util/random';
+import { describeRegions } from 'support/util/regions';
+
+import type { Linode } from '@linode/api-v4';
+import type { Region } from '@linode/api-v4';
 
 authenticate();
 describeRegions('Delete Linodes', (region: Region) => {
@@ -25,10 +26,10 @@ describeRegions('Delete Linodes', (region: Region) => {
    */
   it('can delete a Linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
+      booted: false,
       label: randomLabel(),
       region: region.id,
       root_pass: randomString(32),
-      booted: false,
     });
 
     // Create a Linode before navigating to its details page to delete it.

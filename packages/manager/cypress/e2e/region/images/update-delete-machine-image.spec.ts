@@ -2,7 +2,6 @@
  * @file Image update and deletion region tests.
  */
 
-import type { Image, Region } from '@linode/api-v4';
 import { uploadImage } from '@linode/api-v4';
 import { authenticate } from 'support/api/authentication';
 import { imageUploadProcessingTimeout } from 'support/constants/images';
@@ -12,6 +11,8 @@ import { cleanUp } from 'support/util/cleanup';
 import { pollImageStatus } from 'support/util/polling';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { testRegions } from 'support/util/regions';
+
+import type { Image, Region } from '@linode/api-v4';
 
 /**
  * Uploads a machine image and waits for it to become available.
@@ -33,11 +34,11 @@ const uploadMachineImage = async (region: Region, data: Blob) => {
 
   const [endpoint, image] = [uploadResponse.upload_to, uploadResponse.image];
   await fetch(endpoint, {
-    method: 'PUT',
     body: data,
     headers: {
       'Content-type': 'application/octet-stream',
     },
+    method: 'PUT',
   });
 
   await pollImageStatus(

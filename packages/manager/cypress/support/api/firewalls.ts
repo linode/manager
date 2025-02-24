@@ -1,15 +1,11 @@
-import {
-  Firewall,
-  deleteFirewall,
-  getFirewalls,
-  createFirewall,
-  FirewallRules,
-} from '@linode/api-v4';
+import { createFirewall, deleteFirewall, getFirewalls } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 import { randomLabel } from 'support/util/random';
 
 import { isTestLabel } from './common';
+
+import type { Firewall, FirewallRules } from '@linode/api-v4';
 
 /**
  * Determines if Firewall rules are sufficiently locked down to use for a test resource.
@@ -22,7 +18,7 @@ import { isTestLabel } from './common';
  * @returns `true` if Firewall rules are locked down, `false` otherwise.
  */
 export const areFirewallRulesLockedDown = (rules: FirewallRules) => {
-  const { outbound, outbound_policy, inbound, inbound_policy } = rules;
+  const { inbound, inbound_policy, outbound, outbound_policy } = rules;
 
   const hasOutboundRules = !!outbound && outbound.length > 0;
   const hasInboundRules = !!inbound && inbound.length > 0;
@@ -59,8 +55,8 @@ export const findOrCreateDependencyFirewall = async () => {
     label: randomLabel(),
     rules: {
       inbound: [],
-      outbound: [],
       inbound_policy: 'DROP',
+      outbound: [],
       outbound_policy: 'DROP',
     },
   });

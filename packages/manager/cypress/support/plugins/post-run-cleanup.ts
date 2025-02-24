@@ -1,16 +1,19 @@
-import { DateTime } from 'luxon';
-import { depaginate } from '../util/paginate';
-import { CypressPlugin } from './plugin';
-
 import {
   deleteFirewall,
   deleteKubernetesCluster,
   deleteLinode,
-  Firewall,
   getFirewalls,
   getKubernetesClusters,
   getLinodes,
   getNodePools,
+} from '@linode/api-v4';
+import { DateTime } from 'luxon';
+
+import { depaginate } from '../util/paginate';
+
+import type { CypressPlugin } from './plugin';
+import type {
+  Firewall,
   KubeNodePoolResponse,
   KubernetesCluster,
   Linode,
@@ -143,10 +146,10 @@ const deleteTestLkeClusters = async () => {
  * and their corresponding deletion function.
  */
 const resourceCleanUpItems = [
-  { name: 'Linodes', cleanUp: deleteTestLinodes },
+  { cleanUp: deleteTestLinodes, name: 'Linodes' },
   // TODO Remove LKE cluster clean up once M3-8656 is complete because cluster cleanup will no longer be necessary.
-  { name: 'LKE Clusters', cleanUp: deleteTestLkeClusters },
-  { name: 'Firewalls', cleanUp: deleteTestFirewalls },
+  { cleanUp: deleteTestLkeClusters, name: 'LKE Clusters' },
+  { cleanUp: deleteTestFirewalls, name: 'Firewalls' },
 ];
 
 export const postRunCleanup: CypressPlugin = async (on) => {

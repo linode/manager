@@ -1,4 +1,4 @@
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 
 // The name of the environment variable to read when checking suite configuration.
 const envVarName = 'CY_TEST_SUITE';

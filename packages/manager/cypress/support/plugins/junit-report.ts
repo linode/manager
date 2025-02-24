@@ -1,4 +1,4 @@
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 
 // The name of the environment variable to read when checking report configuration.
 const envVarName = 'CY_TEST_JUNIT_REPORT';
@@ -37,11 +37,11 @@ export const enableJunitReport = (
 
       // See also: https://www.npmjs.com/package/mocha-junit-reporter#full-configuration-options
       config.reporterOptions = {
+        jenkinsMode,
         mochaFile: 'cypress/results/test-results-[hash].xml',
         rootSuiteTitle: 'Cloud Manager Cypress Tests',
-        testsuitesTitle: testSuiteName,
-        jenkinsMode,
         suiteTitleSeparatedBy: jenkinsMode ? '→' : ' ',
+        testsuitesTitle: testSuiteName,
       };
     }
     return config;

@@ -2,10 +2,13 @@
  * @file Allows parallelization without Cypress Cloud.
  */
 
+import { readFileSync } from 'fs';
 import { globSync } from 'glob';
 import { resolve } from 'path';
-import { readFileSync } from 'fs';
-import { SpecWeight, SpecWeights, specWeightsSchema } from './generate-weights';
+
+import { specWeightsSchema } from './generate-weights';
+
+import type { SpecWeight, SpecWeights } from './generate-weights';
 import type { CypressPlugin } from './plugin';
 
 /**
@@ -28,8 +31,8 @@ interface WeightedRunnerSpecs {
 export const splitCypressRun: CypressPlugin = (_on, config) => {
   const {
     CY_TEST_SPLIT_RUN: splitRunEnabled,
-    CY_TEST_SPLIT_RUN_TOTAL: splitRunTotalRunners,
     CY_TEST_SPLIT_RUN_INDEX: splitRunRunnerIndex,
+    CY_TEST_SPLIT_RUN_TOTAL: splitRunTotalRunners,
     CY_TEST_SPLIT_RUN_WEIGHTS: splitRunWeightsPath,
   } = config.env;
 
@@ -136,13 +139,13 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
       };
     }
     return {
-      'Test Weights': splitRunWeightsPath,
-      'Total Test Weight': `${Math.round(totalWeight * 100) / 100}%`,
       'Runner Test Weight': `${
         Math.round(weightedSpecsForRunner.weight * 100) / 100
       }%`,
-      'Weighted Specs': weightedSpecs.length,
+      'Test Weights': splitRunWeightsPath,
+      'Total Test Weight': `${Math.round(totalWeight * 100) / 100}%`,
       'Unweighted Specs': unweightedSpecs.length,
+      'Weighted Specs': weightedSpecs.length,
     };
   })();
 

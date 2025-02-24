@@ -1,9 +1,4 @@
 import {
-  firewallDeviceFactory,
-  firewallFactory,
-  nodeBalancerFactory,
-} from 'src/factories';
-import {
   mockAddFirewallDevice,
   mockGetFirewalls,
 } from 'support/intercepts/firewalls';
@@ -12,6 +7,12 @@ import {
   mockGetNodeBalancerFirewalls,
 } from 'support/intercepts/nodebalancers';
 import { ui } from 'support/ui';
+
+import {
+  firewallDeviceFactory,
+  firewallFactory,
+  nodeBalancerFactory,
+} from 'src/factories';
 
 describe('Firewalls', () => {
   it('allows the user to assign a Firewall from the NodeBalancer settings page', () => {

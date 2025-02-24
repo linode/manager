@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 
 /**
  * Delete recordings for any specs that passed without requiring any

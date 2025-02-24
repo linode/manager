@@ -11,9 +11,9 @@ import {
   mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
 import {
-  mockMigrateVolumes,
-  mockGetVolumes,
   mockGetVolume,
+  mockGetVolumes,
+  mockMigrateVolumes,
 } from 'support/intercepts/volumes';
 import { ui } from 'support/ui';
 
@@ -22,8 +22,8 @@ describe('volume upgrade/migration', () => {
     const volume = volumeFactory.build();
 
     const migrationScheduledNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_scheduled',
-      entity: { type: 'volume', id: volume.id },
     });
 
     mockGetVolumes([volume]).as('getVolumes');
@@ -43,8 +43,8 @@ describe('volume upgrade/migration', () => {
       .click();
 
     const migrationImminentNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_imminent',
-      entity: { type: 'volume', id: volume.id },
     });
     mockGetNotifications([migrationImminentNotification]).as(
       'getNotifications'
@@ -66,8 +66,8 @@ describe('volume upgrade/migration', () => {
       const mockStartedMigrationEvent = eventFactory.build({
         action: 'volume_migrate',
         entity: { id: volume.id, type: 'volume' },
-        status: 'started',
         percent_complete: percentage,
+        status: 'started',
       });
 
       mockGetEvents([mockStartedMigrationEvent]).as('getEvents');
@@ -79,7 +79,7 @@ describe('volume upgrade/migration', () => {
 
     const mockFinishedMigrationEvent = eventFactory.build({
       action: 'volume_migrate',
-      entity: { id: volume.id, type: 'volume', label: volume.label },
+      entity: { id: volume.id, label: volume.label, type: 'volume' },
       status: 'finished',
     });
 
@@ -103,8 +103,8 @@ describe('volume upgrade/migration', () => {
     });
 
     const migrationScheduledNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_scheduled',
-      entity: { type: 'volume', id: volume.id },
     });
 
     mockGetVolumes([volume]).as('getVolumes');
@@ -130,8 +130,8 @@ describe('volume upgrade/migration', () => {
     cy.wait(['@getLinode', '@getLinodeVolumes']);
 
     const migrationImminentNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_imminent',
-      entity: { type: 'volume', id: volume.id },
     });
     mockGetNotifications([migrationImminentNotification]).as(
       'getNotifications'
@@ -157,8 +157,8 @@ describe('volume upgrade/migration', () => {
       const mockStartedMigrationEvent = eventFactory.build({
         action: 'volume_migrate',
         entity: { id: volume.id, type: 'volume' },
-        status: 'started',
         percent_complete: percentage,
+        status: 'started',
       });
 
       mockGetEvents([mockStartedMigrationEvent]).as('getEvents');
@@ -170,7 +170,7 @@ describe('volume upgrade/migration', () => {
 
     const mockFinishedMigrationEvent = eventFactory.build({
       action: 'volume_migrate',
-      entity: { id: volume.id, type: 'volume', label: volume.label },
+      entity: { id: volume.id, label: volume.label, type: 'volume' },
       status: 'finished',
     });
 
@@ -194,8 +194,8 @@ describe('volume upgrade/migration', () => {
     });
 
     const migrationScheduledNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_scheduled',
-      entity: { type: 'volume', id: volume.id },
     });
 
     mockMigrateVolumes().as('migrateVolumes');
@@ -217,8 +217,8 @@ describe('volume upgrade/migration', () => {
       .click();
 
     const migrationImminentNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_imminent',
-      entity: { type: 'volume', id: volume.id },
     });
     mockGetNotifications([migrationImminentNotification]).as(
       'getNotifications'
@@ -244,8 +244,8 @@ describe('volume upgrade/migration', () => {
       const mockStartedMigrationEvent = eventFactory.build({
         action: 'volume_migrate',
         entity: { id: volume.id, type: 'volume' },
-        status: 'started',
         percent_complete: percentage,
+        status: 'started',
       });
 
       mockGetEvents([mockStartedMigrationEvent]).as('getEvents');
@@ -257,7 +257,7 @@ describe('volume upgrade/migration', () => {
 
     const mockFinishedMigrationEvent = eventFactory.build({
       action: 'volume_migrate',
-      entity: { id: volume.id, type: 'volume', label: volume.label },
+      entity: { id: volume.id, label: volume.label, type: 'volume' },
       status: 'finished',
     });
 

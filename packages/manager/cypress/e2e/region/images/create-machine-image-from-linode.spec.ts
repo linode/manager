@@ -1,12 +1,13 @@
-import type { Disk, Linode } from '@linode/api-v4';
-import { createTestLinode } from 'support/util/linodes';
 import { createLinodeRequestFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { imageCaptureProcessingTimeout } from 'support/constants/images';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomPhrase, randomString } from 'support/util/random';
 import { testRegions } from 'support/util/regions';
+
+import type { Disk, Linode } from '@linode/api-v4';
 
 authenticate();
 describe('Capture Machine Images', () => {
@@ -25,10 +26,10 @@ describe('Capture Machine Images', () => {
     const imageDescription = randomPhrase();
 
     const linodePayload = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      root_pass: randomString(32),
-      region: region.id,
       booted: true,
+      label: randomLabel(),
+      region: region.id,
+      root_pass: randomString(32),
     });
 
     cy.defer(

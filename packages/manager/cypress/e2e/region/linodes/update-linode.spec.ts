@@ -1,24 +1,25 @@
-import type { Disk, Linode } from '@linode/api-v4';
 import { getLinodeDisks } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { interceptGetLinodeDetails } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
 import { depaginate } from 'support/util/paginate';
 import { randomLabel, randomString } from 'support/util/random';
 import { describeRegions } from 'support/util/regions';
-import { createTestLinode } from 'support/util/linodes';
+
+import type { Disk, Linode } from '@linode/api-v4';
 
 /*
  * Returns a Linode create payload for the given region.
  */
 const makeLinodePayload = (region: string, booted: boolean) => {
   return createLinodeRequestFactory.build({
-    label: randomLabel(),
-    root_pass: randomString(32),
-    region,
     booted,
+    label: randomLabel(),
+    region,
+    root_pass: randomString(32),
   });
 };
 

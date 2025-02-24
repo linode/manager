@@ -1,27 +1,29 @@
-import type { Linode, Region } from '@linode/api-v4';
-import { createTestLinode } from 'support/util/linodes';
-import {
-  createLinodeRequestFactory,
-  linodeFactory,
-} from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
-import { cleanUp } from 'support/util/cleanup';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockGetLinodeDetails,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
+import { mockGetRegions } from 'support/intercepts/regions';
 import {
   interceptCreateVolume,
   mockGetVolume,
   mockGetVolumes,
 } from 'support/intercepts/volumes';
-import { randomNumber, randomString, randomLabel } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
 import { accountFactory, regionFactory, volumeFactory } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetRegions } from 'support/intercepts/regions';
 import {
-  mockGetLinodeDetails,
-  mockGetLinodes,
-} from 'support/intercepts/linodes';
+  createLinodeRequestFactory,
+  linodeFactory,
+} from 'src/factories/linodes';
+
+import type { Linode, Region } from '@linode/api-v4';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -58,9 +60,9 @@ describe('volume create flow', () => {
     const region = chooseRegion();
     const volume = {
       label: randomLabel(),
-      size: `${randomNumber(10, 250)}`,
       region: region.id,
       regionLabel: region.label,
+      size: `${randomNumber(10, 250)}`,
     };
 
     interceptCreateVolume().as('createVolume');
@@ -102,17 +104,17 @@ describe('volume create flow', () => {
     const region = chooseRegion();
 
     const linodeRequest = createLinodeRequestFactory.build({
+      booted: false,
       label: randomLabel(),
       region: region.id,
       root_pass: randomString(16),
-      booted: false,
     });
 
     const volume = {
       label: randomLabel(),
-      size: `${randomNumber(10, 250)}`,
       region: region.id,
       regionLabel: region.label,
+      size: `${randomNumber(10, 250)}`,
     };
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -194,10 +196,10 @@ describe('volume create flow', () => {
     mockGetRegions(mockRegions).as('getRegions');
 
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      root_pass: randomString(16),
-      region: mockRegions[0].id,
       booted: false,
+      label: randomLabel(),
+      region: mockRegions[0].id,
+      root_pass: randomString(16),
     });
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -250,9 +252,9 @@ describe('volume create flow', () => {
 
     // Mock linode
     const mockLinode = linodeFactory.build({
-      region: mockRegions[0].id,
-      id: 123456,
       capabilities: ['Block Storage Encryption'],
+      id: 123456,
+      region: mockRegions[0].id,
     });
 
     mockGetAccount(mockAccount).as('getAccount');
@@ -307,15 +309,15 @@ describe('volume create flow', () => {
     mockGetRegions(mockRegions).as('getRegions');
 
     const volume = volumeFactory.build({
-      region: mockRegions[0].id,
       encryption: 'enabled',
+      region: mockRegions[0].id,
     });
 
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      root_pass: randomString(16),
-      region: mockRegions[0].id,
       booted: false,
+      label: randomLabel(),
+      region: mockRegions[0].id,
+      root_pass: randomString(16),
     });
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -374,10 +376,10 @@ describe('volume create flow', () => {
   it('creates a volume from an existing Linode', () => {
     cy.tag('method:e2e');
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      root_pass: randomString(16),
-      region: chooseRegion().id,
       booted: false,
+      label: randomLabel(),
+      region: chooseRegion().id,
+      root_pass: randomString(16),
     });
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(

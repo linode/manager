@@ -1,15 +1,16 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
-import { Linode } from '@linode/api-v4';
 import { authenticate } from 'support/api/authentication';
-import { createTestLinode } from 'support/util/linodes';
-import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import {
-  interceptDeleteDisks,
   interceptAddDisks,
+  interceptDeleteDisks,
   interceptResizeDisks,
 } from 'support/intercepts/linodes';
+import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+
+import type { Linode } from '@linode/api-v4';
 
 /**
  * Waits for a Linode to finish provisioning by checking the details page status indicator.
