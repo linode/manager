@@ -1,3 +1,5 @@
+import './sr-only.css';
+
 /**
  * Function to send aria-live messages
  * For instance, when page is loading
