@@ -178,7 +178,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       verifyTableSorting(column, 'ascending', ascending);
 
       // Verify ascending order
-    //  verifyTableSorting(column, 'descending', descending);
+       verifyTableSorting(column, 'descending', descending);
     });
   });
 
