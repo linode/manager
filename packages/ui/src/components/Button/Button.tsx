@@ -29,8 +29,6 @@ export interface ButtonProps extends _ButtonProps {
    * * @default 'secondary'
    * */
   buttonType?: ButtonType;
-  /** Additional css class to pass to the component */
-  className?: string;
   /**
    * Reduce the padding on the x-axis
    * @default false
@@ -45,13 +43,6 @@ export interface ButtonProps extends _ButtonProps {
    * Optional test ID
    */
   'data-testid'?: string;
-  /**
-   * Show a loading indicator
-   * @default false
-   */
-  loading?: boolean;
-  /** The `sx` prop can be either object or function */
-  sx?: SxProps<Theme>;
   /** Pass specific CSS styling for the SVG icon. */
   sxEndIcon?: SxProps<Theme>;
   /** Tooltip analytics event */
@@ -62,13 +53,13 @@ export interface ButtonProps extends _ButtonProps {
 
 const StyledButton = styled(_Button, {
   shouldForwardProp: omittedProps(['compactX', 'compactY', 'buttonType']),
-})<ButtonProps>(({ ...props }) => ({
-  ...(props.compactX && {
+})<ButtonProps>(({ compactX, compactY }) => ({
+  ...(compactX && {
     minWidth: 50,
     paddingLeft: 0,
     paddingRight: 0,
   }),
-  ...(props.compactY && {
+  ...(compactY && {
     minHeight: 20,
     paddingBottom: 0,
     paddingTop: 0,
@@ -82,13 +73,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       // and we end up with the wrong styles (purple color, see #6455)
       // It would be nice to remove this default and require the prop but this fixes the issue for now.
       buttonType = 'secondary',
-      children,
-      className,
       color,
-      compactX,
-      compactY,
       disabled,
-      sx,
       sxEndIcon,
       tooltipAnalyticsEvent,
       tooltipText,
@@ -114,7 +100,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       }
     };
 
-    const renderButton = (
+    const button = (
       <StyledButton
         {...rest}
         aria-describedby={
@@ -125,34 +111,30 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         }
         aria-disabled={disabled}
         buttonType={buttonType}
-        className={className}
         color={(color === 'error' && color) || buttonTypeToColor[buttonType]}
-        compactX={compactX}
-        compactY={compactY}
         data-testid={rest['data-testid'] || 'button'}
         disableRipple={disabled || rest.disableRipple}
         onClick={disabled ? (e) => e.preventDefault() : rest.onClick}
         onKeyDown={disabled ? handleDisabledKeyDown : rest.onKeyDown}
         ref={ref}
-        sx={sx}
         variant={buttonTypeToVariant[buttonType] || 'text'}
-      >
-        {children}
-      </StyledButton>
+      />
     );
 
-    return showTooltip ? (
-      <Tooltip
-        aria-label={rest['aria-label']}
-        data-testid="Tooltip"
-        id="button-tooltip"
-        onClick={handleTooltipAnalytics}
-        title={tooltipText}
-      >
-        {renderButton}
-      </Tooltip>
-    ) : (
-      renderButton
-    );
+    if (showTooltip) {
+      return (
+        <Tooltip
+          aria-label={rest['aria-label']}
+          data-testid="Tooltip"
+          id="button-tooltip"
+          onClick={handleTooltipAnalytics}
+          title={tooltipText}
+        >
+          {button}
+        </Tooltip>
+      );
+    }
+
+    return button;
   }
 );
