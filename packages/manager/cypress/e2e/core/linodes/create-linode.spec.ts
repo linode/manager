@@ -520,7 +520,7 @@ describe('Create Linode', () => {
 
   /*
    * - Confirms UI flow when creating a Linode with a restricted user.
-   * - Confirms that a notice is shown informing the user they do not have permission to create a Linode. (TODO)
+   * - Confirms that a notice is shown informing the user they do not have permission to create a Linode.
    * - Confirms that "Regions" field is disabled.
    * - Confirms that "Linux Distribution" field is disabled.
    * - Confirms that "Create Linode" button is disabled.
@@ -552,7 +552,10 @@ describe('Create Linode', () => {
     // Login and wait for application to load
     cy.visitWithLogin('/linodes/create');
 
-    // TODO: a notice should be shown informing the user they do not have permission to create a Linode.
+    // TODO: Confirm that a notice should be shown informing the user they do not have permission to create a Linode.
+    cy.findByText(
+      "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
+    ).should('be.visible');
 
     // Confirm that "Region" select dropdown is diabled
     ui.regionSelect.find().should('be.visible').should('be.disabled');
