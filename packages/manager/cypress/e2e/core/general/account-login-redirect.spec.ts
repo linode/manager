@@ -1,5 +1,5 @@
-import { mockApiRequestWithError } from 'support/intercepts/general';
 import { loginBaseUrl } from 'support/constants/login';
+import { mockApiRequestWithError } from 'support/intercepts/general';
 
 describe('account login redirect', () => {
   /**
