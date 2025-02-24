@@ -347,11 +347,12 @@ export const CreateCluster = () => {
             label="Cluster Label"
             value={label || ''}
           />
-          {isLkeEnterpriseLAFlagEnabled && !isCreateClusterRestricted && (
+          {isLkeEnterpriseLAFlagEnabled && (
             <>
               <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
               <ClusterTypePanel
                 handleClusterTypeSelection={handleClusterTypeSelection}
+                isUserRestricted={isCreateClusterRestricted}
                 selectedTier={selectedTier}
               />
             </>
