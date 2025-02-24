@@ -160,7 +160,7 @@ export const NodePoolsDisplay = (props: Props) => {
         flexWrap="wrap"
         justifyContent="space-between"
       >
-        <Stack alignItems="center" direction="row" spacing={2}>
+        <Stack alignItems="center" direction="row">
           <Typography variant="h2">Node Pools</Typography>
         </Stack>
         <Stack
@@ -172,9 +172,9 @@ export const NodePoolsDisplay = (props: Props) => {
           })}
           alignItems="center"
           direction="row"
-          spacing={1}
+          gap={1}
         >
-          <FormLabel htmlFor={ariaIdentifier}>
+          <FormLabel htmlFor={ariaIdentifier} sx={{ mb: 0 }}>
             <Typography ml={1} mr={1}>
               Status
             </Typography>
@@ -226,22 +226,20 @@ export const NodePoolsDisplay = (props: Props) => {
             </Button>
           )}
           <Hidden mdUp>
-            <Box sx={{ ml: 'auto !important' }}>
-              <Box sx={{ ml: 1 }}>
-                <ActionMenu
-                  actionsList={[
-                    {
-                      onClick: () => setIsRecycleClusterOpen(true),
-                      title: 'Recycle All Nodes',
-                    },
-                    {
-                      onClick: handleOpenAddDrawer,
-                      title: 'Add a Node Pool',
-                    },
-                  ]}
-                  ariaLabel={`Action menu for Node Pools header`}
-                />
-              </Box>
+            <Box sx={{ ml: 'auto' }}>
+              <ActionMenu
+                actionsList={[
+                  {
+                    onClick: () => setIsRecycleClusterOpen(true),
+                    title: 'Recycle All Nodes',
+                  },
+                  {
+                    onClick: handleOpenAddDrawer,
+                    title: 'Add a Node Pool',
+                  },
+                ]}
+                ariaLabel={`Action menu for Node Pools header`}
+              />
             </Box>
           </Hidden>
           <Hidden mdDown>
