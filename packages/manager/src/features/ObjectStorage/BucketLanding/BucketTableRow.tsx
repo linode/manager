@@ -120,7 +120,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
         </StyledBucketObjectsCell>
       </Hidden>
 
-      <TableCell>
+      <TableCell sx={{ paddingRight: 0 }}>
         <BucketActionMenu
           cluster={cluster}
           data-qa-action-menu

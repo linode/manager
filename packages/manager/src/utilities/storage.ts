@@ -57,6 +57,7 @@ const TICKET = 'ticket';
 const STACKSCRIPT = 'stackscript';
 const DEV_TOOLS_ENV = 'devTools/env';
 const REGION_FILTER = 'regionFilter';
+const NODE_POOLS_EXPANDED = 'nodePoolsExpanded';
 
 export type PageSize = number;
 export type RegionFilter = 'all' | RegionSite;
@@ -113,6 +114,10 @@ export interface Storage {
   infinitePageSize: {
     get: () => PageSize;
     set: (perPage: PageSize) => void;
+  };
+  nodePoolsExpanded: {
+    get: (clusterId: number) => number[];
+    set: (clusterId: number, v: number[]) => void;
   };
   pageSize: {
     get: () => PageSize;
@@ -187,6 +192,11 @@ export const storage: Storage = {
       return Number(getStorage(INFINITE_PAGE_SIZE, fallback));
     },
     set: (v) => setStorage(INFINITE_PAGE_SIZE, `${v}`),
+  },
+  nodePoolsExpanded: {
+    get: (clusterId) => getStorage(`${NODE_POOLS_EXPANDED}-${clusterId}`),
+    set: (clusterId, v) =>
+      setStorage(`${NODE_POOLS_EXPANDED}-${clusterId}`, JSON.stringify(v)),
   },
   pageSize: {
     get: () => {

@@ -1,10 +1,9 @@
 import React from 'react';
 
-import { InfoIcon } from '../../assets/icons';
-
 import {
   CheckIcon,
   AlertIcon as ErrorIcon,
+  InfoIcon,
   WarningIcon,
 } from '../../assets/icons';
 import { Box } from '../Box';

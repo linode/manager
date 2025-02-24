@@ -8,7 +8,7 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith'
   | 'endswith';
-export type AlertDefinitionType = 'system' | 'user' | 'custom' | 'default';
+export type AlertDefinitionType = 'system' | 'user';
 export type AlertStatusType = 'enabled' | 'disabled';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
@@ -180,6 +180,7 @@ export interface CreateAlertDefinitionPayload {
   trigger_conditions: TriggerCondition;
   channel_ids: number[];
 }
+
 export interface MetricCriteria {
   metric: string;
   aggregate_function: MetricAggregationType;

@@ -1,19 +1,10 @@
 /**
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
- *
- * This test suite validates the process of creating an alert in the cloud monitoring system,
- * ensuring that users can navigate to the alert creation page, fill in required details,
- * and successfully submit the form. It also verifies the API interactions and UI behavior.
- *
- * Key Features:
- * - Mocks API responses for accounts, regions, Linodes, and alert definitions.
- * - Tests navigation from the Alert Listings page to the Create Alert page.
- * - Automates form filling, metric selection, and alert creation.
- * - Asserts successful alert creation with API validation and toast notifications.
- *
  */
 
-import { Flags } from 'src/featureFlags';
+import { statusMap } from 'support/constants/alert';
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateAlertDefinition,
   mockGetAlertChannels,
@@ -21,9 +12,11 @@ import {
   mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { mockGetAccount } from 'support/intercepts/account';
+
 import {
   accountFactory,
   alertDefinitionFactory,
@@ -36,13 +29,19 @@ import {
   regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { widgetDetails } from 'support/constants/widgets';
-import { mockGetDatabases } from 'support/intercepts/databases';
-import { statusMap } from 'support/constants/alert';
 import { formatDate } from 'src/utilities/formatDate';
 
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+import type { Flags } from 'src/featureFlags';
+
+export interface MetricDetails {
+  aggregationType: string;
+  dataField: string;
+  operator: string;
+  ruleIndex: number;
+  threshold: string;
+}
+
+const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 
 // Create mock data
 const mockAccount = accountFactory.build();
@@ -53,32 +52,32 @@ const mockRegion = regionFactory.build({
 });
 const { metrics, serviceType } = widgetDetails.dbaas;
 const databaseMock = databaseFactory.buildList(10, {
-  region: 'us-ord',
-  engine: 'mysql',
   cluster_size: 3,
+  engine: 'mysql',
+  region: 'us-ord',
 });
 
 const notificationChannels = notificationChannelFactory.build({
   channel_type: 'email',
-  type: 'custom',
-  label: 'channel-1',
   id: 1,
+  label: 'channel-1',
+  type: 'custom',
 });
 
 const customAlertDefinition = alertDefinitionFactory.build({
   channel_ids: [1],
-  label: 'Alert-1',
-  severity: 0,
   description: 'My Custom Description',
   entity_ids: ['2'],
-  tags: [''],
+  label: 'Alert-1',
   rule_criteria: {
     rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
   },
+  severity: 0,
+  tags: [''],
   trigger_conditions: triggerConditionFactory.build(),
 });
 
-const metricDefinitions = metrics.map(({ title, name, unit }) =>
+const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
     label: title,
     metric: name,
@@ -86,19 +85,19 @@ const metricDefinitions = metrics.map(({ title, name, unit }) =>
   })
 );
 const mockAlerts = alertFactory.build({
-  service_type: 'dbaas',
   alert_channels: [{ id: 1 }],
-  label: 'Alert-1',
-  severity: 0,
+  created_by: 'user1',
   description: 'My Custom Description',
   entity_ids: ['2'],
-  updated: new Date().toISOString(),
-  created_by: 'user1',
+  label: 'Alert-1',
   rule_criteria: {
     rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
   },
-  trigger_conditions: triggerConditionFactory.build(),
+  service_type: 'dbaas',
+  severity: 0,
   tags: [''],
+  trigger_conditions: triggerConditionFactory.build(),
+  updated: new Date().toISOString(),
 });
 
 /**
@@ -109,38 +108,41 @@ const mockAlerts = alertFactory.build({
  * @param operator - The operator (e.g., ">=", "==").
  * @param threshold - The threshold value for the metric.
  */
-const fillMetricDetailsForSpecificRule = (
-  ruleIndex: number,
-  dataField: string,
-  aggregationType: string,
-  operator: string,
-  threshold: string
-) => {
+const fillMetricDetailsForSpecificRule = ({
+  aggregationType,
+  dataField,
+  operator,
+  ruleIndex,
+  threshold,
+}: MetricDetails) => {
   cy.get(`[data-testid="rule_criteria.rules.${ruleIndex}-id"]`).within(() => {
     // Fill Data Field
-    cy.findByPlaceholderText('Select a Data Field')
+    ui.autocomplete
+      .findByLabel('Data Field')
       .should('be.visible')
-      .clear()
       .type(dataField);
 
-    cy.findByText(dataField).should('be.visible').click();
+    ui.autocompletePopper.findByTitle(dataField).should('be.visible').click();
 
-    // Fill Aggregation Type
-    cy.findByPlaceholderText('Select an Aggregation Type')
+    // Validate Aggregation Type
+    ui.autocomplete
+      .findByLabel('Aggregation Type')
       .should('be.visible')
-      .clear()
       .type(aggregationType);
-    cy.findByText(aggregationType).should('be.visible').click();
+
+    ui.autocompletePopper
+      .findByTitle(aggregationType)
+      .should('be.visible')
+      .click();
 
     // Fill Operator
-    cy.findByPlaceholderText('Select an Operator')
-      .should('be.visible')
-      .clear()
-      .type(operator);
-    cy.findByText(operator).should('be.visible').click();
+    ui.autocomplete.findByLabel('Operator').should('be.visible').type(operator);
+
+    ui.autocompletePopper.findByTitle(operator).should('be.visible').click();
 
     // Fill Threshold
-    cy.get('[data-qa-threshold]').should('be.visible').clear().type(threshold);
+    cy.get('[data-qa-threshold]').should('be.visible').clear();
+    cy.get('[data-qa-threshold]').should('be.visible').type(threshold);
   });
 };
 
@@ -184,7 +186,7 @@ describe('Create Alert', () => {
     cy.url().should('endWith', 'monitor/alerts/definitions/create');
   });
 
-  it.only('should successfully create a new alert', () => {
+  it('should successfully create a new alert', () => {
     cy.visitWithLogin('monitor/alerts/definitions/create');
 
     // Enter Name and Description
@@ -197,9 +199,14 @@ describe('Create Alert', () => {
       .type(customAlertDefinition.description ?? '');
 
     // Select Service
-    ui.autocomplete.findByLabel('Service').should('be.visible').type('dbaas');
-
-    ui.autocompletePopper.findByTitle('dbaas').should('be.visible').click();
+    ui.autocomplete
+      .findByLabel('Service')
+      .should('be.visible')
+      .type('Databases');
+    ui.autocompletePopper.findByTitle('Databases').should('be.visible').click();
+    // Select Severity
+    ui.autocomplete.findByLabel('Severity').should('be.visible').type('Severe');
+    ui.autocompletePopper.findByTitle('Severe').should('be.visible').click();
 
     // Search for Resource
     cy.findByPlaceholderText('Search for a Region or Resource')
@@ -220,18 +227,16 @@ describe('Create Alert', () => {
 
     cy.get('[data-qa-notice="true"]').should('be.visible').should('be.enabled');
 
-    // Select Severity
-    ui.autocomplete.findByLabel('Severity').should('be.visible').type('Severe');
-    ui.autocompletePopper.findByTitle('Severe').should('be.visible').click();
-
     // Fill metric details for the first rule
-    fillMetricDetailsForSpecificRule(
-      0,
-      'CPU Utilization',
-      'Average',
-      '==',
-      '1000'
-    );
+    const cpuUsageMetricDetails = {
+      aggregationType: 'Average',
+      dataField: 'CPU Utilization',
+      operator: '==',
+      ruleIndex: 0,
+      threshold: '1000',
+    };
+
+    fillMetricDetailsForSpecificRule(cpuUsageMetricDetails);
 
     // Add metrics
     cy.findByRole('button', { name: 'Add metric' })
@@ -247,17 +252,19 @@ describe('Create Alert', () => {
       .findByLabel('Data Field')
       .eq(1)
       .should('be.visible')
-      .clear()
+      .clear();
+
+    ui.autocomplete
+      .findByLabel('Data Field')
+      .eq(1)
+      .should('be.visible')
       .type('State of CPU');
 
     cy.findByText('State of CPU').should('be.visible').click();
 
-    ui.autocomplete
-      .findByLabel('Operator')
-      .eq(1)
-      .should('be.visible')
-      .clear()
-      .type('Equal');
+    ui.autocomplete.findByLabel('Operator').eq(1).should('be.visible').clear();
+
+    ui.autocomplete.findByLabel('Operator').eq(1).type('Equal');
 
     cy.findByText('Equal').should('be.visible').click();
 
@@ -266,14 +273,16 @@ describe('Create Alert', () => {
     cy.findByText('User').should('be.visible').click();
 
     // Fill metric details for the second rule
-    fillMetricDetailsForSpecificRule(
-      1,
-      'Memory Usage',
-      'Average',
-      '==',
-      '1000'
-    );
 
+    const memoryUsageMetricDetails = {
+      aggregationType: 'Average',
+      dataField: 'Memory Usage',
+      operator: '==',
+      ruleIndex: 1,
+      threshold: '1000',
+    };
+
+    fillMetricDetailsForSpecificRule(memoryUsageMetricDetails);
     // Set evaluation period
     ui.autocomplete
       .findByLabel('Evaluation Period')
@@ -289,17 +298,12 @@ describe('Create Alert', () => {
     ui.autocompletePopper.findByTitle('5 min').should('be.visible').click();
 
     // Set trigger occurrences
-    cy.get('[data-qa-trigger_occurences]')
-      .should('be.visible')
-      .clear()
-      .type('5');
+    cy.get('[data-qa-trigger-occurrences]').should('be.visible').clear();
+
+    cy.get('[data-qa-trigger-occurrences]').should('be.visible').type('5');
 
     // Add notification channel
-    cy.get('[data-qa-buttons="true"]')
-      .should('be.visible')
-      .should('be.enabled')
-      .contains('Add notification channel')
-      .click();
+    ui.buttonGroup.find().contains('Add notification channel').click();
 
     ui.autocomplete.findByLabel('Type').should('be.visible').type('Email');
     ui.autocompletePopper.findByTitle('Email').should('be.visible').click();
@@ -321,33 +325,30 @@ describe('Create Alert', () => {
           .should('be.visible')
           .click();
       });
-
-    // Ensure the cancel button is enabled and can be interacted with
-    cy.get('[data-qa-buttons="true"]')
+    // Click on submit button
+    ui.buttonGroup
+      .find()
       .find('button')
       .filter('[type="submit"]')
       .should('be.visible')
       .should('be.enabled')
       .click();
 
-    cy.wait('@createAlertDefinition').then(({ request, response }) => {
-      // Assuming customAlertDefinition is defined and contains the necessary properties
+    cy.wait('@createAlertDefinition').then(({ request }) => {
       const {
-        label,
         description,
-        severity,
+        label,
         rule_criteria: { rules },
+        severity,
         trigger_conditions: {
-          trigger_occurrences,
+          criteria_condition,
           evaluation_period_seconds,
           polling_interval_seconds,
-          criteria_condition,
+          trigger_occurrences,
         },
       } = customAlertDefinition;
 
-      const { service_type, created_by, updated, status } = mockAlerts;
-
-      expect(response).to.have.property('statusCode', 200);
+      const { created_by, status, updated } = mockAlerts;
 
       // Validate top-level properties
       expect(request.body.label).to.equal(label);
@@ -415,8 +416,8 @@ describe('Create Alert', () => {
         .closest('tr')
         .within(() => {
           cy.findByText(label).should('be.visible');
-          cy.findByText(statusMap[status]).should('be.visible'); // Assuming statusMap is defined somewhere
-          cy.findByText(service_type).should('be.visible');
+          cy.findByText(statusMap[status]).should('be.visible');
+          cy.findByText('Databases').should('be.visible');
           cy.findByText(created_by).should('be.visible');
           cy.findByText(
             formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })
