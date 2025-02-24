@@ -6,3 +6,5 @@ export * from './breakpoints';
 export * from './capitalize';
 export * from './deepStringTransform';
 export * from './downloadFile';
+export * from './env';
+export * from './escapeRegExp';
