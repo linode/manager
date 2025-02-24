@@ -1,5 +1,5 @@
 import { CircleProgress, Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -166,7 +166,7 @@ export const BucketLanding = (props: Props) => {
       {unavailableClusters.length > 0 && (
         <UnavailableClustersDisplay unavailableClusters={unavailableClusters} />
       )}
-      <Grid xs={12}>
+      <Grid size={12}>
         <OrderBy
           data={objectStorageBucketsResponse.buckets}
           order={'asc'}

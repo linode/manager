@@ -215,7 +215,33 @@ const entityTransfers = [
 
 const databases = [
   http.get('*/databases/instances', () => {
-    const databases = databaseInstanceFactory.buildList(9);
+    const database1 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 1,
+      label: 'database-instance-1',
+    });
+    const database2 = databaseInstanceFactory.build({
+      cluster_size: 2,
+      id: 2,
+      label: 'database-instance-2',
+    });
+    const database3 = databaseInstanceFactory.build({
+      cluster_size: 3,
+      id: 3,
+      label: 'database-instance-3',
+    });
+    const database4 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 4,
+      label: 'database-instance-4',
+    });
+    const database5 = databaseInstanceFactory.build({
+      cluster_size: 1,
+      id: 5,
+      label: 'database-instance-5',
+    });
+
+    const databases = [database1, database2, database3, database4, database5];
     return HttpResponse.json(makeResourcePage(databases));
   }),
 
@@ -737,6 +763,15 @@ export const handlers = [
         });
       }
 
+      // filter the linodes based on supported regions
+      if (orFilters?.length) {
+        filteredLinodes = linodes.filter((linode) => {
+          return orFilters.some(
+            (filter: { region: string }) => linode.region === filter.region
+          );
+        });
+      }
+
       if (regionFilter) {
         filteredLinodes = filteredLinodes.filter((linode) => {
           return linode.region === regionFilter;
@@ -835,6 +870,7 @@ export const handlers = [
     const id = Number(params.clusterId);
     const cluster = kubernetesAPIResponse.build({ id, k8s_version: '1.16' });
     return HttpResponse.json(cluster);
+    // return HttpResponse.json({}, { status: 404 });
   }),
   http.put('*/lke/clusters/:clusterId', async ({ params }) => {
     const id = Number(params.clusterId);
@@ -909,6 +945,19 @@ export const handlers = [
   http.get('*/v4/nodebalancers/:nodeBalancerID', ({ params }) => {
     const nodeBalancer = nodeBalancerFactory.build({
       id: Number(params.nodeBalancerID),
+    });
+    return HttpResponse.json(nodeBalancer);
+  }),
+  http.get('*/v4beta/nodebalancers/:nodeBalancerID', ({ params }) => {
+    const nodeBalancer = nodeBalancerFactory.build({
+      id: Number(params.nodeBalancerID),
+      lke_cluster: {
+        id: 1,
+        label: 'lke-e-123',
+        type: 'lkecluster',
+        url: 'v4/lke/clusters/1',
+      },
+      type: 'premium',
     });
     return HttpResponse.json(nodeBalancer);
   }),
@@ -2422,29 +2471,32 @@ export const handlers = [
   ),
   http.get('*/monitor/alert-definitions', async () => {
     const customAlerts = alertFactory.buildList(10, {
+      created_by: 'user1',
       severity: 0,
       type: 'user',
+      updated: '2021-10-16T04:00:00',
+      updated_by: 'user1',
     });
     const customAlertsWithServiceType = alertFactory.buildList(10, {
+      created_by: 'user1',
       service_type: 'dbaas',
       severity: 1,
       type: 'user',
+      updated_by: 'user1',
     });
-    const defaultAlerts = alertFactory.buildList(15, {
-      created_by: 'System',
-      type: 'system',
-    });
+    const defaultAlerts = alertFactory.buildList(15);
     const defaultAlertsWithServiceType = alertFactory.buildList(7, {
-      created_by: 'System',
       service_type: 'dbaas',
       severity: 3,
-      type: 'system',
     });
     const alerts = [
       ...defaultAlerts,
       ...alertFactory.buildList(8, {
+        created_by: 'user1',
         service_type: 'linode',
         status: 'disabled',
+        type: 'user',
+        updated_by: 'user1',
       }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
@@ -2469,10 +2521,27 @@ export const handlers = [
               ],
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
+            type: 'user',
           })
         );
       }
       return HttpResponse.json({}, { status: 404 });
+    }
+  ),
+  http.put(
+    '*/monitor/services/:serviceType/alert-definitions/:id',
+    ({ params, request }) => {
+      const body: any = request.json();
+      return HttpResponse.json(
+        alertFactory.build({
+          id: Number(params.id),
+          label: `Alert-${params.id}`,
+          status: body.status === 'enabled' ? 'disabled' : 'enabled',
+        }),
+        {
+          status: 200,
+        }
+      );
     }
   ),
   http.get('*/monitor/alert-channels', () => {
@@ -2480,14 +2549,11 @@ export const handlers = [
       makeResourcePage(notificationChannelFactory.buildList(3))
     );
   }),
-  http.put('*/monitor/services/:serviceType/alert-definitions/:id', () => {
-    return HttpResponse.json(alertFactory.build());
-  }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [
         serviceTypesFactory.build({
-          label: 'Linode',
+          label: 'Linodes',
           service_type: 'linode',
         }),
         serviceTypesFactory.build({
@@ -2727,6 +2793,27 @@ export const handlers = [
               [1721897579, '0.26164641539434685'],
             ],
           },
+          // Uncomment this to add more metrics and see a scrollable legend if legendHeight is set (ex: CloudPulse)
+          // ...Array.from({ length: 10 }, (_, i) => ({
+          //   metric: {
+          //     test: `Test${i + 2}`,
+          //   },
+          //   values: [
+          //     [1721854379, '0.2744841110560275'],
+          //     [1721857979, '0.2980357104166823'],
+          //     [1721861579, '0.3290476561287732'],
+          //     [1721865179, '0.32148793964961897'],
+          //     [1721868779, '0.3269247326830727'],
+          //     [1721872379, '0.3393055885526987'],
+          //     [1721875979, '0.3237102833940027'],
+          //     [1721879579, '0.3153372503472701'],
+          //     [1721883179, '0.26811506053820466'],
+          //     [1721886779, '0.25839295774934357'],
+          //     [1721890379, '0.26863082415681144'],
+          //     [1721893979, '0.26126998689934394'],
+          //     [1721897579, '0.26164641539434685'],
+          //   ],
+          // })),
           {
             metric: {
               test2: 'Test2',

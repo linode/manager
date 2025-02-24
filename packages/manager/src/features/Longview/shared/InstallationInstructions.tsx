@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -31,7 +31,7 @@ export const InstallationInstructions = React.memo((props: Props) => {
           receiving data.
         </Typography>
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <StyledContainerGrid spacing={2}>
           <Grid sx={{ padding: '8px' }}>
             <CopyTooltip text={command} />
@@ -63,14 +63,14 @@ export const InstallationInstructions = React.memo((props: Props) => {
           </Grid>
         </StyledContainerGrid>
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <Typography>
           This should work for most installations, but if you have issues,
           please consult our troubleshooting guide and manual installation
           instructions (API key required):
         </Typography>
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <Grid container spacing={2}>
           <StyledInstructionGrid>
             <Typography>

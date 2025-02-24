@@ -13,6 +13,7 @@ import {
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
+  getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
@@ -33,6 +34,7 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
+import { useFlags } from 'src/hooks/useFlags';
 
 export interface AlertResourcesProp {
   /**
@@ -60,9 +62,19 @@ export interface AlertResourcesProp {
   handleResourcesSelection?: (resources: string[]) => void;
 
   /**
+   * Property to control the visibility of the title
+   */
+  hideLabel?: boolean;
+
+  /**
    * This controls whether we need to show the checkbox in case of editing the resources
    */
   isSelectionsNeeded?: boolean;
+
+  /**
+   * The element until which we need to scroll on pagination and order change
+   */
+  scrollElement?: HTMLDivElement | null;
 
   /**
    * The service type associated with the alerts like DBaaS, Linode etc.,
@@ -79,7 +91,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertResourceIds,
     alertType,
     handleResourcesSelection,
+    hideLabel,
     isSelectionsNeeded,
+    scrollElement,
     serviceType,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
@@ -92,9 +106,32 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     Record<AlertAdditionalFilterKey, AlertFilterType>
   >({ engineType: undefined });
 
+  const {
+    data: regions,
+    isError: isRegionsError,
+    isLoading: isRegionsLoading,
+  } = useRegionsQuery();
+
+  const flags = useFlags();
+
+  // Validate launchDarkly region ids with the ids from regionOptions prop
+  const supportedRegionIds = getSupportedRegionIds(
+    flags.aclpResourceTypeMap,
+    serviceType
+  );
+
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+    const regionFilter: Filter = supportedRegionIds
+      ? {
+          '+or': supportedRegionIds.map((regionId) => ({
+            region: regionId,
+          })),
+        }
+      : {};
+
+    // if service type is other than dbaas, return only region filter
     if (serviceType !== 'dbaas') {
-      return undefined; // No x-filters needed for other serviceTypes
+      return regionFilter;
     }
 
     // Always include platform filter for 'dbaas'
@@ -112,15 +149,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       },
     };
 
-    // Combine both filters
-    return { ...platformFilter, ...typeFilter };
-  }, [alertClass, alertType, serviceType]);
-
-  const {
-    data: regions,
-    isError: isRegionsError,
-    isLoading: isRegionsLoading,
-  } = useRegionsQuery();
+    // Combine all the filters
+    return { ...platformFilter, '+and': [typeFilter, regionFilter] };
+  }, [alertClass, alertType, serviceType, supportedRegionIds]);
 
   const {
     data: resources,
@@ -262,10 +293,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   if (isNoResources) {
     return (
       <Stack gap={2}>
-        <Typography ref={titleRef} variant="h2">
-          {alertLabel || 'Resources'}
-          {/* It can be either the passed alert label or just Resources */}
-        </Typography>
+        {!hideLabel && (
+          <Typography ref={titleRef} variant="h2">
+            {alertLabel || 'Resources'}
+            {/* It can be either the passed alert label or just Resources */}
+          </Typography>
+        )}
         <StyledPlaceholder
           icon={EntityIcon}
           subtitle="You can assign alerts during the resource creation process."
@@ -279,10 +312,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   return (
     <Stack gap={2}>
-      <Typography ref={titleRef} variant="h2">
-        {alertLabel || 'Resources'}
-        {/* It can be either the passed alert label or just Resources */}
-      </Typography>
+      {!hideLabel && (
+        <Typography ref={titleRef} variant="h2">
+          {alertLabel || 'Resources'}
+          {/* It can be either the passed alert label or just Resources */}
+        </Typography>
+      )}
       {showEditInformation && (
         <Typography ref={titleRef} variant="body1">
           You can enable or disable this system alert for each resource you have
@@ -292,12 +327,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       )}
       <Grid container spacing={3}>
         <Grid
-          alignItems="center"
           columnSpacing={2}
           container
           item
           rowSpacing={3}
           xs={12}
+          sx={{
+            alignItems: 'center',
+          }}
         >
           <Grid item md={3} xs={12}>
             <DebouncedSearchTextField
@@ -326,24 +363,24 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               />
             </Grid>
           ))}
-          {isSelectionsNeeded && (
-            <Grid item md={4} xs={12}>
-              <Checkbox
-                sx={(theme) => ({
-                  svg: {
-                    backgroundColor: theme.tokens.color.Neutrals.White,
-                  },
-                })}
-                data-testid="show_selected_only"
-                disabled={!(selectedResources.length || selectedOnly)}
-                onClick={() => setSelectedOnly(!selectedOnly)}
-                text="Show Selected Only"
-                value="Show Selected"
-              />
-            </Grid>
-          )}
         </Grid>
-        {isSelectionsNeeded && !isDataLoadingError && (
+        {isSelectionsNeeded && (
+          <Grid item md={4} xs={12}>
+            <Checkbox
+              sx={(theme) => ({
+                svg: {
+                  backgroundColor: theme.tokens.color.Neutrals.White,
+                },
+              })}
+              data-testid="show_selected_only"
+              disabled={!(selectedResources.length || selectedOnly)}
+              onClick={() => setSelectedOnly(!selectedOnly)}
+              text="Show Selected Only"
+              value="Show Selected"
+            />
+          </Grid>
+        )}
+        {isSelectionsNeeded && !isDataLoadingError && resources?.length && (
           <Grid item xs={12}>
             <AlertsResourcesNotice
               handleSelectionChange={handleAllSelection}
@@ -354,11 +391,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         )}
         <Grid item xs={12}>
           <DisplayAlertResources
+            scrollToElement={() =>
+              scrollToElement(titleRef.current ?? scrollElement ?? null)
+            }
             filteredResources={filteredResources}
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
-            scrollToElement={() => scrollToElement(titleRef.current)}
             serviceType={serviceType}
           />
         </Grid>

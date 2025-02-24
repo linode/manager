@@ -18,7 +18,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mui/material": "^5.14.7",
+    "@mui/material": "^6.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -40,7 +40,7 @@
     ]
   },
   "devDependencies": {
-    "@linode/eslint-plugin-cloud-manager": "^0.0.5",
+    "@linode/eslint-plugin-cloud-manager": "^0.0.7",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "~6.4.2",
     "@testing-library/react": "~16.0.0",

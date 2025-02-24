@@ -1,7 +1,7 @@
 import { rebuildLinode } from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';

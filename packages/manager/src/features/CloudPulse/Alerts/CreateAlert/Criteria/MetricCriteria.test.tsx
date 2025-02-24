@@ -120,7 +120,7 @@ describe('MetricCriteriaField', () => {
         },
       },
     });
-    expect(screen.getByText('2. Criteria')).toBeVisible();
+    expect(screen.getByText('3. Criteria')).toBeVisible();
     expect(screen.getByText('Metric Threshold')).toBeVisible();
     expect(screen.getByLabelText('Data Field')).toBeVisible();
     expect(screen.getByLabelText('Aggregation Type')).toBeVisible();
