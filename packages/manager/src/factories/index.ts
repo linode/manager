@@ -23,6 +23,7 @@ export * from './kernels';
 export * from './kubernetesCluster';
 export * from './linodeConfigInterfaceFactory';
 export * from './linodeConfigs';
+export * from './linodeInterfaces';
 export * from './linodes';
 export * from './longviewClient';
 export * from './longviewDisks';

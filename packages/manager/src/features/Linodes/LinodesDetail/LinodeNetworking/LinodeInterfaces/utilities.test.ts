@@ -2,9 +2,12 @@ import {
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
-} from 'src/factories/linodeInterface';
+} from 'src/factories/linodeInterfaces';
 
-import { getLinodeInterfaceType } from './utilities';
+import {
+  getLinodeInterfaceType,
+  humanizeLinodeInterfaceStatus,
+} from './utilities';
 
 describe('getLinodeInterfaceType', () => {
   it("returns 'public' if the given interface defines a public interface", () => {
@@ -23,5 +26,13 @@ describe('getLinodeInterfaceType', () => {
     const networkInterface = linodeInterfaceFactoryVlan.build();
 
     expect(getLinodeInterfaceType(networkInterface)).toBe('vlan');
+  });
+});
+
+describe('humanizeLinodeInterfaceStatus', () => {
+  it('humanizes each status', () => {
+    expect(humanizeLinodeInterfaceStatus('active')).toBe('Active');
+    expect(humanizeLinodeInterfaceStatus('inactive')).toBe('Inactive');
+    expect(humanizeLinodeInterfaceStatus('deleted')).toBe('Deleted');
   });
 });

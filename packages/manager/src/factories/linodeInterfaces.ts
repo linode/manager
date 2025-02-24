@@ -2,7 +2,7 @@
 
 import Factory from 'src/factories/factoryProxy';
 
-import type { LinodeInterface } from '@linode/api-v4';
+import type { LinodeInterface, LinodeInterfaceHistory } from '@linode/api-v4';
 
 export const linodeInterfaceFactoryVlan = Factory.Sync.makeFactory<LinodeInterface>(
   {
@@ -79,5 +79,18 @@ export const linodeInterfaceFactoryPublic = Factory.Sync.makeFactory<LinodeInter
     version: 1,
     vlan: null,
     vpc: null,
+  }
+);
+
+export const linodeInterfaceHistoryFactory = Factory.Sync.makeFactory<LinodeInterfaceHistory>(
+  {
+    created: '2025-01-01T00:01:01',
+    event_id: Factory.each((i) => i),
+    interface_data: 'mock data',
+    interface_history_id: Factory.each((i) => i),
+    interface_id: Factory.each((i) => i),
+    linode_id: Factory.each((i) => i),
+    status: 'inactive',
+    version: 1,
   }
 );

@@ -51,6 +51,7 @@ import {
   linodeConfigFactory,
   linodeDiskFactory,
   linodeFactory,
+  linodeInterfaceHistoryFactory,
   linodeIPFactory,
   linodeStatsFactory,
   linodeTransferFactory,
@@ -798,6 +799,10 @@ export const handlers = [
     const firewalls = firewallFactory.buildList(10);
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
+  }),
+  http.get('*/linode/instances/:id/interfaces/history', async () => {
+    const interfaceHistories = linodeInterfaceHistoryFactory.buildList(26);
+    return HttpResponse.json(makeResourcePage(interfaceHistories));
   }),
   http.get('*/linode/kernels', async () => {
     const kernels = LinodeKernelFactory.buildList(10);

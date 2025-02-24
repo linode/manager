@@ -7,6 +7,8 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
+import { humanizeLinodeInterfaceStatus } from '../utilities';
+
 import type { APIError, LinodeInterfaceHistory } from '@linode/api-v4';
 
 interface Props {
@@ -44,7 +46,7 @@ export const LinodeInterfacesHistoryTableContent = (props: Props) => {
       <TableCell>{history.linode_id}</TableCell>
       <TableCell>{history.event_id}</TableCell>
       <TableCell>{history.version}</TableCell>
-      <TableCell>{history.status}</TableCell>
+      <TableCell>{humanizeLinodeInterfaceStatus(history.status)}</TableCell>
     </TableRow>
   ));
 };
