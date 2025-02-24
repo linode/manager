@@ -115,10 +115,10 @@ export const linodeQueries = createQueryKeys('linodes', {
             queryFn: () => getLinodeInterfaces(id),
             queryKey: null,
           },
-          interfacesHistory: {
-            queryFn: () => getLinodeInterfacesHistory(id),
-            queryKey: null,
-          },
+          interfacesHistory: (params: Params = {}, filter: Filter = {}) => ({
+            queryFn: () => getLinodeInterfacesHistory(id, params, filter),
+            queryKey: [params, filter],
+          }),
         },
         queryKey: null,
       },

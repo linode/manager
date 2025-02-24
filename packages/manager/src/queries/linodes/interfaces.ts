@@ -4,9 +4,11 @@ import { linodeQueries } from './linodes';
 
 import type {
   APIError,
+  Filter,
   Firewall,
   LinodeInterfaceHistory,
   LinodeInterfaces,
+  Params,
   ResourcePage,
 } from '@linode/api-v4';
 
@@ -28,10 +30,14 @@ export const useLinodeInterfaceFirewallsQuery = (
 
 export const useLinodeInterfacesHistory = (
   linodeId: number,
+  params: Params,
+  filter: Filter,
   enabled = true
 ) => {
   return useQuery<ResourcePage<LinodeInterfaceHistory>, APIError[]>({
-    ...linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interfacesHistory,
+    ...linodeQueries
+      .linode(linodeId)
+      ._ctx.interfaces._ctx.interfacesHistory(params, filter),
     enabled,
   });
 };

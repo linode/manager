@@ -1,7 +1,7 @@
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import { LinodeInterfacesHistoryDialog } from './InterfaceHistory/LinodeInterfacesHistoryDialog';
+import { LinodeInterfacesHistoryDialog } from './LinodeInterfacesHistory/LinodeInterfacesHistoryDialog';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
