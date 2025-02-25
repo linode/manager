@@ -220,7 +220,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         links: [
           {
             display: 'Metrics',
-           // hide: !isACLPEnabled,
+            hide: !isACLPEnabled,
             href: '/metrics',
             isBeta: flags.aclp?.beta,
           },
