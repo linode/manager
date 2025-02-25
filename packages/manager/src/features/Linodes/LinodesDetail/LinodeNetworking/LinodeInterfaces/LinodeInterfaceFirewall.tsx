@@ -29,5 +29,5 @@ export const LinodeInterfaceFirewall = ({ interfaceId, linodeId }: Props) => {
 
   const firewall = data.data[0];
 
-  return <Link to={`/firewalls/${firewall.id}`}>${firewall.label}</Link>;
+  return <Link to={`/firewalls/${firewall.id}`}>{firewall.label}</Link>;
 };
