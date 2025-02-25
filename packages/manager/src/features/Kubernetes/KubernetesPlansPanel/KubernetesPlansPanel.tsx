@@ -66,7 +66,7 @@ export const KubernetesPlansPanel = (props: Props) => {
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionId || '',
-    Boolean(flags.soldOutChips) && selectedRegionId !== undefined
+    Boolean(flags.soldOutChips) && Boolean(selectedRegionId)
   );
 
   const isPlanDisabledByAPL = (plan: 'shared' | LinodeTypeClass) =>
