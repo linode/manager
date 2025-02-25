@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { escapeRegExp } from './escapeRegExp';
 
 describe('escapeRegExp utility function', () => {

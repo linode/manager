@@ -5,6 +5,7 @@ import {
   Border,
   BorderRadius,
   Button,
+  Calendar,
   Chart,
   Color,
   Content,
@@ -519,6 +520,9 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: 'transparent',
           color: Button.Secondary.Default.Text,
         },
+        loading: {
+          color: 'transparent !important',
+        },
         outlined: {
           '&:hover, &:focus': {
             backgroundColor: Color.Neutrals[5],
@@ -1010,7 +1014,6 @@ export const lightTheme: ThemeOptions = {
     },
     MuiListItem: {
       styleOverrides: {
-        disabled: {},
         root: {
           '&$disabled': {
             opacity: 0.5,
@@ -1026,7 +1029,6 @@ export const lightTheme: ThemeOptions = {
           },
           color: primaryColors.text,
         },
-        selected: {},
       },
     },
     MuiListItemText: {
@@ -1886,6 +1888,7 @@ export const lightTheme: ThemeOptions = {
     background: Background,
     border: Border,
     borderRadius: BorderRadius,
+    calendar: Calendar,
     chart: Chart,
     color: Color,
     content: Content,

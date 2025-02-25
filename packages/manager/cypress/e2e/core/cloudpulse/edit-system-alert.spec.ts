@@ -34,6 +34,7 @@ const alertDetails = alertFactory.build({
   severity: 1,
   status: 'enabled',
   type: 'system',
+  entity_ids: ['1', '2', '3'],
 });
 const { service_type, id, label } = alertDetails;
 const regions = [

@@ -763,10 +763,10 @@ describe('Object Storage Gen2 create bucket modal has disabled fields for restri
           .should('be.visible')
           .should('be.disabled');
         ui.regionSelect.find().should('be.visible').should('be.disabled');
-        // submit button should be enabled
+        // submit button should be disabled
         cy.findByTestId('create-bucket-button')
           .should('be.visible')
-          .should('be.enabled');
+          .should('be.disabled');
       });
   });
 });
