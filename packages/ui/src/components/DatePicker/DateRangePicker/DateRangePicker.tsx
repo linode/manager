@@ -1,4 +1,5 @@
 import { Popover } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
 import React, { useRef, useState } from 'react';
 
@@ -28,7 +29,7 @@ export interface DateRangePickerProps {
   };
 
   /** Format for displaying the date-time */
-  format?: 'dd-MM-yyyy' | 'MM/dd/yyyy' | 'yyyy-MM-dd';
+  format?: 'MM/dd/yyyy' | 'dd-MM-yyyy' | 'yyyy-MM-dd';
 
   /** Callback when the date-time range changes,
    * this returns start date, end date in ISO formate,
@@ -97,6 +98,9 @@ export const DateRangePicker = ({
 
   const startDateInputRef = useRef<HTMLInputElement | null>(null);
   const endDateInputRef = useRef<HTMLInputElement | null>(null);
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleOpen = (field: 'end' | 'start') => {
     setAnchorEl(
@@ -193,7 +197,6 @@ export const DateRangePicker = ({
           inputRef={startDateInputRef}
           label={startDateProps?.label ?? 'Start Date'}
           onClick={() => handleOpen('start')}
-          // otherFieldRef={endDateInputRef}
           value={startDate}
         />
         <DateTimeField
@@ -206,7 +209,6 @@ export const DateRangePicker = ({
           inputRef={endDateInputRef}
           label={endDateProps?.label ?? 'End Date'}
           onClick={() => handleOpen('end')}
-          // otherFieldRef={startDateInputRef}
           value={endDate}
         />
       </Stack>
@@ -226,7 +228,6 @@ export const DateRangePicker = ({
 
           handleClose(); // Close popover only when clicking outside
         }}
-        // onClose={() => undefined}
         anchorEl={anchorEl}
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         disableAutoFocus
@@ -241,6 +242,7 @@ export const DateRangePicker = ({
           display="flex"
           gap={2}
           paddingRight={2}
+          sx={{ overflowX: isSmallScreen ? 'auto' : '' }}
         >
           {presetsProps?.enablePresets && (
             <Presets

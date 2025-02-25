@@ -96,7 +96,7 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
               onPresetSelect(startDate, endDate, preset.label);
             }}
             sx={(theme: Theme) => ({
-              '&:active': {
+              '&:active, &:focus': {
                 backgroundColor:
                   theme.tokens.calendar.PresetArea.ActivePeriod.Background,
                 color: theme.tokens.calendar.PresetArea.ActivePeriod.Text,
@@ -105,7 +105,9 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
                 backgroundColor: !isSelected
                   ? theme.tokens.calendar.PresetArea.HoverPeriod.Background
                   : '',
-                color: theme.tokens.calendar.DateRange.Text,
+                color: isSelected
+                  ? theme.tokens.calendar.PresetArea.ActivePeriod.Text
+                  : theme.tokens.calendar.DateRange.Text,
               },
               backgroundColor: isSelected
                 ? theme.tokens.calendar.PresetArea.ActivePeriod.Background
