@@ -1,6 +1,7 @@
 import {
   Button,
   CircleProgress,
+  ErrorState,
   Notice,
   Paper,
   TextField,
@@ -14,7 +15,6 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import {
   useBucketSSLDeleteMutation,

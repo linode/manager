@@ -2,6 +2,7 @@ import {
   Box,
   CircleProgress,
   Divider,
+  ErrorState,
   Notice,
   Paper,
   Typography,
@@ -10,7 +11,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';
 import { DatabaseNodeSelector } from 'src/features/Databases/DatabaseCreate/DatabaseNodeSelector';

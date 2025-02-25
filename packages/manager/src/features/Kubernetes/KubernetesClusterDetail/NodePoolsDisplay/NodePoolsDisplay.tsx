@@ -1,10 +1,16 @@
-import { Button, CircleProgress, Select, Stack, Typography } from '@linode/ui';
+import {
+  Button,
+  CircleProgress,
+  ErrorState,
+  Select,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormLabel } from 'src/components/FormLabel';
 import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';

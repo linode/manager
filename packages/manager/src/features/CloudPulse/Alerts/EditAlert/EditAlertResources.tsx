@@ -1,4 +1,4 @@
-import { Box, Button, CircleProgress } from '@linode/ui';
+import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import React from 'react';
@@ -6,7 +6,6 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAlertDefinitionQuery,
   useEditAlertDefinition,

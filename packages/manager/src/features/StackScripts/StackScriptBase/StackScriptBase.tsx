@@ -1,11 +1,10 @@
-import { Button, CircleProgress, Notice } from '@linode/ui';
+import { Button, CircleProgress, ErrorState, Notice } from '@linode/ui';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Table } from 'src/components/Table';
 import { withProfile } from 'src/containers/profile.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';

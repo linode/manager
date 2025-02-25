@@ -1,6 +1,7 @@
 import {
   Box,
   CircleProgress,
+  ErrorState,
   IconButton,
   Typography,
   convertForAria,
@@ -11,7 +12,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ErrorState } from './ErrorState/ErrorState';
 import { NotFound } from './NotFound';
 
 import type { APIError } from '@linode/api-v4';

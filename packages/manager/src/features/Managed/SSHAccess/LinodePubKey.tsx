@@ -1,10 +1,9 @@
-import { Button, Stack, Typography } from '@linode/ui';
+import { Button, ErrorState, Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
 import {

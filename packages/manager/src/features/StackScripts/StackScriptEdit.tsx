@@ -1,5 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, CircleProgress, Notice, Paper, Stack } from '@linode/ui';
+import {
+  Button,
+  CircleProgress,
+  ErrorState,
+  Notice,
+  Paper,
+  Stack,
+} from '@linode/ui';
 import { stackScriptSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
@@ -8,7 +15,6 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
