@@ -22,6 +22,7 @@
     "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.5",
     "@mui/utils": "^6.4.3",
+    "@mui/x-date-pickers": "^7.27.0",
     "luxon": "3.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
