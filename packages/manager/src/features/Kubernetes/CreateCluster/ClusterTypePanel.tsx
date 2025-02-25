@@ -13,11 +13,12 @@ import type { Theme } from '@mui/material/styles';
 
 interface Props {
   handleClusterTypeSelection: (tier: KubernetesTier) => void;
+  isUserRestricted: boolean;
   selectedTier: KubernetesTier | undefined;
 }
 
 export const ClusterTypePanel = (props: Props) => {
-  const { handleClusterTypeSelection, selectedTier } = props;
+  const { handleClusterTypeSelection, isUserRestricted, selectedTier } = props;
 
   const { data: account } = useAccount();
 
@@ -58,7 +59,8 @@ export const ClusterTypePanel = (props: Props) => {
             'Shared control plane',
             'HA control plane (optional)',
           ]}
-          checked={selectedTier === 'standard'}
+          checked={selectedTier === 'standard' && !isUserRestricted}
+          disabled={isUserRestricted}
           heading="LKE"
           onClick={() => handleClusterTypeSelection('standard')}
         />
@@ -69,12 +71,12 @@ export const ClusterTypePanel = (props: Props) => {
             'HA control plane (included)',
           ]}
           tooltip={
-            isLkeEnterpriseSelectionDisabled
+            isLkeEnterpriseSelectionDisabled && !isUserRestricted
               ? 'LKE Enterprise is not currently enabled on this contract. To inquire, fill out the Cloud Computing Sales form or email sales@linode.com.'
               : undefined
           }
-          checked={selectedTier === 'enterprise'}
-          disabled={isLkeEnterpriseSelectionDisabled}
+          checked={selectedTier === 'enterprise' && !isUserRestricted}
+          disabled={isLkeEnterpriseSelectionDisabled || isUserRestricted}
           heading="LKE Enterprise"
           onClick={() => handleClusterTypeSelection('enterprise')}
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}

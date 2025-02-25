@@ -298,7 +298,11 @@ export const CreateCluster = () => {
     selectedRegionID: selectedRegion,
   });
 
-  if (typesError || regionsError || versionsError) {
+  if (
+    typesError ||
+    regionsError ||
+    (versionsError && versionsError[0].reason !== 'Unauthorized')
+  ) {
     // This information is necessary to create a Cluster. Otherwise, show an error state.
     return <ErrorState errorText="An unexpected error occurred." />;
   }
@@ -347,6 +351,7 @@ export const CreateCluster = () => {
                       field.onChange(e.target.value);
                     }}
                     data-qa-label-input
+                    disabled={isCreateClusterRestricted}
                     errorText={errorMap.label}
                     label="Cluster Label"
                     value={field.value || ''}
@@ -363,6 +368,7 @@ export const CreateCluster = () => {
                     render={({}) => (
                       <ClusterTypePanel
                         handleClusterTypeSelection={handleClusterTypeSelection}
+                        isUserRestricted={isCreateClusterRestricted}
                         selectedTier={selectedTier}
                       />
                     )}
@@ -398,6 +404,7 @@ export const CreateCluster = () => {
                             : undefined
                         }
                         disableClearable
+                        disabled={isCreateClusterRestricted}
                         errorText={errorMap.region}
                         onChange={(_, region) => field.onChange(region.id)}
                         ref={null}
@@ -430,6 +437,7 @@ export const CreateCluster = () => {
                       ) ?? null
                     }
                     disableClearable={!!getValues('k8s_version')}
+                    disabled={isCreateClusterRestricted}
                     errorText={errorMap.k8s_version}
                     label="Kubernetes Version"
                     loading={isLoadingVersions}
