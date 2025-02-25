@@ -519,6 +519,9 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: 'transparent',
           color: Button.Secondary.Default.Text,
         },
+        loading: {
+          color: 'transparent !important',
+        },
         outlined: {
           '&:hover, &:focus': {
             backgroundColor: Color.Neutrals[5],
