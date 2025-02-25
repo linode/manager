@@ -66,7 +66,7 @@ export const KubernetesPlansPanel = (props: Props) => {
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionId || '',
-    Boolean(flags.soldOutChips) && Boolean(selectedRegionId)
+    Boolean(flags.soldOutChips) && selectedRegionId !== undefined
   );
 
   const isPlanDisabledByAPL = (plan: 'shared' | LinodeTypeClass) =>
@@ -80,7 +80,8 @@ export const KubernetesPlansPanel = (props: Props) => {
   const plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans
       ? replaceOrAppendPlaceholder512GbPlans(_types)
-      : _types
+      : _types,
+    { isLKE: true }
   );
 
   const tabs = Object.keys(plans).map(
