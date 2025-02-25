@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2025-02-25] - v1.137.1
 ### Fixed:
 
-- Unable to save non-US billing contact information without tax id
+- Unable to save non-US billing contact information without tax id ([#11725](https://github.com/linode/manager/pull/11725))
 
 
 ## [2025-02-25] - v1.137.0
