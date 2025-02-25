@@ -1,8 +1,7 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAllManagedIssuesQuery,
   useAllManagedMonitorsQuery,

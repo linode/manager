@@ -1,11 +1,10 @@
-import { Button, Typography } from '@linode/ui';
+import { Button, ErrorState, Typography } from '@linode/ui';
 import { Grid, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
 import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';
 import InfoIcon from 'src/assets/icons/info.svg';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import NullComponent from 'src/components/NullComponent';
 
 import RenderComponent from '../shared/CloudPulseComponentRenderer';

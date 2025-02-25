@@ -1,9 +1,8 @@
 /* eslint-disable scanjs-rules/call_addEventListener */
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { Terminal } from '@xterm/xterm';
 import * as React from 'react';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   ParsePotentialLishErrorString,
   RetryLimiter,

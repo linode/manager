@@ -1,11 +1,10 @@
 import { getAPIFilterFromQuery } from '@linode/search';
-import { CircleProgress, Stack, TooltipIcon } from '@linode/ui';
+import { CircleProgress, ErrorState, Stack, TooltipIcon } from '@linode/ui';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

@@ -1,4 +1,4 @@
-import { CircleProgress, Typography } from '@linode/ui';
+import { CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -10,7 +10,6 @@ import {
   DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY,
 } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

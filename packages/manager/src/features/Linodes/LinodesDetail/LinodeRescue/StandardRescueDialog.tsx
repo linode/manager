@@ -1,11 +1,10 @@
-import { Button, Dialog, Notice, Paper, clamp } from '@linode/ui';
+import { Button, Dialog, ErrorState, Notice, Paper, clamp } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { assoc, equals } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';

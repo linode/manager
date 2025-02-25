@@ -1,7 +1,6 @@
-import { CircleProgress, Dialog } from '@linode/ui';
+import { CircleProgress, Dialog, ErrorState } from '@linode/ui';
 import React from 'react';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { StackScript } from 'src/components/StackScript/StackScript';
 import { useStackScriptQuery } from 'src/queries/stackscripts';
 

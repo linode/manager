@@ -1,5 +1,6 @@
 import {
   CircleProgress,
+  ErrorState,
   IconButton,
   InputAdornment,
   TextField,
@@ -11,7 +12,6 @@ import { debounce } from 'throttle-debounce';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
