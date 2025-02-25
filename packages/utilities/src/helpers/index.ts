@@ -11,3 +11,5 @@ export * from './escapeRegExp';
 export * from './evenizeNumber';
 export * from './formatStorageUnits';
 export * from './groupByTags';
+export * from './getDisplayName';
+export * from './isNumber';
