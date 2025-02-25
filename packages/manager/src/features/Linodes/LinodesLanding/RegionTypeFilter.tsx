@@ -1,5 +1,5 @@
 import { Autocomplete, Box } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';

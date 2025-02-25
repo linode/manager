@@ -54,7 +54,7 @@ describe('Channel Listing component', () => {
         },
       },
     });
-    expect(getByText('3. Notification Channels')).toBeVisible();
+    expect(getByText('4. Notification Channels')).toBeVisible();
     expect(getByText(capitalize(mockNotificationData[0].label))).toBeVisible();
     expect(getByText(emailAddresses[0])).toBeInTheDocument();
     expect(getByText(emailAddresses[1])).toBeInTheDocument();

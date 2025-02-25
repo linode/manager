@@ -283,7 +283,7 @@ const StyledRadioGroup = styled(RadioGroup, {
     minWidth: 100,
   },
   '& p': {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
   },
   marginBottom: '0 !important',
 }));

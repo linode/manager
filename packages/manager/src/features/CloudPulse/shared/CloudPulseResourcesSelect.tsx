@@ -102,6 +102,10 @@ export const CloudPulseResourcesSelect = React.memo(
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
+      if (disabled && !selectedResources) {
+        return;
+      }
+      // To save default values, go through side effects if disabled is false
       if (resources && savePreferences && !selectedResources) {
         const defaultResources =
           defaultValue && Array.isArray(defaultValue)

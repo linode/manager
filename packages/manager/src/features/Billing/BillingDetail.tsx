@@ -113,7 +113,7 @@ export const BillingActionButton = styled(Button)(({ theme, ...props }) => ({
       textDecoration: 'underline',
     },
   }),
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '.875rem',
   minHeight: 'unset',
   minWidth: 'auto',

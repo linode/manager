@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, TextField, Typography } from '@linode/ui';
+import { Box, Button, TextField, Typography } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
@@ -20,18 +20,6 @@ export const StyledTextField = styled(TextField, {
   '& .MuiTooltip-tooltip': {
     [theme.breakpoints.up('md')]: {
       minWidth: 350,
-    },
-  },
-}));
-
-export const StyledEngineSelect = styled(Autocomplete, {
-  label: 'StyledTextField',
-})(() => ({
-  '& .react-select__option--is-focused': {
-    '&:not(.react-select__option--is-selected)': {
-      '& svg': {
-        filter: 'brightness(0) invert(1)',
-      },
     },
   },
 }));

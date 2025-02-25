@@ -30,6 +30,7 @@ import { FirewallRow } from './FirewallRow';
 
 import type { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import type { Mode } from './FirewallDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const preferenceKey = 'firewalls';
 
@@ -139,6 +140,11 @@ const FirewallLanding = () => {
 
   return (
     <React.Fragment>
+      <DocumentTitleSegment
+        segment={`${
+          isCreateFirewallDrawerOpen ? 'Create a Firewall' : 'Firewall'
+        }`}
+      />
       <LandingHeader
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({

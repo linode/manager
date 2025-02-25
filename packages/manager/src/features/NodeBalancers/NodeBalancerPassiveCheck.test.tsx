@@ -15,7 +15,8 @@ describe('NodeBalancer PassiveCheck', () => {
     expect(getAllByText('Passive Checks')).toHaveLength(2);
     expect(
       getByText(
-        'Enable passive checks based on observing communication with back-end nodes.'
+        'When enabled, the NodeBalancer monitors requests to backends.',
+        { exact: false }
       )
     ).toBeVisible();
   });

@@ -28,7 +28,7 @@ describe('verify notification types and icons', () => {
         }
         const text = [`${events[i].message}`, `${events[i].entity?.label}`];
         const regex = new RegExp(`${text.join('|')}`, 'g');
-        cy.get(`[data-test-id="${events[i].action}"]`).within(() => {
+        cy.get(`[data-testid="${events[i].action}"]`).within(() => {
           cy.contains(regex);
         });
       }
@@ -38,7 +38,7 @@ describe('verify notification types and icons', () => {
       events.forEach((event) => {
         const text = [`${event.message}`, `${event.entity?.label}`];
         const regex = new RegExp(`${text.join('|')}`, 'g');
-        cy.get(`[data-test-id="${event.action}"]`).within(() => {
+        cy.get(`[data-testid="${event.action}"]`).within(() => {
           cy.contains(regex);
         });
       });

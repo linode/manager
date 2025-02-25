@@ -133,7 +133,7 @@ describe('DeletionDialog', () => {
     expect(deleteButton).toBeDisabled();
 
     const loadingSvgIcon = deleteButton.querySelector(
-      '[data-test-id="ReloadIcon"]'
+      '[data-testid="loadingIcon"]'
     );
 
     expect(loadingSvgIcon).toBeInTheDocument();

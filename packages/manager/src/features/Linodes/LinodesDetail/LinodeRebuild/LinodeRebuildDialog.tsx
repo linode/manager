@@ -1,8 +1,7 @@
-import { Autocomplete, Notice, Typography } from '@linode/ui';
+import { Autocomplete, Dialog, Notice, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';

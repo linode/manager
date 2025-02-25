@@ -10,19 +10,21 @@ import { placementGroupsCrudPreset } from '../crud/placementGroups';
 import { quotasCrudPreset } from '../crud/quotas';
 import { supportTicketCrudPreset } from '../crud/supportTickets';
 import { volumeCrudPreset } from '../crud/volumes';
+import { vpcCrudPreset } from '../crud/vpcs';
 
 import type { MockPresetBaseline } from 'src/mocks/types';
 
 export const baselineCrudPreset: MockPresetBaseline = {
   group: { id: 'General' },
   handlers: [
+    ...domainCrudPreset.handlers,
+    ...firewallCrudPreset.handlers,
     ...linodeCrudPreset.handlers,
     ...placementGroupsCrudPreset.handlers,
     ...quotasCrudPreset.handlers,
     ...supportTicketCrudPreset.handlers,
     ...volumeCrudPreset.handlers,
-    ...domainCrudPreset.handlers,
-    ...firewallCrudPreset.handlers,
+    ...vpcCrudPreset.handlers,
 
     // Events.
     getEvents,

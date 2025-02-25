@@ -41,6 +41,6 @@ export const StyledDLItemSeparator = styled(Grid, {
 export const StyledDT = styled(Typography, {
   label: 'StyledDT',
 })<TypographyProps>(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   marginRight: theme.spacing(0.75),
 }));

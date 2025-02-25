@@ -13,7 +13,6 @@ import * as landingPageEmptyStateResources from './landing-page-empty-state-reso
 import * as mainSearch from './main-search';
 import * as nav from './nav';
 import * as pagination from './pagination';
-import * as select from './select';
 import * as tabList from './tab-list';
 import * as toast from './toast';
 import * as toggle from './toggle';
@@ -36,7 +35,6 @@ export const ui = {
   ...mainSearch,
   ...nav,
   ...pagination,
-  ...select,
   ...toast,
   ...tabList,
   ...toggle,

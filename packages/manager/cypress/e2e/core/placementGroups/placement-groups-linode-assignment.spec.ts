@@ -123,7 +123,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(mockLinode.label);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button.findByTitle('Assign Linode').should('be.enabled').click();
 
@@ -139,7 +143,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(`${mockLinode.label}`);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button.findByTitle('Assign Linode').click();
       });
@@ -240,7 +248,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(mockLinode.label);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button
           .findByTitle('Assign Linode')
@@ -328,7 +340,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(mockLinode.label);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button
           .findByTitle('Assign Linode')

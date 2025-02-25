@@ -37,5 +37,5 @@ export const StyledPlansPanel = styled(PlansPanel, {
 export const StyledPlanSummarySpan = styled('span', {
   label: 'StyledPlanSummarySpan',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
 }));

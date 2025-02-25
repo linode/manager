@@ -54,7 +54,7 @@ export const AkamaiBanner = React.memo((props: AkamaiBannerProps) => {
           <Typography
             sx={(theme: Theme) => ({
               color: 'inherit',
-              fontFamily: theme.font.bold,
+              font: theme.font.bold,
               fontSize: 11,
               letterSpacing: 0.44,
             })}

@@ -1,6 +1,7 @@
 import {
   Autocomplete,
   CircleProgress,
+  Dialog,
   Divider,
   Notice,
   Typography,
@@ -22,7 +23,6 @@ import {
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { usePrevious } from 'src/hooks/usePrevious';
 import {
   useAllLinodesQuery,
@@ -284,13 +284,13 @@ export const IPTransfer = (props: Props) => {
         >
           <Typography>
             <Typography
-              sx={{
+              sx={(theme) => ({
+                font: theme.font.bold,
                 [theme.breakpoints.up('md')]: {
                   display: 'none',
                 },
-              }}
+              })}
               component="span"
-              fontFamily={theme.font.bold}
             >
               IP address:{' '}
             </Typography>

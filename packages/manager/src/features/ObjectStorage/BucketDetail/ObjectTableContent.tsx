@@ -95,7 +95,6 @@ const ObjectTableContent: React.FC<Props> = (props) => {
                 folderName={object.name}
                 handleClickDelete={handleClickDelete}
                 key={object.name}
-                manuallyCreated={false}
               />
             );
           }
@@ -117,7 +116,6 @@ const ObjectTableContent: React.FC<Props> = (props) => {
               handleClickDetails={() => handleClickDetails(object)}
               handleClickDownload={handleClickDownload}
               key={object.name}
-              manuallyCreated={false}
               objectLastModified={object.last_modified || ''}
               objectSize={object.size || 0}
             />

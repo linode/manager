@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -47,7 +47,7 @@ export const FirewallLandingEmptyState = (props: Props) => {
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={NodeBalancerIcon}
+      icon={NetworkIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />

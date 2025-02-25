@@ -38,7 +38,13 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
       onClick: () => {
         history.push(`/iam/users/${username}/roles`);
       },
-      title: 'View User Roles',
+      title: 'View Assigned Roles',
+    },
+    {
+      onClick: () => {
+        history.push(`/iam/users/${username}/entities`);
+      },
+      title: 'View Assigned Entities',
     },
     {
       disabled: username === profileUsername,

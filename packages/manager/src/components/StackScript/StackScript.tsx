@@ -14,10 +14,11 @@ import { makeStyles } from 'tss-react/mui';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { ScriptCode } from 'src/components/ScriptCode/ScriptCode';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
+
+import { CodeBlock } from '../CodeBlock/CodeBlock';
 
 import type { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
 import type { Theme } from '@mui/material/styles';
@@ -271,7 +272,7 @@ export const StackScript = React.memo((props: StackScriptProps) => {
       <Typography className={classes.heading} variant="h3">
         Script
       </Typography>
-      <ScriptCode script={script} />
+      <CodeBlock code={script} language="shell" />
     </div>
   );
 });

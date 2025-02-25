@@ -5,23 +5,26 @@ export const useStyles = makeStyles()((theme) => ({
     borderLeft: `5px solid ${theme.palette.error.dark}`,
   },
   icon: {
+    '& g': {
+      stroke: theme.tokens.color.Neutrals.White,
+    },
     color: theme.tokens.color.Neutrals.White,
-    position: 'absolute',
     left: -25,
-    transform: 'translateY(-50%)',
+    position: 'absolute',
     top: '50%',
+    transform: 'translateY(-50%)',
   },
   important: {
     backgroundColor: theme.palette.background.paper,
     borderLeftWidth: 32,
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
     padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
   },
   info: {
     borderLeft: `5px solid ${theme.palette.info.dark}`,
   },
   noticeText: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '1rem',
     lineHeight: '20px',
   },
@@ -43,6 +46,9 @@ export const useStyles = makeStyles()((theme) => ({
     borderLeft: `5px solid ${theme.palette.warning.dark}`,
   },
   warningIcon: {
+    '& path:first-of-type': {
+      stroke: theme.tokens.color.Neutrals[80],
+    },
     color: theme.tokens.color.Neutrals[80],
   },
 }));

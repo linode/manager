@@ -23,6 +23,7 @@ import { getRestrictedResourceText } from './utils';
 
 import type { AccountLogin } from '@linode/api-v4/lib/account/types';
 import type { Theme } from '@mui/material/styles';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const preferenceKey = 'account-logins';
 
@@ -98,6 +99,7 @@ const AccountLogins = () => {
 
   return !isAccountAccessRestricted ? (
     <>
+      <DocumentTitleSegment segment="Login History" />
       <Typography className={classes.copy} variant="body1">
         Logins across all users on your account over the last 90 days.
       </Typography>

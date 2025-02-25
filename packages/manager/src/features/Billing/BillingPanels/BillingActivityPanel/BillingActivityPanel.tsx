@@ -93,6 +93,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& > .loading': {
       width: 115,
     },
+    paddingRight: 0,
     textAlign: 'right',
   },
   pdfError: {

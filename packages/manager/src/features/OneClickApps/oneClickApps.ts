@@ -604,28 +604,6 @@ export const oneClickApps: Record<number, OCA> = {
       'Open source community and discussion forum for customers, teams, fans, and more.',
     website: 'https://www.discourse.org/',
   },
-  688902: {
-    alt_description:
-      'Control panel to deploy and manage LAMP stack applications.',
-    alt_name: 'Single user control panel',
-    categories: ['Control Panels'],
-    colors: {
-      end: '445289',
-      start: 'f1b55d',
-    },
-    description: `Lightweight control panel with a suite of features to streamline app management.`,
-    logo_url: 'webuzo.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/webuzo/',
-        title: 'Deploy Webuzo through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'LAMP stack and single user control panel to simplify app deployment in the cloud.',
-    website: 'http://www.webuzo.com/',
-  },
   688903: {
     alt_description: 'Fancy development text editor.',
     alt_name: 'Text editor',
@@ -665,26 +643,6 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Git with a cup of tea - A painless self-hosted Git service.',
     website: 'https://gitea.io/',
-  },
-  688912: {
-    alt_description: 'Drag and drop website CMS.',
-    alt_name: 'CMS: content management system',
-    categories: ['Website'],
-    colors: {
-      end: '4395ff',
-      start: '0166ff',
-    },
-    description: `Use Kepler Builder to easily design and build sites in WordPress - no coding or design knowledge necessary.`,
-    logo_url: 'keplerbuilder.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/kepler/',
-        title: 'Deploy Kepler through the Linode Marketplace',
-      },
-    ],
-    summary: 'Powerful drag & drop WordPress website builder.',
-    website: 'https://kepler.app/',
   },
   688914: {
     alt_description: 'Desktop cloud hosting.',
@@ -848,27 +806,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Enterprise-class open source distributed monitoring solution.',
     website: 'https://www.zabbix.com',
   },
-  774829: {
-    alt_description: 'Host multiple sites on a Linode.',
-    alt_name: 'Website control panel',
-    categories: ['Control Panels'],
-    colors: {
-      end: 'a25c57',
-      start: '4c3148',
-    },
-    description: `Host multiple sites on a single server while managing apps, firewall, databases, backups, system users, cron jobs, SSL and email–  all in an intuitive interface.`,
-    logo_url: 'serverwand.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/serverwand/',
-        title: 'Deploy ServerWand through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Magical control panel for hosting websites and managing your servers.',
-    website: 'https://serverwand.com/',
-  },
   804143: {
     alt_description: 'Open source project management tool.',
     alt_name: 'Ticket management project management tool',
@@ -993,50 +930,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary:
       'All-in-one database deployment, management, and monitoring system.',
     website: 'https://docs.splunk.com/Documentation/Splunk',
-  },
-  869155: {
-    alt_description:
-      'Image hosting and sharing alternative to Google Photos and Flickr.',
-    alt_name: 'Photo library and image library',
-    categories: ['Media and Entertainment'],
-    colors: {
-      end: '8e44ad',
-      start: '23a8e0',
-    },
-    description: `Chevereto is a full-featured image sharing solution that acts as an alternative to services like Google Photos or Flickr. Optimize image hosting by using external cloud storage (like Linode’s S3-compatible Object Storage) and connect to Chevereto using API keys.`,
-    logo_url: 'chevereto.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/chevereto/',
-        title: 'Deploy Chevereto through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Self-host your own open source image library to easily upload, collaborate, and share images on your terms.',
-    website: 'https://v3-docs.chevereto.com/',
-  },
-  869156: {
-    alt_description:
-      'File storage and sharing alternative to Dropbox and Google Drive.',
-    alt_name: 'File sharing',
-    categories: ['Productivity'],
-    colors: {
-      end: '252730',
-      start: '1f4c8f',
-    },
-    description: `Securely share and collaborate Linode S3 object storage files/folders with your internal or external users such as customers, partners, vendors, etc with fine access control and a simple interface. Nirvashare easily integrates with many external identity providers such as Active Directory, GSuite, AWS SSO, KeyClock, etc.`,
-    logo_url: 'nirvashare.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/nirvashare/',
-        title: 'Deploy NirvaShare through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Secure file sharing for better collaboration with employees, partners, vendors, and more.',
-    website: 'https://nirvashare.com/setup-guide/',
   },
   869158: {
     alt_description:
@@ -1265,26 +1158,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary:
       'Free and open source accounting software you can use in your browser.',
     website: 'https://akaunting.com',
-  },
-  923036: {
-    alt_description: 'Free alternative to Trello and Asana.',
-    alt_name: 'Kanban board project management tool',
-    categories: ['Productivity'],
-    colors: {
-      end: '555555',
-      start: 'f47564',
-    },
-    description: `Restyaboard is an open-source alternative to Trello, but with additional smart features like offline sync, diff /revisions, nested comments, multiple view layouts, chat, and more.`,
-    logo_url: 'restyaboard.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/restyaboard/',
-        title: 'Deploy Restyaboard through the Linode Marketplace',
-      },
-    ],
-    summary: 'Free and open source project management tool.',
-    website: 'https://restya.com',
   },
   923037: {
     alt_description: 'Virtual private network.',
@@ -1659,28 +1532,6 @@ export const oneClickApps: Record<number, OCA> = {
       'Popular Linux OS and tool suite for penetration testing and security research.',
     website: 'https://www.kali.org/',
   },
-  1037036: {
-    alt_description:
-      'Application builder for forms, portals, admin panels, and more.',
-    alt_name: 'Low-code application builder',
-    categories: ['Development'],
-    colors: {
-      end: '000000',
-      start: '9981f5',
-    },
-    description:
-      'Budibase is a modern, open source low-code platform for building modern business applications in minutes. Build, design and automate business apps, such as: admin panels, forms, internal tools, client portals and more. Before Budibase, it could take developers weeks to build simple CRUD apps; with Budibase, building CRUD apps takes minutes. When self-hosting please follow best practices for securing, updating and backing up your server.',
-    logo_url: 'budibase.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/budibase/',
-        title: 'Deploy Budibase through the Linode Marketplace',
-      },
-    ],
-    summary: 'Low-code platform for building modern business applications.',
-    website: 'https://docs.budibase.com/docs',
-  },
   1037037: {
     alt_description:
       'HashiCorp containerization tool to use instead of or with Kubernetes',
@@ -1753,7 +1604,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '326690',
     },
     description: `PostgreSQL is a popular open source relational database system that provides many advanced configuration options that can help optimize your database’s performance in a production environment.`,
-    logo_url: 'postgresqlmarketplaceocc.svg',
+    logo_url: 'postgresql.svg',
     related_guides: [
       {
         href:
@@ -1868,28 +1719,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Relational database for unstructured data.',
     website: 'https://www.superinsight.ai/',
   },
-  1102905: {
-    alt_description:
-      'No-code platform for Kubernetes developers and operators.',
-    alt_name: 'Go Paddle',
-    categories: ['Development'],
-    colors: {
-      end: '252930',
-      start: '3a5bfd',
-    },
-    description: `Provision multicloud clusters, containerize applications, and build DevOps pipelines. Gopaddle’s suite of templates and integrations helps eliminate manual errors and automate Kubernetes application releases.`,
-    logo_url: 'gopaddle.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/gopaddle/',
-        title: 'Deploy Gopaddle through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Simple low-code platform for Kubernetes developers and operators.',
-    website: 'https://gopaddle.io/',
-  },
   1102906: {
     alt_description: 'Password Manager',
     alt_name: 'Pass Key',
@@ -1939,13 +1768,12 @@ export const oneClickApps: Record<number, OCA> = {
       start: '222222',
     },
     description: `Redis&reg; is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis&reg; features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.<br/><br/>*Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Akamai Technologies is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Akamai Technologies.`,
-    logo_url: 'redissentinelmarketplaceocc.svg',
+    logo_url: 'redis.svg',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
-        title:
-          'Deploy Redis&reg; Sentinel Cluster through the Linode Marketplace',
+        title: 'Deploy Redis® Sentinel Cluster through the Linode Marketplace',
       },
     ],
     summary:
@@ -2016,28 +1844,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary:
       'Collaborative web interface for data backed project and process management.',
     website: 'https://seatable.io/docs/?lang=auto',
-  },
-  1177605: {
-    alt_description:
-      'Retool open-source alternative, with low-code UI components.',
-    alt_name: 'Low-code development platform',
-    categories: ['Security'],
-    colors: {
-      end: 'FF58BE',
-      start: '654AEC',
-    },
-    description:
-      'Illa Builder is a Retool open-source alternative, with low-code UI components for self-hosting the development of internal tools.',
-    logo_url: 'illabuilder.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/illa-builder',
-        title: 'Deploy Illa Builder through the Linode Marketplace',
-      },
-    ],
-    summary: 'An open-source, low-code development platform.',
-    website: 'https://github.com/illacloud/illa-builder',
   },
   1226544: {
     alt_description:
@@ -2487,5 +2293,26 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Open-source password manager for teams and businesses.',
     website: 'https://www.passbolt.com/',
+  },
+  1646305: {
+    alt_description:
+      'Fast, open source framework for building developer portals.',
+    alt_name: 'Developer Tool.',
+    categories: ['Development'],
+    colors: {
+      end: '121212',
+      start: '9BF0E1',
+    },
+    description: `Platform for building developer portals designed to simplify and unify software development processes.`,
+    isNew: true,
+    logo_url: 'backstage.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/backstage/',
+        title: 'Deploy Backstage through the Linode Marketplace',
+      },
+    ],
+    summary: 'Developer portal for managing services and infrastructure.',
+    website: 'https://backstage.io/',
   },
 };

@@ -96,7 +96,7 @@ const LinodePubKey = () => {
           </Typography>
         </Grid>
         <StyledSSHKeyContainerGrid md={6} sm={7} xs={12}>
-          <StyledTypography variant="subtitle1">
+          <StyledTypography sx={{ fontSize: 14 }}>
             {preferences?.maskSensitiveData && isSSHKeyMasked ? (
               <MaskableTextAreaCopy />
             ) : (

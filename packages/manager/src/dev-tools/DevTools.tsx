@@ -85,7 +85,7 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
     return (
       <Draggable draggable={isDraggable}>
         <div
-          className={`dev-tools ${isMSWEnabled ? 'dev-tools--msw' : ''} ${
+          className={`foo dev-tools ${isMSWEnabled ? 'dev-tools--msw' : ''} ${
             isOpen ? 'dev-tools--open' : ''
           } ${isOpen && isDraggable ? 'isDraggable' : ''}
           `.trim()}

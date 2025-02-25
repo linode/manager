@@ -53,10 +53,8 @@ describeRegions('Delete Linodes', (region: Region) => {
         .findByTitle(`Delete ${linode.label}?`)
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Linode Label')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByLabelText('Linode Label').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')

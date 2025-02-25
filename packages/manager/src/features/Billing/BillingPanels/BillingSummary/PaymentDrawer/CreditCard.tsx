@@ -25,7 +25,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   cardInfo: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     marginRight: 10,
     [theme.breakpoints.down('sm')]: {
       marginRight: 0,

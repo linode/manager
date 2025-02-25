@@ -15,10 +15,10 @@ import {
   StyledTagTableCell,
 } from './ResultRow.styles';
 
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { ResultRowDataOption } from './types';
 
 interface ResultRowProps {
-  result: Item;
+  result: ResultRowDataOption;
 }
 
 export const ResultRow = (props: ResultRowProps) => {

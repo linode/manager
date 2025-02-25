@@ -170,10 +170,15 @@ describe('Billing Contact', () => {
           .click()
           .clear()
           .type(newAccountData['phone']);
-        cy.get('[data-qa-contact-state-province]')
+        ui.autocomplete
+          .findByLabel('State')
           .should('be.visible')
           .click()
-          .type(`${newAccountData['state']}{enter}`);
+          .type(`${newAccountData['state']}`);
+        ui.autocompletePopper
+          .findByTitle(newAccountData['state'])
+          .should('be.visible')
+          .click();
         cy.findByLabelText('Tax ID')
           .should('be.visible')
           .click()
@@ -227,7 +232,15 @@ describe('Billing Contact', () => {
           .click()
           .clear()
           .type(newAccountData['zip']);
-        cy.get('[data-qa-contact-country]').click().type('Afghanistan{enter}');
+        ui.autocomplete
+          .findByLabel('Country')
+          .should('be.visible')
+          .click()
+          .type('Afghanistan');
+        ui.autocompletePopper
+          .findByTitle('Afghanistan')
+          .should('be.visible')
+          .click();
         cy.findByLabelText('Tax ID')
           .should('be.visible')
           .click()

@@ -1,10 +1,6 @@
 import Factory from 'src/factories/factoryProxy';
 
-import type {
-  IamAccess,
-  IamAccountPermissions,
-  PermissionType,
-} from '@linode/api-v4';
+import type { IamAccess, IamAccountPermissions } from '@linode/api-v4';
 
 interface CreateResourceRoles {
   accountAdmin?: string[];
@@ -26,32 +22,42 @@ const createResourceRoles = (
 ) => ({
   resource_type: resourceType,
   roles: [
-    accountAdmin.length && {
-      description: `Access to perform any supported action on all ${resourceType} instances`,
-      name: `account_${resourceType}_admin`,
-      permissions: accountAdmin as PermissionType[],
-    },
-    admin.length && {
-      description: `Access to administer a ${resourceType} instance`,
-      name: `${resourceType}_admin`,
-      permissions: admin as PermissionType[],
-    },
-    contributor.length && {
-      description: `Access to update a ${resourceType} instance`,
-      name: `${resourceType}_contributor`,
-      permissions: contributor as PermissionType[],
-    },
-    creator.length && {
-      description: `Access to create a ${resourceType} instance`,
-      name: `${resourceType}_creator`,
-      permissions: creator as PermissionType[],
-    },
-    viewer.length && {
-      description: `Access to view a ${resourceType} instance`,
-      name: `${resourceType}_viewer`,
-      permissions: viewer as PermissionType[],
-    },
-  ],
+    accountAdmin.length > 0
+      ? {
+          description: `Access to perform any supported action on all ${resourceType} instances`,
+          name: `account_${resourceType}_admin`,
+          permissions: accountAdmin,
+        }
+      : null,
+    admin.length > 0
+      ? {
+          description: `Access to administer a ${resourceType} instance`,
+          name: `${resourceType}_admin`,
+          permissions: admin,
+        }
+      : null,
+    contributor.length > 0
+      ? {
+          description: `Access to update a ${resourceType} instance`,
+          name: `${resourceType}_contributor`,
+          permissions: contributor,
+        }
+      : null,
+    creator.length > 0
+      ? {
+          description: `Access to create a ${resourceType} instance`,
+          name: `${resourceType}_creator`,
+          permissions: creator,
+        }
+      : null,
+    viewer.length > 0
+      ? {
+          description: `Access to view a ${resourceType} instance`,
+          name: `${resourceType}_viewer`,
+          permissions: viewer,
+        }
+      : null,
+  ].filter(Boolean),
 });
 
 export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPermissions>(
@@ -61,7 +67,8 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         resource_type: 'account',
         roles: [
           {
-            description: 'Access to view all resources in the account',
+            description:
+              'Access to view all resources in the account. Access to view all resources in the account. Access to view all resources in the account. Access to view all resources in the account. Access to view all resources in the account. Access to view all resources in the account. Access to view all resources in the account. Access to view all resources in the account.',
             name: 'account_viewer',
             permissions: [
               'list_account_agreements',

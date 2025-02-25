@@ -4,8 +4,7 @@ import * as React from 'react';
 import { RenderGuard } from 'src/components/RenderGuard';
 
 import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import type { Item } from 'src/components/EnhancedSelect';
-
+import type { SelectOption } from '@linode/ui';
 interface Props {
   error?: string;
   field: UserDefinedField;
@@ -26,11 +25,11 @@ interface State {
 }
 
 class UserDefinedMultiSelect extends React.Component<Props, State> {
-  handleSelectManyOf = (selectedOptions: Item[]) => {
+  handleSelectManyOf = (selectedOptions: SelectOption[]) => {
     const { field, updateFormState } = this.props;
 
     const arrayToString = Array.prototype.map
-      .call(selectedOptions, (opt: Item) => opt.value)
+      .call(selectedOptions, (opt: SelectOption) => opt.value)
       .toString();
 
     updateFormState(field.name, arrayToString);

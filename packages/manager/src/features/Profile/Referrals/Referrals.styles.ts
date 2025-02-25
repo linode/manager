@@ -24,7 +24,7 @@ export const StyledEarnedGrid = styled(Grid, {
   label: 'StyledEarnedGrid',
 })(({ theme }) => ({
   color: theme.color.green,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
 }));
 
 export const StyledLimitNotice = styled(Notice, {
@@ -79,7 +79,7 @@ export const StyledImageCopy = styled(Typography, {
   label: 'StyledImageCopy',
 })(({ theme }) => ({
   color: theme.textColors.headlineStatic,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   marginTop: theme.spacing(2),
   textAlign: 'center',
   [theme.breakpoints.up('sm')]: {

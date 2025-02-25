@@ -47,7 +47,7 @@ const Main = () => {
     <ReduxStoreProvider store={store}>
       <QueryClientProvider client={queryClient}>
         <LinodeThemeWrapper>
-          <CssBaseline />
+          <CssBaseline enableColorScheme />
           <React.Suspense fallback={<SplashScreen />}>
             <Router>
               <Switch>

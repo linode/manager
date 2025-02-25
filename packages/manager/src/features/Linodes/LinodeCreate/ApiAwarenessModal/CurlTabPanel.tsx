@@ -74,7 +74,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
         </Link>
         .
       </Typography>
-      <CodeBlock command={curlCommand} commandType={title} language={'bash'} />
+      <CodeBlock code={curlCommand} analyticsLabel={title} language={'bash'} />
     </SafeTabPanel>
   );
 };

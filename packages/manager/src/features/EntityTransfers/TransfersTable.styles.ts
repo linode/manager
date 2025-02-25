@@ -5,9 +5,6 @@ import { Table } from 'src/components/Table';
 export const StyledDiv = styled('div', {
   label: 'StyledDiv',
 })(({ theme }) => ({
-  '& .MuiAccordion-root table': {
-    border: 'none',
-  },
   '& .MuiAccordionDetails-root': {
     padding: 0,
   },

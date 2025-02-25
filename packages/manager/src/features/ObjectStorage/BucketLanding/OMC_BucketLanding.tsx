@@ -30,13 +30,18 @@ import { BucketTable } from './BucketTable';
 import type { APIError, ObjectStorageBucket } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
+interface Props {
+  isCreateBucketDrawerOpen?: boolean;
+}
+
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(),
   },
 }));
 
-export const OMC_BucketLanding = () => {
+export const OMC_BucketLanding = (props: Props) => {
+  const { isCreateBucketDrawerOpen } = props;
   const { data: profile } = useProfile();
   const { availableStorageRegions } = useObjectStorageRegions();
 
@@ -173,7 +178,9 @@ export const OMC_BucketLanding = () => {
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Buckets" />
+      <DocumentTitleSegment
+        segment={`${isCreateBucketDrawerOpen ? 'Create a Bucket' : 'Buckets'}`}
+      />
       {unavailableRegionLabels && unavailableRegionLabels.length > 0 && (
         <UnavailableRegionsDisplay regionLabels={unavailableRegionLabels} />
       )}

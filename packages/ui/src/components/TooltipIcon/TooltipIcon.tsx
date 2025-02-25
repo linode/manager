@@ -112,8 +112,8 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   const sxRootStyle = {
     '&&': {
-      fill: theme.color.grey4,
-      stroke: theme.color.grey4,
+      fill: theme.tokens.color.Neutrals[50],
+      stroke: theme.tokens.color.Neutrals[50],
       strokeWidth: 0,
     },
     '&:hover': {
@@ -121,7 +121,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       fill: theme.palette.primary.main,
       stroke: theme.palette.primary.main,
     },
-    color: theme.color.grey4,
+    color: theme.tokens.color.Neutrals[50],
     height: 20,
     width: 20,
   };

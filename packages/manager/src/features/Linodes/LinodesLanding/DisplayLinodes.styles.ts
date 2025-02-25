@@ -6,13 +6,13 @@ import { TableRow } from 'src/components/TableRow';
 export const StyledTagHeaderRow = styled(TableRow, {
   label: 'StyledTagHeaderRow',
 })(({ theme }) => ({
-  '& td': {
+  '& .MuiTableCell-root': {
     borderBottom: 'none',
     borderTop: 'none',
     // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
     padding: `${theme.spacing(1.25)} 0 2px`,
   },
-  backgroundColor: 'transparent !important',
+  backgroundColor: 'transparent',
   height: 'auto',
 }));
 
@@ -27,11 +27,11 @@ export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
 })(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: theme.bg.tableHeader,
+  backgroundColor: theme.tokens.table.HeaderNested.Background,
   display: 'flex',
-  height: 46,
+  height: 42,
   justifyContent: 'flex-end',
-  marginBottom: theme.spacing(4),
+  marginBottom: theme.spacing(1.25),
 }));
 
 export const StyledToggleButton = styled(IconButton, {
