@@ -1,10 +1,10 @@
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
 import {
-  convertAlertsToTypeSet,
-  filterAlertsByStatusAndType,
   convertAlertDefinitionValues,
+  convertAlertsToTypeSet,
   convertSecondsToMinutes,
+  filterAlertsByStatusAndType,
   getServiceTypeLabel,
 } from './utils';
 
