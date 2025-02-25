@@ -11,6 +11,7 @@ import {
   mockGetEntityTransfers,
   mockInitiateEntityTransferError,
   mockReceiveEntityTransfer,
+  mockGetEntityTransfersError,
 } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
@@ -30,6 +31,9 @@ import type { EntityTransfer, Linode, Profile } from '@linode/api-v4';
 
 // Service transfer empty state message.
 const serviceTransferEmptyState = 'No data to display.';
+
+// Service transfer error message.
+export const serviceTransferErrorMessage = 'An unknown error has occurred';
 
 // Service transfer landing page URL.
 const serviceTransferLandingUrl = '/account/service-transfers';
@@ -518,5 +522,34 @@ describe('Account service transfers', () => {
     cy.url().should('endWith', serviceTransferCreateUrl);
     initiateLinodeTransfer(mockLinodes[0].label);
     cy.findByText(errorMessage).should('be.visible');
+  });
+
+  /*
+   * - Confirms that an error message is displayed in both the Received and Sent tables when the requests to fetch service transfers fail.
+   */
+  it('should display an error message when the request fails to fetch service transfer', () => {
+    mockGetEntityTransfersError().as('getTransfersError');
+
+    cy.visitWithLogin(serviceTransferLandingUrl);
+    cy.wait('@getTransfersError');
+
+    cy.get('[data-qa-panel="Pending Service Transfers"]').should('not.exist');
+
+    // Confirm that an error message is displayed in both "Received Service Transfers" and "Sent Service Transfers" panels.
+    ['Received Service Transfers', 'Sent Service Transfers'].forEach(
+      (transfer) => {
+        cy.get(`[data-qa-panel="${transfer}"]`)
+          .should('be.visible')
+          .within(() => {
+            cy.get(`[data-qa-panel-summary="${transfer}"]`).click();
+            // Error Icon should shows up.
+            cy.findByTestId('ErrorOutlineIcon').should('be.visible');
+            // Error message should be visible.
+            cy.findByText(serviceTransferErrorMessage, { exact: false }).should(
+              'be.visible'
+            );
+          });
+      }
+    );
   });
 });
