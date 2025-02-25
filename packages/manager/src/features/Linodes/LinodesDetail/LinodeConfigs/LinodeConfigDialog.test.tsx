@@ -3,6 +3,8 @@ import React from 'react';
 import {
   LinodeConfigInterfaceFactory,
   linodeConfigFactory,
+  linodeConfigFactoryWithoutInterfaces,
+  linodeFactory,
 } from 'src/factories';
 import {
   LINODE_UNREACHABLE_HELPER_TEXT,
@@ -12,10 +14,31 @@ import {
 import 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { unrecommendedConfigNoticeSelector } from './LinodeConfigDialog';
 import { LinodeConfigDialog, padList } from './LinodeConfigDialog';
+import { unrecommendedConfigNoticeSelector } from './LinodeConfigDialog';
 
 import type { MemoryLimit } from './LinodeConfigDialog';
+
+const queryMocks = vi.hoisted(() => ({
+  useFlags: vi.fn().mockReturnValue({}),
+  useLinodeQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/linodes/linodes', async () => {
+  const actual = await vi.importActual('src/queries/linodes/linodes');
+  return {
+    ...actual,
+    useLinodeQuery: queryMocks.useLinodeQuery,
+  };
+});
+
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+  };
+});
 
 describe('LinodeConfigDialog', () => {
   describe('padInterface helper method', () => {
@@ -170,5 +193,38 @@ describe('LinodeConfigDialog', () => {
 
     await findByDisplayValue('VPC');
     await findByDisplayValue('Public Internet');
+  });
+
+  it('should hide the Network Interfaces section if Linode uses new interfaces', () => {
+    const props = {
+      isReadOnly: false,
+      linodeId: 1,
+      onClose: vi.fn(),
+    };
+
+    const linode = linodeFactory.build({ interface_generation: 'linode' });
+
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linode,
+    });
+
+    queryMocks.useFlags.mockReturnValue({
+      linodeInterfaces: { enabled: true },
+    });
+
+    const { queryByLabelText } = renderWithTheme(
+      <LinodeConfigDialog
+        config={linodeConfigFactoryWithoutInterfaces.build()}
+        open={true}
+        {...props}
+      />
+    );
+
+    expect(
+      queryByLabelText('Primary Interface (Default Route)')
+    ).not.toBeInTheDocument();
+    expect(queryByLabelText('eth0')).not.toBeInTheDocument();
+    expect(queryByLabelText('eth1')).not.toBeInTheDocument();
+    expect(queryByLabelText('eth2')).not.toBeInTheDocument();
   });
 });

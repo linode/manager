@@ -269,6 +269,10 @@ export const LinodeConfigDialog = (props: Props) => {
     config?.id ?? -1
   );
 
+  const isLegacyConfigInterface =
+    linode?.interface_generation === 'legacy_config' ||
+    !linode?.interface_generation;
+
   const theme = useTheme();
 
   const regions = useRegionsQuery().data ?? [];
@@ -967,18 +971,17 @@ export const LinodeConfigDialog = (props: Props) => {
             <Grid size={12}>
               <Box alignItems="center" display="flex">
                 <Typography variant="h3">Networking</Typography>
-                {linode?.interface_generation === 'legacy_config' ||
-                  (!linode?.interface_generation && (
-                    <TooltipIcon
-                      sxTooltipIcon={{
-                        paddingBottom: 0,
-                        paddingTop: 0,
-                      }}
-                      status="help"
-                      sx={{ tooltip: { maxWidth: 350 } }}
-                      text={networkInterfacesHelperText}
-                    />
-                  ))}
+                {isLegacyConfigInterface && (
+                  <TooltipIcon
+                    sxTooltipIcon={{
+                      paddingBottom: 0,
+                      paddingTop: 0,
+                    }}
+                    status="help"
+                    sx={{ tooltip: { maxWidth: 350 } }}
+                    text={networkInterfacesHelperText}
+                  />
+                )}
               </Box>
               {linode?.interface_generation === 'linode' &&
                 linodeInterfacesFlag?.enabled && (
@@ -996,144 +999,139 @@ export const LinodeConfigDialog = (props: Props) => {
                     <StyledDivider />
                   </>
                 )}
-              {linode?.interface_generation === 'legacy_config' ||
-                (!linode?.interface_generation && (
+              {isLegacyConfigInterface && (
+                <>
+                  {formik.errors.interfaces && (
+                    <Notice
+                      text={formik.errors.interfaces as string}
+                      variant="error"
+                    />
+                  )}
                   <>
-                    {formik.errors.interfaces && (
-                      <Notice
-                        text={formik.errors.interfaces as string}
-                        variant="error"
-                      />
-                    )}
-                    <>
-                      <Autocomplete
-                        disableClearable={interfacesWithoutPlaceholderInterfaces.some(
-                          (i) => i.purpose === 'public' || i.purpose === 'vpc'
-                        )}
-                        onChange={(_, selected) => {
-                          const updatedInterfaces = [
-                            ...(values.interfaces ?? []),
+                    <Autocomplete
+                      disableClearable={interfacesWithoutPlaceholderInterfaces.some(
+                        (i) => i.purpose === 'public' || i.purpose === 'vpc'
+                      )}
+                      onChange={(_, selected) => {
+                        const updatedInterfaces = [
+                          ...(values.interfaces ?? []),
+                        ];
+
+                        for (let i = 0; i < updatedInterfaces.length; i++) {
+                          if (selected && selected.value === i) {
+                            updatedInterfaces[i].primary = true;
+                          } else {
+                            updatedInterfaces[i].primary = false;
+                          }
+                        }
+
+                        formik.setValues({
+                          ...values,
+                          interfaces: updatedInterfaces,
+                        });
+                      }}
+                      value={
+                        primaryInterfaceIndex !== null
+                          ? primaryInterfaceOptions[primaryInterfaceIndex]
+                          : null
+                      }
+                      autoHighlight
+                      data-testid="primary-interface-dropdown"
+                      disabled={isReadOnly}
+                      label="Primary Interface (Default Route)"
+                      options={primaryInterfaceOptions}
+                      placeholder="None"
+                    />
+                    <Divider
+                      sx={{
+                        margin: `${theme.spacing(
+                          4.5
+                        )} ${theme.spacing()} ${theme.spacing(1.5)} `,
+                        width: `calc(100% - ${theme.spacing(2)})`,
+                      }}
+                    />
+                  </>
+                  {values.interfaces?.map((thisInterface, idx) => {
+                    const thisInterfaceIPRanges: ExtendedIP[] = (
+                      thisInterface.ip_ranges ?? []
+                    ).map((ip_range, index) => {
+                      // Display a more user-friendly error to the user as opposed to, for example, "interfaces[1].ip_ranges[1] is invalid"
+                      // @ts-expect-error this form intentionally breaks formik's error type
+                      const errorString: string = formik.errors[
+                        `interfaces[${idx}].ip_ranges[${index}]`
+                      ]?.includes('is invalid')
+                        ? 'Invalid IP range'
+                        : // @ts-expect-error this form intentionally breaks formik's error type
+                          formik.errors[
+                            `interfaces[${idx}].ip_ranges[${index}]`
                           ];
 
-                          for (let i = 0; i < updatedInterfaces.length; i++) {
-                            if (selected && selected.value === i) {
-                              updatedInterfaces[i].primary = true;
-                            } else {
-                              updatedInterfaces[i].primary = false;
-                            }
+                      return {
+                        address: ip_range,
+                        error: errorString,
+                      };
+                    });
+
+                    return (
+                      <React.Fragment key={`${idx}-interface`}>
+                        {unrecommendedConfigNoticeSelector({
+                          _interface: thisInterface,
+                          primaryInterfaceIndex,
+                          thisIndex: idx,
+                          values,
+                        })}
+                        <InterfaceSelect
+                          errors={{
+                            ipRangeError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].ip_ranges`],
+                            ipamError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].ipam_address`],
+                            labelError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].label`],
+                            primaryError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].primary`],
+                            publicIPv4Error:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
+                            subnetError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].subnet_id`],
+                            vpcError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].vpc_id`],
+                            vpcIPv4Error:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].ipv4.vpc`],
+                          }}
+                          handleChange={(newInterface: ExtendedInterface) => {
+                            handleInterfaceChange(idx, newInterface);
+                          }}
+                          nattedIPv4Address={
+                            thisInterface.ipv4?.nat_1_1 ?? undefined
                           }
-
-                          formik.setValues({
-                            ...values,
-                            interfaces: updatedInterfaces,
-                          });
-                        }}
-                        value={
-                          primaryInterfaceIndex !== null
-                            ? primaryInterfaceOptions[primaryInterfaceIndex]
-                            : null
-                        }
-                        autoHighlight
-                        data-testid="primary-interface-dropdown"
-                        disabled={isReadOnly}
-                        label="Primary Interface (Default Route)"
-                        options={primaryInterfaceOptions}
-                        placeholder="None"
-                      />
-                      <Divider
-                        sx={{
-                          margin: `${theme.spacing(
-                            4.5
-                          )} ${theme.spacing()} ${theme.spacing(1.5)} `,
-                          width: `calc(100% - ${theme.spacing(2)})`,
-                        }}
-                      />
-                    </>
-                    {values.interfaces?.map((thisInterface, idx) => {
-                      const thisInterfaceIPRanges: ExtendedIP[] = (
-                        thisInterface.ip_ranges ?? []
-                      ).map((ip_range, index) => {
-                        // Display a more user-friendly error to the user as opposed to, for example, "interfaces[1].ip_ranges[1] is invalid"
-                        // @ts-expect-error this form intentionally breaks formik's error type
-                        const errorString: string = formik.errors[
-                          `interfaces[${idx}].ip_ranges[${index}]`
-                        ]?.includes('is invalid')
-                          ? 'Invalid IP range'
-                          : // @ts-expect-error this form intentionally breaks formik's error type
-                            formik.errors[
-                              `interfaces[${idx}].ip_ranges[${index}]`
-                            ];
-
-                        return {
-                          address: ip_range,
-                          error: errorString,
-                        };
-                      });
-
-                      return (
-                        <React.Fragment key={`${idx}-interface`}>
-                          {unrecommendedConfigNoticeSelector({
-                            _interface: thisInterface,
-                            primaryInterfaceIndex,
-                            thisIndex: idx,
-                            values,
-                          })}
-                          <InterfaceSelect
-                            errors={{
-                              ipRangeError:
-                                // @ts-expect-error this form intentionally breaks formik's error type
-                                formik.errors[`interfaces[${idx}].ip_ranges`],
-                              ipamError:
-                                // @ts-expect-error this form intentionally breaks formik's error type
-                                formik.errors[
-                                  `interfaces[${idx}].ipam_address`
-                                ],
-                              labelError:
-                                // @ts-expect-error this form intentionally breaks formik's error type
-                                formik.errors[`interfaces[${idx}].label`],
-                              primaryError:
-                                // @ts-expect-error this form intentionally breaks formik's error type
-                                formik.errors[`interfaces[${idx}].primary`],
-                              publicIPv4Error:
-                                // @ts-expect-error this form intentionally breaks formik's error type
-                                formik.errors[
-                                  `interfaces[${idx}].ipv4.nat_1_1`
-                                ],
-                              subnetError:
-                                // @ts-expect-error this form intentionally breaks formik's error type
-                                formik.errors[`interfaces[${idx}].subnet_id`],
-                              vpcError:
-                                // @ts-expect-error this form intentionally breaks formik's error type
-                                formik.errors[`interfaces[${idx}].vpc_id`],
-                              vpcIPv4Error:
-                                // @ts-expect-error this form intentionally breaks formik's error type
-                                formik.errors[`interfaces[${idx}].ipv4.vpc`],
-                            }}
-                            handleChange={(newInterface: ExtendedInterface) => {
-                              handleInterfaceChange(idx, newInterface);
-                            }}
-                            nattedIPv4Address={
-                              thisInterface.ipv4?.nat_1_1 ?? undefined
-                            }
-                            additionalIPv4RangesForVPC={thisInterfaceIPRanges}
-                            ipamAddress={thisInterface.ipam_address}
-                            key={`eth${idx}-interface`}
-                            label={thisInterface.label}
-                            purpose={thisInterface.purpose}
-                            readOnly={isReadOnly}
-                            region={linode?.region}
-                            regionHasVLANs={regionHasVLANS}
-                            regionHasVPCs={regionHasVPCs}
-                            slotNumber={idx}
-                            subnetId={thisInterface.subnet_id}
-                            vpcIPv4={thisInterface.ipv4?.vpc ?? undefined}
-                            vpcId={thisInterface.vpc_id}
-                          />
-                        </React.Fragment>
-                      );
-                    })}
-                  </>
-                ))}
+                          additionalIPv4RangesForVPC={thisInterfaceIPRanges}
+                          ipamAddress={thisInterface.ipam_address}
+                          key={`eth${idx}-interface`}
+                          label={thisInterface.label}
+                          purpose={thisInterface.purpose}
+                          readOnly={isReadOnly}
+                          region={linode?.region}
+                          regionHasVLANs={regionHasVLANS}
+                          regionHasVPCs={regionHasVPCs}
+                          slotNumber={idx}
+                          subnetId={thisInterface.subnet_id}
+                          vpcIPv4={thisInterface.ipv4?.vpc ?? undefined}
+                          vpcId={thisInterface.vpc_id}
+                        />
+                      </React.Fragment>
+                    );
+                  })}
+                </>
+              )}
             </Grid>
             <Grid size={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
