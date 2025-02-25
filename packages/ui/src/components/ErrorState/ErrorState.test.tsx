@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import PendingIcon from 'src/assets/icons/pending.svg';
-
+import { PendingIcon } from '../../assets';
 import { renderWithTheme } from '../../utilities/testHelpers';
 import { ErrorState } from './ErrorState';
 
