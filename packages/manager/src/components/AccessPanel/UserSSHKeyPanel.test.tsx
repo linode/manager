@@ -8,7 +8,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import UserSSHKeyPanel from './UserSSHKeyPanel';
+import { UserSSHKeyPanel } from './UserSSHKeyPanel';
 
 describe('UserSSHKeyPanel', () => {
   describe('restricted user', () => {
