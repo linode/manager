@@ -22,11 +22,10 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
       return (
         <CloudPulseTooltip placement="bottom-end" title="Minimize">
           <IconButton
-            sx={(theme) => ({
-              color: theme.color.black,
+            sx={{
               fontSize: 'x-large',
               padding: 0,
-            })}
+            }}
             aria-label="Zoom Out"
             data-testid="zoom-out"
             onClick={() => handleClick(false)}
@@ -40,11 +39,10 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
     return (
       <CloudPulseTooltip placement="bottom-end" title="Maximize">
         <IconButton
-          sx={(theme) => ({
-            color: theme.color.black,
+          sx={{
             fontSize: 'x-large',
             padding: 0,
-          })}
+          }}
           aria-label="Zoom In"
           data-testid="zoom-in"
           onClick={() => handleClick(true)}

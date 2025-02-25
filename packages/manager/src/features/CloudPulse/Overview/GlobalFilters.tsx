@@ -121,7 +121,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             <CloudPulseTooltip placement="bottom-end" title="Refresh">
               <IconButton
                 sx={(theme) => ({
-                  color: `${theme.color.black}`,
                   marginBlockEnd: 'auto',
                   marginTop: { md: theme.spacing(3.5) },
                 })}
