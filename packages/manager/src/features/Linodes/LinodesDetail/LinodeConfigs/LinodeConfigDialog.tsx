@@ -14,6 +14,7 @@ import {
   Toggle,
   TooltipIcon,
   Typography,
+  omitProps,
 } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
@@ -82,7 +83,7 @@ interface Helpers {
   devtmpfs_automount: boolean;
   distro: boolean;
   modules_dep: boolean;
-  network: boolean;
+  network?: boolean;
   updatedb_disabled: boolean;
 }
 
@@ -95,7 +96,7 @@ interface EditableFields {
   devices: DevicesAsStrings;
   helpers: Helpers;
   initrd: null | string;
-  interfaces?: ExtendedInterface[];
+  interfaces?: ExtendedInterface[] | null;
   kernel?: string;
   label: string;
   memory_limit?: number;
@@ -143,16 +144,17 @@ const defaultInterfaceList = padInterfaceList([
   },
 ]);
 
+const defaultHelpers: Helpers = {
+  devtmpfs_automount: true,
+  distro: true,
+  modules_dep: true,
+  updatedb_disabled: true,
+};
+
 const defaultFieldsValues: EditableFields = {
   comments: '',
   devices: {},
-  helpers: {
-    devtmpfs_automount: true,
-    distro: true,
-    modules_dep: true,
-    network: true,
-    updatedb_disabled: true,
-  },
+  helpers: defaultHelpers,
   initrd: '',
   kernel: 'linode/latest-64bit',
   label: '',
@@ -162,6 +164,12 @@ const defaultFieldsValues: EditableFields = {
   setMemoryLimit: 'no_limit' as MemoryLimit,
   useCustomRoot: false,
   virt_mode: 'paravirt' as VirtMode,
+};
+
+const defaultLegacyFieldValues: EditableFields = {
+  ...defaultFieldsValues,
+  helpers: { ...defaultHelpers, network: true },
+  interfaces: defaultInterfaceList,
 };
 
 const pathsOptions = [
@@ -175,7 +183,7 @@ const pathsOptions = [
   { label: '/dev/sdh', value: '/dev/sdh' },
 ];
 
-const interfacesToState = (interfaces?: Interface[]) => {
+const interfacesToState = (interfaces?: Interface[] | null) => {
   if (!interfaces || interfaces.length === 0) {
     return defaultInterfaceList;
   }
@@ -205,7 +213,7 @@ const interfacesToState = (interfaces?: Interface[]) => {
   return padInterfaceList(interfacesPayload);
 };
 
-const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
+const interfacesToPayload = (interfaces?: ExtendedInterface[] | null) => {
   if (!interfaces || interfaces.length === 0) {
     return [];
   }
@@ -300,7 +308,7 @@ export const LinodeConfigDialog = (props: Props) => {
     initialValues:
       linode?.interface_generation === 'linode'
         ? defaultFieldsValues
-        : { ...defaultFieldsValues, interfaces: defaultInterfaceList },
+        : defaultLegacyFieldValues,
     onSubmit: (values) => onSubmit(values),
     validate: (values) => {
       onValidate(values);
@@ -333,7 +341,10 @@ export const LinodeConfigDialog = (props: Props) => {
       devices: createDevicesFromStrings(devices),
       helpers,
       initrd: initrd !== '' ? initrd : null,
-      interfaces: interfacesToPayload(interfaces),
+      interfaces:
+        linode?.interface_generation === 'linode'
+          ? undefined
+          : interfacesToPayload(interfaces),
       kernel,
       label,
       /** if the user did not toggle the limit radio button, send a value of 0 */
@@ -504,9 +515,14 @@ export const LinodeConfigDialog = (props: Props) => {
           values: {
             comments: config.comments,
             devices,
-            helpers: config.helpers,
+            helpers: config.helpers.network
+              ? config.helpers
+              : omitProps(config.helpers, ['network']),
             initrd: initrdFromConfig,
-            interfaces: interfacesToState(config.interfaces),
+            interfaces:
+              linode?.interface_generation === 'linode'
+                ? undefined
+                : interfacesToState(config.interfaces),
             kernel: config.kernel,
             label: config.label,
             memory_limit: config.memory_limit,
@@ -524,7 +540,7 @@ export const LinodeConfigDialog = (props: Props) => {
           values:
             linode?.interface_generation === 'linode'
               ? defaultFieldsValues
-              : { ...defaultFieldsValues, interfaces: defaultInterfaceList },
+              : defaultLegacyFieldValues,
         });
         setUseCustomRoot(false);
         setDeviceCounter(deviceCounterDefault);
@@ -1189,25 +1205,28 @@ export const LinodeConfigDialog = (props: Props) => {
                     name="helpers.devtmpfs_automount"
                   />
 
-                  <StyledFormControlLabel
-                    control={
-                      <Toggle
-                        tooltipText={
-                          <>
-                            Automatically configure static networking
-                            <Link to="https://techdocs.akamai.com/cloud-computing/docs/automatically-configure-networking">
-                              (more info)
-                            </Link>
-                          </>
-                        }
-                        checked={values.helpers.network}
-                        disabled={isReadOnly}
-                        onChange={formik.handleChange}
-                      />
-                    }
-                    label="Auto-configure networking"
-                    name="helpers.network"
-                  />
+                  {isLegacyConfigInterface && (
+                    <StyledFormControlLabel
+                      control={
+                        <Toggle
+                          tooltipText={
+                            <>
+                              Automatically configure static networking
+                              <Link to="https://techdocs.akamai.com/cloud-computing/docs/automatically-configure-networking">
+                                {' '}
+                                (more info)
+                              </Link>
+                            </>
+                          }
+                          checked={values.helpers.network}
+                          disabled={isReadOnly}
+                          onChange={formik.handleChange}
+                        />
+                      }
+                      label="Auto-configure networking"
+                      name="helpers.network"
+                    />
+                  )}
                 </StyledFormGroup>
               </FormControl>
             </Grid>
