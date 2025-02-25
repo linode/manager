@@ -121,26 +121,21 @@ describe('Integration Tests for Edit Alert', () => {
     // Verify that the heading with text 'region' is visible
     ui.heading.findByText('region').should('be.visible');
 
-    // Verify the initial selection of resources
-    cy.get('[data-qa-notice="true"]').should(
-      'contain.text',
-      '3 of 50 resources are selected'
-    );
-    // Select all resources
-    cy.get('[data-qa-notice="true"]').within(() => {
-      ui.button.findByTitle('Select All').should('be.visible').click();
+    // Verify the initial selection of resources, then select all resources.
+    cy.findByText('3 of 50 resources are selected.')
+      .should('be.visible')
+      .closest('[data-qa-notice]')
+      .within(() => {
+        ui.button.findByTitle('Select All').should('be.visible').click();
 
-      // Unselect button should be visible after clicking on Select All button
-      ui.button
-        .findByTitle('Unselect All')
-        .should('be.visible')
-        .should('be.enabled');
-    });
+        ui.button
+          .findByTitle('Unselect All')
+          .should('be.visible')
+          .should('be.enabled');
+      });
 
-    cy.get('[data-qa-notice="true"]').should(
-      'contain.text',
-      '50 of 50 resources are selected'
-    );
+    // Confirm notice text updates to reflect selection.
+    cy.findByText('50 of 50 resources are selected.').should('be.visible');
 
     // Verify the initial state of the page size
     ui.pagination.findPageSizeSelect().click();

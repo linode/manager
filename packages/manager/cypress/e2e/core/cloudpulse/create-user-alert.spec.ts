@@ -221,11 +221,7 @@ describe('Create Alert', () => {
       .check();
 
     // Assert resource selection notice
-    cy.get('[data-qa-notice="true"]')
-      .find('p')
-      .should('have.text', '1 of 10 resources are selected.');
-
-    cy.get('[data-qa-notice="true"]').should('be.visible').should('be.enabled');
+    cy.findByText('1 of 10 resources are selected.');
 
     // Fill metric details for the first rule
     const cpuUsageMetricDetails = {
