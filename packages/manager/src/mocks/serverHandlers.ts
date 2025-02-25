@@ -2555,7 +2555,6 @@ export const handlers = [
           id: Number(params.id),
           label: `Alert-${params.id}`,
           status: body.status === 'enabled' ? 'disabled' : 'enabled',
-          type: 'user',
         }),
         {
           status: 200,
