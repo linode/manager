@@ -166,7 +166,6 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
         tags: ['tag-4', 'tag-2'],
         widgets: {},
       },
-      theme: 'dark',
     }).as('fetchPutPreferences');
 
     cy.visitWithLogin('monitor');
