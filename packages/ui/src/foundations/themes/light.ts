@@ -1010,7 +1010,6 @@ export const lightTheme: ThemeOptions = {
     },
     MuiListItem: {
       styleOverrides: {
-        disabled: {},
         root: {
           '&$disabled': {
             opacity: 0.5,
@@ -1026,7 +1025,6 @@ export const lightTheme: ThemeOptions = {
           },
           color: primaryColors.text,
         },
-        selected: {},
       },
     },
     MuiListItemText: {
