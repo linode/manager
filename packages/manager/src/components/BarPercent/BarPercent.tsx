@@ -4,6 +4,8 @@ import * as React from 'react';
 
 import { LinearProgress } from 'src/components/LinearProgress';
 
+import { getCustomColor, getPercentage } from './utils';
+
 import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface BarPercentProps {
@@ -68,21 +70,6 @@ export const BarPercent = React.memo((props: BarPercentProps) => {
     </StyledDiv>
   );
 });
-
-export const getPercentage = (value: number, max: number) =>
-  (value / max) * 100;
-
-const getCustomColor = (
-  customColors: BarPercentProps['customColors'],
-  percentage: number
-) => {
-  if (!customColors) {
-    return undefined;
-  }
-
-  const color = customColors.find((color) => percentage >= color.percentage);
-  return color?.color;
-};
 
 const StyledDiv = styled('div')({
   alignItems: 'center',

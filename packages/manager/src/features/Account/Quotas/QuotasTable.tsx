@@ -24,7 +24,6 @@ import type { SelectOption } from '@linode/ui';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface QuotasTableProps {
-  hasSelectedLocation?: boolean;
   selectedLocation: SelectOption<Quota['region_applied']> | null;
   selectedService: SelectOption<QuotaType>;
 }
@@ -36,9 +35,10 @@ const requestIncreaseAction: Action = {
 };
 
 export const QuotasTable = (props: QuotasTableProps) => {
-  const { hasSelectedLocation, selectedLocation, selectedService } = props;
+  const { selectedLocation, selectedService } = props;
   const theme = useTheme();
   const pagination = usePagination(1, 'quotas-table');
+  const hasSelectedLocation = Boolean(selectedLocation);
 
   const filters: Filter = getQuotasFilters({
     location: selectedLocation,
@@ -55,7 +55,9 @@ export const QuotasTable = (props: QuotasTableProps) => {
     Boolean(selectedLocation?.value)
   );
 
-  // Fetch the usage for each quota, depending on the service
+  // Quota Usage Queries
+  // For each quota, fetch the usage in parallel
+  // This will only fetch for the paginated set
   const quotaIds = quotas?.data.map((quota) => quota.quota_id) ?? [];
   const quotaUsageQueries = useQueries({
     queries: quotaIds.map((quotaId) => ({
@@ -64,6 +66,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
       queryKey: ['quota-usage', selectedService.value, quotaId],
     })),
   });
+  const isFetchingUsage = quotaUsageQueries.some((query) => query.isLoading);
 
   // Combine the quotas with their usage
   const quotasWithUsage = React.useMemo(
@@ -74,9 +77,6 @@ export const QuotasTable = (props: QuotasTableProps) => {
       })) ?? [],
     [quotas, quotaUsageQueries]
   );
-
-  // Loading logic
-  const isFetchingUsage = quotaUsageQueries.some((query) => query.isLoading);
 
   return (
     <>
