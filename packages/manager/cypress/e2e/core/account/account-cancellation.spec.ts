@@ -2,23 +2,17 @@
  * @file Integration tests for Cloud Manager account cancellation flows.
  */
 
-import { profileFactory } from 'src/factories/profile';
-import { accountFactory } from 'src/factories/account';
-import {
-  mockGetAccount,
-  mockCancelAccount,
-  mockCancelAccountError,
-} from 'support/intercepts/account';
 import {
   cancellationDataLossWarning,
-  cancellationPaymentErrorMessage,
   cancellationDialogTitle,
+  cancellationPaymentErrorMessage,
 } from 'support/constants/account';
 import {
-  CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-  PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-} from 'src/features/Account/constants';
+  mockCancelAccount,
+  mockCancelAccountError,
+  mockGetAccount,
+} from 'support/intercepts/account';
+import { mockWebpageUrl } from 'support/intercepts/general';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import {
@@ -26,8 +20,16 @@ import {
   randomPhrase,
   randomString,
 } from 'support/util/random';
+
+import { accountFactory } from 'src/factories/account';
+import { profileFactory } from 'src/factories/profile';
+import {
+  CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+} from 'src/features/Account/constants';
+
 import type { CancelAccount } from '@linode/api-v4';
-import { mockWebpageUrl } from 'support/intercepts/general';
 
 describe('Account cancellation', () => {
   /*

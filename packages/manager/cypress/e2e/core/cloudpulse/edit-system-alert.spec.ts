@@ -4,39 +4,41 @@
  * This file contains Cypress tests for the Edit Alert page of the CloudPulse application.
  * It ensures that users can navigate to the Edit Alert Page and that alerts are correctly displayed and interactive on the Edit page.
  */
+import { mockGetAccount } from 'support/intercepts/account';
+import {
+  mockGetAlertDefinitions,
+  mockGetAllAlertDefinitions,
+  mockUpdateAlertDefinitions,
+} from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+
 import {
   accountFactory,
   alertFactory,
   databaseFactory,
   regionFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import type { Flags } from 'src/featureFlags';
-import {
-  mockGetAlertDefinitions,
-  mockGetAllAlertDefinitions,
-  mockUpdateAlertDefinitions,
-} from 'support/intercepts/cloudpulse';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { ui } from 'support/ui';
-import { Alert, Database } from '@linode/api-v4';
-import { mockGetDatabases } from 'support/intercepts/databases';
 
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+import type { Alert, Database } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
+
+const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 
 const expectedResourceIds = Array.from({ length: 50 }, (_, i) => String(i + 1));
 const mockAccount = accountFactory.build();
 const alertDetails = alertFactory.build({
-  label: 'Alert-1',
   description: 'Test description',
+  entity_ids: ['1', '2', '3'],
+  label: 'Alert-1',
   service_type: 'dbaas',
   severity: 1,
   status: 'enabled',
   type: 'system',
-  entity_ids: ['1', '2', '3'],
 });
-const { service_type, id, label } = alertDetails;
+const { id, label, service_type } = alertDetails;
 const regions = [
   regionFactory.build({
     capabilities: ['Managed Databases'],
@@ -53,10 +55,10 @@ const databases: Database[] = databaseFactory
   .buildList(50)
   .map((db, index) => ({
     ...db,
-    type: 'MySQL',
+    engine: 'mysql',
     region: regions[index % regions.length].id,
     status: 'active',
-    engine: 'mysql',
+    type: 'MySQL',
   }));
 const pages = [1, 2];
 
@@ -198,11 +200,11 @@ describe('Integration Tests for Edit Alert', () => {
 
     cy.wait('@updateDefinitions').then(({ request, response }) => {
       const {
-        type,
-        status,
-        severity,
-        description,
         created_by,
+        description,
+        severity,
+        status,
+        type,
         updated_by,
       } = alertDetails;
 
@@ -219,8 +221,8 @@ describe('Integration Tests for Edit Alert', () => {
       // Destructure alert_channels and trigger_conditions from alertResponse
       const {
         alert_channels,
-        trigger_conditions: responseTriggerConditions,
         tags,
+        trigger_conditions: responseTriggerConditions,
       } = alertResponse;
       const {
         criteria_condition: responseCriteriaCondition,
