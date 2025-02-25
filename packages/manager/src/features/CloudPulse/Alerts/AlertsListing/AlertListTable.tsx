@@ -114,9 +114,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                     <TableRow>
                       {AlertListingTableLabelMap.map((value) => (
                         <TableSortCell
-                          handleClick={() => {
-                            handleOrderChange(orderBy, order);
-                            handlePageChange(1);
+                          handleClick={(orderBy, order) => {
+                            if (order) {
+                              handleOrderChange(orderBy, order);
+                              handlePageChange(1);
+                            }
                           }}
                           active={orderBy === value.label}
                           data-qa-header={value.label}
@@ -167,6 +169,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                 handlePageChange={handlePageChange}
                 page={page}
                 pageSize={pageSize}
+                sx={{ border: 0 }}
               />
             </>
           )}
