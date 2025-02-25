@@ -1,5 +1,6 @@
-import { IconButton } from '@linode/ui';
 import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
+import { IconButton } from '@linode/ui';
+import { groupByTags, sortGroups } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { compose } from 'ramda';
 import * as React from 'react';
@@ -19,7 +20,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 
 import {
   StyledControlHeader,
