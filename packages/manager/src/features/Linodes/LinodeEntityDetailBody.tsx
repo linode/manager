@@ -391,7 +391,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
       <Grid
         sx={{
           borderTop: `1px solid ${theme.borderColors.borderTable}`,
-          padding: `${theme.spacing(2)} ${theme.spacing(2)}`,
+          padding: `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
+            1
+          )} ${theme.spacing(2)}`,
           [theme.breakpoints.down('md')]: {
             paddingLeft: 3,
           },
@@ -399,7 +401,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         container
         direction="row"
       >
-        {!linodeLkeClusterId && (
+        {linodeLkeClusterId && (
           <StyledListItem
             sx={{
               ...(!linodeInterfacesFlag?.enabled
