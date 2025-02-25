@@ -306,6 +306,25 @@ export const mockGetEntityTransfers = (
 };
 
 /**
+ * Intercepts GET request to fetch service transfers and mocks an error response.
+ *
+ * @param errorMessage - API error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetEntityTransfersError = (
+  errorMessage: string = 'An unknown error has occurred',
+  statusCode: number = 500
+) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/entity-transfers*'),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
  * Intercepts GET request to receive entity transfer and mocks response.
  *
  * @param token - Token for entity transfer request to mock.
