@@ -183,14 +183,7 @@ const pathsOptions = [
   { label: '/dev/sdh', value: '/dev/sdh' },
 ];
 
-const interfacesToState = (
-  isLinodeInterface: boolean,
-  interfaces?: Interface[] | null
-) => {
-  if (isLinodeInterface) {
-    return undefined;
-  }
-
+const interfacesToState = (interfaces?: Interface[] | null) => {
   if (!interfaces || interfaces.length === 0) {
     return defaultInterfaceList;
   }
@@ -395,7 +388,6 @@ export const LinodeConfigDialog = (props: Props) => {
     formik.setSubmitting(true);
 
     const configData = convertStateToData(values) as LinodeConfigCreationData;
-
     // If Finnix was selected, make sure it gets sent as a number in the payload, not a string.
     if (Number(configData.initrd) === finnixDiskID) {
       configData.initrd = finnixDiskID;
@@ -518,25 +510,33 @@ export const LinodeConfigDialog = (props: Props) => {
           )
         );
 
+        const baseValues = {
+          comments: config.comments,
+          devices,
+          helpers: config.helpers.network
+            ? config.helpers
+            : omitProps(config.helpers, ['network']),
+          initrd: initrdFromConfig,
+          kernel: config.kernel,
+          label: config.label,
+          memory_limit: config.memory_limit,
+          root_device: config.root_device,
+          run_level: config.run_level,
+          setMemoryLimit:
+            config.memory_limit !== 0
+              ? 'set_limit'
+              : ('no_limit' as MemoryLimit),
+          useCustomRoot: isUsingCustomRoot(config.root_device),
+          virt_mode: config.virt_mode,
+        };
+
         resetForm({
-          values: {
-            comments: config.comments,
-            devices,
-            helpers: config.helpers.network
-              ? config.helpers
-              : omitProps(config.helpers, ['network']),
-            initrd: initrdFromConfig,
-            interfaces: interfacesToState(isLinodeInterface, config.interfaces),
-            kernel: config.kernel,
-            label: config.label,
-            memory_limit: config.memory_limit,
-            root_device: config.root_device,
-            run_level: config.run_level,
-            setMemoryLimit:
-              config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
-            useCustomRoot: isUsingCustomRoot(config.root_device),
-            virt_mode: config.virt_mode,
-          },
+          values: isLinodeInterface
+            ? baseValues
+            : {
+                ...baseValues,
+                interfaces: interfacesToState(config.interfaces),
+              },
         });
       } else {
         // Create mode; make sure loading/error states are cleared.
