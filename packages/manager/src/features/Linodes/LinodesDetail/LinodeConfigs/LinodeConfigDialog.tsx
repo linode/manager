@@ -144,17 +144,17 @@ const defaultInterfaceList = padInterfaceList([
   },
 ]);
 
-const defaultHelpers: Helpers = {
+const baseHelpers: Helpers = {
   devtmpfs_automount: true,
   distro: true,
   modules_dep: true,
   updatedb_disabled: true,
 };
 
-const defaultFieldsValues: EditableFields = {
+const baseFieldValues: EditableFields = {
   comments: '',
   devices: {},
-  helpers: defaultHelpers,
+  helpers: baseHelpers,
   initrd: '',
   kernel: 'linode/latest-64bit',
   label: '',
@@ -166,9 +166,9 @@ const defaultFieldsValues: EditableFields = {
   virt_mode: 'paravirt' as VirtMode,
 };
 
-const defaultLegacyFieldValues: EditableFields = {
-  ...defaultFieldsValues,
-  helpers: { ...defaultHelpers, network: true },
+const defaultLegacyInterfaceFieldValues: EditableFields = {
+  ...baseFieldValues,
+  helpers: { ...baseHelpers, network: true },
   interfaces: defaultInterfaceList,
 };
 
@@ -183,7 +183,14 @@ const pathsOptions = [
   { label: '/dev/sdh', value: '/dev/sdh' },
 ];
 
-const interfacesToState = (interfaces?: Interface[] | null) => {
+const interfacesToState = (
+  isLinodeInterface: boolean,
+  interfaces?: Interface[] | null
+) => {
+  if (isLinodeInterface) {
+    return undefined;
+  }
+
   if (!interfaces || interfaces.length === 0) {
     return defaultInterfaceList;
   }
@@ -277,9 +284,8 @@ export const LinodeConfigDialog = (props: Props) => {
     config?.id ?? -1
   );
 
-  const isLegacyConfigInterface =
-    linode?.interface_generation === 'legacy_config' ||
-    !linode?.interface_generation;
+  const isLinodeInterface = linode?.interface_generation === 'linode';
+  const isLegacyConfigInterface = !isLinodeInterface;
 
   const theme = useTheme();
 
@@ -305,10 +311,9 @@ export const LinodeConfigDialog = (props: Props) => {
   );
 
   const { resetForm, setFieldValue, values, ...formik } = useFormik({
-    initialValues:
-      linode?.interface_generation === 'linode'
-        ? defaultFieldsValues
-        : defaultLegacyFieldValues,
+    initialValues: isLinodeInterface
+      ? baseFieldValues
+      : defaultLegacyInterfaceFieldValues,
     onSubmit: (values) => onSubmit(values),
     validate: (values) => {
       onValidate(values);
@@ -336,15 +341,11 @@ export const LinodeConfigDialog = (props: Props) => {
       virt_mode,
     } = state;
 
-    return {
+    const baseValuesToReturn = {
       comments,
       devices: createDevicesFromStrings(devices),
       helpers,
       initrd: initrd !== '' ? initrd : null,
-      interfaces:
-        linode?.interface_generation === 'linode'
-          ? undefined
-          : interfacesToPayload(interfaces),
       kernel,
       label,
       /** if the user did not toggle the limit radio button, send a value of 0 */
@@ -353,6 +354,12 @@ export const LinodeConfigDialog = (props: Props) => {
       run_level,
       virt_mode,
     };
+    return isLinodeInterface
+      ? baseValuesToReturn
+      : {
+          ...baseValuesToReturn,
+          interfaces: interfacesToPayload(interfaces),
+        };
   };
 
   // This validation runs BEFORE Yup schema validation. This validation logic
@@ -519,10 +526,7 @@ export const LinodeConfigDialog = (props: Props) => {
               ? config.helpers
               : omitProps(config.helpers, ['network']),
             initrd: initrdFromConfig,
-            interfaces:
-              linode?.interface_generation === 'linode'
-                ? undefined
-                : interfacesToState(config.interfaces),
+            interfaces: interfacesToState(isLinodeInterface, config.interfaces),
             kernel: config.kernel,
             label: config.label,
             memory_limit: config.memory_limit,
@@ -537,16 +541,23 @@ export const LinodeConfigDialog = (props: Props) => {
       } else {
         // Create mode; make sure loading/error states are cleared.
         resetForm({
-          values:
-            linode?.interface_generation === 'linode'
-              ? defaultFieldsValues
-              : defaultLegacyFieldValues,
+          values: isLinodeInterface
+            ? baseFieldValues
+            : defaultLegacyInterfaceFieldValues,
         });
         setUseCustomRoot(false);
         setDeviceCounter(deviceCounterDefault);
       }
     }
-  }, [open, linode, config, initrdFromConfig, resetForm, queryClient]);
+  }, [
+    open,
+    linode,
+    isLinodeInterface,
+    config,
+    initrdFromConfig,
+    resetForm,
+    queryClient,
+  ]);
 
   const generalError = formik.status?.generalError;
 
@@ -999,22 +1010,17 @@ export const LinodeConfigDialog = (props: Props) => {
                   />
                 )}
               </Box>
-              {linode?.interface_generation === 'linode' &&
-                linodeInterfacesFlag?.enabled && (
-                  <>
-                    <Typography
-                      sx={(theme) => ({ marginTop: theme.spacing(2) })}
-                    >
-                      Go to{' '}
-                      <Link to={`/linodes/${linodeId}/networking`}>
-                        Network
-                      </Link>{' '}
-                      to view your Linode&apos;s Network interfaces.
-                    </Typography>
+              {isLinodeInterface && linodeInterfacesFlag?.enabled && (
+                <>
+                  <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+                    Go to{' '}
+                    <Link to={`/linodes/${linodeId}/networking`}>Network</Link>{' '}
+                    to view your Linode&apos;s Network interfaces.
+                  </Typography>
 
-                    <StyledDivider />
-                  </>
-                )}
+                  <StyledDivider />
+                </>
+              )}
               {isLegacyConfigInterface && (
                 <>
                   {formik.errors.interfaces && (
