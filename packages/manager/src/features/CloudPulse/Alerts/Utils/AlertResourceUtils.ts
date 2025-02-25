@@ -4,13 +4,12 @@ import {
 } from '../AlertsResources/constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
-import type { AlertsEngineOptionProps } from '../AlertsResources/AlertsEngineTypeFilter';
-import type { AlertsRegionProps } from '../AlertsResources/AlertsRegionFilter';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type {
   AlertAdditionalFilterKey,
   AlertFilterKey,
   AlertFilterType,
+  AlertResourceFiltersProps,
 } from '../AlertsResources/types';
 import type { AlertServiceType, Region } from '@linode/api-v4';
 import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
@@ -84,6 +83,11 @@ interface FilterRendererProps {
    * The regions to be displayed according to the resources associated with alerts
    */
   regionOptions: Region[];
+
+  /**
+   * The tags to be displayed according to the resources associated with alerts
+   */
+  tagOptions: string[];
 }
 
 /**
@@ -323,13 +327,15 @@ export const getAlertResourceFilterProps = ({
   handleFilterChange,
   handleFilteredRegionsChange: handleSelectionChange,
   regionOptions,
-}: FilterRendererProps): AlertsEngineOptionProps | AlertsRegionProps => {
+  tagOptions,
+}: FilterRendererProps): AlertResourceFiltersProps => {
   switch (filterKey) {
     case 'engineType':
       return { handleFilterChange };
     case 'region':
       return { handleSelectionChange, regionOptions };
-
+    case 'tags':
+      return { handleFilterChange, tagOptions };
     default:
       return { handleFilterChange };
   }

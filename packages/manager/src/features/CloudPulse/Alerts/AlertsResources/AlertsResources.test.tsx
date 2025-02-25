@@ -128,7 +128,7 @@ describe('AlertResources component tests', () => {
     });
     // search with invalid text and a region
     await userEvent.type(searchInput, 'dummy');
-    await userEvent.click(getByRole('button', { name: 'Open' }));
+    await userEvent.click(getByPlaceholderText('Select Regions'));
     await userEvent.click(getByTestId(regions[0].id));
     await userEvent.click(getByRole('button', { name: 'Close' }));
     await waitFor(() => {

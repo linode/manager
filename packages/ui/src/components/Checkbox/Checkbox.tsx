@@ -1,11 +1,15 @@
+// @todo: modularization - Import from 'ui' package once FormControlLabel is migrated.
+import { FormControlLabel } from '@mui/material';
 import _Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { CheckboxCheckedIcon, CheckboxIcon } from '../../assets/icons';
+import {
+  CheckboxCheckedIcon,
+  CheckboxIcon,
+  CheckboxIndeterminateIcon,
+} from '../../assets/icons';
 import { TooltipIcon } from '../TooltipIcon';
-// @todo: modularization - Import from 'ui' package once FormControlLabel is migrated.
-import { FormControlLabel } from '@mui/material';
 
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -49,6 +53,7 @@ export const Checkbox = (props: Props) => {
       color="primary"
       data-qa-checked={props.checked}
       icon={<CheckboxIcon />}
+      indeterminateIcon={<CheckboxIndeterminateIcon />}
       {...rest}
     />
   );
