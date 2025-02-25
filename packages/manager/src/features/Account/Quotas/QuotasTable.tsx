@@ -1,11 +1,13 @@
 import { getQuotaUsage } from '@linode/api-v4';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { useTheme } from '@mui/material/styles';
 import { useQueries } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { BarPercent } from 'src/components/BarPercent/BarPercent';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -17,7 +19,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { usePagination } from 'src/hooks/usePagination';
 import { useQuotasQuery } from 'src/queries/quotas/quotas';
 
-import { getQuotasFilters } from './utils';
+import { getQuotaError, getQuotasFilters } from './utils';
 
 import type { Filter, Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
@@ -45,7 +47,11 @@ export const QuotasTable = (props: QuotasTableProps) => {
     service: selectedService,
   });
 
-  const { data: quotas, isFetching: isFetchingQuotas } = useQuotasQuery(
+  const {
+    data: quotas,
+    error: quotasError,
+    isFetching: isFetchingQuotas,
+  } = useQuotasQuery(
     selectedService.value,
     {
       page: pagination.page,
@@ -78,6 +84,10 @@ export const QuotasTable = (props: QuotasTableProps) => {
     [quotas, quotaUsageQueries]
   );
 
+  if (quotasError) {
+    return <ErrorState errorText={quotasError[0].reason} />;
+  }
+
   return (
     <>
       <Table
@@ -108,7 +118,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
               message="No quotas found for the selected service and location."
             />
           ) : (
-            quotasWithUsage.map((quota) => (
+            quotasWithUsage.map((quota, index) => (
               <TableRow key={quota.quota_id}>
                 <TableCell>
                   <Box alignItems="center" display="flex" flexWrap="nowrap">
@@ -138,6 +148,18 @@ export const QuotasTable = (props: QuotasTableProps) => {
                         <CircleProgress size="sm" />{' '}
                         <Typography>Fetching Data...</Typography>
                       </Box>
+                    ) : quotaUsageQueries[index]?.error ? (
+                      <Typography
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                          gap: 1,
+                          lineHeight: 1,
+                        }}
+                      >
+                        <ErrorOutline />
+                        {getQuotaError(quotaUsageQueries, index)}
+                      </Typography>
                     ) : (
                       <>
                         <BarPercent
