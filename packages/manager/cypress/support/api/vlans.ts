@@ -6,9 +6,9 @@ import { isTestLabel } from './common';
 import { randomLabel } from 'support/util/random';
 
 /**
- * Returns a VLAN to use for a test resource, creating it if one does not already exist.
+ * Returns a VLAN label to use for a test resource, creating it if one does not already exist.
  *
- * @returns Promise that resolves to existing or new VLAN.
+ * @returns Promise that resolves to existing or new VLAN label.
  */
 export const findOrCreateDependencyVlan = async (linodeRegion: string) => {
   const vlans = await depaginate<VLAN>((page: number) =>
@@ -23,6 +23,6 @@ export const findOrCreateDependencyVlan = async (linodeRegion: string) => {
     return suitableVlan.label;
   }
 
-  // No suitable VLANs exist, so we'll return null value and create a new one later.
+  // No suitable VLANs exist, so we'll return random label and create a new one later.
   return randomLabel();
 };
