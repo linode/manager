@@ -1152,7 +1152,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       cy.findByText('Cluster Tier').should('be.visible');
 
-      cy.findByText('Compare Cluster Tiers')
+      cy.findByText('Compare Tiers')
         .should('be.visible')
         .should('have.attr', 'href', CLUSTER_TIER_DOCS_LINK);
 

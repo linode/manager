@@ -9,7 +9,6 @@ import { useAccount } from 'src/queries/account/account';
 import { CLUSTER_TIER_DOCS_LINK } from '../constants';
 import {
   StyledDocsLinkContainer,
-  StyledSelectionCardHAControlPlaneCopy,
   StyledStackWithTabletBreakpoint,
 } from './CreateCluster.styles';
 
@@ -26,9 +25,6 @@ export const ClusterTierPanel = (props: Props) => {
 
   const { data: account } = useAccount();
 
-  const lgUpBreakpoint = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.up('lg')
-  );
   const smDownBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
@@ -43,17 +39,13 @@ export const ClusterTierPanel = (props: Props) => {
         <Stack>
           <Typography variant="h3">Cluster Tier</Typography>
           <Typography sx={{ marginTop: 1, maxWidth: 700 }}>
-            Select the cluster tier appropriate for your intended workloads.
-            Choose LKE for smaller deployments and a standard array of cluster
-            management features or LKE Enterprise for a more robust, scalable,
-            and enterprise-grade solution.
+            Select the cluster tier that’s appropriate for your intended
+            workloads. Choose LKE for smaller deployments or LKE Enterprise for
+            a more scalable, enterprise-grade solution.
           </Typography>
         </Stack>
         <StyledDocsLinkContainer>
-          <DocsLink
-            href={CLUSTER_TIER_DOCS_LINK}
-            label="Compare Cluster Tiers"
-          />
+          <DocsLink href={CLUSTER_TIER_DOCS_LINK} label="Compare Tiers" />
         </StyledDocsLinkContainer>
       </StyledStackWithTabletBreakpoint>
 
@@ -64,56 +56,32 @@ export const ClusterTierPanel = (props: Props) => {
       >
         <SelectionCard
           subheadings={[
-            'Small to medium deployments with standard features',
+            'Small to medium deployments',
             'Up to 250 nodes, 1000 pods',
-            SharedControlPlaneCopy,
+            'Shared control plane',
           ]}
           checked={selectedTier === 'standard'}
           heading="LKE"
           onClick={() => handleClusterTypeSelection('standard')}
-          sxGrid={{ width: lgUpBreakpoint ? '380px !important' : 'inherit' }}
         />
         <SelectionCard
           subheadings={[
-            'Large deployments with enterprise-grade features',
+            'Large deployments',
             'Up to 500 nodes, 5000 pods',
-            DedicatedControlPlaneCopy,
+            'Dedicated HA control plane',
           ]}
           tooltip={
             isLkeEnterpriseSelectionDisabled
-              ? 'LKE Enterprise is not currently enabled on this account. Please contact your account manager or Cloud Computing Sales using the request form or sales@linode.com.'
+              ? 'LKE Enterprise is not currently enabled on this account. Please contact your account manager or our sales team using the request form or sales@linode.com.'
               : undefined
           }
           checked={selectedTier === 'enterprise'}
           disabled={isLkeEnterpriseSelectionDisabled}
           heading="LKE Enterprise"
           onClick={() => handleClusterTypeSelection('enterprise')}
-          sxGrid={{ width: lgUpBreakpoint ? '380px !important' : 'inherit' }}
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
       </Stack>
     </Stack>
   );
 };
-
-const SharedControlPlaneCopy = (
-  <>
-    <Typography>
-      Shared control plane<span>*</span>
-    </Typography>
-    <StyledSelectionCardHAControlPlaneCopy>
-      *HA control plane can be optionally added
-    </StyledSelectionCardHAControlPlaneCopy>
-  </>
-);
-
-const DedicatedControlPlaneCopy = (
-  <>
-    <Typography>
-      Dedicated control plane<span>*</span>
-    </Typography>
-    <StyledSelectionCardHAControlPlaneCopy>
-      *HA control plane is included
-    </StyledSelectionCardHAControlPlaneCopy>
-  </>
-);

@@ -1,5 +1,5 @@
 export const CLUSTER_TIER_DOCS_LINK =
-  'https://techdocs.akamai.com/cloud-computing/docs/linode-kubernetes-engine';
+  'https://techdocs.akamai.com/cloud-computing/docs/linode-kubernetes-engine#compare-lke-and-lke-enterprise';
 export const CLUSTER_VERSIONS_DOCS_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/lke-versioning-and-life-cycle-policy';
 export const nodeWarning =
