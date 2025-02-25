@@ -50,12 +50,12 @@ describe('CheckoutBar', () => {
   });
 
   it('should disable submit button and show loading icon if isMakingRequest is true', () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId, getByRole } = renderWithTheme(
       <CheckoutBar {...defaultArgs} isMakingRequest={true} />
     );
 
     expect(getByTestId('button')).toBeDisabled();
-    expect(getByTestId('loadingIcon')).toBeInTheDocument();
+    expect(getByRole('progressbar')).toBeInTheDocument();
   });
 
   it("should disable submit button and show 'Submit' text if disabled prop is set", () => {
