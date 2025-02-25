@@ -1,19 +1,19 @@
-import { Typography } from '@linode/ui';
 import {
   Box,
   Button,
   Checkbox,
   CircleProgress,
+  Dialog,
   Divider,
   Notice,
   TooltipIcon,
+  Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Link } from 'src/components/Link';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';

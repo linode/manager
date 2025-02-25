@@ -55,6 +55,7 @@ import {
   ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,
   ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
 } from '../constants';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const DatabaseCreate = () => {
   const history = useHistory();
@@ -272,120 +273,125 @@ const DatabaseCreate = () => {
     }
   };
   return (
-    <form onSubmit={handleSubmit} ref={formRef}>
-      <LandingHeader
-        breadcrumbProps={{
-          crumbOverrides: [
-            {
-              label: 'Database Clusters',
-              position: 1,
+    <>
+      <DocumentTitleSegment segment="Create a Database" />
+      <form onSubmit={handleSubmit} ref={formRef}>
+        <LandingHeader
+          breadcrumbProps={{
+            crumbOverrides: [
+              {
+                label: 'Database Clusters',
+                position: 1,
+              },
+            ],
+            labelOptions: {
+              suffixComponent: isDatabasesV2Beta ? (
+                <BetaChip
+                  component="span"
+                  sx={{ marginLeft: '6px', marginTop: '4px' }}
+                />
+              ) : null,
             },
-          ],
-          labelOptions: {
-            suffixComponent: isDatabasesV2Beta ? (
-              <BetaChip
-                component="span"
-                sx={{ marginLeft: '6px', marginTop: '4px' }}
-              />
-            ) : null,
-          },
-          pathname: location.pathname,
-        }}
-        title="Create"
-      />
-      {isRestricted && (
-        <Notice
-          text={getRestrictedResourceText({
-            action: 'create',
-            resourceType: 'Databases',
-          })}
-          important
-          spacingTop={16}
-          variant="error"
+            pathname: location.pathname,
+          }}
+          title="Create"
         />
-      )}
-      <Paper>
-        {createError && (
-          <Notice variant="error">
-            <ErrorMessage
-              entity={{ type: 'database_id' }}
-              message={createError}
-            />
-          </Notice>
+        {isRestricted && (
+          <Notice
+            text={getRestrictedResourceText({
+              action: 'create',
+              resourceType: 'Databases',
+            })}
+            important
+            spacingTop={16}
+            variant="error"
+          />
         )}
-        <DatabaseClusterData
-          engines={engines}
-          errors={errors}
-          onChange={(field: string, value: any) => setFieldValue(field, value)}
-          regionsData={regionsData}
-          values={values}
-        />
-        <Divider spacingBottom={12} spacingTop={38} />
-        <Grid>
-          <StyledPlansPanel
-            onSelect={(selected: string) => {
-              setFieldValue('type', selected);
-            }}
-            data-qa-select-plan
-            disabled={isRestricted}
-            error={errors.type}
-            handleTabChange={handleTabChange}
-            header="Choose a Plan"
-            isCreate
+        <Paper>
+          {createError && (
+            <Notice variant="error">
+              <ErrorMessage
+                entity={{ type: 'database_id' }}
+                message={createError}
+              />
+            </Notice>
+          )}
+          <DatabaseClusterData
+            onChange={(field: string, value: any) =>
+              setFieldValue(field, value)
+            }
+            engines={engines}
+            errors={errors}
             regionsData={regionsData}
-            selectedId={values.type}
-            selectedRegionID={values.region}
-            types={displayTypes}
+            values={values}
           />
-        </Grid>
-        <Divider spacingBottom={12} spacingTop={26} />
-        <Grid>
-          <DatabaseNodeSelector
-            handleNodeChange={(v: ClusterSize) => {
-              handleNodeChange(v);
-            }}
-            displayTypes={displayTypes}
-            error={errors.cluster_size}
-            selectedClusterSize={values.cluster_size}
-            selectedEngine={selectedEngine}
-            selectedPlan={selectedPlan}
-            selectedTab={selectedTab}
-          />
-        </Grid>
-        <Divider spacingBottom={12} spacingTop={26} />
-        <DatabaseCreateAccessControls
-          disabled={isRestricted}
-          errors={ipErrorsFromAPI}
-          ips={values.allow_list}
-          onBlur={handleIPBlur}
-          onChange={(ips: ExtendedIP[]) => setFieldValue('allow_list', ips)}
-        />
-      </Paper>
-      {isDatabasesV2GA && (
-        <Paper sx={{ marginTop: 2 }}>
-          <DatabaseSummarySection
-            currentClusterSize={values.cluster_size}
-            currentEngine={selectedEngine}
-            currentPlan={selectedPlan}
+          <Divider spacingBottom={12} spacingTop={38} />
+          <Grid>
+            <StyledPlansPanel
+              onSelect={(selected: string) => {
+                setFieldValue('type', selected);
+              }}
+              data-qa-select-plan
+              disabled={isRestricted}
+              error={errors.type}
+              handleTabChange={handleTabChange}
+              header="Choose a Plan"
+              isCreate
+              regionsData={regionsData}
+              selectedId={values.type}
+              selectedRegionID={values.region}
+              types={displayTypes}
+            />
+          </Grid>
+          <Divider spacingBottom={12} spacingTop={26} />
+          <Grid>
+            <DatabaseNodeSelector
+              handleNodeChange={(v: ClusterSize) => {
+                handleNodeChange(v);
+              }}
+              displayTypes={displayTypes}
+              error={errors.cluster_size}
+              selectedClusterSize={values.cluster_size}
+              selectedEngine={selectedEngine}
+              selectedPlan={selectedPlan}
+              selectedTab={selectedTab}
+            />
+          </Grid>
+          <Divider spacingBottom={12} spacingTop={26} />
+          <DatabaseCreateAccessControls
+            disabled={isRestricted}
+            errors={ipErrorsFromAPI}
+            ips={values.allow_list}
+            onBlur={handleIPBlur}
+            onChange={(ips: ExtendedIP[]) => setFieldValue('allow_list', ips)}
           />
         </Paper>
-      )}
-      <StyledBtnCtn>
-        <StyledTypography>
-          Your database node(s) will take approximately 15-30 minutes to
-          provision.
-        </StyledTypography>
-        <StyledCreateBtn
-          buttonType="primary"
-          disabled={isRestricted}
-          loading={isSubmitting}
-          type="submit"
-        >
-          Create Database Cluster
-        </StyledCreateBtn>
-      </StyledBtnCtn>
-      {isDatabasesV2Enabled && <DatabaseLogo />}
-    </form>
+        {isDatabasesV2GA && (
+          <Paper sx={{ marginTop: 2 }}>
+            <DatabaseSummarySection
+              currentClusterSize={values.cluster_size}
+              currentEngine={selectedEngine}
+              currentPlan={selectedPlan}
+            />
+          </Paper>
+        )}
+        <StyledBtnCtn>
+          <StyledTypography>
+            Your database node(s) will take approximately 15-30 minutes to
+            provision.
+          </StyledTypography>
+          <StyledCreateBtn
+            buttonType="primary"
+            disabled={isRestricted}
+            loading={isSubmitting}
+            type="submit"
+          >
+            Create Database Cluster
+          </StyledCreateBtn>
+        </StyledBtnCtn>
+        {isDatabasesV2Enabled && <DatabaseLogo />}
+      </form>
+    </>
   );
 };
 

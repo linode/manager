@@ -1691,6 +1691,91 @@ describe('LKE cluster updates', () => {
     });
   });
 
+  it('sets default expanded node pools and has collapse/expand all functionality', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+    const mockNodePools = [
+      nodePoolFactory.build({
+        nodes: kubeLinodeFactory.buildList(10),
+        count: 10,
+      }),
+      nodePoolFactory.build({
+        nodes: kubeLinodeFactory.buildList(5),
+        count: 5,
+      }),
+      nodePoolFactory.build({ nodes: [kubeLinodeFactory.build()] }),
+    ];
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools']);
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      // Accordion should be collapsed by default since there are more than 9 nodes
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'false'
+      );
+    });
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      // Accordion should be expanded by default since there are not more than 9 nodes
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+    });
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[2].id}"]`).within(() => {
+      // Accordion should be expanded by default since there are not more than 9 nodes
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+    });
+
+    // Collapse all pools
+    ui.button
+      .findByTitle('Collapse All Pools')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.get(`[data-qa-node-pool-id]`).each(($pool) => {
+      // Accordion should be collapsed
+      cy.wrap($pool).within(() => {
+        cy.get(`[data-qa-panel-summary]`).should(
+          'have.attr',
+          'aria-expanded',
+          'false'
+        );
+      });
+    });
+
+    // Expand all pools
+    ui.button
+      .findByTitle('Expand All Pools')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.get(`[data-qa-node-pool-id]`).each(($pool) => {
+      // Accordion should be expanded
+      cy.wrap($pool).within(() => {
+        cy.get(`[data-qa-panel-summary]`).should(
+          'have.attr',
+          'aria-expanded',
+          'true'
+        );
+      });
+    });
+  });
+
   it('filters the node tables based on selected status filter', () => {
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
@@ -2370,6 +2455,7 @@ describe('LKE ACL updates', () => {
           // Confirm submit button is disabled if form has not been changed
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('not.be.enabled');
 
@@ -2384,6 +2470,7 @@ describe('LKE ACL updates', () => {
           // confirm submit button is now enabled
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled');
 
@@ -2404,6 +2491,7 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -2451,6 +2539,7 @@ describe('LKE ACL updates', () => {
           // Confirm submit button is disabled if form has not been changed
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('not.be.enabled');
 
@@ -2484,6 +2573,7 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -2568,6 +2658,7 @@ describe('LKE ACL updates', () => {
           // Confirm submit button is disabled if form has not been changed
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('not.be.enabled');
 
@@ -2582,6 +2673,7 @@ describe('LKE ACL updates', () => {
           // confirm submit button is now enabled
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled');
 
@@ -2613,6 +2705,7 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -2729,6 +2822,7 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -2819,6 +2913,7 @@ describe('LKE ACL updates', () => {
           // submit
           ui.button
             .findByTitle('Update')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();

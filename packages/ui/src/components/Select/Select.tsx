@@ -48,12 +48,20 @@ export interface SelectProps<T extends { label: string }>
     | 'loading'
     | 'noOptionsText'
     | 'onBlur'
+    | 'open'
     | 'options'
     | 'placeholder'
+    | 'ref'
     | 'sx'
     | 'textFieldProps'
     | 'value'
   > {
+  /**
+   * Whether the Autocomplete should be focused when it mounts.
+   *
+   * @default false
+   */
+  autoFocus?: boolean;
   /**
    * Whether the select can be cleared once a value is selected.
    *
@@ -111,6 +119,7 @@ export const Select = <T extends SelectOption = SelectOption>(
   props: SelectProps<T>
 ) => {
   const {
+    autoFocus = false,
     clearable = false,
     creatable = false,
     hideLabel = false,
@@ -162,6 +171,7 @@ export const Select = <T extends SelectOption = SelectOption>(
       }}
       renderInput={(params) => (
         <TextField
+          autoFocus={autoFocus}
           {...params}
           {...textFieldProps}
           InputProps={{

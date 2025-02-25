@@ -1,9 +1,8 @@
-import { Stack } from '@linode/ui';
+import { Dialog, Stack } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
-
-import type { DialogProps } from 'src/components/Dialog/Dialog';
+import type { DialogProps } from '@linode/ui';
 
 export interface ConfirmationDialogProps extends DialogProps {
   /**
@@ -29,7 +28,7 @@ export const ConfirmationDialog = React.forwardRef<
 
   return (
     <Dialog {...dialogProps} PaperProps={{ role: undefined }} ref={ref}>
-      {children}
+      <StyledDialogContentSection>{children}</StyledDialogContentSection>
       <Stack
         direction="row"
         justifyContent="flex-end"
@@ -43,3 +42,10 @@ export const ConfirmationDialog = React.forwardRef<
     </Dialog>
   );
 });
+
+const StyledDialogContentSection = styled(Stack, {
+  label: 'StyledDialogContentSection',
+})(({ theme: { spacing } }) => ({
+  marginBottom: spacing(2),
+  order: -1,
+}));

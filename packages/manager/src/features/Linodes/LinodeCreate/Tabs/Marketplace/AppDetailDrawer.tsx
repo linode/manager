@@ -15,7 +15,7 @@ import type { Theme } from '@mui/material/styles';
 const useStyles = makeStyles()((theme: Theme) => ({
   appName: {
     color: `${theme.tokens.color.Neutrals.White} !important`,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '2.2rem',
     lineHeight: '2.5rem',
     textAlign: 'center',
@@ -82,7 +82,6 @@ export const AppDetailDrawer = (props: Props) => {
       classes={{ paper: classes.paper }}
       data-qa-drawer
       data-testid="drawer"
-      disablePortal
       onClose={onClose}
       open={open}
     >
@@ -107,14 +106,9 @@ export const AppDetailDrawer = (props: Props) => {
             style={gradient}
           >
             <img
-              src={`/assets/white/${
-                REUSE_WHITE_ICONS[
-                  selectedApp?.details
-                    ?.logo_url as keyof typeof REUSE_WHITE_ICONS
-                ] || selectedApp?.details?.logo_url
-              }`}
               alt={`${displayLabel} logo`}
               className={classes.image}
+              src={`/assets/white/${selectedApp?.details?.logo_url}`}
             />
             <Typography
               dangerouslySetInnerHTML={{
@@ -212,11 +206,4 @@ export const AppDetailDrawer = (props: Props) => {
       )}
     </Drawer>
   );
-};
-
-// remove this when we make the svgs white via css
-const REUSE_WHITE_ICONS = {
-  'mongodbmarketplaceocc.svg': 'mongodb.svg',
-  'postgresqlmarketplaceocc.svg': 'postgresql.svg',
-  'redissentinelmarketplaceocc.svg': 'redis.svg',
 };

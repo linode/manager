@@ -241,6 +241,19 @@ export const NodeTable = React.memo((props: Props) => {
                   )}
                 </TableBody>
               </Table>
+              <PaginationFooter
+                count={count}
+                eventCategory="Node Table"
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+                /**
+                 * M3-9360: Since this table is in an accordion, the position needs to be relative
+                 * to prevent an overflow-y issue with the absolutely positioned visually-hidden footer label
+                 **/
+                sx={{ position: 'relative' }}
+              />
               <StyledTableFooter>
                 <StyledPoolInfoBox>
                   {isDiskEncryptionFeatureEnabled &&
@@ -265,14 +278,6 @@ export const NodeTable = React.memo((props: Props) => {
                 </StyledPoolInfoBox>
                 <TagCell tags={tags} updateTags={updateTags} view="inline" />
               </StyledTableFooter>
-              <PaginationFooter
-                count={count}
-                eventCategory="Node Table"
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
-                page={page}
-                pageSize={pageSize}
-              />
             </>
           )}
         </Paginate>

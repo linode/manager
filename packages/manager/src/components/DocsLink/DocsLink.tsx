@@ -53,12 +53,13 @@ const StyledDocsLink = styled(Link, {
   ...theme.applyLinkStyles,
   '& svg': {
     marginRight: theme.spacing(),
+    position: 'relative',
+    top: -2,
   },
   alignItems: 'center',
   display: 'flex',
-  fontFamily: theme.font.normal,
+  font: theme.font.normal,
   fontSize: '.875rem',
-  lineHeight: 'normal',
   margin: 0,
   minWidth: 'auto',
 }));

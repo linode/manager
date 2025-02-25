@@ -29,7 +29,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: 45,
   },
   paymentMethodLabel: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     marginRight: theme.spacing(),
   },
   paymentTextContainer: {

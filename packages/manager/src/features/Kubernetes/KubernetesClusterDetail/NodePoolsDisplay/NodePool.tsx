@@ -24,12 +24,14 @@ import type {
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
+  accordionExpanded: boolean;
   autoscaler: AutoscaleSettings;
   clusterCreated: string;
   clusterId: number;
   clusterTier: KubernetesTier;
   count: number;
   encryptionStatus: EncryptionStatus | undefined;
+  handleAccordionClick: () => void;
   handleClickLabelsAndTaints: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
   isOnlyNodePool: boolean;
@@ -46,12 +48,14 @@ interface Props {
 
 export const NodePool = (props: Props) => {
   const {
+    accordionExpanded,
     autoscaler,
     clusterCreated,
     clusterId,
     clusterTier,
     count,
     encryptionStatus,
+    handleAccordionClick,
     handleClickLabelsAndTaints,
     handleClickResize,
     isOnlyNodePool,
@@ -210,7 +214,10 @@ export const NodePool = (props: Props) => {
       }
       data-qa-node-pool-id={poolId}
       data-qa-node-pool-section
-      defaultExpanded={true}
+      expanded={accordionExpanded}
+      onChange={handleAccordionClick}
+      // Improve performance by unmounting large content from the DOM when collapsed
+      slotProps={{ transition: { unmountOnExit: nodes.length > 25 } }}
     >
       <NodeTable
         clusterCreated={clusterCreated}

@@ -63,7 +63,7 @@ export const LinodeCLIPanel = ({
         </Link>
         .
       </Typography>
-      <CodeBlock command={cliCommand} commandType={title} language={'bash'} />
+      <CodeBlock code={cliCommand} analyticsLabel={title} language={'bash'} />
     </SafeTabPanel>
   );
 };
