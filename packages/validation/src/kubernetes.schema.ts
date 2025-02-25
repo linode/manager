@@ -12,7 +12,7 @@ export const AutoscaleNodePoolSchema = object({
     is: true,
     then: (schema) =>
       schema
-        .required()
+        .required('Minimum is a required field.')
         .test(
           'min',
           'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.',
@@ -34,7 +34,7 @@ export const AutoscaleNodePoolSchema = object({
     is: true,
     then: (schema) =>
       schema
-        .required()
+        .required('Maximum is a required field.')
         .min(1, 'Maximum must be between 1 and 100 nodes.')
         .max(100, 'Maximum must be between 1 and 100 nodes.'),
   }),

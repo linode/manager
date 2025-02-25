@@ -18,7 +18,7 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
-import { nodeWarning } from '../../kubeUtils';
+import { nodeWarning } from '../../constants';
 import { hasInvalidNodePoolPrice } from './utils';
 
 import type { Region } from '@linode/api-v4';

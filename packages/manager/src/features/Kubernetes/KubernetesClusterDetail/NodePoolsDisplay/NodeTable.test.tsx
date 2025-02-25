@@ -103,7 +103,7 @@ describe('NodeTable', () => {
 
     expect(
       await findByText(
-        'Nodes will appear once cluster provisioning is complete.'
+        'Worker nodes will appear once cluster provisioning is complete.'
       )
     ).toBeVisible();
 
