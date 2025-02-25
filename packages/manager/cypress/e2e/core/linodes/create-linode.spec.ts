@@ -552,15 +552,15 @@ describe('Create Linode', () => {
     // Login and wait for application to load
     cy.visitWithLogin('/linodes/create');
 
-    // TODO: Confirm that a notice should be shown informing the user they do not have permission to create a Linode.
+    // Confirm that a notice should be shown informing the user they do not have permission to create a Linode.
     cy.findByText(
       "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
     ).should('be.visible');
 
-    // Confirm that "Region" select dropdown is diabled
+    // Confirm that "Region" select dropdown is disabled
     ui.regionSelect.find().should('be.visible').should('be.disabled');
 
-    // Confirm that "Linux Distribution" select dropdown is diabled
+    // Confirm that "Linux Distribution" select dropdown is disabled
     cy.get('[data-qa-autocomplete="Linux Distribution"]').within(() => {
       cy.get('[placeholder="Choose a Linux distribution"]')
         .should('be.visible')
