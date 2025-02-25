@@ -2,6 +2,7 @@ import { quotaTypes } from '@linode/api-v4';
 import { Divider, Paper, Select, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -143,7 +144,6 @@ export const Quotas = () => {
           </Typography>
           <Stack direction="column" spacing={2}>
             <QuotasTable
-              hasSelectedLocation={Boolean(selectedLocation)}
               selectedLocation={selectedLocation}
               selectedService={selectedService}
             />
