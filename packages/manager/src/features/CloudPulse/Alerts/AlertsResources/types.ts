@@ -8,7 +8,7 @@ export interface ColumnConfig<T> {
   /**
    * Function to extract the value from a data object for display in the column.
    * @param data - The data object of type T.
-   * @returns The string representation of the column value.
+   * @returns The react node representation of the column value.
    */
   accessor: (data: T) => React.ReactNode;
 
