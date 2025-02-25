@@ -1,7 +1,7 @@
+import { downloadFile } from '@linode/utilities';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { downloadFile } from 'src/utilities/downloadFile';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { DownloadDNSZoneFileButton } from './DownloadDNSZoneFileButton';
@@ -18,8 +18,8 @@ vi.mock('@linode/api-v4/lib/domains', async () => {
   };
 });
 
-vi.mock('src/utilities/downloadFile', async () => {
-  const actual = await vi.importActual<any>('src/utilities/downloadFile');
+vi.mock('@linode/utilities', async () => {
+  const actual = await vi.importActual<any>('@linode/utilities');
   return {
     ...actual,
     downloadFile: vi.fn(),
