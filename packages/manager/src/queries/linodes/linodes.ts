@@ -18,6 +18,7 @@ import {
   linodeBoot,
   linodeReboot,
   linodeShutdown,
+  rebuildLinode,
   rescueLinode,
   resizeLinode,
   scheduleOrQueueMigration,
@@ -63,6 +64,7 @@ import type {
   LinodeLishData,
   MigrateLinodeRequest,
   Params,
+  RebuildRequest,
   ResizeLinodePayload,
   ResourcePage,
 } from '@linode/api-v4';
@@ -489,6 +491,24 @@ export const useLinodeRescueMutation = (id: number) => {
   return useMutation<{}, APIError[], Devices>({
     mutationFn: (data) => rescueLinode(id, data),
     onSuccess() {
+      queryClient.invalidateQueries(linodeQueries.linodes);
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: linodeQueries.linode(id).queryKey,
+      });
+    },
+  });
+};
+
+export const useRebuildLinodeMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<Linode, APIError[], RebuildRequest>({
+    mutationFn: (data) => rebuildLinode(id, data),
+    onSuccess(linode) {
+      queryClient.setQueryData(
+        linodeQueries.linode(linode.id).queryKey,
+        linode
+      );
       queryClient.invalidateQueries(linodeQueries.linodes);
       queryClient.invalidateQueries({
         exact: true,

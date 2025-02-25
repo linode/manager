@@ -5,7 +5,7 @@ import { FormGroup } from 'src/components/FormGroup';
 import { Link } from 'src/components/Link';
 import { usePreferences } from 'src/queries/profile/preferences';
 
-import type { TextFieldProps } from '@linode/ui';
+import type { TextFieldProps, TypographyProps } from '@linode/ui';
 import type { SxProps } from '@mui/material';
 import type { Theme } from '@mui/material';
 
@@ -20,6 +20,11 @@ export interface TypeToConfirmProps extends Omit<TextFieldProps, 'onChange'> {
   onChange: (value: string) => void;
   textFieldStyle?: React.CSSProperties;
   title?: string;
+  /**
+   * Override the title's variant
+   * @default h2
+   */
+  titleVariant?: TypographyProps['variant'];
   typographyStyle?: React.CSSProperties;
   typographyStyleSx?: SxProps<Theme>;
   visible?: boolean | undefined;
@@ -37,6 +42,7 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
     title,
     typographyStyle,
     typographyStyleSx,
+    titleVariant,
     visible = false,
     ...rest
   } = props;
@@ -61,7 +67,7 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
     <>
       {showTypeToConfirmInput ? (
         <>
-          <Typography variant="h2">{title}</Typography>
+          <Typography variant={titleVariant ?? 'h2'}>{title}</Typography>
           <Typography style={typographyStyle} sx={typographyStyleSx}>
             {confirmationText}
           </Typography>

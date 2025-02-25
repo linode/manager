@@ -271,7 +271,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           open={this.state.linodeMigrateOpen}
         />
         <LinodeRebuildDialog
-          linodeId={this.state.selectedLinodeID ?? -1}
+          linodeId={this.state.selectedLinodeID}
           linodeLabel={this.state.selectedLinodeLabel}
           onClose={this.closeDialogs}
           open={this.state.rebuildDialogOpen}

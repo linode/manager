@@ -1,23 +1,11 @@
 import { getStackScripts } from '@linode/api-v4';
 
-import type { StackScriptsRequest } from './types';
 import type {
-  Filter,
   Grant,
   Params,
-  ResourcePage,
   StackScript,
   StackScriptPayload,
 } from '@linode/api-v4';
-
-export type StackScriptCategory = 'account' | 'community';
-
-export const emptyResult: ResourcePage<StackScript> = {
-  data: [],
-  page: 1,
-  pages: 1,
-  results: 0,
-};
 
 const oneClickFilter = [
   {
@@ -35,67 +23,6 @@ const oneClickFilter = [
 
 export const getOneClickApps = (params?: Params) =>
   getStackScripts(params, oneClickFilter);
-
-export const getMineAndAccountStackScripts: StackScriptsRequest = (
-  params?: Params,
-  filter?: Filter
-) => {
-  return getStackScripts(params, { ...filter, mine: true });
-};
-
-/**
- * Gets all StackScripts that don't belong to user "Linode"
- * and do not belong to any users on the current account
- */
-export const getCommunityStackscripts: StackScriptsRequest = (
-  params?: Params,
-  filter?: Filter
-) => {
-  return getStackScripts(params, {
-    ...filter,
-    '+and': [
-      { username: { '+neq': 'linode' } },
-      // linode-stackscripts is the account name on dev for Marketplace Apps
-      { username: { '+neq': 'linode-stackscripts' } },
-    ],
-    mine: false,
-  });
-};
-
-export type AcceptedFilters = 'description' | 'label' | 'username';
-
-export const generateSpecificFilter = (
-  key: AcceptedFilters,
-  searchTerm: string
-) => {
-  return {
-    [key]: {
-      ['+contains']: searchTerm,
-    },
-  };
-};
-
-export const generateCatchAllFilter = (searchTerm: string) => {
-  return {
-    ['+or']: [
-      {
-        label: {
-          ['+contains']: searchTerm,
-        },
-      },
-      {
-        username: {
-          ['+contains']: searchTerm,
-        },
-      },
-      {
-        description: {
-          ['+contains']: searchTerm,
-        },
-      },
-    ],
-  };
-};
 
 export const getStackScriptUrl = (
   username: string,
