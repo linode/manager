@@ -1,34 +1,31 @@
-import { Store, applyMiddleware, combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import thunk from 'redux-thunk';
 
-import { State as AuthState } from 'src/store/authentication';
-import authentication, {
-  defaultState as authenticationDefaultState,
-} from 'src/store/authentication/authentication.reducer';
 import globalErrors, {
-  State as GlobalErrorState,
   defaultState as defaultGlobalErrorState,
 } from 'src/store/globalErrors';
 import longview, {
-  State as LongviewState,
   defaultState as defaultLongviewState,
 } from 'src/store/longview/longview.reducer';
 import longviewStats, {
-  State as LongviewStatsState,
   defaultState as defaultLongviewStatsState,
 } from 'src/store/longviewStats/longviewStats.reducer';
 
 import mockFeatureFlags, {
-  MockFeatureFlagState,
   defaultMockFeatureFlagState,
 } from './mockFeatureFlags';
 import pendingUpload, {
-  State as PendingUploadState,
   defaultState as pendingUploadState,
 } from './pendingUpload';
-import thunk from 'redux-thunk';
+
+import type { MockFeatureFlagState } from './mockFeatureFlags';
+import type { State as PendingUploadState } from './pendingUpload';
+import type { Store } from 'redux';
+import type { State as GlobalErrorState } from 'src/store/globalErrors';
+import type { State as LongviewState } from 'src/store/longview/longview.reducer';
+import type { State as LongviewStatsState } from 'src/store/longviewStats/longviewStats.reducer';
 
 export interface ApplicationState {
-  authentication: AuthState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
@@ -37,7 +34,6 @@ export interface ApplicationState {
 }
 
 export const defaultState: ApplicationState = {
-  authentication: authenticationDefaultState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
@@ -49,7 +45,6 @@ export const defaultState: ApplicationState = {
  * Reducers
  */
 const reducers = combineReducers<ApplicationState>({
-  authentication,
   globalErrors,
   longviewClients: longview,
   longviewStats,
