@@ -190,7 +190,7 @@ describe('Integration Tests for Edit Alert', () => {
       .click();
 
     // Verify the update request and response
-    cy.wait('@updateDefinitions').then(({ request, response }) => {
+    cy.wait('@updateDefinitions').then(({ request }) => {
       // Assert successful API response
       const resourceIds = request.body.entity_ids.map(String);
       // Compare resource IDs
