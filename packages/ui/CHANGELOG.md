@@ -1,3 +1,14 @@
+## [2025-02-25] - v0.7.0
+
+
+### Added:
+- ESLint rules to disallow `data-test-id` attributes and enforce type-safe equality operators ([#11634](https://github.com/linode/manager/pull/11634))
+- `Dialog`, `DialogTitle` components, and `visibilityHide.svg`, `visibilityShow.svg`, and `chevron-down.svg` icons to the `@linode/ui` package ([#11673](https://github.com/linode/manager/pull/11673))
+
+### Upcoming Features:
+
+- Add `MuiOutlinedInput` styling in `dark.ts` and `light.ts` ([#11573](https://github.com/linode/manager/pull/11573))
+
 ## [2025-01-28] - v0.6.0
 
 
