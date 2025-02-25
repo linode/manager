@@ -336,12 +336,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       )}
       <Grid container spacing={3}>
         <Grid
-          alignItems="center"
           columnSpacing={2}
           container
           item
           rowSpacing={3}
           xs={12}
+          sx={{
+            alignItems: 'center',
+          }}
         >
           <Grid item md={3} xs={12}>
             <DebouncedSearchTextField

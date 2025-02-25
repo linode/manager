@@ -1,6 +1,6 @@
 import { Box, Button, Chip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
@@ -98,7 +98,7 @@ export const KubernetesPlanSelection = (
   ];
 
   const renderVariant = () => (
-    <Grid xs={12}>
+    <Grid size={12}>
       <StyledInputOuter>
         <EnhancedNumberInput
           disabled={rowIsDisabled}

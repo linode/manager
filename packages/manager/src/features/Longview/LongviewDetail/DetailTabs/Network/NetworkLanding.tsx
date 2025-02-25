@@ -1,18 +1,19 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
-import {
+import type {
   LongviewNetworkInterface,
   WithStartAndEnd,
 } from '../../../request.types';
-import { StyledItemGrid, StyledTimeRangeSelect } from '../CommonStyles.styles';
 import { StyledBox } from '../Disks/Disks.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { NetworkGraphs } from './NetworkGraphs';
+
+import type { APIError } from '@linode/api-v4';
+import { TimeRangeSelect } from 'src/features/Longview/shared/TimeRangeSelect';
 
 interface Props {
   clientAPIKey: string;
@@ -51,22 +52,23 @@ export const NetworkLanding = (props: Props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'Network'} />
-      <StyledItemGrid xs={12}>
+      <Grid size={{ xs: 12 }}>
         <StyledBox
           alignItems="center"
           display="flex"
           flexDirection="row"
           justifyContent="flex-end"
         >
-          <StyledTimeRangeSelect
+          <TimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
+            sx={{ width: 250 }}
           />
         </StyledBox>
-      </StyledItemGrid>
-      <StyledItemGrid className="py0" xs={12}>
+      </Grid>
+      <Grid size={{ xs: 12 }} sx={{ py: 0 }}>
         <NetworkGraphs
           end={time.end}
           error={lastUpdatedError?.[0]?.reason || error}
@@ -76,7 +78,7 @@ export const NetworkLanding = (props: Props) => {
           start={time.start}
           timezone={timezone}
         />
-      </StyledItemGrid>
+      </Grid>
     </Grid>
   );
 };

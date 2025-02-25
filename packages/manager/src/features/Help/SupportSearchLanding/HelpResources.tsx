@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -58,7 +58,7 @@ export const HelpResources = () => {
   return (
     <>
       <Grid className={classes.wrapper} container spacing={2}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Typography className={classes.heading} variant="h2">
             Didn&rsquo;t find what you need? Get help.
           </Typography>
@@ -70,7 +70,13 @@ export const HelpResources = () => {
           }}
           container
         >
-          <Grid md={4} sm={6} xs={12}>
+          <Grid
+            size={{
+              md: 4,
+              sm: 6,
+              xs: 12,
+            }}
+          >
             <Tile
               description="Find help from other Linode users in the Community Find help from other Linode "
               icon={<Community />}
@@ -78,10 +84,16 @@ export const HelpResources = () => {
               title="Create a Community Post"
             />
           </Grid>
-          <Grid md={4} sm={6} xs={12}>
+          <Grid
+            size={{
+              md: 4,
+              sm: 6,
+              xs: 12,
+            }}
+          >
             <Tile
               description="If you are not able to solve an issue with the resources listed above,
-                you can contact Linode Support"
+              you can contact Linode Support"
               icon={<Support />}
               link={openTicketDrawer}
               title="Open a ticket"
