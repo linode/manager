@@ -128,7 +128,6 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
         region: 'us-ord',
         widgets: {},
       },
-      theme: 'dark',
     }).as('fetchpreferences');
   });
 

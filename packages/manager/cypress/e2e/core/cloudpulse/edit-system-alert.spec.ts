@@ -31,6 +31,7 @@ const expectedResourceIds = Array.from({ length: 50 }, (_, i) => String(i + 1));
 const mockAccount = accountFactory.build();
 const alertDetails = alertFactory.build({
   description: 'Test description',
+  entity_ids: ['1', '2', '3', '4', '5'],
   label: 'Alert-1',
   service_type: 'dbaas',
   severity: 1,

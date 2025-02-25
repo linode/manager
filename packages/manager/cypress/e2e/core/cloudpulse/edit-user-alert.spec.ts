@@ -268,9 +268,9 @@ describe('Integration Tests for Edit Alert', () => {
 
     // Verify notification details
     cy.get('[data-qa-notification="notification-channel-0"]').within(() => {
-      cy.get('[data-qa-channel="true"]').should('have.text', 'Channel-1');
-      cy.get('[data-qa-type="true"]').next().should('have.text', 'Email');
-      cy.get('[data-qa-channel-details="true"]').should(
+      cy.get('[data-qa-channel]').should('have.text', 'Channel-1');
+      cy.get('[data-qa-type]').next().should('have.text', 'Email');
+      cy.get('[data-qa-channel-details]').should(
         'have.text',
         'test@test.comtest2@test.com'
       );

@@ -28,6 +28,7 @@ import type { Flags } from 'src/featureFlags';
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
 const alertDetails = alertFactory.build({
+  entity_ids: ['1', '2', '3', '4', '5'],
   service_type: 'dbaas',
   severity: 1,
   status: 'enabled',
