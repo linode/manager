@@ -1,6 +1,6 @@
 import { Chip } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import {
@@ -90,14 +90,20 @@ export const PaymentMethodCard = (props: Props) => {
 
   const renderVariant = () => {
     return is_default ? (
-      <Grid md={2} sx={sxVariant} xs={3}>
+      <Grid
+        sx={sxVariant}
+        size={{
+          md: 2,
+          xs: 3,
+        }}
+      >
         <Chip component="span" label="DEFAULT" size="small" />
       </Grid>
     ) : null;
   };
 
   return (
-    <Grid xs={12}>
+    <Grid size={12}>
       <SelectionCard
         sxCardBase={{
           flexWrap: 'nowrap',

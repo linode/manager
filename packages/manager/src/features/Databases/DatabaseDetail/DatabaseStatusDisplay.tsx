@@ -1,8 +1,8 @@
 import { Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { capitalize } from 'src/utilities/capitalize';
 
 import type { Event } from '@linode/api-v4';
 import type {

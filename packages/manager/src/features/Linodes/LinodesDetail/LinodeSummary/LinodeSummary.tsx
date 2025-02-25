@@ -1,6 +1,6 @@
 import { Autocomplete, ErrorState, Paper, Stack, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -234,7 +234,7 @@ const LinodeSummary = (props: Props) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid sx={{ display: 'flex', justifyContent: 'flex-end' }} xs={12}>
+      <Grid sx={{ display: 'flex', justifyContent: 'flex-end' }} size={12}>
         <Autocomplete
           textFieldProps={{
             hideLabel: true,
@@ -249,7 +249,12 @@ const LinodeSummary = (props: Props) => {
           sx={{ mt: 1, width: 150 }}
         />
       </Grid>
-      <Grid md={6} xs={12}>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
         <Paper sx={{ height: 370 }} variant="outlined">
           <StatsPanel
             renderBody={renderCPUChart}
@@ -258,7 +263,12 @@ const LinodeSummary = (props: Props) => {
           />
         </Paper>
       </Grid>
-      <Grid md={6} xs={12}>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
         <Paper sx={{ height: 370 }} variant="outlined">
           <StatsPanel
             renderBody={renderDiskIOChart}

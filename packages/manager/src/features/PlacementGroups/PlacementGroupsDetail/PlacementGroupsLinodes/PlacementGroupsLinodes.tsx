@@ -1,5 +1,5 @@
 import { Button, ErrorState, Stack } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import Grid from '@mui/material/Grid2';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -143,8 +143,22 @@ export const PlacementGroupsLinodes = (props: Props) => {
 
   return (
     <Stack spacing={2}>
-      <Grid container justifyContent="space-between">
-        <Grid flexGrow={1} sm={6} sx={{ mb: 1 }} xs={12}>
+      <Grid
+        sx={{
+          justifyContent: 'space-between',
+        }}
+        container
+      >
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12,
+          }}
+          sx={{
+            flexGrow: 1,
+            mb: 1,
+          }}
+        >
           <DebouncedSearchTextField
             clearable
             debounceTime={250}

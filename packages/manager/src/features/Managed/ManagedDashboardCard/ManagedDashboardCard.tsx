@@ -1,5 +1,5 @@
 import { CircleProgress, ErrorState } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import {
@@ -13,7 +13,6 @@ import {
   StyledDashboardCard,
   StyledMonitorStatusOuterGrid,
   StyledOuterContainerGrid,
-  StyledStatusGrid,
 } from './ManagedDashboardCard.styles';
 import MonitorStatus from './MonitorStatus';
 import MonitorTickets from './MonitorTickets';
@@ -57,13 +56,12 @@ export const ManagedDashboardCard = () => {
         direction="row"
         justifyContent="center"
       >
-        <StyledStatusGrid
+        <Grid
           alignItems="center"
           container
           direction="column"
           justifyContent="space-around"
-          sm={5}
-          xs={12}
+          size={{ sm: 5, xs: 12 }}
         >
           <StyledMonitorStatusOuterGrid>
             <MonitorStatus monitors={monitors || []} />
@@ -71,7 +69,7 @@ export const ManagedDashboardCard = () => {
           <Grid>
             <MonitorTickets issues={issues || []} />
           </Grid>
-        </StyledStatusGrid>
+        </Grid>
         <ManagedChartPanel />
       </StyledOuterContainerGrid>
     </StyledDashboardCard>

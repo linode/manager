@@ -16,9 +16,9 @@ export const InternalAdminBanner = (props: InternalAdminBannerProps) => {
     >
       <Typography
         sx={(theme) => ({
+          color: theme.tokens.color.Neutrals.Black,
           font: theme.tokens.typography.Body.Regular,
         })}
-        color={(theme) => theme.tokens.color.Neutrals.Black}
       >
         You are logged in as customer: <strong>{username}</strong>
       </Typography>

@@ -171,7 +171,14 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 resource_ids={[resource]}
               />
             )}
-            <Grid item mb={3} mt={-3} xs={12}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                mb: 3,
+                mt: -3,
+              }}
+            >
               {showAppliedFilters && (
                 <CloudPulseAppliedFilterRenderer
                   filters={filterData.label}

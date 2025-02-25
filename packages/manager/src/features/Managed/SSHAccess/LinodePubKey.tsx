@@ -1,6 +1,6 @@
 import { Button, ErrorState, Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
@@ -83,8 +83,20 @@ const LinodePubKey = () => {
 
   return (
     <StyledRootPaper>
-      <Grid container justifyContent="space-between" spacing={2}>
-        <Grid lg={4} md={3} xs={12}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          justifyContent: 'space-between',
+        }}
+      >
+        <Grid
+          size={{
+            lg: 4,
+            md: 3,
+            xs: 12,
+          }}
+        >
           <Stack flexDirection="row">
             <StyledSSHKeyIcon />
             <Typography variant="h3">Linode Public Key</Typography>
@@ -94,7 +106,7 @@ const LinodePubKey = () => {
             managed Linodes so we can access them and diagnose issues.
           </Typography>
         </Grid>
-        <StyledSSHKeyContainerGrid md={6} sm={7} xs={12}>
+        <StyledSSHKeyContainerGrid size={{ md: 6, sm: 7, xs: 12 }}>
           <StyledTypography sx={{ fontSize: 14 }}>
             {preferences?.maskSensitiveData && isSSHKeyMasked ? (
               <MaskableTextAreaCopy />
@@ -105,7 +117,7 @@ const LinodePubKey = () => {
             {/* pubKey.slice(0, 160)} . . . */}
           </StyledTypography>
         </StyledSSHKeyContainerGrid>
-        <StyledCopyToClipboardGrid lg={2} md={3} sm={4} xs={12}>
+        <StyledCopyToClipboardGrid size={{ lg: 2, md: 3, sm: 4, xs: 12 }}>
           <Stack
             flexDirection={matchesSmDownBreakpoint ? 'row' : 'column'}
             marginLeft={matchesSmDownBreakpoint ? 'auto' : undefined}

@@ -1,4 +1,5 @@
-import { capitalize } from 'src/utilities/capitalize';
+import { capitalize } from '@linode/utilities';
+
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 import { PORT_PRESETS } from './FirewallDetail/Rules/shared';

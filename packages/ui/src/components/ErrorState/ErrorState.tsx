@@ -1,6 +1,6 @@
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Button } from '../Button';

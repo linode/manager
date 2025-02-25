@@ -1,4 +1,5 @@
 import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import * as React from 'react';
 
 import Flag from 'src/assets/icons/flag.svg';
@@ -17,7 +18,6 @@ import {
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useTypeQuery } from 'src/queries/types';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { IPAddress } from '../IPAddress';
