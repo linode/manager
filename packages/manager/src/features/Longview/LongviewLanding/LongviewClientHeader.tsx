@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -74,7 +74,7 @@ export const LongviewClientHeader = enhanced(
 
     const hostname =
       longviewClientData.SysInfo?.hostname ?? 'Hostname not available';
-    const uptime = longviewClientData?.uptime ?? null;
+    const uptime = longviewClientData?.Uptime ?? null;
     const formattedUptime =
       uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
     const packages = longviewClientData?.Packages ?? null;

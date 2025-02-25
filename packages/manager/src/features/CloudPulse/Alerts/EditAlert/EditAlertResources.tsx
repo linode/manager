@@ -78,7 +78,6 @@ export const EditAlertResources = (props: EditAlertProps) => {
     () => isResourcesEqual(alertDetails?.entity_ids, selectedResources),
     [alertDetails, selectedResources]
   );
-
   const handleResourcesSelection = (resourceIds: string[]) => {
     setSelectedResources(resourceIds); // keep track of the selected resources and update it on save
   };

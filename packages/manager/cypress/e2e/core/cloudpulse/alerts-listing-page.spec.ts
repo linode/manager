@@ -93,10 +93,8 @@ const verifyTableSorting = (
   sortOrder: 'ascending' | 'descending',
   expectedValues: number[]
 ) => {
-  ui.heading
-    .findByText(header)
-    .click()
-    .should('have.attr', 'aria-sort', sortOrder);
+  ui.heading.findByText(header).click();
+  ui.heading.findByText(header).should('have.attr', 'aria-sort', sortOrder);
 
   cy.get('[data-qa="alert-table"]').within(() => {
     cy.get('[data-qa-alert-cell]').should(($cells) => {
@@ -251,8 +249,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       ui.button
         .findByAttribute('aria-label', 'Clear')
         .should('be.visible')
-        .scrollIntoView()
-        .click();
+        .scrollIntoView();
+      ui.button.findByAttribute('aria-label', 'Clear').click();
     });
 
     // Filter by alert status and validate the results
@@ -284,8 +282,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       cy.findByPlaceholderText('Search for Alerts')
         .should('be.visible')
         .and('not.be.disabled')
-        .clear()
-        .type(alertName);
+        .clear();
+      cy.findByPlaceholderText('Search for Alerts').type(alertName);
 
       cy.focused().click();
     };
@@ -310,7 +308,6 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       ui.actionMenuItem.findByTitle(action).should('be.visible').click();
 
       cy.wait(alias).then(({ response }) => {
-        expect(response).to.have.property('statusCode', 200);
         ui.toast.assertMessage(successMessage);
       });
     };

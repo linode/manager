@@ -1291,16 +1291,16 @@ describe('LKE cluster updates', () => {
     });
 
     it('can add labels and taints', () => {
-      const mockNewSimpleLabel = 'my-label-key: my-label-value';
-      const mockNewDNSLabel = 'my-label-key.io/app: my-label-value';
+      const mockNewSimpleLabel = 'my_label.-key: my_label.-value';
+      const mockNewDNSLabel = 'my_label-key.io/app: my_label.-value';
       const mockNewTaint: Taint = {
-        key: 'my-taint-key',
-        value: 'my-taint-value',
+        key: 'my_taint.-key',
+        value: 'my_taint.-value',
         effect: 'NoSchedule',
       };
       const mockNewDNSTaint: Taint = {
-        key: 'my-taint-key.io/app',
-        value: 'my-taint-value',
+        key: 'my_taint-key.io/app',
+        value: 'my_taint.-value',
         effect: 'NoSchedule',
       };
       const mockNodePoolUpdated = nodePoolFactory.build({
@@ -1309,8 +1309,8 @@ describe('LKE cluster updates', () => {
         nodes: mockNodes,
         taints: [mockNewTaint, mockNewDNSTaint],
         labels: {
-          'my-label-key': 'my-label-value',
-          'my-label-key.io/app': 'my-label-value',
+          'my_label-key': 'my_label.-value',
+          'my_label-key.io/app': 'my_label.-value',
         },
       });
 
@@ -1688,6 +1688,91 @@ describe('LKE cluster updates', () => {
         'aria-expanded',
         'false'
       );
+    });
+  });
+
+  it('sets default expanded node pools and has collapse/expand all functionality', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+    const mockNodePools = [
+      nodePoolFactory.build({
+        nodes: kubeLinodeFactory.buildList(10),
+        count: 10,
+      }),
+      nodePoolFactory.build({
+        nodes: kubeLinodeFactory.buildList(5),
+        count: 5,
+      }),
+      nodePoolFactory.build({ nodes: [kubeLinodeFactory.build()] }),
+    ];
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePools']);
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
+      // Accordion should be collapsed by default since there are more than 9 nodes
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'false'
+      );
+    });
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
+      // Accordion should be expanded by default since there are not more than 9 nodes
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+    });
+
+    cy.get(`[data-qa-node-pool-id="${mockNodePools[2].id}"]`).within(() => {
+      // Accordion should be expanded by default since there are not more than 9 nodes
+      cy.get(`[data-qa-panel-summary]`).should(
+        'have.attr',
+        'aria-expanded',
+        'true'
+      );
+    });
+
+    // Collapse all pools
+    ui.button
+      .findByTitle('Collapse All Pools')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.get(`[data-qa-node-pool-id]`).each(($pool) => {
+      // Accordion should be collapsed
+      cy.wrap($pool).within(() => {
+        cy.get(`[data-qa-panel-summary]`).should(
+          'have.attr',
+          'aria-expanded',
+          'false'
+        );
+      });
+    });
+
+    // Expand all pools
+    ui.button
+      .findByTitle('Expand All Pools')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.get(`[data-qa-node-pool-id]`).each(($pool) => {
+      // Accordion should be expanded
+      cy.wrap($pool).within(() => {
+        cy.get(`[data-qa-panel-summary]`).should(
+          'have.attr',
+          'aria-expanded',
+          'true'
+        );
+      });
     });
   });
 

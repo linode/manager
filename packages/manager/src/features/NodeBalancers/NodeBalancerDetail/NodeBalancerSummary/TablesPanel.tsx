@@ -264,9 +264,12 @@ const StyledTitle = styled(Typography, {
 
 export const StyledBottomLegend = styled('div', {
   label: 'StyledBottomLegend',
-})(({ theme }) => ({
+  shouldForwardProp: (prop) => prop !== 'legendHeight',
+})<{ legendHeight?: string }>(({ legendHeight, theme }) => ({
   color: theme.tokens.color.Neutrals[70],
   fontSize: 14,
+  height: legendHeight,
+  overflowY: 'auto',
 }));
 
 const StyledPanel = styled(Paper, {

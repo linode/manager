@@ -86,22 +86,23 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   });
   const definitionLanding = '/monitor/alerts/definitions';
 
-  const { newPathname, overrides } = React.useMemo(() => {
-    const overrides = [
-      {
-        label: 'Definitions',
-        linkTo: definitionLanding,
-        position: 1,
-      },
-      {
-        label: 'Edit',
-        linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
-        position: 2,
-      },
-    ];
+  const overrides = [
+    {
+      label: 'Definitions',
 
-    return { newPathname: '/Definitions/Edit', overrides };
-  }, [serviceType, alertId]);
+      linkTo: definitionLanding,
+
+      position: 1,
+    },
+
+    {
+      label: 'Edit',
+
+      linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
+
+      position: 2,
+    },
+  ];
 
   React.useEffect(() => {
     if (!isEmpty(formState.errors)) {
@@ -111,7 +112,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
-      <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
+      <Breadcrumb crumbOverrides={overrides} pathname={'/Definitions/Edit'} />
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit} ref={formRef}>
           <Typography marginTop={2} variant="h2">
@@ -159,9 +160,9 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <TriggerConditions
             maxScrapingInterval={maxScrapeInterval}
-            name={'trigger_conditions'}
+            name="trigger_conditions"
           />
-          <AddChannelListing name={'channel_ids'} />
+          <AddChannelListing name="channel_ids" />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',

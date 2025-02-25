@@ -19,7 +19,7 @@ import {
 } from '../Utils/AlertResourceUtils';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
-import { serviceToFiltersMap } from './constants';
+import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
@@ -120,7 +120,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     flags.aclpResourceTypeMap,
     serviceType
   );
-
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     const regionFilter: Filter = supportedRegionIds
       ? {
@@ -143,11 +142,21 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       return platformFilter;
     }
 
+    // Dynamically exclude 'dedicated' if alertClass is 'shared'
+    const filteredTypes =
+      alertClass === 'shared'
+        ? Object.keys(databaseTypeClassMap).filter(
+            (type) => type !== 'dedicated'
+          )
+        : [alertClass];
+
     // Apply type filter only for system alerts with a valid alertClass
     const typeFilter: Filter = {
-      type: {
-        '+contains': alertClass,
-      },
+      '+or': filteredTypes.map((dbType) => ({
+        type: {
+          '+contains': dbType,
+        },
+      })),
     };
 
     // Combine all the filters
@@ -333,7 +342,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       )}
       <Grid container spacing={2}>
         <Grid
-          alignItems="center"
+          sx={{
+            alignItems: 'center',
+          }}
           columnSpacing={2}
           container
           item
@@ -391,15 +402,18 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
-        {isSelectionsNeeded && !isDataLoadingError && resources?.length && (
-          <Grid item xs={12}>
-            <AlertsResourcesNotice
-              handleSelectionChange={handleAllSelection}
-              selectedResources={selectedResources.length}
-              totalResources={resources?.length ?? 0}
-            />
-          </Grid>
-        )}
+        {isSelectionsNeeded &&
+          !isDataLoadingError &&
+          resources &&
+          resources.length > 0 && (
+            <Grid item xs={12}>
+              <AlertsResourcesNotice
+                handleSelectionChange={handleAllSelection}
+                selectedResources={selectedResources.length}
+                totalResources={resources?.length ?? 0}
+              />
+            </Grid>
+          )}
         <Grid item xs={12}>
           <DisplayAlertResources
             scrollToElement={() =>

@@ -5,6 +5,7 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -18,7 +19,6 @@ import {
   useUpdateBucketAccessMutation,
   useUpdateObjectAccessMutation,
 } from 'src/queries/object-storage/queries';
-import { capitalize } from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { bucketACLOptions, objectACLOptions } from '../utilities';

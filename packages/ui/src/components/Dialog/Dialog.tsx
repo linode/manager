@@ -1,11 +1,14 @@
-import { Box, CircleProgress, Notice, omittedProps } from '@linode/ui';
 import _Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
-import { convertForAria } from 'src/utilities/stringUtils';
+import { omittedProps } from '../../utilities';
+import { convertForAria } from '../../utilities/stringUtils';
+import { Box } from '../Box';
+import { CircleProgress } from '../CircleProgress';
+import { DialogTitle } from '../DialogTitle';
+import { Notice } from '../Notice';
 
 import type { DialogProps as _DialogProps } from '@mui/material/Dialog';
 

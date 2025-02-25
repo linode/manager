@@ -2,7 +2,7 @@ import { getInvoiceItems } from '@linode/api-v4/lib/account';
 import { Autocomplete, Typography } from '@linode/ui';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -93,6 +93,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& > .loading': {
       width: 115,
     },
+    paddingRight: 0,
     textAlign: 'right',
   },
   pdfError: {
@@ -384,7 +385,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   };
 
   return (
-    <Grid data-qa-billing-activity-panel xs={12}>
+    <Grid data-qa-billing-activity-panel size={12}>
       <Paper variant="outlined">
         <StyledBillingAndPaymentHistoryHeader
           className={classes.headerContainer}
