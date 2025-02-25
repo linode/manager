@@ -1,8 +1,7 @@
 import { getDNSZoneFile } from '@linode/api-v4/lib/domains';
 import { Button } from '@linode/ui';
+import { downloadFile } from '@linode/utilities';
 import * as React from 'react';
-
-import { downloadFile } from 'src/utilities/downloadFile';
 
 type DownloadDNSZoneFileButtonProps = {
   domainId: number;

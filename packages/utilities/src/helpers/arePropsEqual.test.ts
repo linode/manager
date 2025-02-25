@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { arePropsEqual } from './arePropsEqual';
 
 interface MockProps {
