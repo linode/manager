@@ -155,7 +155,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                   event.target instanceof HTMLElement && event.target.blur()
                 }
                 sx={{
-                  height: '30px',
+                  height: '34px',
                   marginTop: { sm: '16px', xs: '0px' },
                   width: '30px',
                 }}
