@@ -35,7 +35,7 @@ export interface Linode {
   region: string;
   image: string | null;
   group: string;
-  interface_generation: InterfaceGenerationType;
+  interface_generation?: InterfaceGenerationType;
   ipv4: string[];
   ipv6: string | null;
   label: string;
