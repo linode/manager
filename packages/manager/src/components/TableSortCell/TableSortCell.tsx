@@ -38,13 +38,13 @@ export const TableSortCell = (props: TableSortCellProps) => {
 
   return (
     <TableCell
-      {...rest}
       sx={{
         whiteSpace: noWrap ? 'nowrap' : '',
       }}
       onClick={onHandleClick}
       role="columnheader"
       sortDirection={direction}
+      {...rest}
     >
       <TableSortLabel
         IconComponent={ArrowDown}

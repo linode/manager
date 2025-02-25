@@ -42,7 +42,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
     return getRoleByName(accountPermissions, selectedOptions.value);
   }, [selectedOptions, accountPermissions]);
 
-  // TODO - add a link 'Learn more"
+  // TODO - add a link 'Learn more" - UIE-8534
   return (
     <Drawer onClose={onClose} open={open} title="Assign New Roles">
       <Typography sx={{ marginBottom: 2.5 }}>

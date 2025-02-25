@@ -40,7 +40,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
             }
             username={user.username}
           />
-          <Typography>
+          <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
             <MaskableText isToggleable text={user.username}>
               <Link to={`/iam/users/${user.username}/details`}>
                 {user.username}
@@ -51,7 +51,12 @@ export const UserRow = ({ onDelete, user }: Props) => {
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>
       </TableCell>
-      <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+      <TableCell
+        sx={{
+          '& > p': { overflow: 'hidden', textOverflow: 'ellipsis' },
+          display: { sm: 'table-cell', xs: 'none' },
+        }}
+      >
         <MaskableText isToggleable text={user.email} />
       </TableCell>
       {!isProxyUser && (
