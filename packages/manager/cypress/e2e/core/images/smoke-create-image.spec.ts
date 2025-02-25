@@ -72,8 +72,8 @@ describe('create image (using mocks)', () => {
     cy.findByLabelText('Label')
       .should('be.enabled')
       .should('be.visible')
-      .clear()
-      .type(mockNewImage.label);
+      .clear();
+    cy.focused().type(mockNewImage.label);
 
     // Give the Image a description
     cy.findByLabelText('Description')

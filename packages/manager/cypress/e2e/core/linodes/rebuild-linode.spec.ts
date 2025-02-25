@@ -72,10 +72,8 @@ const assertPasswordComplexity = (
   desiredPassword: string,
   passwordStrength: 'Weak' | 'Fair' | 'Good'
 ) => {
-  cy.findByLabelText('Root Password')
-    .should('be.visible')
-    .clear()
-    .type(desiredPassword);
+  cy.findByLabelText('Root Password').should('be.visible').clear();
+  cy.focused().type(desiredPassword);
 
   cy.contains(`Strength: ${passwordStrength}`).should('be.visible');
 };
@@ -199,9 +197,9 @@ describe('rebuild linode', () => {
 
         cy.wait('@getStackScripts');
         cy.findByLabelText('Search by Label, Username, or Description')
-          .scrollIntoView()
-          .should('be.visible')
-          .type(`${stackScriptName}`);
+          .as('qaSearch')
+          .scrollIntoView();
+        cy.get('@qaSearch').should('be.visible').type(`${stackScriptName}`);
 
         cy.wait('@getStackScripts');
         cy.findByLabelText('List of StackScripts').within(() => {
@@ -273,10 +271,10 @@ describe('rebuild linode', () => {
           .should('be.visible')
           .click();
 
-        cy.findByLabelText('Search by Label, Username, or Description')
-          .scrollIntoView()
-          .should('be.visible')
-          .type(`${stackScript.label}`);
+        cy.findByLabelText(
+          'Search by Label, Username, or Description'
+        ).scrollIntoView();
+        cy.get('@qaSearch').should('be.visible').type(`${stackScript.label}`);
 
         cy.findByLabelText('List of StackScripts').within(() => {
           cy.get(`[id="${stackScript.id}"][type="radio"]`).click();
@@ -326,10 +324,8 @@ describe('rebuild linode', () => {
 
       assertPasswordComplexity(rootPassword, 'Good');
 
-      cy.findByLabelText('Linode Label')
-        .should('be.visible')
-        .click()
-        .type(mockLinode.label);
+      cy.findByLabelText('Linode Label').should('be.visible').click();
+      cy.focused().type(mockLinode.label);
 
       submitRebuild();
       cy.wait('@rebuildLinode');
