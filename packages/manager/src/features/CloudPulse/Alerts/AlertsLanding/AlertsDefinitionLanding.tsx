@@ -9,25 +9,15 @@ import { EditAlertLanding } from '../EditAlert/EditAlertLanding';
 export const AlertDefinitionLanding = () => {
   return (
     <Switch>
-      <Route
-        component={AlertListing}
-        exact
-        path="/monitor/alerts/definitions"
-      />
-      <Route
-        exact
-        path="/monitor/alerts/definitions/detail/:serviceType/:alertId"
-      >
+      <Route component={AlertListing} exact path="/alerts/definitions" />
+      <Route exact path="/alerts/definitions/detail/:serviceType/:alertId">
         <AlertDetail />
       </Route>
       <Route
         component={CreateAlertDefinition}
-        path="/monitor/alerts/definitions/create"
+        path="/alerts/definitions/create"
       />
-      <Route
-        exact
-        path="/monitor/alerts/definitions/edit/:serviceType/:alertId"
-      >
+      <Route exact path="/alerts/definitions/edit/:serviceType/:alertId">
         <EditAlertLanding />
       </Route>
     </Switch>
