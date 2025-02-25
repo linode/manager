@@ -1,5 +1,6 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { Button, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import { downloadFile } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -8,7 +9,6 @@ import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases/databases';
-import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {

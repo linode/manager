@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { arrayToList } from './arrayToList';
 
 describe('Array to delimiter-separated list', () => {

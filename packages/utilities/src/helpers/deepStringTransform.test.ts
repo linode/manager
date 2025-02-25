@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { deepStringTransform } from './deepStringTransform';
 
 describe('deepStringTransform utility function', () => {
