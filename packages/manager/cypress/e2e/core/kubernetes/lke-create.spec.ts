@@ -1,6 +1,7 @@
 /**
  * @file LKE creation end-to-end tests.
  */
+import { pluralize } from '@linode/utilities';
 import {
   accountFactory,
   dedicatedTypeFactory,
@@ -62,7 +63,6 @@ import {
   latestKubernetesVersion,
 } from 'support/constants/lke';
 import { lkeEnterpriseTypeFactory } from 'src/factories';
-import { pluralize } from 'src/utilities/pluralize';
 
 const dedicatedNodeCount = 4;
 const nanodeNodeCount = 3;
