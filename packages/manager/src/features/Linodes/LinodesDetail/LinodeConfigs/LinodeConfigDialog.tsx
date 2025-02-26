@@ -996,7 +996,10 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <Grid size={12}>
               <Box alignItems="center" display="flex">
-                <Typography variant="h3">Networking</Typography>
+                {(isLegacyConfigInterface ||
+                  (isLinodeInterface && linodeInterfacesFlag?.enabled)) && (
+                  <Typography variant="h3">Networking</Typography>
+                )}
                 {isLegacyConfigInterface && (
                   <TooltipIcon
                     sxTooltipIcon={{
