@@ -14,7 +14,7 @@ import type { Theme } from '@mui/material/styles';
 interface Props {
   handleClusterTypeSelection: (tier: KubernetesTier) => void;
   isUserRestricted: boolean;
-  selectedTier: KubernetesTier;
+  selectedTier: KubernetesTier | undefined;
 }
 
 export const ClusterTypePanel = (props: Props) => {
