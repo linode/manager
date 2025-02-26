@@ -133,10 +133,6 @@ describe('KubeControlPaneACLDrawer', () => {
     expect(queryByText('Enable Control Plane ACL')).not.toBeInTheDocument();
   });
 
-  it('displays an error if submitted without at least 1 IP address', () => {
-    // TODO:
-  });
-
   it('closes the drawer', async () => {
     const { getByText } = renderWithTheme(
       <KubeControlPlaneACLDrawer {...props} />

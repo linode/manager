@@ -2620,10 +2620,10 @@ describe('LKE ACL updates', () => {
     });
 
     /**
-     * - Confirms ACL can be disabled from the summary page
+     * - Confirms ACL can be disabled from the summary page (for standard tier only)
      * - Confirms both IPv4 and IPv6 can be updated and that drawer updates as a result
      */
-    it('can disable ACL and edit IPs', () => {
+    it('can disable ACL on a standard tier cluster and edit IPs', () => {
       const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
         enabled: true,
         addresses: { ipv4: undefined, ipv6: undefined },
@@ -2935,6 +2935,78 @@ describe('LKE ACL updates', () => {
 
       cy.wait(['@updateControlPlaneACLError']);
       cy.contains(mockErrorMessage).should('be.visible');
+    });
+
+    it('can handle validation for an enterprise cluster', () => {
+      const mockEnterpriseCluster = kubernetesClusterFactory.build({
+        tier: 'enterprise',
+      });
+      const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
+        enabled: true,
+        addresses: { ipv4: ['127.0.0.1'], ipv6: undefined },
+      });
+      const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
+        acl: mockACLOptions,
+      });
+
+      mockGetCluster(mockEnterpriseCluster).as('getCluster');
+      mockGetControlPlaneACL(mockEnterpriseCluster.id, mockControlPaneACL).as(
+        'getControlPlaneACL'
+      );
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockEnterpriseCluster.id}`);
+      cy.wait(['@getAccount', '@getCluster', '@getControlPlaneACL']);
+
+      cy.contains('Control Plane ACL').should('be.visible');
+      ui.button
+        .findByTitle('Enabled (1 IP Address)')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(`Control Plane ACL for ${mockEnterpriseCluster.label}`)
+        .should('be.visible')
+        .within(() => {
+          // Clear the existing IP
+          cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
+            .should('be.visible')
+            .click()
+            .clear();
+
+          // Try to submit the form without any IPs
+          ui.button
+            .findByTitle('Update')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm validation error prevents this
+          cy.findByText(
+            'At least one IP address or CIDR range is required for LKE Enterprise.'
+          ).should('be.visible');
+
+          // Add at least one IP
+          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
+            .should('be.visible')
+            .click()
+            .clear()
+            .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+
+          // Resubmit the form
+          ui.button
+            .findByTitle('Update')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm error message disappears
+          cy.findByText(
+            'At least one IP address or CIDR range is required for LKE Enterprise.'
+          ).should('not.exist');
+        });
     });
   });
 });
