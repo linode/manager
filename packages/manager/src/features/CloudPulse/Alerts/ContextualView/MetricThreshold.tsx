@@ -1,8 +1,6 @@
 import { Box, Chip, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
-import NullComponent from 'src/components/NullComponent';
-
 import type { ProcessedCriteria } from '../Utils/utils';
 
 export interface MetricThresholdProps {
