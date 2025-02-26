@@ -19,13 +19,13 @@ const props: ControlPlaneACLProps = {
 };
 
 describe('ControlPlaneACLPane', () => {
-  it('renders all fields when enableControlPlaneACL is true', () => {
+  it('renders checkbox, fields, and correct copy for a standard cluster when enableControlPlaneACL is true', () => {
     const { getByText } = renderWithTheme(<ControlPlaneACLPane {...props} />);
 
     expect(getByText('Control Plane ACL')).toBeVisible();
     expect(
       getByText(
-        'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges you specify can connect to the control plane.'
+        'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. Only the IP addresses and ranges specified in the ACL can connect to the control plane.'
       )
     ).toBeVisible();
     expect(getByText('Enable Control Plane ACL')).toBeVisible();
@@ -35,7 +35,7 @@ describe('ControlPlaneACLPane', () => {
     expect(getByText('Add IPv6 Address')).toBeVisible();
   });
 
-  it('hides IP fields when enableControlPlaneACL is false', () => {
+  it('hides IP fields when enableControlPlaneACL is false for a standard cluster', () => {
     const { getByText, queryByText } = renderWithTheme(
       <ControlPlaneACLPane {...props} enableControlPlaneACL={false} />
     );
@@ -43,7 +43,7 @@ describe('ControlPlaneACLPane', () => {
     expect(getByText('Control Plane ACL')).toBeVisible();
     expect(
       getByText(
-        'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges you specify can connect to the control plane.'
+        'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. Only the IP addresses and ranges specified in the ACL can connect to the control plane.'
       )
     ).toBeVisible();
     expect(getByText('Enable Control Plane ACL')).toBeVisible();
@@ -51,6 +51,27 @@ describe('ControlPlaneACLPane', () => {
     expect(queryByText('Add IPv4 Address')).not.toBeInTheDocument();
     expect(queryByText('IPv6 Addresses or CIDRs')).not.toBeInTheDocument();
     expect(queryByText('Add IPv6 Address')).not.toBeInTheDocument();
+  });
+
+  it('renders only fields and correct copy for an enterprise cluster when enableControlPlaneACL is true', () => {
+    const { getByText, queryByText } = renderWithTheme(
+      <ControlPlaneACLPane {...props} selectedTier="enterprise" />
+    );
+
+    expect(getByText('Control Plane ACL')).toBeVisible();
+    expect(
+      getByText(
+        'An access control list (ACL) is enabled by default on LKE Enterprise clusters. All traffic to the control plane is restricted except from IP addresses listed in the ACL. Add at least one IP address or CIDR range.'
+      )
+    ).toBeVisible();
+
+    // Do not display Toggle for LKE-E clusters; ACL is enabled by default.
+    expect(queryByText('Enable Control Plane ACL')).not.toBeInTheDocument();
+
+    expect(getByText('IPv4 Addresses or CIDRs')).toBeVisible();
+    expect(getByText('Add IPv4 Address')).toBeVisible();
+    expect(getByText('IPv6 Addresses or CIDRs')).toBeVisible();
+    expect(getByText('Add IPv6 Address')).toBeVisible();
   });
 
   it('calls setControlPlaneACL when clicking the toggle', async () => {
