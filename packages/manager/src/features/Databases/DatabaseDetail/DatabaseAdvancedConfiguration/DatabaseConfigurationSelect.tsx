@@ -1,5 +1,5 @@
 import { Autocomplete, Button, TextField } from '@linode/ui';
-import Grid2 from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 interface ConfigurationOption {
@@ -23,8 +23,13 @@ export const DatabaseConfigurationSelect = (props: Props) => {
   }, [value, configurations]);
 
   return (
-    <Grid2 alignItems={'end'} container justifyContent="space-between" lg={12}>
-      <Grid2 xs={9}>
+    <Grid
+      alignItems={'end'}
+      container
+      justifyContent="space-between"
+      size={{ lg: 12 }}
+    >
+      <Grid size={{ xs: 9 }}>
         <Autocomplete
           groupBy={(option) => {
             if (option.category === 'Other') {
@@ -56,24 +61,24 @@ export const DatabaseConfigurationSelect = (props: Props) => {
               </div>
             </li>
           )}
-          value={selectedConfiguration}
           autoHighlight
           disableClearable
           getOptionLabel={(option) => option.label}
-          options={configurations}
           label={''}
+          options={configurations}
           sx={{ width: '336px' }}
+          value={selectedConfiguration}
         />
-      </Grid2>
-      <Grid2 xs={2}>
+      </Grid>
+      <Grid size={{ xs: 2 }}>
         <Button
           buttonType="primary"
-          sx={{ minWidth: 'auto', width: '70px' }}
           disabled={!selectedConfiguration}
+          sx={{ minWidth: 'auto', width: '70px' }}
         >
           Add
         </Button>
-      </Grid2>
-    </Grid2>
+      </Grid>
+    </Grid>
   );
 };

@@ -70,7 +70,7 @@ interface DatabaseHosts {
 export interface SSLFields {
   ca_certificate: string;
 }
-// TODO: add all configurations
+// TODO: This will be changed in the next PR
 export interface MySQLAdvancedConfig {
   binlog_retention_period?: number;
   advanced?: {
@@ -82,7 +82,7 @@ export interface MySQLAdvancedConfig {
     sql_mode?: string;
   };
 }
-// TODO: add all configurations
+// TODO: This will be changed in the next PR
 export interface PostgresAdvancedConfig {
   advanced?: {
     max_files_per_process?: number;
