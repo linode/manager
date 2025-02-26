@@ -13,3 +13,6 @@ export * from './formatStorageUnits';
 export * from './groupByTags';
 export * from './getDisplayName';
 export * from './isNumber';
+export * from './link';
+export * from './pluralize';
+export * from './minute-conversion';
