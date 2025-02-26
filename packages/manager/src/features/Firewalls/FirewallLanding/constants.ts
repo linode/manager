@@ -9,3 +9,6 @@ export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
 export const NODEBALANCER_HELPER_TEXT =
   "Only the firewall's inbound rules apply to NodeBalancers.";
+
+export const STRENGTHEN_TEMPLATE_RULES =
+  'It is recommended to further strengthen these rules by limiting the allowed IPv4 and IPv6 ranges.';
