@@ -3,7 +3,13 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
+import {
+  ENTERPRISE_TIER_ACL_COPY,
+  ENTERPRISE_TIER_ACTIVATION_STATUS_COPY,
+  KubeControlPlaneACLDrawer,
+  STANDARD_TIER_ACL_COPY,
+  STANDARD_TIER_ACTIVATION_STATUS_COPY,
+} from './KubeControlPaneACLDrawer';
 
 import type { KubeControlPlaneACLDrawerProps } from './KubeControlPaneACLDrawer';
 
@@ -13,6 +19,7 @@ const props: KubeControlPlaneACLDrawerProps = {
   clusterId: 1,
   clusterLabel: 'Test',
   clusterMigrated: true,
+  clusterTier: 'standard',
   open: true,
 };
 
@@ -47,19 +54,11 @@ describe('KubeControlPaneACLDrawer', () => {
     );
 
     expect(getByText('Control Plane ACL for Test')).toBeVisible();
-    expect(
-      getByText(
-        "Control Plane ACL secures network access to your LKE cluster's control plane. Use this form to enable or disable the ACL on your LKE cluster, update the list of allowed IP addresses, and adjust other settings."
-      )
-    ).toBeVisible();
+    expect(getByText(STANDARD_TIER_ACL_COPY)).toBeVisible();
 
     // Activation Status section
     expect(getByText('Activation Status')).toBeVisible();
-    expect(
-      getByText(
-        'Enable or disable the Control Plane ACL. If the ACL is not enabled, any public IP address can be used to access your control plane. Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
-      )
-    ).toBeVisible();
+    expect(getByText(STANDARD_TIER_ACTIVATION_STATUS_COPY)).toBeVisible();
     expect(getByText('Enable Control Plane ACL')).toBeVisible();
 
     // Revision ID section
@@ -118,6 +117,24 @@ describe('KubeControlPaneACLDrawer', () => {
     expect(getByText('Add IPv4 Address')).toBeVisible();
     expect(getByText('IPv6 Addresses or CIDRs')).toBeVisible();
     expect(getByText('Add IPv6 Address')).toBeVisible();
+  });
+
+  it('shows correct copy and no toggle for enterprise clusters', () => {
+    const { getByText, queryByText } = renderWithTheme(
+      <KubeControlPlaneACLDrawer {...props} clusterTier="enterprise" />
+    );
+
+    expect(getByText('Control Plane ACL for Test')).toBeVisible();
+    expect(getByText(ENTERPRISE_TIER_ACL_COPY)).toBeVisible();
+
+    // Activation Status section
+    expect(getByText('Activation Status')).toBeVisible();
+    expect(getByText(ENTERPRISE_TIER_ACTIVATION_STATUS_COPY)).toBeVisible();
+    expect(queryByText('Enable Control Plane ACL')).not.toBeInTheDocument();
+  });
+
+  it('displays an error if submitted without at least 1 IP address', () => {
+    // TODO:
   });
 
   it('closes the drawer', async () => {
