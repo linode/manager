@@ -1,3 +1,4 @@
+import { IPv4, IPv6 } from 'ipaddr.js';
 import { validateIP } from './firewalls.schema';
 import { array, number, object, string, boolean } from 'yup';
 
@@ -53,15 +54,6 @@ export const clusterLabelSchema = string()
   .min(3, 'Length must be between 3 and 32 characters.')
   .max(32, 'Length must be between 3 and 32 characters.');
 
-export const createKubeClusterSchema = object().shape({
-  label: clusterLabelSchema,
-  region: string().required('Region is required.'),
-  k8s_version: string().required('Kubernetes version is required.'),
-  node_pools: array()
-    .of(nodePoolSchema)
-    .min(1, 'Please add at least one node pool.'),
-});
-
 export const ipv4Address = string().defined().test({
   name: 'validateIP',
   message: 'Must be a valid IPv4 address.',
@@ -72,6 +64,70 @@ export const ipv6Address = string().defined().test({
   name: 'validateIP',
   message: 'Must be a valid IPv6 address.',
   test: validateIP,
+});
+
+export const createKubeClusterSchema = object().shape({
+  label: clusterLabelSchema,
+  region: string().required('Region is required.'),
+  k8s_version: string().required('Kubernetes version is required.'),
+  node_pools: array()
+    .of(nodePoolSchema)
+    .min(1, 'Please add at least one node pool.'),
+});
+
+export const createKubeEnterpriseClusterSchema = object().shape({
+  label: clusterLabelSchema,
+  region: string().required('Region is required.'),
+  k8s_version: string().required('Kubernetes version is required.'),
+  node_pools: array()
+    .of(nodePoolSchema)
+    .min(1, 'Please add at least one node pool.'),
+  control_plane: object()
+    .shape({
+      high_availability: boolean(),
+      enabled: boolean(),
+      addresses: object().shape({
+        ipv4: array().of(ipv4Address),
+        // .when('ipv6', {
+        //   is: undefined,
+        //   then: (schema) =>
+        //     schema.required(
+        //       'At least one address or CIDR range is required for LKE-E.'
+        //     ),
+        //   otherwise: (schema) => schema.nullable(),
+        // }),
+        ipv6: array().of(ipv6Address),
+        //     .when('ipv4', {
+        //       is: undefined,
+        //       then: (schema) =>
+        //         schema.required(
+        //           'At least one address or CIDR range is required for LKE-E.'
+        //         ),
+        //       otherwise: (schema) => schema.nullable(),
+        //     }),
+        // },
+        // [['ipv4', 'ipv6']]
+      }),
+      // .test(
+      //   'validateAtLeastOneAddress',
+      //   'At least one address or CIDR is required for LKE-E.',
+      //   function ({ ipv4, ipv6 }) {
+      //     // Pass validation if either IP address exists
+      //     return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
+      //   }
+      // ),
+    })
+    .test(
+      'validateAtLeastOneAddress',
+      'At least one address or CIDR is required for LKE-E.',
+      function (controlPlane) {
+        const { ipv4, ipv6 } = controlPlane.addresses;
+
+        // Pass validation if either IP address has a value
+        return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
+      }
+    )
+    .required(),
 });
 
 const controlPlaneACLOptionsSchema = object().shape({

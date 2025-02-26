@@ -114,6 +114,7 @@ export const CreateCluster = () => {
     // HA is enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setHighAvailability(true);
+      setControlPlaneACL(true);
 
       // When changing the tier to enterprise, we want to check if the pre-selected region has the capability
       if (!selectedRegion?.capabilities.includes('Kubernetes Enterprise')) {
@@ -230,6 +231,8 @@ export const CreateCluster = () => {
       region: selectedRegion?.id,
     };
 
+    // console.log({payload})
+
     if (showAPL) {
       payload = { ...payload, apl_enabled };
     }
@@ -296,9 +299,18 @@ export const CreateCluster = () => {
       'k8s_version',
       'versionLoad',
       'control_plane',
+      'control_plane.addresses',
+      'control_plane.addresses.ipv6',
+      'control_plane.addresses.ipv4',
     ],
     errors
   );
+
+  // const aclErrors = {
+  //   control_plane: errorMap['control_plane'],
+  //   ['control_plane.addresses.ipv4']: errorMap['control_plane.addresses.ipv4'],
+  //   ['control_plane.addresses.ipv6']: errorMap['control_plane.addresses.ipv6'],
+  // };
 
   const generalError = errorMap.none;
 
@@ -479,6 +491,7 @@ export const CreateCluster = () => {
                 errorText={errorMap.control_plane}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
+                selectedTier={selectedTier}
                 setControlPlaneACL={setControlPlaneACL}
               />
             </>
