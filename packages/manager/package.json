@@ -213,9 +213,6 @@
     "vite": "^6.1.1",
     "vite-plugin-svgr": "^3.2.0"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": ["cypress"]
-  },
   "browserslist": [
     ">1%",
     "last 4 versions",
