@@ -63,5 +63,8 @@
       "scripts"
     ]
   },
-  "dependencies": {}
+  "dependencies": {},
+  "pnpm": {
+    "onlyBuiltDependencies": ["cypress"]
+  }
 }
