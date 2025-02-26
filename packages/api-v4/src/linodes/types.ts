@@ -35,7 +35,7 @@ export interface Linode {
   region: string;
   image: string | null;
   group: string;
-  interface_generation: InterfaceGenerationType;
+  interface_generation?: InterfaceGenerationType;
   ipv4: string[];
   ipv6: string | null;
   label: string;
@@ -226,8 +226,8 @@ export interface Config {
   created: string;
   updated: string;
   initrd: string | null;
-  // If a Linode is using the new Linode Interfaces, this field will no longer be present.
-  interfaces?: Interface[];
+  // If a Linode is using the new Linode Interfaces, this field will either no longer be present or be returned as null.
+  interfaces?: Interface[] | null;
 }
 
 // ----------------------------------------------------------
@@ -430,7 +430,7 @@ export interface LinodeConfigCreationData {
     updatedb_disabled: boolean;
     distro: boolean;
     modules_dep: boolean;
-    network: boolean;
+    network?: boolean;
     devtmpfs_automount: boolean;
   };
   root_device: string;
