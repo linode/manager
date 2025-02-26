@@ -90,7 +90,14 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
             if (!result || !result.kubeconfig) {
               throw new Error('Invalid KubeConfig response');
             }
-            return window.atob(result.kubeconfig);
+
+            let decodedKubeConfig;
+            try {
+              decodedKubeConfig = window.atob(result.kubeconfig);
+            } catch (decodeError) {
+              throw new Error('Failed to decode KubeConfig');
+            }
+            return decodedKubeConfig;
           } catch (error) {
             const err = error as {
               response?: { status?: number };
