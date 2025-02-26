@@ -2,7 +2,7 @@ import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
+import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
@@ -310,9 +310,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Typography>
         )}
         <StyledPlaceholder
+          sx={{
+            h2: {
+              fontSize: '16px',
+            },
+          }}
           icon={EntityIcon}
-          subtitle="You can assign alerts during the resource creation process."
-          title="No resources are currently assigned to this alert definition."
+          subtitle="Once you assign the resources, they will show up here."
+          title="No resources associated with this alert definition."
         />
       </Stack>
     );
@@ -335,7 +340,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           alert for.
         </Typography>
       )}
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         <Grid
           sx={{
             alignItems: 'center',

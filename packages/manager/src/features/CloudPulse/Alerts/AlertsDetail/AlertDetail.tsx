@@ -130,6 +130,7 @@ export const AlertDetail = () => {
             overflow: 'auto',
           }}
           data-qa-section="Resources"
+          maxHeight={sectionMaxHeight}
         >
           <AlertResources
             alertClass={alertClass}
@@ -163,6 +164,7 @@ export const StyledPlaceholder = styled(Placeholder, {
   svg: {
     maxHeight: theme.spacing(10),
   },
+  padding: 0,
 }));
 
 export const StyledAlertChip = styled(Chip, {
