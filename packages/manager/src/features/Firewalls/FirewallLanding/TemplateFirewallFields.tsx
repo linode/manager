@@ -2,33 +2,56 @@ import { Select, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
+import { useFirewallTemplatesQuery } from 'src/queries/firewalls';
+
 import { PublicTemplateRules } from './PublicTemplateRules';
 import { VPCTemplateRules } from './VPCTemplateRules';
 
 import type { CreateFirewallFormValues } from './formUtilities';
-import type { FirewallTemplateSlug } from '@linode/api-v4';
-import type { SelectOption } from '@linode/ui';
 
 interface TemplateFirewallProps {
   userCannotAddFirewall: boolean;
 }
 
-const firewallTemplateOptions: SelectOption<FirewallTemplateSlug>[] = [
-  {
-    label: 'Public Firewall Template',
-    value: 'public',
-  },
-  {
-    label: 'VPC Firewall Template',
-    value: 'vpc',
-  },
-];
+const descriptionMap = {
+  'akamai-non-prod': null,
+  public: <PublicTemplateRules />,
+  vpc: <VPCTemplateRules />,
+};
+
+const templateLabelMap = {
+  'akamai-non-prod': 'Akamai Non Prod Template',
+  public: 'Public Firewall Template',
+  vpc: 'VPC Firewall Template',
+};
 
 export const TemplateFirewallFields = (props: TemplateFirewallProps) => {
   const { userCannotAddFirewall } = props;
   const { control, watch } = useFormContext<CreateFirewallFormValues>();
 
   const selectedTemplate = watch('templateSlug');
+
+  const isAkamaiAccount = useIsAkamaiAccount();
+
+  const { data: templates } = useFirewallTemplatesQuery();
+
+  const firewallTemplateOptions =
+    templates
+      ?.filter(
+        // if account is internal, return all slugs
+        // otherwise only return non internal Akamai accounts
+        // (this endpoint shouldn't return internal templates, but keeping this as an extra failsafe)
+        (template) => isAkamaiAccount || template.slug !== 'akamai-non-prod'
+      )
+      .map((template) => {
+        return {
+          label: templateLabelMap[template.slug],
+          value: template.slug,
+        };
+      }) ?? [];
+
+  // console.log(descriptionMap[selectedTemplate ?? 'vpc'])
 
   return (
     <>
@@ -60,8 +83,7 @@ export const TemplateFirewallFields = (props: TemplateFirewallProps) => {
         control={control}
         name="templateSlug"
       />
-      {selectedTemplate === 'public' && <PublicTemplateRules />}
-      {selectedTemplate === 'vpc' && <VPCTemplateRules />}
+      {selectedTemplate && descriptionMap[selectedTemplate]}
     </>
   );
 };

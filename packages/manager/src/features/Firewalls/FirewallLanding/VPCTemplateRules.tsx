@@ -38,7 +38,7 @@ export const VPCTemplateRules = () => {
         </Typography>
         <List dense sx={{ listStyleType: 'disc', pl: 3 }}>
           <ListItem disablePadding sx={{ display: 'list-item' }}>
-            Protocol: TCP
+            Protocol: TCP, UDP
           </ListItem>
           <ListItem disablePadding sx={{ display: 'list-item' }}>
             Ports: All Ports
