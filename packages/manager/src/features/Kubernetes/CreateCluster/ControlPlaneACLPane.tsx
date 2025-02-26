@@ -79,7 +79,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
               handleIPv4Change(validatedIPs);
             }}
             buttonText="Add IPv4 Address"
-            // error={errors['control_plane.addresses.ipv4']}
             ips={ipV4Addr}
             isLinkStyled
             onChange={handleIPv4Change}
@@ -95,7 +94,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 handleIPv6Change(validatedIPs);
               }}
               buttonText="Add IPv6 Address"
-              // error={errors['control_plane.addresses.ipv6']}
               ips={ipV6Addr}
               isLinkStyled
               onChange={handleIPv6Change}

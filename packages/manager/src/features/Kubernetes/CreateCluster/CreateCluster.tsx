@@ -231,8 +231,6 @@ export const CreateCluster = () => {
       region: selectedRegion?.id,
     };
 
-    // console.log({payload})
-
     if (showAPL) {
       payload = { ...payload, apl_enabled };
     }
@@ -299,18 +297,9 @@ export const CreateCluster = () => {
       'k8s_version',
       'versionLoad',
       'control_plane',
-      'control_plane.addresses',
-      'control_plane.addresses.ipv6',
-      'control_plane.addresses.ipv4',
     ],
     errors
   );
-
-  // const aclErrors = {
-  //   control_plane: errorMap['control_plane'],
-  //   ['control_plane.addresses.ipv4']: errorMap['control_plane.addresses.ipv4'],
-  //   ['control_plane.addresses.ipv6']: errorMap['control_plane.addresses.ipv6'],
-  // };
 
   const generalError = errorMap.none;
 
