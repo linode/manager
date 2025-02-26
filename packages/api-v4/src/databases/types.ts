@@ -118,7 +118,7 @@ export interface DatabaseInstance {
   updated: string;
   updates: UpdatesSchedule;
   version: string;
-  engine_config: MySQLAdvancedConfig | PostgresAdvancedConfig;
+  engine_config?: MySQLAdvancedConfig | PostgresAdvancedConfig;
 }
 
 export type ClusterSize = 1 | 2 | 3;

@@ -112,6 +112,7 @@ export const DatabaseDetail = () => {
 
   const resizeIndex = isMonitorEnabled ? 3 : 2;
   const backupsIndex = isMonitorEnabled ? 2 : 1;
+  const settingsIndex = isMonitorEnabled ? 4 : 3;
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
@@ -236,7 +237,7 @@ export const DatabaseDetail = () => {
               />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel index={tabs.length - 2}>
+          <SafeTabPanel index={settingsIndex}>
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
