@@ -212,7 +212,7 @@ describe('Firewalls', () => {
     cy.wait('@getLinodeFirewalls');
 
     // Verify the firewall shows up in the table
-    cy.findByText(firewallToAttach.label)
+    cy.findAllByText(firewallToAttach.label)
       .should('be.visible')
       .closest('tr')
       .within(() => {
