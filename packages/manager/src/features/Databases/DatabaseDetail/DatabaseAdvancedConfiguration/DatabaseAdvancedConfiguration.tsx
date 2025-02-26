@@ -1,5 +1,5 @@
 import { Box, Button, Paper, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -31,10 +31,11 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
   return (
     <Paper sx={{ marginTop: 2, pb: 5 }}>
       <Grid container justifyContent={'space-between'}>
-        <Grid lg={10}>
+        <Grid size={10}>
           <Typography variant="h2">Advanced Configuration</Typography>
           <Typography sx={{ mb: 1, mt: 1 }}>
             Advanced parameters to configure your database cluster.{' '}
+            {/* TODO: update link when it's ready */}
             <Link to={''}>Learn more.</Link>
           </Typography>
         </Grid>
@@ -50,8 +51,8 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
       {engineConfigs ? (
         <StyledGridContainer
           container
-          lg={10}
           mt={3}
+          size={11}
           spacing={0}
           sx={{ wordBreak: 'break-all' }}
         >
@@ -59,20 +60,20 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
             typeof value === 'object' ? (
               Object.entries(value!).map(([configLabel, configValue]) => (
                 <React.Fragment key={`${key}-${configLabel}`}>
-                  <Grid lg={5} md={4} xs={5}>
+                  <Grid size={{ lg: 4, md: 4, xs: 5 }}>
                     <StyledLabelTypography>{`${engine}.${configLabel}`}</StyledLabelTypography>
                   </Grid>
-                  <StyledConfigValue lg={7} md={8} xs={7}>
+                  <StyledConfigValue size={{ lg: 8, md: 8, xs: 7 }}>
                     {formatConfigValue(String(configValue))}
                   </StyledConfigValue>
                 </React.Fragment>
               ))
             ) : (
               <>
-                <Grid lg={5} md={4} xs={5}>
+                <Grid size={{ lg: 4, md: 4, xs: 5 }}>
                   <StyledLabelTypography>{`${engine}.${key}`}</StyledLabelTypography>
                 </Grid>
-                <StyledConfigValue lg={7} md={8} xs={7}>
+                <StyledConfigValue size={{ lg: 8, md: 8, xs: 7 }}>
                   {formatConfigValue(String(value))}
                 </StyledConfigValue>
               </>
