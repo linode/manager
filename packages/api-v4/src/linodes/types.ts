@@ -1,11 +1,11 @@
 import type { Region, RegionSite } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
-import type { SSHKey } from '../profile/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
 import { InferType } from 'yup';
 import {
   CreateLinodeInterfaceSchema,
   ModifyLinodeInterfaceSchema,
+  RebuildLinodeSchema,
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
@@ -287,17 +287,23 @@ export interface PublicInterfaceData {
       address: string;
       primary: boolean;
     }[];
-    // shared: string[];
+    shared: {
+      address: string;
+      linode_id: number;
+    }[];
   };
   ipv6: {
-    addresses: {
+    slaac: {
       address: string;
       prefix: string;
     }[];
-    // shared: string[];
+    shared: {
+      range: string;
+      route_target: string | null;
+    }[];
     ranges: {
       range: string;
-      route_target: string;
+      route_target: string | null;
     }[];
   };
 }
@@ -646,17 +652,7 @@ export interface LinodeCloneData {
   disks?: number[];
 }
 
-export interface RebuildRequest {
-  image: string;
-  root_pass: string;
-  metadata?: UserData;
-  authorized_keys?: SSHKey[];
-  authorized_users?: string[];
-  stackscript_id?: number;
-  stackscript_data?: any;
-  booted?: boolean;
-  disk_encryption?: EncryptionStatus;
-}
+export type RebuildRequest = InferType<typeof RebuildLinodeSchema>;
 
 export interface LinodeDiskCreationData {
   label: string;

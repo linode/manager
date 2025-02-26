@@ -1,12 +1,13 @@
-import { Domain } from '@linode/api-v4';
+import { createDomain } from '@linode/api-v4/lib/domains';
 import { domainFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { randomDomainName } from 'support/util/random';
-import { createDomain } from '@linode/api-v4/lib/domains';
 import { createDomainRecords } from 'support/constants/domains';
 import { interceptCreateDomainRecord } from 'support/intercepts/domains';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { randomDomainName } from 'support/util/random';
+
+import type { Domain } from '@linode/api-v4';
 
 authenticate();
 describe('Clone a Domain', () => {
@@ -45,7 +46,8 @@ describe('Clone a Domain', () => {
           interceptCreateDomainRecord().as('apiCreateRecord');
           cy.findByText(rec.name).click();
           rec.fields.forEach((f) => {
-            cy.get(f.name).click().type(f.value);
+            cy.get(f.name).click();
+            cy.focused().type(f.value);
           });
           cy.findByText('Save').click();
           cy.wait('@apiCreateRecord');
@@ -101,7 +103,8 @@ describe('Clone a Domain', () => {
               .should('be.disabled');
 
             // Confirm that an error is displayed when entering an invalid domain name
-            cy.findByLabelText('New Domain').click().type(invalidDomainName);
+            cy.findByLabelText('New Domain').click();
+            cy.focused().type(invalidDomainName);
             ui.buttonGroup
               .findButtonByTitle('Create Domain')
               .should('be.visible')
@@ -109,10 +112,9 @@ describe('Clone a Domain', () => {
               .click();
             cy.findByText('Domain is not valid.').should('be.visible');
 
-            cy.findByLabelText('New Domain')
-              .click()
-              .clear()
-              .type(clonedDomainName);
+            cy.findByLabelText('New Domain').click();
+            cy.focused().clear();
+            cy.focused().type(clonedDomainName);
             ui.buttonGroup
               .findButtonByTitle('Create Domain')
               .should('be.visible')

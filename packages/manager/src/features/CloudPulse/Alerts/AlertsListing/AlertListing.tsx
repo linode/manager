@@ -4,7 +4,6 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
@@ -13,6 +12,7 @@ import { AlertsListTable } from './AlertListTable';
 
 import type { Item } from '../constants';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 const searchAndSelectSx = {
   md: '300px',
@@ -117,9 +117,9 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  if (alerts && alerts.length == 0) {
+  if (alerts && alerts.length === 0) {
     return (
-      <StyledPlaceholder
+      <Placeholder
         buttonProps={[
           {
             children: 'Create Alerts',

@@ -1,7 +1,7 @@
 import { Box, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
@@ -13,12 +13,13 @@ import {
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
+import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 import { pluralize } from 'src/utilities/pluralize';
 
-import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,
@@ -46,7 +47,6 @@ import type {
 } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
 import type { TypographyProps } from '@linode/ui';
-import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -131,37 +131,76 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const { data: cluster } = useKubernetesClusterQuery(linodeLkeClusterId ?? -1);
+  const { data: cluster } = useKubernetesClusterQuery(
+    linodeLkeClusterId ?? -1,
+    Boolean(linodeLkeClusterId)
+  );
 
   return (
     <>
       <StyledBodyGrid container spacing={2} sx={{ mb: 0 }}>
         <Grid
+          size={{
+            sm: isDisplayingEncryptedStatus ? 4 : 3,
+            xs: 12,
+          }}
+          sx={{
+            flexDirection: matchesLgUp ? 'row' : 'column',
+          }}
           container
-          flexDirection={matchesLgUp ? 'row' : 'column'}
-          sm={isDisplayingEncryptedStatus ? 4 : 3}
           spacing={0}
-          xs={12}
         >
           <StyledColumnLabelGrid
             mb={matchesLgUp && !isDisplayingEncryptedStatus ? 0 : 2}
-            xs={12}
+            size={{ xs: 12 }}
           >
             Summary
           </StyledColumnLabelGrid>
           <StyledSummaryGrid container spacing={1}>
-            <Grid alignItems="center" display="flex" lg={6} sm={12} xs={6}>
+            <Grid
+              size={{
+                lg: 6,
+                sm: 12,
+                xs: 6,
+              }}
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+              }}
+            >
               <Typography>
                 {pluralize('CPU Core', 'CPU Cores', numCPUs)}
               </Typography>
             </Grid>
-            <Grid alignItems="center" display="flex" lg={6} sm={12} xs={6}>
+            <Grid
+              size={{
+                lg: 6,
+                sm: 12,
+                xs: 6,
+              }}
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+              }}
+            >
               <Typography>{gbStorage} GB Storage</Typography>
             </Grid>
-            <Grid lg={6} sm={12} xs={6}>
+            <Grid
+              size={{
+                lg: 6,
+                sm: 12,
+                xs: 6,
+              }}
+            >
               <Typography>{gbRAM} GB RAM</Typography>
             </Grid>
-            <Grid lg={6} sm={12} xs={6}>
+            <Grid
+              size={{
+                lg: 6,
+                sm: 12,
+                xs: 6,
+              }}
+            >
               <Box
                 sx={(theme) => ({
                   alignItems: 'center',
@@ -202,8 +241,14 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </StyledSummaryGrid>
         </Grid>
 
-        <Grid container sm={isDisplayingEncryptedStatus ? 8 : 9} xs={12}>
-          <Grid container xs={12}>
+        <Grid
+          size={{
+            sm: isDisplayingEncryptedStatus ? 8 : 9,
+            xs: 12,
+          }}
+          container
+        >
+          <Grid container size={12}>
             <AccessTable
               footer={
                 numIPAddresses > 2 ? (
@@ -276,8 +321,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </StyledColumnLabelGrid>
           <Grid
             sx={{
+              alignItems: 'center',
               margin: 0,
               padding: '0 0 8px 0',
+
               [theme.breakpoints.down('md')]: {
                 alignItems: 'start',
                 display: 'flex',
@@ -285,7 +332,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 paddingLeft: '8px',
               },
             }}
-            alignItems="center"
             container
             direction="row"
             spacing={2}
