@@ -205,7 +205,7 @@ export const AlertListing = () => {
             data-qa-filter="alert-status-filter"
             data-testid="alert-status-filter"
             label=""
-            limitTags={2}
+            limitTags={1}
             multiple
             noMarginTop
             options={alertStatusOptions}
