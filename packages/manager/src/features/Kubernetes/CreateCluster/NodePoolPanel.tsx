@@ -17,6 +17,7 @@ import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPan
 
 import type {
   KubeNodePoolResponse,
+  KubernetesTier,
   LinodeTypeClass,
   Region,
 } from '@linode/api-v4';
@@ -33,6 +34,7 @@ export interface NodePoolPanelProps {
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
   selectedRegionId: Region['id'] | undefined;
+  selectedTier: KubernetesTier;
   types: ExtendedType[];
   typesError?: string;
   typesLoading: boolean;
@@ -66,6 +68,7 @@ const Panel = (props: NodePoolPanelProps) => {
     isSelectedRegionEligibleForPlan,
     regionsData,
     selectedRegionId,
+    selectedTier,
     types,
   } = props;
 
@@ -136,6 +139,7 @@ const Panel = (props: NodePoolPanelProps) => {
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
           selectedId={selectedType}
           selectedRegionId={selectedRegionId}
+          selectedTier={selectedTier}
           updatePlanCount={updatePlanCount}
         />
       </Grid>

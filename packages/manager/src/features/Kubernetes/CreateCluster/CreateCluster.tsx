@@ -487,6 +487,7 @@ export const CreateCluster = () => {
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}
             selectedRegionId={selectedRegion?.id}
+            selectedTier={selectedTier}
             types={typesData || []}
             typesLoading={typesLoading}
           />
