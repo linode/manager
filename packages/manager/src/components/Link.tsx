@@ -4,7 +4,7 @@ import {
   childrenContainsNoText,
   flattenChildrenIntoAriaLabel,
   opensInNewTab,
-} from '@linode/utilities'; // `link` utils from @linode/utilities
+} from '@linode/utilities'; // `link.ts` utils from @linode/utilities
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
