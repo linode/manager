@@ -389,64 +389,68 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </Grid>
         </Grid>
       )}
-      <Grid
-        sx={{
-          borderTop: `1px solid ${theme.borderColors.borderTable}`,
-          padding: `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
-            1
-          )} ${theme.spacing(2)}`,
-          [theme.breakpoints.down('md')]: {
-            paddingLeft: 3,
-          },
-        }}
-        container
-        direction="row"
-      >
-        {linodeLkeClusterId && (
-          <StyledListItem
-            sx={{
-              ...(!attachedFirewall && !linodeInterfacesFlag?.enabled
-                ? { borderRight: 'unset' }
-                : {}),
-            }}
-          >
-            <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
-            <Link
-              data-testid="assigned-lke-cluster-label"
-              to={`/kubernetes/clusters/${linodeLkeClusterId}`}
+      {(linodeLkeClusterId ||
+        attachedFirewall ||
+        linodeInterfacesFlag?.enabled) && (
+        <Grid
+          sx={{
+            borderTop: `1px solid ${theme.borderColors.borderTable}`,
+            padding: `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
+              1
+            )} ${theme.spacing(2)}`,
+            [theme.breakpoints.down('md')]: {
+              paddingLeft: 3,
+            },
+          }}
+          container
+          direction="row"
+        >
+          {linodeLkeClusterId && (
+            <StyledListItem
+              sx={{
+                ...(!attachedFirewall && !linodeInterfacesFlag?.enabled
+                  ? { borderRight: 'unset' }
+                  : {}),
+              }}
             >
-              {cluster?.label ?? `${linodeLkeClusterId}`}
-            </Link>
-            &nbsp;
-            {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
-          </StyledListItem>
-        )}
-        {!isLinodeInterface && attachedFirewall && (
-          <StyledListItem
-            sx={{
-              ...(!linodeInterfacesFlag?.enabled
-                ? { borderRight: 'unset' }
-                : {}),
-            }}
-          >
-            <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
-            <Link
-              data-testid="assigned-firewall"
-              to={`/firewalls/${attachedFirewall.id}`}
+              <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
+              <Link
+                data-testid="assigned-lke-cluster-label"
+                to={`/kubernetes/clusters/${linodeLkeClusterId}`}
+              >
+                {cluster?.label ?? `${linodeLkeClusterId}`}
+              </Link>
+              &nbsp;
+              {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
+            </StyledListItem>
+          )}
+          {!isLinodeInterface && attachedFirewall && (
+            <StyledListItem
+              sx={{
+                ...(!linodeInterfacesFlag?.enabled
+                  ? { borderRight: 'unset' }
+                  : {}),
+              }}
             >
-              {attachedFirewall.label ?? `${attachedFirewall.id}`}
-            </Link>
-            &nbsp;
-            {attachedFirewall && `(ID: ${attachedFirewall.id})`}
-          </StyledListItem>
-        )}
-        {linodeInterfacesFlag?.enabled && (
-          <StyledListItem sx={{ borderRight: 'unset' }}>
-            <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
-            {isLinodeInterface ? 'Linode' : 'Configuration Profile'}
-          </StyledListItem>
-        )}
-      </Grid>
+              <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
+              <Link
+                data-testid="assigned-firewall"
+                to={`/firewalls/${attachedFirewall.id}`}
+              >
+                {attachedFirewall.label ?? `${attachedFirewall.id}`}
+              </Link>
+              &nbsp;
+              {attachedFirewall && `(ID: ${attachedFirewall.id})`}
+            </StyledListItem>
+          )}
+          {linodeInterfacesFlag?.enabled && (
+            <StyledListItem sx={{ borderRight: 'unset' }}>
+              <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
+              {isLinodeInterface ? 'Linode' : 'Configuration Profile'}
+            </StyledListItem>
+          )}
+        </Grid>
+      )}
     </>
   );
 });
