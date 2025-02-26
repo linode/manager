@@ -404,7 +404,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         {linodeLkeClusterId && (
           <StyledListItem
             sx={{
-              ...(!linodeInterfacesFlag?.enabled
+              ...(!attachedFirewall && !linodeInterfacesFlag?.enabled
                 ? { borderRight: 'unset' }
                 : {}),
             }}
@@ -420,26 +420,30 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
           </StyledListItem>
         )}
+        {!isLinodeInterface && attachedFirewall && (
+          <StyledListItem
+            sx={{
+              ...(!linodeInterfacesFlag?.enabled
+                ? { borderRight: 'unset' }
+                : {}),
+            }}
+          >
+            <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
+            <Link
+              data-testid="assigned-firewall"
+              to={`/firewalls/${attachedFirewall.id}`}
+            >
+              {attachedFirewall.label ?? `${attachedFirewall.id}`}
+            </Link>
+            &nbsp;
+            {attachedFirewall && `(ID: ${attachedFirewall.id})`}
+          </StyledListItem>
+        )}
         {linodeInterfacesFlag?.enabled && (
-          <>
-            {!isLinodeInterface && attachedFirewall && (
-              <StyledListItem>
-                <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
-                <Link
-                  data-testid="assigned-lke-cluster-label"
-                  to={`/kubernetes/clusters/${attachedFirewall.id}`}
-                >
-                  {attachedFirewall.label ?? `${attachedFirewall.id}`}
-                </Link>
-                &nbsp;
-                {attachedFirewall && `(ID: ${attachedFirewall.id})`}
-              </StyledListItem>
-            )}
-            <StyledListItem sx={{ borderRight: 'unset' }}>
-              <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
-              {isLinodeInterface ? 'Linode' : 'Configuration Profile'}
-            </StyledListItem>
-          </>
+          <StyledListItem sx={{ borderRight: 'unset' }}>
+            <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
+            {isLinodeInterface ? 'Linode' : 'Configuration Profile'}
+          </StyledListItem>
         )}
       </Grid>
     </>
