@@ -2475,6 +2475,9 @@ export const handlers = [
       const serviceType = params.serviceType;
       return HttpResponse.json({
         data: alertFactory.buildList(20, {
+          rule_criteria: {
+            rules: alertRulesFactory.buildList(2),
+          },
           service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
         }),
       });

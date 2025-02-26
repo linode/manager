@@ -1,6 +1,9 @@
+import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
+
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type {
   Alert,
+  AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
   EditAlertPayloadWithService,
@@ -27,6 +30,29 @@ interface AlertChipBorderProps {
    * Indicates Whether to merge the chips into single or keep it individually
    */
   mergeChips: boolean | undefined;
+}
+
+export interface ProcessedCriteria {
+  /**
+   * Aggregation type for the metric criteria
+   */
+  aggregationType: string;
+  /**
+   * Label for the metric criteria
+   */
+  label: string;
+  /**
+   * Comparison operator for the metric criteria
+   */
+  operator: string;
+  /**
+   * Threshold value for the metric criteria
+   */
+  threshold: number;
+  /**
+   * Unit for the threshold value
+   */
+  unit: string;
 }
 
 /**
@@ -203,4 +229,29 @@ export const convertAlertDefinitionValues = (
     tags,
     trigger_conditions,
   };
+};
+
+/**
+ *
+ * @param criterias list of metric criterias to be processed
+ * @returns list of metric criterias in processed form
+ */
+export const processMetricCriteria = (
+  criterias: AlertDefinitionMetricCriteria[]
+): ProcessedCriteria[] => {
+  return criterias
+    .map((criteria) => {
+      const { aggregate_function, label, operator, threshold, unit } = criteria;
+      return {
+        aggregationType: aggregationTypeMap[aggregate_function],
+        label,
+        operator: metricOperatorTypeMap[operator],
+        threshold,
+        unit,
+      };
+    })
+    .reduce<ProcessedCriteria[]>((previousValue, currentValue) => {
+      previousValue.push(currentValue);
+      return previousValue;
+    }, []);
 };
