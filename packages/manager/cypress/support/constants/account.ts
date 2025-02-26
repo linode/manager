@@ -35,3 +35,18 @@ export const loginHelperText =
  * Empty state message that appears when there is no item in the login history table.
  */
 export const loginEmptyStateMessageText = 'No account logins';
+
+/**
+ * Warning message that appears when users is trying to enable Linode Managed.
+ */
+export const linodeEnabledMessageText = (count: number): string => {
+  return `Linode Managed costs an additional $100 per month per Linode.  You currently have ${count} Linodes, so Managed will increase your projected monthly bill by $${
+    100 * count
+  }.`;
+};
+
+/**
+ * Message that tells the Linode Managed is enabled.
+ */
+export const linodeManagedStateMessageText =
+  'Managed is already enabled on your account';
