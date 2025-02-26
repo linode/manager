@@ -117,7 +117,6 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
                 } as APIError & { isKubeConfigNotReady: true },
               ];
 
-              // Add the custom property
               notReadyError[0].isKubeConfigNotReady = true;
 
               throw notReadyError;
