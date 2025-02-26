@@ -46,6 +46,7 @@ import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing'
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { randomString } from 'support/util/random';
 import { buildArray } from 'support/util/arrays';
+import { DateTime } from 'luxon';
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
@@ -1779,6 +1780,8 @@ describe('LKE cluster updates', () => {
   it('filters the node tables based on selected status filter', () => {
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
+      created: DateTime.local().toISO(),
+      tier: 'enterprise',
     });
     const mockNodePools = [
       nodePoolFactory.build({
@@ -1789,6 +1792,7 @@ describe('LKE cluster updates', () => {
         ],
       }),
       nodePoolFactory.build({
+        count: 2,
         nodes: kubeLinodeFactory.buildList(2),
       }),
     ];
@@ -1823,6 +1827,9 @@ describe('LKE cluster updates', () => {
     cy.wait(['@getCluster', '@getNodePools', '@getLinodes']);
 
     // Filter is initially set to Show All nodes
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 4);
     });
@@ -1835,6 +1842,9 @@ describe('LKE cluster updates', () => {
     ui.autocompletePopper.findByTitle('Running').should('be.visible').click();
 
     // Only Running nodes should be displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 2);
     });
@@ -1847,6 +1857,9 @@ describe('LKE cluster updates', () => {
     ui.autocompletePopper.findByTitle('Offline').should('be.visible').click();
 
     // Only Offline nodes should be displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 1);
     });
@@ -1862,6 +1875,9 @@ describe('LKE cluster updates', () => {
       .click();
 
     // Only Provisioning nodes should be displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 1);
     });
@@ -1874,6 +1890,9 @@ describe('LKE cluster updates', () => {
     ui.autocompletePopper.findByTitle('Show All').should('be.visible').click();
 
     // All nodes are displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 4);
     });
