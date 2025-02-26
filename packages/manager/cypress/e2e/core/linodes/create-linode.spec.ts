@@ -23,6 +23,9 @@ import { Region, VLAN, Config, Disk } from '@linode/api-v4';
 import { getRegionById } from 'support/util/regions';
 import {
   accountFactory,
+  accountUserFactory,
+  profileFactory,
+  grantsFactory,
   linodeFactory,
   linodeConfigFactory,
   linodeTypeFactory,
@@ -40,6 +43,11 @@ import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
+import { mockGetUser } from 'support/intercepts/account';
 
 let username: string;
 
@@ -508,5 +516,63 @@ describe('Create Linode', () => {
     // Confirm the correct validation errors show up on the page.
     cy.findByText('You must select a Backup.').should('be.visible');
     cy.findByText('Plan is required.').should('be.visible');
+  });
+
+  /*
+   * - Confirms UI flow when creating a Linode with a restricted user.
+   * - Confirms that a notice is shown informing the user they do not have permission to create a Linode.
+   * - Confirms that "Regions" field is disabled.
+   * - Confirms that "Linux Distribution" field is disabled.
+   * - Confirms that "Create Linode" button is disabled.
+   */
+  it('should not allow restricted users to create linodes', () => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    // simulating a default user without the ability to add Linodes.
+    const mockProfile = profileFactory.build({
+      username: randomLabel(),
+      restricted: true,
+    });
+
+    const mockUser = accountUserFactory.build({
+      username: mockProfile.username,
+      restricted: true,
+      user_type: 'default',
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_linodes: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+
+    // Login and wait for application to load
+    cy.visitWithLogin('/linodes/create');
+
+    // Confirm that a notice should be shown informing the user they do not have permission to create a Linode.
+    cy.findByText(
+      "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
+    ).should('be.visible');
+
+    // Confirm that "Region" select dropdown is disabled
+    ui.regionSelect.find().should('be.visible').should('be.disabled');
+
+    // Confirm that "Linux Distribution" select dropdown is disabled
+    cy.get('[data-qa-autocomplete="Linux Distribution"]').within(() => {
+      cy.get('[placeholder="Choose a Linux distribution"]')
+        .should('be.visible')
+        .should('be.disabled');
+
+      cy.get('[aria-label="Open"]').should('be.visible').should('be.disabled');
+    });
+
+    // Confirm that "Create Linode" button is visible and disabled
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .and('be.disabled');
   });
 });
