@@ -71,7 +71,6 @@ export const CreateCluster = () => {
   const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(false);
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
@@ -104,7 +103,14 @@ export const CreateCluster = () => {
     },
   });
 
-  const { control, getValues, handleSubmit, setValue, watch } = formMethods;
+  const {
+    control,
+    formState: { isSubmitting },
+    getValues,
+    handleSubmit,
+    setValue,
+    watch,
+  } = formMethods;
   const selectedRegion = watch('region');
   const nodePool = watch('node_pools');
   const aplEnabled = watch('apl_enabled');
@@ -175,7 +181,7 @@ export const CreateCluster = () => {
     isLkeEnterpriseLAFlagEnabled,
   } = useIsLkeEnterpriseEnabled();
 
-  const createCluster = (formData: CreateKubeClusterPayload) => {
+  const createCluster = (formData: CreateKubeClusterPayload): Promise<void> => {
     const {
       apl_enabled,
       control_plane,
@@ -186,17 +192,16 @@ export const CreateCluster = () => {
     } = formData;
 
     const { push } = history;
-    setSubmitting(true);
 
     const _ipv4 = control_plane?.acl?.addresses?.ipv4 || [];
 
     const _ipv6 = control_plane?.acl?.addresses?.ipv6 || [];
 
-    const addressIPv4Payload = {
+    const addressIPv4Payload = controlPlaneACL && {
       ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
     };
 
-    const addressIPv6Payload = {
+    const addressIPv6Payload = controlPlaneACL && {
       ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
     };
 
@@ -204,12 +209,13 @@ export const CreateCluster = () => {
       control_plane: {
         acl: {
           enabled: controlPlaneACL,
-          ...((_ipv4?.length > 0 || _ipv6.length > 0) && {
-            addresses: {
-              ...addressIPv4Payload,
-              ...addressIPv6Payload,
-            },
-          }),
+          ...(controlPlaneACL &&
+            (_ipv4?.length || _ipv6.length) && {
+              addresses: {
+                ...addressIPv4Payload,
+                ...addressIPv6Payload,
+              },
+            }),
         },
         high_availability: control_plane?.high_availability ?? false,
       },
@@ -233,7 +239,7 @@ export const CreateCluster = () => {
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
-    createClusterFn(payload)
+    return createClusterFn(payload)
       .then((cluster) => {
         push(`/kubernetes/clusters/${cluster.id}`);
         if (hasAgreed) {
@@ -245,7 +251,6 @@ export const CreateCluster = () => {
       })
       .catch((err) => {
         setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
-        setSubmitting(false);
         scrollErrorIntoViewV2(formContainerRef);
       });
   };
@@ -307,8 +312,13 @@ export const CreateCluster = () => {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
-  const onSubmit = handleSubmit((data) => {
-    createCluster(data);
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      await createCluster(data);
+    } catch (err) {
+      setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
+      scrollErrorIntoViewV2(formContainerRef);
+    }
   });
 
   return (
@@ -598,7 +608,7 @@ export const CreateCluster = () => {
                 getValues('control_plane.high_availability'),
                 getValues('region'),
                 getValues('node_pools'),
-                submitting,
+                isSubmitting,
                 typesData,
                 updatePool,
                 removePool,
@@ -615,7 +625,7 @@ export const CreateCluster = () => {
               regionsData={regionsData}
               removePool={removePool}
               showHighAvailability={showHighAvailability}
-              submitting={submitting}
+              submitting={isSubmitting}
               toggleHasAgreed={toggleHasAgreed}
               updatePool={updatePool}
             />
