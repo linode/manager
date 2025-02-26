@@ -212,9 +212,10 @@ describe('Integration Tests for Edit Alert', () => {
       .should('be.checked');
 
     // Verify alert resource selection count message
-    cy.get('[data-qa-notice="true"]')
-      .find('p')
-      .should('have.text', '1 of 5 resources are selected.');
+    cy.get('[data-testid="selection_notice"]').should(
+      'contain',
+      '1 of 5 resources are selected.'
+    );
 
     // Assert rule values 1
     assertRuleValues(0, {
@@ -290,14 +291,17 @@ describe('Integration Tests for Edit Alert', () => {
     ui.autocomplete.findByLabel('Severity').clear();
     ui.autocomplete.findByLabel('Severity').type('Info');
     ui.autocompletePopper.findByTitle('Info').should('be.visible').click();
-    cy.get('[data-qa-notice="true"]').within(() => {
-      ui.button.findByTitle('Select All').should('be.visible').click();
-    });
+    cy.get('[data-qa-notice="true"]')
+      .find('button')
+      .contains('Select All')
+      .click();
+
     cy.get(
       '[data-qa-metric-threshold="rule_criteria.rules.0-data-field"]'
     ).within(() => {
       ui.button.findByAttribute('aria-label', 'Clear').click();
     });
+
     cy.get('[data-testid="rule_criteria.rules.0-id"]').within(() => {
       ui.autocomplete.findByLabel('Data Field').type('Disk I/O');
       ui.autocompletePopper.findByTitle('Disk I/O').click();
