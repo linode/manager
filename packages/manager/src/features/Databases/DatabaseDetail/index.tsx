@@ -126,7 +126,7 @@ export const DatabaseDetail = () => {
     tabs.splice(1, 0, {
       chip: <BetaChip />,
       routeName: `/databases/${engine}/${id}/monitor`,
-      title: 'Monitor',
+      title: 'Metrics',
     });
   }
 
