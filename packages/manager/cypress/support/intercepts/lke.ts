@@ -77,7 +77,7 @@ export const mockGetTieredKubernetesVersions = (
 
   return cy.intercept(
     'GET',
-    apiMatcher(`lke/versions/${tier}*`),
+    apiMatcher(`lke/tiers/${tier}/versions*`),
     paginateResponse(versionObjects)
   );
 };
