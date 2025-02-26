@@ -95,7 +95,7 @@ export const createKubeEnterpriseClusterSchema = object().shape({
     })
     .test(
       'validateIPForEnterprise',
-      'At least one IP address or CIDR range is required for LKE-E.',
+      'At least one IP address or CIDR range is required for LKE Enterprise.',
       function (controlPlane) {
         const { ipv4, ipv6 } = controlPlane.acl.addresses;
         // Pass validation if either IP address has a value.
@@ -134,11 +134,14 @@ export const kubernetesControlPlaneACLPayloadSchema = object().shape({
 export const kubernetesEnterpriseControlPlaneACLPayloadSchema = object().shape({
   acl: controlPlaneEnterpriseACLOptionsSchema.test(
     'validateIPForEnterprise',
-    'At least one IP address or CIDR range is required for LKE-E.',
+    'At least one IP address or CIDR range is required for LKE Enterprise.',
     function (acl) {
       const { ipv4, ipv6 } = acl.addresses || {};
       // Pass validation if either IP address has a value.
-      return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
+      return (
+        (ipv4 && ipv4.length > 0 && ipv4[0] !== '') ||
+        (ipv6 && ipv6.length > 0 && ipv6[0] !== '')
+      );
     }
   ),
 });

@@ -103,8 +103,6 @@ export const KubeControlPlaneACLDrawer = (
 
   const { acl } = watch();
 
-  // console.log({errors})
-
   const updateCluster = async () => {
     // A quick note on the following code:
     //
@@ -265,9 +263,9 @@ export const KubeControlPlaneACLDrawer = (
             cluster&apos;s control plane will only be accessible from IP
             addresses within this list.
           </StyledTypography>
-          {errors.acl?.message && (
+          {errors.acl?.root && (
             <Notice spacingBottom={12} spacingTop={8} variant="error">
-              {errors.acl.message}
+              {errors.acl?.root.message}
             </Notice>
           )}
           <Box sx={{ maxWidth: 450 }}>
