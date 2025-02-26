@@ -157,9 +157,12 @@ export const KubeConfigDisplay = (props: Props) => {
   const downloadKubeConfig = async () => {
     try {
       const queryResult = await getKubeConfig();
+
       if (
-        ((queryResult.error as unknown) as Error)?.message ===
-        'KUBECONFIG_NOT_READY'
+        Array.isArray(queryResult.error) &&
+        queryResult.error[0]?.reason?.includes(
+          'kubeconfig is not yet available'
+        )
       ) {
         enqueueSnackbar(
           'Your cluster is still provisioning. Please try again in a few minutes.',

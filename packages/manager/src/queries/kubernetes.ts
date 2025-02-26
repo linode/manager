@@ -88,14 +88,14 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
           try {
             const result = await getKubeConfig(id);
             if (!result || !result.kubeconfig) {
-              throw new Error('Invalid KubeConfig response');
+              throw [{ reason: 'Invalid KubeConfig response' } as APIError];
             }
 
             let decodedKubeConfig;
             try {
               decodedKubeConfig = window.atob(result.kubeconfig);
             } catch (decodeError) {
-              throw new Error('Failed to decode KubeConfig');
+              throw [{ reason: 'Failed to decode KubeConfig' } as APIError];
             }
             return decodedKubeConfig;
           } catch (error) {
@@ -110,9 +110,28 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
                 err[0]?.reason?.includes('kubeconfig is not yet available'))
             ) {
               // Custom error to identify when KubeConfig is still provisioning
-              throw new Error('KUBECONFIG_NOT_READY');
+              const notReadyError = [
+                {
+                  reason:
+                    'Cluster kubeconfig is not yet available. Please try again later.',
+                } as APIError & { isKubeConfigNotReady: true },
+              ];
+
+              // Add the custom property
+              notReadyError[0].isKubeConfigNotReady = true;
+
+              throw notReadyError;
             }
-            throw error;
+
+            if (Array.isArray(error)) {
+              throw error;
+            }
+
+            if (error instanceof Error) {
+              throw [{ reason: error.message } as APIError];
+            }
+
+            throw [{ reason: 'An unexpected error occurred' } as APIError];
           }
         },
         queryKey: null,
@@ -235,7 +254,7 @@ export const useKubernetesKubeConfigQuery = (
     enabled,
     retry: (failureCount, error: any) => {
       // Skip retries when cluster is still provisioning
-      if (error?.message === 'KUBECONFIG_NOT_READY') {
+      if (Array.isArray(error) && error[0]?.isKubeConfigNotReady) {
         return false;
       }
       return failureCount < 3;
