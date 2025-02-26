@@ -1,5 +1,4 @@
-import { Box, Paper } from '@linode/ui';
-import { TabList } from '@reach/tabs';
+import { Paper } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import {
