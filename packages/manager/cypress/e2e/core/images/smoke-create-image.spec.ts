@@ -1,4 +1,10 @@
-import { eventFactory, linodeFactory } from 'src/factories';
+import {
+  accountUserFactory,
+  eventFactory,
+  grantsFactory,
+  linodeFactory,
+  profileFactory,
+} from 'src/factories';
 import { linodeDiskFactory } from 'src/factories/disk';
 import { imageFactory } from 'src/factories/images';
 import { mockGetEvents } from 'support/intercepts/events';
@@ -6,6 +12,11 @@ import { mockCreateImage } from 'support/intercepts/images';
 import { mockGetLinodeDisks, mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
+import { mockGetUser } from 'support/intercepts/account';
 
 describe('create image (using mocks)', () => {
   it('create image from a linode', () => {
@@ -108,5 +119,147 @@ describe('create image (using mocks)', () => {
 
     // Verify a success toast shows
     ui.toast.assertMessage('Image My Config has been created.');
+  });
+
+  it('should not create image for the restricted users', () => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    // simulating a default user without the ability to add Linodes.
+    const mockProfile = profileFactory.build({
+      username: randomLabel(),
+      restricted: true,
+    });
+
+    const mockUser = accountUserFactory.build({
+      username: mockProfile.username,
+      restricted: true,
+      user_type: 'default',
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_images: false,
+      },
+    });
+
+    const mockDisks = [
+      linodeDiskFactory.build({ label: 'Debian 12 Disk', filesystem: 'ext4' }),
+      linodeDiskFactory.build({
+        label: '512 MB Swap Image',
+        filesystem: 'swap',
+      }),
+    ];
+
+    const mockLinode = linodeFactory.build();
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+    mockGetLinodes([mockLinode]).as('getLinodes');
+    mockGetLinodeDisks(mockLinode.id, mockDisks).as('getDisks');
+
+    cy.visitWithLogin('/images/create');
+
+    // Wait for Linodes to load
+    cy.wait('@getLinodes');
+
+    // Check the following fields are disable
+
+    // Confirm that a notice should be shown informing the user they do not have permission to create a Linode
+    cy.findByText(
+      "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions."
+    ).should('be.visible');
+
+    // Confirm that "Linode" field is diabled
+    cy.get('[data-qa-autocomplete="Linode"]').within(() => {
+      cy.get('[title="Open"]').should('be.visible').should('be.disabled');
+    });
+
+    // Confirm that "Disk" field is disabled
+    cy.get('[data-qa-autocomplete="Disk"]').within(() => {
+      cy.get('[title="Open"]').should('be.visible').should('be.disabled');
+    });
+
+    // Confirm that "Label" field is disabled
+    cy.get('[id="label"]').should('be.visible').should('be.disabled');
+
+    // Confirm that "Add Tags" field is disabled
+    cy.get('[data-qa-autocomplete="Add Tags"]').within(() => {
+      cy.get('[title="Open"]').should('be.visible').should('be.disabled');
+    });
+
+    // Confirm that "Description" field is disabled
+    cy.get('[id="description"]').should('be.visible').should('be.disabled');
+
+    // Confirm that "Create Image" button is disabled
+    ui.button
+      .findByTitle('Create Image')
+      .should('be.visible')
+      .should('be.disabled');
+  });
+
+  it('should not upload image for the restricted users', () => {
+    const mockProfile = profileFactory.build({
+      username: randomLabel(),
+      restricted: true,
+    });
+
+    const mockUser = accountUserFactory.build({
+      username: mockProfile.username,
+      restricted: true,
+      user_type: 'default',
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_images: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+
+    cy.visitWithLogin('/images/create/upload');
+
+    // Confirm that a notice should be shown informing the user they do not have permission to create a Linode.
+    cy.findByText(
+      "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions."
+    ).should('be.visible');
+
+    // Check the following fields are disabled
+
+    // Confirm that "Label" field is diabled
+    cy.get('[id="label"]').should('be.visible').should('be.disabled');
+
+    // Confirm that "Cloud init compatibility checkbox" field is diabled
+    cy.get('[type="checkbox"]').should('be.disabled');
+
+    // Confirm that "Region" field is diabled
+    cy.get('[data-qa-autocomplete="Region"]').within(() => {
+      cy.get('[title="Open"]').should('be.visible').should('be.disabled');
+    });
+
+    // Confirm that "Add Tags" field is disabled
+    cy.get('[data-qa-autocomplete="Add Tags"]').within(() => {
+      cy.get('[title="Open"]').should('be.visible').should('be.disabled');
+    });
+
+    // Confirm that "Description" field is disabled
+    cy.get('[id="description"]').should('be.visible').should('be.disabled');
+
+    // Confirm that "Choose File" button is disabled
+    ui.button
+      .findByTitle('Choose File')
+      .should('be.visible')
+      .should('be.disabled');
+
+    // Confirm that "Upload Using Command Line" button is disabled
+    ui.button
+      .findByTitle('Upload Using Command Line')
+      .should('be.visible')
+      .should('be.disabled');
+
+    // Confirm that "Upload Image" button is disabled
+    cy.get('[type="submit"]').should('be.visible').should('be.disabled');
   });
 });
