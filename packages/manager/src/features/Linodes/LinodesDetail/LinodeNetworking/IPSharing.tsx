@@ -8,8 +8,9 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
+import { areArraysEqual } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 
@@ -26,7 +27,6 @@ import {
   useLinodeShareIPMutation,
 } from 'src/queries/linodes/networking';
 import { useAllDetailedIPv6RangesQuery } from 'src/queries/networking/networking';
-import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import type { Linode } from '@linode/api-v4/lib/linodes';
@@ -534,13 +534,13 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       </Grid>
       {handleDelete ? (
         <Grid
+          size={{
+            sm: 2,
+          }}
           sx={{
             [theme.breakpoints.down('sm')]: {
               width: '100%',
             },
-          }}
-          size={{
-            sm: 2,
           }}
         >
           <Button

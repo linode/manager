@@ -1,14 +1,14 @@
+import { downloadFile } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { downloadFile } from 'src/utilities/downloadFile';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CopyableTextField } from './CopyableTextField';
 
 import type { CopyableTextFieldProps } from './CopyableTextField';
 
-vi.mock('src/utilities/downloadFile', () => ({
+vi.mock('@linode/utilities', () => ({
   downloadFile: vi.fn(),
 }));
 

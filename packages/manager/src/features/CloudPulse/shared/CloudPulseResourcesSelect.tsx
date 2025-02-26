@@ -14,6 +14,7 @@ export interface CloudPulseResources {
   id: string;
   label: string;
   region?: string;
+  tags?: string[];
 }
 
 export interface CloudPulseResourcesSelectProps {

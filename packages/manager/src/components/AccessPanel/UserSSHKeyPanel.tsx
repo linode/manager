@@ -1,4 +1,4 @@
-import { Button, Checkbox, Typography } from '@linode/ui';
+import { Box, Button, Checkbox, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -20,9 +20,10 @@ import { Avatar } from '../Avatar/Avatar';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
 
+import type { TypographyProps } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
 
-export const MAX_SSH_KEYS_DISPLAY = 25;
+const MAX_SSH_KEYS_DISPLAY = 25;
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cellCheckbox: {
@@ -46,13 +47,23 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   authorizedUsers: string[];
   disabled?: boolean;
+  /**
+   * Override the "SSH Keys" heading variant
+   * @default h2
+   */
+  headingVariant?: TypographyProps['variant'];
   setAuthorizedUsers: (usernames: string[]) => void;
 }
 
-const UserSSHKeyPanel = (props: Props) => {
+export const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
   const theme = useTheme();
-  const { authorizedUsers, disabled, setAuthorizedUsers } = props;
+  const {
+    authorizedUsers,
+    disabled,
+    headingVariant,
+    setAuthorizedUsers,
+  } = props;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -192,8 +203,8 @@ const UserSSHKeyPanel = (props: Props) => {
   };
 
   return (
-    <React.Fragment>
-      <Typography className={classes.title} variant="h2">
+    <Box>
+      <Typography className={classes.title} variant={headingVariant ?? 'h2'}>
         SSH Keys
       </Typography>
       <Table spacingBottom={16}>
@@ -227,8 +238,6 @@ const UserSSHKeyPanel = (props: Props) => {
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
       />
-    </React.Fragment>
+    </Box>
   );
 };
-
-export default React.memo(UserSSHKeyPanel);
