@@ -214,9 +214,10 @@ export const getFilteredResources = (
         (region.length && filteredRegions.includes(region)); // check with filtered region
 
       return (
-        matchesSearchText && // match the search text and match the region selected
+        // if selected only, show only checked, else everything
+        matchesSearchText &&
         matchesFilteredRegions &&
-        (!selectedOnly || checked) // if selected only, show only checked, else everything
+        (!selectedOnly || checked)
       ); // match the search text and match the region selected
     })
     .filter((resource) => applyAdditionalFilter(resource, additionalFilters));
@@ -258,7 +259,9 @@ const applyAdditionalFilter = (
  * This methods scrolls to the given HTML Element
  * @param scrollToElement The HTML Element to which we need to scroll
  */
-export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
+export const scrollToElement = (
+  scrollToElement: HTMLButtonElement | HTMLDivElement | null
+) => {
   if (scrollToElement) {
     window.scrollTo({
       behavior: 'smooth',

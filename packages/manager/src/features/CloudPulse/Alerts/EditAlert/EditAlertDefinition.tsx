@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { isEmpty } from '@linode/api-v4';
 import { Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -8,6 +9,8 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
@@ -19,10 +22,10 @@ import { convertAlertDefinitionValues } from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
+  Alert,
   AlertServiceType,
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
-import type { Alert } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
 export interface EditAlertProps {
@@ -39,6 +42,7 @@ export interface EditAlertProps {
 export const EditAlertDefinition = (props: EditAlertProps) => {
   const { alertDetails, serviceType } = props;
   const history = useHistory();
+  const formRef = React.useRef<HTMLFormElement>(null);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -68,6 +72,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       history.push(definitionLanding);
     } catch (errors) {
       for (const error of errors) {
+        scrollErrorIntoViewV2(formRef);
         if (error.field) {
           setError(error.field, { message: error.reason });
         } else {
@@ -81,28 +86,35 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   });
   const definitionLanding = '/monitor/alerts/definitions';
 
-  const { newPathname, overrides } = React.useMemo(() => {
-    const overrides = [
-      {
-        label: 'Definitions',
-        linkTo: definitionLanding,
-        position: 1,
-      },
-      {
-        label: 'Edit',
-        linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
-        position: 2,
-      },
-    ];
+  const overrides = [
+    {
+      label: 'Definitions',
 
-    return { newPathname: '/Definitions/Edit', overrides };
-  }, [serviceType, alertId]);
+      linkTo: definitionLanding,
+
+      position: 1,
+    },
+
+    {
+      label: 'Edit',
+
+      linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
+
+      position: 2,
+    },
+  ];
+
+  React.useEffect(() => {
+    if (!isEmpty(formState.errors)) {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
+    }
+  }, [formState.errors]);
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
-      <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
+      <Breadcrumb crumbOverrides={overrides} pathname={'/Definitions/Edit'} />
       <FormProvider {...formMethods}>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} ref={formRef}>
           <Typography marginTop={2} variant="h2">
             1. General Information
           </Typography>
@@ -115,7 +127,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
                 name="label"
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
-                placeholder="Enter Name"
+                placeholder="Enter a Name"
                 value={field.value ?? ''}
               />
             )}
@@ -131,7 +143,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
                 optional
-                placeholder="Enter Description"
+                placeholder="Enter a Description"
                 value={field.value ?? ''}
               />
             )}
@@ -148,9 +160,9 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <TriggerConditions
             maxScrapingInterval={maxScrapeInterval}
-            name={'trigger_conditions'}
+            name="trigger_conditions"
           />
-          <AddChannelListing name={'channel_ids'} />
+          <AddChannelListing name="channel_ids" />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',

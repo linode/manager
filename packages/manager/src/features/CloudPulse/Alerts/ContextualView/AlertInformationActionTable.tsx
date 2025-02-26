@@ -165,6 +165,7 @@ export const AlertInformationActionTable = (
                 <Grid>
                   <Table
                     colCount={columns.length + 1}
+                    data-qa="alert-table"
                     data-testid="alert-table"
                     size="small"
                     sx={{ overflowX: 'auto' }}

@@ -3,6 +3,7 @@ import { Grid } from '@mui/material';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
@@ -85,6 +86,7 @@ export const CloudPulseDashboardLanding = () => {
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
       />
+      <DocumentTitleSegment segment="Dashboards" />
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Paper sx={{ padding: 0 }}>

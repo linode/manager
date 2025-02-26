@@ -2,7 +2,7 @@ import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
+import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
@@ -19,7 +19,7 @@ import {
 } from '../Utils/AlertResourceUtils';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
-import { serviceToFiltersMap } from './constants';
+import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
@@ -120,7 +120,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     flags.aclpResourceTypeMap,
     serviceType
   );
-
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     const regionFilter: Filter = supportedRegionIds
       ? {
@@ -143,11 +142,21 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       return platformFilter;
     }
 
+    // Dynamically exclude 'dedicated' if alertClass is 'shared'
+    const filteredTypes =
+      alertClass === 'shared'
+        ? Object.keys(databaseTypeClassMap).filter(
+            (type) => type !== 'dedicated'
+          )
+        : [alertClass];
+
     // Apply type filter only for system alerts with a valid alertClass
     const typeFilter: Filter = {
-      type: {
-        '+contains': alertClass,
-      },
+      '+or': filteredTypes.map((dbType) => ({
+        type: {
+          '+contains': dbType,
+        },
+      })),
     };
 
     // Combine all the filters
@@ -301,9 +310,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Typography>
         )}
         <StyledPlaceholder
+          sx={{
+            h2: {
+              fontSize: '16px',
+            },
+          }}
           icon={EntityIcon}
-          subtitle="You can assign alerts during the resource creation process."
-          title="No resources are currently assigned to this alert definition."
+          subtitle="Once you assign the resources, they will show up here."
+          title="No resources associated with this alert definition."
         />
       </Stack>
     );
@@ -326,9 +340,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           alert for.
         </Typography>
       )}
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         <Grid
-          alignItems="center"
+          sx={{
+            alignItems: 'center',
+          }}
           columnSpacing={2}
           container
           item
@@ -386,15 +402,18 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
-        {isSelectionsNeeded && !isDataLoadingError && resources?.length && (
-          <Grid item xs={12}>
-            <AlertsResourcesNotice
-              handleSelectionChange={handleAllSelection}
-              selectedResources={selectedResources.length}
-              totalResources={resources?.length ?? 0}
-            />
-          </Grid>
-        )}
+        {isSelectionsNeeded &&
+          !isDataLoadingError &&
+          resources &&
+          resources.length > 0 && (
+            <Grid item xs={12}>
+              <AlertsResourcesNotice
+                handleSelectionChange={handleAllSelection}
+                selectedResources={selectedResources.length}
+                totalResources={resources?.length ?? 0}
+              />
+            </Grid>
+          )}
         <Grid item xs={12}>
           <DisplayAlertResources
             scrollToElement={() =>

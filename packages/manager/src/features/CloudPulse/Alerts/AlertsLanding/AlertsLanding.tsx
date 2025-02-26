@@ -1,4 +1,5 @@
 import { Box, Paper } from '@linode/ui';
+import { TabList } from '@reach/tabs';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import {
@@ -10,6 +11,7 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -71,24 +73,18 @@ export const AlertsLanding = React.memo(() => {
         sx={{ width: '100%' }}
       >
         <TabLinkList tabs={accessibleTabs} />
-        <Paper sx={{ padding: 2 }}>
-          <Box
-            sx={{
-              aligneItems: 'center',
-              display: 'flex',
-              justifyContent: 'space-between',
-              p: 1,
-              width: '100%',
-            }}
-          />
-          <Switch>
-            <Route
-              component={AlertDefinitionLanding}
-              path={'/alerts/definitions'}
-            />
-            <Redirect from="*" to="/alerts/definitions" />
-          </Switch>
-        </Paper>
+        <React.Fragment>
+          <DocumentTitleSegment segment="Alerts" />
+          <Paper sx={{ padding: 2 }}>
+            <Switch>
+              <Route
+                component={AlertDefinitionLanding}
+                path={'/alerts/definitions'}
+              />
+              <Redirect from="*" to="/alerts/definitions" />
+            </Switch>
+          </Paper>
+        </React.Fragment>
       </Tabs>
     </React.Suspense>
   );

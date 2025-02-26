@@ -159,6 +159,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                       (option) => option.value === field.value
                     ) ?? null
                   }
+                  data-qa-metric-threshold={`${name}-data-field`}
                   data-testid="data-field"
                   disabled={!serviceWatcher}
                   label="Data Field"
@@ -191,6 +192,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                     aggOptions.find((option) => option.value === field.value) ??
                     null
                   }
+                  data-qa-metric-threshold={`${name}-aggregation-type`}
                   data-testid="aggregation-type"
                   disabled={aggOptions.length === 0}
                   errorText={fieldState.error?.message}
@@ -227,6 +229,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                         )
                       : null
                   }
+                  data-qa-metric-threshold={`${name}-operator`}
                   data-testid="operator"
                   disabled={!metricWatcher}
                   errorText={fieldState.error?.message}
@@ -251,7 +254,8 @@ export const Metric = (props: MetricCriteriaProps) => {
                     onWheel={(event: React.SyntheticEvent<Element, Event>) =>
                       event.target instanceof HTMLElement && event.target.blur()
                     }
-                    data-qa-threshold
+                    data-qa-metric-threshold={`${name}-threshold`}
+                    data-qa-threshold="threshold"
                     data-testid="threshold"
                     errorText={fieldState.error?.message}
                     label="Threshold"
@@ -273,6 +277,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   alignItems: 'flex-end',
                   display: 'flex',
                   height: '56px',
+                  marginTop: { lg: '5px', md: '5px', sm: '5px' },
                 }}
                 variant="body1"
               >

@@ -8,36 +8,38 @@
  * error messages or fallback behavior when necessary.
  */
 
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetCloudPulseDashboard,
   mockGetCloudPulseDashboards,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { widgetDetails } from 'support/constants/widgets';
+
 import {
   accountFactory,
   dashboardFactory,
   regionFactory,
   widgetFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
-import { mockGetRegions } from 'support/intercepts/regions';
+
 import type { Flags } from 'src/featureFlags';
 
-const { metrics, id, serviceType, dashboardName } = widgetDetails.dbaas;
+const { dashboardName, id, metrics, serviceType } = widgetDetails.dbaas;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
-  widgets: metrics.map(({ title, yLabel, name, unit }) => {
+  widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
       label: title,
-      y_label: yLabel,
       metric: name,
       unit,
+      y_label: yLabel,
     });
   }),
 });
@@ -68,7 +70,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
   it('should only display the Chicago region in the dropdown when supportedRegionIds is set to Chicago (us-ord)', () => {
     const flags: Partial<Flags> = {
-      aclp: { enabled: true, beta: true },
+      aclp: { beta: true, enabled: true },
       aclpResourceTypeMap: [
         {
           dimensionKey: 'LINODE_ID',
@@ -134,7 +136,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
   it.skip('If the supportedRegionIds column is removed, all mocked regions will be considered supported by default', () => {
     const flags: Partial<Flags> = {
-      aclp: { enabled: true, beta: true },
+      aclp: { beta: true, enabled: true },
       aclpResourceTypeMap: [
         {
           dimensionKey: 'cluster_id',
@@ -183,7 +185,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
   });
   it('supportedRegionIds is empty, no regions will be displayed', () => {
     const flags: Partial<Flags> = {
-      aclp: { enabled: true, beta: true },
+      aclp: { beta: true, enabled: true },
       aclpResourceTypeMap: [
         {
           dimensionKey: 'LINODE_ID',
@@ -233,7 +235,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
   it('should only display mocking region as Chicago and then supportedRegionIds is set to Junk', () => {
     const flags: Partial<Flags> = {
-      aclp: { enabled: true, beta: true },
+      aclp: { beta: true, enabled: true },
       aclpResourceTypeMap: [
         {
           dimensionKey: 'LINODE_ID',
@@ -282,11 +284,11 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
   });
 
   it('should only display mocking region as Chicago and then supportedRegionIds is set to us-east', () => {
-    //Since we are mocking the region as Chicago but setting supportedRegionIds to Newark,
+    // Since we are mocking the region as Chicago but setting supportedRegionIds to Newark,
     // no region should be displayed in the dropdown, as the region displayed must match the supported region
 
     const flags: Partial<Flags> = {
-      aclp: { enabled: true, beta: true },
+      aclp: { beta: true, enabled: true },
       aclpResourceTypeMap: [
         {
           dimensionKey: 'LINODE_ID',
@@ -339,7 +341,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
   it('should only display the Chicago region in the dropdown when supportedRegionIds is set to Chicago (us-ord) with extra spaces', () => {
     // Adding extra space to supportedRegionIds with the value ' us-ord', and the value should be trimmed to remove the extra spaces.',
     const flags: Partial<Flags> = {
-      aclp: { enabled: true, beta: true },
+      aclp: { beta: true, enabled: true },
       aclpResourceTypeMap: [
         {
           dimensionKey: 'LINODE_ID',

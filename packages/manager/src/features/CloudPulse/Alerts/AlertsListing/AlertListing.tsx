@@ -9,14 +9,16 @@ import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { alertStatusOptions } from '../constants';
+import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
 
 import type { Item } from '../constants';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
 
 const searchAndSelectSx = {
+  lg: '250px',
   md: '300px',
-  sm: '500px',
+  sm: '400px',
   xs: '300px',
 };
 
@@ -29,7 +31,7 @@ export const AlertListing = () => {
     error: serviceTypesError,
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
-
+  const topRef = React.useRef<HTMLButtonElement>(null);
   const getServicesList = React.useMemo((): Item<
     string,
     AlertServiceType
@@ -117,7 +119,7 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  if (alerts && alerts.length == 0) {
+  if (alerts && alerts.length === 0) {
     return (
       <StyledPlaceholder
         buttonProps={[
@@ -136,7 +138,6 @@ export const AlertListing = () => {
       />
     );
   }
-
   return (
     <Stack spacing={2}>
       <Box
@@ -145,6 +146,7 @@ export const AlertListing = () => {
         flexDirection={{ lg: 'row', md: 'column', sm: 'column', xs: 'column' }}
         gap={3}
         justifyContent="space-between"
+        ref={topRef}
       >
         <Box
           flexDirection={{
@@ -158,6 +160,7 @@ export const AlertListing = () => {
         >
           <DebouncedSearchTextField
             sx={{
+              maxHeight: '34px',
               width: searchAndSelectSx,
             }}
             data-qa-filter="alert-search"
@@ -218,11 +221,12 @@ export const AlertListing = () => {
             paddingBottom: 0,
             paddingTop: 0,
             whiteSpace: 'noWrap',
-            width: { md: '150px', xs: '200px' },
+            width: { lg: '120px', md: '120px', sm: '150px', xs: '150px' },
           }}
           buttonType="primary"
           data-qa-button="create-alert"
           data-qa-buttons="true"
+          ref={topRef}
           variant="contained"
         >
           Create Alert
@@ -232,6 +236,7 @@ export const AlertListing = () => {
         alerts={getAlertsList}
         error={error ?? undefined}
         isLoading={isLoading}
+        scrollToElement={() => scrollToElement(topRef.current ?? null)}
         services={getServicesList}
       />
     </Stack>

@@ -3,8 +3,8 @@ import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import * as React from 'react';
 
-import KeyboardArrowDownIcon from 'src/assets/icons/arrow_down.svg';
-import KeyboardArrowRightIcon from 'src/assets/icons/arrow_right.svg';
+import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
+import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -23,14 +23,19 @@ export const CollapsibleRow = (props: Props) => {
     <>
       <TableRow>
         <TableCell scope="row">
-          <Box alignItems="center" display="flex">
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
             <IconButton
               aria-label={`expand ${label} row`}
               onClick={() => setOpen(!open)}
               size="small"
               sx={{ marginRight: 0.5, padding: 0 }}
             >
-              {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
+              {open ? <KeyboardCaretDownIcon /> : <KeyboardCaretRightIcon />}
             </IconButton>
             {label}
           </Box>

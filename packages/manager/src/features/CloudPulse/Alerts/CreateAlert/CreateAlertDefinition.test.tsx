@@ -21,6 +21,7 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 beforeEach(() => {
+  Element.prototype.scrollIntoView = vi.fn();
   queryMocks.useResourcesQuery.mockReturnValue({
     data: [],
     isError: false,
@@ -79,9 +80,9 @@ describe('AlertDefinition Create', () => {
     await user.click(
       container.getByRole('button', { name: 'Add dimension filter' })
     );
-    const submitButton = container.getByText('Submit').closest('button');
-    await user.click(submitButton!);
-    expect(container.getAllByText('This field is required.').length).toBe(10);
+    const submitButton = container.getByText('Submit');
+    await user.click(submitButton);
+    expect(container.getAllByText(errorMessage).length).toBe(11);
     container.getAllByText(errorMessage).forEach((element) => {
       expect(element).toBeVisible();
     });
@@ -122,7 +123,7 @@ describe('AlertDefinition Create', () => {
     await user.click(container.getByText('Submit'));
     expect(
       await container.findByText(
-        'Name cannot contain special characters: * # & + : \< \> ? @ % { } \\ /.'
+        'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
       )
     ).toBeVisible();
     expect(

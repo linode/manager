@@ -20,6 +20,10 @@ export const AlertDefinitionLanding = () => {
       <Route exact path="/alerts/definitions/edit/:serviceType/:alertId">
         <EditAlertLanding />
       </Route>
+      <Route
+        component={CreateAlertDefinition}
+        path="/alerts/definitions/create"
+      />
     </Switch>
   );
 };
