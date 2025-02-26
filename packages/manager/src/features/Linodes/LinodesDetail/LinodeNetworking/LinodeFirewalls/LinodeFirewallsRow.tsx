@@ -1,7 +1,7 @@
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
