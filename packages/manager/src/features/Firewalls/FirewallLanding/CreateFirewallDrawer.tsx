@@ -13,6 +13,7 @@ import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+// eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
