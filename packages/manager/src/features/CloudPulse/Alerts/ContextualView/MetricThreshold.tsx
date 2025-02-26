@@ -15,7 +15,7 @@ export interface MetricThresholdProps {
 export const MetricThreshold = (props: MetricThresholdProps) => {
   const { metricThreshold } = props;
   if (metricThreshold.length === 0) {
-    return <NullComponent />;
+    return <Typography variant="body2">-</Typography>;
   }
 
   const thresholdObject = metricThreshold[0];

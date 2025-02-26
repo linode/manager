@@ -240,8 +240,7 @@ export const processMetricCriteria = (
   criterias: AlertDefinitionMetricCriteria[]
 ): ProcessedCriteria[] => {
   return criterias
-    .map((criteria) => {
-      const { aggregate_function, label, operator, threshold, unit } = criteria;
+    .map(({ aggregate_function, label, operator, threshold, unit }) => {
       return {
         aggregationType: aggregationTypeMap[aggregate_function],
         label,
