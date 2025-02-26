@@ -115,6 +115,9 @@ export const StyledAccordion = styled(Accordion, {
       height: 16,
       width: 16,
     },
+    '.MuiAccordionSummary-root': {
+      transition: 'none',
+    },
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
       '&:hover': {
         backgroundColor: theme.tokens.color.Neutrals[100],

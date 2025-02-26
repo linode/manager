@@ -1,7 +1,8 @@
+import { arrayToList } from '@linode/utilities';
+
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
-import { arrayToList } from 'src/utilities/arrayToList';
 
 import {
   DEDICATED_512_GB_PLAN,
