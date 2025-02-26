@@ -5,6 +5,7 @@ import {
   Border,
   BorderRadius,
   Button,
+  Calendar,
   Chart,
   Color,
   Content,
@@ -88,7 +89,7 @@ export const color = {
   // TODO: `tagButton*` should be moved to component level.
   tagButtonBg: Color.Brand[10],
   tagButtonBgHover: Button.Primary.Hover.Background,
-  tagButtonText: Color.Brand[60],
+  tagButtonText: Color.Brand[90],
   tagButtonTextHover: Color.Neutrals.White,
   tagIcon: Color.Brand[60],
   tagIconHover: Button.Primary.Default.Text,
@@ -236,7 +237,7 @@ const spacing = 8;
 const MuiTableHeadSvgStyles = {
   svg: {
     path: {
-      fill: Color.Brand[60],
+      fill: Color.Brand[90],
     },
   },
 };
@@ -328,7 +329,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover': {
             '& h3': {
-              color: primaryColors.light,
+              color: Color.Brand[80],
             },
           },
           backgroundColor: 'transparent',
@@ -389,6 +390,10 @@ export const lightTheme: ThemeOptions = {
           },
         },
         inputRoot: {
+          '& .MuiInput-input': {
+            position: 'relative',
+            top: 1,
+          },
           paddingLeft: 8,
         },
         listbox: {
@@ -507,13 +512,16 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover, &:focus': {
             backgroundColor: 'transparent',
-            color: Button.Secondary.Hover.Text,
+            color: Color.Brand[70],
           },
           '&[aria-disabled="true"]': {
             color: Color.Neutrals[40],
           },
           backgroundColor: 'transparent',
           color: Button.Secondary.Default.Text,
+        },
+        loading: {
+          color: 'transparent !important',
         },
         outlined: {
           '&:hover, &:focus': {
@@ -882,7 +890,7 @@ export const lightTheme: ThemeOptions = {
             fontSize: '1rem',
           },
           fontSize: Typography.Body.Regular,
-          padding: 8,
+          padding: `0 ${spacing}px`,
         },
         inputMultiline: {
           lineHeight: 1.4,
@@ -1006,7 +1014,6 @@ export const lightTheme: ThemeOptions = {
     },
     MuiListItem: {
       styleOverrides: {
-        disabled: {},
         root: {
           '&$disabled': {
             opacity: 0.5,
@@ -1022,7 +1029,6 @@ export const lightTheme: ThemeOptions = {
           },
           color: primaryColors.text,
         },
-        selected: {},
       },
     },
     MuiListItemText: {
@@ -1129,16 +1135,10 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.main,
             fontSize: 18,
           },
-          '&.Mui-disabled': {
-            backgroundColor: Color.Neutrals[5],
-            borderColor: Color.Neutrals[40],
-            color: 'rgba(0, 0, 0, 0.75)',
-            input: {
-              cursor: 'not-allowed',
-            },
-            opacity: 0.5,
-          },
           '&.Mui-error': {
+            borderColor: Interaction.Border.Error,
+          },
+          '&.Mui-error .MuiOutlinedInput-notchedOutline': {
             borderColor: Interaction.Border.Error,
           },
           '&.Mui-focused': {
@@ -1148,12 +1148,17 @@ export const lightTheme: ThemeOptions = {
             borderColor: primaryColors.main,
             boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
           },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '1px',
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
+          },
           '&.affirmative': {
             borderColor: Color.Green[70],
           },
           alignItems: 'center',
           backgroundColor: Color.Neutrals.White,
           border: `1px solid ${Color.Neutrals[40]}`,
+          borderRadius: 0,
           boxSizing: 'border-box',
           [breakpoints.down('xs')]: {
             maxWidth: '100%',
@@ -1162,7 +1167,6 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.text,
           lineHeight: 1,
           maxWidth: inputMaxWidth,
-          minHeight: 34,
           transition: 'border-color 225ms ease-in-out',
         },
       },
@@ -1556,7 +1560,7 @@ export const lightTheme: ThemeOptions = {
           },
           ':hover, :focus': {
             ...MuiTableHeadSvgStyles,
-            color: Color.Brand[60],
+            color: Color.Brand[90],
             cursor: 'pointer',
           },
           fontSize: Font.FontSize.Xs,
@@ -1882,6 +1886,7 @@ export const lightTheme: ThemeOptions = {
     background: Background,
     border: Border,
     borderRadius: BorderRadius,
+    calendar: Calendar,
     chart: Chart,
     color: Color,
     content: Content,

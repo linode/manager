@@ -2,9 +2,10 @@ import {
   Box,
   CircleProgress,
   Stack,
-  Typography,
   StyledLinkButton,
+  Typography,
 } from '@linode/ui';
+import { downloadFile } from '@linode/utilities';
 import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -19,7 +20,6 @@ import {
   useAllKubernetesClusterAPIEndpointsQuery,
   useKubernetesKubeConfigQuery,
 } from 'src/queries/kubernetes';
-import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4';

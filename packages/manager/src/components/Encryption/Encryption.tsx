@@ -28,7 +28,7 @@ export const Encryption = (props: EncryptionProps) => {
   } = props;
 
   return (
-    <>
+    <Box>
       <Typography data-testid={headerTestId} variant="h3">
         {`${entityType ?? 'Disk'} Encryption`}
       </Typography>
@@ -72,7 +72,7 @@ export const Encryption = (props: EncryptionProps) => {
         flexDirection="row"
       >
         <Checkbox
-          checked={disabled ? false : isEncryptEntityChecked} // in Create flows, this will be defaulted to be checked. Otherwise, we will rely on the current encryption status for the initial value
+          checked={isEncryptEntityChecked}
           data-testid={checkboxTestId}
           disabled={disabled}
           onChange={(e, checked) => onChange(checked)}
@@ -80,6 +80,6 @@ export const Encryption = (props: EncryptionProps) => {
           toolTipText={disabled ? disabledReason : ''}
         />
       </Box>
-    </>
+    </Box>
   );
 };

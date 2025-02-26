@@ -1,7 +1,7 @@
 import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { castDraft } from 'immer';
 import * as React from 'react';
 import {
@@ -271,11 +271,18 @@ export const CloneLanding = () => {
       <LinodesDetailHeader />
       <Paper sx={{ padding: theme.spacing(2) }}>
         <Grid
+          sx={{
+            justifyContent: 'space-between',
+            marginTop: theme.spacing(1),
+          }}
           container
-          justifyContent="space-between"
-          sx={{ marginTop: theme.spacing(1) }}
         >
-          <Grid md={7} xs={12}>
+          <Grid
+            size={{
+              md: 7,
+              xs: 12,
+            }}
+          >
             <Paper sx={{ padding: 0 }}>
               <Typography
                 aria-level={2}
@@ -330,7 +337,12 @@ export const CloneLanding = () => {
               </Tabs>
             </Paper>
           </Grid>
-          <Grid md={4} xs={12}>
+          <Grid
+            size={{
+              md: 4,
+              xs: 12,
+            }}
+          >
             <Details
               selectedConfigs={attachAssociatedDisksToConfigs(
                 selectedConfigs,
@@ -340,7 +352,8 @@ export const CloneLanding = () => {
               selectedDisks={disksInState.filter((disk) => {
                 return (
                   // This disk has been individually selected ...
-                  state.diskSelection[disk.id].isSelected && // ... AND it's associated configs are NOT selected
+                  // ... AND it's associated configs are NOT selected
+                  state.diskSelection[disk.id].isSelected &&
                   (
                     state.diskSelection?.[disk.id]?.associatedConfigIds ?? []
                   ).filter((num) => selectedConfigIds.includes(num)).length ===

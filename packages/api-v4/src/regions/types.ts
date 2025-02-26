@@ -9,7 +9,7 @@ export type Capabilities =
   | 'Cloud Firewall'
   | 'Disk Encryption'
   | 'Distributed Plans'
-  | 'Enhanced Interfaces'
+  | 'Linode Interfaces'
   | 'GPU Linodes'
   | 'Kubernetes'
   | 'Kubernetes Enterprise'

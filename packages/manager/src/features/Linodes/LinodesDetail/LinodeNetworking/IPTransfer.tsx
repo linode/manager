@@ -6,8 +6,8 @@ import {
   Notice,
   Typography,
 } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -248,16 +248,18 @@ export const IPTransfer = (props: Props) => {
         }}
         container
         key={state.sourceIP}
+        size={12}
         spacing={2}
-        xs={12}
       >
         <Grid
+          size={{
+            md: 3,
+            xs: 12,
+          }}
           sx={{
             alignItems: 'center',
             display: 'flex',
           }}
-          md={3}
-          xs={12}
         >
           <Typography>
             <Typography
@@ -274,7 +276,7 @@ export const IPTransfer = (props: Props) => {
             {state.sourceIP}
           </Typography>
         </Grid>
-        <StyledAutoGrid md={3} xs={12}>
+        <StyledAutoGrid size={{ md: 3, xs: 12 }}>
           <Autocomplete
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
@@ -319,7 +321,7 @@ export const IPTransfer = (props: Props) => {
     });
 
     return (
-      <StyledAutoGrid md={3} xs={12}>
+      <StyledAutoGrid size={{ md: 3, xs: 12 }}>
         <Autocomplete
           textFieldProps={{
             dataAttrs: {
@@ -353,7 +355,7 @@ export const IPTransfer = (props: Props) => {
     });
 
     return (
-      <StyledAutoGrid md={3} xs={12}>
+      <StyledAutoGrid size={{ md: 3, xs: 12 }}>
         <Autocomplete
           textFieldProps={{
             dataAttrs: {
@@ -466,18 +468,24 @@ export const IPTransfer = (props: Props) => {
   return (
     <Dialog fullWidth onClose={onClose} open={open} title="IP Transfer">
       {error && (
-        <Grid xs={12}>
+        <Grid size={12}>
           {error.map(({ reason }, idx) => (
             <Notice key={idx} text={reason} variant="error" />
           ))}
         </Grid>
       )}
       {successMessage && (
-        <Grid xs={12}>
+        <Grid size={12}>
           <Notice text={successMessage} variant="success" />
         </Grid>
       )}
-      <Grid lg={8} sm={12} xl={6}>
+      <Grid
+        size={{
+          lg: 8,
+          sm: 12,
+          xl: 6,
+        }}
+      >
         <Typography sx={{ marginBottom: theme.spacing(2) }}>
           If you have two Linodes in the same data center, you can use the IP
           transfer feature to switch their IP addresses. This could be useful in
@@ -486,7 +494,7 @@ export const IPTransfer = (props: Props) => {
           the DNS records.
         </Typography>
       </Grid>
-      <Grid container xs={12}>
+      <Grid container size={12}>
         {!isLoading && !ipv6RangesLoading && ipv6RangesError ? (
           <Notice
             text={'There was an error loading IPv6 Ranges'}
@@ -499,16 +507,18 @@ export const IPTransfer = (props: Props) => {
           </div>
         ) : (
           <>
-            <Grid container xs={12}>
+            <Grid container size={12}>
               <Grid
+                size={{
+                  sm: 3,
+                  xs: 12,
+                }}
                 sx={{
                   [theme.breakpoints.down('md')]: {
                     display: 'none',
                   },
                 }}
                 data-qa-transfer-ip-label
-                sm={3}
-                xs={12}
               >
                 <Typography>IP Address</Typography>
               </Grid>
@@ -529,7 +539,7 @@ export const IPTransfer = (props: Props) => {
                   visibility: 'hidden',
                 },
               }}
-              xs={12}
+              size={12}
             >
               <Divider />
             </Grid>
@@ -544,14 +554,20 @@ export const IPTransfer = (props: Props) => {
                 with which to transfer IPs.
               </Typography>
             ) : (
-              <Grid spacing={2} xs={12}>
+              <Grid size={12} spacing={2}>
                 {Object.values(ips).map(ipRow)}
               </Grid>
             )}
           </>
         )}
       </Grid>
-      <Grid container justifyContent="flex-end" xs={12}>
+      <Grid
+        sx={{
+          justifyContent: 'flex-end',
+        }}
+        container
+        size={12}
+      >
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'ip-transfer-save',

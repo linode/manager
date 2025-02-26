@@ -16,7 +16,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -692,7 +692,7 @@ export const LinodeConfigDialog = (props: Props) => {
                 />
               </Grid>
             )}
-            <Grid xs={12}>
+            <Grid size={12}>
               <TextField
                 disabled={isReadOnly}
                 errorGroup="linode-config-dialog"
@@ -719,7 +719,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
@@ -758,7 +758,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Boot Settings</Typography>
               {kernels && (
                 <KernelSelect
@@ -853,7 +853,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
                 getSelected={(slot) =>
@@ -951,7 +951,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Box alignItems="center" display="flex">
                 <Typography variant="h3">Networking</Typography>
                 <TooltipIcon
@@ -1089,7 +1089,7 @@ export const LinodeConfigDialog = (props: Props) => {
               })}
             </Grid>
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
               <FormControl fullWidth>
                 <StyledFormGroup>
