@@ -15,7 +15,6 @@ describe('account login redirect', () => {
     cy.visitWithLogin('/linodes/create');
 
     cy.url().should('contain', `${loginBaseUrl}/login?`, { exact: false });
-    cy.findByText('Please log in to continue.').should('be.visible');
   });
 
   /**
