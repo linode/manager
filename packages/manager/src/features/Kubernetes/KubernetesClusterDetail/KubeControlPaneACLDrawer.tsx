@@ -8,7 +8,10 @@ import {
   Typography,
   omittedProps,
 } from '@linode/ui';
-import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
+import {
+  kubernetesControlPlaneACLPayloadSchema,
+  kubernetesEnterpriseControlPlaneACLPayloadSchema,
+} from '@linode/validation';
 import { Divider, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -81,7 +84,11 @@ export const KubeControlPlaneACLDrawer = (
   } = useForm<KubernetesControlPlaneACLPayload>({
     defaultValues: aclData,
     mode: 'onBlur',
-    resolver: yupResolver(kubernetesControlPlaneACLPayloadSchema),
+    resolver: yupResolver(
+      clusterTier === 'enterprise'
+        ? kubernetesEnterpriseControlPlaneACLPayloadSchema
+        : kubernetesControlPlaneACLPayloadSchema
+    ),
     values: {
       acl: {
         addresses: {
@@ -95,6 +102,8 @@ export const KubeControlPlaneACLDrawer = (
   });
 
   const { acl } = watch();
+
+  // console.log({errors})
 
   const updateCluster = async () => {
     // A quick note on the following code:

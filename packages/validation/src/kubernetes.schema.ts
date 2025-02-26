@@ -116,8 +116,31 @@ const controlPlaneACLOptionsSchema = object().shape({
     .notRequired(),
 });
 
+const controlPlaneEnterpriseACLOptionsSchema = object().shape({
+  enabled: boolean(),
+  'revision-id': string(),
+  addresses: object()
+    .shape({
+      ipv4: array().of(ipv4Address),
+      ipv6: array().of(ipv6Address),
+    })
+    .required(),
+});
+
 export const kubernetesControlPlaneACLPayloadSchema = object().shape({
   acl: controlPlaneACLOptionsSchema,
+});
+
+export const kubernetesEnterpriseControlPlaneACLPayloadSchema = object().shape({
+  acl: controlPlaneEnterpriseACLOptionsSchema.test(
+    'validateIPForEnterprise',
+    'At least one IP address or CIDR range is required for LKE-E.',
+    function (acl) {
+      const { ipv4, ipv6 } = acl.addresses || {};
+      // Pass validation if either IP address has a value.
+      return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
+    }
+  ),
 });
 
 // Starts and ends with a letter or number and contains letters, numbers, hyphens, dots, and underscores
