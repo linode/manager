@@ -4,7 +4,24 @@
  * This file contains Cypress tests that validate the display and content of the  Alerts Show Detail Page in the CloudPulse application.
  * It ensures that all alert details, criteria, and resource information are displayed correctly.
  */
+import { capitalize } from '@linode/utilities';
+import {
+  aggregationTypeMap,
+  dimensionOperatorTypeMap,
+  metricOperatorTypeMap,
+  severityMap,
+} from 'support/constants/alert';
+import { mockGetAccount } from 'support/intercepts/account';
+import {
+  mockGetAlertChannels,
+  mockGetAlertDefinitions,
+  mockGetAllAlertDefinitions,
+} from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+
 import {
   accountFactory,
   alertFactory,
@@ -13,67 +30,51 @@ import {
   notificationChannelFactory,
   regionFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
+import { formatDate } from 'src/utilities/formatDate';
+
+import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
-import {
-  mockGetAlertChannels,
-  mockGetAlertDefinitions,
-  mockGetAllAlertDefinitions,
-} from 'support/intercepts/cloudpulse';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { formatDate } from 'src/utilities/formatDate';
-import {
-  metricOperatorTypeMap,
-  dimensionOperatorTypeMap,
-  severityMap,
-  aggregationTypeMap,
-} from 'support/constants/alert';
-import { ui } from 'support/ui';
-import { Database } from '@linode/api-v4';
-import { mockGetDatabases } from 'support/intercepts/databases';
-import { capitalize } from '@linode/utilities';
-
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
 const regions = [
   regionFactory.build({
     capabilities: ['Managed Databases'],
+    country: 'us',
     id: 'us-ord',
     label: 'Chicago, IL',
-    country: 'us',
   }),
   regionFactory.build({
     capabilities: ['Managed Databases'],
+    country: 'us',
     id: 'us-east',
     label: 'Newark',
-    country: 'us',
   }),
 ];
 
 const databases: Database[] = databaseFactory.buildList(5).map((db, index) => ({
   ...db,
-  type: 'MySQL',
-  region: regions[index % regions.length].id,
   engine: 'mysql',
+  region: regions[index % regions.length].id,
+  type: 'MySQL',
 }));
 
 const alertDetails = alertFactory.build({
+  entity_ids: databases.slice(0, 4).map((db) => db.id.toString()),
+  rule_criteria: { rules: alertRulesFactory.buildList(2) },
   service_type: 'dbaas',
   severity: 1,
   status: 'enabled',
   type: 'system',
-  entity_ids: databases.slice(0, 4).map((db) => db.id.toString()),
-  rule_criteria: { rules: alertRulesFactory.buildList(2) },
 });
 const {
-  service_type,
-  severity,
-  rule_criteria,
+  created_by,
+  description,
   id,
   label,
-  description,
-  created_by,
+  rule_criteria,
+  service_type,
+  severity,
   updated,
 } = alertDetails;
 const { rules } = rule_criteria;
@@ -156,7 +157,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
       // Validate Service field
       cy.findByText('Service:').should('be.visible');
-      cy.findByText('dbaas').should('be.visible');
+      cy.findByText('Databases').should('be.visible');
 
       // Validate Type field
       cy.findByText('Type:').should('be.visible');

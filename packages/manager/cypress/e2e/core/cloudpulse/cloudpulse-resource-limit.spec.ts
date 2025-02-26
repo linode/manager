@@ -23,14 +23,19 @@
  * thereby validating the system's correctness and user experience.
  */
 
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetCloudPulseDashboard,
   mockGetCloudPulseDashboards,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { widgetDetails } from 'support/constants/widgets';
+
 import {
   accountFactory,
   dashboardFactory,
@@ -38,24 +43,21 @@ import {
   regionFactory,
   widgetFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
-import { mockGetRegions } from 'support/intercepts/regions';
+
+import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
-import { Database } from '@linode/api-v4';
-import { mockGetDatabases } from 'support/intercepts/databases';
 
 const {
-  metrics,
-  id,
-  serviceType,
+  clusterName,
   dashboardName,
   engine,
-  clusterName,
+  id,
+  metrics,
+  serviceType,
 } = widgetDetails.dbaas;
 
 const flags: Partial<Flags> = {
-  aclp: { enabled: true, beta: true },
+  aclp: { beta: true, enabled: true },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'LINODE_ID',
@@ -75,12 +77,12 @@ const flags: Partial<Flags> = {
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
-  widgets: metrics.map(({ title, yLabel, name, unit }) => {
+  widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
       label: title,
-      y_label: yLabel,
       metric: name,
       unit,
+      y_label: yLabel,
     });
   }),
 });
@@ -93,30 +95,30 @@ const mockRegion = regionFactory.build({
   label: 'Chicago, IL',
 });
 const databaseMock: Database = databaseFactory.build({
-  label: clusterName,
-  type: engine,
-  region: mockRegion.label,
-  version: '1',
-  status: 'provisioning',
   cluster_size: 1,
   engine: 'mysql',
   hosts: {
     primary: undefined,
     secondary: undefined,
   },
+  label: clusterName,
+  region: mockRegion.label,
+  status: 'provisioning',
+  type: engine,
+  version: '1',
 });
 const extendDatabaseMock: Database = databaseFactory.build({
-  label: 'updated-dbass-mock',
-  type: engine,
-  region: mockRegion.label,
-  version: '1',
-  status: 'provisioning',
   cluster_size: 1,
   engine: 'mysql',
   hosts: {
     primary: undefined,
     secondary: undefined,
   },
+  label: 'updated-dbass-mock',
+  region: mockRegion.label,
+  status: 'provisioning',
+  type: engine,
+  version: '1',
 });
 
 describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
@@ -173,7 +175,7 @@ describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
       .and('be.visible')
       .and('have.text', 'Select up to 1 Database Clusters');
 
-    //Open the autocomplete dropdown by clicking on the input
+    // Open the autocomplete dropdown by clicking on the input
     ui.autocomplete
       .findByLabel('Database Clusters')
       .should('be.visible')
@@ -211,7 +213,7 @@ describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
 
   it('When the maximum resource limit is not reached, the "Select All" option is visible under Database Clusters input', () => {
     const flags: Partial<Flags> = {
-      aclp: { enabled: true, beta: true },
+      aclp: { beta: true, enabled: true },
       aclpResourceTypeMap: [
         {
           dimensionKey: 'LINODE_ID',
@@ -279,7 +281,7 @@ describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
       .should('be.visible')
       .click();
 
-    //Open the autocomplete dropdown by clicking on the input
+    // Open the autocomplete dropdown by clicking on the input
     ui.autocomplete
       .findByLabel('Database Clusters')
       .should('be.visible')
