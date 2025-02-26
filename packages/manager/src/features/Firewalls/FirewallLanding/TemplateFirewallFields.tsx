@@ -21,7 +21,7 @@ const descriptionMap = {
 };
 
 const templateLabelMap = {
-  'akamai-non-prod': 'Akamai Non Prod Template',
+  'akamai-non-prod': 'Akamai Internal Firewall Template',
   public: 'Public Firewall Template',
   vpc: 'VPC Firewall Template',
 };
