@@ -513,19 +513,18 @@ export const LinodeConfigDialog = (props: Props) => {
         const baseValues = {
           comments: config.comments,
           devices,
-          helpers: config.helpers.network
-            ? config.helpers
-            : omitProps(config.helpers, ['network']),
+          helpers: isLinodeInterface
+            ? omitProps(config.helpers, ['network'])
+            : config.helpers,
           initrd: initrdFromConfig,
           kernel: config.kernel,
           label: config.label,
           memory_limit: config.memory_limit,
           root_device: config.root_device,
           run_level: config.run_level,
-          setMemoryLimit:
-            config.memory_limit !== 0
-              ? 'set_limit'
-              : ('no_limit' as MemoryLimit),
+          setMemoryLimit: (config.memory_limit !== 0
+            ? 'set_limit'
+            : 'no_limit') as MemoryLimit,
           useCustomRoot: isUsingCustomRoot(config.root_device),
           virt_mode: config.virt_mode,
         };
