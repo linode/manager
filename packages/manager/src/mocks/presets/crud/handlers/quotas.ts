@@ -156,14 +156,24 @@ export const getQuotas = () => [
           return makeResponse(
             quotaUsageFactory.build({
               quota_limit: quota.quota_limit,
-              used: pickRandom([5, 6, 7, 8, 9, 10, null]),
+              used: pickRandom([0.2, 0.4, 0.6, 0.8, 0.85, 0.95, null])
+                ? Math.floor(
+                    quota.quota_limit *
+                      pickRandom([0.2, 0.4, 0.6, 0.8, 0.85, 0.95])
+                  )
+                : null,
             })
           );
         case 'lke':
           return makeResponse(
             quotaUsageFactory.build({
               quota_limit: quota.quota_limit,
-              used: pickRandom([0, 1, 2, 3, 4, 5, null]),
+              used: pickRandom([0.1, 0.3, 0.5, 0.7, 0.82, 0.93, null])
+                ? Math.floor(
+                    quota.quota_limit *
+                      pickRandom([0.1, 0.3, 0.5, 0.7, 0.82, 0.93])
+                  )
+                : null,
             })
           );
         case 'object-storage':
@@ -172,15 +182,18 @@ export const getQuotas = () => [
               quota_limit: quota.quota_limit,
               used:
                 quota.quota_name === 'Total Capacity'
-                  ? pickRandom([
-                      0,
-                      100_000_000,
-                      200_000_000,
-                      300_000_000,
-                      400_000_000,
-                      null,
-                    ])
-                  : pickRandom([100, 200, 300, 400, 500, null]),
+                  ? pickRandom([0.2, 0.4, 0.6, 0.8, 0.87, 0.98, null])
+                    ? Math.floor(
+                        quota.quota_limit *
+                          pickRandom([0.2, 0.4, 0.6, 0.8, 0.87, 0.98])
+                      )
+                    : null
+                  : pickRandom([0.3, 0.5, 0.7, 0.9, 0.95, 0.99, null])
+                  ? Math.floor(
+                      quota.quota_limit *
+                        pickRandom([0.3, 0.5, 0.7, 0.9, 0.95, 0.99])
+                    )
+                  : null,
             })
           );
         default:
