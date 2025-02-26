@@ -3,8 +3,8 @@
  */
 
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { ui } from 'support/ui';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
 
 // TODO Delete feature flag mocks when feature flag is removed.
 beforeEach(() => {

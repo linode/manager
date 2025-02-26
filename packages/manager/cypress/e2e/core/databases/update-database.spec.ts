@@ -2,14 +2,11 @@
  * @file DBaaS integration tests for update operations.
  */
 
+import { accountFactory } from '@src/factories';
 import {
-  randomLabel,
-  randomNumber,
-  randomIp,
-  randomString,
-} from 'support/util/random';
-import { databaseFactory } from 'src/factories/databases';
-import { ui } from 'support/ui';
+  databaseConfigurations,
+  mockDatabaseNodeTypes,
+} from 'support/constants/databases';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetDatabase,
@@ -20,13 +17,18 @@ import {
   mockUpdateDatabase,
   mockUpdateProvisioningDatabase,
 } from 'support/intercepts/databases';
-import {
-  databaseClusterConfiguration,
-  databaseConfigurations,
-  mockDatabaseNodeTypes,
-} from 'support/constants/databases';
-import { accountFactory } from '@src/factories';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { ui } from 'support/ui';
+import {
+  randomIp,
+  randomLabel,
+  randomNumber,
+  randomString,
+} from 'support/util/random';
+
+import { databaseFactory } from 'src/factories/databases';
+
+import type { databaseClusterConfiguration } from 'support/constants/databases';
 
 /**
  * Updates a database cluster's label.
@@ -164,7 +166,7 @@ describe('Update database clusters', () => {
       ],
     });
     mockAppendFeatureFlags({
-      dbaasV2: { enabled: false, beta: false },
+      dbaasV2: { beta: false, enabled: false },
     });
     mockGetAccount(mockAccount);
   });
@@ -186,14 +188,14 @@ describe('Update database clusters', () => {
           const newAllowedIp = randomIp();
           const initialPassword = randomString(16);
           const database = databaseFactory.build({
-            id: randomNumber(1, 1000),
-            type: configuration.linodeType,
-            label: initialLabel,
-            region: configuration.region.id,
-            engine: configuration.dbType,
-            status: 'active',
             allow_list: [allowedIp],
+            engine: configuration.dbType,
+            id: randomNumber(1, 1000),
+            label: initialLabel,
             platform: 'rdbms-legacy',
+            region: configuration.region.id,
+            status: 'active',
+            type: configuration.linodeType,
           });
 
           mockGetDatabase(database).as('getDatabase');
@@ -298,18 +300,18 @@ describe('Update database clusters', () => {
           const updateAttemptLabel = randomLabel();
           const allowedIp = randomIp();
           const database = databaseFactory.build({
-            id: randomNumber(1, 1000),
-            type: configuration.linodeType,
-            label: initialLabel,
-            region: configuration.region.id,
-            engine: configuration.dbType,
-            status: 'provisioning',
             allow_list: [allowedIp],
+            engine: configuration.dbType,
             hosts: {
               primary: undefined,
               secondary: undefined,
             },
+            id: randomNumber(1, 1000),
+            label: initialLabel,
             platform: 'rdbms-legacy',
+            region: configuration.region.id,
+            status: 'provisioning',
+            type: configuration.linodeType,
           });
 
           const errorMessage =

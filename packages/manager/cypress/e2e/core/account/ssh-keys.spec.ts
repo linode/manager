@@ -1,4 +1,4 @@
-import { sshKeyFactory } from 'src/factories';
+import { sshFormatErrorMessage } from 'support/constants/account';
 import {
   mockCreateSSHKey,
   mockCreateSSHKeyError,
@@ -8,7 +8,8 @@ import {
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
-import { sshFormatErrorMessage } from 'support/constants/account';
+
+import { sshKeyFactory } from 'src/factories';
 
 describe('SSH keys', () => {
   /*
@@ -21,11 +22,11 @@ describe('SSH keys', () => {
    */
   it('adds an SSH key via Profile page as expected', () => {
     const randomKey = randomString(400, {
-      uppercase: true,
       lowercase: true,
       numbers: true,
       spaces: false,
       symbols: false,
+      uppercase: true,
     });
     const mockSSHKey = sshKeyFactory.build({
       label: randomLabel(),
@@ -132,11 +133,11 @@ describe('SSH keys', () => {
     const errorMessage = 'failed to add an SSH key.';
     const sshKeyLabel = randomLabel();
     const randomKey = randomString(400, {
-      uppercase: true,
       lowercase: true,
       numbers: true,
       spaces: false,
       symbols: false,
+      uppercase: true,
     });
     const sshPublicKey = `ssh-rsa e2etestkey${randomKey} e2etest@linode`;
 
@@ -187,11 +188,11 @@ describe('SSH keys', () => {
    */
   it('updates an SSH key via Profile page as expected', () => {
     const randomKey = randomString(400, {
-      uppercase: true,
       lowercase: true,
       numbers: true,
       spaces: false,
       symbols: false,
+      uppercase: true,
     });
     const mockSSHKey = sshKeyFactory.build({
       label: randomLabel(),

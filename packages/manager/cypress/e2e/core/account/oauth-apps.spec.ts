@@ -7,7 +7,8 @@ import {
   mockUpdateOAuthApps,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { randomLabel, randomHex } from 'support/util/random';
+import { randomHex, randomLabel } from 'support/util/random';
+
 import type { OAuthClient } from '@linode/api-v4';
 
 /**
@@ -149,8 +150,8 @@ describe('OAuth Apps', () => {
       }),
       oauthClientFactory.build({
         label: randomLabel(),
-        secret: randomHex(64),
         public: true,
+        secret: randomHex(64),
       }),
     ];
 

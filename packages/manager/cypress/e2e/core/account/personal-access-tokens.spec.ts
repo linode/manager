@@ -2,9 +2,6 @@
  * @file Integration tests for personal access token CRUD operations.
  */
 
-import { Token } from '@linode/api-v4';
-import { appTokenFactory } from 'src/factories/oauth';
-import { profileFactory } from 'src/factories/profile';
 import {
   mockCreatePersonalAccessToken,
   mockGetAppTokens,
@@ -13,9 +10,14 @@ import {
   mockRevokePersonalAccessToken,
   mockUpdatePersonalAccessToken,
 } from 'support/intercepts/profile';
-import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
+import { randomLabel, randomString } from 'support/util/random';
+
+import { appTokenFactory } from 'src/factories/oauth';
+import { profileFactory } from 'src/factories/profile';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
+
+import type { Token } from '@linode/api-v4';
 
 describe('Personal access tokens', () => {
   /*
