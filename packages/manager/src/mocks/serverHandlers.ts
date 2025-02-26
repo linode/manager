@@ -2469,6 +2469,17 @@ export const handlers = [
       return HttpResponse.json(response);
     }
   ),
+  http.get(
+    '*/monitor/services/:serviceType/alert-definitions',
+    async ({ params }) => {
+      const serviceType = params.serviceType;
+      return HttpResponse.json({
+        data: alertFactory.buildList(20, {
+          service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+        }),
+      });
+    }
+  ),
   http.get('*/monitor/alert-definitions', async () => {
     const customAlerts = alertFactory.buildList(10, {
       created_by: 'user1',

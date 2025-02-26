@@ -72,3 +72,13 @@ export const getNotificationChannels = (params?: Params, filters?: Filter) =>
     setParams(params),
     setXFilter(filters)
   );
+
+export const getAlertDefinitionByServiceType = (serviceType: string) =>
+  Request<ResourcePage<Alert>>(
+    setURL(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/alert-definitions`
+    ),
+    setMethod('GET')
+  );

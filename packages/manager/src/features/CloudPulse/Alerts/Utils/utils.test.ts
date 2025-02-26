@@ -2,7 +2,9 @@ import { alertFactory, serviceTypesFactory } from 'src/factories';
 
 import {
   convertAlertDefinitionValues,
+  convertAlertsToTypeSet,
   convertSecondsToMinutes,
+  filterAlertsByStatusAndType,
   getServiceTypeLabel,
 } from './utils';
 
@@ -26,6 +28,20 @@ it('test convertSecondsToMinutes method', () => {
   expect(convertSecondsToMinutes(65)).toBe('1 minute and 5 seconds');
   expect(convertSecondsToMinutes(1)).toBe('1 second');
   expect(convertSecondsToMinutes(59)).toBe('59 seconds');
+});
+
+it('test filterAlertsByStatusAndType method', () => {
+  const alerts = alertFactory.buildList(12, { created_by: 'system' });
+  expect(filterAlertsByStatusAndType(alerts, '', 'system')).toHaveLength(12);
+  expect(filterAlertsByStatusAndType(alerts, '', 'user')).toHaveLength(0);
+  expect(filterAlertsByStatusAndType(alerts, 'Alert-1', 'system')).toHaveLength(
+    4
+  );
+});
+it('test convertAlertsToTypeSet method', () => {
+  const alerts = alertFactory.buildList(12, { created_by: 'user' });
+
+  expect(convertAlertsToTypeSet(alerts)).toHaveLength(1);
 });
 
 it('should correctly convert an alert definition values to the required format', () => {
