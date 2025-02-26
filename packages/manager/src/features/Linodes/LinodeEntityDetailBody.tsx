@@ -123,8 +123,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const linodeInterfacesFlag = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
-  // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (for now). We'll only display
-  // the attached firewall for legacy config interfaces since Linodes with the new interfaces can be associated with multiple firewalls.
+  // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
+  // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
+  // since each interface can have a firewall.
   const attachedFirewall = firewalls.length > 0 ? firewalls[0] : undefined;
 
   // @ TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
