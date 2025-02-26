@@ -40,8 +40,7 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
     name: `stackscript_data.${userDefinedField.name}`,
   });
 
-  const error = (
-    // @ts-expect-error UDFs don't abide by the form's error type. This is an api-v4 bug.
+  const error = ( // @ts-expect-error UDFs don't abide by the form's error type. This is an api-v4 bug.
     formState.errors?.[userDefinedField.name] ?? fieldState.error
   )?.message?.replace('the UDF', '');
 

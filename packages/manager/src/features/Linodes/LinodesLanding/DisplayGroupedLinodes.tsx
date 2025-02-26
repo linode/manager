@@ -2,7 +2,6 @@ import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
 import { IconButton } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
-import { compose } from 'ramda';
 import * as React from 'react';
 
 import GridView from 'src/assets/icons/grid-view.svg';
@@ -80,7 +79,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
 
   const dataLength = data.length;
 
-  const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
+  const orderedGroupedLinodes = sortGroups(groupByTags(data));
   const tableWrapperProps = {
     dataLength,
     handleOrderChange,
