@@ -85,8 +85,35 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
       },
       kubeconfig: {
         queryFn: async () => {
-          const result = await getKubeConfig(id);
-          return window.atob(result.kubeconfig);
+          try {
+            const result = await getKubeConfig(id);
+            if (!result || !result.kubeconfig) {
+              throw new Error('Invalid KubeConfig response');
+            }
+
+            let decodedKubeConfig;
+            try {
+              decodedKubeConfig = window.atob(result.kubeconfig);
+            } catch (decodeError) {
+              throw new Error('Failed to decode KubeConfig');
+            }
+            return decodedKubeConfig;
+          } catch (error) {
+            const err = error as {
+              response?: { status?: number };
+              reason?: string;
+            };
+            const serviceUnavailableStatus = 503;
+            if (
+              err?.response?.status === serviceUnavailableStatus ||
+              (Array.isArray(err) &&
+                err[0]?.reason?.includes('kubeconfig is not yet available'))
+            ) {
+              // Custom error to identify when KubeConfig is still provisioning
+              throw new Error('KUBECONFIG_NOT_READY');
+            }
+            throw error;
+          }
         },
         queryKey: null,
       },
@@ -211,7 +238,13 @@ export const useKubernetesKubeConfigQuery = (
   useQuery<string, APIError[]>({
     ...kubernetesQueries.cluster(clusterId)._ctx.kubeconfig,
     enabled,
-    retry: 3,
+    retry: (failureCount, error: any) => {
+      // Skip retries when cluster is still provisioning
+      if (error?.message === 'KUBECONFIG_NOT_READY') {
+        return false;
+      }
+      return failureCount < 3;
+    },
     retryDelay: 5000,
     // Disable stale time to prevent caching of the kubeconfig
     // because it can take some time for config to get updated in the API
