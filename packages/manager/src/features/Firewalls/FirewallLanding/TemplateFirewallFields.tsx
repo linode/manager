@@ -40,9 +40,9 @@ export const TemplateFirewallFields = (props: TemplateFirewallProps) => {
     templates
       ?.filter(
         // if account is internal, return all slugs
-        // otherwise only return non internal Akamai accounts
+        // otherwise only return non internal Akamai account slugs
         // (this endpoint shouldn't return internal templates for
-        // non-internall accounts, but keeping as an extra failsafe)
+        // non-internal accounts, but keeping as an extra failsafe)
         (template) => isAkamaiAccount || template.slug !== 'akamai-non-prod'
       )
       .map((template) => {
