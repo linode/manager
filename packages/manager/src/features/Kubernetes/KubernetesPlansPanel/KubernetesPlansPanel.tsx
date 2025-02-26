@@ -80,7 +80,8 @@ export const KubernetesPlansPanel = (props: Props) => {
   const plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans
       ? replaceOrAppendPlaceholder512GbPlans(_types)
-      : _types
+      : _types,
+    { isLKE: true }
   );
 
   const tabs = Object.keys(plans).map(
