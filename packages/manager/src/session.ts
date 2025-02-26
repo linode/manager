@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import { v4 } from 'uuid';
 
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import { generateCodeChallenge, generateCodeVerifier } from 'src/pkce';
@@ -54,7 +53,7 @@ export const revokeToken = (clientId: string, token: string) => {
 
 const generateAuthCode = async (): Promise<AuthCode> => ({
   codeVerifier: await generateCodeVerifier(),
-  nonce: v4(),
+  nonce: crypto.randomUUID(),
 });
 
 /**

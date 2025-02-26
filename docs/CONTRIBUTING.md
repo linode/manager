@@ -33,7 +33,7 @@ Feel free to open an issue to report a bug or request a feature.
         - install it via `brew`: https://github.com/cli/cli#installation or upgrade with `brew upgrade gh`
         - Once installed, run `gh repo set-default` and pick `linode/manager` (only > 2.21.0)
         - You can also just create the changeset manually, in this case make sure to use the proper formatting for it.
-    - Run `yarn changeset`from the root, choose the package to create a changeset for, and provide a description for the change.
+    - Run `pnpm changeset`from the root, choose the package to create a changeset for, and provide a description for the change.
     You can either have it committed automatically or do it manually if you need to edit it.
     - A changeset is optional, but should be included if the PR falls in one of the following categories:<br>
     `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Tests`, `Upcoming Features`
@@ -74,4 +74,4 @@ Break down *additional* things in your PR into multiple PRs (like you would do w
 
 ## Docs
 
-To run the docs development server locally, [install Bun](https://bun.sh/) and start the server: `yarn docs`.
+To run the docs development server locally, [install Bun](https://bun.sh/) and start the server: `pnpm run docs`.

@@ -3,7 +3,10 @@ import { ui } from 'support/ui';
 import { randomString, randomLabel } from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
 import { createStackScript } from '@linode/api-v4/lib';
-import { interceptGetStackScript, interceptGetStackScripts } from 'support/intercepts/stackscripts';
+import {
+  interceptGetStackScript,
+  interceptGetStackScripts,
+} from 'support/intercepts/stackscripts';
 import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
 import { cleanUp } from 'support/util/cleanup';
 import { chooseRegion } from 'support/util/regions';
@@ -208,8 +211,8 @@ describe('rebuild linode', () => {
         cy.wait('@getStackScripts');
 
         cy.get(`[id="stackscript-${stackScriptId}"]`).click();
-        
-        cy.wait('@getStackScript')
+
+        cy.wait('@getStackScript');
 
         ui.autocomplete.findByLabel('Image').should('be.visible').click();
         ui.autocompletePopper.findByTitle(image).should('be.visible').click();
