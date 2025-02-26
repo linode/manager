@@ -1,4 +1,4 @@
-import { DateRangePicker, Notice } from '@linode/ui';
+import { Notice } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
@@ -106,10 +106,6 @@ export const LinodeEntityDetail = (props: Props) => {
           variant="warning"
         />
       )}
-      <DateRangePicker
-        format="dd-MM-yyyy"
-        presetsProps={{ enablePresets: true }}
-      />
       <EntityDetail
         body={
           <LinodeEntityDetailBody
