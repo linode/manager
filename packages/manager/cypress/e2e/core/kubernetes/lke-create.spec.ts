@@ -104,6 +104,18 @@ const nanodeType = linodeTypeFactory.build({
   )?.region_prices,
   vcpus: 1,
 }) as ExtendedType;
+const gpuType = linodeTypeFactory.build({
+  class: 'gpu',
+  id: 'g2-gpu-1',
+}) as ExtendedType;
+const highMemType = linodeTypeFactory.build({
+  class: 'highmem',
+  id: 'g7-highmem-1',
+}) as ExtendedType;
+const premiumType = linodeTypeFactory.build({
+  class: 'premium',
+  id: 'g7-premium-1',
+}) as ExtendedType;
 const mockedLKEClusterPrices: PriceType[] = [
   {
     id: 'lke-sa',
@@ -148,7 +160,20 @@ const clusterPlans: LkePlanDescription[] = [
     type: 'nanode',
   },
 ];
-const mockedLKEClusterTypes = [dedicatedType, nanodeType];
+const mockedLKEClusterTypes = [
+  dedicatedType,
+  nanodeType,
+  gpuType,
+  highMemType,
+  premiumType,
+];
+const validEnterprisePlanTabs = [
+  'Dedicated CPU',
+  'Shared CPU',
+  'High Memory',
+  'Premium CPU',
+];
+const validStandardPlanTabs = [...validEnterprisePlanTabs, 'GPU'];
 
 describe('LKE Cluster Creation', () => {
   /*
@@ -219,6 +244,11 @@ describe('LKE Cluster Creation', () => {
     cy.get('[data-testid="ha-radio-button-no"]').should('be.visible').click();
 
     let monthPrice = 0;
+
+    // Confirm the expected available plans display.
+    validStandardPlanTabs.forEach((tab) => {
+      ui.tabList.findTabByTitle(tab).should('be.visible');
+    });
 
     // Add a node pool for each selected plan, and confirm that the
     // selected node pool plan is added to the checkout bar.
@@ -371,7 +401,8 @@ describe('LKE Cluster Creation with APL enabled', () => {
       )?.region_prices,
       vcpus: 8,
     });
-    const mockedLKEClusterTypes = [
+
+    const mockedAPLLKEClusterTypes = [
       dedicatedType,
       dedicated4Type,
       dedicated8Type,
@@ -401,7 +432,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
       mockedLKECluster.id,
       mockedLKEClusterControlPlane
     ).as('getControlPlaneACL');
-    mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
+    mockGetLinodeTypes(mockedAPLLKEClusterTypes).as('getLinodeTypes');
     mockGetLKEClusterTypes(mockedLKEHAClusterPrices).as('getLKEClusterTypes');
     mockGetApiEndpoints(mockedLKECluster.id).as('getApiEndpoints');
 
@@ -1090,7 +1121,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
         k8s_version: latestEnterpriseTierKubernetesVersion.id,
       });
       const mockedEnterpriseClusterPools = [nanodeMemoryPool, dedicatedCpuPool];
-      const mockedLKEClusterTypes = [dedicatedType, nanodeType];
 
       mockGetAccount(
         accountFactory.build({
@@ -1195,6 +1225,13 @@ describe('LKE Cluster Creation with LKE-E', () => {
         .should('be.visible')
         .should('be.enabled')
         .click();
+
+      // Confirm the expected available plans display.
+      validEnterprisePlanTabs.forEach((tab) => {
+        ui.tabList.findTabByTitle(tab).should('be.visible');
+      });
+      // Confirm the GPU tab is not visible in the plans panel for LKE-E.
+      ui.tabList.findTabByTitle('GPU').should('not.exist');
 
       // Add a node pool for each selected plan, and confirm that the
       // selected node pool plan is added to the checkout bar.
