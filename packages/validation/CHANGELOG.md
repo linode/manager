@@ -1,3 +1,10 @@
+## [2025-02-25] - v0.61.0
+
+
+### Removed:
+
+- Required `entity_ids` from `createAlertDefinitionSchema` ([#11649](https://github.com/linode/manager/pull/11649))
+
 ## [2025-02-19] - v0.60.1
 
 ### Fixed:

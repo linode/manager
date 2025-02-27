@@ -17,7 +17,6 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-  UseQueryOptions,
 } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
@@ -254,14 +253,14 @@ export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   });
 };
 
-export const useFirewallQuery = (
-  id: number,
-  options?: UseQueryOptions<Firewall, APIError[]>
-) =>
-  useQuery<Firewall, APIError[]>({
-    ...firewallQueries.firewall(id),
-    ...options,
+export const useFirewallTemplatesQuery = () => {
+  return useQuery<FirewallTemplate[], APIError[]>({
+    ...firewallQueries.templates,
   });
+};
+
+export const useFirewallQuery = (id: number) =>
+  useQuery<Firewall, APIError[]>(firewallQueries.firewall(id));
 
 export const useAllFirewallsQuery = (enabled: boolean = true) => {
   return useQuery<Firewall[], APIError[]>({

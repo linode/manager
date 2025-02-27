@@ -13,6 +13,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,
@@ -21,6 +22,7 @@ import {
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import {
   reportAgreementSigningError,
@@ -64,8 +66,6 @@ import type {
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -310,7 +310,11 @@ export const CreateCluster = () => {
     selectedRegionID: selectedRegion?.id,
   });
 
-  if (typesError || regionsError || versionsError) {
+  if (
+    typesError ||
+    regionsError ||
+    (versionsError && versionsError[0].reason !== 'Unauthorized')
+  ) {
     // This information is necessary to create a Cluster. Otherwise, show an error state.
     return <ErrorState errorText="An unexpected error occurred." />;
   }
@@ -351,6 +355,7 @@ export const CreateCluster = () => {
               updateLabel(e.target.value)
             }
             data-qa-label-input
+            disabled={isCreateClusterRestricted}
             errorText={errorMap.label}
             label="Cluster Label"
             value={label || ''}
@@ -360,6 +365,7 @@ export const CreateCluster = () => {
               <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
               <ClusterTypePanel
                 handleClusterTypeSelection={handleClusterTypeSelection}
+                isUserRestricted={isCreateClusterRestricted}
                 selectedTier={selectedTier}
               />
             </>
@@ -385,6 +391,7 @@ export const CreateCluster = () => {
                     : undefined
                 }
                 disableClearable
+                disabled={isCreateClusterRestricted}
                 errorText={errorMap.region}
                 onChange={(e, region) => setSelectedRegion(region)}
                 regions={regionsData}
@@ -406,6 +413,7 @@ export const CreateCluster = () => {
               setVersion(selected?.value);
             }}
             disableClearable={!!version}
+            disabled={isCreateClusterRestricted}
             errorText={errorMap.k8s_version}
             label="Kubernetes Version"
             loading={isLoadingVersions}
@@ -479,6 +487,7 @@ export const CreateCluster = () => {
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}
             selectedRegionId={selectedRegion?.id}
+            selectedTier={selectedTier}
             types={typesData || []}
             typesLoading={typesLoading}
           />
