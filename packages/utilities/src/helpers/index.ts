@@ -20,3 +20,4 @@ export * from './mockLocalStorage';
 export * from './nullOrUndefined';
 export * from './pathOr';
 export * from './queryParams';
+export * from './random';
