@@ -6,8 +6,6 @@ You can find all of Cloud Manager's queries and mutations in `packages/manager/s
 
 ## Query Keys
 
-test
-
 React Query's cache is a simple key-value store. Query Keys are serializable strings that uniquely identify a query's data in the cache. You can read more about the concept [here](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys) in the TanStack Query docs.
 
 Because of Cloud Manager's complexity, we use [`@lukemorales/query-key-factory`](https://github.com/lukemorales/query-key-factory) to manage our query keys. This package allows us to define query key _factories_ that enable typesafe standardized query keys that can be reused and referenced throughout the application.
