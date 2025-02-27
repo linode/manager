@@ -66,6 +66,8 @@
   },
   "dependencies": {},
   "pnpm": {
-    "onlyBuiltDependencies": ["cypress"]
+    "onlyBuiltDependencies": [
+      "cypress"
+    ]
   }
 }
