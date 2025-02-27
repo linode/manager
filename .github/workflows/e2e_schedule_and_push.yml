@@ -57,7 +57,6 @@ jobs:
       - name: Install cypress & dependencies
         uses: cypress-io/github-action@v6
         with:
-          working-directory: examples/start-and-pnpm-workspaces
           runTests: false
       - run: pnpm run --filter @linode/validation build
       - run: pnpm run --filter @linode/api-v4 build
