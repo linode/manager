@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@linode/ui';
 import React from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { FieldError, useController, useFormContext } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
@@ -40,9 +40,12 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
     name: `stackscript_data.${userDefinedField.name}`,
   });
 
-  const error = ( // @ts-expect-error UDFs don't abide by the form's error type. This is an api-v4 bug.
-    formState.errors?.[userDefinedField.name] ?? fieldState.error
-  )?.message?.replace('the UDF', '');
+  // @ts-expect-error UDFs don't abide by the form's error type. This is an api-v4 bug.
+  const apiError = formState.errors?.[userDefinedField.name] as
+    | FieldError
+    | undefined;
+
+  const error = (apiError ?? fieldState.error)?.message?.replace('the UDF', '');
 
   // We might be able to fix this by checking the message for "UDF" and fixing the key
   // when we put the error message in the react hook form state.
