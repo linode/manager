@@ -55,7 +55,6 @@ jobs:
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
       - run: pnpm install --frozen-lockfile
-      - run: pnpm cypress install
       - run: pnpm run --filter @linode/validation build
       - run: pnpm run --filter @linode/api-v4 build
       - name: Run tests
