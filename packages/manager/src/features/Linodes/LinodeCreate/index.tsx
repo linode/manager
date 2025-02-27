@@ -15,6 +15,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useMutateAccountAgreements } from 'src/queries/account/agreements';
@@ -70,6 +71,8 @@ export const LinodeCreate = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const { data: profile } = useProfile();
+  const flags = useFlags();
+  const linodeCloneWithFirewall = flags.linodeCloneWithFirewallFlag;
 
   const queryClient = useQueryClient();
 
@@ -233,7 +236,11 @@ export const LinodeCreate = () => {
           <Details />
           {params.type !== 'Clone Linode' && <Security />}
           <VPC />
-          <Firewall />
+          {params.type !== 'Clone Linode' ? (
+            <Firewall />
+          ) : linodeCloneWithFirewall ? (
+            <Firewall />
+          ) : null}
           {params.type !== 'Clone Linode' && <VLAN />}
           <UserData />
           <Addons />
