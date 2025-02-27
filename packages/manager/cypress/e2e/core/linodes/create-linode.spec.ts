@@ -30,8 +30,6 @@ import {
   vpcFactory,
   subnetFactory,
   regionFactory,
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
 } from 'src/factories';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -40,6 +38,10 @@ import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import {
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
 
 let username: string;
 
@@ -299,12 +301,12 @@ describe('Create Linode', () => {
       label: region.label,
       capabilities: ['Linodes', 'VPCs', 'Vlans'],
     });
-    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
+    const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
       ipam_address: null,
       purpose: 'public',
     });
-    const mockVlanConfigInterface = LinodeConfigInterfaceFactory.build();
-    const mockVpcConfigInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const mockVlanConfigInterface = linodeConfigInterfaceFactory.build();
+    const mockVpcConfigInterface = linodeConfigInterfaceFactoryWithVPC.build({
       vpc_id: mockVPC.id,
       purpose: 'vpc',
       active: true,

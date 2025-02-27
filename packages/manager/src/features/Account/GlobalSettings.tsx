@@ -7,8 +7,8 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAccountSettings,
   useMutateAccountSettings,
-} from 'src/queries/account/settings';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+  useAllLinodesQuery,
+} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 

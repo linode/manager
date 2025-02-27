@@ -1,18 +1,13 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import type { OrderSet } from 'src/types/ManagerPreferences';
+import type { Order, OrderSet } from '@linode/utilities';
 import type { BaseQueryParams } from 'src/utilities/queryParams';
-
-export type Order = 'asc' | 'desc';
 
 /**
  * useOrder is a hook that allows you to handle ordering tables. It takes into account

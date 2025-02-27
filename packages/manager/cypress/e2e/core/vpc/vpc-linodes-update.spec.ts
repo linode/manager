@@ -13,7 +13,6 @@ import {
   vpcFactory,
   linodeFactory,
   linodeConfigFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
 } from '@src/factories';
 import { ui } from 'support/ui';
 import { randomNumber, randomLabel } from 'support/util/random';
@@ -28,6 +27,7 @@ import {
   vpcUnassignLinodeRebootNotice,
 } from 'support/constants/vpc';
 import { VPC, Linode, Config } from '@linode/api-v4';
+import { linodeConfigInterfaceFactoryWithVPC } from '@linode/utilities';
 
 describe('VPC assign/unassign flows', () => {
   let mockVPCs: VPC[];
@@ -211,7 +211,7 @@ describe('VPC assign/unassign flows', () => {
       subnets: [mockSubnet],
     });
 
-    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       vpc_id: mockVPC.id,
       subnet_id: mockSubnet.id,
     });

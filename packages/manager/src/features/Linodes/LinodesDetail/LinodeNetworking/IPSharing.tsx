@@ -20,12 +20,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import {
   useAllLinodesQuery,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import {
   useLinodeIPsQuery,
   useLinodeShareIPMutation,
-} from 'src/queries/linodes/networking';
-import { useAllDetailedIPv6RangesQuery } from 'src/queries/networking/networking';
+  useAllDetailedIPv6RangesQuery,
+} from '@linode/queries';
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 

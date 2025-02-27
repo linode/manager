@@ -10,7 +10,7 @@ import {
   initGooglePaymentInstance,
 } from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
-import { useClientToken } from 'src/queries/account/payment';
+import { useClientToken } from '@linode/queries';
 
 import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 

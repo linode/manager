@@ -9,7 +9,7 @@ import {
   useAllKubernetesNodePoolQuery,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';

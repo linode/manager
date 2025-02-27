@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useRevokeTrustedDeviceMutation } from 'src/queries/profile/profile';
+import { useRevokeTrustedDeviceMutation } from '@linode/queries';
 
 interface Props {
   deviceId: number;

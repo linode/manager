@@ -12,7 +12,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { VPCPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/VPCPanel';
-import { useVlansQuery } from 'src/queries/vlans';
+import { useVlansQuery } from '@linode/queries';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import type {

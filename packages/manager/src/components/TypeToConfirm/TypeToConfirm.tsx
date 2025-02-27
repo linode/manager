@@ -3,11 +3,10 @@ import * as React from 'react';
 
 import { FormGroup } from 'src/components/FormGroup';
 import { Link } from 'src/components/Link';
-import { usePreferences } from 'src/queries/profile/preferences';
+import { usePreferences } from '@linode/queries';
 
 import type { TextFieldProps } from '@linode/ui';
-import type { SxProps } from '@mui/material';
-import type { Theme } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 
 export interface TypeToConfirmProps extends Omit<TextFieldProps, 'onChange'> {
   confirmationText?: JSX.Element | string;

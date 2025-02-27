@@ -14,8 +14,7 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useGrants } from 'src/queries/profile/profile';
+import { useAllLinodeConfigsQuery, useGrants } from '@linode/queries';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { BootConfigDialog } from './BootConfigDialog';

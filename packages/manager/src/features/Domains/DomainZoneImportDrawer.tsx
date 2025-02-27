@@ -6,7 +6,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { useImportZoneMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useGrants, useProfile } from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { ImportZonePayload } from '@linode/api-v4/lib/domains';

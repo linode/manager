@@ -1,5 +1,5 @@
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 
 /**
  * Hook to determine if the Disk Encryption feature should be visible to the user.

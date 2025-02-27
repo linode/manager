@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 import { pickRandom, randomDate } from 'src/utilities/random';
 
 import type {

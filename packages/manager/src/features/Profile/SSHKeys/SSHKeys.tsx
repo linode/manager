@@ -1,6 +1,7 @@
+import { useSSHKeysQuery } from '@linode/queries';
 import { Button, Typography } from '@linode/ui';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -18,7 +19,6 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSSHKeysQuery } from 'src/queries/profile/profile';
 import { parseAPIDate } from 'src/utilities/date';
 import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
 
@@ -98,14 +98,14 @@ export const SSHKeys = () => {
     <>
       <DocumentTitleSegment segment="SSH Keys" />
       <Grid
-        container
-        spacing={2}
         sx={{
           alignItems: 'flex-end',
           justifyContent: 'flex-end',
           margin: 0,
           width: '100%',
         }}
+        container
+        spacing={2}
       >
         <StyledAddNewWrapperGridItem>
           <Button

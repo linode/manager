@@ -2,7 +2,7 @@ import {
   EntityTransfer,
   TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers/types';
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { v4 } from 'uuid';
 

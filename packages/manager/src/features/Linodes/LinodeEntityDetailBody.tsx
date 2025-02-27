@@ -14,12 +14,13 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { usePreferences } from 'src/queries/profile/preferences';
-import { useProfile } from 'src/queries/profile/profile';
+import { usePreferences, useProfile } from '@linode/queries';
 import { pluralize } from 'src/utilities/pluralize';
 
-import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
-import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import {
+  encryptionStatusTestId,
+  EncryptedStatus,
+} from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,

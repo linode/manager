@@ -1,4 +1,14 @@
 import {
+  useAllLinodeDisksQuery,
+  useAllLinodeKernelsQuery,
+  useLinodeConfigCreateMutation,
+  useLinodeConfigUpdateMutation,
+  useLinodeQuery,
+  useRegionsQuery,
+  vlanQueries,
+  vpcQueries,
+} from '@linode/queries';
+import {
   Autocomplete,
   Box,
   Button,
@@ -15,8 +25,8 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -34,19 +44,7 @@ import {
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
-import {
-  useLinodeConfigCreateMutation,
-  useLinodeConfigUpdateMutation,
-} from 'src/queries/linodes/configs';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useAllLinodeKernelsQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { vlanQueries } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
-import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 import { createStringsFromDevices } from 'src/utilities/createStringsFromDevices';
 import {
@@ -1240,7 +1238,7 @@ export const unrecommendedConfigNoticeSelector = ({
   values,
 }: {
   _interface: ExtendedInterface;
-  primaryInterfaceIndex: number | null;
+  primaryInterfaceIndex: null | number;
   thisIndex: number;
   values: EditableFields;
 }): JSX.Element | null => {

@@ -9,7 +9,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';

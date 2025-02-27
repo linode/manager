@@ -1,9 +1,7 @@
+import { linodeConfigInterfaceFactory } from '@linode/utilities';
 import React from 'react';
 
-import {
-  LinodeConfigInterfaceFactory,
-  linodeConfigFactory,
-} from 'src/factories';
+import { linodeConfigFactory } from 'src/factories';
 import {
   LINODE_UNREACHABLE_HELPER_TEXT,
   NATTED_PUBLIC_IP_HELPER_TEXT,
@@ -12,8 +10,11 @@ import {
 import 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { unrecommendedConfigNoticeSelector } from './LinodeConfigDialog';
-import { LinodeConfigDialog, padList } from './LinodeConfigDialog';
+import {
+  LinodeConfigDialog,
+  padList,
+  unrecommendedConfigNoticeSelector,
+} from './LinodeConfigDialog';
 
 import type { MemoryLimit } from './LinodeConfigDialog';
 
@@ -32,12 +33,12 @@ describe('LinodeConfigDialog', () => {
     });
   });
 
-  const publicInterface = LinodeConfigInterfaceFactory.build({
+  const publicInterface = linodeConfigInterfaceFactory.build({
     primary: true,
     purpose: 'public',
   });
 
-  const vpcInterface = LinodeConfigInterfaceFactory.build({
+  const vpcInterface = linodeConfigInterfaceFactory.build({
     ipv4: {
       nat_1_1: '10.0.0.0',
     },
@@ -45,7 +46,7 @@ describe('LinodeConfigDialog', () => {
     purpose: 'vpc',
   });
 
-  const vpcInterfaceWithoutNAT = LinodeConfigInterfaceFactory.build({
+  const vpcInterfaceWithoutNAT = linodeConfigInterfaceFactory.build({
     primary: false,
     purpose: 'vpc',
   });

@@ -5,7 +5,7 @@ import React from 'react';
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {

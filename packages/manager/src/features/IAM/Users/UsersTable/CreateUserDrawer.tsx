@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { useCreateUserMutation } from 'src/queries/account/users';
+import { useCreateUserMutation } from '@linode/queries';
 
 import type { User } from '@linode/api-v4/lib/account';
 

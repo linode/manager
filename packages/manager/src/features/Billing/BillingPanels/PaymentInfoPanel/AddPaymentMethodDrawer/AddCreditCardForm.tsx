@@ -10,7 +10,7 @@ import NumberFormat from 'react-number-format';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { accountQueries } from 'src/queries/account/queries';
+import { accountQueries } from '@linode/queries';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 

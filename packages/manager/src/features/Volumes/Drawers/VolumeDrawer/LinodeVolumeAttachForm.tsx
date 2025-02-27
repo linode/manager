@@ -6,7 +6,7 @@ import { number, object } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants } from 'src/queries/profile/profile';
+import { useGrants } from '@linode/queries';
 import {
   useAttachVolumeMutation,
   useVolumeQuery,

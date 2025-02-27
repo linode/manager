@@ -23,8 +23,11 @@ import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useAllFirewallsQuery, useCreateFirewall } from 'src/queries/firewalls';
-import { useGrants } from 'src/queries/profile/profile';
+import {
+  useAllFirewallsQuery,
+  useCreateFirewall,
+  useGrants,
+} from '@linode/queries';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormStepEvent,

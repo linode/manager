@@ -6,9 +6,11 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useLinodeIPMutation } from 'src/queries/linodes/networking';
-import { useAllIPsQuery } from 'src/queries/networking/networking';
+import {
+  useLinodeQuery,
+  useLinodeIPMutation,
+  useAllIPsQuery,
+} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { listIPv6InRange } from './LinodeIPAddressRow';

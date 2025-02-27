@@ -8,8 +8,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
-import { updateAccountSettingsData } from 'src/queries/account/settings';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { updateAccountSettingsData, useLinodesQuery } from '@linode/queries';
 import { pluralize } from 'src/utilities/pluralize';
 
 import type { APIError } from '@linode/api-v4/lib/types';

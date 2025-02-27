@@ -17,7 +17,7 @@ import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import UserSSHKeyPanel from './UserSSHKeyPanel';

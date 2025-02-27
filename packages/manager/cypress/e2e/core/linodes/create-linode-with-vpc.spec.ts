@@ -4,7 +4,6 @@ import {
   subnetFactory,
   vpcFactory,
   linodeConfigFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
 } from 'src/factories';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import {
@@ -30,6 +29,7 @@ import {
 } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
+import { linodeConfigInterfaceFactoryWithVPC } from '@linode/utilities';
 
 describe('Create Linode with VPCs', () => {
   /*
@@ -61,7 +61,7 @@ describe('Create Linode with VPCs', () => {
       region: linodeRegion.id,
     });
 
-    const mockInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
       vpc_id: mockVPC.id,
       subnet_id: mockSubnet.id,
       primary: true,
@@ -188,7 +188,7 @@ describe('Create Linode with VPCs', () => {
       region: linodeRegion.id,
     });
 
-    const mockInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
       vpc_id: mockVPC.id,
       subnet_id: mockSubnet.id,
       primary: true,

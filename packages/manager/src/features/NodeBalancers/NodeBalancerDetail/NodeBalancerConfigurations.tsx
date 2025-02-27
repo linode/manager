@@ -29,7 +29,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromiseLoader from 'src/components/PromiseLoader/PromiseLoader';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
-import { nodebalancerQueries } from 'src/queries/nodebalancers';
+import { nodebalancerQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 

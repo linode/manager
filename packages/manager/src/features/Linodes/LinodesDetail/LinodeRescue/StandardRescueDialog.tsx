@@ -1,3 +1,10 @@
+import {
+  useAllLinodeDisksQuery,
+  useGrants,
+  useLinodeQuery,
+  useLinodeRescueMutation,
+  useProfile,
+} from '@linode/queries';
 import { Button, Dialog, Notice, Paper, clamp } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -8,12 +15,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useLinodeQuery,
-  useLinodeRescueMutation,
-} from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 

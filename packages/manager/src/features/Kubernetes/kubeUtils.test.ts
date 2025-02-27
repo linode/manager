@@ -5,8 +5,6 @@ import {
   kubeLinodeFactory,
   linodeTypeFactory,
   nodePoolFactory,
-} from 'src/factories';
-import {
   kubernetesEnterpriseTierVersionFactory,
   kubernetesVersionFactory,
 } from 'src/factories';
@@ -35,16 +33,16 @@ const queryMocks = vi.hoisted(() => ({
   useKubernetesVersionQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/account/account', () => {
-  const actual = vi.importActual('src/queries/account/account');
+vi.mock('@linode/queries', () => {
+  const actual = vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccount: queryMocks.useAccount,
   };
 });
 
-vi.mock('src/queries/account/betas', () => {
-  const actual = vi.importActual('src/queries/account/betas');
+vi.mock('@linode/queries', () => {
+  const actual = vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccountBetaQuery: queryMocks.useAccountBetaQuery,

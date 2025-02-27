@@ -4,13 +4,13 @@ import {
 } from '@linode/api-v4';
 import { useCallback } from 'react';
 
-import { getPersonalAccessTokenForRevocation } from 'src/features/Account/SwitchAccounts/utils';
 import {
+  getPersonalAccessTokenForRevocation,
   isParentTokenValid,
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/SwitchAccounts/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { useCreateChildAccountPersonalAccessTokenMutation } from 'src/queries/account/account';
+import { useCreateChildAccountPersonalAccessTokenMutation } from '@linode/queries';
 import { getStorage } from 'src/utilities/storage';
 
 import type { Token, UserType } from '@linode/api-v4';

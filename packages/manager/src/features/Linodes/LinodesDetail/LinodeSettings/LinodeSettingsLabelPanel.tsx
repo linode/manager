@@ -5,10 +5,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import { sendUpdateLinodeLabelEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 

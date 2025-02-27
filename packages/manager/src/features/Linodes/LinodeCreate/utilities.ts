@@ -1,9 +1,10 @@
+import { linodeQueries } from '@linode/queries';
 import { omitProps } from '@linode/ui';
+import { getIsLegacyInterfaceArray } from '@linode/utilities';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
-import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -17,7 +18,6 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { LinodeCreateType } from './types';
 import type {
-  CreateLinodeInterfacePayload,
   CreateLinodeRequest,
   InterfacePayload,
   Linode,
@@ -175,25 +175,6 @@ export const getLinodeCreatePayload = (
   }
 
   return values;
-};
-
-/**
- * Determines if the given interfaces payload array is of legacy interface type
- * or of the new Linode Interface type
- * @param interfaces the interfaces to confirm
- * @returns if interfaces is type InterfacePayload
- *
- * @TODO Linode Interfaces - may need to update some logic to to depend on Account Settings for Interfaces soon
- * For now, an undefined/empty interfaces array will return true to match existing behavior
- */
-export const getIsLegacyInterfaceArray = (
-  interfaces: CreateLinodeInterfacePayload[] | InterfacePayload[] | undefined
-): interfaces is InterfacePayload[] => {
-  return (
-    interfaces === undefined ||
-    interfaces.length === 0 ||
-    interfaces.some((iface) => 'purpose' in iface)
-  );
 };
 
 /**

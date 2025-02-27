@@ -1,3 +1,8 @@
+import {
+  useLinodeQuery,
+  useAllLinodeDisksQuery,
+  useLinodeDiskResizeMutation,
+} from '@linode/queries';
 import { FormHelperText, InputAdornment, Notice, TextField } from '@linode/ui';
 import { ResizeLinodeDiskSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
@@ -11,11 +16,6 @@ import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeDiskResizeMutation,
-} from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { sendEvent } from 'src/utilities/analytics/utils';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 

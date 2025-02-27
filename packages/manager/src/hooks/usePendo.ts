@@ -1,9 +1,8 @@
+import { useProfile, useAccount } from '@linode/queries';
 import { sha256 } from 'js-sha256';
 import React from 'react';
 
 import { APP_ROOT, PENDO_API_KEY } from 'src/constants';
-import { useAccount } from 'src/queries/account/account.js';
-import { useProfile } from 'src/queries/profile/profile';
 import {
   ONE_TRUST_COOKIE_CATEGORIES,
   checkOptanonConsent,

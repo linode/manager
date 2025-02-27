@@ -29,7 +29,7 @@ import {
   useDatabaseEnginesQuery,
   useDatabaseTypesQuery,
 } from 'src/queries/databases/databases';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { validateIPs } from 'src/utilities/ipUtils';

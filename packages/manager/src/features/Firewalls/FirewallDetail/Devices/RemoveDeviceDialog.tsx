@@ -5,9 +5,11 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
-import { linodeQueries } from 'src/queries/linodes/linodes';
-import { nodebalancerQueries } from 'src/queries/nodebalancers';
+import {
+  useRemoveFirewallDeviceMutation,
+  linodeQueries,
+  nodebalancerQueries,
+} from '@linode/queries';
 
 import type { FirewallDevice } from '@linode/api-v4';
 

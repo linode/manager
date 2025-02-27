@@ -17,7 +17,7 @@ import { NotificationCenterNotificationsContainer } from 'src/features/Notificat
 import { useFormattedNotifications } from 'src/features/NotificationCenter/useFormattedNotifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { usePrevious } from 'src/hooks/usePrevious';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useNotificationsQuery } from '@linode/queries';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import {
   useEventsInfiniteQuery,

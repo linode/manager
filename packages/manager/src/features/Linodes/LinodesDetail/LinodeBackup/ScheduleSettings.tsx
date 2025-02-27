@@ -15,8 +15,8 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
+  useProfile,
+} from '@linode/queries';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 import { initWindows } from 'src/utilities/initWindows';
 

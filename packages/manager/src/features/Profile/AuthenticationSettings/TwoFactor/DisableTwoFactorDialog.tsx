@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDisableTwoFactorMutation } from 'src/queries/profile/profile';
+import { useDisableTwoFactorMutation } from '@linode/queries';
 
 interface Props {
   onClose: () => void;

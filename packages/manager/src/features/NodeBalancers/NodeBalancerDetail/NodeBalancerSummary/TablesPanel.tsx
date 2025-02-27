@@ -1,6 +1,5 @@
 import { Box, CircleProgress, Paper, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -11,8 +10,8 @@ import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import {
   useNodeBalancerQuery,
   useNodeBalancerStatsQuery,
-} from 'src/queries/nodebalancers';
-import { useProfile } from 'src/queries/profile/profile';
+  useProfile,
+} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';

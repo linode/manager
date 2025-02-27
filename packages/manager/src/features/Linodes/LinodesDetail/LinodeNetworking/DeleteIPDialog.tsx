@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLinodeIPDeleteMutation } from 'src/queries/linodes/networking';
+import { useLinodeIPDeleteMutation } from '@linode/queries';
 
 interface Props {
   address: string;

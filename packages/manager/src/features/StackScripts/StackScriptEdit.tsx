@@ -11,7 +11,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useGrants, useProfile } from '@linode/queries';
 import {
   useStackScriptQuery,
   useUpdateStackScriptMutation,

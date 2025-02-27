@@ -6,13 +6,12 @@ import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 import { Region } from '@linode/api-v4/lib/regions';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { flatten } from 'ramda';
-import { useCallback } from 'react';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import {
   domainToSearchableItem,

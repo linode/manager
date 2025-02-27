@@ -4,9 +4,12 @@ import * as React from 'react';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import {
+  useLinodeQuery,
+  useGrants,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';

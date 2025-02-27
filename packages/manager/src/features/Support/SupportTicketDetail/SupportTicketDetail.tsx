@@ -10,7 +10,7 @@ import { Waypoint } from 'react-waypoint';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import {
   useInfiniteSupportTicketRepliesQuery,
   useSupportTicketQuery,

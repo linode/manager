@@ -15,7 +15,7 @@ import {
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,

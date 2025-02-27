@@ -17,16 +17,16 @@ const queryMocks = vi.hoisted(() => ({
   useSearch: vi.fn().mockReturnValue({ query: undefined }),
 }));
 
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     usePlacementGroupQuery: queryMocks.usePlacementGroupQuery,
   };
 });
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAllLinodesQuery: queryMocks.useAllLinodesQuery,

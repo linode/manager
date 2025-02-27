@@ -20,7 +20,7 @@ import { TableRow } from 'src/components/TableRow';
 import { ObjectUploader } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 import {
   getObjectBucketObjectsQueryKey,
   objectStorageQueries,

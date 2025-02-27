@@ -1,8 +1,8 @@
+import { useVLANsInfiniteQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import React, { useEffect, useState } from 'react';
 
 import { useDebouncedValue } from 'src/hooks/useDebouncedValue';
-import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import type { Filter } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material';

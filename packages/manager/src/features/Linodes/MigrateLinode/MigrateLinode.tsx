@@ -1,4 +1,13 @@
 import {
+  useAccountAgreements,
+  useAllLinodeDisksQuery,
+  useLinodeMigrateMutation,
+  useLinodeQuery,
+  useMutateAccountAgreements,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
   Box,
   Button,
   Dialog,
@@ -15,24 +24,12 @@ import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect
 import { MBpsInterDC } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { useFlags } from 'src/hooks/useFlags';
-import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
 import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import {
   useEventsPollingActions,
   useInProgressEvents,
 } from 'src/queries/events/events';
 import { useImageQuery } from 'src/queries/images';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useLinodeMigrateMutation,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { formatDate } from 'src/utilities/formatDate';
@@ -40,6 +37,7 @@ import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { regionSupportsMetadata } from 'src/utilities/metadata';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';

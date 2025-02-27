@@ -11,7 +11,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { VLANSelect } from 'src/components/VLANSelect';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import { useLinodeCreateQueryParams } from '../utilities';

@@ -1,10 +1,7 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter';
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
 
 import type { ToSubOptions } from '@tanstack/react-router';
 import type { TableSearchParams } from 'src/routes/types';

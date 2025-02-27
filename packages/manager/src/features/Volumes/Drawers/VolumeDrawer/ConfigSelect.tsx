@@ -1,7 +1,7 @@
 import { Autocomplete, FormControl } from '@linode/ui';
 import * as React from 'react';
 
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
+import { useAllLinodeConfigsQuery } from '@linode/queries';
 
 interface Props {
   disabled?: boolean;

@@ -1,7 +1,6 @@
 import {
   createLinodeRequestFactory,
   linodeConfigFactory,
-  LinodeConfigInterfaceFactory,
   linodeFactory,
   VLANFactory,
   volumeFactory,
@@ -41,6 +40,7 @@ import {
 } from 'support/constants/linodes';
 import type { Linode } from '@linode/api-v4';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import { linodeConfigInterfaceFactory } from '@linode/utilities';
 
 /**
  * Returns the Cloud Manager URL to clone a given Linode.
@@ -150,7 +150,7 @@ describe('clone linode', () => {
       type: null,
     });
     const mockVolume = volumeFactory.build();
-    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
+    const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
       ipam_address: null,
       purpose: 'public',
     });

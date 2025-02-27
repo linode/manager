@@ -1,7 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { firewallQueries } from 'src/queries/firewalls';
-import { useCreateFirewall } from 'src/queries/firewalls';
+import { firewallQueries, useCreateFirewall } from '@linode/queries';
 
 import type { DialogState } from './GenerateFirewallDialog';
 import type {

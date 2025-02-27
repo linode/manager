@@ -1,5 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  useAccountAgreements,
+  useMutateAccountAgreements,
+  useRegionsQuery,
+  useProfile,
+} from '@linode/queries';
+import {
   Box,
   Button,
   Checkbox,
@@ -27,16 +33,10 @@ import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
 import { useUploadImageMutation } from 'src/queries/images';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';

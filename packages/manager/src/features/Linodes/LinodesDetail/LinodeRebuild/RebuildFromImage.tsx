@@ -13,8 +13,7 @@ import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { usePreferences } from 'src/queries/profile/preferences';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { usePreferences, useRegionsQuery } from '@linode/queries';
 import {
   handleFieldErrors,
   handleGeneralErrors,

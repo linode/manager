@@ -23,8 +23,8 @@ import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import {
   useAllPlacementGroupsQuery,
   useCreatePlacementGroup,
-} from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+  useRegionsQuery,
+} from '@linode/queries';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';

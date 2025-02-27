@@ -10,7 +10,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { useAccountSettings } from 'src/queries/account/settings';
+import { useAccountSettings } from '@linode/queries';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { sortByString } from 'src/utilities/sort-by';
 

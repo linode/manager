@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { timezones } from 'src/assets/timezones/timezones';
 import { useAuthentication } from 'src/hooks/useAuthentication';
-import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
+import { useMutateProfile, useProfile } from '@linode/queries';
 
 import type { Profile } from '@linode/api-v4';
 

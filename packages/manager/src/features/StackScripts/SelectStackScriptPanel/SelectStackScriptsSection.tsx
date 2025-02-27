@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { TableBody } from 'src/components/TableBody';
 import { TableRow } from 'src/components/TableRow';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { formatDate } from 'src/utilities/formatDate';
 import { truncate } from 'src/utilities/truncate';
 

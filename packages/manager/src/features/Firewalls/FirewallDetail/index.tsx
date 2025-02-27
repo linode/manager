@@ -16,9 +16,13 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
-import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import {
+  useAllFirewallDevicesQuery,
+  useFirewallQuery,
+  useMutateFirewall,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { checkIfUserCanModifyFirewall } from '../shared';

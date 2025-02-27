@@ -13,7 +13,7 @@ import { DescriptionList } from 'src/components/DescriptionList/DescriptionList'
 import { Drawer } from 'src/components/Drawer';
 import { NotFound } from 'src/components/NotFound';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { useMutatePlacementGroup } from 'src/queries/placementGroups';
+import { useMutatePlacementGroup } from '@linode/queries';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 

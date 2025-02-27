@@ -5,9 +5,12 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
+import {
+  useGrants,
+  useProfile,
+  useRegionsQuery,
+  useCreateVPCMutation,
+} from '@linode/queries';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';

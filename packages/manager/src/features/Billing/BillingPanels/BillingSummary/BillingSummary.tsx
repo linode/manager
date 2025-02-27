@@ -6,8 +6,7 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Currency } from 'src/components/Currency';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useGrants } from 'src/queries/profile/profile';
+import { useNotificationsQuery, useGrants } from '@linode/queries';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';

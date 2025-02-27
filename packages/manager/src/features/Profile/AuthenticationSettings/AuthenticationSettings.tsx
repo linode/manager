@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import { ResetPassword } from './ResetPassword';

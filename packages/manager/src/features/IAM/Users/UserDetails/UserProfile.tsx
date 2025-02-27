@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { NotFound } from 'src/components/NotFound';
-import { useAccountUser } from 'src/queries/account/users';
+import { useAccountUser } from '@linode/queries';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
 import { DeleteUserPanel } from './DeleteUserPanel';

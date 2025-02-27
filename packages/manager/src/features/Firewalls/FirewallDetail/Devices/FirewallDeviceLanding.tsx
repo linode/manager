@@ -1,12 +1,11 @@
 import { Button, Notice, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
+import { useAllFirewallDevicesQuery } from '@linode/queries';
 
 import { AddLinodeDrawer } from './AddLinodeDrawer';
 import { AddNodebalancerDrawer } from './AddNodebalancerDrawer';

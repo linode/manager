@@ -1,5 +1,5 @@
-import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
-import { Typography } from '@linode/ui';
+import { useVPCQuery, useRegionsQuery } from '@linode/queries';
+import { Typography, Box, CircleProgress, StyledLinkButton } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -10,8 +10,6 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useVPCQuery } from 'src/queries/vpcs/vpcs';
 import { truncate } from 'src/utilities/truncate';
 
 import { getUniqueLinodesFromSubnets } from '../utils';

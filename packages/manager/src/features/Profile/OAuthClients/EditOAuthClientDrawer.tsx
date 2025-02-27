@@ -10,7 +10,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { useUpdateOAuthClientMutation } from 'src/queries/account/oauth';
+import { useUpdateOAuthClientMutation } from '@linode/queries';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import type { OAuthClient, OAuthClientRequest } from '@linode/api-v4';

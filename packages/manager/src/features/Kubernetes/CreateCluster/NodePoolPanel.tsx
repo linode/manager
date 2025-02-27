@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { extendType } from 'src/utilities/extendType';
 

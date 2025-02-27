@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useGrants, useProfile } from '@linode/queries';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
 

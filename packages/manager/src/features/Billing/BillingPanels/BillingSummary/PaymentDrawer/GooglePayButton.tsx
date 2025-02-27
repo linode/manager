@@ -11,8 +11,7 @@ import {
   initGooglePaymentInstance,
 } from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
-import { useAccount } from 'src/queries/account/account';
-import { useClientToken } from 'src/queries/account/payment';
+import { useAccount, useClientToken } from '@linode/queries';
 
 import type { SetSuccess } from './types';
 import type { APIWarning } from '@linode/api-v4/lib/types';

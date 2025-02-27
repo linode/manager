@@ -18,7 +18,7 @@ import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDra
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSubnetsQuery } from 'src/queries/vpcs/vpcs';
+import { useSubnetsQuery } from '@linode/queries';
 
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
