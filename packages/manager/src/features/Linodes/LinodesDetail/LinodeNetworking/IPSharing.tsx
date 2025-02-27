@@ -1,19 +1,20 @@
 import {
   Button,
   CircleProgress,
+  Dialog,
   Divider,
   Notice,
   Select,
   TextField,
   Typography,
 } from '@linode/ui';
+import { areArraysEqual } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -26,7 +27,6 @@ import {
   useLinodeShareIPMutation,
 } from 'src/queries/linodes/networking';
 import { useAllDetailedIPv6RangesQuery } from 'src/queries/networking/networking';
-import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import type { Linode } from '@linode/api-v4/lib/linodes';
@@ -206,14 +206,14 @@ const IPSharingPanel = (props: Props) => {
         // make note in groupedUnsharedRanges so that we can first share that IP to
         // the Linode it is statically routed to, then to the current Linode
         if (isStaticv6) {
-          const linode_id = ipToLinodeID[currentValue][0];
-          if (groupedUnsharedRanges.hasOwnProperty(linode_id)) {
-            groupedUnsharedRanges[linode_id] = [
-              ...groupedUnsharedRanges[linode_id],
+          const linodeId = ipToLinodeID[currentValue][0];
+          if (groupedUnsharedRanges.hasOwnProperty(linodeId)) {
+            groupedUnsharedRanges[linodeId] = [
+              ...groupedUnsharedRanges[linodeId],
               strippedIP,
             ];
           } else {
-            groupedUnsharedRanges[linode_id] = [strippedIP];
+            groupedUnsharedRanges[linodeId] = [strippedIP];
           }
         }
 
@@ -241,11 +241,11 @@ const IPSharingPanel = (props: Props) => {
 
     if (flags.ipv6Sharing) {
       // share unshared ranges first to their staticly routed Linode, then later we can share to the current Linode
-      Object.keys(groupedUnsharedRanges).forEach((linode_id) => {
+      Object.keys(groupedUnsharedRanges).forEach((linodeId) => {
         promises.push(
           shareAddresses({
-            ips: groupedUnsharedRanges[linode_id],
-            linode_id: parseInt(linode_id, 10),
+            ips: groupedUnsharedRanges[linodeId],
+            linode_id: parseInt(linodeId, 10),
           }).catch((errorResponse) => {
             const errors = getAPIErrorOrDefault(
               errorResponse,
@@ -300,17 +300,23 @@ const IPSharingPanel = (props: Props) => {
       <DialogContent loading={isLoading}>
         <>
           {generalError && (
-            <Grid xs={12}>
+            <Grid size={12}>
               <Notice text={generalError} variant="error" />
             </Grid>
           )}
           {successMessage && (
-            <Grid xs={12}>
+            <Grid size={12}>
               <Notice text={successMessage} variant="success" />
             </Grid>
           )}
           <Grid container>
-            <Grid lg={8} sm={12} xl={6}>
+            <Grid
+              size={{
+                lg: 8,
+                sm: 12,
+                xl: 6,
+              }}
+            >
               {flags.ipv6Sharing ? (
                 <Notice variant="warning">
                   <Typography sx={{ fontSize: '0.875rem' }}>
@@ -333,7 +339,7 @@ const IPSharingPanel = (props: Props) => {
                 sharing.
               </Typography>
             </Grid>
-            <Grid xs={12}>
+            <Grid size={12}>
               <Grid container>
                 <Grid
                   sx={{
@@ -450,10 +456,10 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
   const { ip } = props;
   return (
     <Grid container key={ip} spacing={2}>
-      <Grid xs={12}>
+      <Grid size={12}>
         <Divider spacingBottom={0} />
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <TextField
           disabled
           hideLabel
@@ -501,10 +507,15 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
 
   return (
     <Grid container key={idx} spacing={2}>
-      <Grid xs={12}>
+      <Grid size={12}>
         <Divider spacingBottom={0} />
       </Grid>
-      <Grid sm={10} xs={12}>
+      <Grid
+        size={{
+          sm: 10,
+          xs: 12,
+        }}
+      >
         <Select
           textFieldProps={{
             dataAttrs: {
@@ -523,12 +534,14 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       </Grid>
       {handleDelete ? (
         <Grid
+          size={{
+            sm: 2,
+          }}
           sx={{
             [theme.breakpoints.down('sm')]: {
               width: '100%',
             },
           }}
-          sm={2}
         >
           <Button
             sx={{

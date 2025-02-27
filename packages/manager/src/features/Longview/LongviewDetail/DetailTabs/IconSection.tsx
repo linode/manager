@@ -1,5 +1,5 @@
-import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { Box, Stack, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
@@ -7,6 +7,7 @@ import DiskIcon from 'src/assets/icons/longview/disk.svg';
 import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
 import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
+import { IconTextLink } from 'src/components/IconTextLink/IconTextLink';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -15,13 +16,6 @@ import {
   getTotalMemoryUsage,
   sumStorage,
 } from '../../shared/utilities';
-import {
-  StyledHeaderGrid,
-  StyledIconContainerGrid,
-  StyledIconGrid,
-  StyledIconTextLink,
-  StyledPackageGrid,
-} from './IconSection.styles';
 
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
@@ -48,7 +42,7 @@ export const IconSection = React.memo((props: Props) => {
     props.longviewClientData?.SysInfo?.cpu?.type ??
     'CPU information not available';
 
-  const uptime = props.longviewClientData?.uptime ?? null;
+  const uptime = props.longviewClientData?.Uptime ?? null;
   const formattedUptime =
     uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
 
@@ -71,104 +65,113 @@ export const IconSection = React.memo((props: Props) => {
 
   const storageInBytes = sumStorage(props.longviewClientData.Disk);
 
+  const items = [
+    {
+      content: (
+        <Typography>
+          {osDist} {osDistVersion} {kernel && `(${kernel})`}
+        </Typography>
+      ),
+      icon: <ServerIcon />,
+    },
+    {
+      content: (
+        <>
+          <Typography>{cpuType}</Typography>
+          {cpuCoreCount && (
+            <Typography>{`${cpuCoreCount} ${coreCountDisplay}`}</Typography>
+          )}
+        </>
+      ),
+      icon: <CPUIcon />,
+    },
+    {
+      content: (
+        <Box>
+          {convertedTotalMemory.value !== 0 &&
+          convertedTotalSwap.value !== 0 ? (
+            <Grid size={10}>
+              <Typography>
+                {`${convertedTotalMemory.value} ${convertedTotalMemory.unit} RAM`}
+              </Typography>
+              <Typography>
+                {`${convertedTotalSwap.value} ${convertedTotalSwap.unit} Swap`}
+              </Typography>
+            </Grid>
+          ) : (
+            <Grid size={10}>
+              <Typography>RAM information not available</Typography>
+            </Grid>
+          )}
+        </Box>
+      ),
+      icon: <RamIcon />,
+    },
+    {
+      content: (
+        <Box>
+          {storageInBytes.total !== 0 ? (
+            <Grid size={10}>
+              <Typography>
+                {`${
+                  readableBytes(storageInBytes.total, { unit: 'GB' }).formatted
+                } Storage`}
+              </Typography>
+              <Typography>
+                {`${
+                  readableBytes(storageInBytes.free, { unit: 'GB' }).formatted
+                } Available`}
+              </Typography>
+            </Grid>
+          ) : (
+            <Grid size={10}>
+              <Typography>Storage information not available</Typography>
+            </Grid>
+          )}
+        </Box>
+      ),
+      icon: <DiskIcon />,
+    },
+  ];
+
   return (
-    <Grid lg={3} md={6} xs={12}>
-      <StyledHeaderGrid container spacing={2}>
-        <Grid>
+    <Grid
+      size={{
+        lg: 3,
+        md: 6,
+        xs: 12,
+      }}
+    >
+      <Stack spacing={1.5}>
+        <Stack>
           <Typography sx={{ wordBreak: 'break-all' }} variant="h3">
             {props.client}
           </Typography>
           <Typography>{hostname}</Typography>
           <Typography>{formattedUptime}</Typography>
-        </Grid>
-      </StyledHeaderGrid>
-      <StyledIconContainerGrid container spacing={2}>
-        <StyledIconGrid md={2} sm={1} xs={2}>
-          <ServerIcon />
-        </StyledIconGrid>
-        <Grid xs={10}>
-          <Typography>
-            {osDist} {osDistVersion} {kernel && `(${kernel})`}
-          </Typography>
-        </Grid>
-      </StyledIconContainerGrid>
-      <StyledIconContainerGrid container spacing={2}>
-        <StyledIconGrid md={2} sm={1} xs={2}>
-          <CPUIcon />
-        </StyledIconGrid>
-        <Grid xs={10}>
-          <Typography>{cpuType}</Typography>
-          {cpuCoreCount && (
-            <Typography>{`${cpuCoreCount} ${coreCountDisplay}`}</Typography>
-          )}
-        </Grid>
-      </StyledIconContainerGrid>
-      <StyledIconContainerGrid container spacing={2}>
-        <StyledIconGrid md={2} sm={1} xs={2}>
-          <RamIcon />
-        </StyledIconGrid>
-        {convertedTotalMemory.value !== 0 && convertedTotalSwap.value !== 0 ? (
-          <Grid xs={10}>
-            <Typography>
-              {`${convertedTotalMemory.value} ${convertedTotalMemory.unit} RAM`}
-            </Typography>
-            <Typography>
-              {`${convertedTotalSwap.value} ${convertedTotalSwap.unit} Swap`}
-            </Typography>
-          </Grid>
-        ) : (
-          <Grid xs={10}>
-            <Typography>RAM information not available</Typography>
-          </Grid>
-        )}
-      </StyledIconContainerGrid>
-      <StyledIconContainerGrid container spacing={2}>
-        <StyledIconGrid md={2} sm={1} xs={2}>
-          <DiskIcon />
-        </StyledIconGrid>
-
-        {storageInBytes.total !== 0 ? (
-          <Grid xs={10}>
-            <Typography>
-              {`${
-                readableBytes(storageInBytes.total, { unit: 'GB' }).formatted
-              } Storage`}
-            </Typography>
-            <Typography>
-              {`${
-                readableBytes(storageInBytes.free, { unit: 'GB' }).formatted
-              } Available`}
-            </Typography>
-          </Grid>
-        ) : (
-          <Grid xs={10}>
-            <Typography>Storage information not available</Typography>
-          </Grid>
-        )}
-      </StyledIconContainerGrid>
-      {packages && packages.length > 0 ? (
-        <StyledIconContainerGrid container spacing={2}>
-          <StyledPackageGrid md={2} sm={1} xs={2}>
-            <StyledIconTextLink
+        </Stack>
+        {items.map(({ content, icon }, index) => (
+          <Stack alignItems="center" direction="row" key={index} spacing={1.5}>
+            <Box display="flex" justifyContent="center" width="50px">
+              {icon}
+            </Box>
+            <Box width="100%">{content}</Box>
+          </Stack>
+        ))}
+        {packages && (
+          <Box>
+            <IconTextLink
               SideIcon={PackageIcon}
+              disabled={packages.length === 0}
               onClick={props.openPackageDrawer}
               text={packagesToUpdate}
               title={packagesToUpdate}
             >
               {packagesToUpdate}
-            </StyledIconTextLink>
-          </StyledPackageGrid>
-        </StyledIconContainerGrid>
-      ) : (
-        <StyledIconContainerGrid container spacing={2}>
-          <StyledIconGrid md={2} sm={1} xs={2}>
-            <PackageIcon />
-          </StyledIconGrid>
-          <Grid xs={10}>
-            <Typography>{packagesToUpdate}</Typography>
-          </Grid>
-        </StyledIconContainerGrid>
-      )}
+            </IconTextLink>
+          </Box>
+        )}
+      </Stack>
     </Grid>
   );
 });

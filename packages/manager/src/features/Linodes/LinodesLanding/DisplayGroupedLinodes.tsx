@@ -1,6 +1,7 @@
-import { IconButton } from '@linode/ui';
 import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import { IconButton } from '@linode/ui';
+import { groupByTags, sortGroups } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import { compose } from 'ramda';
 import * as React from 'react';
 
@@ -19,7 +20,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 
 import {
   StyledControlHeader,
@@ -102,7 +102,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
   if (display === 'grid') {
     return (
       <>
-        <Grid className={'px0'} xs={12}>
+        <Grid className={'px0'} size={12}>
           {isGeckoLAEnabled && (
             <Paper sx={{ padding: 1 }}>
               <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
@@ -161,7 +161,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
           return (
             <Box data-qa-tag-header={tag} key={tag} sx={{ marginBottom: 2 }}>
               <Grid container>
-                <Grid xs={12}>
+                <Grid size={12}>
                   <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
                 </Grid>
               </Grid>
@@ -201,7 +201,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                   return (
                     <React.Fragment>
                       <Component {...finalProps} />
-                      <Grid xs={12}>
+                      <Grid size={12}>
                         <PaginationFooter
                           sx={{
                             border: 0,

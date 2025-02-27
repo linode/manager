@@ -54,7 +54,7 @@ export const getAlertDefinitionByServiceTypeAndId = (
 export const editAlertDefinition = (
   data: EditAlertDefinitionPayload,
   serviceType: string,
-  alertId: string
+  alertId: number
 ) =>
   Request<Alert>(
     setURL(
@@ -71,4 +71,14 @@ export const getNotificationChannels = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
+  );
+
+export const getAlertDefinitionByServiceType = (serviceType: string) =>
+  Request<ResourcePage<Alert>>(
+    setURL(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/alert-definitions`
+    ),
+    setMethod('GET')
   );

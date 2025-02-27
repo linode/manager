@@ -12,7 +12,7 @@ export const AutoscaleNodePoolSchema = object({
     is: true,
     then: (schema) =>
       schema
-        .required()
+        .required('Minimum is a required field.')
         .test(
           'min',
           'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.',
@@ -34,7 +34,7 @@ export const AutoscaleNodePoolSchema = object({
     is: true,
     then: (schema) =>
       schema
-        .required()
+        .required('Maximum is a required field.')
         .min(1, 'Maximum must be between 1 and 100 nodes.')
         .max(100, 'Maximum must be between 1 and 100 nodes.'),
   }),
@@ -93,7 +93,7 @@ export const kubernetesControlPlaneACLPayloadSchema = object().shape({
 const alphaNumericValidCharactersRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
 
 // DNS subdomain key (example.com/my-app)
-const dnsKeyRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-./]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
+const dnsKeyRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._/]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
 
 const MAX_DNS_KEY_TOTAL_LENGTH = 128;
 const MAX_DNS_KEY_SUFFIX_LENGTH = 62;

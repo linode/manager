@@ -390,8 +390,6 @@ describe('LKE cluster updates', () => {
       });
 
       const recycleWarningSubstrings = [
-        'will be deleted',
-        'will be created',
         'local storage (such as ’hostPath’ volumes) will be erased',
         'may take several minutes',
       ];
@@ -418,6 +416,9 @@ describe('LKE cluster updates', () => {
         .findByTitle(`Recycle ${mockKubeLinode.id}?`)
         .should('be.visible')
         .within(() => {
+          cy.findByText('Redeploy this node in the node pool.', {
+            exact: false,
+          }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
             cy.findByText(warning, { exact: false }).should('be.visible');
           });
@@ -445,6 +446,13 @@ describe('LKE cluster updates', () => {
         .findByTitle('Recycle node pool?')
         .should('be.visible')
         .within(() => {
+          cy.findByText('Redeploy all nodes in the node pool.', {
+            exact: false,
+          }).should('be.visible');
+          recycleWarningSubstrings.forEach((warning: string) => {
+            cy.findByText(warning, { exact: false }).should('be.visible');
+          });
+
           ui.button
             .findByTitle('Recycle Pool Nodes')
             .should('be.visible')
@@ -468,6 +476,9 @@ describe('LKE cluster updates', () => {
         .findByTitle('Recycle all nodes in cluster?')
         .should('be.visible')
         .within(() => {
+          cy.findByText('Redeploy all nodes in the cluster.', {
+            exact: false,
+          }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
             cy.findByText(warning, { exact: false }).should('be.visible');
           });
@@ -541,7 +552,7 @@ describe('LKE cluster updates', () => {
         .findByTitle('Autoscale Pool')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Autoscaler').should('be.visible').click();
+          cy.findByText('Autoscale').should('be.visible').click();
 
           cy.findByLabelText('Min')
             .should('be.visible')
@@ -594,7 +605,7 @@ describe('LKE cluster updates', () => {
         .findByTitle('Autoscale Pool')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Autoscaler').should('be.visible').click();
+          cy.findByText('Autoscale').should('be.visible').click();
 
           ui.button
             .findByTitle('Save Changes')
@@ -705,9 +716,12 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.disabled');
 
-          cy.findByText('Resized pool: $12/month (1 node at $12/month)').should(
-            'be.visible'
-          );
+          cy.findByText(
+            'Current price: $12/month (1 node at $12/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $12/month (1 node at $12/month each)'
+          ).should('be.visible');
 
           cy.findByLabelText('Add 1')
             .should('be.visible')
@@ -717,7 +731,7 @@ describe('LKE cluster updates', () => {
 
           cy.findByLabelText('Edit Quantity').should('have.value', '3');
           cy.findByText(
-            'Resized pool: $36/month (3 nodes at $12/month)'
+            'Resized price: $36/month (3 nodes at $12/month each)'
           ).should('be.visible');
 
           ui.button
@@ -1291,16 +1305,16 @@ describe('LKE cluster updates', () => {
     });
 
     it('can add labels and taints', () => {
-      const mockNewSimpleLabel = 'my-label-key: my-label-value';
-      const mockNewDNSLabel = 'my-label-key.io/app: my-label-value';
+      const mockNewSimpleLabel = 'my_label.-key: my_label.-value';
+      const mockNewDNSLabel = 'my_label-key.io/app: my_label.-value';
       const mockNewTaint: Taint = {
-        key: 'my-taint-key',
-        value: 'my-taint-value',
+        key: 'my_taint.-key',
+        value: 'my_taint.-value',
         effect: 'NoSchedule',
       };
       const mockNewDNSTaint: Taint = {
-        key: 'my-taint-key.io/app',
-        value: 'my-taint-value',
+        key: 'my_taint-key.io/app',
+        value: 'my_taint.-value',
         effect: 'NoSchedule',
       };
       const mockNodePoolUpdated = nodePoolFactory.build({
@@ -1309,8 +1323,8 @@ describe('LKE cluster updates', () => {
         nodes: mockNodes,
         taints: [mockNewTaint, mockNewDNSTaint],
         labels: {
-          'my-label-key': 'my-label-value',
-          'my-label-key.io/app': 'my-label-value',
+          'my_label-key': 'my_label.-value',
+          'my_label-key.io/app': 'my_label.-value',
         },
       });
 
@@ -1985,10 +1999,10 @@ describe('LKE cluster updates', () => {
             .should('be.disabled');
 
           cy.findByText(
-            'Current pool: $14.40/month (1 node at $14.40/month)'
+            'Current price: $14.40/month (1 node at $14.40/month each)'
           ).should('be.visible');
           cy.findByText(
-            'Resized pool: $14.40/month (1 node at $14.40/month)'
+            'Resized price: $14.40/month (1 node at $14.40/month each)'
           ).should('be.visible');
 
           cy.findByLabelText('Add 1')
@@ -2000,10 +2014,10 @@ describe('LKE cluster updates', () => {
 
           cy.findByLabelText('Edit Quantity').should('have.value', '4');
           cy.findByText(
-            'Current pool: $14.40/month (1 node at $14.40/month)'
+            'Current price: $14.40/month (1 node at $14.40/month each)'
           ).should('be.visible');
           cy.findByText(
-            'Resized pool: $57.60/month (4 nodes at $14.40/month)'
+            'Resized price: $57.60/month (4 nodes at $14.40/month each)'
           ).should('be.visible');
 
           cy.findByLabelText('Subtract 1')
@@ -2013,7 +2027,7 @@ describe('LKE cluster updates', () => {
 
           cy.findByLabelText('Edit Quantity').should('have.value', '3');
           cy.findByText(
-            'Resized pool: $43.20/month (3 nodes at $14.40/month)'
+            'Resized price: $43.20/month (3 nodes at $14.40/month each)'
           ).should('be.visible');
 
           ui.button
@@ -2234,12 +2248,12 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.disabled');
 
-          cy.findByText('Current pool: $0/month (1 node at $0/month)').should(
-            'be.visible'
-          );
-          cy.findByText('Resized pool: $0/month (1 node at $0/month)').should(
-            'be.visible'
-          );
+          cy.findByText(
+            'Current price: $0/month (1 node at $0/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $0/month (1 node at $0/month each)'
+          ).should('be.visible');
 
           cy.findByLabelText('Add 1')
             .should('be.visible')
@@ -2249,12 +2263,12 @@ describe('LKE cluster updates', () => {
             .click();
 
           cy.findByLabelText('Edit Quantity').should('have.value', '4');
-          cy.findByText('Current pool: $0/month (1 node at $0/month)').should(
-            'be.visible'
-          );
-          cy.findByText('Resized pool: $0/month (4 nodes at $0/month)').should(
-            'be.visible'
-          );
+          cy.findByText(
+            'Current price: $0/month (1 node at $0/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $0/month (4 nodes at $0/month each)'
+          ).should('be.visible');
 
           ui.button
             .findByTitle('Save Changes')

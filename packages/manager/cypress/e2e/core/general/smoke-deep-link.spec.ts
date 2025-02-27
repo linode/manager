@@ -1,4 +1,5 @@
 import { pages } from 'support/ui/constants';
+
 import type { Page } from 'support/ui/constants';
 
 beforeEach(() => {

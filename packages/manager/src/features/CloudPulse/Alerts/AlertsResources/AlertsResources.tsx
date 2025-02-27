@@ -4,6 +4,7 @@ import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -13,11 +14,12 @@ import {
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
+  getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
-import { serviceToFiltersMap } from './constants';
+import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
@@ -102,11 +104,33 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const [additionalFilters, setAdditionalFilters] = React.useState<
     Record<AlertAdditionalFilterKey, AlertFilterType>
-  >({ engineType: undefined });
+  >({ engineType: undefined, tags: undefined });
 
+  const {
+    data: regions,
+    isError: isRegionsError,
+    isLoading: isRegionsLoading,
+  } = useRegionsQuery();
+
+  const flags = useFlags();
+
+  // Validate launchDarkly region ids with the ids from regionOptions prop
+  const supportedRegionIds = getSupportedRegionIds(
+    flags.aclpResourceTypeMap,
+    serviceType
+  );
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+    const regionFilter: Filter = supportedRegionIds
+      ? {
+          '+or': supportedRegionIds.map((regionId) => ({
+            region: regionId,
+          })),
+        }
+      : {};
+
+    // if service type is other than dbaas, return only region filter
     if (serviceType !== 'dbaas') {
-      return undefined; // No x-filters needed for other serviceTypes
+      return regionFilter;
     }
 
     // Always include platform filter for 'dbaas'
@@ -117,22 +141,26 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       return platformFilter;
     }
 
-    // Apply type filter only for system alerts with a valid alertClass
+    // Dynamically exclude 'dedicated' if alertClass is 'shared'
+    const filteredTypes =
+      alertClass === 'shared'
+        ? Object.keys(databaseTypeClassMap).filter(
+            (type) => type !== 'dedicated'
+          )
+        : [alertClass];
+
+    // Apply type filter only for DBaaS user alerts with a valid alertClass based on above filtered types
     const typeFilter: Filter = {
-      type: {
-        '+contains': alertClass,
-      },
+      '+or': filteredTypes.map((dbType) => ({
+        type: {
+          '+contains': dbType,
+        },
+      })),
     };
 
-    // Combine both filters
-    return { ...platformFilter, ...typeFilter };
-  }, [alertClass, alertType, serviceType]);
-
-  const {
-    data: regions,
-    isError: isRegionsError,
-    isLoading: isRegionsLoading,
-  } = useRegionsQuery();
+    // Combine all the filters
+    return { ...platformFilter, '+and': [typeFilter, regionFilter] };
+  }, [alertClass, alertType, serviceType, supportedRegionIds]);
 
   const {
     data: resources,
@@ -308,12 +336,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       )}
       <Grid container spacing={3}>
         <Grid
-          alignItems="center"
           columnSpacing={2}
           container
           item
           rowSpacing={3}
           xs={12}
+          sx={{
+            alignItems: 'center',
+          }}
         >
           <Grid item md={3} xs={12}>
             <DebouncedSearchTextField
@@ -337,6 +367,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   handleFilterChange,
                   handleFilteredRegionsChange,
                   regionOptions,
+                  tagOptions: Array.from(
+                    new Set(
+                      resources
+                        ? resources.flatMap(({ tags }) => tags ?? [])
+                        : []
+                    )
+                  ),
                 })}
                 component={component}
               />
@@ -359,15 +396,18 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
-        {isSelectionsNeeded && !isDataLoadingError && resources?.length && (
-          <Grid item xs={12}>
-            <AlertsResourcesNotice
-              handleSelectionChange={handleAllSelection}
-              selectedResources={selectedResources.length}
-              totalResources={resources?.length ?? 0}
-            />
-          </Grid>
-        )}
+        {isSelectionsNeeded &&
+          !isDataLoadingError &&
+          resources &&
+          resources.length > 0 && (
+            <Grid item xs={12}>
+              <AlertsResourcesNotice
+                handleSelectionChange={handleAllSelection}
+                selectedResources={selectedResources.length}
+                totalResources={resources?.length ?? 0}
+              />
+            </Grid>
+          )}
         <Grid item xs={12}>
           <DisplayAlertResources
             scrollToElement={() =>

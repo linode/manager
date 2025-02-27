@@ -2,53 +2,62 @@
  * @file Integration Tests for the CloudPulse Alerts Listing Page.
  * This file verifies the UI, functionality, and sorting/filtering of the CloudPulse Alerts Listing Page.
  */
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { accountFactory, alertFactory } from 'src/factories';
+import { cloudPulseServiceMap } from 'support/constants/cloudpulse';
 import { mockGetAccount } from 'support/intercepts/account';
-import type { Flags } from 'src/featureFlags';
 import {
   mockGetAllAlertDefinitions,
   mockGetCloudPulseServices,
+  mockUpdateAlertDefinitions,
 } from 'support/intercepts/cloudpulse';
-import { formatDate } from 'src/utilities/formatDate';
-import { Alert } from '@linode/api-v4';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
-import { alertStatuses } from 'src/features/CloudPulse/Alerts/constants';
-import { cloudPulseServiceMap } from 'support/constants/cloudpulse';
 
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+import { accountFactory, alertFactory } from 'src/factories';
+import { alertStatuses } from 'src/features/CloudPulse/Alerts/constants';
+import { formatDate } from 'src/utilities/formatDate';
+
+import type { Alert } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
+
+const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
 const now = new Date();
 const mockAlerts = [
   alertFactory.build({
+    created_by: 'user1',
+    label: 'Alert-1',
     service_type: 'dbaas',
     severity: 1,
     status: 'enabled',
-    type: 'system',
-    created_by: 'user1',
+    type: 'user',
     updated: new Date(now.getTime() - 86400).toISOString(),
   }),
   alertFactory.build({
+    created_by: 'user4',
+    label: 'Alert-2',
     service_type: 'dbaas',
     severity: 0,
     status: 'disabled',
+    type: 'user',
     updated: new Date(now.getTime() - 10 * 86400).toISOString(),
-    created_by: 'user4',
   }),
   alertFactory.build({
+    created_by: 'user2',
+    label: 'Alert-3',
     service_type: 'linode',
     severity: 2,
     status: 'enabled',
+    type: 'user',
     updated: new Date(now.getTime() - 6 * 86400).toISOString(),
-    created_by: 'user2',
   }),
   alertFactory.build({
+    created_by: 'user3',
+    label: 'Alert-4',
     service_type: 'linode',
     severity: 3,
     status: 'disabled',
     type: 'user',
     updated: new Date(now.getTime() - 4 * 86400).toISOString(),
-    created_by: 'user3',
   }),
 ];
 
@@ -86,10 +95,8 @@ const verifyTableSorting = (
   sortOrder: 'ascending' | 'descending',
   expectedValues: number[]
 ) => {
-  ui.heading
-    .findByText(header)
-    .click()
-    .should('have.attr', 'aria-sort', sortOrder);
+  ui.heading.findByText(header).click();
+  ui.heading.findByText(header).should('have.attr', 'aria-sort', sortOrder);
 
   cy.get('[data-qa="alert-table"]').within(() => {
     cy.get('[data-qa-alert-cell]').should(($cells) => {
@@ -109,7 +116,7 @@ const verifyTableSorting = (
  * @param {Alert} alert - The alert object to validate.
  */
 const validateAlertDetails = (alert: Alert) => {
-  const { id, service_type, status, label, updated, created_by } = alert;
+  const { created_by, id, label, service_type, status, updated } = alert;
 
   cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
     cy.findByText(cloudPulseServiceMap[service_type])
@@ -138,33 +145,47 @@ const validateAlertDetails = (alert: Alert) => {
 };
 
 describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
+  /*
+   * - Verifies UI elements, navigation, and alert details in the listing page.
+   * - Confirms sorting functionality for multiple columns (Alert Name, Service, Status, Last Modified, Created By).
+   * - Validates filtering and search functionality for alerts by name, service, and status.
+   * - Ensures users can disable and enable alerts successfully.
+   * - Confirms UI properly updates alert statuses after enabling or disabling alerts.
+   * - Ensures API calls return correct responses and status codes.
+   */
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
     mockGetCloudPulseServices(['linode', 'dbaas']);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
+    mockUpdateAlertDefinitions('dbaas', 1, mockAlerts[0]).as(
+      'getFirstAlertDefinitions'
+    );
+    mockUpdateAlertDefinitions('dbaas', 2, mockAlerts[1]).as(
+      'getSecondAlertDefinitions'
+    );
     cy.visitWithLogin('/monitor/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
   });
 
   it('should verify sorting functionality for multiple columns in ascending and descending order', () => {
     const sortCases = [
-      { column: 'label', descending: [4, 3, 2, 1], ascending: [1, 2, 3, 4] },
-      { column: 'status', descending: [1, 3, 2, 4], ascending: [2, 4, 1, 3] },
+      { ascending: [1, 2, 3, 4], column: 'label', descending: [4, 3, 2, 1] },
+      { ascending: [2, 4, 1, 3], column: 'status', descending: [1, 3, 2, 4] },
       {
+        ascending: [2, 1, 4, 3],
         column: 'service_type',
         descending: [4, 3, 2, 1],
-        ascending: [2, 1, 4, 3],
       },
       {
+        ascending: [1, 3, 4, 2],
         column: 'created_by',
         descending: [2, 4, 3, 1],
-        ascending: [1, 3, 4, 2],
       },
-      { column: 'updated', descending: [1, 4, 3, 2], ascending: [2, 3, 4, 1] },
+      { ascending: [2, 3, 4, 1], column: 'updated', descending: [1, 4, 3, 2] },
     ];
 
-    sortCases.forEach(({ column, descending, ascending }) => {
+    sortCases.forEach(({ ascending, column, descending }) => {
       // Verify descending order
       verifyTableSorting(column, 'descending', descending);
 
@@ -242,8 +263,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       ui.button
         .findByAttribute('aria-label', 'Clear')
         .should('be.visible')
-        .scrollIntoView()
-        .click();
+        .scrollIntoView();
+      ui.button.findByAttribute('aria-label', 'Clear').click();
     });
 
     // Filter by alert status and validate the results
@@ -267,5 +288,59 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         'not.exist'
       );
     });
+  });
+
+  it('should disable and enable user alerts successfully', () => {
+    // Function to search for an alert
+    const searchAlert = (alertName: string) => {
+      cy.findByPlaceholderText('Search for Alerts')
+        .should('be.visible')
+        .and('not.be.disabled')
+        .clear();
+      cy.findByPlaceholderText('Search for Alerts').type(alertName);
+
+      cy.focused().click();
+    };
+
+    // Function to toggle an alert's status
+    const toggleAlertStatus = (
+      alertName: string,
+      action: 'Disable' | 'Enable',
+      alias: string,
+      successMessage: string
+    ) => {
+      cy.findByText(alertName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          ui.actionMenu
+            .findByTitle(`Action menu for Alert ${alertName}`)
+            .should('be.visible')
+            .click();
+        });
+
+      ui.actionMenuItem.findByTitle(action).should('be.visible').click();
+
+      cy.wait(alias).then(({ response }) => {
+        ui.toast.assertMessage(successMessage);
+      });
+    };
+    // Disable "Alert-1"
+    searchAlert('Alert-1');
+    toggleAlertStatus(
+      'Alert-1',
+      'Disable',
+      '@getFirstAlertDefinitions',
+      'Alert disabled'
+    );
+
+    // Enable "Alert-2"
+    searchAlert('Alert-2');
+    toggleAlertStatus(
+      'Alert-2',
+      'Enable',
+      '@getSecondAlertDefinitions',
+      'Alert enabled'
+    );
   });
 });

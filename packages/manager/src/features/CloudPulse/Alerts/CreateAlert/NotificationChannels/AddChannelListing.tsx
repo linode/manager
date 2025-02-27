@@ -1,9 +1,9 @@
 import { Box, Button, Stack, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useAllAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
-import { capitalize } from 'src/utilities/capitalize';
 
 import { channelTypeOptions } from '../../constants';
 import { getAlertBoxStyles } from '../../Utils/utils';
@@ -151,6 +151,7 @@ export const AddChannelListing = React.memo((props: AddChannelListingProps) => {
       </Stack>
       <Button
         buttonType="outlined"
+        data-qa-buttons="true"
         onClick={handleOpenDrawer}
         size="medium"
         sx={(theme) => ({ marginTop: theme.spacing(2) })}
