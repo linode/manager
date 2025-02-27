@@ -6,9 +6,9 @@ import { useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
-import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
 import { NO_ASSIGNED_ENTITIES_TEXT } from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
+import { AssignedEntitiesTable } from './AssignedEntitiesTable';
 
 export const UserEntities = () => {
   const { username } = useParams<{ username: string }>();

@@ -16,6 +16,7 @@ export type AccountAccessType =
   | 'linode_creator'
   | 'linode_contributor'
   | 'account_admin'
+  | 'account_viewer'
   | 'firewall_creator';
 
 export type RoleType =

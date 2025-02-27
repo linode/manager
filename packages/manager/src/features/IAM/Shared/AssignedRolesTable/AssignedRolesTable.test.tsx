@@ -60,7 +60,7 @@ describe('AssignedRolesTable', () => {
     );
 
     expect(getByText('account_linode_admin')).toBeInTheDocument();
-    expect(getAllByText('All linodes')[0]).toBeInTheDocument();
+    expect(getAllByText('All Linodes')[0]).toBeInTheDocument();
 
     const actionMenuButton = getAllByLabelText('action menu')[0];
     expect(actionMenuButton).toBeInTheDocument();
