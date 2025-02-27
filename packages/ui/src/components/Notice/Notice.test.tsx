@@ -10,7 +10,7 @@ describe('Notice Component', () => {
     const { container } = renderWithTheme(<Notice />);
     const notice = container.firstChild;
 
-    expect(notice).toHaveStyle('margin-bottom: 24px');
+    expect(notice).toHaveStyle('margin-bottom: 8px');
     expect(notice).toHaveStyle('margin-left: 0');
     expect(notice).toHaveStyle('margin-top: 0');
   });
