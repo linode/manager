@@ -251,7 +251,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(linodeId, open);
 
-  const linodeInterfacesFlag = useIsLinodeInterfacesEnabled();
+  const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -997,7 +997,7 @@ export const LinodeConfigDialog = (props: Props) => {
             <Grid size={12}>
               <Box alignItems="center" display="flex">
                 {(isLegacyConfigInterface ||
-                  (isLinodeInterface && linodeInterfacesFlag?.enabled)) && (
+                  (isLinodeInterface && isLinodeInterfaceEnabled)) && (
                   <Typography variant="h3">Networking</Typography>
                 )}
                 {isLegacyConfigInterface && (
@@ -1012,7 +1012,7 @@ export const LinodeConfigDialog = (props: Props) => {
                   />
                 )}
               </Box>
-              {isLinodeInterface && linodeInterfacesFlag?.enabled && (
+              {isLinodeInterface && isLinodeInterfaceEnabled && (
                 <>
                   <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
                     Go to{' '}

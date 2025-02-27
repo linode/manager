@@ -3,23 +3,22 @@ import {
   mockUpdateAccount,
   mockUpdateAccountAgreements,
 } from 'support/intercepts/account';
-import { accountFactory } from 'src/factories/account';
-import type { Account } from '@linode/api-v4';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
+
+import { accountAgreementsFactory } from 'src/factories';
+import { accountFactory } from 'src/factories/account';
 import {
   TAX_ID_AGREEMENT_TEXT,
   TAX_ID_HELPER_TEXT,
 } from 'src/features/Billing/constants';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
-import { accountAgreementsFactory } from 'src/factories';
+
+import type { Account } from '@linode/api-v4';
 
 /* eslint-disable sonarjs/no-duplicate-string */
 const accountData = accountFactory.build({
-  company: 'company_name',
-  email: 'test_email@linode.com',
-  first_name: 'First name',
-  last_name: 'Last Name',
+  active_promotions: [],
   address_1: 'terrible address address for test',
   address_2: 'Very long address for test Very long address for test Ve ',
   balance: 0,
@@ -32,25 +31,28 @@ const accountData = accountFactory.build({
     'Kubernetes',
   ],
   city: 'philadelphia',
+  company: 'company_name',
   country: 'US',
-  credit_card: { last_four: '4000', expiry: '01/2090' },
+  credit_card: { expiry: '01/2090', last_four: '4000' },
+  email: 'test_email@linode.com',
   euuid: '7C1E3EE8-2F65-418A-95EF12E477XXXXXX',
+  first_name: 'First name',
+  last_name: 'Last Name',
   phone: '2154444444',
   state: 'Pennsylvania',
   tax_id: '1234567890',
   zip: '19109',
-  active_promotions: [],
 });
 
 const newAccountData = accountFactory.build({
-  company: 'New company_name',
-  email: 'new_test_email@linode.com',
-  first_name: 'NewFirstName',
-  last_name: 'New Last Name',
   address_1: 'new terrible address address for test',
   address_2: 'new Very long address for test Very long address for test Ve ',
   city: 'New Philadelphia',
+  company: 'New company_name',
   country: 'FR',
+  email: 'new_test_email@linode.com',
+  first_name: 'NewFirstName',
+  last_name: 'New Last Name',
   phone: '6104444444',
   state: 'Pennsylvania',
   tax_id: '9234567890',
