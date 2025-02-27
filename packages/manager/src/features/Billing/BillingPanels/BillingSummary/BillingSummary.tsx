@@ -1,6 +1,6 @@
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -16,8 +16,6 @@ import { PromoDisplay } from './PromoDisplay';
 
 import type { PaymentMethod } from '@linode/api-v4';
 import type { ActivePromotion } from '@linode/api-v4/lib/account/types';
-import type { GridSize } from '@mui/material';
-import type { Breakpoint } from '@mui/material/styles';
 
 interface BillingSummaryProps {
   balance: number;
@@ -123,7 +121,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   };
 
   // The layout changes if there are promotions.
-  const gridDimensions: Partial<Record<Breakpoint, GridSize>> =
+  const gridDimensions =
     promotions && promotions.length > 0 ? { md: 4, xs: 12 } : { sm: 6, xs: 12 };
 
   const balanceJSX =
@@ -156,17 +154,17 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   return (
     <>
       <Grid
-        container
-        spacing={2}
-        size={12}
         sx={{
           margin: 0,
         }}
+        container
+        size={12}
+        spacing={2}
       >
         <Grid
-          {...gridDimensions}
           size={{
             sm: 6,
+            ...gridDimensions,
           }}
         >
           <BillingPaper variant="outlined">
@@ -235,7 +233,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
             </BillingPaper>
           </Grid>
         ) : null}
-        <Grid {...gridDimensions}>
+        <Grid size={gridDimensions}>
           <BillingPaper variant="outlined">
             <Box alignItems="center" display="flex">
               <Typography variant="h3">Accrued Charges</Typography>

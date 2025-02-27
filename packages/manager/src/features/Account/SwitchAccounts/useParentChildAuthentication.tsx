@@ -2,6 +2,7 @@ import {
   deletePersonalAccessToken,
   getPersonalAccessTokens,
 } from '@linode/api-v4';
+import { useCreateChildAccountPersonalAccessTokenMutation } from '@linode/queries';
 import { useCallback } from 'react';
 
 import {
@@ -9,14 +10,13 @@ import {
   isParentTokenValid,
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/SwitchAccounts/utils';
-import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { useCreateChildAccountPersonalAccessTokenMutation } from '@linode/queries';
+import { getAuthToken } from 'src/utilities/authentication';
 import { getStorage } from 'src/utilities/storage';
 
 import type { Token, UserType } from '@linode/api-v4';
 
 export const useParentChildAuthentication = () => {
-  const currentTokenWithBearer = useCurrentToken() ?? '';
+  const currentTokenWithBearer = getAuthToken().token;
 
   const {
     error: createTokenError,

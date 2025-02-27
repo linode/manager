@@ -132,9 +132,7 @@ describe('DeletionDialog', () => {
     expect(deleteButton).toBeInTheDocument();
     expect(deleteButton).toBeDisabled();
 
-    const loadingSvgIcon = deleteButton.querySelector(
-      '[data-testid="loadingIcon"]'
-    );
+    const loadingSvgIcon = deleteButton.querySelector('[role="progressbar"]');
 
     expect(loadingSvgIcon).toBeInTheDocument();
   });

@@ -252,6 +252,12 @@ export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   });
 };
 
+export const useFirewallTemplatesQuery = () => {
+  return useQuery<FirewallTemplate[], APIError[]>({
+    ...firewallQueries.templates,
+  });
+};
+
 export const useFirewallQuery = (id: number) =>
   useQuery<Firewall, APIError[]>(firewallQueries.firewall(id));
 

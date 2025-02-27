@@ -1,4 +1,6 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon } from '@linode/ui';
+import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -6,8 +8,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useRegionsQuery } from '@linode/queries';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';

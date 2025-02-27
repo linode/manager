@@ -1,4 +1,5 @@
 import { Notice } from '@linode/ui';
+import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
@@ -12,7 +13,6 @@ import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
 import { LinodeEntityDetailFooter } from './LinodeEntityDetailFooter';

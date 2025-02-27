@@ -216,6 +216,8 @@ export const NodePool = (props: Props) => {
       data-qa-node-pool-section
       expanded={accordionExpanded}
       onChange={handleAccordionClick}
+      // Improve performance by unmounting large content from the DOM when collapsed
+      slotProps={{ transition: { unmountOnExit: nodes.length > 25 } }}
     >
       <NodeTable
         clusterCreated={clusterCreated}

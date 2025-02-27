@@ -1,5 +1,5 @@
 import { Button, Stack } from '@linode/ui';
-import { capitalizeAllWords } from '@linode/utilities';
+import { capitalizeAllWords, formatStorageUnits } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import React from 'react';
 
@@ -9,7 +9,6 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 import { getLinodeIconStatus } from '../../LinodesLanding/utils';

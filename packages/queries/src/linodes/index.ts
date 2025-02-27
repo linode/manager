@@ -3,6 +3,7 @@ export * from './backups';
 export * from './configs';
 export * from './disks';
 export * from './firewalls';
+export * from './interfaces';
 export * from './linodes';
 export * from './networking';
 export * from './requests';

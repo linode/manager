@@ -32,8 +32,8 @@
     ]
   },
   "dependencies": {
-    "@linode/api-v4": "*",
-    "@linode/utilities": "*",
+    "@linode/api-v4": "workspace:*",
+    "@linode/utilities": "workspace:*",
     "@lukemorales/query-key-factory": "^1.3.4",
     "@tanstack/react-query": "5.51.24",
     "react": "^18.2.0",

@@ -38,6 +38,7 @@ import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryp
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -48,6 +49,7 @@ import {
 } from 'src/queries/volumes/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
@@ -62,7 +64,7 @@ import { SIZE_FIELD_WIDTH } from './constants';
 import { ConfigSelect } from './Drawers/VolumeDrawer/ConfigSelect';
 import { SizeField } from './Drawers/VolumeDrawer/SizeField';
 
-import type { VolumeEncryption } from '@linode/api-v4';
+import type { APIError, VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Theme } from '@mui/material/styles';
 
@@ -188,7 +190,15 @@ export const VolumeCreate = () => {
   } = useFormik({
     initialValues,
     onSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting }) => {
-      const { config_id, encryption, label, linode_id, region, size } = values;
+      const {
+        config_id,
+        encryption,
+        label,
+        linode_id,
+        region,
+        size,
+        tags,
+      } = values;
 
       setSubmitting(true);
 
@@ -212,6 +222,7 @@ export const VolumeCreate = () => {
           linode_id === null ? undefined : maybeCastToNumber(linode_id),
         region: isNilOrEmpty(region) || region === 'none' ? undefined : region,
         size: maybeCastToNumber(size),
+        tags,
       })
         .then((volume) => {
           if (hasSignedAgreement) {
@@ -368,6 +379,30 @@ export const VolumeCreate = () => {
               tooltipPosition="right"
               value={values.label}
             />
+            <Box className={classes.select}>
+              <TagsInput
+                onChange={(items) =>
+                  setFieldValue(
+                    'tags',
+                    items.map((t) => t.value)
+                  )
+                }
+                tagError={
+                  touched.tags
+                    ? errors.tags
+                      ? getErrorStringOrDefault(
+                          (errors.tags as unknown) as APIError[],
+                          'Unable to tag volume.'
+                        )
+                      : undefined
+                    : undefined
+                }
+                disabled={doesNotHavePermission}
+                label="Tags"
+                name="tags"
+                value={values.tags.map((tag) => ({ label: tag, value: tag }))}
+              />
+            </Box>
             <Box alignItems="flex-end" display="flex">
               <RegionSelect
                 onChange={(e, region) => {
@@ -543,6 +578,7 @@ interface FormState {
   linode_id: null | number;
   region: string;
   size: number;
+  tags: string[];
 }
 
 const initialValues: FormState = {
@@ -552,4 +588,5 @@ const initialValues: FormState = {
   linode_id: null,
   region: '',
   size: 20,
+  tags: [],
 };

@@ -520,10 +520,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'save-contact-info',
-          disabled:
-            isReadOnly ||
-            (nonUSCountry &&
-              (!billingAgreementChecked || !formik.values.tax_id)),
+          disabled: isReadOnly || (nonUSCountry && !billingAgreementChecked),
           label: 'Save Changes',
           loading: isPending,
           type: 'submit',

@@ -96,7 +96,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionID || '',
-    Boolean(flags.soldOutChips) && selectedRegionID !== undefined
+    Boolean(flags.soldOutChips) && Boolean(selectedRegionID)
   );
 
   const _types = types.filter((type) => {

@@ -112,7 +112,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
       ) => ({
         queryFn: () =>
           useBetaEndpoint
-            ? getKubernetesClustersBeta()
+            ? getKubernetesClustersBeta(params, filter)
             : getKubernetesClusters(params, filter),
         queryKey: [params, filter, useBetaEndpoint ? 'v4beta' : 'v4'],
       }),

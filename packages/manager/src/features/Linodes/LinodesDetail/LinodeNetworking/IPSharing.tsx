@@ -1,4 +1,11 @@
 import {
+  useAllDetailedIPv6RangesQuery,
+  useAllLinodesQuery,
+  useLinodeIPsQuery,
+  useLinodeQuery,
+  useLinodeShareIPMutation,
+} from '@linode/queries';
+import {
   Button,
   CircleProgress,
   Dialog,
@@ -8,8 +15,9 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
+import { areArraysEqual } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 
@@ -17,14 +25,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import {
-  useAllLinodesQuery,
-  useLinodeQuery,
-  useLinodeIPsQuery,
-  useLinodeShareIPMutation,
-  useAllDetailedIPv6RangesQuery,
-} from '@linode/queries';
-import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import type { Linode } from '@linode/api-v4/lib/linodes';
@@ -532,13 +532,13 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       </Grid>
       {handleDelete ? (
         <Grid
+          size={{
+            sm: 2,
+          }}
           sx={{
             [theme.breakpoints.down('sm')]: {
               width: '100%',
             },
-          }}
-          size={{
-            sm: 2,
           }}
         >
           <Button

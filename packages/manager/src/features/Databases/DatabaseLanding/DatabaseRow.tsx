@@ -1,4 +1,5 @@
 import { Chip } from '@linode/ui';
+import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -13,7 +14,6 @@ import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useProfile, useRegionsQuery } from '@linode/queries';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import type { Event } from '@linode/api-v4';
 import type {

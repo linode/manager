@@ -23,7 +23,7 @@ describe('UserDetailsPanel', () => {
     expect(getByText(user.email)).toBeVisible();
   });
 
-  it("renders 'no roles assigned' if the user doesn't have the assigned roles", async () => {
+  it("renders 'No Roles Assigned' if the user doesn't have the assigned roles", async () => {
     const user = accountUserFactory.build({ restricted: true });
     const assignedRoles = { account_access: [], resource_access: [] };
 
@@ -32,7 +32,7 @@ describe('UserDetailsPanel', () => {
     );
 
     expect(getByText('Access')).toBeVisible();
-    expect(getByText('no roles assigned')).toBeVisible();
+    expect(getByText('No Roles Assigned')).toBeVisible();
   });
 
   it("renders '5 roles assigned' if the user has 5 different roles", async () => {

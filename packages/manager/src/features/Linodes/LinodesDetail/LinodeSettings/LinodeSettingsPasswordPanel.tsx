@@ -14,8 +14,10 @@ import {
 import { useTypeQuery } from 'src/queries/types';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-const PasswordInput = React.lazy(
-  () => import('src/components/PasswordInput/PasswordInput')
+const PasswordInput = React.lazy(() =>
+  import('src/components/PasswordInput/PasswordInput').then((module) => ({
+    default: module.PasswordInput,
+  }))
 );
 
 interface Props {
