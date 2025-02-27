@@ -213,7 +213,7 @@ export const Region = React.memo(() => {
   }
 
   return (
-    <Paper>
+    <Paper data-qa-linode-region>
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink
