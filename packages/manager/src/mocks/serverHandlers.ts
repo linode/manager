@@ -2474,12 +2474,18 @@ export const handlers = [
     async ({ params }) => {
       const serviceType = params.serviceType;
       return HttpResponse.json({
-        data: alertFactory.buildList(20, {
-          rule_criteria: {
-            rules: alertRulesFactory.buildList(2),
-          },
-          service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
-        }),
+        data: [
+          ...alertFactory.buildList(20, {
+            rule_criteria: {
+              rules: alertRulesFactory.buildList(2),
+            },
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+          }),
+          ...alertFactory.buildList(5, {
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            type: 'user',
+          }),
+        ],
       });
     }
   ),

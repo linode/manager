@@ -38,15 +38,15 @@ export const MetricThreshold = (props: MetricThresholdProps) => {
           <Chip
             sx={(theme) => {
               return {
-                backgroundColor: theme.bg.offWhite,
-                border: '1px solid',
-                borderColors: theme.borderColors.borderFocus,
-                borderRadius: '4px',
+                backgroundColor: theme.color.tagButtonBg,
+                color: theme.color.tagButtonText,
                 px: 0.5,
                 py: 1.5,
               };
             }}
+            color="primary"
             label={`+${total}`}
+            variant="outlined"
           />
         </span>
       </Tooltip>

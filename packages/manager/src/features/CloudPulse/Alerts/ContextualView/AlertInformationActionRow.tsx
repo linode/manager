@@ -1,4 +1,5 @@
 import { FormControlLabel, Toggle, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -54,7 +55,7 @@ export const AlertInformationActionRow = (
         <MetricThreshold metricThreshold={metricThreshold} />
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle1">{type}</Typography>
+        <Typography variant="subtitle1">{capitalize(type)}</Typography>
       </TableCell>
     </TableRow>
   );
