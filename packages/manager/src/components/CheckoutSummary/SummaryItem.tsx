@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import Grid2 from '@mui/material/Grid2';
 import React from 'react';
 
 import type { SummaryItem as Props } from './CheckoutSummary';

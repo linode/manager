@@ -1,5 +1,5 @@
 import { isEmpty } from '@linode/api-v4';
-import { CircleProgress, Stack } from '@linode/ui';
+import { CircleProgress, Notice, Stack } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -14,6 +14,8 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useMutateAccountAgreements } from 'src/queries/account/agreements';
 import {
@@ -94,6 +96,10 @@ export const LinodeCreate = () => {
   } = useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
 
   const currentTabIndex = getTabIndex(params.type);
+
+  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
 
   const onTabChange = (index: number) => {
     if (index !== currentTabIndex) {
@@ -197,6 +203,18 @@ export const LinodeCreate = () => {
               <Tab>Backups</Tab>
               <Tab>Clone Linode</Tab>
             </TabList>
+            {isLinodeCreateRestricted && (
+              <Notice
+                text={getRestrictedResourceText({
+                  action: 'create',
+                  isSingular: false,
+                  resourceType: 'Linodes',
+                })}
+                important
+                sx={{ marginBottom: 2 }}
+                variant="error"
+              />
+            )}
             <TabPanels>
               <SafeTabPanel index={0}>
                 <OperatingSystems />

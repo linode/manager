@@ -7,11 +7,11 @@ import {
   RadioGroup,
   TooltipIcon,
 } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { capitalize } from 'src/utilities/capitalize';
 
 import type { MigrationTypes } from '@linode/api-v4/lib/linodes';
 import type { ResizeLinodePayload } from '@linode/api-v4/lib/linodes/types';

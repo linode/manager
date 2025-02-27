@@ -1,3 +1,17 @@
+## [2025-02-25] - v0.61.0
+
+
+### Removed:
+
+- Required `entity_ids` from `createAlertDefinitionSchema` ([#11649](https://github.com/linode/manager/pull/11649))
+
+## [2025-02-19] - v0.60.1
+
+### Fixed:
+
+- Inability to add LKE Node Pool Labels with underscore in key ([#11682](https://github.com/linode/manager/pull/11682))
+
+
 ## [2025-02-11] - v0.60.0
 
 

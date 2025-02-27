@@ -156,7 +156,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
   }
 
   return (
-    <Box sx={{ height: 500, overflow: 'auto' }}>
+    <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
       <TextField
         InputProps={{
           endAdornment: query && (

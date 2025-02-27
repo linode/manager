@@ -34,6 +34,7 @@ const alertDetails = alertFactory.build({
   severity: 1,
   status: 'enabled',
   type: 'system',
+  entity_ids: ['1', '2', '3'],
 });
 const { service_type, id, label } = alertDetails;
 const regions = [
@@ -61,14 +62,14 @@ const pages = [1, 2];
 
 describe('Integration Tests for Edit Alert', () => {
   /*
- * - Confirms navigation from the Alert Definitions List page to the Edit Alert page.
- * - Confirms alert creation is successful using mock API data.
- * - Confirms that UI handles API interactions and displays correct data.
- * - Confirms that UI redirects back to the Alert Definitions List page after saving updates.
- * - Confirms that a toast notification appears upon successful alert update.
- * - Confirms that UI redirects to the alert listing page after creating an alert.
- * - Confirms that after submitting, the data matches with the API response.
- */
+   * - Confirms navigation from the Alert Definitions List page to the Edit Alert page.
+   * - Confirms alert creation is successful using mock API data.
+   * - Confirms that UI handles API interactions and displays correct data.
+   * - Confirms that UI redirects back to the Alert Definitions List page after saving updates.
+   * - Confirms that a toast notification appears upon successful alert update.
+   * - Confirms that UI redirects to the alert listing page after creating an alert.
+   * - Confirms that after submitting, the data matches with the API response.
+   */
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
@@ -120,29 +121,21 @@ describe('Integration Tests for Edit Alert', () => {
     // Verify that the heading with text 'region' is visible
     ui.heading.findByText('region').should('be.visible');
 
-    // Verify the initial selection of resources
-    cy.get('[data-qa-notice="true"]').should(
-      'contain.text',
-      '3 of 50 resources are selected'
-    );
-    // Select all resources
-    cy.get('[data-qa-notice="true"]').within(() => {
-      ui.button
-        .findByTitle('Select All')
-        .should('be.visible')
-        .click();
+    // Verify the initial selection of resources, then select all resources.
+    cy.findByText('3 of 50 resources are selected.')
+      .should('be.visible')
+      .closest('[data-qa-notice]')
+      .within(() => {
+        ui.button.findByTitle('Select All').should('be.visible').click();
 
-      // Unselect button should be visible after clicking on Select All button
-      ui.button
-        .findByTitle('Unselect All')
-        .should('be.visible')
-        .should('be.enabled');
-    });
+        ui.button
+          .findByTitle('Unselect All')
+          .should('be.visible')
+          .should('be.enabled');
+      });
 
-    cy.get('[data-qa-notice="true"]').should(
-      'contain.text',
-      '50 of 50 resources are selected'
-    );
+    // Confirm notice text updates to reflect selection.
+    cy.findByText('50 of 50 resources are selected.').should('be.visible');
 
     // Verify the initial state of the page size
     ui.pagination.findPageSizeSelect().click();

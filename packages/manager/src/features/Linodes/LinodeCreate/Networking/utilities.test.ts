@@ -16,7 +16,6 @@ describe('Linode Create Networking Utilities', () => {
             ],
           },
           ipv6: {
-            addresses: [],
             ranges: [],
           },
         },

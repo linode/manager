@@ -114,7 +114,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
       ) => ({
         queryFn: () =>
           useBetaEndpoint
-            ? getKubernetesClustersBeta()
+            ? getKubernetesClustersBeta(params, filter)
             : getKubernetesClusters(params, filter),
         queryKey: [params, filter, useBetaEndpoint ? 'v4beta' : 'v4'],
       }),
@@ -137,14 +137,19 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   },
 });
 
-export const useKubernetesClusterQuery = (id: number) => {
+export const useKubernetesClusterQuery = (
+  id: number,
+  enabled = true,
+  options = {}
+) => {
   const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const useBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
 
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.cluster(useBetaEndpoint),
-    enabled: !isAPLAvailabilityLoading,
+    enabled: enabled && !isAPLAvailabilityLoading,
+    ...options,
   });
 };
 

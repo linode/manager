@@ -1,3 +1,4 @@
+import { capitalize } from '@linode/utilities';
 import { screen, within } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
@@ -9,7 +10,6 @@ import DatabaseLanding from 'src/features/Databases/DatabaseLanding/DatabaseLand
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,

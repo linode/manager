@@ -39,7 +39,7 @@ export const StyledActiveLink = styled(Link, {
   cursor: 'pointer',
   display: 'flex',
   font: theme.tokens.typography.Body.Semibold,
-  minHeight: 32,
+  height: 32,
   minWidth: SIDEBAR_WIDTH,
   padding: `8px 8px 8px 48px`,
   position: 'relative',
@@ -114,6 +114,9 @@ export const StyledAccordion = styled(Accordion, {
       color: theme.tokens.color.Neutrals['White'],
       height: 16,
       width: 16,
+    },
+    '.MuiAccordionSummary-root': {
+      transition: 'none',
     },
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
       '&:hover': {
