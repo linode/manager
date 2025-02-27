@@ -97,7 +97,7 @@ export const createKubeClusterSchema = object().shape({
 });
 
 export const createKubeEnterpriseClusterSchema = object().shape({
-  createKubeClusterSchema,
+  ...createKubeClusterSchema.fields,
   control_plane: controlPlaneEnterpriseACLOptionsSchema
     .test(
       'validateIPForEnterprise',
