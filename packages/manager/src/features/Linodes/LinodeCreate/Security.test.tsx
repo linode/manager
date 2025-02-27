@@ -162,7 +162,7 @@ describe('Security', () => {
 
   it('should disable the disk encryption checkbox (but show it as enabled) if the selected region is a distributed region', async () => {
     const region = regionFactory.build({
-      capabilities: [],
+      capabilities: ['Disk Encryption'],
       site_type: 'distributed',
     });
 
@@ -192,6 +192,7 @@ describe('Security', () => {
 
     const checkbox = getByLabelText('Encrypt Disk');
 
+    expect(checkbox).toBeChecked();
     expect(checkbox).toBeDisabled();
   });
 });
