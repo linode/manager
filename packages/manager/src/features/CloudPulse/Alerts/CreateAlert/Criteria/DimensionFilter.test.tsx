@@ -140,4 +140,32 @@ describe('DimensionFilterField', () => {
       expect(container.queryByTestId(dimensionFilterID)).not.toBeInTheDocument()
     );
   });
+  it('should show tooltip when the max limit of dimension filters is reached', async () => {
+    const {getByRole, getByText} = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
+      {
+        component: (
+          <DimensionFilters
+            dataFieldDisabled={true}
+            dimensionOptions={mockData[0].dimensions}
+            name={`rule_criteria.rules.${0}.dimension_filters`}
+          />
+        ),
+        useFormOptions: {
+          defaultValues: {
+            rule_criteria: {
+              rules: [mockData[0]],
+            },
+            serviceType: 'linode',
+          },
+        },
+      }
+    );
+    const addButton = getByRole('button', {name: dimensionFilterButton});
+    for(let i=0;i<5; i++){
+      await user.click(addButton);
+    }
+    expect(addButton).toBeDisabled();
+    userEvent.hover(addButton);
+    await waitFor(() => expect(getByText('You can add up to 5 dimension filters.')).toBeInTheDocument());
+  })
 });

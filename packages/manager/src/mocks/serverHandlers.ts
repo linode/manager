@@ -2519,10 +2519,6 @@ export const handlers = [
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
-  http.get('*/monitor/alert-channels', () => {
-    const notificationChannels = notificationChannelFactory.buildList(3);
-    return HttpResponse.json(makeResourcePage(notificationChannels));
-  }),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions/:id',
     ({ params }) => {
@@ -2564,7 +2560,7 @@ export const handlers = [
   ),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
-      makeResourcePage(notificationChannelFactory.buildList(3))
+      makeResourcePage(notificationChannelFactory.buildList(7))
     );
   }),
   http.get('*/monitor/services', () => {
