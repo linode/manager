@@ -130,9 +130,10 @@ describe('Security', () => {
     expect(heading.tagName).toBe('H3');
   });
 
-  it('should disable disk encryption if the selected region does not support it', async () => {
+  it('should disable disk encryption if the selected core region does not support it', async () => {
     const region = regionFactory.build({
       capabilities: [],
+      site_type: 'core',
     });
 
     const account = accountFactory.build({ capabilities: ['Disk Encryption'] });
@@ -157,5 +158,40 @@ describe('Security', () => {
     await findByLabelText(
       'Disk encryption is not available in the selected region. Select another region to use Disk Encryption.'
     );
+  });
+
+  it('should disable the disk encryption checkbox (but show it as enabled) if the selected region is a distributed region', async () => {
+    const region = regionFactory.build({
+      capabilities: [],
+      site_type: 'distributed',
+    });
+
+    const account = accountFactory.build({ capabilities: ['Disk Encryption'] });
+
+    server.use(
+      http.get('*/v4/account', () => {
+        return HttpResponse.json(account);
+      }),
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([region]));
+      })
+    );
+
+    const {
+      findByLabelText,
+      getByLabelText,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Security />,
+      options: { flags: { linodeDiskEncryption: true } },
+      useFormOptions: { defaultValues: { region: region.id } },
+    });
+
+    await findByLabelText(
+      'Distributed Compute Instances are encrypted. This setting can not be changed.'
+    );
+
+    const checkbox = getByLabelText('Encrypt Disk');
+
+    expect(checkbox).toBeDisabled();
   });
 });
