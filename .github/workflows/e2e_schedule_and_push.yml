@@ -35,7 +35,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-          cache: "pnpm"
       - run: |
           echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
@@ -54,9 +53,9 @@ jobs:
           echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
-          pnpm install:all
-          pnpm build
-          pnpm start:manager:ci &
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run --filter @linode/validation build
+      - run: pnpm run --filter @linode/api-v4 build
       - name: Run tests
         uses: cypress-io/github-action@v6
         with:
@@ -64,6 +63,8 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 1000
           install: false
+          build: pnpm run build
+          start: pnpm start:ci
           browser: chrome
           record: true
           parallel: true
