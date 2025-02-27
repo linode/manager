@@ -6,7 +6,8 @@
     "husky": "^9.1.6",
     "concurrently": "9.1.0",
     "typescript": "^5.7.3",
-    "vitest": "^3.0.7"
+    "vitest": "^3.0.7",
+    "@vitest/ui": "^3.0.7"
   },
   "scripts": {
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
