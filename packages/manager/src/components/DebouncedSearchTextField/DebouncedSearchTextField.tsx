@@ -5,10 +5,12 @@ import {
   TextField,
 } from '@linode/ui';
 import Clear from '@mui/icons-material/Clear';
-import Search from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
+
+import Search from 'src/assets/icons/search.svg';
+import Close from 'src/assets/icons/close.svg';
 
 import type { TextFieldProps } from '@linode/ui';
 
@@ -76,38 +78,44 @@ export const DebouncedSearchTextField = React.memo(
 
     return (
       <TextField
-        InputProps={{
-          endAdornment: isSearching ? (
-            <InputAdornment position="end">
-              <CircleProgress size="sm" />
-            </InputAdornment>
-          ) : (
-            clearable &&
-            textFieldValue && (
-              <IconButton
-                onClick={() => {
-                  setTextFieldValue('');
-                  onSearch('');
-                }}
-                aria-label="Clear"
-                size="small"
-              >
-                <Clear
-                  sx={(theme) => ({
-                    '&&': {
-                      color: theme.color.grey1,
-                    },
-                  })}
-                />
-              </IconButton>
-            )
-          ),
-          startAdornment: (
-            <InputAdornment position="end">
-              <StyledSearchIcon />
-            </InputAdornment>
-          ),
-          ...InputProps,
+        slotProps={{
+          input: {
+            endAdornment: isSearching ? (
+              <InputAdornment position="end">
+                <CircleProgress size="sm" />
+              </InputAdornment>
+            ) : (
+              clearable &&
+              textFieldValue && (
+                <IconButton
+                  onClick={() => {
+                    setTextFieldValue('');
+                    onSearch('');
+                  }}
+                  sx={{
+                    padding: 0,
+                  }}
+                  aria-label="Clear"
+                  size="small"
+                >
+                  <StyledClearIcon />
+                </IconButton>
+              )
+            ),
+            startAdornment: (
+              <InputAdornment position="start">
+                <StyledSearchIcon />
+              </InputAdornment>
+            ),
+            sx: (theme) => ({
+              '& .MuiInput-input': {
+                padding: 0,
+              },
+              font: theme.tokens.typography.Label.Regular.S,
+              padding: `${theme.tokens.spacing.S6} ${theme.tokens.spacing.S8}`,
+            }),
+            ...InputProps,
+          },
         }}
         className={className}
         data-qa-debounced-search
@@ -123,8 +131,22 @@ export const DebouncedSearchTextField = React.memo(
   }
 );
 
-const StyledSearchIcon = styled(Search)(({ theme }) => ({
-  '&&, &&:hover': {
-    color: theme.color.grey1,
+export const StyledClearIcon = styled(Close, {
+  label: 'StyledClearIcon',
+})(({ theme }) => ({
+  color: theme.tokens.search.Filled.Icon,
+  height: '16px',
+  width: '16px',
+}));
+
+export const StyledSearchIcon = styled(Search, {
+  label: 'StyledSearchIcon',
+})(({ theme }) => ({
+  '&&': {
+    '&:hover': {
+      color: theme.tokens.search.Disabled.SearchIcon,
+    },
+
+    color: theme.tokens.search.Default.SearchIcon,
   },
 }));
