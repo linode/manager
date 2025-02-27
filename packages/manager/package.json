@@ -119,7 +119,7 @@
       "prettier --write",
       "eslint --ext .js,.ts,.tsx --quiet"
     ],
-    "*.{ts,tsx}": ["pnpm typecheck"]
+    "*.{ts,tsx}": ["sh -c 'pnpm typecheck'"]
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
