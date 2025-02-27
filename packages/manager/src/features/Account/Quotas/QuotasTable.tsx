@@ -1,10 +1,9 @@
-import { getQuotaUsage } from '@linode/api-v4';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { useTheme } from '@mui/material/styles';
 import { useQueries } from '@tanstack/react-query';
 import * as React from 'react';
-
+import { quotaQueries } from 'src/queries/quotas/quotas';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { BarPercent } from 'src/components/BarPercent/BarPercent';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -66,11 +65,9 @@ export const QuotasTable = (props: QuotasTableProps) => {
   // This will only fetch for the paginated set
   const quotaIds = quotas?.data.map((quota) => quota.quota_id) ?? [];
   const quotaUsageQueries = useQueries({
-    queries: quotaIds.map((quotaId) => ({
-      enabled: selectedService && Boolean(selectedLocation) && Boolean(quotas),
-      queryFn: () => getQuotaUsage(selectedService.value, quotaId),
-      queryKey: ['quota-usage', selectedService.value, quotaId],
-    })),
+    queries: quotaIds.map((quotaId) =>
+      quotaQueries.service(selectedService.value)._ctx.usage(quotaId)
+    ),
   });
   const isFetchingUsage = quotaUsageQueries.some((query) => query.isLoading);
 

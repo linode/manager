@@ -14,6 +14,17 @@ export interface BarPercentProps {
   /**
    * Allows for custom colors to be applied to the bar.
    * The color will be applied to the bar based on the percentage of the value to the max.
+   *
+   * @example
+   * ```tsx
+   * <BarPercent
+   *  customColors={[
+   *    { color: 'blue', percentage: 10 }, // blue at or above 10%
+   *    { color: 'red', percentage: 50 }, // red at or above 50%
+   *  ]}
+   * [...]
+   * />
+   * ```
    */
   customColors?: {
     color: string;
