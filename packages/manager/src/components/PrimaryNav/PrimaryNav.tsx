@@ -228,10 +228,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             display: 'Alerts',
             hide:
               !isACLPEnabled &&
-              !Boolean(
+              !(
                 flags.aclpAlerting?.alertDefinitions ||
-                  flags.aclpAlerting?.recentActivity ||
-                  flags.aclpAlerting?.notificationChannels
+                flags.aclpAlerting?.recentActivity ||
+                flags.aclpAlerting?.notificationChannels
               ),
             href: '/alerts',
             isBeta: flags.aclp?.beta,
