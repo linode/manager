@@ -112,7 +112,7 @@ export const DebouncedSearchTextField = React.memo(
                 padding: 0,
               },
               font: theme.tokens.typography.Label.Regular.S,
-              padding: `${theme.tokens.spacing.S6} ${theme.tokens.spacing.S8}`,
+              padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
             }),
             ...InputProps,
           },
