@@ -5,7 +5,6 @@ import Request, {
   setData,
   setParams,
   setXFilter,
-  setHeaders,
 } from '../request';
 import {
   Alert,
@@ -15,37 +14,27 @@ import {
   NotificationChannel,
 } from './types';
 import { Params, Filter, ResourcePage } from '../types';
-import { API_ROOT } from 'src/constants';
-
-const bearer = 'Bearer vagrant';
-
-const hostedDomain = `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta`;
+import { BETA_API_ROOT as API_ROOT } from 'src/constants';
 export const createAlertDefinition = (
   data: CreateAlertDefinitionPayload,
   serviceType: AlertServiceType
 ) =>
   Request<Alert>(
     setURL(
-      `${hostedDomain}/monitor/services/${encodeURIComponent(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
         serviceType!
       )}/alert-definitions`
     ),
     setMethod('POST'),
     setData(data, createAlertDefinitionSchema),
-    setHeaders({
-      Authorization: bearer,
-    })
   );
 
 export const getAlertDefinitions = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<Alert>>(
-    setURL(`${hostedDomain}/monitor/alert-definitions`),
+    setURL(`${API_ROOT}/monitor/alert-definitions`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setHeaders({
-      Authorization: bearer,
-    })
   );
 
 export const getAlertDefinitionByServiceTypeAndId = (
@@ -54,28 +43,22 @@ export const getAlertDefinitionByServiceTypeAndId = (
 ) =>
   Request<Alert>(
     setURL(
-      `${hostedDomain}/monitor/services/${encodeURIComponent(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
         // updating only here as this is the only API ready
         serviceType
       )}/alert-definitions/${encodeURIComponent(alertId)}`
     ),
     setMethod('GET'),
-    setHeaders({
-      Authorization: bearer,
-    })
   );
 
 export const getAlertDefinitionByServiceType = (serviceType: string) =>
   Request<ResourcePage<Alert>>(
     setURL(
-      `http://blr-lhvl2d.bangalore.corp.akamai.com:9001/v4beta/monitor/services/${encodeURIComponent(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
         serviceType
       )}/alert-definitions`
     ),
     setMethod('GET'),
-    setHeaders({
-      Authorization: bearer,
-    })
   );
 
 export const editAlertDefinition = (
@@ -85,25 +68,19 @@ export const editAlertDefinition = (
 ) =>
   Request<Alert>(
     setURL(
-      `${hostedDomain}/monitor/services/${encodeURIComponent(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
         serviceType
       )}/alert-definitions/${encodeURIComponent(alertId)}`
     ),
     setMethod('PUT'),
     setData(data),
-    setHeaders({
-      Authorization: bearer,
-    })
   );
 export const getNotificationChannels = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<NotificationChannel>>(
-    setURL(`${hostedDomain}/monitor/alert-channels`),
+    setURL(`${API_ROOT}/monitor/alert-channels`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setHeaders({
-      Authorization: bearer,
-    })
   );
 
 export const addEntityToAlert = (
