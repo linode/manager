@@ -8,5 +8,5 @@
 export const cypressRunCommand = (testFiles: string[]): string => {
   const dedupedTestFiles = Array.from(new Set(testFiles));
   const testFilesList = dedupedTestFiles.join(',');
-  return `yarn cy:run -s "${testFilesList}"`;
+  return `pnpm cy:run -s "${testFilesList}"`;
 };

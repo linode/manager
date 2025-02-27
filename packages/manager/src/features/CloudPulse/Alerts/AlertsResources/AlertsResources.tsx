@@ -150,7 +150,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           )
         : [alertClass];
 
-    // Apply type filter only for system alerts with a valid alertClass
+    // Apply type filter only for DBaaS user alerts with a valid alertClass based on above filtered types
     const typeFilter: Filter = {
       '+or': filteredTypes.map((dbType) => ({
         type: {
@@ -376,7 +376,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   tagOptions: Array.from(
                     new Set(
                       resources
-                        ? resources.flatMap((resource) => resource.tags ?? [])
+                        ? resources.flatMap(({ tags }) => tags ?? [])
                         : []
                     )
                   ),
