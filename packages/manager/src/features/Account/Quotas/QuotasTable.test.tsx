@@ -7,6 +7,13 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { QuotasTable } from './QuotasTable';
 
 const queryMocks = vi.hoisted(() => ({
+  quotaQueries: {
+    service: vi.fn().mockReturnValue({
+      _ctx: {
+        usage: vi.fn().mockReturnValue({}),
+      },
+    }),
+  },
   useQueries: vi.fn().mockReturnValue([]),
   useQuotaUsageQuery: vi.fn().mockReturnValue({}),
   useQuotasQuery: vi.fn().mockReturnValue({}),
@@ -16,6 +23,7 @@ vi.mock('src/queries/quotas/quotas', () => {
   const actual = vi.importActual('src/queries/quotas/quotas');
   return {
     ...actual,
+    quotaQueries: queryMocks.quotaQueries,
     useQuotaUsageQuery: queryMocks.useQuotaUsageQuery,
     useQuotasQuery: queryMocks.useQuotasQuery,
   };
