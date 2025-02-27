@@ -161,9 +161,10 @@ describe('DimensionFilterField', () => {
       }
     );
     const addButton = getByRole('button', {name: dimensionFilterButton});
-    for(let i=0;i<5; i++){
-      await user.click(addButton);
+    for(let i=0;i<4; i++){
+      user.click(addButton);
     }
+    await user.click(addButton);
     expect(addButton).toBeDisabled();
     userEvent.hover(addButton);
     await waitFor(() => expect(getByText('You can add up to 5 dimension filters.')).toBeInTheDocument());
