@@ -98,8 +98,8 @@ importers:
         specifier: workspace:*
         version: link:../api-v4
       '@linode/design-language-system':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^4.0.0
+        version: 4.0.0
       '@linode/search':
         specifier: workspace:*
         version: link:../search
@@ -591,8 +591,8 @@ importers:
         specifier: ^11.11.0
         version: 11.13.5(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1)
       '@linode/design-language-system':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^4.0.0
+        version: 4.0.0
       '@mui/icons-material':
         specifier: ^6.4.5
         version: 6.4.5(@mui/material@6.4.5(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.5(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.12)(react@18.3.1)
@@ -2626,8 +2626,8 @@ packages:
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
 
-  '@linode/design-language-system@3.0.0':
-    resolution: {integrity: sha512-LbrDgN0YbwDa1qsbPBV+BreFjk06R/CbcPCvWM4BvU6zrxqCkPVdErwfqJvdtDxRColXbIfn6NeFgq0sJaQ+sw==}
+  '@linode/design-language-system@4.0.0':
+    resolution: {integrity: sha512-SKM4AG0GpFjgirKI+7bG3RT6ai3VU7MJJLUvaZsHf0OgmEJ25qWH7DqGOx5FWSTtzX0YemJSrwnKMpL+3CLawg==}
 
   '@linode/eslint-plugin-cloud-manager@0.0.7':
     resolution: {integrity: sha512-83ZDbDQGsXCKxagX6CWszFZbsuX/fHSFn/i+P1FGYDm/0qnIo2XypB/lTdJhHJwvq1j2z+0VDZIMP7YLF5U6Sg==}
@@ -12583,7 +12583,7 @@ snapshots:
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
-  '@linode/design-language-system@3.0.0': {}
+  '@linode/design-language-system@4.0.0': {}
 
   '@linode/eslint-plugin-cloud-manager@0.0.7(eslint@7.32.0)':
     dependencies:
