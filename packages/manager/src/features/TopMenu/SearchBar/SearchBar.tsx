@@ -1,4 +1,5 @@
 import { Autocomplete, Box, IconButton, TextField } from '@linode/ui';
+import { isNotNullOrUndefined } from '@linode/utilities';
 import Close from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
@@ -26,7 +27,6 @@ import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { StyledIconButton, StyledSearchIcon } from './SearchBar.styles';

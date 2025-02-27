@@ -1,4 +1,5 @@
 import { CircleProgress, Notice, Typography } from '@linode/ui';
+import { isNotNullOrUndefined } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import { equals } from 'ramda';
@@ -23,7 +24,6 @@ import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { useIsDatabasesEnabled } from '../Databases/utilities';
