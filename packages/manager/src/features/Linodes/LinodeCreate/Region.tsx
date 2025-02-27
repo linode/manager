@@ -139,14 +139,19 @@ export const Region = React.memo(() => {
     }
 
     if (isDiskEncryptionFeatureEnabled) {
-      // Enable disk encryption by default if the region supports it
-      const defaultDiskEncryptionValue = region.capabilities.includes(
-        'Disk Encryption'
-      )
-        ? 'enabled'
-        : undefined;
+      if (region.site_type === 'distributed') {
+        // If a distributed region is selected, make sure we don't send disk_encryption in the payload.
+        setValue('disk_encryption', undefined);
+      } else {
+        // Enable disk encryption by default if the region supports it
+        const defaultDiskEncryptionValue = region.capabilities.includes(
+          'Disk Encryption'
+        )
+          ? 'enabled'
+          : undefined;
 
-      setValue('disk_encryption', defaultDiskEncryptionValue);
+        setValue('disk_encryption', defaultDiskEncryptionValue);
+      }
     }
 
     if (!isLabelFieldDirty) {
