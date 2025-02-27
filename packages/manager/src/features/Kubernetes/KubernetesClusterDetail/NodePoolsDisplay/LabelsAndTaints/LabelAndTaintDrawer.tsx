@@ -146,10 +146,12 @@ export const LabelAndTaintDrawer = (props: Props) => {
           <Typography>
             Labels are key-value pairs that are used as identifiers. Review the
             guidelines in the{' '}
-            <Link to="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set">
-              Kubernetes documentation
+            <Link
+              external
+              to="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set"
+            >
+              Kubernetes documentation.
             </Link>
-            .
           </Typography>
           <LabelTable />
           <Button
@@ -178,10 +180,12 @@ export const LabelAndTaintDrawer = (props: Props) => {
             Taints are used to control which pods can be placed on nodes in this
             node pool. They consist of a key, value, and effect. Review the
             guidelines in the{' '}
-            <Link to="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">
-              Kubernetes documentation
+            <Link
+              external
+              to="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/"
+            >
+              Kubernetes documentation.
             </Link>
-            .
           </Typography>
           <TaintTable />
           <Button

@@ -6,25 +6,26 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { useAccount } from 'src/queries/account/account';
 
-import { StyledDocsLinkContainer } from './CreateCluster.styles';
+import { CLUSTER_TIER_DOCS_LINK } from '../constants';
+import {
+  StyledDocsLinkContainer,
+  StyledStackWithTabletBreakpoint,
+} from './CreateCluster.styles';
 
 import type { KubernetesTier } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 interface Props {
-  handleClusterTypeSelection: (tier: KubernetesTier) => void;
+  handleClusterTierSelection: (tier: KubernetesTier) => void;
   isUserRestricted: boolean;
   selectedTier: KubernetesTier;
 }
 
-export const ClusterTypePanel = (props: Props) => {
-  const { handleClusterTypeSelection, isUserRestricted, selectedTier } = props;
+export const ClusterTierPanel = (props: Props) => {
+  const { handleClusterTierSelection, isUserRestricted, selectedTier } = props;
 
   const { data: account } = useAccount();
 
-  const mdDownBreakpoint = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down('md')
-  );
   const smDownBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
@@ -35,18 +36,19 @@ export const ClusterTypePanel = (props: Props) => {
 
   return (
     <Stack>
-      <Stack flexDirection={mdDownBreakpoint ? 'column' : 'row'}>
+      <StyledStackWithTabletBreakpoint>
         <Stack>
           <Typography variant="h3">Cluster Tier</Typography>
           <Typography sx={{ marginTop: 1, maxWidth: 700 }}>
-            Choose from a managed solution for smaller deployments or enterprise
-            grade clusters with enhanced ingress, networking, and security.
+            Select the cluster tier that’s appropriate for your intended
+            workloads. Choose LKE for smaller deployments or LKE Enterprise for
+            a more scalable, enterprise-grade solution.
           </Typography>
         </Stack>
         <StyledDocsLinkContainer>
-          <DocsLink href="/" label="Full Cluster Features" />
+          <DocsLink href={CLUSTER_TIER_DOCS_LINK} label="Compare Tiers" />
         </StyledDocsLinkContainer>
-      </Stack>
+      </StyledStackWithTabletBreakpoint>
 
       <Stack
         flexDirection={smDownBreakpoint ? 'column' : 'row'}
@@ -55,30 +57,30 @@ export const ClusterTypePanel = (props: Props) => {
       >
         <SelectionCard
           subheadings={[
+            'Small to medium deployments',
             'Up to 250 nodes, 1000 pods',
             'Shared control plane',
-            'HA control plane (optional)',
           ]}
           checked={selectedTier === 'standard' && !isUserRestricted}
           disabled={isUserRestricted}
           heading="LKE"
-          onClick={() => handleClusterTypeSelection('standard')}
+          onClick={() => handleClusterTierSelection('standard')}
         />
         <SelectionCard
           subheadings={[
+            'Large deployments',
             'Up to 500 nodes, 5000 pods',
-            'Dedicated control plane',
-            'HA control plane (included)',
+            'Dedicated HA control plane',
           ]}
           tooltip={
             isLkeEnterpriseSelectionDisabled && !isUserRestricted
-              ? 'LKE Enterprise is not currently enabled on this contract. To inquire, fill out the Cloud Computing Sales form or email sales@linode.com.'
+              ? 'LKE Enterprise is not currently enabled on this account. Please contact your account manager or our sales team using the request form or sales@linode.com.'
               : undefined
           }
           checked={selectedTier === 'enterprise' && !isUserRestricted}
           disabled={isLkeEnterpriseSelectionDisabled || isUserRestricted}
           heading="LKE Enterprise"
-          onClick={() => handleClusterTypeSelection('enterprise')}
+          onClick={() => handleClusterTierSelection('enterprise')}
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
       </Stack>

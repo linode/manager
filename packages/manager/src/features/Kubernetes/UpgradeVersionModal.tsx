@@ -7,10 +7,11 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import {
   getNextVersion,
-  localStorageWarning,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
+
+import { localStorageWarning } from './constants';
 
 import type { KubernetesTier } from '@linode/api-v4/lib/kubernetes';
 
