@@ -107,12 +107,14 @@ export const Security = () => {
                     ? DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES
                     : DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY
                 }
+                isEncryptEntityChecked={
+                  isDistributedRegion || field.value === 'enabled'
+                }
                 onChange={(checked) =>
                   field.onChange(checked ? 'enabled' : 'disabled')
                 }
-                disabled={!regionSupportsDiskEncryption}
+                disabled={isDistributedRegion || !regionSupportsDiskEncryption}
                 error={fieldState.error?.message}
-                isEncryptEntityChecked={field.value === 'enabled'}
               />
             )}
             control={control}
