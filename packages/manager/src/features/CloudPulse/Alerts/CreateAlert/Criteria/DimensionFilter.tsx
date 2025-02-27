@@ -62,7 +62,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
         compactX
         data-qa-buttons="true"
         size="small"
-        sx={{ justifyContent: 'start' }}
+        sx={{ justifyContent: 'start', width: '300px' }}
       >
         Add dimension filter
       </Button>

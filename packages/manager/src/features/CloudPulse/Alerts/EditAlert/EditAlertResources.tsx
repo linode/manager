@@ -23,7 +23,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
 
   const { alertDetails, serviceType } = props;
   const alertId = alertDetails.id;
-  const { mutateAsync: editAlert } = useEditAlertDefinition();
+  const { mutateAsync: editAlert, isPending } = useEditAlertDefinition();
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     []
   );
@@ -55,18 +55,19 @@ export const EditAlertResources = (props: EditAlertProps) => {
   }, [serviceType, alertId]);
 
   const saveResources = () => {
-    setShowConfirmation(false);
     editAlert({
       alertId,
       entity_ids: selectedResources,
       serviceType,
     })
       .then(() => {
+        setShowConfirmation(false);
         // on success land on the alert definition list page and show a success snackbar
         history.push(definitionLanding);
         showSnackbar('Alert resources successfully updated.', 'success');
       })
       .catch(() => {
+        setShowConfirmation(false);
         showSnackbar(
           'Error while updating the resources. Try again later.',
           'error'
@@ -139,6 +140,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
           onClose={() => setShowConfirmation((prev) => !prev)}
           onConfirm={saveResources}
           openConfirmationDialog={showConfirmation}
+          isApiResponsePending={isPending}
         />
       </Box>
     </>
@@ -149,12 +151,9 @@ const showSnackbar = (message: string, variant: 'error' | 'success') => {
   enqueueSnackbar(message, {
     anchorOrigin: {
       horizontal: 'right',
-      vertical: 'top', // Show snackbar at the top
+      vertical: 'bottom', // Show snackbar at the bottom
     },
     autoHideDuration: 2000,
-    style: {
-      marginTop: '150px',
-    },
     variant,
   });
 };

@@ -21,17 +21,23 @@ interface AlertResourcesConfirmDialogProps {
    * Boolean flag to control whether the confirmation dialog is open.
    */
   openConfirmationDialog: boolean;
+
+  /**
+   * Boolean flag to control the loading state of the confirm button based on api call pending for result state
+   */
+  isApiResponsePending: boolean;
 }
 
 export const EditAlertResourcesConfirmDialog = React.memo(
   (props: AlertResourcesConfirmDialogProps) => {
-    const { onClose, onConfirm, openConfirmationDialog } = props;
+    const { onClose, onConfirm, openConfirmationDialog, isApiResponsePending } = props;
 
     const actionProps: ActionPanelProps = {
       primaryButtonProps: {
         'data-testid': 'edit-confirmation',
         label: 'Confirm',
         onClick: onConfirm,
+        loading: isApiResponsePending,
       },
       secondaryButtonProps: {
         label: 'Cancel',
