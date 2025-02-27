@@ -16,6 +16,7 @@ on:
       - develop
       - staging
       - master
+  pull_request:
 
 jobs:
   run-cypress-e2e:
