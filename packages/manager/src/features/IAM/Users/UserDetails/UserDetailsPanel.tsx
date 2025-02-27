@@ -4,6 +4,7 @@ import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 
@@ -26,11 +27,11 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
   const items = [
     {
       label: 'Username',
-      value: <Typography>{user.username}</Typography>,
+      value: <MaskableText isToggleable text={user.username} />,
     },
     {
       label: 'Email',
-      value: <Typography>{user.email}</Typography>,
+      value: <MaskableText isToggleable text={user.email} />,
     },
     {
       label: 'Access',
@@ -44,7 +45,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
             </Link>
           </Typography>
         ) : (
-          <span>no roles assigned</span>
+          <span>No Roles Assigned</span>
         ),
     },
     {
@@ -88,7 +89,12 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
     },
     {
       label: 'Verified Phone Number',
-      value: <Typography>{user.verified_phone_number ?? 'None'}</Typography>,
+      value: (
+        <MaskableText
+          isToggleable
+          text={user.verified_phone_number ?? 'None'}
+        />
+      ),
     },
     {
       label: 'SSH Keys',
@@ -110,15 +116,28 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
       <Grid columns={{ md: 6, sm: 4, xs: 2 }} container spacing={2}>
         {items.map((item) => (
           <Grid
-            key={item.label}
             size={{
               md: 2,
               sm: 2,
               xs: 2,
             }}
+            key={item.label}
           >
-            <Stack direction="row" spacing={1}>
-              <Typography sx={(theme) => ({ font: theme.font.bold })}>
+            <Stack
+              sx={{
+                '& > p:nth-of-type(2)': {
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                },
+              }}
+              direction="row"
+              spacing={1}
+            >
+              <Typography
+                sx={(theme) => ({
+                  font: theme.font.bold,
+                })}
+              >
                 {item.label}
               </Typography>
               {item.value}

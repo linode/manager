@@ -4,38 +4,41 @@
  * This file contains Cypress tests for the Edit Alert page of the CloudPulse application.
  * It ensures that users can navigate to the Edit Alert Page and that alerts are correctly displayed and interactive on the Edit page.
  */
+import { mockGetAccount } from 'support/intercepts/account';
+import {
+  mockGetAlertDefinitions,
+  mockGetAllAlertDefinitions,
+  mockUpdateAlertDefinitions,
+} from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+
 import {
   accountFactory,
   alertFactory,
   databaseFactory,
   regionFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import type { Flags } from 'src/featureFlags';
-import {
-  mockGetAlertDefinitions,
-  mockGetAllAlertDefinitions,
-  mockUpdateAlertDefinitions,
-} from 'support/intercepts/cloudpulse';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { ui } from 'support/ui';
-import { Alert, Database } from '@linode/api-v4';
-import { mockGetDatabases } from 'support/intercepts/databases';
 
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+import type { Alert, Database } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
+
+const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 
 const expectedResourceIds = Array.from({ length: 50 }, (_, i) => String(i + 1));
 const mockAccount = accountFactory.build();
 const alertDetails = alertFactory.build({
-  label: 'Alert-1',
   description: 'Test description',
+  entity_ids: ['1', '2', '3'],
+  label: 'Alert-1',
   service_type: 'dbaas',
   severity: 1,
   status: 'enabled',
   type: 'system',
 });
-const { service_type, id, label } = alertDetails;
+const { id, label, service_type } = alertDetails;
 const regions = [
   regionFactory.build({
     capabilities: ['Managed Databases'],
@@ -52,10 +55,10 @@ const databases: Database[] = databaseFactory
   .buildList(50)
   .map((db, index) => ({
     ...db,
-    type: 'MySQL',
+    engine: 'mysql',
     region: regions[index % regions.length].id,
     status: 'active',
-    engine: 'mysql',
+    type: 'MySQL',
   }));
 const pages = [1, 2];
 
@@ -120,26 +123,21 @@ describe('Integration Tests for Edit Alert', () => {
     // Verify that the heading with text 'region' is visible
     ui.heading.findByText('region').should('be.visible');
 
-    // Verify the initial selection of resources
-    cy.get('[data-qa-notice="true"]').should(
-      'contain.text',
-      '3 of 50 resources are selected'
-    );
-    // Select all resources
-    cy.get('[data-qa-notice="true"]').within(() => {
-      ui.button.findByTitle('Select All').should('be.visible').click();
+    // Verify the initial selection of resources, then select all resources.
+    cy.findByText('3 of 50 resources are selected.')
+      .should('be.visible')
+      .closest('[data-qa-notice]')
+      .within(() => {
+        ui.button.findByTitle('Select All').should('be.visible').click();
 
-      // Unselect button should be visible after clicking on Select All button
-      ui.button
-        .findByTitle('Unselect All')
-        .should('be.visible')
-        .should('be.enabled');
-    });
+        ui.button
+          .findByTitle('Unselect All')
+          .should('be.visible')
+          .should('be.enabled');
+      });
 
-    cy.get('[data-qa-notice="true"]').should(
-      'contain.text',
-      '50 of 50 resources are selected'
-    );
+    // Confirm notice text updates to reflect selection.
+    cy.findByText('50 of 50 resources are selected.').should('be.visible');
 
     // Verify the initial state of the page size
     ui.pagination.findPageSizeSelect().click();
@@ -197,11 +195,11 @@ describe('Integration Tests for Edit Alert', () => {
 
     cy.wait('@updateDefinitions').then(({ request, response }) => {
       const {
-        type,
-        status,
-        severity,
-        description,
         created_by,
+        description,
+        severity,
+        status,
+        type,
         updated_by,
       } = alertDetails;
 
@@ -218,8 +216,8 @@ describe('Integration Tests for Edit Alert', () => {
       // Destructure alert_channels and trigger_conditions from alertResponse
       const {
         alert_channels,
-        trigger_conditions: responseTriggerConditions,
         tags,
+        trigger_conditions: responseTriggerConditions,
       } = alertResponse;
       const {
         criteria_condition: responseCriteriaCondition,

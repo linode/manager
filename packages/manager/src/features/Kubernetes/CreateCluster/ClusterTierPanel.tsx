@@ -16,12 +16,13 @@ import type { KubernetesTier } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 interface Props {
-  handleClusterTypeSelection: (tier: KubernetesTier) => void;
+  handleClusterTierSelection: (tier: KubernetesTier) => void;
+  isUserRestricted: boolean;
   selectedTier: KubernetesTier;
 }
 
 export const ClusterTierPanel = (props: Props) => {
-  const { handleClusterTypeSelection, selectedTier } = props;
+  const { handleClusterTierSelection, isUserRestricted, selectedTier } = props;
 
   const { data: account } = useAccount();
 
@@ -60,9 +61,10 @@ export const ClusterTierPanel = (props: Props) => {
             'Up to 250 nodes, 1000 pods',
             'Shared control plane',
           ]}
-          checked={selectedTier === 'standard'}
+          checked={selectedTier === 'standard' && !isUserRestricted}
+          disabled={isUserRestricted}
           heading="LKE"
-          onClick={() => handleClusterTypeSelection('standard')}
+          onClick={() => handleClusterTierSelection('standard')}
         />
         <SelectionCard
           subheadings={[
@@ -71,14 +73,14 @@ export const ClusterTierPanel = (props: Props) => {
             'Dedicated HA control plane',
           ]}
           tooltip={
-            isLkeEnterpriseSelectionDisabled
+            isLkeEnterpriseSelectionDisabled && !isUserRestricted
               ? 'LKE Enterprise is not currently enabled on this account. Please contact your account manager or our sales team using the request form or sales@linode.com.'
               : undefined
           }
-          checked={selectedTier === 'enterprise'}
-          disabled={isLkeEnterpriseSelectionDisabled}
+          checked={selectedTier === 'enterprise' && !isUserRestricted}
+          disabled={isLkeEnterpriseSelectionDisabled || isUserRestricted}
           heading="LKE Enterprise"
-          onClick={() => handleClusterTypeSelection('enterprise')}
+          onClick={() => handleClusterTierSelection('enterprise')}
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
       </Stack>
