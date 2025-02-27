@@ -121,7 +121,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
 
-  const linodeInterfacesFlag = useIsLinodeInterfacesEnabled();
+  const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
   // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
   // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
@@ -389,9 +389,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </Grid>
         </Grid>
       )}
-      {(linodeLkeClusterId ||
-        attachedFirewall ||
-        linodeInterfacesFlag?.enabled) && (
+      {(linodeLkeClusterId || attachedFirewall || isLinodeInterfaceEnabled) && (
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
@@ -408,7 +406,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           {linodeLkeClusterId && (
             <StyledListItem
               sx={{
-                ...(!attachedFirewall && !linodeInterfacesFlag?.enabled
+                ...(!attachedFirewall && !isLinodeInterfaceEnabled
                   ? { borderRight: 'unset' }
                   : {}),
               }}
@@ -427,9 +425,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           {!isLinodeInterface && attachedFirewall && (
             <StyledListItem
               sx={{
-                ...(!linodeInterfacesFlag?.enabled
-                  ? { borderRight: 'unset' }
-                  : {}),
+                ...(!isLinodeInterfaceEnabled ? { borderRight: 'unset' } : {}),
               }}
             >
               <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
@@ -443,7 +439,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               {attachedFirewall && `(ID: ${attachedFirewall.id})`}
             </StyledListItem>
           )}
-          {linodeInterfacesFlag?.enabled && (
+          {isLinodeInterfaceEnabled && (
             <StyledListItem sx={{ borderRight: 'unset' }}>
               <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
               {isLinodeInterface ? 'Linode' : 'Configuration Profile'}
