@@ -17,8 +17,8 @@
     "build:analyze": "pnpm run --filter linode-manager build:analyze",
     "bootstrap": "pnpm install:all && pnpm build:validation && pnpm build:sdk",
     "up:expose": "npm_config_package_import_method=clone-or-copy pnpm install:all && pnpm build:validation && pnpm build:sdk && pnpm start:all:expose",
-    "dev": "concurrently -n api-v4,validation,ui,manager -c blue,yellow,magenta,green \"pnpm run --filter @linode/api-v4 start\" \"pnpm run --filter @linode/validation start\" \"pnpm run --filter @linode/ui start\" \"pnpm run --filter linode-manager start\"",
-    "start:all:expose": "concurrently -n api-v4,validation,ui,manager -c blue,yellow,magenta,green \"pnpm run --filter @linode/api-v4 start\" \"pnpm run --filter @linode/validation start\" \"pnpm run --filter @linode/ui start\" \"pnpm run --filter linode-manager start:expose\"",
+    "dev": "concurrently -n api-v4,validation,ui,utilities,manager -c blue,yellow,magenta,cyan,green \"pnpm run --filter @linode/api-v4 start\" \"pnpm run --filter @linode/validation start\" \"pnpm run --filter @linode/ui start\" \"pnpm run --filter @linode/utilities start\" \"pnpm run --filter linode-manager start\"",
+    "start:all:expose": "concurrently -n api-v4,validation,ui,utilities,manager -c blue,yellow,magenta,cyan,green \"pnpm run --filter @linode/api-v4 start\" \"pnpm run --filter @linode/validation start\" \"pnpm run --filter @linode/ui start\" \"pnpm run --filter @linode/utilities start\" \"pnpm run --filter linode-manager start:expose\"",
     "start:manager": "pnpm --filter linode-manager start",
     "start:manager:ci": "pnpm run --filter linode-manager start:ci",
     "docs": "bunx vitepress@1.0.0-rc.44 dev docs",
@@ -29,6 +29,7 @@
     "test:sdk": "pnpm run --filter @linode/api-v4 test",
     "test:search": "pnpm run --filter @linode/search test",
     "test:ui": "pnpm run --filter @linode/ui test",
+    "test:utilities": "pnpm run --filter @linode/utilities test",
     "coverage": "pnpm run --filter linode-manager coverage",
     "coverage:summary": "pnpm run --filter linode-manager coverage:summary",
     "cy:run": "pnpm run --filter linode-manager cy:run",
@@ -43,7 +44,7 @@
     "package-versions": "pnpm run --filter @linode/scripts package-versions",
     "junit:summary": "pnpm run --filter @linode/scripts --silent junit:summary",
     "generate-tod": "pnpm run --filter @linode/scripts --silent generate-tod",
-    "clean": "rm -rf node_modules && rm -rf packages/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/validation/node_modules && rm -rf packages/api-v4/lib && rm -rf packages/validation/lib",
+    "clean": "rm -rf node_modules && rm -rf packages/manager/node_modules && rm -rf packages/api-v4/node_modules && rm -rf packages/validation/node_modules && rm -rf packages/api-v4/lib && rm -rf packages/validation/lib && rm -rf packages/ui/node_modules && rm -rf packages/utilities/node_modules",
     "prepare": "husky"
   },
   "resolutions": {
@@ -63,5 +64,8 @@
       "scripts"
     ]
   },
-  "dependencies": {}
+  "dependencies": {},
+  "pnpm": {
+    "onlyBuiltDependencies": ["cypress"]
+  }
 }
