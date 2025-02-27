@@ -201,8 +201,8 @@ export const NodeTable = React.memo((props: Props) => {
                                   style={{ textAlign: 'center' }}
                                   variant="h3"
                                 >
-                                  Nodes will appear once cluster provisioning is
-                                  complete.
+                                  Worker nodes will appear once cluster
+                                  provisioning is complete.
                                 </Typography>
                                 <Typography>
                                   Provisioning can take up to 10 minutes.

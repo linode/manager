@@ -1,4 +1,3 @@
-import { accountUserFactory } from 'src/factories/accountUsers';
 import { getProfile } from 'support/api/account';
 import {
   interceptGetUser,
@@ -6,9 +5,11 @@ import {
   mockGetUsers,
   mockUpdateUsername,
 } from 'support/intercepts/account';
-import { randomString } from 'support/util/random';
-import { ui } from 'support/ui';
 import { mockUpdateProfile } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
+import { randomString } from 'support/util/random';
+
+import { accountUserFactory } from 'src/factories/accountUsers';
 import {
   PARENT_USER,
   RESTRICTED_FIELD_TOOLTIP,
@@ -199,8 +200,8 @@ describe('User Profile', () => {
     getProfile().then((profile) => {
       const proxyUsername = 'proxy_user';
       const mockAccountUsers = accountUserFactory.buildList(1, {
-        username: proxyUsername,
         user_type: 'proxy',
+        username: proxyUsername,
       });
 
       mockGetUsers(mockAccountUsers).as('getUsers');
