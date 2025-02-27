@@ -2,13 +2,6 @@
  * @file Integration tests for SMS phone verification.
  */
 
-import { getFormattedNumber } from 'src/features/Profile/AuthenticationSettings/PhoneVerification/helpers';
-import { profileFactory } from 'src/factories/profile';
-import {
-  randomLabel,
-  randomNumber,
-  randomPhoneNumber,
-} from 'support/util/random';
 import {
   mockGetProfile,
   mockSendVerificationCode,
@@ -16,6 +9,14 @@ import {
   mockVerifyVerificationCode,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
+import {
+  randomLabel,
+  randomNumber,
+  randomPhoneNumber,
+} from 'support/util/random';
+
+import { profileFactory } from 'src/factories/profile';
+import { getFormattedNumber } from 'src/features/Profile/AuthenticationSettings/PhoneVerification/helpers';
 
 describe('SMS phone verification', () => {
   /*
