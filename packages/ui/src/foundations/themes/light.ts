@@ -938,7 +938,7 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.text,
           lineHeight: 1,
           maxWidth: inputMaxWidth,
-          minHeight: 34,
+          minHeight: 32,
           transition: 'border-color 225ms ease-in-out',
         },
       },
