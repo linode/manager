@@ -5,6 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { processMetricCriteria } from '../Utils/utils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
+import { capitalize } from '@linode/utilities';
 
 describe('Alert list table row', () => {
   it('Should display the data', () => {
@@ -19,7 +20,7 @@ describe('Alert list table row', () => {
     );
 
     expect(getByText(alert.label)).toBeInTheDocument();
-    expect(getByText(alert.type)).toBeInTheDocument();
+    expect(getByText(capitalize(alert.type))).toBeInTheDocument();
   });
 
   it('Should display metric threshold', () => {
