@@ -136,13 +136,3 @@ export const deleteEntityFromAlert = (
     ),
     setMethod('DELETE')
   );
-
-export const getAlertDefinitionByServiceType = (serviceType: string) =>
-  Request<ResourcePage<Alert>>(
-    setURL(
-      `${API_ROOT}/monitor/services/${encodeURIComponent(
-        serviceType
-      )}/alert-definitions`
-    ),
-    setMethod('GET')
-  );
