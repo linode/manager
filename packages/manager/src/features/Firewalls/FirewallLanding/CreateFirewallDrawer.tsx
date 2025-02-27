@@ -6,6 +6,7 @@ import {
   Typography,
   omitProps,
 } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -20,7 +21,6 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { CustomFirewallFields } from './CustomFirewallFields';
 import { createFirewallResolver } from './formUtilities';
