@@ -92,7 +92,7 @@ describe('Channel Listing component', () => {
     });
   
     const addButton = getByRole('button', {
-      name: 'You can add up to 5 notification channels.',
+      name: 'Add notification channel',
     });
 
     expect(addButton).toBeDisabled();

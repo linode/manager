@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Tooltip, Typography } from '@linode/ui';
+import { Box, Button, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
@@ -91,13 +91,6 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
             );
           })}
       </Stack>
-      <Tooltip
-        title={
-          metricCriteriaWatcher.length === 5
-            ? 'You can add up to 5 metrics.'
-            : ''
-        }
-      >
         <Button
           onClick={() =>
             append({
@@ -108,6 +101,8 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
               threshold: 0,
             })
           }
+          tooltipText='You can add up to 5 metrics.'
+          sxEndIcon={{ display: 'none' }}
           disabled={metricCriteriaWatcher.length === 5}
           buttonType="outlined"
           size="medium"
@@ -115,7 +110,6 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
         >
           Add metric
         </Button>
-      </Tooltip>
     </Box>
   );
 };

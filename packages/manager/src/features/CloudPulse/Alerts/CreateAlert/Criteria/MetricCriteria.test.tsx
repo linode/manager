@@ -265,16 +265,16 @@ describe('MetricCriteriaField', () => {
               mockData.data[1],
               mockData.data[1],
               mockData.data[0],
-            ], // Add two rules to hit the limit
+            ],
           },
         },
       },
     });
 
     const addButton = screen.getByRole('button', {
-      name: 'You can add up to 5 metrics.',
+      name: 'Add metric',
     });
-    
+
     expect(addButton).toBeDisabled();
     userEvent.hover(addButton);
     await waitFor(() =>

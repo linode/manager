@@ -1,4 +1,4 @@
-import { Box, Button, Notice, Stack, Tooltip, Typography } from '@linode/ui';
+import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -151,13 +151,6 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
                 />
               ))}
           </Stack>
-          <Tooltip
-            title={
-              notificationChannelWatcher.length === 5
-                ? 'You can add up to 5 notification channels.'
-                : ''
-            }
-          >
             <Button
               buttonType="outlined"
               data-qa-buttons="true"
@@ -165,11 +158,12 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
               size="medium"
               sx={(theme) => ({ marginTop: theme.spacing(2) })}
               type="button"
+              sxEndIcon={{ display: 'none' }}
+              tooltipText='You can add up to 5 notification channels.'
               disabled={notificationChannelWatcher.length === 5}
             >
               Add notification channel
             </Button>
-          </Tooltip>
 
           <AddNotificationChannelDrawer
             handleCloseDrawer={handleCloseDrawer}

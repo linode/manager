@@ -1,4 +1,4 @@
-import { Box, Tooltip } from '@linode/ui';
+import { Box } from '@linode/ui';
 import { Button, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
@@ -35,7 +35,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
     name,
   });
 
-  const dimensionFilterWatcher = useWatch({ control, name , defaultValue: []});
+  const dimensionFilterWatcher = useWatch({ control, name});
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h3">
@@ -55,26 +55,25 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
             />
           ))}
       </Stack>
-      <Tooltip title={dimensionFilterWatcher.length === 5 ? 'You can add up to 5 dimension filters.': ''}>
-      <Button
-        onClick={() =>
-          append({
-            dimension_label: null,
-            operator: null,
-            value: null,
-          })
-        }
-        disabled={dimensionFilterWatcher.length === 5}
-        buttonType="secondary"
-        compactX
-        data-qa-buttons="true"
-        size="small"
-        sx={{ justifyContent: 'start', width: '150px' }}
-      >
-        Add dimension filter
-      </Button>
-      </Tooltip>
-
+        <Button
+          onClick={() =>
+            append({
+              dimension_label: null,
+              operator: null,
+              value: null,
+            })
+          }
+          disabled={dimensionFilterWatcher && dimensionFilterWatcher.length === 5}
+          buttonType="secondary"
+          compactX
+          data-qa-buttons="true"
+          size="small"
+          tooltipText="You can add up to 5 dimension filters."
+          sxEndIcon={{ display: 'none' }}
+          sx={{ justifyContent: 'start', width: '150px' }}
+        >
+          Add dimension filter
+        </Button>
     </Box>
   );
 };
