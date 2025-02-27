@@ -153,7 +153,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
           </Stack>
           <Tooltip
             title={
-              notificationChannelWatcher.length == 5
+              notificationChannelWatcher.length === 5
                 ? 'You can add up to 5 notification channels.'
                 : ''
             }
@@ -165,7 +165,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
               size="medium"
               sx={(theme) => ({ marginTop: theme.spacing(2) })}
               type="button"
-              disabled={notificationChannelWatcher.length == 5}
+              disabled={notificationChannelWatcher.length === 5}
             >
               Add notification channel
             </Button>

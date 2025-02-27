@@ -55,7 +55,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
             />
           ))}
       </Stack>
-      <Tooltip title={dimensionFilterWatcher.length == 5 ? 'You can add up to 5 dimension filters.': ''}>
+      <Tooltip title={dimensionFilterWatcher.length === 5 ? 'You can add up to 5 dimension filters.': ''}>
       <Button
         onClick={() =>
           append({
@@ -64,7 +64,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
             value: null,
           })
         }
-        disabled={dimensionFilterWatcher.length == 5}
+        disabled={dimensionFilterWatcher.length === 5}
         buttonType="secondary"
         compactX
         data-qa-buttons="true"
