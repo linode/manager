@@ -16,3 +16,5 @@ export * from './isNumber';
 export * from './link';
 export * from './pluralize';
 export * from './minute-conversion';
+export * from './mockLocalStorage';
+export * from './nullOrUndefined';

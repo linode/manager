@@ -1,4 +1,5 @@
 import { omitProps } from '@linode/ui';
+import { isNotNullOrUndefined } from '@linode/utilities';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -9,7 +10,6 @@ import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalyt
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 import { utoa } from 'src/utilities/metadata';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
