@@ -186,7 +186,7 @@ export const AlertListing = () => {
             data-qa-filter="alert-service-filter"
             data-testid="alert-service-filter"
             label=""
-            limitTags={2}
+            limitTags={1}
             loading={serviceTypesLoading}
             multiple
             noMarginTop
@@ -205,6 +205,7 @@ export const AlertListing = () => {
             data-qa-filter="alert-status-filter"
             data-testid="alert-status-filter"
             label=""
+            limitTags={1}
             multiple
             noMarginTop
             options={alertStatusOptions}

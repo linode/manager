@@ -90,7 +90,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     <OrderBy
       data={alerts}
       order="asc"
-      orderBy="service"
+      orderBy="service_type"
       preferenceKey="alerts-landing"
     >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
@@ -157,6 +157,12 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                 </Table>
               </Grid>
               <PaginationFooter
+                handlePageChange={(page) => {
+                  handlePageChange(page);
+                  requestAnimationFrame(() => {
+                    scrollToElement();
+                  });
+                }}
                 handleSizeChange={(pageSize) => {
                   handlePageSizeChange(pageSize);
                   handlePageChange(1);
@@ -166,7 +172,6 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                 }}
                 count={count}
                 eventCategory="Alert Definitions Table"
-                handlePageChange={handlePageChange}
                 page={page}
                 pageSize={pageSize}
                 sx={{ border: 0 }}
