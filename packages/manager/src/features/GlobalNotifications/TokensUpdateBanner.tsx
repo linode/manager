@@ -30,7 +30,7 @@ export const DesignUpdateBanner = () => {
    */
   return (
     <DismissibleBanner preferenceKey={key} variant="info">
-      <Typography variant="body2">
+      <Typography fontSize="inherit">
         We are improving the Cloud Manager experience for our users.{' '}
         <Link to={link}>Read more</Link> about recent updates.
       </Typography>

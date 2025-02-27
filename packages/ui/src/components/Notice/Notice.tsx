@@ -143,7 +143,7 @@ export const Notice = (props: NoticeProps) => {
           marginBottom:
             spacingBottom !== undefined
               ? `${spacingBottom}px`
-              : theme.spacing(3),
+              : theme.spacing(1),
           marginLeft: spacingLeft !== undefined ? `${spacingLeft}px` : 0,
           marginTop: spacingTop !== undefined ? `${spacingTop}px` : 0,
         }),
