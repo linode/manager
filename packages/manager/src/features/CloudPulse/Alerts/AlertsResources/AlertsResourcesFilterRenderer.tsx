@@ -9,6 +9,9 @@ export interface AlertResourcesFilterRendererProps {
   component?: MemoExoticComponent<
     React.ComponentType<AlertResourceFiltersProps>
   >;
+  /**
+   * Props that will be passed to the filter component.
+   */
   componentProps: AlertResourceFiltersProps;
 }
 

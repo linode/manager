@@ -153,6 +153,45 @@ export const getChipLabels = (
 };
 
 /**
+ *
+ * @param alerts list of alerts to be filtered
+ * @param searchText text to be searched in alert name
+ * @param selectedType selecte alert type
+ * @returns list of filtered alerts based on searchText & selectedType
+ */
+export const filterAlertsByStatusAndType = (
+  alerts: Alert[] | undefined,
+  searchText: string,
+  selectedType: string | undefined
+): Alert[] => {
+  return (
+    alerts?.filter(({ label, status, type }) => {
+      return (
+        status === 'enabled' &&
+        (!selectedType || type === selectedType) &&
+        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
+      );
+    }) ?? []
+  );
+};
+
+/**
+ *
+ * @param alerts list of alerts
+ * @returns list of unique alert types in the alerts list in the form of json object
+ */
+export const convertAlertsToTypeSet = (
+  alerts: Alert[] | undefined
+): { label: AlertDefinitionType }[] => {
+  const types = new Set(alerts?.map(({ type }) => type) ?? []);
+
+  return Array.from(types).reduce(
+    (previousValue, type) => [...previousValue, { label: type }],
+    []
+  );
+};
+
+/**
  * Filters and maps the alert data to match the form structure.
  * @param alert The alert object to be mapped.
  * @param serviceType The service type for the alert.
@@ -228,58 +267,4 @@ export const processMetricCriteria = (
 
       return previousValue;
     }, []);
-};
-
-/**
-
- *
-
- * @param alerts list of alerts to be filtered
-
- * @param searchText text to be searched in alert name
-
- * @param selectedType selecte alert type
-
- * @returns list of filtered alerts based on searchText & selectedType
-
- */
-
-export const filterAlertsByStatusAndType = (
-  alerts: Alert[] | undefined,
-
-  searchText: string,
-
-  selectedType: string | undefined
-): Alert[] => {
-  return (
-    alerts?.filter(({ label, status, type }) => {
-      return (
-        status === 'enabled' &&
-        (!selectedType || type === selectedType) &&
-        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
-      );
-    }) ?? []
-  );
-};
-
-/**
-
- *
-
- * @param alerts list of alerts
-
- * @returns list of unique alert types in the alerts list in the form of json object
-
- */
-
-export const convertAlertsToTypeSet = (
-  alerts: Alert[] | undefined
-): { label: AlertDefinitionType }[] => {
-  const types = new Set(alerts?.map(({ type }) => type) ?? []);
-
-  return Array.from(types).reduce(
-    (previousValue, type) => [...previousValue, { label: type }],
-
-    []
-  );
 };

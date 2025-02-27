@@ -13,10 +13,17 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
     return <Typography variant="body2">-</Typography>;
   }
   return (
-    <Box alignItems="center" display="flex" gap={1}>
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        gap: 1,
+      }}
+    >
       <Chip
         sx={(theme) => ({
           backgroundColor: theme.color.tagButtonBg,
+          color: theme.color.tagButtonText,
         })}
         label={values[0]}
       />
@@ -24,30 +31,32 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
         <Tooltip
           title={
             <Box
-              alignItems="center"
-              display="flex"
-              flexDirection="column"
-              gap={1}
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                maxHeight: '280px',
+                overflow: 'auto',
+              }}
             >
-              {values.map(
-                (value, index) =>
-                  index > 0 && (
-                    <Typography key={index} variant="body2">
-                      {value}
-                    </Typography>
-                  )
-              )}
+              {values.slice(1).map((value, index) => (
+                <Typography key={index} variant="body2">
+                  {value}
+                </Typography>
+              ))}
             </Box>
           }
         >
-          <span>
+          <Box>
             <Chip
               sx={(theme) => ({
                 backgroundColor: theme.color.tagButtonBg,
+                color: theme.color.tagButtonText,
               })}
-              label={`+${values ? values.length - 1 : ''}`}
+              label={`+${values.length - 1}`}
             />
-          </span>
+          </Box>
         </Tooltip>
       )}
     </Box>
