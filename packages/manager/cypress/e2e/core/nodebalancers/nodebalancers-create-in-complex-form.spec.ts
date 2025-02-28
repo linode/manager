@@ -257,7 +257,7 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
       cy.contains('Must be a valid private IPv4 address.')
         .as('qaMustbe')
         .scrollIntoView();
-      cy.contains('@qaMustbe').should('be.visible');
+      cy.get('@qaMustbe').should('be.visible');
     });
   });
 });
