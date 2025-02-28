@@ -100,10 +100,8 @@ describe('volume attach and detach flows', () => {
           .click();
 
         ui.drawer.findByTitle(`Attach Volume ${volume.label}`).within(() => {
-          cy.findByLabelText('Linode')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByLabelText('Linode').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.autocompletePopper
             .findByTitle(linode.label)

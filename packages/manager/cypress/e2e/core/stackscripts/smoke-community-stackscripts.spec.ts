@@ -137,9 +137,10 @@ describe('Community Stackscripts integration tests', () => {
 
       // Search the corresponding community stack script
       mockGetStackScripts([stackScript]).as('getFilteredStackScripts');
-      cy.findByPlaceholderText('Search by Label, Username, or Description')
-        .click()
-        .type(`${stackScript.label}{enter}`);
+      cy.findByPlaceholderText(
+        'Search by Label, Username, or Description'
+      ).click();
+      cy.focused().type(`${stackScript.label}{enter}`);
       cy.wait('@getFilteredStackScripts');
 
       // Check filtered results
@@ -251,9 +252,10 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('tr').then((value) => {
       const rowCount = Cypress.$(value).length - 1; // Remove the table title row
 
-      cy.findByPlaceholderText('Search by Label, Username, or Description')
-        .click()
-        .type(`${stackScript.label}{enter}`);
+      cy.findByPlaceholderText(
+        'Search by Label, Username, or Description'
+      ).click();
+      cy.focused().type(`${stackScript.label}{enter}`);
       cy.get(`[data-qa-table-row="${stackScript.label}"]`).should('be.visible');
 
       cy.get('tr').its('length').should('be.lt', rowCount);
@@ -285,9 +287,10 @@ describe('Community Stackscripts integration tests', () => {
     cy.visitWithLogin('/stackscripts/community');
     cy.wait(['@getStackScripts', '@getPreferences']);
 
-    cy.findByPlaceholderText('Search by Label, Username, or Description')
-      .click()
-      .type(`${stackScriptName}{enter}`);
+    cy.findByPlaceholderText(
+      'Search by Label, Username, or Description'
+    ).click();
+    cy.focused().type(`${stackScriptName}{enter}`);
     cy.get(`[data-qa-table-row="${stackScriptName}"]`)
       .should('be.visible')
       .within(() => {
@@ -325,18 +328,12 @@ describe('Community Stackscripts integration tests', () => {
     );
 
     // Input VPN information
-    cy.get('[id="ipsec-pre-shared-key"]')
-      .should('be.visible')
-      .click()
-      .type(`${sharedKey}{enter}`);
-    cy.get('[id="vpn-username"]')
-      .should('be.visible')
-      .click()
-      .type(`${vpnUser}{enter}`);
-    cy.get('[id="vpn-password"]')
-      .should('be.visible')
-      .click()
-      .type(`${vpnPassword}{enter}`);
+    cy.get('[id="ipsec-pre-shared-key"]').should('be.visible').click();
+    cy.focused().type(`${sharedKey}{enter}`);
+    cy.get('[id="vpn-username"]').should('be.visible').click();
+    cy.focused().type(`${vpnUser}{enter}`);
+    cy.get('[id="vpn-password"]').should('be.visible').click();
+    cy.focused().type(`${vpnPassword}{enter}`);
 
     // Check each field should persist when moving onto another field
     cy.get('[id="ipsec-pre-shared-key"]').should('have.value', sharedKey);
@@ -344,10 +341,8 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('[id="vpn-password"]').should('have.value', vpnPassword);
 
     // Choose an image
-    cy.findByPlaceholderText('Choose an image')
-      .should('be.visible')
-      .click()
-      .type(image);
+    cy.findByPlaceholderText('Choose an image').should('be.visible').click();
+    cy.focused().type(image);
     ui.autocompletePopper.findByTitle(image).should('be.visible').click();
 
     cy.findByText(image).should('be.visible').click();
@@ -360,7 +355,8 @@ describe('Community Stackscripts integration tests', () => {
       .click();
     // An error message shows up when no region is selected
     cy.contains('Region is required.').should('be.visible');
-    ui.regionSelect.find().click().type(`${region.id}{enter}`);
+    ui.regionSelect.find().click();
+    cy.focused().type(`${region.id}{enter}`);
 
     // Choose a plan
     ui.button
@@ -370,11 +366,9 @@ describe('Community Stackscripts integration tests', () => {
       .click();
 
     // Enter a label.
-    cy.findByText('Linode Label')
-      .should('be.visible')
-      .click()
-      .type('{selectAll}{backspace}')
-      .type(linodeLabel);
+    cy.findByText('Linode Label').should('be.visible').click();
+    cy.focused().type('{selectAll}{backspace}');
+    cy.focused().type(linodeLabel);
 
     // An error message shows up when no region is selected
     cy.contains('Plan is required.').should('be.visible');
@@ -386,7 +380,8 @@ describe('Community Stackscripts integration tests', () => {
 
     // Input root password
     // Weak or fair root password cannot rebuild the linode
-    cy.get('[id="root-password"]').clear().type(weakPassword);
+    cy.get('[id="root-password"]').clear();
+    cy.focused().type(weakPassword);
     ui.button
       .findByTitle('Create Linode')
       .should('be.visible')
@@ -397,7 +392,8 @@ describe('Community Stackscripts integration tests', () => {
       'be.visible'
     );
 
-    cy.get('[id="root-password"]').clear().type(fairPassword);
+    cy.get('[id="root-password"]').clear();
+    cy.focused().type(fairPassword);
     ui.button
       .findByTitle('Create Linode')
       .should('be.visible')

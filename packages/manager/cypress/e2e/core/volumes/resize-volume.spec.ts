@@ -81,9 +81,8 @@ describe('volume resize flow', () => {
         cy.get('[data-qa-drawer="true"]')
           .should('be.visible')
           .within(() => {
-            cy.findByText('Size')
-              .click()
-              .type(`{selectall}{backspace}${newSize}`);
+            cy.findByText('Size').click();
+            cy.focused().type(`{selectall}{backspace}${newSize}`);
             cy.get('[data-qa-buttons="true"]').within(() => {
               cy.findByText('Resize Volume').should('be.visible').click();
             });

@@ -181,12 +181,14 @@ describe('Linode create flow with Placement Group', () => {
 
     // Confirm the Placement group assignment is accounted for in the summary.
     cy.findByText('Assigned to Placement Group')
-      .scrollIntoView()
-      .should('be.visible');
+      .as('qaAssigned')
+      .scrollIntoView();
+    cy.get('@qaAssigned').should('be.visible');
 
     // Type in a label, password and submit the form.
     mockCreateLinode(mockLinode).as('createLinode');
-    cy.get('#linode-label').clear().type('linode-with-placement-group');
+    cy.get('#linode-label').clear();
+    cy.focused().type('linode-with-placement-group');
     cy.get('#root-password').type(randomString(32));
 
     cy.findByText('Create Linode').should('be.enabled').click();
@@ -242,9 +244,8 @@ describe('Linode create flow with Placement Group', () => {
     // Confirm that mocked Placement Group is shown in the Autocomplete, and then select it.
     cy.findByText(
       `Placement Groups in ${mockNewarkRegion.label} (${mockNewarkRegion.id})`
-    )
-      .click()
-      .type(`${mockPlacementGroup.label}`);
+    ).click();
+    cy.focused().type(`${mockPlacementGroup.label}`);
     ui.autocompletePopper
       .findByTitle(mockPlacementGroup.label)
       .should('be.visible')
@@ -252,8 +253,9 @@ describe('Linode create flow with Placement Group', () => {
 
     // Confirm the Placement group assignment is accounted for in the summary.
     cy.findByText('Assigned to Placement Group')
-      .scrollIntoView()
-      .should('be.visible');
+      .as('qaAssigned')
+      .scrollIntoView();
+    cy.get('@qaAssigned').should('be.visible');
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
