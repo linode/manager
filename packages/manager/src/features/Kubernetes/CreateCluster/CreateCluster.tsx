@@ -124,7 +124,7 @@ export const CreateCluster = () => {
       setHighAvailability(undefined);
       setControlPlaneACL(false);
 
-      // Clear the ACL error if the tier is switched, since standard clusters don't require it
+      // Clear the ACL error if the tier is switched, since standard tier doesn't require it
       setErrors(undefined);
     }
   };

@@ -98,12 +98,23 @@ export const createKubeClusterSchema = object().shape({
 
 export const createKubeEnterpriseClusterSchema = object().shape({
   ...createKubeClusterSchema.fields,
-  control_plane: controlPlaneEnterpriseACLOptionsSchema
+  control_plane: object()
+    .shape({
+      high_availability: boolean(),
+      acl: object().shape({
+        enabled: boolean(),
+        'revision-id': string(),
+        addresses: object().shape({
+          ipv4: array().of(ipv4Address),
+          ipv6: array().of(ipv6Address),
+        }),
+      }),
+    })
     .test(
       'validateIPForEnterprise',
       'At least one IP address or CIDR range is required for LKE Enterprise.',
-      function (acl) {
-        const { ipv4, ipv6 } = acl.addresses;
+      function (controlPlane) {
+        const { ipv4, ipv6 } = controlPlane.acl.addresses;
         // Pass validation if either IP address has a value.
         return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
       }
