@@ -170,6 +170,6 @@ export const mockCreateLinodeConfigInterfaces = (
   return cy.intercept(
     'POST',
     apiMatcher(`linode/instances/${linodeId}/configs/${config.id}/interfaces`),
-    config.interfaces
+    config.interfaces ?? undefined
   );
 };
