@@ -66,6 +66,7 @@ export const StackScriptSelectionRow = (props: Props) => {
           justifyContent: 'flex-end',
           minWidth: 120,
           paddingRight: 0,
+          height: 44,
         }}
         actionCell
       >
