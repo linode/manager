@@ -1,5 +1,6 @@
 import { filter, isNil } from 'ramda';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {
@@ -210,4 +211,20 @@ export const getStickinessOptions = (protocol: Protocol) => {
   return STICKINESS_OPTIONS.filter((option) =>
     option.supportedProtocols.includes(protocol)
   );
+};
+
+/**
+ * Returns whether or not features related to the NB-VPC project
+ * should be enabled.
+ *
+ * Currently, this just uses the `nodebalancerVpc` feature flag as a source of truth,
+ * but will eventually also look at account capabilities.
+ */
+
+export const useIsNodebalancerVPCEnabled = () => {
+  const flags = useFlags();
+
+  // @TODO NB-VPC: check for customer tag/account capability when it exists
+
+  return { isNodebalancerVPCEnabled: flags.nodebalancerVpc ?? false };
 };
