@@ -1302,32 +1302,34 @@ describe('LKE Cluster Creation with LKE-E', () => {
             .should('be.visible')
             .should('be.enabled')
             .click();
+        });
 
-          // Confirm error validation requires an ACL IP
-          cy.findByText(
-            'At least one IP address or CIDR range is required for LKE Enterprise.',
-            { exact: false }
-          ).should('be.visible');
+      // Confirm error validation requires an ACL IP
+      cy.findByText(
+        'At least one IP address or CIDR range is required for LKE Enterprise.'
+      ).should('be.visible');
 
-          // Add an IP
-          cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
-            .should('be.visible')
-            .click()
-            .clear()
-            .type('10.0.0.0/24');
+      // Add an IP
+      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
+        .should('be.visible')
+        .click()
+        .clear()
+        .type('10.0.0.0/24');
 
+      cy.get('[data-testid="kube-checkout-bar"]')
+        .should('be.visible')
+        .within(() => {
           // Successfully submit the form
           ui.button
             .findByTitle('Create Cluster')
             .should('be.visible')
             .should('be.enabled')
             .click();
-
-          cy.findByText(
-            'At least one IP address or CIDR range is required for LKE Enterprise.',
-            { exact: false }
-          ).should('not.exist');
         });
+
+      cy.findByText(
+        'At least one IP address or CIDR range is required for LKE Enterprise.'
+      ).should('not.exist');
 
       // Wait for LKE cluster to be created and confirm that we are redirected
       // to the cluster summary page.
