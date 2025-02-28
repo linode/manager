@@ -120,8 +120,8 @@ describe('LKE summary page', () => {
     });
     cy.get('[data-qa-autocomplete="Create or Select a Tag"]')
       .should('be.visible')
-      .clear()
-      .type(`${tag}`);
+      .clear();
+    cy.focused().type(`${tag}`);
     cy.findByText(`Create "${tag}"`).should('be.visible').click();
 
     // Confirms that a put request is sent
@@ -191,8 +191,8 @@ describe('LKE summary page', () => {
         cy.findByText('Add a tag').click();
         cy.get('[data-qa-autocomplete="Create or Select a Tag"]')
           .should('be.visible')
-          .clear()
-          .type(`${tagNew}`);
+          .clear();
+        cy.focused().type(`${tagNew}`);
         cy.findByText(`Create "${tagNew}"`).should('be.visible').click();
 
         // Confirms that a put request is sent
