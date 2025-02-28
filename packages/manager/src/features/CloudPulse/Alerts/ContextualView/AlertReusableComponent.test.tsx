@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -82,5 +83,27 @@ describe('Alert Resuable Component for contextual view', () => {
     expect(mockHistory.push).toHaveBeenCalledWith(
       '/monitor/alerts/definitions'
     );
+  });
+
+  it('Should filter alerts based on search text', async () => {
+    const { getByPlaceholderText, getByText, queryByText } = renderWithTheme(
+      component
+    );
+    await userEvent.type(getByPlaceholderText('Search for Alerts'), 'Alert-1');
+    await waitFor(() => {
+      expect(getByText('Alert-1')).toBeVisible();
+      expect(queryByText('Alert-3')).not.toBeInTheDocument();
+    });
+  });
+
+  it('Should filter alerts based on alert type', async () => {
+    const { getByRole, getByText } = renderWithTheme(component);
+
+    await userEvent.click(getByRole('button', { name: 'Open' }));
+
+    await userEvent.click(getByRole('option', { name: 'system' }));
+
+    const alert = alerts[alerts.length - 1];
+    expect(getByText(alert.label)).toBeInTheDocument();
   });
 });
