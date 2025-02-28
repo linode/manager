@@ -23,7 +23,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
 
   const { alertDetails, serviceType } = props;
   const alertId = alertDetails.id;
-  const { mutateAsync: editAlert, isPending } = useEditAlertDefinition();
+  const { isPending, mutateAsync: editAlert } = useEditAlertDefinition();
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     []
   );
@@ -137,10 +137,10 @@ export const EditAlertResources = (props: EditAlertProps) => {
           </Button>
         </Box>
         <EditAlertResourcesConfirmDialog
+          isApiResponsePending={isPending}
           onClose={() => setShowConfirmation((prev) => !prev)}
           onConfirm={saveResources}
           openConfirmationDialog={showConfirmation}
-          isApiResponsePending={isPending}
         />
       </Box>
     </>
