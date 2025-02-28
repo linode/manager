@@ -1,13 +1,14 @@
 import { Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useBlocker, useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
+import { Prompt } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Prompt } from 'src/components/Prompt/Prompt';
 import {
   useAllFirewallDevicesQuery,
   useUpdateFirewallRulesMutation,
@@ -111,15 +112,15 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       ruleIdx: idx,
     });
     navigate({
-      params: { id: String(firewallID) },
+      params: { id: String(firewallID), ruleId: String(idx) },
       to:
         category === 'inbound' && mode === 'create'
           ? '/firewalls/$id/rules/add/inbound'
           : category === 'inbound' && mode === 'edit'
-          ? `/firewalls/$id/rules/edit/inbound/${idx}`
+          ? `/firewalls/$id/rules/edit/inbound/$ruleId`
           : category === 'outbound' && mode === 'create'
           ? '/firewalls/$id/rules/add/outbound'
-          : `/firewalls/$id/rules/edit/outbound/${idx}`,
+          : `/firewalls/$id/rules/edit/outbound/$ruleId`,
     });
   };
 
@@ -284,6 +285,27 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     [inboundState, outboundState, policy, rules]
   );
 
+  const { next, proceed, reset, status } = useBlocker({
+    enableBeforeUnload: hasUnsavedChanges,
+    shouldBlockFn: ({ next }) => {
+      // Only block if there are unsaved changes
+      if (!hasUnsavedChanges) {
+        return false;
+      }
+
+      // Don't block navigation to these specific routes, since they are part of the current form
+      const isNavigatingToAllowedRoute =
+        next.routeId === '/firewalls/$id/rules' ||
+        next.routeId === '/firewalls/$id/rules/add/inbound' ||
+        next.routeId === '/firewalls/$id/rules/add/outbound' ||
+        next.routeId === '/firewalls/$id/rules/edit/inbound/$ruleId' ||
+        next.routeId === '/firewalls/$id/rules/edit/outbound/$ruleId';
+
+      return !isNavigatingToAllowedRoute;
+    },
+    withResolver: true,
+  });
+
   const inboundRules = React.useMemo(() => editorStateToRules(inboundState), [
     inboundState,
   ]);
@@ -302,35 +324,40 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
 
   return (
     <>
-      <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
-        {({ handleCancel, handleConfirm, isModalOpen }) => {
-          return (
-            <ConfirmationDialog
-              actions={() => (
-                <ActionsPanel
-                  primaryButtonProps={{
-                    label: 'Go back and review changes',
-                    onClick: handleCancel,
-                  }}
-                  secondaryButtonProps={{
-                    label: 'Leave and discard changes',
-                    onClick: handleConfirm,
-                  }}
-                />
-              )}
-              onClose={handleCancel}
-              open={isModalOpen}
-              title="Discard Firewall changes?"
-            >
-              <Typography variant="subtitle1">
-                The changes you made to this Firewall haven&rsquo;t been
-                applied. If you navigate away from this page, your changes will
-                be discarded.
-              </Typography>
-            </ConfirmationDialog>
-          );
-        }}
-      </Prompt>
+      {/*
+        This Prompt eventually can be removed once react-router is fully deprecated
+        It is here only to block non-Tanstack routes
+      */}
+      <Prompt
+        message={
+          'Are you sure you want to leave this page? Your changes will not be saved.'
+        }
+        when={hasUnsavedChanges && !next}
+      />
+      <ConfirmationDialog
+        actions={() => (
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Go back and review changes',
+              onClick: reset,
+            }}
+            secondaryButtonProps={{
+              buttonType: 'secondary',
+              color: 'error',
+              label: 'Leave and discard changes',
+              onClick: proceed,
+            }}
+          />
+        )}
+        onClose={reset}
+        open={status === 'blocked'}
+        title="Discard Firewall changes?"
+      >
+        <Typography variant="subtitle1">
+          The changes you made to this Firewall haven&rsquo;t been applied. If
+          you navigate away from this page, your changes will be discarded.
+        </Typography>
+      </ConfirmationDialog>
 
       {disabled ? (
         <Notice
@@ -341,11 +368,9 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           variant="error"
         />
       ) : null}
-
       {generalErrors?.length === 1 && (
         <Notice spacingTop={8} text={generalErrors[0].reason} variant="error" />
       )}
-
       <StyledDiv>
         <FirewallRuleTable
           handleCloneFirewallRule={(idx: number) =>
@@ -414,7 +439,6 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           onClick: () => setDiscardChangesModalOpen(true),
         }}
       />
-
       <DiscardChangesDialog
         handleDiscard={() => {
           setDiscardChangesModalOpen(false);

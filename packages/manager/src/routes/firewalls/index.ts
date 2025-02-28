@@ -3,7 +3,12 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { FirewallsRoute } from './FirewallsRoute';
 
-import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { TableSearchParams } from '../types';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
+
+export interface FirewallsSearchParams extends TableSearchParams {
+  type?: LinodeCreateType;
+}
 
 const firewallsRoute = createRoute({
   component: FirewallsRoute,
@@ -21,9 +26,7 @@ const firewallsIndexRoute = createRoute({
 const firewallCreateRoute = createRoute({
   getParentRoute: () => firewallsRoute,
   path: 'create',
-  validateSearch: (
-    search?: LinodeCreateQueryParams
-  ): Partial<LinodeCreateQueryParams> => search ?? {},
+  validateSearch: (search: FirewallsSearchParams) => search,
 }).lazy(() =>
   import('./firewallLazyRoutes').then((m) => m.firewallLandingLazyRoute)
 );
@@ -64,9 +67,16 @@ const firewallDetailRulesAddRuleRoute = createRoute({
   import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
 );
 
-const firewallDetailRulesEditRuleRoute = createRoute({
+const firewallDetailRulesEditInboundRuleRoute = createRoute({
   getParentRoute: () => firewallDetailRulesRoute,
-  path: 'edit',
+  path: 'edit/inbound/$ruleId',
+}).lazy(() =>
+  import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
+);
+
+const firewallDetailRulesEditOutboundRuleRoute = createRoute({
+  getParentRoute: () => firewallDetailRulesRoute,
+  path: 'edit/outbound/$ruleId',
 }).lazy(() =>
   import('./firewallLazyRoutes').then((m) => m.firewallDetailLazyRoute)
 );
@@ -136,7 +146,8 @@ export const firewallsRouteTree = firewallsRoute.addChildren([
     ]),
     firewallDetailRulesRoute.addChildren([
       firewallDetailRulesAddRuleRoute,
-      firewallDetailRulesEditRuleRoute,
+      firewallDetailRulesEditInboundRuleRoute,
+      firewallDetailRulesEditOutboundRuleRoute,
       firewallDetailRulesAddInboundRuleRoute,
       firewallDetailRulesAddOutboundRuleRoute,
     ]),

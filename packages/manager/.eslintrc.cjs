@@ -137,6 +137,7 @@ module.exports = {
                   'Redirect',
                   'RouteComponentProps',
                   'withRouter',
+                  'Prompt',
                 ],
                 message:
                   'Please use routing utilities intended for @tanstack/react-router.',
