@@ -3,7 +3,7 @@ import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { useTheme } from '@mui/material/styles';
 import { useQueries } from '@tanstack/react-query';
 import * as React from 'react';
-import { quotaQueries } from 'src/queries/quotas/quotas';
+
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { BarPercent } from 'src/components/BarPercent/BarPercent';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -17,12 +17,15 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { usePagination } from 'src/hooks/usePagination';
 import { useQuotasQuery } from 'src/queries/quotas/quotas';
+import { quotaQueries } from 'src/queries/quotas/quotas';
 
 import { getQuotaError, getQuotasFilters } from './utils';
 
 import type { Filter, Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
+
+const quotaRowMinHeight = 58;
 
 interface QuotasTableProps {
   selectedLocation: SelectOption<Quota['region_applied']> | null;
@@ -69,7 +72,6 @@ export const QuotasTable = (props: QuotasTableProps) => {
       quotaQueries.service(selectedService.value)._ctx.usage(quotaId)
     ),
   });
-  const isFetchingUsage = quotaUsageQueries.some((query) => query.isLoading);
 
   // Combine the quotas with their usage
   const quotasWithUsage = React.useMemo(
@@ -103,20 +105,26 @@ export const QuotasTable = (props: QuotasTableProps) => {
         </TableHead>
         <TableBody>
           {hasSelectedLocation && isFetchingQuotas ? (
-            <TableRowLoading columns={4} rows={5} />
+            <TableRowLoading
+              columns={4}
+              rows={5}
+              sx={{ height: quotaRowMinHeight }}
+            />
           ) : !selectedLocation ? (
             <TableRowEmpty
               colSpan={4}
               message="Apply filters above to see quotas and current usage."
+              sx={{ height: quotaRowMinHeight }}
             />
           ) : quotasWithUsage.length === 0 ? (
             <TableRowEmpty
               colSpan={4}
               message="No quotas found for the selected service and location."
+              sx={{ height: quotaRowMinHeight }}
             />
           ) : (
             quotasWithUsage.map((quota, index) => (
-              <TableRow key={quota.quota_id}>
+              <TableRow key={quota.quota_id} sx={{ height: quotaRowMinHeight }}>
                 <TableCell>
                   <Box alignItems="center" display="flex" flexWrap="nowrap">
                     <Typography
@@ -140,7 +148,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
                 <TableCell>{quota.quota_limit}</TableCell>
                 <TableCell>
                   <Box sx={{ maxWidth: '80%' }}>
-                    {isFetchingUsage ? (
+                    {quotaUsageQueries[index]?.isLoading ? (
                       <Box alignItems="center" display="flex" gap={1}>
                         <CircleProgress size="sm" />{' '}
                         <Typography>Fetching Data...</Typography>
@@ -157,7 +165,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
                         <ErrorOutline />
                         {getQuotaError(quotaUsageQueries, index)}
                       </Typography>
-                    ) : (
+                    ) : quota.usage?.used !== null ? (
                       <>
                         <BarPercent
                           customColors={[
@@ -180,13 +188,13 @@ export const QuotasTable = (props: QuotasTableProps) => {
                           value={quota.usage?.used ?? 0}
                         />
                         <Typography sx={{ mb: 1 }}>
-                          {quota.usage?.used ?? 'unknown'} of{' '}
-                          {quota.quota_limit}{' '}
-                          {`${quota.resource_metric}${
-                            quota.quota_limit > 1 ? 's' : ''
-                          } used`}
+                          {`${quota.usage?.used} of ${quota.quota_limit} ${
+                            quota.resource_metric
+                          }${quota.quota_limit > 1 ? 's' : ''} used`}
                         </Typography>
                       </>
+                    ) : (
+                      <Typography>Data not available</Typography>
                     )}
                   </Box>
                 </TableCell>
