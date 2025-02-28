@@ -200,11 +200,11 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0
       jspdf:
-        specifier: ^2.5.2
-        version: 2.5.2
+        specifier: ^3.0.0
+        version: 3.0.0
       jspdf-autotable:
-        specifier: ^3.5.14
-        version: 3.8.4(jspdf@2.5.2)
+        specifier: ^5.0.2
+        version: 5.0.2(jspdf@3.0.0)
       launchdarkly-react-client-sdk:
         specifier: 3.0.10
         version: 3.0.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3773,9 +3773,6 @@ packages:
   dom-helpers@5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
 
-  dompurify@2.5.7:
-    resolution: {integrity: sha512-2q4bEI+coQM8f5ez7kt2xclg1XsecaV9ASJk/54vwlfRRNQfDqJz2pzQ8t0Ix/ToBpXlVjrRIx7pFC/o8itG2Q==}
-
   dompurify@3.2.4:
     resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
 
@@ -4832,13 +4829,13 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
-  jspdf-autotable@3.8.4:
-    resolution: {integrity: sha512-rSffGoBsJYX83iTRv8Ft7FhqfgEL2nLpGAIiqruEQQ3e4r0qdLFbPUB7N9HAle0I3XgpisvyW751VHCqKUVOgQ==}
+  jspdf-autotable@5.0.2:
+    resolution: {integrity: sha512-YNKeB7qmx3pxOLcNeoqAv3qTS7KuvVwkFe5AduCawpop3NOkBUtqDToxNc225MlNecxT4kP2Zy3z/y/yvGdXUQ==}
     peerDependencies:
-      jspdf: ^2.5.1
+      jspdf: ^2 || ^3
 
-  jspdf@2.5.2:
-    resolution: {integrity: sha512-myeX9c+p7znDWPk0eTrujCzNjT+CXdXyk7YmJq5nD5V7uLLKmSXnlQ/Jn/kuo3X09Op70Apm0rQSnFWyGK8uEQ==}
+  jspdf@3.0.0:
+    resolution: {integrity: sha512-QvuQZvOI8CjfjVgtajdL0ihrDYif1cN5gXiF9lb9Pd9JOpmocvnNyFO9sdiJ/8RA5Bu8zyGOUjJLj5kiku16ug==}
 
   jsprim@2.0.2:
     resolution: {integrity: sha512-gqXddjPqQ6G40VdnI6T6yObEC+pDNvyP95wdQhkWkg7crHH3km5qP1FsOXEkzEQwnz6gz5qGTn1c2Y52wP3OyQ==}
@@ -9941,9 +9938,6 @@ snapshots:
       '@babel/runtime': 7.26.0
       csstype: 3.1.3
 
-  dompurify@2.5.7:
-    optional: true
-
   dompurify@3.2.4:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
@@ -11234,11 +11228,11 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
-  jspdf-autotable@3.8.4(jspdf@2.5.2):
+  jspdf-autotable@5.0.2(jspdf@3.0.0):
     dependencies:
-      jspdf: 2.5.2
+      jspdf: 3.0.0
 
-  jspdf@2.5.2:
+  jspdf@3.0.0:
     dependencies:
       '@babel/runtime': 7.26.0
       atob: 2.1.2
@@ -11247,7 +11241,7 @@ snapshots:
     optionalDependencies:
       canvg: 3.0.10
       core-js: 3.39.0
-      dompurify: 2.5.7
+      dompurify: 3.2.4
       html2canvas: 1.4.1
 
   jsprim@2.0.2:
