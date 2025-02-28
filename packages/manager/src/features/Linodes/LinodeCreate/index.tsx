@@ -1,5 +1,5 @@
 import { isEmpty } from '@linode/api-v4';
-import { Notice, Stack } from '@linode/ui';
+import { CircleProgress, Notice, Stack } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -27,6 +27,7 @@ import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
@@ -36,6 +37,7 @@ import { Error } from './Error';
 import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { FirewallAuthorization } from './FirewallAuthorization';
+import { Networking } from './Networking/Networking';
 import { Plan } from './Plan';
 import { getLinodeCreateResolver } from './resolvers';
 import { Security } from './Security';
@@ -69,12 +71,13 @@ import type { SubmitHandler } from 'react-hook-form';
 export const LinodeCreate = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: profile } = useProfile();
 
   const queryClient = useQueryClient();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
-    context: { profile, secureVMNoticesEnabled },
+    context: { isLinodeInterfacesEnabled, profile, secureVMNoticesEnabled },
     defaultValues: () => defaultValues(params, queryClient),
     mode: 'onBlur',
     resolver: getLinodeCreateResolver(params.type, queryClient),
@@ -111,7 +114,7 @@ export const LinodeCreate = () => {
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
-    const payload = getLinodeCreatePayload(values);
+    const payload = getLinodeCreatePayload(values, isLinodeInterfacesEnabled);
 
     try {
       const linode =
@@ -168,6 +171,10 @@ export const LinodeCreate = () => {
     }
     previousSubmitCount.current = form.formState.submitCount;
   }, [form.formState, handleLinodeCreateAnalyticsFormError]);
+
+  if (form.formState.isLoading) {
+    return <CircleProgress />;
+  }
 
   return (
     <FormProvider {...form}>
@@ -232,10 +239,13 @@ export const LinodeCreate = () => {
           <Plan />
           <Details />
           {params.type !== 'Clone Linode' && <Security />}
-          <VPC />
-          <Firewall />
-          {params.type !== 'Clone Linode' && <VLAN />}
+          {!isLinodeInterfacesEnabled && <VPC />}
+          {!isLinodeInterfacesEnabled && <Firewall />}
+          {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
+            <VLAN />
+          )}
           <UserData />
+          {isLinodeInterfacesEnabled && <Networking />}
           <Addons />
           <EUAgreement />
           <Summary />

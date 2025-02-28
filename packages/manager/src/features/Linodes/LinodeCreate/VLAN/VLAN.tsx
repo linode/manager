@@ -81,7 +81,7 @@ export const VLAN = () => {
         </Link>
         .
       </Typography>
-      <Stack columnGap={2} direction="row" flexWrap="wrap">
+      <Stack columnGap={2} direction="row" flexWrap="wrap" mt={2}>
         <Controller
           render={({ field, fieldState }) => (
             <VLANSelect
@@ -107,6 +107,7 @@ export const VLAN = () => {
               disabled={disabled}
               errorText={fieldState.error?.message}
               label="IPAM Address"
+              noMarginTop
               onBlur={field.onBlur}
               onChange={field.onChange}
               optional
