@@ -28,7 +28,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
   { flag: 'lkeEnterprise', label: 'LKE-Enterprise' },
-  { flag: 'nodebalancerVPC', label: 'NodeBalancer-VPC Integration' },
+  { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
