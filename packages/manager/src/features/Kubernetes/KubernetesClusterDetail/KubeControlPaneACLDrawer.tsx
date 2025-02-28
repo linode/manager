@@ -8,7 +8,10 @@ import {
   Typography,
   omittedProps,
 } from '@linode/ui';
-import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
+import {
+  kubernetesControlPlaneACLPayloadSchema,
+  kubernetesEnterpriseControlPlaneACLPayloadSchema,
+} from '@linode/validation';
 import { Divider, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -23,9 +26,17 @@ import {
 } from 'src/queries/kubernetes';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
+import {
+  ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY,
+  ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY,
+  ACL_DRAWER_STANDARD_TIER_ACL_COPY,
+  ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY,
+} from '../constants';
+
 import type {
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
+  KubernetesTier,
 } from '@linode/api-v4';
 
 export interface KubeControlPlaneACLDrawerProps {
@@ -34,6 +45,7 @@ export interface KubeControlPlaneACLDrawerProps {
   clusterId: KubernetesCluster['id'];
   clusterLabel: KubernetesCluster['label'];
   clusterMigrated: boolean;
+  clusterTier: KubernetesTier;
   open: boolean;
 }
 
@@ -47,6 +59,7 @@ export const KubeControlPlaneACLDrawer = (
     clusterId,
     clusterLabel,
     clusterMigrated,
+    clusterTier,
     open,
   } = props;
   const aclPayload = aclData?.acl;
@@ -69,7 +82,11 @@ export const KubeControlPlaneACLDrawer = (
   } = useForm<KubernetesControlPlaneACLPayload>({
     defaultValues: aclData,
     mode: 'onBlur',
-    resolver: yupResolver(kubernetesControlPlaneACLPayloadSchema),
+    resolver: yupResolver(
+      clusterTier === 'enterprise'
+        ? kubernetesEnterpriseControlPlaneACLPayloadSchema
+        : kubernetesControlPlaneACLPayloadSchema
+    ),
     values: {
       acl: {
         addresses: {
@@ -165,10 +182,9 @@ export const KubeControlPlaneACLDrawer = (
         )}
         <Stack sx={{ marginTop: 3 }}>
           <StyledTypography variant="body1">
-            Control Plane ACL secures network access to your LKE cluster&apos;s
-            control plane. Use this form to enable or disable the ACL on your
-            LKE cluster, update the list of allowed IP addresses, and adjust
-            other settings.
+            {clusterTier === 'enterprise'
+              ? ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY
+              : ACL_DRAWER_STANDARD_TIER_ACL_COPY}
           </StyledTypography>
           {!clusterMigrated && (
             <Notice spacingBottom={0} spacingTop={16} variant="warning">
@@ -187,30 +203,31 @@ export const KubeControlPlaneACLDrawer = (
           <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
           <Typography variant="h3">Activation Status</Typography>
           <StyledTypography topMargin variant="body1">
-            Enable or disable the Control Plane ACL. If the ACL is not enabled,
-            any public IP address can be used to access your control plane. Once
-            enabled, all network access is denied except for the IP addresses
-            and CIDR ranges defined on the ACL.
+            {clusterTier === 'enterprise'
+              ? ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY
+              : ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY}
           </StyledTypography>
-          <Box sx={{ marginTop: 1 }}>
-            <Controller
-              render={({ field }) => (
-                <FormControlLabel
-                  control={
-                    <Toggle
-                      checked={field.value ?? false}
-                      name="ipacl-checkbox"
-                      onBlur={field.onBlur}
-                      onChange={field.onChange}
-                    />
-                  }
-                  label={'Enable Control Plane ACL'}
-                />
-              )}
-              control={control}
-              name="acl.enabled"
-            />
-          </Box>
+          {clusterTier !== 'enterprise' && (
+            <Box sx={{ marginTop: 1 }}>
+              <Controller
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Toggle
+                        checked={field.value ?? false}
+                        name="ipacl-checkbox"
+                        onBlur={field.onBlur}
+                        onChange={field.onChange}
+                      />
+                    }
+                    label={'Enable Control Plane ACL'}
+                  />
+                )}
+                control={control}
+                name="acl.enabled"
+              />
+            </Box>
+          )}
           <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
           {clusterMigrated && (
             <>
@@ -244,9 +261,9 @@ export const KubeControlPlaneACLDrawer = (
             cluster&apos;s control plane will only be accessible from IP
             addresses within this list.
           </StyledTypography>
-          {errors.acl?.message && (
+          {errors.acl?.root && (
             <Notice spacingBottom={12} spacingTop={8} variant="error">
-              {errors.acl.message}
+              {errors.acl?.root.message}
             </Notice>
           )}
           <Box sx={{ maxWidth: 450 }}>

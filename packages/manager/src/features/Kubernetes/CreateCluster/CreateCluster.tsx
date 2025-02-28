@@ -111,9 +111,10 @@ export const CreateCluster = () => {
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
 
-    // HA is enabled by default for enterprise clusters
+    // HA and ACL are enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setHighAvailability(true);
+      setControlPlaneACL(true);
 
       // When changing the tier to enterprise, we want to check if the pre-selected region has the capability
       if (!selectedRegion?.capabilities.includes('Kubernetes Enterprise')) {
@@ -121,6 +122,10 @@ export const CreateCluster = () => {
       }
     } else {
       setHighAvailability(undefined);
+      setControlPlaneACL(false);
+
+      // Clear the ACL error if the tier is switched, since standard tier doesn't require it
+      setErrors(undefined);
     }
   };
 
@@ -479,6 +484,7 @@ export const CreateCluster = () => {
                 errorText={errorMap.control_plane}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
+                selectedTier={selectedTier}
                 setControlPlaneACL={setControlPlaneACL}
               />
             </>

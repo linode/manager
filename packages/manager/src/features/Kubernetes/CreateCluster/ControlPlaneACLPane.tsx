@@ -13,6 +13,12 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { validateIPs } from 'src/utilities/ipUtils';
 
+import {
+  CREATE_CLUSTER_ENTERPRISE_TIER_ACL_ACTIVATION_STATUS_COPY,
+  CREATE_CLUSTER_STANDARD_TIER_ACL_ACTIVATION_STATUS_COPY,
+} from '../constants';
+
+import type { KubernetesTier } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export interface ControlPlaneACLProps {
@@ -22,6 +28,7 @@ export interface ControlPlaneACLProps {
   handleIPv6Change: (ips: ExtendedIP[]) => void;
   ipV4Addr: ExtendedIP[];
   ipV6Addr: ExtendedIP[];
+  selectedTier: KubernetesTier;
   setControlPlaneACL: (enabled: boolean) => void;
 }
 
@@ -33,6 +40,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     handleIPv6Change,
     ipV4Addr,
     ipV6Addr,
+    selectedTier,
     setControlPlaneACL,
   } = props;
 
@@ -48,20 +56,22 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
           </Notice>
         )}
         <Typography mb={1} sx={{ width: '85%' }}>
-          Enable an access control list (ACL) on your LKE cluster to restrict
-          access to your cluster’s control plane. When enabled, only the IP
-          addresses and ranges you specify can connect to the control plane.
+          {selectedTier === 'enterprise'
+            ? CREATE_CLUSTER_ENTERPRISE_TIER_ACL_ACTIVATION_STATUS_COPY
+            : CREATE_CLUSTER_STANDARD_TIER_ACL_ACTIVATION_STATUS_COPY}
         </Typography>
-        <FormControlLabel
-          control={
-            <Toggle
-              checked={enableControlPlaneACL}
-              name="ipacl-checkbox"
-              onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
-            />
-          }
-          label="Enable Control Plane ACL"
-        />
+        {selectedTier !== 'enterprise' && (
+          <FormControlLabel
+            control={
+              <Toggle
+                checked={enableControlPlaneACL}
+                name="ipacl-checkbox"
+                onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
+              />
+            }
+            label="Enable Control Plane ACL"
+          />
+        )}
       </FormControl>
       {enableControlPlaneACL && (
         <Box sx={{ marginBottom: 3, maxWidth: 450 }}>

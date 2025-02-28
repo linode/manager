@@ -1,4 +1,7 @@
-import { createKubeClusterSchema } from '@linode/validation/lib/kubernetes.schema';
+import {
+  createKubeClusterSchema,
+  createKubeEnterpriseClusterSchema,
+} from '@linode/validation/lib/kubernetes.schema';
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -94,7 +97,12 @@ export const createKubernetesClusterBeta = (data: CreateKubeClusterPayload) => {
   return Request<KubernetesCluster>(
     setMethod('POST'),
     setURL(`${BETA_API_ROOT}/lke/clusters`),
-    setData(data, createKubeClusterSchema)
+    setData(
+      data,
+      data.tier === 'enterprise'
+        ? createKubeEnterpriseClusterSchema
+        : createKubeClusterSchema
+    )
   );
 };
 

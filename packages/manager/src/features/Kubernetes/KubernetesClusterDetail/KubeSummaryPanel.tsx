@@ -210,6 +210,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         clusterId={cluster.id}
         clusterLabel={cluster.label}
         clusterMigrated={!isErrorKubernetesACL}
+        clusterTier={cluster.tier ?? 'standard'} // TODO LKE: remove fallback once LKE-E is in GA and tier is required
         open={isControlPlaneACLDrawerOpen}
       />
       <DeleteKubernetesClusterDialog
