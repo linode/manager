@@ -54,7 +54,10 @@ const Glish = (props: Props) => {
 
   const handlePaste = (event: ClipboardEvent) => {
     event.preventDefault();
-    if (!ref.current?.rfb) {
+    if (
+      !ref.current?.rfb ||
+      ref.current.rfb._rfbConnectionState !== 'connected'
+    ) {
       return;
     }
     if (event.clipboardData === null) {
@@ -147,6 +150,12 @@ const sendCharacter = (
   character: string,
   ref: React.RefObject<VncScreenHandle>
 ) => {
+  if (
+    !ref.current?.rfb ||
+    ref.current.rfb._rfbConnectionState !== 'connected'
+  ) {
+    return;
+  }
   const actualCharacter = character[0];
   const requiresShift = actualCharacter.match(/[A-Z!@#$%^&*()_+{}:\"<>?~|]/);
 
