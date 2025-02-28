@@ -19,7 +19,7 @@ interface AlertInformationActionRowProps {
 
   /**
    * Handler function for the click of toggle button
-   * @param alert alert object for which toggle button is click
+   * @param alert object for which toggle button is click
    */
   handleToggle: (alert: Alert) => void;
 
@@ -55,7 +55,13 @@ export const AlertInformationActionRow = (
         <MetricThreshold metricThreshold={metricThreshold} />
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle1">{capitalize(type)}</Typography>
+        <Typography
+          sx={(theme) => ({
+            font: theme.tokens.typography.Label.Regular.S,
+          })}
+        >
+          {capitalize(type)}
+        </Typography>
       </TableCell>
     </TableRow>
   );

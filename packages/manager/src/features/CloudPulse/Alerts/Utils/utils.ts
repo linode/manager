@@ -34,17 +34,17 @@ interface AlertChipBorderProps {
 
 export interface ProcessedCriteria {
   /**
-   * Aggregation type for the metric criteria
-   */
-  aggregationType: string;
-  /**
    * Label for the metric criteria
    */
   label: string;
   /**
+   * Aggregation type for the metric criteria
+   */
+  metricAggregationType: string;
+  /**
    * Comparison operator for the metric criteria
    */
-  operator: string;
+  metricOperator: string;
   /**
    * Threshold value for the metric criteria
    */
@@ -239,18 +239,15 @@ export const convertAlertDefinitionValues = (
 export const processMetricCriteria = (
   criterias: AlertDefinitionMetricCriteria[]
 ): ProcessedCriteria[] => {
-  return criterias
-    .map(({ aggregate_function, label, operator, threshold, unit }) => {
+  return criterias.map(
+    ({ aggregate_function, label, operator, threshold, unit }) => {
       return {
-        aggregationType: aggregationTypeMap[aggregate_function],
         label,
-        operator: metricOperatorTypeMap[operator],
+        metricAggregationType: aggregationTypeMap[aggregate_function],
+        metricOperator: metricOperatorTypeMap[operator],
         threshold,
         unit,
       };
-    })
-    .reduce<ProcessedCriteria[]>((previousValue, currentValue) => {
-      previousValue.push(currentValue);
-      return previousValue;
-    }, []);
+    }
+  );
 };

@@ -1,3 +1,4 @@
+import { capitalize } from '@linode/utilities';
 import React from 'react';
 
 import { alertFactory } from 'src/factories';
@@ -5,7 +6,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { processMetricCriteria } from '../Utils/utils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
-import { capitalize } from '@linode/utilities';
 
 describe('Alert list table row', () => {
   it('Should display the data', () => {
@@ -35,7 +35,7 @@ describe('Alert list table row', () => {
     );
     expect(
       getByText(
-        `${processCriteria.label} ${processCriteria.operator} ${processCriteria.threshold} ${processCriteria.unit}`
+        `${processCriteria.label} ${processCriteria.metricOperator} ${processCriteria.threshold} ${processCriteria.unit}`
       )
     ).toBeInTheDocument();
   });
