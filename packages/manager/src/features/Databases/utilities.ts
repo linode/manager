@@ -245,3 +245,10 @@ export const upgradableVersions = (
   version: string,
   engines?: Pick<DatabaseEngine, 'engine' | 'version'>[]
 ) => engines?.filter((e) => e.engine === engine && e.version > version);
+
+export const formatConfigValue = (configValue: string) =>
+  configValue === 'true'
+    ? 'Enabled'
+    : configValue === 'false'
+    ? 'Disabled'
+    : configValue;
