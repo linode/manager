@@ -152,6 +152,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
 
           <Controller
             render={({ field, fieldState }) => (
+              <Box sx={{ maxHeight: '54px' }}>
               <TextField
                 onWheel={(event) =>
                   event.target instanceof HTMLElement && event.target.blur()
@@ -171,6 +172,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 type="number"
                 value={field.value ?? 0}
               />
+              </Box>
             )}
             control={control}
             name={`${name}.trigger_occurrences`}
