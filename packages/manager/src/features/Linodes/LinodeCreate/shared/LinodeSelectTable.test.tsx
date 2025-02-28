@@ -9,11 +9,20 @@ import {
   renderWithThemeAndHookFormContext,
 } from 'src/utilities/testHelpers';
 
-import { LinodeSelectTable } from './LinodeSelectTable';
+import { LinodeSelectTable, getLinodeXFilter } from './LinodeSelectTable';
 
 beforeAll(() => mockMatchMedia());
 
 describe('Linode Select Table', () => {
+  it('should filter out Linodes in distributed regions', async () => {
+    const xFilter = getLinodeXFilter('');
+
+    expect(xFilter).toStrictEqual({
+      '+or': [{ label: { '+contains': '' } }],
+      site_type: 'core',
+    });
+  });
+
   it('should render Linodes from the API', async () => {
     const linodes = linodeFactory.buildList(10);
 
