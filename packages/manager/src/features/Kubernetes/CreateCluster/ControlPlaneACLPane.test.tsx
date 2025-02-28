@@ -10,8 +10,6 @@ import type { ControlPlaneACLProps } from './ControlPlaneACLPane';
 const props: ControlPlaneACLProps = {
   enableControlPlaneACL: true,
   errorText: undefined,
-  handleIPv4Change: vi.fn(),
-  handleIPv6Change: vi.fn(),
   setControlPlaneACL: vi.fn(),
 };
 
@@ -85,11 +83,7 @@ describe('ControlPlaneACLPane', () => {
     const ipv4 = getByTestId('ipv4-addresses-or-cidrs-ip-address-0');
     await userEvent.type(ipv4, 'test');
 
-    expect(props.handleIPv4Change).toHaveBeenCalled();
-
     const ipv6 = getByTestId('ipv6-addresses-or-cidrs-ip-address-0');
     await userEvent.type(ipv6, 'test');
-
-    expect(props.handleIPv6Change).toHaveBeenCalled();
   });
 });

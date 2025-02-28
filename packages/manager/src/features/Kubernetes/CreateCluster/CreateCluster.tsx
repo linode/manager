@@ -515,34 +515,8 @@ export const CreateCluster = () => {
                 <>
                   {selectedTier !== 'enterprise' && <Divider />}
                   <Controller
-                    render={({ field }) => (
+                    render={() => (
                       <ControlPlaneACLPane
-                        handleIPv4Change={(value) => {
-                          const updatedACL = { ...field.value };
-                          if (!updatedACL.addresses) {
-                            updatedACL.addresses = {};
-                          }
-                          if (
-                            JSON.stringify(updatedACL.addresses.ipv4) !==
-                            JSON.stringify(value)
-                          ) {
-                            updatedACL.addresses.ipv4 = value;
-                            field.onChange(updatedACL);
-                          }
-                        }}
-                        handleIPv6Change={(value) => {
-                          const updatedACL = { ...field.value };
-                          if (!updatedACL.addresses) {
-                            updatedACL.addresses = {};
-                          }
-                          if (
-                            JSON.stringify(updatedACL.addresses.ipv6) !==
-                            JSON.stringify(value)
-                          ) {
-                            updatedACL.addresses.ipv6 = value;
-                            field.onChange(updatedACL);
-                          }
-                        }}
                         updateFor={[
                           getValues('control_plane.acl.addresses.ipv4'),
                           getValues('control_plane.acl.addresses.ipv6'),

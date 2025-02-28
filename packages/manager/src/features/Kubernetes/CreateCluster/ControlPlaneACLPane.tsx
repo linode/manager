@@ -12,18 +12,23 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LinkButton } from 'src/components/LinkButton';
-import { stringToExtendedIP, validateIPs } from 'src/utilities/ipUtils';
+import {
+  extendedIPToString,
+  stringToExtendedIP,
+  validateIPs,
+} from 'src/utilities/ipUtils';
 
+import type { CreateKubeClusterPayload } from '@linode/api-v4';
 import type { RenderGuardProps } from 'src/components/RenderGuard';
 export interface ControlPlaneACLProps extends RenderGuardProps {
   enableControlPlaneACL: boolean;
   errorText: string | undefined;
-  handleIPv4Change: (ips: string[]) => void;
-  handleIPv6Change: (ips: string[]) => void;
+  initialIpv4Addresses?: string[];
+  initialIpv6Addresses?: string[];
   setControlPlaneACL: (enabled: boolean) => void;
 }
 
@@ -31,44 +36,73 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
   const {
     enableControlPlaneACL,
     errorText,
-    handleIPv4Change,
-    handleIPv6Change,
+    initialIpv4Addresses = [''],
+    initialIpv6Addresses = [''],
     setControlPlaneACL,
   } = props;
 
-  const { clearErrors, control, setError, watch } = useFormContext();
   const {
-    append: appendIPv4,
-    fields: ipv4Fields,
-    remove: removeIPv4,
-  } = useFieldArray({
+    clearErrors,
     control,
-    name: 'ipv4Addresses',
-  });
+    getValues,
+    setError,
+    setValue,
+    watch,
+  } = useFormContext<CreateKubeClusterPayload>();
 
-  const {
-    append: appendIPv6,
-    fields: ipv6Fields,
-    remove: removeIPv6,
-  } = useFieldArray({
-    control,
-    name: 'ipv6Addresses',
-  });
+  const ipv4Addresses = watch(
+    'control_plane.acl.addresses.ipv4',
+    initialIpv4Addresses
+  );
+  const ipv6Addresses = watch(
+    'control_plane.acl.addresses.ipv6',
+    initialIpv6Addresses
+  );
 
-  const ipv4Addresses = watch('ipv4Addresses');
-  const ipv6Addresses = watch('ipv6Addresses');
+  const appendIPv4 = () => {
+    const newIpv4Addresses = [...(ipv4Addresses as []), ''];
+    setValue('control_plane.acl.addresses.ipv4', newIpv4Addresses as string[]);
+  };
 
-  React.useEffect(() => {
-    if (ipv4Addresses && ipv4Addresses.length) {
-      handleIPv4Change(ipv4Addresses);
+  const appendIPv6 = () => {
+    const newIpv6Addresses = [...(ipv6Addresses as []), ''];
+    setValue('control_plane.acl.addresses.ipv6', newIpv6Addresses as string[]);
+  };
+
+  const removeIPv4 = (index: number) => {
+    const updatedIpv4Addresses = ipv4Addresses?.filter(
+      (_: string, i: number) => i !== index
+    );
+    setValue('control_plane.acl.addresses.ipv4', updatedIpv4Addresses);
+  };
+
+  const removeIPv6 = (index: number) => {
+    const updatedIpv6Addresses = ipv6Addresses?.filter(
+      (_: string, i: number) => i !== index
+    );
+    setValue('control_plane.acl.addresses.ipv6', updatedIpv6Addresses);
+  };
+
+  const handleBlur = (value: string, index: number, type: 'ipv4' | 'ipv6') => {
+    const _ips = value ? stringToExtendedIP(value) : stringToExtendedIP('');
+    const validatedIPs = validateIPs([_ips], {
+      allowEmptyAddress: true,
+      errorMessage:
+        type === 'ipv4'
+          ? 'Must be a valid IPv4 address.'
+          : 'Must be a valid IPv6 address.',
+    });
+    if (validatedIPs[0].error) {
+      setError(`control_plane.acl.addresses.${type}.${index}`, {
+        message: validatedIPs[0].error,
+        type: 'manual',
+      });
+    } else {
+      clearErrors(`control_plane.acl.addresses.${type}.${index}`);
     }
-  }, [ipv4Addresses, handleIPv4Change]);
-
-  React.useEffect(() => {
-    if (ipv6Addresses && ipv6Addresses.length) {
-      handleIPv6Change(ipv6Addresses);
-    }
-  }, [ipv6Addresses, handleIPv6Change]);
+    const newIP = extendedIPToString(_ips);
+    setValue(`control_plane.acl.addresses.${type}.${index}`, newIP);
+  };
 
   return (
     <>
@@ -105,11 +139,11 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             <Typography mb={1} variant="inherit">
               IPv4 Addresses or CIDRs
             </Typography>
-            {ipv4Fields.map((field, index) => (
+            {ipv4Addresses?.map((field: string, index: number) => (
               <Stack
                 alignItems="flex-start"
                 direction="row"
-                key={field.id}
+                key={`${field}-${index}`}
                 spacing={0.5}
                 sx={{ marginBottom: 1 }}
               >
@@ -117,21 +151,9 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                   render={({ field: controllerField, fieldState }) => (
                     <TextField
                       {...controllerField}
-                      onBlur={() => {
-                        const _ips = stringToExtendedIP(controllerField?.value);
-                        const validatedIPs = validateIPs([_ips], {
-                          allowEmptyAddress: true,
-                          errorMessage: 'Must be a valid IPv4 address.',
-                        });
-                        if (validatedIPs[0].error) {
-                          setError(controllerField.name, {
-                            message: validatedIPs[0].error,
-                            type: 'manual',
-                          });
-                        } else {
-                          clearErrors(controllerField.name);
-                        }
-                      }}
+                      onBlur={() =>
+                        handleBlur(controllerField.value, index, 'ipv4')
+                      }
                       data-testid={`ipv4-addresses-or-cidrs-ip-address-${index}`}
                       error={!!fieldState.error}
                       errorText={fieldState.error?.message}
@@ -139,16 +161,24 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                       label={`IPv4 Addresses or CIDRs ip-address-${index}`}
                       ref={null}
                       sx={{ minWidth: 350 }}
-                      value={''}
+                      value={controllerField.value}
                     />
                   )}
                   control={control}
-                  name={`ipv4Addresses[${index}]`}
+                  name={`control_plane.acl.addresses.ipv4.${index}`}
                 />
                 {index > 0 && (
                   <IconButton
+                    onClick={() => {
+                      removeIPv4(index);
+                      const currentIPv4Addresses =
+                        getValues('control_plane.acl.addresses.ipv4') || [];
+                      setValue(
+                        'control_plane.acl.addresses.ipv4',
+                        currentIPv4Addresses
+                      );
+                    }}
                     aria-label={`Remove IPv4 Address ${index}`}
-                    onClick={() => removeIPv4(index)}
                     sx={{ padding: 0.75 }}
                   >
                     <CloseIcon />
@@ -156,7 +186,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 )}
               </Stack>
             ))}
-            <LinkButton onClick={() => appendIPv4(' ')}>
+            <LinkButton onClick={() => appendIPv4()}>
               Add IPv4 Address
             </LinkButton>
           </Box>
@@ -166,11 +196,11 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             <Typography mb={1} variant="inherit">
               IPv6 Addresses or CIDRs
             </Typography>
-            {ipv6Fields.map((field, index) => (
+            {ipv6Addresses?.map((field: string, index: number) => (
               <Stack
                 alignItems="flex-start"
                 direction="row"
-                key={field.id}
+                key={`${field}-${index}`}
                 spacing={0.5}
                 sx={{ marginBottom: 1 }}
               >
@@ -178,21 +208,9 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                   render={({ field: controllerField, fieldState }) => (
                     <TextField
                       {...controllerField}
-                      onBlur={() => {
-                        const _ips = stringToExtendedIP(controllerField?.value);
-                        const validatedIPs = validateIPs([_ips], {
-                          allowEmptyAddress: true,
-                          errorMessage: 'Must be a valid IPv6 address.',
-                        });
-                        if (validatedIPs[0].error) {
-                          setError(controllerField.name, {
-                            message: validatedIPs[0].error,
-                            type: 'manual',
-                          });
-                        } else {
-                          clearErrors(controllerField.name);
-                        }
-                      }}
+                      onBlur={() =>
+                        handleBlur(controllerField.value, index, 'ipv6')
+                      }
                       data-testid={`ipv6-addresses-or-cidrs-ip-address-${index}`}
                       error={!!fieldState.error}
                       errorText={fieldState.error?.message}
@@ -200,16 +218,24 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                       label={`IPv6 Addresses or CIDRs ip-address-${index}`}
                       ref={null}
                       sx={{ minWidth: 350 }}
-                      value={''}
+                      value={controllerField.value}
                     />
                   )}
                   control={control}
-                  name={`ipv6Addresses[${index}]`}
+                  name={`control_plane.acl.addresses.ipv6.${index}`}
                 />
                 {index > 0 && (
                   <IconButton
+                    onClick={() => {
+                      removeIPv6(index);
+                      const currentIPv6Addresses =
+                        getValues('control_plane.acl.addresses.ipv6') || [];
+                      setValue(
+                        'control_plane.acl.addresses.ipv6',
+                        currentIPv6Addresses
+                      );
+                    }}
                     aria-label={`Remove IPv6 Address ${index}`}
-                    onClick={() => removeIPv6(index)}
                     sx={{ padding: 0.75 }}
                   >
                     <CloseIcon />
@@ -217,7 +243,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 )}
               </Stack>
             ))}
-            <LinkButton onClick={() => appendIPv6(' ')}>
+            <LinkButton onClick={() => appendIPv6()}>
               Add IPv6 Address
             </LinkButton>
           </Box>
