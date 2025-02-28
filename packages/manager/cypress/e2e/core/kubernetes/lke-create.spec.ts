@@ -48,6 +48,10 @@ import { mockGetLinodeTypes } from 'support/intercepts/linodes';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { chooseRegion } from 'support/util/regions';
 import { getTotalClusterMemoryCPUAndStorage } from 'src/features/Kubernetes/kubeUtils';
+import {
+  CLUSTER_TIER_DOCS_LINK,
+  CLUSTER_VERSIONS_DOCS_LINK,
+} from 'src/features/Kubernetes/constants';
 import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
 
 import type { ExtendedType } from 'src/utilities/extendType';
@@ -1178,6 +1182,10 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       cy.findByText('Cluster Tier').should('be.visible');
 
+      cy.findByText('Compare Tiers')
+        .should('be.visible')
+        .should('have.attr', 'href', CLUSTER_TIER_DOCS_LINK);
+
       // Confirm both Cluster Tiers exist and the LKE card is selected by default
       cy.get(`[data-qa-select-card-heading="LKE"]`)
         .closest('[data-qa-selection-card]')
@@ -1210,7 +1218,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       // Confirm that there is a tooltip explanation for the region dropdown options
       ui.tooltip
         .findByText(
-          'Only regions that support Kubernetes Enterprise are listed.'
+          'Only regions that support LKE Enterprise clusters are listed.'
         )
         .should('be.visible');
 
@@ -1219,6 +1227,10 @@ describe('LKE Cluster Creation with LKE-E', () => {
         .findByLabel('Kubernetes Version')
         .should('be.visible')
         .click();
+
+      cy.findByText('Kubernetes Versions')
+        .should('be.visible')
+        .should('have.attr', 'href', CLUSTER_VERSIONS_DOCS_LINK);
 
       ui.autocompletePopper
         .findByTitle(latestEnterpriseTierKubernetesVersion.id)
@@ -1271,14 +1283,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
           // Confirm LKE-E section is shown
           cy.findByText('LKE Enterprise').should('be.visible');
-          cy.findByText('HA control plane, Dedicated control plane').should(
-            'be.visible'
-          );
           cy.findByText('$300.00/month').should('be.visible');
 
-          cy.findByText(`Dedicated 4 GB Plan`).should('be.visible');
+          cy.findByText('Dedicated 4 GB Plan').should('be.visible');
           cy.findByText('$144.00').should('be.visible');
-          cy.findByText(`Linode 2 GB Plan`).should('be.visible');
+          cy.findByText('Linode 2 GB Plan').should('be.visible');
           cy.findByText('$15.00').should('be.visible');
           cy.findByText('$459.00').should('be.visible');
 
