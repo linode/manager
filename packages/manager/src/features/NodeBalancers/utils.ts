@@ -217,7 +217,7 @@ export const getStickinessOptions = (protocol: Protocol) => {
  * Returns whether or not features related to the NB-VPC project
  * should be enabled.
  *
- * Currently, this just uses the `nodebalancerVPC` feature flag as a source of truth,
+ * Currently, this just uses the `nodebalancerVpc` feature flag as a source of truth,
  * but will eventually also look at account capabilities.
  */
 
