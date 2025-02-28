@@ -1,4 +1,5 @@
 import { omitProps } from '@linode/ui';
+import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -12,10 +13,7 @@ import { utoa } from 'src/utilities/metadata';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import {
-  getLegacyInterfaceFromLinodeInterface,
-  getLinodeInterfacePayload,
-} from './Networking/utilities';
+import { getLegacyInterfaceFromLinodeInterface, getLinodeInterfacePayload } from './Networking/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
 import type { LinodeCreateInterface } from './Networking/utilities';
@@ -31,7 +29,6 @@ import type {
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors } from 'react-hook-form';
-import { enqueueSnackbar } from 'notistack';
 
 /**
  * This is the ID of the Image of the default OS.
@@ -161,8 +158,7 @@ export const getLinodeCreatePayload = (
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
-    'interfaceType',
-    'networkInterface',
+    'linodeInterfaces',
   ]);
 
   if (values.metadata?.user_data) {
@@ -180,20 +176,14 @@ export const getLinodeCreatePayload = (
   if (isShowingNewNetworkingUI) {
     const shouldUseNewInterfaces = values.interface_generation === 'linode';
 
-    const linodeInterface = getLinodeInterfacePayload(
-      formValues.interfaceType,
-      formValues.networkInterface
-    );
-
     if (shouldUseNewInterfaces) {
-      values.interfaces = [linodeInterface];
+      values.interfaces = formValues.linodeInterfaces.map(
+        getLinodeInterfacePayload
+      );
     } else {
-      values.interfaces = [
-        getLegacyInterfaceFromLinodeInterface(
-          formValues.interfaceType,
-          linodeInterface
-        ),
-      ];
+      values.interfaces = formValues.linodeInterfaces.map(
+        getLegacyInterfaceFromLinodeInterface
+      );
     }
   } else {
     values.interfaces = getInterfacesPayload(
@@ -292,13 +282,16 @@ const defaultInterfaces: InterfacePayload[] = [
   },
 ];
 
-const defaultLinodeInterface: LinodeCreateInterface = {
-  default_route: null,
-  firewall_id: null,
-  public: {},
-  vlan: null,
-  vpc: null,
-};
+const defaultLinodeInterfaces: LinodeCreateInterface[] = [
+  {
+    default_route: null,
+    firewall_id: null,
+    public: {},
+    purpose: 'public',
+    vlan: null,
+    vpc: null,
+  },
+];
 
 /**
  * We extend the API's payload type so that we can hold some extra state
@@ -320,10 +313,6 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    */
   hasSignedEUAgreement?: boolean;
   /**
-   * The user's selected interface type (use for new Linode Interfaces)
-   */
-  interfaceType: 'public' | 'vlan' | 'vpc';
-  /**
    * Override the interfaces type of the Linode Create flow so it only has Legacy Interfaces
    */
   interfaces: InterfacePayload[];
@@ -334,7 +323,7 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * Form state for the new Linode interface
    */
-  networkInterface: LinodeCreateInterface;
+  linodeInterfaces: LinodeCreateInterface[];
 }
 
 export interface LinodeCreateFormContext {
@@ -399,10 +388,9 @@ export const defaultValues = async (
     backup_id: params.backupID,
     backups_enabled: linode?.backups.enabled,
     image: getDefaultImageId(params),
-    interfaceType: 'public',
     interfaces: defaultInterfaces,
     linode,
-    networkInterface: defaultLinodeInterface,
+    linodeInterfaces: defaultLinodeInterfaces,
     private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields

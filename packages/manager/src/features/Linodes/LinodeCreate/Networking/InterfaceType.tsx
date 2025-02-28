@@ -6,17 +6,23 @@ import { FormLabel } from 'src/components/FormLabel';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
-export const NetworkConnection = () => {
+interface Props {
+  index: number;
+}
+
+export const InterfaceType = ({ index }: Props) => {
   const { control } = useFormContext<LinodeCreateFormValues>();
 
   const { field } = useController({
     control,
-    name: 'interfaceType',
+    name: `linodeInterfaces.${index}.purpose`,
   });
 
   return (
     <FormControl>
-      <FormLabel id="network-interface">Network Connection</FormLabel>
+      <FormLabel id="network-interface" sx={{ mb: 0 }}>
+        Network Connection
+      </FormLabel>
       <RadioGroup
         aria-labelledby="network-interface"
         onChange={field.onChange}

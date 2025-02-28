@@ -16,6 +16,7 @@ interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
  * We extend the new `CreateLinodeInterfacePayload` to add extra state we need to track
  */
 export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
+  purpose: InterfacePurpose;
   vpc?: VPC | null;
 }
 
@@ -26,11 +27,10 @@ export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
  * are kept for the selected interface type (Public, VPC, VLAN).
  */
 export const getLinodeInterfacePayload = (
-  type: 'public' | 'vlan' | 'vpc',
   networkInterface: LinodeCreateInterface
 ) => {
   for (const key of ['public', 'vlan', 'vpc'] as const) {
-    if (key !== type) {
+    if (key !== networkInterface.purpose) {
       networkInterface[key] = null;
     }
   }
@@ -44,9 +44,10 @@ export const getLinodeInterfacePayload = (
  * we will convert these new interfaces to legacy interface onSubmit.
  */
 export const getLegacyInterfaceFromLinodeInterface = (
-  purpose: InterfacePurpose,
   linodeInterface: LinodeCreateInterface
 ): InterfacePayload => {
+  const purpose = linodeInterface.purpose;
+
   return {
     ip_ranges: linodeInterface.vpc?.ipv4?.ranges?.map(({ range }) => range),
     ipam_address: linodeInterface.vlan?.ipam_address ?? null,

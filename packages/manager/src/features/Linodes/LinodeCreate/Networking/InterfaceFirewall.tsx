@@ -1,6 +1,6 @@
 import { Autocomplete, Box, Stack } from '@linode/ui';
 import React, { useState } from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useWatch } from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
@@ -9,12 +9,23 @@ import { useAllFirewallsQuery } from 'src/queries/firewalls';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
-export const Firewall = () => {
+interface Props {
+  index: number;
+}
+
+export const InterfaceFirewall = ({ index }: Props) => {
+  const interfaceType = useWatch<
+    LinodeCreateFormValues,
+    `linodeInterfaces.${number}.purpose`
+  >({
+    name: `linodeInterfaces.${index}.purpose`,
+  });
+
   const { field, fieldState } = useController<
     LinodeCreateFormValues,
-    'firewall_id'
+    `linodeInterfaces.${number}.firewall_id`
   >({
-    name: 'firewall_id',
+    name: `linodeInterfaces.${index}.firewall_id`,
   });
 
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
@@ -34,7 +45,7 @@ export const Firewall = () => {
         <Autocomplete
           disabled={isLinodeCreateRestricted}
           errorText={fieldState.error?.message ?? error?.[0].reason}
-          label="Firewall"
+          label={`${labelMap[interfaceType]} Interface Firewall`}
           loading={isLoading}
           noMarginTop
           onBlur={field.onBlur}
@@ -60,4 +71,10 @@ export const Firewall = () => {
       />
     </Stack>
   );
+};
+
+const labelMap: Record<'public' | 'vlan' | 'vpc', string> = {
+  public: 'Public',
+  vlan: 'VLAN',
+  vpc: 'VPC',
 };
