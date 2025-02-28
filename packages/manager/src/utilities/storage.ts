@@ -1,6 +1,6 @@
-import { shouldLoadDevTools } from 'src/dev-tools/load';
+import { isNullOrUndefined } from '@linode/utilities';
 
-import { isNullOrUndefined } from './nullOrUndefined';
+import { shouldLoadDevTools } from 'src/dev-tools/load';
 
 import type { RegionSite } from '@linode/api-v4';
 import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';

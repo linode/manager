@@ -1,14 +1,14 @@
 /**
  * Used for tests where a component relies on localStorage.
- * Usage:
  *
- * import LocalStorageMock from 'src/utilities/mockLocalStorage';
+ * @example Usage:
+ *
+ * import { LocalStorageMock } from '@linode/utilities';
  * Object.defineProperty(window, 'localStorage', {
  *   value: new LocalStorageMock()
  * });
  */
-
-class LocalStorageMock {
+export class LocalStorageMock {
   clear() {
     this.store = {};
   }
@@ -27,5 +27,3 @@ class LocalStorageMock {
 
   store: any = {};
 }
-
-export default LocalStorageMock;

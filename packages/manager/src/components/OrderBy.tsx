@@ -1,3 +1,4 @@
+import { getQueryParamsFromQueryString, pathOr } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { equals, sort } from 'ramda';
 import * as React from 'react';
@@ -9,8 +10,6 @@ import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
-import { pathOr } from 'src/utilities/pathOr';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import {
   sortByArrayLength,
   sortByNumber,

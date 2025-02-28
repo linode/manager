@@ -1,3 +1,4 @@
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
@@ -7,10 +8,9 @@ import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import type { BaseQueryParams } from '@linode/utilities';
 import type { OrderSet } from 'src/types/ManagerPreferences';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
 
 export type Order = 'asc' | 'desc';
 

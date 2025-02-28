@@ -1,10 +1,10 @@
 import { Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useDeleteNodePoolMutation } from 'src/queries/kubernetes';
-import { pluralize } from 'src/utilities/pluralize';
 
 import type { KubeNodePoolResponse } from '@linode/api-v4';
 

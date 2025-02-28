@@ -1,7 +1,8 @@
 import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import { castDraft } from 'immer';
 import { intersection } from 'ramda';
 import * as React from 'react';
@@ -26,7 +27,6 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
