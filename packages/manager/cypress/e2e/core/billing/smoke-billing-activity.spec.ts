@@ -1,19 +1,21 @@
-import { DateTime } from 'luxon';
 import { getProfile } from '@linode/api-v4';
-import type { Invoice, Profile, Payment } from '@linode/api-v4';
-import { invoiceFactory, paymentFactory } from 'src/factories/billing';
+import { profileFactory } from '@src/factories';
+import { formatDate } from '@src/utilities/formatDate';
+import { DateTime } from 'luxon';
 import { authenticate } from 'support/api/authentication';
 import {
   mockGetInvoices,
-  mockGetPayments,
   mockGetPaymentMethods,
+  mockGetPayments,
 } from 'support/intercepts/account';
-import { formatDate } from '@src/utilities/formatDate';
-import { randomNumber } from 'support/util/random';
-import { ui } from 'support/ui';
-import { profileFactory } from '@src/factories';
 import { mockGetProfile, mockUpdateProfile } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
+import { randomNumber } from 'support/util/random';
+
+import { invoiceFactory, paymentFactory } from 'src/factories/billing';
+
+import type { Invoice, Payment, Profile } from '@linode/api-v4';
 
 /**
  * Uses the user menu to navigate to the Profile Display page.
@@ -67,8 +69,8 @@ const navigateToBilling = () => {
  */
 const assertInvoiceInfo = (invoice: Invoice, timezone: string) => {
   const invoiceDate = formatDate(invoice.date, {
-    timezone,
     displayTime: true,
+    timezone,
   });
   cy.findByText(invoice.label)
     .should('be.visible')
@@ -97,8 +99,8 @@ const assertInvoiceInfo = (invoice: Invoice, timezone: string) => {
  */
 const assertPaymentInfo = (payment: Payment, timezone: string) => {
   const paymentDate = formatDate(payment.date, {
-    timezone,
     displayTime: true,
+    timezone,
   });
   cy.findByText(`Payment #${payment.id}`)
     .should('be.visible')
@@ -132,9 +134,9 @@ describe('Billing Activity Feed', () => {
         const tax = randomNumber(5, 50);
 
         return invoiceFactory.build({
+          date,
           id,
           label: `Invoice #${id}`,
-          date,
           subtotal,
           tax,
           total: subtotal + tax,
@@ -148,8 +150,8 @@ describe('Billing Activity Feed', () => {
         const date = DateTime.now().minus({ months: i }).toISO();
 
         return paymentFactory.build({
-          id,
           date,
+          id,
           usd: invoice.total,
         });
       }
@@ -332,9 +334,9 @@ describe('Billing Activity Feed', () => {
   it('displays correct timezone for invoice and payment dates', () => {
     // Time zones against which to verify invoice and payment dates.
     const timeZonesList = [
-      { key: 'America/New_York', human: 'Eastern Time - New York' },
-      { key: 'UTC', human: 'Coordinated Universal Time' },
-      { key: 'Asia/Hong_Kong', human: 'Hong Kong Standard Time' },
+      { human: 'Eastern Time - New York', key: 'America/New_York' },
+      { human: 'Coordinated Universal Time', key: 'UTC' },
+      { human: 'Hong Kong Standard Time', key: 'Asia/Hong_Kong' },
     ];
 
     const mockProfile = profileFactory.build({
