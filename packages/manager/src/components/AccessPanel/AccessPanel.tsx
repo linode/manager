@@ -218,7 +218,9 @@ export const AccessPanel = (props: Props) => {
             linodeIsInDistributedRegion,
             regionSupportsDiskEncryption,
           })}
-          isEncryptEntityChecked={diskEncryptionEnabled ?? false}
+          isEncryptEntityChecked={
+            linodeIsInDistributedRegion || (diskEncryptionEnabled ?? false)
+          }
           onChange={() => toggleDiskEncryptionEnabled()}
         />
       </>

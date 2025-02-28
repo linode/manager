@@ -264,4 +264,21 @@ describe('Linode Create Summary', () => {
 
     await findByText(`5 Nodes - $10/month $2.50/hr`);
   });
+
+  it('should render "Encrypted" if a distributed region is selected', async () => {
+    const region = regionFactory.build({ site_type: 'distributed' });
+
+    server.use(
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([region]));
+      })
+    );
+
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <Summary />,
+      useFormOptions: { defaultValues: { region: region.id } },
+    });
+
+    await findByText('Encrypted');
+  });
 });
