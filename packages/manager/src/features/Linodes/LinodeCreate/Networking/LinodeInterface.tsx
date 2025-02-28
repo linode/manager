@@ -4,6 +4,7 @@ import { useWatch } from 'react-hook-form';
 
 import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceType } from './InterfaceType';
+import { VLAN } from './VLAN';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -18,8 +19,13 @@ export const LinodeInterface = ({ index, onRemove }: Props) => {
     'interface_generation'
   >({ name: 'interface_generation' });
 
+  const interfaceType = useWatch<
+    LinodeCreateFormValues,
+    `linodeInterfaces.${number}.purpose`
+  >({ name: `linodeInterfaces.${index}.purpose` });
+
   return (
-    <Stack>
+    <Stack spacing={2}>
       <Stack
         alignItems="center"
         direction="row"
@@ -30,6 +36,7 @@ export const LinodeInterface = ({ index, onRemove }: Props) => {
         {index !== 0 && <Button onClick={onRemove}>Remove Interface</Button>}
       </Stack>
       <InterfaceType index={index} />
+      {interfaceType === 'vlan' && <VLAN index={index} />}
       {interfaceGeneration === 'linode' && <InterfaceFirewall index={index} />}
     </Stack>
   );

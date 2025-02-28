@@ -27,6 +27,7 @@ export const InterfaceType = ({ index }: Props) => {
         aria-labelledby="network-interface"
         onChange={field.onChange}
         row
+        sx={{ mb: '0px !important' }}
         value={field.value}
       >
         <FormControlLabel
