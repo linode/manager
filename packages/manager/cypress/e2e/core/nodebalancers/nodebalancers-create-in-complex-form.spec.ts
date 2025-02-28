@@ -55,42 +55,34 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
 
         interceptCreateNodeBalancer().as('createNodeBalancer');
         cy.visitWithLogin('/nodebalancers/create');
-        cy.get('[id="nodebalancer-label"]')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(nodeBal.label);
-        cy.findByPlaceholderText(/create a tag/i)
-          .click()
-          .type(entityTag);
+        cy.get('[id="nodebalancer-label"]').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(nodeBal.label);
+        cy.findByPlaceholderText(/create a tag/i).click();
+        cy.focused().type(entityTag);
 
         // this will create the NB in newark, where the default Linode was created
         ui.regionSelect.find().click().clear().type(`${region.label}{enter}`);
 
         // node backend config
-        cy.findByText('Label').click().type(randomLabel());
-        cy.findByLabelText('IP Address')
-          .should('be.visible')
-          .click()
-          .type(nodeBal.ipv4);
+        cy.findByText('Label').click();
+        cy.focused().type(randomLabel());
+        cy.findByLabelText('IP Address').should('be.visible').click();
+        cy.focused().type(nodeBal.ipv4);
         ui.autocompletePopper
           .findByTitle(nodeBal.ipv4)
           .should('be.visible')
           .click();
-        cy.findByLabelText('Weight')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type('50');
+        cy.findByLabelText('Weight').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type('50');
 
         // Add a backend node
         cy.get('[data-testid="button"]').contains('Add a Node').click();
-        cy.findAllByText('Label').last().click().type(randomLabel());
-        cy.findAllByText('IP Address')
-          .last()
-          .should('be.visible')
-          .click()
-          .type(nodeBal_2.ipv4);
+        cy.findAllByText('Label').last().click();
+        cy.focused().type(randomLabel());
+        cy.findAllByText('IP Address').last().should('be.visible').click();
+        cy.focused().type(nodeBal_2.ipv4);
         ui.autocompletePopper
           .findByTitle(nodeBal_2.ipv4)
           .should('be.visible')
@@ -98,9 +90,9 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
         cy.get('[data-testid="textfield-input"]')
           .last()
           .should('be.visible')
-          .click()
-          .clear()
-          .type('50');
+          .click();
+        cy.focused().clear();
+        cy.focused().type('50');
 
         // Confirm Summary info
         cy.get('[data-qa-summary="true"]').within(() => {
@@ -155,24 +147,20 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
 
         interceptCreateNodeBalancer().as('createNodeBalancer');
         cy.visitWithLogin('/nodebalancers/create');
-        cy.get('[id="nodebalancer-label"]')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(nodeBal.label);
-        cy.findByPlaceholderText(/create a tag/i)
-          .click()
-          .type(entityTag);
+        cy.get('[id="nodebalancer-label"]').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(nodeBal.label);
+        cy.findByPlaceholderText(/create a tag/i).click();
+        cy.focused().type(entityTag);
 
         // This will create the NB in newark, where the default Linode was created
         ui.regionSelect.find().click().clear().type(`${region.label}{enter}`);
 
         // Node backend config
-        cy.findByText('Label').click().type(randomLabel());
-        cy.findByLabelText('IP Address')
-          .should('be.visible')
-          .click()
-          .type(nodeBal.ipv4);
+        cy.findByText('Label').click();
+        cy.focused().type(randomLabel());
+        cy.findByLabelText('IP Address').should('be.visible').click();
+        cy.focused().type(nodeBal.ipv4);
         ui.autocompletePopper
           .findByTitle(nodeBal.ipv4)
           .should('be.visible')
@@ -183,17 +171,13 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
           .contains('Add another Configuration')
           .click();
         cy.get('[data-qa-panel="Configuration - Port "]').within(() => {
-          cy.get('[data-testid="textfield-input"]')
-            .first()
-            .click()
-            .type('8080');
+          cy.get('[data-testid="textfield-input"]').first().click();
+          cy.focused().type('8080');
         });
-        cy.findAllByText('Label').last().click().type(randomLabel());
-        cy.findAllByText('IP Address')
-          .last()
-          .should('be.visible')
-          .click()
-          .type(nodeBal_2.ipv4);
+        cy.findAllByText('Label').last().click();
+        cy.focused().type(randomLabel());
+        cy.findAllByText('IP Address').last().should('be.visible').click();
+        cy.focused().type(nodeBal_2.ipv4);
         ui.autocompletePopper
           .findByTitle(nodeBal_2.ipv4)
           .should('be.visible')
@@ -236,24 +220,20 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
       });
 
       cy.visitWithLogin('/nodebalancers/create');
-      cy.get('[id="nodebalancer-label"]')
-        .should('be.visible')
-        .click()
-        .clear()
-        .type(nodeBal.label);
-      cy.findByPlaceholderText(/create a tag/i)
-        .click()
-        .type(entityTag);
+      cy.get('[id="nodebalancer-label"]').should('be.visible').click();
+      cy.focused().clear();
+      cy.focused().type(nodeBal.label);
+      cy.findByPlaceholderText(/create a tag/i).click();
+      cy.focused().type(entityTag);
 
       // This will create the NB in newark, where the default Linode was created
       ui.regionSelect.find().click().clear().type(`${region.label}{enter}`);
 
       // Node backend config
-      cy.findByText('Label').click().type(randomLabel());
-      cy.findByLabelText('IP Address')
-        .should('be.visible')
-        .click()
-        .type(nodeBal.ipv4);
+      cy.findByText('Label').click();
+      cy.focused().type(randomLabel());
+      cy.findByLabelText('IP Address').should('be.visible').click();
+      cy.focused().type(nodeBal.ipv4);
       ui.autocompletePopper
         .findByTitle(nodeBal.ipv4)
         .should('be.visible')
@@ -264,16 +244,20 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
         .contains('Add another Configuration')
         .click();
       cy.get('[data-qa-panel="Configuration - Port "]').within(() => {
-        cy.get('[data-testid="textfield-input"]').first().click().type('80');
+        cy.get('[data-testid="textfield-input"]').first().click();
+        cy.focused().type('80');
       });
       cy.get('[data-qa-deploy-nodebalancer]').click();
 
       // Confirm error displays
-      cy.contains('Port must be unique').scrollIntoView().should('be.visible');
-      cy.contains('Label is required').scrollIntoView().should('be.visible');
+      cy.contains('Port must be unique').as('qaPort').scrollIntoView();
+      cy.get('@qaPort').should('be.visible');
+      cy.contains('Label is required').as('qaLabelIs').scrollIntoView();
+      cy.get('@qaLabelIs').should('be.visible');
       cy.contains('Must be a valid private IPv4 address.')
-        .scrollIntoView()
-        .should('be.visible');
+        .as('qaMustbe')
+        .scrollIntoView();
+      cy.get('@qaMustbe').should('be.visible');
     });
   });
 });

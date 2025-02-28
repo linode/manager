@@ -86,18 +86,16 @@ describe('Managed Contacts tab', () => {
       .within(() => {
         cy.findByLabelText('Name', { exact: false })
           .should('be.visible')
-          .click()
-          .type(contactName);
+          .click();
+        cy.focused().type(contactName);
 
         cy.findByLabelText('E-mail', { exact: false })
           .should('be.visible')
-          .click()
-          .type(contactEmail);
+          .click();
+        cy.focused().type(contactEmail);
 
-        cy.findByLabelText('Primary Phone')
-          .should('be.visible')
-          .click()
-          .type(contactPrimaryPhone);
+        cy.findByLabelText('Primary Phone').should('be.visible').click();
+        cy.focused().type(contactPrimaryPhone);
 
         ui.buttonGroup
           .findButtonByTitle('Add Contact')
@@ -173,21 +171,19 @@ describe('Managed Contacts tab', () => {
       .within(() => {
         cy.findByLabelText('Name', { exact: false })
           .should('be.visible')
-          .click()
-          .clear()
-          .type(contactNewName);
+          .click();
+        cy.focused().clear();
+        cy.focused().type(contactNewName);
 
         cy.findByLabelText('E-mail', { exact: false })
           .should('be.visible')
-          .click()
-          .clear()
-          .type(contactNewEmail);
+          .click();
+        cy.focused().clear();
+        cy.focused().type(contactNewEmail);
 
-        cy.findByLabelText('Primary Phone')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(contactNewPrimaryPhone);
+        cy.findByLabelText('Primary Phone').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(contactNewPrimaryPhone);
 
         ui.buttonGroup
           .findButtonByTitle('Save Changes')
@@ -241,10 +237,8 @@ describe('Managed Contacts tab', () => {
       .findByTitle(`Delete Contact ${contactName}?`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Contact Name:')
-          .should('be.visible')
-          .click()
-          .type(contactName);
+        cy.findByLabelText('Contact Name:').should('be.visible').click();
+        cy.focused().type(contactName);
 
         ui.buttonGroup
           .findButtonByTitle('Delete Contact')
