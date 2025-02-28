@@ -62,7 +62,7 @@ export const Networking = () => {
             onRemove={() => remove(index)}
           />
         ))}
-        {interfaceGeneration === 'legacy_config' && <Firewall />}
+        {interfaceGeneration !== 'linode' && <Firewall />}
       </Stack>
     </Paper>
   );

@@ -1,6 +1,6 @@
-import { Button, Stack, Typography } from '@linode/ui';
+import { Button, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
-import { useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceType } from './InterfaceType';
@@ -14,15 +14,20 @@ interface Props {
 }
 
 export const LinodeInterface = ({ index, onRemove }: Props) => {
-  const interfaceGeneration = useWatch<
-    LinodeCreateFormValues,
-    'interface_generation'
-  >({ name: 'interface_generation' });
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<LinodeCreateFormValues>();
 
-  const interfaceType = useWatch<
-    LinodeCreateFormValues,
-    `linodeInterfaces.${number}.purpose`
-  >({ name: `linodeInterfaces.${index}.purpose` });
+  const interfaceGeneration = useWatch<LinodeCreateFormValues>({
+    control,
+    name: 'interface_generation',
+  });
+
+  const interfaceType = useWatch<LinodeCreateFormValues>({
+    control,
+    name: `linodeInterfaces.${index}.purpose`,
+  });
 
   return (
     <Stack spacing={2}>
@@ -35,6 +40,12 @@ export const LinodeInterface = ({ index, onRemove }: Props) => {
         <Typography variant="h3">Interface eth{index}</Typography>
         {index !== 0 && <Button onClick={onRemove}>Remove Interface</Button>}
       </Stack>
+      {errors.interfaces?.[index]?.purpose?.message && (
+        <Notice
+          text={errors.interfaces?.[index]?.purpose?.message}
+          variant="error"
+        />
+      )}
       <InterfaceType index={index} />
       {interfaceType === 'vlan' && <VLAN index={index} />}
       {interfaceGeneration === 'linode' && <InterfaceFirewall index={index} />}
