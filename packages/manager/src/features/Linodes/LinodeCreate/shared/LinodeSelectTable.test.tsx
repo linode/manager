@@ -14,7 +14,7 @@ import { LinodeSelectTable, getLinodeXFilter } from './LinodeSelectTable';
 beforeAll(() => mockMatchMedia());
 
 describe('Linode Select Table', () => {
-  it('should filter out Linodes in distributed regions', async () => {
+  it('should filter out Linodes in distributed regions', () => {
     const xFilter = getLinodeXFilter('');
 
     expect(xFilter).toStrictEqual({
