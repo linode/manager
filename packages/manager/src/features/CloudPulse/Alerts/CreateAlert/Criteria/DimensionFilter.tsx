@@ -1,7 +1,7 @@
 import { Box } from '@linode/ui';
 import { Button, Stack, Typography } from '@linode/ui';
 import React from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { DimensionFilterField } from './DimensionFilterField';
 
@@ -34,6 +34,8 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
     control,
     name,
   });
+
+  const dimensionFilterWatcher = useWatch({ control, name});
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h3">
@@ -53,22 +55,25 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
             />
           ))}
       </Stack>
-      <Button
-        onClick={() =>
-          append({
-            dimension_label: null,
-            operator: null,
-            value: null,
-          })
-        }
-        buttonType="secondary"
-        compactX
-        data-qa-buttons="true"
-        size="small"
-        sx={{ justifyContent: 'start', width: '300px' }}
-      >
-        Add dimension filter
-      </Button>
+        <Button
+          onClick={() =>
+            append({
+              dimension_label: null,
+              operator: null,
+              value: null,
+            })
+          }
+          disabled={dimensionFilterWatcher && dimensionFilterWatcher.length === 5}
+          buttonType="secondary"
+          compactX
+          data-qa-buttons="true"
+          size="small"
+          tooltipText="You can add up to 5 dimension filters."
+          sxEndIcon={{ display: 'none' }}
+          sx={{ justifyContent: 'start', width: '150px' }}
+        >
+          Add dimension filter
+        </Button>
     </Box>
   );
 };

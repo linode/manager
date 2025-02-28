@@ -91,22 +91,25 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
             );
           })}
       </Stack>
-      <Button
-        onClick={() =>
-          append({
-            aggregate_function: null,
-            dimension_filters: [],
-            metric: null,
-            operator: null,
-            threshold: 0,
-          })
-        }
-        buttonType="outlined"
-        size="medium"
-        sx={(theme) => ({ marginTop: theme.spacing(2) })}
-      >
-        Add metric
-      </Button>
+        <Button
+          onClick={() =>
+            append({
+              aggregate_function: null,
+              dimension_filters: [],
+              metric: null,
+              operator: null,
+              threshold: 0,
+            })
+          }
+          tooltipText='You can add up to 5 metrics.'
+          sxEndIcon={{ display: 'none' }}
+          disabled={metricCriteriaWatcher.length === 5}
+          buttonType="outlined"
+          size="medium"
+          sx={(theme) => ({ marginTop: theme.spacing(2) })}
+        >
+          Add metric
+        </Button>
     </Box>
   );
 };
