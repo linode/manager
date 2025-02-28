@@ -115,7 +115,7 @@ export const Security = () => {
                 onChange={(checked) =>
                   field.onChange(checked ? 'enabled' : 'disabled')
                 }
-                disabled={!regionSupportsDiskEncryption}
+                disabled={isDistributedRegion || !regionSupportsDiskEncryption}
                 error={fieldState.error?.message}
               />
             )}

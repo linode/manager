@@ -125,7 +125,7 @@ export const Summary = () => {
       item: {
         title: 'Encrypted',
       },
-      show: diskEncryption === 'enabled',
+      show: diskEncryption === 'enabled' || region?.site_type === 'distributed',
     },
   ];
 
