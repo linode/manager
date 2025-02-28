@@ -13,6 +13,11 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { validateIPs } from 'src/utilities/ipUtils';
 
+import {
+  CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY,
+  CREATE_CLUSTER_STANDARD_TIER_ACL_COPY,
+} from '../constants';
+
 import type { KubernetesTier } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
@@ -52,8 +57,8 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         )}
         <Typography mb={1} sx={{ width: '85%' }}>
           {selectedTier === 'enterprise'
-            ? 'An access control list (ACL) is enabled by default on LKE Enterprise clusters. All traffic to the control plane is restricted except from IP addresses listed in the ACL. Add at least one IP address or CIDR range.'
-            : 'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. Only the IP addresses and ranges specified in the ACL can connect to the control plane.'}
+            ? CREATE_CLUSTER_STANDARD_TIER_ACL_COPY
+            : CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY}
         </Typography>
         {selectedTier !== 'enterprise' && (
           <FormControlLabel

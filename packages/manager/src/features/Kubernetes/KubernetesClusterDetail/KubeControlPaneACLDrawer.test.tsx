@@ -4,12 +4,12 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  ENTERPRISE_TIER_ACL_COPY,
-  ENTERPRISE_TIER_ACTIVATION_STATUS_COPY,
-  KubeControlPlaneACLDrawer,
-  STANDARD_TIER_ACL_COPY,
-  STANDARD_TIER_ACTIVATION_STATUS_COPY,
-} from './KubeControlPaneACLDrawer';
+  ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY,
+  ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY,
+  ACL_DRAWER_STANDARD_TIER_ACL_COPY,
+  ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY,
+} from '../constants';
+import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
 
 import type { KubeControlPlaneACLDrawerProps } from './KubeControlPaneACLDrawer';
 
@@ -54,11 +54,13 @@ describe('KubeControlPaneACLDrawer', () => {
     );
 
     expect(getByText('Control Plane ACL for Test')).toBeVisible();
-    expect(getByText(STANDARD_TIER_ACL_COPY)).toBeVisible();
+    expect(getByText(ACL_DRAWER_STANDARD_TIER_ACL_COPY)).toBeVisible();
 
     // Activation Status section
     expect(getByText('Activation Status')).toBeVisible();
-    expect(getByText(STANDARD_TIER_ACTIVATION_STATUS_COPY)).toBeVisible();
+    expect(
+      getByText(ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY)
+    ).toBeVisible();
     expect(getByText('Enable Control Plane ACL')).toBeVisible();
 
     // Revision ID section
@@ -125,11 +127,13 @@ describe('KubeControlPaneACLDrawer', () => {
     );
 
     expect(getByText('Control Plane ACL for Test')).toBeVisible();
-    expect(getByText(ENTERPRISE_TIER_ACL_COPY)).toBeVisible();
+    expect(getByText(ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY)).toBeVisible();
 
     // Activation Status section
     expect(getByText('Activation Status')).toBeVisible();
-    expect(getByText(ENTERPRISE_TIER_ACTIVATION_STATUS_COPY)).toBeVisible();
+    expect(
+      getByText(ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY)
+    ).toBeVisible();
     expect(queryByText('Enable Control Plane ACL')).not.toBeInTheDocument();
   });
 
