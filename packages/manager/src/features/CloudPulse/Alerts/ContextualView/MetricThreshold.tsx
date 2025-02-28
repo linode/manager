@@ -64,9 +64,7 @@ export const MetricThreshold = (props: MetricThresholdProps) => {
               px: 0.5,
               py: 1.5,
             })}
-            color="primary"
             label={`+${total}`}
-            variant="outlined"
           />
         </span>
       </Tooltip>
