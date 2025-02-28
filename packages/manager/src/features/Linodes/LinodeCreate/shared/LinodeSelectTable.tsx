@@ -34,6 +34,7 @@ import { SelectLinodeCard } from './SelectLinodeCard';
 import type { LinodeCreateFormValues } from '../utilities';
 import type { Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import type { UseOrder } from 'src/hooks/useOrder';
 
 interface Props {
   /**
@@ -81,15 +82,7 @@ export const LinodeSelectTable = (props: Props) => {
 
   const filter = preselectedLinodeId
     ? { id: preselectedLinodeId }
-    : {
-        '+or': [
-          { label: { '+contains': query } },
-          ...(isNumeric(query) ? [{ id: Number(query) }] : []), // let users filter by Linode id
-        ],
-        '+order': order.order,
-        '+order_by': order.orderBy,
-        // backups: { enabled: true }, womp womp! We can't filter on values within objects
-      };
+    : getLinodeXFilter(query, order);
 
   const { data, error, isFetching, isLoading } = useLinodesQuery(
     {
@@ -239,4 +232,21 @@ export const LinodeSelectTable = (props: Props) => {
       )}
     </Stack>
   );
+};
+
+export const getLinodeXFilter = (query: string, order?: UseOrder) => {
+  const filter = {
+    '+or': [
+      { label: { '+contains': query } },
+      ...(isNumeric(query) ? [{ id: Number(query) }] : []), // let users filter by Linode id
+    ],
+    site_type: 'core', // backups and cloning are not supported for distributed regions
+    // backups: { enabled: true }, womp womp! We can't filter on values within objects
+  };
+
+  if (order) {
+    return { ...filter, '+order': order.order, '+order_by': order.orderBy };
+  }
+
+  return filter;
 };
