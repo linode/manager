@@ -132,15 +132,19 @@ const getDateRangeInGMT = (
   hour: number,
   minute: number = 0
 ) => {
-  const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
-  const targetDate = now
-    .startOf('month')
-    .plus({ days: daysOffset })
+  const now = DateTime.now().setZone('GMT'); // Set timezone to GMT
+  const firstDayOfMonth = now.startOf('month'); // Get the 1st day of the month
+  const daysInMonth = firstDayOfMonth.daysInMonth ?? 28; // Default to 28 if undefined
+
+  // Ensure the target day does not exceed the last day of the month
+  const safeDaysOffset = Math.min(daysOffset, daysInMonth - 1);
+
+  const targetDate = firstDayOfMonth
+    .plus({ days: safeDaysOffset }) // Move forward within the month
     .set({ hour, minute });
 
-  const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm'); // Format in GMT
   return {
-    actualDate,
+    actualDate: targetDate.toFormat('yyyy-LL-dd HH:mm'), // Format in GMT
     day: targetDate.day,
     hour: targetDate.hour,
     minute: targetDate.minute,
