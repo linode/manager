@@ -1,6 +1,7 @@
 import { http } from 'msw';
 
 import { regions } from 'src/__data__/regionsData';
+import { objectStorageEndpointsFactory } from 'src/factories/objectStorage';
 import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
 import {
   makeNotFoundResponse,
@@ -9,7 +10,12 @@ import {
 } from 'src/mocks/utilities/response';
 import { pickRandom } from 'src/utilities/random';
 
-import type { Quota, QuotaType, QuotaUsage } from '@linode/api-v4';
+import type {
+  ObjectStorageEndpoint,
+  Quota,
+  QuotaType,
+  QuotaUsage,
+} from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type {
   APIErrorResponse,
@@ -22,7 +28,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quotaFactory.build({
         description:
           'Max number of vCPUs assigned to Linodes with Dedicated plans',
-        quota_limit: pickRandom([10, 20, 30, 40, 50]),
+        quota_limit: 50,
         quota_name: 'Dedicated CPU',
         region_applied: region.id,
         resource_metric: 'CPU',
@@ -32,7 +38,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quotaFactory.build({
         description:
           'Max number of vCPUs assigned to Linodes with Shared plans',
-        quota_limit: pickRandom([25, 50, 75, 100, 125]),
+        quota_limit: 100,
         quota_name: 'Shared CPU',
         region_applied: region.id,
         resource_metric: 'CPU',
@@ -41,7 +47,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
     ...regions.map((region) =>
       quotaFactory.build({
         description: 'Max number of GPUs assigned to Linodes with GPU plans',
-        quota_limit: pickRandom([5, 6, 7, 8, 9, 10]),
+        quota_limit: 25,
         quota_name: 'GPU',
         region_applied: region.id,
         resource_metric: 'GPU',
@@ -50,7 +56,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
     ...regions.map((region) =>
       quotaFactory.build({
         description: 'Max number of VPUs assigned to Linodes with VPU plans',
-        quota_limit: pickRandom([10, 20, 30, 40, 50]),
+        quota_limit: 10,
         quota_name: 'VPU',
         region_applied: region.id,
         resource_metric: 'VPU',
@@ -60,7 +66,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       quotaFactory.build({
         description:
           'Max number of vCPUs assigned to Linodes with High Memory plans',
-        quota_limit: pickRandom([10, 20, 30, 40, 50]),
+        quota_limit: 15,
         quota_name: 'High Memory',
         region_applied: region.id,
         resource_metric: 'CPU',
@@ -70,7 +76,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
   lke: [
     ...regions.map((region) =>
       quotaFactory.build({
-        quota_limit: pickRandom([10, 20, 30, 40, 50]),
+        quota_limit: 50,
         quota_name: 'Total number of Clusters',
         region_applied: region.id,
         resource_metric: 'cluster',
@@ -90,10 +96,10 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       description:
         'The allowed number of buckets in your Object Storage account',
       endpoint_type: 'E0',
-      quota_limit: 1000,
+      quota_limit: 100,
       quota_name: 'Number of Buckets',
       resource_metric: 'bucket',
-      s3_endpoint: 'us-east-1.linodeobjects.com',
+      s3_endpoint: 'us-west-1.linodeobjects.com',
     }),
     quotaFactory.build({
       description: 'The total number of objects in your Object Storage account',
@@ -106,6 +112,32 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
   ],
 };
 
+const mockS3Endpoints = mockQuotas['object-storage'].map((quota) =>
+  objectStorageEndpointsFactory.build({
+    endpoint_type: quota.endpoint_type,
+    region: quota.region_applied,
+    s3_endpoint: quota.s3_endpoint,
+  })
+);
+
+export const getS3Endpoint = () => [
+  http.get(
+    '*/v4/object-storage/endpoints',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<
+        APIErrorResponse | APIPaginatedResponse<ObjectStorageEndpoint>
+      >
+    > => {
+      return makePaginatedResponse({
+        data: mockS3Endpoints,
+        request,
+      });
+    }
+  ),
+];
+
 export const getQuotas = () => [
   http.get(
     '*/v4/:service/quotas',
@@ -115,8 +147,20 @@ export const getQuotas = () => [
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<Quota>>
     > => {
+      const xFilters = request.headers.get('X-Filter');
+      const filters = xFilters ? JSON.parse(xFilters) : {};
+
+      // if we got a global filter, do a randomized sorting on the data,
+      // otherwise, return the data as is
+      const data =
+        filters.region_applied || filters.s3_endpoint === 'global'
+          ? mockQuotas[params.service as QuotaType].sort(
+              () => Math.random() - 0.5
+            )
+          : mockQuotas[params.service as QuotaType];
+
       return makePaginatedResponse({
-        data: mockQuotas[params.service as QuotaType],
+        data,
         request,
       });
     }
@@ -153,36 +197,81 @@ export const getQuotas = () => [
 
       switch (service) {
         case 'linode':
-          return makeResponse(
-            quotaUsageFactory.build({
-              quota_limit: quota.quota_limit,
-              used: pickRandom([5, 6, 7, 8, 9, 10, null]),
-            })
-          );
+          switch (quota.quota_name) {
+            case 'Dedicated CPU':
+              return makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: 45,
+                })
+              );
+            case 'Shared CPU':
+              return makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: 24,
+                })
+              );
+            case 'GPU':
+              return makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: 3,
+                })
+              );
+            case 'VPU':
+              return makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: 7,
+                })
+              );
+            default:
+              return makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: null,
+                })
+              );
+          }
         case 'lke':
           return makeResponse(
             quotaUsageFactory.build({
               quota_limit: quota.quota_limit,
-              used: pickRandom([0, 1, 2, 3, 4, 5, null]),
+              used: pickRandom([2, 27, 5, 38, 49]),
             })
           );
         case 'object-storage':
-          return makeResponse(
-            quotaUsageFactory.build({
-              quota_limit: quota.quota_limit,
-              used:
-                quota.quota_name === 'Total Capacity'
-                  ? pickRandom([
-                      0,
-                      100_000_000,
-                      200_000_000,
-                      300_000_000,
-                      400_000_000,
-                      null,
-                    ])
-                  : pickRandom([100, 200, 300, 400, 500, null]),
-            })
-          );
+          switch (quota.quota_name) {
+            case 'Total Capacity':
+              return makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: 100_000_000_000_000,
+                })
+              );
+            case 'Number of Buckets':
+              return makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: 75,
+                })
+              );
+            case 'Number of Objects':
+              return makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: 10_000_000,
+                })
+              );
+            default:
+              makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: null,
+                })
+              );
+          }
         default:
           return makeNotFoundResponse();
       }
