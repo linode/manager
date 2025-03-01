@@ -4,6 +4,7 @@
 
 import type { ThemeName } from '@linode/ui';
 import type { MountReturn } from 'cypress/react';
+import type { Flags } from 'src/featureFlags';
 
 /**
  * Array of themes for which to test components.
@@ -46,10 +47,13 @@ export type MountCommand = (
  */
 export const componentTests = (
   componentName: string,
-  callback: (mountCommand: MountCommand) => void
+  callback: (mountCommand: MountCommand) => void,
+  options: {
+    useTanstackRouter?: boolean;
+  } = {}
 ) => {
-  const mountCommand = (jsx: React.ReactNode, flags?: any) =>
-    cy.mountWithTheme(jsx, defaultTheme, flags);
+  const mountCommand = (jsx: React.ReactNode, flags?: Flags) =>
+    cy.mountWithTheme(jsx, defaultTheme, flags, options.useTanstackRouter);
   describe(`${componentName} component tests`, () => {
     callback(mountCommand);
   });

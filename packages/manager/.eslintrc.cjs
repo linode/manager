@@ -107,6 +107,7 @@ module.exports = {
         // for each new features added to the migration router, add its directory here
         'src/features/Betas/**/*',
         'src/features/Domains/**/*',
+        'src/features/Firewalls/**/*',
         'src/features/Images/**/*',
         'src/features/Longview/**/*',
         'src/features/PlacementGroups/**/*',
@@ -136,6 +137,7 @@ module.exports = {
                   'Redirect',
                   'RouteComponentProps',
                   'withRouter',
+                  'Prompt',
                 ],
                 message:
                   'Please use routing utilities intended for @tanstack/react-router.',
