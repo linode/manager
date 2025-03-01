@@ -285,7 +285,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     [inboundState, outboundState, policy, rules]
   );
 
-  const { next, proceed, reset, status } = useBlocker({
+  const { proceed, reset, status } = useBlocker({
     enableBeforeUnload: hasUnsavedChanges,
     shouldBlockFn: ({ next }) => {
       // Only block if there are unsaved changes
@@ -332,7 +332,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         message={
           'Are you sure you want to leave this page? Your changes will not be saved.'
         }
-        when={hasUnsavedChanges && !next}
+        when={hasUnsavedChanges}
       />
       <ConfirmationDialog
         actions={() => (
