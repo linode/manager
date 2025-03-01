@@ -22,9 +22,13 @@
  * ```
  */
 
-import { Location } from 'history';
 import * as React from 'react';
 import { Prompt as ReactRouterPrompt, useHistory } from 'react-router-dom';
+
+import type {
+  PromptProps as ReactRouterPromptProps,
+  useLocation,
+} from 'react-router-dom';
 
 interface ChildrenProps {
   handleCancel: () => void;
@@ -64,7 +68,9 @@ export const Prompt = React.memo((props: PromptProps) => {
   const confirmedNav = React.useRef<boolean>(false);
 
   // The location the user is navigating to.
-  const [nextLocation, setNextLocation] = React.useState<Location | null>(null);
+  const [nextLocation, setNextLocation] = React.useState<ReturnType<
+    typeof useLocation
+  > | null>(null);
 
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
@@ -89,7 +95,7 @@ export const Prompt = React.memo((props: PromptProps) => {
     history.push(nextLocation.pathname);
   };
 
-  const handleNavigation = (location: Location) => {
+  const handleNavigation: ReactRouterPromptProps['message'] = (location) => {
     if (location.pathname === history.location.pathname) {
       // Sorting order changes affect the search portion of the URL.
       // The path is the same though, so the user isn't actually navigating away.

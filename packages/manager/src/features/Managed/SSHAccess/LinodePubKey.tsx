@@ -26,7 +26,7 @@ import {
   StyledTypography,
 } from './LinodePubKey.styles';
 
-import type { Theme } from '@storybook/core/theming';
+import type { Theme } from '@mui/material';
 
 const DOC_URL =
   'https://techdocs.akamai.com/cloud-computing/docs/configure-ssh-access-for-managed-services';
@@ -40,7 +40,7 @@ const LinodePubKey = () => {
     preferences?.maskSensitiveData
   );
   const timeout = React.useRef<NodeJS.Timeout>();
-  const matchesSmDownBreakpoint = useMediaQuery((theme: Theme) =>
+  const matchesSmDownBreakpoint = useMediaQuery<Theme>((theme) =>
     theme.breakpoints.down('sm')
   );
 
