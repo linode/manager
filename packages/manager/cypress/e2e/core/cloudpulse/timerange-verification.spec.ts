@@ -127,6 +127,7 @@ const mockProfile = profileFactory.build({
  *   - `minute`: The minute of the hour as a number.
  *   - `month`: The month of the year as a number.
  */
+
 const getDateRangeInGMT = (
   daysOffset: number,
   hour: number,
@@ -398,8 +399,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
           convertToGmt(endActualDate.replace(' ', 'T'))
         );
       });
-
-    // Click on the "Presets" button
+   // Click on the "Presets" button
     ui.buttonGroup.findButtonByTitle('Presets').should('be.visible').click();
 
     // Mock API response for cloud metrics presets
