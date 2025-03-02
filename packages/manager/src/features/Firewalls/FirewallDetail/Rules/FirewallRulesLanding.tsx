@@ -4,11 +4,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useBlocker, useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { Prompt } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+// eslint-disable-next-line no-restricted-imports
+import { Prompt } from 'src/components/Prompt/Prompt';
 import {
   useAllFirewallDevicesQuery,
   useUpdateFirewallRulesMutation,
@@ -328,36 +328,35 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         This Prompt eventually can be removed once react-router is fully deprecated
         It is here only to block non-Tanstack routes
       */}
-      <Prompt
-        message={
-          'Are you sure you want to leave this page? Your changes will not be saved.'
-        }
-        when={hasUnsavedChanges}
-      />
-      <ConfirmationDialog
-        actions={() => (
-          <ActionsPanel
-            primaryButtonProps={{
-              label: 'Go back and review changes',
-              onClick: reset,
-            }}
-            secondaryButtonProps={{
-              buttonType: 'secondary',
-              color: 'error',
-              label: 'Leave and discard changes',
-              onClick: proceed,
-            }}
-          />
+      <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
+        {({ handleCancel, handleConfirm, isModalOpen }) => (
+          <ConfirmationDialog
+            actions={() => (
+              <ActionsPanel
+                primaryButtonProps={{
+                  label: 'Go back and review changes',
+                  onClick: reset || handleCancel,
+                }}
+                secondaryButtonProps={{
+                  buttonType: 'secondary',
+                  color: 'error',
+                  label: 'Leave and discard changes',
+                  onClick: proceed || handleConfirm,
+                }}
+              />
+            )}
+            onClose={reset || handleCancel}
+            open={status === 'blocked' || isModalOpen}
+            title="Discard Firewall changes?"
+          >
+            <Typography variant="subtitle1">
+              The changes you made to this Firewall haven&rsquo;t been applied.
+              If you navigate away from this page, your changes will be
+              discarded.
+            </Typography>
+          </ConfirmationDialog>
         )}
-        onClose={reset}
-        open={status === 'blocked'}
-        title="Discard Firewall changes?"
-      >
-        <Typography variant="subtitle1">
-          The changes you made to this Firewall haven&rsquo;t been applied. If
-          you navigate away from this page, your changes will be discarded.
-        </Typography>
-      </ConfirmationDialog>
+      </Prompt>
 
       {disabled ? (
         <Notice
