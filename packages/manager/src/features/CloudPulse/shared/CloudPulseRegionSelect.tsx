@@ -93,6 +93,7 @@ export const CloudPulseRegionSelect = React.memo(
         disableClearable={false}
         disabled={!selectedDashboard || !regions}
         errorText={isError ? `Failed to fetch ${label || 'Regions'}.` : ''}
+        flags={flags}
         fullWidth
         label={label || 'Region'}
         loading={isLoading}

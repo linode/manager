@@ -4,6 +4,8 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { useFlags } from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { useIsGeckoEnabled } from '../RegionSelect/RegionSelect.utils';
 import { NETWORK_TRANSFER_USAGE_AND_COST_LINK } from './constants';
@@ -36,7 +38,9 @@ export const TransferDisplayDialog = React.memo(
       regionTransferPools,
     } = props;
     const theme = useTheme();
-    const { isGeckoLAEnabled } = useIsGeckoEnabled();
+    const flags = useFlags();
+    const { data: regions } = useRegionsQuery();
+    const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
 
     const daysRemainingInMonth = getDaysRemaining();
     const listOfOtherRegionTransferPools: string[] =

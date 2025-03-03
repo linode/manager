@@ -15,13 +15,14 @@ describe('RegionSelect', () => {
     currentCapability: 'Linodes',
     disabled: false,
     errorText: '',
-    onChange: vi.fn(),
+    flags: {},
     helperText: '',
     label: '',
+    onChange: vi.fn(),
     regions,
     required: false,
-    value: '',
     tooltipText: '',
+    value: '',
     width: 100,
   };
 

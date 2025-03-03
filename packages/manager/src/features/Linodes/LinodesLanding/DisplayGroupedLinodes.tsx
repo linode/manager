@@ -1,5 +1,5 @@
-import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
 import { IconButton } from '@linode/ui';
+import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -16,7 +16,9 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useFlags } from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import {
   StyledControlHeader,
@@ -94,7 +96,10 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
     return acc;
   }, 0);
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const flags = useFlags();
+  const { data: regions } = useRegionsQuery();
+
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
 
   if (display === 'grid') {
     return (

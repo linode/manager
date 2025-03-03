@@ -42,6 +42,7 @@ describe('RegionMultiSelect', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
+        flags={{}}
         onChange={mockHandleSelection}
         regions={[regionNewark, regionAtlanta]}
         selectedIds={[]}
@@ -56,6 +57,7 @@ describe('RegionMultiSelect', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
+        flags={{}}
         onChange={onChange}
         regions={[regionNewark, regionAtlanta]}
         selectedIds={[]}
@@ -75,6 +77,7 @@ describe('RegionMultiSelect', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
+        flags={{}}
         onChange={onChange}
         regions={[regionNewark, regionAtlanta]}
         selectedIds={[regionAtlanta.id, regionNewark.id]}
@@ -99,6 +102,7 @@ describe('RegionMultiSelect', () => {
           />
         )}
         currentCapability="Block Storage"
+        flags={{}}
         onChange={mockHandleSelection}
         regions={[regionNewark, regionAtlanta]}
         selectedIds={[regionNewark.id]}

@@ -30,6 +30,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -61,6 +62,7 @@ export const PlacementGroupsCreateDrawer = (
     open,
     selectedRegionId,
   } = props;
+  const flags = useFlags();
   const { data: regions } = useRegionsQuery();
   const { data: allPlacementGroupsInRegion } = useAllPlacementGroupsQuery({
     enabled: Boolean(selectedRegionId),
@@ -263,6 +265,7 @@ export const PlacementGroupsCreateDrawer = (
                 currentCapability="Placement Group"
                 disableClearable
                 disabledRegions={disabledRegions}
+                flags={flags}
                 helperText={values.region && pgRegionLimitHelperText}
                 onChange={(e, region) => handleRegionSelect(region.id)}
                 regions={regions ?? []}

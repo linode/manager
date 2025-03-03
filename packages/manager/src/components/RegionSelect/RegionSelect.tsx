@@ -39,6 +39,7 @@ export const RegionSelect = <
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
+    flags,
     forcefullyShownRegionIds,
     helperText,
     ignoreAccountAvailability,
@@ -55,7 +56,7 @@ export const RegionSelect = <
     width,
   } = props;
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
 
   const {
     data: accountAvailability,
@@ -117,6 +118,7 @@ export const RegionSelect = <
           return (
             <RegionOption
               disabledOptions={disabledRegions[region.id]}
+              isGeckoLAEnabled={isGeckoLAEnabled}
               item={region}
               key={`${region.id}-${key}`}
               props={rest}

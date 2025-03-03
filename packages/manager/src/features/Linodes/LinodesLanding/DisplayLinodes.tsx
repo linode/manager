@@ -13,7 +13,9 @@ import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFoo
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useFlags } from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledControlHeader } from './DisplayLinodes.styles';
 import { RegionTypeFilter } from './RegionTypeFilter';
@@ -82,6 +84,8 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const displayViewDescriptionId = React.useId();
   const groupByDescriptionId = React.useId();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+  const flags = useFlags();
+  const { data: regions } = useRegionsQuery();
 
   const numberOfLinodesWithMaintenance = React.useMemo(() => {
     return data.reduce((acc, thisLinode) => {
@@ -104,7 +108,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const params = getQueryParamsFromQueryString<QueryParams>(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
 
   return (
     <Paginate

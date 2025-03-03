@@ -43,6 +43,7 @@ import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
@@ -128,6 +129,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export const VolumeCreate = () => {
+  const flags = useFlags();
   const theme = useTheme();
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -412,6 +414,7 @@ export const VolumeCreate = () => {
                 currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
+                flags={flags}
                 label="Region"
                 onBlur={handleBlur}
                 regions={regions ?? []}

@@ -4,18 +4,23 @@ import React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { ListItemOption } from 'src/components/ListItemOption';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+// import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 
 import type { Region } from '@linode/api-v4';
 import type { ListItemProps } from 'src/components/ListItemOption';
 
+interface RegionOptionProps extends ListItemProps<Region> {
+  isGeckoLAEnabled: boolean;
+}
+
 export const RegionOption = ({
   disabledOptions,
+  isGeckoLAEnabled,
   item,
   props,
   selected,
-}: ListItemProps<Region>) => {
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+}: RegionOptionProps) => {
+  // const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
 
   return (
     <ListItemOption

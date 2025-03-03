@@ -179,6 +179,7 @@ export const ConfigureForm = React.memo((props: Props) => {
             currentCapability="Linodes"
             disableClearable
             errorText={errorText}
+            flags={flags}
             label="New Region"
             onChange={(e, region) => handleSelectRegion(region.id)}
             value={selectedRegion}
