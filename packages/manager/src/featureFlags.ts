@@ -126,6 +126,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
+  nodebalancerVpc: boolean;
   objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
   productInformationBanners: ProductInformationBannerFlag[];
