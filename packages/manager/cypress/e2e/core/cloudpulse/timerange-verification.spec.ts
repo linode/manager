@@ -129,10 +129,10 @@ const mockProfile = profileFactory.build({
 const getDateRangeInGMT = (
   hour: number,
   minute: number = 0,
-  isCurrent: boolean = false
+  isStart: boolean = false
 ) => {
   const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
-  const targetDate = isCurrent
+  const targetDate = isStart
     ? now.startOf('month').set({ hour, minute })
     : now.set({ hour, minute });
   const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm'); // Format in GMT
