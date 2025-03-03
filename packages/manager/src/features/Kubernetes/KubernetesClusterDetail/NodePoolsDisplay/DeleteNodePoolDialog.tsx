@@ -69,8 +69,8 @@ export const DeleteNodePoolDialog = (props: Props) => {
           `${pluralize('node', 'nodes', nodeCount)} in this node pool.`}{' '}
         {nodeCount > 1
           ? MULTI_NODE_POD_DELETION_WARNING
-          : SINGLE_NODE_POD_DELETION_WARNING}
-        . Consider draining the node pool first.{' '}
+          : SINGLE_NODE_POD_DELETION_WARNING}{' '}
+        Consider draining the node pool first.{' '}
         <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools#remove-a-node-pool">
           Learn more
         </Link>
