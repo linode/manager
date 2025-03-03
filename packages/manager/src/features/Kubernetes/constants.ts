@@ -8,5 +8,7 @@ export const nodesDeletionWarning =
   'All nodes will be deleted and new nodes will be created to replace them.';
 export const localStorageWarning =
   'In the event you are using local storage (such as ’hostPath’ volumes), this data is erased and may result in data loss.';
-export const podDeletionWarning =
+export const multiNodePodDeletionWarning =
   'Any pods running on these nodes are also deleted and rescheduled.';
+export const singleNodePodDeletionWarning =
+  'Any pods running on this node are also deleted and rescheduled.';

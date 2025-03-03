@@ -5,7 +5,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { podDeletionWarning } from 'src/features/Kubernetes/constants';
+import { multiNodePodDeletionWarning } from 'src/features/Kubernetes/constants';
 import { useRecycleNodePoolMutation } from 'src/queries/kubernetes';
 
 import { LocalStorageWarningNotice } from './LocalStorageWarningNotice';
@@ -62,8 +62,8 @@ export const RecycleNodePoolDialog = (props: Props) => {
       title="Recycle node pool?"
     >
       <Typography>
-        Delete and recreate all nodes in this node pool. {podDeletionWarning}{' '}
-        Consider draining the node pool first.{' '}
+        Delete and recreate all nodes in this node pool.{' '}
+        {multiNodePodDeletionWarning} Consider draining the node pool first.{' '}
         <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools#recycle-nodes">
           Learn more
         </Link>

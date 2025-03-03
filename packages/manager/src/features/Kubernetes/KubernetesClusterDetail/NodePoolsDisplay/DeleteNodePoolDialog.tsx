@@ -7,6 +7,10 @@ import { Link } from 'src/components/Link';
 import { useDeleteNodePoolMutation } from 'src/queries/kubernetes';
 import { pluralize } from 'src/utilities/pluralize';
 
+import {
+  multiNodePodDeletionWarning,
+  singleNodePodDeletionWarning,
+} from '../../constants';
 import { LocalStorageWarningNotice } from '../LocalStorageWarningNotice';
 
 import type { KubeNodePoolResponse } from '@linode/api-v4';
@@ -63,15 +67,17 @@ export const DeleteNodePoolDialog = (props: Props) => {
         Delete {nodeCount > 1 ? 'all' : 'the'}{' '}
         {nodeCount > 0 &&
           `${pluralize('node', 'nodes', nodeCount)} in this node pool.`}{' '}
-        Any pods running on these nodes are also deleted. Consider draining the
-        node pool first.{' '}
+        {nodeCount > 1
+          ? multiNodePodDeletionWarning
+          : singleNodePodDeletionWarning}{' '}
+        Consider draining the node pool first.{' '}
         <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools#remove-a-node-pool">
           Learn more
         </Link>
         .
       </Typography>
 
-      <LocalStorageWarningNotice />
+      <LocalStorageWarningNotice isSingular={nodeCount === 1} />
     </ConfirmationDialog>
   );
 };
