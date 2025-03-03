@@ -17,8 +17,17 @@ describe('Linode Select Table', () => {
   it('should filter out Linodes in distributed regions', () => {
     const xFilter = getLinodeXFilter('');
 
-    expect(xFilter).toStrictEqual({
-      '+or': [{ label: { '+contains': '' } }],
+    expect(xFilter).toHaveProperty('site_type', 'core');
+  });
+
+  it('should search for both label and id', () => {
+    const xFilter = getLinodeXFilter('12345678');
+
+    expect(xFilter).toContain({
+      '+or': [
+        { label: { '+contains': '12345678' } },
+        { id: { '+contains': '12345678' } },
+      ],
       site_type: 'core',
     });
   });

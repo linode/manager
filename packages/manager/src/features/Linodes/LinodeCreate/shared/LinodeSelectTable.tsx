@@ -1,3 +1,4 @@
+import { getAPIFilterFromQuery } from '@linode/search';
 import { Box, Notice, Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -22,7 +23,6 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
-import { isNumeric } from 'src/utilities/stringUtils';
 
 import {
   getGeneratedLinodeLabel,
@@ -235,11 +235,12 @@ export const LinodeSelectTable = (props: Props) => {
 };
 
 export const getLinodeXFilter = (query: string, order?: UseOrder) => {
+  const { filter: apiFilter } = getAPIFilterFromQuery(query, {
+    searchableFieldsWithoutOperator: ['label', 'id'],
+  });
+
   const filter = {
-    '+or': [
-      { label: { '+contains': query } },
-      ...(isNumeric(query) ? [{ id: Number(query) }] : []), // let users filter by Linode id
-    ],
+    ...apiFilter,
     site_type: 'core', // backups and cloning are not supported for distributed regions
     // backups: { enabled: true }, womp womp! We can't filter on values within objects
   };
