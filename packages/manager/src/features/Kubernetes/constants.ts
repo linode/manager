@@ -7,4 +7,4 @@ export const nodeWarning =
 export const nodesDeletionWarning =
   'All nodes will be deleted and new nodes will be created to replace them.';
 export const localStorageWarning =
-  'Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.';
+  'In the event you are using local storage (such as ’hostPath’ volumes), this data is erased and may result in data loss.';
