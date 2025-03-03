@@ -86,8 +86,8 @@ export const BackupDrawer = (props: Props) => {
   const linodeCount = linodesWithoutBackups.length;
 
   const renderBackupsTable = () => {
-    if (linodesLoading || typesLoading || accountSettingsLoading) {
-      return <TableRowLoading columns={3} />;
+    if (linodesLoading || typesLoading || accountSettingsLoading || true) {
+      return <TableRowLoading columns={4} />;
     }
     if (linodesError) {
       return <TableRowError colSpan={4} message={linodesError?.[0]?.reason} />;
