@@ -277,7 +277,7 @@ describe('LKE cluster updates', () => {
         'A new version of Kubernetes is available (1.31.1+lke2).';
 
       const upgradeNotes = [
-        'This upgrades the control plane on your LKE cluster and ensures that any new worker nodes are created using the newer Kubernetes version',
+        'This upgrades the control plane on your cluster and ensures that any new worker nodes are created using the newer Kubernetes version.',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
