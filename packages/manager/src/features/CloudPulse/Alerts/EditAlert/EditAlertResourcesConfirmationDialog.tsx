@@ -8,6 +8,11 @@ import type { ActionPanelProps } from 'src/components/ActionsPanel/ActionsPanel'
 
 interface AlertResourcesConfirmDialogProps {
   /**
+   * Boolean flag to control the loading state of the confirm button based on api call pending for result state
+   */
+  isApiResponsePending: boolean;
+
+  /**
    * Callback function to handle closing the confirmation dialog.
    */
   onClose: () => void;
@@ -25,15 +30,22 @@ interface AlertResourcesConfirmDialogProps {
 
 export const EditAlertResourcesConfirmDialog = React.memo(
   (props: AlertResourcesConfirmDialogProps) => {
-    const { onClose, onConfirm, openConfirmationDialog } = props;
+    const {
+      isApiResponsePending,
+      onClose,
+      onConfirm,
+      openConfirmationDialog,
+    } = props;
 
     const actionProps: ActionPanelProps = {
       primaryButtonProps: {
         'data-testid': 'edit-confirmation',
         label: 'Confirm',
+        loading: isApiResponsePending,
         onClick: onConfirm,
       },
       secondaryButtonProps: {
+        disabled: isApiResponsePending,
         label: 'Cancel',
         onClick: onClose,
       },

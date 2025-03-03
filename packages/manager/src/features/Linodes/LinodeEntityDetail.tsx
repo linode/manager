@@ -1,3 +1,4 @@
+import { useLinodeFirewallsQuery, useRegionsQuery } from '@linode/queries';
 import { Notice } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
@@ -10,7 +11,6 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
@@ -66,6 +66,10 @@ export const LinodeEntityDetail = (props: Props) => {
     vpcLinodeIsAssignedTo,
   } = useVPCConfigInterface(linode.id);
 
+  const { data: attachedFirewallData } = useLinodeFirewallsQuery(linode.id);
+
+  const attachedFirewalls = attachedFirewallData?.data ?? [];
+
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'linode',
@@ -111,8 +115,10 @@ export const LinodeEntityDetail = (props: Props) => {
           <LinodeEntityDetailBody
             configInterfaceWithVPC={configInterfaceWithVPC}
             encryptionStatus={linode.disk_encryption}
+            firewalls={attachedFirewalls}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}
+            interfaceGeneration={linode.interface_generation}
             ipv4={linode.ipv4}
             ipv6={trimmedIPv6}
             isLKELinode={Boolean(linode.lke_cluster_id)}
