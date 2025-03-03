@@ -306,6 +306,20 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     withResolver: true,
   });
 
+  // Create a combined handler for proceeding with navigation
+  const handleProceedNavigation = React.useCallback(() => {
+    if (status === 'blocked' && proceed) {
+      proceed();
+    }
+  }, [status, proceed]);
+
+  // Create a combined handler for canceling navigation
+  const handleCancelNavigation = React.useCallback(() => {
+    if (status === 'blocked' && reset) {
+      reset();
+    }
+  }, [status, reset]);
+
   const inboundRules = React.useMemo(() => editorStateToRules(inboundState), [
     inboundState,
   ]);
@@ -326,7 +340,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     <>
       {/*
         This Prompt eventually can be removed once react-router is fully deprecated
-        It is here only to block non-Tanstack routes
+        It is here only to preserve the behavior of non-Tanstack routes
       */}
       <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
         {({ handleCancel, handleConfirm, isModalOpen }) => (
@@ -335,17 +349,26 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
               <ActionsPanel
                 primaryButtonProps={{
                   label: 'Go back and review changes',
-                  onClick: reset || handleCancel,
+                  onClick: () => {
+                    handleCancelNavigation();
+                    handleCancel();
+                  },
                 }}
                 secondaryButtonProps={{
                   buttonType: 'secondary',
                   color: 'error',
                   label: 'Leave and discard changes',
-                  onClick: proceed || handleConfirm,
+                  onClick: () => {
+                    handleProceedNavigation();
+                    handleConfirm();
+                  },
                 }}
               />
             )}
-            onClose={reset || handleCancel}
+            onClose={() => {
+              handleCancelNavigation();
+              handleCancel();
+            }}
             open={status === 'blocked' || isModalOpen}
             title="Discard Firewall changes?"
           >

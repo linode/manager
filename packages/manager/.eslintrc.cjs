@@ -137,7 +137,6 @@ module.exports = {
                   'Redirect',
                   'RouteComponentProps',
                   'withRouter',
-                  'Prompt',
                 ],
                 message:
                   'Please use routing utilities intended for @tanstack/react-router.',
@@ -154,6 +153,12 @@ module.exports = {
                 message:
                   'Please use useOrderV2 hook for components being migrated to TanStack Router.',
                 name: 'src/components/OrderBy',
+              },
+              {
+                importNames: ['Prompt'],
+                message:
+                  'Please use the TanStack Prompt component for components being migrated to TanStack Router.',
+                name: 'src/components/Prompt/Prompt',
               },
             ],
           },
