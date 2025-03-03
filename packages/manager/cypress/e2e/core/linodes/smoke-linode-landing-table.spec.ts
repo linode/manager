@@ -95,7 +95,8 @@ describe('linode landing checks', () => {
     cy.findByTestId('menu-item-Object Storage').should('be.visible');
     cy.findByTestId('menu-item-Longview').should('be.visible');
     cy.findByTestId('menu-item-Marketplace').should('be.visible');
-    cy.findByTestId('menu-item-Account').scrollIntoView().should('be.visible');
+    cy.findByTestId('menu-item-Account').scrollIntoView();
+    cy.findByTestId('menu-item-Account').should('be.visible');
     cy.findByTestId('menu-item-Help & Support').should('be.visible');
   });
 

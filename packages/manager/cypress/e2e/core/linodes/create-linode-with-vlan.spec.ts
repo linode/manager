@@ -67,11 +67,10 @@ describe('Create Linode with VLANs', () => {
       });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('VLAN Attached').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('VLAN Attached').should('be.visible');
+    });
 
     ui.button
       .findByTitle('Create Linode')
@@ -151,11 +150,10 @@ describe('Create Linode with VLANs', () => {
       });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('VLAN Attached').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('VLAN Attached').should('be.visible');
+    });
 
     ui.button
       .findByTitle('Create Linode')
