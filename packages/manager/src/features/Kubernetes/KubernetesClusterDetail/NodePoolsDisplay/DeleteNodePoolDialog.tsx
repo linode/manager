@@ -8,8 +8,8 @@ import { useDeleteNodePoolMutation } from 'src/queries/kubernetes';
 import { pluralize } from 'src/utilities/pluralize';
 
 import {
-  multiNodePodDeletionWarning,
-  singleNodePodDeletionWarning,
+  MULTI_NODE_POD_DELETION_WARNING,
+  SINGLE_NODE_POD_DELETION_WARNING,
 } from '../../constants';
 import { LocalStorageWarningNotice } from '../LocalStorageWarningNotice';
 
@@ -68,9 +68,9 @@ export const DeleteNodePoolDialog = (props: Props) => {
         {nodeCount > 0 &&
           `${pluralize('node', 'nodes', nodeCount)} in this node pool.`}{' '}
         {nodeCount > 1
-          ? multiNodePodDeletionWarning
-          : singleNodePodDeletionWarning}{' '}
-        Consider draining the node pool first.{' '}
+          ? MULTI_NODE_POD_DELETION_WARNING
+          : SINGLE_NODE_POD_DELETION_WARNING}
+        . Consider draining the node pool first.{' '}
         <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools#remove-a-node-pool">
           Learn more
         </Link>
