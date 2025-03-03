@@ -82,7 +82,7 @@ describe('LKE cluster updates', () => {
 
       const haUpgradeWarnings = [
         'All nodes will be deleted and new nodes will be created to replace them.',
-        'Any local storage (such as ’hostPath’ volumes) will be erased.',
+        'In the event you are using local storage (such as ’hostPath’ volumes), this data is erased and may result in data loss.',
         'This may take several minutes, as nodes will be replaced on a rolling basis.',
       ];
 
@@ -154,7 +154,7 @@ describe('LKE cluster updates', () => {
       const upgradePrompt = 'A new version of Kubernetes is available (1.26).';
 
       const upgradeNotes = [
-        'Once the upgrade is complete you will need to recycle all nodes in your cluster',
+        'This upgrades the control plane on your LKE cluster and ensures that any new worker nodes are created using the newer Kubernetes version.',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
@@ -180,7 +180,7 @@ describe('LKE cluster updates', () => {
 
       ui.dialog
         .findByTitle(
-          `Step 1: Upgrade ${mockCluster.label} to Kubernetes ${newVersion}`
+          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
         )
         .should('be.visible')
         .within(() => {
@@ -203,18 +203,21 @@ describe('LKE cluster updates', () => {
 
       mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
 
-      const stepTwoDialogTitle = 'Step 2: Recycle All Cluster Nodes';
+      const stepTwoDialogTitle = 'Upgrade complete';
 
       ui.dialog
         .findByTitle(stepTwoDialogTitle)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Kubernetes version has been updated successfully.', {
-            exact: false,
-          }).should('be.visible');
+          cy.findByText(
+            'The cluster’s Kubernetes version has been updated successfully',
+            {
+              exact: false,
+            }
+          ).should('be.visible');
 
           cy.findByText(
-            'For the changes to take full effect you must recycle the nodes in your cluster.',
+            'To upgrade your existing worker nodes, you can recycle all nodes (which may have a performance impact) or perform other upgrade methods.',
             { exact: false }
           ).should('be.visible');
 
@@ -274,7 +277,7 @@ describe('LKE cluster updates', () => {
         'A new version of Kubernetes is available (1.31.1+lke2).';
 
       const upgradeNotes = [
-        'Once the upgrade is complete you will need to recycle all nodes in your cluster',
+        'This upgrades the control plane on your LKE cluster and ensures that any new worker nodes are created using the newer Kubernetes version',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
@@ -308,7 +311,7 @@ describe('LKE cluster updates', () => {
 
       ui.dialog
         .findByTitle(
-          `Step 1: Upgrade ${mockCluster.label} to Kubernetes ${newVersion}`
+          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
         )
         .should('be.visible')
         .within(() => {
@@ -331,18 +334,21 @@ describe('LKE cluster updates', () => {
 
       mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
 
-      const stepTwoDialogTitle = 'Step 2: Recycle All Cluster Nodes';
+      const stepTwoDialogTitle = 'Upgrade complete';
 
       ui.dialog
         .findByTitle(stepTwoDialogTitle)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Kubernetes version has been updated successfully.', {
-            exact: false,
-          }).should('be.visible');
+          cy.findByText(
+            'The cluster’s Kubernetes version has been updated successfully',
+            {
+              exact: false,
+            }
+          ).should('be.visible');
 
           cy.findByText(
-            'For the changes to take full effect you must recycle the nodes in your cluster.',
+            'To upgrade your existing worker nodes, you can recycle all nodes (which may have a performance impact) or perform other upgrade methods.',
             { exact: false }
           ).should('be.visible');
 
@@ -391,8 +397,8 @@ describe('LKE cluster updates', () => {
       });
 
       const recycleWarningSubstrings = [
-        'local storage (such as ’hostPath’ volumes) will be erased',
-        'may take several minutes',
+        'local storage (such as ’hostPath’ volumes), this data is erased',
+        'may result in data loss',
       ];
 
       mockGetCluster(mockCluster).as('getCluster');
@@ -417,7 +423,7 @@ describe('LKE cluster updates', () => {
         .findByTitle(`Recycle ${mockKubeLinode.id}?`)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Redeploy this node in the node pool.', {
+          cy.findByText('Delete and recreate this node.', {
             exact: false,
           }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
@@ -447,7 +453,7 @@ describe('LKE cluster updates', () => {
         .findByTitle('Recycle node pool?')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Redeploy all nodes in the node pool.', {
+          cy.findByText('Delete and recreate all nodes in this node pool.', {
             exact: false,
           }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
@@ -477,7 +483,7 @@ describe('LKE cluster updates', () => {
         .findByTitle('Recycle all nodes in cluster?')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Redeploy all nodes in the cluster.', {
+          cy.findByText('Delete and recreate all nodes in this cluster.', {
             exact: false,
           }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {

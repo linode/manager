@@ -98,7 +98,9 @@ export const UpgradeDialog = (props: Props) => {
 
   const dialogTitle = hasUpdatedSuccessfully
     ? 'Upgrade complete'
-    : `Upgrade Kubernetes version to ${nextVersion} on ${clusterLabel}?`;
+    : `Upgrade Kubernetes version ${
+        nextVersion ? `to ${nextVersion}` : ''
+      } on ${clusterLabel}?`;
 
   const actions = (
     <ActionsPanel
