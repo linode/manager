@@ -51,6 +51,11 @@ const VPCDetail = () => {
       ? vpc.description
       : truncate(vpc.description, 150);
 
+  // This isn't great but will hopefully improve once we actually support editing VPCs for LKE-E
+  const isVPCLKEEnterpriseCluster =
+    /^workload VPC for LKE Enterprise Cluster lke\d+/i.test(description) ||
+    /^lke\d+/i.test(vpc.label);
+
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
 
@@ -190,7 +195,11 @@ const VPCDetail = () => {
           Subnets ({vpc.subnets.length})
         </Typography>
       </Box>
-      <VPCSubnetsTable vpcId={vpc.id} vpcRegion={vpc.region} />
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
+        vpcId={vpc.id}
+        vpcRegion={vpc.region}
+      />
     </>
   );
 };

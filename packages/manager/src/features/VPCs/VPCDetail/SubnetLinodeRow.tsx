@@ -34,6 +34,7 @@ interface Props {
   handlePowerActionsLinode: (linode: Linode, action: Action) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   hover?: boolean;
+  isVPCLKEEnterpriseCluster: boolean;
   linodeId: number;
   subnet?: Subnet;
   subnetId: number;
@@ -44,6 +45,7 @@ export const SubnetLinodeRow = (props: Props) => {
     handlePowerActionsLinode,
     handleUnassignLinode,
     hover = false,
+    isVPCLKEEnterpriseCluster,
     linodeId,
     subnet,
     subnetId,
@@ -105,28 +107,29 @@ export const SubnetLinodeRow = (props: Props) => {
     <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
   );
 
-  const labelCell = hasUnrecommendedConfiguration ? (
-    <Box
-      data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
-      sx={{ alignItems: 'center', display: 'flex' }}
-    >
-      <TooltipIcon
-        text={
-          <Typography>
-            This Linode is using a configuration profile with a Networking
-            setting that is not recommended. To avoid potential connectivity
-            issues, edit the Linode’s configuration.
-          </Typography>
-        }
-        icon={<StyledWarningIcon />}
-        status="other"
-        sxTooltipIcon={{ paddingLeft: 0 }}
-      />
-      {linkifiedLinodeLabel}
-    </Box>
-  ) : (
-    linkifiedLinodeLabel
-  );
+  const labelCell =
+    !isVPCLKEEnterpriseCluster && hasUnrecommendedConfiguration ? (
+      <Box
+        data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
+        sx={{ alignItems: 'center', display: 'flex' }}
+      >
+        <TooltipIcon
+          text={
+            <Typography>
+              This Linode is using a configuration profile with a Networking
+              setting that is not recommended. To avoid potential connectivity
+              issues, edit the Linode’s configuration.
+            </Typography>
+          }
+          icon={<StyledWarningIcon />}
+          status="other"
+          sxTooltipIcon={{ paddingLeft: 0 }}
+        />
+        {linkifiedLinodeLabel}
+      </Box>
+    ) : (
+      linkifiedLinodeLabel
+    );
 
   const iconStatus = getLinodeIconStatus(linode.status);
   const isRunning = linode.status === 'running';
