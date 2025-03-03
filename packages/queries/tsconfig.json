@@ -12,7 +12,6 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
     "forceConsistentCasingInFileNames": true,
     "incremental": true
   },
