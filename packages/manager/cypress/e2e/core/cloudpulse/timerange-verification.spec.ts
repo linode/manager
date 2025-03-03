@@ -40,7 +40,6 @@ import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
 const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-const currentDate = new Date();
 
 const cleanText = (string: string) =>
   string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
@@ -49,6 +48,7 @@ const timeRanges = [
   { label: 'Last 30 Minutes', unit: 'min', value: 30 },
   { label: 'Last 12 Hours', unit: 'hr', value: 12 },
   { label: 'Last 24 Hours', unit: 'hr', value: 24 },
+  // eslint-disable-next-line sonarjs/no-duplicate-string
   { label: 'Last 30 Days', unit: 'days', value: 30 },
   { label: 'Last 7 Days', unit: 'days', value: 7 },
   { label: 'Last 1 Hour', unit: 'hr', value: 1 },
@@ -127,25 +127,19 @@ const mockProfile = profileFactory.build({
  *   - `minute`: The minute of the hour as a number.
  *   - `month`: The month of the year as a number.
  */
-
 const getDateRangeInGMT = (
-  daysOffset: number,
   hour: number,
-  minute: number = 0
+  minute: number = 0,
+  isCurrent: boolean = false
 ) => {
-  const now = DateTime.now().setZone('GMT'); // Set timezone to GMT
-  const firstDayOfMonth = now.startOf('month'); // Get the 1st day of the month
-  const daysInMonth = firstDayOfMonth.daysInMonth ?? 28; // Default to 28 if undefined
+  const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
+  const targetDate = !isCurrent
+    ? now.set({ hour, minute })
+    : now.startOf('month').set({ hour, minute });
 
-  // Ensure the target day does not exceed the last day of the month
-  const safeDaysOffset = Math.min(daysOffset, daysInMonth - 1);
-
-  const targetDate = firstDayOfMonth
-    .plus({ days: safeDaysOffset }) // Move forward within the month
-    .set({ hour, minute });
-
+  const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm'); // Format in GMT
   return {
-    actualDate: targetDate.toFormat('yyyy-LL-dd HH:mm'), // Format in GMT
+    actualDate,
     day: targetDate.day,
     hour: targetDate.hour,
     minute: targetDate.minute,
@@ -259,13 +253,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       day: startDay,
       hour: startHour,
       minute: startMinute,
-    } = getDateRangeInGMT(0, 12, 15);
+    } = getDateRangeInGMT(12, 15, true);
     const {
       actualDate: endActualDate,
       day: endDay,
       hour: endHour,
       minute: endMinute,
-    } = getDateRangeInGMT(currentDate.getDate(), 12, 15);
+    } = getDateRangeInGMT(12, 30);
 
     // Select "Custom" from the "Time Range" dropdown
     ui.autocomplete
@@ -399,7 +393,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
           convertToGmt(endActualDate.replace(' ', 'T'))
         );
       });
-   // Click on the "Presets" button
+    // Click on the "Presets" button
     ui.buttonGroup.findButtonByTitle('Presets').should('be.visible').click();
 
     // Mock API response for cloud metrics presets
