@@ -84,7 +84,7 @@ export const usePendo = () => {
       ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
     );
 
-  // Retrieve our self-hosted install script.
+  // Retrieve our self-hosted Pendo agent script (M3-9347).
   const PENDO_SCRIPT =
     APP_ROOT === 'https://cloud.linode.com'
       ? '/pendo/pendo.js'
