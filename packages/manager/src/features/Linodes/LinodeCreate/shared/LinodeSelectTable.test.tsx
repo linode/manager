@@ -23,7 +23,7 @@ describe('Linode Select Table', () => {
   it('should search for both label and id', () => {
     const xFilter = getLinodeXFilter('12345678');
 
-    expect(xFilter).toContain({
+    expect(xFilter).toStrictEqual({
       '+or': [
         { label: { '+contains': '12345678' } },
         { id: { '+contains': '12345678' } },
