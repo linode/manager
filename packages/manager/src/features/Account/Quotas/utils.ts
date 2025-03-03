@@ -6,8 +6,15 @@ import { regionSelectGlobalOption } from 'src/components/RegionSelect/constants'
 import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import type { Filter, Quota, QuotaType, Region } from '@linode/api-v4';
+import type {
+  Filter,
+  Quota,
+  QuotaType,
+  QuotaUsage,
+  Region,
+} from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 type UseGetLocationsForQuotaService =
   | {
@@ -88,4 +95,17 @@ export const getQuotasFilters = ({
     s3_endpoint:
       service.value === 'object-storage' ? location?.value : undefined,
   };
+};
+
+/**
+ * Function to get the error for a given quota usage query
+ */
+export const getQuotaError = (
+  quotaUsageQueries: UseQueryResult<QuotaUsage, Error>[],
+  index: number
+) => {
+  return Array.isArray(quotaUsageQueries[index].error) &&
+    quotaUsageQueries[index].error[0]?.reason
+    ? quotaUsageQueries[index].error[0].reason
+    : 'An unexpected error occurred';
 };
