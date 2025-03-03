@@ -157,7 +157,7 @@ module.exports = {
               {
                 importNames: ['Prompt'],
                 message:
-                  'Please use the TanStack Prompt component for components being migrated to TanStack Router.',
+                  'Please use the TanStack useBlocker hook for components/features being migrated to TanStack Router.',
                 name: 'src/components/Prompt/Prompt',
               },
             ],
