@@ -57,9 +57,7 @@ export const DatabaseSettingsSuspendClusterDialog = (
     setHasConfirmed(false);
   };
 
-  const suspendClusterCopy = `A suspended cluster stops working immediately and you won't be billed for it.
-    You can resume the clusters work within 180 days from its suspension.
-    After that time, the cluster will be deleted permanently.`;
+  const suspendClusterCopy = `A suspended cluster stops immediately and you won't be billed for it. You can resume the cluster within 180 days from its suspension. After that time, the cluster will be deleted permanently.`;
 
   const actions = (
     <ActionsPanel
