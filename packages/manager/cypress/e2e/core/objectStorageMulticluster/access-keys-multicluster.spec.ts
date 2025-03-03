@@ -87,10 +87,8 @@ describe('Object Storage Multicluster access keys', () => {
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.contains('Label (required)')
-          .should('be.visible')
-          .click()
-          .type(mockAccessKey.label);
+        cy.contains('Label (required)').should('be.visible').click();
+        cy.focused().type(mockAccessKey.label);
 
         cy.contains('Regions (required)').should('be.visible').click();
 
@@ -104,10 +102,8 @@ describe('Object Storage Multicluster access keys', () => {
         });
 
         // Close the regions drop-down.
-        cy.contains('Regions (required)')
-          .should('be.visible')
-          .click()
-          .type('{esc}');
+        cy.contains('Regions (required)').should('be.visible').click();
+        cy.focused().type('{esc}');
 
         // TODO Confirm expected regions are shown.
         ui.buttonGroup
@@ -205,25 +201,19 @@ describe('Object Storage Multicluster access keys', () => {
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.contains('Label (required)')
-          .should('be.visible')
-          .click()
-          .type(mockAccessKey.label);
+        cy.contains('Label (required)').should('be.visible').click();
+        cy.focused().type(mockAccessKey.label);
 
-        cy.contains('Regions (required)')
-          .should('be.visible')
-          .click()
-          .type(`${mockRegion.label}{enter}`);
+        cy.contains('Regions (required)').should('be.visible').click();
+        cy.focused().type(`${mockRegion.label}{enter}`);
 
         ui.autocompletePopper
           .findByTitle(`${mockRegion.label} (${mockRegion.id})`)
           .should('be.visible');
 
         // Dismiss region drop-down.
-        cy.contains('Regions (required)')
-          .should('be.visible')
-          .click()
-          .type('{esc}');
+        cy.contains('Regions (required)').should('be.visible').click();
+        cy.focused().type('{esc}');
 
         // Enable "Limited Access" toggle for access key and confirm Create button is disabled.
         cy.findByText('Limited Access').should('be.visible').click();
@@ -364,16 +354,12 @@ describe('Object Storage Multicluster access keys', () => {
       .findByTitle('Edit Access Key')
       .should('be.visible')
       .within(() => {
-        cy.contains('Label (required)')
-          .should('be.visible')
-          .click()
-          .type('{selectall}{backspace}')
-          .type(mockUpdatedAccessKey.label);
+        cy.contains('Label (required)').should('be.visible').click();
+        cy.focused().type('{selectall}{backspace}');
+        cy.focused().type(mockUpdatedAccessKey.label);
 
-        cy.contains('Regions (required)')
-          .should('be.visible')
-          .click()
-          .type(`${mockUpdatedRegion.label}{enter}{esc}`);
+        cy.contains('Regions (required)').should('be.visible').click();
+        cy.focused().type(`${mockUpdatedRegion.label}{enter}{esc}`);
 
         cy.contains(mockUpdatedRegion.label).should('be.visible').and('exist');
 
