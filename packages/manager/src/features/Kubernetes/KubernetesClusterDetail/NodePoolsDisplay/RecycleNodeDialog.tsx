@@ -67,7 +67,7 @@ export const RecycleNodeDialog = (props: Props) => {
         </Link>
         .
       </Typography>
-      <LocalStorageWarningNotice isRecycle />
+      <LocalStorageWarningNotice isRecycle isSingular />
     </ConfirmationDialog>
   );
 };
