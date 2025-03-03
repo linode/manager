@@ -1,4 +1,4 @@
-import { Notice, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -7,7 +7,7 @@ import { Link } from 'src/components/Link';
 import { useDeleteNodePoolMutation } from 'src/queries/kubernetes';
 import { pluralize } from 'src/utilities/pluralize';
 
-import { localStorageWarning } from '../../constants';
+import { LocalStorageWarningNotice } from '../LocalStorageWarningNotice';
 
 import type { KubeNodePoolResponse } from '@linode/api-v4';
 
@@ -71,11 +71,7 @@ export const DeleteNodePoolDialog = (props: Props) => {
         .
       </Typography>
 
-      <Notice spacingTop={8} variant="warning">
-        Compute Instances associated with these nodes will be deleted. Since
-        using local storage is not advised, this operation is generally safe.{' '}
-        {localStorageWarning}
-      </Notice>
+      <LocalStorageWarningNotice />
     </ConfirmationDialog>
   );
 };
