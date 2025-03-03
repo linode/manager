@@ -11,7 +11,7 @@ interface Props {
 export const LocalStorageWarningNotice = (props: Props) => {
   const { isRecycle, isSingular } = props;
   return (
-    <Notice spacingTop={8} variant="warning">
+    <Notice spacingTop={12} variant="warning">
       <strong>Warning:</strong>{' '}
       {isSingular ? 'The Compute Instance' : 'Compute Instances'} associated
       with {isSingular ? 'this node' : 'these nodes'} will be deleted

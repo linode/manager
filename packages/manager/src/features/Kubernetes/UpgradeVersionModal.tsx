@@ -150,8 +150,8 @@ export const UpgradeDialog = (props: Props) => {
             Upgrade the Kubernetes version on <strong>{clusterLabel}</strong>{' '}
             from <strong>{currentVersion}</strong> to{' '}
             <strong>{nextVersion}</strong>. This upgrades the control plane on
-            your LKE cluster and ensures that any new worker nodes are created
-            using the newer Kubernetes version.{' '}
+            your cluster and ensures that any new worker nodes are created
+            Kubernetes version.{' '}
             <Link to="https://techdocs.akamai.com/cloud-computing/docs/upgrade-a-cluster-to-a-newer-kubernetes-version">
               Learn more
             </Link>
