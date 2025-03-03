@@ -48,7 +48,6 @@ const timeRanges = [
   { label: 'Last 30 Minutes', unit: 'min', value: 30 },
   { label: 'Last 12 Hours', unit: 'hr', value: 12 },
   { label: 'Last 24 Hours', unit: 'hr', value: 24 },
-  // eslint-disable-next-line sonarjs/no-duplicate-string
   { label: 'Last 30 Days', unit: 'days', value: 30 },
   { label: 'Last 7 Days', unit: 'days', value: 7 },
   { label: 'Last 1 Hour', unit: 'hr', value: 1 },
@@ -133,10 +132,9 @@ const getDateRangeInGMT = (
   isCurrent: boolean = false
 ) => {
   const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
-  const targetDate = !isCurrent
-    ? now.set({ hour, minute })
-    : now.startOf('month').set({ hour, minute });
-
+  const targetDate = isCurrent
+    ? now.startOf('month').set({ hour, minute })
+    : now.set({ hour, minute });
   const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm'); // Format in GMT
   return {
     actualDate,
