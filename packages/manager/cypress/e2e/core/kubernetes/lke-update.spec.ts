@@ -82,7 +82,7 @@ describe('LKE cluster updates', () => {
 
       const haUpgradeWarnings = [
         'All nodes will be deleted and new nodes will be created to replace them.',
-        'In the event you are using local storage (such as ’hostPath’ volumes), this data is erased and may result in data loss.',
+        'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted.',
         'This may take several minutes, as nodes will be replaced on a rolling basis.',
       ];
 
@@ -397,8 +397,8 @@ describe('LKE cluster updates', () => {
       });
 
       const recycleWarningSubstrings = [
-        'local storage (such as ’hostPath’ volumes), this data is erased',
-        'may result in data loss',
+        'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted',
+        'using local storage for important data is not common or recommended',
       ];
 
       mockGetCluster(mockCluster).as('getCluster');
