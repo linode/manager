@@ -550,6 +550,7 @@ const CreateVlanInterfaceSchema = object({
     .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
   ipam_address: string().nullable(),
 });
+
 export const CreateVPCInterfaceSchema = object({
   subnet_id: number(),
   ipv4: object({
@@ -563,7 +564,9 @@ export const CreateLinodeInterfaceSchema = object({
   default_route: object({
     ipv4: boolean(),
     ipv6: boolean(),
-  }).notRequired().default(null),
+  })
+    .notRequired()
+    .default(null),
   vpc: CreateVPCInterfaceSchema.notRequired().default(null),
   public: object({
     ipv4: object({
@@ -572,7 +575,9 @@ export const CreateLinodeInterfaceSchema = object({
     ipv6: object({
       ranges: array().of(PublicInterfaceRangeSchema),
     }).notRequired(),
-  }).notRequired().default(null),
+  })
+    .notRequired()
+    .default(null),
   vlan: CreateVlanInterfaceSchema.notRequired().default(null),
 });
 
