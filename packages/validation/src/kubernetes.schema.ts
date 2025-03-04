@@ -1,7 +1,7 @@
 import { validateIP } from './firewalls.schema';
 import { array, number, object, string, boolean } from 'yup';
 
-export const nodePoolSchema = object().shape({
+export const nodePoolSchema = object({
   type: string(),
   count: number(),
 });
@@ -65,29 +65,25 @@ export const ipv6Address = string().defined().test({
   test: validateIP,
 });
 
-const controlPlaneACLOptionsSchema = object().shape({
+const controlPlaneACLOptionsSchema = object({
   enabled: boolean(),
   'revision-id': string(),
-  addresses: object()
-    .shape({
-      ipv4: array().of(ipv4Address).nullable(),
-      ipv6: array().of(ipv6Address).nullable(),
-    })
-    .notRequired(),
+  addresses: object({
+    ipv4: array().of(ipv4Address).nullable(),
+    ipv6: array().of(ipv6Address).nullable(),
+  }).notRequired(),
 });
 
-const controlPlaneEnterpriseACLOptionsSchema = object().shape({
+const controlPlaneEnterpriseACLOptionsSchema = object({
   enabled: boolean(),
   'revision-id': string(),
-  addresses: object()
-    .shape({
-      ipv4: array().of(ipv4Address),
-      ipv6: array().of(ipv6Address),
-    })
-    .required(),
+  addresses: object({
+    ipv4: array().of(ipv4Address),
+    ipv6: array().of(ipv6Address),
+  }).required(),
 });
 
-export const createKubeClusterSchema = object().shape({
+export const createKubeClusterSchema = object({
   label: clusterLabelSchema,
   region: string().required('Region is required.'),
   k8s_version: string().required('Kubernetes version is required.'),
@@ -96,37 +92,37 @@ export const createKubeClusterSchema = object().shape({
     .min(1, 'Please add at least one node pool.'),
 });
 
-export const createKubeEnterpriseClusterSchema = object().shape({
-  ...createKubeClusterSchema.fields,
-  control_plane: object()
-    .shape({
+export const createKubeEnterpriseClusterSchema = createKubeClusterSchema.concat(
+  object({
+    control_plane: object({
       high_availability: boolean(),
-      acl: object().shape({
+      acl: object({
         enabled: boolean(),
         'revision-id': string(),
-        addresses: object().shape({
+        addresses: object({
           ipv4: array().of(ipv4Address),
           ipv6: array().of(ipv6Address),
         }),
       }),
     })
-    .test(
-      'validateIPForEnterprise',
-      'At least one IP address or CIDR range is required for LKE Enterprise.',
-      function (controlPlane) {
-        const { ipv4, ipv6 } = controlPlane.acl.addresses;
-        // Pass validation if either IP address has a value.
-        return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
-      }
-    )
-    .required(),
-});
+      .test(
+        'validateIPForEnterprise',
+        'At least one IP address or CIDR range is required for LKE Enterprise.',
+        function (controlPlane) {
+          const { ipv4, ipv6 } = controlPlane.acl.addresses;
+          // Pass validation if either IP address has a value.
+          return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
+        }
+      )
+      .required(),
+  })
+);
 
-export const kubernetesControlPlaneACLPayloadSchema = object().shape({
+export const kubernetesControlPlaneACLPayloadSchema = object({
   acl: controlPlaneACLOptionsSchema,
 });
 
-export const kubernetesEnterpriseControlPlaneACLPayloadSchema = object().shape({
+export const kubernetesEnterpriseControlPlaneACLPayloadSchema = object({
   acl: controlPlaneEnterpriseACLOptionsSchema.test(
     'validateIPForEnterprise',
     'At least one IP address or CIDR range is required for LKE Enterprise.',
@@ -205,7 +201,7 @@ export const kubernetesLabelSchema = object().test({
   test: validateKubernetesLabel,
 });
 
-export const kubernetesTaintSchema = object().shape({
+export const kubernetesTaintSchema = object({
   key: string()
     .required('Key is required.')
     .test(
