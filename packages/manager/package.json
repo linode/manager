@@ -58,8 +58,8 @@
     "immer": "^9.0.6",
     "ipaddr.js": "^1.9.1",
     "js-sha256": "^0.11.0",
-    "jspdf": "^2.5.2",
-    "jspdf-autotable": "^3.5.14",
+    "jspdf": "^3.0.0",
+    "jspdf-autotable": "^5.0.2",
     "launchdarkly-react-client-sdk": "3.0.10",
     "libphonenumber-js": "^1.10.6",
     "logic-query-parser": "^0.0.5",
@@ -100,7 +100,6 @@
     "lint": "eslint . --ext .js,.ts,.tsx --quiet",
     "build": "vite build",
     "build:analyze": "bunx vite-bundle-visualizer",
-    "precommit": "lint-staged && pnpm typecheck",
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "storybook": "NODE_OPTIONS='--max-old-space-size=4096' storybook dev -p 6006",
@@ -120,7 +119,8 @@
     "*.{ts,tsx,js}": [
       "prettier --write",
       "eslint --ext .js,.ts,.tsx --quiet"
-    ]
+    ],
+    "*.{ts,tsx}": ["sh -c 'pnpm typecheck'"]
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
@@ -202,7 +202,6 @@
     "glob": "^10.3.1",
     "history": "4",
     "jsdom": "^24.1.1",
-    "lint-staged": "^15.2.9",
     "mocha-junit-reporter": "^2.2.1",
     "msw": "^2.2.3",
     "pdfreader": "^3.0.7",

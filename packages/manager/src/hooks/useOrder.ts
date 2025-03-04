@@ -9,6 +9,10 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import type { Order, OrderSet } from '@linode/utilities';
 import type { BaseQueryParams } from 'src/utilities/queryParams';
 
+export interface UseOrder extends OrderSet {
+  handleOrderChange: (newOrderBy: string, newOrder: Order) => void;
+}
+
 /**
  * useOrder is a hook that allows you to handle ordering tables. It takes into account
  * the following items when determining initial order
@@ -26,7 +30,7 @@ export const useOrder = (
   initial?: OrderSet,
   preferenceKey?: string,
   prefix?: string
-) => {
+): UseOrder => {
   const { data: sortPreferences } = usePreferences(
     (preferences) => preferences?.sortKeys
   );

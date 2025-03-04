@@ -1,6 +1,6 @@
 import { linodeQueries } from '@linode/queries';
 import { omitProps } from '@linode/ui';
-import { getIsLegacyInterfaceArray } from '@linode/utilities';
+import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -13,8 +13,13 @@ import { utoa } from 'src/utilities/metadata';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import {
+  getLegacyInterfaceFromLinodeInterface,
+  getLinodeInterfacePayload,
+} from './Networking/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
+import type { LinodeCreateInterface } from './Networking/utilities';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { LinodeCreateType } from './types';
 import type {
@@ -22,6 +27,7 @@ import type {
   InterfacePayload,
   Linode,
   Profile,
+  StackScript,
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors } from 'react-hook-form';
@@ -147,13 +153,16 @@ export const tabs: LinodeCreateType[] = [
  * @returns final Linode Create payload to be sent to the API
  */
 export const getLinodeCreatePayload = (
-  formValues: LinodeCreateFormValues
+  formValues: LinodeCreateFormValues,
+  isShowingNewNetworkingUI: boolean
 ): CreateLinodeRequest => {
-  const values = omitProps(formValues, [
+  const values: CreateLinodeRequest = omitProps(formValues, [
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
+    'linodeInterfaces',
   ]);
+
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
@@ -166,10 +175,21 @@ export const getLinodeCreatePayload = (
     values.placement_group = undefined;
   }
 
-  // @TODO Linode Interfaces - need to handle case if interface is not legacy
-  if (getIsLegacyInterfaceArray(values.interfaces)) {
+  if (isShowingNewNetworkingUI) {
+    const shouldUseNewInterfaces = values.interface_generation === 'linode';
+
+    if (shouldUseNewInterfaces) {
+      values.interfaces = formValues.linodeInterfaces.map(
+        getLinodeInterfacePayload
+      );
+    } else {
+      values.interfaces = formValues.linodeInterfaces.map(
+        getLegacyInterfaceFromLinodeInterface
+      );
+    }
+  } else {
     values.interfaces = getInterfacesPayload(
-      values.interfaces,
+      formValues.interfaces,
       Boolean(values.private_ip)
     );
   }
@@ -245,6 +265,17 @@ const defaultInterfaces: InterfacePayload[] = [
   },
 ];
 
+const defaultLinodeInterfaces: LinodeCreateInterface[] = [
+  {
+    default_route: null,
+    firewall_id: null,
+    public: {},
+    purpose: 'public',
+    vlan: null,
+    vpc: null,
+  },
+];
+
 /**
  * We extend the API's payload type so that we can hold some extra state
  * in the react-hook-form form.
@@ -265,12 +296,24 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    */
   hasSignedEUAgreement?: boolean;
   /**
-   * The currently selected Linode
+   * Override the interfaces type of the Linode Create flow so it only has Legacy Interfaces
+   */
+  interfaces: InterfacePayload[];
+  /**
+   * The currently selected Linode (used for the Backups and Clone tabs)
    */
   linode?: Linode | null;
+  /**
+   * Form state for the new Linode interface
+   */
+  linodeInterfaces: LinodeCreateInterface[];
 }
 
 export interface LinodeCreateFormContext {
+  /**
+   * Is the form using the new Interfaces UI?
+   */
+  isLinodeInterfacesEnabled: boolean;
   /**
    * Profile data is used in the Linode Create resolver because
    * restricted users are subject to different validation.
@@ -294,15 +337,33 @@ export const defaultValues = async (
 ): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
-  const stackscript = stackscriptId
-    ? await queryClient.ensureQueryData(
-        stackscriptQueries.stackscript(stackscriptId)
-      )
-    : null;
+  let stackscript: StackScript | null = null;
 
-  const linode = params.linodeID
-    ? await queryClient.ensureQueryData(linodeQueries.linode(params.linodeID))
-    : null;
+  if (stackscriptId) {
+    try {
+      stackscript = await queryClient.ensureQueryData(
+        stackscriptQueries.stackscript(stackscriptId)
+      );
+    } catch (error) {
+      enqueueSnackbar('Unable to initialize StackScript user defined field.', {
+        variant: 'error',
+      });
+    }
+  }
+
+  let linode: Linode | null = null;
+
+  if (params.linodeID) {
+    try {
+      linode = await queryClient.ensureQueryData(
+        linodeQueries.linode(params.linodeID)
+      );
+    } catch (error) {
+      enqueueSnackbar('Unable to initialize pre-selected Linode.', {
+        variant: 'error',
+      });
+    }
+  }
 
   const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
 
@@ -312,6 +373,7 @@ export const defaultValues = async (
     image: getDefaultImageId(params),
     interfaces: defaultInterfaces,
     linode,
+    linodeInterfaces: defaultLinodeInterfaces,
     private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields
@@ -321,11 +383,15 @@ export const defaultValues = async (
     type: linode?.type ? linode.type : '',
   };
 
-  values.label = await getGeneratedLinodeLabel({
-    queryClient,
-    tab: params.type,
-    values,
-  });
+  try {
+    values.label = await getGeneratedLinodeLabel({
+      queryClient,
+      tab: params.type,
+      values,
+    });
+  } catch (error) {
+    enqueueSnackbar('Unable to generate a Linode label.', { variant: 'error' });
+  }
 
   return values;
 };

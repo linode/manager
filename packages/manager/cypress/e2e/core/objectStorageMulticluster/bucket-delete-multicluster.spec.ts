@@ -51,7 +51,8 @@ describe('Object Storage Multicluster Bucket delete', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.enabled')

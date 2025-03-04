@@ -53,12 +53,14 @@ export const CreateSSHKeyDrawer = React.memo(({ onClose, open }: Props) => {
 
   const SSHTextAreaHelperText = () => (
     <Typography component="span">
-      <Link to="https://www.linode.com/docs/guides/use-public-key-authentication-with-ssh/">
-        Learn about
-      </Link>{' '}
-      uploading an SSH key or generating a new key pair. Note that the public
-      key begins with <Code>ssh-rsa</Code> and ends with{' '}
-      <Code>your_username@hostname</Code>.
+      Paste your public key into this field. Supported key formats include
+      Ed25519 and RSA and begin with <Code>ssh-rsa</Code>, <Code>ssh-dss</Code>,{' '}
+      <Code>ecdsa-sha2-nistp</Code>, <Code>ssh-ed25519</Code>, or{' '}
+      <Code>sk-ecdsa-sha2-nistp256</Code>.{' '}
+      <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-ssh-keys#add-a-public-key">
+        Learn more
+      </Link>
+      .
     </Typography>
   );
 
