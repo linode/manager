@@ -547,7 +547,8 @@ const CreateVlanInterfaceSchema = object({
   vlan_label: string()
     .min(1, LABEL_LENGTH_MESSAGE)
     .max(64, LABEL_LENGTH_MESSAGE)
-    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
+    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES)
+    .required('VLAN label is required.'),
   ipam_address: string().nullable(),
 });
 
