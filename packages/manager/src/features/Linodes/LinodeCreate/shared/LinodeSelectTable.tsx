@@ -80,9 +80,11 @@ export const LinodeSelectTable = (props: Props) => {
   const pagination = usePagination();
   const order = useOrder();
 
-  const filter = preselectedLinodeId
-    ? { id: preselectedLinodeId }
-    : getLinodeXFilter(query, order);
+  const { filter, filterError } = getLinodeXFilter(
+    preselectedLinodeId,
+    query,
+    order
+  );
 
   const { data, error, isFetching, isLoading } = useLinodesQuery(
     {
@@ -139,6 +141,7 @@ export const LinodeSelectTable = (props: Props) => {
         }}
         clearable
         debounceTime={250}
+        errorText={filterError?.message}
         hideLabel
         isSearching={isFetching}
         label="Search"
@@ -234,10 +237,23 @@ export const LinodeSelectTable = (props: Props) => {
   );
 };
 
-export const getLinodeXFilter = (query: string, order?: UseOrder) => {
-  const { filter: apiFilter } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['label', 'id'],
-  });
+export const getLinodeXFilter = (
+  preselectedLinodeId: number | undefined,
+  query: string,
+  order?: UseOrder
+) => {
+  if (preselectedLinodeId) {
+    return {
+      id: preselectedLinodeId,
+    };
+  }
+
+  const { error: filterError, filter: apiFilter } = getAPIFilterFromQuery(
+    query,
+    {
+      searchableFieldsWithoutOperator: ['label', 'id', 'ipv4', 'tags'],
+    }
+  );
 
   const filter = {
     ...apiFilter,
@@ -246,8 +262,11 @@ export const getLinodeXFilter = (query: string, order?: UseOrder) => {
   };
 
   if (order) {
-    return { ...filter, '+order': order.order, '+order_by': order.orderBy };
+    return {
+      filter: { ...filter, '+order': order.order, '+order_by': order.orderBy },
+      filterError,
+    };
   }
 
-  return filter;
+  return { filter, filterError };
 };
