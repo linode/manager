@@ -11,7 +11,6 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
@@ -72,7 +71,6 @@ const overrides = [
 export const CreateAlertDefinition = () => {
   const history = useHistory();
   const alertCreateExit = () => history.push('/monitor/alerts/definitions');
-  const formRef = React.useRef<HTMLFormElement>(null);
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
@@ -83,7 +81,7 @@ export const CreateAlertDefinition = () => {
   });
   const {
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, submitCount },
     getValues,
     handleSubmit,
     setError,
@@ -107,7 +105,6 @@ export const CreateAlertDefinition = () => {
       alertCreateExit();
     } catch (errors) {
       for (const error of errors) {
-        scrollErrorIntoViewV2(formRef);
         if (error.field) {
           setError(error.field, { message: error.reason });
         } else {
@@ -120,11 +117,12 @@ export const CreateAlertDefinition = () => {
     }
   });
 
+  const previousSubmitCount = React.useRef<number>(0);
   React.useEffect(() => {
-    if (!isEmpty(errors)) {
+    if (!isEmpty(errors) && submitCount > previousSubmitCount.current) {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
-  }, [errors]);
+  }, [errors, submitCount]);
 
   return (
     <React.Fragment>

@@ -10,7 +10,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
@@ -42,7 +41,6 @@ export interface EditAlertProps {
 export const EditAlertDefinition = (props: EditAlertProps) => {
   const { alertDetails, serviceType } = props;
   const history = useHistory();
-  const formRef = React.useRef<HTMLFormElement>(null);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -72,7 +70,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       history.push(definitionLanding);
     } catch (errors) {
       for (const error of errors) {
-        scrollErrorIntoViewV2(formRef);
         if (error.field) {
           setError(error.field, { message: error.reason });
         } else {
@@ -99,17 +96,21 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     },
   ];
 
+  const previousSubmitCount = React.useRef<number>(0);
   React.useEffect(() => {
-    if (!isEmpty(formState.errors)) {
+    if (
+      !isEmpty(formState.errors) &&
+      formState.submitCount > previousSubmitCount.current
+    ) {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
-  }, [formState.errors]);
+  }, [formState.errors, formState.submitCount]);
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb crumbOverrides={overrides} pathname={'/Definitions/Edit'} />
       <FormProvider {...formMethods}>
-        <form onSubmit={onSubmit} ref={formRef}>
+        <form onSubmit={onSubmit}>
           <Typography marginTop={2} variant="h2">
             1. General Information
           </Typography>
