@@ -165,10 +165,20 @@ const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
 
-const CloudPulse = React.lazy(() =>
-  import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
-    default: module.CloudPulseLanding,
-  }))
+const CloudPulseMetrics = React.lazy(() =>
+  import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
+    (module) => ({
+      default: module.CloudPulseDashboardLanding,
+    })
+  )
+);
+
+const CloudPulseAlerts = React.lazy(() =>
+  import('src/features/CloudPulse/Alerts/AlertsLanding/AlertsLanding').then(
+    (module) => ({
+      default: module.AlertsLanding,
+    })
+  )
 );
 
 const IAM = React.lazy(() =>
@@ -386,7 +396,14 @@ export const MainContent = () => {
                               <Route component={Databases} path="/databases" />
                             )}
                             <Route component={VPC} path="/vpcs" />
-                            <Route component={CloudPulse} path="/monitor" />
+                            <Route
+                              component={CloudPulseMetrics}
+                              path="/metrics"
+                            />
+                            <Route
+                              component={CloudPulseAlerts}
+                              path="/alerts"
+                            />
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                             <Redirect from="/dashboard" to={defaultRoot} />

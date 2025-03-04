@@ -72,7 +72,7 @@ describe('Alert Resuable Component for contextual view', () => {
     );
     await userEvent.click(getByTestId('manage-alerts'));
 
-    expect(history.location.pathname).toBe('/monitor/alerts/definitions');
+    expect(history.location.pathname).toBe('/alerts/definitions');
   });
 
   it('Should go to alert details page on click of an alert', async () => {
@@ -83,7 +83,7 @@ describe('Alert Resuable Component for contextual view', () => {
     await userEvent.click(getByText(alerts[0].label));
 
     expect(history.location.pathname).toBe(
-      `/monitor/alerts/definitions/detail/${serviceType}/${alerts[0].id}`
+      `/alerts/definitions/detail/${serviceType}/${alerts[0].id}`
     );
   });
 

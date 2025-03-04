@@ -60,18 +60,18 @@ const initialValues: CreateAlertDefinitionForm = {
 const overrides = [
   {
     label: 'Definitions',
-    linkTo: '/monitor/alerts/definitions',
+    linkTo: '/alerts/definitions',
     position: 1,
   },
   {
     label: 'Details',
-    linkTo: `/monitor/alerts/definitions/create`,
+    linkTo: `/alerts/definitions/create`,
     position: 2,
   },
 ];
 export const CreateAlertDefinition = () => {
   const history = useHistory();
-  const alertCreateExit = () => history.push('/monitor/alerts/definitions');
+  const alertCreateExit = () => history.push('/alerts/definitions');
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
