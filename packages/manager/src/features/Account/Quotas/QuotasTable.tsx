@@ -9,6 +9,7 @@ import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { useTheme } from '@mui/material/styles';
 import { useQueries } from '@tanstack/react-query';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { BarPercent } from 'src/components/BarPercent/BarPercent';
@@ -20,6 +21,9 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
+import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { usePagination } from 'src/hooks/usePagination';
 import { useQuotasQuery } from 'src/queries/quotas/quotas';
 import { quotaQueries } from 'src/queries/quotas/quotas';
@@ -29,6 +33,7 @@ import { getQuotaError, getQuotasFilters } from './utils';
 import type { Filter, Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
 const quotaRowMinHeight = 58;
 
@@ -37,17 +42,15 @@ interface QuotasTableProps {
   selectedService: SelectOption<QuotaType>;
 }
 
-const requestIncreaseAction: Action = {
-  disabled: false,
-  onClick: () => {},
-  title: 'Request an Increase',
-};
-
 export const QuotasTable = (props: QuotasTableProps) => {
   const { selectedLocation, selectedService } = props;
   const theme = useTheme();
+  const history = useHistory();
   const pagination = usePagination(1, 'quotas-table');
   const hasSelectedLocation = Boolean(selectedLocation);
+  const flags = useFlags();
+  const { isAkamaiAccount } = useIsAkamaiAccount();
+  const [supportModalOpen, setSupportModalOpen] = React.useState(false);
 
   const filters: Filter = getQuotasFilters({
     location: selectedLocation,
@@ -91,6 +94,28 @@ export const QuotasTable = (props: QuotasTableProps) => {
   if (quotasError) {
     return <ErrorState errorText={quotasError[0].reason} />;
   }
+
+  const isRequestForQuotaButtonDisabled =
+    flags.limitsEvolution?.requestForIncreaseDisabledForAll ||
+    (flags.limitsEvolution?.requestForIncreaseDisabledForInternalAccountsOnly &&
+      isAkamaiAccount);
+
+  const requestIncreaseAction: Action = {
+    disabled: isRequestForQuotaButtonDisabled,
+    onClick: () => setSupportModalOpen(true),
+    title: 'Request an Increase',
+  };
+
+  const onIncreaseQuotaTicketCreated = (
+    ticketId: number,
+    attachmentErrors: AttachmentError[] = []
+  ) => {
+    history.push({
+      pathname: `/support/tickets/${ticketId}`,
+      state: { attachmentErrors },
+    });
+    setSupportModalOpen(false);
+  };
 
   return (
     <>
@@ -207,8 +232,6 @@ export const QuotasTable = (props: QuotasTableProps) => {
                   <ActionMenu
                     actionsList={[requestIncreaseAction]}
                     ariaLabel={`Action menu for quota ${quota.quota_name}`}
-                    // TODO LIMITS_M1: Add onOpen
-                    onOpen={() => {}}
                   />
                 </TableCell>
               </TableRow>
@@ -227,6 +250,15 @@ export const QuotasTable = (props: QuotasTableProps) => {
           sx={{ '&.MuiBox-root': { marginTop: 0 } }}
         />
       )}
+      <SupportTicketDialog
+        hideProductSelection
+        onClose={() => setSupportModalOpen(false)}
+        onSuccess={onIncreaseQuotaTicketCreated}
+        open={supportModalOpen}
+        prefilledDescription="I need to increase my quota for the following service and location:"
+        prefilledTicketType="accountLimit"
+        prefilledTitle="Increase Quota"
+      />
     </>
   );
 };
