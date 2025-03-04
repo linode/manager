@@ -5,6 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
@@ -17,8 +18,9 @@ import type { LinodeCreateFormValues } from './utilities';
 
 export const Actions = () => {
   const { params } = useLinodeCreateQueryParams();
-
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
+
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const {
     formState,
@@ -62,9 +64,12 @@ export const Actions = () => {
         Create Linode
       </Button>
       <ApiAwarenessModal
+        payLoad={getLinodeCreatePayload(
+          structuredClone(getValues()),
+          isLinodeInterfacesEnabled
+        )}
         isOpen={isAPIAwarenessModalOpen}
         onClose={() => setIsAPIAwarenessModalOpen(false)}
-        payLoad={getLinodeCreatePayload(structuredClone(getValues()))}
       />
     </Box>
   );
