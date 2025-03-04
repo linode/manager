@@ -1,7 +1,7 @@
 import { Box, Button, Paper, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 
-import { AddInterfaceDrawer } from './Add/AddInterfaceDrawer';
+import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
