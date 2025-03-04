@@ -28,3 +28,5 @@ export * from './random';
 export * from './redactAccessToken';
 export * from './reduceAsync';
 export * from './replaceNewlinesWithLineBreaks';
+export * from './rootManager';
+export * from './roundTo';
