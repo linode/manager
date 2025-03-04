@@ -1,6 +1,7 @@
-import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
-import React from 'react';
+import { Box, Button, Paper, Typography } from '@linode/ui';
+import React, { useState } from 'react';
 
+import { AddInterfaceDrawer } from './Add/AddInterfaceDrawer';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export const LinodeInterfaces = ({ linodeId }: Props) => {
+  const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
+
   return (
     <Box>
       <Paper
@@ -21,12 +24,16 @@ export const LinodeInterfaces = ({ linodeId }: Props) => {
         }}
       >
         <Typography variant="h3">Network Interfaces</Typography>
-        <Stack direction="row" spacing={1}>
-          <Button buttonType="secondary">Interface History</Button>
-          <Button buttonType="primary">Add Network Interface</Button>
-        </Stack>
+        <Button buttonType="primary" onClick={() => setIsAddDrawerOpen(true)}>
+          Add Network Interface
+        </Button>
       </Paper>
       <LinodeInterfacesTable linodeId={linodeId} />
+      <AddInterfaceDrawer
+        linodeId={linodeId}
+        onClose={() => setIsAddDrawerOpen(false)}
+        open={isAddDrawerOpen}
+      />
     </Box>
   );
 };
