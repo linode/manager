@@ -81,7 +81,10 @@ export const StackScriptSelectionList = ({ type }: Props) => {
 
   const hasPreselectedStackScript = Boolean(params.stackScriptID);
 
-  const { data: stackscript } = useStackScriptQuery(
+  const {
+    data: stackscript,
+    isLoading: isSelectedStackScriptLoading,
+  } = useStackScriptQuery(
     params.stackScriptID ?? -1,
     hasPreselectedStackScript
   );
@@ -132,11 +135,13 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           <TableBody>
             {stackscript && (
               <StackScriptSelectionRow
-                disabled
                 isSelected={field.value === stackscript.id}
                 onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
                 stackscript={stackscript}
               />
+            )}
+            {isSelectedStackScriptLoading && (
+              <TableRowLoading columns={3} rows={1} />
             )}
           </TableBody>
         </Table>
@@ -151,6 +156,11 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             Choose Another StackScript
           </Button>
         </Box>
+        <StackScriptDetailsDialog
+          id={selectedStackScriptId}
+          onClose={() => setSelectedStackScriptId(undefined)}
+          open={Boolean(selectedStackScriptId)}
+        />
       </Stack>
     );
   }
@@ -239,7 +249,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
       <StackScriptDetailsDialog
         id={selectedStackScriptId}
         onClose={() => setSelectedStackScriptId(undefined)}
-        open={selectedStackScriptId !== undefined}
+        open={Boolean(selectedStackScriptId)}
       />
     </Box>
   );

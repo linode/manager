@@ -4,44 +4,36 @@
 
 The unit tests for Cloud Manager are written in Typescript using the [Vitest](https://vitest.dev/) testing framework. Unit tests end with either `.test.tsx` or `.test.ts` file extensions and can be found throughout the codebase.
 
-To run tests, first build the **api-v4** package:
+To run tests, first ensure dependencies are installed and packages are built:
 
 ```shell
-yarn install:all && yarn workspace @linode/api-v4 build
+pnpm bootstrap
 ```
 
 Then you can start the tests:
 
 ```shell
-yarn test
+pnpm test
 ```
 
 Or you can run the tests in watch mode with:
 
 ```shell
-yarn test:watch
+pnpm test:watch
 ```
 
 To run a specific file or files in a directory:
 
 ```shell
-yarn test myFile.test.tsx
-yarn test src/some-folder
+pnpm test myFile.test.tsx
+pnpm test src/some-folder
 ```
 
 Vitest has built-in pattern matching, so you can also do things like run all tests whose filename contains "Linode" with:
 
 ```shell
-yarn test linode
+pnpm test linode
 ```
-
-To run a test in debug mode, add a `debugger` breakpoint inside one of the test cases, then run:
-
-```shell
-yarn workspace linode-manager run test:debug
-```
-
-Test execution will stop at the debugger statement, and you will be able to use Chrome's normal debugger to step through the tests (open `chrome://inspect/#devices` in Chrome).
 
 ### React Testing Library
 
@@ -162,9 +154,9 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
 
 ### Running End-to-End Tests
 
-1. In one terminal window, run the app with `yarn up`.
-2. In another terminal window, run all of the tests with `yarn cy:run`.
-    * Alternatively, use Cypress's interactive interface with `yarn cy:debug` if you're focused on a single test suite.
+1. In one terminal window, run the app with `pnpm dev`.
+2. In another terminal window, run all of the tests with `pnpm cy:run`.
+    * Alternatively, use Cypress's interactive interface with `pnpm cy:debug` if you're focused on a single test suite.
 
 #### Configuring End-to-End Tests
 
@@ -243,12 +235,12 @@ Environment variables that can be used to improve test performance in some scena
     /* this test will not pass on cloud manager.
     it is only intended to show correct test structure, syntax,
     and to provide examples of patterns/methods commonly used in the tests */
-    
+
     // start of a test block. Multiple tests can be nested within
     describe('linode landing checks', () => {
       // hook that runs before each test
        beforeEach(() => {
-         // uses factory to build data (factories found in packages/manager/src/factories) 
+         // uses factory to build data (factories found in packages/manager/src/factories)
           const mockAccountSettings = accountSettingsFactory.build({
             managed: false,
           });
@@ -260,8 +252,8 @@ Environment variables that can be used to improve test performance in some scena
         });
         // start of individual test block
       it('checks the landng page side menu items', () => {
-          
-          /* intercept only once method for when a call happens multiple times 
+
+          /* intercept only once method for when a call happens multiple times
           but you only want to stub it once declared in `/cypress/support/ui/common.ts` */
            interceptOnce('GET', '*/profile/preferences*', {
               linodes_view_style: 'list',
@@ -287,7 +279,7 @@ Environment variables that can be used to improve test performance in some scena
                 cy.get(`[data-qa-ip-main]`)
                    // `realHover` and more real event methods from cypress real events plugin
                     .realHover()
-                    .then(() => { 
+                    .then(() => {
                         cy.get(`[aria-label="Copy ${ip} to clipboard"]`).should('be.visible');
                     });
                 cy.get(`[aria-label="Action menu for Linode ${label}"]`).should('be.visible');
@@ -303,11 +295,11 @@ Environment variables that can be used to improve test performance in some scena
     ```tsx
       // stub response syntax:
       cy.intercept('POST', ‘/path’, {response}) or cy.intercept(‘/path’, (req) => { req.reply({response})}).as('something');
-     // edit and end response syntax: 
+     // edit and end response syntax:
       cy.intercept('GET', ‘/path’, (req) => { req.send({edit: something})}).as('something');
      // edit request syntax:
       cy.intercept('POST', ‘/path’, (req) => { req.body.storyName = 'some name'; req.continue().as('something');
-  
+
       // use alias syntax:
        wait(‘@something’).then({})
       ```
