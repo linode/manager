@@ -12,7 +12,7 @@ import type { CreateInterfaceFormValues } from './utilities';
 
 export const InterfaceType = () => {
   const { field, fieldState } = useController<CreateInterfaceFormValues>({
-    name: 'interfaceType',
+    name: 'purpose',
   });
 
   return (
@@ -23,9 +23,9 @@ export const InterfaceType = () => {
         sx={{ my: `0 !important` }}
         value={field.value ?? null}
       >
-        <FormControlLabel control={<Radio />} label="Public" value="vlan" />
+        <FormControlLabel control={<Radio />} label="Public" value="public" />
         <FormControlLabel control={<Radio />} label="VPC" value="vpc" />
-        <FormControlLabel control={<Radio />} label="VLAN" value="public" />
+        <FormControlLabel control={<Radio />} label="VLAN" value="vlan" />
       </RadioGroup>
       {fieldState.error && (
         <FormHelperText

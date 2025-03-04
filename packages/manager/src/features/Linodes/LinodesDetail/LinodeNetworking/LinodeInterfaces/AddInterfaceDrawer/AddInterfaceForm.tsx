@@ -1,16 +1,19 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Notice, omitProps } from '@linode/ui';
+import { Notice, omitProps, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { getLinodeInterfacePayload } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 import { useCreateLinodeInterfaceMutation } from 'src/queries/linodes/interfaces';
 
 import { Actions } from './Actions';
+import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceType } from './InterfaceType';
 import { CreateLinodeInterfaceFormSchema } from './utilities';
 
 import type { CreateInterfaceFormValues } from './utilities';
+import { VLANInterface } from './VLANInterface';
 
 interface Props {
   linodeId: number;
@@ -24,13 +27,27 @@ export const AddInterfaceForm = (props: Props) => {
   const { mutateAsync } = useCreateLinodeInterfaceMutation(linodeId);
 
   const form = useForm<CreateInterfaceFormValues>({
-    defaultValues: { public: {} },
-    resolver: yupResolver(CreateLinodeInterfaceFormSchema),
+    defaultValues: { public: {}, vlan: {}, vpc: {} },
+    async resolver(rawValues, context, options) {
+      const valuesWithOnlySelectedInterface = getLinodeInterfacePayload(
+        structuredClone(rawValues)
+      );
+
+      const { errors, values } = await yupResolver(
+        CreateLinodeInterfaceFormSchema
+      )(valuesWithOnlySelectedInterface, context, options);
+
+      if (errors) {
+        return { errors, values };
+      }
+
+      return { errors: {}, values };
+    },
   });
 
   const onSubmit = async (values: CreateInterfaceFormValues) => {
     try {
-      await mutateAsync(omitProps(values, ['interfaceType']));
+      await mutateAsync(omitProps(values, ['purpose']));
 
       enqueueSnackbar('Successfully added network interface.', {
         variant: 'success',
@@ -42,14 +59,25 @@ export const AddInterfaceForm = (props: Props) => {
     }
   };
 
+  const selectedInterfacePurpose = form.watch('purpose');
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        {form.formState.errors.root && (
-          <Notice text={form.formState.errors.root.message} variant="error" />
-        )}
-        <InterfaceType />
-        <Actions onClose={onClose} />
+        <Stack spacing={2}>
+          {form.formState.errors.root && (
+            <Notice
+              spacingBottom={0}
+              spacingTop={0}
+              text={form.formState.errors.root.message}
+              variant="error"
+            />
+          )}
+          <InterfaceType />
+          {selectedInterfacePurpose === 'vlan' && <VLANInterface />}
+          <InterfaceFirewall />
+          <Actions onClose={onClose} />
+        </Stack>
       </form>
     </FormProvider>
   );
