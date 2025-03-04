@@ -29,7 +29,6 @@ export const AddInterfaceForm = (props: Props) => {
   });
 
   const onSubmit = async (values: CreateInterfaceFormValues) => {
-    console.log("Values", values);
     try {
       await mutateAsync(omitProps(values, ['interfaceType']));
 
@@ -42,8 +41,6 @@ export const AddInterfaceForm = (props: Props) => {
       }
     }
   };
-
-  console.error("Form Errors:", form.formState.errors);
 
   return (
     <FormProvider {...form}>
