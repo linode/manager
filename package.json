@@ -3,11 +3,12 @@
   "private": true,
   "license": "Apache-2.0",
   "devDependencies": {
-    "husky": "^9.1.6",
     "concurrently": "9.1.0",
+    "husky": "^9.1.6",
     "typescript": "^5.7.3",
     "vitest": "^3.0.7",
-    "@vitest/ui": "^3.0.7"
+    "@vitest/ui": "^3.0.7",
+    "lint-staged": "^15.4.3"
   },
   "scripts": {
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
@@ -65,7 +66,6 @@
       "scripts"
     ]
   },
-  "dependencies": {},
   "pnpm": {
     "onlyBuiltDependencies": [
       "cypress"
