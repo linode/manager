@@ -3,30 +3,31 @@
  */
 
 import { getProfile } from '@linode/api-v4/lib/profile';
-import { EntityTransfer, Linode, Profile } from '@linode/api-v4';
-import { entityTransferFactory } from 'src/factories/entityTransfers';
-import { linodeFactory } from 'src/factories';
-import { createLinodeRequestFactory } from 'src/factories/linodes';
-import { formatDate } from 'src/utilities/formatDate';
 import { authenticate } from 'support/api/authentication';
+import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   interceptInitiateEntityTransfer,
   mockAcceptEntityTransfer,
   mockGetEntityTransfers,
-  mockReceiveEntityTransfer,
   mockInitiateEntityTransferError,
+  mockReceiveEntityTransfer,
   mockGetEntityTransfersError,
 } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomUuid } from 'support/util/random';
-import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import { chooseRegion } from 'support/util/regions';
-import { cleanUp } from 'support/util/cleanup';
+
+import { linodeFactory } from 'src/factories';
+import { entityTransferFactory } from 'src/factories/entityTransfers';
+import { createLinodeRequestFactory } from 'src/factories/linodes';
+import { formatDate } from 'src/utilities/formatDate';
 
 import type { EntityTransferStatus } from '@linode/api-v4';
+import type { EntityTransfer, Linode, Profile } from '@linode/api-v4';
 
 // Service transfer empty state message.
 const serviceTransferEmptyState = 'No data to display.';
@@ -190,25 +191,25 @@ describe('Account service transfers', () => {
    */
   it('lists service transfers on landing page', () => {
     const pendingTransfers = entityTransferFactory.buildList(3, {
-      status: 'pending',
       entities: {
         linodes: [0, 1, 2, 3, 4],
       },
+      status: 'pending',
     });
 
     const receivedTransfers = entityTransferFactory.buildList(4, {
-      is_sender: false,
       entities: {
         linodes: [0],
       },
+      is_sender: false,
     });
 
     const sentTransfers = serviceTransferStatuses.map((status) => {
       return entityTransferFactory.build({
-        is_sender: true,
         entities: {
           linodes: [0, 1],
         },
+        is_sender: true,
         status,
       });
     });
@@ -434,12 +435,12 @@ describe('Account service transfers', () => {
   it('can receive a service transfer', () => {
     const token = randomUuid();
     const transfer = entityTransferFactory.build({
-      token,
       entities: {
         linodes: [0],
       },
-      status: 'pending',
       is_sender: false,
+      status: 'pending',
+      token,
     });
 
     mockGetEntityTransfers([], [], []).as('getTransfers');

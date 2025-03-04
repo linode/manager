@@ -68,7 +68,9 @@ export const Prompt = React.memo((props: PromptProps) => {
   const confirmedNav = React.useRef<boolean>(false);
 
   // The location the user is navigating to.
-  const [nextLocation, setNextLocation] = React.useState<ReturnType<typeof useLocation> | null>(null);
+  const [nextLocation, setNextLocation] = React.useState<ReturnType<
+    typeof useLocation
+  > | null>(null);
 
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
