@@ -159,7 +159,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         <StackScriptDetailsDialog
           id={selectedStackScriptId}
           onClose={() => setSelectedStackScriptId(undefined)}
-          open={selectedStackScriptId !== undefined}
+          open={Boolean(selectedStackScriptId)}
         />
       </Stack>
     );
@@ -249,7 +249,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
       <StackScriptDetailsDialog
         id={selectedStackScriptId}
         onClose={() => setSelectedStackScriptId(undefined)}
-        open={selectedStackScriptId !== undefined}
+        open={Boolean(selectedStackScriptId)}
       />
     </Box>
   );
