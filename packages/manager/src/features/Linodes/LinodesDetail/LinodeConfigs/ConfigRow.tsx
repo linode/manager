@@ -1,20 +1,21 @@
-import {
-  Config,
-  Devices,
-  DiskDevice,
-  VolumeDevice,
-} from '@linode/api-v4/lib/linodes';
+import { useAllLinodeDisksQuery, useLinodeKernelQuery } from '@linode/queries';
+import { API_MAX_PAGE_SIZE } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { API_MAX_PAGE_SIZE } from 'src/constants';
-import { useAllLinodeDisksQuery, useLinodeKernelQuery } from '@linode/queries';
 import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 import { InterfaceListItem } from './InterfaceListItem';
 import { ConfigActionMenu } from './LinodeConfigActionMenu';
+
+import type {
+  Config,
+  Devices,
+  DiskDevice,
+  VolumeDevice,
+} from '@linode/api-v4/lib/linodes';
 
 interface Props {
   config: Config;
@@ -26,13 +27,13 @@ interface Props {
 }
 
 export const isDiskDevice = (
-  device: VolumeDevice | DiskDevice
+  device: DiskDevice | VolumeDevice
 ): device is DiskDevice => {
   return 'disk_id' in device;
 };
 
 const isVolumeDevice = (
-  device: VolumeDevice | DiskDevice
+  device: DiskDevice | VolumeDevice
 ): device is VolumeDevice => {
   return 'volume_id' in device;
 };

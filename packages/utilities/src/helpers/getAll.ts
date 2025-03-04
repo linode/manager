@@ -1,11 +1,8 @@
 import { range } from 'ramda';
 
-import type { Filter, Params } from '@linode/api-v4';
+import { API_MAX_PAGE_SIZE } from '../constants';
 
-// Maximum page size allowed by the API. Used in the `getAll()` helper function
-// to request as many items at once as possible.
-export const API_MAX_PAGE_SIZE =
-  Number(import.meta.env.REACT_APP_API_MAX_PAGE_SIZE) || 500;
+import type { Filter, Params } from '@linode/api-v4';
 
 export interface APIResponsePage<T> {
   data: T;

@@ -1,11 +1,11 @@
 import {
-  taxIdEventHandler,
-  oauthClientsEventHandler,
-  sshKeyEventHandler,
-  nodebalancerEventHandler,
-  placementGroupEventHandler,
-  tokenEventHandler,
   firewallEventsHandler,
+  nodebalancerEventHandler,
+  oauthClientsEventHandler,
+  placementGroupEventHandler,
+  sshKeyEventHandler,
+  taxIdEventHandler,
+  tokenEventHandler,
 } from '@linode/queries';
 import { useQueryClient } from '@tanstack/react-query';
 

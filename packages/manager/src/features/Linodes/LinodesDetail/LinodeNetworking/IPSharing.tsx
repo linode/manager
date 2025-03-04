@@ -15,7 +15,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { areArraysEqual } from '@linode/utilities';
+import { API_MAX_PAGE_SIZE, areArraysEqual } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { remove, uniq, update } from 'ramda';
@@ -23,7 +23,6 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
-import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
