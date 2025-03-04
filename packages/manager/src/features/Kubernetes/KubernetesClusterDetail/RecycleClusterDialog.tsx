@@ -66,7 +66,7 @@ export const RecycleClusterDialog = (props: Props) => {
         </Link>
         .
       </Typography>
-      <LocalStorageWarningNotice isRecycle />
+      <LocalStorageWarningNotice />
     </ConfirmationDialog>
   );
 };

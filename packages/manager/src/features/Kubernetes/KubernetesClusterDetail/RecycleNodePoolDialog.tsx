@@ -70,7 +70,7 @@ export const RecycleNodePoolDialog = (props: Props) => {
         .
       </Typography>
 
-      <LocalStorageWarningNotice isRecycle />
+      <LocalStorageWarningNotice />
     </ConfirmationDialog>
   );
 };

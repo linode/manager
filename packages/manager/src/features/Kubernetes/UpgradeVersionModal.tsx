@@ -143,7 +143,7 @@ export const UpgradeDialog = (props: Props) => {
               Learn more
             </Link>
             .
-            <LocalStorageWarningNotice isRecycle />
+            <LocalStorageWarningNotice />
           </>
         ) : (
           <>

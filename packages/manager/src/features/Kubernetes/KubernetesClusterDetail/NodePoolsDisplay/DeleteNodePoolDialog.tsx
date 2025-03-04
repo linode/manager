@@ -77,7 +77,7 @@ export const DeleteNodePoolDialog = (props: Props) => {
         .
       </Typography>
 
-      <LocalStorageWarningNotice isSingular={nodeCount === 1} />
+      <LocalStorageWarningNotice />
     </ConfirmationDialog>
   );
 };

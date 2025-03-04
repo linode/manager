@@ -1,22 +1,16 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import React from 'react';
 
 import { localStorageWarning } from '../constants';
 
-interface Props {
-  isRecycle?: boolean;
-  isSingular?: boolean;
-}
-
-export const LocalStorageWarningNotice = (props: Props) => {
-  const { isRecycle, isSingular } = props;
+export const LocalStorageWarningNotice = () => {
   return (
     <Notice spacingTop={12} variant="warning">
-      <strong>Warning:</strong>{' '}
-      {isSingular ? 'The Compute Instance' : 'Compute Instances'} associated
-      with {isSingular ? 'this node' : 'these nodes'} will be deleted
-      {isRecycle && ' and recreated'}. Since using local storage is not advised,
-      this operation is generally safe. {localStorageWarning}
+      <Typography>
+        <strong>Warning: </strong> {localStorageWarning} This operation is
+        considered safe as using local storage for important data is not common
+        or recommended.
+      </Typography>
     </Notice>
   );
 };
