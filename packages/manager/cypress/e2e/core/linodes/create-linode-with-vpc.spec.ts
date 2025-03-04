@@ -30,8 +30,14 @@ import {
 } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('Create Linode with VPCs', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
+  });
   /*
    * - Confirms UI flow to create a Linode with an existing VPC assigned using mock API data.
    * - Confirms that VPC assignment is reflected in create summary section.

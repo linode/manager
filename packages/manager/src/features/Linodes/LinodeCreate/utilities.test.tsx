@@ -1,7 +1,12 @@
 import {
-  createLinodeRequestFactory,
   LinodeConfigInterfaceFactory,
+  createLinodeRequestFactory,
 } from 'src/factories';
+import {
+  linodeInterfaceFactoryPublic,
+  linodeInterfaceFactoryVPC,
+  linodeInterfaceFactoryVlan,
+} from 'src/factories/linodeInterface';
 import { base64UserData, userData } from 'src/utilities/metadata.test';
 
 import {
@@ -12,11 +17,8 @@ import {
   getLinodeLabelFromLabelParts,
   getTabIndex,
 } from './utilities';
-import {
-  linodeInterfaceFactoryPublic,
-  linodeInterfaceFactoryVlan,
-  linodeInterfaceFactoryVPC,
-} from 'src/factories/linodeInterface';
+
+import type { LinodeCreateFormValues } from './utilities';
 
 describe('getTabIndex', () => {
   it('should return 0 when there is no value specifying the tab', () => {
@@ -33,17 +35,17 @@ describe('getTabIndex', () => {
 
 describe('getLinodeCreatePayload', () => {
   it('should return a basic payload', () => {
-    const values = createLinodeRequestFactory.build();
+    const values = createLinodeRequestFactory.build() as LinodeCreateFormValues;
 
-    expect(getLinodeCreatePayload(values)).toEqual(values);
+    expect(getLinodeCreatePayload(values, false)).toEqual(values);
   });
 
   it('should base64 encode metadata', () => {
     const values = createLinodeRequestFactory.build({
       metadata: { user_data: userData },
-    });
+    }) as LinodeCreateFormValues;
 
-    expect(getLinodeCreatePayload(values)).toEqual({
+    expect(getLinodeCreatePayload(values, false)).toEqual({
       ...values,
       metadata: { user_data: base64UserData },
     });
@@ -52,9 +54,9 @@ describe('getLinodeCreatePayload', () => {
   it('should remove placement_group from the payload if no id exists', () => {
     const values = createLinodeRequestFactory.build({
       placement_group: {},
-    });
+    }) as LinodeCreateFormValues;
 
-    expect(getLinodeCreatePayload(values)).toEqual({
+    expect(getLinodeCreatePayload(values, false)).toEqual({
       ...values,
       placement_group: undefined,
     });
