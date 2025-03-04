@@ -16,12 +16,14 @@ interface Props {
 }
 
 export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
-  const { database, onClose, open } = props;
+  const { onClose, open } = props;
 
   const [selectedConfig, setSelectedConfig] = useState('');
 
-  const engineConfigs = database.engine_config;
-
+  // const engineConfigs = database.engine_config;
+  // Placeholder for engine configurations (currently set to 'undefined' as the UI is not ready yet).
+  // The implementation will be updated in the second PR after UI work is completed.
+  const engineConfigs = undefined;
   return (
     <Drawer onClose={onClose} open={open} title="Advanced Configuration">
       <Typography>
@@ -45,9 +47,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
         />
 
         <Divider spacingBottom={20} spacingTop={24} />
-        {engineConfigs ? (
-          ''
-        ) : (
+        {!engineConfigs && (
           <Typography align="center">
             No advanced configurations have been added.
           </Typography>
