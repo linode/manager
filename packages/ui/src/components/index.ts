@@ -35,3 +35,4 @@ export * from './Tooltip';
 export * from './TooltipIcon';
 export * from './Typography';
 export * from './VisibilityTooltip';
+export * from './DatePicker/DateRangePicker';

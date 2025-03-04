@@ -40,7 +40,7 @@ export const CardBaseGrid = styled(Grid, {
   height: '100%',
   margin: 0,
   minHeight: 60,
-  padding: `0 ${theme.spacing(1)} !important`,
+  padding: theme.spacing(1.5),
   position: 'relative',
   transition:
     'background-color 225ms ease-in-out, border-color 225ms ease-in-out',

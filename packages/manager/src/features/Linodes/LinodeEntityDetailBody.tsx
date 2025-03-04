@@ -16,10 +16,11 @@ import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { pluralize } from 'src/utilities/pluralize';
 
-import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,
@@ -38,14 +39,16 @@ import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses'
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
-import type { VPC } from '@linode/api-v4/lib';
 import type {
   EncryptionStatus,
+  Firewall,
   Interface,
+  InterfaceGenerationType,
   Linode,
   LinodeCapabilities,
-} from '@linode/api-v4/lib/linodes/types';
-import type { Subnet } from '@linode/api-v4/lib/vpcs';
+  Subnet,
+  VPC,
+} from '@linode/api-v4';
 import type { TypographyProps } from '@linode/ui';
 
 interface LinodeEntityDetailProps {
@@ -63,8 +66,10 @@ export interface Props extends LinodeEntityDetailProps {
 export interface BodyProps {
   configInterfaceWithVPC?: Interface;
   encryptionStatus: EncryptionStatus | undefined;
+  firewalls: Firewall[];
   gbRAM: number;
   gbStorage: number;
+  interfaceGeneration: InterfaceGenerationType | undefined;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
@@ -84,8 +89,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
     configInterfaceWithVPC,
     encryptionStatus,
+    firewalls,
     gbRAM,
     gbStorage,
+    interfaceGeneration,
     ipv4,
     ipv6,
     isLKELinode,
@@ -102,6 +109,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   } = props;
 
   const { data: profile } = useProfile();
+
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
   );
@@ -112,6 +120,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
+
+  const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
+  const isLinodeInterface = interfaceGeneration === 'linode';
+  // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
+  // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
+  // since each interface can have a firewall.
+  const attachedFirewall = firewalls.length > 0 ? firewalls[0] : undefined;
 
   // @ TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
   const isDisplayingEncryptedStatus =
@@ -131,7 +146,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const { data: cluster } = useKubernetesClusterQuery(linodeLkeClusterId ?? -1);
+  const { data: cluster } = useKubernetesClusterQuery(
+    linodeLkeClusterId ?? -1,
+    Boolean(linodeLkeClusterId)
+  );
 
   return (
     <>
@@ -371,30 +389,62 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </Grid>
         </Grid>
       )}
-      {linodeLkeClusterId && (
+      {(linodeLkeClusterId || attachedFirewall || isLinodeInterfaceEnabled) && (
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(2)} ${theme.spacing(2)}`,
+            padding: `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
+              1
+            )} ${theme.spacing(2)}`,
             [theme.breakpoints.down('md')]: {
               paddingLeft: 3,
             },
           }}
           container
-          direction="column"
-          spacing={2}
+          direction="row"
         >
-          <StyledListItem sx={{ borderRight: 'unset' }}>
-            <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
-            <Link
-              data-testid="assigned-lke-cluster-label"
-              to={`/kubernetes/clusters/${linodeLkeClusterId}`}
+          {linodeLkeClusterId && (
+            <StyledListItem
+              sx={{
+                ...(!attachedFirewall && !isLinodeInterfaceEnabled
+                  ? { borderRight: 'unset' }
+                  : {}),
+              }}
             >
-              {cluster?.label ?? `${linodeLkeClusterId}`}
-            </Link>
-            &nbsp;
-            {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
-          </StyledListItem>
+              <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
+              <Link
+                data-testid="assigned-lke-cluster-label"
+                to={`/kubernetes/clusters/${linodeLkeClusterId}`}
+              >
+                {cluster?.label ?? `${linodeLkeClusterId}`}
+              </Link>
+              &nbsp;
+              {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
+            </StyledListItem>
+          )}
+          {!isLinodeInterface && attachedFirewall && (
+            <StyledListItem
+              sx={{
+                ...(!isLinodeInterfaceEnabled ? { borderRight: 'unset' } : {}),
+              }}
+            >
+              <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
+              <Link
+                data-testid="assigned-firewall"
+                to={`/firewalls/${attachedFirewall.id}`}
+              >
+                {attachedFirewall.label ?? `${attachedFirewall.id}`}
+              </Link>
+              &nbsp;
+              {attachedFirewall && `(ID: ${attachedFirewall.id})`}
+            </StyledListItem>
+          )}
+          {isLinodeInterfaceEnabled && (
+            <StyledListItem sx={{ borderRight: 'unset' }}>
+              <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
+              {isLinodeInterface ? 'Linode' : 'Configuration Profile'}
+            </StyledListItem>
+          )}
         </Grid>
       )}
     </>

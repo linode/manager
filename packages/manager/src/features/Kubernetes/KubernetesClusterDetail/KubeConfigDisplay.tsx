@@ -2,9 +2,10 @@ import {
   Box,
   CircleProgress,
   Stack,
-  Typography,
   StyledLinkButton,
+  Typography,
 } from '@linode/ui';
+import { downloadFile } from '@linode/utilities';
 import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -19,7 +20,6 @@ import {
   useAllKubernetesClusterAPIEndpointsQuery,
   useKubernetesKubeConfigQuery,
 } from 'src/queries/kubernetes';
-import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4';
@@ -156,16 +156,36 @@ export const KubeConfigDisplay = (props: Props) => {
 
   const downloadKubeConfig = async () => {
     try {
-      const { data } = await getKubeConfig();
+      const queryResult = await getKubeConfig();
 
-      if (data) {
-        downloadFile(`${clusterLabel}-kubeconfig.yaml`, data);
+      if (
+        Array.isArray(queryResult.error) &&
+        queryResult.error[0]?.reason?.includes(
+          'kubeconfig is not yet available'
+        )
+      ) {
+        enqueueSnackbar(
+          'Your cluster is still provisioning. Please try again in a few minutes.',
+          { variant: 'error' }
+        );
+        return;
       }
+
+      if (queryResult.isError) {
+        throw queryResult.error;
+      }
+
+      if (!queryResult.data) {
+        throw new Error('No kubeconfig data available');
+      }
+
+      downloadFile(`${clusterLabel}-kubeconfig.yaml`, queryResult.data);
     } catch (error) {
-      const errorText = getAPIErrorOrDefault(
-        error,
-        'Unable to download your kubeconfig'
-      )[0].reason;
+      const errorText =
+        error instanceof Error
+          ? error.message
+          : getAPIErrorOrDefault(error, 'Unable to download your kubeconfig')[0]
+              .reason;
 
       enqueueSnackbar(errorText, { variant: 'error' });
     }

@@ -188,32 +188,33 @@ export const NodeTable = React.memo((props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {count === 0 && isEnterpriseClusterWithin10MinsOfCreation() && (
-                    <TableRow>
-                      <TableCell colSpan={4}>
-                        <ErrorState
-                          errorText={
-                            <Box>
-                              <Typography
-                                data-qa-error-msg
-                                style={{ textAlign: 'center' }}
-                                variant="h3"
-                              >
-                                Nodes will appear once cluster provisioning is
-                                complete.
-                              </Typography>
-                              <Typography>
-                                Provisioning can take up to 10 minutes.
-                              </Typography>
-                            </Box>
-                          }
-                          CustomIcon={EmptyStateCloud}
-                          compact
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )}
-                  {(count > 0 ||
+                  {rowData.length === 0 &&
+                    isEnterpriseClusterWithin10MinsOfCreation() && (
+                      <TableRow>
+                        <TableCell colSpan={4}>
+                          <ErrorState
+                            errorText={
+                              <Box>
+                                <Typography
+                                  data-qa-error-msg
+                                  style={{ textAlign: 'center' }}
+                                  variant="h3"
+                                >
+                                  Worker nodes will appear once cluster
+                                  provisioning is complete.
+                                </Typography>
+                                <Typography>
+                                  Provisioning can take up to 10 minutes.
+                                </Typography>
+                              </Box>
+                            }
+                            CustomIcon={EmptyStateCloud}
+                            compact
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  {(rowData.length > 0 ||
                     !isEnterpriseClusterWithin10MinsOfCreation()) && (
                     <TableContentWrapper
                       length={paginatedAndOrderedData.length}
@@ -247,6 +248,11 @@ export const NodeTable = React.memo((props: Props) => {
                 handleSizeChange={handlePageSizeChange}
                 page={page}
                 pageSize={pageSize}
+                /**
+                 * M3-9360: Since this table is in an accordion, the position needs to be relative
+                 * to prevent an overflow-y issue with the absolutely positioned visually-hidden footer label
+                 **/
+                sx={{ position: 'relative' }}
               />
               <StyledTableFooter>
                 <StyledPoolInfoBox>

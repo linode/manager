@@ -2,7 +2,7 @@ import { Divider, Paper, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import UserSSHKeyPanel from 'src/components/AccessPanel/UserSSHKeyPanel';
+import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
 import {
   DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES,
   DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION,
@@ -18,8 +18,10 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-const PasswordInput = React.lazy(
-  () => import('src/components/PasswordInput/PasswordInput')
+const PasswordInput = React.lazy(() =>
+  import('src/components/PasswordInput/PasswordInput').then((module) => ({
+    default: module.PasswordInput,
+  }))
 );
 
 export const Security = () => {
@@ -107,12 +109,14 @@ export const Security = () => {
                     ? DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES
                     : DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY
                 }
+                isEncryptEntityChecked={
+                  isDistributedRegion || field.value === 'enabled'
+                }
                 onChange={(checked) =>
                   field.onChange(checked ? 'enabled' : 'disabled')
                 }
-                disabled={!regionSupportsDiskEncryption}
+                disabled={isDistributedRegion || !regionSupportsDiskEncryption}
                 error={fieldState.error?.message}
-                isEncryptEntityChecked={field.value === 'enabled'}
               />
             )}
             control={control}

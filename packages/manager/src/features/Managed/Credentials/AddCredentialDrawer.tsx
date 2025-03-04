@@ -11,8 +11,10 @@ import { creationSchema } from './credential.schema';
 
 import type { CredentialPayload } from '@linode/api-v4/lib/managed';
 
-const PasswordInput = React.lazy(
-  () => import('src/components/PasswordInput/PasswordInput')
+const PasswordInput = React.lazy(() =>
+  import('src/components/PasswordInput/PasswordInput').then((module) => ({
+    default: module.PasswordInput,
+  }))
 );
 
 export interface CredentialDrawerProps {

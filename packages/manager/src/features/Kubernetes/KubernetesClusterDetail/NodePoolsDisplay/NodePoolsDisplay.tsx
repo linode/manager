@@ -318,6 +318,7 @@ export const NodePoolsDisplay = (props: Props) => {
         clusterId={clusterID}
         clusterLabel={clusterLabel}
         clusterRegionId={clusterRegionId}
+        clusterTier={clusterTier}
         onClose={() => setAddDrawerOpen(false)}
         open={addDrawerOpen}
         regionsData={regionsData}
