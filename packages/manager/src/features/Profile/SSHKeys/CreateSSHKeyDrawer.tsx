@@ -58,8 +58,9 @@ export const CreateSSHKeyDrawer = React.memo(({ onClose, open }: Props) => {
       <Code>ecdsa-sha2-nistp</Code>, <Code>ssh-ed25519</Code>, or{' '}
       <Code>sk-ecdsa-sha2-nistp256</Code>.{' '}
       <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-ssh-keys#add-a-public-key">
-        Learn more.
+        Learn more
       </Link>
+      .
     </Typography>
   );
 
