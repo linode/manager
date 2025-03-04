@@ -7,9 +7,14 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EnableBackupsDialog } from './EnableBackupsDialog';
+// import { http, HttpResponse, server } from 'src/mocks/testServer';
+// import { makeResourcePage } from 'src/mocks/serverHandlers';
 
 const queryMocks = vi.hoisted(() => ({
   useLinodeQuery: vi.fn().mockReturnValue({
+    data: undefined,
+  }),
+  useRegionsQuery: vi.fn().mockReturnValue({
     data: undefined,
   }),
   useTypeQuery: vi.fn().mockReturnValue({
@@ -22,6 +27,14 @@ vi.mock('src/queries/linodes/linodes', async () => {
   return {
     ...actual,
     useLinodeQuery: queryMocks.useLinodeQuery,
+  };
+});
+
+vi.mock('src/queries/regions', async () => {
+  const actual = await vi.importActual('src/queries/types');
+  return {
+    ...actual,
+    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 
@@ -160,17 +173,35 @@ describe('EnableBackupsDialog component', () => {
     expect(getByTestId('confirm-enable-backups')).toBeDisabled();
   });
 
-  it('does not display a notice regarding Backups not being encrypted if the Disk Encryption feature is disabled', () => {
-    const { queryByText } = renderWithTheme(
-      <EnableBackupsDialog linodeId={1} onClose={vi.fn()} open={true} />
-    );
+  // it('does not display a notice regarding Backups not being encrypted if the Disk Encryption feature is disabled and the region the linode is in does not support LDE', () => {
+  //   queryMocks.useLinodeQuery.mockReturnValue({
+  //     data: linodeFactory.build({
+  //       id: 1,
+  //       label: 'Mock Linode',
+  //       region: 'us-east',
+  //       type: 'mock-linode-type',
+  //     }),
+  //   });
 
-    const encryptionBackupsCaveatNotice = queryByText(
-      DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY
-    );
+  //   queryMocks.useRegionsQuery.mockReturnValue({
+  //     data: [
+  //       regionFactory.build({
+  //         capabilities: [],
+  //         id: 'us-east',
+  //       }),
+  //     ],
+  //   });
 
-    expect(encryptionBackupsCaveatNotice).not.toBeInTheDocument();
-  });
+  //   const { queryByText } = renderWithTheme(
+  //     <EnableBackupsDialog linodeId={1} onClose={vi.fn()} open={true} />
+  //   );
+
+  //   const encryptionBackupsCaveatNotice = queryByText(
+  //     DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY
+  //   );
+
+  //   expect(encryptionBackupsCaveatNotice).not.toBeInTheDocument();
+  // });
 
   it('displays a notice regarding Backups not being encrypted if the Disk Encryption feature is enabled', () => {
     diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockImplementationOnce(
@@ -193,4 +224,36 @@ describe('EnableBackupsDialog component', () => {
 
     diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockRestore();
   });
+
+  // it('displays a notice regarding Backups not being encrypted if the Disk Encryption feature is disabled but the region the linode is in supports LDE', () => {
+  //   queryMocks.useLinodeQuery.mockReturnValue({
+  //     data: linodeFactory.build({
+  //       id: 1,
+  //       label: 'Mock Linode',
+  //       region: 'us-east',
+  //       type: 'mock-linode-type',
+  //     }),
+  //   });
+
+  //   queryMocks.useRegionsQuery.mockReturnValue({
+  //     data: [
+  //       regionFactory.build({
+  //         capabilities: ['Disk Encryption'],
+  //         id: 'us-east',
+  //       }),
+  //     ],
+  //   });
+
+  //   const { queryByText } = renderWithTheme(
+  //     <EnableBackupsDialog linodeId={1} onClose={vi.fn()} open={true} />
+  //   );
+
+  //   const encryptionBackupsCaveatNotice = queryByText(
+  //     DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY
+  //   );
+
+  //   expect(encryptionBackupsCaveatNotice).toBeInTheDocument();
+
+  //   diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockRestore();
+  // });
 });

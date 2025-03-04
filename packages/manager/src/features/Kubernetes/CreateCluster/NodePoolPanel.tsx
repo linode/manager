@@ -2,7 +2,7 @@ import { CircleProgress } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+// import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -72,9 +72,9 @@ const Panel = (props: NodePoolPanelProps) => {
     types,
   } = props;
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  // const {
+  //   isDiskEncryptionFeatureEnabled,
+  // } = useIsDiskEncryptionFeatureEnabled();
 
   const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
 
@@ -111,7 +111,7 @@ const Panel = (props: NodePoolPanelProps) => {
       <Grid>
         <KubernetesPlansPanel
           copy={
-            isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
+            regionSupportsDiskEncryption
               ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
               : ADD_NODE_POOLS_DESCRIPTION
           }
