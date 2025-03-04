@@ -69,11 +69,11 @@ export const kernelsToGroupedItems = (kernels: Kernel[]) => {
   const groupedKernels: { [index: string]: Kernel[] } = {};
   kernels.forEach((kernel) => {
     let group = '';
-    if (kernel.label.match(/latest/i)) {
-      group = 'Current';
-    } else if (['GRUB (Legacy)', 'GRUB 2'].includes(kernel.label)) {
-      group = 'Current';
-    } else if (kernel.label === 'Direct Disk') {
+    if (
+      kernel.label.match(/latest/i) ||
+      ['GRUB (Legacy)', 'GRUB 2'].includes(kernel.label) ||
+      kernel.label === 'Direct Disk'
+    ) {
       group = 'Current';
     } else if (kernel.deprecated) {
       group = 'Deprecated';
