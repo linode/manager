@@ -1,15 +1,18 @@
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
-import { Theme, useTheme } from '@mui/material/styles';
+import { downloadFile } from '@linode/utilities';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { reportException } from 'src/exceptionReporting';
-import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   clusterId: number;

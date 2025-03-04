@@ -1,6 +1,7 @@
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type {
   Alert,
+  AlertDefinitionType,
   AlertServiceType,
   EditAlertPayloadWithService,
   NotificationChannel,
@@ -123,6 +124,45 @@ export const getChipLabels = (
       values: [value.content.webhook.webhook_url],
     };
   }
+};
+
+/**
+ *
+ * @param alerts list of alerts to be filtered
+ * @param searchText text to be searched in alert name
+ * @param selectedType selecte alert type
+ * @returns list of filtered alerts based on searchText & selectedType
+ */
+export const filterAlertsByStatusAndType = (
+  alerts: Alert[] | undefined,
+  searchText: string,
+  selectedType: string | undefined
+): Alert[] => {
+  return (
+    alerts?.filter(({ label, status, type }) => {
+      return (
+        status === 'enabled' &&
+        (!selectedType || type === selectedType) &&
+        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
+      );
+    }) ?? []
+  );
+};
+
+/**
+ *
+ * @param alerts list of alerts
+ * @returns list of unique alert types in the alerts list in the form of json object
+ */
+export const convertAlertsToTypeSet = (
+  alerts: Alert[] | undefined
+): { label: AlertDefinitionType }[] => {
+  const types = new Set(alerts?.map(({ type }) => type) ?? []);
+
+  return Array.from(types).reduce(
+    (previousValue, type) => [...previousValue, { label: type }],
+    []
+  );
 };
 
 /**

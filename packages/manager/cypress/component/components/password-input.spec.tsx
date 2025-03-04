@@ -2,7 +2,7 @@ import * as React from 'react';
 import { checkComponentA11y } from 'support/util/accessibility';
 import { componentTests, visualTests } from 'support/util/components';
 
-import PasswordInput from 'src/components/PasswordInput/PasswordInput';
+import { PasswordInput } from 'src/components/PasswordInput/PasswordInput';
 
 const fakePassword = 'this is a password';
 const props = {

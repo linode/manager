@@ -40,18 +40,19 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
+import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
-import { ClusterTypePanel } from './ClusterTypePanel';
+import { ClusterTierPanel } from './ClusterTierPanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
-  StyledFieldWithDocsStack,
+  StyledStackWithTabletBreakpoint,
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
@@ -139,7 +140,7 @@ export const CreateCluster = () => {
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
-  const handleClusterTypeSelection = (tier: KubernetesTier) => {
+  const handleClusterTierSelection = (tier: KubernetesTier) => {
     setValue('tier', tier);
     // HA is enabled by default for enterprise clusters
     if (tier === 'enterprise') {
@@ -382,8 +383,8 @@ export const CreateCluster = () => {
                   <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
                   <Controller
                     render={({}) => (
-                      <ClusterTypePanel
-                        handleClusterTypeSelection={handleClusterTypeSelection}
+                      <ClusterTierPanel
+                        handleClusterTierSelection={handleClusterTierSelection}
                         isUserRestricted={isCreateClusterRestricted}
                         selectedTier={selectedTier}
                       />
@@ -394,7 +395,7 @@ export const CreateCluster = () => {
                 </>
               )}
               <Divider sx={{ marginTop: 4 }} />
-              <StyledFieldWithDocsStack>
+              <StyledStackWithTabletBreakpoint>
                 <Stack>
                   <Controller
                     render={({ field }) => (
@@ -416,7 +417,7 @@ export const CreateCluster = () => {
                         tooltipText={
                           isLkeEnterpriseLAFeatureEnabled &&
                           selectedTier === 'enterprise'
-                            ? 'Only regions that support Kubernetes Enterprise are listed.'
+                            ? 'Only regions that support LKE Enterprise clusters are listed.'
                             : undefined
                         }
                         disableClearable
@@ -439,36 +440,48 @@ export const CreateCluster = () => {
                     label={DOCS_LINK_LABEL_DC_PRICING}
                   />
                 </StyledDocsLinkContainer>
-              </StyledFieldWithDocsStack>
+              </StyledStackWithTabletBreakpoint>
               <Divider sx={{ marginTop: 4 }} />
-              <Controller
-                render={() => (
-                  <Autocomplete
-                    onChange={(_, selected) => {
-                      setValue('k8s_version', selected?.value);
-                    }}
-                    value={
-                      versions.find(
-                        (v) => v.value === getValues('k8s_version')
-                      ) ?? null
-                    }
-                    disableClearable={!!getValues('k8s_version')}
-                    disabled={isCreateClusterRestricted}
-                    errorText={errorMap.k8s_version}
-                    label="Kubernetes Version"
-                    loading={isLoadingVersions}
-                    options={versions}
-                    placeholder={' '}
+              <StyledStackWithTabletBreakpoint>
+                <Stack>
+                  <Controller
+                    render={() => (
+                      <Autocomplete
+                        onChange={(_, selected) => {
+                          setValue('k8s_version', selected?.value);
+                        }}
+                        value={
+                          versions.find(
+                            (v) => v.value === getValues('k8s_version')
+                          ) ?? null
+                        }
+                        disableClearable={!!getValues('k8s_version')}
+                        disabled={isCreateClusterRestricted}
+                        errorText={errorMap.k8s_version}
+                        label="Kubernetes Version"
+                        loading={isLoadingVersions}
+                        options={versions}
+                        placeholder={' '}
+                        sx={{ minWidth: 416 }}
+                      />
+                    )}
+                    control={control}
+                    name="k8s_version"
                   />
-                )}
-                control={control}
-                name="k8s_version"
-              />
-
+                </Stack>
+                <StyledDocsLinkContainer
+                  sx={(theme) => ({ marginTop: theme.spacing(2) })}
+                >
+                  <DocsLink
+                    href={CLUSTER_VERSIONS_DOCS_LINK}
+                    label="Kubernetes Versions"
+                  />
+                </StyledDocsLinkContainer>
+              </StyledStackWithTabletBreakpoint>
               {showAPL && (
                 <>
                   <Divider sx={{ marginTop: 4 }} />
-                  <StyledFieldWithDocsStack>
+                  <StyledStackWithTabletBreakpoint>
                     <Stack>
                       <Controller
                         render={({ field }) => (
@@ -489,7 +502,7 @@ export const CreateCluster = () => {
                         name="apl_enabled"
                       />
                     </Stack>
-                  </StyledFieldWithDocsStack>
+                  </StyledStackWithTabletBreakpoint>
                 </>
               )}
               <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
@@ -564,6 +577,7 @@ export const CreateCluster = () => {
                     isPlanPanelDisabled={isPlanPanelDisabled}
                     regionsData={regionsData}
                     selectedRegionId={selectedRegion}
+                    selectedTier={selectedTier as KubernetesTier}
                     types={typesData || []}
                     typesLoading={typesLoading}
                   />

@@ -2,8 +2,9 @@ import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
+import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -18,7 +19,7 @@ import {
 } from '../Utils/AlertResourceUtils';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
-import { serviceToFiltersMap } from './constants';
+import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
@@ -34,7 +35,6 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
-import { useFlags } from 'src/hooks/useFlags';
 
 export interface AlertResourcesProp {
   /**
@@ -104,7 +104,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const [additionalFilters, setAdditionalFilters] = React.useState<
     Record<AlertAdditionalFilterKey, AlertFilterType>
-  >({ engineType: undefined });
+  >({ engineType: undefined, tags: undefined });
 
   const {
     data: regions,
@@ -119,7 +119,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     flags.aclpResourceTypeMap,
     serviceType
   );
-
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
     const regionFilter: Filter = supportedRegionIds
       ? {
@@ -142,11 +141,21 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       return platformFilter;
     }
 
-    // Apply type filter only for system alerts with a valid alertClass
+    // Dynamically exclude 'dedicated' if alertClass is 'shared'
+    const filteredTypes =
+      alertClass === 'shared'
+        ? Object.keys(databaseTypeClassMap).filter(
+            (type) => type !== 'dedicated'
+          )
+        : [alertClass];
+
+    // Apply type filter only for DBaaS user alerts with a valid alertClass based on above filtered types
     const typeFilter: Filter = {
-      type: {
-        '+contains': alertClass,
-      },
+      '+or': filteredTypes.map((dbType) => ({
+        type: {
+          '+contains': dbType,
+        },
+      })),
     };
 
     // Combine all the filters
@@ -301,8 +310,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         )}
         <StyledPlaceholder
           icon={EntityIcon}
-          subtitle="You can assign alerts during the resource creation process."
-          title="No resources are currently assigned to this alert definition."
+          subtitle="Once you assign the resources, they will show up here."
+          title="No resources associated with this alert definition."
+          sx={{
+            h2: {
+              fontSize: '16px',
+            },
+          }}
         />
       </Stack>
     );
@@ -325,7 +339,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           alert for.
         </Typography>
       )}
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         <Grid
           columnSpacing={2}
           container
@@ -358,6 +372,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   handleFilterChange,
                   handleFilteredRegionsChange,
                   regionOptions,
+                  tagOptions: Array.from(
+                    new Set(
+                      resources
+                        ? resources.flatMap(({ tags }) => tags ?? [])
+                        : []
+                    )
+                  ),
                 })}
                 component={component}
               />
@@ -380,15 +401,18 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
-        {isSelectionsNeeded && !isDataLoadingError && resources?.length && (
-          <Grid item xs={12}>
-            <AlertsResourcesNotice
-              handleSelectionChange={handleAllSelection}
-              selectedResources={selectedResources.length}
-              totalResources={resources?.length ?? 0}
-            />
-          </Grid>
-        )}
+        {isSelectionsNeeded &&
+          !isDataLoadingError &&
+          resources &&
+          resources.length > 0 && (
+            <Grid item xs={12}>
+              <AlertsResourcesNotice
+                handleSelectionChange={handleAllSelection}
+                selectedResources={selectedResources.length}
+                totalResources={resources?.length ?? 0}
+              />
+            </Grid>
+          )}
         <Grid item xs={12}>
           <DisplayAlertResources
             scrollToElement={() =>

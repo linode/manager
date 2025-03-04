@@ -29,7 +29,7 @@ describe('useIsLinodeInterfacesEnabled', () => {
       wrapper: (ui) => wrapWithTheme(ui, options),
     });
 
-    expect(result.current?.enabled).toBe(true);
+    expect(result.current?.isLinodeInterfaceEnabled).toBe(true);
   });
 
   it('returns enabled: false if the feature is NOT enabled', () => {
@@ -39,6 +39,6 @@ describe('useIsLinodeInterfacesEnabled', () => {
       wrapper: (ui) => wrapWithTheme(ui, options),
     });
 
-    expect(result.current?.enabled).toBe(false);
+    expect(result.current?.isLinodeInterfaceEnabled).toBe(false);
   });
 });
