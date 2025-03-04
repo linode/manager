@@ -1,9 +1,12 @@
 import * as React from 'react';
 
-import { Hidden, HiddenProps } from '../Hidden';
+import { Hidden } from '../Hidden';
 import { Skeleton } from '../Skeleton';
 import { TableCell } from '../TableCell/TableCell';
 import { TableRow } from '../TableRow/TableRow';
+
+import type { HiddenProps } from '../Hidden';
+import type { SxProps } from '@mui/material/styles';
 
 export interface TableRowLoadingProps {
   /**
@@ -20,12 +23,17 @@ export interface TableRowLoadingProps {
    * @default 1
    */
   rows?: number;
+  /**
+   * The style overrides for the TableRow
+   */
+  sx?: SxProps;
 }
 
 export const TableRowLoading = ({
   columns = 1,
   responsive,
   rows = 1,
+  sx,
 }: TableRowLoadingProps) => {
   const cols = [];
 
@@ -53,6 +61,7 @@ export const TableRowLoading = ({
     tableRows.push(
       <TableRow
         sx={{
+          ...sx,
           '&& :last-child': {
             paddingRight: '15px',
           },
