@@ -35,49 +35,18 @@ export interface ControlPlaneACLProps extends RenderGuardProps {
 export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
   const { enableControlPlaneACL, errorText, setControlPlaneACL } = props;
 
-  const [reRender, setReRender] = React.useState(false);
-
   const {
     clearErrors,
     control,
     getValues,
     setError,
     setValue,
+    watch,
   } = useFormContext<CreateKubeClusterPayload>();
 
-  const appendIPv4 = () => {
-    const newIpv4Addresses = [
-      ...(getValues('control_plane.acl.addresses.ipv4') || []),
-      '',
-    ];
-    setValue('control_plane.acl.addresses.ipv4', newIpv4Addresses);
-    setReRender(!reRender);
-  };
+  const ipv4Addresses = watch('control_plane.acl.addresses.ipv4');
+  const ipv6Addresses = watch('control_plane.acl.addresses.ipv6');
 
-  const appendIPv6 = () => {
-    const newIpv6Addresses = [
-      ...(getValues('control_plane.acl.addresses.ipv6') || []),
-      '',
-    ];
-    setValue('control_plane.acl.addresses.ipv6', newIpv6Addresses);
-    setReRender(!reRender);
-  };
-
-  const removeIPv4 = (index: number) => {
-    const updatedIpv4Addresses = getValues(
-      'control_plane.acl.addresses.ipv4'
-    )?.filter((_, i) => i !== index);
-    setValue('control_plane.acl.addresses.ipv4', updatedIpv4Addresses);
-    setReRender(!reRender);
-  };
-
-  const removeIPv6 = (index: number) => {
-    const updatedIpv6Addresses = getValues(
-      'control_plane.acl.addresses.ipv6'
-    )?.filter((_, i) => i !== index);
-    setValue('control_plane.acl.addresses.ipv6', updatedIpv6Addresses);
-    setReRender(!reRender);
-  };
   const handleBlur = (value: string, index: number, type: 'ipv4' | 'ipv6') => {
     const _ips = value ? stringToExtendedIP(value) : stringToExtendedIP('');
     const validatedIPs = validateIPs([_ips], {
@@ -166,9 +135,8 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                   {index > 0 && (
                     <IconButton
                       onClick={() => {
-                        removeIPv4(index);
                         const currentIPv4Addresses =
-                          getValues('control_plane.acl.addresses.ipv4') || [];
+                          ipv4Addresses?.filter((_, i) => i !== index) || [];
                         setValue(
                           'control_plane.acl.addresses.ipv4',
                           currentIPv4Addresses
@@ -183,7 +151,12 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 </Stack>
               )
             )}
-            <LinkButton onClick={() => appendIPv4()}>
+            <LinkButton
+              onClick={() => {
+                const newIpv4Addresses = [...(ipv4Addresses || []), ''];
+                setValue('control_plane.acl.addresses.ipv4', newIpv4Addresses);
+              }}
+            >
               Add IPv4 Address
             </LinkButton>
           </Box>
@@ -225,9 +198,8 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                   {index > 0 && (
                     <IconButton
                       onClick={() => {
-                        removeIPv6(index);
                         const currentIPv6Addresses =
-                          getValues('control_plane.acl.addresses.ipv6') || [];
+                          ipv6Addresses?.filter((_, i) => i !== index) || [];
                         setValue(
                           'control_plane.acl.addresses.ipv6',
                           currentIPv6Addresses
@@ -242,7 +214,12 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 </Stack>
               )
             )}
-            <LinkButton onClick={() => appendIPv6()}>
+            <LinkButton
+              onClick={() => {
+                const newIpv6Addresses = [...(ipv6Addresses || []), ''];
+                setValue('control_plane.acl.addresses.ipv6', newIpv6Addresses);
+              }}
+            >
               Add IPv6 Address
             </LinkButton>
           </Box>
