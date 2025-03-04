@@ -3,10 +3,6 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  CREATE_CLUSTER_ENTERPRISE_TIER_ACL_ACTIVATION_STATUS_COPY,
-  CREATE_CLUSTER_STANDARD_TIER_ACL_ACTIVATION_STATUS_COPY,
-} from '../constants';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 
 import type { ControlPlaneACLProps } from './ControlPlaneACLPane';
@@ -28,7 +24,9 @@ describe('ControlPlaneACLPane', () => {
 
     expect(getByText('Control Plane ACL')).toBeVisible();
     expect(
-      getByText(CREATE_CLUSTER_STANDARD_TIER_ACL_ACTIVATION_STATUS_COPY)
+      getByText(
+        'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. Only the IP addresses and ranges specified in the ACL can connect to the control plane.'
+      )
     ).toBeVisible();
     expect(getByText('Enable Control Plane ACL')).toBeVisible();
     expect(getByText('IPv4 Addresses or CIDRs')).toBeVisible();
@@ -44,7 +42,9 @@ describe('ControlPlaneACLPane', () => {
 
     expect(getByText('Control Plane ACL')).toBeVisible();
     expect(
-      getByText(CREATE_CLUSTER_STANDARD_TIER_ACL_ACTIVATION_STATUS_COPY)
+      getByText(
+        'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. Only the IP addresses and ranges specified in the ACL can connect to the control plane.'
+      )
     ).toBeVisible();
     expect(getByText('Enable Control Plane ACL')).toBeVisible();
     expect(queryByText('IPv4 Addresses or CIDRs')).not.toBeInTheDocument();
@@ -60,7 +60,9 @@ describe('ControlPlaneACLPane', () => {
 
     expect(getByText('Control Plane ACL')).toBeVisible();
     expect(
-      getByText(CREATE_CLUSTER_ENTERPRISE_TIER_ACL_ACTIVATION_STATUS_COPY)
+      getByText(
+        'An access control list (ACL) is enabled by default on LKE Enterprise clusters. All traffic to the control plane is restricted except from IP addresses listed in the ACL. Add at least one IP address or CIDR range.'
+      )
     ).toBeVisible();
 
     // Do not display Toggle for LKE-E clusters; ACL is enabled by default.

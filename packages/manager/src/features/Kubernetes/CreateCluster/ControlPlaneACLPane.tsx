@@ -14,8 +14,8 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { validateIPs } from 'src/utilities/ipUtils';
 
 import {
-  CREATE_CLUSTER_ENTERPRISE_TIER_ACL_ACTIVATION_STATUS_COPY,
-  CREATE_CLUSTER_STANDARD_TIER_ACL_ACTIVATION_STATUS_COPY,
+  CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY,
+  CREATE_CLUSTER_STANDARD_TIER_ACL_COPY,
 } from '../constants';
 
 import type { KubernetesTier } from '@linode/api-v4';
@@ -57,8 +57,8 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         )}
         <Typography mb={1} sx={{ width: '85%' }}>
           {selectedTier === 'enterprise'
-            ? CREATE_CLUSTER_ENTERPRISE_TIER_ACL_ACTIVATION_STATUS_COPY
-            : CREATE_CLUSTER_STANDARD_TIER_ACL_ACTIVATION_STATUS_COPY}
+            ? CREATE_CLUSTER_STANDARD_TIER_ACL_COPY
+            : CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY}
         </Typography>
         {selectedTier !== 'enterprise' && (
           <FormControlLabel
