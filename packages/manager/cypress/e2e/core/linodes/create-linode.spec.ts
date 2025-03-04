@@ -57,6 +57,11 @@ describe('Create Linode', () => {
     cleanUp('linodes');
     cleanUp('ssh-keys');
   });
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
+  });
 
   /*
    * End-to-end tests to create Linodes for each available plan type.

@@ -12,7 +12,7 @@ import { LinodeIPAddresses } from './LinodeIPAddresses';
 import { LinodeNetworkingSummaryPanel } from './NetworkingSummaryPanel/NetworkingSummaryPanel';
 
 export const LinodeNetworking = () => {
-  const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
 
@@ -27,7 +27,7 @@ export const LinodeNetworking = () => {
   }
 
   const showInterfacesTable =
-    isLinodeInterfaceEnabled && linode.interface_generation === 'linode';
+    isLinodeInterfacesEnabled && linode.interface_generation === 'linode';
 
   const showFirewallsTable =
     !linode.interface_generation ||
