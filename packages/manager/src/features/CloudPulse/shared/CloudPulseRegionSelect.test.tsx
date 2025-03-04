@@ -35,13 +35,10 @@ const flags: Partial<Flags> = {
   ] as CloudPulseResourceTypeMapFlag[],
 };
 
-vi.mock('src/queries/regions/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions/regions');
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
-  };
-});
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
+  useRegionsQuery: queryMocks.useRegionsQuery,
+}));
 
 describe('CloudPulseRegionSelect', () => {
   it('should render a Region Select component', () => {

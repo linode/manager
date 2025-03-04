@@ -21,15 +21,9 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    usePlacementGroupQuery: queryMocks.usePlacementGroupQuery,
-  };
-});
-
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
     useAllLinodesQuery: queryMocks.useAllLinodesQuery,
+    usePlacementGroupQuery: queryMocks.usePlacementGroupQuery,
+    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 
@@ -39,14 +33,6 @@ vi.mock('@tanstack/react-router', async () => {
     ...actual,
     useParams: queryMocks.useParams,
     useSearch: queryMocks.useSearch,
-  };
-});
-
-vi.mock('src/queries/regions/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions/regions');
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 

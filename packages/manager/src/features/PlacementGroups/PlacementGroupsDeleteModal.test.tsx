@@ -22,15 +22,8 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    usePreferences: queryMocks.usePreferences,
-  };
-});
-
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
     useDeletePlacementGroup: queryMocks.useDeletePlacementGroup,
+    usePreferences: queryMocks.usePreferences,
   };
 });
 

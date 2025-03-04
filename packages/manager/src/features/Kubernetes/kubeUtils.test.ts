@@ -3,10 +3,10 @@ import { renderHook } from '@testing-library/react';
 import {
   accountBetaFactory,
   kubeLinodeFactory,
-  linodeTypeFactory,
-  nodePoolFactory,
   kubernetesEnterpriseTierVersionFactory,
   kubernetesVersionFactory,
+  linodeTypeFactory,
+  nodePoolFactory,
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
 
@@ -18,7 +18,11 @@ import {
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from './kubeUtils';
-import { KubernetesTieredVersion, KubernetesVersion } from '@linode/api-v4';
+
+import type {
+  KubernetesTieredVersion,
+  KubernetesVersion,
+} from '@linode/api-v4';
 
 const mockKubernetesVersions = kubernetesVersionFactory.buildList(1);
 const mockKubernetesEnterpriseVersions = kubernetesEnterpriseTierVersionFactory.buildList(
@@ -38,13 +42,6 @@ vi.mock('@linode/queries', () => {
   return {
     ...actual,
     useAccount: queryMocks.useAccount,
-  };
-});
-
-vi.mock('@linode/queries', () => {
-  const actual = vi.importActual('@linode/queries');
-  return {
-    ...actual,
     useAccountBetaQuery: queryMocks.useAccountBetaQuery,
   };
 });

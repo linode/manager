@@ -21,21 +21,7 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useAllLinodesQuery: queryMocks.useAllLinodesQuery,
-  };
-});
-
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
     useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
-  };
-});
-
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
     useAssignLinodesToPlacementGroup:
       queryMocks.useAssignLinodesToPlacementGroup,
   };
@@ -68,7 +54,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       ],
     });
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
-      data: placementGroupFactory.build(),
+      data: placementGroupFactory.buildList(1),
     });
     queryMocks.useAssignLinodesToPlacementGroup.mockReturnValue(
       placementGroupFactory.build({
