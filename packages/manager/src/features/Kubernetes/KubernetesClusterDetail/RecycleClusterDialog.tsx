@@ -4,8 +4,11 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { localStorageWarning } from 'src/features/Kubernetes/constants';
+import { Link } from 'src/components/Link';
+import { MULTI_NODE_POD_RECYCLE_WARNING } from 'src/features/Kubernetes/constants';
 import { useRecycleClusterMutation } from 'src/queries/kubernetes';
+
+import { LocalStorageWarningNotice } from './LocalStorageWarningNotice';
 
 interface Props {
   clusterId: number;
@@ -56,9 +59,14 @@ export const RecycleClusterDialog = (props: Props) => {
       title="Recycle all nodes in cluster?"
     >
       <Typography>
-        Redeploy all nodes in the cluster. {localStorageWarning} This may take
-        several minutes, as nodes will be replaced on a rolling basis.
+        Delete and recreate all nodes in this cluster.{' '}
+        {MULTI_NODE_POD_RECYCLE_WARNING}{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools#recycle-nodes">
+          Learn more
+        </Link>
+        .
       </Typography>
+      <LocalStorageWarningNotice />
     </ConfirmationDialog>
   );
 };
