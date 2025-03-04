@@ -82,8 +82,14 @@ export const CreateCluster = () => {
   const formValues = React.useMemo(() => {
     return {
       apl_enabled: false,
-      ipv4Addresses: [' '],
-      ipv6Addresses: [' '],
+      control_plane: {
+        acl: {
+          addresses: {
+            ipv4: [''],
+            ipv6: [''],
+          },
+        },
+      },
       node_pools: [],
       tier: 'standard' as KubernetesTier,
     };
