@@ -69,11 +69,9 @@ export const Permissions = ({ permissions }: Props) => {
         <StyledClampedContent ref={containerRef} showAll={showAll}>
           {permissions.map((permission: PermissionType, index: number) => (
             <StyledPermissionItem
-              ref={(el: HTMLSpanElement | null) =>
-                (itemRefs.current[index] = el)
-              }
               data-testid="permission"
               key={permission}
+              ref={(el: HTMLSpanElement) => (itemRefs.current[index] = el)}
             >
               {permission}
             </StyledPermissionItem>

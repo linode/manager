@@ -49,7 +49,7 @@ export const AssignedEntities = ({
   const items = entities?.map((name: string, index: number) => (
     <div
       key={name}
-      ref={(el) => (itemRefs.current[index] = el)}
+      ref={(el: HTMLDivElement) => (itemRefs.current[index] = el)}
       style={{ display: 'inline-block', marginRight: 8 }}
     >
       <Chip

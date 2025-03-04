@@ -1,5 +1,4 @@
 import { capitalize } from '@linode/utilities';
-
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -229,7 +228,7 @@ export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
         if (roleMap.has(role)) {
           const existingResourceIds = roleMap.get(role);
           if (existingResourceIds && existingResourceIds !== null) {
-            roleMap.set(role, [...existingResourceIds, resource.resource_id]);
+            existingResourceIds.push(resource.resource_id);
           }
         } else {
           roleMap.set(role, [resource.resource_id]);
@@ -343,9 +342,7 @@ export const useCalculateHiddenItems = (
 
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  const itemRefs = React.useRef<(HTMLDivElement | HTMLSpanElement | null)[]>(
-    []
-  );
+  const itemRefs = React.useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
 
   const calculateHiddenItems = React.useCallback(() => {
     if (showAll || !containerRef.current) {
@@ -362,7 +359,7 @@ export const useCalculateHiddenItems = (
     const itemsArray = Array.from(itemRefs.current);
 
     const firstHiddenIndex = itemsArray.findIndex(
-      (item: HTMLParagraphElement) => {
+      (item: HTMLDivElement | HTMLSpanElement) => {
         const rect = item.getBoundingClientRect();
         return rect.top >= containerBottom;
       }
