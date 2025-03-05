@@ -18,6 +18,7 @@ import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
@@ -36,6 +37,7 @@ const LinodeConfigs = (props: LinodeDetailProps) => {
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
+  const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
 
   const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
@@ -105,16 +107,17 @@ const LinodeConfigs = (props: LinodeDetailProps) => {
           }}
           label={'Configuration Profiles'}
         />
-        {linode?.interface_generation === 'legacy_config' && (
-          <Button
-            buttonType="outlined"
-            disabled={isReadOnly}
-            onClick={() => setIsUpgradeInterfacesDialogOpen(true)}
-            tooltipText="Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading."
-          >
-            Upgrade Interfaces
-          </Button>
-        )}
+        {isLinodeInterfaceEnabled &&
+          linode?.interface_generation === 'legacy_config' && (
+            <Button
+              buttonType="outlined"
+              disabled={isReadOnly}
+              onClick={() => setIsUpgradeInterfacesDialogOpen(true)}
+              tooltipText="Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading."
+            >
+              Upgrade Interfaces
+            </Button>
+          )}
         <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
           Add Configuration
         </Button>
