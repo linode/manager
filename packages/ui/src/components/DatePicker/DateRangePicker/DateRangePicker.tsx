@@ -1,4 +1,4 @@
-import { Popover } from '@mui/material';
+import { Popover, useTheme, useMediaQuery } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTime } from 'luxon';
@@ -99,6 +99,9 @@ export const DateRangePicker = ({
 
   const startDateInputRef = useRef<HTMLInputElement | null>(null);
   const endDateInputRef = useRef<HTMLInputElement | null>(null);
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleOpen = (field: 'end' | 'start') => {
     setAnchorEl(
@@ -225,7 +228,6 @@ export const DateRangePicker = ({
 
             handleClose(); // Close popover only when clicking outside
           }}
-          // onClose={() => undefined}
           anchorEl={anchorEl}
           anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           disableAutoFocus
@@ -241,6 +243,7 @@ export const DateRangePicker = ({
             display="flex"
             gap={2}
             paddingRight={2}
+            sx={{ overflowX: isSmallScreen ? 'auto' : '' }}
           >
             {presetsProps?.enablePresets && (
               <Presets
