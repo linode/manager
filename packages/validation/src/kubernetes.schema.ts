@@ -1,7 +1,7 @@
 import { validateIP } from './firewalls.schema';
 import { array, number, object, string, boolean } from 'yup';
 
-export const nodePoolSchema = object().shape({
+export const nodePoolSchema = object({
   type: string(),
   count: number(),
 });
@@ -53,15 +53,6 @@ export const clusterLabelSchema = string()
   .min(3, 'Length must be between 3 and 32 characters.')
   .max(32, 'Length must be between 3 and 32 characters.');
 
-export const createKubeClusterSchema = object().shape({
-  label: clusterLabelSchema,
-  region: string().required('Region is required.'),
-  k8s_version: string().required('Kubernetes version is required.'),
-  node_pools: array()
-    .of(nodePoolSchema)
-    .min(1, 'Please add at least one node pool.'),
-});
-
 export const ipv4Address = string().defined().test({
   name: 'validateIP',
   message: 'Must be a valid IPv4 address.',
@@ -74,19 +65,76 @@ export const ipv6Address = string().defined().test({
   test: validateIP,
 });
 
-const controlPlaneACLOptionsSchema = object().shape({
+const controlPlaneACLOptionsSchema = object({
   enabled: boolean(),
   'revision-id': string(),
-  addresses: object()
-    .shape({
-      ipv4: array().of(ipv4Address).nullable(),
-      ipv6: array().of(ipv6Address).nullable(),
-    })
-    .notRequired(),
+  addresses: object({
+    ipv4: array().of(ipv4Address).nullable(),
+    ipv6: array().of(ipv6Address).nullable(),
+  }).notRequired(),
 });
 
-export const kubernetesControlPlaneACLPayloadSchema = object().shape({
+const controlPlaneEnterpriseACLOptionsSchema = object({
+  enabled: boolean(),
+  'revision-id': string(),
+  addresses: object({
+    ipv4: array().of(ipv4Address),
+    ipv6: array().of(ipv6Address),
+  }).required(),
+});
+
+export const createKubeClusterSchema = object({
+  label: clusterLabelSchema,
+  region: string().required('Region is required.'),
+  k8s_version: string().required('Kubernetes version is required.'),
+  node_pools: array()
+    .of(nodePoolSchema)
+    .min(1, 'Please add at least one node pool.'),
+});
+
+export const createKubeEnterpriseClusterSchema = createKubeClusterSchema.concat(
+  object({
+    control_plane: object({
+      high_availability: boolean(),
+      acl: object({
+        enabled: boolean(),
+        'revision-id': string(),
+        addresses: object({
+          ipv4: array().of(ipv4Address),
+          ipv6: array().of(ipv6Address),
+        }),
+      }),
+    })
+      .test(
+        'validateIPForEnterprise',
+        'At least one IP address or CIDR range is required for LKE Enterprise.',
+        function (controlPlane) {
+          const { ipv4, ipv6 } = controlPlane.acl.addresses;
+          // Pass validation if either IP address has a value.
+          return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
+        }
+      )
+      .required(),
+  })
+);
+
+export const kubernetesControlPlaneACLPayloadSchema = object({
   acl: controlPlaneACLOptionsSchema,
+});
+
+export const kubernetesEnterpriseControlPlaneACLPayloadSchema = object({
+  acl: controlPlaneEnterpriseACLOptionsSchema.test(
+    'validateIPForEnterprise',
+    'At least one IP address or CIDR range is required for LKE Enterprise.',
+    function (acl) {
+      const { ipv4, ipv6 } = acl.addresses || {};
+      // Pass validation if either IP address has a value.
+      return (
+        (ipv4 && ipv4.length > 0 && ipv4[0] !== '') ||
+        (ipv6 && ipv6.length > 0 && ipv6[0] !== '')
+      );
+    }
+  ),
 });
 
 // Starts and ends with a letter or number and contains letters, numbers, hyphens, dots, and underscores
@@ -153,7 +201,7 @@ export const kubernetesLabelSchema = object().test({
   test: validateKubernetesLabel,
 });
 
-export const kubernetesTaintSchema = object().shape({
+export const kubernetesTaintSchema = object({
   key: string()
     .required('Key is required.')
     .test(

@@ -1086,6 +1086,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
      * - Confirms that HA is enabled by default with LKE-E selection
      * - Confirms an LKE-E supported region can be selected
      * - Confirms an LKE-E supported k8 version can be selected
+     * - Confirms at least one IP must be provided for ACL
      * - Confirms the checkout bar displays the correct LKE-E info
      * - Confirms an enterprise cluster can be created with the correct chip, version, and price
      * - Confirms that the total node count for each pool is displayed
@@ -1102,7 +1103,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       mockGetAccount(
         accountFactory.build({
-          capabilities: ['Kubernetes Enterprise'],
+          capabilities: [
+            'Kubernetes Enterprise',
+            'LKE HA Control Planes',
+            'LKE Network Access Control List (IP ACL)',
+          ],
         })
       ).as('getAccount');
       mockGetTieredKubernetesVersions('enterprise', [
@@ -1263,12 +1268,40 @@ describe('LKE Cluster Creation with LKE-E', () => {
           cy.findByText('$15.00').should('be.visible');
           cy.findByText('$459.00').should('be.visible');
 
+          // Try to submit the form
           ui.button
             .findByTitle('Create Cluster')
             .should('be.visible')
             .should('be.enabled')
             .click();
         });
+
+      // Confirm error validation requires an ACL IP
+      cy.findByText(
+        'At least one IP address or CIDR range is required for LKE Enterprise.'
+      ).should('be.visible');
+
+      // Add an IP
+      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
+        .should('be.visible')
+        .click();
+      cy.focused().clear();
+      cy.focused().type('10.0.0.0/24');
+
+      cy.get('[data-testid="kube-checkout-bar"]')
+        .should('be.visible')
+        .within(() => {
+          // Successfully submit the form
+          ui.button
+            .findByTitle('Create Cluster')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.findByText(
+        'At least one IP address or CIDR range is required for LKE Enterprise.'
+      ).should('not.exist');
 
       // Wait for LKE cluster to be created and confirm that we are redirected
       // to the cluster summary page.
