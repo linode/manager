@@ -1,7 +1,6 @@
 import { Button, Dialog, ErrorState, Notice, Paper, clamp } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
-import { assoc, equals } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -112,9 +111,10 @@ export const StandardRescueDialog = (props: Props) => {
   //   open
   // );
 
-  const linodeDisks = disks?.map((disk) =>
-    assoc('_id', `disk-${disk.id}`, disk)
-  );
+  const linodeDisks = disks?.map((disk) => ({
+    ...disk,
+    _id: `disk-${disk.id}`,
+  }));
 
   const filteredVolumes =
     volumes?.filter((volume) => {
@@ -146,7 +146,13 @@ export const StandardRescueDialog = (props: Props) => {
   const [APIError, setAPIError] = React.useState<string>('');
 
   React.useEffect(() => {
-    if (!equals(deviceMap, prevDeviceMap)) {
+    if (
+      Object.entries(deviceMap).length !==
+        Object.entries(prevDeviceMap ?? {}).length ||
+      Object.entries(deviceMap).some(
+        ([key, value]) => prevDeviceMap?.[key as keyof DeviceMap] !== value
+      )
+    ) {
       setCounter(initialCounter);
       setRescueDevices(deviceMap);
       setAPIError('');
