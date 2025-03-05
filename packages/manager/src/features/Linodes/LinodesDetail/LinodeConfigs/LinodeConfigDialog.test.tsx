@@ -3,7 +3,6 @@ import React from 'react';
 import {
   LinodeConfigInterfaceFactory,
   linodeConfigFactory,
-  linodeConfigFactoryWithoutInterfaces,
   linodeFactory,
 } from 'src/factories';
 import {
@@ -214,7 +213,7 @@ describe('LinodeConfigDialog', () => {
 
     const { queryByLabelText } = renderWithTheme(
       <LinodeConfigDialog
-        config={linodeConfigFactoryWithoutInterfaces.build()}
+        config={linodeConfigFactory.build({ interfaces: null })}
         open={true}
         {...props}
       />

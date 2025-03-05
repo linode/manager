@@ -226,8 +226,8 @@ export interface Config {
   created: string;
   updated: string;
   initrd: string | null;
-  // If a Linode is using the new Linode Interfaces, this field will either no longer be present or be returned as null.
-  interfaces?: Interface[] | null;
+  // If a Linode is using new Linode Interfaces, the interfaces in the Config object will be returned as null.
+  interfaces: Interface[] | null;
 }
 
 // ----------------------------------------------------------
