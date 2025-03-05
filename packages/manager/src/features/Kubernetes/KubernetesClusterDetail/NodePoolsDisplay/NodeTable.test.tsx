@@ -34,6 +34,7 @@ const props: Props = {
   nodes: mockKubeNodes,
   openRecycleNodeDialog: vi.fn(),
   poolId: 1,
+  regionSupportsDiskEncryption: false,
   statusFilter: 'all',
   tags: [],
   typeLabel: 'Linode 2G',
@@ -112,12 +113,27 @@ describe('NodeTable', () => {
     ).toBeVisible();
   });
 
-  it('does not display the encryption status of the pool if the account lacks the capability or the feature flag is off', () => {
-    // situation where isDiskEncryptionFeatureEnabled === false
+  it('does not display the encryption status of the pool if the account lacks the capability or the feature flag is off, and the region does not have the capability', () => {
+    // situation where isDiskEncryptionFeatureEnabled === false and prop regionSupportsDiskEncryption === false
     const { queryByTestId } = renderWithTheme(<NodeTable {...props} />);
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
 
     expect(encryptionStatusFragment).not.toBeInTheDocument();
+  });
+
+  it('displays the encryption status of the pool if the cluster region supports Disk Encryption but the feature flag is off and the account does not have the capability', () => {
+    // situation where isDiskEncryptionFeatureEnabled === false but the region the cluster is in supports LDE
+    const propsWithRegionSupportingLDE = {
+      ...props,
+      regionSupportsDiskEncryption: true,
+    };
+
+    const { queryByTestId } = renderWithTheme(
+      <NodeTable {...propsWithRegionSupportingLDE} />
+    );
+    const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
+
+    expect(encryptionStatusFragment).toBeInTheDocument();
   });
 
   it('displays the encryption status of the pool if the feature flag is on and the account has the capability', () => {
