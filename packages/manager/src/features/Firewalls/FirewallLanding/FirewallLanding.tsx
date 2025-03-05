@@ -1,9 +1,9 @@
-import { Button, CircleProgress } from '@linode/ui';
+import { Button, CircleProgress, ErrorState } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -30,7 +30,6 @@ import { FirewallRow } from './FirewallRow';
 
 import type { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import type { Mode } from './FirewallDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const preferenceKey = 'firewalls';
 
@@ -193,7 +192,7 @@ const FirewallLanding = () => {
               <TableCell>Rules</TableCell>
               <TableCell>Services</TableCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

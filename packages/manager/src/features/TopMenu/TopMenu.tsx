@@ -52,7 +52,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             <TopMenuTooltip title="Expand side menu">
               <IconButton
                 sx={(theme) => ({
-                  padding: theme.tokens.spacing[60],
+                  padding: theme.tokens.spacing.S16,
                 })}
                 aria-label="open menu"
                 color="inherit"
@@ -65,13 +65,13 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           )}
           <Box
             gap={(theme) => ({
-              md: theme.tokens.spacing[80],
-              xs: theme.tokens.spacing[50],
+              md: theme.tokens.spacing.S32,
+              xs: theme.tokens.spacing.S12,
             })}
             sx={(theme) => ({
               paddingLeft: {
                 md: 0,
-                sm: theme.tokens.spacing[60],
+                sm: theme.tokens.spacing.S16,
               },
             })}
             alignItems="center"
@@ -104,17 +104,17 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           <Stack
             sx={(theme) => ({
               gap: {
-                sm: theme.tokens.spacing[70],
-                xs: theme.tokens.spacing[40],
+                sm: theme.tokens.spacing.S24,
+                xs: theme.tokens.spacing.S8,
               },
               paddingLeft: {
-                sm: theme.tokens.spacing[80],
-                xs: theme.tokens.spacing[60],
+                sm: theme.tokens.spacing.S32,
+                xs: theme.tokens.spacing.S16,
               },
               paddingRight: {
                 md: 0,
-                sm: theme.tokens.spacing[60],
-                xs: theme.tokens.spacing[40],
+                sm: theme.tokens.spacing.S16,
+                xs: theme.tokens.spacing.S8,
               },
             })}
             alignItems="center"
@@ -125,8 +125,8 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             <Box
               gap={{
                 md: 0,
-                sm: theme.tokens.spacing[60],
-                xs: theme.tokens.spacing[40],
+                sm: theme.tokens.spacing.S16,
+                xs: theme.tokens.spacing.S8,
               }}
               display="flex"
             >

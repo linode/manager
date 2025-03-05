@@ -4,7 +4,7 @@ import {
   usePlacementGroupsQuery,
   useRegionsQuery,
 } from '@linode/queries';
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import {
   useLocation,
@@ -15,7 +15,6 @@ import {
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

@@ -1,4 +1,4 @@
-import { Button, CircleProgress } from '@linode/ui';
+import { Button, CircleProgress, ErrorState } from '@linode/ui';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
@@ -6,7 +6,6 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import {
   useAccount,

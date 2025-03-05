@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { describe, expect, it } from 'vitest';
 
-import PendingIcon from 'src/assets/icons/pending.svg';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { PendingIcon } from '../../assets';
+import { renderWithTheme } from '../../utilities/testHelpers';
 import { ErrorState } from './ErrorState';
 
 const errorText = 'Some error text here';

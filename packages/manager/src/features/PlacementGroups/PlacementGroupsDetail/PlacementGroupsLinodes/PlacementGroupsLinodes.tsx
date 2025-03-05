@@ -1,11 +1,10 @@
 import { useAllLinodesQuery, useLinodeQuery } from '@linode/queries';
-import { Button, Stack } from '@linode/ui';
+import { Button, ErrorState, Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { useDialogData } from 'src/hooks/useDialogData';

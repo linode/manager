@@ -1,9 +1,8 @@
 import { useLinodeQuery } from '@linode/queries';
-import { CircleProgress, Stack } from '@linode/ui';
+import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { LinodeFirewalls } from './LinodeFirewalls/LinodeFirewalls';
