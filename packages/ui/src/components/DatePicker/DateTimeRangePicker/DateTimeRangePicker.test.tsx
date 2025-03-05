@@ -170,7 +170,7 @@ describe('DateTimeRangePicker', () => {
         name: '(GMT -10:00) Hawaii-Aleutian Standard Time',
       });
 
-      fireEvent.click(optionElement);
+      await userEvent.click(optionElement);
 
       // Ensure the local time remains the same, but the timezone changes
       expect(startTimeField).toHaveValue('12:00 AM');
