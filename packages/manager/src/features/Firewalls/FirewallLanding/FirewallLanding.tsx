@@ -1,9 +1,8 @@
-import { Button, CircleProgress } from '@linode/ui';
+import { Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';

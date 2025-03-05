@@ -2,7 +2,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 
-import { useGetLocationsForQuotaService } from './utils';
+import { getQuotaError, useGetLocationsForQuotaService } from './utils';
+
+import type { QuotaUsage } from '@linode/api-v4';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 const queryMocks = vi.hoisted(() => ({
   useObjectStorageEndpoints: vi.fn().mockReturnValue({}),
@@ -69,5 +72,17 @@ describe('useGetLocationsForQuotaService', () => {
       { label: 'Global (Account level)', value: 'global' },
       { label: 'endpoint1 (Standard E0)', value: 'endpoint1' },
     ]);
+  });
+
+  it('should return the error for a given quota usage query', () => {
+    const quotaUsageQueries = ([
+      { error: [{ reason: 'Error 1' }] },
+      { error: [{ reason: 'Error 2' }] },
+    ] as unknown) as UseQueryResult<QuotaUsage, Error>[];
+    const index = 0;
+
+    const error = getQuotaError(quotaUsageQueries, index);
+
+    expect(error).toEqual('Error 1');
   });
 });

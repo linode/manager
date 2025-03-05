@@ -62,7 +62,7 @@ export const CreateFirewallDrawer = React.memo(
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { mutateAsync: createFirewall } = useCreateFirewall();
     const queryClient = useQueryClient();
-    const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
+    const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -162,7 +162,7 @@ export const CreateFirewallDrawer = React.memo(
                 />
               </Notice>
             )}
-            {isLinodeInterfaceEnabled && (
+            {isLinodeInterfacesEnabled && (
               <>
                 <Typography style={{ marginTop: 24 }}>
                   <strong>Create</strong>
@@ -196,7 +196,7 @@ export const CreateFirewallDrawer = React.memo(
                 />
               </>
             )}
-            {createFirewallFrom === 'template' && isLinodeInterfaceEnabled ? (
+            {createFirewallFrom === 'template' && isLinodeInterfacesEnabled ? (
               <TemplateFirewallFields
                 userCannotAddFirewall={userCannotAddFirewall}
               />
