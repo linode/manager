@@ -194,6 +194,7 @@ jobs:
       - run: pnpm run --filter @linode/ui test
 
   test-utilities:
+    needs: build-sdk
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -205,11 +206,16 @@ jobs:
         with:
           node-version: "20.17"
           cache: "pnpm"
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/utilities test
 
   test-queries:
     runs-on: ubuntu-latest
+    needs: build-sdk
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -220,6 +226,10 @@ jobs:
         with:
           node-version: "20.17"
           cache: "pnpm"
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/queries test
 
@@ -252,6 +262,10 @@ jobs:
         with:
           node-version: "20.17"
           cache: "pnpm"
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/utilities typecheck
 
@@ -268,6 +282,10 @@ jobs:
         with:
           node-version: "20.17"
           cache: "pnpm"
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/queries typecheck
     
