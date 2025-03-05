@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Notice, omitProps, Stack } from '@linode/ui';
+import { Notice, Stack, omitProps } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -11,9 +11,9 @@ import { Actions } from './Actions';
 import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceType } from './InterfaceType';
 import { CreateLinodeInterfaceFormSchema } from './utilities';
+import { VLANInterface } from './VLANInterface';
 
 import type { CreateInterfaceFormValues } from './utilities';
-import { VLANInterface } from './VLANInterface';
 
 interface Props {
   linodeId: number;
@@ -27,7 +27,7 @@ export const AddInterfaceForm = (props: Props) => {
   const { mutateAsync } = useCreateLinodeInterfaceMutation(linodeId);
 
   const form = useForm<CreateInterfaceFormValues>({
-    defaultValues: { public: {}, vlan: {}, vpc: {} },
+    defaultValues: { firewall_id: null, public: {}, vlan: {}, vpc: {} },
     async resolver(rawValues, context, options) {
       const valuesWithOnlySelectedInterface = getLinodeInterfacePayload(
         structuredClone(rawValues)
@@ -52,6 +52,7 @@ export const AddInterfaceForm = (props: Props) => {
       enqueueSnackbar('Successfully added network interface.', {
         variant: 'success',
       });
+      onClose();
     } catch (errors) {
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });

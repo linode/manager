@@ -1,5 +1,10 @@
-import { createLinodeInterface } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createLinodeInterface, deleteLinodeInterface } from '@linode/api-v4';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { linodeQueries } from './linodes';
 
@@ -16,6 +21,18 @@ export const useLinodeInterfacesQuery = (linodeId: number) => {
   return useQuery<LinodeInterfaces, APIError[]>(
     linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interfaces
   );
+};
+
+export const useLinodeInterfaceQuery = (
+  linodeId: number,
+  interfaceId: number
+) => {
+  return useQuery<LinodeInterface, APIError[]>({
+    ...linodeQueries
+      .linode(linodeId)
+      ._ctx.interfaces._ctx.interface(interfaceId),
+    enabled: Boolean(interfaceId),
+  });
 };
 
 export const useLinodeInterfaceFirewallsQuery = (
@@ -41,4 +58,21 @@ export const useCreateLinodeInterfaceMutation = (linodeId: number) => {
       },
     }
   );
+};
+
+export const useDeleteLinodeInterfaceMutation = (
+  linodeId: number,
+  options?: UseMutationOptions<{}, APIError[], number>
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], number>({
+    mutationFn: (interfaceId) => deleteLinodeInterface(linodeId, interfaceId),
+    ...options,
+    onSuccess(...params) {
+      options?.onSuccess?.(...params);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.interfaces.queryKey,
+      });
+    },
+  });
 };
