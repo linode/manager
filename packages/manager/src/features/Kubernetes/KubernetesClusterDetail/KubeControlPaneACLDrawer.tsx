@@ -4,7 +4,6 @@ import {
   FormControlLabel,
   Notice,
   TextField,
-  Toggle,
   Typography,
   omittedProps,
 } from '@linode/ui';
@@ -32,6 +31,7 @@ import {
   ACL_DRAWER_STANDARD_TIER_ACL_COPY,
   ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY,
 } from '../constants';
+import { StyledACLToggle } from '../CreateCluster/ControlPlaneACLPane';
 
 import type {
   KubernetesCluster,
@@ -64,6 +64,8 @@ export const KubeControlPlaneACLDrawer = (
   } = props;
   const aclPayload = aclData?.acl;
 
+  const isEnterpriseCluster = clusterTier === 'enterprise';
+
   const {
     mutateAsync: updateKubernetesClusterControlPlaneACL,
   } = useKubernetesControlPlaneACLMutation(clusterId);
@@ -83,7 +85,7 @@ export const KubeControlPlaneACLDrawer = (
     defaultValues: aclData,
     mode: 'onBlur',
     resolver: yupResolver(
-      clusterTier === 'enterprise'
+      isEnterpriseCluster
         ? kubernetesEnterpriseControlPlaneACLPayloadSchema
         : kubernetesControlPlaneACLPayloadSchema
     ),
@@ -182,7 +184,7 @@ export const KubeControlPlaneACLDrawer = (
         )}
         <Stack sx={{ marginTop: 3 }}>
           <StyledTypography variant="body1">
-            {clusterTier === 'enterprise'
+            {isEnterpriseCluster
               ? ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY
               : ACL_DRAWER_STANDARD_TIER_ACL_COPY}
           </StyledTypography>
@@ -203,31 +205,32 @@ export const KubeControlPlaneACLDrawer = (
           <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
           <Typography variant="h3">Activation Status</Typography>
           <StyledTypography topMargin variant="body1">
-            {clusterTier === 'enterprise'
+            {isEnterpriseCluster
               ? ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY
               : ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY}
           </StyledTypography>
-          {clusterTier !== 'enterprise' && (
-            <Box sx={{ marginTop: 1 }}>
-              <Controller
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={
-                      <Toggle
-                        checked={field.value ?? false}
-                        name="ipacl-checkbox"
-                        onBlur={field.onBlur}
-                        onChange={field.onChange}
-                      />
-                    }
-                    label={'Enable Control Plane ACL'}
-                  />
-                )}
-                control={control}
-                name="acl.enabled"
-              />
-            </Box>
-          )}
+          <Box sx={{ marginTop: 1 }}>
+            <Controller
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <StyledACLToggle
+                      checked={
+                        isEnterpriseCluster ? true : field.value ?? false
+                      }
+                      disabled={isEnterpriseCluster}
+                      name="ipacl-checkbox"
+                      onBlur={field.onBlur}
+                      onChange={field.onChange}
+                    />
+                  }
+                  label="Enable Control Plane ACL"
+                />
+              )}
+              control={control}
+              name="acl.enabled"
+            />
+          </Box>
           <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
           {clusterMigrated && (
             <>

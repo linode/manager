@@ -121,8 +121,8 @@ describe('KubeControlPaneACLDrawer', () => {
     expect(getByText('Add IPv6 Address')).toBeVisible();
   });
 
-  it('shows correct copy and no toggle for enterprise clusters', () => {
-    const { getByText, queryByText } = renderWithTheme(
+  it('shows correct copy and state for toggle for enterprise clusters', () => {
+    const { getByRole, getByText } = renderWithTheme(
       <KubeControlPlaneACLDrawer {...props} clusterTier="enterprise" />
     );
 
@@ -134,7 +134,10 @@ describe('KubeControlPaneACLDrawer', () => {
     expect(
       getByText(ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY)
     ).toBeVisible();
-    expect(queryByText('Enable Control Plane ACL')).not.toBeInTheDocument();
+    // Confirm ACL is checked by default and edits are disabled.
+    const toggle = getByRole('checkbox', { name: 'Enable Control Plane ACL' });
+    expect(toggle).toBeChecked();
+    expect(toggle).toBeDisabled();
   });
 
   it('closes the drawer', async () => {
