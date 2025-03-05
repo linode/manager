@@ -293,7 +293,7 @@ const SearchBarComponent = (props: SearchProps) => {
             top: '50%',
             transform: 'translate(-50%, -50%)',
             visibility: searchActive ? 'visible' : 'hidden',
-            width: `calc(100% - ${theme.tokens.spacing[80]})`,
+            width: `calc(100% - ${theme.tokens.spacing.S32})`,
             zIndex: searchActive ? 3 : 0,
           },
         }}
@@ -433,7 +433,7 @@ const SearchBarComponent = (props: SearchProps) => {
           }}
           sx={(theme) => ({
             '& .MuiInput-root .MuiInput-input': {
-              padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
+              padding: `${theme.tokens.spacing.S6} ${theme.tokens.spacing.S8}`,
             },
             '&.MuiAutocomplete-root': {
               '&.Mui-focused, &.Mui-focused:hover': {
@@ -443,7 +443,7 @@ const SearchBarComponent = (props: SearchProps) => {
                 borderColor: theme.tokens.header.Search.Border.Hover,
               },
               '.MuiInput-root': {
-                paddingRight: theme.tokens.spacing[40],
+                paddingRight: theme.tokens.spacing.S8,
               },
               border: `1px solid ${theme.tokens.header.Search.Border.Default}`,
             },
