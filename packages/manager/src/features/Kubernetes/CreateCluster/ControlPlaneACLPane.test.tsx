@@ -53,8 +53,8 @@ describe('ControlPlaneACLPane', () => {
     expect(queryByText('Add IPv6 Address')).not.toBeInTheDocument();
   });
 
-  it('renders only fields and correct copy for an enterprise cluster when enableControlPlaneACL is true', () => {
-    const { getByText, queryByText } = renderWithTheme(
+  it('renders correct toggle state and copy for an enterprise cluster when enableControlPlaneACL is true', () => {
+    const { getByRole, getByText } = renderWithTheme(
       <ControlPlaneACLPane {...props} selectedTier="enterprise" />
     );
 
@@ -65,8 +65,10 @@ describe('ControlPlaneACLPane', () => {
       )
     ).toBeVisible();
 
-    // Do not display Toggle for LKE-E clusters; ACL is enabled by default.
-    expect(queryByText('Enable Control Plane ACL')).not.toBeInTheDocument();
+    // Confirm ACL is checked by default and edits are disabled.
+    const toggle = getByRole('checkbox', { name: 'Enable Control Plane ACL' });
+    expect(toggle).toBeChecked();
+    expect(toggle).toBeDisabled();
 
     expect(getByText('IPv4 Addresses or CIDRs')).toBeVisible();
     expect(getByText('Add IPv4 Address')).toBeVisible();

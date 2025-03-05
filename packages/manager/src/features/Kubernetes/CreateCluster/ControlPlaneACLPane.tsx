@@ -6,7 +6,7 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import { FormLabel } from '@mui/material';
+import { FormLabel, styled } from '@mui/material';
 import * as React from 'react';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
@@ -44,6 +44,8 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     setControlPlaneACL,
   } = props;
 
+  const isEnterpriseCluster = selectedTier === 'enterprise';
+
   return (
     <>
       <FormControl data-testid="control-plane-ipacl-form">
@@ -56,22 +58,21 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
           </Notice>
         )}
         <Typography mb={1} sx={{ width: '85%' }}>
-          {selectedTier === 'enterprise'
+          {isEnterpriseCluster
             ? CREATE_CLUSTER_STANDARD_TIER_ACL_COPY
             : CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY}
         </Typography>
-        {selectedTier !== 'enterprise' && (
-          <FormControlLabel
-            control={
-              <Toggle
-                checked={enableControlPlaneACL}
-                name="ipacl-checkbox"
-                onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
-              />
-            }
-            label="Enable Control Plane ACL"
-          />
-        )}
+        <FormControlLabel
+          control={
+            <StyledToggle
+              checked={enableControlPlaneACL}
+              disabled={isEnterpriseCluster}
+              name="ipacl-checkbox"
+              onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
+            />
+          }
+          label="Enable Control Plane ACL"
+        />
       </FormControl>
       {enableControlPlaneACL && (
         <Box sx={{ marginBottom: 3, maxWidth: 450 }}>
@@ -110,3 +111,12 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     </>
   );
 };
+
+export const StyledToggle = styled(Toggle, {
+  label: 'StyledToggle',
+})(({ theme }) => ({
+  // Keep the checked, disabled toggle a faded blue for LKE Enterprise.
+  '& .Mui-disabled+.MuiSwitch-track': {
+    backgroundColor: theme.tokens.color.Brand[50],
+  },
+}));
