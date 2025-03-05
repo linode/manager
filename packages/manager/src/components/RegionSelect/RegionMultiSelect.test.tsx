@@ -1,4 +1,3 @@
-import { Region } from '@linode/api-v4';
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
@@ -6,6 +5,8 @@ import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
+
+import type { Region } from '@linode/api-v4';
 
 const regionNewark = regionFactory.build({
   id: 'us-east',
