@@ -92,22 +92,8 @@ export const useAddEntityToAlert = () => {
       });
     },
 
-    onSuccess(_data, variables, _context) {
-      const { alertId, serviceType } = variables;
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.all().queryKey,
-      });
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
-          .queryKey,
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
-          serviceType,
-          String(alertId)
-        ).queryKey,
-      });
+    onSuccess() {
+      queryClient.invalidateQueries(queryFactory.alerts);
     },
   });
 };
@@ -119,23 +105,8 @@ export const useRemoveEntityFromAlert = () => {
       return deleteEntityFromAlert(serviceType, entityId, alertId);
     },
 
-    onSuccess(_data, variables, _context) {
-      const { alertId, serviceType } = variables;
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.all().queryKey,
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
-          .queryKey,
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
-          serviceType,
-          String(alertId)
-        ).queryKey,
-      });
+    onSuccess() {
+      queryClient.invalidateQueries(queryFactory.alerts);
     },
   });
 };
