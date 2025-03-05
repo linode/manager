@@ -19,8 +19,14 @@ describe('ControlPlaneACLPane', () => {
       component: <ControlPlaneACLPane {...props} />,
       useFormOptions: {
         defaultValues: {
-          ipv4Addresses: [{ address: '', id: 1 }],
-          ipv6Addresses: [{ address: '', id: 1 }],
+          control_plane: {
+            acl: {
+              addresses: {
+                ipv4: [''],
+                ipv6: [''],
+              },
+            },
+          },
         },
       },
     });
