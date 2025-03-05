@@ -73,9 +73,9 @@ export const TimePicker = ({
             layout: {
               sx: (theme: Theme) => ({
                 '& .MuiPickersLayout-contentWrapper': {
-                  borderBottom: `1px solid ${theme.borderColors.divider}`,
+                  borderBottom: `1px solid ${theme.tokens.calendar.Border}`,
                 },
-                border: `1px solid ${theme.borderColors.divider}`,
+                border: `1px solid ${theme.tokens.calendar.Border}`,
               }),
             },
             openPickerButton: {
@@ -84,7 +84,7 @@ export const TimePicker = ({
             popper: {
               sx: (theme: Theme) => ({
                 ul: {
-                  borderColor: `${theme.borderColors.divider} !important`,
+                  borderColor: `${theme.tokens.calendar.Border} !important`,
                 },
               }),
             },
