@@ -109,8 +109,9 @@ describe('DateRangePicker - Format Validation', () => {
     'yyyy-MM-dd',
   ];
 
-  formats.forEach((format) => {
-    it(`should accept and display dates correctly in ${format} format`, async () => {
+  it.each(formats)(
+    'should accept and display dates correctly in %s format',
+    async (format) => {
       const Props = {
         ...defaultProps,
         format,
@@ -146,8 +147,8 @@ describe('DateRangePicker - Format Validation', () => {
 
       expect(startDateField).toHaveValue(formattedTestDate);
       expect(endDateField).toHaveValue(formattedTestDate);
-    });
-  });
+    }
+  );
 
   it('should prevent invalid date input for each format', async () => {
     renderWithTheme(<DateRangePicker {...defaultProps} format="yyyy-MM-dd" />);
