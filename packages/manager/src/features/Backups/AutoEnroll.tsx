@@ -36,7 +36,7 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
               the additional hourly rate noted on the{' '}
               <Link
                 data-qa-backups-price
-                to="https://www.linode.com/products/backups/"
+                to="https://www.linode.com/pricing/#backups"
               >
                 Backups pricing page
               </Link>
