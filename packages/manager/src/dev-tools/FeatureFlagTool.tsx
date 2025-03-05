@@ -38,6 +38,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
+  {
+    flag: 'linodeCloneFirewall',
+    label: 'Linode Clone Firewall',
+  },
 ];
 
 interface RenderFlagItemProps {
