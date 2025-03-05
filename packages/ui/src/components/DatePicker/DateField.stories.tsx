@@ -43,7 +43,7 @@ The **DateField** component provides a user-friendly way to input date values.
       },
     },
   },
-  title: 'Components/DateField',
+  title: 'Components/DatePicker/DateFieldV2',
 };
 
 export default meta;
