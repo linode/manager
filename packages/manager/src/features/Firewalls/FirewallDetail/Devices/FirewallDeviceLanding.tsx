@@ -62,6 +62,20 @@ export const FirewallDeviceLanding = React.memo(
 
     const formattedType = formattedTypes[type];
 
+    // If the user initiates a history -/+ to a /remove route and the device is not found,
+    // push navigation to the appropriate /linodes or /nodebalancers route.
+    React.useEffect(() => {
+      if (!device && location.pathname.endsWith('remove')) {
+        navigate({
+          params: { id: String(firewallId) },
+          to:
+            type === 'linode'
+              ? '/firewalls/$id/linodes'
+              : '/firewalls/$id/nodebalancers',
+        });
+      }
+    }, [device, location.pathname, firewallId, type, navigate]);
+
     return (
       <>
         {disabled ? (
