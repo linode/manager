@@ -1,6 +1,8 @@
 import { getTickets } from '@linode/api-v4/lib/support';
 
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import {
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
@@ -62,9 +64,14 @@ export const getTicketsPage = (
 };
 
 export const useTicketSeverityCapability = () => {
+  const flags = useFlags();
   const { account } = useAccountManagement();
 
-  return account?.capabilities.includes('Support Ticket Severity');
+  return isFeatureEnabled(
+    'Support Ticket Severity',
+    Boolean(flags.supportTicketSeverity),
+    account?.capabilities ?? []
+  );
 };
 
 /**
