@@ -22,6 +22,8 @@ import {
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { DatabaseAdvancedConfiguration } from './DatabaseAdvancedConfiguration/DatabaseAdvancedConfiguration';
+
 import type { Engine } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Tab } from 'src/components/Tabs/TabLinkList';
@@ -40,13 +42,6 @@ const DatabaseMonitor = React.lazy(() =>
   import('./DatabaseMonitor/DatabaseMonitor').then(({ DatabaseMonitor }) => ({
     default: DatabaseMonitor,
   }))
-);
-const DatabaseAlert = React.lazy(() =>
-  import('../../CloudPulse/Alerts/ContextualView/AlertReusableComponent').then(
-    ({ AlertReusableComponent }) => ({
-      default: AlertReusableComponent,
-    })
-  )
 );
 export const DatabaseDetail = () => {
   const history = useHistory();
@@ -98,6 +93,7 @@ export const DatabaseDetail = () => {
 
   const isDefault = database.platform === 'rdbms-default';
   const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
+  const isAdvancedConfigEnabled = isDefault && flags.databaseAdvancedConfig;
 
   const tabs: Tab[] = [
     {
@@ -112,14 +108,11 @@ export const DatabaseDetail = () => {
       routeName: `/databases/${engine}/${id}/settings`,
       title: 'Settings',
     },
-    {
-      routeName: `/databases/${engine}/${id}/alerts`,
-      title: `Alerts`,
-    },
   ];
 
   const resizeIndex = isMonitorEnabled ? 3 : 2;
   const backupsIndex = isMonitorEnabled ? 2 : 1;
+  const settingsIndex = isMonitorEnabled ? 4 : 3;
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
@@ -133,6 +126,13 @@ export const DatabaseDetail = () => {
     tabs.splice(resizeIndex, 0, {
       routeName: `/databases/${engine}/${id}/resize`,
       title: 'Resize',
+    });
+  }
+
+  if (isAdvancedConfigEnabled) {
+    tabs.splice(5, 0, {
+      routeName: `/databases/${engine}/${id}/configs`,
+      title: 'Advanced Configuration',
     });
   }
 
@@ -237,19 +237,17 @@ export const DatabaseDetail = () => {
               />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel index={tabs.length - 2}>
+          <SafeTabPanel index={settingsIndex}>
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
             />
           </SafeTabPanel>
-          <SafeTabPanel index={5}>
-            <DatabaseAlert
-              entityId={String(database.id)}
-              entityName={database.label}
-              serviceType="dbaas"
-            />
-          </SafeTabPanel>
+          {isAdvancedConfigEnabled && (
+            <SafeTabPanel index={tabs.length - 1}>
+              <DatabaseAdvancedConfiguration database={database} />
+            </SafeTabPanel>
+          )}
         </TabPanels>
       </Tabs>
       {isDefault && <DatabaseLogo />}
