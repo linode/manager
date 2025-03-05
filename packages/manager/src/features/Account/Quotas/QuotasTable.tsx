@@ -1,4 +1,10 @@
-import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  ErrorState,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { useTheme } from '@mui/material/styles';
 import { useQueries } from '@tanstack/react-query';
@@ -6,7 +12,6 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { BarPercent } from 'src/components/BarPercent/BarPercent';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table/Table';
 import { TableBody } from 'src/components/TableBody';

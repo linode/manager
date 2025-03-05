@@ -1,8 +1,7 @@
-import { CircleProgress, Notice, Paper } from '@linode/ui';
+import { CircleProgress, ErrorState, Notice, Paper } from '@linode/ui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';

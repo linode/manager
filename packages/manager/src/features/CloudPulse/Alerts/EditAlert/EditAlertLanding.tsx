@@ -1,10 +1,9 @@
-import { Box, CircleProgress } from '@linode/ui';
+import { Box, CircleProgress, ErrorState } from '@linode/ui';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';

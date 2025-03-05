@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   CircleProgress,
+  ErrorState,
   Paper,
   Stack,
   Typography,
@@ -10,7 +11,6 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';

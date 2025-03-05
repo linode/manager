@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   CircleProgress,
+  ErrorState,
   Select,
   Stack,
   Typography,
@@ -13,7 +14,6 @@ import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormLabel } from 'src/components/FormLabel';
 import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';

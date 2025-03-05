@@ -1,9 +1,8 @@
-import { Box, CircleProgress, Typography } from '@linode/ui';
+import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import {
   convertNetworkToUnit,

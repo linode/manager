@@ -1,11 +1,10 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LinkButton } from 'src/components/LinkButton';
