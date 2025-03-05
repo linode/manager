@@ -198,29 +198,33 @@ export const SubnetLinodeRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        {isRebootNeeded && (
-          <InlineMenuAction
-            onClick={() => {
-              handlePowerActionsLinode(linode, 'Reboot');
-            }}
-            actionText="Reboot"
-          />
+        {!isVPCLKEEnterpriseCluster && (
+          <>
+            {isRebootNeeded && (
+              <InlineMenuAction
+                onClick={() => {
+                  handlePowerActionsLinode(linode, 'Reboot');
+                }}
+                actionText="Reboot"
+              />
+            )}
+            {showPowerButton && (
+              <InlineMenuAction
+                onClick={() => {
+                  handlePowerActionsLinode(
+                    linode,
+                    isOffline ? 'Power On' : 'Power Off'
+                  );
+                }}
+                actionText={isOffline ? 'Power On' : 'Power Off'}
+              />
+            )}
+            <InlineMenuAction
+              actionText="Unassign Linode"
+              onClick={() => handleUnassignLinode(linode, subnet)}
+            />
+          </>
         )}
-        {showPowerButton && (
-          <InlineMenuAction
-            onClick={() => {
-              handlePowerActionsLinode(
-                linode,
-                isOffline ? 'Power On' : 'Power Off'
-              );
-            }}
-            actionText={isOffline ? 'Power On' : 'Power Off'}
-          />
-        )}
-        <InlineMenuAction
-          actionText="Unassign Linode"
-          onClick={() => handleUnassignLinode(linode, subnet)}
-        />
       </TableCell>
     </TableRow>
   );
