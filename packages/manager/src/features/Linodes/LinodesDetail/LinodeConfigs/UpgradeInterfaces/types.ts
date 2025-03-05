@@ -19,7 +19,6 @@ export type UpgradeInterfacesDialogState =
 
 export interface BaseDialogState {
   dialogTitle: string;
-  isDryRun: boolean;
   step: 'configSelect' | 'error' | 'progress' | 'prompt' | 'success';
 }
 
@@ -29,20 +28,24 @@ export interface PromptDialogState extends BaseDialogState {
 
 export interface ConfigSelectDialogState extends BaseDialogState {
   configs: Config[];
+  isDryRun: boolean;
   step: 'configSelect';
 }
 
 export interface ProgressDialogState extends BaseDialogState {
+  isDryRun: boolean;
   progress: number;
   step: 'progress';
 }
 
 export interface SuccessDialogState extends BaseDialogState {
+  isDryRun: boolean;
   linodeInterfaces: LinodeInterface[];
   step: 'success';
 }
 
 export interface ErrorDialogState extends BaseDialogState {
   error: APIError[];
+  isDryRun: boolean;
   step: 'error';
 }

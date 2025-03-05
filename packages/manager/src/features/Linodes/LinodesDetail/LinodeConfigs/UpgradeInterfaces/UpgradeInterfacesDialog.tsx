@@ -1,8 +1,8 @@
 import { Box, Button, Dialog, List } from '@linode/ui';
 import React from 'react';
 
-import { ConfigSelectDialogContent } from './ConfigSelectDialogContent';
-import { UpgradePromptDialogContent } from './UpgradePromptDialogContent';
+import { ConfigSelectDialogContent } from './DialogContents/ConfigSelectDialogContent';
+import { UpgradePromptDialogContent } from './DialogContents/UpgradePromptDialogContent';
 
 import type { UpgradeInterfacesDialogState } from './types';
 
@@ -20,7 +20,6 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
     setDialogState,
   ] = React.useState<UpgradeInterfacesDialogState>({
     dialogTitle: 'Upgrade Interfaces',
-    isDryRun: true,
     step: 'prompt',
   });
 

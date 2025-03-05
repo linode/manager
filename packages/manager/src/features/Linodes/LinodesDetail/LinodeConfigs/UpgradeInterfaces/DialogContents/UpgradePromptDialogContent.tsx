@@ -6,7 +6,7 @@ import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import type {
   PromptDialogState,
   UpgradeInterfacesDialogContentProps,
-} from './types';
+} from '../types';
 
 export const UpgradePromptDialogContent = (
   props: UpgradeInterfacesDialogContentProps<PromptDialogState>

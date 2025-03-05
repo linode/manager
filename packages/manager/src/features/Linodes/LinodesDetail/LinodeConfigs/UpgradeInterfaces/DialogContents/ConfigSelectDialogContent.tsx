@@ -1,16 +1,16 @@
-import { Box, Button, Notice, Select, SelectOption, Stack } from '@linode/ui';
+import { Box, Button, Notice, Select, Stack } from '@linode/ui';
 import React from 'react';
 
 import {
   CONFIG_SELECT_ACTUAL_UPGRADE_COPY,
   CONFIG_SELECT_DRY_RUN_COPY,
   UPGRADE_INTERFACES_WARNING,
-} from './constants';
+} from '../constants';
 
 import type {
   ConfigSelectDialogState,
   UpgradeInterfacesDialogContentProps,
-} from './types';
+} from '../types';
 
 export const ConfigSelectDialogContent = (
   props: UpgradeInterfacesDialogContentProps<ConfigSelectDialogState>
@@ -49,7 +49,7 @@ export const ConfigSelectDialogContent = (
         <Button buttonType="secondary" onClick={onClose}>
           Cancel
         </Button>
-        <Button disabled={!selectedConfigId}>
+        <Button disabled={!selectedConfigId} onClick={() => {}}>
           {state.isDryRun ? 'Upgrade Dry Run' : 'Upgrade Interfaces'}
         </Button>
       </Box>
