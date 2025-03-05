@@ -32,6 +32,7 @@ interface LinodeEntityDetailProps {
   id: number;
   isSummaryView?: boolean;
   linode: Linode;
+  setIsUpgradeInterfacesDialogOpen: (setOpen: boolean) => void;
   variant?: TypographyProps['variant'];
 }
 
@@ -40,7 +41,13 @@ export interface Props extends LinodeEntityDetailProps {
 }
 
 export const LinodeEntityDetail = (props: Props) => {
-  const { handlers, isSummaryView, linode, variant } = props;
+  const {
+    handlers,
+    isSummaryView,
+    linode,
+    setIsUpgradeInterfacesDialogOpen,
+    variant,
+  } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -141,6 +148,7 @@ export const LinodeEntityDetail = (props: Props) => {
             numVolumes={numberOfVolumes}
             region={linode.region}
             regionSupportsDiskEncryption={regionSupportsDiskEncryption}
+            setIsUpgradeInterfacesDialogOpen={setIsUpgradeInterfacesDialogOpen}
             vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
           />
         }

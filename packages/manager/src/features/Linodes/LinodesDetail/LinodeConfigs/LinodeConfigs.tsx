@@ -24,7 +24,11 @@ import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 import { LinodeConfigDialog } from './LinodeConfigDialog';
 
-const LinodeConfigs = () => {
+import type { LinodeDetailProps } from '../LinodesDetail';
+
+const LinodeConfigs = (props: LinodeDetailProps) => {
+  const { setIsUpgradeInterfacesDialogOpen } = props;
+
   const theme = useTheme();
 
   const { linodeId } = useParams<{ linodeId: string }>();
@@ -101,6 +105,16 @@ const LinodeConfigs = () => {
           }}
           label={'Configuration Profiles'}
         />
+        {linode?.interface_generation === 'legacy_config' && (
+          <Button
+            buttonType="outlined"
+            disabled={isReadOnly}
+            onClick={() => setIsUpgradeInterfacesDialogOpen(true)}
+            tooltipText="Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading."
+          >
+            Upgrade Interfaces
+          </Button>
+        )}
         <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
           Add Configuration
         </Button>

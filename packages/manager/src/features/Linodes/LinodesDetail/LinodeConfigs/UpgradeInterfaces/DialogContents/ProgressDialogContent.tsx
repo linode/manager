@@ -1,4 +1,4 @@
-import { Stack } from '@linode/ui';
+import { Button, Stack } from '@linode/ui';
 import React from 'react';
 
 import { LinearProgress } from 'src/components/LinearProgress';
@@ -16,6 +16,9 @@ export const ProgressDialogContent = (
   return (
     <Stack gap={2}>
       <LinearProgress value={state.progress} variant="determinate" />
+      <Button loading onClick={() => {}}>
+        Upgrade Interfaces
+      </Button>
     </Stack>
   );
 };

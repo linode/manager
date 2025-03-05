@@ -1,4 +1,4 @@
-import { Box, Typography } from '@linode/ui';
+import { Box, Chip, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
@@ -83,6 +83,7 @@ export interface BodyProps {
   numVolumes: number;
   region: string;
   regionSupportsDiskEncryption: boolean;
+  setIsUpgradeInterfacesDialogOpen: (setOpen: boolean) => void;
   vpcLinodeIsAssignedTo?: VPC;
 }
 
@@ -107,6 +108,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     numVolumes,
     region,
     regionSupportsDiskEncryption,
+    setIsUpgradeInterfacesDialogOpen,
     vpcLinodeIsAssignedTo,
   } = props;
 
@@ -448,7 +450,17 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           {isLinodeInterfacesEnabled && (
             <StyledListItem sx={{ borderRight: 'unset' }}>
               <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
-              {isLinodeInterface ? 'Linode' : 'Configuration Profile'}
+              {isLinodeInterface ? (
+                'Linode'
+              ) : (
+                <>
+                  Configuration Profile{' '}
+                  <Chip
+                    onClick={() => setIsUpgradeInterfacesDialogOpen(true)}
+                    title="Upgrade"
+                  />
+                </>
+              )}
             </StyledListItem>
           )}
         </Grid>
