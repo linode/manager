@@ -250,7 +250,7 @@ describe('LKE landing page', () => {
 
     ui.dialog
       .findByTitle(
-        `Step 1: Upgrade ${cluster.label} to Kubernetes ${newVersion}`
+        `Upgrade Kubernetes version to ${newVersion} on ${cluster.label}?`
       )
       .should('be.visible');
 
@@ -264,9 +264,7 @@ describe('LKE landing page', () => {
 
     cy.wait(['@updateCluster', '@getClusters']);
 
-    ui.dialog
-      .findByTitle('Step 2: Recycle All Cluster Nodes')
-      .should('be.visible');
+    ui.dialog.findByTitle('Upgrade complete').should('be.visible');
 
     ui.button
       .findByTitle('Recycle All Nodes')
@@ -321,7 +319,7 @@ describe('LKE landing page', () => {
 
     ui.dialog
       .findByTitle(
-        `Step 1: Upgrade ${cluster.label} to Kubernetes ${newVersion}`
+        `Upgrade Kubernetes version to ${newVersion} on ${cluster.label}?`
       )
       .should('be.visible');
 
@@ -335,9 +333,7 @@ describe('LKE landing page', () => {
 
     cy.wait(['@updateCluster', '@getClusters']);
 
-    ui.dialog
-      .findByTitle('Step 2: Recycle All Cluster Nodes')
-      .should('be.visible');
+    ui.dialog.findByTitle('Upgrade complete').should('be.visible');
 
     ui.button
       .findByTitle('Recycle All Nodes')

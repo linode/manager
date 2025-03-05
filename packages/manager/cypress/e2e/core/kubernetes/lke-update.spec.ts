@@ -46,6 +46,7 @@ import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing'
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { randomString } from 'support/util/random';
 import { buildArray } from 'support/util/arrays';
+import { DateTime } from 'luxon';
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
@@ -81,7 +82,7 @@ describe('LKE cluster updates', () => {
 
       const haUpgradeWarnings = [
         'All nodes will be deleted and new nodes will be created to replace them.',
-        'Any local storage (such as ’hostPath’ volumes) will be erased.',
+        'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted.',
         'This may take several minutes, as nodes will be replaced on a rolling basis.',
       ];
 
@@ -153,7 +154,7 @@ describe('LKE cluster updates', () => {
       const upgradePrompt = 'A new version of Kubernetes is available (1.26).';
 
       const upgradeNotes = [
-        'Once the upgrade is complete you will need to recycle all nodes in your cluster',
+        'This upgrades the control plane on your cluster and ensures that any new worker nodes are created using the newer Kubernetes version.',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
@@ -179,7 +180,7 @@ describe('LKE cluster updates', () => {
 
       ui.dialog
         .findByTitle(
-          `Step 1: Upgrade ${mockCluster.label} to Kubernetes ${newVersion}`
+          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
         )
         .should('be.visible')
         .within(() => {
@@ -202,18 +203,21 @@ describe('LKE cluster updates', () => {
 
       mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
 
-      const stepTwoDialogTitle = 'Step 2: Recycle All Cluster Nodes';
+      const stepTwoDialogTitle = 'Upgrade complete';
 
       ui.dialog
         .findByTitle(stepTwoDialogTitle)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Kubernetes version has been updated successfully.', {
-            exact: false,
-          }).should('be.visible');
+          cy.findByText(
+            'The cluster’s Kubernetes version has been updated successfully',
+            {
+              exact: false,
+            }
+          ).should('be.visible');
 
           cy.findByText(
-            'For the changes to take full effect you must recycle the nodes in your cluster.',
+            'To upgrade your existing worker nodes, you can recycle all nodes (which may have a performance impact) or perform other upgrade methods.',
             { exact: false }
           ).should('be.visible');
 
@@ -273,7 +277,7 @@ describe('LKE cluster updates', () => {
         'A new version of Kubernetes is available (1.31.1+lke2).';
 
       const upgradeNotes = [
-        'Once the upgrade is complete you will need to recycle all nodes in your cluster',
+        'This upgrades the control plane on your cluster and ensures that any new worker nodes are created using the newer Kubernetes version.',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
@@ -307,7 +311,7 @@ describe('LKE cluster updates', () => {
 
       ui.dialog
         .findByTitle(
-          `Step 1: Upgrade ${mockCluster.label} to Kubernetes ${newVersion}`
+          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
         )
         .should('be.visible')
         .within(() => {
@@ -330,18 +334,21 @@ describe('LKE cluster updates', () => {
 
       mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
 
-      const stepTwoDialogTitle = 'Step 2: Recycle All Cluster Nodes';
+      const stepTwoDialogTitle = 'Upgrade complete';
 
       ui.dialog
         .findByTitle(stepTwoDialogTitle)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Kubernetes version has been updated successfully.', {
-            exact: false,
-          }).should('be.visible');
+          cy.findByText(
+            'The cluster’s Kubernetes version has been updated successfully',
+            {
+              exact: false,
+            }
+          ).should('be.visible');
 
           cy.findByText(
-            'For the changes to take full effect you must recycle the nodes in your cluster.',
+            'To upgrade your existing worker nodes, you can recycle all nodes (which may have a performance impact) or perform other upgrade methods.',
             { exact: false }
           ).should('be.visible');
 
@@ -390,10 +397,8 @@ describe('LKE cluster updates', () => {
       });
 
       const recycleWarningSubstrings = [
-        'will be deleted',
-        'will be created',
-        'local storage (such as ’hostPath’ volumes) will be erased',
-        'may take several minutes',
+        'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted',
+        'using local storage for important data is not common or recommended',
       ];
 
       mockGetCluster(mockCluster).as('getCluster');
@@ -418,6 +423,9 @@ describe('LKE cluster updates', () => {
         .findByTitle(`Recycle ${mockKubeLinode.id}?`)
         .should('be.visible')
         .within(() => {
+          cy.findByText('Delete and recreate this node.', {
+            exact: false,
+          }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
             cy.findByText(warning, { exact: false }).should('be.visible');
           });
@@ -445,6 +453,13 @@ describe('LKE cluster updates', () => {
         .findByTitle('Recycle node pool?')
         .should('be.visible')
         .within(() => {
+          cy.findByText('Delete and recreate all nodes in this node pool.', {
+            exact: false,
+          }).should('be.visible');
+          recycleWarningSubstrings.forEach((warning: string) => {
+            cy.findByText(warning, { exact: false }).should('be.visible');
+          });
+
           ui.button
             .findByTitle('Recycle Pool Nodes')
             .should('be.visible')
@@ -468,6 +483,9 @@ describe('LKE cluster updates', () => {
         .findByTitle('Recycle all nodes in cluster?')
         .should('be.visible')
         .within(() => {
+          cy.findByText('Delete and recreate all nodes in this cluster.', {
+            exact: false,
+          }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
             cy.findByText(warning, { exact: false }).should('be.visible');
           });
@@ -541,30 +559,24 @@ describe('LKE cluster updates', () => {
         .findByTitle('Autoscale Pool')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Autoscaler').should('be.visible').click();
+          cy.findByText('Autoscale').should('be.visible').click();
 
-          cy.findByLabelText('Min')
-            .should('be.visible')
-            .click()
-            .clear()
-            .type(`${autoscaleMin}`);
+          cy.findByLabelText('Min').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type(`${autoscaleMin}`);
 
           cy.findByText(minWarning).should('be.visible');
 
-          cy.findByLabelText('Max')
-            .should('be.visible')
-            .click()
-            .clear()
-            .type('101');
+          cy.findByLabelText('Max').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type('101');
 
           cy.findByText(minWarning).should('not.exist');
           cy.findByText(maxWarning).should('be.visible');
 
-          cy.findByLabelText('Max')
-            .should('be.visible')
-            .click()
-            .clear()
-            .type(`${autoscaleMax}`);
+          cy.findByLabelText('Max').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type(`${autoscaleMax}`);
 
           cy.findByText(minWarning).should('not.exist');
           cy.findByText(maxWarning).should('not.exist');
@@ -594,7 +606,7 @@ describe('LKE cluster updates', () => {
         .findByTitle('Autoscale Pool')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Autoscaler').should('be.visible').click();
+          cy.findByText('Autoscale').should('be.visible').click();
 
           ui.button
             .findByTitle('Save Changes')
@@ -705,19 +717,22 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.disabled');
 
-          cy.findByText('Resized pool: $12/month (1 node at $12/month)').should(
-            'be.visible'
-          );
+          cy.findByText(
+            'Current price: $12/month (1 node at $12/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $12/month (1 node at $12/month each)'
+          ).should('be.visible');
 
           cy.findByLabelText('Add 1')
             .should('be.visible')
             .should('be.enabled')
-            .click()
             .click();
+          cy.focused().click();
 
           cy.findByLabelText('Edit Quantity').should('have.value', '3');
           cy.findByText(
-            'Resized pool: $36/month (3 nodes at $12/month)'
+            'Resized price: $36/month (3 nodes at $12/month each)'
           ).should('be.visible');
 
           ui.button
@@ -759,8 +774,8 @@ describe('LKE cluster updates', () => {
           cy.findByLabelText('Subtract 1')
             .should('be.visible')
             .should('be.enabled')
-            .click()
             .click();
+          cy.focused().click();
 
           cy.findByText(decreaseSizeWarning).should('be.visible');
           cy.findByText(nodeSizeRecommendation).should('be.visible');
@@ -957,8 +972,8 @@ describe('LKE cluster updates', () => {
         cy.findByTestId('textfield-input')
           .should('be.visible')
           .should('have.value', mockCluster.label)
-          .clear()
-          .type(`${mockNewCluster.label}{enter}`);
+          .clear();
+        cy.focused().type(`${mockNewCluster.label}{enter}`);
       });
 
       cy.wait('@updateCluster');
@@ -995,8 +1010,8 @@ describe('LKE cluster updates', () => {
         cy.findByTestId('textfield-input')
           .should('be.visible')
           .should('have.value', mockCluster.label)
-          .clear()
-          .type(`${mockErrorCluster.label}{enter}`);
+          .clear();
+        cy.focused().type(`${mockErrorCluster.label}{enter}`);
       });
 
       // Error message shows when API request fails.
@@ -1369,7 +1384,8 @@ describe('LKE cluster updates', () => {
           // Confirm labels with simple keys and DNS subdomain keys can be added.
           [mockNewSimpleLabel, mockNewDNSLabel].forEach((newLabel, index) => {
             // Confirm form adds a valid new label.
-            cy.findByLabelText('Label').click().type(newLabel);
+            cy.findByLabelText('Label').click();
+            cy.focused().type(newLabel);
 
             ui.button.findByTitle('Add').click();
 
@@ -1404,9 +1420,8 @@ describe('LKE cluster updates', () => {
           // Confirm taints with simple keys and DNS subdomain keys can be added.
           [mockNewTaint, mockNewDNSTaint].forEach((newTaint, index) => {
             // Confirm form adds a valid new taint.
-            cy.findByLabelText('Taint')
-              .click()
-              .type(`${newTaint.key}: ${newTaint.value}`);
+            cy.findByLabelText('Taint').click();
+            cy.focused().type(`${newTaint.key}: ${newTaint.value}`);
 
             ui.autocomplete.findByLabel('Effect').click();
 
@@ -1529,7 +1544,9 @@ describe('LKE cluster updates', () => {
           );
 
           invalidLabels.forEach((invalidLabel) => {
-            cy.findByLabelText('Label').click().clear().type(invalidLabel);
+            cy.findByLabelText('Label').click();
+            cy.focused().clear();
+            cy.focused().type(invalidLabel);
 
             // Try to submit with invalid label.
             ui.button.findByTitle('Add').click();
@@ -1541,10 +1558,9 @@ describe('LKE cluster updates', () => {
           });
 
           // Submit a valid label to enable the 'Save Changes' button.
-          cy.findByLabelText('Label')
-            .click()
-            .clear()
-            .type('mockKey: mockValue');
+          cy.findByLabelText('Label').click();
+          cy.focused().clear();
+          cy.focused().type('mockKey: mockValue');
 
           ui.button.findByTitle('Add').click();
 
@@ -1557,7 +1573,9 @@ describe('LKE cluster updates', () => {
           cy.findByText('Key is required.').should('be.visible');
 
           invalidTaintKeys.forEach((invalidTaintKey, index) => {
-            cy.findByLabelText('Taint').click().clear().type(invalidTaintKey);
+            cy.findByLabelText('Taint').click();
+            cy.focused().clear();
+            cy.focused().type(invalidTaintKey);
 
             // Try to submit taint with invalid key.
             ui.button.findByTitle('Add').click();
@@ -1574,7 +1592,9 @@ describe('LKE cluster updates', () => {
           });
 
           invalidTaintValues.forEach((invalidTaintValue, index) => {
-            cy.findByLabelText('Taint').click().clear().type(invalidTaintValue);
+            cy.findByLabelText('Taint').click();
+            cy.focused().clear();
+            cy.focused().type(invalidTaintValue);
 
             // Try to submit taint with invalid value.
             ui.button.findByTitle('Add').click();
@@ -1779,6 +1799,8 @@ describe('LKE cluster updates', () => {
   it('filters the node tables based on selected status filter', () => {
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
+      created: DateTime.local().toISO(),
+      tier: 'enterprise',
     });
     const mockNodePools = [
       nodePoolFactory.build({
@@ -1789,6 +1811,7 @@ describe('LKE cluster updates', () => {
         ],
       }),
       nodePoolFactory.build({
+        count: 2,
         nodes: kubeLinodeFactory.buildList(2),
       }),
     ];
@@ -1823,6 +1846,9 @@ describe('LKE cluster updates', () => {
     cy.wait(['@getCluster', '@getNodePools', '@getLinodes']);
 
     // Filter is initially set to Show All nodes
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 4);
     });
@@ -1835,6 +1861,9 @@ describe('LKE cluster updates', () => {
     ui.autocompletePopper.findByTitle('Running').should('be.visible').click();
 
     // Only Running nodes should be displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 2);
     });
@@ -1847,6 +1876,9 @@ describe('LKE cluster updates', () => {
     ui.autocompletePopper.findByTitle('Offline').should('be.visible').click();
 
     // Only Offline nodes should be displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 1);
     });
@@ -1862,6 +1894,9 @@ describe('LKE cluster updates', () => {
       .click();
 
     // Only Provisioning nodes should be displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 1);
     });
@@ -1874,6 +1909,9 @@ describe('LKE cluster updates', () => {
     ui.autocompletePopper.findByTitle('Show All').should('be.visible').click();
 
     // All nodes are displayed
+    cy.findByText(
+      'Nodes will appear once cluster provisioning is complete.'
+    ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 4);
     });
@@ -1985,25 +2023,25 @@ describe('LKE cluster updates', () => {
             .should('be.disabled');
 
           cy.findByText(
-            'Current pool: $14.40/month (1 node at $14.40/month)'
+            'Current price: $14.40/month (1 node at $14.40/month each)'
           ).should('be.visible');
           cy.findByText(
-            'Resized pool: $14.40/month (1 node at $14.40/month)'
+            'Resized price: $14.40/month (1 node at $14.40/month each)'
           ).should('be.visible');
 
           cy.findByLabelText('Add 1')
             .should('be.visible')
             .should('be.enabled')
-            .click()
-            .click()
             .click();
+          cy.focused().click();
+          cy.focused().click();
 
           cy.findByLabelText('Edit Quantity').should('have.value', '4');
           cy.findByText(
-            'Current pool: $14.40/month (1 node at $14.40/month)'
+            'Current price: $14.40/month (1 node at $14.40/month each)'
           ).should('be.visible');
           cy.findByText(
-            'Resized pool: $57.60/month (4 nodes at $14.40/month)'
+            'Resized price: $57.60/month (4 nodes at $14.40/month each)'
           ).should('be.visible');
 
           cy.findByLabelText('Subtract 1')
@@ -2013,7 +2051,7 @@ describe('LKE cluster updates', () => {
 
           cy.findByLabelText('Edit Quantity').should('have.value', '3');
           cy.findByText(
-            'Resized pool: $43.20/month (3 nodes at $14.40/month)'
+            'Resized price: $43.20/month (3 nodes at $14.40/month each)'
           ).should('be.visible');
 
           ui.button
@@ -2110,7 +2148,8 @@ describe('LKE cluster updates', () => {
               // Assert that DC-specific prices are displayed the plan table, then add a node pool with 2 linodes.
               cy.findByText('$14.40').should('be.visible');
               cy.findByText('$0.021').should('be.visible');
-              cy.findByLabelText('Add 1').should('be.visible').click().click();
+              cy.findByLabelText('Add 1').should('be.visible').click();
+              cy.focused().click();
             });
 
           // Assert that DC-specific prices are displayed as helper text.
@@ -2234,27 +2273,27 @@ describe('LKE cluster updates', () => {
             .should('be.visible')
             .should('be.disabled');
 
-          cy.findByText('Current pool: $0/month (1 node at $0/month)').should(
-            'be.visible'
-          );
-          cy.findByText('Resized pool: $0/month (1 node at $0/month)').should(
-            'be.visible'
-          );
+          cy.findByText(
+            'Current price: $0/month (1 node at $0/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $0/month (1 node at $0/month each)'
+          ).should('be.visible');
 
           cy.findByLabelText('Add 1')
             .should('be.visible')
             .should('be.enabled')
-            .click()
-            .click()
             .click();
+          cy.focused().click();
+          cy.focused().click();
 
           cy.findByLabelText('Edit Quantity').should('have.value', '4');
-          cy.findByText('Current pool: $0/month (1 node at $0/month)').should(
-            'be.visible'
-          );
-          cy.findByText('Resized pool: $0/month (4 nodes at $0/month)').should(
-            'be.visible'
-          );
+          cy.findByText(
+            'Current price: $0/month (1 node at $0/month each)'
+          ).should('be.visible');
+          cy.findByText(
+            'Resized price: $0/month (4 nodes at $0/month each)'
+          ).should('be.visible');
 
           ui.button
             .findByTitle('Save Changes')
@@ -2349,7 +2388,8 @@ describe('LKE cluster updates', () => {
             .within(() => {
               // Assert that $0 prices are displayed the plan table, then add a node pool with 2 linodes.
               cy.findAllByText('$0').should('have.length', 2);
-              cy.findByLabelText('Add 1').should('be.visible').click().click();
+              cy.findByLabelText('Add 1').should('be.visible').click();
+              cy.focused().click();
             });
 
           // Assert that $0 prices are displayed as helper text.
@@ -2479,14 +2519,13 @@ describe('LKE ACL updates', () => {
             'have.value',
             mockACLOptions['revision-id']
           );
-          cy.findByLabelText('Revision ID').clear().type(mockRevisionId);
+          cy.findByLabelText('Revision ID').clear();
+          cy.focused().type(mockRevisionId);
 
           // Addresses section: confirm current IPv4 value and enter new IP
-          cy.findByDisplayValue('10.0.3.0/24')
-            .should('be.visible')
-            .click()
-            .clear()
-            .type('10.0.0.0/24');
+          cy.findByDisplayValue('10.0.3.0/24').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type('10.0.0.0/24');
 
           // submit
           ui.button
@@ -2559,16 +2598,16 @@ describe('LKE ACL updates', () => {
           cy.findByDisplayValue('10.0.0.0/24').should('be.visible');
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click()
-            .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+            .click();
+          cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
           cy.findByText('Add IPv6 Address')
             .should('be.visible')
             .should('be.enabled')
             .click();
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-1')
             .should('be.visible')
-            .click()
-            .type('f4a2:b849:4a24:d0d9:15f0:704b:f943:718f');
+            .click();
+          cy.focused().type('f4a2:b849:4a24:d0d9:15f0:704b:f943:718f');
 
           // submit
           ui.button
@@ -2686,8 +2725,8 @@ describe('LKE ACL updates', () => {
           // Addresses Section: update IPv4
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click()
-            .type('10.0.0.0/24');
+            .click();
+          cy.focused().type('10.0.0.0/24');
           cy.findByText('Add IPv4 Address')
             .should('be.visible')
             .should('be.enabled')
@@ -2695,8 +2734,8 @@ describe('LKE ACL updates', () => {
           // update IPv6
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click()
-            .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+            .click();
+          cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
           cy.findByText('Add IPv6 Address')
             .should('be.visible')
             .should('be.enabled')
@@ -2811,13 +2850,13 @@ describe('LKE ACL updates', () => {
           cy.findByText('Addresses').should('be.visible');
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click()
-            .type('10.0.0.0/24');
+            .click();
+          cy.focused().type('10.0.0.0/24');
 
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click()
-            .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+            .click();
+          cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
 
           // submit
           ui.button
@@ -2877,17 +2916,17 @@ describe('LKE ACL updates', () => {
           // Confirm ACL IP validation works as expected for IPv4
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click()
-            .type('invalid ip');
+            .click();
+          cy.focused().type('invalid ip');
           // click out of textbox and confirm error is visible
           cy.contains('Addresses').should('be.visible').click();
           cy.contains('Must be a valid IPv4 address.').should('be.visible');
           // enter valid IP
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click()
-            .clear()
-            .type('10.0.0.0/24');
+            .click();
+          cy.focused().clear();
+          cy.focused().type('10.0.0.0/24');
           // Click out of textbox and confirm error is gone
           cy.contains('Addresses').should('be.visible').click();
           cy.contains('Must be a valid IPv4 address.').should('not.exist');
@@ -2895,17 +2934,17 @@ describe('LKE ACL updates', () => {
           // Confirm ACL IP validation works as expected for IPv6
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click()
-            .type('invalid ip');
+            .click();
+          cy.focused().type('invalid ip');
           // click out of textbox and confirm error is visible
           cy.findByText('Addresses').should('be.visible').click();
           cy.contains('Must be a valid IPv6 address.').should('be.visible');
           // enter valid IP
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click()
-            .clear()
-            .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+            .click();
+          cy.focused().clear();
+          cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
           // Click out of textbox and confirm error is gone
           cy.findByText('Addresses').should('be.visible').click();
           cy.contains('Must be a valid IPv6 address.').should('not.exist');
