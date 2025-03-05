@@ -2,7 +2,6 @@ import { CircleProgress } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-// import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -71,10 +70,6 @@ const Panel = (props: NodePoolPanelProps) => {
     selectedTier,
     types,
   } = props;
-
-  // const {
-  //   isDiskEncryptionFeatureEnabled,
-  // } = useIsDiskEncryptionFeatureEnabled();
 
   const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
 
