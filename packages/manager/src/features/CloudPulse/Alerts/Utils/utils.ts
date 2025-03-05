@@ -1,6 +1,9 @@
+import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
+
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type {
   Alert,
+  AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
   EditAlertPayloadWithService,
@@ -27,6 +30,29 @@ interface AlertChipBorderProps {
    * Indicates Whether to merge the chips into single or keep it individually
    */
   mergeChips: boolean | undefined;
+}
+
+export interface ProcessedCriteria {
+  /**
+   * Label for the metric criteria
+   */
+  label: string;
+  /**
+   * Aggregation type for the metric criteria
+   */
+  metricAggregationType: string;
+  /**
+   * Comparison operator for the metric criteria
+   */
+  metricOperator: string;
+  /**
+   * Threshold value for the metric criteria
+   */
+  threshold: number;
+  /**
+   * Unit for the threshold value
+   */
+  unit: string;
 }
 
 /**
@@ -203,4 +229,25 @@ export const convertAlertDefinitionValues = (
     tags,
     trigger_conditions,
   };
+};
+
+/**
+ *
+ * @param criterias list of metric criterias to be processed
+ * @returns list of metric criterias in processed form
+ */
+export const processMetricCriteria = (
+  criterias: AlertDefinitionMetricCriteria[]
+): ProcessedCriteria[] => {
+  return criterias.map(
+    ({ aggregate_function, label, operator, threshold, unit }) => {
+      return {
+        label,
+        metricAggregationType: aggregationTypeMap[aggregate_function],
+        metricOperator: metricOperatorTypeMap[operator],
+        threshold,
+        unit,
+      };
+    }
+  );
 };
