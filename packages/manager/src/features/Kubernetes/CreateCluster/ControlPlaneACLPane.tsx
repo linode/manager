@@ -113,10 +113,10 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
 };
 
 export const StyledACLToggle = styled(Toggle, {
-  label: 'StyledToggle',
+  label: 'StyledACLToggle',
 })(({ theme }) => ({
   // Keep the checked, disabled toggle a faded blue for LKE Enterprise.
-  '& .Mui-disabled+.MuiSwitch-track': {
+  '& .MuiSwitch-switchBase.Mui-disabled+.MuiSwitch-track': {
     backgroundColor: theme.tokens.color.Brand[50],
     borderColor: theme.tokens.color.Brand[50],
   },
