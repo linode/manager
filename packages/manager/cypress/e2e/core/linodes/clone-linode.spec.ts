@@ -41,6 +41,7 @@ import {
 } from 'support/constants/linodes';
 import type { Linode } from '@linode/api-v4';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 /**
  * Returns the Cloud Manager URL to clone a given Linode.
@@ -59,6 +60,11 @@ authenticate();
 describe('clone linode', () => {
   before(() => {
     cleanUp('linodes');
+  });
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
   });
 
   /*
@@ -215,11 +221,10 @@ describe('clone linode', () => {
       });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('VLAN Attached').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('VLAN Attached').should('be.visible');
+    });
 
     ui.button
       .findByTitle('Create Linode')

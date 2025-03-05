@@ -7,8 +7,7 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
-import type { RoutePaths } from '@tanstack/react-router';
-import type { MigrationRouteTree } from 'src/routes';
+import type { LinkProps, RegisteredRouter } from '@tanstack/react-router';
 import type { OrderSetWithPrefix } from 'src/types/ManagerPreferences';
 
 export type Order = 'asc' | 'desc';
@@ -32,7 +31,7 @@ export interface UseOrderV2Props<T> {
       order: Order;
       orderBy: string;
     };
-    from: RoutePaths<MigrationRouteTree>;
+    from: LinkProps['to'];
   };
   /**
    * preference key to save to user preferences
@@ -112,7 +111,7 @@ export const useOrderV2 = <T>({
           orderBy: newOrderBy,
         };
 
-    navigate({
+    navigate<RegisteredRouter, string, string>({
       search: (prev) => ({
         ...prev,
         ...searchParams,

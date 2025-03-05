@@ -13,7 +13,6 @@ const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),
   useGetLocationsForQuotaService: vi.fn().mockReturnValue({}),
   useGetRegionsQuery: vi.fn().mockReturnValue({}),
-  useQuotasQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/regions/regions', () => ({
@@ -27,10 +26,6 @@ vi.mock('src/hooks/useFlags', () => {
     useFlags: queryMocks.useFlags,
   };
 });
-
-vi.mock('src/queries/quotas/quotas', () => ({
-  useQuotasQuery: queryMocks.useQuotasQuery,
-}));
 
 vi.mock('./utils', () => ({
   getQuotasFilters: queryMocks.getQuotasFilters,
@@ -51,11 +46,6 @@ describe('Quotas', () => {
         regionFactory.build({ id: 'us-east', label: 'Newark, NJ' }),
       ],
       isFetching: false,
-    });
-    queryMocks.useQuotasQuery.mockReturnValue({
-      data: { data: [] },
-      isFetching: false,
-      refetch: vi.fn(),
     });
   });
 
@@ -124,12 +114,6 @@ describe('Quotas', () => {
   });
 
   it('shows loading state when fetching data', () => {
-    queryMocks.useQuotasQuery.mockReturnValue({
-      data: null,
-      isFetching: true,
-      refetch: vi.fn(),
-    });
-
     queryMocks.useGetLocationsForQuotaService.mockReturnValue({
       isFetchingRegions: true,
       regions: [],

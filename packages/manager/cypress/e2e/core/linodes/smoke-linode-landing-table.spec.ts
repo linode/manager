@@ -8,7 +8,10 @@ import { routes } from 'support/ui/constants';
 import { apiMatcher } from 'support/util/intercepts';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { authenticate } from 'support/api/authentication';
-import { mockGetLinodes } from 'support/intercepts/linodes';
+import {
+  mockGetLinodes,
+  mockGetLinodeFirewalls,
+} from 'support/intercepts/linodes';
 import { userPreferencesFactory, profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
@@ -22,6 +25,7 @@ import {
 import { randomLabel } from 'support/util/random';
 import * as commonLocators from 'support/ui/locators/common-locators';
 import * as linodeLocators from 'support/ui/locators/linode-locators';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 const mockLinodes = new Array(5).fill(null).map(
   (_item: null, index: number): Linode => {
@@ -91,7 +95,8 @@ describe('linode landing checks', () => {
     cy.findByTestId('menu-item-Object Storage').should('be.visible');
     cy.findByTestId('menu-item-Longview').should('be.visible');
     cy.findByTestId('menu-item-Marketplace').should('be.visible');
-    cy.findByTestId('menu-item-Account').scrollIntoView().should('be.visible');
+    cy.findByTestId('menu-item-Account').scrollIntoView();
+    cy.findByTestId('menu-item-Account').should('be.visible');
     cy.findByTestId('menu-item-Help & Support').should('be.visible');
   });
 
@@ -392,6 +397,10 @@ describe('linode landing checks', () => {
   });
 
   it('checks summary view for linode table', () => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
+
     const mockPreferencesListView = userPreferencesFactory.build();
 
     const mockPreferencesSummaryView = {
@@ -404,6 +413,10 @@ describe('linode landing checks', () => {
     mockUpdateUserPreferences(mockPreferencesSummaryView).as(
       'updateUserPreferences'
     );
+
+    mockLinodes.forEach((linode) => {
+      mockGetLinodeFirewalls(linode.id, []);
+    });
 
     cy.visitWithLogin('/linodes');
     cy.wait(['@getLinodes', '@getUserPreferences']);

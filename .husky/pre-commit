@@ -1,1 +1,1 @@
-pnpm run -r  --workspace-concurrency=1 --if-present precommit
+pnpm lint-staged

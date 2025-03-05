@@ -1,27 +1,21 @@
-import { getQuotaUsage, quotaTypes } from '@linode/api-v4';
-import {
-  CircleProgress,
-  Divider,
-  Paper,
-  Select,
-  Stack,
-  Typography,
-} from '@linode/ui';
-import { useQueries } from '@tanstack/react-query';
+import { quotaTypes } from '@linode/api-v4';
+import { Divider, Paper, Select, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useQuotasQuery } from 'src/queries/quotas/quotas';
 
-import { getQuotasFilters, useGetLocationsForQuotaService } from './utils';
+import { QuotasTable } from './QuotasTable';
+import { useGetLocationsForQuotaService } from './utils';
 
 import type { Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Theme } from '@mui/material';
 
 export const Quotas = () => {
+  const history = useHistory();
   const [selectedService, setSelectedService] = React.useState<
     SelectOption<QuotaType>
   >({
@@ -32,56 +26,17 @@ export const Quotas = () => {
     Quota['region_applied']
   > | null>(null);
   const locationData = useGetLocationsForQuotaService(selectedService.value);
-  const filters = getQuotasFilters({
-    location: selectedLocation,
-    service: selectedService,
-  });
 
-  const { data: quotas, isFetching: isFetchingQuotas } = useQuotasQuery(
-    selectedService.value,
-    {},
-    filters,
-    Boolean(selectedLocation?.value)
-  );
-
-  // Build Service options
   const serviceOptions = Object.entries(quotaTypes).map(([key, value]) => ({
     label: value,
     value: key as QuotaType,
   }));
 
-  // Destructure Locations for both the regions and s3 endpoints controls
   const { regions, s3Endpoints } = locationData;
-
-  // Fetch the usage for each quota, depending on the service
-  const quotaIds = quotas?.data.map((quota) => quota.quota_id) ?? [];
-  const quotaUsageQueries = useQueries({
-    queries: quotaIds.map((quotaId) => ({
-      enabled: selectedService && Boolean(selectedLocation) && Boolean(quotas),
-      queryFn: () => getQuotaUsage(selectedService.value, quotaId),
-      queryKey: ['quota-usage', selectedService.value, quotaId],
-    })),
-  });
-
-  // Combine the quotas with their usage
-  // This may be different once we build the table to display the data
-  const quotasWithUsage = quotas?.data.map((quota, index) => ({
-    ...quota,
-    usage: quotaUsageQueries?.[index]?.data,
-  }));
-
-  // Loading logic
-  // - Locations
   const isFetchingLocations =
     'isFetchingS3Endpoints' in locationData
       ? locationData.isFetchingS3Endpoints
       : locationData.isFetchingRegions;
-  // - Quotas
-  const isLoadingQuotaUsage = quotaUsageQueries.some(
-    (query) => query.isLoading
-  );
-  const isLoadingQuotasTable =
-    isFetchingQuotas || isLoadingQuotaUsage || !quotasWithUsage;
 
   // Handlers
   const onSelectServiceChange = (
@@ -90,6 +45,8 @@ export const Quotas = () => {
   ) => {
     setSelectedService(value);
     setSelectedLocation(null);
+    // remove search params
+    history.push('/account/quotas');
   };
 
   return (
@@ -101,7 +58,7 @@ export const Quotas = () => {
         })}
         variant="outlined"
       >
-        <Stack divider={<Divider spacingBottom={20} spacingTop={40} />}>
+        <Stack>
           <Stack spacing={1}>
             <Select
               label="Select a Service"
@@ -117,6 +74,7 @@ export const Quotas = () => {
                     label: value?.label,
                     value: value?.value,
                   });
+                  history.push('/account/quotas');
                 }}
                 options={
                   s3Endpoints?.map((location) => ({
@@ -142,6 +100,7 @@ export const Quotas = () => {
                     label: region.label,
                     value: region.id,
                   });
+                  history.push('/account/quotas');
                 }}
                 placeholder={
                   isFetchingLocations
@@ -159,35 +118,35 @@ export const Quotas = () => {
               />
             )}
           </Stack>
-          <Stack direction="row" justifyContent="space-between">
+          <Divider spacingBottom={40} spacingTop={40} />
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            marginBottom={2}
+          >
             <Typography variant="h3">Quotas</Typography>
-            <Stack alignItems="center" direction="row" spacing={3}>
+            <Stack
+              sx={(theme) => ({
+                position: 'relative',
+                top: `-${theme.spacing(2)}`,
+              })}
+              alignItems="center"
+              direction="row"
+              spacing={3}
+            >
               {/* TODO LIMITS_M1: update once link is available */}
               <DocsLink href="#" label="Learn More About Quotas" />
             </Stack>
           </Stack>
-          <Stack direction="row" spacing={2}>
-            {selectedLocation ? (
-              isLoadingQuotasTable ? (
-                <CircleProgress />
-              ) : (
-                <pre
-                  style={{
-                    backgroundColor: '#f5f5f5',
-                    borderRadius: '8px',
-                    overflow: 'auto',
-                    padding: '1rem',
-                    width: '100%',
-                  }}
-                >
-                  {JSON.stringify(quotasWithUsage, null, 2)}
-                </pre>
-              )
-            ) : (
-              <Typography>
-                Select a service and region to view quotas
-              </Typography>
-            )}
+          <Typography>
+            This table shows quotas and usage. If you need to increase a quota,
+            select <strong>Request an Increase</strong> from the Actions menu.
+          </Typography>
+          <Stack direction="column" spacing={2}>
+            <QuotasTable
+              selectedLocation={selectedLocation}
+              selectedService={selectedService}
+            />
           </Stack>
         </Stack>
       </Paper>

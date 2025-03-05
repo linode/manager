@@ -94,20 +94,21 @@ export const AddChannelListing = React.memo((props: AddChannelListingProps) => {
             overflow: 'auto',
             padding: theme.spacing(2),
           })}
+          data-qa-notification={`notification-channel-${id}`}
           data-testid={`notification-channel-${id}`}
           key={id}
         >
           <Stack direction="row" justifyContent="space-between">
-            <Typography marginBottom={2} variant="h3">
+            <Typography data-qa-channel marginBottom={2} variant="h3">
               {capitalize(notification?.label ?? 'Unnamed Channel')}
             </Typography>
             <ClearIconButton handleClick={() => handleRemove(id)} />
           </Stack>
           <Stack alignItems="baseline" direction="row">
-            <Typography variant="h3" width={100}>
+            <Typography data-qa-type variant="h3" width={100}>
               Type:
             </Typography>
-            <Typography variant="subtitle2">
+            <Typography data-qa-channel-type variant="subtitle2">
               {
                 channelTypeOptions.find(
                   (option) => option.value === notification?.channel_type
@@ -116,10 +117,10 @@ export const AddChannelListing = React.memo((props: AddChannelListingProps) => {
             </Typography>
           </Stack>
           <Stack alignItems="baseline" direction="row">
-            <Typography variant="h3" width={100}>
+            <Typography data-qa-to variant="h3" width={100}>
               To:
             </Typography>
-            <Typography variant="subtitle2">
+            <Typography data-qa-channel-details variant="subtitle2">
               {notification && <RenderChannelDetails template={notification} />}
             </Typography>
           </Stack>

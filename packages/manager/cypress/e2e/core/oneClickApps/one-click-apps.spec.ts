@@ -85,11 +85,10 @@ describe('OneClick Apps (OCA)', () => {
         cy.findAllByLabelText(
           `Info for "${getMarketplaceAppLabel(candidateStackScript.label)}"`
         )
+          .as('qaInfoFor')
           .first()
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+          .scrollIntoView();
+        cy.get('@qaInfoFor').should('be.visible').should('be.enabled').click();
       });
 
       ui.drawer
@@ -187,20 +186,18 @@ describe('OneClick Apps (OCA)', () => {
       "The username for the Linode's non-root admin/SSH user(must be lowercase) (required)"
     )
       .should('be.visible')
-      .click()
-      .type(firstName);
+      .click();
+    cy.focused().type(firstName);
 
     cy.findByLabelText(
       "The password for the Linode's non-root admin/SSH user (required)"
     )
       .should('be.visible')
-      .click()
-      .type(password);
+      .click();
+    cy.focused().type(password);
 
-    cy.findByLabelText('World Name (required)')
-      .should('be.visible')
-      .click()
-      .type(levelName);
+    cy.findByLabelText('World Name (required)').should('be.visible').click();
+    cy.focused().type(levelName);
 
     // Check each field should persist when moving onto another field
     cy.findByLabelText(
@@ -214,12 +211,12 @@ describe('OneClick Apps (OCA)', () => {
     cy.findByLabelText('World Name (required)').should('have.value', levelName);
 
     // Choose an image
-    cy.findByPlaceholderText('Choose an image')
-      .click()
-      .type('{downArrow}{enter}');
+    cy.findByPlaceholderText('Choose an image').click();
+    cy.focused().type('{downArrow}{enter}');
 
     // Choose a region
-    ui.regionSelect.find().click().type(`${region.id}{enter}`);
+    ui.regionSelect.find().click();
+    cy.focused().type(`${region.id}{enter}`);
 
     // Choose a Linode plan
     cy.get('[data-qa-plan-row="Dedicated 8 GB"]')
@@ -229,10 +226,8 @@ describe('OneClick Apps (OCA)', () => {
       });
 
     // Enter a label.
-    cy.findByText('Linode Label')
-      .should('be.visible')
-      .click()
-      .type(linodeLabel);
+    cy.findByText('Linode Label').should('be.visible').click();
+    cy.focused().type(linodeLabel);
 
     // Choose a Root Password
     cy.get('[id="root-password"]').type(rootPassword);
@@ -282,8 +277,10 @@ describe('OneClick Apps (OCA)', () => {
             cy.findAllByLabelText(
               `Info for "${getMarketplaceAppLabel(candidateStackScript.label)}"`
             )
+              .as('qaInfoFor')
               .first()
-              .scrollIntoView()
+              .scrollIntoView();
+            cy.get('@qaInfoFor')
               .should('be.visible')
               .should('be.enabled')
               .click();

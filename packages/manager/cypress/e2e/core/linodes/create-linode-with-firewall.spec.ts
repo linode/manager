@@ -17,8 +17,14 @@ import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('Create Linode with Firewall', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
+  });
   /*
    * - Confirms UI flow to create a Linode with an existing Firewall using mock API data.
    * - Confirms that Firewall is reflected in create summary section.
@@ -51,7 +57,8 @@ describe('Create Linode with Firewall', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
-    cy.findByText('Assign Firewall').click().type(`${mockFirewall.label}`);
+    cy.findByText('Assign Firewall').click();
+    cy.focused().type(`${mockFirewall.label}`);
 
     ui.autocompletePopper
       .findByTitle(mockFirewall.label)
@@ -59,11 +66,10 @@ describe('Create Linode with Firewall', () => {
       .click();
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Firewall Assigned').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Firewall Assigned').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -126,7 +132,8 @@ describe('Create Linode with Firewall', () => {
         cy.get('[data-testid="submit"]').click();
         cy.findByText('Label is required.');
         // Fill out and submit firewall create form.
-        cy.contains('Label').click().type(mockFirewall.label);
+        cy.contains('Label').click();
+        cy.focused().type(mockFirewall.label);
         ui.buttonGroup
           .findButtonByTitle('Create Firewall')
           .should('be.visible')
@@ -140,7 +147,8 @@ describe('Create Linode with Firewall', () => {
     );
 
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
-    cy.findByText('Assign Firewall').click().type(`${mockFirewall.label}`);
+    cy.findByText('Assign Firewall').click();
+    cy.focused().type(`${mockFirewall.label}`);
 
     ui.autocompletePopper
       .findByTitle(mockFirewall.label)
@@ -148,11 +156,10 @@ describe('Create Linode with Firewall', () => {
       .click();
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Firewall Assigned').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Firewall Assigned').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -263,11 +270,10 @@ describe('Create Linode with Firewall', () => {
     cy.findByText(mockFirewall.label).should('be.visible');
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Firewall Assigned').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Firewall Assigned').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button

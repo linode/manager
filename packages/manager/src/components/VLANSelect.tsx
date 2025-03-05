@@ -137,6 +137,7 @@ export const VLANSelect = (props: Props) => {
       inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
       label="VLAN"
       loading={isFetching}
+      noMarginTop
       noOptionsText="You have no VLANs in this region. Type to create one."
       onBlur={onBlur}
       open={open}

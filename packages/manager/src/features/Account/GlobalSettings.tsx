@@ -31,7 +31,7 @@ const GlobalSettings = () => {
     isLoading: accountSettingsLoading,
   } = useAccountSettings();
 
-  const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: linodes } = useAllLinodesQuery();
 
   const hasLinodesWithoutBackups =
@@ -84,7 +84,7 @@ const GlobalSettings = () => {
   return (
     <div>
       <DocumentTitleSegment segment="Settings" />
-      {isLinodeInterfaceEnabled && <NetworkInterfaceType />}
+      {isLinodeInterfacesEnabled && <NetworkInterfaceType />}
       <AutoBackups
         backups_enabled={backups_enabled}
         hasLinodesWithoutBackups={hasLinodesWithoutBackups}
