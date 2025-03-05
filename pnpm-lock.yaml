@@ -24,6 +24,9 @@ importers:
       husky:
         specifier: ^9.1.6
         version: 9.1.7
+      lint-staged:
+        specifier: ^15.4.3
+        version: 15.4.3
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -58,9 +61,6 @@ importers:
       eslint-plugin-sonarjs:
         specifier: ^0.5.0
         version: 0.5.0(eslint@6.8.0)
-      lint-staged:
-        specifier: ^15.2.9
-        version: 15.2.10
       prettier:
         specifier: ~2.2.1
         version: 2.2.1
@@ -200,11 +200,11 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0
       jspdf:
-        specifier: ^2.5.2
-        version: 2.5.2
+        specifier: ^3.0.0
+        version: 3.0.0
       jspdf-autotable:
-        specifier: ^3.5.14
-        version: 3.8.4(jspdf@2.5.2)
+        specifier: ^5.0.2
+        version: 5.0.2(jspdf@3.0.0)
       launchdarkly-react-client-sdk:
         specifier: 3.0.10
         version: 3.0.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -539,9 +539,6 @@ importers:
       jsdom:
         specifier: ^24.1.1
         version: 24.1.3
-      lint-staged:
-        specifier: ^15.2.9
-        version: 15.2.10
       mocha-junit-reporter:
         specifier: ^2.2.1
         version: 2.2.1(mocha@10.8.2)
@@ -669,9 +666,6 @@ importers:
       eslint-plugin-sonarjs:
         specifier: ^0.5.0
         version: 0.5.0(eslint@7.32.0)
-      lint-staged:
-        specifier: ^15.2.9
-        version: 15.2.10
       prettier:
         specifier: ~2.2.1
         version: 2.2.1
@@ -724,9 +718,6 @@ importers:
       eslint-plugin-sonarjs:
         specifier: ^0.5.0
         version: 0.5.0(eslint@7.32.0)
-      lint-staged:
-        specifier: ^15.2.9
-        version: 15.2.10
       prettier:
         specifier: ~2.2.1
         version: 2.2.1
@@ -752,9 +743,6 @@ importers:
       eslint-plugin-sonarjs:
         specifier: ^0.5.0
         version: 0.5.0(eslint@6.8.0)
-      lint-staged:
-        specifier: ^15.2.9
-        version: 15.2.10
       prettier:
         specifier: ~2.2.1
         version: 2.2.1
@@ -3346,6 +3334,10 @@ packages:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
+  chalk@5.4.1:
+    resolution: {integrity: sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
   change-emitter@0.1.6:
     resolution: {integrity: sha512-YXzt1cQ4a2jqazhcuSWEOc1K2q8g9H6eWNsyZgi640LDzRWVQ2eDe+Y/kVdftH+vYdPF2rgDb3dLdpxE1jvAxw==}
 
@@ -3469,6 +3461,10 @@ packages:
 
   commander@12.1.0:
     resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
+    engines: {node: '>=18'}
+
+  commander@13.1.0:
+    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
 
   commander@2.20.3:
@@ -3772,9 +3768,6 @@ packages:
 
   dom-helpers@5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
-
-  dompurify@2.5.7:
-    resolution: {integrity: sha512-2q4bEI+coQM8f5ez7kt2xclg1XsecaV9ASJk/54vwlfRRNQfDqJz2pzQ8t0Ix/ToBpXlVjrRIx7pFC/o8itG2Q==}
 
   dompurify@3.2.4:
     resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
@@ -4832,13 +4825,13 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
-  jspdf-autotable@3.8.4:
-    resolution: {integrity: sha512-rSffGoBsJYX83iTRv8Ft7FhqfgEL2nLpGAIiqruEQQ3e4r0qdLFbPUB7N9HAle0I3XgpisvyW751VHCqKUVOgQ==}
+  jspdf-autotable@5.0.2:
+    resolution: {integrity: sha512-YNKeB7qmx3pxOLcNeoqAv3qTS7KuvVwkFe5AduCawpop3NOkBUtqDToxNc225MlNecxT4kP2Zy3z/y/yvGdXUQ==}
     peerDependencies:
-      jspdf: ^2.5.1
+      jspdf: ^2 || ^3
 
-  jspdf@2.5.2:
-    resolution: {integrity: sha512-myeX9c+p7znDWPk0eTrujCzNjT+CXdXyk7YmJq5nD5V7uLLKmSXnlQ/Jn/kuo3X09Op70Apm0rQSnFWyGK8uEQ==}
+  jspdf@3.0.0:
+    resolution: {integrity: sha512-QvuQZvOI8CjfjVgtajdL0ihrDYif1cN5gXiF9lb9Pd9JOpmocvnNyFO9sdiJ/8RA5Bu8zyGOUjJLj5kiku16ug==}
 
   jsprim@2.0.2:
     resolution: {integrity: sha512-gqXddjPqQ6G40VdnI6T6yObEC+pDNvyP95wdQhkWkg7crHH3km5qP1FsOXEkzEQwnz6gz5qGTn1c2Y52wP3OyQ==}
@@ -4900,14 +4893,18 @@ packages:
     resolution: {integrity: sha512-eop+wDAvpItUys0FWkHIKeC9ybYrTGbU41U5K7+bttZZeohvnY7M9dZ5kB21GNWiFT2q1OoPTvncPCgSOVO5ow==}
     engines: {node: '>=14'}
 
+  lilconfig@3.1.3:
+    resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
+    engines: {node: '>=14'}
+
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
   linkify-it@5.0.0:
     resolution: {integrity: sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==}
 
-  lint-staged@15.2.10:
-    resolution: {integrity: sha512-5dY5t743e1byO19P9I4b3x8HJwalIznL5E1FWYnU6OWw33KxNBSLAc6Cy7F2PsFEO8FKnLwjwm5hx7aMF0jzZg==}
+  lint-staged@15.4.3:
+    resolution: {integrity: sha512-FoH1vOeouNh1pw+90S+cnuoFwRfUD9ijY2GKy5h7HS3OR7JVir2N2xrsa0+Twc1B7cW72L+88geG5cW4wIhn7g==}
     engines: {node: '>=18.12.0'}
     hasBin: true
 
@@ -9506,6 +9503,8 @@ snapshots:
 
   chalk@5.3.0: {}
 
+  chalk@5.4.1: {}
+
   change-emitter@0.1.6: {}
 
   character-entities-html4@2.1.0: {}
@@ -9627,6 +9626,8 @@ snapshots:
   comma-separated-tokens@2.0.3: {}
 
   commander@12.1.0: {}
+
+  commander@13.1.0: {}
 
   commander@2.20.3:
     optional: true
@@ -9940,9 +9941,6 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.26.0
       csstype: 3.1.3
-
-  dompurify@2.5.7:
-    optional: true
 
   dompurify@3.2.4:
     optionalDependencies:
@@ -10854,7 +10852,7 @@ snapshots:
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.1
-      debug: 4.3.7
+      debug: 4.4.0(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -10867,7 +10865,7 @@ snapshots:
   https-proxy-agent@7.0.5:
     dependencies:
       agent-base: 7.1.1
-      debug: 4.3.7
+      debug: 4.4.0(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -11234,11 +11232,11 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
-  jspdf-autotable@3.8.4(jspdf@2.5.2):
+  jspdf-autotable@5.0.2(jspdf@3.0.0):
     dependencies:
-      jspdf: 2.5.2
+      jspdf: 3.0.0
 
-  jspdf@2.5.2:
+  jspdf@3.0.0:
     dependencies:
       '@babel/runtime': 7.26.0
       atob: 2.1.2
@@ -11247,7 +11245,7 @@ snapshots:
     optionalDependencies:
       canvg: 3.0.10
       core-js: 3.39.0
-      dompurify: 2.5.7
+      dompurify: 3.2.4
       html2canvas: 1.4.1
 
   jsprim@2.0.2:
@@ -11321,19 +11319,21 @@ snapshots:
 
   lilconfig@3.1.2: {}
 
+  lilconfig@3.1.3: {}
+
   lines-and-columns@1.2.4: {}
 
   linkify-it@5.0.0:
     dependencies:
       uc.micro: 2.1.0
 
-  lint-staged@15.2.10:
+  lint-staged@15.4.3:
     dependencies:
-      chalk: 5.3.0
-      commander: 12.1.0
-      debug: 4.3.7
+      chalk: 5.4.1
+      commander: 13.1.0
+      debug: 4.4.0(supports-color@8.1.1)
       execa: 8.0.1
-      lilconfig: 3.1.2
+      lilconfig: 3.1.3
       listr2: 8.2.5
       micromatch: 4.0.8
       pidtree: 0.6.0
