@@ -264,9 +264,10 @@ export const KubeControlPlaneACLDrawer = (
             cluster&apos;s control plane will only be accessible from IP
             addresses within this list.
           </StyledTypography>
-          {errors.acl?.root && (
+          {(errors.acl?.root || errors.acl?.message) && (
             <Notice spacingBottom={12} spacingTop={8} variant="error">
-              {errors.acl?.root.message}
+              {errors.acl?.root?.message}
+              {errors.acl?.message}
             </Notice>
           )}
           <Box sx={{ maxWidth: 450 }}>
