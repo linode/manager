@@ -7,4 +7,12 @@ export const nodeWarning =
 export const nodesDeletionWarning =
   'All nodes will be deleted and new nodes will be created to replace them.';
 export const localStorageWarning =
-  'Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.';
+  'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted.';
+export const MULTI_NODE_POD_DELETION_WARNING =
+  'Any pods running on these nodes are also deleted.';
+export const SINGLE_NODE_POD_DELETION_WARNING =
+  'Any pods running on this node are also deleted.';
+export const MULTI_NODE_POD_RECYCLE_WARNING =
+  'Any pods running on these nodes are also deleted and rescheduled.';
+export const SINGLE_NODE_POD_RECYCLE_WARNING =
+  'Any pods running on this node are also deleted and rescheduled.';

@@ -202,10 +202,8 @@ describe('linode backups', () => {
             .should('be.disabled');
 
           // Enter a snapshot name, click "Take Snapshot".
-          cy.findByLabelText('Name Snapshot')
-            .should('be.visible')
-            .clear()
-            .type(snapshotName);
+          cy.findByLabelText('Name Snapshot').should('be.visible').clear();
+          cy.focused().type(snapshotName);
 
           ui.button
             .findByTitle('Take Snapshot')

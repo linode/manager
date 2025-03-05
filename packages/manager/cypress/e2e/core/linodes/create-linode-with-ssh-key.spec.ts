@@ -47,8 +47,8 @@ describe('Create Linode with SSH Key', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm that SSH key is listed, then select it.
+    cy.findByText(mockSshKey.label).scrollIntoView();
     cy.findByText(mockSshKey.label)
-      .scrollIntoView()
       .should('be.visible')
       .closest('tr')
       .within(() => {
@@ -113,8 +113,8 @@ describe('Create Linode with SSH Key', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm that no SSH keys are listed for the mocked user.
+    cy.findByText(mockUser.username).scrollIntoView();
     cy.findByText(mockUser.username)
-      .scrollIntoView()
       .should('be.visible')
       .closest('tr')
       .within(() => {
@@ -148,8 +148,8 @@ describe('Create Linode with SSH Key', () => {
     cy.wait(['@createSSHKey', '@refetchUsers']);
 
     // Confirm that the new SSH key is listed, and select it to be added to the Linode.
+    cy.findByText(mockSshKey.label).scrollIntoView();
     cy.findByText(mockSshKey.label)
-      .scrollIntoView()
       .should('be.visible')
       .closest('tr')
       .within(() => {

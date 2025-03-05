@@ -85,6 +85,11 @@ export const LinodeRebuildForm = (props: Props) => {
       values.metadata.user_data = utoa(values.metadata.user_data);
     }
 
+    // Distributed instances are encrypted by default and disk_encryption should not be included in the payload.
+    if (linode.site_type === 'distributed') {
+      values.disk_encryption = undefined;
+    }
+
     try {
       await rebuildLinode(values);
 
