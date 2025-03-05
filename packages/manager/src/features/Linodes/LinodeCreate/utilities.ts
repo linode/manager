@@ -13,15 +13,20 @@ import { utoa } from 'src/utilities/metadata';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { getLegacyInterfaceFromLinodeInterface, getLinodeInterfacePayload } from './Networking/utilities';
+import {
+  getLegacyInterfaceFromLinodeInterface,
+  getLinodeInterfacePayload,
+} from './Networking/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
 import type { LinodeCreateInterface } from './Networking/utilities';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { LinodeCreateType } from './types';
 import type {
+  AccountSettings,
   CreateLinodeInterfacePayload,
   CreateLinodeRequest,
+  InterfaceGenerationType,
   InterfacePayload,
   Linode,
   Profile,
@@ -29,6 +34,7 @@ import type {
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors } from 'react-hook-form';
+import { accountQueries } from 'src/queries/account/queries';
 
 /**
  * This is the ID of the Image of the default OS.
@@ -382,12 +388,26 @@ export const defaultValues = async (
     }
   }
 
+  let interfaceGeneration: LinodeCreateFormValues['interface_generation'] = undefined;
+
+  try {
+    const accountSettings = await queryClient.ensureQueryData(
+      accountQueries.settings
+    );
+    interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
+      accountSettings.interfaces_for_new_linodes
+    );
+  } catch (error) {
+    // silently fail because the user may be a restricted user that can't access this endpoint
+  }
+
   const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
     backups_enabled: linode?.backups.enabled,
     image: getDefaultImageId(params),
+    interface_generation: interfaceGeneration,
     interfaces: defaultInterfaces,
     linode,
     linodeInterfaces: defaultLinodeInterfaces,
@@ -650,4 +670,22 @@ export const useHandleLinodeCreateAnalyticsFormError = (
   );
 
   return { handleLinodeCreateAnalyticsFormError };
+};
+
+export const getDefaultInterfaceGenerationFromAccountSetting = (
+  accountSetting: AccountSettings['interfaces_for_new_linodes']
+): InterfaceGenerationType | undefined => {
+  if (
+    accountSetting === 'linode_only' ||
+    accountSetting === 'linode_default_but_legacy_config_allowed'
+  ) {
+    return 'linode';
+  }
+  if (
+    accountSetting === 'legacy_config_only' ||
+    accountSetting === 'legacy_config_default_but_linode_allowed'
+  ) {
+    return 'legacy_config';
+  }
+  return undefined;
 };
