@@ -9,7 +9,7 @@ import KebabIcon from 'src/assets/icons/kebab.svg';
 export interface Action {
   disabled?: boolean;
   id?: string;
-  onClick: () => void;
+  onClick: (...args: unknown[]) => void;
   title: string;
   tooltip?: string;
 }

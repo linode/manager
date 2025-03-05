@@ -21,13 +21,13 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { usePagination } from 'src/hooks/usePagination';
-import { useQuotasQuery } from 'src/queries/quotas/quotas';
 import { quotaQueries } from 'src/queries/quotas/quotas';
+import { useQuotasQuery } from 'src/queries/quotas/quotas';
 
+import { QuotasIncreaseModal } from './QuotasIncreaseModal';
 import { getQuotaError, getQuotasFilters } from './utils';
 
 import type { Filter, Quota, QuotaType } from '@linode/api-v4';
@@ -51,6 +51,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
   const flags = useFlags();
   const { isAkamaiAccount } = useIsAkamaiAccount();
   const [supportModalOpen, setSupportModalOpen] = React.useState(false);
+  const [selectedQuota, setSelectedQuota] = React.useState<Quota | undefined>();
 
   const filters: Filter = getQuotasFilters({
     location: selectedLocation,
@@ -102,7 +103,10 @@ export const QuotasTable = (props: QuotasTableProps) => {
 
   const requestIncreaseAction: Action = {
     disabled: isRequestForQuotaButtonDisabled,
-    onClick: () => setSupportModalOpen(true),
+    onClick: (quota: Quota) => {
+      setSelectedQuota(quota);
+      setSupportModalOpen(true);
+    },
     title: 'Request an Increase',
   };
 
@@ -153,89 +157,106 @@ export const QuotasTable = (props: QuotasTableProps) => {
               sx={{ height: quotaRowMinHeight }}
             />
           ) : (
-            quotasWithUsage.map((quota, index) => (
-              <TableRow key={quota.quota_id} sx={{ height: quotaRowMinHeight }}>
-                <TableCell>
-                  <Box alignItems="center" display="flex" flexWrap="nowrap">
-                    <Typography
-                      sx={{
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {quota.quota_name}
-                    </Typography>
-                    <TooltipIcon
-                      sxTooltipIcon={{
-                        position: 'relative',
-                        top: -2,
-                      }}
-                      placement="top"
-                      status="help"
-                      text={quota.description}
-                    />
-                  </Box>
-                </TableCell>
-                <TableCell>{quota.quota_limit}</TableCell>
-                <TableCell>
-                  <Box sx={{ maxWidth: '80%' }}>
-                    {quotaUsageQueries[index]?.isLoading ? (
-                      <Box alignItems="center" display="flex" gap={1}>
-                        <CircleProgress size="sm" />{' '}
-                        <Typography>Fetching Data...</Typography>
-                      </Box>
-                    ) : quotaUsageQueries[index]?.error ? (
+            quotasWithUsage.map((quota, index) => {
+              const hasQuotaUsage = quota.usage?.used !== null;
+
+              return (
+                <TableRow
+                  key={quota.quota_id}
+                  sx={{ height: quotaRowMinHeight }}
+                >
+                  <TableCell>
+                    <Box alignItems="center" display="flex" flexWrap="nowrap">
                       <Typography
                         sx={{
-                          alignItems: 'center',
-                          display: 'flex',
-                          gap: 1,
-                          lineHeight: 1,
+                          whiteSpace: 'nowrap',
                         }}
                       >
-                        <ErrorOutline />
-                        {getQuotaError(quotaUsageQueries, index)}
+                        {quota.quota_name}
                       </Typography>
-                    ) : quota.usage?.used !== null ? (
-                      <>
-                        <BarPercent
-                          customColors={[
-                            {
-                              color: theme.tokens.color.Red[80],
-                              percentage: 81,
-                            },
-                            {
-                              color: theme.tokens.color.Orange[80],
-                              percentage: 61,
-                            },
-                            {
-                              color: theme.tokens.color.Brand[80],
-                              percentage: 1,
-                            },
-                          ]}
-                          max={quota.quota_limit}
-                          rounded
-                          sx={{ mb: 1, mt: 2, padding: '3px' }}
-                          value={quota.usage?.used ?? 0}
-                        />
-                        <Typography sx={{ mb: 1 }}>
-                          {`${quota.usage?.used} of ${quota.quota_limit} ${
-                            quota.resource_metric
-                          }${quota.quota_limit > 1 ? 's' : ''} used`}
+                      <TooltipIcon
+                        sxTooltipIcon={{
+                          position: 'relative',
+                          top: -2,
+                        }}
+                        placement="top"
+                        status="help"
+                        text={quota.description}
+                      />
+                    </Box>
+                  </TableCell>
+                  <TableCell>{quota.quota_limit}</TableCell>
+                  <TableCell>
+                    <Box sx={{ maxWidth: '80%' }}>
+                      {quotaUsageQueries[index]?.isLoading ? (
+                        <Box alignItems="center" display="flex" gap={1}>
+                          <CircleProgress size="sm" />{' '}
+                          <Typography>Fetching Data...</Typography>
+                        </Box>
+                      ) : quotaUsageQueries[index]?.error ? (
+                        <Typography
+                          sx={{
+                            alignItems: 'center',
+                            display: 'flex',
+                            gap: 1,
+                            lineHeight: 1,
+                          }}
+                        >
+                          <ErrorOutline />
+                          {getQuotaError(quotaUsageQueries, index)}
                         </Typography>
-                      </>
-                    ) : (
-                      <Typography>Data not available</Typography>
-                    )}
-                  </Box>
-                </TableCell>
-                <TableCell sx={{ paddingRight: 0, textAlign: 'right' }}>
-                  <ActionMenu
-                    actionsList={[requestIncreaseAction]}
-                    ariaLabel={`Action menu for quota ${quota.quota_name}`}
-                  />
-                </TableCell>
-              </TableRow>
-            ))
+                      ) : hasQuotaUsage ? (
+                        <>
+                          <BarPercent
+                            customColors={[
+                              {
+                                color: theme.tokens.color.Red[80],
+                                percentage: 81,
+                              },
+                              {
+                                color: theme.tokens.color.Orange[80],
+                                percentage: 61,
+                              },
+                              {
+                                color: theme.tokens.color.Brand[80],
+                                percentage: 1,
+                              },
+                            ]}
+                            max={quota.quota_limit}
+                            rounded
+                            sx={{ mb: 1, mt: 2, padding: '3px' }}
+                            value={quota.usage?.used ?? 0}
+                          />
+                          <Typography sx={{ mb: 1 }}>
+                            {`${quota.usage?.used} of ${quota.quota_limit} ${
+                              quota.resource_metric
+                            }${quota.quota_limit > 1 ? 's' : ''} used`}
+                          </Typography>
+                        </>
+                      ) : (
+                        <Typography>Data not available</Typography>
+                      )}
+                    </Box>
+                  </TableCell>
+                  {hasQuotaUsage && (
+                    <TableCell sx={{ paddingRight: 0, textAlign: 'right' }}>
+                      <ActionMenu
+                        actionsList={[
+                          {
+                            ...requestIncreaseAction,
+                            onClick: () => {
+                              setSelectedQuota(quota);
+                              setSupportModalOpen(true);
+                            },
+                          },
+                        ]}
+                        ariaLabel={`Action menu for quota ${quota.quota_name}`}
+                      />
+                    </TableCell>
+                  )}
+                </TableRow>
+              );
+            })
           )}
         </TableBody>
       </Table>
@@ -250,14 +271,11 @@ export const QuotasTable = (props: QuotasTableProps) => {
           sx={{ '&.MuiBox-root': { marginTop: 0 } }}
         />
       )}
-      <SupportTicketDialog
-        hideProductSelection
+      <QuotasIncreaseModal
         onClose={() => setSupportModalOpen(false)}
         onSuccess={onIncreaseQuotaTicketCreated}
         open={supportModalOpen}
-        prefilledDescription="I need to increase my quota for the following service and location:"
-        prefilledTicketType="accountLimit"
-        prefilledTitle="Increase Quota"
+        quota={selectedQuota}
       />
     </>
   );
