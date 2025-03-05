@@ -1,5 +1,7 @@
 import {
+  addEntityToAlert,
   createAlertDefinition,
+  deleteEntityFromAlert,
   editAlertDefinition,
 } from '@linode/api-v4/lib/cloudpulse';
 import {
@@ -17,6 +19,7 @@ import type {
   AlertServiceType,
   CreateAlertDefinitionPayload,
   EditAlertPayloadWithService,
+  EntityAlertUpdatePayload,
   NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
@@ -75,6 +78,64 @@ export const useEditAlertDefinition = () => {
       editAlertDefinition(data, serviceType, alertId),
     onSuccess() {
       queryClient.invalidateQueries(queryFactory.alerts);
+    },
+  });
+};
+
+export const useAddEntityToAlert = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
+    mutationFn: (payload: EntityAlertUpdatePayload) => {
+      const { alertId, entityId, serviceType } = payload;
+      return addEntityToAlert(serviceType, entityId, {
+        'alert-definition-id': alertId,
+      });
+    },
+
+    onSuccess(_data, variables, _context) {
+      const { alertId, serviceType } = variables;
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
+          .queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          serviceType,
+          String(alertId)
+        ).queryKey,
+      });
+    },
+  });
+};
+export const useRemoveEntityFromAlert = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
+    mutationFn: (payload: EntityAlertUpdatePayload) => {
+      const { alertId, entityId, serviceType } = payload;
+      return deleteEntityFromAlert(serviceType, entityId, alertId);
+    },
+
+    onSuccess(_data, variables, _context) {
+      const { alertId, serviceType } = variables;
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
+          .queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          serviceType,
+          String(alertId)
+        ).queryKey,
+      });
     },
   });
 };

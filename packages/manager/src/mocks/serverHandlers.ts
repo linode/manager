@@ -2473,6 +2473,7 @@ export const handlers = [
     '*/monitor/services/:serviceType/alert-definitions',
     async ({ params }) => {
       const serviceType = params.serviceType;
+      alertFactory.resetSequenceNumber();
       return HttpResponse.json({
         data: [
           ...alertFactory.buildList(20, {
