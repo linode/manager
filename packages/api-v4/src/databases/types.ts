@@ -70,7 +70,26 @@ interface DatabaseHosts {
 export interface SSLFields {
   ca_certificate: string;
 }
-
+// TODO: This will be changed in the next PR
+export interface MySQLAdvancedConfig {
+  binlog_retention_period?: number;
+  advanced?: {
+    connect_timeout?: number;
+    default_time_zone?: string;
+    group_concat_max_len?: number;
+    information_schema_stats_expiry?: number;
+    innodb_print_all_deadlocks?: boolean;
+    sql_mode?: string;
+  };
+}
+// TODO: This will be changed in the next PR
+export interface PostgresAdvancedConfig {
+  advanced?: {
+    max_files_per_process?: number;
+    timezone?: string;
+    pg_stat_monitor_enable?: boolean;
+  };
+}
 type MemberType = 'primary' | 'failover';
 
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
@@ -99,6 +118,7 @@ export interface DatabaseInstance {
   updated: string;
   updates: UpdatesSchedule;
   version: string;
+  engine_config?: MySQLAdvancedConfig | PostgresAdvancedConfig;
 }
 
 export type ClusterSize = 1 | 2 | 3;
