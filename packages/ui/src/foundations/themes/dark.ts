@@ -424,34 +424,34 @@ export const darkTheme: ThemeOptions = {
           color: Button.Primary.Default.Text,
         },
         colorError: {
-          backgroundColor: Badge.Negative.Background,
-          color: Badge.Negative.Text,
+          backgroundColor: Badge.Negative.Subtle.Background,
+          color: Badge.Negative.Subtle.Text,
         },
         colorInfo: {
-          backgroundColor: Badge.Informative.Background,
-          color: Badge.Informative.Text,
+          backgroundColor: Badge.Informative.Subtle.Background,
+          color: Badge.Informative.Subtle.Text,
         },
         colorPrimary: {
-          backgroundColor: Badge.Informative.Background,
-          color: Badge.Informative.Text,
+          backgroundColor: Badge.Informative.Subtle.Background,
+          color: Badge.Informative.Subtle.Text,
         },
         colorSecondary: {
           '&.MuiChip-clickable': {
             '&:hover': {
-              backgroundColor: Badge.Informative.Background,
-              color: Badge.Informative.Text,
+              backgroundColor: Badge.Informative.Subtle.Background,
+              color: Badge.Informative.Subtle.Text,
             },
           },
-          backgroundColor: Badge.Informative.Background,
-          color: Badge.Informative.Text,
+          backgroundColor: Badge.Informative.Subtle.Background,
+          color: Badge.Informative.Subtle.Text,
         },
         colorSuccess: {
-          backgroundColor: Badge.Positive.Background,
-          color: Badge.Positive.Text,
+          backgroundColor: Badge.Positive.Subtle.Background,
+          color: Badge.Positive.Subtle.Text,
         },
         colorWarning: {
-          backgroundColor: Badge.Warning.Background,
-          color: Badge.Warning.Text,
+          backgroundColor: Badge.Warning.Subtle.Background,
+          color: Badge.Warning.Subtle.Text,
         },
         outlined: {
           '& .MuiChip-label': {
