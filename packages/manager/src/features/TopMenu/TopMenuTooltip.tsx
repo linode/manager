@@ -30,5 +30,5 @@ export const topMenuIconButtonSx = (theme: Theme) => ({
     color: theme.tokens.header.Icon.Hover,
   },
   color: theme.tokens.header.Icon.Default,
-  padding: theme.tokens.spacing[40],
+  padding: theme.tokens.spacing.S8,
 });

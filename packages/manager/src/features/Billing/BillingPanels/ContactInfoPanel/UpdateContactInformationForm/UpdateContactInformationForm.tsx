@@ -454,7 +454,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             sx={{
               alignItems: 'flex-start',
               display: 'flex',
-              marginTop: (theme) => theme.tokens.spacing[60],
+              marginTop: (theme) => theme.tokens.spacing.S16,
             }}
           >
             <Checkbox
@@ -462,7 +462,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
                 setBillingAgreementChecked(!billingAgreementChecked)
               }
               sx={(theme) => ({
-                marginRight: theme.tokens.spacing[40],
+                marginRight: theme.tokens.spacing.S8,
                 padding: 0,
               })}
               checked={billingAgreementChecked}

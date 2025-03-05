@@ -82,8 +82,8 @@ export const StyledAccordion = styled(Accordion, {
         fontWeight: theme.tokens.font.FontWeight.Extrabold,
         letterSpacing: theme.tokens.typography.Heading.OverlineLetterSpacing,
         lineHeight: theme.tokens.font.LineHeight.Xxxs,
-        paddingLeft: theme.tokens.spacing[50],
-        paddingRight: theme.tokens.spacing[50],
+        paddingLeft: theme.tokens.spacing.S12,
+        paddingRight: theme.tokens.spacing.S12,
         textTransform: 'uppercase',
         transition: theme.transitions.create(['opacity']),
         ...(props.isCollapsed && {
@@ -130,8 +130,8 @@ export const StyledAccordion = styled(Accordion, {
       backgroundColor: theme.tokens.color.Neutrals[90],
       maxHeight: '48px',
       minHeight: '48px',
-      paddingLeft: theme.tokens.spacing[50],
-      paddingRight: theme.tokens.spacing[40],
+      paddingLeft: theme.tokens.spacing.S12,
+      paddingRight: theme.tokens.spacing.S8,
       svg: {
         fill: theme.tokens.color.Neutrals['White'],
         stroke: 'transparent',
@@ -139,7 +139,7 @@ export const StyledAccordion = styled(Accordion, {
     },
     // Spacing between the accordion and the next accordion
     '.MuiCollapse-entered .MuiAccordionDetails-root': {
-      marginBottom: theme.tokens.spacing[40],
+      marginBottom: theme.tokens.spacing.S8,
     },
     backgroundColor: theme.tokens.color.Neutrals[90],
   })

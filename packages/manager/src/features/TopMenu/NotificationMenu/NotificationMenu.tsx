@@ -186,19 +186,19 @@ const StyledChip = styled(Chip, {
 })<{ adjustBorderRadius: boolean }>(({ theme, ...props }) => ({
   '& .MuiChip-icon': {
     margin: 0,
-    marginLeft: theme.tokens.spacing[10],
+    marginLeft: theme.tokens.spacing.S2,
   },
   '& .MuiChip-label': {
     padding: 0,
   },
   backgroundColor: theme.tokens.header.Badge.Background,
-  borderRadius: props.adjustBorderRadius ? theme.tokens.spacing[50] : '50%',
+  borderRadius: props.adjustBorderRadius ? theme.tokens.spacing.S12 : '50%',
   color: theme.tokens.header.Badge.Text,
   flexDirection: 'row-reverse',
   font: theme.tokens.typography.Label.Bold.Xs,
   justifyContent: 'center',
   left: 20,
-  padding: `${theme.tokens.spacing[20]} ${theme.tokens.spacing[30]}`,
+  padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S6}`,
   position: 'absolute',
   top: '-3px',
 }));

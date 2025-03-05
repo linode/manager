@@ -74,8 +74,8 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
           {isCloseAccount && (
             <FormGroup
               sx={(theme) => ({
-                marginTop: theme.tokens.spacing[20],
-                paddingLeft: theme.tokens.spacing[10],
+                marginTop: theme.tokens.spacing.S4,
+                paddingLeft: theme.tokens.spacing.S2,
               })}
             >
               <FormControlLabel

@@ -13,7 +13,10 @@ import { utoa } from 'src/utilities/metadata';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { getLegacyInterfaceFromLinodeInterface, getLinodeInterfacePayload } from './Networking/utilities';
+import {
+  getLegacyInterfaceFromLinodeInterface,
+  getLinodeInterfacePayload,
+} from './Networking/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
 import type { LinodeCreateInterface } from './Networking/utilities';
