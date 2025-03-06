@@ -1,4 +1,10 @@
-import { Box, CircleProgress, ErrorState, StyledLinkButton } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  ErrorState,
+  Notice,
+  StyledLinkButton,
+} from '@linode/ui';
 import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -24,6 +30,7 @@ import {
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
+import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -50,6 +57,11 @@ const VPCDetail = () => {
     vpc.description.length < 150 || showFullDescription
       ? vpc.description
       : truncate(vpc.description, 150);
+
+  // This isn't great but will hopefully improve once we actually support editing VPCs for LKE-E
+  const isVPCLKEEnterpriseCluster =
+    /^workload VPC for LKE Enterprise Cluster lke\d+/i.test(description) ||
+    /^lke\d+/i.test(vpc.label);
 
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
@@ -178,6 +190,11 @@ const VPCDetail = () => {
         open={editVPCDrawerOpen}
         vpc={vpc}
       />
+      {isVPCLKEEnterpriseCluster && (
+        <Notice variant="warning" important spacingTop={24}>
+          <Typography>{LKE_ENTERPRISE_VPC_WARNING}</Typography>
+        </Notice>
+      )}
       <Box
         sx={(theme) => ({
           [theme.breakpoints.up('lg')]: {
@@ -190,7 +207,11 @@ const VPCDetail = () => {
           Subnets ({vpc.subnets.length})
         </Typography>
       </Box>
-      <VPCSubnetsTable vpcId={vpc.id} vpcRegion={vpc.region} />
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
+        vpcId={vpc.id}
+        vpcRegion={vpc.region}
+      />
     </>
   );
 };

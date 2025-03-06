@@ -32,6 +32,7 @@ import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
+  isVPCLKEEnterpriseCluster: boolean;
   vpcId: number;
   vpcRegion: string;
 }
@@ -39,7 +40,7 @@ interface Props {
 const preferenceKey = 'vpc-subnets';
 
 export const VPCSubnetsTable = (props: Props) => {
-  const { vpcId, vpcRegion } = props;
+  const { isVPCLKEEnterpriseCluster, vpcId, vpcRegion } = props;
   const theme = useTheme();
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
   const [selectedSubnet, setSelectedSubnet] = React.useState<
@@ -248,6 +249,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 <SubnetLinodeRow
                   handlePowerActionsLinode={handlePowerActionsLinode}
                   handleUnassignLinode={handleSubnetUnassignLinode}
+                  isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
                   key={linodeInfo.id}
                   linodeId={linodeInfo.id}
                   subnet={subnet}
