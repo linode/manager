@@ -55,7 +55,6 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { InterfaceSelect } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';
@@ -78,6 +77,7 @@ import type {
 } from '@linode/api-v4';
 import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 
 interface Helpers {
   devtmpfs_automount: boolean;

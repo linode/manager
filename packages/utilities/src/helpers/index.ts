@@ -31,3 +31,4 @@ export * from './replaceNewlinesWithLineBreaks';
 export * from './rootManager';
 export * from './roundTo';
 export * from './scrollErrorIntoView';
+export * from './scrollErrorIntoViewV2';
