@@ -751,6 +751,10 @@ importers:
         version: 8.3.5(@swc/core@1.10.11)(jiti@1.21.6)(postcss@8.5.3)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.6.1)
 
   scripts:
+    dependencies:
+      markdown-it:
+        specifier: ^14.1.0
+        version: 14.1.0
     devDependencies:
       '@types/node':
         specifier: ^20.17.0
@@ -4940,6 +4944,7 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.isplainobject@4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
