@@ -1,11 +1,10 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
 import { Flag } from 'src/components/Flag';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionOption } from './RegionOption';
@@ -13,6 +12,7 @@ import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
+  useIsGeckoEnabled,
 } from './RegionSelect.utils';
 
 import type { RegionSelectProps } from './RegionSelect.types';
