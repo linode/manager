@@ -1,6 +1,5 @@
+import { Drawer } from '@linode/ui';
 import * as React from 'react';
-
-import { Drawer } from 'src/components/Drawer';
 
 import { TagCell } from './TagCell';
 

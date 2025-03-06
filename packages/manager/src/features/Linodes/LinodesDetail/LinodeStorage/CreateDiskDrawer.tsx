@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  Drawer,
   FormHelperText,
   InputAdornment,
   Notice,
@@ -14,7 +15,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';

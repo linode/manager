@@ -1,8 +1,7 @@
-import { Box } from '@linode/ui';
+import { Box, Drawer } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

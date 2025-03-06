@@ -1,8 +1,7 @@
-import { Notice, StyledLinkButton, Typography } from '@linode/ui';
+import { Drawer, Notice, StyledLinkButton, Typography } from '@linode/ui';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Drawer } from 'src/components/Drawer';
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';

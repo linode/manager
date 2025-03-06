@@ -1,7 +1,6 @@
-import { Button, Paper, Stack, Typography } from '@linode/ui';
+import { Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

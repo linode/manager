@@ -1,8 +1,7 @@
-import { Box } from '@linode/ui';
+import { Box, Drawer } from '@linode/ui';
 import * as React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { Drawer } from 'src/components/Drawer';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 
 import { CopyAllHostnames } from './CopyAllHostnames';

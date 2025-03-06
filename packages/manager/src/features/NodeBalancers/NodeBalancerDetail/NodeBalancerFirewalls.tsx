@@ -1,7 +1,6 @@
-import { Box, Button, Stack, Typography } from '@linode/ui';
+import { Box, Button, Drawer, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

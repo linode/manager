@@ -3,6 +3,7 @@ import { Typography } from '@linode/ui';
 import {
   Button,
   Divider,
+  Drawer,
   ErrorState,
   InputAdornment,
   Notice,
@@ -17,7 +18,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Currency } from 'src/components/Currency';
-import { Drawer } from 'src/components/Drawer';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';

@@ -1,11 +1,17 @@
-import { Autocomplete, Box, Notice, Stack, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Drawer,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { Drawer } from 'src/components/Drawer';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';

@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  Drawer,
   InputAdornment,
   Notice,
   Select,
@@ -11,7 +12,6 @@ import { Formik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 
 import type {
   ManagedCredential,

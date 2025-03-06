@@ -1,4 +1,5 @@
 import {
+  Drawer,
   FormControlLabel,
   Notice,
   Radio,
@@ -13,7 +14,6 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { createFirewallFromTemplate } from 'src/components/GenerateFirewallDialog/useCreateFirewallFromTemplate';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';

@@ -1,5 +1,6 @@
 import {
   Divider,
+  Drawer,
   List,
   ListItem,
   Notice,
@@ -16,7 +17,7 @@ import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { Drawer } from 'src/components/Drawer';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
@@ -47,7 +48,6 @@ import type {
 } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 import type { DisableItemOption } from 'src/components/ListItemOption';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps

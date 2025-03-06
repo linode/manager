@@ -1,5 +1,6 @@
 import {
   Checkbox,
+  Drawer,
   FormControl,
   FormControlLabel,
   Notice,
@@ -9,7 +10,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { useUpdateOAuthClientMutation } from 'src/queries/account/oauth';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 

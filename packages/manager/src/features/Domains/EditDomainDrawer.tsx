@@ -1,4 +1,5 @@
 import {
+  Drawer,
   FormControlLabel,
   Notice,
   Radio,
@@ -9,7 +10,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateDomainMutation } from 'src/queries/domains';

@@ -1,8 +1,7 @@
-import { Stack, Typography } from '@linode/ui';
+import { Drawer, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { Drawer } from 'src/components/Drawer';
 
 import type { Volume } from '@linode/api-v4';
 

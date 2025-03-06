@@ -1,6 +1,7 @@
 import {
   Autocomplete,
   Checkbox,
+  Drawer,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -11,7 +12,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {

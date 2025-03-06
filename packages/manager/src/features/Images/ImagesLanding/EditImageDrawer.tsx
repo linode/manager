@@ -1,11 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Notice, TextField } from '@linode/ui';
+import { Drawer, Notice, TextField } from '@linode/ui';
 import { updateImageSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateImageMutation } from 'src/queries/images';
 

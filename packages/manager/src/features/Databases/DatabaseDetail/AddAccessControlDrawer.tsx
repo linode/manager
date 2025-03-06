@@ -1,10 +1,9 @@
-import { Notice, Typography } from '@linode/ui';
+import { Drawer, Notice, Typography } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import {

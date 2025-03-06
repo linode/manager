@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  Drawer,
   FormControl,
   FormHelperText,
   Notice,
@@ -11,7 +12,6 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';

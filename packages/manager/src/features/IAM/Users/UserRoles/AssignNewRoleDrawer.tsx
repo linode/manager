@@ -1,7 +1,6 @@
-import { Autocomplete, Typography } from '@linode/ui';
+import { Autocomplete, Drawer, Typography } from '@linode/ui';
 import React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { useAccountPermissions } from 'src/queries/iam/iam';
 

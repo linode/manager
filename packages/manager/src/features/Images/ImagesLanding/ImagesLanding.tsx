@@ -1,6 +1,7 @@
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   CircleProgress,
+  Drawer,
   ErrorState,
   IconButton,
   InputAdornment,
@@ -22,7 +23,6 @@ import { makeStyles } from 'tss-react/mui';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Drawer } from 'src/components/Drawer';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

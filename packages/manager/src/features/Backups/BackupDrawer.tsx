@@ -1,11 +1,10 @@
-import { Box, Notice, Stack, Typography } from '@linode/ui';
+import { Box, Drawer, Notice, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DisplayPrice } from 'src/components/DisplayPrice';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

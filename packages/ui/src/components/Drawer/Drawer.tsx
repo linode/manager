@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { NotFound } from './NotFound';
+import { NotFound } from '../../../../manager/src/components/NotFound';
 
 import type { APIError } from '@linode/api-v4';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
@@ -97,14 +97,14 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         role="dialog"
       >
         <Grid
-          className={classes.drawerHeader}
-          container
-          wrap="nowrap"
           sx={{
             alignItems: 'flex-start',
             justifyContent: 'space-between',
             position: 'relative',
           }}
+          className={classes.drawerHeader}
+          container
+          wrap="nowrap"
         >
           <Grid>
             {isFetching ? null : (

@@ -1,10 +1,9 @@
-import { Box, IconButton, Typography } from '@linode/ui';
+import { Box, Drawer, IconButton, Typography } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import React from 'react';
 
 import Download from 'src/assets/icons/download.svg';
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
-import { Drawer } from 'src/components/Drawer';
 import { useKubernetesKubeConfigQuery } from 'src/queries/kubernetes';
 
 interface Props {
@@ -44,8 +43,8 @@ export const KubeConfigDrawer = (props: Props) => {
         </IconButton>
       </Box>
       <CodeBlock
-        code={(data ?? '').trim()}
         analyticsLabel="Kube Config Yaml"
+        code={(data ?? '').trim()}
         handleCopyIconClick={() => null}
         language="yaml"
       />

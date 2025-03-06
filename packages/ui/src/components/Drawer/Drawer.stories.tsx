@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import { useArgs } from '@storybook/preview-api';
 import React from 'react';
 
-import { ActionsPanel } from './ActionsPanel/ActionsPanel';
+import { ActionsPanel } from '../../../../manager/src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from './Drawer';
 
 import type { Meta, StoryObj } from '@storybook/react';

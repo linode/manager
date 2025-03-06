@@ -1,4 +1,5 @@
 import {
+  Drawer,
   FormControlLabel,
   Notice,
   Radio,
@@ -10,7 +11,6 @@ import { useFormik } from 'formik';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { useCloneDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 

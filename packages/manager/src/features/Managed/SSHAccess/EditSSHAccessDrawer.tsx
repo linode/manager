@@ -1,4 +1,5 @@
 import {
+  Drawer,
   FormControlLabel,
   Notice,
   TextField,
@@ -10,7 +11,6 @@ import { Formik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
@@ -189,11 +189,11 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
 
                       <Grid size={{ md: 4, xs: 12 }}>
                         <TextField
-                          noMarginTop
                           error={!!portError}
                           errorText={portError}
                           label="Port"
                           name="ssh.port"
+                          noMarginTop
                           onBlur={handleBlur}
                           onChange={handleChange}
                           placeholder={String(port || DEFAULTS.port)}

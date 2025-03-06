@@ -1,11 +1,10 @@
-import { Notice, Select, TextField } from '@linode/ui';
+import { Drawer, Notice, Select, TextField } from '@linode/ui';
 import { createContactSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import {
   useCreateContactMutation,
   useUpdateContactMutation,

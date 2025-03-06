@@ -1,9 +1,8 @@
-import { Box, Notice, Typography } from '@linode/ui';
+import { Box, Drawer, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
@@ -17,8 +16,8 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
-import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { nodeWarning } from '../../constants';
+import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { hasInvalidNodePoolPrice } from './utils';
 
 import type { KubernetesTier, Region } from '@linode/api-v4';

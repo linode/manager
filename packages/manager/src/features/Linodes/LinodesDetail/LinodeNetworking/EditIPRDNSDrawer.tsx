@@ -1,10 +1,9 @@
-import { Notice, TextField } from '@linode/ui';
+import { Drawer, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { useLinodeIPMutation } from 'src/queries/linodes/networking';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
