@@ -134,7 +134,7 @@ describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
 
   it('When the maximum resource limit is reached, the appropriate message is displayed, clusters are disabled, and the Select All option is hidden', () => {
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 
     // Wait for the services and dashboard API calls to complete before proceeding
@@ -231,7 +231,7 @@ describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
     };
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
 
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.

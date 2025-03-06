@@ -30,8 +30,8 @@ describe('CloudPulse  navigation', () => {
     cy.visitWithLogin('/linodes');
     cy.wait('@getFeatureFlags');
 
-    cy.get('[data-testid="menu-item-Monitor"]').should('be.visible').click();
-    cy.url().should('endWith', '/monitor');
+    cy.get('[data-testid="menu-item-Metrics"]').should('be.visible').click();
+    cy.url().should('endWith', '/metrics');
   });
 
   /*
@@ -49,7 +49,7 @@ describe('CloudPulse  navigation', () => {
     cy.wait('@getFeatureFlags');
 
     ui.nav.find().within(() => {
-      cy.get('[data-testid="menu-item-Monitor"]').should('not.exist');
+      cy.get('[data-testid="menu-item-Metrics"]').should('not.exist');
     });
   });
 
@@ -64,7 +64,7 @@ describe('CloudPulse  navigation', () => {
       },
     }).as('getFeatureFlags');
 
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 
     cy.findByText('Not Found').should('be.visible');
@@ -79,7 +79,7 @@ describe('CloudPulse  navigation', () => {
     }).as('getFeatureFlags');
 
     // Attempt to visit the alert definitions page for a specific alert using a manual URL
-    cy.visitWithLogin('monitor/alerts/definitions');
+    cy.visitWithLogin('alerts');
 
     // Wait for the feature flag to be fetched and applied
     cy.wait('@getFeatureFlags');
@@ -97,7 +97,7 @@ describe('CloudPulse  navigation', () => {
     }).as('getFeatureFlags');
 
     // Attempt to visit the alert detail page for a specific alert using a manual URL
-    cy.visitWithLogin('monitor/alerts/definitions/detail/dbaas/20000');
+    cy.visitWithLogin('alerts/definitions/detail/dbaas/20000');
 
     // Wait for the feature flag to be fetched and applied
     cy.wait('@getFeatureFlags');

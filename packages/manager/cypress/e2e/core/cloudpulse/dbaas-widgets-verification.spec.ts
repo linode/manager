@@ -200,7 +200,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetDatabases([databaseMock]).as('getDatabases');
 
     // navigate to the cloudpulse page
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
 
     // Wait for the services and dashboard API calls to complete before proceeding
     cy.wait(['@fetchServices', '@fetchDashboard']);
