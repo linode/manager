@@ -238,7 +238,6 @@ export const DateRangePicker = ({
         >
           <Box
             bgcolor="background.paper"
-            borderRadius={2}
             boxShadow={4}
             display="flex"
             gap={2}
