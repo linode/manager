@@ -32,9 +32,9 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
 
   const defaultValues = React.useMemo(
     () => ({
-      description: `**User**: ${profile?.username}<br>\n**Email**: ${profile?.email}<br>\n**Quantity**: 0<br>\n**Region**: ${quota.region_applied}`,
+      description: `**User**: ${profile?.username}<br>\n**Email**: ${profile?.email}<br>\n**Quota Name**: ${quota.quota_name}<br>\n**New Quantity Requested**: 0 ${quota.resource_metric}<br>\n**Region**: ${quota.region_applied}`,
       quantity: '0',
-      summary: `Increase ${quota.quota_name} quota in ${quota.region_applied}`,
+      summary: 'Increase Quota',
     }),
     [quota, profile]
   );
@@ -79,8 +79,8 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
     // Update the description field
     const currentDescription = form.getValues('description');
     const updatedDescription = currentDescription.replace(
-      /\*\*Quantity\*\*: \d+/,
-      `**Quantity**: ${value || '0'}`
+      /\*\*New Quantity Requested\*\*: \d+/,
+      `**New Quantity Requested**: ${value || '0'}`
     );
 
     form.setValue('description', updatedDescription);
@@ -115,7 +115,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                       endAdornment: (
                         <Typography
                           sx={(theme) => ({
-                            color: theme.tokens.color.Neutrals[50],
+                            color: theme.tokens.color.Neutrals[80],
                             fontSize: theme.tokens.font.FontSize.Xxxs,
                             mx: 1,
                             userSelect: 'none',
@@ -123,19 +123,19 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                           })}
                           component="span"
                         >
-                          {quota.quota_name}
+                          {quota.resource_metric}
                         </Typography>
                       ),
                     },
                   }}
                   errorText={fieldState.error?.message}
-                  helperText={`In ${quota.region_applied} - from initial limit of ${quota?.quota_limit} `}
+                  helperText={`In ${quota.region_applied} (initial limit of ${quota?.quota_limit})`}
                   label="Quantity"
                   min={1}
                   name="quantity"
                   onChange={(e) => handleQuantityChange(e.target.value)}
                   required
-                  sx={{ width: 275 }}
+                  sx={{ width: 300 }}
                   type="number"
                   value={quantity}
                 />
