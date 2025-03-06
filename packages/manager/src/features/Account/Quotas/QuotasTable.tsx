@@ -1,4 +1,4 @@
-import { ErrorState } from '@linode/ui';
+import { Dialog, ErrorState } from '@linode/ui';
 import { useQueries } from '@tanstack/react-query';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -17,7 +17,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useQuotasQuery } from 'src/queries/quotas/quotas';
 import { quotaQueries } from 'src/queries/quotas/quotas';
 
-import { QuotasIncreaseModal } from './QuotasIncreaseModal';
+import { QuotasIncreaseForm } from './QuotasIncreaseForm';
 import { QuotasTableRow } from './QuotasTableRow';
 import { getQuotasFilters } from './utils';
 
@@ -177,12 +177,26 @@ export const QuotasTable = (props: QuotasTableProps) => {
           sx={{ '&.MuiBox-root': { marginTop: 0 } }}
         />
       )}
-      <QuotasIncreaseModal
+
+      <Dialog
+        sx={{
+          '& .MuiDialog-paper': {
+            width: '600px',
+          },
+        }}
         onClose={() => setSupportModalOpen(false)}
-        onSuccess={onIncreaseQuotaTicketCreated}
         open={supportModalOpen}
-        quota={selectedQuota}
-      />
+        title="Increase Quota"
+      >
+        {selectedQuota && (
+          <QuotasIncreaseForm
+            onClose={() => setSupportModalOpen(false)}
+            onSuccess={onIncreaseQuotaTicketCreated}
+            open={supportModalOpen}
+            quota={selectedQuota}
+          />
+        )}
+      </Dialog>
     </>
   );
 };
