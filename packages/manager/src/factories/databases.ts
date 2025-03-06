@@ -1,5 +1,6 @@
+import { pickRandom, randomDate } from '@linode/utilities';
+
 import Factory from 'src/factories/factoryProxy';
-import { pickRandom, randomDate } from 'src/utilities/random';
 
 import type {
   ClusterSize,

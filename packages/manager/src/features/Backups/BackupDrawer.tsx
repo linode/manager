@@ -1,4 +1,5 @@
 import { Box, Notice, Stack, Typography } from '@linode/ui';
+import { isNumber, pluralize } from '@linode/utilities';
 import { styled } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -20,8 +21,6 @@ import {
 } from 'src/queries/account/settings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllTypes } from 'src/queries/types';
-import { isNumber } from 'src/utilities/isNumber';
-import { pluralize } from 'src/utilities/pluralize';
 import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 

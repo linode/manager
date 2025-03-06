@@ -1,3 +1,4 @@
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { isEmpty } from 'ramda';
@@ -6,7 +7,6 @@ import { act } from 'react-dom/test-utils';
 
 import { LOGIN_ROOT } from 'src/constants';
 import { getAuthToken } from 'src/utilities/authentication';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { OAuthCallback } from './OAuthCallback';
