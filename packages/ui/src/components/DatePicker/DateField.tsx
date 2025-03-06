@@ -1,5 +1,5 @@
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { DateTimeField as MUIDateTimeField } from '@mui/x-date-pickers/DateTimeField';
+import { DateField as MUIDateField } from '@mui/x-date-pickers/DateField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from 'react';
 
@@ -9,19 +9,13 @@ import { FormHelperText } from '../FormHelperText';
 import { InputLabel } from '../InputLabel/InputLabel';
 
 import type { SxProps, Theme } from '@mui/material/styles';
-import type { DateTimeFieldProps as MUIDateTimeFieldProps } from '@mui/x-date-pickers/DateTimeField';
+import type { DateFieldProps as MUIDateFieldProps } from '@mui/x-date-pickers/DateField';
 import type { DateTime } from 'luxon';
 
-interface DateTimeFieldProps
-  extends Omit<MUIDateTimeFieldProps<DateTime>, 'onChange' | 'value'> {
+interface DateFieldProps
+  extends Omit<MUIDateFieldProps<DateTime>, 'onChange' | 'value'> {
   errorText?: string;
-  format?:
-    | 'MM/dd/yyyy HH:mm'
-    | 'MM/dd/yyyy hh:mm a'
-    | 'dd-MM-yyyy HH:mm'
-    | 'dd-MM-yyyy hh:mm a'
-    | 'yyyy-MM-dd HH:mm'
-    | 'yyyy-MM-dd hh:mm a';
+  format?: 'MM/dd/yyyy' | 'dd-MM-yyyy' | 'yyyy-MM-dd';
   inputRef?: React.RefObject<HTMLInputElement>;
   label: string;
   onChange: (date: DateTime | null) => void;
@@ -30,9 +24,9 @@ interface DateTimeFieldProps
   value: DateTime | null;
 }
 
-export const DateTimeField = ({
+export const DateField = ({
   errorText,
-  format = 'yyyy-MM-dd hh:mm a', // Default format includes time
+  format = 'yyyy-MM-dd',
   inputRef,
   label,
   onChange,
@@ -40,15 +34,14 @@ export const DateTimeField = ({
   sx,
   value,
   ...rest
-}: DateTimeFieldProps) => {
+}: DateFieldProps) => {
   const fallbackId = React.useId();
-
   const validInputId = label ? convertToKebabCase(label) : fallbackId;
   const errorTextId = `${validInputId}-error-text`;
 
   const handleChange = (newValue: DateTime | null) => {
     if (newValue?.isValid) {
-      onChange(newValue); // Ensure full DateTime value (date + time) is passed
+      onChange(newValue);
     }
   };
 
@@ -64,7 +57,7 @@ export const DateTimeField = ({
         >
           {label}
         </InputLabel>
-        <MUIDateTimeField
+        <MUIDateField
           inputProps={{
             'aria-errormessage': errorText ? errorTextId : undefined,
             'aria-invalid': Boolean(errorText),

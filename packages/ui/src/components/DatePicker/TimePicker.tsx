@@ -1,6 +1,6 @@
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { DateTimeField as MUIDateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker as MuiTimePicker } from '@mui/x-date-pickers/TimePicker';
 import React from 'react';
 
 import { convertToKebabCase } from '../../utilities';
@@ -9,30 +9,27 @@ import { FormHelperText } from '../FormHelperText';
 import { InputLabel } from '../InputLabel/InputLabel';
 
 import type { SxProps, Theme } from '@mui/material/styles';
-import type { DateTimeFieldProps as MUIDateTimeFieldProps } from '@mui/x-date-pickers/DateTimeField';
+import type { TimePickerProps as MUITimePickerProps } from '@mui/x-date-pickers/TimePicker';
 import type { DateTime } from 'luxon';
 
-interface DateTimeFieldProps
-  extends Omit<MUIDateTimeFieldProps<DateTime>, 'onChange' | 'value'> {
+interface TimePickerProps
+  extends Omit<
+    MUITimePickerProps<DateTime>,
+    'onChange' | 'renderInput' | 'value'
+  > {
   errorText?: string;
-  format?:
-    | 'MM/dd/yyyy HH:mm'
-    | 'MM/dd/yyyy hh:mm a'
-    | 'dd-MM-yyyy HH:mm'
-    | 'dd-MM-yyyy hh:mm a'
-    | 'yyyy-MM-dd HH:mm'
-    | 'yyyy-MM-dd hh:mm a';
+  format?: 'HH:mm' | 'hh:mm a'; // 24-hour or 12-hour format
   inputRef?: React.RefObject<HTMLInputElement>;
   label: string;
-  onChange: (date: DateTime | null) => void;
+  onChange: (time: DateTime | null) => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-  sx?: SxProps<Theme>;
+  sx?: SxProps; // Accepts MUI sx for styling
   value: DateTime | null;
 }
 
-export const DateTimeField = ({
+export const TimePicker = ({
   errorText,
-  format = 'yyyy-MM-dd hh:mm a', // Default format includes time
+  format = 'hh:mm a', // Default format
   inputRef,
   label,
   onChange,
@@ -40,21 +37,20 @@ export const DateTimeField = ({
   sx,
   value,
   ...rest
-}: DateTimeFieldProps) => {
+}: TimePickerProps) => {
   const fallbackId = React.useId();
-
   const validInputId = label ? convertToKebabCase(label) : fallbackId;
   const errorTextId = `${validInputId}-error-text`;
 
-  const handleChange = (newValue: DateTime | null) => {
-    if (newValue?.isValid) {
-      onChange(newValue); // Ensure full DateTime value (date + time) is passed
+  const handleChange = (newTime: DateTime | null) => {
+    if (newTime?.isValid) {
+      onChange(newTime);
     }
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
-      <Box display="flex" flexDirection="column" sx={sx}>
+      <Box display="flex" flex="1" flexDirection="column" sx={sx}>
         <InputLabel
           sx={{
             marginBottom: 0,
@@ -64,23 +60,44 @@ export const DateTimeField = ({
         >
           {label}
         </InputLabel>
-        <MUIDateTimeField
-          inputProps={{
-            'aria-errormessage': errorText ? errorTextId : undefined,
-            'aria-invalid': Boolean(errorText),
-            'aria-labelledby': validInputId,
-            id: validInputId,
-            onClick,
-          }}
+        <MuiTimePicker
           slotProps={{
+            actionBar: {
+              sx: (theme: Theme) => ({
+                justifyContent: 'center',
+                marginBottom: theme.spacing(0.5),
+                marginTop: theme.spacing(0.5),
+                padding: 0,
+              }),
+            },
+            layout: {
+              sx: (theme: Theme) => ({
+                '& .MuiPickersLayout-contentWrapper': {
+                  borderBottom: `1px solid ${theme.tokens.calendar.Border}`,
+                },
+                border: `1px solid ${theme.tokens.calendar.Border}`,
+              }),
+            },
+            openPickerButton: {
+              sx: { padding: 0 },
+            },
+            popper: {
+              sx: (theme: Theme) => ({
+                ul: {
+                  borderColor: `${theme.tokens.calendar.Border} !important`,
+                },
+              }),
+            },
             textField: {
               InputLabelProps: { shrink: true },
               error: Boolean(errorText),
               helperText: '',
+              id: validInputId,
+              inputRef,
+              onClick,
             },
           }}
-          format={format}
-          inputRef={inputRef}
+          ampm={format === 'hh:mm a'} // Toggle 12-hour or 24-hour format
           onChange={handleChange}
           sx={{ marginTop: 1 }}
           value={value}
