@@ -1,5 +1,11 @@
-import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import {
+  Checkbox,
+  CircleProgress,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
+import { Grid, Grid2 } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
@@ -18,7 +24,7 @@ import {
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
-import { AlertsResourcesNotice } from './AlertsResourcesNotice';
+import { AlertsResourcesNotice, StyledNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
@@ -71,6 +77,8 @@ export interface AlertResourcesProp {
    */
   isSelectionsNeeded?: boolean;
 
+  maxSelectionCount?: number;
+
   /**
    * The element until which we need to scroll on pagination and order change
    */
@@ -93,6 +101,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     handleResourcesSelection,
     hideLabel,
     isSelectionsNeeded,
+    maxSelectionCount,
     scrollElement,
     serviceType,
   } = props;
@@ -402,6 +411,21 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
+        {maxSelectionCount !== undefined && (
+          <Grid item xs={12}>
+            <StyledNotice variant="warning">
+              <Typography
+                sx={(theme) => ({
+                  fontFamily: theme.font.bold,
+                })}
+                data-testid="max_selection_notice"
+                variant="body2"
+              >
+                You can select up to {maxSelectionCount} resources
+              </Typography>
+            </StyledNotice>
+          </Grid>
+        )}
         {isSelectionsNeeded &&
           !isDataLoadingError &&
           resources &&
@@ -409,11 +433,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             <Grid item xs={12}>
               <AlertsResourcesNotice
                 handleSelectionChange={handleAllSelection}
+                maxSelectionCount={maxSelectionCount}
                 selectedResources={selectedResources.length}
                 totalResources={resources?.length ?? 0}
               />
             </Grid>
           )}
+
         <Grid item xs={12}>
           <DisplayAlertResources
             scrollToElement={() =>
