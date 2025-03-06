@@ -2563,8 +2563,6 @@ export const handlers = [
           status: 200,
         }
       );
-      // return HttpResponse.json({}, { status: 400 });
-      // return HttpResponse.json({errors: [{reason: 'OMG, failed'}, {reason: 'failed due to'}]}, { status: 400 });
     }
   ),
   http.get('*/monitor/alert-channels', () => {
