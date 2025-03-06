@@ -77,11 +77,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         })
         .catch((updateError: APIError[]) => {
           // Handle error
-          const errorReasons = getAPIErrorOrDefault(
+          const errorResponse = getAPIErrorOrDefault(
             updateError,
             `${errorStatus} alert failed`
           );
-          enqueueSnackbar(errorReasons?.[0].reason, {
+          enqueueSnackbar(errorResponse[0].reason, {
             variant: 'error',
           });
         });
