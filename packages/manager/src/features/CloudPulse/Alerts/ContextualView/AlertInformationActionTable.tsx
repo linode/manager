@@ -101,7 +101,6 @@ export const AlertInformationActionTable = (
             `The alert settings for ${entityName} saved successfully.`,
             { variant: 'success' }
           );
-          setIsDialogOpen(false);
         })
         .catch(() => {
           enqueueSnackbar(
@@ -110,9 +109,11 @@ export const AlertInformationActionTable = (
               variant: 'error',
             }
           );
-          setIsDialogOpen(false);
         })
-        .finally(() => setIsLoading(false));
+        .finally(() => {
+          setIsLoading(false);
+          setIsDialogOpen(false);
+        });
     },
     [addEntity, enqueueSnackbar, entityId, entityName, removeEntity]
   );

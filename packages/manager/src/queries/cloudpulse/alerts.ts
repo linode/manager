@@ -91,8 +91,44 @@ export const useAddEntityToAlert = () => {
         'alert-definition-id': alertId,
       });
     },
+    onError(_error, payload, context: { previousData: Alert[] }) {
+      const { serviceType } = payload;
+      const { previousData } = context;
+      queryClient.setQueryData(
+        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
+        previousData
+      );
+    },
+    onMutate(payload) {
+      const { alertId, entityId, serviceType } = payload;
 
-    onSuccess() {
+      queryClient.cancelQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
+          .queryKey,
+      });
+
+      const previousData = queryClient.getQueryData(
+        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey
+      );
+
+      queryClient.setQueryData(
+        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
+        (alerts: Alert[]) => {
+          return alerts?.map((alert) => {
+            if (alert.id !== alertId) {
+              return alert;
+            }
+
+            alert.entity_ids.push(entityId);
+
+            return alert;
+          });
+        }
+      );
+
+      return { previousData };
+    },
+    onSettled() {
       queryClient.invalidateQueries(queryFactory.alerts);
     },
   });
@@ -105,7 +141,47 @@ export const useRemoveEntityFromAlert = () => {
       return deleteEntityFromAlert(serviceType, entityId, alertId);
     },
 
-    onSuccess() {
+    onError(_error, payload, context: { previousData: Alert[] }) {
+      const { serviceType } = payload;
+      const { previousData } = context;
+      queryClient.setQueryData(
+        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
+        previousData
+      );
+    },
+    onMutate(payload) {
+      const { alertId, entityId, serviceType } = payload;
+
+      queryClient.cancelQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
+          .queryKey,
+      });
+
+      const previousData = queryClient.getQueryData(
+        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey
+      );
+
+      queryClient.setQueryData(
+        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
+        (alerts: Alert[]) => {
+          return alerts?.map((alert) => {
+            if (alert.id !== alertId) {
+              return alert;
+            }
+
+            const index = alert.entity_ids.indexOf(entityId);
+            if (index > -1) {
+              alert.entity_ids.splice(index, 1);
+            }
+
+            return alert;
+          });
+        }
+      );
+
+      return { previousData };
+    },
+    onSettled() {
       queryClient.invalidateQueries(queryFactory.alerts);
     },
   });
