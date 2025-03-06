@@ -9,12 +9,14 @@ import { Button } from '../../Button/Button';
 import { Divider } from '../../Divider/Divider';
 import { Stack } from '../../Stack/Stack';
 import { Calendar } from '../Calendar/Calendar';
-import { DateField } from '../DateField';
-import { Presets } from './Presets';
+import { Presets } from '../DateRangePicker/Presets';
+import { DateTimeField } from '../DateTimeField';
+import { TimePicker } from '../TimePicker';
+import { TimeZoneSelect } from '../TimeZoneSelect';
 
 import type { SxProps } from '@mui/material/styles';
 
-export interface DateRangePickerProps {
+export interface DateTimeRangePickerProps {
   /** Properties for the end date field */
   endDateProps?: {
     /** Custom error message for invalid end date */
@@ -30,7 +32,13 @@ export interface DateRangePickerProps {
   };
 
   /** Format for displaying the date-time */
-  format?: 'MM/dd/yyyy' | 'dd-MM-yyyy' | 'yyyy-MM-dd';
+  format?:
+    | 'MM/dd/yyyy HH:mm'
+    | 'MM/dd/yyyy hh:mm a'
+    | 'dd-MM-yyyy HH:mm'
+    | 'dd-MM-yyyy hh:mm a'
+    | 'yyyy-MM-dd HH:mm'
+    | 'yyyy-MM-dd hh:mm a';
 
   /** Callback when the date-time range changes,
    * this returns start date, end date in ISO formate,
@@ -40,7 +48,6 @@ export interface DateRangePickerProps {
     endDate: null | string;
     selectedPreset: null | string;
     startDate: null | string;
-    timeZone?: null | string;
   }) => void;
 
   /** Additional settings for the presets dropdown */
@@ -71,14 +78,14 @@ export interface DateRangePickerProps {
   sx?: SxProps;
 }
 
-export const DateRangePicker = ({
+export const DateTimeRangePicker = ({
   endDateProps,
   format,
   onApply,
   presetsProps,
   startDateProps,
   sx,
-}: DateRangePickerProps) => {
+}: DateTimeRangePickerProps) => {
   const [startDate, setStartDate] = useState<DateTime | null>(
     startDateProps?.value ?? null
   );
@@ -96,6 +103,7 @@ export const DateRangePicker = ({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
   const [focusedField, setFocusedField] = useState<'end' | 'start'>('start'); // Tracks focused input field
+  const [timeZone, setTimeZone] = useState<string>('UTC'); // Default timezone
 
   const startDateInputRef = useRef<HTMLInputElement | null>(null);
   const endDateInputRef = useRef<HTMLInputElement | null>(null);
@@ -119,11 +127,25 @@ export const DateRangePicker = ({
 
   const handleApply = () => {
     onApply?.({
-      endDate: endDate ? endDate.toISODate() : null,
+      endDate: endDate ? endDate.toISO() : null,
       selectedPreset,
-      startDate: startDate ? startDate.toISODate() : null,
+      startDate: startDate ? startDate.toISO() : null,
     });
     handleClose();
+  };
+
+  const handleTimeZoneChange = (newTimeZone: string) => {
+    if (!newTimeZone) {
+      return;
+    }
+    setTimeZone(newTimeZone);
+
+    setStartDate((prev) =>
+      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null
+    );
+    setEndDate((prev) =>
+      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null
+    );
   };
 
   const validateDates = (
@@ -183,7 +205,7 @@ export const DateRangePicker = ({
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <Box>
         <Stack direction="row" spacing={2} sx={sx}>
-          <DateField
+          <DateTimeField
             onChange={(date) => {
               setStartDate(date);
 
@@ -200,7 +222,7 @@ export const DateRangePicker = ({
             onClick={() => handleOpen('start')}
             value={startDate}
           />
-          <DateField
+          <DateTimeField
             onChange={(date) => {
               setEndDate(date);
             }}
@@ -213,24 +235,10 @@ export const DateRangePicker = ({
           />
         </Stack>
         <Popover
-          onClose={(e: React.SyntheticEvent<HTMLElement>) => {
-            const target = e.target as HTMLElement;
-
-            // Check if click is inside the input field (anchorEl)
-            const isClickInsideInput = anchorEl?.contains(target);
-
-            // Check if click is inside the Popover itself
-            const isClickInsidePopover = target.closest('.MuiPopover-paper');
-
-            if (isClickInsideInput || isClickInsidePopover) {
-              return; // Prevent closing if clicked inside input or popover
-            }
-
-            handleClose(); // Close popover only when clicking outside
-          }}
           anchorEl={anchorEl}
           anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           disableAutoFocus
+          onClose={handleClose}
           open={open}
           role="dialog"
           sx={{ boxShadow: 3, zIndex: 1300 }}
@@ -250,24 +258,72 @@ export const DateRangePicker = ({
                 selectedPreset={selectedPreset}
               />
             )}
-            <Calendar
-              direction="left"
-              endDate={endDate}
-              focusedField={focusedField}
-              month={currentMonth}
-              onDateClick={handleDateSelection}
-              setMonth={setCurrentMonth}
-              startDate={startDate}
-            />
-            <Calendar
-              direction="right"
-              endDate={endDate}
-              focusedField={focusedField}
-              month={currentMonth.plus({ months: 1 })}
-              onDateClick={handleDateSelection}
-              setMonth={(date) => setCurrentMonth(date.minus({ months: 1 }))}
-              startDate={startDate}
-            />
+            <Box>
+              <Box display="flex" gap={2}>
+                <Calendar
+                  direction="left"
+                  endDate={endDate}
+                  focusedField={focusedField}
+                  month={currentMonth}
+                  onDateClick={handleDateSelection}
+                  setMonth={setCurrentMonth}
+                  startDate={startDate}
+                />
+                <Calendar
+                  setMonth={(date) =>
+                    setCurrentMonth(date.minus({ months: 1 }))
+                  }
+                  direction="right"
+                  endDate={endDate}
+                  focusedField={focusedField}
+                  month={currentMonth.plus({ months: 1 })}
+                  onDateClick={handleDateSelection}
+                  startDate={startDate}
+                />
+              </Box>
+              <Box
+                display="flex"
+                gap={2}
+                justifyContent="space-between"
+                paddingBottom={2}
+              >
+                <TimePicker
+                  onChange={(newTime) => {
+                    if (newTime) {
+                      setStartDate(
+                        (prev) =>
+                          prev?.set({
+                            hour: newTime.hour,
+                            minute: newTime.minute,
+                          }) ?? newTime
+                      );
+                    }
+                  }}
+                  label="Start Time"
+                  value={startDate}
+                />
+                <TimePicker
+                  onChange={(newTime) => {
+                    if (newTime) {
+                      setEndDate(
+                        (prev) =>
+                          prev?.set({
+                            hour: newTime.hour,
+                            minute: newTime.minute,
+                          }) ?? newTime
+                      );
+                    }
+                  }}
+                  label="End Time"
+                  value={endDate}
+                />
+                <TimeZoneSelect
+                  noMarginTop
+                  onChange={handleTimeZoneChange}
+                  value={timeZone}
+                />
+              </Box>
+            </Box>
           </Box>
           <Divider spacingBottom={0} spacingTop={0} />
           <Box display="flex" gap={2} justifyContent="flex-end" padding={2}>
