@@ -63,6 +63,6 @@ export const useIsLinodeCloneFirewallEnabled = () => {
   // @TODO Clone Linode Firewalls: check for firewall attachment capability in Linode API when it exists
 
   return {
-    isLinodeCloneFirewallEnabled: flags.linodeCloneFirewall ?? false,
+    isLinodeCloneFirewallEnabled: Boolean(flags.linodeCloneFirewall),
   };
 };
