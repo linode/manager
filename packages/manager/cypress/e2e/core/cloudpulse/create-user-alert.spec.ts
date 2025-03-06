@@ -171,7 +171,7 @@ describe('Create Alert', () => {
 
   it('should navigate to the Create Alert page from the Alert Listings page', () => {
     // Navigate to the alert definitions list page with login
-    cy.visitWithLogin('alerts/definitions');
+    cy.visitWithLogin('/alerts/definitions');
 
     // Wait for the alert definitions list API call to complete
     cy.wait('@getAlertDefinitionsList');
@@ -187,7 +187,7 @@ describe('Create Alert', () => {
   });
 
   it('should successfully create a new alert', () => {
-    cy.visitWithLogin('alerts/definitions/create');
+    cy.visitWithLogin('/alerts/definitions/create');
 
     // Enter Name and Description
     cy.findByPlaceholderText('Enter a Name')

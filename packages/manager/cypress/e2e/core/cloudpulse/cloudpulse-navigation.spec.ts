@@ -64,7 +64,7 @@ describe('CloudPulse  navigation', () => {
       },
     }).as('getFeatureFlags');
 
-    cy.visitWithLogin('metrics');
+    cy.visitWithLogin('/metrics');
     cy.wait('@getFeatureFlags');
 
     cy.findByText('Not Found').should('be.visible');
@@ -79,7 +79,7 @@ describe('CloudPulse  navigation', () => {
     }).as('getFeatureFlags');
 
     // Attempt to visit the alert definitions page for a specific alert using a manual URL
-    cy.visitWithLogin('alerts');
+    cy.visitWithLogin('/alerts');
 
     // Wait for the feature flag to be fetched and applied
     cy.wait('@getFeatureFlags');
@@ -97,7 +97,7 @@ describe('CloudPulse  navigation', () => {
     }).as('getFeatureFlags');
 
     // Attempt to visit the alert detail page for a specific alert using a manual URL
-    cy.visitWithLogin('alerts/definitions/detail/dbaas/20000');
+    cy.visitWithLogin('/alerts/definitions/detail/dbaas/20000');
 
     // Wait for the feature flag to be fetched and applied
     cy.wait('@getFeatureFlags');

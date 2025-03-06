@@ -168,7 +168,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     mockUpdateAlertDefinitions('dbaas', 2, mockAlerts[1]).as(
       'getSecondAlertDefinitions'
     );
-    cy.visitWithLogin('alerts/definitions');
+    cy.visitWithLogin('/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
   });
 
