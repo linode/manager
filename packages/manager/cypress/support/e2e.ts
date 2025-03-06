@@ -12,7 +12,8 @@
 // You can read more here:
 // https://on.cypress.io/configuration
 // ***********************************************************
-
+// mochaawesome doc says this is necessary but it seems to work w/out this step
+// import 'cypress-mochawesome-reporter/register';
 import '@testing-library/cypress/add-commands';
 // Cypress command and assertion setup.
 import chaiString from 'chai-string';

@@ -20,7 +20,7 @@ import cypressViteConfig from './cypress/vite.config';
 import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-override';
 import { postRunCleanup } from './cypress/support/plugins/post-run-cleanup';
 import { resetUserPreferences } from './cypress/support/plugins/reset-user-preferences';
-
+import {enableHtmlReport} from './cypress/support/plugins/html-report'
 /**
  * Exports a Cypress configuration object.
  *
@@ -101,6 +101,8 @@ export default defineConfig({
         enableJunitReport(),
         generateTestWeights,
         postRunCleanup,
+        // html page not generated if enableHtmlReport before postRunCleanup
+        enableHtmlReport,
       ]);
     },
   },

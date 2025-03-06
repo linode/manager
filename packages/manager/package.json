@@ -180,6 +180,7 @@
     "cypress": "14.0.1",
     "cypress-axe": "^1.6.0",
     "cypress-file-upload": "^5.0.8",
+    "cypress-mochawesome-reporter": "^3.8.2",
     "cypress-real-events": "^1.14.0",
     "cypress-vite": "^1.6.0",
     "dotenv": "^16.0.3",
