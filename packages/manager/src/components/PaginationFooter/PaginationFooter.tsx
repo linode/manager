@@ -84,6 +84,13 @@ export const PaginationFooter = (props: Props) => {
       {!fixedSize ? (
         <Box data-qa-pagination-page-size padding={0.5}>
           <Select
+            listItemProps={(value) => {
+              return {
+                dataAttributes: {
+                  'data-qa-pagination-page-size-option': String(value.value),
+                },
+              };
+            }}
             value={{
               label: defaultPagination?.label ?? '',
               value: defaultPagination?.value ?? '',
