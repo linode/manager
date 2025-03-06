@@ -10,6 +10,7 @@ import {
 } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
+  scrollErrorIntoView,
   useFormValidateOnChange,
 } from '@linode/utilities';
 import { createPlacementGroupSchema } from '@linode/validation';
@@ -31,7 +32,6 @@ import {
 } from '@linode/queries';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
 import { PlacementGroupPolicyRadioGroup } from './PlacementGroupPolicyRadioGroup';
@@ -154,7 +154,7 @@ export const PlacementGroupsCreateDrawer = (
   const hasApiError = error?.[0]?.reason;
 
   const selectedRegion = React.useMemo(
-    () => regions?.find((region) => region.id == values.region),
+    () => regions?.find((region) => region.id === values.region),
     [regions, values.region]
   );
 

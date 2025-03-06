@@ -9,6 +9,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -21,7 +22,6 @@ import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { useRegionsQuery, useAllVPCsQuery } from '@linode/queries';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 

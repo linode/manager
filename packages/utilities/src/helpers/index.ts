@@ -30,3 +30,4 @@ export * from './reduceAsync';
 export * from './replaceNewlinesWithLineBreaks';
 export * from './rootManager';
 export * from './roundTo';
+export * from './scrollErrorIntoView';

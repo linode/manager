@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { equals, lensPath, remove, set } from 'ramda';
@@ -18,7 +19,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useMutateProfile, useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import type { Profile } from '@linode/api-v4/lib/profile';
 import type { APIError } from '@linode/api-v4/lib/types';
