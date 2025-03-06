@@ -27,6 +27,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
+import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
@@ -79,7 +80,6 @@ import type {
 } from '@linode/api-v4';
 import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 
 interface Helpers {
   devtmpfs_automount: boolean;
