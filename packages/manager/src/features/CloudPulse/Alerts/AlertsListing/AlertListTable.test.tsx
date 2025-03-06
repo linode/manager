@@ -119,7 +119,9 @@ describe('Alert List Table test', () => {
 
   it('should show error snackbar when enabling alert fails', async () => {
     queryMocks.useEditAlertDefinition.mockReturnValue({
-      mutateAsync: vi.fn().mockRejectedValue({}),
+      mutateAsync: vi
+        .fn()
+        .mockRejectedValue([{ reason: 'Enabling alert failed' }]),
     });
 
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
@@ -141,7 +143,9 @@ describe('Alert List Table test', () => {
 
   it('should show error snackbar when disabling alert fails', async () => {
     queryMocks.useEditAlertDefinition.mockReturnValue({
-      mutateAsync: vi.fn().mockRejectedValue({}),
+      mutateAsync: vi
+        .fn()
+        .mockRejectedValue([{ reason: 'Disabling alert failed' }]),
     });
 
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });

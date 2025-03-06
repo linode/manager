@@ -922,6 +922,7 @@ export const handlers = [
         status: body?.['status'] ?? 'disabled',
       });
       return HttpResponse.json(firewall);
+     // return HttpResponse.json({errors: [{field: 'unknown',reason: 'nooooo'}]}, {status: 400});
     }
   ),
   // http.post('*/account/agreements', () => {
@@ -2563,6 +2564,8 @@ export const handlers = [
           status: 200,
         }
       );
+      // return HttpResponse.json({}, { status: 400 });
+      // return HttpResponse.json({errors: [{reason: 'OMG, failed'}, {reason: 'failed due to'}]}, { status: 400 });
     }
   ),
   http.get('*/monitor/alert-channels', () => {
