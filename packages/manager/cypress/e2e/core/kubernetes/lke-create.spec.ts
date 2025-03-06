@@ -1194,9 +1194,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       // Confirm that there is a tooltip explanation for the region dropdown options
       ui.tooltip
-        .findByText(
-          'Only regions that support LKE Enterprise clusters are listed.'
-        )
+        .findByText('Only regions that support placement groups are listed.')
         .should('be.visible');
 
       // Selects an enterprise version

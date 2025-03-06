@@ -400,7 +400,7 @@ export const CreateCluster = () => {
                 tooltipText={
                   isLkeEnterpriseLAFeatureEnabled &&
                   selectedTier === 'enterprise'
-                    ? 'Only regions that support LKE Enterprise clusters are listed.'
+                    ? 'Only regions that support placement groups are listed.'
                     : undefined
                 }
                 disableClearable
