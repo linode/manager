@@ -921,7 +921,6 @@ export const handlers = [
         status: body?.['status'] ?? 'disabled',
       });
       return HttpResponse.json(firewall);
-     // return HttpResponse.json({errors: [{field: 'unknown',reason: 'nooooo'}]}, {status: 400});
     }
   ),
   // http.post('*/account/agreements', () => {
