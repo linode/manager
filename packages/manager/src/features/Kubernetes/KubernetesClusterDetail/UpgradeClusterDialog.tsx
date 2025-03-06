@@ -8,7 +8,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import {
   localStorageWarning,
   nodesDeletionWarning,
-} from 'src/features/Kubernetes/kubeUtils';
+} from 'src/features/Kubernetes/constants';
 import {
   useKubernetesClusterMutation,
   useKubernetesTypesQuery,

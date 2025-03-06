@@ -1,7 +1,8 @@
-import { getBooleanEnv } from './utilities/env';
-
 // whether or not this is a Vite production build
 // This does not necessarily mean Cloud is running in a production environment.
+
+import { getBooleanEnv } from '@linode/utilities';
+
 // For example, cloud.dev.linode.com is technically a production build.
 export const isProductionBuild = import.meta.env.PROD;
 

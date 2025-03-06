@@ -5,6 +5,7 @@ import {
   CircleProgress,
   Dialog,
   Divider,
+  ErrorState,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -16,15 +17,13 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { equals, repeat } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
@@ -127,13 +126,12 @@ const defaultInterface = {
  * they are only used as placeholders presented to the user as empty selects.
  */
 export const padList = <T,>(list: T[], filler: T, size: number = 3): T[] => {
-  return [...list, ...repeat(filler, Math.max(0, size - list.length))];
+  return [...list, ...Array(Math.max(0, size - list.length)).fill(filler)];
 };
 
 const padInterfaceList = (interfaces: ExtendedInterface[]) => {
   return padList<ExtendedInterface>(interfaces, defaultInterface, 3);
 };
-
 const defaultInterfaceList = padInterfaceList([
   {
     ipam_address: '',
@@ -214,13 +212,14 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
     (thisInterface) => thisInterface.purpose !== 'none'
   );
 
+  const defaultNonNoneInterfaces = defaultInterfaceList.filter(
+    (thisInterface) => thisInterface.purpose !== 'none'
+  );
+
   if (
-    equals(
-      filteredInterfaces,
-      defaultInterfaceList.filter(
-        (thisInterface) => thisInterface.purpose !== 'none'
-      )
-    )
+    filteredInterfaces.length === defaultNonNoneInterfaces.length &&
+    JSON.stringify(filteredInterfaces) ===
+      JSON.stringify(defaultNonNoneInterfaces)
   ) {
     // In this case, where eth0 is set to public interface
     // and no other interfaces are specified, the API prefers
@@ -693,7 +692,7 @@ export const LinodeConfigDialog = (props: Props) => {
                 />
               </Grid>
             )}
-            <Grid xs={12}>
+            <Grid size={12}>
               <TextField
                 disabled={isReadOnly}
                 errorGroup="linode-config-dialog"
@@ -720,7 +719,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
@@ -759,7 +758,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Boot Settings</Typography>
               {kernels && (
                 <KernelSelect
@@ -854,7 +853,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
                 getSelected={(slot) =>
@@ -952,7 +951,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Box alignItems="center" display="flex">
                 <Typography variant="h3">Networking</Typography>
                 <TooltipIcon
@@ -1090,7 +1089,7 @@ export const LinodeConfigDialog = (props: Props) => {
               })}
             </Grid>
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
               <FormControl fullWidth>
                 <StyledFormGroup>
@@ -1240,7 +1239,7 @@ export const unrecommendedConfigNoticeSelector = ({
   values,
 }: {
   _interface: ExtendedInterface;
-  primaryInterfaceIndex: number | null;
+  primaryInterfaceIndex: null | number;
   thisIndex: number;
   values: EditableFields;
 }): JSX.Element | null => {

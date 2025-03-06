@@ -166,7 +166,7 @@ const StyledUserMenuButton = styled(Button, {
       font: theme.tokens.typography.Label.Bold.S,
     },
     marginLeft: 0,
-    marginRight: theme.tokens.spacing[40],
+    marginRight: theme.tokens.spacing.S8,
   },
   '.MuiStack-root .MuiTypography-root': {
     color: open
@@ -181,6 +181,6 @@ const StyledUserMenuButton = styled(Button, {
     },
   },
   [theme.breakpoints.down('sm')]: {
-    padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
+    padding: `${theme.tokens.spacing.S6} ${theme.tokens.spacing.S8}`,
   },
 }));

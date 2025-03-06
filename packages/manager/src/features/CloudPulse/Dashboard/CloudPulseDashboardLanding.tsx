@@ -2,6 +2,8 @@ import { Box, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import * as React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { defaultTimeDuration } from '../Utils/CloudPulseDateTimePickerUtils';
@@ -75,30 +77,33 @@ export const CloudPulseDashboardLanding = () => {
     []
   );
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Paper sx={{ padding: 0 }}>
-          <Box display="flex" flexDirection="column">
-            <GlobalFilters
-              handleAnyFilterChange={onFilterChange}
-              handleDashboardChange={onDashboardChange}
-              handleTimeDurationChange={onTimeDurationChange}
-              handleToggleAppliedFilter={toggleAppliedFilter}
-            />
-            {dashboard?.service_type && showAppliedFilters && (
-              <CloudPulseAppliedFilterRenderer
-                filters={filterData.label}
-                serviceType={dashboard.service_type}
+    <React.Fragment>
+      <DocumentTitleSegment segment="Dashboards" />
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Paper sx={{ padding: 0 }}>
+            <Box display="flex" flexDirection="column">
+              <GlobalFilters
+                handleAnyFilterChange={onFilterChange}
+                handleDashboardChange={onDashboardChange}
+                handleTimeDurationChange={onTimeDurationChange}
+                handleToggleAppliedFilter={toggleAppliedFilter}
               />
-            )}
-          </Box>
-        </Paper>
+              {dashboard?.service_type && showAppliedFilters && (
+                <CloudPulseAppliedFilterRenderer
+                  filters={filterData.label}
+                  serviceType={dashboard.service_type}
+                />
+              )}
+            </Box>
+          </Paper>
+        </Grid>
+        <CloudPulseDashboardRenderer
+          dashboard={dashboard}
+          filterValue={filterData.id}
+          timeDuration={timeDuration}
+        />
       </Grid>
-      <CloudPulseDashboardRenderer
-        dashboard={dashboard}
-        filterValue={filterData.id}
-        timeDuration={timeDuration}
-      />
-    </Grid>
+    </React.Fragment>
   );
 };

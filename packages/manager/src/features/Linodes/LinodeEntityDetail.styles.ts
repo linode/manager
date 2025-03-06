@@ -4,7 +4,7 @@ import { Typography as FontTypography } from '@linode/design-language-system';
 
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';

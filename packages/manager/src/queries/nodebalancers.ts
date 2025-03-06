@@ -4,6 +4,7 @@ import {
   deleteNodeBalancer,
   deleteNodeBalancerConfig,
   getNodeBalancer,
+  getNodeBalancerBeta,
   getNodeBalancerConfigs,
   getNodeBalancerFirewalls,
   getNodeBalancerStats,
@@ -21,6 +22,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
@@ -68,6 +70,11 @@ export const nodebalancerQueries = createQueryKeys('nodebalancers', {
         queryFn: () => getNodeBalancerFirewalls(id),
         queryKey: null,
       },
+      nodebalancer: (useBetaEndpoint: boolean = false) => ({
+        queryFn: (useBetaEndpoint) =>
+          useBetaEndpoint ? getNodeBalancerBeta(id) : getNodeBalancer(id),
+        queryKey: [useBetaEndpoint ? 'v4beta' : 'v4'],
+      }),
       stats: {
         queryFn: () => getNodeBalancerStats(id),
         queryKey: null,
@@ -117,11 +124,15 @@ export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
     placeholderData: keepPreviousData,
   });
 
-export const useNodeBalancerQuery = (id: number, enabled = true) =>
-  useQuery<NodeBalancer, APIError[]>({
-    ...nodebalancerQueries.nodebalancer(id),
+export const useNodeBalancerQuery = (id: number, enabled = true) => {
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const useBetaEndpoint = isLkeEnterpriseLAFeatureEnabled;
+
+  return useQuery<NodeBalancer, APIError[]>({
+    ...nodebalancerQueries.nodebalancer(id)._ctx.nodebalancer(useBetaEndpoint),
     enabled,
   });
+};
 
 export const useNodebalancerUpdateMutation = (id: number) => {
   const queryClient = useQueryClient();

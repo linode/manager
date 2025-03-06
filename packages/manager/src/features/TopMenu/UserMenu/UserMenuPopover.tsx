@@ -2,7 +2,7 @@ import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -126,7 +126,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     }
 
     return (
-      <Grid key={link.display} xs={12}>
+      <Grid key={link.display} size={12}>
         <Link
           data-testid={`menu-item-${link.display}`}
           onClick={onClose}
@@ -158,8 +158,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       slotProps={{
         paper: {
           sx: (theme) => ({
-            paddingX: theme.tokens.spacing[70],
-            paddingY: theme.tokens.spacing[60],
+            paddingX: theme.tokens.spacing.S24,
+            paddingY: theme.tokens.spacing.S16,
           }),
         },
       }}
@@ -174,10 +174,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     >
       <Stack
         data-qa-user-menu
-        gap={(theme) => theme.tokens.spacing[60]}
+        gap={(theme) => theme.tokens.spacing.S16}
         minWidth={250}
       >
-        <Stack display="flex" gap={(theme) => theme.tokens.spacing[40]}>
+        <Stack display="flex" gap={(theme) => theme.tokens.spacing.S8}>
           {canSwitchBetweenParentOrProxyAccount && (
             <Typography>Current account:</Typography>
           )}
@@ -205,10 +205,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           <Heading>My Profile</Heading>
           <Divider />
           <Grid columnSpacing={2} container rowSpacing={1}>
-            <Grid container direction="column" wrap="nowrap" xs={6}>
+            <Grid container direction="column" wrap="nowrap" size={6}>
               {profileLinks.slice(0, 4).map(renderLink)}
             </Grid>
-            <Grid container direction="column" wrap="nowrap" xs={6}>
+            <Grid container direction="column" wrap="nowrap" size={6}>
               {profileLinks.slice(4).map(renderLink)}
             </Grid>
           </Grid>
@@ -218,8 +218,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             <Heading>Account</Heading>
             <Divider />
             <Stack
-              gap={(theme) => theme.tokens.spacing[40]}
-              mt={(theme) => theme.tokens.spacing[40]}
+              gap={(theme) => theme.tokens.spacing.S8}
+              mt={(theme) => theme.tokens.spacing.S8}
             >
               {accountLinks.map((menuLink) =>
                 menuLink.hide ? null : (

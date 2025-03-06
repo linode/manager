@@ -1,4 +1,5 @@
 import { Notice, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -7,7 +8,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { titlecase } from 'src/features/Linodes/presentation';
 import { usePreferences } from 'src/queries/profile/preferences';
-import { capitalize } from 'src/utilities/capitalize';
 
 import type { DialogProps } from '@linode/ui';
 

@@ -1,6 +1,6 @@
 import { IconButton } from '@linode/ui';
 import { Box, CircleProgress, Paper, Tooltip } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -170,7 +170,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
             )}
             {display === 'grid' && (
               <>
-                <Grid className={'px0'} xs={12}>
+                <Grid className={'px0'} size={12}>
                   {isGeckoLAEnabled && (
                     <Paper
                       sx={{ borderBottom: 0, padding: 1 }}
@@ -237,7 +237,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                 )}
               </>
             )}
-            <Grid xs={12}>
+            <Grid size={12}>
               {
                 <PaginationFooter
                   sx={{

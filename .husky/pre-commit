@@ -1,1 +1,1 @@
-yarn workspaces run precommit
+pnpm lint-staged

@@ -1,6 +1,6 @@
 import { Button, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 
 import { TableCell } from 'src/components/TableCell';
 

@@ -18,10 +18,10 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
-import { nodeWarning } from '../../kubeUtils';
+import { nodeWarning } from '../../constants';
 import { hasInvalidNodePoolPrice } from './utils';
 
-import type { Region } from '@linode/api-v4';
+import type { KubernetesTier, Region } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -60,6 +60,7 @@ export interface Props {
   clusterId: number;
   clusterLabel: string;
   clusterRegionId: Region['id'];
+  clusterTier: KubernetesTier;
   onClose: () => void;
   open: boolean;
   regionsData: Region[];
@@ -70,6 +71,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     clusterId,
     clusterLabel,
     clusterRegionId,
+    clusterTier,
     onClose,
     open,
     regionsData,
@@ -190,6 +192,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           resetValues={resetDrawer}
           selectedId={selectedTypeInfo?.planId}
           selectedRegionId={clusterRegionId}
+          selectedTier={clusterTier}
           // No nanodes in clusters
           types={extendedTypes.filter((t) => t.class !== 'nanode')}
           updatePlanCount={updatePlanCount}

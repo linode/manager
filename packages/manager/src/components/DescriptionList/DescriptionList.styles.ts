@@ -1,10 +1,10 @@
 import { Typography, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 
 import type { DescriptionListProps } from './DescriptionList';
 import type { TypographyProps } from '@mui/material';
-import type { Grid2Props } from '@mui/material/Unstable_Grid2';
+import type { Grid2Props } from '@mui/material/Grid2';
 
 interface StyledDLProps extends Omit<DescriptionListProps, 'items'> {
   component: Grid2Props['component'];

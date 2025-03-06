@@ -85,8 +85,53 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
       },
       kubeconfig: {
         queryFn: async () => {
-          const result = await getKubeConfig(id);
-          return window.atob(result.kubeconfig);
+          try {
+            const result = await getKubeConfig(id);
+            if (!result || !result.kubeconfig) {
+              throw [{ reason: 'Invalid KubeConfig response' } as APIError];
+            }
+
+            let decodedKubeConfig;
+            try {
+              decodedKubeConfig = window.atob(result.kubeconfig);
+            } catch (decodeError) {
+              throw [{ reason: 'Failed to decode KubeConfig' } as APIError];
+            }
+            return decodedKubeConfig;
+          } catch (error) {
+            const err = error as {
+              response?: { status?: number };
+              reason?: string;
+            };
+            const serviceUnavailableStatus = 503;
+            if (
+              err?.response?.status === serviceUnavailableStatus ||
+              (Array.isArray(err) &&
+                err[0]?.reason?.includes('kubeconfig is not yet available'))
+            ) {
+              // Custom error to identify when KubeConfig is still provisioning
+              const notReadyError = [
+                {
+                  reason:
+                    'Cluster kubeconfig is not yet available. Please try again later.',
+                } as APIError & { isKubeConfigNotReady: true },
+              ];
+
+              notReadyError[0].isKubeConfigNotReady = true;
+
+              throw notReadyError;
+            }
+
+            if (Array.isArray(error)) {
+              throw error;
+            }
+
+            if (error instanceof Error) {
+              throw [{ reason: error.message } as APIError];
+            }
+
+            throw [{ reason: 'An unexpected error occurred' } as APIError];
+          }
         },
         queryKey: null,
       },
@@ -114,7 +159,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
       ) => ({
         queryFn: () =>
           useBetaEndpoint
-            ? getKubernetesClustersBeta()
+            ? getKubernetesClustersBeta(params, filter)
             : getKubernetesClusters(params, filter),
         queryKey: [params, filter, useBetaEndpoint ? 'v4beta' : 'v4'],
       }),
@@ -137,14 +182,19 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   },
 });
 
-export const useKubernetesClusterQuery = (id: number) => {
+export const useKubernetesClusterQuery = (
+  id: number,
+  enabled = true,
+  options = {}
+) => {
   const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const useBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
 
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.cluster(useBetaEndpoint),
-    enabled: !isAPLAvailabilityLoading,
+    enabled: enabled && !isAPLAvailabilityLoading,
+    ...options,
   });
 };
 
@@ -206,7 +256,13 @@ export const useKubernetesKubeConfigQuery = (
   useQuery<string, APIError[]>({
     ...kubernetesQueries.cluster(clusterId)._ctx.kubeconfig,
     enabled,
-    retry: 3,
+    retry: (failureCount, error: any) => {
+      // Skip retries when cluster is still provisioning
+      if (Array.isArray(error) && error[0]?.isKubeConfigNotReady) {
+        return false;
+      }
+      return failureCount < 3;
+    },
     retryDelay: 5000,
     // Disable stale time to prevent caching of the kubeconfig
     // because it can take some time for config to get updated in the API

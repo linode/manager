@@ -66,6 +66,22 @@ describe('KubeCheckoutBar', () => {
     expect(queryAllByText(/minimum of 3 nodes/i)).toHaveLength(0);
   });
 
+  it('should render additional pricing text and link', async () => {
+    const { findByText, getByRole } = renderComponent(props);
+    expect(
+      await findByText(
+        /Additional services added to the cluster may incur charges./i
+      )
+    ).toBeVisible();
+
+    const additionalPricingLink = getByRole('link');
+    expect(additionalPricingLink).toHaveTextContent('See pricing');
+    expect(additionalPricingLink).toHaveAttribute(
+      'href',
+      'https://www.linode.com/pricing/'
+    );
+  });
+
   it('should show a warning if any pool has fewer than 3 nodes', async () => {
     const poolsWithSmallNode = [...pools, nodePoolFactory.build({ count: 2 })];
     const { findByText } = renderComponent({

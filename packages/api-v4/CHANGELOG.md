@@ -1,3 +1,20 @@
+## [2025-03-11] - v0.136.0
+
+### Changed:
+
+- Add `type` and `lke_cluster` to Nodebalancer interface and `getNodeBalancerBeta` function ([#11653](https://github.com/linode/manager/pull/11653))
+- Make `interface_generation` on `Linode` optional ([#11655](https://github.com/linode/manager/pull/11655))
+- Make `label` field in `CreateFirewallPayload` required ([#11677](https://github.com/linode/manager/pull/11677))
+- Update Region `Capabilities` type to temporarily include LA Disk Encryption ([#11783](https://github.com/linode/manager/pull/11783))
+
+### Upcoming Features:
+
+- Update region capability and Public Interface object for Linode Interfaces ([#11621](https://github.com/linode/manager/pull/11621))
+- Add payload type for EditAlertDefinition, API request changes for the user edit functionality ([#11669](https://github.com/linode/manager/pull/11669))
+- Add `getAlertDefinitionByServiceType` in alerts.ts ([#11685](https://github.com/linode/manager/pull/11685))
+- Add `engine_config` to the Database Instance for DBaaS Advanced Configurations ([#11735](https://github.com/linode/manager/pull/11735))
+- Use different validation schema for creating enterprise LKE cluster ([#11746](https://github.com/linode/manager/pull/11746))
+
 ## [2025-02-25] - v0.135.0
 
 ### Changed:

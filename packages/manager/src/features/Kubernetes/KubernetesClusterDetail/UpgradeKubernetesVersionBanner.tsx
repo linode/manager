@@ -1,5 +1,5 @@
 import { Button, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
@@ -41,10 +41,12 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
           variant="info"
         >
           <Grid
-            alignItems="center"
             container
             direction="row"
-            justifyContent="space-between"
+            sx={{
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
           >
             <Grid>
               <Typography>

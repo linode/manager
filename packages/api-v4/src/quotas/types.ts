@@ -45,6 +45,7 @@ export interface Quota {
    * The region slug to which this limit applies.
    *
    * OBJ limits are applied by endpoint, not region.
+   * This below really just is a `string` type but being verbose helps with reading comprehension.
    */
   region_applied?: Region['id'] | 'global';
 
@@ -77,8 +78,16 @@ export interface QuotaUsage {
   /**
    * The current account usage, measured in units specified by the
    * `resource_metric` field.
+   *
+   * This can be null if the user does not have resources for the given Quota Name.
    */
-  used: number;
+  used: number | null;
 }
 
-export type QuotaType = 'linode' | 'lke' | 'object-storage';
+export const quotaTypes = {
+  linode: 'Linodes',
+  lke: 'Kubernetes',
+  'object-storage': 'Object Storage',
+} as const;
+
+export type QuotaType = keyof typeof quotaTypes;

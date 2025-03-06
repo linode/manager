@@ -42,7 +42,7 @@ const Users = React.lazy(() =>
   }))
 );
 const Quotas = React.lazy(() =>
-  import('./Quotas').then((module) => ({ default: module.Quotas }))
+  import('./Quotas/Quotas').then((module) => ({ default: module.Quotas }))
 );
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 const MaintenanceLanding = React.lazy(

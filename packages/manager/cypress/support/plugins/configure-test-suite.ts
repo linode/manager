@@ -20,9 +20,6 @@ export const configureTestSuite: CypressPlugin = (_on, config) => {
       case 'synthetic':
         return 'synthetic';
 
-      case 'region':
-        return 'region';
-
       case 'core':
       default:
         if (!!config.env[envVarName] && config.env[envVarName] !== 'core') {

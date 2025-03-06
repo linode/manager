@@ -2,13 +2,6 @@
  * @file Integration tests for SMS phone verification.
  */
 
-import { getFormattedNumber } from 'src/features/Profile/AuthenticationSettings/PhoneVerification/helpers';
-import { profileFactory } from 'src/factories/profile';
-import {
-  randomLabel,
-  randomNumber,
-  randomPhoneNumber,
-} from 'support/util/random';
 import {
   mockGetProfile,
   mockSendVerificationCode,
@@ -16,6 +9,14 @@ import {
   mockVerifyVerificationCode,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
+import {
+  randomLabel,
+  randomNumber,
+  randomPhoneNumber,
+} from 'support/util/random';
+
+import { profileFactory } from 'src/factories/profile';
+import { getFormattedNumber } from 'src/features/Profile/AuthenticationSettings/PhoneVerification/helpers';
 
 describe('SMS phone verification', () => {
   /*
@@ -53,7 +54,8 @@ describe('SMS phone verification', () => {
 
     // @TODO Add steps to change country code before typing phone number.
 
-    cy.findByLabelText('Phone Number').click().type(optInPhoneNumber);
+    cy.findByLabelText('Phone Number').click();
+    cy.focused().type(optInPhoneNumber);
 
     ui.button
       .findByTitle('Send Verification Code')
@@ -65,10 +67,8 @@ describe('SMS phone verification', () => {
     cy.findByText(confirmationMessage, { exact: false }).should('be.visible');
 
     // Mock invalid verification code for first attempt.
-    cy.findByLabelText('Verification Code')
-      .should('be.visible')
-      .click()
-      .type(`${randomNumber(10000, 50000)}`);
+    cy.findByLabelText('Verification Code').should('be.visible').click();
+    cy.focused().type(`${randomNumber(10000, 50000)}`);
 
     ui.button
       .findByTitle('Verify Phone Number')
@@ -87,11 +87,9 @@ describe('SMS phone verification', () => {
 
     // Mock successful verification code for second attempt.
     mockVerifyVerificationCode().as('verifyCode');
-    cy.findByLabelText('Verification Code')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(`${randomNumber(10000, 50000)}`);
+    cy.findByLabelText('Verification Code').should('be.visible').click();
+    cy.focused().clear();
+    cy.focused().type(`${randomNumber(10000, 50000)}`);
 
     ui.button
       .findByTitle('Verify Phone Number')

@@ -22,6 +22,7 @@ import {
   mockGetLinodeDetails,
   mockGetLinodes,
 } from 'support/intercepts/linodes';
+import { entityTag } from 'support/constants/cypress';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -51,6 +52,7 @@ describe('volume create flow', () => {
   /*
    * - Creates a volume that is not attached to a Linode.
    * - Confirms that volume is listed correctly on volumes landing page.
+   * - Add a single tag to the volume during creation.
    */
   it('creates an unattached volume', () => {
     cy.tag('purpose:syntheticTesting', 'method:e2e', 'purpose:dcTesting');
@@ -71,6 +73,7 @@ describe('volume create flow', () => {
 
     // Fill out and submit volume create form.
     cy.contains('Label').click().type(volume.label);
+    cy.findByLabelText('Tags').click().type(entityTag);
     cy.contains('Size').click().type(`{selectall}{backspace}${volume.size}`);
     ui.regionSelect.find().click().type(`${volume.region}{enter}`);
 

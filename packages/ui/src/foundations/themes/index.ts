@@ -23,6 +23,7 @@ import type {
   BackgroundTypes as BackgroundTypesLight,
   BorderRadiusTypes,
   BorderTypes as BorderTypesLight,
+  CalendarTypes as CalendarTypesLight,
   ChartTypes,
   ColorTypes,
   ContentTypes as ContentTypesLight,
@@ -44,6 +45,7 @@ import type {
   ActionTypes as ActionTypesDark,
   BackgroundTypes as BackgroundTypesDark,
   BorderTypes as BorderTypesDark,
+  CalendarTypes as CalendarTypesDark,
   ContentTypes as ContentTypesDark,
   DropdownTypes as DropdownTypesDark,
   ElevationTypes as ElevationTypesDark,
@@ -64,6 +66,7 @@ type BackgroundTypes = MergeTypes<BackgroundTypesLight, BackgroundTypesDark>;
 type BorderTypes = MergeTypes<BorderTypesLight, BorderTypesDark>;
 type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
 type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
+type CalendarTypes = MergeTypes<CalendarTypesLight, CalendarTypesDark>;
 type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
 type SideNavigationTypes = MergeTypes<
   SideNavigationTypesLight,
@@ -140,6 +143,7 @@ declare module '@mui/material/styles/createTheme' {
       //  ---- Global tokens: theme agnostic ----
       border: BorderTypes;
       borderRadius: BorderRadiusTypes;
+      calendar: CalendarTypes;
       chart: ChartTypes;
       color: ColorTypes;
       content: ContentTypes;
@@ -183,6 +187,7 @@ declare module '@mui/material/styles/createTheme' {
       border?: BorderTypes;
       //  ---- Global tokens: theme agnostic ----
       borderRadius?: BorderRadiusTypes;
+      calendar?: CalendarTypes;
       chart?: ChartTypes;
       color?: ColorTypes;
       content?: ContentTypes;

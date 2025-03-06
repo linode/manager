@@ -9,6 +9,7 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useFlags } from 'src/hooks/useFlags';
@@ -51,31 +52,34 @@ export const AlertsLanding = React.memo(() => {
   };
 
   return (
-    <Paper sx={{ padding: 2 }}>
-      <Tabs
-        index={activeTabIndex}
-        onChange={handleChange}
-        sx={{ width: '100%' }}
-      >
-        <Box
-          sx={{
-            aligneItems: 'center',
-            display: 'flex',
-            justifyContent: 'space-between',
-            p: 1,
-            width: '100%',
-          }}
+    <React.Fragment>
+      <DocumentTitleSegment segment="Alerts" />
+      <Paper sx={{ padding: 2 }}>
+        <Tabs
+          index={activeTabIndex}
+          onChange={handleChange}
+          sx={{ width: '100%' }}
         >
-          <TabLinkList tabs={accessibleTabs} />
-        </Box>
-        <Switch>
-          <Route
-            component={AlertDefinitionLanding}
-            path={'/monitor/alerts/definitions'}
-          />
-          <Redirect from="*" to="/monitor/alerts/definitions" />
-        </Switch>
-      </Tabs>
-    </Paper>
+          <Box
+            sx={{
+              aligneItems: 'center',
+              display: 'flex',
+              justifyContent: 'space-between',
+              p: 1,
+              width: '100%',
+            }}
+          >
+            <TabLinkList tabs={accessibleTabs} />
+          </Box>
+          <Switch>
+            <Route
+              component={AlertDefinitionLanding}
+              path={'/monitor/alerts/definitions'}
+            />
+            <Redirect from="*" to="/monitor/alerts/definitions" />
+          </Switch>
+        </Tabs>
+      </Paper>
+    </React.Fragment>
   );
 });

@@ -77,6 +77,6 @@ describe('Parent/Child token expiration', () => {
           .click();
       });
 
-    cy.url().should('endWith', '/logout');
+    cy.url().should('endWith', '/login');
   });
 });

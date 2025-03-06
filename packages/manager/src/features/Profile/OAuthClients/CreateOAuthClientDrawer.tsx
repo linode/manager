@@ -31,7 +31,7 @@ export const CreateOAuthClientDrawer = ({
   const formik = useFormik<OAuthClientRequest>({
     initialValues: {
       label: '',
-      public: false,
+      public: true,
       redirect_uri: '',
     },
     async onSubmit(values) {

@@ -1,4 +1,5 @@
 import { Box, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
@@ -14,7 +15,6 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';
-import { StyledItemGrid } from './CommonStyles.styles';
 import { StyledLink } from './TopProcesses.styles';
 
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -63,7 +63,7 @@ export const TopProcesses = React.memo((props: Props) => {
     : undefined;
 
   return (
-    <StyledItemGrid lg={4} xs={12}>
+    <Grid size={{ lg: 4, xs: 12 }}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
         <StyledLink to={`/longview/clients/${clientID}/processes`}>
@@ -113,7 +113,7 @@ export const TopProcesses = React.memo((props: Props) => {
           )}
         </TableBody>
       </Table>
-    </StyledItemGrid>
+    </Grid>
   );
 });
 

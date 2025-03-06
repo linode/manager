@@ -2,10 +2,11 @@
  * @file Integration tests for CloudPulse navigation.
  */
 
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetAccount } from 'support/intercepts/account';
-import { accountFactory } from 'src/factories';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
+
+import { accountFactory } from 'src/factories';
 
 const mockAccount = accountFactory.build();
 

@@ -1,5 +1,4 @@
 import { Autocomplete, FormControl } from '@linode/ui';
-import { defaultTo } from 'ramda';
 import * as React from 'react';
 
 import { titlecase } from 'src/features/Linodes/presentation';
@@ -41,7 +40,7 @@ export const DeviceSelection = (props: Props) => {
     slots,
   } = props;
 
-  const counter = defaultTo(0, props.counter) as number;
+  const counter = props.counter ?? 0;
 
   const diskOrVolumeInErrReason = errorText
     ? extractDiskOrVolumeId(errorText)

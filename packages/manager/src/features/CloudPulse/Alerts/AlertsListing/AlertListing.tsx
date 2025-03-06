@@ -4,7 +4,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
@@ -117,9 +117,9 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  if (alerts && alerts.length == 0) {
+  if (alerts && alerts.length === 0) {
     return (
-      <StyledPlaceholder
+      <Placeholder
         buttonProps={[
           {
             children: 'Create Alerts',
@@ -143,6 +143,7 @@ export const AlertListing = () => {
         alignItems={{ lg: 'flex-end', md: 'flex-start' }}
         display="flex"
         flexDirection={{ lg: 'row', md: 'column', sm: 'column', xs: 'column' }}
+        flexWrap="wrap"
         gap={3}
         justifyContent="space-between"
       >

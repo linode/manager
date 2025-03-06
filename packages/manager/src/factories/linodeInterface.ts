@@ -67,10 +67,12 @@ export const linodeInterfaceFactoryPublic = Factory.Sync.makeFactory<LinodeInter
             primary: true,
           },
         ],
+        shared: [],
       },
       ipv6: {
-        addresses: [],
         ranges: [],
+        shared: [],
+        slaac: [],
       },
     },
     updated: '2020-01-01 00:00:00',

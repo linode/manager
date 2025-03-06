@@ -1,9 +1,9 @@
 import { Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { Formik } from 'formik';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
-import { capitalize } from 'src/utilities/capitalize';
 
 import {
   formValueToIPs,

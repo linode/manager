@@ -40,6 +40,11 @@ export interface AlertInstance {
    * The region associated with the instance
    */
   region: string;
+
+  /**
+   * The list of tags associated with the instance
+   */
+  tags?: string[];
 }
 
 export interface DisplayAlertResourceProp {

@@ -216,8 +216,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
                 {isRestrictedUser && (
                   <Notice
-                    important
-                    text="You don't have bucket_access to create an Access Key. Please contact an account administrator for details."
+                    text="You don't have permissions to create an Access Key. Please contact an account administrator for details."
                     variant="error"
                   />
                 )}

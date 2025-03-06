@@ -1,7 +1,7 @@
 import { keyframes } from '@emotion/react';
 import { H1Header, Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 
 import Error from 'src/assets/icons/error.svg';
 

@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 
 import DashboardCard from './DashboardCard';
@@ -35,12 +35,3 @@ export const StyledDashboardCard = styled(DashboardCard, {
   },
   width: '100%',
 }));
-
-export const StyledStatusGrid = styled(Grid, { label: 'StyledStatusGrid' })(
-  ({ theme }) => ({
-    position: 'relative',
-    [theme.breakpoints.up('sm')]: {
-      margin: `${theme.spacing(3)} ${theme.spacing(1)} !important`,
-    },
-  })
-);

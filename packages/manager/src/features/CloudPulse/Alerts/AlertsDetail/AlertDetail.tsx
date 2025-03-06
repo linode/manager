@@ -1,11 +1,11 @@
-import { Box, Chip, CircleProgress, Typography } from '@linode/ui';
+import { Box, Chip, CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
@@ -96,8 +96,10 @@ export const AlertDetail = () => {
     service_type: alertServiceType,
     type,
   } = alertDetails;
+
   return (
     <>
+      <DocumentTitleSegment segment={`${alertDetails.label}`} />
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
       <Box display="flex" flexDirection="column" gap={2}>
         <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>

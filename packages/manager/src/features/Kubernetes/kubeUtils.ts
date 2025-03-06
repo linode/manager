@@ -19,9 +19,6 @@ import type {
 } from '@linode/api-v4/lib/kubernetes';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { ExtendedType } from 'src/utilities/extendType';
-export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
-export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
-export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.`;
 
 interface ClusterData {
   CPU: number;

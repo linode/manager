@@ -68,18 +68,19 @@ export const StackScriptCreate = () => {
       />
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack spacing={2}>
+          {isStackScriptCreationRestricted && (
+            <Notice
+              text={getRestrictedResourceText({
+                action: 'create',
+                isSingular: false,
+                resourceType: 'StackScripts',
+              })}
+              important
+              spacingBottom={12}
+              variant="error"
+            />
+          )}
           <Paper>
-            {isStackScriptCreationRestricted && (
-              <Notice
-                text={getRestrictedResourceText({
-                  action: 'create',
-                  isSingular: false,
-                  resourceType: 'StackScripts',
-                })}
-                spacingBottom={12}
-                variant="error"
-              />
-            )}
             {form.formState.errors.root && (
               <Notice
                 text={form.formState.errors.root?.message}

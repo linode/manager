@@ -7,6 +7,7 @@ import {
   databaseTypeFactory,
 } from 'src/factories';
 import {
+  formatConfigValue,
   getDatabasesDescription,
   hasPendingUpdates,
   isDateOutsideBackup,
@@ -557,5 +558,27 @@ describe('upgradableVersions', () => {
   it('should return undefined when no engines are provided', () => {
     const result = upgradableVersions('mysql', '8.0.26', undefined);
     expect(result).toBeUndefined();
+  });
+});
+
+describe('formatConfigValue', () => {
+  it('should return "Enabled" when configValue is "true"', () => {
+    const result = formatConfigValue('true');
+    expect(result).toBe('Enabled');
+  });
+
+  it('should return "Disabled" when configValue is "false"', () => {
+    const result = formatConfigValue('false');
+    expect(result).toBe('Disabled');
+  });
+
+  it('should return " -" when configValue is "undefined"', () => {
+    const result = formatConfigValue('undefined');
+    expect(result).toBe(' - ');
+  });
+
+  it('should return the original configValue for other values', () => {
+    const result = formatConfigValue('+03:00');
+    expect(result).toBe('+03:00');
   });
 });

@@ -94,7 +94,7 @@ export const AddNotificationChannelDrawer = (
     <Drawer
       onClose={handleCloseDrawer}
       open={open}
-      title="AddNotificationChannel"
+      title="Add Notification Channel"
     >
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
@@ -189,7 +189,15 @@ export const AddNotificationChannelDrawer = (
                   <Grid item md={1} sm={1} xs={2}>
                     <Typography variant="h3">To:</Typography>
                   </Grid>
-                  <Grid item md="auto" overflow="auto" paddingRight={1} xs={12}>
+                  <Grid
+                    item
+                    md="auto"
+                    xs={12}
+                    sx={{
+                      overflow: 'auto',
+                      paddingRight: 1,
+                    }}
+                  >
                     <RenderChannelDetails template={selectedTemplate} />
                   </Grid>
                 </Grid>

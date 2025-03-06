@@ -1,8 +1,8 @@
 import { Stack, TooltipIcon } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 import { imageStatusIconMap } from './ImageRegions/ImageRegionRow';
 

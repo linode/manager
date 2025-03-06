@@ -1,6 +1,6 @@
 import { deleteDomainRecord as _deleteDomainRecord } from '@linode/api-v4/lib/domains';
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';

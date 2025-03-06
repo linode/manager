@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 module.exports = {
   env: {
     browser: true,
@@ -22,7 +23,10 @@ module.exports = {
     'build',
     'storybook-static',
     '.storybook',
-    'e2e/core',
+    'e2e/core/placementGroups',
+    'e2e/core/stackscripts',
+    'e2e/core/volumes',
+    'e2e/core/vpc',
     'public',
     '!.eslintrc.js',
   ],
@@ -91,6 +95,7 @@ module.exports = {
         // for each new features added to the migration router, add its directory here
         'src/features/Betas/**/*',
         'src/features/Domains/**/*',
+        'src/features/Firewalls/**/*',
         'src/features/Images/**/*',
         'src/features/Longview/**/*',
         'src/features/PlacementGroups/**/*',
@@ -137,9 +142,22 @@ module.exports = {
                   'Please use useOrderV2 hook for components being migrated to TanStack Router.',
                 name: 'src/components/OrderBy',
               },
+              {
+                importNames: ['Prompt'],
+                message:
+                  'Please use the TanStack useBlocker hook for components/features being migrated to TanStack Router.',
+                name: 'src/components/Prompt/Prompt',
+              },
             ],
           },
         ],
+      },
+    },
+    // Apply `no-createLinode` rule to `cypress` related files only.
+    {
+      files: ['cypress/**'],
+      rules: {
+        '@linode/cloud-manager/no-createLinode': 'error',
       },
     },
   ],
@@ -173,6 +191,7 @@ module.exports = {
   ],
   rules: {
     '@linode/cloud-manager/deprecate-formik': 'warn',
+    '@linode/cloud-manager/no-createLinode': 'off',
     '@linode/cloud-manager/no-custom-fontWeight': 'error',
     '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',

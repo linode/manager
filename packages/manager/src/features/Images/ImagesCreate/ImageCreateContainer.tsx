@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -15,7 +15,7 @@ export const ImagesCreateContainer = () => {
         removeCrumbX={2}
         title="Create"
       />
-      <Grid className="p0" xs={12}>
+      <Grid className="p0" size={12}>
         <ImageCreate />
       </Grid>
     </Grid>

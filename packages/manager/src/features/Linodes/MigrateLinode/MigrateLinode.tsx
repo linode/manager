@@ -6,6 +6,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { formatStorageUnits } from '@linode/utilities';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -37,7 +38,6 @@ import { useTypeQuery } from 'src/queries/types';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { formatDate } from 'src/utilities/formatDate';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { regionSupportsMetadata } from 'src/utilities/metadata';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';

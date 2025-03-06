@@ -1,5 +1,3 @@
-import { v4 } from 'uuid';
-
 import Factory from 'src/factories/factoryProxy';
 import { pickRandom, randomDate } from 'src/utilities/random';
 
@@ -139,6 +137,18 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     created: '2021-12-09T17:15:12',
     encrypted: false,
     engine: Factory.each((i) => ['mysql', 'postgresql'][i % 2] as Engine),
+    engine_config: {
+      advanced: {
+        connect_timeout: 10,
+        default_time_zone: '+03:00',
+        group_concat_max_len: 4,
+        information_schema_stats_expiry: 900,
+        innodb_print_all_deadlocks: true,
+        sql_mode:
+          'ANSI,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,STRICT_ALL_TABLES',
+      },
+      binlog_retention_period: 600,
+    },
     hosts: Factory.each((i) =>
       adb10(i)
         ? {
@@ -193,6 +203,18 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   created: '2021-12-09T17:15:12',
   encrypted: false,
   engine: 'mysql',
+  engine_config: {
+    advanced: {
+      connect_timeout: 10,
+      default_time_zone: '+03:00',
+      group_concat_max_len: 4,
+      information_schema_stats_expiry: 900,
+      innodb_print_all_deadlocks: true,
+      sql_mode:
+        'ANSI,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,STRICT_ALL_TABLES',
+    },
+    binlog_retention_period: 600,
+  },
   hosts: Factory.each((i) =>
     adb10(i)
       ? {
@@ -243,7 +265,7 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
     return randomDate(tenDaysAgo, now).toISOString();
   }),
   id: Factory.each((i) => i),
-  label: Factory.each(() => `backup-${v4()}`),
+  label: Factory.each(() => `backup-${crypto.randomUUID()}`),
   type: pickRandom(['snapshot', 'auto']),
 });
 

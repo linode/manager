@@ -61,7 +61,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
       const errorStatus =
         toggleStatus === 'disabled' ? 'Disabling' : 'Enabling';
       editAlertDefinition({
-        alertId: String(alert.id),
+        alertId: alert.id,
         serviceType: alert.service_type,
         status: toggleStatus,
       })
@@ -99,7 +99,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
             pageSize,
           }) => (
             <>
-              <Grid marginTop={2}>
+              <Grid
+                sx={{
+                  marginTop: 2,
+                }}
+              >
                 <Table colCount={7} data-qa="alert-table" size="small">
                   <TableHead>
                     <TableRow>

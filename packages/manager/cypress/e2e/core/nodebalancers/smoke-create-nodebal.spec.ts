@@ -33,14 +33,11 @@ const createNodeBalancerWithUI = (
   const regionName = getRegionById(nodeBal.region).label;
 
   cy.visitWithLogin('/nodebalancers/create');
-  cy.get('[id="nodebalancer-label"]')
-    .should('be.visible')
-    .click()
-    .clear()
-    .type(nodeBal.label);
-  cy.findByPlaceholderText(/create a tag/i)
-    .click()
-    .type(entityTag);
+  cy.get('[id="nodebalancer-label"]').should('be.visible').click();
+  cy.focused().clear();
+  cy.focused().type(nodeBal.label);
+  cy.findByPlaceholderText(/create a tag/i).click();
+  cy.focused().type(entityTag);
 
   if (isDcPricingTest) {
     const newRegion = getRegionById('br-gru');
@@ -71,12 +68,11 @@ const createNodeBalancerWithUI = (
   ui.regionSelect.find().click().clear().type(`${regionName}{enter}`);
 
   // node backend config
-  cy.findByText('Label').click().type(randomLabel());
+  cy.findByText('Label').click();
+  cy.focused().type(randomLabel());
 
-  cy.findByLabelText('IP Address')
-    .should('be.visible')
-    .click()
-    .type(nodeBal.ipv4);
+  cy.findByLabelText('IP Address').should('be.visible').click();
+  cy.focused().type(nodeBal.ipv4);
 
   ui.autocompletePopper.findByTitle(nodeBal.ipv4).should('be.visible').click();
 
@@ -144,7 +140,8 @@ describe('create NodeBalancer', () => {
 
     cy.findByLabelText('Label').type('my-node-1');
 
-    cy.findByLabelText('IP Address').click().type(linode.ipv4[0]);
+    cy.findByLabelText('IP Address').click();
+    cy.focused().type(linode.ipv4[0]);
 
     ui.autocompletePopper.findByTitle(linode.label).click();
 

@@ -1,4 +1,5 @@
-import { areArraysEqual } from 'src/utilities/areArraysEqual';
+import { areArraysEqual } from '@linode/utilities';
+
 import { sortByString } from 'src/utilities/sort-by';
 
 import type { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
