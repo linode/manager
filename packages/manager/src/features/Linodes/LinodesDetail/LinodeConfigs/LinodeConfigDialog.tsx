@@ -79,6 +79,7 @@ import type {
 } from '@linode/api-v4';
 import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 
 interface Helpers {
   devtmpfs_automount: boolean;
@@ -1107,7 +1108,8 @@ export const LinodeConfigDialog = (props: Props) => {
                       <React.Fragment key={`${idx}-interface`}>
                         {unrecommendedConfigNoticeSelector({
                           _interface: thisInterface,
-                          isLKEEVPC: cluster?.tier === 'enterprise',
+                          isLKEEnterpriseCluster:
+                            cluster?.tier === 'enterprise',
                           primaryInterfaceIndex,
                           thisIndex: idx,
                           values,
@@ -1309,18 +1311,18 @@ const noticeForScenario = (scenarioText: string) => (
  * @param primaryInterfaceIndex the index of the primary interface
  * @param thisIndex the index of the current config interface within the `interfaces` array of the `config` object
  * @param values the values held in Formik state, having a type of `EditableFields`
- * @param isLKEEVPC boolean indicating if the config was created for LKE-E
+ * @param isLKEEnterpriseCluster boolean indicating if the linode is associated with a LKE-E cluster
  * @returns JSX.Element | null
  */
 export const unrecommendedConfigNoticeSelector = ({
   _interface,
-  isLKEEVPC,
+  isLKEEnterpriseCluster,
   primaryInterfaceIndex,
   thisIndex,
   values,
 }: {
   _interface: ExtendedInterface;
-  isLKEEVPC: boolean;
+  isLKEEnterpriseCluster: boolean;
   primaryInterfaceIndex: null | number;
   thisIndex: number;
   values: EditableFields;
@@ -1339,8 +1341,8 @@ export const unrecommendedConfigNoticeSelector = ({
     values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
 
   // Return a different warning if the VPC interface was created for a LKE-E cluster
-  if (vpcInterface && isLKEEVPC) {
-    return noticeForScenario('We do not recommend editing this');
+  if (vpcInterface && isLKEEnterpriseCluster) {
+    return noticeForScenario(LKE_ENTERPRISE_VPC_WARNING);
   }
   /*
    Scenario 1:

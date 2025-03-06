@@ -1,4 +1,10 @@
-import { Box, CircleProgress, ErrorState, StyledLinkButton } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  ErrorState,
+  Notice,
+  StyledLinkButton,
+} from '@linode/ui';
 import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -24,6 +30,7 @@ import {
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
+import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -183,6 +190,11 @@ const VPCDetail = () => {
         open={editVPCDrawerOpen}
         vpc={vpc}
       />
+      {isVPCLKEEnterpriseCluster && (
+        <Notice variant="warning" important spacingTop={24}>
+          <Typography>{LKE_ENTERPRISE_VPC_WARNING}</Typography>
+        </Notice>
+      )}
       <Box
         sx={(theme) => ({
           [theme.breakpoints.up('lg')]: {
