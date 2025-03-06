@@ -118,7 +118,13 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText } = await renderWithThemeAndRouter(<ImagesLanding />);
+    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+      <ImagesLanding />
+    );
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
     expect(getByText('No Recovery Images to display.')).toBeInTheDocument();
   });

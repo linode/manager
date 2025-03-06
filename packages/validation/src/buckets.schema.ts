@@ -11,7 +11,7 @@ export const CreateBucketSchema = object()
         .matches(/^\S*$/, 'Label must not contain spaces.')
         .matches(
           /^[a-z0-9].*[a-z0-9]$/,
-          'Label must start and end with a letter or number.'
+          'Label must start and end with a lowercase letter or number.'
         )
         .matches(
           /^(?!.*[.-]{2})[a-z0-9.-]+$/,

@@ -1,6 +1,6 @@
 import { Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid, { Grid2Props } from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { CardBase } from './CardBase';
@@ -19,10 +19,20 @@ export interface SelectionCardProps {
    */
   className?: string;
   /**
+   * An optional custom data-testid
+   * @default selection-card
+   */
+  'data-testid'?: string;
+  /**
    * If true, the card will be disabled and will be displayed in a disabled state.
    * @default false
    */
   disabled?: boolean;
+  /**
+   * Optionally override the grid item's size
+   * @default { lg: 4, sm: 6, xl: 3, xs: 12 }
+   */
+  gridSize?: Grid2Props['size'];
   /**
    * The heading of the card.
    * @example Linode 1GB
@@ -106,6 +116,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
     checked,
     className,
     disabled,
+    gridSize,
     heading,
     headingDecoration,
     id,
@@ -156,17 +167,14 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
       className={className}
       data-qa-selection-card
       data-qa-selection-card-checked={checked}
-      data-testid="selection-card"
+      data-testid={props['data-testid'] ?? 'selection-card'}
       disabled={disabled}
       id={id}
-      lg={4}
       onClick={handleClick}
       onKeyPress={handleKeyPress}
-      sm={6}
+      size={gridSize ?? { lg: 4, sm: 6, xl: 3, xs: 12 }}
       sx={sxGrid}
       tabIndex={0}
-      xl={3}
-      xs={12}
     >
       {content}
     </StyledGrid>
@@ -203,7 +211,7 @@ const StyledGrid = styled(Grid, {
       cursor: 'pointer',
     }),
   ...(props.disabled && {
-    '& .cardSubheadingItem, & .cardSubheadingTitle': {
+    '& .cardSubheadingItem, & .cardSubheadingTitle, & p': {
       opacity: 0.3,
     },
     cursor: 'not-allowed',

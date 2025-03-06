@@ -5,6 +5,7 @@ import {
   Badge,
   Border,
   Button,
+  Calendar,
   Color,
   Content,
   Dropdown,
@@ -423,34 +424,34 @@ export const darkTheme: ThemeOptions = {
           color: Button.Primary.Default.Text,
         },
         colorError: {
-          backgroundColor: Badge.Negative.Background,
-          color: Badge.Negative.Text,
+          backgroundColor: Badge.Negative.Subtle.Background,
+          color: Badge.Negative.Subtle.Text,
         },
         colorInfo: {
-          backgroundColor: Badge.Informative.Background,
-          color: Badge.Informative.Text,
+          backgroundColor: Badge.Informative.Subtle.Background,
+          color: Badge.Informative.Subtle.Text,
         },
         colorPrimary: {
-          backgroundColor: Badge.Informative.Background,
-          color: Badge.Informative.Text,
+          backgroundColor: Badge.Informative.Subtle.Background,
+          color: Badge.Informative.Subtle.Text,
         },
         colorSecondary: {
           '&.MuiChip-clickable': {
             '&:hover': {
-              backgroundColor: Badge.Informative.Background,
-              color: Badge.Informative.Text,
+              backgroundColor: Badge.Informative.Subtle.Background,
+              color: Badge.Informative.Subtle.Text,
             },
           },
-          backgroundColor: Badge.Informative.Background,
-          color: Badge.Informative.Text,
+          backgroundColor: Badge.Informative.Subtle.Background,
+          color: Badge.Informative.Subtle.Text,
         },
         colorSuccess: {
-          backgroundColor: Badge.Positive.Background,
-          color: Badge.Positive.Text,
+          backgroundColor: Badge.Positive.Subtle.Background,
+          color: Badge.Positive.Subtle.Text,
         },
         colorWarning: {
-          backgroundColor: Badge.Warning.Background,
-          color: Badge.Warning.Text,
+          backgroundColor: Badge.Warning.Subtle.Background,
+          color: Badge.Warning.Subtle.Text,
         },
         outlined: {
           '& .MuiChip-label': {
@@ -663,6 +664,12 @@ export const darkTheme: ThemeOptions = {
           '&.Mui-disabled': {
             WebkitTextFillColor: 'unset !important',
           },
+          boxSizing: 'border-box',
+          [breakpoints.only('xs')]: {
+            fontSize: '1rem',
+          },
+          fontSize: '0.9rem',
+          padding: 8,
         },
         root: {
           '& svg': {
@@ -684,6 +691,10 @@ export const darkTheme: ThemeOptions = {
             borderColor: TextField.Error.Border,
             color: TextField.Error.Text,
           },
+          '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+            borderColor: TextField.Error.Border,
+            color: TextField.Error.Text,
+          },
           '&.Mui-focused': {
             '& svg': {
               color: TextField.Focus.Icon,
@@ -692,6 +703,10 @@ export const darkTheme: ThemeOptions = {
             borderColor: TextField.Focus.Border,
             boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
             color: TextField.Focus.Text,
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '1px',
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
           },
           '&.Mui-hover': {
             '& svg': {
@@ -703,7 +718,11 @@ export const darkTheme: ThemeOptions = {
           },
           backgroundColor: TextField.Default.Background,
           borderColor: TextField.Default.Border,
+          borderRadius: 0,
+          boxSizing: 'border-box',
           color: TextField.Filled.Text,
+          lineHeight: 1,
+          transition: 'border-color 225ms ease-in-out',
         },
       },
     },
@@ -1043,6 +1062,7 @@ export const darkTheme: ThemeOptions = {
     action: Action,
     background: Background,
     border: Border,
+    calendar: Calendar,
     content: Content,
     dropdown: Dropdown,
     elevation: Elevation,

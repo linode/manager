@@ -1,3 +1,23 @@
+## [2025-03-11] - v0.8.0
+
+### Added:
+
+- V2 of the custom Date Range Picker leveraging Luxon ([#11540](https://github.com/linode/manager/pull/11540))
+- New indeterminate state icon for checkbox component ([#11693](https://github.com/linode/manager/pull/11693))
+- Migrate ErrorState to ui package ([#11718](https://github.com/linode/manager/pull/11718))
+
+### Changed:
+
+- Temporarily extend ESLint rules from `@linode/manager` to `@linode/ui` package ([#11666](https://github.com/linode/manager/pull/11666))
+- `Notice`'s default `marginBottom` from `24px` to `8px` ([#11724](https://github.com/linode/manager/pull/11724))
+- Move `@vitest/ui` to monorepo root dependency ([#11755](https://github.com/linode/manager/pull/11755))
+
+### Tech Stories:
+
+- Upgrade to MUI v6 ([#11688](https://github.com/linode/manager/pull/11688))
+- Add 4.0.0 Design Tokens - New Spacing & Badge Tokens ([#11757](https://github.com/linode/manager/pull/11757))
+
+
 ## [2025-02-25] - v0.7.0
 
 

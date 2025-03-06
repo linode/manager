@@ -1,7 +1,7 @@
 import { Paper, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import Grid2 from '@mui/material/Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
@@ -51,11 +51,7 @@ export const CheckoutSummary = (props: CheckoutSummaryProps) => {
           Please configure your Linode.
         </StyledHeading>
       ) : null}
-      <StyledSummary
-        container
-        direction={matchesSmDown ? 'column' : 'row'}
-        spacing={3}
-      >
+      <StyledSummary container direction={matchesSmDown ? 'column' : 'row'}>
         {displaySections.map((item) => (
           <SummaryItem key={`${item.title}-${item.details}`} {...item} />
         ))}
@@ -78,10 +74,12 @@ const StyledHeading = styled(Typography)(({ theme }) => ({
 const StyledSummary = styled(Grid2)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     '& > div': {
-      '&:last-child': {
-        borderRight: 'none',
+      '&:first-child': {
+        borderLeft: 'none',
+        paddingLeft: 0,
       },
-      borderRight: `solid 1px ${theme.tokens.color.Neutrals[50]}`,
+      borderLeft: `solid 1px ${theme.tokens.color.Neutrals[50]}`,
+      padding: `0 ${theme.spacing(1.5)}`,
     },
   },
 }));

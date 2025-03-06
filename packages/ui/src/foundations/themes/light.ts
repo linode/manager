@@ -5,6 +5,7 @@ import {
   Border,
   BorderRadius,
   Button,
+  Calendar,
   Chart,
   Color,
   Content,
@@ -519,6 +520,9 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: 'transparent',
           color: Button.Secondary.Default.Text,
         },
+        loading: {
+          color: 'transparent !important',
+        },
         outlined: {
           '&:hover, &:focus': {
             backgroundColor: Color.Neutrals[5],
@@ -540,7 +544,7 @@ export const lightTheme: ThemeOptions = {
           },
           '.MuiButton-startIcon': {
             marginLeft: 0,
-            marginRight: Spacing[20],
+            marginRight: Spacing.S4,
           },
           border: 'none',
           borderRadius: 1,
@@ -1010,7 +1014,6 @@ export const lightTheme: ThemeOptions = {
     },
     MuiListItem: {
       styleOverrides: {
-        disabled: {},
         root: {
           '&$disabled': {
             opacity: 0.5,
@@ -1026,7 +1029,6 @@ export const lightTheme: ThemeOptions = {
           },
           color: primaryColors.text,
         },
-        selected: {},
       },
     },
     MuiListItemText: {
@@ -1133,16 +1135,10 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.main,
             fontSize: 18,
           },
-          '&.Mui-disabled': {
-            backgroundColor: Color.Neutrals[5],
-            borderColor: Color.Neutrals[40],
-            color: 'rgba(0, 0, 0, 0.75)',
-            input: {
-              cursor: 'not-allowed',
-            },
-            opacity: 0.5,
-          },
           '&.Mui-error': {
+            borderColor: Interaction.Border.Error,
+          },
+          '&.Mui-error .MuiOutlinedInput-notchedOutline': {
             borderColor: Interaction.Border.Error,
           },
           '&.Mui-focused': {
@@ -1152,12 +1148,17 @@ export const lightTheme: ThemeOptions = {
             borderColor: primaryColors.main,
             boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
           },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '1px',
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
+          },
           '&.affirmative': {
             borderColor: Color.Green[70],
           },
           alignItems: 'center',
           backgroundColor: Color.Neutrals.White,
           border: `1px solid ${Color.Neutrals[40]}`,
+          borderRadius: 0,
           boxSizing: 'border-box',
           [breakpoints.down('xs')]: {
             maxWidth: '100%',
@@ -1166,7 +1167,6 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.text,
           lineHeight: 1,
           maxWidth: inputMaxWidth,
-          minHeight: 34,
           transition: 'border-color 225ms ease-in-out',
         },
       },
@@ -1190,7 +1190,7 @@ export const lightTheme: ThemeOptions = {
           [breakpoints.up('lg')]: {
             minWidth: 250,
           },
-          marginTop: Spacing[20],
+          marginTop: Spacing.S4,
           minWidth: 200,
         },
       },
@@ -1507,13 +1507,13 @@ export const lightTheme: ThemeOptions = {
           },
           // Spacing for collapsible inner content
           '.MuiCollapse-root': {
-            padding: Spacing[60],
+            padding: Spacing.S16,
           },
           borderBottom: `1px solid ${Table.Row.Border}`,
           fontSize: Font.FontSize.Xs,
           height: '40px',
           lineHeight: Font.LineHeight.Xs,
-          padding: `0 ${Spacing[50]}`,
+          padding: `0 ${Spacing.S12}`,
         },
         stickyHeader: {
           // No idea where sticky cells are getting their background from
@@ -1566,7 +1566,7 @@ export const lightTheme: ThemeOptions = {
           fontSize: Font.FontSize.Xs,
           svg: {
             height: '16px',
-            margin: `0 ${Spacing[20]}`,
+            margin: `0 ${Spacing.S4}`,
             path: {
               fill: Table.HeaderNested.Text,
             },
@@ -1625,10 +1625,10 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           [breakpoints.down('md')]: {
-            padding: `0 ${Spacing[40]}`,
+            padding: `0 ${Spacing.S8}`,
           },
           [breakpoints.up('md')]: {
-            padding: `0 ${Spacing[60]}`, // To override default MUI breakpoint padding
+            padding: `0 ${Spacing.S16}`, // To override default MUI breakpoint padding
           },
           height: topMenuHeight,
           width: '100%',
@@ -1886,6 +1886,7 @@ export const lightTheme: ThemeOptions = {
     background: Background,
     border: Border,
     borderRadius: BorderRadius,
+    calendar: Calendar,
     chart: Chart,
     color: Color,
     content: Content,

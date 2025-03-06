@@ -1,3 +1,21 @@
+## [2025-03-11] - v0.62.0
+
+### Added:
+
+- Validation messages for required Autoscale min and max values ([#11664](https://github.com/linode/manager/pull/11664))
+
+### Changed:
+
+- Update CreateFirewallSchema to match API types ([#11677](https://github.com/linode/manager/pull/11677))
+
+### Fixed:
+
+- Improve clarity for OBJ bucket creation validation message ([#11712](https://github.com/linode/manager/pull/11712))
+
+### Upcoming Features:
+
+- Add validation for required ACL enablement on LKE-E clusters ([#11746](https://github.com/linode/manager/pull/11746))
+
 ## [2025-02-25] - v0.61.0
 
 

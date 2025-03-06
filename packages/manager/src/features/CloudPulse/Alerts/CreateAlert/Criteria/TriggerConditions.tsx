@@ -57,7 +57,13 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
       })}
     >
       <Typography variant="h3"> Trigger Conditions</Typography>
-      <Grid alignItems="flex-start" container spacing={2}>
+      <Grid
+        sx={{
+          alignItems: 'flex-start',
+        }}
+        container
+        spacing={2}
+      >
         <Grid item md={3} sm={6} xs={12}>
           <Controller
             render={({ field, fieldState }) => (
@@ -129,12 +135,14 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           />
         </Grid>
         <Grid
-          alignItems="center"
-          display="flex"
-          gap={1}
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            mt: { lg: 3.5, xs: 0 },
+          }}
           item
           md="auto"
-          mt={{ lg: 3.5, xs: 0 }}
           sm={12}
           xs={12}
         >
@@ -144,24 +152,27 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
 
           <Controller
             render={({ field, fieldState }) => (
-              <TextField
-                onWheel={(event) =>
-                  event.target instanceof HTMLElement && event.target.blur()
-                }
-                sx={{
-                  height: '30px',
-                  width: '30px',
-                }}
-                data-testid="trigger-occurences"
-                errorText={fieldState.error?.message}
-                label=""
-                min={0}
-                name={`${name}.trigger_occurrences`}
-                onBlur={field.onBlur}
-                onChange={(e) => field.onChange(e.target.value)}
-                type="number"
-                value={field.value ?? 0}
-              />
+              <Box sx={{ maxHeight: '54px' }}>
+                <TextField
+                  onWheel={(event) =>
+                    event.target instanceof HTMLElement && event.target.blur()
+                  }
+                  sx={{
+                    height: '30px',
+                    width: '30px',
+                  }}
+                  data-qa-trigger-occurrences
+                  data-testid="trigger-occurences"
+                  errorText={fieldState.error?.message}
+                  label=""
+                  min={0}
+                  name={`${name}.trigger_occurrences`}
+                  onBlur={field.onBlur}
+                  onChange={(e) => field.onChange(e.target.value)}
+                  type="number"
+                  value={field.value ?? 0}
+                />
+              </Box>
             )}
             control={control}
             name={`${name}.trigger_occurrences`}

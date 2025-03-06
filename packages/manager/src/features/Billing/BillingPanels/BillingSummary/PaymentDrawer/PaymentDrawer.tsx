@@ -3,13 +3,14 @@ import { Typography } from '@linode/ui';
 import {
   Button,
   Divider,
+  ErrorState,
   InputAdornment,
   Notice,
   Stack,
   TextField,
   TooltipIcon,
 } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -17,7 +18,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Currency } from 'src/components/Currency';
 import { Drawer } from 'src/components/Drawer';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -343,7 +343,12 @@ export const PaymentDrawer = (props: Props) => {
               </Typography>
             </Grid>
             <Grid container spacing={2}>
-              <Grid sm={6} xs={9}>
+              <Grid
+                size={{
+                  sm: 6,
+                  xs: 9,
+                }}
+              >
                 <PayPalErrorBoundary renderError={renderError}>
                   <PayPalButton
                     disabled={isProcessing}
@@ -355,7 +360,12 @@ export const PaymentDrawer = (props: Props) => {
                   />
                 </PayPalErrorBoundary>
               </Grid>
-              <Grid sm={6} xs={9}>
+              <Grid
+                size={{
+                  sm: 6,
+                  xs: 9,
+                }}
+              >
                 <GooglePayButton
                   transactionInfo={{
                     countryCode: 'US',

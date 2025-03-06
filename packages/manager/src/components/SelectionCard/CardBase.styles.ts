@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 
 import type { CardBaseProps } from './CardBase';
 
@@ -40,7 +40,7 @@ export const CardBaseGrid = styled(Grid, {
   height: '100%',
   margin: 0,
   minHeight: 60,
-  padding: `0 ${theme.spacing(1)} !important`,
+  padding: theme.spacing(1.5),
   position: 'relative',
   transition:
     'background-color 225ms ease-in-out, border-color 225ms ease-in-out',

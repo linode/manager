@@ -109,6 +109,7 @@ export interface Flags {
   apl: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
+  databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
@@ -126,6 +127,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
+  nodebalancerVpc: boolean;
   objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
   productInformationBanners: ProductInformationBannerFlag[];

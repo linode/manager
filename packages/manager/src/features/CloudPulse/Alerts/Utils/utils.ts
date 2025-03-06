@@ -1,5 +1,15 @@
+import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
+
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
-import type { NotificationChannel, ServiceTypesList } from '@linode/api-v4';
+import type {
+  Alert,
+  AlertDefinitionMetricCriteria,
+  AlertDefinitionType,
+  AlertServiceType,
+  EditAlertPayloadWithService,
+  NotificationChannel,
+  ServiceTypesList,
+} from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
 interface AlertChipBorderProps {
@@ -20,6 +30,29 @@ interface AlertChipBorderProps {
    * Indicates Whether to merge the chips into single or keep it individually
    */
   mergeChips: boolean | undefined;
+}
+
+export interface ProcessedCriteria {
+  /**
+   * Label for the metric criteria
+   */
+  label: string;
+  /**
+   * Aggregation type for the metric criteria
+   */
+  metricAggregationType: string;
+  /**
+   * Comparison operator for the metric criteria
+   */
+  metricOperator: string;
+  /**
+   * Threshold value for the metric criteria
+   */
+  threshold: number;
+  /**
+   * Unit for the threshold value
+   */
+  unit: string;
 }
 
 /**
@@ -117,4 +150,104 @@ export const getChipLabels = (
       values: [value.content.webhook.webhook_url],
     };
   }
+};
+
+/**
+ *
+ * @param alerts list of alerts to be filtered
+ * @param searchText text to be searched in alert name
+ * @param selectedType selecte alert type
+ * @returns list of filtered alerts based on searchText & selectedType
+ */
+export const filterAlertsByStatusAndType = (
+  alerts: Alert[] | undefined,
+  searchText: string,
+  selectedType: string | undefined
+): Alert[] => {
+  return (
+    alerts?.filter(({ label, status, type }) => {
+      return (
+        status === 'enabled' &&
+        (!selectedType || type === selectedType) &&
+        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
+      );
+    }) ?? []
+  );
+};
+
+/**
+ *
+ * @param alerts list of alerts
+ * @returns list of unique alert types in the alerts list in the form of json object
+ */
+export const convertAlertsToTypeSet = (
+  alerts: Alert[] | undefined
+): { label: AlertDefinitionType }[] => {
+  const types = new Set(alerts?.map(({ type }) => type) ?? []);
+
+  return Array.from(types).reduce(
+    (previousValue, type) => [...previousValue, { label: type }],
+    []
+  );
+};
+
+/**
+ * Filters and maps the alert data to match the form structure.
+ * @param alert The alert object to be mapped.
+ * @param serviceType The service type for the alert.
+ * @returns The formatted alert values suitable for the form.
+ */
+export const convertAlertDefinitionValues = (
+  {
+    alert_channels,
+    description,
+    entity_ids,
+    id,
+    label,
+    rule_criteria,
+    severity,
+    tags,
+    trigger_conditions,
+  }: Alert,
+  serviceType: AlertServiceType
+): EditAlertPayloadWithService => {
+  return {
+    alertId: id,
+    channel_ids: alert_channels.map((channel) => channel.id),
+    description: description || undefined,
+    entity_ids,
+    label,
+    rule_criteria: {
+      rules: rule_criteria.rules.map((rule) => ({
+        ...rule,
+        dimension_filters:
+          rule.dimension_filters?.map(({ label, ...filter }) => filter) ?? [],
+      })),
+    },
+    serviceType,
+    severity,
+    tags,
+    trigger_conditions,
+  };
+};
+
+/**
+ *
+ * @param criterias list of metric criterias to be processed
+ * @returns list of metric criterias in processed form
+ */
+export const processMetricCriteria = (
+  criterias: AlertDefinitionMetricCriteria[]
+): ProcessedCriteria[] => {
+  return criterias.map(
+    ({ aggregate_function, label, operator, threshold, unit }) => {
+      return {
+        label,
+        metricAggregationType: aggregationTypeMap[aggregate_function],
+        metricOperator: metricOperatorTypeMap[operator],
+        threshold,
+        unit,
+      };
+    }
+  );
 };
