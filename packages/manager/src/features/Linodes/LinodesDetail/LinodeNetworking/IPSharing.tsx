@@ -11,7 +11,6 @@ import {
 import { areArraysEqual } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
-import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -169,14 +168,12 @@ const IPSharingPanel = (props: Props) => {
     setIpsToShare((currentIps) => {
       return ipIdx >= currentIps.length
         ? [...currentIps, e.value]
-        : update(ipIdx, e.value, currentIps);
+        : currentIps.map((val, idx) => (idx === ipIdx ? e.value : val));
     });
   };
 
   const onIPDelete = (ipIdx: number) => {
-    setIpsToShare((currentIps) => {
-      return remove(ipIdx, 1, currentIps);
-    });
+    setIpsToShare((currentIps) => currentIps.filter((_, idx) => idx !== ipIdx));
   };
 
   const handleClose = () => {
@@ -193,32 +190,35 @@ const IPSharingPanel = (props: Props) => {
 
   const onSubmit = () => {
     const groupedUnsharedRanges: Record<number | string, string[]> = {};
-    const finalIPs: string[] = uniq(
-      ipsToShare.reduce((previousValue, currentValue) => {
-        if (currentValue === undefined || currentValue === null) {
-          return previousValue;
-        }
-        const strippedIP: string = currentValue.split('/')[0];
+    const strippedIPs = ipsToShare.reduce((previousValue, currentValue) => {
+      if (currentValue === undefined || currentValue === null) {
+        return previousValue;
+      }
+      const strippedIP: string = currentValue.split('/')[0];
 
-        // Filter out v4s and shared v6 ranges as only v6s and unshared ips will be added
-        const isStaticv6 = ipToLinodeID?.[currentValue]?.length === 1;
-        // For any IP in finalIPs that isn't shared (length of linode_ids === 1)
-        // make note in groupedUnsharedRanges so that we can first share that IP to
-        // the Linode it is statically routed to, then to the current Linode
-        if (isStaticv6) {
-          const linodeId = ipToLinodeID[currentValue][0];
-          if (groupedUnsharedRanges.hasOwnProperty(linodeId)) {
-            groupedUnsharedRanges[linodeId] = [
-              ...groupedUnsharedRanges[linodeId],
-              strippedIP,
-            ];
-          } else {
-            groupedUnsharedRanges[linodeId] = [strippedIP];
-          }
+      // Filter out v4s and shared v6 ranges as only v6s and unshared ips will be added
+      const isStaticv6 = ipToLinodeID?.[currentValue]?.length === 1;
+      // For any IP in finalIPs that isn't shared (length of linode_ids === 1)
+      // make note in groupedUnsharedRanges so that we can first share that IP to
+      // the Linode it is statically routed to, then to the current Linode
+      if (isStaticv6) {
+        const linodeId = ipToLinodeID[currentValue][0];
+        if (groupedUnsharedRanges.hasOwnProperty(linodeId)) {
+          groupedUnsharedRanges[linodeId] = [
+            ...groupedUnsharedRanges[linodeId],
+            strippedIP,
+          ];
+        } else {
+          groupedUnsharedRanges[linodeId] = [strippedIP];
         }
+      }
 
-        return [...previousValue, strippedIP];
-      }, [])
+      return [...previousValue, strippedIP];
+    }, []);
+
+    const finalIPs = strippedIPs.reduce(
+      (acc: string[], ip) => (acc.includes(ip) ? acc : [...acc, ip]),
+      []
     );
 
     // use local variable and state because useState won't update state right away

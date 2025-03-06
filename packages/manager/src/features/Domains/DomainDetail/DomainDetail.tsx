@@ -1,10 +1,15 @@
-import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
+import {
+  CircleProgress,
+  ErrorState,
+  Notice,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
