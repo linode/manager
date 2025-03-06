@@ -59,6 +59,7 @@ export const Default: Story = {
     format: 'hh:mm a',
     label: 'Select Time',
     value: null,
+    onChange: () => {},
   },
 };
 
@@ -67,6 +68,7 @@ export const Interactive: Story = {
     format: 'HH:mm',
     label: 'Pick a Time',
     value: DateTime.now(),
+    onChange: () => {},
   },
 };
 
@@ -76,5 +78,6 @@ export const WithError: Story = {
     format: 'hh:mm a',
     label: 'Invalid Time Input',
     value: null,
+    onChange: () => {},
   },
 };

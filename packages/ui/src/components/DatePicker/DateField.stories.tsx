@@ -56,6 +56,7 @@ export const Default: Story = {
     format: 'yyyy-MM-dd',
     label: 'Select Date',
     value: null,
+    onChange: () => {},
   },
 };
 
@@ -64,6 +65,7 @@ export const Interactive: Story = {
     format: 'dd-MM-yyyy',
     label: 'Pick a Date',
     value: DateTime.now(),
+    onChange: () => {},
   },
 };
 
@@ -73,5 +75,6 @@ export const WithError: Story = {
     format: 'MM/dd/yyyy',
     label: 'Invalid Date Input',
     value: null,
+    onChange: () => {},
   },
 };
