@@ -6,12 +6,12 @@ import {
   Tooltip,
   Typography,
 } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import Divider from '@mui/material/Divider';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
-import { pluralize } from 'src/utilities/pluralize';
 
 import { NodeTable } from './NodeTable';
 
