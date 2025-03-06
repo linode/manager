@@ -143,7 +143,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
           ) : quotasWithUsage.length === 0 ? (
             <TableRowEmpty
               colSpan={4}
-              message="No quotas found for the selected service and location."
+              message="There is no data available for this service and region."
               sx={{ height: quotaRowMinHeight }}
             />
           ) : (
