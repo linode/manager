@@ -69,7 +69,7 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const { data: attachedFirewallData } = useLinodeFirewallsQuery(
     linode.id,
-    linode.interface_generation === 'legacy_config'
+    linode.interface_generation !== 'linode'
   );
 
   const attachedFirewalls = attachedFirewallData?.data ?? [];
