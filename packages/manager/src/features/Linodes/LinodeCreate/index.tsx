@@ -78,7 +78,8 @@ export const LinodeCreate = () => {
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
     context: { isLinodeInterfacesEnabled, profile, secureVMNoticesEnabled },
-    defaultValues: () => defaultValues(params, queryClient),
+    defaultValues: () =>
+      defaultValues(params, queryClient, isLinodeInterfacesEnabled),
     mode: 'onBlur',
     resolver: getLinodeCreateResolver(params.type, queryClient),
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
@@ -104,7 +105,11 @@ export const LinodeCreate = () => {
   const onTabChange = (index: number) => {
     if (index !== currentTabIndex) {
       const newTab = tabs[index];
-      defaultValues({ ...params, type: newTab }, queryClient).then((values) => {
+      defaultValues(
+        { ...params, type: newTab },
+        queryClient,
+        isLinodeInterfacesEnabled
+      ).then((values) => {
         // Reset the form values
         form.reset(values);
         // Update tab "type" query param. (This changes the selected tab)
@@ -151,6 +156,15 @@ export const LinodeCreate = () => {
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
+          if (
+            isLinodeInterfacesEnabled &&
+            error.field.startsWith('interfaces')
+          ) {
+            form.setError(
+              error.field.replace('interfaces', 'linodeInterfaces'),
+              { message: error.reason }
+            );
+          }
           form.setError(error.field, { message: error.reason });
         } else {
           form.setError('root', { message: error.reason });

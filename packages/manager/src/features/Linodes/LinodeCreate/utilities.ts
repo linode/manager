@@ -3,6 +3,7 @@ import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { accountQueries } from 'src/queries/account/queries';
 import { imageQueries } from 'src/queries/images';
 import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
@@ -34,7 +35,6 @@ import type {
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors } from 'react-hook-form';
-import { accountQueries } from 'src/queries/account/queries';
 
 /**
  * This is the ID of the Image of the default OS.
@@ -356,7 +356,8 @@ export interface LinodeCreateFormContext {
  */
 export const defaultValues = async (
   params: ParsedLinodeCreateQueryParams,
-  queryClient: QueryClient
+  queryClient: QueryClient,
+  isLinodeInterfacesEnabled: boolean
 ): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
@@ -390,15 +391,17 @@ export const defaultValues = async (
 
   let interfaceGeneration: LinodeCreateFormValues['interface_generation'] = undefined;
 
-  try {
-    const accountSettings = await queryClient.ensureQueryData(
-      accountQueries.settings
-    );
-    interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
-      accountSettings.interfaces_for_new_linodes
-    );
-  } catch (error) {
-    // silently fail because the user may be a restricted user that can't access this endpoint
+  if (isLinodeInterfacesEnabled) {
+    try {
+      const accountSettings = await queryClient.ensureQueryData(
+        accountQueries.settings
+      );
+      interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
+        accountSettings.interfaces_for_new_linodes
+      );
+    } catch (error) {
+      // silently fail because the user may be a restricted user that can't access this endpoint
+    }
   }
 
   const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
