@@ -22,6 +22,7 @@ import {
   SideNavigation,
   Spacing,
   Table,
+  TextField,
   Typography,
 } from '@linode/design-language-system';
 
@@ -873,73 +874,89 @@ export const lightTheme: ThemeOptions = {
         disableUnderline: true,
       },
       styleOverrides: {
-        disabled: {},
-        error: {},
-        focused: {},
-        formControl: {
-          'label + &': {
-            marginTop: 0,
-          },
-        },
-        input: {
-          '&::placeholder': {
-            color: Color.Neutrals[50],
-          },
-          boxSizing: 'border-box',
-          [breakpoints.only('xs')]: {
-            fontSize: '1rem',
-          },
-          fontSize: Typography.Body.Regular,
-          padding: `0 ${spacing}px`,
-        },
-        inputMultiline: {
-          lineHeight: 1.4,
-          minHeight: 125,
-          padding: '9px 12px',
-        },
+        // disabled: {},
+        // error: {},
+        // focused: {},
+        // formControl: {
+        //   'label + &': {
+        //     marginTop: 0,
+        //   },
+        // },
+        // input: {
+        //   '&::placeholder': {
+        //     color: Color.Neutrals[50],
+        //   },
+        //   boxSizing: 'border-box',
+        //   [breakpoints.only('xs')]: {
+        //     fontSize: '1rem',
+        //   },
+        //   fontSize: Typography.Body.Regular,
+        //   padding: `0 ${spacing}px`,
+        // },
+        // inputMultiline: {
+        //   lineHeight: 1.4,
+        //   minHeight: 125,
+        //   padding: '9px 12px',
+        // },
         root: {
-          '& svg': {
-            '&:hover': {
-              color: Color.Brand[60],
-            },
-            color: primaryColors.main,
-            fontSize: 18,
+          '&:active, &:focus, &.Mui-focused, &.Mui-focused:hover': {
+            backgroundColor: TextField.Focus.Background,
+            border: `1px solid ${TextField.Focus.Border}`,
+            color: TextField.Focus.Text,
           },
-          '&.Mui-disabled': {
-            backgroundColor: Color.Neutrals[5],
-            borderColor: Color.Neutrals[40],
-            color: 'rgba(0, 0, 0, 0.75)',
-            input: {
-              cursor: 'not-allowed',
-            },
-            opacity: 0.5,
+          '&:disabled, &[aria-disabled="true"]': {
+            backgroundColor: TextField.Disabled.Background,
+            border: `1px solid ${TextField.Disabled.Border}`,
+            color: TextField.Disabled.Text,
           },
-          '&.Mui-error': {
-            borderColor: Interaction.Border.Error,
+          '&:hover': {
+            backgroundColor: TextField.Hover.Background,
+            border: `1px solid ${TextField.Hover.Border}`,
+            color: TextField.Hover.Text,
           },
-          '&.Mui-focused': {
-            '& .select-option-icon': {
-              paddingLeft: `30px !important`,
-            },
-            borderColor: primaryColors.main,
-            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
-          },
-          '&.affirmative': {
-            borderColor: Color.Green[70],
-          },
-          alignItems: 'center',
-          backgroundColor: Color.Neutrals.White,
-          border: `1px solid ${Color.Neutrals[40]}`,
-          boxSizing: 'border-box',
-          [breakpoints.down('xs')]: {
-            maxWidth: '100%',
-            width: '100%',
-          },
-          color: primaryColors.text,
-          lineHeight: 1,
-          maxWidth: inputMaxWidth,
-          minHeight: 32,
-          transition: 'border-color 225ms ease-in-out',
+          background: TextField.Default.Background,
+          border: `1px solid ${TextField.Default.Border}`,
+          // '& svg': {
+          //   '&:hover': {
+          //     color: Color.Brand[60],
+          //   },
+          //   color: primaryColors.main,
+          //   fontSize: 18,
+          // },
+          // '&.Mui-disabled': {
+          //   backgroundColor: Color.Neutrals[5],
+          //   borderColor: Color.Neutrals[40],
+          //   color: 'rgba(0, 0, 0, 0.75)',
+          //   input: {
+          //     cursor: 'not-allowed',
+          //   },
+          //   opacity: 0.5,
+          // },
+          // '&.Mui-error': {
+          //   borderColor: Interaction.Border.Error,
+          // },
+          // '&.Mui-focused': {
+          //   '& .select-option-icon': {
+          //     paddingLeft: `30px !important`,
+          //   },
+          //   borderColor: primaryColors.main,
+          //   boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
+          // },
+          // '&.affirmative': {
+          //   borderColor: Color.Green[70],
+          // },
+          // alignItems: 'center',
+          // backgroundColor: Color.Neutrals.White,
+          // border: `1px solid ${Color.Neutrals[40]}`,
+          // boxSizing: 'border-box',
+          // [breakpoints.down('xs')]: {
+          //   maxWidth: '100%',
+          //   width: '100%',
+          // },
+          // color: primaryColors.text,
+          // lineHeight: 1,
+          // maxWidth: inputMaxWidth,
+          // transition: 'border-color 225ms ease-in-out',
         },
       },
     },
