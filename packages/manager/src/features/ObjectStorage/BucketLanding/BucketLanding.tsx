@@ -1,4 +1,5 @@
 import { CircleProgress, ErrorState, Notice, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -32,7 +33,6 @@ import type {
   ObjectStorageEndpoint,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import { readableBytes } from '@linode/utilities';
 
 interface Props {
   isCreateBucketDrawerOpen?: boolean;

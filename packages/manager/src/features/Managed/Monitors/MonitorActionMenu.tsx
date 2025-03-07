@@ -1,3 +1,4 @@
+import { splitAt } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
@@ -14,7 +15,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import type { MonitorStatus } from '@linode/api-v4/lib/managed';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
-import { splitAt } from '@linode/utilities';
 
 export interface MonitorActionMenuProps {
   label: string;

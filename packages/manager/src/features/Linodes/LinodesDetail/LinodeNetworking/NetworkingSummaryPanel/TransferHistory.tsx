@@ -1,4 +1,5 @@
 import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
@@ -26,7 +27,6 @@ import type {
   LinodeNetworkTimeData,
   Point,
 } from 'src/components/AreaChart/types';
-import { readableBytes } from '@linode/utilities';
 
 interface Props {
   linodeCreated: string;

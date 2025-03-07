@@ -28,6 +28,7 @@ import {
   Typography,
   omitProps,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
@@ -77,7 +78,6 @@ import type {
 } from '@linode/api-v4';
 import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { scrollErrorIntoViewV2 } from '@linode/utilities';
 
 interface Helpers {
   devtmpfs_automount: boolean;

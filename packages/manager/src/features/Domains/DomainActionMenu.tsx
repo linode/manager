@@ -1,3 +1,4 @@
+import { splitAt } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -9,7 +10,6 @@ import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuActi
 import type { Domain } from '@linode/api-v4/lib/domains';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
-import { splitAt } from '@linode/utilities';
 
 const useStyles = makeStyles()(() => ({
   button: {

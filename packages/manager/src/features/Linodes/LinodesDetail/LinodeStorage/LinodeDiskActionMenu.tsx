@@ -1,4 +1,5 @@
 import { Box } from '@linode/ui';
+import { splitAt } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -11,7 +12,6 @@ import { sendEvent } from 'src/utilities/analytics/utils';
 import type { Disk, Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
-import { splitAt } from '@linode/utilities';
 
 interface Props {
   disk: Disk;
