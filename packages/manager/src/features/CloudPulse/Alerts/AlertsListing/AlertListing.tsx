@@ -163,7 +163,6 @@ export const AlertListing = () => {
         >
           <DebouncedSearchTextField
             sx={{
-              height: '34px',
               width: searchAndSelectSx,
             }}
             data-qa-filter="alert-search"
