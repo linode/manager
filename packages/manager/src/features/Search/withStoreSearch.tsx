@@ -35,18 +35,18 @@ export const useLegacySearch = ({ query }: Props) => {
     isSearching && isLargeAccount !== undefined && !isLargeAccount;
 
   const { data: regions } = useRegionsQuery();
-  const { data: objectStorageBuckets } = useObjectStorageBuckets(
-    shouldFetchAll
-  );
   const { data: domains } = useAllDomainsQuery(shouldFetchAll);
   const { data: clusters } = useAllKubernetesClustersQuery(shouldFetchAll);
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldFetchAll);
-  const { data: nodebalancers } = useAllNodeBalancersQuery(shouldFetchAll);
+  const { data: nodebals } = useAllNodeBalancersQuery(shouldFetchAll);
   const { data: firewalls } = useAllFirewallsQuery(shouldFetchAll);
   const { data: databases } = useAllDatabasesQuery(shouldFetchAll);
-  const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
+  const { data: objectStorageBuckets } = useObjectStorageBuckets(
+    shouldFetchAll
+  );
+  const { data: privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
-    { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
+    { is_public: false },
     shouldFetchAll
   );
   const { data: publicImages } = useAllImagesQuery(
@@ -65,28 +65,18 @@ export const useLegacySearch = ({ query }: Props) => {
     return formatLinode(linode, [], imageLabel);
   });
 
-  const searchableBuckets =
-    objectStorageBuckets?.buckets.map((bucket) =>
-      bucketToSearchableItem(bucket)
-    ) ?? [];
-  const searchableDomains =
-    domains?.map((domain) => domainToSearchableItem(domain)) ?? [];
-  const searchableVolumes =
-    volumes?.map((volume) => volumeToSearchableItem(volume)) ?? [];
-  const searchableImages =
-    _privateImages?.map((image) => imageToSearchableItem(image)) ?? [];
   const searchableClusters =
     clusters?.map((cluster) =>
       kubernetesClusterToSearchableItem(cluster, regions ?? [])
     ) ?? [];
-  const searchableNodebalancers =
-    nodebalancers?.map((nodebalancer) =>
-      nodeBalToSearchableItem(nodebalancer)
-    ) ?? [];
-  const searchableFirewalls =
-    firewalls?.map((firewall) => firewallToSearchableItem(firewall)) ?? [];
-  const searchableDatabases =
-    databases?.map((database) => databaseToSearchableItem(database)) ?? [];
+  const searchableBuckets =
+    objectStorageBuckets?.buckets.map(bucketToSearchableItem) ?? [];
+  const searchableDomains = domains?.map(domainToSearchableItem) ?? [];
+  const searchableVolumes = volumes?.map(volumeToSearchableItem) ?? [];
+  const searchableImages = privateImages?.map(imageToSearchableItem) ?? [];
+  const searchableNodebalancers = nodebals?.map(nodeBalToSearchableItem) ?? [];
+  const searchableFirewalls = firewalls?.map(firewallToSearchableItem) ?? [];
+  const searchableDatabases = databases?.map(databaseToSearchableItem) ?? [];
 
   const searchableItems = [
     ...searchableLinodes,
