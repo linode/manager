@@ -7,7 +7,10 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
+import {
+  getQueryParamsFromQueryString,
+  useFormValidateOnChange,
+} from '@linode/utilities';
 import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -21,7 +24,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import {
   useAllPlacementGroupsQuery,
   useCreatePlacementGroup,
@@ -264,7 +266,7 @@ export const PlacementGroupsCreateDrawer = (
                 helperText={values.region && pgRegionLimitHelperText}
                 onChange={(e, region) => handleRegionSelect(region.id)}
                 regions={regions ?? []}
-                tooltipText="Only Linode data center regions that support placement groups are listed."
+                tooltipText="Only regions that support placement groups are listed."
                 value={selectedRegionId ?? values.region}
               />
             )}
