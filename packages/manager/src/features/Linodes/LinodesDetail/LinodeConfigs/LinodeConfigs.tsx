@@ -37,7 +37,8 @@ const LinodeConfigs = (props: LinodeDetailProps) => {
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
-  const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
+
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
@@ -107,7 +108,7 @@ const LinodeConfigs = (props: LinodeDetailProps) => {
           }}
           label={'Configuration Profiles'}
         />
-        {isLinodeInterfaceEnabled &&
+        {isLinodeInterfacesEnabled &&
           linode?.interface_generation === 'legacy_config' && (
             <Button
               buttonType="outlined"
