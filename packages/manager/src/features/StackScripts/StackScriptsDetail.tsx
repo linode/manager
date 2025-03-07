@@ -1,6 +1,6 @@
 import { CircleProgress, ErrorState, Paper } from '@linode/ui';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -19,9 +19,12 @@ import {
 } from './stackScriptUtils';
 
 export const StackScriptDetail = () => {
+  const navigate = useNavigate();
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
-  const { stackScriptId } = useParams<{ stackScriptId: string }>();
+  const { id: stackScriptId } = useParams({
+    strict: false,
+  });
 
   const id = Number(stackScriptId);
 
@@ -31,10 +34,6 @@ export const StackScriptDetail = () => {
     mutateAsync: updateStackScript,
     reset,
   } = useUpdateStackScriptMutation(id);
-
-  const history = useHistory();
-  const location = useLocation();
-
   const isRestrictedUser = profile?.restricted ?? false;
   const username = profile?.username;
   const userCannotAddLinodes = isRestrictedUser && !grants?.global.add_linodes;
@@ -50,7 +49,7 @@ export const StackScriptDetail = () => {
       return;
     }
     const url = getStackScriptUrl(stackscript.username, id, username);
-    history.push(url);
+    navigate({ to: url });
   };
 
   const handleLabelChange = (label: string) => {

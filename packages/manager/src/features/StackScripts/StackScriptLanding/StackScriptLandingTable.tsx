@@ -1,7 +1,7 @@
 import { getAPIFilterFromQuery } from '@linode/search';
 import { CircleProgress, ErrorState, Stack, TooltipIcon } from '@linode/ui';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -36,6 +36,10 @@ interface Props {
 
 export const StackScriptLandingTable = (props: Props) => {
   const { type } = props;
+  const navigate = useNavigate();
+  const { query } = useSearch({
+    from: '/stackscripts',
+  });
 
   const filter =
     type === 'community'
@@ -46,11 +50,6 @@ export const StackScriptLandingTable = (props: Props) => {
     type === 'community'
       ? { order: 'desc' as const, orderBy: 'deployments_total' }
       : { order: 'desc' as const, orderBy: 'updated' };
-
-  const history = useHistory();
-
-  const queryParams = new URLSearchParams(history.location.search);
-  const query = queryParams.get('query') ?? '';
 
   const {
     error: searchParseError,
@@ -124,8 +123,7 @@ export const StackScriptLandingTable = (props: Props) => {
             : {}
         }
         onSearch={(value) => {
-          queryParams.set('query', value);
-          history.push({ search: queryParams.toString() });
+          navigate({ search: { query: value }, to: '/stackscripts' });
         }}
         clearable
         hideLabel
@@ -135,7 +133,7 @@ export const StackScriptLandingTable = (props: Props) => {
         placeholder="Search by Label, Username, or Description"
         tooltipText={<StackScriptSearchHelperText />}
         tooltipWidth={300}
-        value={query}
+        value={query ?? ''}
       />
       <Table aria-label="List of StackScripts">
         <TableHead>
