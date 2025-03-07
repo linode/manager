@@ -1,3 +1,4 @@
+import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
 import { sha256 } from 'js-sha256';
 import React from 'react';
 
@@ -9,8 +10,6 @@ import {
   checkOptanonConsent,
   getCookie,
 } from 'src/utilities/analytics/utils';
-
-import { loadScript } from './useScript';
 
 declare global {
   interface Window {

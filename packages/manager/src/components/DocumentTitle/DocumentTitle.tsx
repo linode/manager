@@ -6,10 +6,9 @@ the Linodes landing page. More context: https://github.com/linode/manager/pull/9
 
 */
 
+import { usePrevious } from '@linode/utilities';
 import { reverse } from 'ramda';
 import * as React from 'react';
-
-import { usePrevious } from 'src/hooks/usePrevious';
 
 interface DocumentTitleSegmentsContext {
   appendSegment: (segment: string) => void;
