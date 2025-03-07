@@ -3,8 +3,6 @@ import { pluralize } from '@linode/utilities';
 import { getDatabasesDescription } from 'src/features/Databases/utilities';
 import { getFirewallDescription } from 'src/features/Firewalls/shared';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
-import { displayType } from 'src/features/Linodes/presentation';
-import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import type {
@@ -17,10 +15,10 @@ import type {
   NodeBalancer,
   ObjectStorageBucket,
   Region,
+  StackScript,
   Volume,
 } from '@linode/api-v4';
 import type { SearchableItem } from 'src/features/Search/search.interfaces';
-import type { ExtendedType } from 'src/utilities/extendType';
 
 export const getLinodeIps = (linode: Linode): string[] => {
   const { ipv4, ipv6 } = linode;
@@ -41,25 +39,14 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
   return ips;
 };
 
-export const linodeToSearchableItem = (
-  linode: Linode,
-  types: ExtendedType[],
-  imageLabel: null | string
-): SearchableItem => ({
+export const linodeToSearchableItem = (linode: Linode): SearchableItem => ({
   data: {
     created: linode.created,
-    description: getLinodeDescription(
-      displayType(linode.type, types),
-      linode.specs.memory,
-      linode.specs.disk,
-      linode.specs.vcpus,
-      imageLabel
-    ),
+    description: `${linode.image} ${linode.specs.vcpus} CPUs`,
     icon: 'linode',
     ips: getLinodeIps(linode),
     path: `/linodes/${linode.id}`,
     region: linode.region,
-    searchText: '', // @todo update this, either here or in the consumer. Probably in the consumer.
     status: linode.status,
     tags: linode.tags,
   },
@@ -93,7 +80,6 @@ export const imageToSearchableItem = (image: Image): SearchableItem => ({
           image.regions.length
         )}`,
     icon: 'image',
-    /* TODO: Choose a real location for this to link to */
     path: `/images?query="${image.label}"`,
     tags: image.tags,
   },
@@ -199,4 +185,20 @@ export const databaseToSearchableItem = (
   entityType: 'database',
   label: database.label,
   value: `${database.engine}/${database.id}`,
+});
+
+export const stackscriptToSearchableItem = (
+  stackscript: StackScript
+): SearchableItem => ({
+  data: {
+    created: stackscript.created,
+    description: stackscript.description
+      ? stackscript.description
+      : `${stackscript.deployments_total} deploys, ${stackscript.deployments_active} active deployments`,
+    icon: 'stackscript',
+    path: `/stackscripts/${stackscript.id}`,
+  },
+  entityType: 'stackscript',
+  label: stackscript.label,
+  value: stackscript.id,
 });

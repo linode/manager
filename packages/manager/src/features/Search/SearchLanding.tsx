@@ -7,19 +7,23 @@ import { useLocation } from 'react-router-dom';
 import { ResultGroup } from './ResultGroup';
 import { useSearch } from './useSearch';
 
-import type { SearchResultsByEntity } from './search.interfaces';
+import type {
+  SearchResultsByEntity,
+  SearchableEntityType,
+} from './search.interfaces';
 import type { ResultRowDataOption } from './types';
 
-const displayMap = {
-  buckets: 'Buckets',
-  databases: 'Databases',
-  domains: 'Domains',
-  firewalls: 'Firewalls',
-  images: 'Images',
-  kubernetesClusters: 'Kubernetes',
-  linodes: 'Linodes',
-  nodebalancers: 'NodeBalancers',
-  volumes: 'Volumes',
+const displayMap: Record<SearchableEntityType, string> = {
+  bucket: 'Buckets',
+  database: 'Databases',
+  domain: 'Domains',
+  firewall: 'Firewalls',
+  image: 'Images',
+  kubernetesCluster: 'Kubernetes',
+  linode: 'Linodes',
+  nodebalancer: 'NodeBalancers',
+  stackscript: 'StackScripts',
+  volume: 'Volumes',
 };
 
 const SearchLanding = () => {
@@ -40,7 +44,8 @@ const SearchLanding = () => {
         spacing={1}
       >
         <Typography variant="h1">
-          Search Results {query && `for "${query}"`}</Typography>
+          Search Results {query && `for "${query}"`}
+        </Typography>
         {isLoading && <CircleProgress size="sm" />}
       </Stack>
       {!isLoading && combinedResults.length === 0 && (
