@@ -1,6 +1,7 @@
 import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
 import Backup from '@mui/icons-material/Backup';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
