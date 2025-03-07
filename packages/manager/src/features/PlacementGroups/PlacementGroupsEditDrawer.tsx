@@ -2,7 +2,9 @@ import {
   PLACEMENT_GROUP_POLICIES,
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
+import { useMutatePlacementGroup } from '@linode/queries';
 import { Divider, Notice, Stack, TextField } from '@linode/ui';
+import { useFormValidateOnChange } from '@linode/utilities';
 import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -12,8 +14,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Drawer } from 'src/components/Drawer';
 import { NotFound } from 'src/components/NotFound';
-import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { useMutatePlacementGroup } from '@linode/queries';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 

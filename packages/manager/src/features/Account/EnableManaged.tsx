@@ -1,5 +1,7 @@
 import { enableManaged } from '@linode/api-v4/lib/managed';
+import { updateAccountSettingsData, useLinodesQuery } from '@linode/queries';
 import { Accordion, Button, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
@@ -8,8 +10,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
-import { updateAccountSettingsData, useLinodesQuery } from '@linode/queries';
-import { pluralize } from 'src/utilities/pluralize';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 

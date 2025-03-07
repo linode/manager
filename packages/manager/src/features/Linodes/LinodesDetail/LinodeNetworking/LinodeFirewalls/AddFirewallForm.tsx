@@ -11,7 +11,7 @@ import { number, object } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
-import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/FirewallDeviceLanding';
+import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/constants';
 
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';

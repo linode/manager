@@ -6,12 +6,12 @@ import {
   Notice,
   Typography,
 } from '@linode/ui';
+import { usePrevious } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { usePrevious } from 'src/hooks/usePrevious';
 import {
   useAllLinodesQuery,
   useLinodeQuery,

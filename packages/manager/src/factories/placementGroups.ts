@@ -1,5 +1,5 @@
+import { pickRandom } from '@linode/utilities';
 import { Factory } from '@linode/utilities';
-import { pickRandom } from 'src/utilities/random';
 
 import type {
   CreatePlacementGroupPayload,

@@ -66,7 +66,10 @@ export const LinodeEntityDetail = (props: Props) => {
     vpcLinodeIsAssignedTo,
   } = useVPCConfigInterface(linode.id);
 
-  const { data: attachedFirewallData } = useLinodeFirewallsQuery(linode.id);
+  const { data: attachedFirewallData } = useLinodeFirewallsQuery(
+    linode.id,
+    linode.interface_generation !== 'linode'
+  );
 
   const attachedFirewalls = attachedFirewallData?.data ?? [];
 
@@ -88,6 +91,11 @@ export const LinodeEntityDetail = (props: Props) => {
     regions ?? [],
     linode.region
   );
+
+  const regionSupportsDiskEncryption =
+    regions
+      ?.find((r) => r.id === linode.region)
+      ?.capabilities.includes('Disk Encryption') ?? false;
 
   let progress;
   let transitionText;
@@ -131,6 +139,7 @@ export const LinodeEntityDetail = (props: Props) => {
             numCPUs={linode.specs.vcpus}
             numVolumes={numberOfVolumes}
             region={linode.region}
+            regionSupportsDiskEncryption={regionSupportsDiskEncryption}
             vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
           />
         }

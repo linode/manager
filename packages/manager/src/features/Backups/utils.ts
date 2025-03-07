@@ -1,8 +1,7 @@
 import { enableBackups } from '@linode/api-v4';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
 import { linodeQueries } from '@linode/queries';
-import { pluralize } from 'src/utilities/pluralize';
+import { pluralize } from '@linode/utilities';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { APIError, Linode } from '@linode/api-v4';
 

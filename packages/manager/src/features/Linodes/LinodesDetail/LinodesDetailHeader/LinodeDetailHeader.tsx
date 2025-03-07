@@ -1,4 +1,5 @@
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -15,7 +16,6 @@ import {
   sendUpdateLinodeLabelEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
@@ -30,9 +30,9 @@ import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { BaseQueryParams } from '@linode/utilities';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import type { BooleanString } from 'src/features/Linodes/types';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
 
 interface QueryParams extends BaseQueryParams {
   delete: BooleanString;

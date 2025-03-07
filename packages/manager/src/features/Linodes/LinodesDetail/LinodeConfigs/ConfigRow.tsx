@@ -1,4 +1,8 @@
-import { useAllLinodeDisksQuery, useLinodeKernelQuery } from '@linode/queries';
+import {
+  useAllLinodeDisksQuery,
+  useLinodeKernelQuery,
+  useLinodeQuery,
+} from '@linode/queries';
 import { API_MAX_PAGE_SIZE } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -40,6 +44,8 @@ const isVolumeDevice = (
 
 export const ConfigRow = React.memo((props: Props) => {
   const { config, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
+
+  const { data: linode } = useLinodeQuery(linodeId);
 
   const { data: kernel } = useLinodeKernelQuery(config.kernel);
 
@@ -110,9 +116,11 @@ export const ConfigRow = React.memo((props: Props) => {
         {config.label} – {kernel?.label ?? config.kernel}
       </TableCell>
       <TableCell>{deviceLabels}</TableCell>
-      <TableCell>
-        {interfaces.length > 0 ? InterfaceList : defaultInterfaceLabel}
-      </TableCell>
+      {linode?.interface_generation !== 'linode' && (
+        <TableCell>
+          {interfaces.length > 0 ? InterfaceList : defaultInterfaceLabel}
+        </TableCell>
+      )}
       <StyledTableCell>
         <ConfigActionMenu
           config={config}

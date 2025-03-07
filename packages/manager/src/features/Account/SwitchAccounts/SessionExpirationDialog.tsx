@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import { useInterval } from '@linode/utilities';
+import { pluralize, useInterval } from '@linode/utilities';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -10,7 +10,6 @@ import { useParentChildAuthentication } from 'src/features/Account/SwitchAccount
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
 import { useAccount } from '@linode/queries';
 import { parseAPIDate } from 'src/utilities/date';
-import { pluralize } from 'src/utilities/pluralize';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 interface SessionExpirationDialogProps {

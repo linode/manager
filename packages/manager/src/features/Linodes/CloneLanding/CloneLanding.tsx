@@ -1,5 +1,6 @@
 import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { castDraft } from 'immer';
@@ -25,7 +26,6 @@ import {
   useLinodeQuery,
 } from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';

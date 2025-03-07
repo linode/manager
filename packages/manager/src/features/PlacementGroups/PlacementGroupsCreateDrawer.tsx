@@ -7,6 +7,10 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import {
+  getQueryParamsFromQueryString,
+  useFormValidateOnChange,
+} from '@linode/utilities';
 import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -16,10 +20,10 @@ import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import {
   useAllPlacementGroupsQuery,
   useCreatePlacementGroup,
@@ -27,7 +31,6 @@ import {
 } from '@linode/queries';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
@@ -47,7 +50,6 @@ import type {
 } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 import type { DisableItemOption } from 'src/components/ListItemOption';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
@@ -264,7 +266,7 @@ export const PlacementGroupsCreateDrawer = (
                 helperText={values.region && pgRegionLimitHelperText}
                 onChange={(e, region) => handleRegionSelect(region.id)}
                 regions={regions ?? []}
-                tooltipText="Only Linode data center regions that support placement groups are listed."
+                tooltipText="Only regions that support placement groups are listed."
                 value={selectedRegionId ?? values.region}
               />
             )}

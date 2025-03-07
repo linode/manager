@@ -1,13 +1,12 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import type { Order, OrderSet } from '@linode/utilities';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
+import type { BaseQueryParams, Order, OrderSet } from '@linode/utilities';
 
 export interface UseOrder extends OrderSet {
   handleOrderChange: (newOrderBy: string, newOrder: Order) => void;

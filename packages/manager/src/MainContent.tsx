@@ -162,7 +162,6 @@ const EventsLanding = React.lazy(() =>
 const AccountActivationLanding = React.lazy(
   () => import('src/components/AccountActivation/AccountActivationLanding')
 );
-const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
 
@@ -384,7 +383,6 @@ export const MainContent = () => {
                             <Route component={Help} path="/support" />
                             <Route component={SearchLanding} path="/search" />
                             <Route component={EventsLanding} path="/events" />
-                            <Route component={Firewalls} path="/firewalls" />
                             {isDatabasesEnabled && (
                               <Route component={Databases} path="/databases" />
                             )}

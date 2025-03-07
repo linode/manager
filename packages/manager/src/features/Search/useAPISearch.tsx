@@ -6,6 +6,7 @@ import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { useRegionsQuery } from '@linode/queries';
 import { API_MAX_PAGE_SIZE } from '@linode/utilities';
+import { isNotNullOrUndefined } from '@linode/utilities';
 import { flatten } from 'ramda';
 import React, { useCallback } from 'react';
 
@@ -21,7 +22,6 @@ import {
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 import { getImageLabelForLinode } from '../Images/utils';
 import { refinedSearch } from './refinedSearch';

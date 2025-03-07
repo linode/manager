@@ -1,9 +1,10 @@
-import { Config } from '@linode/api-v4/lib/linodes/types';
 import {
   Factory,
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
 } from '@linode/utilities';
+
+import type { Config } from '@linode/api-v4';
 
 const generateRandomId = () => Math.floor(Math.random() * 10000);
 

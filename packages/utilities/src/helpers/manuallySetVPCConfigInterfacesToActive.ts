@@ -5,14 +5,18 @@ import type { Config } from '@linode/api-v4';
 // NOTE: This logic only works for linodes with one configuration/one vpc interface, and will lead to VERY CONFUSING results for linodes with multiple configurations.
 export const manuallySetVPCConfigInterfacesToActive = (
   configs: Config[]
-): Config[] =>
-  configs.map((config) => ({
-    ...config,
-    interfaces: config.interfaces?.map((linodeInterface) => {
-      if (linodeInterface.purpose === 'vpc') {
-        return { ...linodeInterface, active: true };
-      } else {
-        return linodeInterface;
-      }
-    }),
-  }));
+): Config[] => {
+  return configs.map((config) => {
+    return {
+      ...config,
+      interfaces:
+        config.interfaces?.map((linodeInterface) => {
+          if (linodeInterface.purpose === 'vpc') {
+            return { ...linodeInterface, active: true };
+          } else {
+            return linodeInterface;
+          }
+        }) ?? null,
+    };
+  });
+};

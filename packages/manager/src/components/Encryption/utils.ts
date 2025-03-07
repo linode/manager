@@ -1,5 +1,6 @@
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from '@linode/queries';
+
+import { useFlags } from 'src/hooks/useFlags';
 
 import {
   ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON,
