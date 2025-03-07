@@ -352,50 +352,21 @@ export const lightTheme: ThemeOptions = {
     },
     MuiAutocomplete: {
       styleOverrides: {
-        endAdornment: {
-          '.MuiAutocomplete-clearIndicator': {
-            visibility: 'visible !important',
-          },
-          '.MuiAutocomplete-popupIndicator': {
-            svg: {
-              fontSize: '28px',
-            },
-          },
-          paddingRight: 4,
+        clearIndicator: {
+          padding: 0,
           svg: {
-            ':hover': {
-              color: `${Color.Brand[70]} !important`,
-            },
-            color: `${Search.Default.Icon} !important`,
+            height: '16px',
+            width: '16px',
           },
+        },
+        endAdornment: {
+          display: 'flex',
+          gap: Spacing.S2,
+          marginRight: Spacing.S8,
         },
         groupLabel: {
-          font: Typography.Body.Bold,
-          fontSize: '1rem',
-          lineHeight: 'unset',
+          font: Typography.Label.Bold.L,
           padding: '8px',
-        },
-        hasPopupIcon: {
-          '&.MuiAutocomplete-root': {
-            '& .MuiAutocomplete-inputRoot': {
-              paddingRight: '34px',
-            },
-          },
-        },
-        input: {
-          '&::placeholder': {
-            opacity: 1,
-          },
-          '&::selection': {
-            backgroundColor: color.grey10,
-          },
-        },
-        inputRoot: {
-          '& .MuiInput-input': {
-            position: 'relative',
-            top: 1,
-          },
-          paddingLeft: 8,
         },
         listbox: {
           backgroundColor: bg.white,
@@ -435,6 +406,9 @@ export const lightTheme: ThemeOptions = {
               },
             },
           },
+        },
+        popupIndicator: {
+          padding: 0,
         },
         root: {
           maxWidth: inputMaxWidth,
@@ -858,13 +832,13 @@ export const lightTheme: ThemeOptions = {
           '&.MuiIconButton-isActive': {
             svg: {
               path: {
-                fill: Color.Brand[60],
+                fill: Content.Icon.Primary.Active,
               },
             },
           },
           '&:hover': {
             backgroundColor: 'transparent',
-            color: primaryColors.main,
+            color: Content.Icon.Primary.Hover,
           },
         },
       },
@@ -873,41 +847,73 @@ export const lightTheme: ThemeOptions = {
       defaultProps: {
         disableUnderline: true,
       },
+    },
+    MuiInputAdornment: {
       styleOverrides: {
-        // disabled: {},
-        // error: {},
-        // focused: {},
-        // formControl: {
-        //   'label + &': {
-        //     marginTop: 0,
-        //   },
-        // },
-        // input: {
-        //   '&::placeholder': {
-        //     color: Color.Neutrals[50],
-        //   },
-        //   boxSizing: 'border-box',
-        //   [breakpoints.only('xs')]: {
-        //     fontSize: '1rem',
-        //   },
-        //   fontSize: Typography.Body.Regular,
-        //   padding: `0 ${spacing}px`,
-        // },
-        // inputMultiline: {
-        //   lineHeight: 1.4,
-        //   minHeight: 125,
-        //   padding: '9px 12px',
-        // },
+        positionEnd: {
+          marginLeft: Spacing.S8,
+          svg: {
+            fontSize: Font.FontSize.S,
+          },
+        },
+        positionStart: {
+          marginRight: Spacing.S8,
+          svg: {
+            fontSize: Font.FontSize.L,
+          },
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        adornedEnd: {
+          // Similar to `clearIndicator` in `MuiAutocomplete`
+          // Assuming this is for the clear/close icon in `DebouncedSearchTextField`. Update if this changes.
+          '.MuiInputAdornment-positionEnd': {
+            svg: {
+              height: '16px',
+              width: '16px',
+            },
+          },
+        },
+        input: {
+          '&::placeholder': {
+            color: TextField.Placeholder.Text,
+            font: Typography.Label.Regular.Placeholder,
+            fontStyle: 'italic',
+          },
+          '&:disabled, &.Mui-disabled': {
+            cursor: 'not-allowed',
+          },
+          padding: `${Spacing.S8} 0`, // L & R padding applied to parent due to possible adornments
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        },
+        inputMultiline: {
+          minHeight: '100px',
+        },
+        multiline: {
+          height: 'auto',
+        },
         root: {
+          '&.Mui-error': {
+            backgroundColor: TextField.Error.Background,
+            borderColor: TextField.Error.Border,
+            color: TextField.Error.Text,
+          },
           '&:active, &:focus, &.Mui-focused, &.Mui-focused:hover': {
             backgroundColor: TextField.Focus.Background,
             border: `1px solid ${TextField.Focus.Border}`,
             color: TextField.Focus.Text,
           },
-          '&:disabled, &[aria-disabled="true"]': {
+          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover': {
+            '& .MuiInputAdornment-root': {
+              cursor: 'not-allowed',
+            },
             backgroundColor: TextField.Disabled.Background,
             border: `1px solid ${TextField.Disabled.Border}`,
             color: TextField.Disabled.Text,
+            cursor: 'not-allowed',
           },
           '&:hover': {
             backgroundColor: TextField.Hover.Background,
@@ -916,79 +922,13 @@ export const lightTheme: ThemeOptions = {
           },
           background: TextField.Default.Background,
           border: `1px solid ${TextField.Default.Border}`,
-          // '& svg': {
-          //   '&:hover': {
-          //     color: Color.Brand[60],
-          //   },
-          //   color: primaryColors.main,
-          //   fontSize: 18,
-          // },
-          // '&.Mui-disabled': {
-          //   backgroundColor: Color.Neutrals[5],
-          //   borderColor: Color.Neutrals[40],
-          //   color: 'rgba(0, 0, 0, 0.75)',
-          //   input: {
-          //     cursor: 'not-allowed',
-          //   },
-          //   opacity: 0.5,
-          // },
-          // '&.Mui-error': {
-          //   borderColor: Interaction.Border.Error,
-          // },
-          // '&.Mui-focused': {
-          //   '& .select-option-icon': {
-          //     paddingLeft: `30px !important`,
-          //   },
-          //   borderColor: primaryColors.main,
-          //   boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
-          // },
-          // '&.affirmative': {
-          //   borderColor: Color.Green[70],
-          // },
-          // alignItems: 'center',
-          // backgroundColor: Color.Neutrals.White,
-          // border: `1px solid ${Color.Neutrals[40]}`,
-          // boxSizing: 'border-box',
-          // [breakpoints.down('xs')]: {
-          //   maxWidth: '100%',
-          //   width: '100%',
-          // },
-          // color: primaryColors.text,
-          // lineHeight: 1,
-          // maxWidth: inputMaxWidth,
-          // transition: 'border-color 225ms ease-in-out',
-        },
-      },
-    },
-    MuiInputAdornment: {
-      styleOverrides: {
-        positionEnd: {
-          marginRight: 10,
-        },
-        root: {
-          '& p': {
-            [breakpoints.only('xs')]: {
-              fontSize: '1rem',
-            },
-            color: Color.Neutrals[70],
-            fontSize: '0.9rem',
-          },
-          [breakpoints.only('xs')]: {
-            fontSize: '1rem',
-          },
-          color: Color.Neutrals[70],
-          fontSize: '0.9rem',
-          whiteSpace: 'nowrap',
-        },
-      },
-    },
-    MuiInputBase: {
-      styleOverrides: {
-        input: {
-          '&::placeholder': {
-            opacity: 1,
-          },
-          height: 'auto',
+          color: TextField.Filled.Text,
+          font: Typography.Label.Regular.S,
+          height: '32px',
+          maxWidth: inputMaxWidth,
+          paddingLeft: Spacing.S8,
+          paddingRight: Spacing.S8,
+          transition: 'border-color 225ms ease-in-out',
         },
       },
     },
@@ -1123,71 +1063,6 @@ export const lightTheme: ThemeOptions = {
           padding: '10px 10px 10px 16px',
         },
         selected: {},
-      },
-    },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        input: {
-          '&::placeholder': {
-            color: Color.Neutrals[50],
-          },
-          boxSizing: 'border-box',
-          [breakpoints.only('xs')]: {
-            fontSize: '1rem',
-          },
-          fontSize: '0.9rem',
-          padding: 8,
-        },
-        root: {
-          '& .MuiInputAdornment-root': {
-            margin: 0,
-          },
-          '& fieldset': {
-            border: 'none',
-          },
-          '& svg': {
-            '&:hover': {
-              color: Color.Brand[60],
-            },
-            color: primaryColors.main,
-            fontSize: 18,
-          },
-          '&.Mui-error': {
-            borderColor: Interaction.Border.Error,
-          },
-          '&.Mui-error .MuiOutlinedInput-notchedOutline': {
-            borderColor: Interaction.Border.Error,
-          },
-          '&.Mui-focused': {
-            '& .select-option-icon': {
-              paddingLeft: `30px !important`,
-            },
-            borderColor: primaryColors.main,
-            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
-          },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderWidth: '1px',
-            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
-          },
-          '&.affirmative': {
-            borderColor: Color.Green[70],
-          },
-          alignItems: 'center',
-          backgroundColor: Color.Neutrals.White,
-          border: `1px solid ${Color.Neutrals[40]}`,
-          borderRadius: 0,
-          boxSizing: 'border-box',
-          [breakpoints.down('xs')]: {
-            maxWidth: '100%',
-            width: '100%',
-          },
-          color: primaryColors.text,
-          height: '34px',
-          lineHeight: 1,
-          maxWidth: inputMaxWidth,
-          minHeight: '34px',
-          transition: 'border-color 225ms ease-in-out',
-        },
       },
     },
     MuiPaper: {

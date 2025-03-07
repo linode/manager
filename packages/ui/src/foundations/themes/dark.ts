@@ -239,28 +239,6 @@ export const darkTheme: ThemeOptions = {
     },
     MuiAutocomplete: {
       styleOverrides: {
-        endAdornment: {
-          '.MuiAutocomplete-clearIndicator': {
-            visibility: 'visible !important',
-          },
-          '.MuiAutocomplete-popupIndicator': {
-            svg: {
-              fontSize: '28px',
-            },
-          },
-          paddingRight: 4,
-          svg: {
-            ':hover': {
-              color: `${Color.Brand[50]} !important`,
-            },
-            color: `${Search.Default.Icon} !important`,
-          },
-        },
-        input: {
-          '&::selection': {
-            backgroundColor: customDarkModeOptions.bg.appBar,
-          },
-        },
         listbox: {
           backgroundColor: customDarkModeOptions.bg.white,
           border: `1px solid ${primaryColors.main}`,
@@ -547,71 +525,50 @@ export const darkTheme: ThemeOptions = {
     MuiIconButton: {
       styleOverrides: {
         root: {
+          '&.MuiIconButton-isActive': {
+            svg: {
+              path: {
+                fill: Content.Icon.Primary.Active,
+              },
+            },
+          },
           '&:hover': {
-            color: primaryColors.main,
+            color: Content.Icon.Primary.Hover,
           },
         },
       },
     },
-    MuiInput: {
+    MuiInputBase: {
       styleOverrides: {
-        disabled: {},
-        focused: {},
         input: {
-          '&.Mui-disabled': {
-            WebkitTextFillColor: 'unset !important',
+          '&::placeholder': {
+            color: TextField.Placeholder.Text,
           },
         },
         root: {
-          '& svg': {
-            color: TextField.Default.InfoIcon,
-          },
-          '&.Mui-disabled': {
-            '& svg': {
-              color: TextField.Disabled.InfoIcon,
-            },
-            backgroundColor: TextField.Disabled.Background,
-            borderColor: TextField.Disabled.Border,
-            color: TextField.Disabled.Text,
-          },
           '&.Mui-error': {
-            '& svg': {
-              color: TextField.Error.Icon,
-            },
             backgroundColor: TextField.Error.Background,
             borderColor: TextField.Error.Border,
             color: TextField.Error.Text,
           },
-          '&.Mui-focused': {
-            '& svg': {
-              color: TextField.Focus.Icon,
-            },
+          '&:active, &:focus, &.Mui-focused, &.Mui-focused:hover': {
             backgroundColor: TextField.Focus.Background,
-            borderColor: TextField.Focus.Border,
-            boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
+            border: `1px solid ${TextField.Focus.Border}`,
             color: TextField.Focus.Text,
           },
-          '&.Mui-hover': {
-            '& svg': {
-              color: TextField.Hover.Icon,
-            },
+          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover': {
+            backgroundColor: TextField.Disabled.Background,
+            border: `1px solid ${TextField.Disabled.Border}`,
+            color: TextField.Disabled.Text,
+          },
+          '&:hover': {
             backgroundColor: TextField.Hover.Background,
-            borderColor: TextField.Hover.Border,
+            border: `1px solid ${TextField.Hover.Border}`,
             color: TextField.Hover.Text,
           },
-          backgroundColor: TextField.Default.Background,
-          borderColor: TextField.Default.Border,
+          background: TextField.Default.Background,
+          border: `1px solid ${TextField.Default.Border}`,
           color: TextField.Filled.Text,
-        },
-      },
-    },
-    MuiInputAdornment: {
-      styleOverrides: {
-        root: {
-          '& p': {
-            color: Color.Neutrals[20],
-          },
-          color: Color.Neutrals[20],
         },
       },
     },
