@@ -67,8 +67,8 @@ describe('Alert Row', () => {
   it('alert labels should have hyperlinks to the details page', () => {
     const alert = alertFactory.build({ status: 'enabled' });
     const history = createMemoryHistory();
-    history.push('/monitor/alerts/definitions');
-    const link = `/monitor/alerts/definitions/detail/${alert.service_type}/${alert.id}`;
+    history.push('/alerts/definitions');
+    const link = `/alerts/definitions/detail/${alert.service_type}/${alert.id}`;
     const renderedAlert = (
       <Router history={history}>
         <AlertTableRow
