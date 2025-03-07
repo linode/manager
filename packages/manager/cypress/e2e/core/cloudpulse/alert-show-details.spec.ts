@@ -109,7 +109,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
   it('navigates to the Show Details page from the list page', () => {
     // Navigate to the alert definitions list page with login
-    cy.visitWithLogin('/monitor/alerts/definitions');
+    cy.visitWithLogin('/alerts/definitions');
 
     // Wait for the alert definitions list API call to complete
     cy.wait('@getAlertDefinitionsList');
@@ -134,7 +134,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
   it('should correctly display the details of the DBaaS alert in the alert details view', () => {
     cy.visitWithLogin(
-      `/monitor/alerts/definitions/detail/${service_type}/${id}`
+      `/alerts/definitions/detail/${service_type}/${id}`
     );
     cy.wait(['@getDBaaSAlertDefinitions', '@getMockedDbaasDatabases']);
 
