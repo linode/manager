@@ -239,7 +239,9 @@ export const LinodeCreate = () => {
           <Plan />
           <Details />
           {params.type !== 'Clone Linode' && <Security />}
-          {!isLinodeInterfacesEnabled && <VPC />}
+          {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
+            <VPC />
+          )}
           {!isLinodeInterfacesEnabled && <Firewall />}
           {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
             <VLAN />
