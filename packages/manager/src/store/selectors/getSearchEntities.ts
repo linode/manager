@@ -1,3 +1,5 @@
+import { pluralize } from '@linode/utilities';
+
 import { getDatabasesDescription } from 'src/features/Databases/utilities';
 import { getFirewallDescription } from 'src/features/Firewalls/shared';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
@@ -83,7 +85,13 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
 export const imageToSearchableItem = (image: Image): SearchableItem => ({
   data: {
     created: image.created,
-    description: image.description || '',
+    description: image.description
+      ? image.description
+      : `${image.size} MB, ${pluralize(
+          'region',
+          'regions',
+          image.regions.length
+        )}`,
     icon: 'image',
     /* TODO: Choose a real location for this to link to */
     path: `/images?query="${image.label}"`,
