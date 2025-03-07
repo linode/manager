@@ -13,7 +13,7 @@ import Search from 'src/assets/icons/search.svg';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
-import withStoreSearch from 'src/features/Search/withStoreSearch';
+import { withStoreSearch } from 'src/features/Search/withStoreSearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
@@ -58,7 +58,7 @@ const isSpecialOption = (
 };
 
 const SearchBarComponent = (props: SearchProps) => {
-  const { combinedResults, entitiesLoading, search } = props;
+  const { combinedResults, search } = props;
   const [searchText, setSearchText] = React.useState<string>('');
   const [value, setValue] = React.useState<SearchResultItem | null>(null);
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
@@ -457,7 +457,7 @@ const SearchBarComponent = (props: SearchProps) => {
           disableClearable
           inputValue={searchText}
           label={label}
-          loading={entitiesLoading}
+          loading={false}
           multiple={false}
           noOptionsText="No results"
           onBlur={handleBlur}
@@ -476,4 +476,4 @@ const SearchBarComponent = (props: SearchProps) => {
   );
 };
 
-export const SearchBar = withStoreSearch()(SearchBarComponent);
+export const SearchBar = withStoreSearch(SearchBarComponent);

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose, withStateHandlers } from 'recompose';
 
 import {
   bucketToSearchableItem,
@@ -49,8 +48,8 @@ interface HandlerProps {
 }
 export interface SearchProps extends HandlerProps {
   combinedResults: SearchableItem[];
-  entities: SearchableItem[];
-  entitiesLoading: boolean;
+  // entities: SearchableItem[];
+  // entitiesLoading: boolean;
   searchResultsByEntity: SearchResultsByEntity;
 }
 
@@ -70,75 +69,77 @@ export const search = (
   };
 };
 
-export default () => (Component: React.ComponentType<any>) => {
-  const WrappedComponent: React.FC<SearchProps> = (props) => {
-    return React.createElement(Component, {
-      ...props,
-    });
+export const withStoreSearch = <Props extends {}>(
+  Component: React.ComponentType<Props & SearchProps>
+) => (props: Props) => {
+  const [searchResults, setSearchResults] = React.useState<SearchResults>({
+    searchResultsByEntity: emptyResults,
+    combinedResults: [],
+  });
+
+  const handleSearch = (
+    query: string,
+    objectStorageBuckets: ObjectStorageBucket[],
+    domains: Domain[],
+    volumes: Volume[],
+    clusters: KubernetesCluster[],
+    images: Image[],
+    regions: Region[],
+    searchableLinodes: SearchableItem<number | string>[],
+    nodebalancers: NodeBalancer[],
+    firewalls: Firewall[],
+    databases: DatabaseInstance[]
+  ) => {
+    const searchableBuckets = objectStorageBuckets.map((bucket) =>
+      bucketToSearchableItem(bucket)
+    );
+    const searchableDomains = domains.map((domain) =>
+      domainToSearchableItem(domain)
+    );
+    const searchableVolumes = volumes.map((volume) =>
+      volumeToSearchableItem(volume)
+    );
+    const searchableImages = images.map((image) =>
+      imageToSearchableItem(image)
+    );
+    const searchableClusters = clusters.map((cluster) =>
+      kubernetesClusterToSearchableItem(cluster, regions)
+    );
+    const searchableNodebalancers = nodebalancers.map((nodebalancer) =>
+      nodeBalToSearchableItem(nodebalancer)
+    );
+    const searchableFirewalls = firewalls.map((firewall) =>
+      firewallToSearchableItem(firewall)
+    );
+    const searchableDatabases = databases.map((database) =>
+      databaseToSearchableItem(database)
+    );
+
+    const searchableItems = [
+      ...searchableLinodes,
+      ...searchableImages,
+      ...searchableBuckets,
+      ...searchableDomains,
+      ...searchableVolumes,
+      ...searchableClusters,
+      ...searchableNodebalancers,
+      ...searchableFirewalls,
+      ...searchableDatabases,
+    ]
+
+    const results = search(searchableItems, query);
+
+    setSearchResults(results);
+
+    return results;
   };
 
-  return compose<SearchProps, {}>(
-    withStateHandlers<any, any, any>(
-      { searchResultsByEntity: emptyResults },
-      {
-        search: (_) => (
-          query: string,
-          objectStorageBuckets: ObjectStorageBucket[],
-          domains: Domain[],
-          volumes: Volume[],
-          clusters: KubernetesCluster[],
-          images: Image[],
-          regions: Region[],
-          searchableLinodes: SearchableItem<number | string>[],
-          nodebalancers: NodeBalancer[],
-          firewalls: Firewall[],
-          databases: DatabaseInstance[]
-        ) => {
-          const searchableBuckets = objectStorageBuckets.map((bucket) =>
-            bucketToSearchableItem(bucket)
-          );
-          const searchableDomains = domains.map((domain) =>
-            domainToSearchableItem(domain)
-          );
-          const searchableVolumes = volumes.map((volume) =>
-            volumeToSearchableItem(volume)
-          );
-          const searchableImages = images.map((image) =>
-            imageToSearchableItem(image)
-          );
-          const searchableClusters = clusters.map((cluster) =>
-            kubernetesClusterToSearchableItem(cluster, regions)
-          );
-          const searchableNodebalancers = nodebalancers.map((nodebalancer) =>
-            nodeBalToSearchableItem(nodebalancer)
-          );
-          const searchableFirewalls = firewalls.map((firewall) =>
-            firewallToSearchableItem(firewall)
-          );
-          const searchableDatabases = databases.map((database) =>
-            databaseToSearchableItem(database)
-          );
-          const results = search(
-            [
-              ...searchableLinodes,
-              ...searchableImages,
-              ...searchableBuckets,
-              ...searchableDomains,
-              ...searchableVolumes,
-              ...searchableClusters,
-              ...searchableNodebalancers,
-              ...searchableFirewalls,
-              ...searchableDatabases,
-            ],
-            query
-          );
-          const { combinedResults, searchResultsByEntity } = results;
-          return {
-            combinedResults,
-            searchResultsByEntity,
-          };
-        },
-      }
-    )
-  )(WrappedComponent);
+  return (
+    <Component
+      {...props}
+      combinedResults={searchResults.combinedResults}
+      search={handleSearch}
+      searchResultsByEntity={searchResults.searchResultsByEntity}
+    />
+  );
 };

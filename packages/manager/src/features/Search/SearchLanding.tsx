@@ -40,7 +40,7 @@ import {
   StyledStack,
 } from './SearchLanding.styles';
 import { emptyResults } from './utils';
-import withStoreSearch from './withStoreSearch';
+import { withStoreSearch } from './withStoreSearch';
 
 import type { SearchProps } from './withStoreSearch';
 import type { RouteComponentProps } from 'react-router-dom';
@@ -62,7 +62,7 @@ export interface SearchLandingProps
     RouteComponentProps<{}> {}
 
 export const SearchLanding = (props: SearchLandingProps) => {
-  const { entities, search, searchResultsByEntity } = props;
+  const { search, searchResultsByEntity } = props;
   const { data: regions } = useRegionsQuery();
 
   const isLargeAccount = useIsLargeAccount();
@@ -209,7 +209,6 @@ export const SearchLanding = (props: SearchLandingProps) => {
     }
   }, [
     query,
-    entities,
     search,
     isLargeAccount,
     _searchAPI,
@@ -336,7 +335,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
   );
 };
 
-const EnhancedSearchLanding = withStoreSearch()(SearchLanding);
+const EnhancedSearchLanding = withStoreSearch(SearchLanding);
 
 export const searchLandingLazyRoute = createLazyRoute('/search')({
   component: React.lazy(() =>
