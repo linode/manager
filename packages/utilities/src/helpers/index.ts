@@ -38,3 +38,4 @@ export * from './stripImageName';
 export * from './tail';
 export * from './truncate';
 export * from './unitConversions';
+export * from './userAgent';
