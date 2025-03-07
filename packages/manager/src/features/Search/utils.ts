@@ -1,4 +1,6 @@
+import { refinedSearch } from './refinedSearch';
 import type {
+    SearchResults,
   SearchResultsByEntity,
   SearchableItem,
 } from './search.interfaces';
@@ -38,4 +40,20 @@ export const separateResultsByEntity = (
     ].push(result);
   });
   return separatedResults;
+};
+
+export const search = (
+  entities: SearchableItem[],
+  inputValue: string
+): SearchResults => {
+  if (!inputValue || inputValue === '') {
+    return { combinedResults: [], searchResultsByEntity: emptyResults };
+  }
+
+  const combinedResults = refinedSearch(inputValue, entities);
+
+  return {
+    combinedResults,
+    searchResultsByEntity: separateResultsByEntity(combinedResults),
+  };
 };

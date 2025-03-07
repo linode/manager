@@ -2,7 +2,7 @@ import { Autocomplete, Box, IconButton, TextField } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Close from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
-import * as React from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Search from 'src/assets/icons/search.svg';
@@ -12,9 +12,9 @@ import { StyledIconButton, StyledSearchIcon } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
 import { StyledSearchSuggestion } from './SearchSuggestion.styles';
 import { SearchSuggestionContainer } from './SearchSuggestionContainer';
+import { createFinalOptions } from './utils';
 
 import type { SearchableItem } from 'src/features/Search/search.interfaces';
-import { createFinalOptions } from './utils';
 
 export interface ExtendedSearchableItem
   extends Omit<SearchableItem, 'entityType'> {

@@ -22,26 +22,7 @@ import {
 } from 'src/store/selectors/getSearchEntities';
 
 import { getImageLabelForLinode } from '../Images/utils';
-import { refinedSearch } from './refinedSearch';
-import { emptyResults, separateResultsByEntity } from './utils';
-
-import type { SearchResults, SearchableItem } from './search.interfaces';
-
-export const search = (
-  entities: SearchableItem[],
-  inputValue: string
-): SearchResults => {
-  if (!inputValue || inputValue === '') {
-    return { combinedResults: [], searchResultsByEntity: emptyResults };
-  }
-
-  const combinedResults = refinedSearch(inputValue, entities);
-
-  return {
-    combinedResults,
-    searchResultsByEntity: separateResultsByEntity(combinedResults),
-  };
-};
+import { search } from './utils';
 
 interface Props {
   query: string;
