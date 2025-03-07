@@ -5,8 +5,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { ResultGroup } from './ResultGroup';
-import { StyledError, StyledGrid, StyledStack } from './SearchLanding.styles';
-import { useLegacySearch } from './withStoreSearch';
+import { useSearch } from './useSearch';
 
 import type { SearchResultsByEntity } from './search.interfaces';
 import type { ResultRowDataOption } from './types';
@@ -27,11 +26,9 @@ const SearchLanding = () => {
   const location = useLocation();
   const query = getQueryParamFromQueryString(location.search, 'query');
 
-  const {
-    combinedResults,
-    isLoading,
-    searchResultsByEntity,
-  } = useLegacySearch({ query });
+  const { combinedResults, isLoading, searchResultsByEntity } = useSearch({
+    query,
+  });
 
   return (
     <Stack spacing={2}>
@@ -42,18 +39,15 @@ const SearchLanding = () => {
       )}
       {isLoading && <CircleProgress />}
       {!isLoading && combinedResults.length === 0 && (
-        <StyledGrid data-qa-empty-state>
-          <StyledStack>
-            <StyledError />
-            <Typography style={{ marginBottom: 16 }}>
-              You searched for ...
-            </Typography>
-            <Typography>{query}</Typography>
-            <Typography className="nothing" style={{ marginTop: 56 }}>
-              Sorry, no results for this one.
-            </Typography>
-          </StyledStack>
-        </StyledGrid>
+        <Stack>
+          <Typography style={{ marginBottom: 16 }}>
+            You searched for ...
+          </Typography>
+          <Typography>{query}</Typography>
+          <Typography className="nothing" style={{ marginTop: 56 }}>
+            Sorry, no results for this one.
+          </Typography>
+        </Stack>
       )}
       {Object.keys(searchResultsByEntity).map(
         (entityType: keyof SearchResultsByEntity, idx: number) => (

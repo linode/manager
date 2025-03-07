@@ -55,10 +55,11 @@ export const useRegionQuery = (regionId: string) => {
   });
 };
 
-export const useRegionsQuery = () =>
+export const useRegionsQuery = (enabled?: boolean) =>
   useQuery<Region[], APIError[]>({
     ...regionQueries.regions,
     ...queryPresets.longLived,
+    enabled,
     select: (regions: Region[]) =>
       regions.map((region) => ({
         ...region,

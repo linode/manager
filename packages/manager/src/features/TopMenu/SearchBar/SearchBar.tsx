@@ -6,7 +6,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Search from 'src/assets/icons/search.svg';
-import { useLegacySearch } from 'src/features/Search/withStoreSearch';
+import { useSearch } from 'src/features/Search/useSearch';
 
 import { StyledIconButton, StyledSearchIcon } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
@@ -36,7 +36,7 @@ const isSpecialOption = (
 export const SearchBar = () => {
   // Search state
   const [searchText, setSearchText] = React.useState<string>('');
-  const { combinedResults, isLargeAccount, isLoading } = useLegacySearch({
+  const { combinedResults, isLargeAccount, isLoading } = useSearch({
     query: searchText,
   });
 

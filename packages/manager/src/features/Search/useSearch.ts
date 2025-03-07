@@ -14,9 +14,9 @@ import {
   databaseToSearchableItem,
   domainToSearchableItem,
   firewallToSearchableItem,
-  formatLinode,
   imageToSearchableItem,
   kubernetesClusterToSearchableItem,
+  linodeToSearchableItem,
   nodeBalToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
@@ -28,13 +28,13 @@ interface Props {
   query: string;
 }
 
-export const useLegacySearch = ({ query }: Props) => {
+export const useSearch = ({ query }: Props) => {
   const isSearching = Boolean(query);
   const isLargeAccount = useIsLargeAccount(isSearching);
   const shouldFetchAll =
     isSearching && isLargeAccount !== undefined && !isLargeAccount;
 
-  const { data: regions } = useRegionsQuery();
+  const { data: regions } = useRegionsQuery(shouldFetchAll);
   const { data: domains } = useAllDomainsQuery(shouldFetchAll);
   const { data: clusters } = useAllKubernetesClustersQuery(shouldFetchAll);
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldFetchAll);
@@ -62,7 +62,7 @@ export const useLegacySearch = ({ query }: Props) => {
 
   const searchableLinodes = (linodes ?? []).map((linode) => {
     const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
-    return formatLinode(linode, [], imageLabel);
+    return linodeToSearchableItem(linode, [], imageLabel);
   });
 
   const searchableClusters =

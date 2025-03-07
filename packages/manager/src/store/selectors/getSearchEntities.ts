@@ -39,7 +39,7 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
   return ips;
 };
 
-export const formatLinode = (
+export const linodeToSearchableItem = (
   linode: Linode,
   types: ExtendedType[],
   imageLabel: null | string
@@ -79,11 +79,6 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   label: volume.label,
   value: volume.id,
 });
-
-export const imageReducer = (accumulator: SearchableItem[], image: Image) =>
-  image.is_public
-    ? accumulator
-    : [...accumulator, imageToSearchableItem(image)];
 
 export const imageToSearchableItem = (image: Image): SearchableItem => ({
   data: {
