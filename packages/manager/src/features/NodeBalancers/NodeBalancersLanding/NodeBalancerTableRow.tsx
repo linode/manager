@@ -33,7 +33,11 @@ export const NodeBalancerTableRow = (props: Props) => {
   return (
     <TableRow key={id}>
       <TableCell>
-        <Link tabIndex={0} to={`/nodebalancers/${id}`}>
+        <Link
+          accessibleAriaLabel={label}
+          tabIndex={0}
+          to={`/nodebalancers/${id}`}
+        >
           {label}
         </Link>
       </TableCell>
@@ -49,7 +53,10 @@ export const NodeBalancerTableRow = (props: Props) => {
           {configs?.length === 0 && 'None'}
           {configs?.map(({ id: configId, port }, i) => (
             <React.Fragment key={configId}>
-              <Link to={`/nodebalancers/${id}/configurations/${configId}`}>
+              <Link
+                accessibleAriaLabel={`NodeBalancer Port ${port}`}
+                to={`/nodebalancers/${id}/configurations/${configId}`}
+              >
                 {port}
               </Link>
               {i < configs.length - 1 ? ', ' : ''}
