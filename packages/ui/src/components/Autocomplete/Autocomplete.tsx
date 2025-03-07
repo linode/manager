@@ -1,5 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import ChevronDownIcon from 'src/assets/icons/chevron-down.svg';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 import React from 'react';
 
@@ -136,7 +136,7 @@ export const Autocomplete = <
                     <>
                       {loading && (
                         <InputAdornment position="end">
-                          <CircleProgress size="sm" />
+                          <CircleProgress size="xs" />
                         </InputAdornment>
                       )}
                       {textFieldProps?.InputProps?.endAdornment}
@@ -183,7 +183,7 @@ export const Autocomplete = <
       multiple={multiple}
       noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
       onBlur={onBlur}
-      popupIcon={<KeyboardArrowDownIcon />}
+      popupIcon={<ChevronDownIcon />}
       value={value}
       {...rest}
       onChange={(e, value, reason, details) => {

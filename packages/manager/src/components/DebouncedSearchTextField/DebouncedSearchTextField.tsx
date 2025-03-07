@@ -4,13 +4,12 @@ import {
   InputAdornment,
   TextField,
 } from '@linode/ui';
-import Clear from '@mui/icons-material/Clear';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import Search from 'src/assets/icons/search.svg';
 import Close from 'src/assets/icons/close.svg';
+import Search from 'src/assets/icons/search.svg';
 
 import type { TextFieldProps } from '@linode/ui';
 
@@ -80,40 +79,32 @@ export const DebouncedSearchTextField = React.memo(
       <TextField
         slotProps={{
           input: {
-            endAdornment: isSearching ? (
+            endAdornment: (
               <InputAdornment position="end">
-                <CircleProgress size="sm" />
+                {isSearching ? (
+                  <CircleProgress size="xs" />
+                ) : clearable && textFieldValue ? (
+                  <IconButton
+                    onClick={() => {
+                      setTextFieldValue('');
+                      onSearch('');
+                    }}
+                    sx={{
+                      padding: 0,
+                    }}
+                    aria-label="Clear"
+                    size="small"
+                  >
+                    <Close />
+                  </IconButton>
+                ) : null}
               </InputAdornment>
-            ) : (
-              clearable &&
-              textFieldValue && (
-                <IconButton
-                  onClick={() => {
-                    setTextFieldValue('');
-                    onSearch('');
-                  }}
-                  sx={{
-                    padding: 0,
-                  }}
-                  aria-label="Clear"
-                  size="small"
-                >
-                  <StyledClearIcon />
-                </IconButton>
-              )
             ),
             startAdornment: (
               <InputAdornment position="start">
-                <StyledSearchIcon />
+                <Search />
               </InputAdornment>
             ),
-            sx: (theme) => ({
-              '& .MuiInput-input': {
-                padding: 0,
-              },
-              font: theme.tokens.typography.Label.Regular.S,
-              padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
-            }),
             ...InputProps,
           },
         }}
